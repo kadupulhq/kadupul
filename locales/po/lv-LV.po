@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 02:48-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -121,10 +121,10 @@ msgstr "Noklikšķiniet 'Turpināt', lai dzēstu šādu(s) apkopoto(-s) grafiku(
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
 #: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
-#: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
-#: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
-#: graphs.php:1858 host_templates.php:222 host_templates.php:236
+#: graph_view.php:1043 graphs.php:898 graphs.php:914 graphs.php:925
+#: graphs.php:936 graphs.php:951 graphs.php:968 graphs.php:977 graphs.php:1179
+#: graphs.php:1222 graphs.php:1244 graphs.php:1275 graphs.php:1287
+#: graphs.php:1870 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
 #: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
@@ -150,9 +150,9 @@ msgstr "Atcelt"
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
 #: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
-#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
-#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
+#: graphs.php:898 graphs.php:914 graphs.php:925 graphs.php:936 graphs.php:951
+#: graphs.php:968 graphs.php:977 graphs.php:1179 graphs.php:1222
+#: graphs.php:1244 graphs.php:1275 graphs.php:1287 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
 #: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
@@ -166,7 +166,7 @@ msgid "Continue"
 msgstr "Turpināt"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:886
+#: graphs.php:898
 msgid "Delete Graph(s)"
 msgstr "Dzēst grafiku(s)"
 
@@ -180,8 +180,8 @@ msgstr "Lai migrētu tālāk norādītos apkopotos grafikus uz veidnēm balstīt
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
-#: graphs.php:1266 graphs.php:1858 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1181 graphs.php:1231 graphs.php:1234
+#: graphs.php:1278 graphs.php:1870 include/auth.php:309
 #: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
@@ -229,29 +229,29 @@ msgstr "Kopējais nosaukums:"
 msgid "New Aggregate"
 msgstr "Jauns agregāts"
 
-#: aggregate_graphs.php:485 graphs.php:1247
+#: aggregate_graphs.php:485 graphs.php:1259
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Noklikšķiniet 'Turpināt', lai pievienotu atlasītos grafikus zemāk esošajam pārskatam."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1263
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Pārskata nosaukums"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1267
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Laika sprīdis"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1271
 msgid "Align"
 msgstr "Izlīdzināt"
 
-#: aggregate_graphs.php:501 graphs.php:1263
+#: aggregate_graphs.php:501 graphs.php:1275
 msgid "Add Graphs to Report"
 msgstr "Pievienot grafikus pārskatam"
 
-#: aggregate_graphs.php:503 graphs.php:1265
+#: aggregate_graphs.php:503 graphs.php:1277
 msgid "You currently have no reports defined."
 msgstr "Pašlaik jums nav definēta neviena pārskata."
 
@@ -287,7 +287,7 @@ msgstr "Noklikšķiniet 'Turpināt', lai zem koka zara novietotu šādu(s) apkop
 msgid "Destination Branch:"
 msgstr "Galamērķa zars:"
 
-#: aggregate_graphs.php:545 graphs.php:939
+#: aggregate_graphs.php:545 graphs.php:951
 msgid "Place Graph(s) on Tree"
 msgstr "Novietot grafiku(s) uz koka"
 
@@ -342,15 +342,15 @@ msgstr "Kopējais priekšskatījums neeksistē"
 msgid "Aggregate Preview %s"
 msgstr "Apkopotais priekšskatījums %s"
 
-#: aggregate_graphs.php:763 graph.php:553 graphs.php:1691
+#: aggregate_graphs.php:763 graph.php:553 graphs.php:1703
 msgid "RRDtool Command:"
 msgstr "RRDtool komanda:"
 
-#: aggregate_graphs.php:765 graph.php:562 graphs.php:1695
+#: aggregate_graphs.php:765 graph.php:562 graphs.php:1707
 msgid "Not Checked"
 msgstr "Nepārbaudīts"
 
-#: aggregate_graphs.php:765 graph.php:558 graphs.php:1693
+#: aggregate_graphs.php:765 graph.php:558 graphs.php:1705
 msgid "RRDtool Says:"
 msgstr "RRDtool ziņo:"
 
@@ -359,24 +359,24 @@ msgstr "RRDtool ziņo:"
 msgid "Aggregate Graph %s"
 msgstr "Apkopotā diagramma %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1033
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1045
 msgid "Prefix Replacement Values"
 msgstr "Prefiksu aizstāšanas vērtības"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1034
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1046
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "Šīs aizvietošanas vērtības varat izmantot prefiksam apkopotajā diagrammā"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1128
 #: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "Kopā"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1118
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1130
 msgid "All Items"
 msgstr "Visi elementi"
 
-#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
+#: aggregate_graphs.php:1010 graphs.php:1718 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "Grafika iestatījumi"
 
@@ -400,7 +400,7 @@ msgstr "Atbilstošie grafiki"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
 #: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
-#: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
+#: graph_view.php:667 graphs.php:2125 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -418,8 +418,8 @@ msgstr "Meklēt"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 data_sources.php:2004 data_sources.php:2143
-#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2130
-#: graphs.php:2322 include/global_arrays.php:996 include/global_arrays.php:1232
+#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2142
+#: graphs.php:2334 include/global_arrays.php:996 include/global_arrays.php:1232
 #: include/global_arrays.php:2018 lib/api_automation.php:283 lib/html.php:1955
 #: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
@@ -433,7 +433,7 @@ msgstr "Grafiki"
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
 #: data_queries.php:1383 data_sources.php:1824 data_templates.php:1130
-#: graph_templates.php:736 graph_view.php:743 graphs.php:2134
+#: graph_templates.php:736 graph_view.php:743 graphs.php:2146
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
 #: lib/api_automation.php:718 lib/api_automation.php:1082
@@ -455,7 +455,7 @@ msgstr "Daļa no Agregāta"
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:757 graph_view.php:675 graphs.php:2104
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2116
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
 #: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
@@ -470,7 +470,7 @@ msgstr "Doties"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:757 graph_view.php:675 graphs.php:2104
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2116
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
 #: pollers.php:914
@@ -486,7 +486,7 @@ msgstr "Atlasīt/Atjaunināt filtrus"
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
 #: data_queries.php:1399 data_sources.php:1765 data_templates.php:1152
-#: graph_templates.php:758 graph_view.php:676 graphs.php:2105
+#: graph_templates.php:758 graph_view.php:676 graphs.php:2117
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
 #: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
@@ -502,7 +502,7 @@ msgstr "Notīrīt"
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: data_debug.php:1140 data_queries.php:1399 data_sources.php:1765
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
-#: graphs.php:2105 graphs_new.php:516 host_templates.php:787
+#: graphs.php:2117 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
@@ -512,7 +512,7 @@ msgstr "Notīrīt"
 msgid "Clear Filters"
 msgstr "Notīrīt filtrus"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1196
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1208
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "Grafika nosaukums"
@@ -520,7 +520,7 @@ msgstr "Grafika nosaukums"
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
 #: data_debug.php:517 data_queries.php:1484 data_sources.php:1998
-#: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
+#: data_templates.php:1260 graph_templates.php:863 graphs.php:2350
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
 #: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
@@ -534,7 +534,7 @@ msgid "Included in Aggregate"
 msgstr "Iekļauts apkopojumā"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:880
-#: graph_view.php:832 graph_view.php:845 graphs.php:2356 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2368 lib/spikekill.php:1745
 msgid "Size"
 msgstr "Izmērs"
 
@@ -560,7 +560,7 @@ msgstr "Nē"
 msgid "Yes"
 msgstr "Jā"
 
-#: aggregate_graphs.php:1354 graphs.php:2398 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2410 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "Nav atrasts neviens grafiks"
 
@@ -574,7 +574,7 @@ msgid "Aggregate Graphs"
 msgstr "Apkopotie grafiki"
 
 #: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
-#: graph_view.php:699 graphs.php:2066 include/global_arrays.php:2898
+#: graph_view.php:699 graphs.php:2078 include/global_arrays.php:2898
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
@@ -587,7 +587,7 @@ msgstr "Veidne"
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
 #: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
-#: graphs.php:2070 graphs_items.php:270 lib/api_automation.php:26
+#: graphs.php:2082 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3980 lib/auth.php:4029
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
@@ -605,8 +605,8 @@ msgstr "Jebkuru"
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
 #: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
-#: graph_templates_items.php:53 graphs.php:950 graphs.php:1595 graphs.php:1604
-#: graphs.php:2071 graphs_items.php:271 graphs_items.php:391
+#: graph_templates_items.php:53 graphs.php:962 graphs.php:1607 graphs.php:1616
+#: graphs.php:2083 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:526 include/global_arrays.php:584
 #: include/global_arrays.php:676 include/global_arrays.php:888
 #: include/global_arrays.php:1747 include/global_form.php:574
@@ -643,7 +643,7 @@ msgstr "Apkopoto diagrammu nosaukums"
 msgid "The internal database identifier for this object"
 msgstr "Šī objekta iekšējais datu bāzes identifikators"
 
-#: aggregate_graphs.php:1664 graphs.php:1200
+#: aggregate_graphs.php:1664 graphs.php:1212
 msgid "Aggregate Template"
 msgstr "Apkopotā veidne"
 
@@ -718,7 +718,7 @@ msgstr "Dzēšams"
 msgid "Graphs Using"
 msgstr "Grafiki izmanto"
 
-#: aggregate_templates.php:709 graphs.php:2125 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2137 host_templates.php:730
 #: include/global_arrays.php:961 include/global_arrays.php:1367
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -1245,8 +1245,8 @@ msgstr "Nospiediet 'Turpināt', lai dzēstu sekojošos grafika noteikumus."
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Noklikšķiniet 'Turpināt', lai dublētu sekojošu(-as) kārtulu(-as). Varat pēc savas izvēles mainīt jauno grafiku kārtulu virsraksta formātu."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:908
-#: graphs.php:919
+#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:920
+#: graphs.php:931
 msgid "Title Format"
 msgstr "Virsraksta formāts"
 
@@ -1321,7 +1321,7 @@ msgid "Graph Rules"
 msgstr "Grafika noteikumi"
 
 #: automation_graph_rules.php:813 automation_graph_rules.php:963
-#: graphs.php:2126 include/global_arrays.php:1370
+#: graphs.php:2138 include/global_arrays.php:1370
 #: include/global_arrays.php:2897 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -2887,7 +2887,7 @@ msgstr "Profils"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
 #: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
-#: graphs.php:2123 graphs_new.php:488 host_templates.php:716
+#: graphs.php:2135 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:597 settings.php:619 settings.php:650 tree.php:914
@@ -3424,7 +3424,7 @@ msgstr "Ieslēdziet datu avota informācijas režīmu."
 msgid "Edit Graph: '%s'."
 msgstr "Rediģēt diagrammu: '%s'."
 
-#: data_sources.php:1017 graphs.php:1557
+#: data_sources.php:1017 graphs.php:1569
 msgid "Edit Device."
 msgstr "Rediģēt ierīci."
 
@@ -3448,7 +3448,7 @@ msgstr "Atlasītā datu veidne"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Šai datu veidnei piešķirtais nosaukums. Lūdzu, ņemiet vērā, ka diagrammas veidnes drīkst mainīt tikai uz 100%$ saderīgu diagrammu veidni, kas nozīmē, ka tajā ir iekļauti identiski datu avoti."
 
-#: data_sources.php:1101 graph_view.php:817 graphs.php:1600
+#: data_sources.php:1101 graph_view.php:817 graphs.php:1612
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
 #: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
@@ -3481,7 +3481,7 @@ msgstr "Pielāgoti dati"
 msgid "Data Source Item %s"
 msgstr "Datu avota elements %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2875
 #: package_import.php:604
 msgid "New"
 msgstr "Jauns"
@@ -3522,11 +3522,11 @@ msgstr "Datu avoti [ %s ]"
 msgid "Bad Indexes"
 msgstr "Slikti indeksi"
 
-#: data_sources.php:1806 graphs.php:2099
+#: data_sources.php:1806 graphs.php:2111
 msgid "Note that this query may take some time to run."
 msgstr "Ņemiet vērā, ka šī vaicājuma izpilde var aizņemt kādu laiku."
 
-#: data_sources.php:1806 graphs.php:2099
+#: data_sources.php:1806 graphs.php:2111
 msgid "Orphaned"
 msgstr "Bāreņi"
 
@@ -3988,21 +3988,25 @@ msgstr "Vertikālā etiķete iegūtajiem grafikiem."
 msgid "No Graph Templates Found"
 msgstr "Nav atrasta neviena grafika veidne"
 
-#: graph_templates_inputs.php:138
+#: graph_templates_inputs.php:66
+msgid "The Graph Item Input relationship is invalid."
+msgstr ""
+
+#: graph_templates_inputs.php:156
 #, php-format
 msgid "Graph Item Inputs [edit graph: %s]"
 msgstr "Grafika elementu ievades [rediģēt grafiku: %s]"
 
-#: graph_templates_inputs.php:189
+#: graph_templates_inputs.php:207
 msgid "Associated Graph Items"
 msgstr "Saistītie grafika vienumi"
 
-#: graph_templates_inputs.php:213
+#: graph_templates_inputs.php:231
 #, php-format
 msgid "Item #%s"
 msgstr "Elements #%s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
+#: graph_templates_inputs.php:243 lib/api_aggregate.php:2526 lib/html.php:1515
 msgid "No Items"
 msgstr "Nav vienumu"
 
@@ -4093,12 +4097,12 @@ msgstr "Visi grafiki un veidnes"
 msgid "Not Templated"
 msgstr "Nav veidnes"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2332
+#: graph_view.php:812 graph_view.php:840 graphs.php:2344
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "Grafika nosaukums"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2335
+#: graph_view.php:814 graph_view.php:842 graphs.php:2347
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Šī grafika nosaukums.  Parasti ģenerē no grafika veidnes definīciju vai ieteikto nosaukumu piešķiršanas noteikumiem.  Maksimālo nosaukuma garumu var izmainīt zem Iestatījumi->Vizuāls sadaļas."
 
@@ -4106,23 +4110,23 @@ msgstr "Šī grafika nosaukums.  Parasti ģenerē no grafika veidnes definīciju
 msgid "The device for this Graph."
 msgstr "Ierīce šim grafikam."
 
-#: graph_view.php:822 graphs.php:2344
+#: graph_view.php:822 graphs.php:2356
 msgid "Source Type"
 msgstr "Avota veids"
 
-#: graph_view.php:824 graphs.php:2347
+#: graph_view.php:824 graphs.php:2359
 msgid "The underlying source that this Graph was based upon."
 msgstr "Pamatavots, uz kura balstījās šī diagramma."
 
-#: graph_view.php:827 graphs.php:2350
+#: graph_view.php:827 graphs.php:2362
 msgid "Source Name"
 msgstr "Avota nosaukums"
 
-#: graph_view.php:829 graphs.php:2353
+#: graph_view.php:829 graphs.php:2365
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Grafika veidne vai datu vaicājums, uz kuru balstījās šīs grafiks."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2359
+#: graph_view.php:834 graph_view.php:847 graphs.php:2371
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Šīs diagrammas lielums, kad tas nav priekšskatījuma režīmā."
 
@@ -4192,23 +4196,23 @@ msgstr "Kopsavilkuma detaļas"
 msgid "Download"
 msgstr "Lejupielādēt"
 
-#: graphs.php:37 graphs.php:902 include/global_arrays.php:2092
+#: graphs.php:37 graphs.php:914 include/global_arrays.php:2092
 msgid "Change Graph Template"
 msgstr "Mainīt diagrammas veidni"
 
-#: graphs.php:45 graphs.php:1167
+#: graphs.php:45 graphs.php:1179
 msgid "Create Aggregate Graph"
 msgstr "Izveidojiet apkopotu grafiku"
 
-#: graphs.php:46 graphs.php:1210
+#: graphs.php:46 graphs.php:1222
 msgid "Create Aggregate from Template"
 msgstr "Izveidojiet apkopojumu no veidnes"
 
-#: graphs.php:47 graphs.php:1232
+#: graphs.php:47 graphs.php:1244
 msgid "Apply Automation Rules"
 msgstr "Izmantojiet automatizācijas noteikumus"
 
-#: graphs.php:53 graphs.php:924
+#: graphs.php:53 graphs.php:936
 msgid "Convert to Graph Template"
 msgstr "Konvertēt uz diagrammas veidni"
 
@@ -4217,220 +4221,224 @@ msgstr "Konvertēt uz diagrammas veidni"
 msgid "Created graph: %s"
 msgstr "Izveidots grafiks: %s"
 
-#: graphs.php:267 lib/template.php:2363 lib/template.php:2401
+#: graphs.php:267 lib/template.php:2372 lib/template.php:2410
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "KĻŪDA: nav saistīts datu avots. Pārbaudiet veidni"
 
-#: graphs.php:678
+#: graphs.php:391
+msgid "A Graph Item Input contains an invalid value."
+msgstr ""
+
+#: graphs.php:690
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:697
+#: graphs.php:709
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:853
+#: graphs.php:865
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai dzēstu šādu(s) grafiku(-s). Ņemiet vērā: ja izvēlaties Dzēst datu avotus, tiks dzēsti arī tikai tie datu avoti, kas netiek izmantoti citur."
 
-#: graphs.php:857
+#: graphs.php:869
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "Šajos grafikos tiek izmantots(-i) šāds(-i) datu avots(-i)."
 
-#: graphs.php:876
+#: graphs.php:888
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Dzēsiet visus datu avotus, uz kuriem ir atsauce šajā grafikā un kuri netiek izmantoti citur."
 
-#: graphs.php:878
+#: graphs.php:890
 msgid "Leave the Data Source(s) untouched."
 msgstr "Neatstājiet datu avotu(-s) neskartus."
 
-#: graphs.php:890
+#: graphs.php:902
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Izvēlieties diagrammas veidni un noklikšķiniet uz \"Turpināt\", lai mainītu diagrammas veidni tālāk norādītajam(-iem) grafikam(-iem). Lūdzu, ņemiet vērā, ka tiks parādītas tikai saderīgas grafiku veidnes. Saderību nosaka tie, kuriem ir identiski datu avoti."
 
-#: graphs.php:892 graphs_new.php:606
+#: graphs.php:904 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "Jauna grafika veidne"
 
-#: graphs.php:906
+#: graphs.php:918
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai dublētu šādu(-s) grafiku(-us). Varat pēc izvēles mainīt jaunā(-o) grafika(-u) virsraksta formātu."
 
-#: graphs.php:909
+#: graphs.php:921
 msgid "<graph_title> (1)"
 msgstr "<graph_title> (1)"
 
-#: graphs.php:913
+#: graphs.php:925
 msgid "Duplicate Graph(s)"
 msgstr "Diagrammas(-u) dublikāti"
 
-#: graphs.php:917
+#: graphs.php:929
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Noklikšķiniet uz 'Turpināt', lai pārvērstu tālāk norādīto(-os) grafiku(-s) par diagrammas veidni(-ēm). Varat pēc izvēles mainīt virsraksta formātu jaunajai(-ām) diagrammas veidnei(-ēm)."
 
-#: graphs.php:920
+#: graphs.php:932
 msgid "<graph_title> Template"
 msgstr "<graph_title> Veidne"
 
-#: graphs.php:928
+#: graphs.php:940
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai zem tālāk atlasītā koka zara novietotu šādu(s) grafiku(-us)."
 
-#: graphs.php:930
+#: graphs.php:942
 msgid "Destination Branch"
 msgstr "Galamērķa filiāle"
 
-#: graphs.php:943
+#: graphs.php:955
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Izvēlieties jaunu ierīci šiem grafikiem un noklikšķiniet uz \"Turpināt\"."
 
-#: graphs.php:945 include/global_arrays.php:990
+#: graphs.php:957 include/global_arrays.php:990
 msgid "New Device"
 msgstr "Jauna ierīce"
 
-#: graphs.php:956
+#: graphs.php:968
 msgid "Change Graph(s) Associated Device"
 msgstr "Mainīt Graph(-es) saistīto ierīci"
 
-#: graphs.php:960
+#: graphs.php:972
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai atkārtoti lietotu ieteikto nosaukumu šim(-iem) grafikam(-iem)."
 
-#: graphs.php:965
+#: graphs.php:977
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Atkārtoti lietot ieteikto nosaukumu piešķiršanu diagrammai(-ām)"
 
-#: graphs.php:981
+#: graphs.php:993
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai no atlasītā(-iem) grafika(-iem) izveidotu apkopotu grafiku."
 
-#: graphs.php:990
+#: graphs.php:1002
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "Šajos grafikos tiek izmantoti šādi datu avoti:"
 
-#: graphs.php:1051
+#: graphs.php:1063
 msgid "Please confirm"
 msgstr "Lūdzu apstipriniet"
 
-#: graphs.php:1189
+#: graphs.php:1201
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Atlasiet izmantojamo apkopojuma veidni un nospiediet \"Turpināt\", lai izveidotu apkopoto grafiku. Pretējā gadījumā nospiediet \"Atcelt\", lai atgrieztos."
 
-#: graphs.php:1214
+#: graphs.php:1226
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Pašlaik šai diagrammas veidnei nav definētas apkopotās veidnes. Lūdzu, vispirms izveidojiet apkopoto veidni atlasītajai grafiku diagrammas veidnei un mēģiniet vēlreiz, vai arī vienkārši izveidojiet apkopoto grafiku bez veidnes."
 
-#: graphs.php:1215
+#: graphs.php:1227
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Nospiediet Atgriezties, lai atgrieztos un atlasītu dažādus grafikus."
 
-#: graphs.php:1227
+#: graphs.php:1239
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai lietotu automatizācijas noteikumus tālāk norādītajiem grafikiem."
 
-#: graphs.php:1313
+#: graphs.php:1325
 msgid "Graph Items [new]"
 msgstr "Grafika elementi [jauns]"
 
-#: graphs.php:1357
+#: graphs.php:1369
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Grafika elementi [labot: %s]"
 
-#: graphs.php:1481
+#: graphs.php:1493
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Grafiks [rediģēt: %s]"
 
-#: graphs.php:1491
+#: graphs.php:1503
 msgid "Graph [new]"
 msgstr "Grafiks [jauns]"
 
-#: graphs.php:1516
+#: graphs.php:1528
 msgid "Turn Off Graph Debug Mode."
 msgstr "Izslēdziet grafika atkļūdošanas režīmu."
 
-#: graphs.php:1518
+#: graphs.php:1530
 msgid "Turn On Graph Debug Mode."
 msgstr "Ieslēdziet grafika atkļūdošanas režīmu."
 
-#: graphs.php:1540
+#: graphs.php:1552
 msgid "Edit Graph Template."
 msgstr "Rediģēt diagrammas veidni."
 
-#: graphs.php:1552
+#: graphs.php:1564
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Rediģēt datu avotu: '%s'."
 
-#: graphs.php:1561
+#: graphs.php:1573
 msgid "Unlock Graph."
 msgstr "Atbloķēt grafiku."
 
-#: graphs.php:1563
+#: graphs.php:1575
 msgid "Lock Graph."
 msgstr "Bloķēt grafiku."
 
-#: graphs.php:1592
+#: graphs.php:1604
 msgid "Selected Graph Template"
 msgstr "Atlasītā grafika veidne"
 
-#: graphs.php:1593
+#: graphs.php:1605
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Izvēlieties diagrammas veidni, ko lietot šim grafikam. Lūdzu, ņemiet vērā, ka diagrammu veidnes drīkst mainīt tikai uz 100%% saderīgu diagrammu veidni, kas nozīmē, ka tajā ir iekļauti identiski datu avoti."
 
-#: graphs.php:1601
+#: graphs.php:1613
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Izvēlieties ierīci, kurai pieder šis grafiks."
 
-#: graphs.php:1657
+#: graphs.php:1669
 msgid "Supplemental Graph Template Data"
 msgstr "Papildu diagrammas veidnes dati"
 
-#: graphs.php:1659
+#: graphs.php:1671
 msgid "Graph Fields"
 msgstr "Grafika lauki"
 
-#: graphs.php:1660
+#: graphs.php:1672
 msgid "Graph Item Fields"
 msgstr "Grafika elementa lauki"
 
-#: graphs.php:1904 spikekill.php:42
+#: graphs.php:1916 spikekill.php:42
 msgid "Graph access denied"
 msgstr ""
 
-#: graphs.php:2039
+#: graphs.php:2051
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "Grafiku pārvaldība [Lietots pielāgoto grafiku saraksts — notīrīt, lai atiestatītu]"
 
-#: graphs.php:2041
+#: graphs.php:2053
 msgid "Graph Management [ All Devices ]"
 msgstr "Grafiku pārvaldība [ Visas ierīces ]"
 
-#: graphs.php:2043
+#: graphs.php:2055
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Grafiku pārvaldība [nav balstīta uz ierīci]"
 
-#: graphs.php:2046
+#: graphs.php:2058
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Grafiku pārvaldība [ %s ]"
 
-#: graphs.php:2119
+#: graphs.php:2131
 msgid "Graph Source"
 msgstr "Grafika avots"
 
-#: graphs.php:2124
+#: graphs.php:2136
 msgid "Non Templated"
 msgstr "Nav veidnes"
 
-#: graphs.php:2341
+#: graphs.php:2353
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "Šī grafika iekšējā datu bāzes ID. Noderīgs, veicot automatizāciju vai atkļūdošanu."
 
-#: graphs.php:2385
+#: graphs.php:2397
 msgid "Empty Graph"
 msgstr "Tukšs grafiks"
 
@@ -13697,7 +13705,7 @@ msgstr "Notikumi"
 msgid "Send Report"
 msgstr "Nosūtīt ziņojumu"
 
-#: lib/html_reports.php:1644 lib/import.php:2957 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2960 user_admin.php:1776
 msgid "[new]"
 msgstr "[jauns]"
 
@@ -13964,89 +13972,89 @@ msgstr "neeksistē"
 msgid "not writable"
 msgstr "nav rakstāms"
 
-#: lib/import.php:1970 lib/import.php:1991
+#: lib/import.php:1973 lib/import.php:1994
 #, php-format
 msgid "New Graph Template: %s"
 msgstr ", Diagrammas veidne: %s"
 
-#: lib/import.php:2005 lib/import.php:2017
+#: lib/import.php:2008 lib/import.php:2020
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Datu vaicājums [%s]"
 
-#: lib/import.php:2654
+#: lib/import.php:2657
 msgid "Unknown Field"
 msgstr "Nezināms lauks"
 
-#: lib/import.php:2870
+#: lib/import.php:2873
 msgid "Updated"
 msgstr "Atjaunināts (veiktas izmaiņas)"
 
-#: lib/import.php:2874
+#: lib/import.php:2877
 msgid "Damaged"
 msgstr "Bojāts grafiks"
 
-#: lib/import.php:2876 package_import.php:598
+#: lib/import.php:2879 package_import.php:598
 msgid "Unchanged"
 msgstr "Bez izmaiņām"
 
-#: lib/import.php:2912
+#: lib/import.php:2915
 msgid "Import Preview Results"
 msgstr "Ievietot priekšskatījuma rezultātus"
 
-#: lib/import.php:2912
+#: lib/import.php:2915
 msgid "Import Results"
 msgstr "Ievietot rezultātus"
 
-#: lib/import.php:2916
+#: lib/import.php:2919
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Ja pakotne tiktu importēta, Kadupul veiktu šādas izmaiņas:"
 
-#: lib/import.php:2918
+#: lib/import.php:2921
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul pakotnei ir importējis šādas preces:"
 
-#: lib/import.php:2921
+#: lib/import.php:2924
 msgid "Package Files"
 msgstr "Pakešu faili"
 
-#: lib/import.php:2925
+#: lib/import.php:2928
 msgid "[preview] "
 msgstr "[priekšskatījums] "
 
-#: lib/import.php:2930
+#: lib/import.php:2933
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Ja veidne tiktu importēta, Kadupul veiktu šādas izmaiņas:"
 
-#: lib/import.php:2932
+#: lib/import.php:2935
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ir importējis šādus vienumus veidnei:"
 
-#: lib/import.php:2947
+#: lib/import.php:2950
 msgid "[success]"
 msgstr "[panākumi]"
 
-#: lib/import.php:2949
+#: lib/import.php:2952
 msgid "[fail]"
 msgstr "[neizdevās]"
 
-#: lib/import.php:2951
+#: lib/import.php:2954
 msgid "[preview]"
 msgstr "[priekšskatījums]"
 
-#: lib/import.php:2955
+#: lib/import.php:2958
 msgid "[updated]"
 msgstr "[atjaunināts]"
 
-#: lib/import.php:2959
+#: lib/import.php:2962
 msgid "[unchanged]"
 msgstr "[nemainīts]"
 
-#: lib/import.php:2995
+#: lib/import.php:2998
 msgid "Found Dependency:"
 msgstr "Atrastā atkarība:"
 
-#: lib/import.php:2997
+#: lib/import.php:3000
 msgid "Unmet Dependency:"
 msgstr "Neapmierinātā atkarība:"
 
@@ -15925,29 +15933,29 @@ msgstr ""
 msgid "WindKilled"
 msgstr ""
 
-#: lib/template.php:1646
+#: lib/template.php:1655
 msgid "Attempting to Create Graph from Non-Template"
 msgstr "Mēģinājums izveidot grafiku no neveidnes"
 
-#: lib/template.php:1660
+#: lib/template.php:1669
 msgid "Attempting to Create Graph from Removed Graph Template"
 msgstr "Mēģinājums izveidot grafiku no noņemtās diagrammas veidnes"
 
-#: lib/template.php:2355 lib/template.php:2393
+#: lib/template.php:2364 lib/template.php:2402
 #, php-format
 msgid "Created: %s"
 msgstr "Izveidots: %s"
 
-#: lib/template.php:2373 lib/template.php:2404
+#: lib/template.php:2382 lib/template.php:2413
 msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "KĻŪDA: baltā saraksta validācija neizdevās. Pārbaudiet datu ievades metodi"
 
-#: lib/template.php:2383
+#: lib/template.php:2392
 #, php-format
 msgid "Graph Not created for %s due to bad data"
 msgstr "Grafiks %s nav izveidots sliktu datu dēļ"
 
-#: lib/template.php:2414
+#: lib/template.php:2423
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "PIEZĪME: Grafiks nav pievienots %s datu vaicājumam un %s indeksam datu avota pārbaudes kļūmes dēļ"

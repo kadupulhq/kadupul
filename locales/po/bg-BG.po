@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 02:48-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -118,10 +118,10 @@ msgstr "Кликнете върху „Напред“, за да изтриет
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
 #: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:886 graphs.php:902 graphs.php:913
-#: graphs.php:924 graphs.php:939 graphs.php:956 graphs.php:965 graphs.php:1167
-#: graphs.php:1210 graphs.php:1232 graphs.php:1263 graphs.php:1275
-#: graphs.php:1858 host_templates.php:222 host_templates.php:236
+#: graph_view.php:1043 graphs.php:898 graphs.php:914 graphs.php:925
+#: graphs.php:936 graphs.php:951 graphs.php:968 graphs.php:977 graphs.php:1179
+#: graphs.php:1222 graphs.php:1244 graphs.php:1275 graphs.php:1287
+#: graphs.php:1870 host_templates.php:222 host_templates.php:236
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
 #: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
@@ -147,9 +147,9 @@ msgstr "Отказ"
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
 #: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:886 graphs.php:902 graphs.php:913 graphs.php:924 graphs.php:939
-#: graphs.php:956 graphs.php:965 graphs.php:1167 graphs.php:1210
-#: graphs.php:1232 graphs.php:1263 graphs.php:1275 host_templates.php:222
+#: graphs.php:898 graphs.php:914 graphs.php:925 graphs.php:936 graphs.php:951
+#: graphs.php:968 graphs.php:977 graphs.php:1179 graphs.php:1222
+#: graphs.php:1244 graphs.php:1275 graphs.php:1287 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
 #: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
@@ -163,7 +163,7 @@ msgid "Continue"
 msgstr "Продължи"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: graphs.php:886
+#: graphs.php:898
 msgid "Delete Graph(s)"
 msgstr "Изтриване на графиките"
 
@@ -177,8 +177,8 @@ msgstr "За да мигрират агрегираните графики по-
 
 #: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
-#: graphs.php:1266 graphs.php:1858 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1181 graphs.php:1231 graphs.php:1234
+#: graphs.php:1278 graphs.php:1870 include/auth.php:309
 #: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
@@ -226,29 +226,29 @@ msgstr "Агрегирано име:"
 msgid "New Aggregate"
 msgstr "Нов сбор"
 
-#: aggregate_graphs.php:485 graphs.php:1247
+#: aggregate_graphs.php:485 graphs.php:1259
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Кликнете върху „Напред“, за да добавите избраните графики към отчета по-долу."
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251
+#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1263
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "Име на отчета"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255
+#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1267
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "Време"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259
+#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1271
 msgid "Align"
 msgstr "Подравняване"
 
-#: aggregate_graphs.php:501 graphs.php:1263
+#: aggregate_graphs.php:501 graphs.php:1275
 msgid "Add Graphs to Report"
 msgstr "Добавете графики в отчета"
 
-#: aggregate_graphs.php:503 graphs.php:1265
+#: aggregate_graphs.php:503 graphs.php:1277
 msgid "You currently have no reports defined."
 msgstr "Понастоящем нямате дефинирани отчети."
 
@@ -284,7 +284,7 @@ msgstr "Кликнете върху „Напред“, за да постави
 msgid "Destination Branch:"
 msgstr "Клон на дестинацията:"
 
-#: aggregate_graphs.php:545 graphs.php:939
+#: aggregate_graphs.php:545 graphs.php:951
 msgid "Place Graph(s) on Tree"
 msgstr "Поставете графиките в Дървото"
 
@@ -339,15 +339,15 @@ msgstr "Общ преглед [ %s]"
 msgid "Aggregate Preview %s"
 msgstr "Общ преглед [ %s]"
 
-#: aggregate_graphs.php:763 graph.php:553 graphs.php:1691
+#: aggregate_graphs.php:763 graph.php:553 graphs.php:1703
 msgid "RRDtool Command:"
 msgstr "Команда RRDtool:"
 
-#: aggregate_graphs.php:765 graph.php:562 graphs.php:1695
+#: aggregate_graphs.php:765 graph.php:562 graphs.php:1707
 msgid "Not Checked"
 msgstr "Без проверки"
 
-#: aggregate_graphs.php:765 graph.php:558 graphs.php:1693
+#: aggregate_graphs.php:765 graph.php:558 graphs.php:1705
 msgid "RRDtool Says:"
 msgstr "RRDtool казва:"
 
@@ -356,24 +356,24 @@ msgstr "RRDtool казва:"
 msgid "Aggregate Graph %s"
 msgstr "Общ график %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1033
+#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1045
 msgid "Prefix Replacement Values"
 msgstr "Модел за заместване"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1034
+#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1046
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "Можете да използвате тези заместващи стойности за префикса в агрегираната графика"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
+#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1128
 #: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "Общо"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1118
+#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1130
 msgid "All Items"
 msgstr "Всички Елементи"
 
-#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
+#: aggregate_graphs.php:1010 graphs.php:1718 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "Конфигурация на графиката"
 
@@ -397,7 +397,7 @@ msgstr "Съответстващи графики"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
 #: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
-#: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
+#: graph_view.php:667 graphs.php:2125 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -415,8 +415,8 @@ msgstr "Търсене"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
 #: aggregate_graphs.php:1587 data_sources.php:2004 data_sources.php:2143
-#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2130
-#: graphs.php:2322 include/global_arrays.php:996 include/global_arrays.php:1232
+#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2142
+#: graphs.php:2334 include/global_arrays.php:996 include/global_arrays.php:1232
 #: include/global_arrays.php:2018 lib/api_automation.php:283 lib/html.php:1955
 #: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:917 tree.php:2366 user_admin.php:801
@@ -430,7 +430,7 @@ msgstr "Графики"
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
 #: data_queries.php:1383 data_sources.php:1824 data_templates.php:1130
-#: graph_templates.php:736 graph_view.php:743 graphs.php:2134
+#: graph_templates.php:736 graph_view.php:743 graphs.php:2146
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
 #: lib/api_automation.php:718 lib/api_automation.php:1082
@@ -452,7 +452,7 @@ msgstr "Част от агрегата"
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:757 graph_view.php:675 graphs.php:2104
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2116
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
 #: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
@@ -467,7 +467,7 @@ msgstr "Търси"
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
-#: graph_templates.php:757 graph_view.php:675 graphs.php:2104
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2116
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
 #: pollers.php:914
@@ -483,7 +483,7 @@ msgstr "Задаване / опресняване на филтрите"
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
 #: data_queries.php:1399 data_sources.php:1765 data_templates.php:1152
-#: graph_templates.php:758 graph_view.php:676 graphs.php:2105
+#: graph_templates.php:758 graph_view.php:676 graphs.php:2117
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
 #: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
@@ -499,7 +499,7 @@ msgstr "Изчисти"
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
 #: data_debug.php:1140 data_queries.php:1399 data_sources.php:1765
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
-#: graphs.php:2105 graphs_new.php:516 host_templates.php:787
+#: graphs.php:2117 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
@@ -509,7 +509,7 @@ msgstr "Изчисти"
 msgid "Clear Filters"
 msgstr "Изчистване на филтрите"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1196
+#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1208
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "Заглавие на графиката"
@@ -517,7 +517,7 @@ msgstr "Заглавие на графиката"
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
 #: data_debug.php:517 data_queries.php:1484 data_sources.php:1998
-#: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
+#: data_templates.php:1260 graph_templates.php:863 graphs.php:2350
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
 #: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
@@ -531,7 +531,7 @@ msgid "Included in Aggregate"
 msgstr "Включено в сборния"
 
 #: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:880
-#: graph_view.php:832 graph_view.php:845 graphs.php:2356 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2368 lib/spikekill.php:1745
 msgid "Size"
 msgstr "Размер"
 
@@ -557,7 +557,7 @@ msgstr "Не"
 msgid "Yes"
 msgstr "Да"
 
-#: aggregate_graphs.php:1354 graphs.php:2398 lib/api_automation.php:601
+#: aggregate_graphs.php:1354 graphs.php:2410 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "Няма намерени графики"
 
@@ -571,7 +571,7 @@ msgid "Aggregate Graphs"
 msgstr "Обобщени графики"
 
 #: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
-#: graph_view.php:699 graphs.php:2066 include/global_arrays.php:2898
+#: graph_view.php:699 graphs.php:2078 include/global_arrays.php:2898
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
@@ -584,7 +584,7 @@ msgstr "Шаблон"
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
 #: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
-#: graphs.php:2070 graphs_items.php:270 lib/api_automation.php:26
+#: graphs.php:2082 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3980 lib/auth.php:4029
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
@@ -602,8 +602,8 @@ msgstr "Всички"
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
 #: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
-#: graph_templates_items.php:53 graphs.php:950 graphs.php:1595 graphs.php:1604
-#: graphs.php:2071 graphs_items.php:271 graphs_items.php:391
+#: graph_templates_items.php:53 graphs.php:962 graphs.php:1607 graphs.php:1616
+#: graphs.php:2083 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:526 include/global_arrays.php:584
 #: include/global_arrays.php:676 include/global_arrays.php:888
 #: include/global_arrays.php:1747 include/global_form.php:574
@@ -640,7 +640,7 @@ msgstr "Заглавието на обобщените графики"
 msgid "The internal database identifier for this object"
 msgstr "Вътрешният идентификатор на базата данни за този обект"
 
-#: aggregate_graphs.php:1664 graphs.php:1200
+#: aggregate_graphs.php:1664 graphs.php:1212
 msgid "Aggregate Template"
 msgstr "Обобщен шаблон:"
 
@@ -715,7 +715,7 @@ msgstr "Deletable"
 msgid "Graphs Using"
 msgstr "Използване на графики"
 
-#: aggregate_templates.php:709 graphs.php:2125 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2137 host_templates.php:730
 #: include/global_arrays.php:961 include/global_arrays.php:1367
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1944
@@ -1242,8 +1242,8 @@ msgstr "Натиснете „Напред“, за да изтриете сле
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Кликнете върху „Напред“, за да дублирате следното (ите) правило (а). По желание можете да промените формата на заглавието за новите правила за графика."
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:908
-#: graphs.php:919
+#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:920
+#: graphs.php:931
 msgid "Title Format"
 msgstr "Формат на заглавието"
 
@@ -1318,7 +1318,7 @@ msgid "Graph Rules"
 msgstr "Графични правила"
 
 #: automation_graph_rules.php:813 automation_graph_rules.php:963
-#: graphs.php:2126 include/global_arrays.php:1370
+#: graphs.php:2138 include/global_arrays.php:1370
 #: include/global_arrays.php:2897 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
@@ -2880,7 +2880,7 @@ msgstr "Профил"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
 #: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
-#: graphs.php:2123 graphs_new.php:488 host_templates.php:716
+#: graphs.php:2135 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:597 settings.php:619 settings.php:650 tree.php:914
@@ -3396,7 +3396,7 @@ msgstr "Включете информационния режим на източ
 msgid "Edit Graph: '%s'."
 msgstr "Редактиране на графика: „{ 0 }“."
 
-#: data_sources.php:1017 graphs.php:1557
+#: data_sources.php:1017 graphs.php:1569
 msgid "Edit Device."
 msgstr "Редактиране на устройството."
 
@@ -3420,7 +3420,7 @@ msgstr "Шаблон за избрани данни"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Името, дадено на този шаблон за данни. Моля, обърнете внимание, че можете да променяте само шаблоните за графики на 100% $ съвместим шаблон за графики, което означава, че включва идентични източници на данни."
 
-#: data_sources.php:1101 graph_view.php:817 graphs.php:1600
+#: data_sources.php:1101 graph_view.php:817 graphs.php:1612
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
 #: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
@@ -3453,7 +3453,7 @@ msgstr "Цветове"
 msgid "Data Source Item %s"
 msgstr "Елемент на източник на данни %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2875
 #: package_import.php:604
 msgid "New"
 msgstr "Нов"
@@ -3494,11 +3494,11 @@ msgstr "Източници на данни [ %s]"
 msgid "Bad Indexes"
 msgstr "Показалец"
 
-#: data_sources.php:1806 graphs.php:2099
+#: data_sources.php:1806 graphs.php:2111
 msgid "Note that this query may take some time to run."
 msgstr "Имайте предвид, че изпълнението на тази заявка може да отнеме известно време."
 
-#: data_sources.php:1806 graphs.php:2099
+#: data_sources.php:1806 graphs.php:2111
 msgid "Orphaned"
 msgstr "осиротял"
 
@@ -3960,21 +3960,25 @@ msgstr "Вертикалният етикет за получените граф
 msgid "No Graph Templates Found"
 msgstr "Не са намерени шаблони на графиките"
 
-#: graph_templates_inputs.php:138
+#: graph_templates_inputs.php:66
+msgid "The Graph Item Input relationship is invalid."
+msgstr ""
+
+#: graph_templates_inputs.php:156
 #, php-format
 msgid "Graph Item Inputs [edit graph: %s]"
 msgstr "Входни елементи на графиката [редактиране на графика: %s]"
 
-#: graph_templates_inputs.php:189
+#: graph_templates_inputs.php:207
 msgid "Associated Graph Items"
 msgstr "Свързани графични елементи"
 
-#: graph_templates_inputs.php:213
+#: graph_templates_inputs.php:231
 #, php-format
 msgid "Item #%s"
 msgstr "Елемент # %s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
+#: graph_templates_inputs.php:243 lib/api_aggregate.php:2526 lib/html.php:1515
 msgid "No Items"
 msgstr "Елементи"
 
@@ -4065,12 +4069,12 @@ msgstr "Всички графики и шаблони"
 msgid "Not Templated"
 msgstr "Не е планирано"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2332
+#: graph_view.php:812 graph_view.php:840 graphs.php:2344
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1021
 msgid "Graph Name"
 msgstr "Име на графиката"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2335
+#: graph_view.php:814 graph_view.php:842 graphs.php:2347
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "Заглавието на тази графика. Обикновено се генерира програмно от дефиницията на графичния шаблон или от предложените правила за наименуване. Максималната дължина на заглавието се контролира от Настройки-&gt; Визуално."
 
@@ -4078,23 +4082,23 @@ msgstr "Заглавието на тази графика. Обикновено 
 msgid "The device for this Graph."
 msgstr "Името на тази група."
 
-#: graph_view.php:822 graphs.php:2344
+#: graph_view.php:822 graphs.php:2356
 msgid "Source Type"
 msgstr "Вид на източника на данни"
 
-#: graph_view.php:824 graphs.php:2347
+#: graph_view.php:824 graphs.php:2359
 msgid "The underlying source that this Graph was based upon."
 msgstr "Основният източник, на който се основава тази графика."
 
-#: graph_view.php:827 graphs.php:2350
+#: graph_view.php:827 graphs.php:2362
 msgid "Source Name"
 msgstr "Име на източника"
 
-#: graph_view.php:829 graphs.php:2353
+#: graph_view.php:829 graphs.php:2365
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "Шаблонът на графиката или заявката за данни, на която се основава тази графика."
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2359
+#: graph_view.php:834 graph_view.php:847 graphs.php:2371
 msgid "The size of this Graph when not in Preview mode."
 msgstr "Размерът на тази графика, когато не е в режим Преглед."
 
@@ -4164,23 +4168,23 @@ msgstr "Обобщени данни"
 msgid "Download"
 msgstr "Изтегли"
 
-#: graphs.php:37 graphs.php:902 include/global_arrays.php:2092
+#: graphs.php:37 graphs.php:914 include/global_arrays.php:2092
 msgid "Change Graph Template"
 msgstr "Промяна на шаблона на графиката"
 
-#: graphs.php:45 graphs.php:1167
+#: graphs.php:45 graphs.php:1179
 msgid "Create Aggregate Graph"
 msgstr "Създайте съвкупна графика"
 
-#: graphs.php:46 graphs.php:1210
+#: graphs.php:46 graphs.php:1222
 msgid "Create Aggregate from Template"
 msgstr "Създайте Съвкупност от Шаблон"
 
-#: graphs.php:47 graphs.php:1232
+#: graphs.php:47 graphs.php:1244
 msgid "Apply Automation Rules"
 msgstr "Прилагане на правила за автоматизация"
 
-#: graphs.php:53 graphs.php:924
+#: graphs.php:53 graphs.php:936
 msgid "Convert to Graph Template"
 msgstr "Конвертиране в графичен шаблон"
 
@@ -4189,220 +4193,224 @@ msgstr "Конвертиране в графичен шаблон"
 msgid "Created graph: %s"
 msgstr "Създадена графика: %s"
 
-#: graphs.php:267 lib/template.php:2363 lib/template.php:2401
+#: graphs.php:267 lib/template.php:2372 lib/template.php:2410
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "ГРЕШКА: Няма асоцииран източник на данни. Проверка на шаблона"
 
-#: graphs.php:678
+#: graphs.php:391
+msgid "A Graph Item Input contains an invalid value."
+msgstr ""
+
+#: graphs.php:690
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:697
+#: graphs.php:709
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:853
+#: graphs.php:865
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Кликнете върху „Напред“, за да изтриете следните графики. Обърнете внимание, че ако изберете да изтриете източници на данни, ще бъдат изтрити само тези източници на данни, които не се използват другаде."
 
-#: graphs.php:857
+#: graphs.php:869
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "Следните източници на данни се използват от тези графики."
 
-#: graphs.php:876
+#: graphs.php:888
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Изтрийте всички източници на данни, посочени от тези графики, които не се използват другаде."
 
-#: graphs.php:878
+#: graphs.php:890
 msgid "Leave the Data Source(s) untouched."
 msgstr "Оставете източника (ите) на данни недокоснати."
 
-#: graphs.php:890
+#: graphs.php:902
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Изберете шаблон на графиката и кликнете върху „Напред“, за да промените шаблона на графиката за следната графика (и). Моля, обърнете внимание, че ще се показват само съвместими шаблони за графики. Съвместимостта се идентифицира от тези, които имат идентични източници на данни."
 
-#: graphs.php:892 graphs_new.php:606
+#: graphs.php:904 graphs_new.php:606
 msgid "New Graph Template"
 msgstr "Нов шаблон за графика"
 
-#: graphs.php:906
+#: graphs.php:918
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Кликнете върху „Напред“, за да дублирате следната графика (и). Можете по желание да промените формата на заглавието на новата графика (и)."
 
-#: graphs.php:909
+#: graphs.php:921
 msgid "<graph_title> (1)"
 msgstr "<graph_title> (1)"
 
-#: graphs.php:913
+#: graphs.php:925
 msgid "Duplicate Graph(s)"
 msgstr "Дублирани графики"
 
-#: graphs.php:917
+#: graphs.php:929
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Кликнете върху „Напред“, за да конвертирате следващата графика (и) в Графа (и). По желание можете да промените формата на заглавието за новия (те) шаблон (и) на графиката."
 
-#: graphs.php:920
+#: graphs.php:932
 msgid "<graph_title> Template"
 msgstr "<graph_title> Шаблон"
 
-#: graphs.php:928
+#: graphs.php:940
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Кликнете върху „Напред“, за да поставите следната графика (и) под избрания по-долу клон на дърво."
 
-#: graphs.php:930
+#: graphs.php:942
 msgid "Destination Branch"
 msgstr "Клон на дестинацията"
 
-#: graphs.php:943
+#: graphs.php:955
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Изберете ново устройство за тези графики и кликнете върху „Напред“."
 
-#: graphs.php:945 include/global_arrays.php:990
+#: graphs.php:957 include/global_arrays.php:990
 msgid "New Device"
 msgstr "Ново устройство"
 
-#: graphs.php:956
+#: graphs.php:968
 msgid "Change Graph(s) Associated Device"
 msgstr "Промяна на графиката (ите) на свързаното устройство"
 
-#: graphs.php:960
+#: graphs.php:972
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Кликнете върху „Напред“, за да приложите повторно предложеното наименование към следната графика (и)."
 
-#: graphs.php:965
+#: graphs.php:977
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Прилагане на предложеното наименование към графиките"
 
-#: graphs.php:981
+#: graphs.php:993
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Кликнете върху „Напред“, за да създадете съвкупна графика от избраните графики."
 
-#: graphs.php:990
+#: graphs.php:1002
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "Следните източници на данни се използват от тези графики."
 
-#: graphs.php:1051
+#: graphs.php:1063
 msgid "Please confirm"
 msgstr "Моля потвърдете"
 
-#: graphs.php:1189
+#: graphs.php:1201
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Изберете агрегатния шаблон, който да използвате, и натиснете „Напред“, за да създадете своя агрегиран график. В противен случай натиснете „Отказ“, за да се върнете."
 
-#: graphs.php:1214
+#: graphs.php:1226
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Понастоящем няма дефинирани агрегирани шаблони за този графичен шаблон. Моля, първо създайте съвкупна шаблона за избрания графичен график и опитайте отново, или просто намалете агрегирания график."
 
-#: graphs.php:1215
+#: graphs.php:1227
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Натиснете &#39;Return&#39;, за да се върнете и изберете различни графики."
 
-#: graphs.php:1227
+#: graphs.php:1239
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Кликнете върху „Напред“, за да приложите правилата за автоматизация към следните графики."
 
-#: graphs.php:1313
+#: graphs.php:1325
 msgid "Graph Items [new]"
 msgstr "Графични елементи [нови]"
 
-#: graphs.php:1357
+#: graphs.php:1369
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Елементи на графиката [редактиране: %s]"
 
-#: graphs.php:1481
+#: graphs.php:1493
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Графика [редактиране: %s]"
 
-#: graphs.php:1491
+#: graphs.php:1503
 msgid "Graph [new]"
 msgstr "Графика [ново]"
 
-#: graphs.php:1516
+#: graphs.php:1528
 msgid "Turn Off Graph Debug Mode."
 msgstr "Изключете режима за отстраняване на грешки от графиката."
 
-#: graphs.php:1518
+#: graphs.php:1530
 msgid "Turn On Graph Debug Mode."
 msgstr "Включете режима за отстраняване на грешки в графиката."
 
-#: graphs.php:1540
+#: graphs.php:1552
 msgid "Edit Graph Template."
 msgstr "Редактиране на шаблона на графиката."
 
-#: graphs.php:1552
+#: graphs.php:1564
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Източници на данни [ %s]"
 
-#: graphs.php:1561
+#: graphs.php:1573
 msgid "Unlock Graph."
 msgstr "Отключи графиката."
 
-#: graphs.php:1563
+#: graphs.php:1575
 msgid "Lock Graph."
 msgstr "Заключване на графиката."
 
-#: graphs.php:1592
+#: graphs.php:1604
 msgid "Selected Graph Template"
 msgstr "Шаблон за избрана графика"
 
-#: graphs.php:1593
+#: graphs.php:1605
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Изберете шаблон на графиката, който да се приложи към тази графика. Моля, обърнете внимание, че можете да променяте само шаблоните за графики на 100 %% съвместим шаблон за графики, което означава, че включва идентични източници на данни."
 
-#: graphs.php:1601
+#: graphs.php:1613
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Изберете устройството, към което принадлежи графиката."
 
-#: graphs.php:1657
+#: graphs.php:1669
 msgid "Supplemental Graph Template Data"
 msgstr "Допълнителни данни от шаблона на графиката"
 
-#: graphs.php:1659
+#: graphs.php:1671
 msgid "Graph Fields"
 msgstr "Графични полета"
 
-#: graphs.php:1660
+#: graphs.php:1672
 msgid "Graph Item Fields"
 msgstr "Полета на графичните елементи"
 
-#: graphs.php:1904 spikekill.php:42
+#: graphs.php:1916 spikekill.php:42
 msgid "Graph access denied"
 msgstr ""
 
-#: graphs.php:2039
+#: graphs.php:2051
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[Приложен графичен списък на графиките - Филтър FROM списък]"
 
-#: graphs.php:2041
+#: graphs.php:2053
 msgid "Graph Management [ All Devices ]"
 msgstr "Нови графики за [Всички устройства]"
 
-#: graphs.php:2043
+#: graphs.php:2055
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Управление на потребителските групи [редактиране: %s]"
 
-#: graphs.php:2046
+#: graphs.php:2058
 #, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Графично управление [%s]"
 
-#: graphs.php:2119
+#: graphs.php:2131
 msgid "Graph Source"
 msgstr "Графика, Източник на данни"
 
-#: graphs.php:2124
+#: graphs.php:2136
 msgid "Non Templated"
 msgstr "Не е планирано"
 
-#: graphs.php:2341
+#: graphs.php:2353
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "ID на вътрешната база данни за тази графика. Полезно при извършване на автоматизация или отстраняване на грешки."
 
-#: graphs.php:2385
+#: graphs.php:2397
 msgid "Empty Graph"
 msgstr "Копиране на графиката"
 
@@ -13642,7 +13650,7 @@ msgstr "Събития"
 msgid "Send Report"
 msgstr "Изпрати доклад"
 
-#: lib/html_reports.php:1644 lib/import.php:2957 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2960 user_admin.php:1776
 msgid "[new]"
 msgstr "[Ново]"
 
@@ -13909,89 +13917,89 @@ msgstr "не съществува"
 msgid "not writable"
 msgstr "Презаписваща"
 
-#: lib/import.php:1970 lib/import.php:1991
+#: lib/import.php:1973 lib/import.php:1994
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Графика [Шаблон: %s]"
 
-#: lib/import.php:2005 lib/import.php:2017
+#: lib/import.php:2008 lib/import.php:2020
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Заявка за данни [ %s]"
 
-#: lib/import.php:2654
+#: lib/import.php:2657
 msgid "Unknown Field"
 msgstr "Неизвестно поле"
 
-#: lib/import.php:2870
+#: lib/import.php:2873
 msgid "Updated"
 msgstr "Обновяване"
 
-#: lib/import.php:2874
+#: lib/import.php:2877
 msgid "Damaged"
 msgstr "Източник на данни, графика"
 
-#: lib/import.php:2876 package_import.php:598
+#: lib/import.php:2879 package_import.php:598
 msgid "Unchanged"
 msgstr "[непроменен]"
 
-#: lib/import.php:2912
+#: lib/import.php:2915
 msgid "Import Preview Results"
 msgstr "Резултати от импортиране на импортиране"
 
-#: lib/import.php:2912
+#: lib/import.php:2915
 msgid "Import Results"
 msgstr "Резултати от импортиране"
 
-#: lib/import.php:2916
+#: lib/import.php:2919
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul ще направи следните промени, ако пакетът беше импортиран:"
 
-#: lib/import.php:2918
+#: lib/import.php:2921
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul е внесъл следните елементи за пакета:"
 
-#: lib/import.php:2921
+#: lib/import.php:2924
 msgid "Package Files"
 msgstr "Файлове на пакети"
 
-#: lib/import.php:2925
+#: lib/import.php:2928
 msgid "[preview] "
 msgstr "Преглед"
 
-#: lib/import.php:2930
+#: lib/import.php:2933
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul ще направи следните промени, ако шаблонът е импортиран:"
 
-#: lib/import.php:2932
+#: lib/import.php:2935
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul е импортирал следните елементи за шаблона:"
 
-#: lib/import.php:2947
+#: lib/import.php:2950
 msgid "[success]"
 msgstr "Успешно!"
 
-#: lib/import.php:2949
+#: lib/import.php:2952
 msgid "[fail]"
 msgstr "Скъсан"
 
-#: lib/import.php:2951
+#: lib/import.php:2954
 msgid "[preview]"
 msgstr "Преглед"
 
-#: lib/import.php:2955
+#: lib/import.php:2958
 msgid "[updated]"
 msgstr "Обновена на"
 
-#: lib/import.php:2959
+#: lib/import.php:2962
 msgid "[unchanged]"
 msgstr "[непроменен]"
 
-#: lib/import.php:2995
+#: lib/import.php:2998
 msgid "Found Dependency:"
 msgstr "Намерена зависимост:"
 
-#: lib/import.php:2997
+#: lib/import.php:3000
 msgid "Unmet Dependency:"
 msgstr "Неудовлетворена зависимост:"
 
@@ -15864,29 +15872,29 @@ msgstr ""
 msgid "WindKilled"
 msgstr ""
 
-#: lib/template.php:1646
+#: lib/template.php:1655
 msgid "Attempting to Create Graph from Non-Template"
 msgstr "Създайте Съвкупност от Шаблон"
 
-#: lib/template.php:1660
+#: lib/template.php:1669
 msgid "Attempting to Create Graph from Removed Graph Template"
 msgstr "Опит за създаване на графика от премахнат шаблон на графика"
 
-#: lib/template.php:2355 lib/template.php:2393
+#: lib/template.php:2364 lib/template.php:2402
 #, php-format
 msgid "Created: %s"
 msgstr "Създадено: %s"
 
-#: lib/template.php:2373 lib/template.php:2404
+#: lib/template.php:2382 lib/template.php:2413
 msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "ГРЕШКА: Неуспешно потвърждаване на белия списък. Проверете метода за въвеждане на данни"
 
-#: lib/template.php:2383
+#: lib/template.php:2392
 #, php-format
 msgid "Graph Not created for %s due to bad data"
 msgstr "Графика Не е създадена за %s поради лоши данни"
 
-#: lib/template.php:2414
+#: lib/template.php:2423
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "ЗАБЕЛЕЖКА: Графиката не е добавена за заявка за данни %s и индекс %s поради неуспешна проверка на източника на данни"
