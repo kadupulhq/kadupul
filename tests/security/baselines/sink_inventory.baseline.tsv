@@ -377,7 +377,7 @@ dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2242	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:2244	    include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3849	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:1016	    include_once($config['base_path'] . '/lib/poller.php');
@@ -830,8 +830,8 @@ header_redirect	./lib/auth.php:5746	                header('Location: ' . $confi
 header_redirect	./lib/auth.php:5751	            header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1' : ''));
 header_redirect	./lib/auth.php:5962	        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
 header_redirect	./lib/clog_webapi.php:88	        header('Location: ' . get_current_page());
-header_redirect	./lib/functions.php:8815	    header('Location: ' . $save_url);
-header_redirect	./lib/functions.php:8839	    header('Location: ' . $safe_url, true, $status);
+header_redirect	./lib/functions.php:8820	    header('Location: ' . $save_url);
+header_redirect	./lib/functions.php:8844	    header('Location: ' . $safe_url, true, $status);
 header_redirect	./lib/graph_data_removal.php:449	    header('Location: ' . ($resource === 'graph' ? 'graphs.php' : 'data_sources.php') . '?header=false');
 header_redirect	./lib/graph_item_editor.php:40	    header('Location: graphs.php?header=false');
 header_redirect	./lib/html_graph.php:496	        header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
