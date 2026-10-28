@@ -248,13 +248,13 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
 
                 if (cacti_sizeof($dtd_ids_to_delete) >= 1000) {
                     $execute('DELETE FROM data_input_data
-						WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')');
+						WHERE data_template_data_id IN (' . implode(',', array_map('intval', $dtd_ids_to_delete)) . ')');
 
                     if (cacti_sizeof($poller_ids)) {
                         foreach ($poller_ids as $poller_id) {
                             if (($rcnn_id = $remote($poller_id, true)) !== false) {
                                 $execute('DELETE FROM data_input_data
-									WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')', true, $rcnn_id);
+									WHERE data_template_data_id IN (' . implode(',', array_map('intval', $dtd_ids_to_delete)) . ')', true, $rcnn_id);
                             }
                         }
                     }
@@ -265,13 +265,13 @@ function api_data_source_remove_multi($local_data_ids, $propagate_remote = true,
 
             if (cacti_sizeof($dtd_ids_to_delete)) {
                 $execute('DELETE FROM data_input_data
-					WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')');
+					WHERE data_template_data_id IN (' . implode(',', array_map('intval', $dtd_ids_to_delete)) . ')');
 
                 if (cacti_sizeof($poller_ids)) {
                     foreach ($poller_ids as $poller_id) {
                         if (($rcnn_id = $remote($poller_id, true)) !== false) {
                             $execute('DELETE FROM data_input_data
-								WHERE data_template_data_id IN (' . implode(',', $dtd_ids_to_delete) . ')', true, $rcnn_id);
+								WHERE data_template_data_id IN (' . implode(',', array_map('intval', $dtd_ids_to_delete)) . ')', true, $rcnn_id);
                         }
                     }
                 }
