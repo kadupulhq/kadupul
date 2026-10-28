@@ -3,8 +3,8 @@
     "name": "draw_login_status",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4249,
-        "end_line": 4297,
+        "start_line": 4250,
+        "end_line": 4298,
         "line_count": 49,
         "signature": {
             "parameters": [
@@ -40,28 +40,28 @@
                     "name": "nav_login_before",
                     "resolved": true,
                     "expression": null,
-                    "line": 4257
+                    "line": 4258
                 },
                 {
                     "call": "api_plugin_hook",
                     "name": "nav_login_after",
                     "resolved": true,
                     "expression": null,
-                    "line": 4266
+                    "line": 4267
                 },
                 {
                     "call": "api_plugin_hook",
                     "name": "nav_login_before",
                     "resolved": true,
                     "expression": null,
-                    "line": 4275
+                    "line": 4276
                 },
                 {
                     "call": "api_plugin_hook",
                     "name": "nav_login_after",
                     "resolved": true,
                     "expression": null,
-                    "line": 4295
+                    "line": 4296
                 }
             ]
         },

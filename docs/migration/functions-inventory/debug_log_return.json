@@ -3,8 +3,8 @@
     "name": "debug_log_return",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5039,
-        "end_line": 5068,
+        "start_line": 5040,
+        "end_line": 5069,
         "line_count": 30,
         "signature": {
             "parameters": [

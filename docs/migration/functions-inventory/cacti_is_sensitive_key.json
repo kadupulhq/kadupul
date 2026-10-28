@@ -3,8 +3,8 @@
     "name": "cacti_is_sensitive_key",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8916,
-        "end_line": 8937,
+        "start_line": 8917,
+        "end_line": 8938,
         "line_count": 22,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 4, "core_outside_functions_php": 1, "tests": 15, "plugins": 0},
+        "fan_out": {"core": 4, "core_outside_functions_php": 1, "tests": 16, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["sensitive_keys"],

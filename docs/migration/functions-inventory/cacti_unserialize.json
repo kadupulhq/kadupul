@@ -3,8 +3,8 @@
     "name": "cacti_unserialize",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8732,
-        "end_line": 8739,
+        "start_line": 8733,
+        "end_line": 8740,
         "line_count": 8,
         "signature": {
             "parameters": [

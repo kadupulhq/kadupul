@@ -3,8 +3,8 @@
     "name": "record_mailer_error",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5987,
-        "end_line": 5993,
+        "start_line": 5988,
+        "end_line": 5994,
         "line_count": 7,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "cacti_validate_theme",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9000,
-        "end_line": 9049,
+        "start_line": 9001,
+        "end_line": 9050,
         "line_count": 50,
         "signature": {
             "parameters": [

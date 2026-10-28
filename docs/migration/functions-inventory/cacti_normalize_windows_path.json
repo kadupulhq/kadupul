@@ -3,8 +3,8 @@
     "name": "cacti_normalize_windows_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8818,
-        "end_line": 8839,
+        "start_line": 8819,
+        "end_line": 8840,
         "line_count": 22,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "cacti_exec",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8128,
-        "end_line": 8220,
+        "start_line": 8129,
+        "end_line": 8221,
         "line_count": 93,
         "signature": {
             "parameters": [

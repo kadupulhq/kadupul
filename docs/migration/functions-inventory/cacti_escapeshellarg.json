@@ -3,8 +3,8 @@
     "name": "cacti_escapeshellarg",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5369,
-        "end_line": 5423,
+        "start_line": 5370,
+        "end_line": 5424,
         "line_count": 55,
         "signature": {
             "parameters": [
@@ -49,7 +49,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 109, "core_outside_functions_php": 104, "tests": 54, "plugins": 0},
+        "fan_out": {"core": 109, "core_outside_functions_php": 104, "tests": 58, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

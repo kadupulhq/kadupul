@@ -3,8 +3,8 @@
     "name": "cacti_redirect",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8869,
-        "end_line": 8878,
+        "start_line": 8870,
+        "end_line": 8879,
         "line_count": 10,
         "signature": {
             "parameters": [

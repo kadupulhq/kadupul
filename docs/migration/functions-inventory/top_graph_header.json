@@ -3,8 +3,8 @@
     "name": "top_graph_header",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5492,
-        "end_line": 5498,
+        "start_line": 5493,
+        "end_line": 5499,
         "line_count": 7,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
