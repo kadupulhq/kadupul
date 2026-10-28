@@ -4538,7 +4538,7 @@ msgstr "生成的圖形的默認大小。"
 msgid "The default image format for the resulting Graphs."
 msgstr "生成的圖形的默認圖像格式。"
 
-#: graph_templates.php:892 graph_xport.php:103 graph_xport.php:149
+#: graph_templates.php:892 graph_xport.php:122 graph_xport.php:170
 #, fuzzy
 msgid "Vertical Label"
 msgstr "垂直標籤"
@@ -4735,63 +4735,63 @@ msgstr "將所選圖表添加到報告中"
 msgid "Ok"
 msgstr "確定"
 
-#: graph_xport.php:102 graph_xport.php:144 include/global_form.php:1809
+#: graph_xport.php:121 graph_xport.php:165 include/global_form.php:1809
 #: include/global_form.php:2077 lib/html.php:2087
 #, fuzzy
 msgid "Title"
 msgstr "標題"
 
-#: graph_xport.php:105 graph_xport.php:154
+#: graph_xport.php:124 graph_xport.php:175
 #, fuzzy
 msgid "Start Date"
 msgstr "開始日期"
 
-#: graph_xport.php:106 graph_xport.php:159
+#: graph_xport.php:125 graph_xport.php:180
 #, fuzzy
 msgid "End Date"
 msgstr "結束日期"
 
-#: graph_xport.php:107 graph_xport.php:164 include/global_form.php:587
+#: graph_xport.php:126 graph_xport.php:185 include/global_form.php:587
 #, fuzzy
 msgid "Step"
 msgstr "步驟"
 
-#: graph_xport.php:108 graph_xport.php:169
+#: graph_xport.php:127 graph_xport.php:190
 #, fuzzy
 msgid "Total Rows"
 msgstr "總行數"
 
-#: graph_xport.php:109 graph_xport.php:174 lib/api_automation.php:575
+#: graph_xport.php:128 graph_xport.php:195 lib/api_automation.php:575
 #, fuzzy
 msgid "Graph ID"
 msgstr "圖表ID"
 
-#: graph_xport.php:110 graph_xport.php:179
+#: graph_xport.php:129 graph_xport.php:200
 #, fuzzy
 msgid "Host ID"
 msgstr "主機識別碼"
 
-#: graph_xport.php:114 graph_xport.php:193
+#: graph_xport.php:133 graph_xport.php:214
 #, fuzzy
 msgid "Nth Percentile"
 msgstr "Nth Percentile"
 
-#: graph_xport.php:120 graph_xport.php:208
+#: graph_xport.php:139 graph_xport.php:229
 #, fuzzy
 msgid "Summation"
 msgstr "合計"
 
-#: graph_xport.php:126 graph_xport.php:220 utilities.php:265 utilities.php:1163
+#: graph_xport.php:145 graph_xport.php:241 utilities.php:265 utilities.php:1163
 #, fuzzy
 msgid "Date"
 msgstr "日期"
 
-#: graph_xport.php:139
+#: graph_xport.php:160
 #, fuzzy
 msgid "Summary Details"
 msgstr "摘要細節"
 
-#: graph_xport.php:140
+#: graph_xport.php:161
 #, fuzzy
 msgid "Download"
 msgstr "下載"

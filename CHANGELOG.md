@@ -15,6 +15,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Quote the stored SNMP index values in the new graph data query filter and anchor the graphs.php template filter pattern (upstream Cacti #8138 GHSA-j3px-vw6r-g25x, #7866).
 - Require a set Boost debug log path to end in `.log` on the settings page, and have Boost ignore a stored path that does not (GHSA-m6wx-f538-m6q3, upstream Cacti #8150 and #8148).
+- Encode the page title in the HTML `<title>` element, strip header-breaking characters from the graph export file name, and guard the graph export title, vertical label and legend cells against spreadsheet formulas (upstream Cacti #8164 and #8165, GHSA-v99q-57w7-mpmg, GHSA-hh7r-464j-rf39).
 - Report a data query XML file as located on the edit page and in the template import preview only when it is a regular file under `resource/`, which the loader reads, and refuse a NUL byte in path containment checks (GHSA-2x86-jpm8-9vgp, upstream Cacti #8150 and #8151).
 - Encode form and confirmation output: the edit form action, name and enctype, the notification receiver confirmation inputs, the data query graph template id in an inline script, and the names formatted into flash messages (upstream Cacti #8437, #8439, #8449, #7252, GHSA-9737-rqh3-h7fh).
 - Escape new graph template and data query names in the import preview differences, so a name from an uploaded template shows as text instead of markup the preview purifier would allow (upstream Cacti #7238).

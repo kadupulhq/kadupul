@@ -3951,7 +3951,7 @@ msgstr "Το προεπιλεγμένο μέγεθος των γραφημάτω
 msgid "The default image format for the resulting Graphs."
 msgstr "Η προεπιλεγμένη μορφή εικόνας για τα προκύπτοντα γραφήματα."
 
-#: graph_templates.php:892 graph_xport.php:103 graph_xport.php:149
+#: graph_templates.php:892 graph_xport.php:122 graph_xport.php:170
 msgid "Vertical Label"
 msgstr "Κάθετη ετικέτα"
 
@@ -4118,52 +4118,52 @@ msgstr "Προσθήκη επιλεγμένων γραφημάτων στην α
 msgid "Ok"
 msgstr "Εντάξει"
 
-#: graph_xport.php:102 graph_xport.php:144 include/global_form.php:1809
+#: graph_xport.php:121 graph_xport.php:165 include/global_form.php:1809
 #: include/global_form.php:2077 lib/html.php:2087
 msgid "Title"
 msgstr "Τίτλος"
 
-#: graph_xport.php:105 graph_xport.php:154
+#: graph_xport.php:124 graph_xport.php:175
 msgid "Start Date"
 msgstr "Ημερομηνία Έναρξης"
 
-#: graph_xport.php:106 graph_xport.php:159
+#: graph_xport.php:125 graph_xport.php:180
 msgid "End Date"
 msgstr "Ημερομηνία Λήξης"
 
-#: graph_xport.php:107 graph_xport.php:164 include/global_form.php:587
+#: graph_xport.php:126 graph_xport.php:185 include/global_form.php:587
 msgid "Step"
 msgstr "Βήμα"
 
-#: graph_xport.php:108 graph_xport.php:169
+#: graph_xport.php:127 graph_xport.php:190
 msgid "Total Rows"
 msgstr "Συνολικές σειρές"
 
-#: graph_xport.php:109 graph_xport.php:174 lib/api_automation.php:575
+#: graph_xport.php:128 graph_xport.php:195 lib/api_automation.php:575
 msgid "Graph ID"
 msgstr "Αναγνωριστικό γράφου"
 
-#: graph_xport.php:110 graph_xport.php:179
+#: graph_xport.php:129 graph_xport.php:200
 msgid "Host ID"
 msgstr "Αναγνωριστικό κεντρικού υπολογιστή"
 
-#: graph_xport.php:114 graph_xport.php:193
+#: graph_xport.php:133 graph_xport.php:214
 msgid "Nth Percentile"
 msgstr "Nth Percentile"
 
-#: graph_xport.php:120 graph_xport.php:208
+#: graph_xport.php:139 graph_xport.php:229
 msgid "Summation"
 msgstr "Άθροιση"
 
-#: graph_xport.php:126 graph_xport.php:220 utilities.php:265 utilities.php:1163
+#: graph_xport.php:145 graph_xport.php:241 utilities.php:265 utilities.php:1163
 msgid "Date"
 msgstr "Ημερομηνία"
 
-#: graph_xport.php:139
+#: graph_xport.php:160
 msgid "Summary Details"
 msgstr "Συνοπτικές λεπτομέρειες"
 
-#: graph_xport.php:140
+#: graph_xport.php:161
 msgid "Download"
 msgstr "Λήψη"
 
