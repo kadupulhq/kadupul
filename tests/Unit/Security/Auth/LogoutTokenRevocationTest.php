@@ -113,6 +113,16 @@ test('every logout path deletes the server-side remember-me token first', functi
         ->and(array_search($deletes[0], $result['events'], true))->toBeLessThan(array_search('cookie_logout', $result['events'], true));
 })->with(array('timeout', 'disabled', 'remote', 'default' => ''));
 
+test('every logout path revokes the server-side token before expiring the remember-me cookie', function (string $action) {
+    $result = logout_run($action, '42,0,remember-me-token');
+    $deletes = logout_token_deletes($result);
+
+    expect($result['stderr'])->toBe('')
+        ->and($deletes)->toHaveCount(1)
+        ->and($result['events'])->toContain('cookie_session_logout')
+        ->and(array_search($deletes[0], $result['events'], true))->toBeLessThan(array_search('cookie_session_logout', $result['events'], true));
+})->with(array('timeout', 'disabled', 'remote', 'default' => ''));
+
 test('a logout without a remember-me cookie deletes nothing', function (string $action) {
     $result = logout_run($action, null);
 
