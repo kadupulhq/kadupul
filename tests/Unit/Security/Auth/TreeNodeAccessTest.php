@@ -204,12 +204,18 @@ function seed(): void
     $db->exec('INSERT INTO user_auth VALUES (' . USER . ', 2)');
     $db->exec('INSERT INTO user_auth_perms VALUES (' . USER . ', ' . ALLOWED . ', 2)');
     $db->exec("INSERT INTO graph_tree_items (id, graph_tree_id, parent, position, title) VALUES
-        (10, 1, 0, 1, 'allowed branch'), (11, 1, 10, 1, 'allowed child'),
-        (20, 2, 0, 1, 'forbidden branch'), (21, 2, 20, 1, 'forbidden child'), (22, 2, 20, 2, 'forbidden sibling')");
+        (10, 1, 0, 1, 'allowed branch'), (11, 1, 10, 1, 'allowed child'), (12, 1, 0, 2, 'allowed second'),
+        (20, 2, 0, 1, 'forbidden branch'), (21, 2, 20, 1, 'forbidden child'), (22, 2, 20, 2, 'forbidden sibling'),
+        (23, 2, 0, 2, 'forbidden second')");
     $GLOBALS['tree_node_access_db'] = $db;
     $GLOBALS['tree_node_access_log'] = array();
     $GLOBALS['tree_node_access_request'] = array();
     $_SESSION = array('sess_user_id' => USER);
+}
+
+function tree_items(int $tree_id): array
+{
+    return array_values(array_filter(items(), fn(array $row): bool => (int) $row['graph_tree_id'] === $tree_id));
 }
 
 function items(): array
@@ -288,7 +294,7 @@ test('node changes in an allowed tree still apply', function () {
 
     call(fn() => api_tree_delete_node(ALLOWED, 'tbranch:11'));
     expect(array_column(items(), null, 'id'))->not->toHaveKey(11)
-        ->and(count(items()))->toBe(6);
+        ->and(count(items()))->toBe(8);
 });
 
 test('graphs are placed only on a tree the user may access', function () {
@@ -303,3 +309,19 @@ test('the graph action menu offers only trees the user may access', function () 
 
     expect($GLOBALS['graph_actions'])->toBe(array('tr_1' => 'Place on a Tree (allowed)'));
 });
+
+test('moving a node in one tree leaves the root of another tree in place', function (string $node, string $parent, int $position) {
+    $before = tree_items(FORBIDDEN);
+    call(fn() => api_tree_move_node(ALLOWED, $node, $parent, $position));
+
+    expect(tree_items(FORBIDDEN))->toBe($before);
+})->with(array(
+    'to the root' => array('tbranch:11', '#', 0),
+    'within the root' => array('tbranch:12', '#', 0),
+));
+
+test('a node of another tree cannot be moved through an allowed tree id', function (string $node) {
+    [$before, $after] = call(fn() => api_tree_move_node(ALLOWED, $node, '#', 0));
+
+    expect($after)->toBe($before);
+})->with(array('tbranch:21', 'tbranch:23', 'thost:7'));

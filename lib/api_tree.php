@@ -508,7 +508,12 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position)
 
     $data  = api_tree_parse_node_data($node_id);
 
-    // The node update is scoped to the tree, but siblings are renumbered by parent alone.
+    // Root items of every tree share parent 0, so the node and its parent must both belong to this tree.
+    if (empty($data['leaf_id']) || !api_tree_branch_in_tree($tree_id, $data['leaf_id'])) {
+        cacti_log("SECURITY: BranchID:'" . $data['leaf_id'] . "' is not part of TreeID:'$tree_id', Function move_node", false, 'AUTH');
+        return;
+    }
+
     if (!api_tree_branch_in_tree($tree_id, $pdata['leaf_id'])) {
         cacti_log("SECURITY: Parent BranchID:'" . $pdata['leaf_id'] . "' is not part of TreeID:'$tree_id', Function move_node", false, 'AUTH');
         return;
@@ -526,13 +531,14 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position)
         $others = db_fetch_assoc_prepared('SELECT id
 			FROM graph_tree_items
 			WHERE parent = ?
+			AND graph_tree_id = ?
 			AND id != ?
-			AND position >= ?', array($pdata['leaf_id'], $data['leaf_id'], $new_position));
+			AND position >= ?', array($pdata['leaf_id'], $tree_id, $data['leaf_id'], $new_position));
 
         $position = $new_position + 1;
         if (cacti_sizeof($others)) {
             foreach ($others as $other) {
-                db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ?', array($position, $other['id']));
+                db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ? AND graph_tree_id = ?', array($position, $other['id'], $tree_id));
                 $position++;
             }
         }
@@ -550,13 +556,14 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position)
         $others = db_fetch_assoc_prepared('SELECT id
 			FROM graph_tree_items
 			WHERE parent = ?
+			AND graph_tree_id = ?
 			AND id != ? AND
-			position >= ?', array($pdata['leaf_id'], $data['leaf_id'], $new_position));
+			position >= ?', array($pdata['leaf_id'], $tree_id, $data['leaf_id'], $new_position));
 
         $position = $new_position + 1;
         if (cacti_sizeof($others)) {
             foreach ($others as $other) {
-                db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ?', array($position, $other['id']));
+                db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ? AND graph_tree_id = ?', array($position, $other['id'], $tree_id));
                 $position++;
             }
         }
