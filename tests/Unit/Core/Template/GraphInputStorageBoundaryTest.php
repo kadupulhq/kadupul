@@ -100,7 +100,7 @@ test('graph input limits follow the shipped column ranges and character lengths'
 	array('dashes', str_repeat('1', 20), true), array('dashes', str_repeat('1', 21), false),
 	array('textalign', str_repeat('a', 10), true), array('textalign', str_repeat('a', 11), false),
 	array('text_format', str_repeat('界', 255), true), array('text_format', str_repeat('界', 256), false),
-	array('value', str_repeat('界', 255), true), array('value', "\xff", false),
+	array('value', str_repeat('界', 255), true), 'invalid UTF-8' => array('value', "\xff", false),
 	array('text_format', array('invalid'), false), array('text_format', "safe\ttext", true),
 ));
 
