@@ -842,11 +842,11 @@ msgstr "Достъпът е отказан, моля, свържете се с �
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Достъпът е отказан, моля, свържете се с администратора на Kadupul."
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4505
-#: lib/auth.php:4556 lib/auth.php:4581 lib/auth.php:4604 lib/auth.php:4644
-#: lib/auth.php:4656 lib/auth.php:4679 lib/auth.php:4802 lib/auth.php:4822
-#: lib/auth.php:5034 lib/auth.php:5076 lib/auth.php:5086 lib/auth.php:5102
-#: lib/auth.php:5116 lib/auth.php:5154
+#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
+#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
+#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
+#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
+#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
 msgid "Access Denied!  Login Failed."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
@@ -4726,7 +4726,7 @@ msgstr "Трябва да сте влезли, за да имате достъп
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Трябва да сте влезли в системата за достъп до тази зона на Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Влезте отново"
@@ -11793,46 +11793,46 @@ msgstr "Уеб базовото удостоверяване е конфигур
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s удостоверено от Web Server, но както шаблонът, така и гостът не са дефинирани в Kadupul."
 
-#: lib/auth.php:4616 lib/auth.php:4815
+#: lib/auth.php:4606 lib/auth.php:4805
 msgid "Access Denied!  No password provided by user."
 msgstr "Отказан достъп! Не е предоставена парола от потребителя."
 
-#: lib/auth.php:4788 lib/auth.php:5854
+#: lib/auth.php:4778 lib/auth.php:5844
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Достъпът е отказан! Потребителският идентификатор на шаблона %s не съществува.  Моля, свържете се с вашия администратор."
 
-#: lib/auth.php:4796
+#: lib/auth.php:4786
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5149
+#: lib/auth.php:5139
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Вашият Kadupul администратор е принудил сложни пароли за влизания и текущата ви Kadupul парола не отговаря на новите изисквания. Следователно трябва да промените паролата си сега."
 
-#: lib/auth.php:5189
+#: lib/auth.php:5179
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Паролата трябва да е поне% d знака!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5185
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Вашата парола трябва да съдържа поне 1 цифров знак!"
 
-#: lib/auth.php:5199
+#: lib/auth.php:5189
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Вашата парола трябва да съдържа комбинация от малки букви и главни букви!"
 
-#: lib/auth.php:5205
+#: lib/auth.php:5195
 msgid "Your password must contain at least 1 special character!"
 msgstr "Вашата парола трябва да съдържа поне 1 специален знак!"
 
-#: lib/auth.php:5640
+#: lib/auth.php:5630
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Изчистена регистрация на Kadupul"
 
-#: lib/auth.php:5940
+#: lib/auth.php:5930
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Удостоверяването преди това не е било зададено. Опит за настройка на локално удостоверяване, но не беше намерен административен акаунт."
 
