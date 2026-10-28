@@ -426,7 +426,7 @@ jobs:
           # shellcheck disable=SC2016
           php -r '$manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR); echo "available=" . (isset($manifest["scripts"]["test"]) ? "true" : "false") . PHP_EOL;' >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -537,7 +537,7 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -754,7 +754,7 @@ jobs:
             echo "No package.json at the root yet; skipping."
           fi
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         if: steps.detect.outputs.found == 'true'
         with:
           node-version-file: .node-version

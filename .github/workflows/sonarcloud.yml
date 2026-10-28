@@ -185,7 +185,7 @@ jobs:
       # PCOV guesses its root from the working directory and would instrument
       # only tests/, so point it at the checkout.
       - name: Set up Node for application assets
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -313,7 +313,7 @@ jobs:
           composer install --no-progress --no-interaction
 
       - name: Set up Node for application assets
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -488,7 +488,7 @@ jobs:
       # PCOV guesses its root from the working directory and would instrument
       # only tests/, so point it at the checkout.
       - name: Set up Node for application assets
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm

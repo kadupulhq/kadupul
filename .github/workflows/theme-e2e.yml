@@ -36,7 +36,7 @@ jobs:
           extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
 
       - name: Setup Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version-file: .node-version
           cache: 'npm'
