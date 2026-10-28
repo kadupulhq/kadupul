@@ -6,18 +6,26 @@ include(dirname(__FILE__) . '/../include/cli_check.php');
 
 global $database_hostname, $database_username, $database_password;
 
-$args = array(
-	'--host=' . $database_hostname,
-	'--user=' . $database_username
-);
+// Keep credentials out of process arguments and remove the private file after use.
+$option_file = db_client_option_file($database_username, $database_password);
 
-if ($database_password != '') {
-	$args[] = '--password=' . $database_password;
+if ($option_file === false) {
+	print 'U';
+
+	exit;
 }
 
-$args[] = 'status';
+$args = array(
+	'--defaults-extra-file=' . $option_file,
+	'--host=' . $database_hostname,
+	'status'
+);
 
-$output = cacti_exec_string('mysqladmin', $args);
+try {
+	$output = cacti_exec_string('mysqladmin', $args);
+} finally {
+	unlink($option_file);
+}
 
 if ($output === null || $output === '') {
 	print 'U';

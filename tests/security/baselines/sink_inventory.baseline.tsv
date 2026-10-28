@@ -561,6 +561,7 @@ fs_write	./lib/csp_report_endpoint.php:200		   leaving a symlink there gave fope
 fs_write	./lib/csp_report_endpoint.php:238		$fh = @fopen($bucket, 'c+');
 fs_write	./lib/database.php:207					file_put_contents(sys_get_temp_dir() . '/cacti-option.log',
 fs_write	./lib/database.php:2550		file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
+fs_write	./lib/database.php:2763		if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
 fs_write	./lib/database.php:75					file_put_contents(sys_get_temp_dir() . '/cacti-option.log',
 fs_write	./lib/functions.php:1439			$fp = @fopen($logfile, 'a');
 fs_write	./lib/functions.php:1516		$fp = fopen($file_name, 'r');
