@@ -22,30 +22,34 @@ existing `fail-fast: false` so compatibility failures are fully observed.
 
 | Workflow | Events and purpose | Security, caches, artifacts, and dependencies |
 | --- | --- | --- |
-| `ci.yml` | Main pushes and all PRs; PHP boundary/syntax/tests, formatting, Node build/tests, gettext, Windows storage, six database versions, CDEF, installed application smoke (including the function-behavior goldens), changelog | Read-only; disposable database credentials only. Node download cache in the JavaScript job. Smoke/CDEF retain observations. Independent jobs run in parallel. |
-| `security.yml` | Main/PR/weekly/manual; Semgrep new-finding PR gate and dependency review | SARIF upload alone needs `security-events: write`; dependency-review comments need `pull-requests: write`. Pinned Semgrep image; failed report retained. No provider secret. Existing differential/full-scan behavior preserved. |
-| `codeql.yml` | Main/PR/weekly/manual; public-repository JavaScript and Actions analysis | Job-scoped code-scanning permissions; PHP remains covered by Semgrep. |
-| `snyk.yml` | Main/PR/weekly/manual; complete Composer/npm/Python dependency discovery | `SNYK_TOKEN` configuration job precedes secret-dependent scanning. Five-project completion guard and safe receipt retained. No policy relaxation. |
-| `security-proof.yml` | Main/stack PR/manual; sink, architecture, entry-point, global statement and branding inventories | Read-only baselines; private advisory proof is manual, uses the job token, and retains artifacts. No baseline expansion. |
+| `ci.yml` | Main pushes, all PRs and merge groups; PHP boundary/syntax/tests, spike-removal contracts (own job), formatting, Node build/tests, gettext, Windows storage, six database versions, CDEF, installed application smoke (including the function-behavior goldens), changelog; `CI result` aggregate | Read-only; disposable database credentials only. Node download cache in the JavaScript job. Smoke/CDEF retain observations. Independent jobs run in parallel. |
+| `security.yml` | Main/PR/merge group/weekly/manual; Semgrep new-finding gate for PRs and merge groups, dependency review; `Security result` aggregate | SARIF upload alone needs `security-events: write`; dependency-review comments need `pull-requests: write`. Pinned Semgrep image; failed report retained. No provider secret. Existing differential/full-scan behavior preserved. |
+| `codeql.yml` | Main/PR/merge group/weekly/manual; public-repository JavaScript and Actions analysis; `CodeQL result` aggregate | Job-scoped code-scanning permissions; PHP remains covered by Semgrep. |
+| `snyk.yml` | Main/PR/merge group/weekly/manual; complete Composer/npm/Python dependency discovery; `Snyk result` aggregate | `SNYK_TOKEN` configuration job precedes secret-dependent scanning. Five-project completion guard and safe receipt retained. No policy relaxation. |
+| `security-proof.yml` | Main/stack PR/merge group/manual; sink, architecture, entry-point, global statement and branding inventories; `Security proof result` aggregate | Read-only baselines; private advisory proof is manual, uses the job token, and retains artifacts. No baseline expansion. |
 | `lint.yml` | Workflow/action changes and manual; actionlint and zizmor | Digest-pinned actionlint image and version-pinned zizmor; job token supports native metadata queries. |
-| `theme-e2e.yml` | Main/stack PR; actual theme/browser and compiled-asset compatibility | npm E2E cache; browser-library checksum checks and failure artifacts retained. |
-| `csp-e2e.yml` | Relevant PR paths; independent unit, HTTP, and Docker/browser CSP checks | npm E2E cache; cleanup and browser reports retained. No provider secrets. |
-| `rrd-proxy-e2e.yml` | Relevant main/PR paths; real proxy settings, RRD I/O and template journeys | Pinned actions; browser failure artifacts. |
-| `offline-bundle.yml` | Main/stack PR and reusable call; dependency-complete archive, installed authentication, network-isolated verification | Archive and SHA-256 artifact; no publishing permission. Reused by release. |
-| `release-rehearsal.yml` | Main/PR; installed LTS upgrade, RRD preservation and rollback | Pinned upstream source; failure/complete observations retained. No publishing permission. |
-| `release.yml` | Version tags; reusable offline build then organization release, then archive attachment | Pinned organization workflow. Publishing, package, OIDC and attestation permissions remain scoped to publishing jobs. Attachment depends on both release and bundle. |
+| `theme-e2e.yml` | Main/stack PR/merge group; actual theme/browser and compiled-asset compatibility; `Theme E2E result` aggregate | npm E2E cache; browser-library checksum checks and failure artifacts retained. |
+| `csp-e2e.yml` | All PRs and merge groups; a `Relevant changes` job applies the CSP path filter, then independent unit, HTTP, and Docker/browser CSP checks; `CSP result` aggregate | npm E2E cache; cleanup and browser reports retained. No provider secrets. |
+| `rrd-proxy-e2e.yml` | Relevant main paths, all PRs and merge groups (path filter in a `Relevant changes` job); real proxy settings, RRD I/O and template journeys; `RRDtool proxy E2E result` aggregate | Pinned actions; browser failure artifacts. |
+| `offline-bundle.yml` | Main/stack PR/merge group and reusable call; dependency-complete archive, installed authentication, network-isolated verification; `Offline bundle result` aggregate | Archive and SHA-256 artifact; no publishing permission. Reused by release with `hosted-runners-only: true`. |
+| `release-rehearsal.yml` | Main/PR/merge group; installed LTS upgrade, RRD preservation and rollback; `Release rehearsal result` aggregate | Pinned upstream source; failure/complete observations retained. No publishing permission. |
+| `release.yml` | Version tags; reusable offline build then organization release, then archive attachment | Pinned organization workflow. Publishing, package, OIDC and attestation permissions remain scoped to publishing jobs. Attachment depends on both release and bundle. Every job runs on GitHub-hosted runners whatever `DO_RUNNERS_ENABLED` says. |
 | `claude-review.yml` | PR updates, authorized comments and manual review | `ANTHROPIC_API_KEY`; trusted-default-branch configuration; scoped review/comment write permissions. Existing review job concurrency retained. |
 | `digitalocean-runner-smoke.yml` | Manual; single-job ephemeral runner contract | Read-only; ten-minute timeout. Does not provision or delete droplets. |
-| `sonarcloud.yml` | Main/all PR/manual scheduling; selected complete multi-language coverage/analysis | Only scanner and credential preflight receive `SONAR_TOKEN`; npm and Composer download caches, full history, no cached vendor tree. Analysis has read-only contents/PR permissions. |
-| `cli-docker-integration.yml` | Main/`lts/1.2` pushes and PRs on CLI, library, schema and harness paths, manual; runs `09-cli-maintenance-integration.sh` in the Docker E2E harness | Read-only contents; `packages: read` with the job token for GHCR pulls. No other secrets. |
+| `sonarcloud.yml` | Main/all PR/merge group/manual scheduling; selected complete multi-language coverage/analysis. The legacy unit suite runs in six `Legacy unit coverage (n/6)` shards; `Legacy coverage merge` joins them, adds poller coverage and seals `tests/coverage.xml`. This is the only workflow that runs the full Pest unit suite. | Only scanner and credential preflight receive `SONAR_TOKEN`; npm and Composer download caches, full history, no cached vendor tree. Analysis has read-only contents/PR permissions. |
+| `cli-docker-integration.yml` | Main/`lts/1.2` pushes on CLI, library, schema and harness paths, all PRs to those branches, merge groups, manual; a `Relevant changes` job applies the PR path filter, then `09-cli-maintenance-integration.sh` runs in the Docker E2E harness; `CLI Docker integration result` aggregate | Read-only contents; `packages: read` with the job token for GHCR pulls. No other secrets. |
 | `container-mirrors.yml` | Container and workflow PR paths, main pushes to mirror tooling, manual; inventories `tools/containers/mirrors.json`, copies the images to GHCR on non-PR runs, then pulls them read-only and builds a two-platform fixture image through the mirrored BuildKit with SBOM and provenance attestations | Only the publish job, which never runs on a PR, gets `packages: write`; receipts and build artifacts retained. |
 | `fuzz.yml` | Main/PR/weekly/manual; fast-check property runs against the shipped asset synchronizer | Read-only; npm download cache; results log retained for 14 days. |
 | `pest-profile.yml` | Manual only; full or filtered Pest run with optional serial coverage, for timing | Read-only; 240-minute timeout; profile log and JUnit retained. |
-| `release-artifacts.yml` | Main pushes, all PRs, manual; builds the release image, verifies offline dependencies and unprivileged FPM health with no network | Read-only contents; `packages: read` with the job token. No publishing permission. |
+| `release-artifacts.yml` | Main pushes, all PRs, merge groups, manual; builds the release image, verifies offline dependencies and unprivileged FPM health with no network; `Release artifact acceptance result` aggregate | Read-only contents; `packages: read` with the job token. No publishing permission. |
 | `scorecard.yml` | Main pushes, branch protection changes, weekly, manual; OpenSSF Scorecard | Job-scoped `security-events`, `id-token` and `actions: read` permissions; publishes results and uploads SARIF; assessment artifact retained. |
 
 `DO_RUNNERS_ENABLED` selects the existing eligible DigitalOcean runner paths;
-its current repository value is false. Fork jobs retain GitHub-hosted execution.
+its current repository value is false. Fork jobs, Dependabot jobs (by actor and
+by pull request author), merge groups and every release job retain
+GitHub-hosted execution. `offline-bundle.yml` takes a `hosted-runners-only`
+input, which `release.yml` sets, so the attested archive is never built on a
+self-hosted machine.
 Runner provisioning and cleanup are outside this repository's workflow changes.
 
 Missing job timeouts are now bounded: cheap configuration checks use 5–20
@@ -55,7 +59,9 @@ would reject legitimate work. Existing bounded integration jobs retain their
 limits. Called release workflows own their internal limits; caller jobs cannot
 set `timeout-minutes` on a reusable-workflow call.
 
-Lint/theme PR updates cancel obsolete runs. Offline bundles cancel only obsolete
+Lint/theme PR updates cancel obsolete runs. SonarQube Cloud cancels only
+superseded pull request runs: a main push or manual run always finishes, and
+GitHub keeps at most one pending run behind it. Offline bundles cancel only obsolete
 PR runs; tag/reusable release builds are not interrupted. Release concurrency is
 per tag and never cancels a running publication. Existing Claude review
 concurrency stays scoped to the reviewed PR; independent comment replies are
@@ -98,6 +104,38 @@ unignored files added, so ignored output such as `var/` never counts.
 PHP is generated. `GlobalStatementInventoryTest` in `composer test` holds the
 counter to fixtures under `tests/Fixtures/global-statements/` and runs the
 check against scratch repositories.
+
+## Aggregate result checks
+
+Each workflow that should gate a merge ends with one result job. It runs with
+`if: !cancelled()`, so it reports even when path filters or event conditions
+skip the jobs it needs, and `tests/tools/require_job_results.sh` fails it
+unless every needed job succeeded or was skipped by design for that event.
+GitHub reads a skipped required check as passing, so the ruleset should require
+these names rather than individual or matrix jobs:
+
+| Check | Workflow | Skips allowed by design |
+| --- | --- | --- |
+| `CI result` | `ci.yml` | `Changelog` outside pull requests or with the `no-changelog` label |
+| `Security result` | `security.yml` | `Dependency review` outside pull requests or while the repository is private |
+| `Security proof result` | `security-proof.yml` | None; the manual advisory proof matrix is not a merge gate |
+| `Release rehearsal result` | `release-rehearsal.yml` | None |
+| `Release artifact acceptance result` | `release-artifacts.yml` | None |
+| `Offline bundle result` | `offline-bundle.yml` | None |
+| `CLI Docker integration result` | `cli-docker-integration.yml` | The suite, when `Relevant changes` finds no matching path |
+| `CSP result` | `csp-e2e.yml` | The three suites, when `Relevant changes` finds no matching path |
+| `RRDtool proxy E2E result` | `rrd-proxy-e2e.yml` | The journey, when `Relevant changes` finds no matching path |
+| `Theme E2E result` | `theme-e2e.yml` | None |
+| `CodeQL result` | `codeql.yml` | Analysis while the repository is private |
+| `Snyk result` | `snyk.yml` | The scan when `SNYK_TOKEN` is unavailable (forks, Dependabot) |
+| `Sonar Quality Gate` | `sonarcloud.yml` | See [Sonar execution and configuration](#sonar-execution-and-configuration) |
+
+All of these workflows also run on `merge_group`, so they can gate a merge
+queue. Steps that read `github.event.pull_request.*` fall back to
+`github.event.merge_group.base_sha` or to the push path there. `lint.yml`,
+`fuzz.yml` and `container-mirrors.yml` have no result job: lint is a
+workflow-file check rather than a product gate, the fuzzer is randomized, and
+the mirror workflow publishes images.
 
 ## Required correctness and remaining opportunities
 
@@ -212,12 +250,11 @@ continue under the workflow revision that started them.
 
 When replacement code and coverage stabilize, set `ENABLE_SONAR=true` and
 **`SONAR_ALL_PRS=true`**. The latter admits every trusted PR source branch and
-activates the aggregate check named exactly **`Sonar Quality Gate`**. This check
-requires both successful scheduling and successful completed analysis; disabled,
-skipped, cancelled, credential-failed, test-failed, scanner-failed or backend-
-failed analysis cannot satisfy it. There is no workflow redesign or threshold
-change. Before adding it to a default-branch ruleset's required status checks,
-verify a fresh successful run and retain all existing correctness/security
+makes the aggregate check named exactly **`Sonar Quality Gate`** strict: it then
+requires both successful scheduling and successful completed analysis on every
+run; disabled, skipped, cancelled, credential-failed, test-failed,
+scanner-failed or backend-failed analysis cannot satisfy it. Before adding it to
+a default-branch ruleset's required status checks, verify a fresh successful run and retain all existing correctness/security
 requirements. Only an authorized maintainer changes those rules.
 
 Forks remain secret-ineligible. In strict mode their aggregate gate fails closed;
@@ -225,5 +262,11 @@ requiring this check therefore holds fork PRs until maintainers establish an
 approved safe analysis path. Do not enable required enforcement for fork merges
 by switching to `pull_request_target`, copying secrets into fork jobs, or treating
 a manual run on another revision as a same-head gate. Manual dispatch with
-`run_sonar=false` also cannot pass strict enforcement. Leaving `SONAR_ALL_PRS`
-false/absent keeps the aggregate intentionally skipped during modernization.
+`run_sonar=false` also cannot pass strict enforcement.
+
+With `SONAR_ALL_PRS` false or absent the gate still runs on every event and
+never reports skipped. It fails when `Sonar analysis scope` did not complete,
+or when the scope selected full analysis (main pushes, `sonar/*` and
+`release/*` branches, manual runs) and that analysis did not pass. When the
+scope leaves the run out, it passes and logs the reason. Merge groups follow
+`SONAR_ALL_PRS`: analysed when it is true, out of scope otherwise.

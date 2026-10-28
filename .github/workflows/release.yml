@@ -17,6 +17,9 @@ jobs:
       contents: read
       packages: read
     uses: ./.github/workflows/offline-bundle.yml # zizmor: ignore[self-repository] -- Pinned actionlint does not yet support $/ workflow calls.
+    with:
+      # The archive is attested and published, so it is built on a hosted runner.
+      hosted-runners-only: true
 
   # A called workflow can only narrow the caller's token, never widen it, so
   # every scope the reusable jobs need has to be granted here.
@@ -41,7 +44,8 @@ jobs:
   attach-offline-bundle:
     timeout-minutes: 15
     needs: [release, offline-bundle]
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    # Signs and uploads release assets, so it never routes to a self-hosted runner.
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write

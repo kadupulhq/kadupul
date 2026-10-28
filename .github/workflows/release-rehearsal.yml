@@ -1,6 +1,7 @@
 name: Release upgrade and rollback
 on:
   pull_request:
+  merge_group:
   push:
     branches: [main]
 permissions:
@@ -44,3 +45,25 @@ jobs:
           name: release-rehearsal
           path: tests/behavior/results/release-readiness/
           if-no-files-found: error
+
+  release-rehearsal-result:
+    name: Release rehearsal result
+    # Always reports: a required check reads a skipped job as passing.
+    if: ${{ !cancelled() }}
+    needs:
+      - rehearsal
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools/require_job_results.sh
+          sparse-checkout-cone-mode: false
+      - name: Require every gating job to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ''
+        run: bash tests/tools/require_job_results.sh

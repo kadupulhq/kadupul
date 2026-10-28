@@ -3,9 +3,15 @@ name: Offline bundle
 on:
   pull_request:
     branches: [main, 'chore/consolidate-main-*']
+  merge_group:
   push:
     branches: [main]
   workflow_call:
+    inputs:
+      hosted-runners-only:
+        description: Keep every job on GitHub-hosted runners, as release builds require
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -20,7 +26,7 @@ jobs:
       contents: read
       packages: read
     name: Shared authentication (${{ matrix.backend }} sessions)
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && !inputs.hosted-runners-only && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -77,8 +83,9 @@ jobs:
       contents: read
       packages: read
     needs: authentication
-    if: ${{ always() }}
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    # A superseded run is cancelled rather than reported as a failure.
+    if: ${{ !cancelled() }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && !inputs.hosted-runners-only && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 30
     steps:
       - name: Require both authentication backends to pass
@@ -140,3 +147,26 @@ jobs:
             dist/kadupul-offline.tar.gz
             dist/kadupul-offline.tar.gz.sha256
           if-no-files-found: error
+
+  offline-bundle-result:
+    name: Offline bundle result
+    # Always reports: a required check reads a skipped job as passing.
+    if: ${{ !cancelled() }}
+    needs:
+      - authentication
+      - bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools/require_job_results.sh
+          sparse-checkout-cone-mode: false
+      - name: Require every gating job to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ''
+        run: bash tests/tools/require_job_results.sh

@@ -10,24 +10,7 @@ name: CSP Migration CI
 
 on:
   pull_request:
-    paths:
-      - lib/headers_secure.php
-      - lib/csp_report_endpoint.php
-      - include/global.php
-      - include/global_settings.php
-      - csp_report.php
-      - tests/integration/**
-      - tests/e2e/**
-      - .github/workflows/csp-e2e.yml
-      - tests/Unit/HeadersSecureTest.php
-      - tests/Unit/CspReportEndpointTest.php
-      - tests/Unit/HelpLocalDocumentationTest.php
-      - tests/Unit/HelpSsrFTest.php
-      - help.php
-      - lib/html.php
-      - include/themes/classic/**
-      - tests/bootstrap-unit.php
-      - tests/composer.json
+  merge_group:
 
 permissions:
   contents: read
@@ -37,10 +20,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The pull request path filter lives here instead of under `on:`, so the
+  # workflow always runs and its result job always reports.
+  changes:
+    name: Relevant changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      relevant: ${{ steps.scope.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Match changed paths
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != pull_request ] && [ "$EVENT_NAME" != merge_group ]; then
+            echo 'relevant=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A failed diff must fail the job, never read as "nothing relevant".
+          changed=$(git diff --name-only "$BASE_SHA" HEAD)
+          relevant=false
+          while IFS= read -r path; do
+            case "$path" in
+              lib/headers_secure.php|lib/csp_report_endpoint.php|include/global.php|include/global_settings.php|csp_report.php|tests/integration/*|tests/e2e/*|.github/workflows/csp-e2e.yml|tests/Unit/HeadersSecureTest.php|tests/Unit/CspReportEndpointTest.php|tests/Unit/HelpLocalDocumentationTest.php|tests/Unit/HelpSsrFTest.php|help.php|lib/html.php|include/themes/classic/*|tests/bootstrap-unit.php|tests/composer.json) relevant=true ;;
+            esac
+          done <<< "$changed"
+          echo "Relevant to this workflow: $relevant"
+          echo "relevant=$relevant" >> "$GITHUB_OUTPUT"
+
   unit:
+    needs: changes
+    if: ${{ needs.changes.outputs.relevant == 'true' }}
     timeout-minutes: 20
     name: Unit tests (CactiSecureHeaders, CSP report endpoint, local help)
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -75,9 +95,11 @@ jobs:
           done
 
   integration:
+    needs: changes
+    if: ${{ needs.changes.outputs.relevant == 'true' }}
     timeout-minutes: 30
     name: Integration tests (php -S harness)
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -108,11 +130,13 @@ jobs:
           grep -Eq 'Tests: +[1-9][0-9]* passed' "$RUNNER_TEMP/pest.log"
 
   e2e:
+    needs: changes
+    if: ${{ needs.changes.outputs.relevant == 'true' }}
     permissions:
       contents: read
       packages: read
     name: Playwright E2E (docker-compose + Playwright)
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 25
     steps:
       - name: Checkout
@@ -256,3 +280,29 @@ jobs:
         if: always()
         working-directory: tests/e2e
         run: docker compose down -v
+
+  csp-result:
+    name: CSP result
+    # Always reports: a required check reads a skipped job as passing.
+    # The suite jobs skip only when the changes job found nothing relevant.
+    if: ${{ !cancelled() }}
+    needs:
+      - changes
+      - unit
+      - integration
+      - e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools/require_job_results.sh
+          sparse-checkout-cone-mode: false
+      - name: Require every gating job to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ${{ needs.changes.result == 'success' && needs.changes.outputs.relevant == 'false' && 'unit integration e2e' || '' }}
+        run: bash tests/tools/require_job_results.sh
