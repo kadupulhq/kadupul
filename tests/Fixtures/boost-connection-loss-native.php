@@ -46,6 +46,10 @@ require $loss_root . '/tests/Helpers/PhpSource.php';
 foreach (['cacti_sizeof', 'cacti_count', 'clean_up_lines', 'array_rekey', 'version_to_decimal', 'cacti_version_compare'] as $function) {
     eval(test_php_function_source(file_get_contents($loss_root . '/lib/functions.php'), $function));
 }
+// The writer refuses an RRD path outside rra_path, so the real check runs here.
+foreach (['rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path'] as $function) {
+    eval(test_php_function_source(file_get_contents($loss_root . '/lib/rrd.php'), $function));
+}
 require $loss_root . '/lib/boost.php';
 foreach (['boost_output_rrd_data', 'boost_process_local_data_ids', 'boost_process_output'] as $function) {
     eval(test_php_function_source(file_get_contents($loss_root . '/poller_boost.php'), $function));
@@ -147,7 +151,7 @@ function rrdtool_execute($command, $output_flag, $output_type, $rrdtool_pipe = f
     return true;
 }
 
-$config = ['base_path' => $loss_tree, 'library_path' => $loss_tree . '/lib', 'poller_id' => 1];
+$config = ['base_path' => $loss_tree, 'library_path' => $loss_tree . '/lib', 'rra_path' => $loss_tree . '/rra', 'poller_id' => 1];
 $database_hostname = $loss_host;
 $database_port = $loss_port;
 $database_default = (string) $loss_options['schema'];

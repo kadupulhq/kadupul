@@ -20,8 +20,11 @@ function boost_lookup_probe($coverage, string $probe): array
     }
     $script .= 'require ' . var_export($root . '/include/global_constants.php', true) . ';';
     $script .= 'require ' . var_export($root . '/lib/boost.php', true) . ';';
+    // The writer refuses an RRD path outside rra_path, so the real check runs here.
+    $script .= 'require ' . var_export($root . '/tests/Helpers/PhpSource.php', true) . ';';
+    $script .= 'foreach (array("rrd_check_path", "rrd_path_is_contained", "rrd_resolve_missing_path") as $function) { eval(test_php_function_source(file_get_contents(' . var_export($root . '/lib/rrd.php', true) . '), $function)); }';
     $script .= <<<'STUBS'
-$config = array('library_path' => __DIR__);
+$config = array('library_path' => __DIR__, 'rra_path' => __DIR__);
 $writes = array();
 $updates = array();
 $fail = array();
@@ -112,9 +115,9 @@ test('a missing RRD file is not acknowledged when the data source lookup fails',
 $values = '1700000000:7';
 $pipe = false;
 $fail = array('data_local');
-$failed = boost_rrdtool_function_update(42, '/nonexistent/42.rrd', 'value', $values, $pipe);
+$failed = boost_rrdtool_function_update(42, __DIR__ . '/42.rrd', 'value', $values, $pipe);
 $fail = array('missing');
-$removed = boost_rrdtool_function_update(42, '/nonexistent/42.rrd', 'value', $values, $pipe);
+$removed = boost_rrdtool_function_update(42, __DIR__ . '/42.rrd', 'value', $values, $pipe);
 echo json_encode(array($failed, $removed, $updates));
 PROBE);
     expect($result)->toBe(array('ERROR: Unable to confirm the Data Source', 'OK', array()));
