@@ -3,6 +3,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -20,16 +21,24 @@ function ss_sql()
     global $database_password;
     global $database_hostname;
 
-    $args = array(
-        '--host=' . $database_hostname,
-        '--user=' . $database_username
-    );
+    // Credentials go in a private option file, not the process arguments.
+    $option_file = db_client_option_file($database_username, $database_password);
 
-    if ($database_password != '') {
-        $args[] = '--password=' . $database_password;
+    if ($option_file === false) {
+        return 'U';
     }
 
-    $result = cacti_exec_string('mysqladmin', $args);
+    $args = array(
+        '--defaults-extra-file=' . $option_file,
+        '--host=' . $database_hostname,
+        'status'
+    );
+
+    try {
+        $result = cacti_exec_string('mysqladmin', $args);
+    } finally {
+        unlink($option_file);
+    }
 
     $result = preg_replace('/: /', ':', $result);
     $result = preg_replace('/  /', ' ', $result);

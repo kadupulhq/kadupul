@@ -128,6 +128,7 @@
       <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
       <file>Unit/Security/Auth/TreeViewerEnabledCallerTest.php</file>
       <file>Unit/Security/Misc/IncludeDirectoryDenyTest.php</file>
+      <file>Unit/SqlScriptCredentialsTest.php</file>
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
     </testsuite>
   </testsuites>

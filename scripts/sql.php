@@ -1,23 +1,37 @@
 <?php
 
+/*
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 error_reporting(0);
 
 include(dirname(__FILE__) . '/../include/cli_check.php');
 
 global $database_hostname, $database_username, $database_password;
 
-$args = array(
-    '--host=' . $database_hostname,
-    '--user=' . $database_username
-);
+// Credentials go in a private option file, not the process arguments.
+$option_file = db_client_option_file($database_username, $database_password);
 
-if ($database_password != '') {
-    $args[] = '--password=' . $database_password;
+if ($option_file === false) {
+    print 'U';
+
+    exit;
 }
 
-$args[] = 'status';
+$args = array(
+    '--defaults-extra-file=' . $option_file,
+    '--host=' . $database_hostname,
+    'status'
+);
 
-$output = cacti_exec_string('mysqladmin', $args);
+try {
+    $output = cacti_exec_string('mysqladmin', $args);
+} finally {
+    unlink($option_file);
+}
 
 if ($output === null || $output === '') {
     print 'U';

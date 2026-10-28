@@ -554,6 +554,7 @@ fs_write	./lib/csp_report_endpoint.php:151	    /* Bucket names are predictable, 
 fs_write	./lib/csp_report_endpoint.php:168	    $fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./lib/database.php:209	                file_put_contents(
 fs_write	./lib/database.php:2176	    file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
+fs_write	./lib/database.php:2424	    if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
 fs_write	./lib/database.php:75	                file_put_contents(
 fs_write	./lib/functions.php:1660	        $fp = @fopen($logfile, 'a');
 fs_write	./lib/functions.php:1738	    $fp = fopen($file_name, 'r');
