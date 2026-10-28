@@ -60,13 +60,13 @@ if (!is_string($importSource) || !is_string($functionsSource)) {
     throw new \RuntimeException('Unable to read the production sources.');
 }
 
-foreach ([[$importSource, 'xml_to_data_template'], [$importSource, 'import_validate_data_source_item'], [$importSource, 'xml_character_decode'], [$functionsSource, 'clean_up_lines']] as [$source, $function]) {
+foreach ([[$importSource, 'xml_to_data_template'], [$importSource, 'import_validate_data_source_item'], [$importSource, 'import_invalid_data_source_item'], [$importSource, 'xml_character_decode'], [$functionsSource, 'clean_up_lines']] as [$source, $function]) {
     if (!function_exists(__NAMESPACE__ . '\\' . $function)) {
         eval('namespace ' . __NAMESPACE__ . '; ' . test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
 }
 
-/** @return array{0: mixed, 1: list<int>, 2: list<string>} */
+/** @return array{0: mixed, 1: array|null, 2: list<string>} */
 function importItem(array $item): array
 {
     $GLOBALS['preview_only'] = true;
@@ -74,7 +74,6 @@ function importItem(array $item): array
     $GLOBALS['ignorable_hashes'] = [];
     $GLOBALS['legacy_template'] = false;
     $GLOBALS['import_template_id'] = 0;
-    $GLOBALS['import_messages'] = [];
     $GLOBALS['import_item_logs'] = [];
     $GLOBALS['struct_data_source'] = [];
     $GLOBALS['struct_data_source_item'] = ['data_source_name' => [], 'rrd_minimum' => [], 'rrd_maximum' => []];
@@ -83,13 +82,13 @@ function importItem(array $item): array
 
     $result = xml_to_data_template('0123456789abcdef0123456789abcdef', $xml, $cache, true, 1);
 
-    return [$result, $GLOBALS['import_messages'], $GLOBALS['import_item_logs']];
+    return [$result, import_invalid_data_source_item($xml), $GLOBALS['import_item_logs']];
 }
 
 test('ordinary data source item values are accepted', function (string $name, string $minimum, string $maximum) {
-    [$result, $messages] = importItem(['data_source_name' => $name, 'rrd_minimum' => $minimum, 'rrd_maximum' => $maximum]);
+    [$result, $invalid] = importItem(['data_source_name' => $name, 'rrd_minimum' => $minimum, 'rrd_maximum' => $maximum]);
 
-    expect($result)->toBeArray()->and($messages)->toBe([]);
+    expect($result)->toBeArray()->and($invalid)->toBeNull();
 })->with([
     'counter' => ['traffic_in', '0', 'U'],
     'speed variable' => ['traffic-out', '0', '|query_ifSpeed|'],
@@ -99,9 +98,9 @@ test('ordinary data source item values are accepted', function (string $name, st
 ]);
 
 test('a rejected item field stops the template import and names the field in the log', function (array $item, string $field) {
-    [$result, $messages, $logs] = importItem($item);
+    [$result, $invalid, $logs] = importItem($item);
 
-    expect($result)->toBeFalse()->and($messages)->toBe([45]);
+    expect($result)->toBeFalse()->and($invalid[0])->toBe($field);
     expect($logs)->toHaveCount(1)->and($logs[0])->toContain("'" . $field . "'");
 })->with([
     'name with a quote' => [['data_source_name' => "in' --", 'rrd_minimum' => '0', 'rrd_maximum' => 'U'], 'data_source_name'],
@@ -117,7 +116,10 @@ test('a rejected value cannot add lines to the log', function () {
     expect($logs)->toHaveCount(1)->and($logs[0])->not->toContain("\n");
 });
 
-test('the rejection code has a message the import page can show', function () {
+test('the importer reports the rejection with a message the import page can show', function () {
+    $import = file_get_contents(dirname(__DIR__, 3) . '/lib/import.php');
+    expect($import)->toContain("if (import_invalid_data_source_item(\$hash_array) !== null) {\n                                \$import_messages[] = 45;");
+
     $arrays = file_get_contents(dirname(__DIR__, 3) . '/include/global_arrays.php');
 
     expect($arrays)->toContain("    45 => array(\n        'message' => __('Data Source Item field holds a value the Data Source form would reject.'),");

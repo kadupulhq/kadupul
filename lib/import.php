@@ -232,6 +232,10 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
                                 db_rollback_transaction();
                             }
 
+                            if (import_invalid_data_source_item($hash_array) !== null) {
+                                $import_messages[] = 45;
+                            }
+
                             return false;
                         }
 
@@ -1209,10 +1213,56 @@ function import_validate_data_source_item($field_name, $value)
     return true;
 }
 
+/**
+ * import_invalid_data_source_item - finds the first Data Source item field of a
+ * Template XML that import_validate_data_source_item() rejects.
+ *
+ * @param array $xml_array The data template section of the Template XML
+ *
+ * @return array|null The field name and decoded value, or null when every item is acceptable
+ */
+function import_invalid_data_source_item($xml_array)
+{
+    if (!is_array($xml_array['items'] ?? null)) {
+        return null;
+    }
+
+    foreach ($xml_array['items'] as $item_array) {
+        foreach (array('data_source_name', 'rrd_minimum', 'rrd_maximum') as $field_name) {
+            if (!isset($item_array[$field_name]) || preg_match('/hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})/', $item_array[$field_name])) {
+                continue;
+            }
+
+            $value = xml_character_decode($item_array[$field_name]);
+
+            if (!import_validate_data_source_item($field_name, $value)) {
+                return array($field_name, $value);
+            }
+        }
+    }
+
+    return null;
+}
+
 function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_as_new, $profile_id)
 {
     global $struct_data_source, $struct_data_source_item, $import_template_id, $preview_only;
-    global $ignorable_hashes, $import_debug_info, $legacy_template, $import_messages;
+    global $ignorable_hashes, $import_debug_info, $legacy_template;
+
+    /* refuse the template before anything is written */
+    $invalid_field = import_invalid_data_source_item($xml_array);
+
+    if ($invalid_field !== null) {
+        /* the value comes from the uploaded file, so it must not add lines to the log */
+        cacti_log(sprintf(
+            'FATAL: Data Template \'%s\' rejected, the Data Source Item field \'%s\' holds the invalid value \'%s\'',
+            $xml_array['name'],
+            $invalid_field[0],
+            substr(clean_up_lines($invalid_field[1]), 0, 100)
+        ), false, 'IMPORT', POLLER_VERBOSITY_LOW);
+
+        return false;
+    }
 
     /* track changes */
     $status = 0;
@@ -1378,22 +1428,6 @@ function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_as_new, 
                         $save[$field_name] = resolve_hash_to_id($item_array[$field_name], $hash_cache, 'data_template_rrd');
                     } else {
                         $save[$field_name] = xml_character_decode($item_array[$field_name]);
-
-                        if (!import_validate_data_source_item($field_name, $save[$field_name])) {
-                            /* the value comes from the uploaded file, so it must not add lines to the log */
-                            $logged = substr(clean_up_lines($save[$field_name]), 0, 100);
-
-                            cacti_log(sprintf(
-                                'FATAL: Data Template \'%s\' rejected, the Data Source Item field \'%s\' holds the invalid value \'%s\'',
-                                $xml_array['name'],
-                                $field_name,
-                                $logged
-                            ), false, 'IMPORT', POLLER_VERBOSITY_LOW);
-
-                            $import_messages[] = 45;
-
-                            return false;
-                        }
                     }
                 }
             }
