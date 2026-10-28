@@ -106,7 +106,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        # Same accounts as the CI database contracts job.
+        # Same server accounts as the CI database jobs.
         env:
           MARIADB_DATABASE: kadupul_test
           MARIADB_USER: cactiuser
@@ -204,8 +204,10 @@ jobs:
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
-          KADUPUL_TEST_MYSQL_USER: cactiuser
-          KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+          # The CDEF native probes create and drop their own databases, so the
+          # test account is root, as in the CI CDEF job.
+          KADUPUL_TEST_MYSQL_USER: root
+          KADUPUL_TEST_MYSQL_PASSWORD: cactiroot
           KADUPUL_TEST_MYSQL_ADMIN_USER: root
           KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
           SHARD: ${{ matrix.shard }}
@@ -407,7 +409,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        # Same accounts as the CI database contracts job.
+        # Same server accounts as the CI database jobs.
         env:
           MARIADB_DATABASE: kadupul_test
           MARIADB_USER: cactiuser
@@ -503,8 +505,10 @@ jobs:
       - name: Symfony module coverage
         env:
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
-          KADUPUL_TEST_MYSQL_USER: cactiuser
-          KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+          # The CDEF native probes create and drop their own databases, so the
+          # test account is root, as in the CI CDEF job.
+          KADUPUL_TEST_MYSQL_USER: root
+          KADUPUL_TEST_MYSQL_PASSWORD: cactiroot
           KADUPUL_TEST_MYSQL_ADMIN_USER: root
           KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
         run: |
