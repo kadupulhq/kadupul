@@ -7,9 +7,13 @@ variable keeps the existing GitHub-hosted runner selection. The variable can be
 set for a single repository during rollout, then at organization scope with
 access to all repositories.
 
-Push, schedule, manual workflow events, and pull requests with branches in the
-same repository are eligible. Fork pull requests and comment-triggered reviews
-stay on GitHub-hosted runners. Explicit Windows and Ubuntu 22.04 compatibility jobs
+Push, schedule, manual workflow events, merge-queue (`merge_group`) builds, and
+pull requests with branches in the same repository are eligible. Fork pull
+requests and comment-triggered reviews stay on GitHub-hosted runners.
+
+The repository is public, so a fork pull request that a maintainer approves into
+a merge group runs on the self-hosted runner. Those runners are ephemeral and
+single-job, and they hold no cloud or controller credentials. Explicit Windows and Ubuntu 22.04 compatibility jobs
 keep their existing platforms. Reusable release jobs follow the calling
 repository's event and variable.
 

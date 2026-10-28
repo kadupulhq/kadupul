@@ -46,8 +46,10 @@ existing `fail-fast: false` so compatibility failures are fully observed.
 
 `DO_RUNNERS_ENABLED` selects the existing eligible DigitalOcean runner paths;
 its current repository value is false. Fork jobs, Dependabot jobs (by actor and
-by pull request author), merge groups and every release job retain
-GitHub-hosted execution. `offline-bundle.yml` takes a `hosted-runners-only`
+by pull request author) and every release job retain GitHub-hosted execution.
+Merge groups are eligible for the runners; an approved fork pull request in a
+merge group therefore runs on the ephemeral, single-job runner, which holds no
+cloud or controller credentials. `offline-bundle.yml` takes a `hosted-runners-only`
 input, which `release.yml` sets, so the attested archive is never built on a
 self-hosted machine.
 Runner provisioning and cleanup are outside this repository's workflow changes.
