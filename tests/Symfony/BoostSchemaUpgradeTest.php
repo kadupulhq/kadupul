@@ -60,6 +60,7 @@ final class BoostSchemaUpgradeTest extends TestCase
         self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
         self::assertSame('sock_int_value,run_id,process_handler,status', $this->columns(self::STATUS));
         self::assertSame(['run_id', 'process_handler'], $this->indexColumns(self::STATUS, 'run_partition', 0));
+        self::assertSame('char(32)|YES|NULL', $this->runIdShape());
         self::assertSame('MEMORY', $this->engine(self::STATUS));
         self::assertSame('id,body,headers,queue_name,created_at,available_at,delivered_at', $this->columns(self::QUEUE));
         self::assertSame('InnoDB', $this->engine(self::QUEUE));
@@ -87,6 +88,57 @@ final class BoostSchemaUpgradeTest extends TestCase
 
         self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
         self::assertSame('sock_int_value,run_id,process_handler,status', $this->columns(self::STATUS));
+        self::assertSame('char(32)|YES|NULL', $this->runIdShape());
+    }
+
+    public function testAnEarlierAttemptsNotNullRunIdIsMadeNullable(): void
+    {
+        $db = $this->database();
+        $db->exec('CREATE TABLE ' . self::STATUS . ' (sock_int_value bigint(20) unsigned NOT NULL auto_increment, run_id char(32) NOT NULL default \'\', process_handler int(10) unsigned NOT NULL default 0, status varchar(255) default NULL, PRIMARY KEY (sock_int_value), UNIQUE KEY run_partition (run_id, process_handler)) ENGINE=MEMORY');
+
+        upgrade_to_1_2_38();
+
+        self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+        self::assertSame('char(32)|YES|NULL', $this->runIdShape());
+        self::assertSame(['run_id', 'process_handler'], $this->indexColumns(self::STATUS, 'run_partition', 0));
+
+        $GLOBALS['forward_schema_status'] = [];
+        upgrade_to_1_2_38();
+        self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+        self::assertSame('char(32)|YES|NULL', $this->runIdShape());
+    }
+
+    public function testARunIdOfAnotherTypeStopsTheStepWithoutTouchingIt(): void
+    {
+        $db = $this->database();
+        $db->exec('CREATE TABLE ' . self::STATUS . ' (sock_int_value bigint(20) unsigned NOT NULL auto_increment, run_id varchar(64) NOT NULL default \'\', process_handler int(10) unsigned NOT NULL default 0, status varchar(255) default NULL, PRIMARY KEY (sock_int_value), UNIQUE KEY run_partition (run_id, process_handler)) ENGINE=MEMORY');
+
+        try {
+            upgrade_to_1_2_38();
+            self::fail('The step accepted a run_id column it did not define.');
+        } catch (RuntimeException $e) {
+            self::assertStringContainsString(self::STATUS . ' is missing or differs', $e->getMessage());
+        }
+        self::assertSame("varchar(64)|NO|''", $this->runIdShape());
+    }
+
+    public function testLegacyChildRowsCoexistAndAreNotCountedForARun(): void
+    {
+        $db = $this->database();
+        upgrade_to_1_2_38();
+
+        // A 1.2.37 child after a rollback writes only its status.
+        $legacy = $db->prepare('INSERT INTO ' . self::STATUS . ' (status) VALUES (?)');
+        self::assertTrue($legacy->execute(['4']));
+        self::assertTrue($legacy->execute(['6']));
+        self::assertSame('2', (string) $db->query('SELECT COUNT(*) FROM ' . self::STATUS . ' WHERE run_id IS NULL')->fetchColumn());
+
+        $current = str_repeat('a', 32);
+        $insert = $db->prepare('INSERT INTO ' . self::STATUS . ' (run_id, process_handler, status) VALUES (?, ?, ?)');
+        self::assertTrue($insert->execute([$current, 1, '5']));
+
+        self::assertSame('1', $this->scalar('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ?', $current));
+        self::assertSame('5', $this->scalar('SELECT SUM(status) FROM poller_output_boost_processes WHERE run_id = ?', $current));
     }
 
     public function testAQueueTableOfAnotherShapeStopsTheStepWithoutTouchingIt(): void
@@ -127,6 +179,7 @@ final class BoostSchemaUpgradeTest extends TestCase
 
         self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
         self::assertSame(['run_id', 'process_handler'], $this->indexColumns(self::STATUS, 'run_partition', 0));
+        self::assertSame('char(32)|YES|NULL', $this->runIdShape());
         self::assertSame('0', (string) $db->query('SELECT COUNT(*) FROM ' . self::STATUS)->fetchColumn());
     }
 
@@ -186,6 +239,12 @@ final class BoostSchemaUpgradeTest extends TestCase
     private function columns(string $table): string
     {
         return (string) $this->database()->query("SELECT GROUP_CONCAT(COLUMN_NAME ORDER BY ORDINAL_POSITION) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . $table . "'")->fetchColumn();
+    }
+
+    /** COLUMN_TYPE|IS_NULLABLE|COLUMN_DEFAULT of run_id; MariaDB reports a NULL default as the text NULL. */
+    private function runIdShape(): string
+    {
+        return (string) $this->database()->query("SELECT CONCAT_WS('|', COLUMN_TYPE, IS_NULLABLE, IFNULL(COLUMN_DEFAULT, 'NULL')) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '" . self::STATUS . "' AND COLUMN_NAME = 'run_id'")->fetchColumn();
     }
 
     private function scalar(string $sql, string $run): string

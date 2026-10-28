@@ -8,7 +8,7 @@
  * status table, the clock and the consumer are in-memory stand-ins; the state
  * file carries them from one run to the next.
  *
- * @param array{mode?: string, poller_id?: int, consumer?: string, dispatch?: string, at?: int, signal?: bool, newer?: string} $scenario
+ * @param array{mode?: string, poller_id?: int, consumer?: string, dispatch?: string, at?: int, signal?: bool, newer?: string, signalOnPublish?: bool} $scenario
  *
  * @return array{state: array, status: int, error: string}
  */
@@ -65,7 +65,11 @@ function read_config_option($key, $force = false) {
         default: return 1;
     }
 }
-function set_config_option($key, $value) { $GLOBALS['state']['options'][$key] = $value; }
+function set_config_option($key, $value) {
+    $GLOBALS['state']['options'][$key] = $value;
+    // A SIGTERM that lands right after the run id is published.
+    if (!empty($GLOBALS['scenario']['signalOnPublish']) && $key === 'boost_active_run' && $value !== '') { sig_handler(SIGTERM); }
+}
 function cacti_sizeof($rows) { return is_array($rows) ? count($rows) : 0; }
 function cacti_log($message, ...$args) { $GLOBALS['state']['log'][] = $message; }
 function boost_debug(...$args) {}
@@ -237,6 +241,15 @@ test('SIGTERM during the wait clears the active run', function () {
     $run = boost_queue_master_run($this->stateFile, array('mode' => 'queue', 'consumer' => 'none', 'at' => 9, 'signal' => true));
 
     expect($run['error'])->toBe('')
+        ->and($run['state']['options']['boost_active_run'])->toBe('')
+        ->and($run['state']['options']['boost_poller_status'])->toStartWith('terminated');
+});
+
+test('SIGTERM right after the run id is published still clears it', function () {
+    $run = boost_queue_master_run($this->stateFile, array('mode' => 'queue', 'consumer' => 'none', 'signalOnPublish' => true));
+
+    expect($run['error'])->toBe('')
+        ->and($run['state']['dispatched'])->toBe(array())
         ->and($run['state']['options']['boost_active_run'])->toBe('')
         ->and($run['state']['options']['boost_poller_status'])->toStartWith('terminated');
 });

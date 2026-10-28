@@ -28,3 +28,19 @@ function db_fetch_cell_prepared($sql, $params = array())
 
     return is_file($file) ? file_get_contents($file) : false;
 }
+
+// The processes table as the master worker reads it after an overrun; the stub master writes it.
+function db_fetch_assoc_prepared($sql, $params = array())
+{
+    if ($sql !== 'SELECT pid, taskid FROM processes WHERE tasktype = ? AND taskname = ?' || $params !== array('boost', 'child')) {
+        throw new LogicException('Unexpected processes query: ' . $sql . ' ' . json_encode($params));
+    }
+    $file = getenv('BOOST_FIXTURE') . '/processes';
+
+    return is_file($file) ? json_decode(file_get_contents($file), true) : array();
+}
+
+function unregister_process($tasktype, $taskname, $taskid = 0, $pid = -1)
+{
+    file_put_contents(getenv('BOOST_FIXTURE') . '/unregistered', json_encode(array($tasktype, $taskname, $taskid, $pid)) . "\n", FILE_APPEND);
+}

@@ -5,14 +5,22 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-/** A copy of bin/legacy-boost-master.php beside a fixture install whose poller_boost.php is a stub master. */
-function boost_master_fixture(): string
+/**
+ * A copy of bin/legacy-boost-master.php beside a fixture install whose poller_boost.php is a stub master.
+ * $shortDeadline drops the 600 s margin from the copy so an overrun test does not wait it out.
+ */
+function boost_master_fixture(bool $shortDeadline = false): string
 {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/boost-master-' . bin2hex(random_bytes(8));
     mkdir($dir . '/bin', 0700, true);
     mkdir($dir . '/include', 0700);
-    copy($root . '/bin/legacy-boost-master.php', $dir . '/bin/legacy-boost-master.php');
+    $worker = file_get_contents($root . '/bin/legacy-boost-master.php');
+    if ($shortDeadline) {
+        $worker = str_replace(' * 3 + 600;', ' * 3;', $worker, $replaced);
+        expect($replaced)->toBe(1);
+    }
+    file_put_contents($dir . '/bin/legacy-boost-master.php', $worker);
     file_put_contents($dir . '/include/cli_check.php', '<?php require ' . var_export($root . '/tests/Fixtures/boost-partition-bootstrap.php', true) . ';');
     file_put_contents($dir . '/poller_boost.php', <<<'PHP'
 <?php
@@ -20,9 +28,20 @@ file_put_contents(getenv('BOOST_FIXTURE') . '/spawned', json_encode(array_slice(
 $mode = getenv('BOOST_MODE');
 echo "master output\n";
 fwrite(STDERR, "master diagnostics\n");
-if ($mode === 'hang' || $mode === 'ignore-term') {
+if ($mode === 'slow') {
+    // Past runtime * 3 + 7 s for the fixture's 1 s window, still inside the real deadline.
+    sleep(11);
+}
+if ($mode === 'hang' || $mode === 'ignore-term' || $mode === 'hang-child') {
     if ($mode === 'ignore-term') {
         pcntl_signal(SIGTERM, SIG_IGN);
+    }
+    if ($mode === 'hang-child') {
+        // A boost child registered in the processes table; it outlives a SIGKILLed master.
+        $orphan = proc_open(array(PHP_BINARY, '-r', 'sleep(30);'), array(0 => array('file', '/dev/null', 'r'), 1 => array('file', '/dev/null', 'w'), 2 => array('file', '/dev/null', 'w')), $orphanPipes);
+        $orphanPid = proc_get_status($orphan)['pid'];
+        file_put_contents(getenv('BOOST_FIXTURE') . '/grandchild.pid', (string) $orphanPid);
+        file_put_contents(getenv('BOOST_FIXTURE') . '/processes', json_encode(array(array('pid' => $orphanPid, 'taskid' => 1))));
     }
     file_put_contents(getenv('BOOST_FIXTURE') . '/child.pid', (string) getmypid());
     sleep(30);
@@ -204,10 +223,10 @@ test('master worker stops a master that outlives its deadline', function ($mode)
     if (!function_exists('pcntl_signal') || !function_exists('posix_kill')) {
         $this->markTestSkipped('pcntl and posix are required.');
     }
-    $dir = boost_master_fixture();
+    $dir = boost_master_fixture(true);
     $started = microtime(true);
     try {
-        // The fixture window is 1 s, so the deadline is 3 s; the stub master sleeps 30 s.
+        // The fixture window is 1 s, so the shortened deadline is 3 s; the stub master sleeps 30 s.
         $process = proc_open(
             array(PHP_BINARY, $dir . '/bin/legacy-boost-master.php'),
             array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
@@ -238,3 +257,52 @@ test('master worker stops a master that outlives its deadline', function ($mode)
         boost_master_remove($dir);
     }
 })->with(array('master hangs' => 'hang', 'master ignores SIGTERM' => 'ignore-term'));
+
+test('master worker lets the master outlast its own window plus preparation', function () {
+    // The master's runtime * 3 window opens after preparation and a 7 s sleep and is
+    // followed by cleanup, so the worker must not stop it at runtime * 3.
+    [$result, , $exit, $output, $errors] = boost_master_worker_run('{"force":false,"debug":false}', 'slow');
+
+    expect($result)->toBe(array('status' => 'ok'))
+        ->and($exit)->toBe(0)
+        ->and($errors)->not->toContain('exceeded its deadline');
+});
+
+test('master worker stops boost children still registered after an overrun', function () {
+    if (!function_exists('pcntl_signal') || !function_exists('posix_kill')) {
+        $this->markTestSkipped('pcntl and posix are required.');
+    }
+    $dir = boost_master_fixture(true);
+    try {
+        $process = proc_open(
+            array(PHP_BINARY, $dir . '/bin/legacy-boost-master.php'),
+            array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            null,
+            array_merge(getenv(), array('BOOST_FIXTURE' => $dir, 'BOOST_MODE' => 'hang-child'))
+        );
+        fwrite($pipes[0], '{"force":false,"debug":false}');
+        fclose($pipes[0]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        $exit = proc_close($process);
+        $pid = (int) file_get_contents($dir . '/child.pid');
+        $orphan = (int) file_get_contents($dir . '/grandchild.pid');
+        $gone = false;
+        for ($i = 0; $i < 100 && !$gone; $i++) {
+            $gone = !posix_kill($orphan, 0);
+            $gone || usleep(50000);
+        }
+        expect($stdout)->toContain('BOOST_MASTER={"status":"failed"}')
+            ->and($exit)->toBe(1)
+            ->and($stderr)->toContain('exceeded its deadline')
+            ->and($orphan)->toBeGreaterThan(0)
+            ->and($gone)->toBeTrue()
+            ->and(is_file($dir . '/unregistered') ? file_get_contents($dir . '/unregistered') : '')->toBe(json_encode(array('boost', 'child', 1, $orphan)) . "\n");
+    } finally {
+        foreach (array($pid ?? 0, $orphan ?? 0) as $leftover) {
+            $leftover > 0 && @posix_kill($leftover, 9);
+        }
+        boost_master_remove($dir);
+    }
+});

@@ -774,7 +774,7 @@ INSERT INTO `table_columns` VALUES ('poller_output_boost',4,'output','varchar(51
 INSERT INTO `table_columns` VALUES ('poller_output_boost_local_data_ids',1,'local_data_id','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('poller_output_boost_local_data_ids',2,'process_handler','int(10) unsigned','YES','MUL','0','',NULL);
 INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',1,'sock_int_value','bigint(20) unsigned','NO','PRI',NULL,'auto_increment',NULL);
-INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',2,'run_id','char(32)','NO','MUL','','','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',2,'run_id','char(32)','YES','MUL',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',3,'process_handler','int(10) unsigned','NO','','0','',NULL);
 INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',4,'status','varchar(255)','YES','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('poller_output_rejected',1,'local_data_id','int(10) unsigned','NO','PRI','0','',NULL);

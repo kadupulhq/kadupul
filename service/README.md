@@ -61,11 +61,28 @@ See "Boost queue workers" in docs/symfony-migration.md for setup, scaling and
 the checks to run before enabling queue mode.
 
 To let Messenger own the Boost cycle instead of poller.php, set
-`KADUPUL_BOOST_SCHEDULER=1` in both the poller and the scheduler worker
-environments and run
+`KADUPUL_BOOST_SCHEDULER=1` in the environment of both processes:
+
+- The poller. In its cron file, add the line `KADUPUL_BOOST_SCHEDULER=1` above
+  the poller entry, which passes it to every command below it, or put it in
+  front of the command, as in
+  `*/5 * * * * apache KADUPUL_BOOST_SCHEDULER=1 php /var/www/html/cacti/poller.php > /dev/null 2>&1`.
+  With cactid.service, add it to /etc/sysconfig/cactid, which the unit reads
+  through `EnvironmentFile=`.
+- The scheduler_boost consumer. Add `Environment=KADUPUL_BOOST_SCHEDULER=1` to
+  the `[Service]` section of its systemd unit.
+
+Kadupul does not load `.env` files. config/bootstrap.php reads only the process
+environment and poller.php checks `getenv()`, so the variable set only in a
+Symfony `.env.local` file reaches neither the poller nor the consumer.
+
+Run
 `php bin/console messenger:consume scheduler_boost --time-limit=3600 --memory-limit=128M --failure-limit=1`
-alongside the row-cache consumer (`scheduler_row_cache`). Enabling the scheduler
-stops poller.php from launching Boost. That environment setting is what
+alongside the row-cache consumer (`scheduler_row_cache`), under systemd or
+another process supervisor configured to restart the worker even after a
+successful time-limit exit. `--failure-limit=1` makes the worker exit on a
+failed message; its supervisor must restart it so a dropped database connection
+is replaced. Enabling the scheduler stops poller.php from launching Boost. That environment setting is what
 prevents two masters per cycle; the master's own process registration is only a
 best-effort backstop and can let two near-simultaneous masters both start.
 The scheduler also purges the Boost image cache hourly while `boost_png_cache_enable` is on; `bin/console kadupul:boost:purge-image-cache` does the same on demand.

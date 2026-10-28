@@ -36,6 +36,17 @@ function upgrade_to_1_2_38(): void
         if ($found['data'] !== $expected) {
             throw new RuntimeException('Table ' . $table . ' is missing or differs from the Boost queue definition. Review it and rerun the upgrade; existing rows are not changed.');
         }
+
+        if ($table === 'poller_output_boost_processes') {
+            $run_id = db_install_fetch_cell(
+                'SELECT CONCAT_WS(\'|\', COLUMN_TYPE, IS_NULLABLE, IFNULL(COLUMN_DEFAULT, \'NULL\')) FROM information_schema.COLUMNS
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+                array($table, 'run_id')
+            );
+            if ($run_id['data'] !== 'char(32)|YES|NULL') {
+                throw new RuntimeException('Table ' . $table . ' is missing or differs from the Boost queue definition. Review it and rerun the upgrade; existing rows are not changed.');
+            }
+        }
     }
 }
 
@@ -66,8 +77,20 @@ function upgrade_boost_scope_status_table(string $table): void
         // attempt that stopped before the key was added would block it.
         db_install_execute('TRUNCATE TABLE ' . $table);
     }
+    // run_id is nullable so a 1.2.37 child after a rollback, which inserts only
+    // its status, adds NULL run ids; a unique key never matches two NULLs.
     if (in_array('run_id', $missing, true)) {
-        db_install_execute('ALTER TABLE ' . $table . ' ADD COLUMN run_id char(32) NOT NULL DEFAULT \'\' AFTER sock_int_value');
+        db_install_execute('ALTER TABLE ' . $table . ' ADD COLUMN run_id char(32) NULL DEFAULT NULL AFTER sock_int_value');
+    } else {
+        $run_id = db_install_fetch_cell(
+            'SELECT CONCAT_WS(\'|\', COLUMN_TYPE, IS_NULLABLE) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+            array($table, 'run_id')
+        );
+        // An earlier attempt of this step added it NOT NULL. Any other shape is
+        // left for the check in upgrade_to_1_2_38() to refuse.
+        if ($run_id['data'] === 'char(32)|NO') {
+            db_install_execute('ALTER TABLE ' . $table . ' MODIFY run_id char(32) NULL DEFAULT NULL');
+        }
     }
     if (in_array('process_handler', $missing, true)) {
         db_install_execute('ALTER TABLE ' . $table . ' ADD COLUMN process_handler int(10) unsigned NOT NULL DEFAULT 0 AFTER run_id');
@@ -91,7 +114,7 @@ function upgrade_boost_queue_tables(): array
         'poller_output_boost_processes' => array(
             'create' => 'CREATE TABLE IF NOT EXISTS poller_output_boost_processes (
   sock_int_value bigint(20) unsigned NOT NULL auto_increment,
-  run_id char(32) NOT NULL default \'\',
+  run_id char(32) default NULL,
   process_handler int(10) unsigned NOT NULL default 0,
   status varchar(255) default NULL,
   PRIMARY KEY (sock_int_value),

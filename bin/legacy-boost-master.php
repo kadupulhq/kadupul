@@ -80,8 +80,11 @@ function legacy_boost_master(bool $force, bool $debug): array
     if ($debug) {
         $arguments[] = '--debug';
     }
-    // The window the master registers with register_process_start().
-    $deadline = microtime(true) + max(1, (int) read_config_option('boost_rrd_update_max_runtime')) * 3;
+    // The master registers runtime * 3 with register_process_start(), but that
+    // window opens after preparation and a 7 s sleep, and cleanup, dsstats,
+    // rrdcheck and the plugin hook run after it. The 600 s margin the queue keeps
+    // above the partition timeout lets the master time out and log the cause first.
+    $deadline = microtime(true) + max(1, (int) read_config_option('boost_rrd_update_max_runtime')) * 3 + 600;
     $child = $masterChild = new Process($arguments, $config['base_path'], null, null, null);
     $child->start(static function (string $type, string $buffer): void {
         if ($type === Process::ERR) {
@@ -93,6 +96,7 @@ function legacy_boost_master(bool $force, bool $debug): array
     while ($child->isRunning()) {
         if (microtime(true) >= $deadline) {
             $child->stop(5, SIGKILL);
+            legacy_boost_stop_children();
             fwrite(STDERR, "legacy-boost-master: the master exceeded its deadline and was stopped\n");
 
             return ['status' => 'failed'];
@@ -104,4 +108,24 @@ function legacy_boost_master(bool $force, bool $debug): array
     // Rows flushed are not reported: the master keeps no per-run total
     // outside its log line, so there is nothing cheap to read back.
     return ['status' => $child->getExitCode() === 0 ? 'ok' : 'failed'];
+}
+
+/**
+ * A SIGKILLed master cannot end the boost children it forked, so stop the ones
+ * still registered, as boost_kill_running_processes() does for the next master.
+ * poller_boost.php dispatches at top level and cannot be included for it.
+ */
+function legacy_boost_stop_children(): void
+{
+    $children = db_fetch_assoc_prepared('SELECT pid, taskid FROM processes WHERE tasktype = ? AND taskname = ?', ['boost', 'child']);
+    if (!is_array($children)) {
+        return;
+    }
+    foreach ($children as $registered) {
+        $pid = (int) $registered['pid'];
+        if ($pid > 0 && $pid !== getmypid() && function_exists('posix_kill')) {
+            posix_kill($pid, SIGTERM);
+        }
+        unregister_process('boost', 'child', (int) $registered['taskid'], $pid);
+    }
 }

@@ -930,6 +930,34 @@ failed. The archives stay in place for the next cycle.
 To roll back, set Boost Processing Mode to Forked processes, then stop the
 worker.
 
+### Boost scheduler
+
+By default poller.php launches the Boost master at the end of each polling
+cycle. With `KADUPUL_BOOST_SCHEDULER=1` the `scheduler_boost` consumer starts it
+instead, through `bin/legacy-boost-master.php`, and poller.php stops launching
+it. Only literal `1` enables it. The variable must reach both processes, or
+each starts its own master:
+
+- The poller. In its cron file, add the line `KADUPUL_BOOST_SCHEDULER=1` above
+  the poller entry, which passes it to every command below it, or put it in
+  front of the command, as in
+  `*/5 * * * * apache KADUPUL_BOOST_SCHEDULER=1 php /var/www/html/cacti/poller.php > /dev/null 2>&1`.
+  With cactid.service, add it to /etc/sysconfig/cactid, which the unit reads
+  through `EnvironmentFile=`.
+- The consumer. Add `Environment=KADUPUL_BOOST_SCHEDULER=1` to the `[Service]`
+  section of its systemd unit.
+
+Kadupul does not load `.env` files. config/bootstrap.php reads only the process
+environment and poller.php checks `getenv()`, so the variable set only in a
+Symfony `.env.local` file reaches neither the poller nor the consumer.
+
+Run `php bin/console messenger:consume scheduler_boost --time-limit=3600 --memory-limit=128M --failure-limit=1`
+under systemd or another process supervisor configured to restart the worker
+even after a successful time-limit exit. `--failure-limit=1` makes the worker exit
+on a failed message; its supervisor must restart it so a dropped database
+connection is replaced. See `service/README.md` for the image cache purge and
+for running `bin/console kadupul:boost:run` by hand.
+
 ## Site creation through Symfony
 
 `/app.php/inventory/sites/new` now renders a Symfony Form in Twig and dispatches

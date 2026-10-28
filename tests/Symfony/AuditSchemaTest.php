@@ -582,6 +582,16 @@ final class AuditSchemaTest extends TestCase
         self::assertContains('data_debug', $baseline->tableNames());
     }
 
+    public function testShippedBoostRunIdIsNullableSoLegacyChildRowsDoNotCollide(): void
+    {
+        $column = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'))->column('poller_output_boost_processes', 'run_id');
+
+        self::assertNotNull($column);
+        self::assertSame('char(32)', $column->type);
+        self::assertSame('YES', $column->null);
+        self::assertNull($column->default);
+    }
+
     #[DataProvider('freshTimestampColumns')]
     public function testShippedTimestampBaselineHasNoSyntheticExtraAttribute(string $table, string $field): void
     {

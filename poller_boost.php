@@ -203,6 +203,16 @@ if ($child == false) {
 
                 cacti_log('INFO: Boost queueing ' . $expected_children . ' partitions ...', true, 'BOOST');
 
+                /* sig_handler() exits, which skips the finally below. Clear only
+                 * our own value so a newer master's run is never wiped. Registered
+                 * before the value is set so a signal in between cannot leave it. */
+                $clear_active_run = function () use ($run_id) {
+                    if (read_config_option('boost_active_run', true) === $run_id) {
+                        set_config_option('boost_active_run', '');
+                    }
+                };
+                register_shutdown_function($clear_active_run);
+
                 /* A worker only runs a partition of the run named here. One that
                  * passed this check just before the clear below may still start a
                  * child for this run. That is safe: its status row carries the old
@@ -211,15 +221,6 @@ if ($child == false) {
                  * boost children (boost_kill_running_processes covers every
                  * boost task, including queue-started children). */
                 set_config_option('boost_active_run', $run_id);
-
-                /* sig_handler() exits, which skips the finally below. Clear only
-                 * our own value so a newer master's run is never wiped. */
-                $clear_active_run = function () use ($run_id) {
-                    if (read_config_option('boost_active_run', true) === $run_id) {
-                        set_config_option('boost_active_run', '');
-                    }
-                };
-                register_shutdown_function($clear_active_run);
 
                 try {
                     boost_dispatch_partitions($run_id, $expected_children);
