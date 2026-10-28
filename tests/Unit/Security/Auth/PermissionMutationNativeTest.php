@@ -201,7 +201,8 @@ final class PermissionMutationNativeTest extends TestCase
         self::assertFalse($state['transaction_open']);
         self::assertCount(1, $state['permissions']);
         self::assertSame(8, (int) array_column($state['epochs'], 'reset_perms', 'id')[42]);
-        self::assertLessThanOrEqual(3 * $scenario['size'] + 20, $state['mutation_queries']);
+        // Remembered-login expiry adds one statement per 1000-user epoch chunk.
+        self::assertLessThanOrEqual(3 * $scenario['size'] + 20 + intdiv($members + 999, 1000), $state['mutation_queries']);
         self::assertSame(array(), $state['messages']);
         if ($group) {
             self::assertCount($members + 2, $state['epochs']);
