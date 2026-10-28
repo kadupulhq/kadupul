@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
+
 - Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.
 - Pass bulk permission selection field names explicitly from authenticated user/group page handlers instead of reading POST inside the association helper.
 - Remove 71 unused global bindings from 45 retained operation-page functions, tighten their per-file ratchet, and document global-state boundaries behind every Twig migration family. Native HTTP controllers are now checked alongside application/domain code for direct global access.

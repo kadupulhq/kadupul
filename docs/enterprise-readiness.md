@@ -123,6 +123,15 @@ cover schema-backed projections, credential exclusion, owner scoping and
 seven-theme presentation tests. Installed-session and collector HTTP acceptance
 remain release gates. Existing preference resolution and writers remain active.
 
+### Explicit local RRDtool viewer context
+
+Status: implemented. The local-process web-context adapter accepts explicit web
+and timezone values instead of reading the cookie superglobal. Native cases cover
+handoff ordering and web/CLI, null and zero values. See
+[scope and verification](migrations/rrd-web-context-input.md). Session lifecycle,
+legacy timezone policy and installed collector/session acceptance remain separate
+compatibility boundaries and release checks.
+
 ### Explicit permission-filter row choices
 
 Status: implemented. The retained user/group edit paths pass bootstrap row choices
