@@ -441,6 +441,24 @@ function db_execute($sql, $log = true, $db_conn = false)
 }
 
 /**
+ * db_statement_count - number of statements this request has executed
+ *
+ * @param  (bool) True to record one more execution before returning
+ *
+ * @return (int) The running count, read by the KADUPUL_PROFILE shutdown writer
+ */
+function db_statement_count(bool $executed = false): int
+{
+    static $count = 0;
+
+    if ($executed) {
+        $count++;
+    }
+
+    return $count;
+}
+
+/**
  * db_execute_prepared - run an sql query and do not return any output
  *
  * @param  (string)        The SQL query to execute
@@ -533,6 +551,8 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
         }
 
         set_error_handler('db_warning_handler', E_WARNING | E_NOTICE);
+
+        db_statement_count(true);
 
         try {
             if (empty($params) || cacti_count($params) == 0) {

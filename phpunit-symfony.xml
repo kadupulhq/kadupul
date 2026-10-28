@@ -58,6 +58,12 @@
             <file>scripts/motorola_surfboard_SB6141.php</file>
             <file>scripts/ss_apache_stats.php</file>
             <file>tools/edit-package.php</file>
+            <file>include/request_profile.php</file>
+            <file>automation_templates.php</file>
+            <file>cdef.php</file>
+            <file>data_source_profiles.php</file>
+            <file>gprint_presets.php</file>
+            <file>host.php</file>
         </include>
     </source>
 </phpunit>

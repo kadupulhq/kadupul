@@ -1,0 +1,19 @@
+when@dev:
+    web_profiler:
+        toolbar: true
+        intercept_redirects: false
+
+    framework:
+        profiler:
+            only_exceptions: false
+
+# The test environment must collect so tests can read profiles back.
+when@test:
+    web_profiler:
+        toolbar: false
+        intercept_redirects: false
+
+    framework:
+        profiler:
+            collect: true
+            only_exceptions: false
