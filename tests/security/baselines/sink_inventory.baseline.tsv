@@ -803,6 +803,7 @@ header_redirect	./graphs.php:475			header('Location: graphs.php?action=graph_edi
 header_redirect	./graphs.php:477			header('Location: graphs.php?action=graph_edit&header=false&id=' . (empty($local_graph_id) ? get_nfilter_request_var('local_graph_id') : $local_graph_id) . (isset_request_var('host_id') ? '&host_id=' . get_nfilter_request_var('host_id') : ''));
 header_redirect	./graphs.php:479			header('Location: graphs.php?action=graph_edit&header=false&id=' . $local_graph_id);
 header_redirect	./graphs.php:481			header('Location: graphs.php?header=false');
+header_redirect	./graphs.php:653						header('Location: graphs.php?header=false');
 header_redirect	./graphs.php:808					header("Location: aggregate_graphs.php?header=false&action=edit&tab=details&id=$local_graph_id");
 header_redirect	./graphs.php:841				header('Location: graphs.php?header=false&template_id=-1');
 header_redirect	./graphs.php:843				header('Location: graphs.php?header=false');
