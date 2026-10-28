@@ -400,7 +400,7 @@ function plugins_load_temp_table()
 
 function update_show_current()
 {
-    global $plugins, $pluginslist, $config, $status_names, $actions, $item_rows;
+    global $plugins, $config, $item_rows;
 
     /* clean from the database any invalid entries */
     plugin_clean_old_plugin_info();
@@ -852,7 +852,7 @@ function plugin_required_installed($plugin, $table)
 
 function plugin_actions($plugin, $table)
 {
-    global $config, $pluginslist, $plugins_integrated;
+    global $config, $plugins_integrated;
 
     $link = '<td class="nowrap">';
     switch ($plugin['status']) {

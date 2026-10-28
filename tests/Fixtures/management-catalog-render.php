@@ -50,6 +50,7 @@ $container->set(Kadupul\Platform\Contract\DatabaseConnection::class, new class (
 $pages = [];
 try {
     foreach (Kadupul\Navigation\Contract\Management\CatalogScreen::cases() as $screen) {
+        if ($screen->metadataView() !== (($argv[2] ?? '') === 'metadata')) { continue; }
         $uri = substr($screen->path(), 7) . ($screen->scoped() ? '/4' : '');
         $request = Symfony\Component\HttpFoundation\Request::create($uri);
         $response = $kernel->handle($request);

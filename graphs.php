@@ -1302,7 +1302,6 @@ function form_actions()
 
 function item()
 {
-    global $consolidation_functions, $graph_item_types, $struct_graph_item;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -1400,7 +1399,7 @@ function is_multi_device_graph($local_graph_id)
 
 function graph_edit()
 {
-    global $config, $struct_graph, $image_types, $consolidation_functions, $graph_item_types, $struct_graph_item;
+    global $config, $struct_graph;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -1980,7 +1979,7 @@ function validate_graph_request_vars()
 
 function graph_management()
 {
-    global $graph_actions, $graph_sources, $item_rows, $config;
+    global $graph_actions, $graph_sources, $item_rows;
     if (get_request_var('host_id') > 0 && !is_device_allowed(get_filter_request_var('host_id'))) {
         set_request_var('host_id', '-2');
     }

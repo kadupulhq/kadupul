@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,11 +13,13 @@ use CactiSecureHeaders;
 
 final class PermissionFilter
 {
-    /** Render the shared filter controls; callers retain their route and translations. */
-    public static function render(string $page, string $action, string $tab, string $title, string $row_label, string $associated_label, string $template_field, string $go_label, string $clear_label, bool $apply_form_argument = false, bool $clear_form_argument = false): void
+    /**
+     * Render the shared filter controls; callers retain their route and translations.
+     *
+     * @param array<int|string, int|string> $rowChoices Bootstrap row choices, already limited by max_input_vars.
+     */
+    public static function render(array $rowChoices, string $page, string $action, string $tab, string $title, string $row_label, string $associated_label, string $template_field, string $go_label, string $clear_label, bool $apply_form_argument = false, bool $clear_form_argument = false): void
     {
-        global $item_rows;
-
         $id = (int) get_request_var('id');
         $url = $page . '?action=' . $action . '&tab=' . $tab . '&id=' . $id;
         $json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
@@ -80,7 +84,7 @@ final class PermissionFilter
         <td><select id='rows'>
             <option value='-1'<?php print get_request_var('rows') == '-1' ? ' selected' : ''; ?>><?php print __('Default'); ?></option>
             <?php
-            foreach (cacti_sizeof($item_rows) ? $item_rows : array() as $key => $value) {
+            foreach ($rowChoices as $key => $value) {
                 print "<option value='" . html_escape($key) . "'";
                 print get_request_var('rows') == $key ? ' selected' : '';
                 print '>' . html_escape($value) . '</option>';

@@ -137,9 +137,10 @@ headers only and mutation methods are rejected.
 The adapter projects the four legacy graph/device visibility modes without the
 legacy fast path that overlooks device exceptions. Default-allow exceptions are
 explicitly checked. The explicit state filter replaces legacy saved display
-preferences for this new screen. `host.php` remains operational; advanced filters,
+preferences for this new screen. `host.php` remained operational at this slice; advanced filters,
 full exports, advanced edits, bulk actions, plugin-provided list hooks/columns and navigation
-cutover are remaining migration work, not claimed parity.
+cutover were left as later migration work, not claimed parity. `host.php` now only
+forwards to Symfony; see [Legacy device entry and menus](#legacy-device-entry-and-menus).
 
 Run the module/kernel checks with `composer test`. Run real HTTP/database checks:
 
@@ -173,8 +174,9 @@ sorts by name with an ID tie-breaker; `page` and `size=25|50|100` provide bounde
 pagination with lookahead. Twig escapes site text and carries filters between
 pages. Controller responses are private/no-store. GET/HEAD are supported; Symfony
 rejects mutations at routing with a generic 405. Site deletion/duplication, remaining edit fields,
-other sort columns, saved preferences and legacy navigation cutover remain to be
-migrated. `sites.php` remains operational.
+other sort columns, saved preferences and legacy navigation cutover were left to
+later slices, and `sites.php` remained operational. See
+[Completed Sites workflow on main](#completed-sites-workflow-on-main) for the current state.
 
 ## Site editing slice
 
@@ -209,7 +211,7 @@ editors do not enforce the new revision protocol, so they can still overwrite la
 
 Failed persistence attempts roll back when the transaction remains active. An
 uncertain failure returns 502 and asks the operator to reload before retrying;
-there is no automatic retry. Controller responses are private/no-store. Other settings and destructive/bulk operations remain in `sites.php`.
+there is no automatic retry. Controller responses are private/no-store. Other settings and destructive/bulk operations stayed in `sites.php` until the [Completed Sites workflow](#completed-sites-workflow-on-main).
 
 ## Inventory details slice
 
@@ -248,8 +250,11 @@ Opening a device from the list preserves its search, filters, sorting, page and
 page size through validation errors and successful saves. “Back to devices”
 returns to that view. Only validated list parameters are carried in `list[...]`;
 form actions and links use fixed Symfony routes, never a supplied return URL.
-Other settings, including SNMP credentials, templates and poller assignment, remain
-in the legacy editor and cannot be submitted through this form.
+Other settings, including SNMP credentials, templates and poller assignment, stayed
+in the legacy editor at this slice and cannot be submitted through this form. Later
+slices moved them: [Device SNMP editing](#device-snmp-editing),
+[Device template assignment](#device-template-assignment) and
+[Device collector assignment](#device-collector-assignment).
 
 Symfony's built-in stateless CSRF protection requires the form token and same-origin
 browser evidence. Missing or cross-origin evidence fails closed; no second session
@@ -484,7 +489,8 @@ the existing `fa-circle-thin` alias. The small unminified tablesorter pager stay
 as pinned source because the npm distribution omits it. Other small legacy
 browser libraries remain until their owning screens migrate.
 
-Symfony's migrated Twig templates currently request no browser assets. The test
+Symfony's migrated Twig templates request only local browser assets: the base
+layout's theme stylesheet and a few page scripts served by the installation. The test
 suite rejects static remote script, stylesheet, image, media and frame URLs in
 those templates. When a migrated page first needs a browser dependency, pin its
 exact version in `package.json` and `package-lock.json`, build it to a local path,
@@ -558,7 +564,7 @@ differed only in its unnormalized `Total[...]` elapsed time (`0.0211` versus
 This is recorded as baseline nondeterminism, not a migration regression or an
 approved golden rewrite.
 
-The existing coverage suite aborts at `tests/HandOff/AggregateDataHandoffTest.php`
+The existing coverage suite aborts at `tests/handoff/AggregateDataHandoffTest.php`
 because `lib/type_secure.php` is missing, on both the local runtime and the Linux
 container. Focused CSV tests passed (4 tests); header tests also passed. These
 pre-existing failures must not be represented as a passing full test suite.
@@ -854,8 +860,8 @@ Successful creation redirects with HTTP 303 to the existing Twig site editor.
 Validation failures return 422, revoked access 401/403 and uncertain write results
 502 with a message to inspect the list before retrying. Responses are private and
 not stored. Labels and errors use the English/French Inventory catalogs. Existing
-site address/map editing, duplication and deletion remain in `sites.php`; LTS is
-unchanged.
+site address/map editing, duplication and deletion stayed in `sites.php` until the
+batch below; LTS is unchanged.
 
 
 ## Completed Sites workflow on main
@@ -999,7 +1005,8 @@ Unassigned. Timeouts and remote/plugin effects retain the existing uncertain-sav
 behavior; the adapter never automatically retries.
 
 This completes site assignment in the editor; template, collector and detailed
-polling/credential editing remain separate migration slices. LTS is unchanged.
+polling/credential editing were separate migration slices, described in the
+sections that follow. LTS is unchanged.
 
 ### Device polling settings
 
@@ -1015,7 +1022,8 @@ configured maximum.
 NULL ping methods and other unsupported historical values require an explicit
 valid choice before saving; they are not silently normalized. The worker repeats validation and retains the
 legacy cache/poller/plugin path. SNMP credential and protocol editing, template
-and collector assignment remain separate slices. LTS is unchanged.
+and collector assignment were separate slices, described in the sections that
+follow. LTS is unchanged.
 
 
 ### Device SNMP editing
@@ -1292,7 +1300,7 @@ deprecation warning to stderr; while the database is behind, it still runs the
 core and plugin upgrades. It needs the Console
 Access and Installation/Upgrades realms, the realm of the install wizard,
 which is the only place the web UI changes the core schema
-(`include/global_arrays.php:1284-1285`). `--dry-run` reads the file and the
+(`include/global_arrays.php:1294-1295`). `--dry-run` reads the file and the
 schema and changes nothing, not even the two audit tables. `--json` prints
 `status`, `database`, `dry_run`, `mode`, `upgrade`, `baseline`, `tables`,
 `alters`, `imported` and `exported`.
@@ -1527,8 +1535,8 @@ clears it. Confirmation revisions include all supported options. The isolated
 worker rechecks authorization, writes the entire primary selection transactionally,
 refreshes polling configuration and invokes legacy action 4. Remote outcomes are
 verified and failures report uncertainty because remote writes are not distributed
-transactions. Bulk collector/site/template assignment and SNMP credential changes
-remain separate pending slices; the legacy bulk options page is not retired yet.
+transactions. Bulk site, template and collector assignments and bulk SNMP settings
+are described in the sections below.
 
 
 ### Bulk site, template and collector assignments
@@ -1626,7 +1634,7 @@ Inventory now coordinates bounded device selections through `PlaceDevices`. Dest
 
 The list retains collector/template/exact-location filters and the core not-up status filter. Legacy sort columns other than name/hostname are rejected rather than silently ignored. CSV compatibility intentionally uses the bounded public-data export; it never exports SNMP credentials or unrestricted host rows.
 
-Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Rule authoring/administration remains a later module migration. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.
+Applying already configured device automation rules is available through a Symfony confirmation and `ApplyDeviceRules`, with rule execution owned by the Automation adapter. Device Rules administration is described under Automation template administration; graph and tree rule authoring remain later migrations. Existing mutating hooks remain in the isolated workers. Legacy UI injection hooks (`device_top`, `host_edit_*`, `device_edit_*`, `device_filters`, `device_sql_where`, `device_display_text`, `device_table_*`, `device_change_javascript`) and custom `device_action_array`, `device_action_prepare` and `device_action_execute` hooks no longer run on core device pages. Plugin-owned pages are outside this queue; plugin authors must provide their own routes or a typed Symfony extension before relying on the new core UI. This is a main-only compatibility change and must be reviewed before release.
 ### Palette CSV spreadsheet safety
 
 Palette downloads mark every operator-controlled name and hex cell as literal
@@ -1916,10 +1924,27 @@ Personal reports preserve the normal-user realm without adding console access.
 Graph and device visibility reuse a shared IdentityAccess policy projection while
 Inventory's existing helper remains a compatibility delegate. Existing PHP
 editors, bulk operations and plugin/report execution retain their write paths.
+
+The [mapping and MIB slice](migrations/mapping-mib-batch-10.md) adds ten Twig
+views using the merged management catalog infrastructure. Template ownership,
+composite mapping identities and MIB module scope are checked in bounded DBAL
+readers. Related confirmation rendering no longer binds three unused VDEF
+globals; its HTML and request/query calls remain unchanged.
+
 The [relationship browsing slice](migrations/relationships-batch-10.md) adds ten
 parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
 continues to handle edits and operational actions. This slice does not retire
 legacy writers or remove their global state.
+
+The [permission selection input boundary](migrations/permission-selection-input.md)
+passes submitted field names from authenticated legacy page handlers to the
+association helper. It removes that helper's direct POST dependency while keeping
+its existing writer, transaction and permission-cache lifecycle.
+
+The [Twig global-state audit](migrations/twig-global-state-audit.md) covers the
+native layers, retained operation pages and shared compatibility adapters. It
+removes 71 unused bindings and identifies the session, connection, plugin and
+worker ownership work needed before the remaining globals can disappear.
 
 The [identity relationship slice](migrations/identity-relationships-batch-10.md)
 adds ten views for recorded memberships and permission exceptions. It reuses the
@@ -1935,3 +1960,8 @@ The [RRDtool web-context input boundary](migrations/rrd-web-context-input.md)
 passes viewer state explicitly to the local-process adapter. The procedural
 caller still owns cookie/configuration integration; session release and timezone
 preparation keep their ordering around the existing executable check.
+
+The [permission filter row-context slice](migrations/permission-filter-row-context.md)
+passes the existing bootstrap catalog through retained legacy edit pages and
+filters. It removes the shared renderer's row-choice global without replacing
+the catalog, its input limit or tab-hook customization.

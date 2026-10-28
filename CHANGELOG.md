@@ -8,6 +8,12 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
 
+- Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.
+- Pass bulk permission selection field names explicitly from authenticated user/group page handlers instead of reading POST inside the association helper.
+- Remove 71 unused global bindings from 45 retained operation-page functions, tighten their per-file ratchet, and document global-state boundaries behind every Twig migration family. Native HTTP controllers are now checked alongside application/domain code for direct global access.
+- Say in `rebuild_poller_cache.php --help` that `--threads` defaults to the Poller Command Concurrent Processes setting, not 5 (#1021).
+
+- Add ten Twig views for graph-input associations, data-query mappings and suggestions, template relationships, and registered SNMP MIB metadata. Remove three unused VDEF global bindings from the related data-query confirmation page without changing its HTML or request/query calls.
 - Reject malformed aggregate parent identifiers, bound prepared insert batches, and hold the verified table engine stable until item replacement completes. Failed replacements preserve previous items and caller-owned work (#1017).
 - Add ten Twig views for stored user/group realm grants, display preferences, graph preferences, time preferences and login options. Preference readers allowlist public keys and preserve zero, empty and missing values; existing PHP forms still handle changes.
 

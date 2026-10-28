@@ -33,6 +33,16 @@ final readonly class ManagementCatalogController
     #[Route('/management/graph-template-inputs/{id}', name: 'management_graph_template_inputs', defaults: ['screen' => 'graph-template-inputs'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
     #[Route('/management/device-template-graphs/{id}', name: 'management_device_template_graphs', defaults: ['screen' => 'device-template-graphs'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
     #[Route('/management/data-query-graphs/{id}', name: 'management_data_query_graphs', defaults: ['screen' => 'data-query-graphs'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/graph-input-items/{id}', name: 'management_graph_input_items', defaults: ['screen' => 'graph-input-items'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/query-data-sources/{id}', name: 'management_query_data_sources', defaults: ['screen' => 'query-data-sources'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/query-graph-suggestions/{id}', name: 'management_query_graph_suggestions', defaults: ['screen' => 'query-graph-suggestions'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/query-data-suggestions/{id}', name: 'management_query_data_suggestions', defaults: ['screen' => 'query-data-suggestions'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/query-device-templates/{id}', name: 'management_query_device_templates', defaults: ['screen' => 'query-device-templates'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/graph-device-templates/{id}', name: 'management_graph_device_templates', defaults: ['screen' => 'graph-device-templates'], requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/snmp-mibs', name: 'management_snmp_mibs', defaults: ['screen' => 'snmp-mibs', 'id' => '0'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/mib-objects/{id}', name: 'management_mib_objects', defaults: ['screen' => 'mib-objects'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/mib-conventions/{id}', name: 'management_mib_conventions', defaults: ['screen' => 'mib-conventions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/mib-notification-attributes/{id}', name: 'management_mib_notification_attributes', defaults: ['screen' => 'mib-notification-attributes'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     public function __invoke(CatalogScreen $screen, string $id, Request $request, ConsoleAccess $console, ManagementCatalogAccess $access, ViewManagementCatalog $view, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
