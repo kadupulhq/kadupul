@@ -140,9 +140,11 @@ locked 4.19.1 and updates compatible test dependency patches.
 - PHPMailer, gettext, legacy graph/widget libraries and icon assets still need
   separate upstream/compatibility review. They are not covered by root Composer
   or the E2E npm audit merely because their files live in this repository.
-- Chart.js 4, billboard.js 4, dygraphs 2 and screenfull 6 must not be treated as
+- Chart.js 4, billboard.js 4 and dygraphs 2 must not be treated as
   drop-in replacements. Their API, module or browser compatibility changes need
-  call-site migration and dedicated regression tests. jQuery 4.0.0 now ships with
+  call-site migration and dedicated regression tests. screenfull is no longer
+  bundled: `include/js/screenfull.js` is an application-owned shim over the native
+  Fullscreen API that keeps the screenfull 3.x global API for plugins. jQuery 4.0.0 now ships with
   the call-site fixes from #834, and Font Awesome 7.3.1 is installed from
   `package.json` (#152).
 - The multiselect implementation already matches upstream 3.0.1 despite its
