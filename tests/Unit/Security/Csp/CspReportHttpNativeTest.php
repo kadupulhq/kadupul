@@ -43,6 +43,8 @@ test('the actual CSP endpoint enforces HTTP methods and report validation', func
         }
         if ($expected === 204) {
             $this->assertStringContainsString('CSP violation: script-src blocked inline on https://example.test/', file_get_contents($directory . '/endpoint.log'));
+        } else {
+            $this->assertFileDoesNotExist($directory . '/endpoint.log');
         }
         if ($coverage !== null) {
             $deadline = microtime(true) + 5;
@@ -71,4 +73,16 @@ test('the actual CSP endpoint enforces HTTP methods and report validation', func
     'GET requires POST' => ['GET', '', 405, ''],
     'invalid POST is rejected' => ['POST', 'not JSON', 400, 'Invalid JSON'],
     'valid POST is logged' => ['POST', '{"csp-report":{"violated-directive":"script-src","blocked-uri":"inline","document-uri":"https://example.test/"}}', 204, ''],
+    'report at the size limit is logged' => ['POST', cspReportOfLength(16384), 204, ''],
+    'report one byte over the limit is refused' => ['POST', cspReportOfLength(16385), 400, 'Body exceeds size limit'],
+    'large report is refused' => ['POST', cspReportOfLength(1048576), 400, 'Body exceeds size limit'],
 ]);
+
+/** A well-formed report padded to exactly $length bytes. */
+function cspReportOfLength(int $length): string
+{
+    $prefix = '{"csp-report":{"violated-directive":"script-src","blocked-uri":"inline","document-uri":"https://example.test/","original-policy":"';
+    $suffix = '"}}';
+
+    return $prefix . str_repeat('a', $length - strlen($prefix) - strlen($suffix)) . $suffix;
+}
