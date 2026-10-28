@@ -45,3 +45,17 @@ Today, the cactid service does not include Windows support, though the
 PHP Windows project does provide a PHP module to install and enable a PHP
 based Windows services.  We would be glad to accept a pull request and
 additional instructions for supporting this service on Windows.
+
+## kadupul-boost-worker.service
+
+Run a Boost queue worker. It consumes the `boost` Messenger transport when
+Boost Processing Mode is set to Message queue workers. It does nothing for
+installations that use the default forked processes.
+
+Install it the same way as cactid.service: copy the file to
+/usr/lib/systemd/system, set User, Group and WorkingDirectory to match the
+installation, and change the `php` path in ExecStart if yours is not /usr/bin/php. The unit must run as the same account as the poller so the Boost child
+it starts can write the RRD files. `Restart=always` is required: the worker
+exits after `--time-limit` or `--memory-limit` and systemd starts it again.
+See "Boost queue workers" in docs/symfony-migration.md for setup, scaling and
+the checks to run before enabling queue mode.
