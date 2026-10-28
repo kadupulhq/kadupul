@@ -13490,11 +13490,11 @@ msgstr "' %s' Veri Kaynağı için bir XML çıktı sütunu seçmeli ve onay kut
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Grafik Şablonunuz kullanımda Veri Şablonları içermiyor. Lütfen Grafik Şablonunuzu düzeltin"
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Şifre alanı uzunluğu belirlenemedi, şifreyi bozabileceğinden devam edemiyor"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Şifre alanı uzunluğu değiştirilemedi, şifreyi bozabileceğinden devam edemiyor"
 

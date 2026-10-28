@@ -117,6 +117,9 @@ jobs:
         BOOST_DB_NAME: cacti_boost_contract
         BOOST_DB_USER: cactiuser
         BOOST_DB_PASSWORD: cactiuser
+        KADUPUL_TEST_MYSQL_DSN: 'mysql:host=127.0.0.1;port=3306;dbname=cacti_boost_contract'
+        KADUPUL_TEST_MYSQL_USER: root
+        KADUPUL_TEST_MYSQL_PASSWORD: cactiroot
         AUTH_POLICY_NATIVE_DB: '1'
         AUTH_POLICY_DB_NAME: cacti_auth_policy_contract
         SETTINGS_USER_DB_NAME: cacti_settings_user_contract
