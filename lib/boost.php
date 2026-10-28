@@ -1360,7 +1360,7 @@ function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe)
      * found the Data Source invalid, so it was removed
      * from the poller_item table
      */
-    if ($rrd_path == '') {
+    if ($rrd_path == '' || !rrd_check_path($rrd_path, null, 'BOOST')) {
         return time();
     }
 
@@ -1491,6 +1491,10 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
     include($config['include_path'] . '/global_arrays.php');
 
     $data_source_path = get_data_source_path($local_data_id, true);
+
+    if (!rrd_check_path($data_source_path, null, 'BOOST')) {
+        return false;
+    }
 
     /* ok, if that passes lets check to make sure an rra does not already
     exist, the last thing we want to do is overwrite data! */
@@ -1654,6 +1658,10 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
      */
     if ($rrd_path == '') {
         return 'OK';
+    }
+
+    if (!rrd_check_path($rrd_path, null, 'BOOST')) {
+        return 'ERROR: Invalid RRD path';
     }
 
     // Refuse a path RRDtool cannot receive before any existence check or create runs.

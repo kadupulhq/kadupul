@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 23:54-0700\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -399,7 +399,7 @@ msgstr "Відповідні Графіки"
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
-#: data_sources.php:1814 data_templates.php:1101 graph_templates.php:726
+#: data_sources.php:1794 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2113 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
@@ -417,7 +417,7 @@ msgid "Search"
 msgstr "Пошук"
 
 #: aggregate_graphs.php:1288 aggregate_graphs.php:1324
-#: aggregate_graphs.php:1587 data_sources.php:2004 data_sources.php:2143
+#: aggregate_graphs.php:1587 data_sources.php:1984 data_sources.php:2123
 #: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2130
 #: graphs.php:2322 include/global_arrays.php:996 include/global_arrays.php:1232
 #: include/global_arrays.php:2018 lib/api_automation.php:283 lib/html.php:1955
@@ -432,7 +432,7 @@ msgstr "Графіки"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1383 data_sources.php:1824 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1804 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2134
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -454,7 +454,7 @@ msgstr "Частина Агрегованого"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1744 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -469,7 +469,7 @@ msgstr "Вперед"
 
 #: aggregate_graphs.php:1303 aggregate_graphs.php:1596
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1764 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1744 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -485,7 +485,7 @@ msgstr "Встановити/Оновити Фільтри"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1399 data_sources.php:1765 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1745 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2105
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -500,7 +500,7 @@ msgid "Clear"
 msgstr "Очистити"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1765
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1745
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2105 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -519,7 +519,7 @@ msgstr "Заголовок Графіку"
 
 #: aggregate_graphs.php:1330 aggregate_graphs.php:1663
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1484 data_sources.php:1998
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1978
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2306 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -539,8 +539,8 @@ msgid "Size"
 msgstr "Розмір"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2085
-#: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2065
+#: data_sources.php:2066 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1438 tree.php:2399
 #: tree.php:2400 user_admin.php:2269 user_domains.php:757
@@ -550,8 +550,8 @@ msgstr "Ні"
 
 #: aggregate_graphs.php:1348 aggregate_templates.php:724
 #: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
-#: data_debug.php:791 data_queries.php:1536 data_sources.php:2085
-#: data_sources.php:2086 data_templates.php:1321 graph_templates.php:920
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2065
+#: data_sources.php:2066 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1438
 #: lib/installer.php:2134 lib/installer.php:2162 lib/installer.php:4027
@@ -573,7 +573,7 @@ msgstr " [ Застосовано користувацький список Гр
 msgid "Aggregate Graphs"
 msgstr "Агреговані Графіки"
 
-#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1733
+#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1713
 #: graph_view.php:699 graphs.php:2066 include/global_arrays.php:2898
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
@@ -586,7 +586,7 @@ msgstr "Шаблон"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
-#: data_debug.php:1114 data_sources.php:1737 graph_templates_items.php:447
+#: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2070 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3980 lib/auth.php:4029
@@ -604,7 +604,7 @@ msgstr "Будь-який"
 #: automation_graph_rules.php:972 automation_graph_rules.php:973
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
-#: data_sources.php:1738 data_sources.php:2059 data_templates.php:1323
+#: data_sources.php:1718 data_sources.php:2039 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:950 graphs.php:1595 graphs.php:1604
 #: graphs.php:2071 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:526 include/global_arrays.php:584
@@ -708,7 +708,7 @@ msgstr "Заголовок Шаблону"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Шаблони Агрегації, котрі використовуються не можуть бути Видалені. Використання має на увазі посилання на Агрегований графік."
 
-#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:2016
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1996
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 msgid "Deletable"
 msgstr "Видаляється"
@@ -1138,7 +1138,7 @@ msgstr "SNMP"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:835 automation_networks.php:1075
 #: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
-#: data_sources.php:1793 data_templates.php:1289 lib/api_automation.php:52
+#: data_sources.php:1773 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
@@ -1329,7 +1329,7 @@ msgstr "Запит Даних"
 #: automation_graph_rules.php:840 automation_graph_rules.php:965
 #: automation_graph_rules.php:981 automation_networks.php:535
 #: automation_tree_rules.php:854 automation_tree_rules.php:974
-#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1798
+#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1778
 #: include/global_arrays.php:920 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1344,7 +1344,7 @@ msgstr "Увімкнено"
 
 #: automation_graph_rules.php:841 automation_graph_rules.php:981
 #: automation_networks.php:1090 automation_tree_rules.php:855
-#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1799
+#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1779
 #: data_templates.php:1325 include/global_arrays.php:919
 #: include/global_arrays.php:1579 include/global_arrays.php:1871
 #: include/global_settings.php:437 include/global_settings.php:453
@@ -1611,7 +1611,7 @@ msgstr "%d Хвилина"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1557 include/global_arrays.php:714
+#: data_sources.php:1537 include/global_arrays.php:714
 #: include/global_arrays.php:715 include/global_arrays.php:716
 #: include/global_arrays.php:717 include/global_arrays.php:754
 #: include/global_arrays.php:755 include/global_arrays.php:757
@@ -2057,7 +2057,7 @@ msgstr "Оновити"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1553 include/global_arrays.php:712
+#: data_sources.php:1533 include/global_arrays.php:712
 #: include/global_arrays.php:748 include/global_arrays.php:749
 #: include/global_arrays.php:750 include/global_arrays.php:751
 #: include/global_arrays.php:752 include/global_arrays.php:753
@@ -2572,7 +2572,7 @@ msgstr "Автоматичне відлагодження Джерела Дан�
 msgid "Data Source repair received an invalid Data Source ID."
 msgstr "Ремонт Джерела Даних отримав невірний ID Джерела Даних."
 
-#: data_debug.php:90 data_debug.php:164 lib/dsdebug.php:350
+#: data_debug.php:90 data_debug.php:164 lib/dsdebug.php:355
 msgid "The requested Data Source is not available."
 msgstr ""
 
@@ -2628,7 +2628,7 @@ msgstr "Існує"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "Визначає чи Джерело Даних розташовано в Кеші Поллера."
 
-#: data_debug.php:541 data_sources.php:2022 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:2002 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "Активно"
@@ -2669,8 +2669,8 @@ msgstr "Проблеми"
 msgid "Summary of issues found for the Data Source."
 msgstr "Підсумок проблем знайдених для Джерела Даних."
 
-#: data_debug.php:646 data_debug.php:1220 data_sources.php:1820
-#: data_sources.php:1982 include/global_arrays.php:997
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1800
+#: data_sources.php:1962 include/global_arrays.php:997
 #: include/global_arrays.php:1043 include/global_arrays.php:2314
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
@@ -2785,7 +2785,7 @@ msgstr "Перезапустити Аналіз"
 msgid "Check"
 msgstr "Перевірка"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4278
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4468
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Значення"
@@ -2875,13 +2875,13 @@ msgstr ""
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr ""
 
-#: data_debug.php:1150 data_sources.php:1773 data_templates.php:1107
+#: data_debug.php:1150 data_sources.php:1753 data_templates.php:1107
 #: lib/html.php:2780
 msgid "Profile"
 msgstr "Профіль"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
-#: data_sources.php:1777 data_sources.php:1797 data_templates.php:1111
+#: data_sources.php:1757 data_sources.php:1777 data_templates.php:1111
 #: graphs.php:2123 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
@@ -3487,100 +3487,100 @@ msgstr "Відлагодження Джерела Даних"
 msgid "RRDtool Tune Info"
 msgstr "Інформація налаштувань RRDtool"
 
-#: data_sources.php:1551 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1531 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "Зовнішній"
 
-#: data_sources.php:1555 include/global_arrays.php:713
+#: data_sources.php:1535 include/global_arrays.php:713
 #: include/global_arrays.php:1210 include/global_arrays.php:1585
 #: include/global_arrays.php:1621 include/global_arrays.php:1639
 #: include/global_settings.php:1713 include/global_settings.php:2678
 msgid "1 Minute"
 msgstr "1 Хвилина"
 
-#: data_sources.php:1714
+#: data_sources.php:1694
 msgid "Data Sources [ All Devices ]"
 msgstr "Джерела Даних [ Всі Пристрої ]"
 
-#: data_sources.php:1716
+#: data_sources.php:1696
 msgid "Data Sources [ Non Device Based ]"
 msgstr "Джерела Даних [ Не базуються на Пристроях ]"
 
-#: data_sources.php:1719
+#: data_sources.php:1699
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "Джерела Даних [ %s ]"
 
-#: data_sources.php:1800
+#: data_sources.php:1780
 msgid "Bad Indexes"
 msgstr "Хибні Індекси"
 
-#: data_sources.php:1806 graphs.php:2099
+#: data_sources.php:1786 graphs.php:2099
 msgid "Note that this query may take some time to run."
 msgstr "Зверніть увагу, що виконання цього запиту може тривати деякий час."
 
-#: data_sources.php:1806 graphs.php:2099
+#: data_sources.php:1786 graphs.php:2099
 msgid "Orphaned"
 msgstr "Сирота"
 
-#: data_sources.php:1992 utilities.php:2282
+#: data_sources.php:1972 utilities.php:2282
 msgid "Data Source Name"
 msgstr "І'мя Джерела Даних"
 
-#: data_sources.php:1995
+#: data_sources.php:1975
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "Ім'я цього Джерела Даних. За звичай згенеровано програмно з визначення в Шаблоні Даних."
 
-#: data_sources.php:2001
+#: data_sources.php:1981
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "Внутрішній ID бази даних для цього Джерела Даних. Корисно під час виконання Автоматизації або налагодження."
 
-#: data_sources.php:2007
+#: data_sources.php:1987
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "Кількість Графіків та Агрегованих Графіків, що використовують цей Запит Даних."
 
-#: data_sources.php:2010 include/global_settings.php:1248
+#: data_sources.php:1990 include/global_settings.php:1248
 msgid "Poller Interval"
 msgstr "Інтервал Поллера"
 
-#: data_sources.php:2013
+#: data_sources.php:1993
 msgid "The frequency that data is collected for this Data Source."
 msgstr "Періодичність з якою дані будуть збиратись для цього Джерела Даних."
 
-#: data_sources.php:2019
+#: data_sources.php:1999
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "Якщо це Джерело Даних більше не використовується Графіками, його можна Видалити."
 
-#: data_sources.php:2025
+#: data_sources.php:2005
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "Чи збиратимуться дані для цього Джерела Даних. Контролюється на рівні Шаблону Даних."
 
-#: data_sources.php:2028 package_import.php:630 templates_import.php:243
+#: data_sources.php:2008 package_import.php:630 templates_import.php:243
 #: user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Ім`я Шаблона"
 
-#: data_sources.php:2031
+#: data_sources.php:2011
 msgid "The Data Template that this Data Source was based upon."
 msgstr "Шаблон Даних, на основі якого було створено це Джерело Даних."
 
-#: data_sources.php:2072
+#: data_sources.php:2052
 msgid "Damaged Data Source Name"
 msgstr "Ім'я пошкодженого Джерела Даних"
 
-#: data_sources.php:2092
+#: data_sources.php:2072
 msgid "No Data Sources Found"
 msgstr "Не знайдено Джерел Даних"
 
-#: data_sources.php:2145
+#: data_sources.php:2125
 msgid "No Graphs"
 msgstr "Немає Графіків"
 
-#: data_sources.php:2149 include/global_arrays.php:998
+#: data_sources.php:2129 include/global_arrays.php:998
 msgid "Aggregates"
 msgstr "Агреговане"
 
-#: data_sources.php:2151
+#: data_sources.php:2131
 msgid "No Aggregates"
 msgstr "Немає Агрегованих"
 
@@ -3798,7 +3798,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Синтаксис RRDtool Графіка"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2649
+#: lib/rrd.php:2835
 msgid "The Kadupul Poller has not run yet."
 msgstr "Поллер Kadupul ще не запускався."
 
@@ -4390,7 +4390,7 @@ msgstr "Поля Графіку"
 msgid "Graph Item Fields"
 msgstr "Поля Елементів Графіку"
 
-#: graphs.php:1904 spikekill.php:42
+#: graphs.php:1904 spikekill.php:43
 msgid "Graph access denied"
 msgstr ""
 
@@ -4488,7 +4488,7 @@ msgid "Save Filters"
 msgstr "Зберегти Фільтри"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4320
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4510
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Рядки"
@@ -5617,7 +5617,7 @@ msgstr ""
 msgid "Numeric Ordering"
 msgstr ""
 
-#: include/global_arrays.php:955 lib/rrd.php:4244
+#: include/global_arrays.php:955 lib/rrd.php:4434
 msgid "Header"
 msgstr "Заголовок"
 
@@ -7255,7 +7255,7 @@ msgstr "Heartbeat"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr ""
 
-#: include/global_form.php:226 lib/rrd.php:4323
+#: include/global_form.php:226 lib/rrd.php:4513
 msgid "X-Files Factor"
 msgstr ""
 
@@ -7825,7 +7825,7 @@ msgstr ""
 msgid "The opacity/alpha channel of the color."
 msgstr ""
 
-#: include/global_form.php:989 lib/rrd.php:4319
+#: include/global_form.php:989 lib/rrd.php:4509
 msgid "Consolidation Function"
 msgstr ""
 
@@ -11486,7 +11486,7 @@ msgstr "Відновлення"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4296 lib/rrd.php:4308 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
 #: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11494,7 +11494,7 @@ msgstr "Невідомо"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4273
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4463
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr ""
@@ -12414,49 +12414,49 @@ msgstr ""
 msgid "Data Source ID %s does not exist"
 msgstr ""
 
-#: lib/dsdebug.php:244
+#: lib/dsdebug.php:249
 msgid "Debug not completed after 5 pollings"
 msgstr ""
 
-#: lib/dsdebug.php:245
+#: lib/dsdebug.php:250
 msgid "Failed fields: "
 msgstr ""
 
-#: lib/dsdebug.php:254
+#: lib/dsdebug.php:259
 msgid "Data Source is not set as Active"
-msgstr ""
-
-#: lib/dsdebug.php:262
-#, php-format
-msgid "RRDfile Folder (rra) is not writable by Poller.  Folder owner: %s.  Poller runs as: %s"
 msgstr ""
 
 #: lib/dsdebug.php:267
 #, php-format
+msgid "RRDfile Folder (rra) is not writable by Poller.  Folder owner: %s.  Poller runs as: %s"
+msgstr ""
+
+#: lib/dsdebug.php:272
+#, php-format
 msgid "RRDfile is not writable by Poller.  RRDfile owner: %s.  Poller runs as %s"
 msgstr ""
 
-#: lib/dsdebug.php:276
+#: lib/dsdebug.php:281
 msgid "RRDfile does not match Data Source"
 msgstr ""
 
-#: lib/dsdebug.php:281
+#: lib/dsdebug.php:286
 msgid "RRDfile not updated after polling"
 msgstr ""
 
-#: lib/dsdebug.php:288
+#: lib/dsdebug.php:293
 msgid "Data Source returned Bad Results for "
 msgstr ""
 
-#: lib/dsdebug.php:293
+#: lib/dsdebug.php:298
 msgid "Data Source was not polled"
 msgstr ""
 
-#: lib/dsdebug.php:298
+#: lib/dsdebug.php:303
 msgid "No issues found"
 msgstr ""
 
-#: lib/dsdebug.php:302
+#: lib/dsdebug.php:307
 msgid "RRDfile not created yet"
 msgstr ""
 
@@ -15345,194 +15345,198 @@ msgstr ""
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr ""
 
-#: lib/rrd.php:2272
+#: lib/rrd.php:2446
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2275
+#: lib/rrd.php:2449
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2646
+#: lib/rrd.php:2816 lib/rrd.php:2819 lib/rrd.php:4720
+msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
+msgstr ""
+
+#: lib/rrd.php:2832
 #, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr ""
 
-#: lib/rrd.php:4061
+#: lib/rrd.php:4251
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr ""
 
-#: lib/rrd.php:4097
+#: lib/rrd.php:4287
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr ""
 
-#: lib/rrd.php:4103
+#: lib/rrd.php:4293
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr ""
 
-#: lib/rrd.php:4115
+#: lib/rrd.php:4305
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr ""
 
-#: lib/rrd.php:4124
+#: lib/rrd.php:4314
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr ""
 
-#: lib/rrd.php:4138 lib/rrd.php:4139
+#: lib/rrd.php:4328 lib/rrd.php:4329
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr ""
 
-#: lib/rrd.php:4152 lib/rrd.php:4153
+#: lib/rrd.php:4342 lib/rrd.php:4343
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr ""
 
-#: lib/rrd.php:4185
+#: lib/rrd.php:4375
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:4189
+#: lib/rrd.php:4379
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr ""
 
-#: lib/rrd.php:4193
+#: lib/rrd.php:4383
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr ""
 
-#: lib/rrd.php:4210
+#: lib/rrd.php:4400
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr ""
 
-#: lib/rrd.php:4218
+#: lib/rrd.php:4408
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr ""
 
-#: lib/rrd.php:4240
+#: lib/rrd.php:4430
 msgid "RRD File Information"
 msgstr ""
 
-#: lib/rrd.php:4272
+#: lib/rrd.php:4462
 msgid "Data Source Items"
 msgstr ""
 
-#: lib/rrd.php:4274
+#: lib/rrd.php:4464
 msgid "Minimal Heartbeat"
 msgstr ""
 
-#: lib/rrd.php:4275
+#: lib/rrd.php:4465
 msgid "Min"
 msgstr ""
 
-#: lib/rrd.php:4276
+#: lib/rrd.php:4466
 msgid "Max"
 msgstr ""
 
-#: lib/rrd.php:4277
+#: lib/rrd.php:4467
 msgid "Last DS"
 msgstr ""
 
-#: lib/rrd.php:4279
+#: lib/rrd.php:4469
 msgid "Unknown Sec"
 msgstr ""
 
-#: lib/rrd.php:4318
+#: lib/rrd.php:4508
 msgid "Round Robin Archive"
 msgstr ""
 
-#: lib/rrd.php:4321
+#: lib/rrd.php:4511
 msgid "Cur Row"
 msgstr ""
 
-#: lib/rrd.php:4322
+#: lib/rrd.php:4512
 msgid "PDP per Row"
 msgstr ""
 
-#: lib/rrd.php:4324
+#: lib/rrd.php:4514
 msgid "CDP Prep Value (0)"
 msgstr ""
 
-#: lib/rrd.php:4325
+#: lib/rrd.php:4515
 msgid "CDP Unknown Data points (0)"
 msgstr ""
 
-#: lib/rrd.php:4406
+#: lib/rrd.php:4600
 msgid "Errors Found"
 msgstr "Кольорів Не Знайдено"
 
-#: lib/rrd.php:4418
+#: lib/rrd.php:4612
 msgid "Optional Tuning Recommendations"
 msgstr "Поради що до Ремонту Джерела Даних"
 
-#: lib/rrd.php:4445 lib/rrd.php:4448
+#: lib/rrd.php:4639 lib/rrd.php:4642
 #, php-format
 msgid "rename %s to %s"
 msgstr ""
 
-#: lib/rrd.php:4542
+#: lib/rrd.php:4740
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr ""
 
-#: lib/rrd.php:4548
+#: lib/rrd.php:4746
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4554
+#: lib/rrd.php:4752
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr ""
 
-#: lib/rrd.php:4575
+#: lib/rrd.php:4773
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr ""
 
-#: lib/rrd.php:4611 lib/rrd.php:4630
+#: lib/rrd.php:4809 lib/rrd.php:4828
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr ""
 
-#: lib/rrd.php:4848
+#: lib/rrd.php:5046
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr ""
 
-#: lib/rrd.php:4886
+#: lib/rrd.php:5084
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr ""
 
-#: lib/rrd.php:4917 lib/rrd.php:4933
+#: lib/rrd.php:5115 lib/rrd.php:5131
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr ""
 
-#: lib/rrd.php:4929
+#: lib/rrd.php:5127
 msgid "(Custom)"
 msgstr ""
 
-#: lib/rrd.php:4935
+#: lib/rrd.php:5133
 msgid "Failed to open data file, poller may not have run yet"
 msgstr ""
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:5136
 msgid "RRA Folder"
 msgstr ""
 
-#: lib/rrd.php:4938
+#: lib/rrd.php:5136
 msgid "Root"
 msgstr ""
 
-#: lib/rrd.php:5018
+#: lib/rrd.php:5216
 msgid "Unknown RRDtool Error"
 msgstr ""
 
@@ -17490,12 +17494,12 @@ msgstr ""
 msgid "No Sites Found"
 msgstr ""
 
-#: spikekill.php:30
+#: spikekill.php:31
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr ""
 
-#: spikekill.php:120
+#: spikekill.php:125
 msgid "FATAL: Spike Kill Not Allowed"
 msgstr ""
 
