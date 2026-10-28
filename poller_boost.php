@@ -33,6 +33,7 @@ $debug    = false;
 $forcerun = false;
 $verbose  = false;
 $child    = false;
+$run_id   = '';
 
 /* for releasing lock on SIGNAL */
 $current_lock = false;
@@ -51,6 +52,9 @@ if (cacti_sizeof($parms)) {
         switch ($arg) {
             case '--child':
                 $child = $value;
+                break;
+            case '--run':
+                $run_id = $value;
                 break;
             case '-d':
             case '--debug':
@@ -174,6 +178,9 @@ if ($child == false) {
         /* Truncate the rrd_update_counter table */
         db_execute('TRUNCATE TABLE poller_output_boost_processes');
 
+        /* Each run counts only the partitions it started */
+        $run_id = bin2hex(random_bytes(16));
+
         /* Prepare the boost distribution */
         cacti_log('INFO: Boost preparing tables ...', true, 'BOOST');
         $time_start = time();
@@ -190,15 +197,15 @@ if ($child == false) {
             sleep(7);
 
             cacti_log('INFO: Boost spawning child processes ...', true, 'BOOST');
-            $children = boost_launch_children();
+            $children = boost_launch_children($run_id);
             $children_ok = boost_wait_children($children, max(1, (int) read_config_option('boost_rrd_update_max_runtime')) * 3);
 
             cacti_log('INFO: Boost last child processes ended.', true, 'BOOST');
 
             /* A sum alone hides a failed child behind successful updates. */
-            $failed_children = db_fetch_cell('SELECT COUNT(*) FROM poller_output_boost_processes WHERE status < 0');
-            $rrd_updates = db_fetch_cell('SELECT SUM(status) FROM poller_output_boost_processes');
-            $reported_children = db_fetch_cell('SELECT COUNT(*) FROM poller_output_boost_processes');
+            $failed_children = db_fetch_cell_prepared('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ? AND status < 0', array($run_id));
+            $rrd_updates = db_fetch_cell_prepared('SELECT SUM(status) FROM poller_output_boost_processes WHERE run_id = ?', array($run_id));
+            $reported_children = db_fetch_cell_prepared('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ?', array($run_id));
             $run_failed = !$children_ok || !is_numeric($reported_children) || (int) $reported_children !== count($children)
                 || !($failed_children === 0 || $failed_children === '0')
                 || !is_numeric($rrd_updates) || $rrd_updates < 0;
@@ -274,6 +281,11 @@ if ($child == false) {
 } else {
     cacti_log('INFO: Boost register child process ' . $child, true, 'BOOST');
 
+    if (preg_match('/^[0-9a-f]{32}$/D', $run_id) !== 1) {
+        print "ERROR: Boost child requires --run=<32 hex characters> from the master process.\n";
+        exit(1);
+    }
+
     /* we will warn if the process is taking extra long */
     if (!register_process_start('boost', 'child', $child, read_config_option('boost_rrd_update_max_runtime') * 3)) {
         exit(0);
@@ -287,8 +299,9 @@ if ($child == false) {
 
     db_execute_prepared(
         'INSERT INTO poller_output_boost_processes
-		(status) VALUES (?)',
-        array($rrd_updates)
+		(run_id, process_handler, status) VALUES (?, ?, ?)
+		ON DUPLICATE KEY UPDATE status = VALUES(status)',
+        array($run_id, (int) $child, $rrd_updates)
     );
 
     boost_log_child_statistics($rrd_updates, $child);
@@ -510,7 +523,7 @@ function boost_prune_memstats()
     );
 }
 
-function boost_launch_children()
+function boost_launch_children($run_id)
 {
     global $config, $debug;
 
@@ -554,7 +567,7 @@ function boost_launch_children()
 
         cacti_log('NOTE: Launching Boost Process Number ' . $i, true, 'BOOST', POLLER_VERBOSITY_MEDIUM);
 
-        $arguments = array($php_binary, $config['base_path'] . '/poller_boost.php', '--child=' . $i);
+        $arguments = array($php_binary, $config['base_path'] . '/poller_boost.php', '--child=' . $i, '--run=' . $run_id);
         if ($debug) {
             $arguments[] = '--debug';
         }

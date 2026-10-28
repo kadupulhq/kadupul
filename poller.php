@@ -1133,8 +1133,11 @@ function poller_table_maintenance()
     if (!db_table_exists('poller_output_boost_processes')) {
         db_execute('CREATE TABLE  `poller_output_boost_processes` (
 			`sock_int_value` bigint(20) unsigned NOT NULL auto_increment,
+			`run_id` char(32) NOT NULL default \'\',
+			`process_handler` int(10) unsigned NOT NULL default 0,
 			`status` varchar(255) default NULL,
-			PRIMARY KEY (`sock_int_value`))
+			PRIMARY KEY (`sock_int_value`),
+			UNIQUE KEY `run_partition` (`run_id`, `process_handler`))
 			ENGINE=MEMORY');
     }
 

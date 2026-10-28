@@ -74,7 +74,7 @@ function db_fetch_cell($sql)
         // A reconnected session no longer holds the child's token.
         return $mode === 'output-session-kept' ? $GLOBALS['session_token'] : null;
     }
-    if (strpos($sql, 'WHERE status < 0') !== false) {
+    if (strpos($sql, 'status < 0') !== false) {
         return $mode === 'master-failed-count' ? false : ($mode === 'master-child-failed' ? 1 : 0);
     }
     if (strpos($sql, 'SUM(status)') !== false) {
@@ -87,6 +87,12 @@ function db_fetch_cell($sql)
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
+    if (strpos($sql, 'FROM poller_output_boost_processes') !== false) {
+        if (!isset($params[0]) || preg_match('/^[0-9a-f]{32}$/D', $params[0]) !== 1) {
+            return false;
+        }
+        return db_fetch_cell($sql);
+    }
     if (str_contains($sql, 'SELECT ENGINE FROM information_schema.TABLES')) {
         return 'InnoDB';
     }
@@ -218,7 +224,7 @@ if ($mode === 'shutdown') {
     // Launch during normal execution, as the master does, so its registered
     // cleanup precedes the final coverage collector and owns live children.
     $debug = true;
-    $children = boost_launch_children();
+    $children = boost_launch_children(str_repeat('a', 32));
     file_put_contents($fixture . '/result.json', json_encode(array(null, array_column($children, 'pid'))));
     return;
 }
@@ -242,7 +248,7 @@ register_shutdown_function(function () use ($fixture, $mode) {
     }
 
     $GLOBALS['debug'] = true;
-    $children = boost_launch_children();
+    $children = boost_launch_children(str_repeat('a', 32));
     $pids = array_column($children, 'pid');
     if ($mode === 'launch-failure') {
         $children[] = array('process' => false, 'child' => 3, 'pid' => 0);
