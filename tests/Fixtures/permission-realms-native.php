@@ -42,7 +42,7 @@ foreach (array('user_auth_realm' => 'user_id', 'user_auth_group_realm' => 'group
 $opposite = $group ? 'user_auth_realm' : 'user_auth_group_realm';
 $db->exec('DELETE FROM ' . $opposite . ' WHERE ' . ($group ? 'user_id' : 'group_id') . '=42');
 $db->exec('INSERT INTO ' . $opposite . ' VALUES(42,8)');
-$db->exec('CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY); INSERT INTO user_auth_group(id) VALUES(41),(42),(43),(44); CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER DEFAULT 0); INSERT INTO user_auth(id) VALUES(41),(42),(43),(44); CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER); INSERT INTO user_auth_group_members VALUES(42,42),(42,44),(43,43)');
+$db->exec('CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY); INSERT INTO user_auth_group(id) VALUES(41),(42),(43),(44); CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER DEFAULT 0); CREATE TABLE user_auth_cache(user_id INTEGER, token TEXT); INSERT INTO user_auth(id) VALUES(41),(42),(43),(44); CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER); INSERT INTO user_auth_group_members VALUES(42,42),(42,44),(43,43)');
 $db->sqliteCreateFunction('RAND', static fn() => 0.5);
 $db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
 $queries = array();
