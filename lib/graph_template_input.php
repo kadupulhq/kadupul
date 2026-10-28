@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -31,8 +33,8 @@ function graph_template_input_column($column)
 
 /**
  * Validate a value for a graph template input field before it is written to
- * graph items. Each field takes the shape its graph_templates_item column and
- * RRDtool expect; control characters are refused everywhere.
+ * graph items. Numeric fields must fit their storage columns, and text limits
+ * count UTF-8 characters. Existing text whitespace remains supported.
  */
 function graph_template_input_value_is_allowed($column, $value)
 {
@@ -48,12 +50,14 @@ function graph_template_input_value_is_allowed($column, $value)
 
     switch ($column) {
         case 'graph_type_id':
-        case 'task_item_id':
         case 'consolidation_function_id':
+            return preg_match('/^\d{1,10}$/D', $value) === 1 && $value <= '255';
+        case 'task_item_id':
+            return preg_match('/^\d{1,10}$/D', $value) === 1 && $value <= '4294967295';
         case 'cdef_id':
         case 'vdef_id':
         case 'gprint_id':
-            return preg_match('/^\d{1,10}$/D', $value) === 1;
+            return preg_match('/^\d{1,10}$/D', $value) === 1 && $value <= '16777215';
         case 'color_id':
             return $value === '' || (preg_match('/^\d{1,8}$/D', $value) === 1 && (int) $value <= 16777215);
         case 'alpha':
@@ -62,18 +66,24 @@ function graph_template_input_value_is_allowed($column, $value)
         case 'hard_return':
             return in_array($value, array('', '0', '1', 'on'), true);
         case 'line_width':
-            return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:[.,]\d+)?$/D', $value) === 1);
+            return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:\.\d{1,2})?$/D', $value) === 1 && (float) $value <= 99.99);
         case 'dash_offset':
             return $value === '' || (preg_match('/^-?\d{1,7}$/D', $value) === 1 && (int) $value >= -8388608 && (int) $value <= 8388607);
         case 'sequence':
             return $value === '' || (preg_match('/^\d{1,8}$/D', $value) === 1 && (int) $value <= 16777215);
         case 'dashes':
-            return strlen($value) <= 40 && ($value === '' || preg_match('/^[0-9.,[:space:]]+$/D', $value) === 1);
+            return strlen($value) <= 20 && ($value === '' || preg_match('/^[0-9.,[:space:]]+$/D', $value) === 1);
         case 'textalign':
-            return strlen($value) <= 20 && ($value === '' || preg_match('/^[A-Za-z]+$/D', $value) === 1);
+            return strlen($value) <= 10 && ($value === '' || preg_match('/^[A-Za-z]+$/D', $value) === 1);
     }
 
-    return strlen($value) <= 255;
+    if (strlen($value) > 1020) {
+        return false;
+    }
+
+    $characters = preg_match_all('/./us', $value);
+
+    return $characters !== false && $characters <= 255;
 }
 
 /**

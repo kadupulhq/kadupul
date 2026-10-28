@@ -51,11 +51,12 @@ final class Fixture
     public static array $request = array();
     /** @var list<string> */
     public static array $log = array();
+    public static string $column = 'alpha';
 }
 
 function db_fetch_row_prepared($sql, $params = array()): array
 {
-    return array('graph_template_id' => 2, 'column_name' => 'alpha');
+    return array('graph_template_id' => 2, 'column_name' => Fixture::$column);
 }
 function db_fetch_assoc_prepared($sql, $params = array()): array
 {
@@ -112,22 +113,38 @@ function get_filter_request_var($name): mixed
     return Fixture::$request[$name] ?? '';
 }
 
-beforeEach(function () {
+$savedGraphInputGlobals = array();
+
+beforeEach(function () use (&$savedGraphInputGlobals) {
+    foreach (array('hash_type_codes', 'cacti_version_codes') as $name) {
+        $savedGraphInputGlobals[$name] = array_key_exists($name, $GLOBALS) ? array($GLOBALS[$name]) : null;
+    }
     Fixture::$writes = array();
     Fixture::$rows = array();
     Fixture::$request = array();
     Fixture::$log = array();
+    Fixture::$column = 'alpha';
     $GLOBALS['hash_type_codes'] = array('graph_template' => '00', 'graph_template_item' => '10', 'graph_template_input' => '09');
     $GLOBALS['cacti_version_codes'] = array('1.2.31' => '0103');
 });
 
+afterEach(function () use (&$savedGraphInputGlobals) {
+    foreach ($savedGraphInputGlobals as $name => $value) {
+        if ($value === null) {
+            unset($GLOBALS[$name]);
+        } else {
+            $GLOBALS[$name] = $value[0];
+        }
+    }
+});
+
 /** Run the graphs.php block that applies submitted graph input values to a graph's items. */
-function save_graph_inputs(array $request): array
+function save_graph_inputs(array $request, ?array $inputs = null): array
 {
     Fixture::$request = $request + array('local_graph_id' => '9', 'save_component_input' => '1');
     Fixture::$rows = array(array('id' => 101), array('id' => 102));
     $input_template_id = 2;
-    $input_list = array(array('id' => 7, 'column_name' => 'alpha'), array('id' => 8, 'column_name' => 'line_width'));
+    $input_list = $inputs ?? array(array('id' => 7, 'column_name' => 'alpha'), array('id' => 8, 'column_name' => 'line_width'));
     $source = file_get_contents(dirname(__DIR__, 3) . '/graphs.php');
     eval('namespace ' . __NAMESPACE__ . '; if (' . test_php_block_source($source, "isset_request_var('save_component_input'))", '$input_template_id = 0;') . ';'); // nosemgrep: php.lang.security.eval-use.eval-use
 
@@ -166,7 +183,61 @@ test('graph input values must have the shape of their graph item field', functio
     array('text_format', 'Inbound |host_description|', true),
     array('local_graph_id', '1', false),
     array('alpha', array('FF'), false),
+    array('graph_type_id', '255', true),
+    array('graph_type_id', '256', false),
+    array('consolidation_function_id', '255', true),
+    array('consolidation_function_id', '256', false),
+    array('task_item_id', '4294967295', true),
+    array('task_item_id', '4294967296', false),
+    array('cdef_id', '16777215', true),
+    array('cdef_id', '16777216', false),
+    array('cdef_id', '0000000012', true),
+    array('vdef_id', '16777215', true),
+    array('vdef_id', '16777216', false),
+    array('gprint_id', '16777215', true),
+    array('gprint_id', '16777216', false),
+    array('line_width', '99.99', true),
+    array('line_width', '100', false),
+    array('line_width', '999.9', false),
+    array('line_width', '1.234', false),
+    array('line_width', '1,5', false),
+    array('line_width', '01.00', true),
+    array('dashes', str_repeat('1', 20), true),
+    array('dashes', str_repeat('1', 21), false),
+    array('textalign', str_repeat('a', 10), true),
+    array('textalign', str_repeat('a', 11), false),
+    array('text_format', str_repeat('界', 255), true),
+    array('text_format', str_repeat('界', 256), false),
+    array('text_format', str_repeat("\u{1f600}", 255), true),
+    array('text_format', "line one\nline two", true),
+    array('value', str_repeat('界', 255), true),
+    array('value', str_repeat('界', 256), false),
+    array('value', "\xff", false),
 ));
+
+test('a later out-of-range graph input prevents every input write', function () {
+    expect(save_graph_inputs(array('alpha_7' => 'FF', 'line_width_8' => '999.9')))->toBe(array());
+});
+
+test('a valid multibyte graph label is preserved at the input handoff', function () {
+    $label = str_repeat('界', 100);
+    $writes = save_graph_inputs(array('text_format_7' => $label), array(array('id' => 7, 'column_name' => 'text_format')));
+    expect(array_column($writes, 1))->toBe(array(array($label, 101), array($label, 102)));
+});
+
+test('a later out-of-range stored width prevents every push-out write', function () {
+    Fixture::$column = 'line_width';
+    Fixture::$rows = array(array('local_graph_id' => 9, 'line_width' => '1.5'), array('local_graph_id' => 10, 'line_width' => '999.9'));
+    expect(push_out_graph_input(5, 30, array()))->toBeFalse()->and(Fixture::$writes)->toBe(array());
+});
+
+test('push-out preserves valid multibyte labels and NULL values', function () {
+    $label = str_repeat('界', 100);
+    Fixture::$column = 'text_format';
+    Fixture::$rows = array(array('local_graph_id' => 9, 'text_format' => $label), array('local_graph_id' => 10, 'text_format' => null));
+    push_out_graph_input(5, 30, array());
+    expect(array_column(Fixture::$writes, 1))->toBe(array(array($label, 9, 30), array(null, 10, 30)));
+});
 
 test('a graph save writes no graph input value when one is malformed', function () {
     expect(save_graph_inputs(array('alpha_7' => "FF' OR 1=1", 'line_width_8' => '2')))->toBe(array())
