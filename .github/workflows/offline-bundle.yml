@@ -27,7 +27,9 @@ jobs:
       packages: read
     name: Shared authentication (${{ matrix.backend }} sessions)
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && !inputs.hosted-runners-only && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
-    timeout-minutes: 30
+    # The self-hosted runners take 28 to 30 minutes here, against 18 on
+    # GitHub-hosted ones, so 30 cancelled passing runs.
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
