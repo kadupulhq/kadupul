@@ -100,6 +100,14 @@ function sql_save($save, $table)
 
     return (int) db()->lastInsertId();
 }
+function is_device_allowed($id)
+{
+    return !in_array((int) $id, $GLOBALS['tree_node_access_denied_devices'], true);
+}
+function is_graph_allowed($id)
+{
+    return !in_array((int) $id, $GLOBALS['tree_node_access_denied_graphs'], true);
+}
 function cacti_sizeof($value)
 {
     return is_array($value) ? count($value) : 0;
@@ -209,6 +217,8 @@ function seed(): void
         (23, 2, 0, 2, 'forbidden second')");
     $GLOBALS['tree_node_access_db'] = $db;
     $GLOBALS['tree_node_access_log'] = array();
+    $GLOBALS['tree_node_access_denied_devices'] = array();
+    $GLOBALS['tree_node_access_denied_graphs'] = array();
     $GLOBALS['tree_node_access_request'] = array();
     $_SESSION = array('sess_user_id' => USER);
 }
@@ -237,7 +247,24 @@ function call(callable $operation): array
     return array($before, items());
 }
 
-beforeEach(fn() => seed());
+$previousGlobals = array();
+$fixtureKeys = array('tree_node_access_db', 'tree_node_access_log', 'tree_node_access_request', 'tree_node_access_placed', 'tree_node_access_denied_devices', 'tree_node_access_denied_graphs', 'graph_actions', '_SESSION');
+beforeEach(function () use (&$previousGlobals, $fixtureKeys): void {
+    foreach ($fixtureKeys as $key) {
+        $previousGlobals[$key] = array(array_key_exists($key, $GLOBALS), $GLOBALS[$key] ?? null);
+    }
+    seed();
+});
+afterEach(function () use (&$previousGlobals): void {
+    foreach ($previousGlobals as $key => [$existed, $value]) {
+        if ($existed) {
+            $GLOBALS[$key] = $value;
+        } else {
+            unset($GLOBALS[$key]);
+        }
+    }
+    $previousGlobals = array();
+});
 
 test('node changes in a tree the user may not access leave the tree unchanged', function (callable $operation) {
     [$before, $after] = call($operation);
@@ -325,3 +352,24 @@ test('a node of another tree cannot be moved through an allowed tree id', functi
 
     expect($after)->toBe($before);
 })->with(array('tbranch:21', 'tbranch:23', 'thost:7'));
+
+
+test('copying a device or graph requires access to the source resource', function (string $node, string $denied) {
+    $GLOBALS[$denied] = array(7);
+    [$before, $after] = call(fn() => api_tree_copy_node(ALLOWED, $node, 'tbranch:10', 0));
+
+    expect($after)->toBe($before)
+        ->and(implode("\n", $GLOBALS['tree_node_access_log']))->toContain('not permitted to copy');
+})->with(array(
+    array('thost:7', 'tree_node_access_denied_devices'),
+    array('tgraph:7', 'tree_node_access_denied_graphs'),
+));
+
+test('an allowed graph can still be copied into an allowed tree', function () {
+    call(fn() => api_tree_copy_node(ALLOWED, 'tgraph:7', 'tbranch:10', 0));
+    $copies = array_values(array_filter(items(), fn(array $row): bool => (int) $row['local_graph_id'] === 7));
+
+    expect($copies)->toHaveCount(1)
+        ->and((int) $copies[0]['graph_tree_id'])->toBe(ALLOWED)
+        ->and((int) $copies[0]['parent'])->toBe(10);
+});

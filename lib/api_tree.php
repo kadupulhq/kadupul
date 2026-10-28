@@ -135,6 +135,16 @@ function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position)
         return;
     }
 
+    if ($data['host'] > 0 && !is_device_allowed($data['host'])) {
+        cacti_log("SECURITY: User is not permitted to copy DeviceID:'" . (int) $data['host'] . "', Function copy_node", false, 'AUTH');
+        return;
+    }
+
+    if ($data['graph'] > 0 && !is_graph_allowed($data['graph'])) {
+        cacti_log("SECURITY: User is not permitted to copy GraphID:'" . (int) $data['graph'] . "', Function copy_node", false, 'AUTH');
+        return;
+    }
+
     // Check to see if the node already exists
     $title = '';
     if ($data['host'] > 0) {
