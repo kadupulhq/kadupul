@@ -303,7 +303,7 @@ msgstr "El gráfico Agregado no existe"
 msgid "Details"
 msgstr "Detalles"
 
-#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "Items"
@@ -4490,12 +4490,12 @@ msgstr "(Selecciona un tipo de gráfico a crear)"
 msgid "Create"
 msgstr "Crear"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1111 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1111 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "Seleccionar todo"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1000 lib/html.php:1111
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1000 lib/html.php:1111
 msgid "Select All Rows"
 msgstr "Seleccionar todas las filas"
 
@@ -4519,39 +4519,39 @@ msgstr "Error al analizar el archivo XML de recursos de consulta de datos para l
 msgid "Data Query [%s]"
 msgstr "Consulta de datos [%s]"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "From there you can get more information."
 msgstr "Desde donde puedes obtener mas información."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "Esta consulta de datos devolvió 0 filas, quizás hubo un problema ejecutando esta consulta de datos."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "You can run this Data Query in debug mode"
 msgstr "Puedes ejecutar esta consulta de datos en modo de depuración"
 
-#: graphs_new.php:968
+#: graphs_new.php:970
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "El índice está deshabilitado debido a que la consulta de datos no tiene plantillas gráficas asociadas."
 
-#: graphs_new.php:1020
+#: graphs_new.php:1022
 msgid "Search Returned no Rows."
 msgstr "La busqueda no produjo resultados."
 
-#: graphs_new.php:1025
+#: graphs_new.php:1027
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "Error en consulta de datos. Esto podría deberse a lo siguiente: Permisos de archivo, o un archivo XML de consulta de datos faltante o con un formato incorrecto."
 
-#: graphs_new.php:1053
+#: graphs_new.php:1055
 msgid "Select a Graph Type to Create"
 msgstr "Seleccionar Tipo de gráfico a crear"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Make selection default"
 msgstr "Hacer esta selección predeterminada"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Set Default"
 msgstr "Establecer como predeterminado"
 

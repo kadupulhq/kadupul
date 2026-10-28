@@ -847,10 +847,12 @@ function graphs()
 
                         if (cacti_sizeof($indexes)) {
                             foreach ($indexes as $index) {
+                                /* snmp_index is stored host_snmp_cache data; quote it so a
+                                 * crafted index cannot break out of this IN() list. */
                                 if ($sql_where != '') {
-                                    $sql_where .= ", '" . $index['snmp_index'] . "'";
+                                    $sql_where .= ', ' . db_qstr($index['snmp_index']);
                                 } else {
-                                    $sql_where .= " AND snmp_index IN('" . $index['snmp_index'] . "'";
+                                    $sql_where .= ' AND snmp_index IN(' . db_qstr($index['snmp_index']);
                                 }
                             }
 

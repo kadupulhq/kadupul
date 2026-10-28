@@ -306,7 +306,7 @@ msgstr "اعدادات الرسم الكلي"
 msgid "Details"
 msgstr "التفاصيل"
 
-#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "الاعلانات"
@@ -4590,12 +4590,12 @@ msgstr "(حدد نوع الرسم البياني لإنشاء)"
 msgid "Create"
 msgstr "أنشأ"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1111 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1111 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "حدد الكل"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1000 lib/html.php:1111
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1000 lib/html.php:1111
 msgid "Select All Rows"
 msgstr "حدد كل الصفوف"
 
@@ -4619,39 +4619,39 @@ msgstr "خطأ في تحليل ملف XML مورد استعلام البيانا
 msgid "Data Query [%s]"
 msgstr "استعلام البيانات [%s]"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "From there you can get more information."
 msgstr "من هناك يمكنك الحصول على مزيد من المعلومات."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "عرض استعلام البيانات هذا 0 صفوف ، ربما كانت هناك مشكلة في تنفيذ هذا الاستعلام عن البيانات."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "You can run this Data Query in debug mode"
 msgstr "يمكنك تشغيل هذا الاستعلام البيانات في وضع التصحيح"
 
-#: graphs_new.php:968
+#: graphs_new.php:970
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "تم تعطيل الفهرس بسبب عدم وجود قوالب رسم بياني مقترنة باستعلام البيانات."
 
-#: graphs_new.php:1020
+#: graphs_new.php:1022
 msgid "Search Returned no Rows."
 msgstr "البحث لم يتم إرجاع أي صفوف."
 
-#: graphs_new.php:1025
+#: graphs_new.php:1027
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "خطأ في استعلام البيانات.  قد يكون هذا بسبب ما يلي: أذونات الملف، أو ملف XML لاستعلام البيانات مفقود أو منسق بشكل غير صحيح."
 
-#: graphs_new.php:1053
+#: graphs_new.php:1055
 msgid "Select a Graph Type to Create"
 msgstr "حدد نوع الرسم البياني لإنشاء"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Make selection default"
 msgstr "جعل الاختيار الافتراضي"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Set Default"
 msgstr "تعين كافتراضي"
 
