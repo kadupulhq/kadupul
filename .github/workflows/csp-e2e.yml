@@ -68,7 +68,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP 8.4
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962  # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: mbstring, intl, json, openssl, curl, xml
@@ -107,7 +107,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP 8.4
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962  # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: mbstring, intl, json, openssl, curl, xml
@@ -162,7 +162,7 @@ jobs:
           node-version: '22.22.2'
 
       - name: Set up PHP for dependency installation
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: gd, gmp, intl, ldap, mbstring, mysqli, pdo_mysql, pcntl, sockets, sqlite3, xml

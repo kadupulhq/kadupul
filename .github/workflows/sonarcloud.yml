@@ -140,7 +140,7 @@ jobs:
         run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -275,7 +275,7 @@ jobs:
         run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -443,7 +443,7 @@ jobs:
         run: bash tests/tools/login_ghcr.sh
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml

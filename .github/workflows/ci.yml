@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
@@ -70,7 +70,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '${{ matrix.php }}'
           coverage: none
@@ -98,7 +98,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           coverage: none
@@ -178,7 +178,7 @@ jobs:
       run: bash tests/tools/login_ghcr.sh
 
     - name: Install PHP 8.4
-      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
       with:
         php-version: '8.4'
         extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
@@ -282,7 +282,7 @@ jobs:
           GHCR_TOKEN: ${{ github.token }}
           GHCR_USERNAME: ${{ github.actor }}
         run: bash tests/tools/login_ghcr.sh
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
@@ -373,7 +373,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: ${{ matrix.php }}
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
@@ -516,7 +516,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
@@ -599,7 +599,7 @@ jobs:
         with:
           install_args: python@3.12.12 node@22.22.2
       - name: Install PHP for native process-boundary self-tests
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: posix
@@ -688,7 +688,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           coverage: none
@@ -776,7 +776,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         # The permission-filter JS test executes the actual PHP controllers.
         # Its SQLite fixture and HTML renderer need these runtime extensions.
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: pdo_sqlite, dom
