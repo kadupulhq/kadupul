@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 23:54-0700\n"
+"POT-Creation-Date: 2026-10-27 23:58-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -781,7 +781,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "पासवर्ड बदलें पेज में समस्याएँ हैं। अपने Kadupul एडमिनिस्ट्रेटर से तुरंत संपर्क करें।"
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4284 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
 msgid "Change Password"
 msgstr "पासवर्ड बदलें"
 
@@ -796,7 +796,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "कृपया अपना वर्तमान पासवर्ड और अपना नया दर्ज करें <br> Kadupul पासवर्ड।"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6238
+#: include/global_settings.php:1851 lib/functions.php:6240
 msgid "Username"
 msgstr "उपयोगकर्ता नाम"
 
@@ -891,7 +891,7 @@ msgstr "उपयोक्ता लॉगइन"
 msgid "Enter your Username and Password below"
 msgstr "नीचे अपना यूजरनेम और पासवर्ड डालें"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6239
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
 msgid "Password"
 msgstr "पासवर्ड"
 
@@ -1199,7 +1199,7 @@ msgstr "खोजे गए उपकरण"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6597 lib/functions.php:6602
+#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2193,7 +2193,7 @@ msgstr "सरूप"
 msgid "Community"
 msgstr "कम्युनिटी"
 
-#: automation_snmp.php:543 lib/functions.php:6234
+#: automation_snmp.php:543 lib/functions.php:6236
 msgid "Port"
 msgstr "पोर्ट"
 
@@ -2403,8 +2403,8 @@ msgstr "बूट्सConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6742 lib/functions.php:6812
-#: lib/functions.php:6908 lib/functions.php:7569 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6910 lib/functions.php:7571 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:392
 #, fuzzy
@@ -3439,7 +3439,7 @@ msgstr "इस डेटा टेम्प्लेट को दिया ग�
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/api_automation.php:426 lib/functions.php:6233 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "डिवाइस"
@@ -3799,7 +3799,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul पोलर अभी तक नहीं चला है।"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8272 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8274 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "अनुमति अस्वीकृत"
 
@@ -4749,13 +4749,13 @@ msgstr "FATAL: Kadupul के इस क्षेत्र तक पहुं�
 msgid "Login Again"
 msgstr "फिर से लॉगिन करें"
 
-#: include/auth.php:317 lib/functions.php:8273
+#: include/auth.php:317 lib/functions.php:8275
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "यदि आपको लगता है कि यह एक त्रुटि है। कृपया अपने Kadupul प्रशासक से संपर्क करें।"
 
-#: include/auth.php:317 lib/functions.php:8273
+#: include/auth.php:317 lib/functions.php:8275
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "आपको Kadupul के इस अनुभाग तक पहुंचने की अनुमति नहीं है।"
@@ -6835,7 +6835,7 @@ msgid "List Mode"
 msgstr "सूची मोड"
 
 #: include/global_arrays.php:2068 include/global_arrays.php:2074
-#: lib/functions.php:4506 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "कंसोल"
@@ -8638,8 +8638,8 @@ msgstr "डाटा"
 msgid "Visual"
 msgstr "विज़ुअल"
 
-#: include/global_settings.php:112 lib/functions.php:6237
-#: lib/functions.php:6242
+#: include/global_settings.php:112 lib/functions.php:6239
+#: lib/functions.php:6244
 msgid "Authentication"
 msgstr "प्रमाणीकरण"
 
@@ -8675,11 +8675,11 @@ msgstr "ग्राफ फ़ॉन्ट्स"
 msgid "PHP Mail() Function"
 msgstr "PHP मेल () फ़ंक्शन"
 
-#: include/global_settings.php:153 lib/functions.php:6218
+#: include/global_settings.php:153 lib/functions.php:6220
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6224
+#: include/global_settings.php:154 lib/functions.php:6226
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10557,7 +10557,7 @@ msgstr "यह है कि ईमेल में एक पंक्ति �
 msgid "Sendmail Options"
 msgstr "Sendmail विकल्प"
 
-#: include/global_settings.php:1972 lib/functions.php:6218
+#: include/global_settings.php:1972 lib/functions.php:6220
 msgid "Sendmail Path"
 msgstr "सेंडमेल पथ"
 
@@ -11755,8 +11755,8 @@ msgstr "स्थान:"
 msgid "Contact:"
 msgstr "संपर्क:"
 
-#: lib/api_device.php:1986 lib/functions.php:6251 lib/functions.php:6253
-#: lib/functions.php:6257
+#: lib/api_device.php:1986 lib/functions.php:6253 lib/functions.php:6255
+#: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "पिंग परिणाम"
 
@@ -12522,179 +12522,179 @@ msgstr "संदेश नहीं मिला।"
 msgid "Error %s is not readable"
 msgstr "त्रुटि %s पठनीय नहीं है"
 
-#: lib/functions.php:4260
+#: lib/functions.php:4261
 msgid "Logged in a Guest"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/functions.php:4260 lib/functions.php:4278
+#: lib/functions.php:4261 lib/functions.php:4279
 msgid "Logged in as"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/functions.php:4260
+#: lib/functions.php:4261
 msgid "Login as Regular User"
 msgstr "नियमित उपयोगकर्ता के रूप में लॉगिन करें"
 
-#: lib/functions.php:4260
+#: lib/functions.php:4261
 msgid "guest"
 msgstr "अतिथि"
 
-#: lib/functions.php:4263 lib/functions.php:4288 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
 msgid "User Community"
 msgstr "उपयोगकर्ता समुदाय"
 
-#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "प्रलेखन"
 
-#: lib/functions.php:4281
+#: lib/functions.php:4282
 #, php-format
 msgid "Logged in as %s"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/functions.php:4283 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "संपादित करें"
 
-#: lib/functions.php:4293 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2755
 msgid "Logout"
 msgstr "लॉगआउट"
 
-#: lib/functions.php:4447
+#: lib/functions.php:4448
 msgid "Leaf"
 msgstr "पत्ती"
 
-#: lib/functions.php:4471 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4472 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "गैर क्वेरी आधारित"
 
-#: lib/functions.php:4509
+#: lib/functions.php:4510
 #, php-format
 msgid "Link %s"
 msgstr "लिंक %s"
 
-#: lib/functions.php:4971 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4972 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "कॉपी करें"
 
-#: lib/functions.php:5787
+#: lib/functions.php:5789
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "मेलर त्रुटि: कोई सेट <b>को</b> संबोधित <b>करने के</b> !! <br> यदि <i>टेस्ट मेल</i> लिंक का उपयोग कर रहे हैं, तो कृपया <b>अलर्ट ई-मेल</b> सेटिंग सेट करें।"
 
-#: lib/functions.php:6181
+#: lib/functions.php:6183
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "प्रमाणीकरण विफल: %s"
 
-#: lib/functions.php:6185
+#: lib/functions.php:6187
 #, php-format
 msgid "HELO failed: %s"
 msgstr "हेलो विफल: %s"
 
-#: lib/functions.php:6188
+#: lib/functions.php:6190
 #, php-format
 msgid "Connect failed: %s"
 msgstr "कनेक्ट विफल: %s"
 
-#: lib/functions.php:6191
+#: lib/functions.php:6193
 msgid "SMTP error: "
 msgstr "SMTP त्रुटि:"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6207
 #, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "यह Kadupul से उत्पन्न एक परीक्षण संदेश है। यह संदेश आपके मेल सेटिंग्स के कॉन्फ़िगरेशन का परीक्षण करने के लिए भेजा गया था।"
 
-#: lib/functions.php:6206
+#: lib/functions.php:6208
 msgid "Your email settings are currently set as follows"
 msgstr "आपकी ईमेल सेटिंग्स वर्तमान में इस प्रकार सेट की गई हैं"
 
-#: lib/functions.php:6207
+#: lib/functions.php:6209
 msgid "Method"
 msgstr "तरीका"
 
-#: lib/functions.php:6209
+#: lib/functions.php:6211
 msgid "Checking Configuration...<br>"
 msgstr "कॉन्फ़िगरेशन की जाँच कर रहा है ... <br>"
 
-#: lib/functions.php:6216
+#: lib/functions.php:6218
 msgid "PHP's Mailer Class"
 msgstr "PHP का मेलर क्लास"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6224
 msgid "Method: SMTP"
 msgstr "विधि: SMTP"
 
-#: lib/functions.php:6239
+#: lib/functions.php:6241
 msgid "Not Shown for Security Reasons"
 msgstr "सुरक्षा कारणों से नहीं दिखाया गया"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6242
 msgid "Security"
 msgstr "सुरक्षा"
 
-#: lib/functions.php:6248
+#: lib/functions.php:6250
 msgid "Ping Results:"
 msgstr "पिंग परिणाम:"
 
-#: lib/functions.php:6248 lib/functions.php:6253
+#: lib/functions.php:6250 lib/functions.php:6255
 msgid "Success"
 msgstr "सफलता"
 
-#: lib/functions.php:6257
+#: lib/functions.php:6259
 msgid "Bypassed"
 msgstr "बाईपास कीता"
 
-#: lib/functions.php:6266
+#: lib/functions.php:6268
 msgid "Creating Message Text..."
 msgstr "संदेश पाठ बना रहा है ..."
 
-#: lib/functions.php:6269
+#: lib/functions.php:6271
 msgid "Sending Message..."
 msgstr "संदेश भेजना..."
 
-#: lib/functions.php:6273
+#: lib/functions.php:6275
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul टेस्ट संदेश"
 
-#: lib/functions.php:6275
+#: lib/functions.php:6277
 msgid "Success!"
 msgstr "सफ़ल!"
 
-#: lib/functions.php:6278
+#: lib/functions.php:6280
 msgid "Message Not Sent due to ping failure."
 msgstr "पिंग विफलता के कारण संदेश नहीं भेजा गया।"
 
-#: lib/functions.php:6742 lib/functions.php:6812
+#: lib/functions.php:6744 lib/functions.php:6814
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "निम्न त्रुटि के कारण Kadupul अक्षम प्लगइन %s: %s! अधिक जानकारी के लिए Kadupul logfile देखें।"
 
-#: lib/functions.php:6908
+#: lib/functions.php:6910
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "चेतावनी: PollerID:%s का एक अमान्य होस्टनाम है:%s।  क्या यह DNS के माध्यम से उपलब्ध नहीं है!"
 
-#: lib/functions.php:7332 lib/functions.php:7334
+#: lib/functions.php:7334 lib/functions.php:7336
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- बीटा %s"
 
-#: lib/functions.php:7332 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7334 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "संस्करण %s %s"
 
-#: lib/functions.php:7334
+#: lib/functions.php:7336
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7569
+#: lib/functions.php:7571
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "चेतावनी:  कुंजी Kadupul फ़ाइल %s लापता शामिल करें।  कृपया इस फ़ाइल का पता लगाएँ और उसे बदलें"

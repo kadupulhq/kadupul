@@ -3,8 +3,8 @@
     "name": "cacti_ntop",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7980,
-        "end_line": 7993,
+        "start_line": 7982,
+        "end_line": 7995,
         "line_count": 14,
         "signature": {
             "parameters": [

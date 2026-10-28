@@ -3,8 +3,8 @@
     "name": "cacti_gethostinfo",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7434,
-        "end_line": 7437,
+        "start_line": 7436,
+        "end_line": 7439,
         "line_count": 4,
         "signature": {
             "parameters": [

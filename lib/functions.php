@@ -2993,14 +2993,15 @@ function get_full_test_script_path($data_template_id, $host_id)
 
     if (cacti_sizeof($data)) {
         foreach ($data as $item) {
-            // Values reach cmd.exe on Windows; only a hostname never holds a '%'.
-            $hostname = $item['data_name'] === 'hostname' || ($item['type_code'] ?? '') === 'hostname';
+            // Values reach cmd.exe on Windows; only an SNMP credential may keep a '%'.
+            $credential = in_array($item['data_name'], array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true)
+                || in_array($item['type_code'] ?? '', array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true);
             if (isset($host[$item['data_name']])) {
-                $value = cacti_escapeshellarg($host[$item['data_name']], true, true, $hostname);
+                $value = cacti_escapeshellarg($host[$item['data_name']], true, true, $credential);
             } elseif ($item['data_name'] == 'host_id' || $item['data_name'] == 'hostid') {
                 $value = cacti_escapeshellarg($host['id']);
             } else {
-                $value = cacti_escapeshellarg((string) $item['value'], true, true, $hostname);
+                $value = cacti_escapeshellarg((string) $item['value'], true, true, $credential);
             }
 
             // The first row for a name wins, as it did with str_replace().
@@ -3065,8 +3066,8 @@ function get_full_script_path($local_data_id)
 
     if (cacti_sizeof($data)) {
         foreach ($data as $item) {
-            // Values reach cmd.exe on Windows; only a hostname field never holds a '%'.
-            $value = cacti_escapeshellarg($item['value'], true, true, ($item['type_code'] ?? '') === 'hostname');
+            // Values reach cmd.exe on Windows; only an SNMP credential may keep a '%'.
+            $value = cacti_escapeshellarg($item['value'], true, true, in_array($item['type_code'] ?? '', array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true));
 
             if ($value == '') {
                 $value = "''";
@@ -5361,13 +5362,14 @@ function cacti_escapeshellcmd($string)
  * @param $string 	- the string to be escaped
  * @param $quote 	- true: do NOT remove quotes from result; false: do remove quotes
  * @param $cmd 		- true: the value reaches cmd.exe on Windows, so drop the characters it
- *                    acts on even inside quotes; no effect on Unix
- * @param $strip_env - with $cmd, also drop '%' so cmd.exe cannot expand a variable;
- *                    only for values that never contain one, such as a hostname
+ *                    acts on even inside quotes, including '%' so it cannot expand a
+ *                    variable; no effect on Unix
+ * @param $keep_percent - with $cmd, keep '%' for an administrator-set credential that may
+ *                    legitimately contain one; never for device-reported or free text
  *
  * @return			- the escaped [quoted|unquoted] string
  */
-function cacti_escapeshellarg($string, $quote = true, $cmd = false, $strip_env = false)
+function cacti_escapeshellarg($string, $quote = true, $cmd = false, $keep_percent = false)
 {
     global $config;
 
@@ -5405,7 +5407,7 @@ function cacti_escapeshellarg($string, $quote = true, $cmd = false, $strip_env =
              * quotation mark, so quoting alone cannot stop these operators. */
             $string = str_replace(array('"', '&', '|', '^', '<', '>', '(', ')'), '', $string);
 
-            if ($strip_env) {
+            if (!$keep_percent) {
                 $string = str_replace('%', '', $string);
             }
         }

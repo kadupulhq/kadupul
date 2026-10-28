@@ -3,8 +3,8 @@
     "name": "IgnoreErrorHandler",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6665,
-        "end_line": 6704,
+        "start_line": 6667,
+        "end_line": 6706,
         "line_count": 40,
         "signature": {
             "parameters": [

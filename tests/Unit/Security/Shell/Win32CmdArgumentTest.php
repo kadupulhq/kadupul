@@ -64,13 +64,15 @@ test('data input commands drop cmd.exe operators from device values on Windows',
     $result = win32_cmd_run(
         'win32',
         'require $argv[1] . "/tests/Fixtures/data-input-substitution-native.php";'
-        . 'echo json_encode(data_input_command($arguments["caller"], "<path_cacti>/scripts/check.php <hostname> <community> <ip>",'
-        . ' ["hostname" => "%COMSPEC%\\" & calc", "community" => "pa%ss\\" | del x", "ip" => "%TEMP%^>out"], ["hostname" => "%COMSPEC%\\" & calc", "id" => 9], ["hostname" => "hostname", "ip" => "hostname"]));',
+        . 'echo json_encode(data_input_command($arguments["caller"], "<path_cacti>/scripts/check.php <hostname> <snmp_community> <ip> <description> <snmp_sysName> <note>",'
+        . ' ["hostname" => "%COMSPEC%\\" & calc", "snmp_community" => "pa%ss\\" | del x", "ip" => "%TEMP%^>out", "description" => "%PATH% rack", "snmp_sysName" => "sw%USERNAME%", "note" => "50%"],'
+        . ' ["hostname" => "%COMSPEC%\\" & calc", "description" => "%PATH% rack", "snmp_sysName" => "sw%USERNAME%", "snmp_community" => "pa%ss\\" | del x", "id" => 9],'
+        . ' ["hostname" => "hostname", "snmp_community" => "snmp_community", "ip" => "hostname"]));',
         array('caller' => $caller)
     );
 
-    // Hostname fields lose '%' as well; a community may contain one.
-    expect($result)->toBe('C:/kadupul/scripts/check.php "COMSPEC  calc" "pa%ss  del x" "TEMPout"');
+    // Device-reported and free-text values lose '%'; only an SNMP credential keeps one.
+    expect($result)->toBe('C:/kadupul/scripts/check.php "COMSPEC  calc" "pa%ss  del x" "TEMPout" "PATH rack" "swUSERNAME" "50"');
 })->with(array('poller', 'test'));
 
 test('data input commands keep their Unix quoting', function () {
@@ -83,11 +85,13 @@ test('data input commands keep their Unix quoting', function () {
 test('data query script arguments drop cmd.exe operators and keep credential percent signs', function () {
     $program = win32_cmd_function('lib/data_query.php', 'get_script_query_path')
         . 'function substitute_script_query_path($path) { return $path; }'
-        . 'function substitute_host_data($s, $l, $r, $id) { return strtr($s, ["|host_hostname|" => "%USERNAME%\" & calc", "|host_snmp_community|" => "c%m\" > x", "|query_index|" => "1) & (echo"]); }'
-        . 'echo json_encode(get_script_query_path("|host_hostname| |host_snmp_community| index |query_index|", "C:/kadupul/scripts/q.php", 9));';
-    $result = win32_cmd_run('win32', $program);
+        . 'function substitute_host_data($s, $l, $r, $id) { return strtr($s, ["|host_hostname|" => "%USERNAME%\" & calc", "|host_snmp_community|" => "c%m\" > x", "|host_description|" => "%PATH% core",'
+        . ' "|host_snmp_sysName|" => "sw%TEMP%", "|host_location|" => "%APPDATA%", "|query_index|" => "1) & (echo"]); }'
+        . 'echo json_encode(get_script_query_path($arguments["args"], "C:/kadupul/scripts/q.php", 9));';
+    $result = win32_cmd_run('win32', $program, array('args' => '|host_hostname| |host_snmp_community| index |query_index| |host_description| |host_snmp_sysName| x|host_snmp_community| "5%COMSPEC%" |host_location|'));
 
-    expect($result)->toBe('C:/kadupul/scripts/q.php "USERNAME  calc" "c%m  x" "index" "1  echo"');
+    // An index the poller quotes into the arguments is device data, as is a mixed argument.
+    expect($result)->toBe('C:/kadupul/scripts/q.php "USERNAME  calc" "c%m  x" "index" "1  echo" "PATH core" "swTEMP" "xcm  x" "5COMSPEC" "APPDATA"');
 });
 
 test('the Windows ping hostname drops cmd.exe operators and percent signs', function () {
@@ -95,9 +99,9 @@ test('the Windows ping hostname drops cmd.exe operators and percent signs', func
     preg_match("/shell_exec\\('chcp 437 && ping -w ' . [^;]+;/", $source, $call);
     expect($call)->toHaveCount(1);
     $program = '$host = ["hostname" => "%COMPUTERNAME%\" & calc (x)"];'
-        . 'echo json_encode(cacti_escapeshellarg($host["hostname"], true, true, true));';
-    // The call site passes the hostname-only flags the helper is exercised with here.
-    expect($call[0])->toContain("cacti_escapeshellarg(\$this->host['hostname'], true, true, true)");
+        . 'echo json_encode(cacti_escapeshellarg($host["hostname"], true, true));';
+    // The call site passes the flags the helper is exercised with here.
+    expect($call[0])->toContain("cacti_escapeshellarg(\$this->host['hostname'], true, true)");
 
     expect(win32_cmd_run('win32', $program))->toBe('"COMPUTERNAME  calc x"');
 });
@@ -114,22 +118,22 @@ test('SNMP trap arguments drop cmd.exe operators and the log still redacts crede
         . 'function db_fetch_cell_prepared($sql, $params = []) { return ".1.3.6.1.4.1.23925.1.6"; }'
         . 'function db_fetch_assoc_prepared($sql, $params = []) {'
         . '  if (str_contains($sql, "snmpagent_cache_notifications")) { return [["attribute" => "cactiEventDescription", "oid" => ".1.3.6.1.4.1.23925.1.5", "type" => "DisplayString", "tcType" => null]]; }'
-        . '  return [["id" => 1, "hostname" => "%LOGONSERVER%\" & calc", "snmp_port" => 162, "snmp_version" => $GLOBALS["arguments"]["version"], "snmp_community" => "pub(\"x", "snmp_message_type" => 1,'
+        . '  return [["id" => 1, "hostname" => "%LOGONSERVER%\" & calc", "snmp_port" => 162, "snmp_version" => $GLOBALS["arguments"]["version"], "snmp_community" => "pub(\"x%1", "snmp_message_type" => 1,'
         . '    "snmp_engine_id" => "80001f88^", "snmp_username" => "user", "snmp_password" => "pa(ss)wd%1", "snmp_auth_protocol" => "SHA", "snmp_priv_passphrase" => "", "snmp_priv_protocol" => "[None]"]];'
         . '}'
         . 'function exec_background($file, $args) { $GLOBALS["sent"] = $args; }'
         . 'function sql_save($save, $table) { return 1; }'
         . 'function cacti_log($message, ...$rest) { if (str_starts_with($message, "NOTE:")) { $GLOBALS["logged"] = $message; } }'
-        . 'snmpagent_notification("cactiNotifyDeviceDown", "CACTI-MIB", ["cactiEventDescription" => "down\" & del (all)"]);'
+        . 'snmpagent_notification("cactiNotifyDeviceDown", "CACTI-MIB", ["cactiEventDescription" => "down\" & del (all) %PATH%"]);'
         . 'echo json_encode(["sent" => $GLOBALS["sent"], "logged" => $GLOBALS["logged"]]);';
 
     foreach (array(2, 3) as $version) {
         $result = win32_cmd_run('win32', $program, array('version' => $version), false);
         win32_cmd_expect_clean($result['sent']);
         expect($result['sent'])->toContain('"LOGONSERVER  calc:162"')
-            ->and($result['sent'])->toContain('"down  del all"');
+            ->and($result['sent'])->toContain('"down  del all PATH"');
         if ($version === 2) {
-            expect($result['sent'])->toContain('-c "pubx"');
+            expect($result['sent'])->toContain('-c "pubx%1"');
         } else {
             expect($result['sent'])->toContain('-A "passwd%1"')
                 ->and($result['logged'])->not->toContain('passwd%1')

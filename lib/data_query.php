@@ -2596,10 +2596,10 @@ function get_script_query_path($args, $script_path, $host_id)
 
         $extra_arguments = '';
         foreach ($parts as $index => $part) {
-            // A monitored device supplies these values and cmd.exe runs them on
-            // Windows. Credentials may hold a '%'; a hostname or address never does.
-            $strip_env = strpos($part, '|host_hostname|') !== false || strpos($part, '|host_management_ip|') !== false;
-            $extra_arguments .= ($index > 0 ? ' ' : '') . cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id), true, true, $strip_env);
+            // Devices supply most of these values and cmd.exe runs them on Windows.
+            // Only an argument made of SNMP credential placeholders may keep a '%'.
+            $credential = preg_match('/^(?:\|host_snmp_(?:community|password|priv_passphrase)\|)+$/D', $part) === 1;
+            $extra_arguments .= ($index > 0 ? ' ' : '') . cacti_escapeshellarg(substitute_host_data($part, '|', '|', $host_id), true, true, $credential);
         }
     } else {
         $extra_arguments = '';

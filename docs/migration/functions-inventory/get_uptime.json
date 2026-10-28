@@ -3,8 +3,8 @@
     "name": "get_uptime",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6600,
-        "end_line": 6603,
+        "start_line": 6602,
+        "end_line": 6605,
         "line_count": 4,
         "signature": {
             "parameters": [
