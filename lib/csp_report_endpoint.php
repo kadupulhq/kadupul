@@ -252,7 +252,7 @@ $rawBody = '';
 $input = @fopen('php://input', 'rb');
 if ($input !== false) {
     while (!feof($input) && strlen($rawBody) <= 16384) {
-        $chunk = fread($input, 8192);
+        $chunk = fread($input, min(8192, 16385 - strlen($rawBody)));
         if ($chunk === false || $chunk === '') {
             break;
         }

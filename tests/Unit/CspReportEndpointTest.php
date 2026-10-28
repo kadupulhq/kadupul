@@ -87,9 +87,35 @@ test('validator accepts Reporting API body format', function () {
 
 /* ---- rate-limit buckets ---- */
 
+$cspSavedServer = array();
+
+beforeEach(function () use (&$cspSavedServer) {
+	$cspSavedServer = $_SERVER;
+	$GLOBALS['csp_endpoint_owned_directories'] = array();
+});
+
+afterEach(function () use (&$cspSavedServer) {
+	foreach ($GLOBALS['csp_endpoint_owned_directories'] as $directory) {
+		$entries = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+		foreach ($entries as $entry) {
+			if ($entry->isLink() || !$entry->isDir()) {
+				unlink($entry->getPathname());
+			} else {
+				rmdir($entry->getPathname());
+			}
+		}
+		rmdir($directory);
+	}
+	unset($GLOBALS['csp_endpoint_owned_directories']);
+	$_SERVER = $cspSavedServer;
+});
+
 function _csp_bucket_base() {
 	$base = sys_get_temp_dir() . '/kadupul-csp-test-' . bin2hex(random_bytes(4));
-	mkdir($base, 0700);
+	if (!mkdir($base, 0700)) {
+		throw new RuntimeException('Unable to create owned CSP test directory');
+	}
+	$GLOBALS['csp_endpoint_owned_directories'][] = $base;
 
 	return $base;
 }
