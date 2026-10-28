@@ -2142,6 +2142,11 @@ function get_allowed_management_graph_ids_sql($user_id = 0): string
  */
 function get_allowed_aggregate_graphs($sql_where = '', $sql_order = 'gtg.title_cache', $sql_limit = '', &$total_rows = 0, $user_id = 0, $graph_id = 0)
 {
+    $graph_id = auth_resource_id($graph_id);
+    if ($graph_id === null) {
+        $total_rows = 0;
+        return array();
+    }
     if (!auth_valid_user($user_id)) {
         return array();
     }
