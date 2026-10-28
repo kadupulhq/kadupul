@@ -29,7 +29,7 @@ function boostOnDemandProbe(string $body, array $environment = array()): array
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('');
 
         return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
     } finally {
@@ -67,7 +67,7 @@ function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function read_config_option($key) { return $key === 'boost_redirect' ? '' : 'on'; }
 function set_config_option($key, $value) {}
 function db_fetch_row($sql) { return array('Variable_name' => 'max_allowed_packet', 'Value' => '16777216'); }
-function db_execute($sql, ...$args) { return true; }
+function db_execute($sql, ...$args) { return $GLOBALS['pdo']->exec($sql) !== false; }
 function db_execute_prepared($sql, $params, $log = true, $conn = false)
 {
     $GLOBALS['pdo']->prepare($sql)->execute($params);
