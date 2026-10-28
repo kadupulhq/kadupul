@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -148,12 +150,15 @@ function ddl_reset(array $overrides = array()): void
     $GLOBALS['database_default']  = 'cacti';
     $GLOBALS['database_sessions'] = array('localhost:3306:cacti' => new \PDO('sqlite::memory:'));
 
-    $stubs = sys_get_temp_dir() . '/kadupul-ddl-validation-' . getmypid() . '/lib';
-    if (!is_dir($stubs)) {
-        mkdir($stubs, 0700, true);
+    $owned = sys_get_temp_dir() . '/kadupul-ddl-validation-' . bin2hex(random_bytes(8));
+    if (!mkdir($owned, 0700)) {
+        throw new \RuntimeException('Unable to create owned DDL fixture directory');
     }
-    file_put_contents($stubs . '/database.php', '<?php');
-    file_put_contents($stubs . '/poller.php', '<?php');
+    $GLOBALS['ddl_validation_owned_stubs'][] = $owned;
+    $stubs = $owned . '/lib';
+    if (!mkdir($stubs, 0700) || file_put_contents($stubs . '/database.php', '<?php') !== 5 || file_put_contents($stubs . '/poller.php', '<?php') !== 5) {
+        throw new \RuntimeException('Unable to write DDL fixture bootstrap');
+    }
     $GLOBALS['config'] = array('library_path' => $stubs, 'base_path' => dirname($stubs));
 
     $GLOBALS['ddl_validation'] = array_merge(array(
@@ -197,13 +202,26 @@ function ddl_thold_style_table(): array
 $saved_globals = array();
 
 beforeEach(function () use (&$saved_globals) {
-    foreach (array('config', 'database_hostname', 'database_port', 'database_default', 'database_sessions', 'ddl_validation') as $name) {
+    foreach (array('config', 'database_hostname', 'database_port', 'database_default', 'database_sessions', 'ddl_validation', 'ddl_validation_owned_stubs') as $name) {
         $saved_globals[$name] = array_key_exists($name, $GLOBALS) ? array($GLOBALS[$name]) : null;
     }
+    $GLOBALS['ddl_validation_owned_stubs'] = array();
 });
 
 // Restore what other files in the same run may read.
 afterEach(function () use (&$saved_globals) {
+    foreach ($GLOBALS['ddl_validation_owned_stubs'] ?? array() as $owned) {
+        foreach (array('database.php', 'poller.php') as $file) {
+            $path = $owned . '/lib/' . $file;
+            if (file_exists($path) || is_link($path)) {
+                unlink($path);
+            }
+        }
+        if (is_dir($owned . '/lib')) {
+            rmdir($owned . '/lib');
+        }
+        rmdir($owned);
+    }
     foreach ($saved_globals as $name => $value) {
         if ($value === null) {
             unset($GLOBALS[$name]);
@@ -230,9 +248,7 @@ test('db_table_create builds a plugin table definition with quoted values', func
         . " PRIMARY KEY (`id`),\n"
         . " KEY `name_state` (`name`,`state`),\n"
         . " KEY `name_prefix` (`name`(10)),\n"
-        . " UNIQUE KEY `uniq_name` (`name`)) ENGINE = InnoDB COMMENT = 'Plugin''s threshold data' ROW_FORMAT = Dynamic",
-        'ALTER TABLE `plugin_thold_data` CHARSET = utf8mb4',
-        'ALTER TABLE `plugin_thold_data` COLLATE = utf8mb4_unicode_ci',
+        . " UNIQUE KEY `uniq_name` (`name`)) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = 'Plugin''s threshold data' ROW_FORMAT = Dynamic",
     ));
 });
 
