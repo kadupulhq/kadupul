@@ -46,6 +46,7 @@ final class InstallationConfiguration implements LegacyConfiguration
             'session_name' => $settings['cacti_session_name'] ?? 'Cacti', 'database_sessions' => $settings['cacti_db_session'] ?? false,
             'cookie_domain' => $settings['cacti_cookie_domain'] ?? '', 'url_path' => $settings['url_path'] ?? '/',
             'proxy_headers' => $settings['proxy_headers'] ?? [],
+            'proxy_trusted_addresses' => $settings['proxy_trusted_addresses'] ?? [],
         ];
         if ($values['collector_id'] < 1) {
             throw new \RuntimeException('Invalid collector identity.');

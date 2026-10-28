@@ -44,6 +44,26 @@ final class InstallationConfigurationTest extends TestCase
         yield 'unset' => [false];
     }
 
+    public function testItMapsTrustedProxyAddressesForBrowserAuthentication(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-proxy-configuration-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/include', 0700, true);
+        try {
+            file_put_contents($directory . '/include/config.php', "<?php\n\$proxy_headers = array('HTTP_X_FORWARDED_FOR');\n\$proxy_trusted_addresses = array('192.0.2.10');\n");
+            $values = (new InstallationConfiguration($directory))->values();
+            self::assertSame(['HTTP_X_FORWARDED_FOR'], $values['proxy_headers']);
+            self::assertSame(['192.0.2.10'], $values['proxy_trusted_addresses']);
+
+            file_put_contents($directory . '/include/config.php', "<?php\n");
+            $values = (new InstallationConfiguration($directory))->values();
+            self::assertSame([], $values['proxy_trusted_addresses']);
+        } finally {
+            unlink($directory . '/include/config.php');
+            rmdir($directory . '/include');
+            rmdir($directory);
+        }
+    }
+
     public function testVdefRoutesAreAllowedToUseOnlyOnlinePrimaryDatabaseOnCollectors(): void
     {
         $directory = sys_get_temp_dir() . '/kadupul-vdef-configuration-' . bin2hex(random_bytes(8));

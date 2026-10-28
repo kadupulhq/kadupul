@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Resolve the client address for Symfony remember-me and Basic restoration with the same trusted-proxy rules as legacy pages, so forwarded headers count only from a listed proxy (ports the lts protection; upstream Cacti #7658, #7363).
 - Refuse unsafe table, column, index and option names and column clauses in the plugin and core DDL helpers (`db_table_create()`, `db_add_column()`, `db_update_table()`, `db_add_index()` and the `api_plugin_db_*` wrappers), and quote column defaults and comments; the plugin wrappers now use the core helpers. Definitions used by shipped upgrades and common plugins, including compound key strings, prefix lengths and quoted enum members, are unchanged. RRDtool create and update commands now refuse data source names and update templates RRDtool cannot parse, tune lines and data source paths with control characters are refused, and spike removal and background process starts quote their executable or RRD path.
 
 - Require a set Boost debug log path to end in `.log` on the settings page, and have Boost ignore a stored path that does not (GHSA-m6wx-f538-m6q3, upstream Cacti #8150 and #8148).
