@@ -77,6 +77,8 @@
       <file>Unit/Core/Rrd/RrdRejectionNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdLegendTextTest.php</file>
       <file>Unit/Core/Rrd/RrdOneShotIoTest.php</file>
+      <file>Unit/Core/Rrd/LegacyRrdWebContextTest.php</file>
+      <file>Unit/Core/Rrd/RrdNoShellNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyCreateGuardNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyDeadlineNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdFetchFailureTest.php</file>
@@ -125,6 +127,7 @@
       <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
       <file>Unit/Security/Auth/TreeViewerEnabledCallerTest.php</file>
       <file>Unit/Security/Misc/IncludeDirectoryDenyTest.php</file>
+      <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

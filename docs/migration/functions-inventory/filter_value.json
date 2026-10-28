@@ -3,8 +3,8 @@
     "name": "filter_value",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 46,
-        "end_line": 75,
+        "start_line": 47,
+        "end_line": 76,
         "line_count": 30,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 107, "core_outside_functions_php": 106, "tests": 6, "plugins": 0},
+        "fan_out": {"core": 101, "core_outside_functions_php": 100, "tests": 6, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["charset"],

@@ -3,8 +3,8 @@
     "name": "create_emailtext",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6101,
-        "end_line": 6114,
+        "start_line": 6117,
+        "end_line": 6130,
         "line_count": 14,
         "signature": {
             "parameters": [
