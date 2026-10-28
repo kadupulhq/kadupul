@@ -29,7 +29,7 @@ final class ArchitectureTest extends TestCase
                 if ($layer !== 'Infrastructure') {
                     self::assertNotContains($kind, [T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE, T_GLOBAL], $relative);
                     if ($kind === T_VARIABLE) {
-                        self::assertNotContains($value, ['$_SESSION', '$_SERVER', '$_GET', '$_POST', '$GLOBALS'], $relative);
+                        self::assertNotContains($value, ['$_SESSION', '$_SERVER', '$_GET', '$_POST', '$_COOKIE', '$_REQUEST', '$_FILES', '$_ENV', '$GLOBALS'], $relative);
                     }
                     if ($kind === T_STRING) {
                         self::assertDoesNotMatchRegularExpression('/^(db_|session_|get_allowed_)/', $value, $relative);
@@ -63,6 +63,30 @@ final class ArchitectureTest extends TestCase
                 }
             }
         }
+    }
+
+    public function testHttpControllersReceiveStateThroughTheirRequestBoundary(): void
+    {
+        $controllers = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__, 2) . '/src', \FilesystemIterator::SKIP_DOTS));
+        $count = 0;
+        foreach ($controllers as $file) {
+            if ($file->getExtension() !== 'php' || !str_contains($file->getPathname(), '/Symfony/Controller/')) {
+                continue;
+            }
+            ++$count;
+            $source = file_get_contents($file->getPathname());
+            self::assertIsString($source);
+            foreach (token_get_all($source) as $token) {
+                if (!is_array($token)) {
+                    continue;
+                }
+                self::assertNotSame(T_GLOBAL, $token[0], $file->getPathname());
+                if ($token[0] === T_VARIABLE) {
+                    self::assertNotContains($token[1], ['$GLOBALS', '$_SESSION', '$_SERVER', '$_GET', '$_POST', '$_COOKIE', '$_REQUEST', '$_FILES', '$_ENV'], $file->getPathname());
+                }
+            }
+        }
+        self::assertGreaterThan(0, $count, 'Controller discovery must not be empty.');
     }
 
     /**
@@ -293,6 +317,36 @@ final class ArchitectureTest extends TestCase
             sort($files);
             sort($found[$class]);
             self::assertSame($files, $found[$class], $class);
+        }
+    }
+
+    public function testPermissionFilterReceivesItsRowCatalogExplicitly(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
+        self::assertIsString($source);
+        foreach (token_get_all($source) as $token) {
+            if (!is_array($token)) {
+                continue;
+            }
+            self::assertNotSame(T_GLOBAL, $token[0]);
+            if ($token[0] === T_VARIABLE) {
+                self::assertNotContains($token[1], ['$GLOBALS', '$_GET', '$_POST', '$_REQUEST', '$_SESSION', '$_COOKIE', '$_SERVER', '$_FILES', '$_ENV']);
+            }
+        }
+    }
+
+    public function testPermissionAssociationsReceiveSubmittedFieldsExplicitly(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php');
+        self::assertIsString($source);
+        foreach (token_get_all($source) as $token) {
+            if (!is_array($token)) {
+                continue;
+            }
+            self::assertNotSame(T_GLOBAL, $token[0]);
+            if ($token[0] === T_VARIABLE) {
+                self::assertNotContains($token[1], ['$GLOBALS', '$_GET', '$_POST', '$_REQUEST', '$_COOKIE', '$_SESSION', '$_SERVER', '$_FILES', '$_ENV']);
+            }
         }
     }
 

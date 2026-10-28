@@ -206,7 +206,6 @@ function automation_tree_rules_form_save()
 function automation_tree_rules_form_actions()
 {
     global $automation_tree_rules_actions;
-    global $config;
 
     /* if we are to save this form, instead of display it */
     if (isset_request_var('selected_items')) {
@@ -388,7 +387,6 @@ function automation_tree_rules_item_remove()
 
 function automation_tree_rules_item_edit()
 {
-    global $config;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -782,7 +780,7 @@ function automation_tree_rules_edit()
 
 function automation_tree_rules()
 {
-    global $automation_tree_rules_actions, $config, $item_rows;
+    global $automation_tree_rules_actions, $item_rows;
     global $automation_tree_item_types, $host_group_types;
 
     if ((!empty($_SESSION['sess_autom_tr_status'])) && (!isempty_request_var('status'))) {

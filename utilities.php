@@ -134,7 +134,7 @@ function rebuild_resource_cache()
 
 function utilities_view_tech()
 {
-    global $database_default, $config, $rrdtool_versions, $poller_options, $input_types, $local_db_cnn_id, $remote_db_cnn_id;
+    global $config, $poller_options, $input_types, $local_db_cnn_id;
 
     /* ================= input validation ================= */
     get_filter_request_var('tab', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-z_A-Z]+)$/')));
@@ -1288,7 +1288,7 @@ function utilities_clear_user_log()
 
 function utilities_view_logfile()
 {
-    global $log_tail_lines, $page_refresh_interval, $config;
+    global $log_tail_lines, $page_refresh_interval;
 
     $logfile = basename(get_nfilter_request_var('filename'));
     $logbase = basename(read_config_option('path_cactilog'));
@@ -1666,7 +1666,7 @@ function utilities_clear_logfile()
 
 function utilities_view_snmp_cache()
 {
-    global $poller_actions, $item_rows;
+    global $item_rows;
 
     /* ================= input validation and session storage ================= */
     $filters = array(
@@ -1970,7 +1970,7 @@ function utilities_view_snmp_cache()
 
 function utilities_view_poller_cache()
 {
-    global $poller_actions, $item_rows;
+    global $item_rows;
 
     /* ================= input validation and session storage ================= */
     $filters = array(
@@ -2541,7 +2541,7 @@ function purge_data_source_statistics()
 
 function boost_display_run_status()
 {
-    global $config, $refresh_interval, $boost_utilities_interval, $boost_refresh_interval, $boost_max_runtime;
+    global $config, $boost_utilities_interval, $boost_refresh_interval, $boost_max_runtime;
 
     /* ================= input validation ================= */
     get_filter_request_var('refresh');

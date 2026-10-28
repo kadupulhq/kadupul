@@ -88,6 +88,23 @@ Kernel, native-schema and seven-theme browser regressions are registered.
 Installed-session and collector HTTP acceptance remain release gates; legacy
 editing and operational paths remain active.
 
+### Explicit permission selection input
+
+Status: implemented. Authenticated user/group page handlers pass POST field names
+to the shared association helper. The helper no longer reads the POST superglobal.
+See [scope and verification](migrations/permission-selection-input.md). Legacy
+request helpers and database/session ownership remain compatibility dependencies;
+installed collector/session acceptance remains a release gate.
+
+### Global state behind Twig migrations
+
+Status: implemented for the unused-binding cleanup and native-layer guard.
+The [audit and migration boundaries](migrations/twig-global-state-audit.md)
+distinguish direct access from legacy worker/session/plugin dependencies.
+Eleven declarations and 71 unused bindings are removed; live adapters remain
+assessed rather than retired. Full installed-session, collector and retained
+legacy-action acceptance remain release gates.
+
 ### Identity relationship browsing
 
 Status: implemented. Ten views display stored user/group memberships and four
@@ -105,3 +122,11 @@ user/group settings behind existing user administration authorization.
 cover schema-backed projections, credential exclusion, owner scoping and
 seven-theme presentation tests. Installed-session and collector HTTP acceptance
 remain release gates. Existing preference resolution and writers remain active.
+
+### Explicit permission-filter row choices
+
+Status: implemented. The retained user/group edit paths pass bootstrap row choices
+to the shared filter renderer, which no longer declares a global. Native cases
+cover custom/empty catalogs and catalog changes in tab hooks. See
+[scope and verification](migrations/permission-filter-row-context.md). Indirect
+request/database dependencies and installed collector/session acceptance remain.

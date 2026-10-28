@@ -51,7 +51,6 @@ switch (get_request_var('action')) {
    -------------------------- */
 
 function form_save() {
-	global $registered_cacti_names;
 
 	if (isset_request_var('save_component_domain_ldap')) {
 		/* ================= input validation ================= */

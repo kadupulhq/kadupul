@@ -805,7 +805,7 @@ validator needs the running product version and no non-legacy source exists yet.
 
 | Item | Status |
 | --- | --- |
-| Architecture decision records 0001 to 0008 | Written, proposed |
+| Architecture decision records 0001 to 0009 | Written, proposed |
 | Pack JSON Schema and example | Written; validated against its example, see below |
 | Collection plan JSON Schemas (v1, v2) and examples | Written; validated against their examples, see below |
 | Telemetry contract: `MetricId`, `ResourceId`, `Sample`, `CounterValue`, `CounterNormalizer` and related | Implemented; tests in `tests/Symfony/Telemetry`. Samples carry a device id and a `CollectionProtocol`; a decrease is a rollover only on a declared 32-bit counter and a reset otherwise, as [0004](adr/0004-common-telemetry-contracts.md) specifies |
