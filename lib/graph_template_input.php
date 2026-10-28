@@ -28,3 +28,132 @@ function graph_template_input_column($column)
 
     return is_string($column) && isset($columns[$column]) ? $columns[$column] : null;
 }
+
+/**
+ * Validate a value for a graph template input field before it is written to
+ * graph items. Each field takes the shape its graph_templates_item column and
+ * RRDtool expect; control characters are refused everywhere.
+ */
+function graph_template_input_value_is_allowed($column, $value)
+{
+    if (graph_template_input_column($column) === null || !is_scalar($value)) {
+        return false;
+    }
+
+    $value = (string) $value;
+
+    if (preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', $value)) {
+        return false;
+    }
+
+    switch ($column) {
+        case 'graph_type_id':
+        case 'task_item_id':
+        case 'consolidation_function_id':
+        case 'cdef_id':
+        case 'vdef_id':
+        case 'gprint_id':
+            return preg_match('/^\d{1,10}$/D', $value) === 1;
+        case 'color_id':
+            return $value === '' || (preg_match('/^\d{1,8}$/D', $value) === 1 && (int) $value <= 16777215);
+        case 'alpha':
+            return preg_match('/^[A-Fa-f0-9]{2}$/D', $value) === 1;
+        case 'shift':
+        case 'hard_return':
+            return in_array($value, array('', '0', '1', 'on'), true);
+        case 'line_width':
+            return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:[.,]\d+)?$/D', $value) === 1);
+        case 'dash_offset':
+            return $value === '' || (preg_match('/^-?\d{1,7}$/D', $value) === 1 && (int) $value >= -8388608 && (int) $value <= 8388607);
+        case 'sequence':
+            return $value === '' || (preg_match('/^\d{1,8}$/D', $value) === 1 && (int) $value <= 16777215);
+        case 'dashes':
+            return strlen($value) <= 40 && ($value === '' || preg_match('/^[0-9.,[:space:]]+$/D', $value) === 1);
+        case 'textalign':
+            return strlen($value) <= 20 && ($value === '' || preg_match('/^[A-Za-z]+$/D', $value) === 1);
+    }
+
+    return strlen($value) <= 255;
+}
+
+/**
+ * Verify that a graph input and every selected template item belong to one
+ * graph template. An input id of 0 is a new input.
+ *
+ * @param array<int|string> $graph_template_item_ids
+ */
+function graph_template_input_relationships_are_valid($input_id, $graph_template_id, $graph_template_item_ids)
+{
+    $input_id          = (int) $input_id;
+    $graph_template_id = (int) $graph_template_id;
+
+    if ($graph_template_id <= 0 || $input_id < 0 || !is_array($graph_template_item_ids)) {
+        return false;
+    }
+
+    if ($input_id > 0 && (int) db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM graph_template_input
+		WHERE id = ?
+		AND graph_template_id = ?', array($input_id, $graph_template_id)) !== 1) {
+        return false;
+    }
+
+    $graph_template_item_ids = array_values(array_unique(array_map('intval', $graph_template_item_ids)));
+
+    foreach ($graph_template_item_ids as $item_id) {
+        if ($item_id <= 0) {
+            return false;
+        }
+    }
+
+    if (!cacti_sizeof($graph_template_item_ids)) {
+        return true;
+    }
+
+    $placeholders = implode(',', array_fill(0, cacti_sizeof($graph_template_item_ids), '?'));
+
+    return (int) db_fetch_cell_prepared(
+        'SELECT COUNT(*)
+		FROM graph_templates_item
+		WHERE graph_template_id = ?
+		AND local_graph_id = 0
+		AND id IN (' . $placeholders . ')',
+        array_merge(array($graph_template_id), $graph_template_item_ids)
+    ) === cacti_sizeof($graph_template_item_ids);
+}
+
+/**
+ * Check that every graph input in one decoded XML graph template names only
+ * items of that same template. The hash cache used during import spans the
+ * whole package, so an unchecked reference could link another template's item.
+ */
+function graph_template_input_xml_items_are_valid($xml_array)
+{
+    $available_items = array();
+
+    foreach (is_array($xml_array['items'] ?? null) ? array_keys($xml_array['items']) : array() as $item_hash) {
+        $parsed_hash = parse_xml_hash($item_hash);
+
+        if ($parsed_hash === false) {
+            return false;
+        }
+
+        $available_items[$parsed_hash['hash']] = true;
+    }
+
+    foreach (is_array($xml_array['inputs'] ?? null) ? $xml_array['inputs'] : array() as $input) {
+        if (!is_array($input) || (isset($input['items']) && !is_string($input['items']))) {
+            return false;
+        }
+
+        foreach (array_filter(explode('|', $input['items'] ?? ''), 'strlen') as $item_hash) {
+            $parsed_hash = parse_xml_hash($item_hash);
+
+            if ($parsed_hash === false || !isset($available_items[$parsed_hash['hash']])) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}

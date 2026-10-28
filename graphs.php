@@ -383,6 +383,18 @@ function form_save(): never
         /* ==================================================== */
 
         /* Reuse the validated snapshot; do not discover invalid inputs after writes. */
+        foreach ($input_list as $input) {
+            $input_var = graph_template_input_column($input['column_name']) . '_' . $input['id'];
+
+            if (isset_request_var($input_var) && !graph_template_input_value_is_allowed($input['column_name'], get_nfilter_request_var($input_var))) {
+                cacti_log('ERROR: Graph save refused an invalid graph input value', false, 'SECURITY');
+                raise_message('graph_input_invalid', __('A Graph Item Input contains an invalid value.'), MESSAGE_LEVEL_ERROR);
+                $input_list = array();
+
+                break;
+            }
+        }
+
         if ($input_template_id > 0) {
             if (cacti_sizeof($input_list)) {
                 foreach ($input_list as $input) {
