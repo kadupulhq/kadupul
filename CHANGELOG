@@ -353,6 +353,7 @@ Cacti CHANGELOG
 -security: Restore the Cacti error handler on LDAP bind-only and empty-password paths
 -security: Harden CLI shell arguments, database credentials, and temporary RRD files
 -security#7027: Detect reused process IDs before treating registry tasks as live
+-security#GHSA-m6wx-f538-m6q3: Require a .log suffix when saving or using the Boost debug log path
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
 -security: Set the Secure session cookie behind a trusted TLS-terminating proxy

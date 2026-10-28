@@ -462,7 +462,7 @@ msgstr "Відповідні Графіки"
 #: lib/html_graph.php:214 lib/html_reports.php:2033 lib/html_tree.php:136
 #: lib/html_tree.php:984 links.php:329 managers.php:158 managers.php:514
 #: managers.php:780 plugins.php:482 pollers.php:959 rrdcheck.php:229
-#: rrdcleaner.php:531 settings.php:557 settings.php:574 settings.php:633
+#: rrdcleaner.php:531 settings.php:562 settings.php:579 settings.php:638
 #: sites.php:573 tree.php:1029 tree.php:1068 tree.php:1107 tree.php:2316
 #: user_admin.php:2228 user_admin.php:2681 user_admin.php:2803
 #: user_admin.php:2904 user_admin.php:3022 user_admin.php:3122
@@ -729,7 +729,7 @@ msgstr "Будь-який"
 #: lib/html_reports.php:1131 lib/html_reports.php:1142
 #: lib/html_reports.php:1162 lib/html_reports.php:1416
 #: lib/html_reports.php:1421 lib/html_reports.php:1426 package_import.php:738
-#: settings.php:550 settings.php:572 settings.php:603 templates_import.php:344
+#: settings.php:555 settings.php:577 settings.php:608 templates_import.php:344
 #: templates_import.php:376 user_admin.php:2693 user_admin.php:2916
 #: user_group_admin.php:2402 user_group_admin.php:2525 utilities.php:2091
 msgid "None"
@@ -910,7 +910,7 @@ msgstr "Підтвердження нового паролю"
 
 #: auth_changepassword.php:378 auth_profile.php:560 graphs_new.php:454
 #: lib/html_form.php:1658 lib/html_form.php:1667 lib/html_graph.php:204
-#: lib/html_tree.php:1029 settings.php:512
+#: lib/html_tree.php:1029 settings.php:517
 msgid "Save"
 msgstr "Зберегти"
 
@@ -3349,7 +3349,7 @@ msgstr "Профіль"
 #: graphs.php:2141 graphs_new.php:430 host.php:1848 host_templates.php:861
 #: host_templates.php:876 lib/clog_webapi.php:585 lib/html.php:256
 #: lib/html_reports.php:1094 lib/html_reports.php:2287 plugins.php:496
-#: settings.php:549 settings.php:571 settings.php:602 tree.php:1005
+#: settings.php:554 settings.php:576 settings.php:607 tree.php:1005
 #: user_admin.php:2239 user_admin.php:2261 user_admin.php:2275
 #: utilities.php:1077 utilities.php:1501
 msgid "All"
@@ -13566,12 +13566,12 @@ msgstr ""
 msgid "RRDfile not created yet"
 msgstr ""
 
-#: lib/functions.php:451 settings.php:269
+#: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr ""
 
-#: lib/functions.php:463 settings.php:281
+#: lib/functions.php:463 settings.php:286
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr ""
@@ -13770,11 +13770,11 @@ msgstr "Видалити Запит"
 msgid "Get Page Help"
 msgstr ""
 
-#: lib/html.php:244 settings.php:593
+#: lib/html.php:244 settings.php:598
 msgid "Templates Selected"
 msgstr ""
 
-#: lib/html.php:298 settings.php:558 settings.php:575 settings.php:634
+#: lib/html.php:298 settings.php:563 settings.php:580 settings.php:639
 msgid "Enter keyword"
 msgstr ""
 
@@ -18352,60 +18352,60 @@ msgstr ""
 msgid "Archive All Unknown RRDfiles"
 msgstr ""
 
-#: settings.php:377
+#: settings.php:382
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr ""
 
-#: settings.php:382
+#: settings.php:387
 #, php-format
 msgid "Cacti Settings (%s)%s"
 msgstr ""
 
-#: settings.php:500
+#: settings.php:505
 msgid "Changing Permission Model Warning"
 msgstr ""
 
-#: settings.php:501
+#: settings.php:506
 msgid "Changing Permission Model will alter a users effective Graph permissions."
 msgstr ""
 
-#: settings.php:502
+#: settings.php:507
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
 msgstr ""
 
-#: settings.php:516
+#: settings.php:521
 msgid "Poller Interval must be less than Cron Interval"
 msgstr ""
 
-#: settings.php:544
+#: settings.php:549
 msgid "Select Plugin(s)"
 msgstr ""
 
-#: settings.php:546
+#: settings.php:551
 msgid "Plugins Selected"
 msgstr ""
 
-#: settings.php:566
+#: settings.php:571
 msgid "Select File(s)"
 msgstr ""
 
-#: settings.php:568
+#: settings.php:573
 msgid "Files Selected"
 msgstr ""
 
-#: settings.php:591
+#: settings.php:596
 msgid "Select Template(s)"
 msgstr ""
 
-#: settings.php:596
+#: settings.php:601
 msgid "All Templates Selected"
 msgstr ""
 
-#: settings.php:670
+#: settings.php:675
 msgid "Send a Test Email"
 msgstr ""
 
-#: settings.php:681
+#: settings.php:686
 msgid "Test Email Results"
 msgstr ""
 

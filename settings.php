@@ -139,7 +139,9 @@ case 'save':
 			} else {
 				$continue = true;
 
-				if ($field_name == 'path_cactilog' || $field_name == 'path_stderrlog') {
+				// A blank Boost debug log disables logging; other values must end in .log.
+				if ($field_name == 'path_cactilog' || $field_name == 'path_stderrlog'
+					|| ($field_name == 'path_boost_log' && get_nfilter_request_var($field_name) != '')) {
 					$extension = pathinfo(get_nfilter_request_var($field_name), PATHINFO_EXTENSION);
 
 					if ($extension != 'log') {
@@ -148,7 +150,10 @@ case 'save':
 						$errors[9] = 9;
 						$continue = false;
 					}
-				} elseif (get_nfilter_request_var($field_name) != '' && !is_valid_pathname(get_nfilter_request_var($field_name))) {
+				}
+
+				if ($continue && $field_name != 'path_cactilog' && $field_name != 'path_stderrlog'
+					&& get_nfilter_request_var($field_name) != '' && !is_valid_pathname(get_nfilter_request_var($field_name))) {
 					$_SESSION['sess_error_fields'][$field_name] = $field_name;
 					$_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
 					$errors[36] = 36;

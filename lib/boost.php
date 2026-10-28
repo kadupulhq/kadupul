@@ -2375,7 +2375,7 @@ function boost_poller_bottom() {
 
 		boost_update_snmp_statistics();
 
-		$boost_log     = read_config_option('path_boost_log');
+		$boost_log     = boost_debug_log_path();
 		$boost_logdir  = dirname($boost_log);
 
 		if ($boost_log != '') {
@@ -2468,6 +2468,19 @@ function boost_update_snmp_statistics() {
 	$mc->object('boostStatsTotalsDataSources')->set( $total_data_sources );
 
 	$mc->object('boostStatsLastUpdate')->set( time() );
+}
+
+/** Return the configured Boost log only when its name ends in .log. */
+function boost_debug_log_path() {
+	$path = (string) read_config_option('path_boost_log');
+
+	if ($path != '' && pathinfo($path, PATHINFO_EXTENSION) != 'log') {
+		cacti_log("WARNING: Boost debug log '$path' does not end in .log and is ignored.", false, 'BOOST');
+
+		return '';
+	}
+
+	return $path;
 }
 
 function boost_debug($string) {
