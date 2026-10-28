@@ -45,7 +45,8 @@ register_shutdown_function(function () { echo json_encode(array($GLOBALS['option
 FIXTURE;
     $file = tempnam(sys_get_temp_dir(), 'boost-master-');
     try {
-        file_put_contents($file, $bootstrap . "\n" . test_php_function_source($source, 'boost_interval_seconds') . "\n" . '$interval = ' . var_export($interval, true) . '; $failed = ' . var_export($failed, true) . '; $updates = ' . var_export($updates, true) . ';' . $master);
+        $library = file_get_contents(dirname(__DIR__, 4) . '/lib/boost.php');
+        file_put_contents($file, $bootstrap . "\n" . test_php_function_source($source, 'boost_interval_seconds') . "\n" . test_php_function_source($library, 'boost_debug_log_path') . "\n" . '$interval = ' . var_export($interval, true) . '; $failed = ' . var_export($failed, true) . '; $updates = ' . var_export($updates, true) . ';' . $master);
         $process = proc_open(array(PHP_BINARY, $file), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);

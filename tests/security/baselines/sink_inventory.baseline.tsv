@@ -888,8 +888,8 @@ header_redirect	./resource/script_server/index.php:7	header("Location:../index.p
 header_redirect	./resource/snmp_queries/index.php:7	header("Location:../index.php");
 header_redirect	./scripts/index.php:7	header('Location:../index.php');
 header_redirect	./service/index.php:7	header("Location:../index.php");
-header_redirect	./settings.php:328	            header('Location: settings.php?header=false&tab=' . get_request_var('tab'));
-header_redirect	./settings.php:330	            header('Location: settings.php?tab=' . get_request_var('tab'));
+header_redirect	./settings.php:335	            header('Location: settings.php?header=false&tab=' . get_request_var('tab'));
+header_redirect	./settings.php:337	            header('Location: settings.php?tab=' . get_request_var('tab'));
 header_redirect	./templates_export.php:55					header('Location: templates_export.php');
 header_redirect	./templates_import.php:105				header('Location: templates_import.php');
 header_redirect	./templates_import.php:53				header('Location: templates_import.php'); exit;
