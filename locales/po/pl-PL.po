@@ -306,7 +306,7 @@ msgstr "Ustawienia wykresu zbiorczego"
 msgid "Details"
 msgstr "Szczegóły"
 
-#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "Produkty"
@@ -4517,12 +4517,12 @@ msgstr "(Wybierz typ wykresu do utworzenia)"
 msgid "Create"
 msgstr "Utwórz"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1111 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1111 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "Zaznacz wszystko"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1000 lib/html.php:1111
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1000 lib/html.php:1111
 msgid "Select All Rows"
 msgstr "Wybierz wszystkie wiersze"
 
@@ -4546,39 +4546,39 @@ msgstr "Błąd podczas analizowania pliku XML zasobu zapytania o dane dla zapyta
 msgid "Data Query [%s]"
 msgstr "Zapytanie o dane [%s]"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "From there you can get more information."
 msgstr "Stamtąd można uzyskać więcej informacji."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "To zapytanie o dane zwróciło 0 wierszy, być może wystąpił problem z wykonaniem tego zapytania o dane."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "You can run this Data Query in debug mode"
 msgstr "Możesz uruchomić to zapytanie w trybie debugowania"
 
-#: graphs_new.php:968
+#: graphs_new.php:970
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "Indeks jest wyłączony, ponieważ zapytanie o dane nie ma powiązanych szablonów wykresów."
 
-#: graphs_new.php:1020
+#: graphs_new.php:1022
 msgid "Search Returned no Rows."
 msgstr "Wyszukiwanie Zwrócony brak wierszy."
 
-#: graphs_new.php:1025
+#: graphs_new.php:1027
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "Błąd w zapytaniu o dane. Może to być spowodowane następującymi przyczynami: Uprawnienia plików lub brakujący lub niepoprawnie sformatowany plik XML zapytania o dane."
 
-#: graphs_new.php:1053
+#: graphs_new.php:1055
 msgid "Select a Graph Type to Create"
 msgstr "Wybierz typ wykresu do utworzenia"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Make selection default"
 msgstr "Dokonaj wyboru domyślnie"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Set Default"
 msgstr "Ustaw domyślne"
 

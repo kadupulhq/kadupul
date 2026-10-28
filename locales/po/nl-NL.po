@@ -306,7 +306,7 @@ msgstr "Geaggregeerde grafiek instellingen"
 msgid "Details"
 msgstr "Details"
 
-#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "Items"
@@ -4495,12 +4495,12 @@ msgstr "(Selecteer een type grafiek om te maken)"
 msgid "Create"
 msgstr "Maken"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1111 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1111 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "Selecteer alles"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1000 lib/html.php:1111
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1000 lib/html.php:1111
 msgid "Select All Rows"
 msgstr "Selecteer alle rijen"
 
@@ -4524,39 +4524,39 @@ msgstr "Fout bij parseren van gegevensquerybron XML-bestand voor gegevensquery '
 msgid "Data Query [%s]"
 msgstr "Data query [%s]"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "From there you can get more information."
 msgstr "Daar kunt u meer informatie krijgen."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "Deze data query retourneerde geen rijen, misschien is er een probleem bij het uitvoeren van de data query."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "You can run this Data Query in debug mode"
 msgstr "U kunt deze data query in debug modus uitvoeren"
 
-#: graphs_new.php:968
+#: graphs_new.php:970
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "De index is uitgeschakeld omdat de gegevensquery geen gekoppelde grafieksjablonen heeft."
 
-#: graphs_new.php:1020
+#: graphs_new.php:1022
 msgid "Search Returned no Rows."
 msgstr "Geen zoekresultaten."
 
-#: graphs_new.php:1025
+#: graphs_new.php:1027
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "Fout in gegevensquery. Dit kan de volgende oorzaken hebben: Bestandsmachtigingen of een ontbrekend of onjuist opgemaakt Data Query XML-bestand."
 
-#: graphs_new.php:1053
+#: graphs_new.php:1055
 msgid "Select a Graph Type to Create"
 msgstr "Selecteer een grafiektype om te creëeren"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Make selection default"
 msgstr "Maak standaardselectie"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Set Default"
 msgstr "Stel in als standaard"
 

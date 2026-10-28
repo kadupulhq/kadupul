@@ -330,7 +330,7 @@ msgstr "聚合圖設置"
 msgid "Details"
 msgstr "詳細資料"
 
-#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 #, fuzzy
 msgid "Items"
@@ -5164,13 +5164,13 @@ msgstr "（選擇要創建的圖表類型）"
 msgid "Create"
 msgstr "創建"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1111 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1111 user_admin.php:1427
 #: user_group_admin.php:1447
 #, fuzzy
 msgid "Select All"
 msgstr "全選"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1000 lib/html.php:1111
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1000 lib/html.php:1111
 #, fuzzy
 msgid "Select All Rows"
 msgstr "選擇所有行"
@@ -5195,45 +5195,45 @@ msgstr "為 ID 為“%s”的數據查詢“%s”解析數據查詢資源 XML �
 msgid "Data Query [%s]"
 msgstr "數據查詢[%s]"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 #, fuzzy
 msgid "From there you can get more information."
 msgstr "從那裡你可以獲得更多信息。"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 #, fuzzy
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "此數據查詢返回0行，可能執行此數據查詢時出現問題。"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 #, fuzzy
 msgid "You can run this Data Query in debug mode"
 msgstr "您可以在調試模式下運行此數據查詢"
 
-#: graphs_new.php:968
+#: graphs_new.php:970
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "由於數據查詢沒有關聯的圖表模板，索引被禁用。"
 
-#: graphs_new.php:1020
+#: graphs_new.php:1022
 #, fuzzy
 msgid "Search Returned no Rows."
 msgstr "搜索返回沒有行。"
 
-#: graphs_new.php:1025
+#: graphs_new.php:1027
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "數據查詢錯誤。這可能是由於以下原因： 文件權限，或丟失或格式不正確的數據查詢 XML 文件。"
 
-#: graphs_new.php:1053
+#: graphs_new.php:1055
 #, fuzzy
 msgid "Select a Graph Type to Create"
 msgstr "選擇要創建的圖表類型"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 #, fuzzy
 msgid "Make selection default"
 msgstr "選擇默認"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 #, fuzzy
 msgid "Set Default"
 msgstr "設為預設"

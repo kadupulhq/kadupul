@@ -306,7 +306,7 @@ msgstr "Impostazioni del grafico aggregato"
 msgid "Details"
 msgstr "Dettagli"
 
-#: aggregate_graphs.php:645 graphs_new.php:933 lib/html_reports.php:1545
+#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "Elementi"
@@ -4493,12 +4493,12 @@ msgstr "(Selezionare un tipo di grafico da creare)"
 msgid "Create"
 msgstr "Crea"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1111 user_admin.php:1427
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1111 user_admin.php:1427
 #: user_group_admin.php:1447
 msgid "Select All"
 msgstr "Seleziona tutto"
 
-#: graphs_new.php:641 graphs_new.php:955 lib/html.php:1000 lib/html.php:1111
+#: graphs_new.php:641 graphs_new.php:957 lib/html.php:1000 lib/html.php:1111
 msgid "Select All Rows"
 msgstr "Seleziona tutte le righe"
 
@@ -4522,39 +4522,39 @@ msgstr "Errore durante l'analisi del file XML della risorsa della query di dati 
 msgid "Data Query [%s]"
 msgstr "Interrogazione dati [%s]"
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "From there you can get more information."
 msgstr "Da lì è possibile ottenere ulteriori informazioni."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
 msgstr "Questa query dati ha restituito 0 righe, forse c'è stato un problema nell'esecuzione di questa query dati."
 
-#: graphs_new.php:951
+#: graphs_new.php:953
 msgid "You can run this Data Query in debug mode"
 msgstr "È possibile eseguire questa query di dati in modalità debug"
 
-#: graphs_new.php:968
+#: graphs_new.php:970
 msgid "The index is disabled due to the Data Query having no associated Graph Templates."
 msgstr "L'indice è disabilitato perché la query sui dati non ha modelli di grafico associati."
 
-#: graphs_new.php:1020
+#: graphs_new.php:1022
 msgid "Search Returned no Rows."
 msgstr "Ricerca Non restituito nessuna riga."
 
-#: graphs_new.php:1025
+#: graphs_new.php:1027
 msgid "Error in Data Query.  This could be due to the following: File Permissions, or a missing or improperly formatted Data Query XML file."
 msgstr "Errore nella query dei dati. Ciò potrebbe essere dovuto a quanto segue: Autorizzazioni file o un file XML di query dati mancante o formattato in modo errato."
 
-#: graphs_new.php:1053
+#: graphs_new.php:1055
 msgid "Select a Graph Type to Create"
 msgstr "Selezionare un tipo di grafico da creare"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Make selection default"
 msgstr "Effettuare la selezione predefinita"
 
-#: graphs_new.php:1056
+#: graphs_new.php:1058
 msgid "Set Default"
 msgstr "Ripristina impostazioni iniziali"
 
