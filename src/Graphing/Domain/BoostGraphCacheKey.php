@@ -19,6 +19,12 @@ use InvalidArgumentException;
  */
 final readonly class BoostGraphCacheKey
 {
+    /**
+     * The basename shape fileName() produces. The purge deletes only names that match, so a change
+     * to fileName() has to change this pattern with it.
+     */
+    public const string FILE_PATTERN = '/^[A-Za-z0-9_-]+_lgi_\d+_rrai_\d+(?:_tsi_\d+)?(?:_height_-?\d+)?(?:_width_-?\d+)?_rk_[0-9a-f]{64}(?:_thumb)?\.png$/D';
+
     private const VIEWER_INPUTS = ['theme', 'selected_theme', 'color_mode', 'fonts', 'date_format', 'datechar',
         'php_tz', 'tz', 'lang', 'locale', 'country'];
 

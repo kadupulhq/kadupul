@@ -68,6 +68,7 @@ alongside the row-cache consumer (`scheduler_row_cache`). Enabling the scheduler
 stops poller.php from launching Boost. That environment setting is what
 prevents two masters per cycle; the master's own process registration is only a
 best-effort backstop and can let two near-simultaneous masters both start.
+The scheduler also purges the Boost image cache hourly while `boost_png_cache_enable` is on; `bin/console kadupul:boost:purge-image-cache` does the same on demand.
 
 Stop the scheduler_boost consumer before running `bin/console kadupul:boost:run`
 manually; it holds the boost lock for its whole life, so the command exits 2

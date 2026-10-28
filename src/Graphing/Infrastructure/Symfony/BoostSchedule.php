@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Infrastructure\Symfony;
 
+use Kadupul\Graphing\Application\Command\PurgeBoostImageCache;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
@@ -37,6 +38,9 @@ final class BoostSchedule implements ScheduleProviderInterface
         // and exits when no run is due, so a one-minute tick keeps the configured cadence.
         return $this->schedule = (new Schedule())
             ->add(RecurringMessage::every('1 minute', new BoostRun()))
+            // Always scheduled so building the schedule stays free of database access; the
+            // handler skips the purge while boost_png_cache_enable is off.
+            ->add(RecurringMessage::every('1 hour', new PurgeBoostImageCache()))
             ->stateful($this->state->cache())
             ->processOnlyLastMissedRun(true)
             ->lock($this->state->lock());

@@ -1693,6 +1693,11 @@ function boost_purge_cached_png_files($forcerun)
 {
     global $config;
 
+    /* the Messenger schedule purges the image cache hourly when it owns Boost */
+    if (getenv('KADUPUL_BOOST_SCHEDULER') === '1') {
+        return;
+    }
+
     /* remove stale png's from the cache.  I consider png's stale after 1 hour */
     if ((read_config_option('boost_png_cache_enable') == 'on') || $forcerun) {
         $cache_directory = read_config_option('boost_png_cache_directory');

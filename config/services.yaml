@@ -361,6 +361,11 @@ services:
     Kadupul\Graphing\Infrastructure\Symfony\FlushBoostPartitionHandler:
         arguments:
             $timeout: '%kadupul.boost.partition_timeout%'
+    Kadupul\Graphing\Application\Port\BoostImageCache:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\InstallationBoostImageCache
+    Kadupul\Graphing\Infrastructure\Legacy\InstallationBoostImageCache:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
     Kadupul\Graphing\Infrastructure\Symfony\BoostSchedule:
         arguments:
             $enabled: '%env(default::KADUPUL_BOOST_SCHEDULER)%'

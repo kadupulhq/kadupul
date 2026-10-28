@@ -84,7 +84,8 @@ final class BoostScheduleTest extends TestCase
         $generator = new MessageGenerator($provider, 'boost', $clock);
         iterator_to_array($generator->getMessages(), false);
         $clock->sleep(3601);
-        self::assertCount(1, iterator_to_array($generator->getMessages(), false));
+        $runs = array_filter(iterator_to_array($generator->getMessages(), false), static fn(object $message): bool => $message instanceof BoostRun);
+        self::assertCount(1, $runs);
         $provider->getSchedule()->getLock()->release();
     }
 
