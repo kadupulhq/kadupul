@@ -138,8 +138,8 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         $pdo->exec("INSERT INTO settings VALUES ('auth_method','1'),('auth_cache_enabled','on'),('guest_user','3'),('force_https','')");
         $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT "", must_change_password TEXT DEFAULT "", password_change TEXT DEFAULT "")');
         $pdo->exec("INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES (9, 'account', 0, 'on', '')");
-        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT)');
-        $pdo->prepare('INSERT INTO user_auth_cache VALUES (1, 9, ?, ?)')->execute([hash('sha512', 'token'), '192.0.2.4']);
+        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT, last_update TEXT)');
+        $pdo->prepare("INSERT INTO user_auth_cache VALUES (1, 9, ?, ?, datetime('now'))")->execute([hash('sha512', 'token'), '192.0.2.4']);
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '192.0.2.4';
         $_COOKIE = ['cacti_remembers' => '9,0,token'];
         $request = Request::create('/about', 'GET', [], $_COOKIE, [], $_SERVER);
