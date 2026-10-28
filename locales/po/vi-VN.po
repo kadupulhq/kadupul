@@ -2784,7 +2784,7 @@ msgstr "Phân tích chạy lại"
 msgid "Check"
 msgstr "Kiểm tra"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4243
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4278
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Giá trị"
@@ -3759,7 +3759,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Cú pháp đồ thị RRDtool"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2614
+#: lib/rrd.php:2649
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller chưa chạy."
 
@@ -4449,7 +4449,7 @@ msgid "Save Filters"
 msgstr "Lưu bộ lọc"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4285
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4320
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Hàng"
@@ -5582,7 +5582,7 @@ msgstr "Trật tự tự nhiên"
 msgid "Numeric Ordering"
 msgstr "Đặt hàng số"
 
-#: include/global_arrays.php:955 lib/rrd.php:4209
+#: include/global_arrays.php:955 lib/rrd.php:4244
 msgid "Header"
 msgstr "Đầu trang"
 
@@ -5762,7 +5762,7 @@ msgid "Export Templates"
 msgstr "Xuất mẫu"
 
 #: include/global_arrays.php:1032 include/global_arrays.php:1054
-#: include/global_arrays.php:1073 lib/plugins.php:1443
+#: include/global_arrays.php:1073 lib/plugins.php:1337
 msgid "Configuration"
 msgstr "Cấu hình"
 
@@ -7224,7 +7224,7 @@ msgstr "Nhịp tim"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Dữ liệu có thể bị mất bao lâu trước khi RRDtool ghi lại dữ liệu không xác định. Tăng giá trị này nếu Nguồn dữ liệu của bạn không ổn định và bạn muốn chuyển tiếp dữ liệu cũ thay vì hiển thị các khoảng trống trong biểu đồ của bạn. Giá trị này được nhân với Hệ số tệp X để xác định lượng thời gian thực tế."
 
-#: include/global_form.php:226 lib/rrd.php:4288
+#: include/global_form.php:226 lib/rrd.php:4323
 msgid "X-Files Factor"
 msgstr "Yếu tố X-Files"
 
@@ -7794,7 +7794,7 @@ msgstr "Opacity / Kênh Alpha"
 msgid "The opacity/alpha channel of the color."
 msgstr "Các kênh opacity / alpha của màu sắc."
 
-#: include/global_form.php:989 lib/rrd.php:4284
+#: include/global_form.php:989 lib/rrd.php:4319
 msgid "Consolidation Function"
 msgstr "Chức năng hợp nhất"
 
@@ -11462,8 +11462,8 @@ msgid "Recovering"
 msgstr "Phục hồi"
 
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1499
-#: lib/plugins.php:1500 lib/rrd.php:4261 lib/rrd.php:4273 lib/spikekill.php:301
+#: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
+#: lib/plugins.php:1394 lib/rrd.php:4296 lib/rrd.php:4308 lib/spikekill.php:301
 #: package_import.php:528 package_import.php:606 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11471,7 +11471,7 @@ msgstr "Không xác định"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4238
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4273
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Loại"
@@ -12379,11 +12379,11 @@ msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' v�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 
-#: lib/database.php:2149
+#: lib/database.php:2405
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Không thể xác định độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
-#: lib/database.php:2156
+#: lib/database.php:2412
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Không thể thay đổi độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
@@ -15207,31 +15207,31 @@ msgstr "TCP ping đã hết thời gian"
 msgid "Ping not performed due to setting."
 msgstr "Ping không được thực hiện do cài đặt."
 
-#: lib/plugins.php:706
+#: lib/plugins.php:596
 #, php-format
 msgid "%s Version %s or above is required for %s. "
 msgstr "%s Phiên bản %s trở lên là bắt buộc đối với %s."
 
-#: lib/plugins.php:710
+#: lib/plugins.php:600
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
 msgstr "%s được yêu cầu cho %s và nó không được cài đặt."
 
-#: lib/plugins.php:726
+#: lib/plugins.php:616
 msgid "Plugin cannot be installed."
 msgstr "Plugin không thể được cài đặt."
 
-#: lib/plugins.php:786
+#: lib/plugins.php:676
 #, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
 msgstr ""
 
-#: lib/plugins.php:789
+#: lib/plugins.php:679
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
 msgstr ""
 
-#: lib/plugins.php:822
+#: lib/plugins.php:712
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr ""
@@ -15240,20 +15240,20 @@ msgstr ""
 msgid "Legacy Plugin"
 msgstr "Plugin kế thừa"
 
-#: lib/plugins.php:1443 lib/plugins.php:1451 plugins.php:511 plugins.php:595
+#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:595
 msgid "Plugins"
 msgstr "Gói mở rộng"
 
-#: lib/plugins.php:1471
+#: lib/plugins.php:1365
 msgid "Plugin INFO must declare a valid compat version"
 msgstr ""
 
-#: lib/plugins.php:1475 lib/plugins.php:1478
+#: lib/plugins.php:1369 lib/plugins.php:1372
 #, php-format
 msgid "Requires: Kadupul >= %s"
 msgstr "Yêu cầu: Kadupul&gt; = %s"
 
-#: lib/plugins.php:1501
+#: lib/plugins.php:1395
 msgid "Not Stated"
 msgstr "Không nêu"
 
@@ -15332,194 +15332,194 @@ msgstr "Không thể thêm mục biểu đồ báo cáo &#39; <i> %s</i> &#39; �
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Mục biểu đồ bị bỏ qua &#39; <i> %s</i> &#39; đã tồn tại"
 
-#: lib/rrd.php:2237
+#: lib/rrd.php:2272
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2240
+#: lib/rrd.php:2275
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2611
+#: lib/rrd.php:2646
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "LRI: RRDfile %s không thể ghi"
 
-#: lib/rrd.php:4026
+#: lib/rrd.php:4061
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Kích thước bước RRD bắt buộc là &#39; %s&#39;"
 
-#: lib/rrd.php:4062
+#: lib/rrd.php:4097
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Loại cho Nguồn dữ liệu &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:4068
+#: lib/rrd.php:4103
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Nhịp tim cho Nguồn dữ liệu &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:4080
+#: lib/rrd.php:4115
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD tối thiểu cho Nguồn dữ liệu &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:4089
+#: lib/rrd.php:4124
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS &#39; %s&#39; bị thiếu trong định nghĩa Kadupul"
 
-#: lib/rrd.php:4103 lib/rrd.php:4104
+#: lib/rrd.php:4138 lib/rrd.php:4139
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39; có cùng CF / bước ( %s, %s) là &#39; %s&#39;"
 
-#: lib/rrd.php:4117 lib/rrd.php:4118
+#: lib/rrd.php:4152 lib/rrd.php:4153
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Tệp RRA &#39; %s&#39; có cùng CF / bước ( %s, %s) là &#39; %s&#39;"
 
-#: lib/rrd.php:4150
+#: lib/rrd.php:4185
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:4154
+#: lib/rrd.php:4189
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF cho id RRA của Kadupul &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:4158
+#: lib/rrd.php:4193
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Số lượng hàng cho id Kadupul RRA &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:4175
+#: lib/rrd.php:4210
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39; bị thiếu trong RRDfile"
 
-#: lib/rrd.php:4183
+#: lib/rrd.php:4218
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA &#39; %s&#39; bị thiếu trong định nghĩa Kadupul"
 
-#: lib/rrd.php:4205
+#: lib/rrd.php:4240
 msgid "RRD File Information"
 msgstr "Thông tin tập tin RRD"
 
-#: lib/rrd.php:4237
+#: lib/rrd.php:4272
 msgid "Data Source Items"
 msgstr "Mục nguồn dữ liệu"
 
-#: lib/rrd.php:4239
+#: lib/rrd.php:4274
 msgid "Minimal Heartbeat"
 msgstr "Nhịp tim tối thiểu"
 
-#: lib/rrd.php:4240
+#: lib/rrd.php:4275
 msgid "Min"
 msgstr "Tối thiểu"
 
-#: lib/rrd.php:4241
+#: lib/rrd.php:4276
 msgid "Max"
 msgstr "Tối đa"
 
-#: lib/rrd.php:4242
+#: lib/rrd.php:4277
 msgid "Last DS"
 msgstr "DS cuối"
 
-#: lib/rrd.php:4244
+#: lib/rrd.php:4279
 msgid "Unknown Sec"
 msgstr "Không rõ giây"
 
-#: lib/rrd.php:4283
+#: lib/rrd.php:4318
 msgid "Round Robin Archive"
 msgstr "Lưu trữ vòng Robin"
 
-#: lib/rrd.php:4286
+#: lib/rrd.php:4321
 msgid "Cur Row"
 msgstr "Hàng cong"
 
-#: lib/rrd.php:4287
+#: lib/rrd.php:4322
 msgid "PDP per Row"
 msgstr "PDP mỗi hàng"
 
-#: lib/rrd.php:4289
+#: lib/rrd.php:4324
 msgid "CDP Prep Value (0)"
 msgstr "Giá trị chuẩn bị CDP (0)"
 
-#: lib/rrd.php:4290
+#: lib/rrd.php:4325
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Điểm dữ liệu không xác định (0)"
 
-#: lib/rrd.php:4371
+#: lib/rrd.php:4406
 msgid "Errors Found"
 msgstr "Không %s Tìm thấy"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4418
 msgid "Optional Tuning Recommendations"
 msgstr "Trường nguồn dữ liệu"
 
-#: lib/rrd.php:4408 lib/rrd.php:4411
+#: lib/rrd.php:4445 lib/rrd.php:4448
 #, php-format
 msgid "rename %s to %s"
 msgstr "đổi tên %s thành %s"
 
-#: lib/rrd.php:4503
+#: lib/rrd.php:4542
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "LRI trong khi viết tệp XML: %s"
 
-#: lib/rrd.php:4509
+#: lib/rrd.php:4548
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4515
+#: lib/rrd.php:4554
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "LRI: RRDfile %s không thể ghi"
 
-#: lib/rrd.php:4536
+#: lib/rrd.php:4575
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Lỗi trong khi phân tích cú pháp XML của rrdtool dump"
 
-#: lib/rrd.php:4572 lib/rrd.php:4591
+#: lib/rrd.php:4611 lib/rrd.php:4630
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Lỗi trong khi phân tích cú pháp XML của RRDtool dump"
 
-#: lib/rrd.php:4809
+#: lib/rrd.php:4848
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) đã bị xóa khỏi tệp RRD"
 
-#: lib/rrd.php:4847
+#: lib/rrd.php:4886
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) thêm vào tệp RRD"
 
-#: lib/rrd.php:4878 lib/rrd.php:4894
+#: lib/rrd.php:4917 lib/rrd.php:4933
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Trang web không có quyền ghi vào %s, có thể không thể tạo / cập nhật RRD"
 
-#: lib/rrd.php:4890
+#: lib/rrd.php:4929
 msgid "(Custom)"
 msgstr "(Tùy chỉnh)"
 
-#: lib/rrd.php:4896
+#: lib/rrd.php:4935
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Không thể mở tệp dữ liệu, pug có thể chưa chạy"
 
-#: lib/rrd.php:4899
+#: lib/rrd.php:4938
 msgid "RRA Folder"
 msgstr "Thư mục RRA"
 
-#: lib/rrd.php:4899
+#: lib/rrd.php:4938
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4979
+#: lib/rrd.php:5018
 msgid "Unknown RRDtool Error"
 msgstr "Lỗi RRDtool không xác định"
 

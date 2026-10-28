@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Refuse unsafe table, column, index and option names and column clauses in the plugin and core DDL helpers (`db_table_create()`, `db_add_column()`, `db_update_table()`, `db_add_index()` and the `api_plugin_db_*` wrappers), and quote column defaults and comments; the plugin wrappers now use the core helpers. Definitions used by shipped upgrades and common plugins, including compound key strings, prefix lengths and quoted enum members, are unchanged. RRDtool create and update commands now refuse data source names and update templates RRDtool cannot parse, tune lines and data source paths with control characters are refused, and spike removal and background process starts quote their executable or RRD path.
+
 - Require a set Boost debug log path to end in `.log` on the settings page, and have Boost ignore a stored path that does not (GHSA-m6wx-f538-m6q3, upstream Cacti #8150 and #8148).
 - Report a data query XML file as located on the edit page and in the template import preview only when it is a regular file under `resource/`, which the loader reads, and refuse a NUL byte in path containment checks (GHSA-2x86-jpm8-9vgp, upstream Cacti #8150 and #8151).
 - Keep the database user and password out of `mysqladmin` process arguments in `scripts/sql.php` and `scripts/ss_sql.php`. Both scripts pass a private option file that is removed after each call, and `ss_sql.php` requests `status` again, so it no longer always returns `U` (upstream Cacti #8545 and #8450).
