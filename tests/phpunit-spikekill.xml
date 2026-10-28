@@ -127,6 +127,8 @@
       <file>Unit/Security/Auth/TreeGroupExceptionParityTest.php</file>
       <file>Unit/Security/Auth/TreeViewerEnabledCallerTest.php</file>
       <file>Unit/Security/Misc/IncludeDirectoryDenyTest.php</file>
+      <file>Unit/Database/DdlIdentifierValidationTest.php</file>
+      <file>Unit/Core/Rrd/RrdCommandArgumentValidationTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

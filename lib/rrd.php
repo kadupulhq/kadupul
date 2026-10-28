@@ -717,6 +717,28 @@ function rrdtool_command_argument($argument)
     return strpbrk($argument, "\r\n\0") === false ? rrdtool_pipe_encoder()->quote($argument) : false;
 }
 
+/** True when $name fits RRDtool's data source name syntax. */
+function rrdtool_ds_name_is_valid($name)
+{
+    return is_string($name) && preg_match('/^[a-zA-Z0-9_-]{1,19}$/D', $name) === 1;
+}
+
+/** True when every member of a colon separated update template is a valid data source name. */
+function rrdtool_ds_template_is_valid($template)
+{
+    if (!is_string($template) || $template === '') {
+        return false;
+    }
+
+    foreach (explode(':', $template) as $name) {
+        if (!rrdtool_ds_name_is_valid($name)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 /**
  * As rrdtool_command_argument(), for an RRD path. The proxy receives paths
  * relative to the RRA root, so the rewrite applies to paths and nothing else.
@@ -786,6 +808,12 @@ function rrdtool_create_minimum($minimum, $local_data_id, $logopt)
  */
 function rrdtool_create_ds($name, $type, array $data_source, $local_data_id, $logopt)
 {
+    // The name is written unquoted, so a line break would start another command.
+    if (!rrdtool_ds_name_is_valid($name)) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its data source name is not valid for RRDtool.', false, $logopt);
+        return false;
+    }
+
     $minimum = rrdtool_create_minimum($data_source['rrd_minimum'], $local_data_id, $logopt);
     if ($minimum === false) {
         return false;
@@ -1961,6 +1989,13 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
                 if (isset($rrd_fields['template']) && $rrd_update_template == '') {
                     $rrd_update_template = $rrd_fields['template'];
+                }
+
+                if (!rrdtool_ds_template_is_valid($rrd_update_template)) {
+                    cacti_log('ERROR: RRD sample has an invalid update template (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time)), false, 'POLLER');
+                    $completed[$rrd_path][$update_time] = false;
+                    $failed = true;
+                    continue;
                 }
 
                 // Never advance this RRD's timestamp after dropping a valid field.
@@ -4393,6 +4428,8 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
                 } else {
                     print '<tr><td>' . $rrd_path . ' tune ' . $line . '</td></tr>';
                 }
+            } elseif (strpbrk($line, "\r\n\0") !== false) {
+                cacti_log('ERROR: RRD tune command skipped. It contains a line break or NUL.', false, 'UTIL');
             } else {
                 rrdtool_execute("tune $line", true, RRDTOOL_OUTPUT_STDOUT);
             }
@@ -4410,6 +4447,8 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
                     print '<tr><td>' . read_config_option('path_rrdtool') . ' resize ' . $line . '</td></tr>';
                     print '<tr><td>' . __('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file) . '</td></tr>';
                 }
+            } elseif (strpbrk($line, "\r\n\0") !== false) {
+                cacti_log('ERROR: RRD resize command skipped. It contains a line break or NUL.', false, 'UTIL');
             } else {
                 $resized = rrd_with_pipe(function ($pipe) use ($line, $rrd_file) {
                     if (rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_BOOLEAN, $pipe) !== true) {

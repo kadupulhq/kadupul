@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Refuse unsafe table, column, index and option names and column clauses in the plugin and core DDL helpers (`db_table_create()`, `db_add_column()`, `db_update_table()`, `db_add_index()` and the `api_plugin_db_*` wrappers), and quote column defaults and comments; the plugin wrappers now use the core helpers. Definitions used by shipped upgrades and common plugins, including compound key strings, prefix lengths and quoted enum members, are unchanged. RRDtool create and update commands now refuse data source names and update templates RRDtool cannot parse, tune lines and data source paths with control characters are refused, and spike removal and background process starts quote their executable or RRD path.
+
 - Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
 
 - Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.

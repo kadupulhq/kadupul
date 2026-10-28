@@ -1706,6 +1706,12 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
     }
 
     if ($valid_entry) {
+        // The template and values are written unquoted after the path.
+        if (($rrd_update_template != '' && !rrdtool_ds_template_is_valid($rrd_update_template)) || strpbrk($rrd_update_values, "\r\n\0") !== false) {
+            cacti_log('ERROR: RRD update for Data Source ' . $local_data_id . ' was not run. Its template or values cannot be sent to RRDtool.', false, 'BOOST');
+            return 'ERROR: Invalid RRD update template or values';
+        }
+
         if ($rrd_update_template != '') {
             cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
