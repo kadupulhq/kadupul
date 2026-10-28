@@ -83,6 +83,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
         $sourcePaths[] = 'tests/Symfony/console_home_http.py';
         $sourcePaths[] = 'tests/Symfony/permission_denied_scenarios.py';
+        $sourcePaths[] = 'tests/Symfony/plugin_menu_scenarios.py';
         $sourcePaths[] = 'tests/Symfony/console_browser_probe.cjs';
         $sourcePaths[] = 'include/js/console-home.js';
         foreach (['console_home', 'console_home_body', 'console_home_fragment', 'console_home_shell', 'help'] as $template) {
@@ -91,6 +92,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/e2e/browser-coverage.js';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
+        $sourcePaths[] = 'tests/Fixtures/plugins/menu_parity/setup.php';
         // cli_parity_scenarios.py, cli_schema_scenarios.py and
         // cli_audit_scenarios.py compare the shims against these frozen originals.
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
@@ -108,6 +110,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'console schema mismatch preserves the native installer redirect before worker startup',
         'permission denied renders in place: /permission_denied.php',
         'custom_denied runs once with OPER_MODE_NATIVE for the native page path',
+        'real worker reports the config_arrays entry and its plugin realm (plugin_realms.id + 100)',
+        'revoking plugin realm id + 100 hides its menu entries',
         'custom_denied reskin replaces the page',
         'console native login preserves the installation subdirectory',
         'help return link retains the installation subdirectory: /public/index.php/help',
@@ -678,7 +682,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-console-menu.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -707,6 +711,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
         'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
         'bin/legacy-permission-denied.php', 'permission_denied.php',
+        'bin/legacy-console-menu.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleMenuRuntime.php',
+        'src/Platform/Infrastructure/Legacy/LegacyPluginConsoleMenu.php',
         'src/Platform/Infrastructure/Legacy/PermissionDeniedRuntime.php',
         'src/Platform/Infrastructure/Symfony/Controller/PermissionDeniedController.php',
         'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',

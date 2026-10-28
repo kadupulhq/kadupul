@@ -14,6 +14,7 @@
         <include>
             <directory suffix=".php">src</directory>
             <file>bin/legacy-console-home.php</file>
+            <file>bin/legacy-console-menu.php</file>
             <file>index.php</file>
             <file>login.php</file>
             <file>lib/headers_secure.php</file>

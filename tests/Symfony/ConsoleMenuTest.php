@@ -19,8 +19,10 @@ use Kadupul\Navigation\Infrastructure\Legacy\LegacyConsoleMenu;
 use Kadupul\Navigation\Contract\Administration\ListScreen;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Contract\PluginConsoleMenu;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\IdentityTranslator;
 
@@ -187,7 +189,7 @@ final class ConsoleMenuTest extends TestCase
                 return true;
             }
         };
-        $menu = new LegacyConsoleMenu($consoleOnly, self::online(), self::database(), new IdentityTranslator());
+        $menu = new LegacyConsoleMenu($consoleOnly, self::online(), self::database(), new IdentityTranslator(), self::noPlugins(), new NullLogger());
         self::assertSame([], $menu->sections());
     }
 
@@ -209,7 +211,7 @@ final class ConsoleMenuTest extends TestCase
                 throw new \PDOException('gone');
             }
         };
-        $menu = new LegacyConsoleMenu($session, self::online(), self::database(), new IdentityTranslator());
+        $menu = new LegacyConsoleMenu($session, self::online(), self::database(), new IdentityTranslator(), self::noPlugins(), new NullLogger());
 
         self::assertSame([], $menu->sections());
     }
@@ -284,7 +286,17 @@ final class ConsoleMenuTest extends TestCase
             }
         };
 
-        return new LegacyConsoleMenu($session, $configuration ?? self::online(), self::database(), new IdentityTranslator());
+        return new LegacyConsoleMenu($session, $configuration ?? self::online(), self::database(), new IdentityTranslator(), self::noPlugins(), new NullLogger());
+    }
+
+    private static function noPlugins(): PluginConsoleMenu
+    {
+        return new class implements PluginConsoleMenu {
+            public function entries(int $actorId, array $sections): array
+            {
+                return [];
+            }
+        };
     }
 
     private static function online(): LegacyConfiguration

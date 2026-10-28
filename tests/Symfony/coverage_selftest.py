@@ -90,6 +90,9 @@ def main():
     required = [prefix + path for path in (
         'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
         'bin/legacy-permission-denied.php', 'permission_denied.php',
+        'bin/legacy-console-menu.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleMenuRuntime.php',
+        'src/Platform/Infrastructure/Legacy/LegacyPluginConsoleMenu.php',
         'src/Platform/Infrastructure/Legacy/PermissionDeniedRuntime.php',
         'src/Platform/Infrastructure/Symfony/Controller/PermissionDeniedController.php',
         'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',
@@ -554,7 +557,7 @@ def main():
                    'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']:
         failures['missing-runner-registration-' + source] = 'Integration test source differs'
         failures['stale-runner-registration-' + source] = 'Integration test source differs'
-    for source in ['tests/Symfony/console_home_http.py', 'tests/Symfony/console_browser_probe.cjs', 'include/js/console-home.js', 'templates/platform/console_home_body.html.twig', 'tests/Symfony/permission_denied_scenarios.py']:
+    for source in ['tests/Symfony/console_home_http.py', 'tests/Symfony/console_browser_probe.cjs', 'include/js/console-home.js', 'templates/platform/console_home_body.html.twig', 'tests/Symfony/permission_denied_scenarios.py', 'tests/Symfony/plugin_menu_scenarios.py']:
         failures['missing-console-source-hash-' + source] = 'Integration test source differs'
     failures['stale-legacy-page-test-hash'] = 'Integration test source differs'
     for index in range(len(REQUIRED_CHECKS)):

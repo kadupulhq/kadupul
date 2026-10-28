@@ -454,8 +454,35 @@ installed themes and `custom.css` apply without changes. It avoids `#main`,
 The layout does not render the console and graph tabs or the breadcrumb bar.
 Twig pages do not load `main.js` or `layout.js`, so collapsible menu sections,
 AJAX sorting and paging, select-all checkboxes and row highlighting are absent.
-Plugin menu entries added through the `config_arrays` hook do not appear,
-because Symfony requests do not run the legacy bootstrap that calls it.
+Symfony requests do not run the legacy bootstrap, so plugin menu entries added
+through the `config_arrays` hook come from `bin/legacy-console-menu.php`, an
+isolated worker with the same authenticated session handoff as the console home
+worker. It returns the resulting `$menu` as data with each script's realm;
+`LegacyConsoleMenu` keeps entries that are not built in, have a positive realm
+the user holds, and point at a relative script (`isAppPath()` or
+`isPluginPath()`).
+
+Only an enabled non-internal `config_arrays` hook starts the worker, and its
+validated answer is kept in the `cache.plugin_console_menu` pool for five
+minutes. One query fingerprints the enabled hooks, `plugin_config`,
+`plugin_realms` and the user's direct and group realms; the key adds the user
+ID, that fingerprint, the request and preferred locales, the catalogue locale
+that `Accept-Language` selects (not the raw header, so a client cannot create
+an entry per spelling) and the collector connection state, so entries are never shared between users and
+a plugin, realm or locale change misses the cache. The menu worker receives
+only the session cookie and no query string, referrer, origin or AJAX header,
+so a hook cannot vary the cached entries on client-chosen input. Edits to plugin code on disk show within the lifetime, or after
+`bin/console cache:pool:clear cache.plugin_console_menu`. The worker has a
+3-second budget. A timeout, failure or invalid answer logs a warning and leaves
+the built-in menu, and the failure is cached under the same key for 60 seconds
+so a broken plugin does not cost the full budget on every page.
+
+Three differences from `draw_menu()` are deliberate. Plugin items whose script
+has no realm, or realm -1, are hidden; legacy showed them inside a section
+that already had a visible item. Labels are escaped as text, so HTML a plugin
+puts in a label shows literally. A POST re-render cannot hand its session to a
+worker, so it shows the cached entries when a GET has filled the cache and the
+built-in menu otherwise.
 
 To render a page without the layout, override `page` with `{{ block('body') }}`.
 
