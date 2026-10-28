@@ -134,6 +134,8 @@
       <file>Unit/Security/Misc/IncludeDirectoryDenyTest.php</file>
       <file>Unit/Database/DdlIdentifierValidationTest.php</file>
       <file>Unit/Core/Rrd/RrdCommandArgumentValidationTest.php</file>
+      <file>Unit/Core/Rrd/RrdPathContainmentTest.php</file>
+      <file>Unit/Core/Rrd/RrdPathContainmentSinksTest.php</file>
       <file>Unit/Security/Misc/BoostDebugLogPathTest.php</file>
       <file>Unit/Security/Misc/DataQueryXmlPathTest.php</file>
       <file>Unit/SqlScriptCredentialsTest.php</file>
