@@ -2580,7 +2580,7 @@ msgid "No Tree Rules Found"
 msgstr "Не са намерени правила за дърво"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6328 lib/functions.php:6397
-#: lib/functions.php:6503 lib/functions.php:7174 poller.php:410 poller.php:560
+#: lib/functions.php:6503 lib/functions.php:7181 poller.php:410 poller.php:560
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
@@ -4606,7 +4606,7 @@ msgstr "Cacti Poller все още не работи."
 msgid "Real-time has been disabled by your administrator."
 msgstr "Реално време е деактивирано от администратора ви."
 
-#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7973
+#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7980
 #: permission_denied.php:46 permission_denied.php:53
 msgid "Permission Denied"
 msgstr "Отказано разрешение"
@@ -5991,11 +5991,11 @@ msgstr "FATAL: Трябва да сте влезли в системата за 
 msgid "Login Again"
 msgstr "Влезте отново"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "If you feel that this is an error. Please contact your Cacti Administrator."
 msgstr "Ако смятате, че това е грешка. Моля, свържете се с вашия Cacti Administrator."
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
 msgstr "Нямате достъп до този раздел на Cacti."
 
@@ -13720,7 +13720,7 @@ msgstr "Версия %s %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7174
+#: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите кактуси включват липсващ файл %s. Моля, намерете и заменете този файл"

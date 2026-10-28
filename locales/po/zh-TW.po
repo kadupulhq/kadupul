@@ -2952,7 +2952,7 @@ msgid "No Tree Rules Found"
 msgstr "找不到樹規則"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6328 lib/functions.php:6397
-#: lib/functions.php:6503 lib/functions.php:7174 poller.php:410 poller.php:560
+#: lib/functions.php:6503 lib/functions.php:7181 poller.php:410 poller.php:560
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 #, fuzzy
@@ -5257,7 +5257,7 @@ msgstr "Cacti Poller尚未運行。"
 msgid "Real-time has been disabled by your administrator."
 msgstr "您的管理員已禁用實時。"
 
-#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7973
+#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7980
 #: permission_denied.php:46 permission_denied.php:53
 #, fuzzy
 msgid "Permission Denied"
@@ -6849,12 +6849,12 @@ msgstr "致命：您必須登錄才能訪問Cacti的這個區域。"
 msgid "Login Again"
 msgstr "再次登錄"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Cacti Administrator."
 msgstr "如果你覺得這是一個錯誤。請聯繫您的Cacti管理員。"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 #, fuzzy
 msgid "You are not permitted to access this section of Cacti."
 msgstr "您無權訪問此Cacti部分。"
@@ -16047,7 +16047,7 @@ msgstr "版本%s%s"
 msgid "%s %s"
 msgstr "%s - %s"
 
-#: lib/functions.php:7174
+#: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
 msgstr ""
