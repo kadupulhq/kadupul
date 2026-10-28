@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Escape the username shown on the change password page for an account with no stored password, so a stored username renders as text (upstream Cacti #8338).
 - Bind on-demand Boost sample inserts so poller output is stored verbatim instead of being concatenated into SQL.
 - Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
 
