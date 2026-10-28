@@ -327,7 +327,7 @@
             "name": "cacti_html_context_escape",
             "start_line": 9098,
             "end_line": 9142,
-            "fan_out_core": 21,
+            "fan_out_core": 24,
             "target_module": "Platform/Domain/Security",
             "wave": 3,
             "status": "not assessed",
