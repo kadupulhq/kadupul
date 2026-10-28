@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 110, "core_outside_functions_php": 107, "tests": 37, "plugins": 0},
+        "fan_out": {"core": 110, "core_outside_functions_php": 107, "tests": 38, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

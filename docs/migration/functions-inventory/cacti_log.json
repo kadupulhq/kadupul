@@ -49,7 +49,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 1208, "core_outside_functions_php": 1134, "tests": 270, "plugins": 0},
+        "fan_out": {"core": 1227, "core_outside_functions_php": 1153, "tests": 278, "plugins": 0},
         "body": {
             "uses_global": ["config", "database_log"],
             "static_variables": ["start"],
