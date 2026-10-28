@@ -118,17 +118,19 @@ test('mysqladmin receives the credentials in a private option file, not its argu
     $call = $result['calls'][0];
     $quoted = '"' . addcslashes($password, '\\"') . '"';
 
-    expect($call['argv'])->toBe(array('--defaults-extra-file=' . $call['path'], '--host=db.example.test', 'status'))
-        ->and($call['mode'])->toBe(0600)
-        ->and($call['contents'])->toBe("[client]\nuser=\"poller\"\n" . ($password === '' ? '' : 'password=' . $quoted . "\n"))
-        ->and($result['left'])->toBe(array());
-
     foreach ($call['argv'] as $argument) {
         expect($argument)->not->toContain('poller');
         if ($password !== '') {
             expect($argument)->not->toContain($password);
         }
     }
+
+    expect($call['argv'])->toBe(array('--defaults-extra-file=' . $call['path'], '--host=db.example.test', 'status'))
+        ->and($call['mode'])->toBe(0600)
+        ->and($call['contents'])->toBe("[client]\nuser=\"poller\"\n" . ($password === '' ? '' : 'password=' . $quoted . "\n"))
+        ->and($result['left'])->toBe(array());
+
+
 })->with(array('sql.php', 'ss_sql.php'))->with(array(
     'no password' => '',
     'quotes, backslashes, comment and spaces' => "p\"q\\x #y z'w caf\u{e9}",
