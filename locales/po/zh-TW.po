@@ -102,7 +102,7 @@ msgstr "本程序的發布是希望它有用，但沒有任何擔保;甚至沒�
 #: automation_tree_rules.php:33 cdef.php:29 cdef.php:630 color.php:29
 #: color_templates.php:28 color_templates.php:123 data_input.php:32
 #: data_input.php:828 data_input.php:912 data_queries.php:32
-#: data_queries.php:971 data_queries.php:1118 data_queries.php:1407
+#: data_queries.php:971 data_queries.php:1118 data_queries.php:1408
 #: data_source_profiles.php:31 data_source_profiles.php:796 data_sources.php:37
 #: data_sources.php:1167 data_templates.php:34 data_templates.php:879
 #: gprint_presets.php:28 graph_templates.php:37 graph_templates.php:556
@@ -497,7 +497,7 @@ msgstr "匹配圖"
 #: automation_networks.php:1252 automation_snmp.php:714
 #: automation_templates.php:406 automation_tree_rules.php:905 cdef.php:755
 #: color.php:596 color_templates.php:548 data_debug.php:1138
-#: data_input.php:1030 data_queries.php:1525 data_source_profiles.php:1040
+#: data_input.php:1030 data_queries.php:1526 data_source_profiles.php:1040
 #: data_sources.php:1552 data_templates.php:1184 gprint_presets.php:340
 #: graph_templates.php:761 graph_view.php:654 graphs.php:2127
 #: graphs_new.php:463 host.php:1882 host_templates.php:935
@@ -542,7 +542,7 @@ msgstr "圖表"
 #: automation_snmp.php:728 automation_templates.php:420
 #: automation_tree_rules.php:929 cdef.php:769 color.php:610
 #: color_templates.php:564 data_debug.php:1152 data_input.php:1044
-#: data_queries.php:1539 data_source_profiles.php:1054
+#: data_queries.php:1540 data_source_profiles.php:1054
 #: data_source_profiles.php:1173 data_sources.php:1566 data_templates.php:1214
 #: gprint_presets.php:354 graph_templates.php:775 graph_view.php:732
 #: graphs.php:2152 graphs_new.php:477 host.php:1911 host_templates.php:949
@@ -574,7 +574,7 @@ msgstr "聚合的一部分"
 #: automation_snmp.php:740 automation_templates.php:432
 #: automation_tree_rules.php:941 cdef.php:787 color.php:634
 #: color_templates.php:586 data_debug.php:1066 data_input.php:1056
-#: data_queries.php:1551 data_source_profiles.php:1072 data_sources.php:1505
+#: data_queries.php:1552 data_source_profiles.php:1072 data_sources.php:1505
 #: data_templates.php:1232 gprint_presets.php:372 graph_templates.php:793
 #: graph_view.php:666 graphs.php:2118 graphs_new.php:452 host.php:1872
 #: host_templates.php:926 lib/api_automation.php:248 lib/api_automation.php:547
@@ -593,7 +593,7 @@ msgstr "送出"
 #: aggregate_graphs.php:1277 aggregate_graphs.php:1575
 #: automation_devices.php:522 automation_snmp.php:740
 #: automation_templates.php:432 cdef.php:787 color.php:634 data_debug.php:1066
-#: data_input.php:1056 data_queries.php:1551 data_source_profiles.php:1072
+#: data_input.php:1056 data_queries.php:1552 data_source_profiles.php:1072
 #: data_sources.php:1505 data_templates.php:1232 gprint_presets.php:372
 #: graph_templates.php:793 graph_view.php:666 graphs.php:2118
 #: graphs_new.php:452 host.php:1872 host_templates.php:926
@@ -616,7 +616,7 @@ msgstr "設置/刷新過濾器"
 #: automation_snmp.php:741 automation_templates.php:433
 #: automation_tree_rules.php:942 cdef.php:788 color.php:635
 #: color_templates.php:587 data_debug.php:1067 data_input.php:1057
-#: data_queries.php:1552 data_source_profiles.php:1073 data_sources.php:1506
+#: data_queries.php:1553 data_source_profiles.php:1073 data_sources.php:1506
 #: data_templates.php:1233 gprint_presets.php:373 graph_templates.php:794
 #: graph_view.php:667 graphs.php:2119 graphs_new.php:453 host.php:1873
 #: host_templates.php:927 lib/api_automation.php:249 lib/api_automation.php:548
@@ -634,7 +634,7 @@ msgstr "清除"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1576 automation_snmp.php:741
 #: automation_templates.php:433 cdef.php:788 color.php:635 data_debug.php:1067
-#: data_input.php:1057 data_queries.php:1552 data_source_profiles.php:1073
+#: data_input.php:1057 data_queries.php:1553 data_source_profiles.php:1073
 #: data_sources.php:1506 data_templates.php:1233 gprint_presets.php:373
 #: graph_templates.php:794 graph_view.php:667 graphs.php:2119
 #: graphs_new.php:453 host.php:1873 host_templates.php:927
@@ -660,7 +660,7 @@ msgstr "圖標題"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1642
 #: automation_graph_rules.php:990 automation_tree_rules.php:1035
-#: data_debug.php:474 data_input.php:1143 data_queries.php:1637
+#: data_debug.php:474 data_input.php:1143 data_queries.php:1638
 #: data_sources.php:1731 data_templates.php:1341 graph_templates.php:899
 #: graphs.php:2329 host.php:1590 host_templates.php:1090
 #: lib/api_automation.php:343 pollers.php:1089 sites.php:679 tree.php:2406
@@ -687,7 +687,7 @@ msgstr "尺寸"
 
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:784 cdef.php:914 color.php:801 color.php:803
-#: color_templates.php:692 data_input.php:1188 data_queries.php:1689
+#: color_templates.php:692 data_input.php:1188 data_queries.php:1690
 #: data_source_profiles.php:1253 data_source_profiles.php:1254
 #: data_sources.php:1818 data_sources.php:1819 data_templates.php:1402
 #: gprint_presets.php:527 graph_templates.php:956 host_templates.php:1138
@@ -702,7 +702,7 @@ msgstr "否"
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:777 cdef.php:914 color.php:801 color.php:803
 #: color_templates.php:692 data_debug.php:714 data_debug.php:719
-#: data_debug.php:724 data_input.php:1188 data_queries.php:1689
+#: data_debug.php:724 data_input.php:1188 data_queries.php:1690
 #: data_source_profiles.php:1252 data_source_profiles.php:1253
 #: data_source_profiles.php:1254 data_sources.php:1818 data_sources.php:1819
 #: data_templates.php:1402 gprint_presets.php:527 graph_templates.php:956
@@ -880,7 +880,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "無法刪除正在使用的聚合模板。在使用中定義為由Aggregate引用。"
 
 #: aggregate_templates.php:718 cdef.php:897 color.php:778
-#: color_templates.php:663 data_input.php:1149 data_queries.php:1643
+#: color_templates.php:663 data_input.php:1149 data_queries.php:1644
 #: data_source_profiles.php:1178 data_sources.php:1749 data_templates.php:1347
 #: gprint_presets.php:487 graph_templates.php:905 host_templates.php:1096
 #: vdef.php:928
@@ -888,8 +888,8 @@ msgstr "無法刪除正在使用的聚合模板。在使用中定義為由Aggreg
 msgid "Deletable"
 msgstr "可刪除"
 
-#: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1368
-#: data_queries.php:1648 gprint_presets.php:492 graph_templates.php:910
+#: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1369
+#: data_queries.php:1649 gprint_presets.php:492 graph_templates.php:910
 #: vdef.php:929
 #, fuzzy
 msgid "Graphs Using"
@@ -1781,7 +1781,7 @@ msgstr "一般設定"
 
 #: automation_networks.php:460 automation_snmp.php:521 data_input.php:739
 #: data_input.php:842 data_queries.php:899 data_queries.php:1041
-#: data_queries.php:1366 data_source_profiles.php:761 graph_templates.php:539
+#: data_queries.php:1367 data_source_profiles.php:761 graph_templates.php:539
 #: include/global_form.php:215 include/global_form.php:281
 #: include/global_form.php:338 include/global_form.php:358
 #: include/global_form.php:399 include/global_form.php:529
@@ -2652,7 +2652,7 @@ msgstr "特權協議"
 msgid "Context"
 msgstr "上下文"
 
-#: automation_snmp.php:563 data_queries.php:1370 utilities.php:2145
+#: automation_snmp.php:563 data_queries.php:1371 utilities.php:2145
 #, fuzzy
 msgid "Action"
 msgstr "動作"
@@ -3099,7 +3099,7 @@ msgstr "正在使用的CDEF無法刪除。使用中定義為由圖形或圖形�
 msgid "The number of Graphs using this CDEF."
 msgstr "使用此CDEF的圖表數量。"
 
-#: cdef.php:899 color.php:780 data_input.php:1160 data_queries.php:1654
+#: cdef.php:899 color.php:780 data_input.php:1160 data_queries.php:1655
 #: data_source_profiles.php:1206 gprint_presets.php:498 vdef.php:930
 #, fuzzy
 msgid "Templates Using"
@@ -4062,7 +4062,7 @@ msgstr "使用此數據輸入方法的數據源的數量。"
 msgid "The number of Data Templates that use this Data Input Method."
 msgstr "使用此數據輸入方法的數據模板的數量。"
 
-#: data_input.php:1166 data_queries.php:1660 include/global_arrays.php:1374
+#: data_input.php:1166 data_queries.php:1661 include/global_arrays.php:1374
 #: include/global_form.php:584 include/global_form.php:1401
 #, fuzzy
 msgid "Data Input Method"
@@ -4229,96 +4229,96 @@ msgstr "數據查詢[編輯：%s]"
 msgid "Data Queries [new]"
 msgstr "數據查詢[新]"
 
-#: data_queries.php:1352
+#: data_queries.php:1353
 #, fuzzy
 msgid "Successfully located XML file"
 msgstr "成功找到XML文件"
 
-#: data_queries.php:1355
+#: data_queries.php:1356
 #, fuzzy
 msgid "Could not locate XML file."
 msgstr "找不到XML文件。"
 
-#: data_queries.php:1363 host.php:837 host_templates.php:578
+#: data_queries.php:1364 host.php:837 host_templates.php:578
 #: include/global_arrays.php:2444
 #, fuzzy
 msgid "Associated Graph Templates"
 msgstr "關聯圖模板"
 
-#: data_queries.php:1367 graph_templates.php:893 graphs_new.php:575
+#: data_queries.php:1368 graph_templates.php:893 graphs_new.php:575
 #: host.php:841 lib/api_automation.php:672
 #, fuzzy
 msgid "Graph Template Name"
 msgstr "圖形模板名稱"
 
-#: data_queries.php:1369
+#: data_queries.php:1370
 #, fuzzy
 msgid "Mapping ID"
 msgstr "映射ID"
 
-#: data_queries.php:1394
+#: data_queries.php:1395
 #, fuzzy
 msgid "Association Read Only until XML file located"
 msgstr "關聯只讀，直到找到XML文件"
 
-#: data_queries.php:1411
+#: data_queries.php:1412
 #, fuzzy
 msgid "Mapped Graph Templates with Graphs are read only"
 msgstr "帶圖表的映射圖模板是只讀的"
 
-#: data_queries.php:1418
+#: data_queries.php:1419
 #, fuzzy
 msgid "No Graph Templates Defined."
 msgstr "沒有定義圖表模板。"
 
-#: data_queries.php:1460
+#: data_queries.php:1461
 #, fuzzy
 msgid "Delete Associated Graph"
 msgstr "刪除關聯圖表"
 
-#: data_queries.php:1516 data_queries.php:1535 data_queries.php:1667
+#: data_queries.php:1517 data_queries.php:1536 data_queries.php:1668
 #: include/global_arrays.php:1017 include/global_arrays.php:1243
 #: include/global_arrays.php:2426 lib/api_automation.php:1271
 #, fuzzy
 msgid "Data Queries"
 msgstr "數據查詢"
 
-#: data_queries.php:1631 host.php:965 utilities.php:1935
+#: data_queries.php:1632 host.php:965 utilities.php:1935
 #, fuzzy
 msgid "Data Query Name"
 msgstr "數據查詢名稱"
 
-#: data_queries.php:1634
+#: data_queries.php:1635
 #, fuzzy
 msgid "The name of this Data Query."
 msgstr "此數據查詢的名稱。"
 
-#: data_queries.php:1640 graph_templates.php:902
+#: data_queries.php:1641 graph_templates.php:902
 #, fuzzy
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "此圖表模板的內部ID。在執行自動化或調試時很有用。"
 
-#: data_queries.php:1645
+#: data_queries.php:1646
 #, fuzzy
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "正在使用的數據查詢無法刪除。使用中定義為由圖形或圖形模板引用。"
 
-#: data_queries.php:1651
+#: data_queries.php:1652
 #, fuzzy
 msgid "The number of Graphs using this Data Query."
 msgstr "使用此數據查詢的圖表數量。"
 
-#: data_queries.php:1657
+#: data_queries.php:1658
 #, fuzzy
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "使用此數據查詢的圖表模板數。"
 
-#: data_queries.php:1663
+#: data_queries.php:1664
 #, fuzzy
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
 msgstr "用於收集與此數據查詢關聯的數據源的數據的數據輸入方法。"
 
-#: data_queries.php:1697
+#: data_queries.php:1698
 #, fuzzy
 msgid "No Data Queries Found"
 msgstr "沒有找到數據查詢"
@@ -17189,7 +17189,7 @@ msgstr "活動"
 msgid "Send Report"
 msgstr "發送報告"
 
-#: lib/html_reports.php:1603 lib/import.php:3142 user_admin.php:1925
+#: lib/html_reports.php:1603 lib/import.php:3143 user_admin.php:1925
 #, fuzzy
 msgid "[new]"
 msgstr "[新]"
@@ -17504,102 +17504,102 @@ msgstr "不存在"
 msgid "not writable"
 msgstr "可寫入"
 
-#: lib/import.php:2023 lib/import.php:2040
+#: lib/import.php:2024 lib/import.php:2041
 #, fuzzy, php-format
 msgid "New Graph Template: %s"
 msgstr "圖[模板：%s]"
 
-#: lib/import.php:2052 lib/import.php:2062
+#: lib/import.php:2053 lib/import.php:2063
 #, fuzzy, php-format
 msgid "New Data Query: %s"
 msgstr "數據查詢[%s]"
 
-#: lib/import.php:2556
+#: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
 msgstr ""
 
-#: lib/import.php:2732
+#: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
 msgstr ""
 
-#: lib/import.php:2844
+#: lib/import.php:2845
 #, fuzzy
 msgid "Unknown Field"
 msgstr "未知的領域"
 
-#: lib/import.php:3097
+#: lib/import.php:3098
 #, fuzzy
 msgid "Import Preview Results"
 msgstr "導入預覽結果"
 
-#: lib/import.php:3097
+#: lib/import.php:3098
 #, fuzzy
 msgid "Import Results"
 msgstr "匯入結果"
 
-#: lib/import.php:3101
+#: lib/import.php:3102
 #, fuzzy
 msgid "Cacti would make the following changes if the Package was imported:"
 msgstr "如果導入包，Cacti將進行以下更改："
 
-#: lib/import.php:3103
+#: lib/import.php:3104
 #, fuzzy
 msgid "Cacti has imported the following items for the Package:"
 msgstr "Cacti為包裝導入了以下物品："
 
-#: lib/import.php:3106
+#: lib/import.php:3107
 #, fuzzy
 msgid "Package Files"
 msgstr "包文件"
 
-#: lib/import.php:3110
+#: lib/import.php:3111
 #, fuzzy
 msgid "[preview] "
 msgstr "預覽 "
 
-#: lib/import.php:3115
+#: lib/import.php:3116
 #, fuzzy
 msgid "Cacti would make the following changes if the Template was imported:"
 msgstr "如果導入模板，Cacti將進行以下更改："
 
-#: lib/import.php:3117
+#: lib/import.php:3118
 #, fuzzy
 msgid "Cacti has imported the following items for the Template:"
 msgstr "Cacti為模板導入了以下項目："
 
-#: lib/import.php:3132
+#: lib/import.php:3133
 #, fuzzy
 msgid "[success]"
 msgstr "成功！"
 
-#: lib/import.php:3134
+#: lib/import.php:3135
 #, fuzzy
 msgid "[fail]"
 msgstr "失敗"
 
-#: lib/import.php:3136
+#: lib/import.php:3137
 #, fuzzy
 msgid "[preview]"
 msgstr "預覽"
 
-#: lib/import.php:3140
+#: lib/import.php:3141
 #, fuzzy
 msgid "[updated]"
 msgstr "已更新"
 
-#: lib/import.php:3144
+#: lib/import.php:3145
 #, fuzzy
 msgid "[unchanged]"
 msgstr "[不變]"
 
-#: lib/import.php:3180
+#: lib/import.php:3181
 #, fuzzy
 msgid "Found Dependency:"
 msgstr "找到依賴關係："
 
-#: lib/import.php:3182
+#: lib/import.php:3183
 #, fuzzy
 msgid "Unmet Dependency:"
 msgstr "未滿足的依賴關係："

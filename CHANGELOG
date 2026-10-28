@@ -353,6 +353,7 @@ Cacti CHANGELOG
 -security: Restore the Cacti error handler on LDAP bind-only and empty-password paths
 -security: Harden CLI shell arguments, database credentials, and temporary RRD files
 -security#7027: Detect reused process IDs before treating registry tasks as live
+-security#GHSA-2x86-jpm8-9vgp: Report data query XML files only inside resource/ in the editor and import preview
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
 -security: Set the Secure session cookie behind a trusted TLS-terminating proxy

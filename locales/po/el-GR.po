@@ -95,7 +95,7 @@ msgstr "Το πρόγραμμα αυτό διανέμεται με την ελπ
 #: automation_tree_rules.php:33 cdef.php:29 cdef.php:630 color.php:29
 #: color_templates.php:28 color_templates.php:123 data_input.php:32
 #: data_input.php:828 data_input.php:912 data_queries.php:32
-#: data_queries.php:971 data_queries.php:1118 data_queries.php:1407
+#: data_queries.php:971 data_queries.php:1118 data_queries.php:1408
 #: data_source_profiles.php:31 data_source_profiles.php:796 data_sources.php:37
 #: data_sources.php:1167 data_templates.php:34 data_templates.php:879
 #: gprint_presets.php:28 graph_templates.php:37 graph_templates.php:556
@@ -453,7 +453,7 @@ msgstr "Ταίριασμα των γραφημάτων"
 #: automation_networks.php:1252 automation_snmp.php:714
 #: automation_templates.php:406 automation_tree_rules.php:905 cdef.php:755
 #: color.php:596 color_templates.php:548 data_debug.php:1138
-#: data_input.php:1030 data_queries.php:1525 data_source_profiles.php:1040
+#: data_input.php:1030 data_queries.php:1526 data_source_profiles.php:1040
 #: data_sources.php:1552 data_templates.php:1184 gprint_presets.php:340
 #: graph_templates.php:761 graph_view.php:654 graphs.php:2127
 #: graphs_new.php:463 host.php:1882 host_templates.php:935
@@ -496,7 +496,7 @@ msgstr "Γραφήματα"
 #: automation_snmp.php:728 automation_templates.php:420
 #: automation_tree_rules.php:929 cdef.php:769 color.php:610
 #: color_templates.php:564 data_debug.php:1152 data_input.php:1044
-#: data_queries.php:1539 data_source_profiles.php:1054
+#: data_queries.php:1540 data_source_profiles.php:1054
 #: data_source_profiles.php:1173 data_sources.php:1566 data_templates.php:1214
 #: gprint_presets.php:354 graph_templates.php:775 graph_view.php:732
 #: graphs.php:2152 graphs_new.php:477 host.php:1911 host_templates.php:949
@@ -526,7 +526,7 @@ msgstr "Μέρος του συνόλου"
 #: automation_snmp.php:740 automation_templates.php:432
 #: automation_tree_rules.php:941 cdef.php:787 color.php:634
 #: color_templates.php:586 data_debug.php:1066 data_input.php:1056
-#: data_queries.php:1551 data_source_profiles.php:1072 data_sources.php:1505
+#: data_queries.php:1552 data_source_profiles.php:1072 data_sources.php:1505
 #: data_templates.php:1232 gprint_presets.php:372 graph_templates.php:793
 #: graph_view.php:666 graphs.php:2118 graphs_new.php:452 host.php:1872
 #: host_templates.php:926 lib/api_automation.php:248 lib/api_automation.php:547
@@ -544,7 +544,7 @@ msgstr "Πήγαινε"
 #: aggregate_graphs.php:1277 aggregate_graphs.php:1575
 #: automation_devices.php:522 automation_snmp.php:740
 #: automation_templates.php:432 cdef.php:787 color.php:634 data_debug.php:1066
-#: data_input.php:1056 data_queries.php:1551 data_source_profiles.php:1072
+#: data_input.php:1056 data_queries.php:1552 data_source_profiles.php:1072
 #: data_sources.php:1505 data_templates.php:1232 gprint_presets.php:372
 #: graph_templates.php:793 graph_view.php:666 graphs.php:2118
 #: graphs_new.php:452 host.php:1872 host_templates.php:926
@@ -566,7 +566,7 @@ msgstr "Ρύθμιση / Ανανέωση φίλτρων"
 #: automation_snmp.php:741 automation_templates.php:433
 #: automation_tree_rules.php:942 cdef.php:788 color.php:635
 #: color_templates.php:587 data_debug.php:1067 data_input.php:1057
-#: data_queries.php:1552 data_source_profiles.php:1073 data_sources.php:1506
+#: data_queries.php:1553 data_source_profiles.php:1073 data_sources.php:1506
 #: data_templates.php:1233 gprint_presets.php:373 graph_templates.php:794
 #: graph_view.php:667 graphs.php:2119 graphs_new.php:453 host.php:1873
 #: host_templates.php:927 lib/api_automation.php:249 lib/api_automation.php:548
@@ -583,7 +583,7 @@ msgstr "Καθαρισμός"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1576 automation_snmp.php:741
 #: automation_templates.php:433 cdef.php:788 color.php:635 data_debug.php:1067
-#: data_input.php:1057 data_queries.php:1552 data_source_profiles.php:1073
+#: data_input.php:1057 data_queries.php:1553 data_source_profiles.php:1073
 #: data_sources.php:1506 data_templates.php:1233 gprint_presets.php:373
 #: graph_templates.php:794 graph_view.php:667 graphs.php:2119
 #: graphs_new.php:453 host.php:1873 host_templates.php:927
@@ -607,7 +607,7 @@ msgstr "Τίτλος γραφήματος"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1642
 #: automation_graph_rules.php:990 automation_tree_rules.php:1035
-#: data_debug.php:474 data_input.php:1143 data_queries.php:1637
+#: data_debug.php:474 data_input.php:1143 data_queries.php:1638
 #: data_sources.php:1731 data_templates.php:1341 graph_templates.php:899
 #: graphs.php:2329 host.php:1590 host_templates.php:1090
 #: lib/api_automation.php:343 pollers.php:1089 sites.php:679 tree.php:2406
@@ -631,7 +631,7 @@ msgstr "Μέγεθος"
 
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:784 cdef.php:914 color.php:801 color.php:803
-#: color_templates.php:692 data_input.php:1188 data_queries.php:1689
+#: color_templates.php:692 data_input.php:1188 data_queries.php:1690
 #: data_source_profiles.php:1253 data_source_profiles.php:1254
 #: data_sources.php:1818 data_sources.php:1819 data_templates.php:1402
 #: gprint_presets.php:527 graph_templates.php:956 host_templates.php:1138
@@ -645,7 +645,7 @@ msgstr "Όχι"
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:777 cdef.php:914 color.php:801 color.php:803
 #: color_templates.php:692 data_debug.php:714 data_debug.php:719
-#: data_debug.php:724 data_input.php:1188 data_queries.php:1689
+#: data_debug.php:724 data_input.php:1188 data_queries.php:1690
 #: data_source_profiles.php:1252 data_source_profiles.php:1253
 #: data_source_profiles.php:1254 data_sources.php:1818 data_sources.php:1819
 #: data_templates.php:1402 gprint_presets.php:527 graph_templates.php:956
@@ -805,15 +805,15 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "Τα συγκεντρωτικά πρότυπα που χρησιμοποιούνται δεν μπορούν να διαγραφούν. Κατά τη χρήση ορίζεται ως αναφορά από ένα Σύνολο."
 
 #: aggregate_templates.php:718 cdef.php:897 color.php:778
-#: color_templates.php:663 data_input.php:1149 data_queries.php:1643
+#: color_templates.php:663 data_input.php:1149 data_queries.php:1644
 #: data_source_profiles.php:1178 data_sources.php:1749 data_templates.php:1347
 #: gprint_presets.php:487 graph_templates.php:905 host_templates.php:1096
 #: vdef.php:928
 msgid "Deletable"
 msgstr "Δυνατότητα διαγραφής"
 
-#: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1368
-#: data_queries.php:1648 gprint_presets.php:492 graph_templates.php:910
+#: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1369
+#: data_queries.php:1649 gprint_presets.php:492 graph_templates.php:910
 #: vdef.php:929
 msgid "Graphs Using"
 msgstr "Χρήση γραφημάτων"
@@ -1595,7 +1595,7 @@ msgstr "Γενικές Ρυθμίσεις"
 
 #: automation_networks.php:460 automation_snmp.php:521 data_input.php:739
 #: data_input.php:842 data_queries.php:899 data_queries.php:1041
-#: data_queries.php:1366 data_source_profiles.php:761 graph_templates.php:539
+#: data_queries.php:1367 data_source_profiles.php:761 graph_templates.php:539
 #: include/global_form.php:215 include/global_form.php:281
 #: include/global_form.php:338 include/global_form.php:358
 #: include/global_form.php:399 include/global_form.php:529
@@ -2327,7 +2327,7 @@ msgstr "Πρωτόκολλο Priv"
 msgid "Context"
 msgstr "Γενικό πλαίσιο"
 
-#: automation_snmp.php:563 data_queries.php:1370 utilities.php:2145
+#: automation_snmp.php:563 data_queries.php:1371 utilities.php:2145
 msgid "Action"
 msgstr "Ενέργεια"
 
@@ -2718,7 +2718,7 @@ msgstr "Τα CDEF που χρησιμοποιούνται δεν μπορούν 
 msgid "The number of Graphs using this CDEF."
 msgstr "Ο αριθμός των γραφημάτων που χρησιμοποιούν αυτό το CDEF."
 
-#: cdef.php:899 color.php:780 data_input.php:1160 data_queries.php:1654
+#: cdef.php:899 color.php:780 data_input.php:1160 data_queries.php:1655
 #: data_source_profiles.php:1206 gprint_presets.php:498 vdef.php:930
 msgid "Templates Using"
 msgstr "Χρήση προτύπων"
@@ -3547,7 +3547,7 @@ msgstr "Ο αριθμός των πηγών δεδομένων που χρησι
 msgid "The number of Data Templates that use this Data Input Method."
 msgstr "Ο αριθμός των πρότυπων δεδομένων που χρησιμοποιούν αυτή τη μέθοδο εισαγωγής δεδομένων."
 
-#: data_input.php:1166 data_queries.php:1660 include/global_arrays.php:1374
+#: data_input.php:1166 data_queries.php:1661 include/global_arrays.php:1374
 #: include/global_form.php:584 include/global_form.php:1401
 msgid "Data Input Method"
 msgstr "Μέθοδος εισαγωγής δεδομένων"
@@ -3698,79 +3698,79 @@ msgstr "Ερωτήματα δεδομένων [επεξεργασία: %s]"
 msgid "Data Queries [new]"
 msgstr "Ερωτήματα δεδομένων [νέο]"
 
-#: data_queries.php:1352
+#: data_queries.php:1353
 msgid "Successfully located XML file"
 msgstr "Αρχείο XML με επιτυχία"
 
-#: data_queries.php:1355
+#: data_queries.php:1356
 msgid "Could not locate XML file."
 msgstr "Δεν ήταν δυνατή η εύρεση αρχείου XML."
 
-#: data_queries.php:1363 host.php:837 host_templates.php:578
+#: data_queries.php:1364 host.php:837 host_templates.php:578
 #: include/global_arrays.php:2444
 msgid "Associated Graph Templates"
 msgstr "Σχετικά πρότυπα γραφήματος"
 
-#: data_queries.php:1367 graph_templates.php:893 graphs_new.php:575
+#: data_queries.php:1368 graph_templates.php:893 graphs_new.php:575
 #: host.php:841 lib/api_automation.php:672
 msgid "Graph Template Name"
 msgstr "Όνομα προτύπου γραφήματος"
 
-#: data_queries.php:1369
+#: data_queries.php:1370
 msgid "Mapping ID"
 msgstr "ID χαρτογράφησης"
 
-#: data_queries.php:1394
+#: data_queries.php:1395
 msgid "Association Read Only until XML file located"
 msgstr "Σύνδεση μόνο για ανάγνωση έως ότου εντοπιστεί το αρχείο XML"
 
-#: data_queries.php:1411
+#: data_queries.php:1412
 msgid "Mapped Graph Templates with Graphs are read only"
 msgstr "Τα χαρτογραφημένα πρότυπα γραφημάτων με γραφήματα διαβάζονται μόνο"
 
-#: data_queries.php:1418
+#: data_queries.php:1419
 msgid "No Graph Templates Defined."
 msgstr "Δεν έχουν οριστεί πρότυπα γραφήματος."
 
-#: data_queries.php:1460
+#: data_queries.php:1461
 msgid "Delete Associated Graph"
 msgstr "Διαγράψτε το σχετικό γράφημα"
 
-#: data_queries.php:1516 data_queries.php:1535 data_queries.php:1667
+#: data_queries.php:1517 data_queries.php:1536 data_queries.php:1668
 #: include/global_arrays.php:1017 include/global_arrays.php:1243
 #: include/global_arrays.php:2426 lib/api_automation.php:1271
 msgid "Data Queries"
 msgstr "Ερωτήματα δεδομένων"
 
-#: data_queries.php:1631 host.php:965 utilities.php:1935
+#: data_queries.php:1632 host.php:965 utilities.php:1935
 msgid "Data Query Name"
 msgstr "Όνομα ερωτήματος δεδομένων"
 
-#: data_queries.php:1634
+#: data_queries.php:1635
 msgid "The name of this Data Query."
 msgstr "Το όνομα αυτού του ερωτήματος δεδομένων."
 
-#: data_queries.php:1640 graph_templates.php:902
+#: data_queries.php:1641 graph_templates.php:902
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "Το εσωτερικό αναγνωριστικό για αυτό το πρότυπο γραφήματος. Χρήσιμη κατά την εκτέλεση αυτοματοποίησης ή εντοπισμού σφαλμάτων."
 
-#: data_queries.php:1645
+#: data_queries.php:1646
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Τα ερωτήματα δεδομένων που χρησιμοποιούνται δεν μπορούν να διαγραφούν. Κατά τη χρήση ορίζεται ως αναφορά από ένα γράφημα ή ένα πρότυπο γραφήματος."
 
-#: data_queries.php:1651
+#: data_queries.php:1652
 msgid "The number of Graphs using this Data Query."
 msgstr "Ο αριθμός των γραφημάτων που χρησιμοποιούν αυτό το ερώτημα δεδομένων."
 
-#: data_queries.php:1657
+#: data_queries.php:1658
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Ο αριθμός των προτύπων γραφημάτων που χρησιμοποιούν αυτό το ερώτημα δεδομένων."
 
-#: data_queries.php:1663
+#: data_queries.php:1664
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
 msgstr "Η μέθοδος εισαγωγής δεδομένων που χρησιμοποιείται για τη συλλογή δεδομένων για τις Πηγές δεδομένων που σχετίζονται με αυτό το ερώτημα δεδομένων."
 
-#: data_queries.php:1697
+#: data_queries.php:1698
 msgid "No Data Queries Found"
 msgstr "Δεν βρέθηκαν ερωτήματα δεδομένων"
 
@@ -14684,7 +14684,7 @@ msgstr "Εκδηλώσεις"
 msgid "Send Report"
 msgstr "Αποστολή αναφοράς"
 
-#: lib/html_reports.php:1603 lib/import.php:3142 user_admin.php:1925
+#: lib/html_reports.php:1603 lib/import.php:3143 user_admin.php:1925
 msgid "[new]"
 msgstr "[νέος]"
 
@@ -14958,87 +14958,87 @@ msgstr "δεν υπάρχει"
 msgid "not writable"
 msgstr "Εγγράψιμος"
 
-#: lib/import.php:2023 lib/import.php:2040
+#: lib/import.php:2024 lib/import.php:2041
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Γράφημα [Πρότυπο: %s]"
 
-#: lib/import.php:2052 lib/import.php:2062
+#: lib/import.php:2053 lib/import.php:2063
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Ερώτημα δεδομένων [ %s]"
 
-#: lib/import.php:2556
+#: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
 msgstr ""
 
-#: lib/import.php:2732
+#: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
 msgstr ""
 
-#: lib/import.php:2844
+#: lib/import.php:2845
 msgid "Unknown Field"
 msgstr "Άγνωστο πεδίο"
 
-#: lib/import.php:3097
+#: lib/import.php:3098
 msgid "Import Preview Results"
 msgstr "Εισαγωγή προεπισκόπησης"
 
-#: lib/import.php:3097
+#: lib/import.php:3098
 msgid "Import Results"
 msgstr "Εισαγωγή Αποτελεσμάτων"
 
-#: lib/import.php:3101
+#: lib/import.php:3102
 msgid "Cacti would make the following changes if the Package was imported:"
 msgstr "Ο Cacti θα πραγματοποιήσει τις ακόλουθες αλλαγές εάν εισήχθη το πακέτο:"
 
-#: lib/import.php:3103
+#: lib/import.php:3104
 msgid "Cacti has imported the following items for the Package:"
 msgstr "Ο Cacti εισήγαγε τα παρακάτω στοιχεία για τη Συσκευασία:"
 
-#: lib/import.php:3106
+#: lib/import.php:3107
 msgid "Package Files"
 msgstr "Αρχεία πακέτων"
 
-#: lib/import.php:3110
+#: lib/import.php:3111
 msgid "[preview] "
 msgstr "Προεπισκόπηση"
 
-#: lib/import.php:3115
+#: lib/import.php:3116
 msgid "Cacti would make the following changes if the Template was imported:"
 msgstr "Ο Cacti θα πραγματοποιήσει τις παρακάτω αλλαγές εάν το Πρότυπο εισήχθη:"
 
-#: lib/import.php:3117
+#: lib/import.php:3118
 msgid "Cacti has imported the following items for the Template:"
 msgstr "Ο Cacti εισήγαγε τα ακόλουθα στοιχεία για το Πρότυπο:"
 
-#: lib/import.php:3132
+#: lib/import.php:3133
 msgid "[success]"
 msgstr "Επιτυχία!"
 
-#: lib/import.php:3134
+#: lib/import.php:3135
 msgid "[fail]"
 msgstr "Αποτυχία"
 
-#: lib/import.php:3136
+#: lib/import.php:3137
 msgid "[preview]"
 msgstr "Προεπισκόπηση"
 
-#: lib/import.php:3140
+#: lib/import.php:3141
 msgid "[updated]"
 msgstr "Ενημερώθηκε"
 
-#: lib/import.php:3144
+#: lib/import.php:3145
 msgid "[unchanged]"
 msgstr "Καμία αλλαγή"
 
-#: lib/import.php:3180
+#: lib/import.php:3181
 msgid "Found Dependency:"
 msgstr "Βρήκε Εξάρτηση:"
 
-#: lib/import.php:3182
+#: lib/import.php:3183
 msgid "Unmet Dependency:"
 msgstr "Εξατομικευμένη εξάρτηση:"
 
