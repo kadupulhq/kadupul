@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/gettext-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/gettext-php/bin/php"
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
@@ -78,7 +78,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/runtime-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/runtime-php/bin/php"
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
@@ -292,7 +292,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/cdef-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/cdef-php/bin/php"
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
           add_shims_to_path: false
@@ -595,7 +595,7 @@ jobs:
           GHCR_TOKEN: ${{ github.token }}
           GHCR_USERNAME: ${{ github.actor }}
         run: bash tests/tools/login_ghcr.sh
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
       - name: Install PHP for native process-boundary self-tests
