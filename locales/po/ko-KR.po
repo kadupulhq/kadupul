@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 00:11-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -7013,7 +7013,7 @@ msgid "Tree Rule Items"
 msgstr "트리 규칙 항목"
 
 #: include/global_arrays.php:2861 include/global_arrays.php:2877
-#: lib/api_device.php:1952
+#: lib/api_device.php:2058
 msgid "days"
 msgstr "일"
 
@@ -7029,11 +7029,11 @@ msgstr "분"
 msgid "secs"
 msgstr "초second"
 
-#: include/global_arrays.php:2878 lib/api_device.php:1952
+#: include/global_arrays.php:2878 lib/api_device.php:2058
 msgid "hours"
 msgstr "시간"
 
-#: include/global_arrays.php:2879 lib/api_device.php:1952
+#: include/global_arrays.php:2879 lib/api_device.php:2058
 msgid "minutes"
 msgstr "분"
 
@@ -9649,7 +9649,7 @@ msgstr "글꼴 선택 방법"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "글꼴을 기본적으로 어떻게 처리 하시겠습니까?"
 
-#: include/global_settings.php:1153 lib/api_device.php:1907
+#: include/global_settings.php:1153 lib/api_device.php:2013
 msgid "System"
 msgstr "시스템"
 
@@ -11608,92 +11608,102 @@ msgstr "Kadupul Automation에 의해 추가됨"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "오류: range1-range2 형식의 IP 범위는 더 이상 지원되지 않습니다."
 
-#: lib/api_device.php:155 lib/api_device.php:158 lib/api_device.php:385
-#: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
-#: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
-#: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
-#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
-#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
-#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
-#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
+#: lib/api_device.php:75
+#, php-format
+msgid "Unable to remove Device %s because its Graphs could not all be removed."
+msgstr ""
+
+#: lib/api_device.php:83
+#, php-format
+msgid "Unable to remove Device %s because its database records could not be removed together."
+msgstr ""
+
+#: lib/api_device.php:261 lib/api_device.php:264 lib/api_device.php:491
+#: lib/api_device.php:495 lib/api_device.php:557 lib/api_device.php:562
+#: lib/api_device.php:607 lib/api_device.php:611 lib/api_device.php:687
+#: lib/api_device.php:691 lib/api_device.php:746 lib/api_device.php:750
+#: lib/api_device.php:816 lib/api_device.php:819 lib/api_device.php:894
+#: lib/api_device.php:897 lib/api_device.php:946 lib/api_device.php:949
+#: lib/api_device.php:992 lib/api_device.php:995 lib/api_device.php:1418
+#: lib/api_device.php:1431 lib/api_device.php:1435 lib/api_device.php:1480
+#: lib/api_device.php:1483 lib/api_device.php:1670 lib/api_device.php:1674
+#: lib/api_device.php:1710 lib/api_device.php:1714 lib/api_device.php:1759
+#: lib/api_device.php:1763 lib/api_device.php:1824 lib/api_device.php:1828
 #: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "원격 폴러 %s 이 (가) 다운되었습니다. 다시 시작되면 FullSync를 수행해야 합니다"
 
-#: lib/api_device.php:549
+#: lib/api_device.php:655
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1828
+#: lib/api_device.php:1934
 msgid "ERROR: Device ID is Blank"
 msgstr "오류 : 기기 ID가 비어 있습니다."
 
-#: lib/api_device.php:1841 lib/api_device.php:1843
+#: lib/api_device.php:1947 lib/api_device.php:1949
 msgid "ERROR: Device["
 msgstr "오류 : 장치 ["
 
-#: lib/api_device.php:1859
+#: lib/api_device.php:1965
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "오류 : 원격 수집기에 연결하지 못했습니다."
 
-#: lib/api_device.php:1866
+#: lib/api_device.php:1972
 msgid "Device is Disabled"
 msgstr "기기가 사용 중지되었습니다."
 
-#: lib/api_device.php:1867
+#: lib/api_device.php:1973
 msgid "Device Availability Check Bypassed"
 msgstr "장치 가용성 확인 무시 됨"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1980
 msgid "SNMP Information"
 msgstr "SNMP 정보"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1984
 msgid "SNMP not in use"
 msgstr "사용하지 않는 SNMP"
 
-#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
+#: lib/api_device.php:2005 lib/api_device.php:2013 lib/api_device.php:2032
 msgid "SNMP error"
 msgstr "SNMP 오류"
 
-#: lib/api_device.php:1899
+#: lib/api_device.php:2005
 msgid "Session"
 msgstr "세션"
 
-#: lib/api_device.php:1926
+#: lib/api_device.php:2032
 msgid "Host"
 msgstr "호스트"
 
-#: lib/api_device.php:1944
+#: lib/api_device.php:2050
 msgid "System:"
 msgstr "시스템"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:2057
 msgid "Uptime:"
 msgstr "운영 시간"
 
-#: lib/api_device.php:1953
+#: lib/api_device.php:2059
 msgid "Hostname:"
 msgstr "호스트이름:"
 
-#: lib/api_device.php:1954
+#: lib/api_device.php:2060
 msgid "Location:"
 msgstr "위치:"
 
-#: lib/api_device.php:1955
+#: lib/api_device.php:2061
 msgid "Contact:"
 msgstr "연락처:"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
+#: lib/api_device.php:2092 lib/functions.php:6234 lib/functions.php:6236
 #: lib/functions.php:6240
 msgid "Ping Results"
 msgstr "Ping 결과"
 
-#: lib/api_device.php:1991
+#: lib/api_device.php:2097
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "사용중인 Ping 또는 SNMP 가용성 검사 없음"
 

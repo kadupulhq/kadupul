@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 00:11-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -8182,7 +8182,7 @@ msgid "Tree Rule Items"
 msgstr "樹規則項"
 
 #: include/global_arrays.php:2861 include/global_arrays.php:2877
-#: lib/api_device.php:1952
+#: lib/api_device.php:2058
 #, fuzzy
 msgid "days"
 msgstr "天"
@@ -8202,12 +8202,12 @@ msgstr "分鐘"
 msgid "secs"
 msgstr "秒"
 
-#: include/global_arrays.php:2878 lib/api_device.php:1952
+#: include/global_arrays.php:2878 lib/api_device.php:2058
 #, fuzzy
 msgid "hours"
 msgstr "小時"
 
-#: include/global_arrays.php:2879 lib/api_device.php:1952
+#: include/global_arrays.php:2879 lib/api_device.php:2058
 #, fuzzy
 msgid "minutes"
 msgstr "分鐘"
@@ -11385,7 +11385,7 @@ msgstr "字體選擇方法"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "您希望默認情況下如何處理字體？"
 
-#: include/global_settings.php:1153 lib/api_device.php:1907
+#: include/global_settings.php:1153 lib/api_device.php:2013
 #, fuzzy
 msgid "System"
 msgstr "取得系統報表"
@@ -13690,108 +13690,118 @@ msgstr "由Kadupul Automation添加"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "錯誤：不再支持採用 range1-range2 形式的 IP 範圍。"
 
-#: lib/api_device.php:155 lib/api_device.php:158 lib/api_device.php:385
-#: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
-#: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
-#: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
-#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
-#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
-#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
-#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
+#: lib/api_device.php:75
+#, php-format
+msgid "Unable to remove Device %s because its Graphs could not all be removed."
+msgstr ""
+
+#: lib/api_device.php:83
+#, php-format
+msgid "Unable to remove Device %s because its database records could not be removed together."
+msgstr ""
+
+#: lib/api_device.php:261 lib/api_device.php:264 lib/api_device.php:491
+#: lib/api_device.php:495 lib/api_device.php:557 lib/api_device.php:562
+#: lib/api_device.php:607 lib/api_device.php:611 lib/api_device.php:687
+#: lib/api_device.php:691 lib/api_device.php:746 lib/api_device.php:750
+#: lib/api_device.php:816 lib/api_device.php:819 lib/api_device.php:894
+#: lib/api_device.php:897 lib/api_device.php:946 lib/api_device.php:949
+#: lib/api_device.php:992 lib/api_device.php:995 lib/api_device.php:1418
+#: lib/api_device.php:1431 lib/api_device.php:1435 lib/api_device.php:1480
+#: lib/api_device.php:1483 lib/api_device.php:1670 lib/api_device.php:1674
+#: lib/api_device.php:1710 lib/api_device.php:1714 lib/api_device.php:1759
+#: lib/api_device.php:1763 lib/api_device.php:1824 lib/api_device.php:1828
 #: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr ""
 
-#: lib/api_device.php:549
+#: lib/api_device.php:655
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1828
+#: lib/api_device.php:1934
 #, fuzzy
 msgid "ERROR: Device ID is Blank"
 msgstr "錯誤：設備ID為空"
 
-#: lib/api_device.php:1841 lib/api_device.php:1843
+#: lib/api_device.php:1947 lib/api_device.php:1949
 #, fuzzy
 msgid "ERROR: Device["
 msgstr "錯誤：設備["
 
-#: lib/api_device.php:1859
+#: lib/api_device.php:1965
 #, fuzzy
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "錯誤：無法連接到遠程收集器。"
 
-#: lib/api_device.php:1866
+#: lib/api_device.php:1972
 #, fuzzy
 msgid "Device is Disabled"
 msgstr "設備已禁用"
 
-#: lib/api_device.php:1867
+#: lib/api_device.php:1973
 #, fuzzy
 msgid "Device Availability Check Bypassed"
 msgstr "設備可用性檢查旁路"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1980
 #, fuzzy
 msgid "SNMP Information"
 msgstr "SNMP信息"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1984
 #, fuzzy
 msgid "SNMP not in use"
 msgstr "SNMP未使用"
 
-#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
+#: lib/api_device.php:2005 lib/api_device.php:2013 lib/api_device.php:2032
 #, fuzzy
 msgid "SNMP error"
 msgstr "SNMP錯誤"
 
-#: lib/api_device.php:1899
+#: lib/api_device.php:2005
 #, fuzzy
 msgid "Session"
 msgstr "課堂"
 
-#: lib/api_device.php:1926
+#: lib/api_device.php:2032
 #, fuzzy
 msgid "Host"
 msgstr "主機"
 
-#: lib/api_device.php:1944
+#: lib/api_device.php:2050
 #, fuzzy
 msgid "System:"
 msgstr "取得系統報表"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:2057
 #, fuzzy
 msgid "Uptime:"
 msgstr "運行時間"
 
-#: lib/api_device.php:1953
+#: lib/api_device.php:2059
 #, fuzzy
 msgid "Hostname:"
 msgstr "主機名稱："
 
-#: lib/api_device.php:1954
+#: lib/api_device.php:2060
 #, fuzzy
 msgid "Location:"
 msgstr "地點:"
 
-#: lib/api_device.php:1955
+#: lib/api_device.php:2061
 #, fuzzy
 msgid "Contact:"
 msgstr "聯繫方式："
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
+#: lib/api_device.php:2092 lib/functions.php:6234 lib/functions.php:6236
 #: lib/functions.php:6240
 #, fuzzy
 msgid "Ping Results"
 msgstr "Ping結果"
 
-#: lib/api_device.php:1991
+#: lib/api_device.php:2097
 #, fuzzy
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "無Ping或SNMP可用性檢查正在使用中"
