@@ -21,8 +21,10 @@ final class IncludeNotificationNativeEvidence
         'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php',
         'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
         'src/Platform/Infrastructure/Legacy/LegacyLogText.php',
+        'src/DataInput/Domain/InputStringSubstitution.php',
     ];
     public const COPIES = [
+        'src/DataInput/Domain/InputStringSubstitution.php' => 'src/DataInput/Domain/InputStringSubstitution.php',
         'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php' => 'src/Platform/Infrastructure/Legacy/LegacyLockRetry.php',
         'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php' => 'src/Platform/Infrastructure/Legacy/LegacySettingsStorage.php',
         'src/Platform/Infrastructure/Legacy/LegacyLogText.php' => 'src/Platform/Infrastructure/Legacy/LegacyLogText.php',

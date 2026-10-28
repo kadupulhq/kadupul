@@ -42,6 +42,8 @@ final class PresentationPageEvidence
             'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoResult.php', 'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoStatement.php',
             'src/Platform/Infrastructure/Persistence/DbalConfigurationSettings.php', 'src/Platform/Infrastructure/Persistence/DbalUserSettings.php',
             'src/Platform/Application/Port/ConfigurationSettings.php', 'src/Platform/Application/Port/UserSettings.php',
+            // lib/functions.php loads the data input substitution scanner directly.
+            'src/DataInput/Domain/InputStringSubstitution.php',
 
             'include/global_session.php',
             'lib/api_aggregate.php',
