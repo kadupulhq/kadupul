@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Bind on-demand Boost sample inserts so poller output is stored verbatim instead of being concatenated into SQL.
 - Pass browser timezone input explicitly to the local RRDtool web-context adapter while preserving session-close and process-start ordering.
 
 - Pass bootstrap row choices explicitly through legacy permission filters, removing the renderer's global binding while preserving tab-hook catalog changes.
