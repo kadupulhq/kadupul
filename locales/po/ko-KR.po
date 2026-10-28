@@ -2398,7 +2398,7 @@ msgstr "트리 규칙 없음"
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
 #: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
-#: poller_automation.php:37 poller_boost.php:387
+#: poller_automation.php:37 poller_boost.php:392
 #, fuzzy
 msgid "Kadupul System Warning"
 msgstr "Kadupul 시스템 경고"
@@ -16749,16 +16749,16 @@ msgstr "참고 : 두 번째 Kadupul 데이터 수집기가 추가되었습니다
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "경고: 주요 Kadupul 데이터베이스가 오프라인이거나 복구 중입니다."
 
-#: poller_automation.php:987 poller_automation.php:1040
+#: poller_automation.php:996 poller_automation.php:1049
 #, fuzzy
 msgid "Kadupul Primary Admin"
 msgstr "Kadupul 기본 관리자"
 
-#: poller_automation.php:1143
+#: poller_automation.php:1152
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr "Kadupul Automation Report는 HTML 기반 이메일 클라이언트가 필요합니다"
 
-#: poller_boost.php:387
+#: poller_boost.php:392
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "경고: 감지된 폴러 부스트 오버런, 가능한 부스트 폴러 충돌"
 

@@ -343,9 +343,14 @@ function boost_kill_running_processes()
 
     if (cacti_sizeof($processes)) {
         foreach ($processes as $p) {
-            cacti_log(sprintf('WARNING: Killing Boost %s PID %d due to another boost process starting.', ucfirst($p['taskname']), $p['pid']), true, 'BOOST');
+            if (cacti_process_still_running($p['pid'])) {
+                cacti_log(sprintf('WARNING: Killing Boost %s PID %d due to another boost process starting.', ucfirst($p['taskname']), $p['pid']), true, 'BOOST');
+                if (!cacti_process_kill($p['pid'], SIGTERM, 'BOOST') && cacti_process_kill_denied($p['pid'])) {
+                    cacti_log(sprintf('WARNING: Unable to kill Boost %s PID %d owned by another user, leaving it registered.', ucfirst($p['taskname']), $p['pid']), true, 'BOOST');
 
-            posix_kill($p['pid'], SIGTERM);
+                    continue;
+                }
+            }
 
             unregister_process($p['tasktype'], $p['taskname'], $p['taskid'], $p['pid']);
         }

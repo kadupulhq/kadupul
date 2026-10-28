@@ -2393,7 +2393,7 @@ msgstr "Inga trädregler hittades"
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
 #: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
-#: poller_automation.php:37 poller_boost.php:387
+#: poller_automation.php:37 poller_boost.php:392
 msgid "Kadupul System Warning"
 msgstr "Kadupul systemvarning"
 
@@ -16723,15 +16723,15 @@ msgstr "OBS: En andra Kadupul-datainsamlare har lagts till.  Därför aktiveras 
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "VARNING: Huvuddatabasen för Kadupul %s offline eller under återställning"
 
-#: poller_automation.php:987 poller_automation.php:1040
+#: poller_automation.php:996 poller_automation.php:1049
 msgid "Kadupul Primary Admin"
 msgstr "Kadupul primär admin"
 
-#: poller_automation.php:1143
+#: poller_automation.php:1152
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr "Kadupul Automation Report kräver en html-baserad e-postklient"
 
-#: poller_boost.php:387
+#: poller_boost.php:392
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "VARNING: Detekterad Poller Boost-överskridning, möjlig krasch av Poller Boost"
 

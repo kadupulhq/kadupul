@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Refuse to signal a process-table PID that cannot name a Kadupul task. PID 1, zero, negative or malformed values and values wider than `pid_t` are never passed to `posix_kill()`, and worker cleanup confirms a registered PID still runs the same program before signalling it. This ports the lts/1.2 protection from upstream Cacti #7955 and #7414.
 - Resolve the client address for Symfony remember-me and Basic restoration with the same trusted-proxy rules as legacy pages, so forwarded headers count only from a listed proxy (ports the lts protection; upstream Cacti #7658, #7363).
 - Refuse unsafe table, column, index and option names and column clauses in the plugin and core DDL helpers (`db_table_create()`, `db_add_column()`, `db_update_table()`, `db_add_index()` and the `api_plugin_db_*` wrappers), and quote column defaults and comments; the plugin wrappers now use the core helpers. Definitions used by shipped upgrades and common plugins, including compound key strings, prefix lengths and quoted enum members, are unchanged. RRDtool create and update commands now refuse data source names and update templates RRDtool cannot parse, tune lines and data source paths with control characters are refused, and spike removal and background process starts quote their executable or RRD path.
 
