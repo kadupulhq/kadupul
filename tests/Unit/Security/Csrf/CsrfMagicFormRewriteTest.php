@@ -20,7 +20,7 @@
  * Loading csrf-magic.php starts its request handling, so the handler runs in
  * a child process and each page comes back as the handler rewrote it.
  */
-function csrf_rewrite_pages(array $pages) {
+function csrf_rewrite_pages(array $pages, bool $advance_clock = false) {
 	$program = <<<'PHP'
 function csrf_startup() {
 	csrf_conf('rewrite', false);
@@ -33,15 +33,23 @@ function csrf_startup() {
 require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
 session_id('form-rewrite-test-session');
 $field = "<input type='hidden' name='__csrf_magic' value=\"" . csrf_get_tokens() . "\" />";
+if ($argv[2] === 'advance-clock') { usleep(1100000); }
 $pages = array();
 foreach (json_decode(stream_get_contents(STDIN), true) as $page) {
-	$pages[] = csrf_ob_handler('<html><head></head><body>' . $page . '</body></html>', 0);
+	$rewritten = csrf_ob_handler('<html><head></head><body>' . $page . '</body></html>', 0);
+	// Validate each emitted token before comparing markup with a stable field.
+	$pages[] = preg_replace_callback('/<input type=\'hidden\' name=\'__csrf_magic\' value="([^"]+)" \/>/', function ($match) use ($field) {
+		if (!csrf_check_tokens($match[1])) {
+			throw new RuntimeException('Output handler emitted an invalid CSRF token');
+		}
+		return $field;
+	}, $rewritten);
 }
 echo json_encode(array('field' => $field, 'pages' => $pages));
 PHP;
 
 	$process = proc_open(
-		array(PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-r', $program, dirname(__DIR__, 4)),
+		array(PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', '-r', $program, dirname(__DIR__, 4), $advance_clock ? 'advance-clock' : ''),
 		array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
 		$pipes
 	);
@@ -220,4 +228,11 @@ test('inline scripts that build a POST form are left intact', function () {
 	$result = csrf_rewrite_pages(array($script));
 
 	expect($result['pages'][0])->toBe($script);
+});
+
+test('form markup checks tolerate token timestamps crossing a second boundary', function () {
+	$tag = "<form method='post'>";
+	$result = csrf_rewrite_pages(array($tag . '</form>'), true);
+
+	expect($result['pages'][0])->toBe($tag . $result['field'] . '</form>');
 });
