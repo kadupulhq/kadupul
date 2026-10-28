@@ -96,6 +96,21 @@ final class AdminListNativeCoverageTest extends TestCase
         self::assertCount(0, $xpath->query('//script[contains(text(),"Alpha")]'));
     }
 
+    public function testEditPagesPreserveRowChoicesChangedByTabHooks(): void
+    {
+        foreach (array(false, true) as $group) {
+            $state = $this->render(array('group' => $group, 'grid' => true, 'edit_entry' => true, 'policy' => 1, 'associated' => 'false'));
+            $document = new DOMDocument();
+            self::assertTrue($document->loadHTML($state['html'], LIBXML_NOERROR | LIBXML_NONET));
+            $xpath = new DOMXPath($document);
+            $options = iterator_to_array($xpath->query('//select[@id="rows"]/option'));
+            self::assertSame(array('-1', '2'), array_map(static fn($option) => $option->getAttribute('value'), $options));
+            self::assertSame('<Two & plugin>', $options[1]->textContent);
+            self::assertTrue($options[1]->hasAttribute('selected'));
+            self::assertSame($state['permissions_before'], $state['permissions_after']);
+        }
+    }
+
     public static function templateCases(): array
     {
         $cases = array();
@@ -179,10 +194,11 @@ final class AdminListNativeCoverageTest extends TestCase
                 $requiredHits = array($scenario['group'] ? 'user_group_admin.php' : 'user_admin.php', 'lib/html.php');
                 if (!empty($scenario['grid'])) {
                     $requiredHits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php';
+                    $requiredHits[] = 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
                 }
-                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), $requiredHits);
+                $childCoverage = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), $requiredHits);
                 if (!self::$coverageEvidenceChecked || (!empty($scenario['grid']) && !self::$gridCoverageEvidenceChecked)) {
-                    self::assertSame(35, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), $requiredHits, 'lib/rrd.php'));
+                    self::assertSame(36, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/admin-list-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), array('config/icons.json', 'src/Platform/Contract/IconRegistry.php', 'user_admin.php', 'user_group_admin.php', 'lib/html.php', 'lib/html_form.php', 'lib/html_utility.php', 'lib/functions.php', 'lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'include/global_constants.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php', 'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'), array('native-list-rendered', 'list-state-readback'), $requiredHits, 'lib/rrd.php'));
                     self::$coverageEvidenceChecked = true;
                     if (!empty($scenario['grid'])) {
                         self::$gridCoverageEvidenceChecked = true;

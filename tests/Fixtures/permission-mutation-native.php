@@ -224,7 +224,7 @@ try {
         }
         $startQueries = $db->calls;
         $startIndex = count($db->queries);
-        $result = Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($group);
+        $result = Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($group, array_keys($_POST));
     } else {
         $result = Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionMutation::write($sql, $parameters, $group, 42, $member);
     }

@@ -1936,6 +1936,11 @@ parent-scoped Twig views. Existing parent catalogs link to them. Legacy PHP
 continues to handle edits and operational actions. This slice does not retire
 legacy writers or remove their global state.
 
+The [permission selection input boundary](migrations/permission-selection-input.md)
+passes submitted field names from authenticated legacy page handlers to the
+association helper. It removes that helper's direct POST dependency while keeping
+its existing writer, transaction and permission-cache lifecycle.
+
 The [Twig global-state audit](migrations/twig-global-state-audit.md) covers the
 native layers, retained operation pages and shared compatibility adapters. It
 removes 71 unused bindings and identifies the session, connection, plugin and
@@ -1950,3 +1955,13 @@ The [identity settings slice](migrations/identity-settings-batch-10.md) adds ten
 views for stored user/group grants, preferences and login options. It extends
 the identity relationship reader without changing preference inheritance,
 plugin settings, authorization evaluation or legacy writes.
+
+The [RRDtool web-context input boundary](migrations/rrd-web-context-input.md)
+passes viewer state explicitly to the local-process adapter. The procedural
+caller still owns cookie/configuration integration; session release and timezone
+preparation keep their ordering around the existing executable check.
+
+The [permission filter row-context slice](migrations/permission-filter-row-context.md)
+passes the existing bootstrap catalog through retained legacy edit pages and
+filters. It removes the shared renderer's row-choice global without replacing
+the catalog, its input limit or tab-hook customization.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -44,7 +46,8 @@ final class PermissionAssociations
         return PermissionMutation::write($sql, array($principal, $item, $type), $group, (int) $principal);
     }
 
-    public static function apply(bool $group): ?string
+    /** @param list<int|string> $submittedFieldNames POST field names captured by the authenticated HTTP boundary. */
+    public static function apply(bool $group, array $submittedFieldNames): ?string
     {
         $choices = $group
             ? array('associate_host' => array(3, 'permsd'), 'associate_graph' => array(1, 'permsg'), 'associate_template' => array(4, 'permste'), 'associate_tree' => array(2, 'permstr'), 'associate_member' => array(0, 'members'))
@@ -55,8 +58,8 @@ final class PermissionAssociations
             }
             $associate = get_nfilter_request_var('drp_action') == '1';
             $selected = array();
-            foreach ($_POST as $name => $value) {
-                if (!preg_match('/^chk_([0-9]+)$/', $name, $matches)) {
+            foreach ($submittedFieldNames as $name) {
+                if (!is_string($name) || !preg_match('/^chk_([0-9]+)$/', $name, $matches)) {
                     continue;
                 }
                 input_validate_input_number($matches[1]);

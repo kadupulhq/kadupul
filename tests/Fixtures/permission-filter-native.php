@@ -194,8 +194,9 @@ if (isset($argv[3])) {
 require (getenv('PERMISSION_FILTER_CONTROLLER_ROOT') ?: $root) . '/' . $scenario['page'];
 if (!empty($scenario['no_association'])) {
     require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
-    $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php');
+    $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php', array_keys($_POST));
     $nativeChildCoverageMarkers = array('association-contract-returned');
+    // nosemgrep: php.lang.security.injection.printed-request.printed-request -- CLI JSON protocol; the PHP_SAPI guard rejects HTTP before reading input.
     print json_encode(array('tab' => $tab, 'queries' => $queries), JSON_THROW_ON_ERROR);
     exit;
 }
@@ -205,11 +206,16 @@ if (isset($scenario['association'])) {
         $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
         print json_encode($state, JSON_THROW_ON_ERROR);
     });
+    if (array_key_exists('submitted_fields', $scenario)) {
+        require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
+        \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php', $scenario['submitted_fields']);
+        exit;
+    }
     form_actions();
     throw new RuntimeException('Association did not complete its controller redirect');
 }
 ob_start();
-($scenario['function'] . '_filter')('Example');
+($scenario['function'] . '_filter')('Example', $scenario['row_choices'] ?? (is_array($item_rows) ? $item_rows : array()));
 $html = ob_get_clean();
 // Browser behavior tests execute the script nodes parsed from the actual markup.
 $document = new DOMDocument();

@@ -143,6 +143,51 @@ final class PermissionFilterRendererTest extends TestCase
         return $cases;
     }
 
+    public function testExplicitRowChoicesDoNotReadTheAmbientCatalog(): void
+    {
+        foreach (self::filters() as [$page, $function]) {
+            foreach (array(array(), array(42 => '<Forty & two>', 9 => 'Nine')) as $choices) {
+                $result = $this->render(array('page' => $page, 'function' => $function, 'rows' => '42', 'row_choices' => $choices));
+                $document = new DOMDocument();
+                self::assertTrue($document->loadHTML($result['html'], LIBXML_NOERROR | LIBXML_NONET));
+                $xpath = new DOMXPath($document);
+                $options = iterator_to_array($xpath->query('//select[@id="rows"]/option'));
+                self::assertSame(array('-1', ...array_map('strval', array_keys($choices))), array_map(static fn($option) => $option->getAttribute('value'), $options));
+                self::assertCount(0, $xpath->query('//select[@id="rows"]/option[@value="25"]'));
+                if ($choices !== array()) {
+                    self::assertSame('<Forty & two>', $options[1]->textContent);
+                    self::assertTrue($options[1]->hasAttribute('selected'));
+                    self::assertCount(0, $xpath->query('//select[@id="rows"]//forty'));
+                }
+            }
+        }
+    }
+
+    public function testExplicitSelectionDoesNotReadAmbientPostFields(): void
+    {
+        foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+            foreach (array('associate_graph' => 1, $page === 'user_admin.php' ? 'associate_groups' : 'associate_member' => 0) as $flag => $type) {
+                foreach (array(false, true) as $add) {
+                    foreach (array(array(), array('chk_42', 'chk_invalid', 'chk_41_extra', 41)) as $fields) {
+                        $result = $this->render(array('page' => $page, 'association' => $flag, 'type' => $type, 'add' => $add, 'submitted_fields' => $fields));
+                        // The fixture's ambient POST selects 41 and 43. Only the
+                        // explicit field list may select 42 for this operation.
+                        $expected = array(array('subject' => 7, 'item' => 41), array('subject' => 77, 'item' => 41));
+                        if ($add || $fields === array()) {
+                            array_splice($expected, 1, 0, array(array('subject' => 7, 'item' => 42)));
+                        }
+                        self::assertSame($expected, $result['rows']);
+                        $writes = array_values(array_filter($result['queries'], static fn(array $query): bool => str_starts_with($query[0], 'REPLACE INTO') || str_starts_with($query[0], 'DELETE FROM')));
+                        self::assertCount($fields === array() ? 0 : 1, $writes);
+                        if ($fields !== array()) {
+                            self::assertSame(array(7, 42, ...($type === 0 ? array() : array($type))), $writes[0][1]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public function testOtherActionsDoNotWriteAssociations(): void
     {
         foreach (array('user_admin.php', 'user_group_admin.php') as $page) {

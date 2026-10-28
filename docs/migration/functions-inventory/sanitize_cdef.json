@@ -3,8 +3,8 @@
     "name": "sanitize_cdef",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5183,
-        "end_line": 5189,
+        "start_line": 5199,
+        "end_line": 5205,
         "line_count": 7,
         "signature": {
             "parameters": [
