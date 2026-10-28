@@ -446,8 +446,8 @@ msgstr "匹配圖"
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
 #: lib/html_graph.php:191 lib/html_reports.php:2025 lib/html_tree.php:119
 #: lib/html_tree.php:967 managers.php:144 managers.php:503 managers.php:770
-#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:598
-#: settings.php:615 settings.php:674
+#: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:605
+#: settings.php:622 settings.php:681
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
@@ -688,7 +688,7 @@ msgstr "任何"
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
-#: settings.php:591 settings.php:613 settings.php:644
+#: settings.php:598 settings.php:620 settings.php:651
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
 #, fuzzy
@@ -901,7 +901,7 @@ msgstr "確認新密碼"
 
 #: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:517
 #: lib/html_form.php:1420 lib/html_form.php:1429 lib/html_graph.php:181
-#: lib/html_tree.php:1012 settings.php:553
+#: lib/html_tree.php:1012 settings.php:560
 #, fuzzy
 msgid "Save"
 msgstr "儲存"
@@ -2767,12 +2767,12 @@ msgstr "Kadupul系統工具"
 msgid "Notice: Kadupul Daemon PID["
 msgstr "注意：Kadupul 守護進程 PID["
 
-#: cli/refresh_csrf.php:104 lib/functions.php:693 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:693 settings.php:302
 #, fuzzy, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "設置保存到Data Collector%d失敗。"
 
-#: cli/refresh_csrf.php:105 lib/functions.php:706 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:706 settings.php:314
 #, fuzzy, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "設置保存到Data Collector%d失敗。"
@@ -3332,7 +3332,7 @@ msgstr "個人資料"
 #: graphs.php:2123 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
-#: settings.php:590 settings.php:612 settings.php:643 tree.php:914
+#: settings.php:597 settings.php:619 settings.php:650 tree.php:914
 #: user_admin.php:2084 user_admin.php:2109 user_admin.php:2123
 #: utilities.php:1043 utilities.php:1484
 #, fuzzy
@@ -14888,12 +14888,12 @@ msgstr "線上"
 msgid "Get Page Help"
 msgstr "取得說明"
 
-#: lib/html.php:215 settings.php:634
+#: lib/html.php:215 settings.php:641
 #, fuzzy
 msgid "Templates Selected"
 msgstr "選擇模板"
 
-#: lib/html.php:269 settings.php:599 settings.php:616 settings.php:675
+#: lib/html.php:269 settings.php:606 settings.php:623 settings.php:682
 #, fuzzy
 msgid "Enter keyword"
 msgstr "輸入關鍵字"
@@ -20048,69 +20048,69 @@ msgstr "歸檔所有"
 msgid "Archive All Unknown RRDfiles"
 msgstr "存檔所有未知的RRD文件"
 
-#: settings.php:403
+#: settings.php:410
 #, fuzzy
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "注意：此選項卡上的路徑設置僅在本地保存！"
 
-#: settings.php:408
+#: settings.php:415
 #, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
 msgstr "Kadupul設置（%s）"
 
-#: settings.php:541
+#: settings.php:548
 msgid "Changing Permission Model Warning"
 msgstr ""
 
-#: settings.php:542
+#: settings.php:549
 msgid "Changing Permission Model will alter a users effective Graph permissions."
 msgstr ""
 
-#: settings.php:543
+#: settings.php:550
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
 msgstr ""
 
-#: settings.php:557
+#: settings.php:564
 #, fuzzy
 msgid "Poller Interval must be less than Cron Interval"
 msgstr "Poller Interval必須小於Cron Interval"
 
-#: settings.php:585
+#: settings.php:592
 #, fuzzy
 msgid "Select Plugin(s)"
 msgstr "選擇插件"
 
-#: settings.php:587
+#: settings.php:594
 #, fuzzy
 msgid "Plugins Selected"
 msgstr "插件已選中"
 
-#: settings.php:607
+#: settings.php:614
 #, fuzzy
 msgid "Select File(s)"
 msgstr "選擇文件"
 
-#: settings.php:609
+#: settings.php:616
 #, fuzzy
 msgid "Files Selected"
 msgstr "已選擇文件"
 
-#: settings.php:632
+#: settings.php:639
 #, fuzzy
 msgid "Select Template(s)"
 msgstr "選擇模板"
 
-#: settings.php:637
+#: settings.php:644
 #, fuzzy
 msgid "All Templates Selected"
 msgstr "選擇所有模板"
 
-#: settings.php:711
+#: settings.php:718
 #, fuzzy
 msgid "Send a Test Email"
 msgstr "傳送測試郵件"
 
-#: settings.php:722
+#: settings.php:729
 #, fuzzy
 msgid "Test Email Results"
 msgstr "測試郵件結果"
