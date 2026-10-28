@@ -76,11 +76,12 @@ PHP;
             $pipes,
             $dir
         );
+        expect(is_resource($process))->toBeTrue();
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        proc_close($process);
+        $exit = proc_close($process);
         child_coverage_collect($coverage_dir);
     } finally {
         unlink($dir . '/include/auth.php');
@@ -88,6 +89,8 @@ PHP;
         rmdir($dir . '/include');
         rmdir($dir);
     }
+
+    expect($exit)->toBe(0);
 
     $result = json_decode($stdout, true);
     expect($result)->toBeArray();
