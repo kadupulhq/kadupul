@@ -1230,7 +1230,7 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 $descriptorspec[2] = array('redirect', 1);
             }
 
-            $web_context->prepareProcess($config);
+            $web_context->prepareProcess((bool) $config['is_web'], $config['is_web'] ? ($_COOKIE['CactiTimeZone'] ?? null) : null);
             $process = rrdtool_pipe_process($descriptorspec, $pipes);
 
             if (!is_resource($process)) {

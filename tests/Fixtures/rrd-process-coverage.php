@@ -518,6 +518,9 @@ if (defined('RRD_PROXY_DEADLINE_TEST_COVERAGE')) {
         $coverageFilter->includeFile($coverageRoot . '/' . $file);
     }
 }
+if (defined('RRD_NO_SHELL_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php');
+}
 if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
     foreach (RrdOneShotCoverageRegistration::HITS as $file) {
