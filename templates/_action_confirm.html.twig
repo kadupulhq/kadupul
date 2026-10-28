@@ -1,0 +1,35 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+
+Confirmation page for a bulk action on a selection. The caller sets
+domain, cancel_url, heading, intro and, when some rows block the action,
+used and used_message. The three texts are t() messages so
+translation:extract finds them in the caller. The caller fills the
+items block with the selected rows and extra_fields with any field shown
+before the hidden selection. `form` carries the hidden selection and
+revisions fields. A page whose form differs from that shape
+keeps its own template.
+#}
+{% extends 'base.html.twig' %}
+{% set used = used ?? false %}
+{% block title %}{{ heading|trans }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ heading|trans }}</h1>
+    <p>{{ intro|trans }}</p>
+    <ul>
+        {% block items %}{% endblock %}
+    </ul>
+    {% if used %}<p role="alert">{{ used_message|trans }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {% block extra_fields %}{% endblock %}
+        {{ form_widget(form.selection) }}
+        {{ form_widget(form.revisions) }}
+        {% if not used %}<button type="submit">{{ 'Continue'|trans({}, domain) }}</button>{% endif %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- cancel_url is path() output from the caller's fixed route. #}
+        <a href="{{ cancel_url }}">{{ 'Cancel'|trans({}, domain) }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
