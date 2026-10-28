@@ -1,3 +1,10 @@
 framework:
-    messenger: ~
+    messenger:
+        transports:
+            boost:
+                dsn: '%env(default:kadupul.boost.default_dsn:KADUPUL_BOOST_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 0
+        routing:
+            Kadupul\Graphing\Application\Command\FlushBoostPartition: boost
     scheduler: true

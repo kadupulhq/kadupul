@@ -208,6 +208,12 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
                 'config/services.yaml',
             ],
+            'LegacyWorkerRunner' => [
+                'src/Platform/Contract/LegacyWorkerRunner.php',
+                'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php',
+                'src/Graphing/Infrastructure/Legacy/LegacyBoostPartitionWriter.php',
+                'config/services.yaml',
+            ],
             'LegacyInstallationUpgrade' => [
                 'bin/legacy-audit-upgrade.php',
                 'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',

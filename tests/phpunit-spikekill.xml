@@ -31,6 +31,7 @@
       <file>Unit/Installer/DataInputIndexUpgradeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>Unit/Core/Cli/BoostWorkerNativeTest.php</file>
+      <file>Unit/Core/Cli/BoostPartitionWorkerNativeTest.php</file>
       <file>Unit/Core/Cli/PollerDrainNativeTest.php</file>
       <file>Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
