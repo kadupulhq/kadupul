@@ -22,11 +22,11 @@ function cacti_sizeof($value)
 }
 function db_fetch_row($sql)
 {
-    return array('Value' => strpos($GLOBALS['mode'], 'split-') === 0 ? 180 : 1000);
+    return array('Value' => strpos($GLOBALS['mode'], 'split-') === 0 ? 250 : 1000);
 }
-function db_execute($sql, $log, $connection)
+function db_execute_prepared($sql, $params, $log, $connection)
 {
-    $GLOBALS['writes'][] = array('sql' => $sql, 'connection' => $connection);
+    $GLOBALS['writes'][] = array('sql' => $sql, 'params' => $params, 'connection' => $connection);
     return !str_ends_with($GLOBALS['mode'], 'failure');
 }
 require $root . '/lib/boost.php';

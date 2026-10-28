@@ -3,8 +3,8 @@
     "name": "generate_graph_best_cf",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3575,
-        "end_line": 3600,
+        "start_line": 3591,
+        "end_line": 3616,
         "line_count": 26,
         "signature": {
             "parameters": [

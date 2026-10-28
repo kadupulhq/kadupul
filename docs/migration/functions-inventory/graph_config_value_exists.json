@@ -3,8 +3,8 @@
     "name": "graph_config_value_exists",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 100,
-        "end_line": 103,
+        "start_line": 101,
+        "end_line": 104,
         "line_count": 4,
         "signature": {
             "parameters": [

@@ -1956,6 +1956,11 @@ views for stored user/group grants, preferences and login options. It extends
 the identity relationship reader without changing preference inheritance,
 plugin settings, authorization evaluation or legacy writes.
 
+The [RRDtool web-context input boundary](migrations/rrd-web-context-input.md)
+passes viewer state explicitly to the local-process adapter. The procedural
+caller still owns cookie/configuration integration; session release and timezone
+preparation keep their ordering around the existing executable check.
+
 The [permission filter row-context slice](migrations/permission-filter-row-context.md)
 passes the existing bootstrap catalog through retained legacy edit pages and
 filters. It removes the shared renderer's row-choice global without replacing

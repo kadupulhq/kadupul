@@ -3,8 +3,8 @@
     "name": "settings_value_passes_filter",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 225,
-        "end_line": 246,
+        "start_line": 226,
+        "end_line": 247,
         "line_count": 22,
         "signature": {
             "parameters": [

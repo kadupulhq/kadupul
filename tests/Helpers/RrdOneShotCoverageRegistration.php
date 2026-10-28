@@ -17,6 +17,6 @@ final class RrdOneShotCoverageRegistration
         'src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php',
         'include/global_constants.php', 'composer.lock', 'tests/composer.lock',
     ];
-    public const HITS = ['lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php'];
+    public const HITS = ['lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php', 'src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php'];
     public const MARKERS = ['one-shot-scenario-calls-returned'];
 }

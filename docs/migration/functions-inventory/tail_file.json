@@ -3,8 +3,8 @@
     "name": "tail_file",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 1724,
-        "end_line": 1789,
+        "start_line": 1725,
+        "end_line": 1790,
         "line_count": 66,
         "signature": {
             "parameters": [

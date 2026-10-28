@@ -6,6 +6,7 @@
 // path_rrdtool holds a space and "$HOME". A shell would split the path at the
 // space or expand the variable, so RRDtool runs here only without one.
 test('RRDtool starts without a shell and receives its exact arguments', function ($mode) {
+    static $evidenceChecked = array();
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/rrd-no-shell-' . bin2hex(random_bytes(8));
     $bin = $dir . '/bin dir $HOME';
@@ -15,6 +16,7 @@ test('RRDtool starts without a shell and receives its exact arguments', function
     // does not wait for it is visible.
     file_put_contents($bin . '/rrdtool', '#!' . PHP_BINARY . "\n<?php\n" . <<<'FAKE'
         $log = dirname(__DIR__) . '/rrdtool.log';
+        file_put_contents(dirname(__DIR__) . '/context.log', "spawn\n", FILE_APPEND);
         file_put_contents($log, json_encode(array_slice($argv, 1)) . "\n", FILE_APPEND);
         fwrite(STDERR, "stderr-marker\n");
         echo "stdout-marker\n";
@@ -34,17 +36,27 @@ test('RRDtool starts without a shell and receives its exact arguments', function
     file_put_contents($dir . '/global_arrays.php', '<?php $data_source_types = array(1 => "GAUGE");');
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $program = '<?php ';
+    $program .= '$root=' . var_export($root, true) . ';$mode=' . var_export($mode, true) . ';';
     if ($coverage !== null) {
+        require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+        require_once $root . '/tests/Helpers/RrdNoShellCoverageRegistration.php';
+        $program .= 'require $root . "/tests/Helpers/NativeChildCoverageEvidence.php";';
+        $program .= 'require $root . "/tests/Helpers/RrdNoShellCoverageRegistration.php";';
+        $program .= '$nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, RrdNoShellCoverageRegistration::PRODUCER, $mode, RrdNoShellCoverageRegistration::SOURCES);';
+        $program .= 'define("RRD_NO_SHELL_TEST_COVERAGE",true);';
         $program .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
-    $program .= '$root=' . var_export($root, true) . ';$mode=' . var_export($mode, true) . ';';
     $program .= <<<'SOURCE'
-$config=array('cacti_server_os'=>'unix','rra_path'=>__DIR__,'include_path'=>__DIR__,'is_web'=>false);
+$config=array('cacti_server_os'=>'unix','rra_path'=>__DIR__,'include_path'=>__DIR__,'is_web'=>str_starts_with($mode,'web-context'));
+if(str_contains($mode,'context')){
+    $_COOKIE=$mode==='web-context-missing'?array():array('CactiTimeZone'=>$mode==='web-context-null'?null:($mode==='web-context-zero'?'0':'330'));
+}
 require $root.'/include/global_constants.php';
 define('CACTI_LOCALE','en-US');
 function read_config_option($key){return $key==='path_rrdtool'?__DIR__.'/bin dir $HOME/rrdtool':'';}
 function cacti_log($message,...$args){$GLOBALS['messages'][]=$message;}
-function cacti_session_close(){}
+function cacti_session_close(){if(str_contains($GLOBALS['mode'],'context')){file_put_contents(__DIR__.'/context.log',"session\n",FILE_APPEND);}}
+function cacti_time_zone_set($timezone){file_put_contents(__DIR__.'/context.log','timezone:'.$timezone."\n",FILE_APPEND);}
 // As the unix branch of the real one, which removes CR and LF.
 function cacti_escapeshellarg($value){return escapeshellarg(str_replace(array("\r","\n"),'',$value));}
 function cacti_escapeshellcmd($value){return escapeshellcmd($value);}
@@ -67,6 +79,7 @@ if($mode==='writer-shutdown'){
 // Anything after rrd_close() or the call itself returned sees the child gone.
 // The open writer's child may not have started yet, so the test reads its log.
 $log=$mode==='writer-shutdown'?array():array_map('json_decode',file(__DIR__.'/rrdtool.log',FILE_IGNORE_NEW_LINES));
+$nativeChildCoverageMarkers=array('no-shell-scenario-returned');
 echo "\n".json_encode(array($result,$log,$GLOBALS['messages']??array()));
 SOURCE;
     file_put_contents($dir . '/run.php', $program);
@@ -97,7 +110,7 @@ SOURCE;
                     . ' --heartbeat ' . escapeshellarg('value:600') . ' --data-source-type ' . escapeshellarg('value:GAUGE')
                     . ' --data-source-rename ' . escapeshellarg("value:it's \$HOME \"x\"")))
                 ->and($printed)->toBe('')->and($err)->toBe("stderr-marker\n");
-        } elseif ($mode === 'execute-stdout' || $mode === 'execute-stderr') {
+        } elseif ($mode === 'execute-stdout' || $mode === 'execute-stderr' || str_contains($mode, 'context')) {
             expect($log)->toBe(array(array('-'), 'info it.rrd', 'quit', 'exited'))->and($printed)->toBe('');
             if ($mode === 'execute-stdout') {
                 expect($result)->toBe("stdout-marker\n")->and($err)->toBe("stderr-marker\n");
@@ -115,10 +128,24 @@ SOURCE;
                 expect($result)->toBeNull()->and($printed)->toBe("stdout-marker\nOK u:0.00 s:0.00 r:0.00\n")->and($err)->toBe("stderr-marker\n");
             }
         }
+        if (str_contains($mode, 'context')) {
+            $timezone = $mode === 'web-context' ? "timezone:330\n" : ($mode === 'web-context-zero' ? "timezone:0\n" : '');
+            expect(file_get_contents($dir . '/context.log'))->toBe("session\n" . $timezone . "spawn\n");
+        }
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            $hits = RrdNoShellCoverageRegistration::requiredHits($mode);
+            $arguments = array($reports[0], $root, RrdNoShellCoverageRegistration::PRODUCER, $mode,
+                RrdNoShellCoverageRegistration::SOURCES, RrdNoShellCoverageRegistration::MARKERS, $hits);
+            $childCoverage = NativeChildCoverageEvidence::load(...$arguments);
+            $evidenceKind = str_contains($mode, 'context') ? 'context' : 'transport';
+            if (!isset($evidenceChecked[$evidenceKind])) {
+                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/rrd.php'))))
+                    ->toBe(count(RrdNoShellCoverageRegistration::SOURCES) + count(RrdNoShellCoverageRegistration::MARKERS) + 10);
+                $evidenceChecked[$evidenceKind] = true;
+            }
+            $coverage->merge($childCoverage);
         }
     } finally {
         foreach (array_merge(glob($bin . '/*'), glob($dir . '/*')) as $file) {
@@ -126,4 +153,4 @@ SOURCE;
         }
         rmdir($dir);
     }
-})->with(array('acknowledged', 'writer-null', 'writer-shutdown', 'writer-terminal', 'execute-stdout', 'execute-stderr', 'tune'));
+})->with(array('acknowledged', 'writer-null', 'writer-shutdown', 'writer-terminal', 'execute-stdout', 'execute-stderr', 'tune', 'web-context', 'web-context-missing', 'web-context-null', 'web-context-zero', 'cli-context-cookie'));

@@ -3,8 +3,8 @@
     "name": "repair_system_data_input_methods",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6971,
-        "end_line": 7175,
+        "start_line": 6987,
+        "end_line": 7191,
         "line_count": 205,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 3, "core_outside_functions_php": 2, "tests": 3, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],
