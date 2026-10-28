@@ -478,6 +478,20 @@ function aggregate_graphs_insert_graph_items($_new_graph_id, $_old_graph_id, $_g
 	return $_graph_item_sequence;
 }
 
+/** Return a positive parent ID without accepting SQL fragments or arrays. */
+function aggregate_graph_items_parent_id($value) {
+	if (!is_int($value) && !is_string($value)) {
+		return false;
+	}
+
+	$digits = ltrim(trim((string) $value), '0');
+	if ($digits === '' || !ctype_digit($digits)) {
+		return false;
+	}
+
+	return filter_var($digits, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
+}
+
 /**
  * insert or update aggregate graph items in DB tables
  * @param array $items
@@ -485,6 +499,10 @@ function aggregate_graphs_insert_graph_items($_new_graph_id, $_old_graph_id, $_g
  * @return bool true if save was successful, false otherwise
  */
 function aggregate_graph_items_save($items, $table) {
+	if (!is_array($items) || !$items) {
+		return false;
+	}
+
 	$defaults = array();
 	if ($table == 'aggregate_graphs_graph_item') {
 		$defaults['aggregate_graph_id'] = null;
@@ -506,51 +524,161 @@ function aggregate_graph_items_save($items, $table) {
 	$defaults['item_skip']       = '';
 	$defaults['item_total']      = '';
 
-	$items_sql = array();
+	$parameters = array();
+	$parent_id = null;
 	foreach ($items as $item) {
-		// substitute any missing fields with defaults
-		$item = array_merge($defaults, $item);
-
-		// remove any extra fields
-		$item = array_intersect_key($item, $defaults);
-
-		// without these graph item makes no sense
-		if (!isset($item[$id_field]) || !isset($item['graph_templates_item_id'])) {
+		$item = aggregate_graph_items_row($item, $defaults, $id_field, $parent_id);
+		if ($item === false) {
 			return false;
 		}
-
-		// convert to partial SQL statement
-		$items_sql[] = sprintf(
-			' (%d, %d, %d, %d, %s, %d, %s, %d, %s, %s)',
-			$item[$id_field],
-			$item['graph_templates_item_id'],
-			$item['sequence'],
-			$item['color_template'],
-			db_qstr($item['t_graph_type_id']),
-			$item['graph_type_id'],
-			db_qstr($item['t_cdef_id']),
-			$item['cdef_id'],
-			db_qstr($item['item_skip']),
-			db_qstr($item['item_total'])
-		);
+		$parent_id = $item[$id_field];
+		foreach (array_keys($defaults) as $field) {
+			$numeric = in_array($field, array($id_field, 'graph_templates_item_id', 'sequence', 'color_template', 'graph_type_id', 'cdef_id'), true);
+			$parameters[] = $numeric ? (int) $item[$field] : $item[$field];
+		}
 	}
 
 	$sql = 'INSERT INTO ' . $table;
 	$sql .= '(' . implode(', ', array_keys($defaults)) . ') VALUES ';
-	$sql .= implode(', ', $items_sql);
 
-	cacti_log(__FUNCTION__ . ' called. SQL: ' . $sql, true, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
+	return aggregate_graph_items_replace($table, $id_field, $parent_id, $sql, $parameters);
+}
 
-	/* remove all old items */
-	if (isset( $items[0][$id_field])) {
-		db_execute("DELETE FROM $table WHERE " . $id_field . '=' . $items[0][$id_field]);
-	}
-
-	if (db_execute($sql) == 1) {
-		return true;
-	} else {
+/** Normalize one item before any database changes. */
+function aggregate_graph_items_row($item, $defaults, $id_field, $parent_id) {
+	if (!is_array($item)) {
 		return false;
 	}
+	$item = array_intersect_key(array_merge($defaults, $item), $defaults);
+	if (!isset($item[$id_field], $item['graph_templates_item_id'])) {
+		return false;
+	}
+	$id = aggregate_graph_items_parent_id($item[$id_field]);
+	if ($id === false || ($parent_id !== null && $parent_id !== $id)) {
+		return false;
+	}
+	foreach ($item as $value) {
+		if ($value !== null && !is_scalar($value)) {
+			return false;
+		}
+	}
+	$item[$id_field] = $id;
+
+	return $item;
+}
+
+/** Replace one parent's items without committing a caller-owned transaction. */
+function aggregate_graph_items_replace($table, $id_field, $parent_id, $sql, $parameters) {
+	global $database_sessions, $database_default, $database_hostname, $database_port;
+
+	$connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+	if (!$connection instanceof PDO) {
+		return false;
+	}
+
+	$owned = !$connection->inTransaction();
+	$savepoint = 'aggregate_items_' . bin2hex(random_bytes(8));
+	$complete = false;
+	$started = false;
+	try {
+		$started = $owned ? $connection->beginTransaction()
+			: db_execute_prepared('SAVEPOINT ' . $savepoint, array(), false, $connection);
+		if (!$started) {
+			return false;
+		}
+		if (!aggregate_graph_items_transactional_table($connection, $table)) {
+			return false;
+		}
+		// Disable statement-level retries: reconnects/deadlocks invalidate the
+		// transaction, so repeating only an INSERT could lose the deleted rows.
+		$deleted = db_execute_prepared('DELETE FROM ' . $table . ' WHERE ' . $id_field . ' = ?', array($parent_id), false, $connection);
+		if ($deleted && aggregate_graph_items_insert($connection, $sql, $parameters)) {
+			$complete = $owned ? $connection->commit()
+				: db_execute_prepared('RELEASE SAVEPOINT ' . $savepoint, array(), false, $connection);
+		}
+	} catch (Throwable $error) {
+		cacti_log('ERROR: Aggregate graph item replacement failed.', false, 'AGGREGATE');
+	} finally {
+		if ($started && !$complete) {
+			aggregate_graph_items_rollback($connection, $owned, $savepoint);
+		}
+	}
+
+	return $complete;
+}
+
+/** Preserve the caller's transaction when undoing a failed replacement. */
+function aggregate_graph_items_rollback(PDO $connection, $owned, $savepoint) {
+	if (!$connection->inTransaction()) {
+		return;
+	}
+	try {
+		if ($owned) {
+			$complete = $connection->rollBack();
+		} else {
+			$complete = db_execute_prepared('ROLLBACK TO SAVEPOINT ' . $savepoint, array(), false, $connection)
+				&& db_execute_prepared('RELEASE SAVEPOINT ' . $savepoint, array(), false, $connection);
+		}
+		if (!$complete) {
+			cacti_log('ERROR: Aggregate graph item rollback failed.', false, 'AGGREGATE');
+		}
+	} catch (Throwable $error) {
+		cacti_log('ERROR: Aggregate graph item rollback failed.', false, 'AGGREGATE');
+	}
+}
+
+/** Bound each INSERT below the native prepared-statement parameter limit. */
+function aggregate_graph_items_insert(PDO $connection, $sql, array $parameters) {
+	if (!$parameters || count($parameters) % 10 !== 0) {
+		return false;
+	}
+	foreach (array_chunk($parameters, 10000) as $chunk) {
+		$rows = array_fill(0, intdiv(count($chunk), 10), '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+		if (!db_execute_prepared($sql . implode(', ', $rows), $chunk, false, $connection)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/** Check the actual table on this connection, including temporary shadows. */
+function aggregate_graph_items_transactional_table(PDO $connection, $table) {
+	if (!in_array($table, array('aggregate_graphs_graph_item', 'aggregate_graph_templates_item'), true)) {
+		return false;
+	}
+	$driver = $connection->getAttribute(PDO::ATTR_DRIVER_NAME);
+	if ($driver === 'sqlite') {
+		return true;
+	}
+	if ($driver !== 'mysql') {
+		return false;
+	}
+	// Keep a metadata lock until transaction completion so concurrent DDL cannot
+	// change the checked engine before the DELETE executes.
+	$lock = $connection->query('SELECT 1 FROM `' . $table . '` LIMIT 0');
+	if (!$lock || !$lock->closeCursor()) {
+		return false;
+	}
+	$statement = $connection->query('SHOW CREATE TABLE `' . $table . '`');
+	if (!$statement) {
+		return false;
+	}
+	$definition = $statement->fetch(PDO::FETCH_NUM);
+	$ddl = $definition[1] ?? '';
+	if (!$statement->closeCursor() || preg_match('/\ACREATE TABLE\s/i', $ddl) !== 1) {
+		return false;
+	}
+	// Read the engine separately: a quoted table comment can contain arbitrary
+	// newlines and ENGINE=InnoDB text in SHOW CREATE TABLE output.
+	$status = $connection->query("SHOW TABLE STATUS WHERE Name = '$table'");
+	if (!$status) {
+		return false;
+	}
+	$row = $status->fetch(PDO::FETCH_ASSOC);
+
+	return $status->closeCursor() && ($row['Name'] ?? null) === $table
+		&& ($row['Engine'] ?? null) === 'InnoDB';
 }
 
 /**
