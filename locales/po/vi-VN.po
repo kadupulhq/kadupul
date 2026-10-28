@@ -5938,8 +5938,9 @@ msgstr "Không tìm thấy mẫu thiết bị nào"
 
 #: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
 #: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:4031 lib/auth.php:4050 lib/auth.php:4269
-#: lib/auth.php:4299 lib/auth.php:4325 lib/auth.php:4338
+#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
+#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
+#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
 msgid "Access Denied!  Login Failed."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
@@ -5955,7 +5956,7 @@ msgstr "Bạn phải đăng nhập để truy cập vào khu vực này của Ca
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "FATAL: Bạn phải đăng nhập để truy cập vào khu vực này của Cacti."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:4784
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "Đăng nhập lại"
@@ -12846,41 +12847,42 @@ msgstr "Xác thực cơ bản Web được định cấu hình, nhưng không c�
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "%s được xác thực bởi Máy chủ Web, nhưng cả Người dùng mẫu và Khách không được xác định trong Cacti."
 
-#: lib/auth.php:3873 lib/auth.php:4043 lib/auth.php:4309
+#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
+#: lib/auth.php:4651
 msgid "Access Denied!  No password provided by user."
 msgstr "Truy cập bị Từ chối! Không có mật khẩu được cung cấp bởi người dùng."
 
-#: lib/auth.php:4024 lib/auth.php:4982
+#: lib/auth.php:4273 lib/auth.php:5387
 #, fuzzy, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Cacti."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4720
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Quản trị viên Cacti của bạn đã buộc mật khẩu phức tạp để đăng nhập và mật khẩu Cacti hiện tại của bạn không phù hợp với yêu cầu mới. Do đó, bạn phải thay đổi mật khẩu của bạn bây giờ."
 
-#: lib/auth.php:4390
+#: lib/auth.php:4751
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Mật khẩu phải có ít nhất% d ký tự!"
 
-#: lib/auth.php:4396
+#: lib/auth.php:4757
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự số!"
 
-#: lib/auth.php:4400
+#: lib/auth.php:4761
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Mật khẩu của bạn phải chứa hỗn hợp các ký tự chữ thường và chữ hoa!"
 
-#: lib/auth.php:4406
+#: lib/auth.php:4767
 msgid "Your password must contain at least 1 special character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
-#: lib/auth.php:4777
+#: lib/auth.php:5182
 msgid "Cacti Login Failure"
 msgstr "Nhật ký xương rồng đã bị xóa"
 
-#: lib/auth.php:5064
+#: lib/auth.php:5469
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Xác thực trước đó chưa được đặt. Đã cố gắng đặt thành Xác thực cục bộ, nhưng không tìm thấy tài khoản Quản trị viên nào."
 
