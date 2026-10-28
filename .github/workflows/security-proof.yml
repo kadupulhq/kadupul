@@ -62,6 +62,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          fetch-depth: 2
           persist-credentials: false
 
       # The classifier reads each page with nikic/php-parser, a locked dev
@@ -90,6 +91,25 @@ jobs:
       # entry point whose gate the generator cannot read from the code.
       - name: Verify entry-point gate inventory
         run: mise exec python@3.12.12 -- tests/security/verify_entry_point_inventory.sh
+
+      # Reads the baseline at the previous commit (HEAD^1: the base tip of a
+      # pull request's test merge, the queue base of a merge group, or the
+      # parent of a push), so a baseline edit cannot raise its own allowance.
+      - name: Verify legacy root web pages do not rise
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          # Only a manual or scheduled run has no previous commit to compare
+          # with, so it reports the count without enforcing it.
+          if [ "$EVENT" = pull_request ] || [ "$EVENT" = merge_group ] || [ "$EVENT" = push ]; then
+            mise exec python@3.12.12 -- python tests/security/check_legacy_page_ratchet.py --base HEAD^1
+          else
+            mise exec python@3.12.12 -- python tests/security/check_legacy_page_ratchet.py
+          fi
+
+      - name: Check the legacy page ratchet cases
+        run: mise exec python@3.12.12 -- python tests/security/test_check_legacy_page_ratchet.py
 
       - name: Check the inventory classifier fails closed
         run: mise exec python@3.12.12 -- python tests/security/test_entry_point_classifier.py
