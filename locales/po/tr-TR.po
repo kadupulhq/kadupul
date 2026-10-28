@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 20:31-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11609,41 +11609,41 @@ msgstr "Deseni Değiştir"
 msgid "No Tree Creation Criteria"
 msgstr "Ağaç Yaratma Kriteri Yok"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "Cihaz Eşleştirme Kuralı"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "Grafik Kuralı Oluştur"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "Grafik Eşleştirme Kuralı"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "Ağaç Kuralı Oluştur (Cihaz)"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "Ağaç Kuralı Oluştur (Grafik)"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "Kural Öğesi [ %s için kural öğesini düzenle: %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "Kural Öğesi [ %s için yeni kural öğesi: %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "Kadupul Automation tarafından eklendi"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "HATA: Aralık1-aralık2 biçimindeki IP aralıkları artık desteklenmiyor."
 

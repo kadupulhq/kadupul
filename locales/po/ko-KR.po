@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 20:31-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11570,41 +11570,41 @@ msgstr "패턴 교체"
 msgid "No Tree Creation Criteria"
 msgstr "트리 생성 기준 없음"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "기기 검색 규칙"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "그래프 규칙 만들기"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "그래프 일치 규칙"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "트리 규칙 생성 (장치)"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "트리 규칙 생성 (그래프)"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "규칙 항목 [ %s의 규칙 항목 편집 :  %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "규칙 항목 [ %s의 새 규칙 항목 :  %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "Kadupul Automation에 의해 추가됨"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "오류: range1-range2 형식의 IP 범위는 더 이상 지원되지 않습니다."
 

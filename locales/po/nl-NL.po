@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-27 20:31-0700\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11592,41 +11592,41 @@ msgstr "Patroon vervangen"
 msgid "No Tree Creation Criteria"
 msgstr "Criteria voor het aanmaken van een menuitem"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "Apparaat koppelregels"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "Grafiekregels"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "Grafiek koppelregels"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "Boomregel (apparaat) maken"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "Boomregel maken (grafiek)"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "Regelitem [wijzig regelitem voor %s: %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "Regelpost [nieuw regelitem voor %s: %s]."
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "Toegevoegd door Kadupul automation"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "FOUT: IP-bereiken in de vorm van bereik1-bereik2 worden niet langer ondersteund."
 
