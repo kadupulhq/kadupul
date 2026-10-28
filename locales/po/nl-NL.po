@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 12:58-0700\n"
+"POT-Creation-Date: 2026-10-27 16:55-0700\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -408,7 +408,7 @@ msgstr "Overeenkomende grafieken"
 #: lib/html_tree.php:967 managers.php:144 managers.php:503 managers.php:770
 #: plugins.php:491 pollers.php:869 rrdcleaner.php:519 settings.php:598
 #: settings.php:615 settings.php:674
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:56
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:938 tree.php:973 tree.php:1008 tree.php:2217 user_admin.php:2074
 #: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
 #: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
@@ -439,7 +439,7 @@ msgstr "Grafieken"
 #: lib/api_automation.php:718 lib/api_automation.php:1082
 #: lib/html_reports.php:2045 managers.php:154 managers.php:513 plugins.php:515
 #: pollers.php:879 rrdcleaner.php:545
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:81
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
 #: tree.php:2227 user_admin.php:2135 user_domains.php:18 user_domains.php:652
 #: user_domains.php:738 user_group_admin.php:2003 utilities.php:1076
 #: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
@@ -474,7 +474,7 @@ msgstr "Ga"
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
 #: pollers.php:914
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:95
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
 #: tree.php:2242 user_admin.php:2150 user_domains.php:664
 #: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
@@ -505,7 +505,7 @@ msgstr "Herstel"
 #: graphs.php:2105 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:96
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
 #: tree.php:2243 user_admin.php:2151 user_domains.php:665
 #: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
@@ -577,7 +577,7 @@ msgstr "Geaggregeerde grafieken"
 #: graph_view.php:699 graphs.php:2066 include/global_arrays.php:2898
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:59
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
 #: utilities.php:2094
 msgid "Template"
 msgstr "Template"
@@ -594,7 +594,7 @@ msgstr "Template"
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
 #: lib/html_reports.php:2035 managers.php:489 managers.php:780
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:61
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:65
 #: utilities.php:1064 utilities.php:1785 utilities.php:2098 utilities.php:2145
 #: utilities.php:2155 utilities.php:3135 utilities.php:3397 utilities.php:3413
 msgid "Any"
@@ -630,7 +630,7 @@ msgstr "Alle"
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
 #: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
 #: settings.php:591 settings.php:613 settings.php:644
-#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:62
+#: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
 msgid "None"
 msgstr "Geen"
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Er zijn problemen met de pagina Wachtwoord wijzigen.  Neem direct contact op met uw Kadupul-beheerder."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4265 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
 msgid "Change Password"
 msgstr "Wijzig wachtwoord"
 
@@ -793,7 +793,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Voer alstublieft uw huidige en uw nieuwe<br>Kadupul wachtwoord in."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6205
+#: include/global_settings.php:1851 lib/functions.php:6221
 msgid "Username"
 msgstr "Gebruikersnaam"
 
@@ -844,11 +844,11 @@ msgstr "Toegang geweigerd, neem alstublieft contact op uw Kadupul beheerder."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Toegang geweigerd, neem alstublieft contact op uw Kadupul beheerder."
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4505
-#: lib/auth.php:4556 lib/auth.php:4581 lib/auth.php:4604 lib/auth.php:4644
-#: lib/auth.php:4656 lib/auth.php:4679 lib/auth.php:4802 lib/auth.php:4822
-#: lib/auth.php:5034 lib/auth.php:5076 lib/auth.php:5086 lib/auth.php:5102
-#: lib/auth.php:5116 lib/auth.php:5154
+#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
+#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
+#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
+#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
+#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
 msgid "Access Denied!  Login Failed."
 msgstr "Toegang geweigerd, gebruikersaccount is uitgeschakeld."
 
@@ -886,7 +886,7 @@ msgstr "Gebruikerlogin"
 msgid "Enter your Username and Password below"
 msgstr "Voer uw gebruikersnaam en wachtwoord in"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6206
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
 msgid "Password"
 msgstr "Wachtwoord"
 
@@ -1193,7 +1193,7 @@ msgstr "Ontdekte apparaten verwijderen"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6564 lib/functions.php:6569
+#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2184,7 +2184,7 @@ msgstr "Versie"
 msgid "Community"
 msgstr "Community"
 
-#: automation_snmp.php:543 lib/functions.php:6201
+#: automation_snmp.php:543 lib/functions.php:6217
 msgid "Port"
 msgstr "Poort"
 
@@ -2394,8 +2394,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "Geen boomstructuur regels gevonden"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6709 lib/functions.php:6779
-#: lib/functions.php:6875 lib/functions.php:7536 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:387
 #, fuzzy
@@ -2416,12 +2416,12 @@ msgstr "Hulpprogramma's voor Kadupul"
 msgid "Notice: Kadupul Daemon PID["
 msgstr "Opmerking: Kadupul Daemon PID["
 
-#: cli/refresh_csrf.php:104 lib/functions.php:693 settings.php:295
+#: cli/refresh_csrf.php:104 lib/functions.php:694 settings.php:295
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "Instellingen opslaan op Dataverzamelaar %d Mislukt."
 
-#: cli/refresh_csrf.php:105 lib/functions.php:706 settings.php:307
+#: cli/refresh_csrf.php:105 lib/functions.php:707 settings.php:307
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "Instellingen opslaan op Dataverzamelaar %d Mislukt."
@@ -3428,7 +3428,7 @@ msgstr "De naam van dit data template. Let op dat u alleen grafiek templates kun
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1600
 #: include/global_arrays.php:957 include/global_arrays.php:1006
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/api_automation.php:426 lib/functions.php:6200 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Apparaat"
@@ -3787,7 +3787,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "De Kadupul Poller heeft nog niet gelopen."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8239 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Toegang geweigerd"
 
@@ -4731,17 +4731,17 @@ msgstr "U dient ingelogd te zijn om dit deel van Kadupul te gebruiken."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATALE FOUT: U dient ingelogd te zijn om dit deel van Kadupul te gebruiken."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5647
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Log nogmaals in"
 
-#: include/auth.php:317 lib/functions.php:8240
+#: include/auth.php:317 lib/functions.php:8256
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Als u van mening bent dat dit foutief is, neem dan alstublieft contact op met uw Kadupul beheerder."
 
-#: include/auth.php:317 lib/functions.php:8240
+#: include/auth.php:317 lib/functions.php:8256
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "U heeft geen toestemming voor dit deel van Kadupul."
@@ -6818,7 +6818,7 @@ msgid "List Mode"
 msgstr "Lijst modus"
 
 #: include/global_arrays.php:2068 include/global_arrays.php:2074
-#: lib/functions.php:4487 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Console"
@@ -8616,8 +8616,8 @@ msgstr "Data"
 msgid "Visual"
 msgstr "Visueel"
 
-#: include/global_settings.php:112 lib/functions.php:6204
-#: lib/functions.php:6209
+#: include/global_settings.php:112 lib/functions.php:6220
+#: lib/functions.php:6225
 msgid "Authentication"
 msgstr "Authenticatie"
 
@@ -8653,11 +8653,11 @@ msgstr "Grafiek lettertypes"
 msgid "PHP Mail() Function"
 msgstr "PHP mail() functie"
 
-#: include/global_settings.php:153 lib/functions.php:6185
+#: include/global_settings.php:153 lib/functions.php:6201
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6191
+#: include/global_settings.php:154 lib/functions.php:6207
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10515,7 +10515,7 @@ msgstr "Dit is het aantal karakters dat wordt toegestaan voordat een regel in de
 msgid "Sendmail Options"
 msgstr "Sendmail opties"
 
-#: include/global_settings.php:1972 lib/functions.php:6185
+#: include/global_settings.php:1972 lib/functions.php:6201
 msgid "Sendmail Path"
 msgstr "Sendmail path"
 
@@ -11710,8 +11710,8 @@ msgstr "Locatie:"
 msgid "Contact:"
 msgstr "Contactpersoon:"
 
-#: lib/api_device.php:1986 lib/functions.php:6218 lib/functions.php:6220
-#: lib/functions.php:6224
+#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
+#: lib/functions.php:6240
 msgid "Ping Results"
 msgstr "Ping resultaten"
 
@@ -11800,45 +11800,45 @@ msgstr "Web Basic Authentication is geconfigureerd, maar geen gebruikersnaam was
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s geautoriseerd door de webserver, maar zowel template als gast gebruikers zijn niet gedefinieerd in Kadupul."
 
-#: lib/auth.php:4616 lib/auth.php:4815
+#: lib/auth.php:4606 lib/auth.php:4805
 msgid "Access Denied!  No password provided by user."
 msgstr "Toegang geweigerd! Geen wachtwoord verstrekt door gebruiker."
 
-#: lib/auth.php:4788 lib/auth.php:5854
+#: lib/auth.php:4778 lib/auth.php:5844
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Toegang geweigerd! Sjabloongebruikers-ID %s bestaat niet.  Neem contact op met uw beheerder."
 
-#: lib/auth.php:4796
+#: lib/auth.php:4786
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5149
+#: lib/auth.php:5139
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Uw Kadupul-beheerder heeft complexe wachtwoorden voor aanmeldingen geforceerd en uw huidige Kadupul-wachtwoord komt niet overeen met de nieuwe vereisten. Daarom moet u nu uw wachtwoord wijzigen."
 
-#: lib/auth.php:5189
+#: lib/auth.php:5179
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Moet op zijn minst %d karakters lang zijn!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5185
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Het wachtwoord moet minstens 1 numeriek karakter bevatten!"
 
-#: lib/auth.php:5199
+#: lib/auth.php:5189
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Het wachtwoord moet een combinatie van kleine en hoofdletters bevatten!"
 
-#: lib/auth.php:5205
+#: lib/auth.php:5195
 msgid "Your password must contain at least 1 special character!"
 msgstr "Het wachtwoord moet tenminste 1 vreemd teken bevatten!"
 
-#: lib/auth.php:5640
+#: lib/auth.php:5630
 msgid "Kadupul Login Failure"
 msgstr "Kadupul log leeggemaakt"
 
-#: lib/auth.php:5940
+#: lib/auth.php:5930
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Verificatie was eerder niet ingesteld. Geprobeerd om lokale authenticatie in te stellen, maar er is geen beheerdersaccount gevonden."
 
@@ -12467,186 +12467,186 @@ msgstr "Geen problemen gevonden"
 msgid "RRDfile not created yet"
 msgstr "RRD Bestand niet bijgewerkt na polling"
 
-#: lib/functions.php:1230 lib/functions.php:1312
+#: lib/functions.php:1231 lib/functions.php:1313
 msgid "Message Not Found."
 msgstr "Bericht niet gevonden."
 
-#: lib/functions.php:1732
+#: lib/functions.php:1733
 #, php-format
 msgid "Error %s is not readable"
 msgstr "Fout %s is niet leesbaar"
 
-#: lib/functions.php:4241
+#: lib/functions.php:4257
 msgid "Logged in a Guest"
 msgstr "Ingelogd als"
 
-#: lib/functions.php:4241 lib/functions.php:4259
+#: lib/functions.php:4257 lib/functions.php:4275
 msgid "Logged in as"
 msgstr "Ingelogd als"
 
-#: lib/functions.php:4241
+#: lib/functions.php:4257
 msgid "Login as Regular User"
 msgstr "Log in als reguliere gebruiker"
 
-#: lib/functions.php:4241
+#: lib/functions.php:4257
 msgid "guest"
 msgstr "gast"
 
-#: lib/functions.php:4244 lib/functions.php:4269 lib/html.php:2770
+#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
 msgid "User Community"
 msgstr "Gebruikersgemeenschap"
 
-#: lib/functions.php:4245 lib/functions.php:4270 lib/html.php:2772
+#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Documentatie"
 
-#: lib/functions.php:4262
+#: lib/functions.php:4278
 #, php-format
 msgid "Logged in as %s"
 msgstr "Ingelogd als %s"
 
-#: lib/functions.php:4264 lib/html.php:2751
+#: lib/functions.php:4280 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "Wijzig profiel"
 
-#: lib/functions.php:4274 lib/html.php:2755
+#: lib/functions.php:4290 lib/html.php:2755
 msgid "Logout"
 msgstr "Uitloggen"
 
-#: lib/functions.php:4428
+#: lib/functions.php:4444
 msgid "Leaf"
 msgstr "Blad"
 
-#: lib/functions.php:4452 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Niet query gebaseerd"
 
-#: lib/functions.php:4490
+#: lib/functions.php:4506
 #, php-format
 msgid "Link %s"
 msgstr "Link %s"
 
-#: lib/functions.php:4952 tree.php:1804 tree.php:1878 tree.php:1986
+#: lib/functions.php:4968 tree.php:1804 tree.php:1878 tree.php:1986
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: lib/functions.php:5754
+#: lib/functions.php:5770
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Fout in de mailer: Nee <b>TO</b> adres ingesteld! <br>Als u de link <i>Test Mail</i> gebruikt, stelt u de instelling <b>Alert e-mail</b> in."
 
-#: lib/functions.php:6148
+#: lib/functions.php:6164
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Authenticatie mislukt: %s"
 
-#: lib/functions.php:6152
+#: lib/functions.php:6168
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO mislukt: %s"
 
-#: lib/functions.php:6155
+#: lib/functions.php:6171
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Mislukte verbindingen: %s"
 
-#: lib/functions.php:6158
+#: lib/functions.php:6174
 msgid "SMTP error: "
 msgstr "SMTP fout: "
 
-#: lib/functions.php:6172
+#: lib/functions.php:6188
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Dit is een testbericht van Kadupul.  Dit bericht werd verzonden om de configuratie van uw e-mailinstellingen te testen."
 
-#: lib/functions.php:6173
+#: lib/functions.php:6189
 msgid "Your email settings are currently set as follows"
 msgstr "Uw e-mail instellingen zijn momenteel als volgt"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6190
 msgid "Method"
 msgstr "Methode"
 
-#: lib/functions.php:6176
+#: lib/functions.php:6192
 msgid "Checking Configuration...<br>"
 msgstr "Configuratie controleren…<br>"
 
-#: lib/functions.php:6183
+#: lib/functions.php:6199
 msgid "PHP's Mailer Class"
 msgstr "PHP's Mailer Class"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6205
 msgid "Method: SMTP"
 msgstr "Methode: SMTP"
 
-#: lib/functions.php:6206
+#: lib/functions.php:6222
 msgid "Not Shown for Security Reasons"
 msgstr "Wordt vanwege beveiligingsredenen niet getoond"
 
-#: lib/functions.php:6207
+#: lib/functions.php:6223
 msgid "Security"
 msgstr "Beveiliging"
 
-#: lib/functions.php:6215
+#: lib/functions.php:6231
 msgid "Ping Results:"
 msgstr "Ping resultaten:"
 
-#: lib/functions.php:6215 lib/functions.php:6220
+#: lib/functions.php:6231 lib/functions.php:6236
 msgid "Success"
 msgstr "Gelukt"
 
-#: lib/functions.php:6224
+#: lib/functions.php:6240
 msgid "Bypassed"
 msgstr "Overgeslagen"
 
-#: lib/functions.php:6233
+#: lib/functions.php:6249
 msgid "Creating Message Text..."
 msgstr "Berichttekst maken....."
 
-#: lib/functions.php:6236
+#: lib/functions.php:6252
 msgid "Sending Message..."
 msgstr "Bericht wordt verstuurt..."
 
-#: lib/functions.php:6240
+#: lib/functions.php:6256
 msgid "Kadupul Test Message"
 msgstr "Kadupul testbericht"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6258
 msgid "Success!"
 msgstr "Gelukt!"
 
-#: lib/functions.php:6245
+#: lib/functions.php:6261
 msgid "Message Not Sent due to ping failure."
 msgstr "Bericht Niet verzonden als gevolg van een pingstoring."
 
-#: lib/functions.php:6709 lib/functions.php:6779
+#: lib/functions.php:6725 lib/functions.php:6795
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul uitgeschakeld plugin %s als gevolg van de volgende fout: %s!  Zie het Kadupul logbestand voor meer details."
 
-#: lib/functions.php:6875
+#: lib/functions.php:6891
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "WAARSCHUWING: PollerID:%s heeft een ongeldige hostnaam:%s.  Is het niet bereikbaar via DNS!"
 
-#: lib/functions.php:7299 lib/functions.php:7301
+#: lib/functions.php:7315 lib/functions.php:7317
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7299 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Versie %s %s"
 
-#: lib/functions.php:7301
+#: lib/functions.php:7317
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7536
+#: lib/functions.php:7552
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "WAARSCHUWING:  Kadupul bevatten bestand %s ontbreekt.  Zoek en vervang dit bestand"

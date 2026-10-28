@@ -3,8 +3,8 @@
     "name": "read_user_setting",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 547,
-        "end_line": 624,
+        "start_line": 548,
+        "end_line": 625,
         "line_count": 78,
         "signature": {
             "parameters": [
@@ -49,7 +49,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 137, "core_outside_functions_php": 134, "tests": 40, "plugins": 0},
+        "fan_out": {"core": 137, "core_outside_functions_php": 134, "tests": 42, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

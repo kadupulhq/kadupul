@@ -3,12 +3,12 @@
     "name": "get_cacti_version",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7282,
-        "end_line": 7291,
+        "start_line": 7298,
+        "end_line": 7307,
         "line_count": 10,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 27, "core_outside_functions_php": 25, "tests": 15, "plugins": 0},
+        "fan_out": {"core": 27, "core_outside_functions_php": 25, "tests": 17, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": ["version"],

@@ -416,6 +416,7 @@ if (defined('ADMIN_LIST_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionTemplateGrid.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php');
 }
 if (defined('REALM_RENDER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
@@ -516,6 +517,9 @@ if (defined('RRD_PROXY_DEADLINE_TEST_COVERAGE')) {
     foreach (RrdProxyDeadlineCoverageRegistration::HITS as $file) {
         $coverageFilter->includeFile($coverageRoot . '/' . $file);
     }
+}
+if (defined('RRD_NO_SHELL_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php');
 }
 if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();

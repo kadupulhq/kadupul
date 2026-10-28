@@ -3,8 +3,8 @@
     "name": "set_config_option",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 657,
-        "end_line": 731,
+        "start_line": 658,
+        "end_line": 732,
         "line_count": 75,
         "signature": {
             "parameters": [

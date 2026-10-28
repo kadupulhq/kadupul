@@ -151,7 +151,7 @@ if (isset_request_var('update_policy')) {
             break;
         case 'edit':
             top_header();
-            group_edit();
+            group_edit($item_rows);
             bottom_footer();
 
             break;
@@ -363,7 +363,7 @@ function form_actions()
 
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
     try {
-        $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(true);
+        $association_tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply(true, array_keys($_POST));
     } catch (\Kadupul\IdentityAccess\Infrastructure\Legacy\MissingPermissionGroup $error) {
         if (!$error->rollbackConfirmed) {
             throw $error;
@@ -685,13 +685,13 @@ function perm_remove()
     header('Location: user_group_admin.php?action=edit&header=false&tab=gperms&id=' . get_request_var('group_id'));
 }
 
-function user_group_members_edit($header_label)
+function user_group_members_edit($header_label, array $row_choices)
 {
     global $auth_realms;
 
     process_member_request_vars();
 
-    member_filter($header_label);
+    member_filter($header_label, $row_choices);
 
     /* if the number of rows is -1, set it to the default */
     if (get_request_var('rows') == -1) {
@@ -783,7 +783,7 @@ function user_group_members_edit($header_label)
     form_end();
 }
 
-function user_group_graph_perms_edit($tab, $header_label)
+function user_group_graph_perms_edit($tab, $header_label, array $row_choices)
 {
     global $config, $assoc_actions;
 
@@ -821,7 +821,7 @@ function user_group_graph_perms_edit($tab, $header_label)
                 $policy_note = __('<b>Note:</b> System Graph Policy is \'Graph Template\' meaning the User must have access to the Graph or Graph Template to gain access to the Graph');
             }
 
-            graph_filter($header_label);
+            graph_filter($header_label, $row_choices);
 
             form_start('user_group_admin.php', 'policy');
 
@@ -1007,7 +1007,7 @@ function user_group_graph_perms_edit($tab, $header_label)
         case 'permsd':
             process_device_request_vars();
 
-            device_filter($header_label);
+            device_filter($header_label, $row_choices);
 
             form_start('user_group_admin.php', 'policy');
 
@@ -1155,7 +1155,7 @@ function user_group_graph_perms_edit($tab, $header_label)
         case 'permste':
             process_template_request_vars();
 
-            template_filter($header_label);
+            template_filter($header_label, $row_choices);
 
             form_start('user_group_admin.php', 'policy');
 
@@ -1289,7 +1289,7 @@ function user_group_graph_perms_edit($tab, $header_label)
         case 'permstr':
             process_tree_request_vars();
 
-            tree_filter($header_label);
+            tree_filter($header_label, $row_choices);
 
             form_start('user_group_admin.php', 'policy');
 
@@ -1749,7 +1749,7 @@ function user_group_settings_edit($header_label)
     User Administration
    -------------------------- */
 
-function group_edit()
+function group_edit(array &$row_choices)
 {
     global $config, $fields_user_group_edit;
 
@@ -1865,7 +1865,7 @@ function group_edit()
                 header('Location: user_group_admin.php&header=false');
             }
 
-            user_group_graph_perms_edit(get_request_var('tab'), $header_label);
+            user_group_graph_perms_edit(get_request_var('tab'), $header_label, $row_choices);
 
             break;
         case 'members':
@@ -1873,7 +1873,7 @@ function group_edit()
                 header('Location: user_group_admin.php&header=false');
             }
 
-            user_group_members_edit($header_label);
+            user_group_members_edit($header_label, $row_choices);
 
             break;
         default:
@@ -2142,32 +2142,32 @@ function process_member_request_vars()
     \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionRequests::process(true, 'member');
 }
 
-function graph_filter($header_label)
+function graph_filter($header_label, array $row_choices)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permsg', __('Graph Permissions %s', $header_label), __('Graphs'), __('Only Show Exceptions'), 'graph_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render($row_choices, 'user_group_admin.php', 'edit', 'permsg', __('Graph Permissions %s', $header_label), __('Graphs'), __('Only Show Exceptions'), 'graph_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
-function device_filter($header_label)
+function device_filter($header_label, array $row_choices)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permsd', __('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render($row_choices, 'user_group_admin.php', 'edit', 'permsd', __('Devices Permission %s', $header_label), __('Devices'), __('Only Show Exceptions'), 'host_template_id', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
-function template_filter($header_label)
+function template_filter($header_label, array $row_choices)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permste', __('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render($row_choices, 'user_group_admin.php', 'edit', 'permste', __('Template Permission %s', $header_label), __('Templates'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
-function tree_filter($header_label)
+function tree_filter($header_label, array $row_choices)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'permstr', __('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render($row_choices, 'user_group_admin.php', 'edit', 'permstr', __('Tree Permission %s', $header_label), __('Trees'), __('Only Show Exceptions'), '', __x('filter: use', 'Go'), __x('filter: reset', 'Clear'));
 }
 
-function member_filter($header_label)
+function member_filter($header_label, array $row_choices)
 {
     require_once __DIR__ . '/src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php';
-    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render('user_group_admin.php', 'edit', 'members', $header_label, __('Users'), __('Show Members'), '', __x('filter: use', 'Go'), __x('filter reset', 'Clear'));
+    \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionFilter::render($row_choices, 'user_group_admin.php', 'edit', 'members', $header_label, __('Users'), __('Show Members'), '', __x('filter: use', 'Go'), __x('filter reset', 'Clear'));
 }

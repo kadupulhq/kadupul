@@ -3,8 +3,8 @@
     "name": "clog_admin",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6378,
-        "end_line": 6389,
+        "start_line": 6394,
+        "end_line": 6405,
         "line_count": 12,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

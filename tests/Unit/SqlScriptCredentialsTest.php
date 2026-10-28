@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -129,8 +131,6 @@ test('mysqladmin receives the credentials in a private option file, not its argu
         ->and($call['mode'])->toBe(0600)
         ->and($call['contents'])->toBe("[client]\nuser=\"poller\"\n" . ($password === '' ? '' : 'password=' . $quoted . "\n"))
         ->and($result['left'])->toBe(array());
-
-
 })->with(array('sql.php', 'ss_sql.php'))->with(array(
     'no password' => '',
     'quotes, backslashes, comment and spaces' => "p\"q\\x #y z'w caf\u{e9}",
