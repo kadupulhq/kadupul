@@ -20,6 +20,12 @@ use Kadupul\Platform\Contract\DatabaseConnection;
  */
 final readonly class InstallationBoostImageCache implements BoostImageCache
 {
+    /**
+     * BOOST_PNG_TEMP_PREFIX in lib/boost.php. A write interrupted before its rename leaves a file
+     * with this prefix that nothing else removes while the scheduler owns the purge.
+     */
+    private const string TEMP_PREFIX = 'boost_png_tmp_';
+
     public function __construct(private DatabaseConnection $database, private string $projectDir) {}
 
     #[\Override]
@@ -40,7 +46,7 @@ final readonly class InstallationBoostImageCache implements BoostImageCache
 
         $removed = 0;
         foreach ($names as $name) {
-            if (preg_match(BoostGraphCacheKey::FILE_PATTERN, $name) !== 1) {
+            if (preg_match(BoostGraphCacheKey::FILE_PATTERN, $name) !== 1 && !str_starts_with($name, self::TEMP_PREFIX)) {
                 continue;
             }
             $path = $directory . '/' . $name;

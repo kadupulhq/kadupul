@@ -96,16 +96,36 @@ final class BoostImageCacheCommandTest extends TestCase
         symlink($outside, $link);
         $notes = $this->file('notes.txt', 7200);
         $foreignPng = $this->file('other.png', 7200);
-        $temp = $this->file('boost_png_tmp_0123456789abcdef', 7200);
         mkdir($this->cache . '/modern_lgi_9_rrai_1_rk_' . self::HASH . '.png');
 
         self::assertSame(0, $this->configured()->purgeOlderThan(3600));
         self::assertTrue(is_link($link));
         self::assertFileExists($outside);
-        foreach ([$notes, $foreignPng, $temp] as $kept) {
+        foreach ([$notes, $foreignPng] as $kept) {
             self::assertFileExists($kept);
         }
         self::assertDirectoryExists($this->cache . '/modern_lgi_9_rrai_1_rk_' . self::HASH . '.png');
+    }
+
+    public function testDeletesExpiredTempFilesLeftByInterruptedWrites(): void
+    {
+        self::assertSame(1, preg_match("/define\\('BOOST_PNG_TEMP_PREFIX', '([^']+)'\\);/", (string) file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), $prefix));
+        $old = $this->file($prefix[1] . '0123456789abcdef', 7200);
+        $fresh = $this->file($prefix[1] . 'fedcba9876543210', 60);
+        $outside = $this->base . '/outside';
+        file_put_contents($outside, 'image');
+        touch($outside, time() - 7200);
+        $link = $this->cache . '/' . $prefix[1] . 'aaaaaaaaaaaaaaaa';
+        symlink($outside, $link);
+        mkdir($this->cache . '/' . $prefix[1] . 'bbbbbbbbbbbbbbbb');
+        touch($this->cache . '/' . $prefix[1] . 'bbbbbbbbbbbbbbbb', time() - 7200);
+
+        self::assertSame(1, $this->configured()->purgeOlderThan(3600));
+        self::assertFileDoesNotExist($old);
+        self::assertFileExists($fresh);
+        self::assertTrue(is_link($link));
+        self::assertFileExists($outside);
+        self::assertDirectoryExists($this->cache . '/' . $prefix[1] . 'bbbbbbbbbbbbbbbb');
     }
 
     public function testSymlinkedCacheDirectoryOutsideTheInstallationIsRefused(): void

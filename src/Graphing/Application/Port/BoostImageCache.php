@@ -14,8 +14,9 @@ interface BoostImageCache
     public function isEnabled(): bool;
 
     /**
-     * Deletes the regular files Boost names for cached graphs, directly inside the configured
-     * cache directory and older than $seconds. Symlinks, other names and subdirectories are left.
+     * Deletes the regular files Boost names for cached graphs, and the temporary files an
+     * interrupted cache write leaves, directly inside the configured cache directory and older
+     * than $seconds. Symlinks, other names and subdirectories are left.
      *
      * @return int the number of files removed
      * @throws BoostImageCacheUnavailable when the cache directory is not configured or cannot be used
