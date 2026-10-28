@@ -1191,7 +1191,9 @@ function data_query_edit()
         $replace      = array($config['base_path'], read_config_option('path_snmpget'), read_config_option('path_php_binary'));
         $xml_filename = str_replace($search, $replace, $snmp_query['xml_path']);
 
-        if ((file_exists($xml_filename)) && (is_file($xml_filename))) {
+        // Report only a file get_data_query_array() would read, so this page
+        // cannot say whether an arbitrary path exists (GHSA-2x86-jpm8-9vgp).
+        if (cacti_path_is_within($xml_filename, $config['base_path'] . '/resource') && is_file($xml_filename)) {
             $text = "<span class='deviceUp'>" . __('Successfully located XML file') . "</span>";
             $xml_file_exists = true;
         } else {

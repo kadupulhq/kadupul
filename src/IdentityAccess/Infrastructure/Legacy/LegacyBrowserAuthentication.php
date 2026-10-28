@@ -344,23 +344,55 @@ final readonly class LegacyBrowserAuthentication
         return $username;
     }
 
+    /** Resolve the client exactly as get_client_addr() does for legacy pages. */
     private function nativeIp(Request $request, array $config): ?string
     {
-        $configured = $config['proxy_headers'] ?? [];
-        $headers = $configured === true ? self::PROXY_HEADERS : (is_array($configured) ? array_values(array_intersect($configured, self::PROXY_HEADERS)) : []);
-        $headers[] = 'REMOTE_ADDR';
-        foreach ($headers as $header) {
-            $native = $_SERVER[$header] ?? null;
-            if (!is_string($native) || $request->server->get($header) !== $native) {
+        $peer = $this->nativeServer($request, 'REMOTE_ADDR');
+        if ($peer === null || !filter_var($peer, FILTER_VALIDATE_IP)) {
+            return null;
+        }
+        // Forwarded headers are client input unless REMOTE_ADDR is an exact
+        // configured proxy; legacy login binds remember tokens the same way.
+        $trusted = $config['proxy_trusted_addresses'] ?? [];
+        if (!is_array($trusted) || !$this->trustedProxy($peer, $trusted)) {
+            return $peer;
+        }
+        $headers = $config['proxy_headers'] ?? [];
+        if (!is_array($headers) || count($headers) !== 1) {
+            return null;
+        }
+        $header = reset($headers);
+        if (!is_string($header) || $header === 'REMOTE_ADDR' || !in_array($header, self::PROXY_HEADERS, true)) {
+            return null;
+        }
+        $client = $this->nativeServer($request, $header);
+        if ($client === null || str_contains($client, ',') || !filter_var(trim($client), FILTER_VALIDATE_IP)) {
+            return null;
+        }
+        return trim($client);
+    }
+
+    /** @param array<mixed> $trusted */
+    private function trustedProxy(string $peer, array $trusted): bool
+    {
+        $packed = inet_pton($peer);
+        foreach ($trusted as $proxy) {
+            if (!is_string($proxy) || !filter_var($proxy, FILTER_VALIDATE_IP)) {
                 continue;
             }
-            foreach (explode(',', $native) as $address) {
-                if (filter_var($address, FILTER_VALIDATE_IP)) {
-                    return $address;
-                }
+            $candidate = inet_pton($proxy);
+            if ($packed !== false && $candidate !== false && hash_equals($packed, $candidate)) {
+                return true;
             }
         }
-        return null;
+        return false;
+    }
+
+    /** A server value counts only when the request was built from the native globals. */
+    private function nativeServer(Request $request, string $name): ?string
+    {
+        $native = $_SERVER[$name] ?? null;
+        return is_string($native) && $request->server->get($name) === $native ? $native : null;
     }
 
     private function record(?Actor $actor, string $reason, string $outcome): void

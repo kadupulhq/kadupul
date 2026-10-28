@@ -468,109 +468,29 @@ function api_plugin_db_table_create($plugin, $table, $data)
 
     include_once($config['library_path'] . '/database.php');
 
-    $result = db_fetch_assoc('SHOW TABLES');
-    $tables = array();
-    foreach ($result as $index => $arr) {
-        foreach ($arr as $t) {
-            $tables[] = $t;
-        }
+    if (!db_is_safe_identifier($table)) {
+        return;
     }
 
-    if (!in_array($table, $tables)) {
-        $c = 0;
-        $sql = 'CREATE TABLE `' . $table . "` (\n";
-        foreach ($data['columns'] as $column) {
-            if (isset($column['name'])) {
-                if ($c > 0) {
-                    $sql .= ",\n";
-                }
-
-                $sql .= '`' . $column['name'] . '`';
-
-                if (isset($column['type'])) {
-                    $sql .= ' ' . $column['type'];
-                }
-
-                if (isset($column['unsigned'])) {
-                    $sql .= ' unsigned';
-                }
-
-                if (isset($column['NULL']) && $column['NULL'] == false) {
-                    $sql .= ' NOT NULL';
-                }
-
-                if (isset($column['NULL']) && $column['NULL'] == true && !isset($column['default'])) {
-                    $sql .= ' default NULL';
-                }
-
-                if (isset($column['default'])) {
-                    if (strtolower($column['type']) == 'timestamp' && $column['default'] === 'CURRENT_TIMESTAMP') {
-                        $sql .= ' default CURRENT_TIMESTAMP';
-                    } else {
-                        $sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : "'" . $column['default'] . "'");
-                    }
-                }
-
-                if (isset($column['auto_increment'])) {
-                    $sql .= ' auto_increment';
-                }
-
-                $c++;
-            }
-        }
-
-        if (isset($data['primary'])) {
-            $sql .= ",\n PRIMARY KEY (`" . $data['primary'] . '`)';
-        }
-
-        if (isset($data['keys']) && cacti_sizeof($data['keys'])) {
-            foreach ($data['keys'] as $key) {
-                if (isset($key['name'])) {
-                    $sql .= ",\n INDEX `" . $key['name'] . '` (' . db_format_index_create($key['columns']) . ')';
-                }
-            }
-        }
-
-        if (isset($data['unique_keys'])) {
-            foreach ($data['unique_keys'] as $key) {
-                if (isset($key['name'])) {
-                    $sql .= ",\n UNIQUE INDEX `" . $key['name'] . '` (' . db_format_index_create($key['columns']) . ')';
-                }
-            }
-        }
-
-        $sql .= ') ENGINE = ' . $data['type'];
-
-        if (isset($data['charset'])) {
-            $sql .= ' DEFAULT CHARSET = ' . $data['charset'];
-        }
-
-        if (isset($data['row_format']) && strtolower(db_get_global_variable('innodb_file_format')) == 'barracuda') {
-            $sql .= ' ROW_FORMAT = ' . $data['row_format'];
-        }
-
-        if (isset($data['comment'])) {
-            $sql .= " COMMENT = '" . $data['comment'] . "'";
-        }
-
-        if (db_execute($sql)) {
+    if (!db_table_exists($table, false)) {
+        if (db_table_create($table, $data)) {
             db_execute_prepared(
                 "REPLACE INTO plugin_db_changes
 				(plugin, `table`, `column`, `method`)
 				VALUES (?, ?, '', 'create')",
                 array($plugin, $table)
             );
-
-            if (isset($data['collate'])) {
-                db_execute("ALTER TABLE `$table` COLLATE = " . $data['collate']);
-            }
         }
     }
 }
 
 function api_plugin_drop_table($table)
 {
-    db_execute("DROP TABLE IF EXISTS $table");
+    if (!db_is_safe_identifier($table)) {
+        return;
+    }
+
+    db_execute("DROP TABLE IF EXISTS `$table`");
 
     api_plugin_drop_remote_table($table);
 }
@@ -588,8 +508,10 @@ function api_plugin_db_changes_remove($plugin)
 
     if (cacti_count($tables)) {
         foreach ($tables as $table) {
-            db_execute('DROP TABLE IF EXISTS `' . $table['table'] . '`;');
-            api_plugin_drop_remote_table($table['table']);
+            if (db_is_safe_identifier($table['table'])) {
+                db_execute('DROP TABLE IF EXISTS `' . $table['table'] . '`;');
+                api_plugin_drop_remote_table($table['table']);
+            }
         }
 
         db_execute_prepared(
@@ -612,7 +534,9 @@ function api_plugin_db_changes_remove($plugin)
 
     if (cacti_count($columns)) {
         foreach ($columns as $column) {
-            db_execute('ALTER TABLE `' . $column['table'] . '` DROP `' . $column['column'] . '`');
+            if (db_is_safe_identifier($column['table']) && db_is_safe_identifier($column['column'])) {
+                db_execute('ALTER TABLE `' . $column['table'] . '` DROP `' . $column['column'] . '`');
+            }
         }
 
         db_execute_prepared(
@@ -634,57 +558,23 @@ function api_plugin_db_add_column($plugin, $table, $column)
 
     include_once($config['library_path'] . '/database.php');
 
-    $result = db_fetch_assoc('SHOW COLUMNS FROM `' . $table . '`');
-    $columns = array();
-    foreach ($result as $index => $arr) {
-        foreach ($arr as $t) {
-            $columns[] = $t;
-        }
+    if (!db_is_safe_identifier($table) || !db_is_safe_column_definition($column)) {
+        return;
     }
 
-    if (isset($column['name']) && !in_array($column['name'], $columns)) {
-        $sql = 'ALTER TABLE `' . $table . '` ADD `' . $column['name'] . '`';
+    $result = db_fetch_assoc('SHOW COLUMNS FROM `' . $table . '`');
+    $columns = array();
+    foreach ($result as $arr) {
+        $columns[] = $arr['Field'];
+    }
 
-        if (isset($column['type'])) {
-            $sql .= ' ' . $column['type'];
-        }
-
-        if (isset($column['unsigned'])) {
-            $sql .= ' unsigned';
-        }
-
-        if (isset($column['NULL']) && $column['NULL'] == false) {
-            $sql .= ' NOT NULL';
-        }
-
-        if (isset($column['NULL']) && $column['NULL'] == true && !isset($column['default'])) {
-            $sql .= ' default NULL';
-        }
-
-        if (isset($column['default'])) {
-            if (strtolower($column['type']) == 'timestamp' && $column['default'] === 'CURRENT_TIMESTAMP') {
-                $sql .= ' default CURRENT_TIMESTAMP';
-            } else {
-                $sql .= ' default ' . (is_numeric($column['default']) ? $column['default'] : "'" . $column['default'] . "'");
-            }
-        }
-
-        if (isset($column['auto_increment'])) {
-            $sql .= ' auto_increment';
-        }
-
-        if (isset($column['after'])) {
-            $sql .= ' AFTER ' . $column['after'];
-        }
-
-        if (db_execute($sql)) {
-            db_execute_prepared(
-                "INSERT INTO plugin_db_changes
+    if (!in_array($column['name'], $columns, true) && db_add_column($table, $column)) {
+        db_execute_prepared(
+            "INSERT INTO plugin_db_changes
 				(plugin, `table`, `column`, `method`)
 				VALUES (?, ?, ?, 'addcolumn')",
-                array($plugin, $table, $column['name'])
-            );
-        }
+            array($plugin, $table, $column['name'])
+        );
     }
 }
 
@@ -1015,6 +905,10 @@ function api_plugin_drop_remote_table($table)
 
     include_once($config['base_path'] . '/lib/poller.php');
 
+    if (!db_is_safe_identifier($table)) {
+        return;
+    }
+
     $gone_time = read_config_option('poller_interval') * 2;
 
     $pollers = array_rekey(
@@ -1033,7 +927,7 @@ function api_plugin_drop_remote_table($table)
             $rcnn_id = poller_connect_to_remote($poller_id);
 
             if ($rcnn_id !== false) {
-                db_execute("DROP TABLE IF EXISTS $table", false, $rcnn_id);
+                db_execute("DROP TABLE IF EXISTS `$table`", false, $rcnn_id);
             }
         }
     }

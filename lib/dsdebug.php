@@ -379,6 +379,12 @@ function dsdebug_run_repair($id)
                 $failure_data = '';
 
                 foreach ($check['info']['rrd_match_array']['tune'] AS $options) {
+                    if (strpbrk($options, "\r\n\0") !== false) {
+                        cacti_log("ERROR: RRDfile repair command skipped for DS[$id]. It contains a line break or NUL.", false, 'DSDEBUG');
+                        $failures++;
+                        continue;
+                    }
+
                     $command    = $rrdtool_path . ' tune ' . $options;
 
                     $output = rrdtool_execute('tune ' . $options, false, RRDTOOL_OUTPUT_RETURN_STDERR);

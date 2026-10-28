@@ -147,15 +147,15 @@ function exec_background($filename, $args = '', $redirect_args = '')
                 pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
             }
         } elseif ($redirect_args == '') {
-            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
+            exec(cacti_escapeshellarg($filename) . ' ' . $args . ' > /dev/null 2>&1 &');
         } else {
-            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
+            exec(cacti_escapeshellarg($filename) . ' ' . $args . ' ' . $redirect_args . ' &');
         }
     } elseif (file_exists_2gb($filename)) {
         if ($redirect_args == '') {
-            exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
+            exec(cacti_escapeshellarg($filename) . ' ' . $args . ' > /dev/null 2>&1 &');
         } else {
-            exec($filename . ' ' . $args . ' ' . $redirect_args . ' &');
+            exec(cacti_escapeshellarg($filename) . ' ' . $args . ' ' . $redirect_args . ' &');
         }
     }
 }

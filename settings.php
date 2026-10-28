@@ -99,7 +99,10 @@ switch (get_request_var('action')) {
                 } else {
                     $continue = true;
 
-                    if ($field_name == 'path_cactilog' || $field_name == 'path_stderrlog') {
+                    // Boost writes its debug log to this path, so a blank value turns
+                    // it off and any other value must name a .log file (GHSA-m6wx-f538-m6q3).
+                    if ($field_name == 'path_cactilog' || $field_name == 'path_stderrlog'
+                        || ($field_name == 'path_boost_log' && get_nfilter_request_var($field_name) != '')) {
                         $extension = pathinfo(get_nfilter_request_var($field_name), PATHINFO_EXTENSION);
 
                         if ($extension != 'log') {
@@ -108,7 +111,11 @@ switch (get_request_var('action')) {
                             $errors[9] = 9;
                             $continue = false;
                         }
-                    } elseif (get_nfilter_request_var($field_name) != '' && !is_valid_pathname(get_nfilter_request_var($field_name))) {
+                    }
+
+                    // The Boost log keeps the path name check other file paths get.
+                    if ($continue && $field_name != 'path_cactilog' && $field_name != 'path_stderrlog'
+                        && get_nfilter_request_var($field_name) != '' && !is_valid_pathname(get_nfilter_request_var($field_name))) {
                         $_SESSION['sess_error_fields'][$field_name] = $field_name;
                         $_SESSION['sess_field_values'][$field_name] = get_nfilter_request_var($field_name);
                         $errors[36] = 36;

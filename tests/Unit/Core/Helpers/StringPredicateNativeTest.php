@@ -113,7 +113,7 @@ test('native predicates preserve rendering redirects and resource replication', 
 
         $this->assertStringContainsString('host.php?page=1', $result['pages'][0]);
         $this->assertStringContainsString('host.php?filter=x&amp;page=1', $result['pages'][1]);
-        $this->assertSame(['`name`', 'name(10)', '`name`,value(10)'], $result['indexes']);
+        $this->assertSame(['`name`', '`name`(10)', '`name`,`value`(10)'], $result['indexes']);
         $this->assertSame([true, false, false], $result['quoted']);
         $this->assertSame(['/base/file', '/base/file'], $result['paths']);
         $this->assertSame(0, (int) $result['core_config_cached']);
