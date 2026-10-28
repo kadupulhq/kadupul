@@ -1216,13 +1216,14 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
             $replacement = automation_string_replace($item['search_pattern'], $item['replace_pattern'], $template['source']);
             /* build multiline <td> entry */
 
+            // Device and data query fields supply both values; escape them and keep the <br> layout.
             $repl = '';
             for ($j = 0; cacti_sizeof($replacement); $j++) {
                 if ($j > 0) {
                     $repl .= '<br>';
-                    $repl .= str_pad('', $j * 3, '-') . '&nbsp;' . array_shift($replacement);
+                    $repl .= str_pad('', $j * 3, '-') . '&nbsp;' . html_escape((string) array_shift($replacement));
                 } else {
-                    $repl  = array_shift($replacement);
+                    $repl  = html_escape((string) array_shift($replacement));
                 }
             }
             cacti_log($function . " replacement: $repl", false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
@@ -1232,7 +1233,7 @@ function display_matching_trees($rule_id, $rule_type, $item, $url)
             form_selectable_cell(filter_value($template['hostname'], get_request_var('filter')), $template['host_id']);
             form_selectable_cell(filter_value($template['host_template_name'], get_request_var('filter')), $template['host_id']);
             form_selectable_cell(get_colored_device_status(($template['disabled'] == 'on' ? true : false), $template['status']), $template['host_id']);
-            form_selectable_cell($template['source'], $template['host_id']);
+            form_selectable_ecell($template['source'], $template['host_id']);
             form_selectable_cell($repl, $template['host_id']);
             form_end_row();
         }

@@ -112,6 +112,7 @@
       <file>Unit/Security/Auth/LocalLoginPolicyTest.php</file>
       <file>Unit/Security/Auth/LocalPasswordRehashTest.php</file>
       <file>Unit/Security/Auth/SessionlessPermissionResetTest.php</file>
+      <file>Unit/Security/AutomationPreviewAndSnmpCredentialTest.php</file>
       <file>Unit/Security/Auth/CredentialGenerationRehashTest.php</file>
       <file>Unit/Security/Auth/CredentialPreferenceIsolationTest.php</file>
       <file>Unit/Security/Auth/GroupChangeResetsPermsTest.php</file>

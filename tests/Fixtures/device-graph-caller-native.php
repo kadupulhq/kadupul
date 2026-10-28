@@ -409,6 +409,7 @@ if ($scenario['api'] ?? false) {
     $database_default = 'fixture';
     $database_sessions = ['owned:0:fixture' => $db];
     $values = ['id' => $scenario['id'] ?? 12,'device_template_id' => 0,'description' => 'API changed','hostname' => 'localhost','snmp_community' => '','snmp_version' => 1,'snmp_username' => '','snmp_password' => '','snmp_port' => 161,'snmp_timeout' => 500,'disabled' => '','availability_method' => 1,'ping_method' => 1,'ping_port' => 0,'ping_timeout' => 500,'ping_retries' => 1,'notes' => '','snmp_auth_protocol' => '','snmp_priv_passphrase' => '','snmp_priv_protocol' => '','snmp_context' => '','snmp_engine_id' => '','max_oids' => 5,'device_threads' => 1,'poller_id' => 1,'site_id' => 0,'external_id' => '','location' => '','bulk_walk_size' => -1];
+    $values = array_replace($values, $scenario['api_values'] ?? []);
     $reflection = new ReflectionFunction('api_device_save');
     $arguments = [];
     foreach ($reflection->getParameters() as $parameter) {
