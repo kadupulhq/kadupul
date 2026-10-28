@@ -33,9 +33,7 @@ ob_end_clean();
 $masterChild = null;
 if (function_exists('pcntl_signal')) {
     pcntl_async_signals(true);
-    $stopChild = static function (): never {
-        global $masterChild;
-
+    $stopChild = static function () use (&$masterChild): never {
         if ($masterChild instanceof Process && $masterChild->isRunning()) {
             // stop() sends SIGTERM itself so the master can release its locks; the
             // signal argument is what follows once the 5 s grace has passed.
@@ -55,7 +53,7 @@ try {
     $force = is_array($command) ? ($command['force'] ?? null) : null;
     $debug = is_array($command) ? ($command['debug'] ?? null) : null;
     if (is_bool($force) && is_bool($debug)) {
-        $result = legacy_boost_master($force, $debug);
+        $result = legacy_boost_master($force, $debug, $config, $masterChild);
     }
 } catch (\Throwable $failure) {
     // The class gives operators a cause; the message could carry data values.
@@ -64,11 +62,12 @@ try {
 print 'BOOST_MASTER=' . json_encode($result) . PHP_EOL;
 exit($result['status'] === 'failed' ? 1 : 0);
 
-/** @return array{status: string} */
-function legacy_boost_master(bool $force, bool $debug): array
+/**
+ * @param array<string, mixed> $config
+ * @return array{status: string}
+ */
+function legacy_boost_master(bool $force, bool $debug, array $config, ?Process &$masterChild): array
 {
-    global $config, $masterChild;
-
     $php = read_config_option('path_php_binary');
     if (!is_string($php) || $php === '' || !is_executable($php)) {
         $php = PHP_BINARY;

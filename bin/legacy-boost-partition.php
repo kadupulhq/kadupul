@@ -27,9 +27,7 @@ require __DIR__ . '/../include/cli_check.php';
 $partitionChild = null;
 if (function_exists('pcntl_signal')) {
     pcntl_async_signals(true);
-    $stopChild = static function (): never {
-        global $partitionChild;
-
+    $stopChild = static function () use (&$partitionChild): never {
         if ($partitionChild instanceof Process && $partitionChild->isRunning()) {
             // stop() sends SIGTERM itself so the child can release its locks; the
             // signal argument is what follows once the 5 s grace has passed.
@@ -50,7 +48,7 @@ try {
     $run = is_array($command) ? ($command['run'] ?? null) : null;
     $partition = is_array($command) ? ($command['partition'] ?? null) : null;
     if (is_string($run) && preg_match('/^[0-9a-f]{32}$/D', $run) === 1 && is_int($partition) && $partition >= 1) {
-        $result = legacy_boost_partition($run, $partition);
+        $result = legacy_boost_partition($run, $partition, $config, $partitionChild);
     }
 } catch (\Throwable $failure) {
     // The class gives operators a cause; the message could carry data values.
@@ -60,11 +58,12 @@ ob_end_clean();
 print 'BOOST_PARTITION=' . json_encode($result) . PHP_EOL;
 exit($result['status'] === 'failed' ? 1 : 0);
 
-/** @return array{status: string, rows?: int} */
-function legacy_boost_partition(string $run, int $partition): array
+/**
+ * @param array<string, mixed> $config
+ * @return array{status: string, rows?: int}
+ */
+function legacy_boost_partition(string $run, int $partition, array $config, ?Process &$partitionChild): array
 {
-    global $config, $partitionChild;
-
     // The master clears this setting when it stops waiting; a late message
     // must not flush data the master already counted as failed.
     if (read_config_option('boost_active_run', true) !== $run) {

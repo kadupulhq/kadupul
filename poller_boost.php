@@ -223,7 +223,7 @@ if ($child == false) {
                 set_config_option('boost_active_run', $run_id);
 
                 try {
-                    boost_dispatch_partitions($run_id, $expected_children);
+                    boost_dispatch_partitions($run_id, $expected_children, $config['base_path']);
 
                     while (true) {
                         $reported = (int) db_fetch_cell_prepared('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ?', array($run_id));
@@ -403,11 +403,9 @@ function sig_handler($signo)
 }
 
 /** Queue mode: hand the run's partitions to the Messenger transport. */
-function boost_dispatch_partitions(string $run_id, int $partitions): void
+function boost_dispatch_partitions(string $run_id, int $partitions, string $base_path): void
 {
-    global $config;
-
-    $kernel = require $config['base_path'] . '/config/bootstrap.php';
+    $kernel = require $base_path . '/config/bootstrap.php';
 
     try {
         $kernel->boot();
