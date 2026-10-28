@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  merge_group:
   schedule:
     # Rulesets change even when the code does not. Catch that weekly.
     - cron: '17 6 * * 1'
@@ -19,7 +20,7 @@ concurrency:
 jobs:
   semgrep:
     name: Semgrep
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 20
     permissions:
       contents: read
@@ -51,7 +52,7 @@ jobs:
       - name: Scan
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
         run: |
           set -euo pipefail
           configs=(--config p/php --config p/javascript --config p/typescript
@@ -60,10 +61,10 @@ jobs:
           [ -f .semgrep.yml ] && configs+=(--config .semgrep.yml)
           [ -d tests/security/semgrep ] && configs+=(--config tests/security/semgrep)
 
-          # A pull request blocks on new findings only. Everything else
-          # reports the whole tree and does not block.
+          # A pull request or merge group blocks on new findings only.
+          # Everything else reports the whole tree and does not block.
           gate=()
-          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ] || [ "${GITHUB_EVENT_NAME}" = "merge_group" ]; then
             git fetch --no-tags --depth=1 origin "${BASE_SHA}"
             gate=(--baseline-commit "${BASE_SHA}" --error)
           fi
@@ -107,7 +108,7 @@ jobs:
     # Needs the dependency graph, which is another Code Security feature on a
     # private repository. Turns itself on with the repository.
     if: ${{ github.event_name == 'pull_request' && !github.event.repository.private }}
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     permissions:
       contents: read
       pull-requests: write
@@ -121,3 +122,27 @@ jobs:
           comment-summary-in-pr: on-failure
           # A dependency that is not redistributable under GPL-3.0 cannot ship.
           deny-licenses: AGPL-1.0-or-later, AGPL-3.0-or-later, SSPL-1.0, BUSL-1.1, Elastic-2.0
+
+  security-result:
+    name: Security result
+    # Always reports: a required check reads a skipped job as passing.
+    # Dependency review runs only on pull requests in a public repository.
+    if: ${{ !cancelled() }}
+    needs:
+      - semgrep
+      - dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools/require_job_results.sh
+          sparse-checkout-cone-mode: false
+      - name: Require every gating job to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ${{ (github.event_name != 'pull_request' || github.event.repository.private) && 'dependencies' || '' }}
+        run: bash tests/tools/require_job_results.sh

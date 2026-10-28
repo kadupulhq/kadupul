@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  merge_group:
 
 permissions:
   contents: read
@@ -60,7 +61,7 @@ jobs:
   runtime-floor:
     timeout-minutes: 15
     name: PHP runtime boundary (${{ matrix.php }})
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
       matrix:
         # 8.3 is a rejection test, not a supported application runtime.
@@ -362,7 +363,7 @@ jobs:
   php:
     timeout-minutes: 60
     name: PHP ${{ matrix.php }}
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -495,6 +496,61 @@ jobs:
         working-directory: tests
         run: php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --bootstrap=bootstrap-unit.php Unit/Forms/LegacyFormGoldenTest.php --colors=never
 
+      - name: Preserve legacy suite execution evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: legacy-suite-evidence-${{ matrix.php }}
+          retention-days: 14
+          path: ${{ runner.temp }}/authentication-native.xml
+          if-no-files-found: error
+
+  # The two spike-removal runs took 13 of the 18 minutes of PHP 8.4. They run
+  # here, in parallel, with the same PHP, dependencies and built assets.
+  spike-removal:
+    timeout-minutes: 45
+    name: Spike-removal contracts
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.4'
+          extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
+          coverage: none
+          tools: composer
+
+      - name: Locate Composer download cache
+        id: composer-cache
+        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - name: Cache Composer downloads
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.directory }}
+          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
+          restore-keys: |
+            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.22.2'
+          cache: npm
+
+      - name: Build installed browser assets for compatibility tests
+        run: npm ci --ignore-scripts && npm run build
+
+      - name: Compile browser assets
+        run: php bin/console asset-map:compile
+
+      - name: Install isolated test runner
+        run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
+
       - name: Install RRDtool for spike-removal contracts
         run: sudo apt-get update && sudo apt-get install -y rrdtool
 
@@ -512,16 +568,15 @@ jobs:
         working-directory: tests
         run: php tools/verify_pest_inventory.php phpunit-spikekill.xml "$RUNNER_TEMP/legacy-normal.xml" "$RUNNER_TEMP/legacy-privileged.xml"
 
-      - name: Preserve legacy suite execution evidence
+      - name: Preserve spike-removal execution evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: legacy-suite-evidence-${{ matrix.php }}
+          name: spike-removal-evidence
           retention-days: 14
           path: |
             ${{ runner.temp }}/legacy-normal.xml
             ${{ runner.temp }}/legacy-privileged.xml
-            ${{ runner.temp }}/authentication-native.xml
           if-no-files-found: error
 
   application-smoke:
@@ -529,7 +584,7 @@ jobs:
       contents: read
       packages: read
     name: Install, login and poller smoke
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -626,7 +681,7 @@ jobs:
   style:
     timeout-minutes: 20
     name: Code style
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -657,17 +712,21 @@ jobs:
 
       # main moves to PER-CS one edited file at a time, so only the PHP files
       # this push or pull request changes are checked. On a pull request HEAD
-      # is the test merge, and its first parent is the base branch tip. Calling
+      # is the test merge, and its first parent is the base branch tip; a merge
+      # group is compared with the base it was built on. Calling
       # bash keeps the step working if a patch-based cherry-pick drops the
       # script's executable bit.
       - name: Check formatting
         if: hashFiles('.php-cs-fixer.php', '.php-cs-fixer.dist.php') != ''
         env:
-          BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
+          BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event_name == 'merge_group' && github.event.merge_group.base_sha || github.event.before }}
         run: bash tests/tools/check_php_style.sh "$BASE"
 
       - name: Check PHP registration identity and failure contracts
         run: bash tests/tools/test_register_ci_php.sh
+
+      - name: Check the aggregate job result gate
+        run: bash tests/tools/test_require_job_results.sh
 
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
@@ -678,7 +737,7 @@ jobs:
   javascript:
     timeout-minutes: 30
     name: JavaScript
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -736,7 +795,7 @@ jobs:
     # describe. Finding that out at tag time is the worst moment, so catch it
     # here instead. Add the no-changelog label to skip deliberately.
     if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -772,3 +831,37 @@ jobs:
             exit 1
           fi
           echo "Changelog updated."
+
+  ci-result:
+    name: CI result
+    # Always reports: a required check reads a skipped job as passing.
+    # Changelog is skipped by design outside pull requests and with the
+    # no-changelog label; any other skip fails.
+    if: ${{ !cancelled() }}
+    needs:
+      - gettext-catalogs
+      - runtime-floor
+      - windows-storage-preflight
+      - database-contracts
+      - cdef-reference-contracts
+      - php
+      - spike-removal
+      - application-smoke
+      - style
+      - javascript
+      - changelog
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools/require_job_results.sh
+          sparse-checkout-cone-mode: false
+      - name: Require every gating job to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ${{ (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'no-changelog')) && 'changelog' || '' }}
+        run: bash tests/tools/require_job_results.sh

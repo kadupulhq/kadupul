@@ -5,16 +5,7 @@ name: RRDtool Proxy E2E
 
 on:
   pull_request:
-    paths:
-      - lib/rrd.php
-      - lib/functions.php
-      - src/Graphing/Infrastructure/Rrd/**
-      - include/global_settings.php
-      - settings.php
-      - templates_import.php
-      - templates_export.php
-      - tests/e2e/**
-      - .github/workflows/rrd-proxy-e2e.yml
+  merge_group:
   push:
     branches: [main]
     paths:
@@ -36,12 +27,50 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # The pull request path filter lives here instead of under `on:`, so the
+  # workflow always runs and its result job always reports.
+  # Pushes keep their own path filter.
+  changes:
+    name: Relevant changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      relevant: ${{ steps.scope.outputs.relevant }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Match changed paths
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != pull_request ] && [ "$EVENT_NAME" != merge_group ]; then
+            echo 'relevant=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A failed diff must fail the job, never read as "nothing relevant".
+          changed=$(git diff --name-only "$BASE_SHA" HEAD)
+          relevant=false
+          while IFS= read -r path; do
+            case "$path" in
+              lib/rrd.php|lib/functions.php|src/Graphing/Infrastructure/Rrd/*|include/global_settings.php|settings.php|templates_import.php|templates_export.php|tests/e2e/*|.github/workflows/rrd-proxy-e2e.yml) relevant=true ;;
+            esac
+          done <<< "$changed"
+          echo "Relevant to this workflow: $relevant"
+          echo "relevant=$relevant" >> "$GITHUB_OUTPUT"
+
   docker-proxy-journey:
+    needs: changes
+    if: ${{ needs.changes.outputs.relevant == 'true' }}
     permissions:
       contents: read
       packages: read
     name: Settings, RRD I/O, and template import/export
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -86,3 +115,27 @@ jobs:
             tests/e2e/playwright-report
             tests/e2e/test-results
           retention-days: 7
+
+  rrd-proxy-e2e-result:
+    name: RRDtool proxy E2E result
+    # Always reports: a required check reads a skipped job as passing.
+    # The suite jobs skip only when the changes job found nothing relevant.
+    if: ${{ !cancelled() }}
+    needs:
+      - changes
+      - docker-proxy-journey
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools/require_job_results.sh
+          sparse-checkout-cone-mode: false
+      - name: Require every gating job to pass
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          ALLOWED_SKIPS: ${{ needs.changes.result == 'success' && needs.changes.outputs.relevant == 'false' && 'docker-proxy-journey' || '' }}
+        run: bash tests/tools/require_job_results.sh
