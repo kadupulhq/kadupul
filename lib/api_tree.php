@@ -46,6 +46,50 @@ function api_tree_unlock($tree_id, $user_id = 0, $web = true)
     );
 }
 
+/* api_tree_node_access - whether the current user may change the nodes of a tree.
+ * An out-of-range id is refused as bad input before is_tree_allowed(), which
+ * caches its answer in the session and reads the database.
+ * @arg $tree_id - The tree to be changed
+ * @arg $function - The calling operation, for the log
+ * @returns - true when the tree id is valid and the user may access it */
+function api_tree_node_access($tree_id, $function)
+{
+    if (!is_numeric($tree_id) || $tree_id <= 0) {
+        cacti_log("ERROR: Invalid TreeID: '$tree_id', Function $function", false);
+
+        return false;
+    }
+
+    if (!is_tree_allowed($tree_id)) {
+        cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function $function", false, 'AUTH');
+
+        return false;
+    }
+
+    return true;
+}
+
+/* api_tree_branch_in_tree - whether a branch id names an item of the given tree.
+ * Node requests carry the tree and its branches separately, so a branch from
+ * a tree the user may not access must not be used as a parent or a source.
+ * @arg $tree_id - The tree that is being changed
+ * @arg $leaf_id - The branch id, 0 for the tree root
+ * @returns - true for the root or an item of $tree_id */
+function api_tree_branch_in_tree($tree_id, $leaf_id)
+{
+    if ($leaf_id == 0) {
+        return true;
+    }
+
+    return db_fetch_cell_prepared(
+        'SELECT COUNT(*)
+		FROM graph_tree_items
+		WHERE id = ?
+		AND graph_tree_id = ?',
+        array($leaf_id, $tree_id)
+    ) > 0;
+}
+
 /* api_tree_copy_node - given a tree id, a new node location,
  * it's original paren, make a copy of the prior node.
  * @arg $tree_id - The name of the lock to be created
@@ -57,6 +101,10 @@ function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position)
 {
     input_validate_input_number($tree_id);
     input_validate_input_number($new_position);
+
+    if (!api_tree_node_access($tree_id, 'copy_node')) {
+        return;
+    }
 
     $data  = api_tree_parse_node_data($node_id);
     $pdata = api_tree_parse_node_data($new_parent);
@@ -79,6 +127,11 @@ function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position)
 
     if (!isset($pdata['leaf_id']) || $pdata['leaf_id'] < 0 || !is_numeric($pdata['leaf_id'])) {
         cacti_log('ERROR: Copy node parent data invalid, Function copy_node', false);
+        return;
+    }
+
+    if (!api_tree_branch_in_tree($tree_id, $pdata['leaf_id']) || !api_tree_branch_in_tree($tree_id, $data['leaf_id'])) {
+        cacti_log("SECURITY: Copy node branch is not part of TreeID:'$tree_id', Function copy_node", false, 'AUTH');
         return;
     }
 
@@ -200,6 +253,10 @@ function api_tree_create_node($tree_id, $node_id, $position, $title = '')
     input_validate_input_number($tree_id);
     input_validate_input_number($position);
 
+    if (!api_tree_node_access($tree_id, 'create_node')) {
+        return false;
+    }
+
     if ($title == '') {
         $title = __('New Branch');
     }
@@ -209,6 +266,11 @@ function api_tree_create_node($tree_id, $node_id, $position, $title = '')
     if ($data['leaf_id'] < 0) {
         cacti_log("ERROR: Invalid BranchID: '" . (isset($data['leaf_id']) ? $data['leaf_id'] : '-') . "', Function create_node", false);
         return;
+    }
+
+    if (!api_tree_branch_in_tree($tree_id, $data['leaf_id'])) {
+        cacti_log("SECURITY: Parent BranchID:'" . $data['leaf_id'] . "' is not part of TreeID:'$tree_id', Function create_node", false, 'AUTH');
+        return false;
     }
 
     $i     = 0;
@@ -355,9 +417,7 @@ function api_tree_delete_node($tree_id, $node_id)
 {
     input_validate_input_number($tree_id);
 
-    // Basic Error Checking
-    if (empty($tree_id) || $tree_id < 0) {
-        cacti_log("ERROR: Invalid TreeID: '$tree_id', Function delete_node", false);
+    if (!api_tree_node_access($tree_id, 'delete_node')) {
         return;
     }
 
@@ -428,9 +488,7 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position)
 
     $new_position++;
 
-    // Basic Error Checking
-    if (empty($tree_id) || $tree_id < 0) {
-        cacti_log("ERROR: Invalid TreeID: '$tree_id', Function delete_node", false);
+    if (!api_tree_node_access($tree_id, 'move_node')) {
         return;
     }
 
@@ -449,6 +507,12 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position)
     }
 
     $data  = api_tree_parse_node_data($node_id);
+
+    // The node update is scoped to the tree, but siblings are renumbered by parent alone.
+    if (!api_tree_branch_in_tree($tree_id, $pdata['leaf_id'])) {
+        cacti_log("SECURITY: Parent BranchID:'" . $pdata['leaf_id'] . "' is not part of TreeID:'$tree_id', Function move_node", false, 'AUTH');
+        return;
+    }
 
     if ($data['parent'] != $pdata['leaf_id']) {
         db_execute_prepared(
@@ -575,9 +639,7 @@ function api_tree_rename_node($tree_id, $node_id = '', $title = '')
     input_validate_input_number($tree_id);
 
     // Basic Error Checking
-    if ($tree_id <= 0) {
-        cacti_log("ERROR: Invalid TreeID: '" . $tree_id . "', Function rename_node", false);
-
+    if (!api_tree_node_access($tree_id, 'rename_node')) {
         header('Content-Type: application/json; charset=utf-8');
         print json_encode(array('id' => $node_id, 'result' => false));
 
