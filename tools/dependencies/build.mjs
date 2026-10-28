@@ -19,6 +19,7 @@ const paths = {
   'jquery.tablesorter.js': 'tablesorter/dist/js/jquery.tablesorter.js',
   'jquery.tablesorter.widgets.js': 'tablesorter/dist/js/jquery.tablesorter.widgets.js',
   'jquery.tablesorter.pager.js': 'tablesorter/addons/pager/jquery.tablesorter.pager.js',
+  'billboard.js': 'billboard.js/dist/billboard.js',
 };
 await mkdir(new URL('include/js/', root), { recursive: true });
 await syncAssets(manifest, '--write', {
