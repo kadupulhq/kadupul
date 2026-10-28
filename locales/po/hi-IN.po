@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 00:29-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -15363,11 +15363,11 @@ msgstr "आवश्यकता है: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "नहीं बताया हुआ"
 
-#: lib/poller.php:1998
+#: lib/poller.php:2026
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2022 lib/poller.php:2254
+#: lib/poller.php:2050 lib/poller.php:2282
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

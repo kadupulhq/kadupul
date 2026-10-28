@@ -4,6 +4,7 @@
     <testsuite name="Spikekill">
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
+      <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>

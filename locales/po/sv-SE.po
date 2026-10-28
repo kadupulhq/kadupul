@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-27 16:55-0700\n"
+"POT-Creation-Date: 2026-10-28 00:29-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -15255,11 +15255,11 @@ msgstr "Kräver: Kadupul >= %s"
 msgid "Not Stated"
 msgstr "Ej angiven"
 
-#: lib/poller.php:1998
+#: lib/poller.php:2026
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2022 lib/poller.php:2254
+#: lib/poller.php:2050 lib/poller.php:2282
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
