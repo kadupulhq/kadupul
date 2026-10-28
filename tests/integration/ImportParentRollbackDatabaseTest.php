@@ -26,7 +26,7 @@ foreach (array(
     '/lib/import.php' => array(
         'import_xml_data', 'xml_to_data_template', 'xml_to_data_input_method', 'xml_to_data_query', 'xml_detect_ignorable_hash_cache',
         'compare_data', 'resolve_hash_to_id', 'parse_xml_hash', 'check_hash_type', 'check_hash_version',
-        'xml_character_decode', 'import_is_base64_encoded', 'import_package', 'import_read_package_data',
+        'xml_character_decode', 'import_invalid_data_source_item', 'import_validate_data_source_item', 'import_is_base64_encoded', 'import_package', 'import_read_package_data',
         'import_package_get_public_key', 'import_package_get_details', 'is_cacti_public_key', 'xml_to_array',
     ),
     '/lib/database.php' => array('db_begin_transaction', 'db_commit_transaction', 'db_rollback_transaction'),
