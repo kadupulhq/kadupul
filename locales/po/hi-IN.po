@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 18:58-0700\n"
+"POT-Creation-Date: 2026-10-28 19:47-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -109,9 +109,9 @@ msgstr ""
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
 msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: aggregate_graphs.php:501 aggregate_graphs.php:514 aggregate_graphs.php:523
-#: aggregate_graphs.php:532 aggregate_graphs.php:545
+#: aggregate_graphs.php:370 aggregate_graphs.php:448 aggregate_graphs.php:473
+#: aggregate_graphs.php:504 aggregate_graphs.php:517 aggregate_graphs.php:526
+#: aggregate_graphs.php:535 aggregate_graphs.php:548
 #: aggregate_templates.php:316 automation_devices.php:211
 #: automation_devices.php:220 automation_graph_rules.php:332
 #: automation_networks.php:386 automation_snmp.php:245 automation_snmp.php:368
@@ -138,9 +138,9 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 msgid "Cancel"
 msgstr "कैंसिल करें"
 
-#: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
-#: aggregate_graphs.php:501 aggregate_graphs.php:514 aggregate_graphs.php:523
-#: aggregate_graphs.php:532 aggregate_graphs.php:545
+#: aggregate_graphs.php:370 aggregate_graphs.php:448 aggregate_graphs.php:473
+#: aggregate_graphs.php:504 aggregate_graphs.php:517 aggregate_graphs.php:526
+#: aggregate_graphs.php:535 aggregate_graphs.php:548
 #: aggregate_templates.php:316 automation_devices.php:211
 #: automation_devices.php:220 automation_graph_rules.php:332
 #: automation_networks.php:378 automation_snmp.php:218 automation_snmp.php:369
@@ -165,20 +165,20 @@ msgstr "कैंसिल करें"
 msgid "Continue"
 msgstr "जारी रखें"
 
-#: aggregate_graphs.php:370 aggregate_graphs.php:445 aggregate_graphs.php:470
+#: aggregate_graphs.php:370 aggregate_graphs.php:448 aggregate_graphs.php:473
 #: graphs.php:886
 msgid "Delete Graph(s)"
 msgstr "ग्राफ़ हटाएं"
 
-#: aggregate_graphs.php:400
+#: aggregate_graphs.php:403
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
 msgstr "चयनित एग्रीगेट ग्राफ़ एक से अधिक ग्राफ़ टेम्पलेट से तत्वों का प्रतिनिधित्व करते हैं।"
 
-#: aggregate_graphs.php:401
+#: aggregate_graphs.php:404
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, they must only be using one Graph Template.  Please press 'Return' and then select only Aggregate Graph that utilize the same Graph Template."
 msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ़ को माइग्रेट करने के लिए, उन्हें केवल एक ग्राफ़ टेम्प्लेट का उपयोग करना चाहिए। कृपया &#39;रिटर्न&#39; दबाएं और फिर केवल एग्रीगेट ग्राफ़ चुनें जो उसी ग्राफ़ टेम्पलेट का उपयोग करें।"
 
-#: aggregate_graphs.php:406 aggregate_graphs.php:456 aggregate_graphs.php:504
+#: aggregate_graphs.php:409 aggregate_graphs.php:459 aggregate_graphs.php:507
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1169 graphs.php:1219 graphs.php:1222
 #: graphs.php:1266 graphs.php:1858 include/auth.php:309
@@ -188,213 +188,213 @@ msgstr "टेम्पलेट आधारित एग्रीगेट क
 msgid "Return"
 msgstr "वापसी"
 
-#: aggregate_graphs.php:410
+#: aggregate_graphs.php:413
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
 msgstr "चयनित एग्रीगेट ग्राफ़ एक से अधिक ग्राफ़ टेम्पलेट से तत्वों का प्रतिनिधित्व करते हैं।"
 
-#: aggregate_graphs.php:411
+#: aggregate_graphs.php:414
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
 msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ़ को माइग्रेट करने के लिए, उन्हें केवल एक ग्राफ़ टेम्प्लेट का उपयोग करना चाहिए। कृपया &#39;रिटर्न&#39; दबाएं और फिर केवल एग्रीगेट ग्राफ़ चुनें जो उसी ग्राफ़ टेम्पलेट का उपयोग करें।"
 
-#: aggregate_graphs.php:429
+#: aggregate_graphs.php:432
 msgid "Click 'Continue' and the following Aggregate Graph(s) will be migrated to use the Aggregate Template that you choose below."
 msgstr "&#39;जारी रखें&#39; पर क्लिक करें और नीचे दिए गए एग्रीगेट टेम्पलेट का उपयोग करने के लिए निम्नलिखित एग्रीगेट ग्राफ (s) माइग्रेट किए जाएंगे।"
 
-#: aggregate_graphs.php:435
+#: aggregate_graphs.php:438
 msgid "Aggregate Template:"
 msgstr "सकल टेम्पलेट:"
 
-#: aggregate_graphs.php:449
+#: aggregate_graphs.php:452
 msgid "There are currently no Aggregate Templates defined for the selected Legacy Aggregates."
 msgstr "वर्तमान में चयनित लिगेसी समुच्चय के लिए कोई एग्रीगेट टेंप्लेट निर्धारित नहीं हैं।"
 
-#: aggregate_graphs.php:450
+#: aggregate_graphs.php:453
 #, php-format
 msgid "In order to migrate the Aggregate Graphs below to a Template based Aggregate, first create an Aggregate Template for the Graph Template '%s'."
 msgstr "टेम्पलेट आधारित एग्रीगेट के नीचे दिए गए एग्रीगेट ग्राफ को माइग्रेट करने के लिए, पहले ग्राफ टेम्पलेट &#39; %s&#39; के लिए एग्रीगेट टेम्पलेट बनाएं।"
 
-#: aggregate_graphs.php:451
+#: aggregate_graphs.php:454
 msgid "Please press 'Return' to continue."
 msgstr "जारी रखने के लिए कृपया &#39;वापसी&#39; दबाएँ।"
 
-#: aggregate_graphs.php:462
+#: aggregate_graphs.php:465
 msgid "Click 'Continue' to combine the following Aggregate Graph(s) into a single Aggregate Graph."
 msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को एक एकल ग्राफ में संयोजित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: aggregate_graphs.php:467
+#: aggregate_graphs.php:470
 msgid "Aggregate Name:"
 msgstr "सकल नाम:"
 
-#: aggregate_graphs.php:468
+#: aggregate_graphs.php:471
 msgid "New Aggregate"
 msgstr "न्यू एग्रीगेट"
 
-#: aggregate_graphs.php:485 graphs.php:1247
+#: aggregate_graphs.php:488 graphs.php:1247
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "नीचे दी गई रिपोर्ट में चयनित ग्राफ़ जोड़ने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: aggregate_graphs.php:489 graph_view.php:901 graphs.php:1251
+#: aggregate_graphs.php:492 graph_view.php:901 graphs.php:1251
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 msgid "Report Name"
 msgstr "रिपोर्ट का नाम"
 
-#: aggregate_graphs.php:493 graph_view.php:908 graphs.php:1255
+#: aggregate_graphs.php:496 graph_view.php:908 graphs.php:1255
 #: lib/html_reports.php:1789
 msgid "Timespan"
 msgstr "काल"
 
-#: aggregate_graphs.php:497 graph_view.php:915 graphs.php:1259
+#: aggregate_graphs.php:500 graph_view.php:915 graphs.php:1259
 msgid "Align"
 msgstr "पंक्ति में होना"
 
-#: aggregate_graphs.php:501 graphs.php:1263
+#: aggregate_graphs.php:504 graphs.php:1263
 msgid "Add Graphs to Report"
 msgstr "रिपोर्ट में रेखांकन जोड़ें"
 
-#: aggregate_graphs.php:503 graphs.php:1265
+#: aggregate_graphs.php:506 graphs.php:1265
 msgid "You currently have no reports defined."
 msgstr "वर्तमान में आपके पास कोई रिपोर्ट परिभाषित नहीं है।"
 
-#: aggregate_graphs.php:509
+#: aggregate_graphs.php:512
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
 msgstr "निम्नलिखित एग्रीगेट ग्राफ (ओं) को एक एकल ग्राफ में संयोजित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: aggregate_graphs.php:514
+#: aggregate_graphs.php:517
 msgid "Convert to normal Graph(s)"
 msgstr "LINE1 ग्राफ़ में कनवर्ट करें"
 
-#: aggregate_graphs.php:518
+#: aggregate_graphs.php:521
 msgid "Click 'Continue' to associate the following Graph(s) with the Aggregate Graph."
 msgstr "निम्नलिखित ग्राफ (ओं) को एग्रीगेट ग्राफ के साथ जोड़ने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: aggregate_graphs.php:523
+#: aggregate_graphs.php:526
 msgid "Associate Graph(s)"
 msgstr "एसोसिएट ग्राफ़"
 
-#: aggregate_graphs.php:527
+#: aggregate_graphs.php:530
 msgid "Click 'Continue' to disassociate the following Graph(s) from the Aggregate."
 msgstr "निम्नलिखित ग्राफ (ओं) को अलग करने के लिए &#39;जारी रखें&#39; पर क्लिक करें"
 
-#: aggregate_graphs.php:532
+#: aggregate_graphs.php:535
 msgid "Dis-Associate Graph(s)"
 msgstr "डिस-एसोसिएट ग्राफ़"
 
-#: aggregate_graphs.php:536
+#: aggregate_graphs.php:539
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
 msgstr "ट्री शाखा के तहत निम्नलिखित एग्रीगेट ग्राफ (ओं) को रखने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: aggregate_graphs.php:538
+#: aggregate_graphs.php:541
 msgid "Destination Branch:"
 msgstr "गंतव्य शाखा:"
 
-#: aggregate_graphs.php:545 graphs.php:939
+#: aggregate_graphs.php:548 graphs.php:939
 msgid "Place Graph(s) on Tree"
 msgstr "ट्री पर ग्राफ (ओं) रखें"
 
-#: aggregate_graphs.php:625 data_sources.php:1235 lib/html_reports.php:1641
+#: aggregate_graphs.php:628 data_sources.php:1235 lib/html_reports.php:1641
 #: user_admin.php:1774
 #, php-format
 msgid "[edit: %s]"
 msgstr "[संपादित करें: %s]"
 
-#: aggregate_graphs.php:627 aggregate_graphs.php:739 aggregate_graphs.php:741
+#: aggregate_graphs.php:630 aggregate_graphs.php:742 aggregate_graphs.php:744
 msgid "Aggregate Graph does not Exist"
 msgstr "ग्राफ़ सेटिंग्स को अलग करें"
 
-#: aggregate_graphs.php:644 aggregate_graphs.php:651 lib/html_reports.php:1545
+#: aggregate_graphs.php:647 aggregate_graphs.php:654 lib/html_reports.php:1545
 #: lib/html_reports.php:1547 utilities.php:2284
 msgid "Details"
 msgstr "विवरण"
 
-#: aggregate_graphs.php:645 graphs_new.php:935 lib/html_reports.php:1545
+#: aggregate_graphs.php:648 graphs_new.php:935 lib/html_reports.php:1545
 #: utilities.php:361
 msgid "Items"
 msgstr "वस्तुएं"
 
-#: aggregate_graphs.php:646 aggregate_graphs.php:652 lib/html.php:2231
+#: aggregate_graphs.php:649 aggregate_graphs.php:655 lib/html.php:2231
 #: lib/html_reports.php:1545
 msgid "Preview"
 msgstr "पूर्वावलोकन"
 
-#: aggregate_graphs.php:655
+#: aggregate_graphs.php:658
 #, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "ग्राफ़ सेटिंग्स को अलग करें"
 
-#: aggregate_graphs.php:716
+#: aggregate_graphs.php:719
 msgid "Turn Off Graph Debug Mode"
 msgstr "ग्राफ़ डीबग मोड को बंद करें"
 
-#: aggregate_graphs.php:718
+#: aggregate_graphs.php:721
 msgid "Turn On Graph Debug Mode"
 msgstr "ग्राफ़ डीबग मोड चालू करें"
 
-#: aggregate_graphs.php:724 aggregate_graphs.php:1065
+#: aggregate_graphs.php:727 aggregate_graphs.php:1068
 msgid "Show Item Details"
 msgstr "आइटम विवरण दिखाएं"
 
-#: aggregate_graphs.php:738
+#: aggregate_graphs.php:741
 msgid "Aggregate Preview Does Not Exist"
 msgstr "सकल पूर्वावलोकन [ %s]"
 
-#: aggregate_graphs.php:745
+#: aggregate_graphs.php:748
 #, php-format
 msgid "Aggregate Preview %s"
 msgstr "सकल पूर्वावलोकन [ %s]"
 
-#: aggregate_graphs.php:763 graph.php:553 graphs.php:1691
+#: aggregate_graphs.php:766 graph.php:553 graphs.php:1691
 msgid "RRDtool Command:"
 msgstr "RRDtool कमांड:"
 
-#: aggregate_graphs.php:765 graph.php:562 graphs.php:1695
+#: aggregate_graphs.php:768 graph.php:562 graphs.php:1695
 msgid "Not Checked"
 msgstr "कोई जाँच नहीं"
 
-#: aggregate_graphs.php:765 graph.php:558 graphs.php:1693
+#: aggregate_graphs.php:768 graph.php:558 graphs.php:1693
 msgid "RRDtool Says:"
 msgstr "RRDtool कहते हैं:"
 
-#: aggregate_graphs.php:795
+#: aggregate_graphs.php:798
 #, php-format
 msgid "Aggregate Graph %s"
 msgstr "सकल ग्राफ़ %s"
 
-#: aggregate_graphs.php:820 aggregate_templates.php:408 graphs.php:1033
+#: aggregate_graphs.php:823 aggregate_templates.php:408 graphs.php:1033
 msgid "Prefix Replacement Values"
 msgstr "प्रतिस्थापन पैटर्न"
 
-#: aggregate_graphs.php:821 aggregate_templates.php:409 graphs.php:1034
+#: aggregate_graphs.php:824 aggregate_templates.php:409 graphs.php:1034
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "आप समग्र ग्राफ़ में उपसर्ग के लिए इन प्रतिस्थापन मानों का उपयोग कर सकते हैं"
 
-#: aggregate_graphs.php:988 aggregate_templates.php:536 graphs.php:1116
+#: aggregate_graphs.php:991 aggregate_templates.php:536 graphs.php:1116
 #: lib/api_aggregate.php:2384
 msgid "Total"
 msgstr "कुल"
 
-#: aggregate_graphs.php:992 aggregate_templates.php:540 graphs.php:1118
+#: aggregate_graphs.php:995 aggregate_templates.php:540 graphs.php:1118
 msgid "All Items"
 msgstr "सभी आइटम"
 
-#: aggregate_graphs.php:1010 graphs.php:1706 lib/api_aggregate.php:2544
+#: aggregate_graphs.php:1013 graphs.php:1706 lib/api_aggregate.php:2544
 msgid "Graph Configuration"
 msgstr "ग्राफ विन्यास"
 
-#: aggregate_graphs.php:1060 automation_graph_rules.php:610
+#: aggregate_graphs.php:1063 automation_graph_rules.php:610
 #: automation_graph_rules.php:625 automation_graph_rules.php:641
 #: automation_tree_rules.php:414 automation_tree_rules.php:572
 msgid "Show"
 msgstr "दिखाना"
 
-#: aggregate_graphs.php:1062
+#: aggregate_graphs.php:1065
 msgid "Hide Item Details"
 msgstr "आइटम विवरण छिपाएँ"
 
-#: aggregate_graphs.php:1273
+#: aggregate_graphs.php:1276
 msgid "Matching Graphs"
 msgstr "मिलान रेखांकन"
 
-#: aggregate_graphs.php:1282 aggregate_graphs.php:1556
+#: aggregate_graphs.php:1285 aggregate_graphs.php:1559
 #: aggregate_templates.php:606 automation_devices.php:485
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
@@ -416,8 +416,8 @@ msgstr "मिलान रेखांकन"
 msgid "Search"
 msgstr "खोजें"
 
-#: aggregate_graphs.php:1288 aggregate_graphs.php:1324
-#: aggregate_graphs.php:1587 data_sources.php:1984 data_sources.php:2123
+#: aggregate_graphs.php:1291 aggregate_graphs.php:1327
+#: aggregate_graphs.php:1590 data_sources.php:1984 data_sources.php:2123
 #: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2130
 #: graphs.php:2322 include/global_arrays.php:997 include/global_arrays.php:1233
 #: include/global_arrays.php:2019 lib/api_automation.php:283 lib/html.php:1955
@@ -428,7 +428,7 @@ msgstr "खोजें"
 msgid "Graphs"
 msgstr "रेखांकन"
 
-#: aggregate_graphs.php:1292 aggregate_graphs.php:1591
+#: aggregate_graphs.php:1295 aggregate_graphs.php:1594
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
@@ -446,11 +446,11 @@ msgstr "रेखांकन"
 msgid "Default"
 msgstr "डिफ़ॉल्ट"
 
-#: aggregate_graphs.php:1298
+#: aggregate_graphs.php:1301
 msgid "Part of Aggregate"
 msgstr "एग्रीगेट का हिस्सा"
 
-#: aggregate_graphs.php:1303 aggregate_graphs.php:1596
+#: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
@@ -467,7 +467,7 @@ msgstr "एग्रीगेट का हिस्सा"
 msgid "Go"
 msgstr "जाएं"
 
-#: aggregate_graphs.php:1303 aggregate_graphs.php:1596
+#: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1744 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2104
@@ -481,7 +481,7 @@ msgstr "जाएं"
 msgid "Set/Refresh Filters"
 msgstr "सेट / फ़िल्टर ताज़ा करें"
 
-#: aggregate_graphs.php:1304 aggregate_graphs.php:1597
+#: aggregate_graphs.php:1307 aggregate_graphs.php:1600
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
@@ -499,7 +499,7 @@ msgstr "सेट / फ़िल्टर ताज़ा करें"
 msgid "Clear"
 msgstr "明确"
 
-#: aggregate_graphs.php:1304 aggregate_graphs.php:1597 automation_snmp.php:729
+#: aggregate_graphs.php:1307 aggregate_graphs.php:1600 automation_snmp.php:729
 #: data_debug.php:1140 data_queries.php:1399 data_sources.php:1745
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2105 graphs_new.php:516 host_templates.php:787
@@ -512,12 +512,12 @@ msgstr "明确"
 msgid "Clear Filters"
 msgstr "साफ फिल्टर"
 
-#: aggregate_graphs.php:1329 aggregate_graphs.php:1662 graphs.php:1196
+#: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graphs.php:1196
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 msgid "Graph Title"
 msgstr "ग्राफ शीर्षक"
 
-#: aggregate_graphs.php:1330 aggregate_graphs.php:1663
+#: aggregate_graphs.php:1333 aggregate_graphs.php:1666
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
 #: data_debug.php:517 data_queries.php:1484 data_sources.php:1978
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2338
@@ -529,16 +529,16 @@ msgstr "ग्राफ शीर्षक"
 msgid "ID"
 msgstr "ID"
 
-#: aggregate_graphs.php:1331
+#: aggregate_graphs.php:1334
 msgid "Included in Aggregate"
 msgstr "एग्रीगेट में शामिल"
 
-#: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graph_templates.php:880
+#: aggregate_graphs.php:1335 aggregate_graphs.php:1668 graph_templates.php:880
 #: graph_view.php:832 graph_view.php:845 graphs.php:2356 lib/spikekill.php:1745
 msgid "Size"
 msgstr "आकार"
 
-#: aggregate_graphs.php:1348 aggregate_templates.php:724
+#: aggregate_graphs.php:1351 aggregate_templates.php:724
 #: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2065
 #: data_sources.php:2066 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
@@ -548,7 +548,7 @@ msgstr "आकार"
 msgid "No"
 msgstr "नहीं"
 
-#: aggregate_graphs.php:1348 aggregate_templates.php:724
+#: aggregate_graphs.php:1351 aggregate_templates.php:724
 #: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
 #: data_debug.php:791 data_queries.php:1536 data_sources.php:2065
 #: data_sources.php:2066 data_templates.php:1321 graph_templates.php:920
@@ -560,20 +560,20 @@ msgstr "नहीं"
 msgid "Yes"
 msgstr "हाँ"
 
-#: aggregate_graphs.php:1354 graphs.php:2398 lib/api_automation.php:601
+#: aggregate_graphs.php:1357 graphs.php:2398 lib/api_automation.php:601
 msgid "No Graphs Found"
 msgstr "कोई रेखांकन नहीं मिला"
 
-#: aggregate_graphs.php:1547
+#: aggregate_graphs.php:1550
 msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[कस्टम ग्राफ सूची लागू - सूची से फ़िल्टर करें]"
 
-#: aggregate_graphs.php:1547 aggregate_graphs.php:1653
+#: aggregate_graphs.php:1550 aggregate_graphs.php:1656
 #: include/global_arrays.php:2771
 msgid "Aggregate Graphs"
 msgstr "सकल रेखांकन"
 
-#: aggregate_graphs.php:1562 data_debug.php:1110 data_sources.php:1713
+#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1713
 #: graph_view.php:699 graphs.php:2066 include/global_arrays.php:2899
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
@@ -582,7 +582,7 @@ msgstr "सकल रेखांकन"
 msgid "Template"
 msgstr "खाका"
 
-#: aggregate_graphs.php:1566 automation_devices.php:495
+#: aggregate_graphs.php:1569 automation_devices.php:495
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
@@ -600,7 +600,7 @@ msgstr "खाका"
 msgid "Any"
 msgstr "कोई भी@ label"
 
-#: aggregate_graphs.php:1567 aggregate_graphs.php:1677
+#: aggregate_graphs.php:1570 aggregate_graphs.php:1680
 #: automation_graph_rules.php:972 automation_graph_rules.php:973
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
@@ -635,23 +635,23 @@ msgstr "कोई भी@ label"
 msgid "None"
 msgstr "कोई नहीं"
 
-#: aggregate_graphs.php:1662
+#: aggregate_graphs.php:1665
 msgid "The title for the Aggregate Graphs"
 msgstr "सकल रेखांकन के लिए शीर्षक"
 
-#: aggregate_graphs.php:1663
+#: aggregate_graphs.php:1666
 msgid "The internal database identifier for this object"
 msgstr "इस ऑब्जेक्ट के लिए आंतरिक डेटाबेस पहचानकर्ता"
 
-#: aggregate_graphs.php:1664 graphs.php:1200
+#: aggregate_graphs.php:1667 graphs.php:1200
 msgid "Aggregate Template"
 msgstr "एग्रीगेट टेम्पलेट"
 
-#: aggregate_graphs.php:1664
+#: aggregate_graphs.php:1667
 msgid "The Aggregate Template that this Aggregate Graphs is based upon"
 msgstr "एग्रीगेट टेम्पलेट जो इस एग्रीगेट ग्राफ पर आधारित है"
 
-#: aggregate_graphs.php:1683
+#: aggregate_graphs.php:1686
 msgid "No Aggregate Graphs Found"
 msgstr "कोई सकल रेखांकन नहीं मिला"
 
@@ -11840,7 +11840,7 @@ msgid "Branch:"
 msgstr "शाखा:"
 
 #: lib/auth.php:3326 lib/auth.php:3360 lib/html_tree.php:949
-#: lib/reports.php:1114
+#: lib/reports.php:1117
 msgid "Device:"
 msgstr "उपकरणः"
 
@@ -12775,7 +12775,7 @@ msgstr "टेम्प्लेट चुने गए"
 msgid "Enter keyword"
 msgstr "कुंजीशब्द दर्ज करें"
 
-#: lib/html.php:464 lib/reports.php:1711
+#: lib/html.php:464 lib/reports.php:1714
 msgid "Data Query:"
 msgstr "डेटा क्वेरी:"
 
@@ -13866,7 +13866,7 @@ msgstr "ग्राफ टेम्पलेट:"
 msgid "Template Based"
 msgstr "टेम्पलेट आधारित है"
 
-#: lib/html_tree.php:927 lib/reports.php:1359
+#: lib/html_tree.php:927 lib/reports.php:1362
 msgid "Tree:"
 msgstr "वृक्षugiou"
 
@@ -15411,45 +15411,45 @@ msgstr "रिपोर्ट भेजने में समस्या '%s' 
 msgid "Report '%s' Sent Successfully"
 msgstr "रिपोर्ट '%s' सफलतापूर्वक भेजी गई"
 
-#: lib/reports.php:1141 lib/reports.php:1497
+#: lib/reports.php:1144 lib/reports.php:1500
 msgid "(No Graph Template)"
 msgstr "(कोई ग्राफ़ टेम्पलेट नहीं)"
 
-#: lib/reports.php:1565
+#: lib/reports.php:1568
 msgid "(Non Query Based)"
 msgstr "(गैर क्वेरी आधारित)"
 
-#: lib/reports.php:1976
+#: lib/reports.php:1979
 msgid "Add to Report"
 msgstr "रिपोर्ट में जोड़ें"
 
-#: lib/reports.php:1994
+#: lib/reports.php:1997
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "इन ग्राफ़ों को संबद्ध करने के लिए रिपोर्ट चुनें। संरेखण के लिए चूक नीचे दी गई सूची में प्रत्येक ग्राफ के लिए उपयोग की जाएगी।"
 
-#: lib/reports.php:1996
+#: lib/reports.php:1999
 msgid "Report:"
 msgstr "रिपोर्ट"
 
-#: lib/reports.php:2006
+#: lib/reports.php:2009
 msgid "Graph Timespan:"
 msgstr "ग्राफ टाइमपेन:"
 
-#: lib/reports.php:2009
+#: lib/reports.php:2012
 msgid "Graph Alignment:"
 msgstr "ग्राफ संरेखण:"
 
-#: lib/reports.php:2108
+#: lib/reports.php:2111
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "रिपोर्ट किया गया ग्राफ़ आइटम &#39; <i> %s</i> &#39;"
 
-#: lib/reports.php:2110
+#: lib/reports.php:2113
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "रिपोर्ट ग्राफ़ आइटम &#39; <i> %s</i> &#39; पहले से ही मौजूद है जोड़ने में विफल"
 
-#: lib/reports.php:2113
+#: lib/reports.php:2116
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "छोड़ी गई रिपोर्ट ग्राफ की वस्तु &#39; <i> %s</i> &#39; पहले से ही मौजूद है"
