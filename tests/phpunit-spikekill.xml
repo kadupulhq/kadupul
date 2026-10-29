@@ -15,6 +15,7 @@
       <file>Unit/Security/ImportPreviewOutputTest.php</file>
       <file>Unit/Security/FormOutputEncodingTest.php</file>
       <file>Unit/Security/GraphsNewFilterInputTest.php</file>
+      <file>Unit/Security/ImportPreviewDifferenceNamesTest.php</file>
       <file>Unit/Security/Auth/AdminMutationCsrfTest.php</file>
       <file>Unit/Security/GraphTemplateInputTest.php</file>
       <file>Unit/Installer/InstallerEndpointCsrfTest.php</file>
