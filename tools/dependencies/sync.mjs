@@ -21,6 +21,11 @@ const defaultIo = Object.freeze({
 });
 const jsDirectory = new URL("../../include/js/", import.meta.url);
 
+function compareText(left, right) {
+  if (left === right) return 0;
+  return left < right ? -1 : 1;
+}
+
 function patchAsset(asset, originalBytes) {
   // Match the repository's LF checkout policy after verifying the original bytes.
   let source = originalBytes.toString("utf8").replaceAll("\r\n", "\n");
@@ -129,12 +134,12 @@ export async function checkInventory(
       .map((entry) => entry.name),
   );
   const listed = new Set(manifest.map((asset) => asset.file));
-  for (const file of [...present].sort()) {
+  for (const file of [...present].sort(compareText)) {
     if (!listed.has(file)) {
       throw new Error(`include/js/${file} has no inventory entry`);
     }
   }
-  for (const file of [...listed].sort()) {
+  for (const file of [...listed].sort(compareText)) {
     if (!present.has(file)) {
       throw new Error(`Inventory entry ${file} does not exist in include/js`);
     }
@@ -148,7 +153,8 @@ export async function syncAssets(manifest, mode, io = defaultIo) {
   validateManifest(manifest);
   const prepared = [];
   const tracked = [];
-  for (const asset of manifest) {
+  // Keep requests serial and finish validation before the first write.
+  for await (const asset of manifest) {
     if (asset.owned) continue;
     if (asset.tracked) {
       if (mode === "--check") tracked.push(await verifyTracked(asset, io));
@@ -158,7 +164,7 @@ export async function syncAssets(manifest, mode, io = defaultIo) {
   }
 
   // Validate every download before modifying any tracked asset.
-  for (const { file, bytes, asset } of prepared) {
+  for await (const { file, bytes, asset } of prepared) {
     if (mode === "--write") {
       await io.writeFile(file, bytes);
     } else if (!bytes.equals(await io.readFile(file))) {
@@ -175,28 +181,39 @@ export async function syncAssets(manifest, mode, io = defaultIo) {
 
 const versionPattern = /^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+.*)?$/;
 
-// Semantic Versioning precedence for the numeric part and prerelease tags.
+function compareVersionIdentifier(left, right) {
+  if (left === right) return 0;
+  const leftNumeric = /^\d+$/.test(left);
+  const rightNumeric = /^\d+$/.test(right);
+  if (leftNumeric && rightNumeric) {
+    const x = BigInt(left);
+    const y = BigInt(right);
+    if (x === y) return 0;
+    return x < y ? -1 : 1;
+  }
+  if (leftNumeric !== rightNumeric) return leftNumeric ? -1 : 1;
+  return compareText(left, right);
+}
+
+function compareVersionIdentifiers(left, right) {
+  for (let i = 0; i < Math.min(left.length, right.length); i++) {
+    const order = compareVersionIdentifier(left[i], right[i]);
+    if (order !== 0) return order;
+  }
+  return Math.sign(left.length - right.length);
+}
+
+// Numeric identifiers have no SemVer size limit; Number would lose precision.
 function compareVersions(a, b) {
   const x = versionPattern.exec(a);
   const y = versionPattern.exec(b);
-  if (!x || !y) return a === b ? 0 : NaN;
-  for (let i = 1; i <= 3; i++) {
-    if (x[i] !== y[i]) return Number(x[i]) < Number(y[i]) ? -1 : 1;
-  }
+  if (!x || !y) return a === b ? 0 : Number.NaN;
+  const core = compareVersionIdentifiers(x.slice(1, 4), y.slice(1, 4));
+  if (core !== 0) return core;
   if (x[4] === y[4]) return 0;
   if (x[4] === undefined) return 1;
   if (y[4] === undefined) return -1;
-  const left = x[4].split(".");
-  const right = y[4].split(".");
-  for (let i = 0; i < Math.min(left.length, right.length); i++) {
-    if (left[i] === right[i]) continue;
-    const l = /^\d+$/.test(left[i]);
-    const r = /^\d+$/.test(right[i]);
-    if (l && r) return Number(left[i]) < Number(right[i]) ? -1 : 1;
-    if (l !== r) return l ? -1 : 1;
-    return left[i] < right[i] ? -1 : 1;
-  }
-  return Math.sign(left.length - right.length);
+  return compareVersionIdentifiers(x[4].split("."), y[4].split("."));
 }
 
 // An unparseable version counts as behind unless it equals the latest.
@@ -227,14 +244,17 @@ export function collectPins(manifest, dependencies = {}) {
 
 export async function reportOutdated(pins, io = defaultIo) {
   let behind = 0;
-  for (const [name, { version, frozen }] of [...pins].sort()) {
+  const entries = [...pins].sort(([left], [right]) => compareText(left, right));
+  // Query in report order and stop before querying later packages on failure.
+  for await (const [name, { version, frozen }] of entries) {
     if (!/^(@[a-z0-9~][a-z0-9-._~]*\/)?[a-z0-9~][a-z0-9-._~]*$/.test(name)) {
       throw new Error(`Invalid npm package name: ${name}`);
     }
     const latest = await io.npmLatest(name);
     const stale = isBehind(version, latest);
     if (stale && !frozen) behind++;
-    const state = !stale ? "current" : frozen ? "frozen" : "behind";
+    let state = "current";
+    if (stale) state = frozen ? "frozen" : "behind";
     console.log(`${name}: pinned ${version}, latest ${latest} (${state})`);
   }
   return behind;
