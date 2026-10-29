@@ -2585,7 +2585,7 @@ msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6328 lib/functions.php:6397
-#: lib/functions.php:6503 lib/functions.php:7174 poller.php:410 poller.php:560
+#: lib/functions.php:6503 lib/functions.php:7181 poller.php:410 poller.php:560
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
@@ -4576,7 +4576,7 @@ msgstr "Cacti Poller는 아직 운영되지 않았습니다."
 msgid "Real-time has been disabled by your administrator."
 msgstr "관리자가 실시간을 비활성화했습니다."
 
-#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7973
+#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7980
 #: permission_denied.php:46 permission_denied.php:53
 msgid "Permission Denied"
 msgstr "사용 권한이 거부되었습니다."
@@ -5963,11 +5963,11 @@ msgstr "치명적 : Cacti의이 영역에 액세스하려면 로그인해야합�
 msgid "Login Again"
 msgstr "다시 로그인"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "If you feel that this is an error. Please contact your Cacti Administrator."
 msgstr "이것이 오류라고 생각하면. Cacti 관리자에게 문의하십시오."
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
 msgstr "Cacti의이 섹션에 액세스하는 것은 허용되지 않습니다."
 
@@ -13694,7 +13694,7 @@ msgstr "버전  %s  %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7174
+#: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 선인장 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"

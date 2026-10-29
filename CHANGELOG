@@ -370,6 +370,7 @@ Cacti CHANGELOG
 -security: Harden advisory command execution and database DDL sink validation
 -security: Restrict graph input fields across the template, graph and import handoffs
 -security: Treat a non-boolean signature result as a failure in import_package
+-security#1183: Check embedded IPv4 destinations in compatible, NAT64 and 6to4 collector addresses against the reserved-address policy
 -issue#1153: Apply requested character sets and collations when creating table columns
 -issue#7961: Preserve the full Plugin Management layout after dependency errors
 -issue#7809: Undefined array key "source" warning reindexing SNMP data queries with output-only fields
