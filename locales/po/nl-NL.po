@@ -589,7 +589,7 @@ msgstr "Template"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3981 lib/auth.php:4030
+#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -620,8 +620,8 @@ msgstr "Alle"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3984
-#: lib/auth.php:4033 lib/auth.php:4079 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
+#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -844,11 +844,11 @@ msgstr "Toegang geweigerd, neem alstublieft contact op uw Kadupul beheerder."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Toegang geweigerd, neem alstublieft contact op uw Kadupul beheerder."
 
-#: auth_login.php:119 lib/auth.php:4395 lib/auth.php:4401 lib/auth.php:4491
-#: lib/auth.php:4500 lib/auth.php:4547 lib/auth.php:4572 lib/auth.php:4595
-#: lib/auth.php:4635 lib/auth.php:4647 lib/auth.php:4670 lib/auth.php:4793
-#: lib/auth.php:4813 lib/auth.php:5025 lib/auth.php:5067 lib/auth.php:5077
-#: lib/auth.php:5093 lib/auth.php:5107 lib/auth.php:5145
+#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
+#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
+#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
+#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
+#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
 msgid "Access Denied!  Login Failed."
 msgstr "Toegang geweigerd, gebruikersaccount is uitgeschakeld."
 
@@ -4743,7 +4743,7 @@ msgstr "U dient ingelogd te zijn om dit deel van Kadupul te gebruiken."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATALE FOUT: U dient ingelogd te zijn om dit deel van Kadupul te gebruiken."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5638
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Log nogmaals in"
@@ -11519,7 +11519,7 @@ msgstr "Niet online"
 msgid "Recovering"
 msgstr "Herstellende"
 
-#: lib/api_automation.php:33 lib/auth.php:3086 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11755,118 +11755,118 @@ msgstr "Nieuwe vestiging"
 msgid "Web Basic"
 msgstr "Web Basis"
 
-#: lib/auth.php:2915
+#: lib/auth.php:2920
 msgid "Device:(Hide Disabled)"
 msgstr "Apparaat is uitgeschakeld"
 
-#: lib/auth.php:2933 lib/auth.php:2935 lib/auth.php:2941 lib/auth.php:2943
+#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Grafiek:(%s%s)"
 
-#: lib/auth.php:2956 lib/auth.php:2962 lib/auth.php:3029 lib/auth.php:3031
-#: lib/auth.php:3035 lib/auth.php:3037
+#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
+#: lib/auth.php:3040 lib/auth.php:3042
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Apparaat:(%s%s)"
 
-#: lib/auth.php:2970 lib/auth.php:2976 lib/auth.php:3045 lib/auth.php:3047
-#: lib/auth.php:3051 lib/auth.php:3053
+#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
+#: lib/auth.php:3056 lib/auth.php:3058
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Sjabloon:(%s%s)"
 
-#: lib/auth.php:2983
+#: lib/auth.php:2988
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Grafiek+apparaat+sjabloon:(%s%s)"
 
-#: lib/auth.php:3020 lib/auth.php:3022
+#: lib/auth.php:3025 lib/auth.php:3027
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Apparaat+sjabloon:(%s%s)"
 
-#: lib/auth.php:3066 lib/auth.php:3073 lib/auth.php:3082
+#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
 msgid "Restricted By: "
 msgstr "Beperkt"
 
-#: lib/auth.php:3070
+#: lib/auth.php:3075
 msgid "Granted By: "
 msgstr "Toegang verleend"
 
-#: lib/auth.php:3077
+#: lib/auth.php:3082
 msgid "Granted"
 msgstr "Toegekend"
 
-#: lib/auth.php:3079 lib/auth.php:3084
+#: lib/auth.php:3084 lib/auth.php:3089
 msgid "Restricted"
 msgstr "Beperkt"
 
-#: lib/auth.php:3318 lib/auth.php:3353
+#: lib/auth.php:3323 lib/auth.php:3358
 msgid "Branch:"
 msgstr "Tak:"
 
-#: lib/auth.php:3327 lib/auth.php:3361 lib/html_tree.php:949
+#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "Apparaat:"
 
-#: lib/auth.php:4299 lib/auth.php:4390
+#: lib/auth.php:4304 lib/auth.php:4395
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Toegang geweigerd, neem alstublieft contact op uw Kadupul beheerder."
 
-#: lib/auth.php:4349
+#: lib/auth.php:4354
 msgid "Access Denied!  Login Disabled."
 msgstr "Toegang geweigerd, gebruikersaccount is uitgeschakeld."
 
-#: lib/auth.php:4424
+#: lib/auth.php:4429
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web Basic Authentication is geconfigureerd, maar geen gebruikersnaam was doorgegeven aan de webserver. Controleer of u authenticatie heeft ingeschakeld op de webserver."
 
-#: lib/auth.php:4440
+#: lib/auth.php:4445
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s geautoriseerd door de webserver, maar zowel template als gast gebruikers zijn niet gedefinieerd in Kadupul."
 
-#: lib/auth.php:4607 lib/auth.php:4806
+#: lib/auth.php:4612 lib/auth.php:4811
 msgid "Access Denied!  No password provided by user."
 msgstr "Toegang geweigerd! Geen wachtwoord verstrekt door gebruiker."
 
-#: lib/auth.php:4779 lib/auth.php:5845
+#: lib/auth.php:4784 lib/auth.php:5850
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Toegang geweigerd! Sjabloongebruikers-ID %s bestaat niet.  Neem contact op met uw beheerder."
 
-#: lib/auth.php:4787
+#: lib/auth.php:4792
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5140
+#: lib/auth.php:5145
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Uw Kadupul-beheerder heeft complexe wachtwoorden voor aanmeldingen geforceerd en uw huidige Kadupul-wachtwoord komt niet overeen met de nieuwe vereisten. Daarom moet u nu uw wachtwoord wijzigen."
 
-#: lib/auth.php:5180
+#: lib/auth.php:5185
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Moet op zijn minst %d karakters lang zijn!"
 
-#: lib/auth.php:5186
+#: lib/auth.php:5191
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Het wachtwoord moet minstens 1 numeriek karakter bevatten!"
 
-#: lib/auth.php:5190
+#: lib/auth.php:5195
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Het wachtwoord moet een combinatie van kleine en hoofdletters bevatten!"
 
-#: lib/auth.php:5196
+#: lib/auth.php:5201
 msgid "Your password must contain at least 1 special character!"
 msgstr "Het wachtwoord moet tenminste 1 vreemd teken bevatten!"
 
-#: lib/auth.php:5631
+#: lib/auth.php:5636
 msgid "Kadupul Login Failure"
 msgstr "Kadupul log leeggemaakt"
 
-#: lib/auth.php:5931
+#: lib/auth.php:5936
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Verificatie was eerder niet ingesteld. Geprobeerd om lokale authenticatie in te stellen, maar er is geen beheerdersaccount gevonden."
 
