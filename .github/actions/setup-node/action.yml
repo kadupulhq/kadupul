@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Set up Node.js
+description: Install Node.js through the pinned setup-node release.
+
+# setup-node declares no default for these inputs, so an empty value behaves
+# the same as leaving the key out of the calling step.
+inputs:
+  node-version:
+    description: Node.js version to install.
+    required: false
+    default: ''
+  node-version-file:
+    description: File holding the Node.js version, such as .node-version.
+    required: false
+    default: ''
+  cache:
+    description: Package manager whose download cache is restored.
+    required: false
+    default: ''
+  cache-dependency-path:
+    description: Lock files that key the package manager cache.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+        cache: ${{ inputs.cache }}
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}

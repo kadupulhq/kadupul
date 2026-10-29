@@ -346,6 +346,19 @@ function get_host_sort_type()
     }
 }
 
+/** Resolve the tree that owns a branch and require node access to it. */
+function tree_branch_editable($branch, $function)
+{
+    $tree_id = db_fetch_cell_prepared(
+        'SELECT graph_tree_id
+		FROM graph_tree_items
+		WHERE id = ?',
+        array($branch)
+    );
+
+    return $tree_id !== false && $tree_id !== null && api_tree_node_access($tree_id, $function);
+}
+
 function set_host_sort_type()
 {
     $type   = '';
@@ -365,6 +378,10 @@ function set_host_sort_type()
                 if (isset($parts[0]) && $parts[0] == 'tbranch') {
                     $branch = $parts[1];
                     input_validate_input_number($branch);
+
+                    if (!tree_branch_editable($branch, 'set_host_sort')) {
+                        break;
+                    }
 
                     if (get_request_var('type') == 'hsgt') {
                         $type = HOST_GROUPING_GRAPH_TEMPLATE;
@@ -461,6 +478,10 @@ function set_branch_sort_type()
                 if (isset($parts[0]) && $parts[0] == 'tbranch') {
                     $branch = $parts[1];
                     input_validate_input_number($branch);
+
+                    if (!tree_branch_editable($branch, 'set_branch_sort')) {
+                        break;
+                    }
 
                     switch (get_request_var('type')) {
                         case 'inherit':

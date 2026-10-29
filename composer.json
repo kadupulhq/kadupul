@@ -38,6 +38,7 @@
         "symfony/cache": "7.4.*",
         "symfony/clock": "7.4.*",
         "symfony/console": "7.4.*",
+        "symfony/doctrine-messenger": "7.4.*",
         "symfony/filesystem": "7.4.*",
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
