@@ -69,10 +69,21 @@ jobs:
             gate=(--baseline-commit "${BASE_SHA}" --error)
           fi
 
-          semgrep scan "${configs[@]}" "${gate[@]}" \
-              --metrics off \
-              --timeout 0 --timeout-threshold 0 --max-target-bytes 0 \
-              --sarif --output semgrep.sarif
+          # The registry sometimes answers a rule pack download with 403, which
+          # Semgrep reports as exit 7 (missing config) before scanning anything.
+          for attempt in 1 2 3; do
+            status=0
+            semgrep scan "${configs[@]}" "${gate[@]}" \
+                --metrics off \
+                --timeout 0 --timeout-threshold 0 --max-target-bytes 0 \
+                --sarif --output semgrep.sarif || status=$?
+            if [ "$status" -ne 7 ] || [ "$attempt" -eq 3 ]; then
+              break
+            fi
+            echo "::warning::Semgrep could not download a rule pack; retrying in $((attempt * 30)) seconds."
+            sleep $((attempt * 30))
+          done
+          exit "$status"
 
       # Semgrep honours nosemgrep, but it still writes those findings to the
       # SARIF with an inSource suppression, and code scanning lists them as open
