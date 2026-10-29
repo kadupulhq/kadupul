@@ -21,6 +21,14 @@ const defaultIo = Object.freeze({
 });
 const jsDirectory = new URL("../../include/js/", import.meta.url);
 
+// Keep I/O bounded to one action and stop before starting the next on failure.
+function forEachSerially(items, action) {
+  return Array.from(items).reduce(
+    (previous, item) => previous.then(() => action(item)),
+    Promise.resolve(),
+  );
+}
+
 function compareText(left, right) {
   if (left === right) return 0;
   return left < right ? -1 : 1;
@@ -154,17 +162,17 @@ export async function syncAssets(manifest, mode, io = defaultIo) {
   const prepared = [];
   const tracked = [];
   // Keep requests serial and finish validation before the first write.
-  for await (const asset of manifest) {
-    if (asset.owned) continue;
+  await forEachSerially(manifest, async (asset) => {
+    if (asset.owned) return;
     if (asset.tracked) {
       if (mode === "--check") tracked.push(await verifyTracked(asset, io));
     } else {
       prepared.push(await prepareAsset(asset, io));
     }
-  }
+  });
 
   // Validate every download before modifying any tracked asset.
-  for await (const { file, bytes, asset } of prepared) {
+  await forEachSerially(prepared, async ({ file, bytes, asset }) => {
     if (mode === "--write") {
       await io.writeFile(file, bytes);
     } else if (!bytes.equals(await io.readFile(file))) {
@@ -173,7 +181,7 @@ export async function syncAssets(manifest, mode, io = defaultIo) {
       );
     }
     console.log(`${asset.file}: ${asset.package}@${asset.version} verified`);
-  }
+  });
   for (const asset of tracked) {
     console.log(`${asset.file}: ${asset.package}@${asset.version} tracked`);
   }
@@ -246,7 +254,7 @@ export async function reportOutdated(pins, io = defaultIo) {
   let behind = 0;
   const entries = [...pins].sort(([left], [right]) => compareText(left, right));
   // Query in report order and stop before querying later packages on failure.
-  for await (const [name, { version, frozen }] of entries) {
+  await forEachSerially(entries, async ([name, { version, frozen }]) => {
     if (!/^(@[a-z0-9~][a-z0-9-._~]*\/)?[a-z0-9~][a-z0-9-._~]*$/.test(name)) {
       throw new Error(`Invalid npm package name: ${name}`);
     }
@@ -256,7 +264,7 @@ export async function reportOutdated(pins, io = defaultIo) {
     let state = "current";
     if (stale) state = frozen ? "frozen" : "behind";
     console.log(`${name}: pinned ${version}, latest ${latest} (${state})`);
-  }
+  });
   return behind;
 }
 
