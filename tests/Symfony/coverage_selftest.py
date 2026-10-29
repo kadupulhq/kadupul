@@ -90,7 +90,7 @@ def main():
     required = [prefix + path for path in (
         'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
         'bin/legacy-permission-denied.php', 'permission_denied.php',
-        'bin/legacy-console-menu.php',
+        'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php',
         'src/Platform/Infrastructure/Legacy/ConsoleMenuRuntime.php',
         'src/Platform/Infrastructure/Legacy/LegacyPluginConsoleMenu.php',
         'src/Platform/Infrastructure/Legacy/PermissionDeniedRuntime.php',
