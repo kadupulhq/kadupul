@@ -98,7 +98,7 @@ function cacti_snmp_session(
     }
 
     try {
-        $session = @new SNMP($version, $snmp_hostname . ':' . $port, ($version == 3 ? $auth_user : $community), $timeout_us, $retries);
+        $session = @new SNMP($version, $snmp_hostname . ':' . (is_numeric($port) ? (int) $port : 161), ($version == 3 ? $auth_user : $community), $timeout_us, $retries);
     } catch (Exception $e) {
         return false;
     }
@@ -1258,6 +1258,10 @@ function cacti_snmp_options_sanitize($version, $community, &$port, &$timeout, &$
 
         return false;
     }
+
+    /* every binary and native call site builds host:port from this value, so
+       it must be an integer before it leaves the sanitizer */
+    $port = (int) $port;
 
     return true;
 }

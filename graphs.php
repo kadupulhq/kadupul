@@ -148,7 +148,9 @@ function add_tree_names_to_actions_array()
 
     if (cacti_sizeof($trees)) {
         foreach ($trees as $tree) {
-            $graph_actions['tr_' . $tree['id']] = __esc('Place on a Tree (%s)', $tree['name']);
+            if (is_tree_allowed($tree['id'])) {
+                $graph_actions['tr_' . $tree['id']] = __esc('Place on a Tree (%s)', $tree['name']);
+            }
         }
     }
 }
@@ -666,6 +668,10 @@ function form_actions()
             } elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches)) { // place on tree
                 get_filter_request_var('tree_id');
                 get_filter_request_var('tree_item_id');
+                if (!api_tree_node_access(get_request_var('tree_id'), 'place_graph')) {
+                    $selected_items = array();
+                    raise_message('tree_access_denied', __('The selected Tree is not available.'), MESSAGE_LEVEL_ERROR);
+                }
                 for ($i = 0;($i < cacti_count($selected_items));$i++) {
                     api_tree_item_save(0, get_nfilter_request_var('tree_id'), TREE_ITEM_TYPE_GRAPH, get_nfilter_request_var('tree_item_id'), '', $selected_items[$i], 0, 0, 0, 0, false);
                 }
@@ -922,6 +928,14 @@ function form_actions()
 				</td>
 			</tr>";
             $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Convert to Graph Template') . "'>";
+        } elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches) && !is_tree_allowed($matches[1])) { // place on an inaccessible tree
+            print "<tr>
+				<td class='textArea'>
+					<p>" . __('The selected Tree is not available.') . "</p>
+				</td>
+			</tr>";
+
+            $save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>";
         } elseif (preg_match('/^tr_([0-9]+)$/', get_request_var('drp_action'), $matches)) { // place on tree
             print "<tr>
 				<td class='textArea'>
@@ -1956,7 +1970,7 @@ function validate_graph_request_vars()
         ),
         'template_id' => array(
             'filter' => FILTER_VALIDATE_REGEXP,
-            'options' => array('options' => array('regexp' => '(cg_[0-9]|dq_[0-9]|[\-0-9])')),
+            'options' => array('options' => array('regexp' => '/^(cg_[0-9]+|dq_[0-9]+|-?[0-9]+)$/')),
             'pageset' => true,
             'default' => '-1'
         ),

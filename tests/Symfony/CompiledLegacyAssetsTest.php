@@ -105,8 +105,8 @@ final class CompiledLegacyAssetsTest extends TestCase
                 ++$checked;
             }
         }
-        // 12 theme stylesheets and 27 scripts per theme, minus flag-icons.
-        self::assertGreaterThanOrEqual(38 * count(self::themes()), $checked);
+        // 12 theme stylesheets and 28 scripts per theme, minus flag-icons.
+        self::assertGreaterThanOrEqual(39 * count(self::themes()), $checked);
     }
 
     public function testCompiledStylesheetsReferenceOnlyCompiledFiles(): void

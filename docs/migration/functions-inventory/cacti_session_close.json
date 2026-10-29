@@ -3,12 +3,12 @@
     "name": "cacti_session_close",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8352,
-        "end_line": 8355,
+        "start_line": 8388,
+        "end_line": 8391,
         "line_count": 4,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 11, "core_outside_functions_php": 6, "tests": 28, "plugins": 0},
+        "fan_out": {"core": 11, "core_outside_functions_php": 6, "tests": 29, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

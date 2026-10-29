@@ -3,8 +3,8 @@
     "name": "is_page_ajax",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8262,
-        "end_line": 8269,
+        "start_line": 8298,
+        "end_line": 8305,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

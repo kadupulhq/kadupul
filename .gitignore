@@ -145,6 +145,7 @@ notepad.md
 /include/js/jquery.tablesorter.js
 /include/js/jquery.tablesorter.widgets.js
 /include/js/jquery.js
+/include/js/jquery-migrate.js
 
 # Generated Symfony IDE reference.
 /config/reference.php

@@ -167,20 +167,25 @@ function dsdebug_poller_bottom()
 
                 $real_path = str_replace('<path_rra>', $config['rra_path'], $dtd['data_source_path']);
 
+                // A path outside the RRA directory is reported as unusable, not probed.
+                $path_allowed = rrd_check_path($real_path, null, 'DSDEBUG');
+
                 // rrd_folder_writable
-                $info['rrd_folder_writable'] = (is_resource_writable(dirname($real_path) . '/') ? 1 : 0);
+                $info['rrd_folder_writable'] = ($path_allowed && is_resource_writable(dirname($real_path) . '/') ? 1 : 0);
 
                 // rrd_exists
-                $info['rrd_exists'] = (file_exists($real_path) ? 1 : 0);
+                $info['rrd_exists'] = ($path_allowed && file_exists($real_path) ? 1 : 0);
 
                 // rrd_writable
-                $info['rrd_writable'] = (is_resource_writable($real_path) ? 1 : 0);
+                $info['rrd_writable'] = ($path_allowed && is_resource_writable($real_path) ? 1 : 0);
 
                 // active
                 $info['active'] = $dtd['active'];
                 // owner
                 if ($config['cacti_server_os'] == 'win32') {
                     $info['owner'] = '<unable to determine on windows>';
+                } elseif (!$path_allowed) {
+                    $info['owner'] = '<path outside the RRA directory>';
                 } else {
                     $o = posix_getpwuid(fileowner($real_path));
                     $o = $o['name'];
@@ -373,14 +378,26 @@ function dsdebug_run_repair($id)
         if (isset($check['info']['rrd_match_array']['tune'])) {
             $path = get_data_source_path($id, true);
 
+            if (!rrd_check_path($path, null, 'DSDEBUG')) {
+                return false;
+            }
+
             if (is_writeable($path)) {
                 $rrdtool_path = read_config_option('path_rrdtool');
                 $failures = 0;
                 $failure_data = '';
+                $target       = clean_up_path($path) . ' ';
 
                 foreach ($check['info']['rrd_match_array']['tune'] AS $options) {
                     if (strpbrk($options, "\r\n\0") !== false) {
                         cacti_log("ERROR: RRDfile repair command skipped for DS[$id]. It contains a line break or NUL.", false, 'DSDEBUG');
+                        $failures++;
+                        continue;
+                    }
+
+                    // The stored command was built for the file checked above; it must still name that file.
+                    if (strncmp($options, $target, strlen($target)) !== 0) {
+                        cacti_log("ERROR: RRDfile repair command skipped for DS[$id]. It does not name the Data Source RRDfile.", false, 'DSDEBUG');
                         $failures++;
                         continue;
                     }

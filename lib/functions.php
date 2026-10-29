@@ -3640,7 +3640,7 @@ function get_rrd_cfs($local_data_id, $rrdtool_pipe = false)
 
     $rrdfile = get_data_source_path($local_data_id, true);
 
-    $output = @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
+    $output = rrd_check_path($rrdfile, null, 'WEBLOG') ? @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe) : '';
 
     /* search for
      * 		rra[0].cf = 'LAST'
@@ -6893,25 +6893,31 @@ function is_device_debug_enabled($host_id)
  */
 function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI')
 {
-    $hostname = db_fetch_cell_prepared(
+    $stored = db_fetch_cell_prepared(
         'SELECT hostname
 		FROM poller
 		WHERE id = ?',
         array($poller_id)
     );
 
-    if (!is_ipaddress($hostname)) {
-        $ipaddress = gethostbyname($hostname);
+    $hostname = \Kadupul\Platform\Contract\CollectorAddress::host($stored);
 
-        if (!is_ipaddress($ipaddress)) {
-            if (debounce_run_notification('poller_down:' . $poller_id)) {
-                cacti_log(sprintf('WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!', $poller_id, $hostname), false, $logtype);
+    if ($hostname === null) {
+        cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s because its hostname is not a valid host name or address', $poller_id), false, 'SECURITY');
 
-                admin_email(__('Kadupul System Warning'), __('WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!', $poller_id, $hostname));
-            }
+        return '';
+    }
 
-            return '';
+    $target_ip = is_ipaddress($hostname) ? $hostname : gethostbyname($hostname);
+
+    if (!is_ipaddress($target_ip)) {
+        if (debounce_run_notification('poller_down:' . $poller_id)) {
+            cacti_log(sprintf('WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!', $poller_id, $hostname), false, $logtype);
+
+            admin_email(__('Kadupul System Warning'), __('WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!', $poller_id, $hostname));
         }
+
+        return '';
     }
 
     // Validate URL is a relative path to prevent SSRF
@@ -6924,10 +6930,40 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI')
         return '';
     }
 
-    $fgc_contextoption = get_default_contextoption();
-    $fgc_context       = stream_context_create($fgc_contextoption);
+    if (!\Kadupul\Platform\Contract\CollectorAddress::allows($target_ip)) {
+        cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s to reserved address %s', $poller_id, $target_ip), false, 'SECURITY');
 
-    return  file_get_contents(get_url_type() . '://' . $hostname . $url, false, $fgc_context);
+        return '';
+    }
+
+    $fgc_contextoption = get_default_contextoption();
+
+    // The address checked above is the one connected to. A redirect is not
+    // followed and the name is not resolved again, so neither can move the
+    // request to an address the check refuses. The http wrapper reads these
+    // options for https URLs too.
+    $fgc_contextoption['http']['follow_location'] = 0;
+    $fgc_contextoption['http']['max_redirects']   = 0;
+
+    if (!is_ipaddress($hostname)) {
+        $host_header = 'Host: ' . $hostname;
+
+        if (!isset($fgc_contextoption['http']['header']) || $fgc_contextoption['http']['header'] === '') {
+            $fgc_contextoption['http']['header'] = $host_header;
+        } elseif (is_array($fgc_contextoption['http']['header'])) {
+            $fgc_contextoption['http']['header'][] = $host_header;
+        } else {
+            $fgc_contextoption['http']['header'] = rtrim($fgc_contextoption['http']['header'], "\r\n") . "\r\n" . $host_header;
+        }
+
+        if (get_url_type() == 'https') {
+            $fgc_contextoption['ssl']['peer_name'] = $hostname;
+        }
+    }
+
+    $fgc_context = stream_context_create($fgc_contextoption);
+
+    return  file_get_contents(get_url_type() . '://' . \Kadupul\Platform\Contract\CollectorAddress::urlHost($target_ip) . $url, false, $fgc_context);
 }
 
 /**
@@ -9201,10 +9237,13 @@ function escape_page_action(array $actions, $drp_action, string $default = ''): 
  * @param int    $timeout    Seconds before the request is aborted.
  * @param array  $allowlist  Optional case-insensitive list of allowed hostnames (exact match).
  * @param int    $status     By-ref HTTP status code, or 0 on transport failure.
+ * @param string $connect_address Optional IP address to connect to instead of
+ *                                resolving the URL host again; the URL host stays
+ *                                the Host header and TLS peer name.
  *
  * @return mixed  Response body string on 2xx, false on any failure.
  */
-function cacti_http($url, $timeout = 10, array $allowlist = array(), &$status = 0)
+function cacti_http($url, $timeout = 10, array $allowlist = array(), &$status = 0, $connect_address = '')
 {
     $status = 0;
 
@@ -9235,6 +9274,32 @@ function cacti_http($url, $timeout = 10, array $allowlist = array(), &$status = 
         'allow_self_signed' => read_config_option('allow_unsafe_https') == 'on' ? true : false,
     ) : array();
 
+    $header = "Accept: */*\r\nConnection: close\r\n";
+
+    if ($connect_address !== '') {
+        if (filter_var($connect_address, FILTER_VALIDATE_IP) === false) {
+            return false;
+        }
+
+        $host = trim($parts['host'], '[]');
+
+        // An address host is its own connection address; a name keeps its Host header and TLS identity.
+        if (filter_var($host, FILTER_VALIDATE_IP) === false) {
+            $header .= 'Host: ' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . "\r\n";
+
+            if ($scheme === 'https') {
+                $ssl['peer_name'] = $parts['host'];
+            }
+        } elseif (inet_pton($host) !== inet_pton($connect_address)) {
+            return false;
+        }
+
+        $url = $scheme . '://' . \Kadupul\Platform\Contract\CollectorAddress::urlHost($connect_address)
+            . (isset($parts['port']) ? ':' . $parts['port'] : '')
+            . ($parts['path'] ?? '')
+            . (isset($parts['query']) ? '?' . $parts['query'] : '');
+    }
+
     $ctx = stream_context_create(array(
         'http' => array(
             'method'          => 'GET',
@@ -9242,7 +9307,7 @@ function cacti_http($url, $timeout = 10, array $allowlist = array(), &$status = 
             'follow_location' => 0,
             'max_redirects'   => 0,
             'ignore_errors'   => true,
-            'header'          => "Accept: */*\r\nConnection: close\r\n",
+            'header'          => $header,
         ),
         'ssl' => $ssl,
     ));

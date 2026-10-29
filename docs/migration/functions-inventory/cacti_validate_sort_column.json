@@ -3,8 +3,8 @@
     "name": "cacti_validate_sort_column",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9159,
-        "end_line": 9166,
+        "start_line": 9195,
+        "end_line": 9202,
         "line_count": 8,
         "signature": {
             "parameters": [

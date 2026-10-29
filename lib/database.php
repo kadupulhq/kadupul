@@ -2279,6 +2279,23 @@ function db_qstr($s, $db_conn = false)
 }
 
 /**
+ * db_like_escape - escape the LIKE wildcard characters in a value so it
+ * matches literally instead of as a pattern.
+ *
+ * Pass the result to a bound parameter (LIKE ?), not db_qstr(), which would
+ * escape the backslashes again. Add the surrounding wildcards after escaping,
+ * for example '%' . db_like_escape($value) . '%'.
+ *
+ * @param mixed $value The value to neutralise for a LIKE clause
+ *
+ * @return string The value with backslash, percent and underscore escaped
+ */
+function db_like_escape($value): string
+{
+    return str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), (string) $value);
+}
+
+/**
  * db_qstr_rlike - Safely quote a value for use in a RLIKE/REGEXP clause.
  *
  * Caps the length and strips alternation and bounded-repeat metacharacters

@@ -61,7 +61,6 @@ or deprecating anything. Do not remove a function on the count alone.
 | `cacti_temp_file` | 2 | 0 | 0 | 0 | Platform/Application/Port/Filesystem |
 | `get_daysfromtime` | 2 | 0 | 0 | 0 | Platform/Domain/Time |
 | `get_nearest_timespan` | 2 | 1 | 0 | 0 | Platform/Domain/Time |
-| `get_rrd_cfs` | 2 | 0 | 0 | 0 | Graphing/Domain |
 | `is_base64_encoded` | 2 | 2 | 0 | 0 | Platform/Domain/Text |
 | `is_function_enabled` | 2 | 2 | 0 | 0 | Platform/Application/Port/ProcessRunner |
 | `sanitize_cdef` | 2 | 2 | 0 | 0 | Platform/Domain/Security |
@@ -70,6 +69,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `get_execution_user` | 2 | 1 | 1 | 0 | Platform/Application/Port/Filesystem |
 | `get_md5_hash` | 2 | 0 | 1 | 0 | Navigation |
 | `get_message_max_type` | 2 | 0 | 1 | 0 | Platform/Application/Port/FlashMessages |
+| `get_rrd_cfs` | 2 | 0 | 1 | 0 | Graphing/Domain |
 | `get_uptime` | 2 | 2 | 1 | 0 | Platform/Domain/Time |
 | `is_device_debug_enabled` | 2 | 1 | 1 | 0 | Inventory/Application |
 | `is_mac_address` | 2 | 1 | 1 | 0 | Platform/Domain/Network |
@@ -79,7 +79,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `send_mail` | 2 | 1 | 1 | 0 | Alerting/Application/Port/MailSender |
 | `clog_admin` | 2 | 2 | 2 | 0 | IdentityAccess |
 | `check_changed` | 2 | 1 | 3 | 0 | legacy-retained |
-| `get_default_contextoption` | 2 | 0 | 3 | 0 | Platform/Presentation/Http |
+| `get_default_contextoption` | 2 | 0 | 4 | 0 | Platform/Presentation/Http |
 | `get_format_message_instance` | 2 | 0 | 4 | 0 | Platform/Application/Port/FlashMessages |
 | `get_selective_log_level` | 2 | 1 | 4 | 0 | Platform/Infrastructure/Legacy |
 | `is_urlencoded` | 2 | 1 | 4 | 0 | Platform/Domain/Text |
