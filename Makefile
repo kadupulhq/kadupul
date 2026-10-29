@@ -84,6 +84,15 @@ compare: ## Differential report. Usage: make compare BASELINE=cacti-1.2.31 CANDI
 test-harness-selftest: ## Check the harness normalization does not erase real contracts
 	mise exec python@3.12 -- python tests/Support/Behavior/selftest.py
 
+# Static analysis runs through the composer scripts so CI and local runs match.
+.PHONY: phpstan deptrac analyse
+phpstan: ## Run PHPStan at max level over src/ (warms the dev container first)
+	mise exec -- composer run-script phpstan
+deptrac: ## Check module and layer boundaries against docs/architecture.md
+	mise exec -- composer run-script deptrac
+analyse: ## Run PHPStan, Deptrac and the Composer dependency analyser
+	mise exec -- composer run-script analyse
+
 .PHONY: inventory
 inventory: ## Regenerate the behavioral surface inventory
 	mise exec python@3.12 -- python tests/Support/Behavior/inventory.py
