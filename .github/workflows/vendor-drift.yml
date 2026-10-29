@@ -1,0 +1,33 @@
+name: Browser library drift
+
+# Informational. Reports pinned packages that are behind npm latest without
+# gating any change, so a new upstream release never blocks unrelated work.
+on:
+  schedule:
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  outdated:
+    name: Report outdated pins
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        with:
+          install_args: node@22.22.2
+      - name: Compare pins with npm latest
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          {
+            echo '```'
+            mise exec node@22.22.2 -- node tools/dependencies/sync.mjs --outdated
+            echo '```'
+          } 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"

@@ -7,6 +7,8 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Log PHP deprecations (`E_DEPRECATED`, `E_USER_DEPRECATED`) as warnings without a backtrace instead of as errors, so library deprecations no longer read as failures in `cacti.log` (#1184).
+- Inventory bundled browser libraries and report dependency version drift during maintenance.
+
 - Load jQuery Migrate after jQuery 4 so existing widgets and plugins can use removed jQuery helpers. Keep its unsafe HTML and JSONP compatibility patches disabled.
 
 - Make the CSP report size limit reachable with a bounded body read, drop reports when the rate-limit directory cannot be trusted, and sweep expired rate-limit counters (ports the lts protection; upstream Cacti #7704).
