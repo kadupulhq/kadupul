@@ -702,6 +702,17 @@ function boost_output_rrd_data($child)
 
     $runtime_exceeded  = false;
 
+    /**
+     * The work list is a MEMORY table that a database restart empties, so a
+     * replaced session would end the loop early as if all work were done.
+     * Session variables do not survive a reconnect.
+     */
+    $session_token = bin2hex(random_bytes(8));
+    if (db_execute_prepared('SET @boost_child_session = ?', array($session_token)) === false) {
+        rrd_close($rrdtool_pipe);
+        return -1;
+    }
+
     /* let's set and track memory usage will we */
     if (!function_exists('memory_get_peak_usage')) {
         $get_memory   = true;
@@ -810,6 +821,12 @@ function boost_output_rrd_data($child)
 
             $runtime_exceeded = true;
         }
+    }
+
+    if (db_fetch_cell('SELECT @boost_child_session') !== $session_token) {
+        cacti_log('ERROR: Boost child ' . $child . ' lost its database session; unprocessed samples retained for retry.', true, 'BOOST');
+        rrd_close($rrdtool_pipe);
+        return -1;
     }
 
     boost_debug("Processing Complete for Boost Process $child.  It took $curpass passed to complete.");
@@ -1042,6 +1059,15 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
                 /* reset the rrd file path and templates, assume non multi output */
                 boost_timer('rrd_filename_and_template', BOOST_TIMER_START);
                 $rrd_data     = boost_get_rrd_filename_and_template($item['local_data_id']);
+
+                /* A failed lookup is not a removed data source; keep its samples queued. */
+                if ($rrd_data === false) {
+                    boost_timer('rrd_filename_and_template', BOOST_TIMER_END);
+                    $local_data_id = $item['local_data_id'];
+                    $failed_ids[$local_data_id] = array('path' => '', 'reason' => null);
+                    continue;
+                }
+
                 $rrd_tmpl     = $rrd_data['rrd_template'];
                 $template_len = strlen($rrd_tmpl);
 

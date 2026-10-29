@@ -73,6 +73,7 @@
       <file>Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
       <file>Unit/Core/Rrd/BoostReadFailureNativeTest.php</file>
+      <file>Unit/Core/Rrd/BoostLookupFailureNativeTest.php</file>
       <file>Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
       <file>Unit/Core/Poller/PollerAcknowledgementTest.php</file>
       <file>Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>

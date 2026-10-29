@@ -1036,6 +1036,10 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '')
 
             $path_template = boost_get_rrd_filename_and_template($local_data_id);
 
+            if ($path_template === false) {
+                return -1;
+            }
+
             if (cacti_sizeof($path_template)) {
                 $rrd_path = $path_template['rrd_path'];
                 $rrd_tmpl = $path_template['rrd_template'];
@@ -1415,7 +1419,9 @@ function boost_determine_caching_state()
    1) the rrd_update template from the database in form of
       update decisions for multi-output RRDs
    2) rrd filename
-   @arg $local_data_id - the data source to obtain information from */
+   @arg $local_data_id - the data source to obtain information from
+   @returns false when a lookup failed, which callers must not read as a
+     removed data source: an empty path drops its samples unwritten */
 function boost_get_rrd_filename_and_template($local_data_id)
 {
     $rrd_path     = '';
@@ -1423,12 +1429,18 @@ function boost_get_rrd_filename_and_template($local_data_id)
     $ds_null      = array();
     $ds_nnull     = array();
 
-    $data_template_id = db_fetch_cell_prepared(
+    $data_local = db_fetch_row_prepared(
         'SELECT data_template_id
 		FROM data_local
 		WHERE id = ?',
         array($local_data_id)
     );
+
+    if ($data_local === false) {
+        return false;
+    }
+
+    $data_template_id = $data_local['data_template_id'] ?? 0;
 
     if ($data_template_id > 0) {
         $ds_names = db_fetch_assoc_prepared(
@@ -1454,6 +1466,10 @@ function boost_get_rrd_filename_and_template($local_data_id)
 			ORDER BY data_source_name ASC",
             array($local_data_id)
         );
+    }
+
+    if ($ds_names === false) {
+        return false;
     }
 
     if (cacti_sizeof($ds_names)) {
@@ -1691,10 +1707,14 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
     }
 
     if ($file_exists === false) {
-        $ds_exists = db_fetch_cell_prepared('SELECT id FROM data_local WHERE id = ?', array($local_data_id));
+        $ds_exists = db_fetch_row_prepared('SELECT id FROM data_local WHERE id = ?', array($local_data_id));
+
+        if ($ds_exists === false) {
+            return 'ERROR: Unable to confirm the Data Source';
+        }
 
         // Check for a Data Source that has been removed
-        if ($ds_exists) {
+        if (cacti_sizeof($ds_exists)) {
             $create_pipe = $rrdtool_pipe;
             $valid_entry = boost_rrdtool_function_create($local_data_id, false, $create_pipe);
         } else {
