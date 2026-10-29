@@ -934,6 +934,11 @@ function form_save()
                 $save['snmp_engine_id']       = '';
             }
 
+            // SNMP credentials reach the snmptrap command line; control characters are never part of one.
+            foreach (array('snmp_community', 'snmp_username', 'snmp_password', 'snmp_priv_passphrase', 'snmp_engine_id') as $field) {
+                $save[$field] = preg_replace('/[\x00-\x1f\x7f]/', '', (string) $save[$field]);
+            }
+
             $save['snmp_port']                = form_input_validate(get_nfilter_request_var('snmp_port'), 'snmp_port', '^[0-9]+$', false, 3);
             $save['snmp_message_type']        = form_input_validate(get_nfilter_request_var('snmp_message_type'), 'snmp_message_type', '^[1-2]$', false, 3);
             $save['notes']                    = form_input_validate(get_nfilter_request_var('notes'), 'notes', '', true, 3);
