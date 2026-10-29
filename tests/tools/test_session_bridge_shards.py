@@ -4,10 +4,11 @@
 import sys
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'Symfony'))
 import session_bridge
-from session_bridge import SHARDS, STEPS, selected_steps, shard_errors
+from session_bridge import LASTING_STATE, SHARDS, STEPS, selected_steps, shard_errors
 
 
 class ShardPartitionTest(unittest.TestCase):
@@ -41,6 +42,31 @@ class ShardPartitionTest(unittest.TestCase):
         errors = shard_errors(shards=shards)
         self.assertIn('unknown step in a shard: missing_step', errors)
         self.assertIn('shard 1 changes the step order', errors)
+
+    def test_lasting_state_names_real_steps(self):
+        names = {step.__name__ for step in STEPS}
+        self.assertLessEqual(set(LASTING_STATE), names)
+        self.assertIn("('guest_user','0')", LASTING_STATE['login_policy'])
+        for statements in LASTING_STATE.values():
+            self.assertNotIn('{', statements.format(user_id=1))
+        original = dict(LASTING_STATE)
+        LASTING_STATE['missing_step'] = 'SELECT 1'
+        try:
+            self.assertIn('lasting state names an unknown step: missing_step', shard_errors())
+        finally:
+            LASTING_STATE.clear()
+            LASTING_STATE.update(original)
+
+    def test_skipped_steps_are_mirrored_in_order(self):
+        statements = []
+        fixture = session_bridge.Fixture(SimpleNamespace(sql=statements.append), False)
+        fixture._user_id = 1
+        for step in STEPS:
+            if step.__name__ not in SHARDS[1]:
+                fixture.mirror(step)
+        joined = '\n'.join(statements)
+        self.assertLess(joined.index("('guest_user','0')"), joined.index("('i18n_force_language','fr')"))
+        self.assertNotIn('create-test-community', joined)
 
     def test_broken_partition_refuses_to_run(self):
         original = session_bridge.SHARDS

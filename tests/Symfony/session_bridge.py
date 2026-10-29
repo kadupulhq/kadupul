@@ -61,6 +61,13 @@ class Fixture:
     def actor(self, session):
         return session.request('/app.php/session')
 
+    def mirror(self, step):
+        """Write the lasting state a skipped step leaves, so the next step sees
+        the settings and grants a full run gives it."""
+        statements = LASTING_STATE.get(step.__name__)
+        if statements:
+            self.harness.sql(statements.format(user_id=self.user_id))
+
 
 def console_home(fixture):
     from console_home_http import verify_console_home
@@ -314,10 +321,53 @@ STEPS = (
     account_lifecycle,
 )
 
+# Settings rows and admin grants each step leaves behind in a full run, written
+# in its place when a shard skips it. Steps that snapshot and restore a row
+# leave nothing. "INSERT IGNORE ... ''" mirrors a step that writes back a value
+# it read, which turns an absent row into an empty one. A later step can depend
+# on the row existing: device_create proves its row lock covers
+# "UPDATE settings ... guest_user", which matches no row unless login_policy
+# ran first. The time_last_change_* markers are left out because the
+# application rewrites them on every save.
+LASTING_STATE = {
+    # Resets the CSP mode, console and help settings it toggles and restores
+    # the PHP path its worker failure case breaks.
+    'console_home': "REPLACE INTO settings (name,value) VALUES ('content_security_policy_script',''),('hide_console',''),"
+                    "('path_php_binary','/usr/local/bin/php'),('local_documentation',''); "
+                    'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},8)',
+    'permission_denied': "REPLACE INTO settings (name,value) VALUES ('content_security_policy_script',''); "
+                         "DELETE FROM settings WHERE name='compatibility_denied_reskin'",
+    # Revoked realm checks reinsert the admin grants unconditionally.
+    'schema_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},15),({user_id},26)',
+    # The policy checks end by writing both rows explicitly.
+    'login_policy': "REPLACE INTO settings (name,value) VALUES ('force_https',''),('guest_user','0')",
+    'data_inputs': "UPDATE settings SET value='1' WHERE name='auth_method'; "
+                   "INSERT IGNORE INTO settings (name,value) VALUES ('i18n_language_support',''); "
+                   "INSERT IGNORE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language',''); "
+                   'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},2),({user_id},8)',
+    # Leaves French forced while re-enabling detection.
+    'about': "REPLACE INTO settings (name,value) VALUES ('i18n_force_language','fr'),('i18n_auto_detection','1'),"
+             "('i18n_default_language','en-US'),('i18n_language_support','1'); "
+             'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},8)',
+    'inventory': "INSERT IGNORE INTO settings (name,value) VALUES ('enable_snmp_agent',''); "
+                 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)',
+    'data_source_profile_deletion': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},9)',
+    'site_edit': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)',
+    'links': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},15)',
+    'site_create': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)',
+    'site_lifecycle': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)',
+    # Default SNMP credentials stay at the creation fixture's values.
+    'device_create': "REPLACE INTO settings (name,value) VALUES ('snmp_community','create-test-community'),"
+                     "('snmp_password','create-test-auth'),('snmp_priv_passphrase','create-test-privacy'); "
+                     "INSERT IGNORE INTO settings (name,value) VALUES ('enable_snmp_agent',''),('rrd_autoclean',''),"
+                     "('rrd_autoclean_method',''),('selective_device_debug',''),('automation_graphs_enabled',''); "
+                     'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)',
+}
+
 # CI runs one stack per shard. The split follows measured hosted-runner step
 # times: the schema and audit parity CLIs take about seven minutes together,
-# device creation about four. Every step restores the state it changes, and a
-# shard creates the session and account ID it needs through Fixture.
+# device creation about four. A shard creates the session and account ID it
+# needs through Fixture and mirrors LASTING_STATE for the steps it skips.
 SHARDS = (
     ('schema_parity', 'audit_parity'),
     ('cdef_legacy_pages', 'inventory', 'device_create'),
@@ -337,6 +387,8 @@ def shard_errors(shards=None):
     assigned = [name for shard in shards for name in shard]
     for name in sorted(set(assigned) - set(names)):
         errors.append('unknown step in a shard: ' + name)
+    for name in sorted(set(LASTING_STATE) - set(names)):
+        errors.append('lasting state names an unknown step: ' + name)
     for name in names:
         count = assigned.count(name)
         if count != 1:
@@ -395,8 +447,11 @@ def main():
         if database_sessions:
             harness.command('php', '-r', 'file_put_contents("include/config.php", "\\n\\$cacti_db_session = true;\\n", FILE_APPEND);', check=True)
         fixture = Fixture(harness, database_sessions)
-        for step in steps:
-            step(fixture)
+        for step in STEPS:
+            if step in steps:
+                step(fixture)
+            else:
+                fixture.mirror(step)
         if args.shard:
             print(f'Shared session bridge shard {args.shard} passed.', flush=True)
         else:
