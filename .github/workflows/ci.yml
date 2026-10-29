@@ -696,6 +696,9 @@ jobs:
       - name: Check the aggregate job result gate
         run: bash tests/tools/test_require_job_results.sh
 
+      - name: Check the pull request change scope
+        run: bash tests/tools/test_ci_change_scope.sh
+
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
 
