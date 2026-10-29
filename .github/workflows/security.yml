@@ -77,7 +77,9 @@ jobs:
                 --metrics off \
                 --timeout 0 --timeout-threshold 0 --max-target-bytes 0 \
                 --sarif --output semgrep.sarif || status=$?
-            [ "$status" -eq 7 ] && [ "$attempt" -lt 3 ] || break
+            if [ "$status" -ne 7 ] || [ "$attempt" -eq 3 ]; then
+              break
+            fi
             echo "::warning::Semgrep could not download a rule pack; retrying in $((attempt * 30)) seconds."
             sleep $((attempt * 30))
           done
