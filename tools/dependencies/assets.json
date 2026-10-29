@@ -229,5 +229,18 @@
     "version": "4.0.0",
     "url": "https://cdn.jsdelivr.net/npm/jquery@4.0.0/dist/jquery.js",
     "sha256": "f5fb077959ca06faa1dc50761d8bbb836c6c78067932537a2b3fea9e401257c5"
+  },
+  {
+    "file": "jquery-migrate.js",
+    "package": "jquery-migrate",
+    "version": "4.0.2",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-migrate@4.0.2/dist/jquery-migrate.js",
+    "sha256": "e2379587d8dfc32ca8a44738fffbc7f012ae14fd2af4494964bb09ad311c6632",
+    "replacements": [
+      {
+        "before": "jQuery.migrateVersion = \"4.0.2\";",
+        "after": "jQuery.migrateVersion = \"4.0.2\";\n\n// Muted for production; deprecated calls are still recorded in\n// jQuery.migrateMessages, and setting this to false restores console warnings.\njQuery.migrateMute = true;"
+      }
+    ]
   }
 ]
