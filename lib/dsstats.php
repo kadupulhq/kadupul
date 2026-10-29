@@ -272,6 +272,10 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
         return;
     }
 
+    if (!rrd_check_path($rrdfile, null, 'DSSTATS')) {
+        return;
+    }
+
     if ($use_proxy) {
         $file_exists = rrdtool_execute(array('file_exists', $rrdfile), true, RRDTOOL_OUTPUT_BOOLEAN, false, 'DSSTATS');
     } else {

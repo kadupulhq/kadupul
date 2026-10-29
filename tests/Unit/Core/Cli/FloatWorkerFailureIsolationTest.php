@@ -16,6 +16,8 @@ function cacti_sizeof($rows){return count($rows);}
 function cacti_log($message,...$args){$GLOBALS['logs'][]=$message;}
 function rrdtool_function_fetch($id,...$args){if($id===1){if($GLOBALS['mode']==='empty'){return array();}if($GLOBALS['mode']==='fetch'){throw new RuntimeException('fetch failure');}}return array('data_source_names'=>array('value'));}
 function rrd_maintenance_acquire(...$args){return true;}
+// These queue paths are not files; the path check has its own tests in RrdPathContainmentTest.
+function rrd_check_path($path,$rra_base=null,$logopt=null){return true;}
 function rrd_maintenance_acquire_paths(...$args){return true;}
 function rrd_maintenance_release($lock){$GLOBALS['released']++;}
 function float_rrdfile($path,$id,...$args){if($id===1){throw new RuntimeException('rewrite failure');}return true;}
@@ -51,6 +53,7 @@ function cacti_log(...$args){}
 function rrdtool_function_fetch(...$args){return array('data_source_names'=>array('value'));}
 function rrd_maintenance_acquire_paths($paths,$timeout){$GLOBALS['attempts']++;if(count($paths)!==1 || $timeout!==5){throw new RuntimeException('Unbounded or incorrect RRD lease');}return !$GLOBALS['busy'];}
 function rrd_maintenance_release($lock){if(!$lock){throw new RuntimeException('Released unowned lease');}$GLOBALS['released']++;}
+function rrd_check_path($path,$rra_base=null,$logopt=null){return true;}
 function float_rrdfile($path,$id,...$args){$GLOBALS['rewritten'][]=$id;return true;}
 function db_execute_prepared($sql,$params){unset($GLOBALS['queue'][$params[0]]);return true;}
 function unregister_process(...$args){$GLOBALS['unregistered']++;}

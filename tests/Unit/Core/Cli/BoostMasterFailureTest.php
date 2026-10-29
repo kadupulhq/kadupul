@@ -40,7 +40,7 @@ function boost_purge_cached_png_files(...$args) {}
 function db_fetch_row(...$args) { return array('pending' => 1); }
 function db_fetch_assoc(...$args) { return array(array('name' => 'poller_output_boost_arch_test')); }
 function db_execute($sql) { if (strpos($sql, 'DROP TABLE') !== false) { $GLOBALS['effects'][] = 'drop'; } return true; }
-function db_fetch_cell($sql) { if ($sql === 'SELECT COUNT(*) FROM poller_output_boost_processes') {return 1;} return strpos($sql, 'status < 0') !== false ? $GLOBALS['failed'] : $GLOBALS['updates']; }
+function db_fetch_cell_prepared($sql, $params = array()) { if (preg_match('/^[0-9a-f]{32}$/D', $params[0] ?? '') !== 1) {return false;} if ($sql === 'SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ?') {return 1;} return strpos($sql, 'status < 0') !== false ? $GLOBALS['failed'] : $GLOBALS['updates']; }
 register_shutdown_function(function () { echo json_encode(array($GLOBALS['options'], $GLOBALS['effects'])); });
 FIXTURE;
     $file = tempnam(sys_get_temp_dir(), 'boost-master-');
@@ -75,6 +75,48 @@ FIXTURE;
         unlink($file);
     }
 })->with(array(array(1, 9, 1), array(2, -2, 1), array(false, 10, 1), array(null, 10, 1), array(0, null, 1), array('0', '10', 0), array(0, 10, 0), array(0, 10, 0, 'abc'), array(0, 10, 0, null), array(0, 10, 0, -5)));
+
+test('Boost child records its status under the run it was given and rejects a missing run', function ($run, $expectedExit) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller_boost.php');
+    $start = strpos($source, "} else {\n    cacti_log('INFO: Boost register child process");
+    $end = strpos($source, "function sig_handler", $start);
+    expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
+    $child = substr(rtrim(substr($source, $start + strlen('} else {'), $end - $start - strlen('} else {'))), 0, -1);
+    $bootstrap = <<<'FIXTURE'
+<?php
+namespace BoostChildProbe;
+$config = array('poller_id' => 1); $statements = array();
+function cacti_log(...$args) {}
+function read_config_option($key) { return 1; }
+function register_process_start(...$args) { return true; }
+function unregister_process(...$args) {}
+function boost_output_rrd_data($child) { return 42; }
+function boost_log_child_statistics(...$args) {}
+function db_execute_prepared($sql, $params = array()) { $GLOBALS['statements'][] = array($sql, $params); return true; }
+register_shutdown_function(function () { echo json_encode($GLOBALS['statements']); });
+FIXTURE;
+    $file = tempnam(sys_get_temp_dir(), 'boost-child-');
+    try {
+        file_put_contents($file, $bootstrap . "\n" . '$child = "3"; $run_id = ' . var_export($run, true) . ';' . $child);
+        $process = proc_open(array(PHP_BINARY, $file), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $status = proc_close($process);
+        expect($error)->toBe('')->and($status)->toBe($expectedExit);
+        if ($expectedExit === 0) {
+            $statements = json_decode(substr($output, strpos($output, '[')), true);
+            expect($statements)->toHaveCount(1)
+                ->and($statements[0][0])->toContain('run_id, process_handler, status', 'ON DUPLICATE KEY UPDATE status = VALUES(status)')
+                ->and($statements[0][1])->toBe(array($run, 3, 42));
+        } else {
+            expect($output)->toContain('--run=')->not->toContain('INSERT');
+        }
+    } finally {
+        unlink($file);
+    }
+})->with(array(array(str_repeat('a', 32), 0), array('', 1), array(str_repeat('A', 32), 1), array(str_repeat('a', 31), 1), array(str_repeat('a', 32) . "\n", 1)));
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 eval('namespace BoostWorkerSupervision; function unregister_process(...$args) {$GLOBALS["boost_reaped"][]=$args;}' . test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/poller_boost.php'), 'boost_wait_children'));

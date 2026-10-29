@@ -36,7 +36,7 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 				ON dtd.local_data_id=dtr.local_data_id
 				INNER JOIN graph_templates_item AS gti
 				ON dtr.id=gti.task_item_id
-				WHERE ' . array_to_sql_or($local_graph_ids, 'gti.local_graph_id') . '
+				WHERE gti.local_graph_id IN (' . implode(',', array_map('intval', $local_graph_ids)) . ')
 				AND gti.local_graph_id NOT IN(SELECT local_graph_id FROM aggregate_graphs)
 				AND dtd.local_data_id > 0'),
                 'local_data_id',
@@ -62,7 +62,7 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 					AND gti.local_graph_id NOT IN(SELECT local_graph_id FROM aggregate_graphs)
 					GROUP BY dtd.local_data_id
 					HAVING graphs = 1
-                    AND ' . array_to_sql_or($all_data_sources, 'dtd.local_data_id')),
+                    AND dtd.local_data_id IN (' . implode(',', array_map('intval', $all_data_sources)) . ')'),
                     'local_data_id',
                     'local_data_id'
                 );
@@ -81,7 +81,7 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 					ON dtd.local_data_id=dtr.local_data_id
 					LEFT JOIN graph_templates_item AS gti
 					ON dtr.id=gti.task_item_id
-					WHERE ' . array_to_sql_or($all_data_sources, 'dtd.local_data_id') . '
+					WHERE dtd.local_data_id IN (' . implode(',', array_map('intval', $all_data_sources)) . ')
 					AND gti.local_graph_id IS NULL
                     ' . ($web_scope === null ? 'AND gti.local_graph_id NOT IN(SELECT local_graph_id FROM aggregate_graphs)' : '') . '
                     AND dtd.local_data_id > 0'),
@@ -233,9 +233,9 @@ function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $v
 
         foreach ($local_graph_ids as $local_graph_id) {
             if ($i == 0) {
-                $ids_to_delete .= $local_graph_id;
+                $ids_to_delete .= (int) $local_graph_id;
             } else {
-                $ids_to_delete .= ', ' . $local_graph_id;
+                $ids_to_delete .= ', ' . (int) $local_graph_id;
             }
 
             $i++;

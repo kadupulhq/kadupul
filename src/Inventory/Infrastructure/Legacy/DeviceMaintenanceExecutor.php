@@ -10,6 +10,7 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Domain\DeviceMaintenanceRequest;
 use Kadupul\Inventory\Domain\DeviceMaintenanceState;
 use Kadupul\Inventory\Application\ReadModel\DeviceMaintenanceResult;
+use Kadupul\Platform\Contract\CollectorAddress;
 use PDO;
 
 final class DeviceMaintenanceExecutor
@@ -94,9 +95,16 @@ final class DeviceMaintenanceExecutor
             || str_contains($this->basePath, '..') || preg_match('/[\\\\\s?#]/', $this->basePath)) {
             throw new \RuntimeException('Invalid remote collector address');
         }
-        $url = get_url_type() . '://' . $hostname . rtrim($this->basePath, '/') . '/remote_agent.php?action=ping&safe_diagnostics=1&host_id=' . $deviceId;
+        $host = CollectorAddress::host($hostname);
+        $address = $host === null ? null : CollectorAddress::connectAddress($host, static fn(string $name): string => gethostbyname($name));
+        if ($address === null) {
+            throw new \RuntimeException('Remote collector address refused');
+        }
+        $urlHost = CollectorAddress::urlHost($host);
+        $url = get_url_type() . '://' . $urlHost . rtrim($this->basePath, '/') . '/remote_agent.php?action=ping&safe_diagnostics=1&host_id=' . $deviceId;
         $timeout = max(1, min(300, (int) read_config_option('remote_agent_timeout')));
-        $output = cacti_http($url, $timeout, [$hostname]);
+        $status = 0;
+        $output = cacti_http($url, $timeout, [$urlHost], $status, $address);
         if ($output === false) {
             throw new \RuntimeException('Remote collector probe failed');
         }

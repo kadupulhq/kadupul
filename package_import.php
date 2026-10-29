@@ -228,12 +228,20 @@ function package_file_get_contents($filename) {
 			return false;
 		}
 
-		$data = import_read_package_data($xmlfile, $binary_signature);
+		/* Verify each file with the key import_read_package_data() has already
+		 * checked against the built-in trusted keys, never the key the package
+		 * ships, which a self-signed package controls. */
+		$public_key = '';
+		$data       = import_read_package_data($xmlfile, $public_key);
 
-		if (isset($data['publickey'])) {
-			$public_key = base64_decode($data['publickey']);
-		} else {
-			$public_key = get_public_key();
+		if (!is_array($data) || !isset($data['files']['file']) || !is_array($data['files']['file']) || !package_public_key_is_trusted($public_key)) {
+			unlink($xmlfile);
+
+			return false;
+		}
+
+		if (isset($data['files']['file']['data'])) {
+			$data['files']['file'] = array($data['files']['file']);
 		}
 
 		$fdata = false;
@@ -397,6 +405,32 @@ function package_get_details() {
 	}
 }
 
+function package_public_key_is_trusted($public_key) {
+	if (!is_string($public_key) || trim($public_key) === '') {
+		return false;
+	}
+
+	if (is_cacti_public_key($public_key)) {
+		return true;
+	}
+
+	if (!db_table_exists('package_public_keys')) {
+		return false;
+	}
+
+	$trusted = db_fetch_assoc('SELECT public_key FROM package_public_keys');
+
+	if (cacti_sizeof($trusted)) {
+		foreach ($trusted as $t) {
+			if ($t['public_key'] === $public_key) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 function import_validate_public_key($xmlfile, $accept = false) {
 	$public_key = get_public_key();
 
@@ -443,7 +477,8 @@ function import_validate_public_key($xmlfile, $accept = false) {
 				$package_publickey = base64_decode($xml['publickey']);
 			}
 
-			if ($package_publickey != '') {
+			// Return the shipped key only when it is already trusted.
+			if ($package_publickey != '' && package_public_key_is_trusted($package_publickey)) {
 				return $package_publickey;
 			} else {
 				return get_public_key();
@@ -471,11 +506,15 @@ function package_validate_signature($xmlfile) {
 		return true;
 	}
 
-	// Other trusted keys next
-	$keys = array_rekey(
-		db_fetch_assoc('SELECT public_key FROM package_public_keys'),
-		'public_key', 'public_key'
-	);
+	// Other trusted keys next; the table is absent unless an operator created it
+	$keys = array();
+
+	if (db_table_exists('package_public_keys')) {
+		$keys = array_rekey(
+			db_fetch_assoc('SELECT public_key FROM package_public_keys'),
+			'public_key', 'public_key'
+		);
+	}
 
 	$keys[$cacti_key] = $cacti_key;
 
