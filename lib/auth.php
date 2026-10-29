@@ -3969,47 +3969,29 @@ function local_auth_login_process($username) {
 
 		$user = secpass_login_process($username);
 
-		/* a locked or disabled account that still knows its password was not authenticated */
-		$authenticated = cacti_sizeof($user) > 0;
+		/* The returned account row means secpass_login_process verified the password. */
+		if (cacti_sizeof($user) && !$error) {
+			$verified_hash = $user['password'];
+			$user = db_fetch_row_prepared('SELECT *
+				FROM user_auth
+				WHERE username = ?
+				AND realm = 0',
+				array($username));
 
-		/**
-		 * If the password needs to be rehashed for security purposes,
-		 * do that now.
-		 */
-		$stored_pass = db_fetch_cell_prepared('SELECT password
-			FROM user_auth
-			WHERE username = ?
-			AND realm = 0',
-			array($username));
-
-		if ($stored_pass != '') {
-			$password = get_nfilter_request_var('login_password');
-
-			$valid = compat_password_verify($password, $stored_pass);
-
-			cacti_log("DEBUG: User '" . auth_log_username($username) . "' password for rehash is " . ($valid ? '':'in') . 'valid', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-
-			if ($valid) {
-				$user = db_fetch_row_prepared('SELECT *
-					FROM user_auth
-					WHERE username = ?
+			/* A concurrent password reset must not authenticate against its replacement. */
+			if (!cacti_sizeof($user) || !is_string($user['password']) || !hash_equals($verified_hash, $user['password'])) {
+				$error     = true;
+				$error_msg = __('Access Denied!  Login Failed.');
+				$user      = array();
+			} elseif (compat_password_needs_rehash($verified_hash, PASSWORD_DEFAULT)) {
+				$password = compat_password_hash(get_nfilter_request_var('login_password'), PASSWORD_DEFAULT);
+				db_check_password_length();
+				db_execute_prepared('UPDATE user_auth
+					SET password = ?
+					WHERE id = ?
 					AND realm = 0',
-					array($username));
-
-				/* the same username may exist in other realms; only this local row was verified */
-				if ($authenticated && cacti_sizeof($user) && compat_password_needs_rehash($stored_pass, PASSWORD_DEFAULT)) {
-					$password = compat_password_hash($password, PASSWORD_DEFAULT);
-					db_check_password_length();
-					db_execute_prepared('UPDATE user_auth
-						SET password = ?
-						WHERE id = ?
-						AND realm = 0',
-						array($password, $user['id']));
-				}
+					array($password, $user['id']));
 			}
-		} else {
-			/* a known account verifies here a second time; keep unknown usernames level */
-			compat_password_verify((string) get_nfilter_request_var('login_password'), auth_dummy_password_hash());
 		}
 	}
 
@@ -4627,6 +4609,10 @@ function secpass_login_process($username) {
 	auth_checkclear_lockout($username, 0);
 
 	if (auth_process_lockout_check($username, 0)) {
+		if (trim($password) != '') {
+			compat_password_verify((string) $password, auth_dummy_password_hash());
+		}
+
 		return array();
 	}
 

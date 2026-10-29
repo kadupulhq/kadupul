@@ -1,7 +1,10 @@
 <?php
+declare(strict_types=1);
+
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul Project                                  |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -53,8 +56,16 @@ function graph_template_input_value_is_allowed($column_name, $value) {
 		return false;
 	}
 
-	if (in_array($column_name, array('graph_type_id', 'task_item_id', 'consolidation_function_id', 'cdef_id', 'vdef_id', 'gprint_id'), true)) {
-		return preg_match('/^\d{1,10}$/D', $value) === 1;
+	if (in_array($column_name, array('graph_type_id', 'consolidation_function_id'), true)) {
+		return preg_match('/^\d{1,10}$/D', $value) === 1 && $value <= '255';
+	}
+
+	if ($column_name === 'task_item_id') {
+		return preg_match('/^\d{1,10}$/D', $value) === 1 && $value <= '4294967295';
+	}
+
+	if (in_array($column_name, array('cdef_id', 'vdef_id', 'gprint_id'), true)) {
+		return preg_match('/^\d{1,10}$/D', $value) === 1 && $value <= '16777215';
 	}
 
 	if ($column_name === 'color_id') {
@@ -70,7 +81,7 @@ function graph_template_input_value_is_allowed($column_name, $value) {
 	}
 
 	if ($column_name === 'line_width') {
-		return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:[.,]\d+)?$/D', $value) === 1);
+		return $value === '' || (strlen($value) <= 5 && preg_match('/^\d+(?:[.,]\d{1,2})?$/D', $value) === 1 && (float) str_replace(',', '.', $value) <= 99.99);
 	}
 
 	if ($column_name === 'dash_offset') {
@@ -82,14 +93,35 @@ function graph_template_input_value_is_allowed($column_name, $value) {
 	}
 
 	if ($column_name === 'dashes') {
-		return strlen($value) <= 40 && ($value === '' || preg_match('/^[0-9.,[:space:]]+$/D', $value) === 1);
+		return strlen($value) <= 20 && ($value === '' || preg_match('/^[0-9.,[:space:]]+$/D', $value) === 1);
 	}
 
 	if ($column_name === 'textalign') {
-		return strlen($value) <= 20 && ($value === '' || preg_match('/^[A-Za-z]+$/D', $value) === 1);
+		return strlen($value) <= 10 && ($value === '' || preg_match('/^[A-Za-z]+$/D', $value) === 1);
 	}
 
-	return strlen($value) <= 255;
+	if (strlen($value) > 1020) {
+		return false;
+	}
+
+	$characters = preg_match_all('/./us', $value);
+
+	return $characters !== false && $characters <= 255;
+}
+
+/**
+ * Normalize validated form values for their storage columns.
+ */
+function graph_template_input_storage_value($column_name, $value) {
+	if (in_array($column_name, array('color_id', 'line_width', 'dash_offset', 'sequence'), true) && is_scalar($value) && (string) $value === '') {
+		return '0';
+	}
+
+	if ($column_name === 'line_width' && is_string($value)) {
+		return str_replace(',', '.', $value);
+	}
+
+	return $value;
 }
 
 /**

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2026 The Kadupul project and contributors                 |
@@ -11,7 +13,7 @@
 */
 
 /*
- * call_remote_data_collector() must refuse loopback, link-local and other
+ * call_remote_data_collector() must refuse link-local and other
  * reserved targets before it opens a connection. The function is extracted
  * from lib/functions.php and run with its database and logging helpers
  * stubbed, so no request leaves the test.
@@ -24,12 +26,14 @@
 
 namespace RemoteDataCollectorReservedAddressTest;
 
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+
 if (!function_exists(__NAMESPACE__ . '\call_remote_data_collector')) {
 	$source = \file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
-	preg_match('/^function call_remote_data_collector\(.*?^}\n/ms', $source, $match);
+	if ($source === false) { throw new \RuntimeException('Cannot read collector function'); }
 
 	// test-only eval of source read from this repository, not external input
-	eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]);
+	eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($source, 'call_remote_data_collector'));
 }
 
 function db_fetch_cell_prepared($sql, $params = array()) {
@@ -84,6 +88,20 @@ function remote_collector_call(string $hostname, array $dns = array()) : array {
 	return array($result === 'reply' ? 'connected' : $result, $GLOBALS['rdc_log'], $GLOBALS['rdc_url']);
 }
 
+$previousGlobals = array();
+$fixtureKeys = array('rdc_hostname', 'rdc_dns', 'rdc_log', 'rdc_url', 'rdc_context', 'rdc_base_context');
+beforeEach(function () use (&$previousGlobals, $fixtureKeys) {
+	foreach ($fixtureKeys as $key) {
+		$previousGlobals[$key] = array(array_key_exists($key, $GLOBALS), $GLOBALS[$key] ?? null);
+	}
+});
+afterEach(function () use (&$previousGlobals) {
+	foreach ($previousGlobals as $key => [$exists, $value]) {
+		if ($exists) { $GLOBALS[$key] = $value; } else { unset($GLOBALS[$key]); }
+	}
+	$previousGlobals = array();
+});
+
 dataset('refused addresses', array(
 	'metadata' => array('169.254.169.254'),
 	'link-local IPv4' => array('169.254.0.1'),
@@ -94,6 +112,12 @@ dataset('refused addresses', array(
 	'link-local IPv6 range end' => array('febf::1'),
 	'mapped metadata' => array('::ffff:169.254.169.254'),
 	'mapped metadata hex' => array('::ffff:a9fe:a9fe'),
+	'compatible metadata' => array('::169.254.169.254'),
+	'NAT64 metadata' => array('64:ff9b::a9fe:a9fe'),
+	'6to4 metadata' => array('2002:a9fe:a9fe::1'),
+	'compatible this network' => array('::0.1.2.3'),
+	'NAT64 this network' => array('64:ff9b::1:203'),
+	'6to4 this network' => array('2002:0001:0203::1'),
 	'mapped this network' => array('::ffff:0.0.0.0'),
 	'reserved IPv4' => array('240.0.0.1'),
 	'broadcast' => array('255.255.255.255'),
@@ -131,6 +155,12 @@ dataset('allowed addresses', array(
 	'container host network' => array('host.docker.internal', array('host.docker.internal' => '172.17.0.1')),
 	'private collector' => array('10.20.30.40', array()),
 	'mapped private collector' => array('::ffff:10.20.30.40', array()),
+	'compatible private' => array('::10.20.30.40', array()),
+	'NAT64 private' => array('64:ff9b::a14:1e28', array()),
+	'6to4 private' => array('2002:0a14:1e28::1', array()),
+	'compatible loopback' => array('::127.0.0.1', array()),
+	'NAT64 loopback' => array('64:ff9b::7f00:1', array()),
+	'6to4 loopback' => array('2002:7f00:0001::1', array()),
 ));
 
 test('lets loopback and private collector addresses through to the connection step', function (string $hostname, array $dns) {
