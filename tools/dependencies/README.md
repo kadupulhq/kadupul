@@ -140,13 +140,31 @@ locked 4.19.1 and updates compatible test dependency patches.
 - PHPMailer, gettext, legacy graph/widget libraries and icon assets still need
   separate upstream/compatibility review. They are not covered by root Composer
   or the E2E npm audit merely because their files live in this repository.
-- Chart.js 4, billboard.js 4 and dygraphs 2 must not be treated as
-  drop-in replacements. Their API, module or browser compatibility changes need
+- Chart.js 4 and dygraphs 2 must not be treated as drop-in
+  replacements. Their API, module or browser compatibility changes need
   call-site migration and dedicated regression tests. screenfull is no longer
   bundled: `include/js/screenfull.js` is an application-owned shim over the native
-  Fullscreen API that keeps the screenfull 3.x global API for plugins. jQuery 4.0.0 now ships with
+  Fullscreen API that keeps the screenfull 3.x global API for plugins (screenfull 6
+  is ESM-only and was not adopted). jQuery 4.0.0 now ships with
   the call-site fixes from #834, and Font Awesome 7.3.1 is installed from
   `package.json` (#152).
+- billboard.js is pinned to 4.1.3 in `package.json` and `assets.json`, replacing
+  the tracked 3.18.0 copy, which matched upstream byte for byte. Its 4.0 breaking
+  change applies only to ESM imports: the UMD `dist/billboard.js` that
+  `lib/html.php` loads still installs `export`, `flow`, grid, region and category
+  APIs, and every option the intropage, flowview, syslog, servcheck, reportit and
+  evidence plugins pass exists in the 4.x schema.
+  `billboard.spec.js` renders each plugin chart pattern under D3 7.9.0 and checks
+  hostile names, titles, formatter output, tooltip contents and legend templates.
+  Those sanitization cases pass on both versions except a `javascript:` link
+  spelled with a semicolonless numeric character reference, which 3.18.0 left in
+  default tooltip, custom tooltip and legend-template HTML and 4.1.3 removes. Seven
+  theme `billboard.css` files are the unmodified upstream stylesheet;
+  `midwinter/billboard.midwinter.css` is that stylesheet with Midwinter's tooltip
+  colours, border and radius. Git-based installs must rerun `npm ci && npm run build`
+  after pulling this change, because `git pull` deletes the formerly tracked
+  `include/js/billboard.js` and charts stay broken until it is rebuilt; packaged
+  and offline releases are unaffected.
 - The multiselect implementation already matches upstream 3.0.1 despite its
   stale 3.0.0 banner; its filter differs only in whitespace. jstree 3.3.17,
   js-storage 1.1.0, pace-js 1.2.4 and Playwright 1.63.0 match the latest releases

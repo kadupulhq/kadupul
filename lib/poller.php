@@ -9,6 +9,34 @@
 require_once __DIR__ . '/reference_write.php';
 
 /**
+ * poller_script_server_open - start the PHP script server for a poller run
+ *
+ * @param  string $command The script server command line
+ * @param  array  $pipes   Receives the child's stdin, stdout and stderr
+ *
+ * @return resource|false The process, or false when it could not be started
+ */
+function poller_script_server_open($command, &$pipes)
+{
+    $descriptors = array(
+        0 => array('pipe', 'r'), // stdin is a pipe that the child will read from
+        1 => array('pipe', 'w'), // stdout is a pipe that the child will write to
+        2 => array('pipe', 'w')  // stderr is a pipe to write to
+    );
+
+    $pipes   = array();
+    $process = proc_open($command, $descriptors, $pipes);
+
+    if (!is_resource($process)) {
+        $pipes = array();
+
+        return false;
+    }
+
+    return $process;
+}
+
+/**
  * exec_poll - executes a command and returns its output
  *
  * @param  (string) $command - the command to execute

@@ -163,13 +163,14 @@ if (!$mysql) {
     $db->sqliteCreateFunction('RAND', static fn() => 0.5);
     $db->sqliteCreateFunction('FLOOR', static fn($value) => floor($value));
 }
-$tables = array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'caller_work');
+$tables = array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'user_auth_cache', 'caller_work');
 try {
     $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms ' . ($mysql ? 'INT UNSIGNED' : 'INTEGER') . ' NOT NULL)' . $engine);
     $db->exec('CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY)' . $engine);
     $db->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))' . $engine);
     $db->exec('CREATE TABLE user_auth_group_realm(group_id INTEGER,realm_id INTEGER)' . $engine);
     $db->exec('CREATE TABLE user_auth_group_perms(group_id INTEGER,item_id INTEGER,type INTEGER)' . $engine);
+    $db->exec('CREATE TABLE user_auth_cache(user_id INTEGER, token VARCHAR(191))' . $engine);
     $db->exec('CREATE TABLE caller_work(id INTEGER PRIMARY KEY)' . $engine);
     $db->exec('INSERT INTO user_auth VALUES(7,13),(42,' . (str_contains($scenario, 'wrap') ? '4294967295' : '7') . '),(43,0),(44,99)');
     $db->exec('INSERT INTO user_auth_group VALUES(1),(2),(3)');

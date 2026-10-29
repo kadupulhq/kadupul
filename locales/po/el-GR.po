@@ -126,7 +126,7 @@ msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; γ�
 #: graphs.php:1193 graphs.php:1236 graphs.php:1258 graphs.php:1289
 #: graphs.php:1301 graphs.php:1884 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:302
-#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2819
+#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2953
 #: lib/html_form.php:1397 lib/html_form.php:1414 lib/html_form.php:1425
 #: lib/html_reports.php:632 managers.php:1070 managers.php:1131 plugins.php:713
 #: pollers.php:549 pollers.php:558 pollers.php:567 pollers.php:576
@@ -154,7 +154,7 @@ msgstr "Ακύρωση"
 #: graphs.php:982 graphs.php:991 graphs.php:1193 graphs.php:1236
 #: graphs.php:1258 graphs.php:1289 graphs.php:1301 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2952
 #: lib/html_reports.php:574 managers.php:1070 managers.php:1131 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:783
 #: tree.php:792 tree.php:801 tree.php:810 user_admin.php:252 user_admin.php:292
@@ -589,7 +589,7 @@ msgstr "Πρότυπο"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
+#: lib/api_automation.php:450 lib/auth.php:3991 lib/auth.php:4040
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -620,8 +620,8 @@ msgstr "Οποιοδήποτε"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
-#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3994
+#: lib/auth.php:4043 lib/auth.php:4089 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Υπάρχουν προβλήματα με τη σελίδα Αλλαγή κωδικού πρόσβασης.  Επικοινωνήστε αμέσως με τον διαχειριστή του Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2888
 msgid "Change Password"
 msgstr "Αλλαγή Κωδικού"
 
@@ -844,11 +844,11 @@ msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνή�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
-#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
-#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
-#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
-#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
+#: auth_login.php:119 lib/auth.php:4405 lib/auth.php:4411 lib/auth.php:4501
+#: lib/auth.php:4510 lib/auth.php:4557 lib/auth.php:4582 lib/auth.php:4605
+#: lib/auth.php:4645 lib/auth.php:4657 lib/auth.php:4680 lib/auth.php:4803
+#: lib/auth.php:4823 lib/auth.php:5035 lib/auth.php:5077 lib/auth.php:5087
+#: lib/auth.php:5103 lib/auth.php:5117 lib/auth.php:5155
 msgid "Access Denied!  Login Failed."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
@@ -890,13 +890,13 @@ msgstr "Εισαγάγετε το όνομα χρήστη και τον κωδι
 msgid "Password"
 msgstr "Κωδικός"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1039
-#: lib/auth.php:1061 lib/auth.php:1071 lib/auth.php:1076 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1044
+#: lib/auth.php:1066 lib/auth.php:1076 lib/auth.php:1081 user_admin.php:2124
 msgid "Local"
 msgstr "Τοπικό"
 
-#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1072
-#: lib/auth.php:1077
+#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1077
+#: lib/auth.php:1082
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -915,7 +915,7 @@ msgstr "Σύνδεση"
 
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
-#: lib/html.php:2767 managers.php:24 user_admin.php:1741
+#: lib/html.php:2901 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "Γενικά"
@@ -926,17 +926,17 @@ msgstr "Στοιχεία λογαριασμού χρήστη"
 
 #: auth_profile.php:313 include/global_arrays.php:861
 #: include/global_settings.php:2763 lib/html.php:2191 lib/html.php:2213
-#: lib/html.php:2748
+#: lib/html.php:2882
 msgid "Tree View"
 msgstr "Προβολή δέντρου"
 
 #: auth_profile.php:317 include/global_arrays.php:862 lib/html.php:2198
-#: lib/html.php:2222 lib/html.php:2749
+#: lib/html.php:2222 lib/html.php:2883
 msgid "List View"
 msgstr "Προβολή Λίστας"
 
 #: auth_profile.php:321 include/global_arrays.php:863 lib/html.php:2205
-#: lib/html.php:2750
+#: lib/html.php:2884
 msgid "Preview View"
 msgstr "Προβολή προεπισκόπησης"
 
@@ -1352,7 +1352,7 @@ msgstr "Ενεργοποιημένο"
 #: include/global_settings.php:1660 include/global_settings.php:1673
 #: include/global_settings.php:1698 include/global_settings.php:1712
 #: include/global_settings.php:1802 include/global_settings.php:2576
-#: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2978 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:611 pollers.php:33 user_admin.php:936 user_domains.php:396
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
@@ -2394,8 +2394,8 @@ msgstr "Ρίζα"
 msgid "No Tree Rules Found"
 msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
-#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -2587,7 +2587,7 @@ msgstr "Ανεπεξέργαστη πηγή"
 msgid "The Data Source to Debug"
 msgstr "Η πηγή δεδομένων για την επιδιόρθωση"
 
-#: data_debug.php:506 lib/html.php:2771 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2905 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "Χρήστης"
 
@@ -2877,7 +2877,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Εκτελέστε ελέγχους στις τρέχουσες φιλτραρισμένες προελεύσεις δεδομένων και διατηρήστε άλλα αποτελέσματα"
 
 #: data_debug.php:1150 data_sources.php:1753 data_templates.php:1107
-#: lib/html.php:2780
+#: lib/html.php:2914
 msgid "Profile"
 msgstr "Προφίλ"
 
@@ -3759,7 +3759,7 @@ msgstr "Επεξεργασία προτύπου γραφήματος."
 msgid "Click to view just this Graph in Real-time"
 msgstr "Κάντε κλικ για να δείτε μόνο αυτό το γράφημα σε πραγματικό χρόνο"
 
-#: graph.php:272 lib/html.php:2745
+#: graph.php:272 lib/html.php:2879
 msgid "Utility View"
 msgstr "Προβολή βοηθητικού προγράμματος"
 
@@ -3785,7 +3785,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Ο Kadupul Poller δεν έχει τρέξει ακόμα."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Δεν επιτρέπεται η πρόσβαση"
 
@@ -4118,7 +4118,7 @@ msgstr "Λειτουργία προεπισκόπησης"
 msgid "Add Selected Graphs to Report"
 msgstr "Προσθήκη επιλεγμένων γραφημάτων στην αναφορά"
 
-#: graph_view.php:1049 lib/html.php:2816
+#: graph_view.php:1049 lib/html.php:2950
 msgid "Ok"
 msgstr "Εντάξει"
 
@@ -4465,7 +4465,7 @@ msgstr "Νέα γραφήματα για [Όλες οι συσκευές]"
 msgid "New Graphs for None Host Type"
 msgstr "Νέα γραφήματα για κανένα τύπο κεντρικού υπολογιστή"
 
-#: graphs_new.php:440 lib/html.php:2743
+#: graphs_new.php:440 lib/html.php:2877
 msgid "Filter Settings Saved"
 msgstr "Οι ρυθμίσεις φίλτρου αποθηκεύτηκαν"
 
@@ -4741,17 +4741,17 @@ msgstr "Πρέπει να είστε συνδεδεμένοι για να απο
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να αποκτήσετε πρόσβαση σε αυτή την περιοχή του Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5657
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την ενότητα του Kadupul."
@@ -5223,7 +5223,7 @@ msgstr "Δεξιά"
 msgid "Justified"
 msgstr "Πλήρης στοίχιση"
 
-#: include/global_arrays.php:589 lib/html.php:2842
+#: include/global_arrays.php:589 lib/html.php:2976
 msgid "Center"
 msgstr "Κέντρο"
 
@@ -5621,7 +5621,7 @@ msgstr "Κεφαλίδα"
 
 #: include/global_arrays.php:957 include/global_arrays.php:1008
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/html.php:2831
+#: lib/html.php:2965
 msgid "Graph"
 msgstr "Γραφικό Σχήμα"
 
@@ -5800,7 +5800,7 @@ msgid "Configuration"
 msgstr "Παραμετροποίηση"
 
 #: include/global_arrays.php:1034 include/global_arrays.php:1056
-#: lib/html.php:2549 lib/html.php:2846
+#: lib/html.php:2549 lib/html.php:2980
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
@@ -6829,7 +6829,7 @@ msgid "List Mode"
 msgstr "Λειτουργία λίστας"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Κονσόλα"
@@ -6989,7 +6989,7 @@ msgstr "Εξωτερική σύνδεση"
 msgid "(Action)"
 msgstr "Ενέργεια:"
 
-#: include/global_arrays.php:2633 lib/html.php:2785
+#: include/global_arrays.php:2633 lib/html.php:2919
 msgid "About Kadupul"
 msgstr "Σχετικά με το Kadupul"
 
@@ -7039,7 +7039,7 @@ msgid "Tree Rule Items"
 msgstr "Στοιχεία διασταύρωσης"
 
 #: include/global_arrays.php:2862 include/global_arrays.php:2878
-#: lib/api_device.php:1957
+#: lib/api_device.php:2070
 msgid "days"
 msgstr "ημέρες"
 
@@ -7055,11 +7055,11 @@ msgstr "λεπτά"
 msgid "secs"
 msgstr "δευτερόλεπτα"
 
-#: include/global_arrays.php:2879 lib/api_device.php:1957
+#: include/global_arrays.php:2879 lib/api_device.php:2070
 msgid "hours"
 msgstr "ώρες"
 
-#: include/global_arrays.php:2880 lib/api_device.php:1957
+#: include/global_arrays.php:2880 lib/api_device.php:2070
 msgid "minutes"
 msgstr "λεπτά"
 
@@ -9033,7 +9033,7 @@ msgstr "Εάν είναι Απλή, τα Γραφήματα και οι Πηγέ
 msgid "Simple"
 msgstr "Απλό"
 
-#: include/global_settings.php:521 lib/html.php:2833
+#: include/global_settings.php:521 lib/html.php:2967
 msgid "Advanced"
 msgstr "Προχωρημένος"
 
@@ -9452,7 +9452,7 @@ msgid "Theme Settings"
 msgstr "Ρυθμίσεις Θέματος"
 
 #: include/global_settings.php:944 include/global_settings.php:1154
-#: include/global_settings.php:2611 lib/html.php:2781
+#: include/global_settings.php:2611 lib/html.php:2915
 msgid "Theme"
 msgstr "Θέμα"
 
@@ -9673,7 +9673,7 @@ msgstr "Μέθοδος επιλογής γραμματοσειράς"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Πώς επιθυμείτε να επεξεργάζεται τις γραμματοσειρές από προεπιλογή;"
 
-#: include/global_settings.php:1153 lib/api_device.php:1912
+#: include/global_settings.php:1153 lib/api_device.php:2025
 msgid "System"
 msgstr "Σύστημα"
 
@@ -11507,7 +11507,7 @@ msgstr "Δεν είναι επάνω"
 msgid "Recovering"
 msgstr "αναληπτικό"
 
-#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11646,92 +11646,102 @@ msgstr "Προστέθηκε από την Kadupul Automation"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "ΣΦΑΛΜΑ: Τα εύρη IP με τη μορφή εύρους1-εύρος2 δεν υποστηρίζονται πλέον."
 
-#: lib/api_device.php:155 lib/api_device.php:158 lib/api_device.php:385
-#: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
-#: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
-#: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1317
-#: lib/api_device.php:1330 lib/api_device.php:1334 lib/api_device.php:1379
-#: lib/api_device.php:1382 lib/api_device.php:1569 lib/api_device.php:1573
-#: lib/api_device.php:1609 lib/api_device.php:1613 lib/api_device.php:1658
-#: lib/api_device.php:1662 lib/api_device.php:1723 lib/api_device.php:1727
+#: lib/api_device.php:76
+#, php-format
+msgid "Unable to remove Device %s because its Graphs could not all be removed."
+msgstr ""
+
+#: lib/api_device.php:84
+#, php-format
+msgid "Unable to remove Device %s because its database records could not be removed together."
+msgstr ""
+
+#: lib/api_device.php:268 lib/api_device.php:271 lib/api_device.php:498
+#: lib/api_device.php:502 lib/api_device.php:564 lib/api_device.php:569
+#: lib/api_device.php:614 lib/api_device.php:618 lib/api_device.php:694
+#: lib/api_device.php:698 lib/api_device.php:753 lib/api_device.php:757
+#: lib/api_device.php:823 lib/api_device.php:826 lib/api_device.php:901
+#: lib/api_device.php:904 lib/api_device.php:953 lib/api_device.php:956
+#: lib/api_device.php:999 lib/api_device.php:1002 lib/api_device.php:1430
+#: lib/api_device.php:1443 lib/api_device.php:1447 lib/api_device.php:1492
+#: lib/api_device.php:1495 lib/api_device.php:1682 lib/api_device.php:1686
+#: lib/api_device.php:1722 lib/api_device.php:1726 lib/api_device.php:1771
+#: lib/api_device.php:1775 lib/api_device.php:1836 lib/api_device.php:1840
 #: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Η απομακρυσμένη δημοσκόπηση %s είναι κάτω, θα χρειαστεί να εκτελέσετε ένα FullSync μόλις ενεργοποιηθεί ξανά"
 
-#: lib/api_device.php:549
+#: lib/api_device.php:662
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1833
+#: lib/api_device.php:1946
 msgid "ERROR: Device ID is Blank"
 msgstr "ΣΦΑΛΜΑ: Το αναγνωριστικό συσκευής είναι κενό"
 
-#: lib/api_device.php:1846 lib/api_device.php:1848
+#: lib/api_device.php:1959 lib/api_device.php:1961
 msgid "ERROR: Device["
 msgstr "ΣΦΑΛΜΑ: Η συσκευή ["
 
-#: lib/api_device.php:1864
+#: lib/api_device.php:1977
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "Σφάλμα: Αποτυχία σύνδεσης με απομακρυσμένο συλλέκτη."
 
-#: lib/api_device.php:1871
+#: lib/api_device.php:1984
 msgid "Device is Disabled"
 msgstr "Η συσκευή είναι απενεργοποιημένη"
 
-#: lib/api_device.php:1872
+#: lib/api_device.php:1985
 msgid "Device Availability Check Bypassed"
 msgstr "Έλεγχος διαθεσιμότητας συσκευής Παράκαμψη"
 
-#: lib/api_device.php:1879
+#: lib/api_device.php:1992
 msgid "SNMP Information"
 msgstr "Πληροφορίες SNMP"
 
-#: lib/api_device.php:1883
+#: lib/api_device.php:1996
 msgid "SNMP not in use"
 msgstr "Το SNMP δεν χρησιμοποιείται"
 
-#: lib/api_device.php:1904 lib/api_device.php:1912 lib/api_device.php:1931
+#: lib/api_device.php:2017 lib/api_device.php:2025 lib/api_device.php:2044
 msgid "SNMP error"
 msgstr "Σφάλμα SNMP"
 
-#: lib/api_device.php:1904
+#: lib/api_device.php:2017
 msgid "Session"
 msgstr "Συνεδρία"
 
-#: lib/api_device.php:1931
+#: lib/api_device.php:2044
 msgid "Host"
 msgstr "Διακομιστής"
 
-#: lib/api_device.php:1949
+#: lib/api_device.php:2062
 msgid "System:"
 msgstr "Σύστημα:"
 
-#: lib/api_device.php:1956
+#: lib/api_device.php:2069
 msgid "Uptime:"
 msgstr "Χρόνος λειτουργίας:"
 
-#: lib/api_device.php:1958
+#: lib/api_device.php:2071
 msgid "Hostname:"
 msgstr "Όνομα κεντρικού υπολογιστή:"
 
-#: lib/api_device.php:1959
+#: lib/api_device.php:2072
 msgid "Location:"
 msgstr "Τοποθεσία:"
 
-#: lib/api_device.php:1960
+#: lib/api_device.php:2073
 msgid "Contact:"
 msgstr "Επαφή"
 
-#: lib/api_device.php:1991 lib/functions.php:6253 lib/functions.php:6255
+#: lib/api_device.php:2104 lib/functions.php:6253 lib/functions.php:6255
 #: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "Αποτελέσματα Ping"
 
-#: lib/api_device.php:1996
+#: lib/api_device.php:2109
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Δεν υπάρχει διαθεσιμότητα Ping ή SNMP"
 
@@ -11739,122 +11749,122 @@ msgstr "Δεν υπάρχει διαθεσιμότητα Ping ή SNMP"
 msgid "New Branch"
 msgstr "Νέο υποκατάστημα"
 
-#: lib/auth.php:1078
+#: lib/auth.php:1083
 msgid "Web Basic"
 msgstr "Web Basic"
 
-#: lib/auth.php:2920
+#: lib/auth.php:2925
 msgid "Device:(Hide Disabled)"
 msgstr "Η συσκευή είναι απενεργοποιημένη"
 
-#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
+#: lib/auth.php:2943 lib/auth.php:2945 lib/auth.php:2951 lib/auth.php:2953
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Γράφημα:(%s%s)"
 
-#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
-#: lib/auth.php:3040 lib/auth.php:3042
+#: lib/auth.php:2966 lib/auth.php:2972 lib/auth.php:3039 lib/auth.php:3041
+#: lib/auth.php:3045 lib/auth.php:3047
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Συσκευή:(%s%s)"
 
-#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
-#: lib/auth.php:3056 lib/auth.php:3058
+#: lib/auth.php:2980 lib/auth.php:2986 lib/auth.php:3055 lib/auth.php:3057
+#: lib/auth.php:3061 lib/auth.php:3063
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Πρότυπο:(%s%s)"
 
-#: lib/auth.php:2988
+#: lib/auth.php:2993
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Γράφημα+Συσκευή+Πρότυπο:(%s%s)"
 
-#: lib/auth.php:3025 lib/auth.php:3027
+#: lib/auth.php:3030 lib/auth.php:3032
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Συσκευή+πρότυπο:(%s%s)"
 
-#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
+#: lib/auth.php:3076 lib/auth.php:3083 lib/auth.php:3092
 msgid "Restricted By: "
 msgstr "Περιορισμένη"
 
-#: lib/auth.php:3075
+#: lib/auth.php:3080
 msgid "Granted By: "
 msgstr "Χορηγείται από:"
 
-#: lib/auth.php:3082
+#: lib/auth.php:3087
 msgid "Granted"
 msgstr "Χορήγηση"
 
-#: lib/auth.php:3084 lib/auth.php:3089
+#: lib/auth.php:3089 lib/auth.php:3094
 msgid "Restricted"
 msgstr "Περιορισμένη"
 
-#: lib/auth.php:3323 lib/auth.php:3358
+#: lib/auth.php:3328 lib/auth.php:3363
 msgid "Branch:"
 msgstr "Κλαδί:"
 
-#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
+#: lib/auth.php:3337 lib/auth.php:3371 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "设备："
 
-#: lib/auth.php:4304 lib/auth.php:4395
+#: lib/auth.php:4309 lib/auth.php:4400
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: lib/auth.php:4354
+#: lib/auth.php:4359
 msgid "Access Denied!  Login Disabled."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
-#: lib/auth.php:4429
+#: lib/auth.php:4434
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Ο βασικός έλεγχος ταυτότητας Web έχει ρυθμιστεί, αλλά δεν μεταβιβάστηκε κανένα όνομα χρήστη από το διακομιστή ιστού. Βεβαιωθείτε ότι έχετε ενεργοποιήσει τον έλεγχο ταυτότητας στον διακομιστή ιστού."
 
-#: lib/auth.php:4445
+#: lib/auth.php:4450
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "Το %s έχει πιστοποιηθεί από τον διακομιστή Web, αλλά και οι δύο χρήστες και οι χρήστες δεν έχουν οριστεί στο Kadupul."
 
-#: lib/auth.php:4612 lib/auth.php:4811
+#: lib/auth.php:4617 lib/auth.php:4816
 msgid "Access Denied!  No password provided by user."
 msgstr "Δεν επιτρέπεται η πρόσβαση! Δεν παρέχεται κωδικός πρόσβασης από τον χρήστη."
 
-#: lib/auth.php:4784 lib/auth.php:5850
+#: lib/auth.php:4789 lib/auth.php:5864
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση!  Το αναγνωριστικό χρήστη προτύπου %s δεν υπάρχει.  Επικοινωνήστε με τον διαχειριστή σας."
 
-#: lib/auth.php:4792
+#: lib/auth.php:4797
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5145
+#: lib/auth.php:5150
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ο διαχειριστής του Kadupul έχει επιβάλει σύνθετους κωδικούς πρόσβασης για σύνδεση και ο τρέχων κωδικός πρόσβασης Kadupul δεν ταιριάζει με τις νέες απαιτήσεις. Επομένως, πρέπει να αλλάξετε τον κωδικό πρόσβασής σας τώρα."
 
-#: lib/auth.php:5185
+#: lib/auth.php:5190
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Ο κωδικός πρόσβασης πρέπει να είναι τουλάχιστον% d χαρακτήρες!"
 
-#: lib/auth.php:5191
+#: lib/auth.php:5196
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν αριθμητικό χαρακτήρα!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5200
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ο κωδικός πρόσβασής σας πρέπει να περιέχει ένα μείγμα πεζών και κεφαλαίων χαρακτήρων!"
 
-#: lib/auth.php:5201
+#: lib/auth.php:5206
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν ειδικό χαρακτήρα!"
 
-#: lib/auth.php:5636
+#: lib/auth.php:5650
 msgid "Kadupul Login Failure"
 msgstr "Εγγραφή Kadupul Clear"
 
-#: lib/auth.php:5936
+#: lib/auth.php:5950
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Ο έλεγχος ταυτότητας δεν είχε οριστεί προηγουμένως. Επιχειρήθηκε να οριστεί σε Τοπικό έλεγχο ταυτότητας, αλλά δεν βρέθηκε λογαριασμός διαχειριστή."
 
@@ -12508,11 +12518,11 @@ msgstr "Είσοδος ως τακτικός χρήστης"
 msgid "guest"
 msgstr "άτομο"
 
-#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2904
 msgid "User Community"
 msgstr "Κοινότητα χρηστών"
 
-#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
@@ -12522,11 +12532,11 @@ msgstr "Τεκμηρίωση"
 msgid "Logged in as %s"
 msgstr "Συνδεδεμένος ως %s"
 
-#: lib/functions.php:4284 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Επεξεργασία Προφίλ"
 
-#: lib/functions.php:4294 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2889
 msgid "Logout"
 msgstr "Αποσύνδεση"
 
@@ -12637,33 +12647,33 @@ msgstr "Επιτυχία!"
 msgid "Message Not Sent due to ping failure."
 msgstr "Μήνυμα δεν έχει σταλεί λόγω βλάβης του ping."
 
-#: lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6744 lib/functions.php:6819
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Το plugin Kadupul έχει απενεργοποιηθεί %s λόγω του ακόλουθου σφάλματος: %s! Δείτε το αρχείο καταγραφής Kadupul για περισσότερες λεπτομέρειες."
 
-#: lib/functions.php:6917
+#: lib/functions.php:6922
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Το PollerID:%s έχει μη έγκυρο όνομα κεντρικού υπολογιστή:%s.  Δεν είναι προσβάσιμο μέσω DNS!"
 
-#: lib/functions.php:7370 lib/functions.php:7372
+#: lib/functions.php:7375 lib/functions.php:7377
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Έκδοση %s %s"
 
-#: lib/functions.php:7372
+#: lib/functions.php:7377
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7607
+#: lib/functions.php:7612
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:  Το Key Kadupul Include File %s λείπει.  Εντοπίστε και αντικαταστήστε αυτό το αρχείο"
@@ -12736,7 +12746,7 @@ msgstr "Ερώτημα δεδομένων:"
 msgid "CSV Export of Graph Data"
 msgstr "CSV Εξαγωγή δεδομένων γραφήματος"
 
-#: lib/html.php:540 lib/html.php:2742
+#: lib/html.php:540 lib/html.php:2876
 msgid "Time Graph View"
 msgstr "Προβολή χρονικού γραφήματος"
 
@@ -12840,319 +12850,319 @@ msgstr "Σειρά γεμίσματος γεμίσματος ξηρής λειτ
 msgid "Dry Run Float Range"
 msgstr "Σειρά πλωτών επιφανειών ξηρής λειτουργίας"
 
-#: lib/html.php:2738
+#: lib/html.php:2872
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "Επιτρέψτε ή περιορίστε τις στήλες πίνακα να επεκταθούν πέρα από τα τρέχοντα όρια παραθύρων."
 
-#: lib/html.php:2739 lib/html_filter.php:48
+#: lib/html.php:2873 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "Εισαγάγετε έναν όρο αναζήτησης"
 
-#: lib/html.php:2740
+#: lib/html.php:2874
 msgid "Enter a regular expression"
 msgstr "Εισαγάγετε μια κανονική έκφραση"
 
-#: lib/html.php:2741
+#: lib/html.php:2875
 msgid "No file selected"
 msgstr "Δεν επιλέχθηκε αρχείο"
 
-#: lib/html.php:2744 lib/html.php:2787
+#: lib/html.php:2878 lib/html.php:2921
 msgid "SpikeKill Results"
 msgstr "SpikeKill Αποτελέσματα"
 
-#: lib/html.php:2746
+#: lib/html.php:2880
 msgid "Click to view just this Graph in Realtime"
 msgstr "Κάντε κλικ για να δείτε μόνο αυτό το γράφημα σε πραγματικό χρόνο"
 
-#: lib/html.php:2747
+#: lib/html.php:2881
 msgid "Click again to take this Graph out of Realtime"
 msgstr "Κάντε ξανά κλικ για να πάρετε αυτό το γράφημα από το Realtime"
 
-#: lib/html.php:2756
+#: lib/html.php:2890
 msgid "Standard Mode"
 msgstr "Λειτουργία σάρωσης"
 
-#: lib/html.php:2757
+#: lib/html.php:2891
 msgid "Compact Mode"
 msgstr "Λειτουργία ζουμ"
 
-#: lib/html.php:2758
+#: lib/html.php:2892
 msgid "Dark Color Mode"
 msgstr "Δεν βρέθηκαν χρώματα"
 
-#: lib/html.php:2759
+#: lib/html.php:2893
 msgid "Light Color Mode"
 msgstr "Λειτουργία λίστας"
 
-#: lib/html.php:2760
+#: lib/html.php:2894
 msgid "Use System Color"
 msgstr "Χρώμα στοιχείου"
 
-#: lib/html.php:2761
+#: lib/html.php:2895
 msgid "Ignore System Color"
 msgstr "Χρώμα στοιχείου"
 
-#: lib/html.php:2762
+#: lib/html.php:2896
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: lib/html.php:2763
+#: lib/html.php:2897
 msgid "Kadupul Home"
 msgstr "Kadupul Home"
 
-#: lib/html.php:2765
+#: lib/html.php:2899
 msgid "Miscellaneous"
 msgstr "Διάφορα"
 
-#: lib/html.php:2766
+#: lib/html.php:2900
 msgid "Dashboards"
 msgstr "Απόκρυψη του ταμπλό του Kadupul"
 
-#: lib/html.php:2768
+#: lib/html.php:2902
 msgid "Charts"
 msgstr "Διαγράμματα"
 
-#: lib/html.php:2769
+#: lib/html.php:2903
 msgid "Kadupul Project Page"
 msgstr "Kadupul Project Page"
 
-#: lib/html.php:2773
+#: lib/html.php:2907
 msgid "Spine"
 msgstr "ΣΠΟΝΔΥΛΙΚΗ ΣΤΗΛΗ"
 
-#: lib/html.php:2774
+#: lib/html.php:2908
 msgid "RRDProxy"
 msgstr "RRDProxy"
 
-#: lib/html.php:2775
+#: lib/html.php:2909
 msgid "Keyboard"
 msgstr "Πληκτρολόγιο"
 
-#: lib/html.php:2776
+#: lib/html.php:2910
 msgid "Shortcuts"
 msgstr "Συντομεύσεις"
 
-#: lib/html.php:2777
+#: lib/html.php:2911
 msgid "Contribute to the Kadupul Project"
 msgstr "Περιστρέψτε το αρχείο καταγραφής Kadupul"
 
-#: lib/html.php:2778
+#: lib/html.php:2912
 msgid "Help in Developing"
 msgstr "Βοήθεια στην ανάπτυξη"
 
-#: lib/html.php:2779
+#: lib/html.php:2913
 msgid "Donation & Sponsoring"
 msgstr "Δωρεά & Χορηγίες"
 
-#: lib/html.php:2782
+#: lib/html.php:2916
 msgid "Client"
 msgstr "Πελάτης"
 
-#: lib/html.php:2783
+#: lib/html.php:2917
 msgid "Help in Translating"
 msgstr "Βοήθεια στη μετάφραση"
 
-#: lib/html.php:2784
+#: lib/html.php:2918
 msgid "Report a bug"
 msgstr "Αναφορά ενός σφάλματος"
 
-#: lib/html.php:2786
+#: lib/html.php:2920
 msgid "Kadupul"
 msgstr "Astrophytum asterias (I)"
 
-#: lib/html.php:2788
+#: lib/html.php:2922
 msgid "Click to Show/Hide Filter"
 msgstr "Κάντε κλικ για εμφάνιση / απόκρυψη φίλτρου"
 
-#: lib/html.php:2789
+#: lib/html.php:2923
 msgid "Clear Current Filter"
 msgstr "Διαγραφή τρέχοντος φίλτρου"
 
-#: lib/html.php:2790
+#: lib/html.php:2924
 msgid "Clipboard"
 msgstr "Πρόχειρο"
 
-#: lib/html.php:2791
+#: lib/html.php:2925
 msgid "Clipboard ID"
 msgstr "Αναγνωριστικό πρόχειρου"
 
-#: lib/html.php:2792
+#: lib/html.php:2926
 msgid "Copy operation is unavailable at this time"
 msgstr "Η λειτουργία αντιγραφής δεν είναι διαθέσιμη αυτή τη στιγμή"
 
-#: lib/html.php:2793
+#: lib/html.php:2927
 msgid "Failed to find data to copy!"
 msgstr "Αποτυχία εύρεσης δεδομένων για αντιγραφή!"
 
-#: lib/html.php:2794
+#: lib/html.php:2928
 msgid "Clipboard has been updated"
 msgstr "Το Πρόχειρο έχει ενημερωθεί"
 
-#: lib/html.php:2795
+#: lib/html.php:2929
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "Λυπούμαστε, το πρόχειρο σας δεν ήταν δυνατό να ενημερωθεί αυτή τη στιγμή"
 
-#: lib/html.php:2799
+#: lib/html.php:2933
 msgid "Passphrase length meets 8 character minimum"
 msgstr "Το μήκος της διεύθυνσης πρόσβασης πληρεί ελάχιστο όριο 8 χαρακτήρων"
 
-#: lib/html.php:2800
+#: lib/html.php:2934
 msgid "Passphrase too short"
 msgstr "Η φράση πρόσβασης είναι πολύ μικρή"
 
-#: lib/html.php:2801
+#: lib/html.php:2935
 msgid "Passphrase matches but too short"
 msgstr "Η φράση πρόσβασης είναι πολύ μικρή"
 
-#: lib/html.php:2802
+#: lib/html.php:2936
 msgid "Passphrase too short and not matching"
 msgstr "Η φράση πρόσβασης είναι πολύ μικρή και δεν ταιριάζει"
 
-#: lib/html.php:2803
+#: lib/html.php:2937
 msgid "Passphrases match"
 msgstr "Ταίριασμα φράσεων"
 
-#: lib/html.php:2804
+#: lib/html.php:2938
 msgid "Passphrases do not match"
 msgstr "Οι φράσεις πρόσβασης δεν ταιριάζουν"
 
-#: lib/html.php:2805
+#: lib/html.php:2939
 msgid "Sorry, we could not process your last action."
 msgstr "Λυπούμαστε, δεν ήταν δυνατή η επεξεργασία της τελευταίας σας ενέργειας."
 
-#: lib/html.php:2806
+#: lib/html.php:2940
 msgid "Error:"
 msgstr "Σφάλμα :"
 
-#: lib/html.php:2807
+#: lib/html.php:2941
 msgid "Reason:"
 msgstr "Αιτία:"
 
-#: lib/html.php:2808
+#: lib/html.php:2942
 msgid "Action failed"
 msgstr "Η ενέργεια απέτυχε"
 
-#: lib/html.php:2809 pollers.php:804
+#: lib/html.php:2943 pollers.php:804
 msgid "Connection Successful"
 msgstr "Λειτουργία επιτυχής"
 
-#: lib/html.php:2810 pollers.php:806
+#: lib/html.php:2944 pollers.php:806
 msgid "Connection Failed"
 msgstr "Η σύνδεση απέτυχε"
 
-#: lib/html.php:2811
+#: lib/html.php:2945
 msgid "The response to the last action was unexpected."
 msgstr "Η απάντηση στην τελευταία ενέργεια ήταν απροσδόκητη."
 
-#: lib/html.php:2812
+#: lib/html.php:2946
 msgid "Some Actions failed"
 msgstr "Ορισμένες ενέργειες απέτυχαν"
 
-#: lib/html.php:2813
+#: lib/html.php:2947
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "Σημειώστε ότι δεν μπορούσαμε να επεξεργαστούμε όλες τις ενέργειές σας. Τα στοιχεία είναι παρακάτω."
 
-#: lib/html.php:2814
+#: lib/html.php:2948
 msgid "Operation successful"
 msgstr "Λειτουργία επιτυχής"
 
-#: lib/html.php:2815
+#: lib/html.php:2949
 msgid "The Operation was successful.  Details are below."
 msgstr "Η λειτουργία ήταν επιτυχής. Τα στοιχεία είναι παρακάτω."
 
-#: lib/html.php:2817
+#: lib/html.php:2951
 msgid "Pause"
 msgstr "Παύση"
 
-#: lib/html.php:2820
+#: lib/html.php:2954
 msgid "Zoom In"
 msgstr "Μεγέθυνση"
 
-#: lib/html.php:2821
+#: lib/html.php:2955
 msgid "Zoom Out"
 msgstr "Σμίκρινση"
 
-#: lib/html.php:2822
+#: lib/html.php:2956
 msgid "Zoom Out Factor"
 msgstr "Παράγοντας σμίκρυνσης"
 
-#: lib/html.php:2823
+#: lib/html.php:2957
 msgid "Timestamps"
 msgstr "Χρονοδιακόπτες"
 
-#: lib/html.php:2824
+#: lib/html.php:2958
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2825
+#: lib/html.php:2959
 msgid "4x"
 msgstr "4X"
 
-#: lib/html.php:2826
+#: lib/html.php:2960
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2827
+#: lib/html.php:2961
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2828
+#: lib/html.php:2962
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2829
+#: lib/html.php:2963
 msgid "Zoom Out Positioning"
 msgstr "Σμίκρυνση θέσης"
 
-#: lib/html.php:2830
+#: lib/html.php:2964
 msgid "Zoom Mode"
 msgstr "Λειτουργία ζουμ"
 
-#: lib/html.php:2832
+#: lib/html.php:2966
 msgid "Quick"
 msgstr "Προεπισκόπηση"
 
-#: lib/html.php:2834
+#: lib/html.php:2968
 msgid "Open in new tab"
 msgstr "Άνοιγμα σε νέα καρτέλα"
 
-#: lib/html.php:2835
+#: lib/html.php:2969
 msgid "Save graph"
 msgstr "Αποθήκευση γραφήματος"
 
-#: lib/html.php:2836
+#: lib/html.php:2970
 msgid "Copy graph"
 msgstr "Αντιγράψτε το γράφημα"
 
-#: lib/html.php:2837
+#: lib/html.php:2971
 msgid "Copy graph link"
 msgstr "Αντιγραφή συνδέσμου γραφημάτων"
 
-#: lib/html.php:2838
+#: lib/html.php:2972
 msgid "Always On"
 msgstr "Πάντα ενεργοί"
 
-#: lib/html.php:2839
+#: lib/html.php:2973
 msgid "Auto"
 msgstr "Αυτόματα"
 
-#: lib/html.php:2840
+#: lib/html.php:2974
 msgid "Always Off"
 msgstr "Πάντα ανενεργό"
 
-#: lib/html.php:2841
+#: lib/html.php:2975
 msgid "Begin with"
 msgstr "Ξεκινάω με"
 
-#: lib/html.php:2843
+#: lib/html.php:2977
 msgid "End with"
 msgstr "Ημερομηνία Λήξης"
 
-#: lib/html.php:2845 lib/html_form.php:1433
+#: lib/html.php:2979 lib/html_form.php:1433
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: lib/html.php:2847
+#: lib/html.php:2981
 msgid "3rd Mouse Button"
 msgstr "3ο κουμπί του ποντικιού"
 
@@ -15302,11 +15312,11 @@ msgstr "Απαιτεί: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "Δεν αναφέρεται"
 
-#: lib/poller.php:1998
+#: lib/poller.php:2026
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2022 lib/poller.php:2254
+#: lib/poller.php:2050 lib/poller.php:2282
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

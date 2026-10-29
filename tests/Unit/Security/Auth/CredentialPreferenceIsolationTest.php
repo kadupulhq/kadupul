@@ -25,6 +25,7 @@ $database_hostname='fixture';$database_port=0;$database_default='auth';$database
 $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT, full_name TEXT, email_address TEXT, must_change_password TEXT, reset_perms INTEGER NOT NULL DEFAULT 0)');
 foreach(array('failed_attempts INTEGER NOT NULL DEFAULT 0','lastfail INTEGER NOT NULL DEFAULT 0','password_history TEXT NOT NULL DEFAULT \'-1\'','lastlogin INTEGER NOT NULL DEFAULT -1','lastchange INTEGER NOT NULL DEFAULT -1') as $column){$db->exec('ALTER TABLE user_auth ADD COLUMN '.$column);}
 $db->exec('CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY)');
+$db->exec('CREATE TABLE user_auth_cache(user_id INTEGER,token TEXT)');
 $db->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))');
 $db->exec('CREATE TABLE user_auth_perms(user_id INTEGER,item_id INTEGER,type INTEGER)');
 $db->exec('CREATE TABLE user_auth_realm(user_id INTEGER,realm_id INTEGER)');

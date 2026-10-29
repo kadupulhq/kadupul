@@ -25,11 +25,25 @@ function api_device_cache_crc_update($poller_id, $variable = 'poller_replicate_d
 /**
  * api_device_remove - removes a device
  *
+ * Graphs and data sources go first, then the device's dependent rows and the
+ * device row itself in one transaction, so a failure never leaves a deleted or
+ * flagged device with live poller items. A caller's open transaction is kept:
+ * the removal then runs under a savepoint and queues remote collector cleanup
+ * in that transaction. Otherwise cleanup follows the local commit.
+ *
  * @param  $device_id - the id of the device to remove
+ *
+ * @return (bool) true when the device was removed or flagged for removal
  */
 function api_device_remove($device_id)
 {
     global $config;
+
+    if ((!is_int($device_id) && (!is_string($device_id) || !ctype_digit($device_id)))
+        || (float) $device_id < 1 || (float) $device_id > 16777215) {
+        return false;
+    }
+    $device_id = (int) $device_id;
 
     $poller_id = db_fetch_cell_prepared(
         'SELECT poller_id
@@ -37,26 +51,11 @@ function api_device_remove($device_id)
         array($device_id)
     );
 
+    if ($poller_id === false || $poller_id === null) {
+        return false;
+    }
+
     api_plugin_hook_function('device_remove', array($device_id));
-
-    if ($poller_id == 1) {
-        db_execute_prepared('DELETE FROM host WHERE id = ?', array($device_id));
-    } else {
-        db_execute_prepared('UPDATE host SET deleted = "on" WHERE id = ?', array($device_id));
-    }
-
-    db_execute_prepared('DELETE FROM host_graph       WHERE host_id = ?', array($device_id));
-    db_execute_prepared('DELETE FROM host_snmp_query  WHERE host_id = ?', array($device_id));
-    db_execute_prepared('DELETE FROM host_snmp_cache  WHERE host_id = ?', array($device_id));
-    db_execute_prepared('DELETE FROM poller_item      WHERE host_id = ?', array($device_id));
-    db_execute_prepared('DELETE FROM poller_reindex   WHERE host_id = ?', array($device_id));
-    db_execute_prepared('DELETE FROM graph_tree_items WHERE host_id = ?', array($device_id));
-    db_execute_prepared('DELETE FROM reports_items    WHERE host_id = ?', array($device_id . ':%'));
-    db_execute_prepared('DELETE FROM poller_command   WHERE command LIKE ?', array($device_id . ':%'));
-
-    if ($poller_id > 1) {
-        api_device_purge_from_remote($device_id, $poller_id);
-    }
 
     $graphs = array_rekey(
         db_fetch_assoc_prepared(
@@ -71,6 +70,24 @@ function api_device_remove($device_id)
 
     if (cacti_sizeof($graphs)) {
         api_delete_graphs($graphs, 2);
+
+        $remaining = db_fetch_cell_prepared('SELECT COUNT(*) FROM graph_local WHERE host_id = ?', array($device_id));
+        if ($remaining === false || (int) $remaining > 0) {
+            raise_message('device_remove_failed_' . $device_id, __esc('Unable to remove Device %s because its Graphs could not all be removed.', $device_id), MESSAGE_LEVEL_ERROR);
+
+            return false;
+        }
+    }
+
+    $db = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select(false);
+    if (!$db instanceof PDO || !api_device_remove_rows($db, $device_id, (int) $poller_id)) {
+        raise_message('device_remove_failed_' . $device_id, __esc('Unable to remove Device %s because its database records could not be removed together.', $device_id), MESSAGE_LEVEL_ERROR);
+
+        return false;
+    }
+
+    if ($poller_id > 1 && !$db->inTransaction()) {
+        api_device_purge_from_remote($device_id, $poller_id);
     }
 
     api_device_cache_crc_update($poller_id);
@@ -81,6 +98,102 @@ function api_device_remove($device_id)
      */
     set_config_option('time_last_change_device', time());
     set_config_option('time_last_change_site_device', time());
+
+    return true;
+}
+
+/**
+ * Remove one device's dependent rows and then the device row as one unit.
+ *
+ * @param  PDO $db        The connection the legacy database helpers use
+ * @param  int $device_id The device being removed
+ * @param  int $poller_id The device's data collector; collector 1 deletes the row, others flag it
+ *
+ * @return bool false after the unit has been undone
+ */
+function api_device_remove_rows($db, $device_id, $poller_id)
+{
+    $tables = array('host', 'host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item', 'poller_reindex', 'graph_tree_items', 'reports_items', 'poller_command');
+    $statements = array(
+        array('DELETE FROM host_graph WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM host_snmp_query WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM host_snmp_cache WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM poller_item WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM poller_reindex WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM graph_tree_items WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM reports_items WHERE host_id = ?', array($device_id)),
+        array('DELETE FROM poller_command WHERE command LIKE ?', array($device_id . ':%')),
+        $poller_id == 1
+            ? array('DELETE FROM host WHERE id = ?', array($device_id))
+            : array("UPDATE host SET deleted = 'on' WHERE id = ?", array($device_id)),
+    );
+
+    $owned = !$db->inTransaction();
+    if (!$owned && $poller_id > 1) {
+        // A released savepoint is not a commit. The existing purge worker sees
+        // this command only after the caller commits; rollback removes it too.
+        $statements[] = array('DELETE FROM poller_command WHERE poller_id = ? AND action = ? AND command = ?', array($poller_id, POLLER_COMMAND_PURGE, (string) $device_id));
+        $statements[] = array('INSERT INTO poller_command (poller_id, time, action, command) VALUES (?, CURRENT_TIMESTAMP, ?, ?)', array($poller_id, POLLER_COMMAND_PURGE, (string) $device_id));
+    }
+    $savepoint = 'kadupul_device_remove_' . bin2hex(random_bytes(8));
+
+    try {
+        if ($owned ? !$db->beginTransaction() : $db->exec('SAVEPOINT ' . $savepoint) === false) {
+            return false;
+        }
+    } catch (Throwable $error) {
+        return false;
+    }
+
+    try {
+        if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
+            foreach ($tables as $table) {
+                // Inspect this session's tables, so a temporary shadow or a
+                // non-transactional engine cannot make the rollback a lie.
+                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
+                $row = $query === false ? false : $query->fetch(PDO::FETCH_NUM);
+                if (!is_array($row) || !isset($row[1]) || stripos($row[1], 'CREATE TEMPORARY TABLE') !== false || !preg_match('/\bENGINE=InnoDB\b/i', $row[1])) {
+                    throw new RuntimeException('Device removal requires persistent InnoDB tables');
+                }
+            }
+            $lock = $db->prepare('SELECT id FROM host WHERE id = ? FOR UPDATE');
+            if ($lock === false || !$lock->execute(array($device_id)) || $lock->fetchColumn() === false) {
+                throw new RuntimeException('Device no longer exists');
+            }
+        }
+
+        foreach ($statements as list($sql, $parameters)) {
+            $query = $db->prepare($sql);
+            if ($query === false || !$query->execute($parameters) || $query->errorCode() !== '00000') {
+                throw new RuntimeException('Device removal statement failed');
+            }
+        }
+
+        if ($owned) {
+            if (!$db->commit()) {
+                throw new RuntimeException('Device removal commit failed');
+            }
+        } elseif ($db->exec('RELEASE SAVEPOINT ' . $savepoint) === false) {
+            throw new RuntimeException('Device removal savepoint release failed');
+        }
+
+        return true;
+    } catch (Throwable $error) {
+        cacti_log('ERROR: Device ' . $device_id . ' removal was rolled back: ' . $error->getMessage(), false, 'DEVICE');
+        try {
+            if ($owned) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+            } elseif ($db->exec('ROLLBACK TO SAVEPOINT ' . $savepoint) !== false) {
+                $db->exec('RELEASE SAVEPOINT ' . $savepoint);
+            }
+        } catch (Throwable $cleanup) {
+            // The removal failure is the outcome the caller needs.
+        }
+
+        return false;
+    }
 }
 
 /**

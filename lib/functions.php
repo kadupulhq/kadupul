@@ -5461,7 +5461,7 @@ function bottom_footer()
 
     include_once($config['base_path'] . '/include/global_session.php');
 
-    if (!isset_request_var('header') || get_nfilter_request_var('header') == 'true') {
+    if (html_page_chrome_requested()) {
         include_once($config['base_path'] . '/include/bottom_footer.php');
     }
 
@@ -5487,7 +5487,7 @@ function top_header()
 {
     global $config;
 
-    if (!isset_request_var('header') || get_nfilter_request_var('header') == 'true') {
+    if (html_page_chrome_requested()) {
         include_once($config['base_path'] . '/include/top_header.php');
     }
 }
@@ -5495,7 +5495,7 @@ function top_header()
 function top_graph_header()
 {
     global $config;
-    if (!isset_request_var('header') || get_nfilter_request_var('header') == 'true') {
+    if (html_page_chrome_requested()) {
         include_once($config['base_path'] . '/include/top_graph_header.php');
     }
 }
@@ -5503,7 +5503,7 @@ function top_graph_header()
 function general_header()
 {
     global $config;
-    if (!isset_request_var('header') || get_nfilter_request_var('header') == 'true') {
+    if (html_page_chrome_requested()) {
         include_once($config['base_path'] . '/include/top_general_header.php');
     }
 }
@@ -6764,6 +6764,11 @@ function CactiErrorHandler($level, $message, $file, $line, $context = array())
         case E_STRICT:
             cacti_log($error, false, 'ERROR');
             cacti_debug_backtrace('PHP ERROR STRICT', false, true, 0, 1);
+            break;
+        case E_DEPRECATED:
+        case E_USER_DEPRECATED:
+            /* library deprecations are not failures, so no ERROR tag and no backtrace */
+            cacti_log($error, false, 'WARNING');
             break;
         default:
             cacti_log($error, false, 'ERROR');

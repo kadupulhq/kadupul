@@ -59,8 +59,7 @@
           }
         ],
         "log": [
-          "<TIMESTAMP> - ERROR PHP DEPRECATED: message deprecated in file: <APP>/lib/example.php  on line: 12",
-          "<TIMESTAMP> - CMDPHP PHP ERROR Backtrace:  (<harness frames: 3>, <HARNESS>/function_capture.php[<LINE>]:CactiErrorHandler())"
+          "<TIMESTAMP> - WARNING PHP DEPRECATED: message deprecated in file: <APP>/lib/example.php  on line: 12"
         ],
         "returned": {"type": "bool", "value": false}
       }

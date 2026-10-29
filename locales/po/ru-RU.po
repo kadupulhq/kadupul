@@ -123,7 +123,7 @@ msgstr "Нажмите \"Продолжить\", чтобы удалить сл�
 #: graphs.php:1193 graphs.php:1236 graphs.php:1258 graphs.php:1289
 #: graphs.php:1301 graphs.php:1884 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:302
-#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2819
+#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2953
 #: lib/html_form.php:1397 lib/html_form.php:1414 lib/html_form.php:1425
 #: lib/html_reports.php:632 managers.php:1070 managers.php:1131 plugins.php:713
 #: pollers.php:549 pollers.php:558 pollers.php:567 pollers.php:576
@@ -151,7 +151,7 @@ msgstr "Отмена"
 #: graphs.php:982 graphs.php:991 graphs.php:1193 graphs.php:1236
 #: graphs.php:1258 graphs.php:1289 graphs.php:1301 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2952
 #: lib/html_reports.php:574 managers.php:1070 managers.php:1131 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:783
 #: tree.php:792 tree.php:801 tree.php:810 user_admin.php:252 user_admin.php:292
@@ -586,7 +586,7 @@ msgstr "Шаблон"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
+#: lib/api_automation.php:450 lib/auth.php:3991 lib/auth.php:4040
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -617,8 +617,8 @@ msgstr "Любой"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
-#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3994
+#: lib/auth.php:4043 lib/auth.php:4089 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -777,7 +777,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Возникли проблемы со страницей изменения пароля.  Немедленно свяжитесь с администратором Kadupul."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2888
 msgid "Change Password"
 msgstr "Изменить пароль"
 
@@ -841,11 +841,11 @@ msgstr "Kadupul больше не поддерживает аутентифик�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Невозможно определить область входа пользователя Login Realm или Domain . Пожалуйста свяжитесь со своим Администратором."
 
-#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
-#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
-#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
-#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
-#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
+#: auth_login.php:119 lib/auth.php:4405 lib/auth.php:4411 lib/auth.php:4501
+#: lib/auth.php:4510 lib/auth.php:4557 lib/auth.php:4582 lib/auth.php:4605
+#: lib/auth.php:4645 lib/auth.php:4657 lib/auth.php:4680 lib/auth.php:4803
+#: lib/auth.php:4823 lib/auth.php:5035 lib/auth.php:5077 lib/auth.php:5087
+#: lib/auth.php:5103 lib/auth.php:5117 lib/auth.php:5155
 msgid "Access Denied!  Login Failed."
 msgstr "Доступ запрещен, учетная запись пользователя отключена."
 
@@ -887,13 +887,13 @@ msgstr "Введите имя пользователя и пароль ниже"
 msgid "Password"
 msgstr "Пароль"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1039
-#: lib/auth.php:1061 lib/auth.php:1071 lib/auth.php:1076 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1044
+#: lib/auth.php:1066 lib/auth.php:1076 lib/auth.php:1081 user_admin.php:2124
 msgid "Local"
 msgstr "Локальный"
 
-#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1072
-#: lib/auth.php:1077
+#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1077
+#: lib/auth.php:1082
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -912,7 +912,7 @@ msgstr "Вход"
 
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
-#: lib/html.php:2767 managers.php:24 user_admin.php:1741
+#: lib/html.php:2901 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "Общие"
@@ -923,17 +923,17 @@ msgstr "Данные учетной записи пользователя"
 
 #: auth_profile.php:313 include/global_arrays.php:861
 #: include/global_settings.php:2763 lib/html.php:2191 lib/html.php:2213
-#: lib/html.php:2748
+#: lib/html.php:2882
 msgid "Tree View"
 msgstr "В виде дерева"
 
 #: auth_profile.php:317 include/global_arrays.php:862 lib/html.php:2198
-#: lib/html.php:2222 lib/html.php:2749
+#: lib/html.php:2222 lib/html.php:2883
 msgid "List View"
 msgstr "Список"
 
 #: auth_profile.php:321 include/global_arrays.php:863 lib/html.php:2205
-#: lib/html.php:2750
+#: lib/html.php:2884
 msgid "Preview View"
 msgstr "Предварительный просмотр Представления Toolset"
 
@@ -1349,7 +1349,7 @@ msgstr "Включенные"
 #: include/global_settings.php:1660 include/global_settings.php:1673
 #: include/global_settings.php:1698 include/global_settings.php:1712
 #: include/global_settings.php:1802 include/global_settings.php:2576
-#: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2978 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:611 pollers.php:33 user_admin.php:936 user_domains.php:396
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
@@ -2390,8 +2390,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "Правила для деревьев не найдены"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
-#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -2585,7 +2585,7 @@ msgstr "Источник Данных"
 msgid "The Data Source to Debug"
 msgstr "Источник Данных для отладки"
 
-#: data_debug.php:506 lib/html.php:2771 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2905 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "Пользователь"
 
@@ -2874,7 +2874,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Запустить проверки для отфильтрованных Источников Данных и других сохранённых результатов"
 
 #: data_debug.php:1150 data_sources.php:1753 data_templates.php:1107
-#: lib/html.php:2780
+#: lib/html.php:2914
 msgid "Profile"
 msgstr "Профиль"
 
@@ -3775,7 +3775,7 @@ msgstr "Редактирование шаблона графика."
 msgid "Click to view just this Graph in Real-time"
 msgstr "Нажмите, чтобы просмотреть только этот график в реальном времени"
 
-#: graph.php:272 lib/html.php:2745
+#: graph.php:272 lib/html.php:2879
 msgid "Utility View"
 msgstr "Вид утилиты"
 
@@ -3801,7 +3801,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Какти Поллер еще не сбежал."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Доступ запрещён"
 
@@ -4135,7 +4135,7 @@ msgstr "Режим предварительного просмотра"
 msgid "Add Selected Graphs to Report"
 msgstr "Добавить выбранные графики в отчет"
 
-#: graph_view.php:1049 lib/html.php:2816
+#: graph_view.php:1049 lib/html.php:2950
 msgid "Ok"
 msgstr "Ок"
 
@@ -4482,7 +4482,7 @@ msgstr "Новые графики для [ Все устройства ]"
 msgid "New Graphs for None Host Type"
 msgstr "Новые графики для None Host Type (Нет типа хоста)"
 
-#: graphs_new.php:440 lib/html.php:2743
+#: graphs_new.php:440 lib/html.php:2877
 msgid "Filter Settings Saved"
 msgstr "Настройки фильтра Сохранены"
 
@@ -4760,17 +4760,17 @@ msgstr "Вы должны войти в систему, чтобы получи�
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "Вы должны войти в систему, чтобы получить доступ к этой области Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5657
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Войти снова"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Если вы считаете, что это ошибка. Пожалуйста, свяжитесь с администратором Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -5243,7 +5243,7 @@ msgstr "Право"
 msgid "Justified"
 msgstr "Оправдано"
 
-#: include/global_arrays.php:589 lib/html.php:2842
+#: include/global_arrays.php:589 lib/html.php:2976
 msgid "Center"
 msgstr "Центр"
 
@@ -5641,7 +5641,7 @@ msgstr "Заголовок"
 
 #: include/global_arrays.php:957 include/global_arrays.php:1008
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/html.php:2831
+#: lib/html.php:2965
 msgid "Graph"
 msgstr "График"
 
@@ -5820,7 +5820,7 @@ msgid "Configuration"
 msgstr "Конфигурация"
 
 #: include/global_arrays.php:1034 include/global_arrays.php:1056
-#: lib/html.php:2549 lib/html.php:2846
+#: lib/html.php:2549 lib/html.php:2980
 msgid "Settings"
 msgstr "Настройки"
 
@@ -6873,7 +6873,7 @@ msgid "List Mode"
 msgstr "Режим списка"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Консоль"
@@ -7034,7 +7034,7 @@ msgstr "Внешняя ссылка"
 msgid "(Action)"
 msgstr "Действие"
 
-#: include/global_arrays.php:2633 lib/html.php:2785
+#: include/global_arrays.php:2633 lib/html.php:2919
 msgid "About Kadupul"
 msgstr "О Kadupul"
 
@@ -7085,7 +7085,7 @@ msgid "Tree Rule Items"
 msgstr "Пункты правила деревьев"
 
 #: include/global_arrays.php:2862 include/global_arrays.php:2878
-#: lib/api_device.php:1957
+#: lib/api_device.php:2070
 msgid "days"
 msgstr "дней"
 
@@ -7101,11 +7101,11 @@ msgstr "мин"
 msgid "secs"
 msgstr "сек"
 
-#: include/global_arrays.php:2879 lib/api_device.php:1957
+#: include/global_arrays.php:2879 lib/api_device.php:2070
 msgid "hours"
 msgstr "часов"
 
-#: include/global_arrays.php:2880 lib/api_device.php:1957
+#: include/global_arrays.php:2880 lib/api_device.php:2070
 msgid "minutes"
 msgstr "минут"
 
@@ -9083,7 +9083,7 @@ msgstr "Если установлено значение Просто, то гр
 msgid "Simple"
 msgstr "Простой"
 
-#: include/global_settings.php:521 lib/html.php:2833
+#: include/global_settings.php:521 lib/html.php:2967
 msgid "Advanced"
 msgstr "Дополнительно"
 
@@ -9502,7 +9502,7 @@ msgid "Theme Settings"
 msgstr "Настройки темы"
 
 #: include/global_settings.php:944 include/global_settings.php:1154
-#: include/global_settings.php:2611 lib/html.php:2781
+#: include/global_settings.php:2611 lib/html.php:2915
 msgid "Theme"
 msgstr "Тема"
 
@@ -9725,7 +9725,7 @@ msgstr "Метод выбора шрифта"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "Как вы хотите, чтобы шрифты обрабатывались по умолчанию?"
 
-#: include/global_settings.php:1153 lib/api_device.php:1912
+#: include/global_settings.php:1153 lib/api_device.php:2025
 msgid "System"
 msgstr "Система"
 
@@ -11560,7 +11560,7 @@ msgstr "Упал"
 msgid "Recovering"
 msgstr "Восстановление"
 
-#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11699,92 +11699,102 @@ msgstr "Добавлено с помощью Kadupul Automation"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "ОШИБКА: диапазоны IP-адресов в форме диапазон1-диапазон2 больше не поддерживаются."
 
-#: lib/api_device.php:155 lib/api_device.php:158 lib/api_device.php:385
-#: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
-#: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
-#: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1317
-#: lib/api_device.php:1330 lib/api_device.php:1334 lib/api_device.php:1379
-#: lib/api_device.php:1382 lib/api_device.php:1569 lib/api_device.php:1573
-#: lib/api_device.php:1609 lib/api_device.php:1613 lib/api_device.php:1658
-#: lib/api_device.php:1662 lib/api_device.php:1723 lib/api_device.php:1727
+#: lib/api_device.php:76
+#, php-format
+msgid "Unable to remove Device %s because its Graphs could not all be removed."
+msgstr ""
+
+#: lib/api_device.php:84
+#, php-format
+msgid "Unable to remove Device %s because its database records could not be removed together."
+msgstr ""
+
+#: lib/api_device.php:268 lib/api_device.php:271 lib/api_device.php:498
+#: lib/api_device.php:502 lib/api_device.php:564 lib/api_device.php:569
+#: lib/api_device.php:614 lib/api_device.php:618 lib/api_device.php:694
+#: lib/api_device.php:698 lib/api_device.php:753 lib/api_device.php:757
+#: lib/api_device.php:823 lib/api_device.php:826 lib/api_device.php:901
+#: lib/api_device.php:904 lib/api_device.php:953 lib/api_device.php:956
+#: lib/api_device.php:999 lib/api_device.php:1002 lib/api_device.php:1430
+#: lib/api_device.php:1443 lib/api_device.php:1447 lib/api_device.php:1492
+#: lib/api_device.php:1495 lib/api_device.php:1682 lib/api_device.php:1686
+#: lib/api_device.php:1722 lib/api_device.php:1726 lib/api_device.php:1771
+#: lib/api_device.php:1775 lib/api_device.php:1836 lib/api_device.php:1840
 #: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Удалённый Poller %s выключен, вам нужно будет выполнить полную синхронизацию, как только он снова включится"
 
-#: lib/api_device.php:549
+#: lib/api_device.php:662
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1833
+#: lib/api_device.php:1946
 msgid "ERROR: Device ID is Blank"
 msgstr "ОШИБКА: ID устройства пуст"
 
-#: lib/api_device.php:1846 lib/api_device.php:1848
+#: lib/api_device.php:1959 lib/api_device.php:1961
 msgid "ERROR: Device["
 msgstr "ОШИБКА: Устройство ["
 
-#: lib/api_device.php:1864
+#: lib/api_device.php:1977
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "ОШИБКА: Не удалось подключиться к удаленному сборщику."
 
-#: lib/api_device.php:1871
+#: lib/api_device.php:1984
 msgid "Device is Disabled"
 msgstr "Устройство отключено"
 
-#: lib/api_device.php:1872
+#: lib/api_device.php:1985
 msgid "Device Availability Check Bypassed"
 msgstr "Проверка доступности устройства пройдена"
 
-#: lib/api_device.php:1879
+#: lib/api_device.php:1992
 msgid "SNMP Information"
 msgstr "Информация SNMP"
 
-#: lib/api_device.php:1883
+#: lib/api_device.php:1996
 msgid "SNMP not in use"
 msgstr "SNMP не используется"
 
-#: lib/api_device.php:1904 lib/api_device.php:1912 lib/api_device.php:1931
+#: lib/api_device.php:2017 lib/api_device.php:2025 lib/api_device.php:2044
 msgid "SNMP error"
 msgstr "ошибка SNMP"
 
-#: lib/api_device.php:1904
+#: lib/api_device.php:2017
 msgid "Session"
 msgstr "Сессия"
 
-#: lib/api_device.php:1931
+#: lib/api_device.php:2044
 msgid "Host"
 msgstr "Хост"
 
-#: lib/api_device.php:1949
+#: lib/api_device.php:2062
 msgid "System:"
 msgstr "Система:"
 
-#: lib/api_device.php:1956
+#: lib/api_device.php:2069
 msgid "Uptime:"
 msgstr "Работает:"
 
-#: lib/api_device.php:1958
+#: lib/api_device.php:2071
 msgid "Hostname:"
 msgstr "Имя хоста: "
 
-#: lib/api_device.php:1959
+#: lib/api_device.php:2072
 msgid "Location:"
 msgstr "Местоположение:"
 
-#: lib/api_device.php:1960
+#: lib/api_device.php:2073
 msgid "Contact:"
 msgstr "Контактная информация:"
 
-#: lib/api_device.php:1991 lib/functions.php:6253 lib/functions.php:6255
+#: lib/api_device.php:2104 lib/functions.php:6253 lib/functions.php:6255
 #: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "Результаты тестирования"
 
-#: lib/api_device.php:1996
+#: lib/api_device.php:2109
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "Нет Ping или SNMP Проверка доступности Используется"
 
@@ -11792,123 +11802,123 @@ msgstr "Нет Ping или SNMP Проверка доступности Испо
 msgid "New Branch"
 msgstr "Новый филиал"
 
-#: lib/auth.php:1078
+#: lib/auth.php:1083
 msgid "Web Basic"
 msgstr "Web Basic"
 
-#: lib/auth.php:2920
+#: lib/auth.php:2925
 msgid "Device:(Hide Disabled)"
 msgstr "Устройство отключено"
 
-#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
+#: lib/auth.php:2943 lib/auth.php:2945 lib/auth.php:2951 lib/auth.php:2953
 #, fuzzy, php-format
 msgid "Graph:(%s%s)"
 msgstr "График:(%s%с)"
 
-#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
-#: lib/auth.php:3040 lib/auth.php:3042
+#: lib/auth.php:2966 lib/auth.php:2972 lib/auth.php:3039 lib/auth.php:3041
+#: lib/auth.php:3045 lib/auth.php:3047
 #, fuzzy, php-format
 msgid "Device:(%s%s)"
 msgstr "Устройство:(%s%с)"
 
-#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
-#: lib/auth.php:3056 lib/auth.php:3058
+#: lib/auth.php:2980 lib/auth.php:2986 lib/auth.php:3055 lib/auth.php:3057
+#: lib/auth.php:3061 lib/auth.php:3063
 #, fuzzy, php-format
 msgid "Template:(%s%s)"
 msgstr "Шаблон:(%s%с)"
 
-#: lib/auth.php:2988
+#: lib/auth.php:2993
 #, fuzzy, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "График+устройство+шаблон:(%s%с)"
 
-#: lib/auth.php:3025 lib/auth.php:3027
+#: lib/auth.php:3030 lib/auth.php:3032
 #, fuzzy, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Устройство+шаблон:(%s%с)"
 
-#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
+#: lib/auth.php:3076 lib/auth.php:3083 lib/auth.php:3092
 msgid "Restricted By: "
 msgstr "Ограничен: "
 
-#: lib/auth.php:3075
+#: lib/auth.php:3080
 msgid "Granted By: "
 msgstr "Разрешено: "
 
-#: lib/auth.php:3082
+#: lib/auth.php:3087
 msgid "Granted"
 msgstr "Награжденые"
 
-#: lib/auth.php:3084 lib/auth.php:3089
+#: lib/auth.php:3089 lib/auth.php:3094
 msgid "Restricted"
 msgstr "Ограниченный"
 
-#: lib/auth.php:3323 lib/auth.php:3358
+#: lib/auth.php:3328 lib/auth.php:3363
 msgid "Branch:"
 msgstr "Отделение:"
 
-#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
+#: lib/auth.php:3337 lib/auth.php:3371 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "Устройство:"
 
-#: lib/auth.php:4304 lib/auth.php:4395
+#: lib/auth.php:4309 lib/auth.php:4400
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Доступ запрещен, пожалуйста, свяжитесь с администратором кактусов."
 
-#: lib/auth.php:4354
+#: lib/auth.php:4359
 msgid "Access Denied!  Login Disabled."
 msgstr "Доступ запрещен, учетная запись пользователя отключена."
 
-#: lib/auth.php:4429
+#: lib/auth.php:4434
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Настроена базовая аутентификация Web Basic, но с веб-сервера не было передано ни одного имени пользователя. Убедитесь, что на веб-сервере включена аутентификация."
 
-#: lib/auth.php:4445
+#: lib/auth.php:4450
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s аутентифицированы веб сервером, но и шаблоны, и гостевые пользователи не определены в Kadupul."
 
-#: lib/auth.php:4612 lib/auth.php:4811
+#: lib/auth.php:4617 lib/auth.php:4816
 msgid "Access Denied!  No password provided by user."
 msgstr "Доступ запрещен! Пользователь не предоставил пароль."
 
-#: lib/auth.php:4784 lib/auth.php:5850
+#: lib/auth.php:4789 lib/auth.php:5864
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Доступ запрещен! Идентификатор пользователя шаблона %s не существует.  Обратитесь к администратору."
 
-#: lib/auth.php:4792
+#: lib/auth.php:4797
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5145
+#: lib/auth.php:5150
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ваш администратор Kadupul ввел сложные пароли для входа в систему, и ваш текущий пароль Kadupul не соответствует новым требованиям. Поэтому вы должны изменить свой пароль сейчас."
 
-#: lib/auth.php:5185
+#: lib/auth.php:5190
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Пароль должен содержать не менее %d символов!"
 
-#: lib/auth.php:5191
+#: lib/auth.php:5196
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ваш пароль должен содержать не менее 1 цифрового символа!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5200
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ваш пароль должен содержать символы нижнего регистра и верхнего регистра!"
 
-#: lib/auth.php:5201
+#: lib/auth.php:5206
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ваш пароль должен содержать не менее 1 специального символа!"
 
-#: lib/auth.php:5636
+#: lib/auth.php:5650
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Журнал Kadupul очищен."
 
-#: lib/auth.php:5936
+#: lib/auth.php:5950
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Аутентификация ранее не устанавливалась. Попытка установить локальную аутентификацию, но учетная запись администратора не найдена."
 
@@ -12562,11 +12572,11 @@ msgstr "Вход в систему как постоянный пользова�
 msgid "guest"
 msgstr "гость"
 
-#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2904
 msgid "User Community"
 msgstr "Сообщество пользователей"
 
-#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Документация"
@@ -12576,11 +12586,11 @@ msgstr "Документация"
 msgid "Logged in as %s"
 msgstr "Авторизован как %s"
 
-#: lib/functions.php:4284 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
 
-#: lib/functions.php:4294 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2889
 msgid "Logout"
 msgstr "Выход"
 
@@ -12692,33 +12702,33 @@ msgstr "Успешно!"
 msgid "Message Not Sent due to ping failure."
 msgstr "Сообщение не отправлено в связи с ошибкой пинга."
 
-#: lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6744 lib/functions.php:6819
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Какти отключил плагин %s из-за ошибки: %s!  Для получения более подробной информации см. файл журнала Kadupul."
 
-#: lib/functions.php:6917
+#: lib/functions.php:6922
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: PollerID:%s имеет недопустимое имя хоста:%s.  Это не доступно через DNS!"
 
-#: lib/functions.php:7370 lib/functions.php:7372
+#: lib/functions.php:7375 lib/functions.php:7377
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Бета %s"
 
-#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Версия %s %s"
 
-#: lib/functions.php:7372
+#: lib/functions.php:7377
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7607
+#: lib/functions.php:7612
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Отсутствует файл включения ключевых Kadupul %s.  Найдите и замените этот файл"
@@ -12791,7 +12801,7 @@ msgstr "Запрос данных:"
 msgid "CSV Export of Graph Data"
 msgstr "CSV Экспорт графических данных"
 
-#: lib/html.php:540 lib/html.php:2742
+#: lib/html.php:540 lib/html.php:2876
 msgid "Time Graph View"
 msgstr "Вид графика времени"
 
@@ -12895,322 +12905,322 @@ msgstr "Диапазон заполнения зазоров сухого ход
 msgid "Dry Run Float Range"
 msgstr "Диапазон поплавков сухого хода"
 
-#: lib/html.php:2738
+#: lib/html.php:2872
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "Разрешить или ограничить выход столбцов таблицы за пределы текущих окон."
 
-#: lib/html.php:2739 lib/html_filter.php:48
+#: lib/html.php:2873 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "Введите поисковый запрос"
 
-#: lib/html.php:2740
+#: lib/html.php:2874
 msgid "Enter a regular expression"
 msgstr "Введите регулярное выражение"
 
-#: lib/html.php:2741
+#: lib/html.php:2875
 msgid "No file selected"
 msgstr "Файл не выбран"
 
-#: lib/html.php:2744 lib/html.php:2787
+#: lib/html.php:2878 lib/html.php:2921
 msgid "SpikeKill Results"
 msgstr "Результаты СпайкКилла"
 
-#: lib/html.php:2746
+#: lib/html.php:2880
 msgid "Click to view just this Graph in Realtime"
 msgstr "Нажмите, чтобы просмотреть только этот график в реальном времени"
 
-#: lib/html.php:2747
+#: lib/html.php:2881
 msgid "Click again to take this Graph out of Realtime"
 msgstr "Нажмите еще раз, чтобы вывести этот график из режима реального времени."
 
-#: lib/html.php:2756
+#: lib/html.php:2890
 msgid "Standard Mode"
 msgstr "Режим сканирования"
 
-#: lib/html.php:2757
+#: lib/html.php:2891
 msgid "Compact Mode"
 msgstr "Режим масштабирования"
 
-#: lib/html.php:2758
+#: lib/html.php:2892
 msgid "Dark Color Mode"
 msgstr "Нет цветов найдено"
 
-#: lib/html.php:2759
+#: lib/html.php:2893
 msgid "Light Color Mode"
 msgstr "Режим списка"
 
-#: lib/html.php:2760
+#: lib/html.php:2894
 msgid "Use System Color"
 msgstr "Цвет элемента"
 
-#: lib/html.php:2761
+#: lib/html.php:2895
 msgid "Ignore System Color"
 msgstr "Цвет элемента"
 
-#: lib/html.php:2762
+#: lib/html.php:2896
 msgid "Help"
 msgstr "Помощь"
 
-#: lib/html.php:2763
+#: lib/html.php:2897
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul дома"
 
-#: lib/html.php:2765
+#: lib/html.php:2899
 msgid "Miscellaneous"
 msgstr "Разное"
 
-#: lib/html.php:2766
+#: lib/html.php:2900
 msgid "Dashboards"
 msgstr "Панель управления"
 
-#: lib/html.php:2768
+#: lib/html.php:2902
 msgid "Charts"
 msgstr "Диаграммы"
 
-#: lib/html.php:2769
+#: lib/html.php:2903
 msgid "Kadupul Project Page"
 msgstr "Страница проекта Какти"
 
-#: lib/html.php:2773
+#: lib/html.php:2907
 msgid "Spine"
 msgstr "Позвоночник"
 
-#: lib/html.php:2774
+#: lib/html.php:2908
 msgid "RRDProxy"
 msgstr "RRDProxy"
 
-#: lib/html.php:2775
+#: lib/html.php:2909
 msgid "Keyboard"
 msgstr "Клавиатура"
 
-#: lib/html.php:2776
+#: lib/html.php:2910
 msgid "Shortcuts"
 msgstr "Горячие клавиши"
 
-#: lib/html.php:2777
+#: lib/html.php:2911
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Поверните журнал Kadupul"
 
-#: lib/html.php:2778
+#: lib/html.php:2912
 msgid "Help in Developing"
 msgstr "Помощь в разработке"
 
-#: lib/html.php:2779
+#: lib/html.php:2913
 msgid "Donation & Sponsoring"
 msgstr "Пожертвование и спонсорство"
 
-#: lib/html.php:2782
+#: lib/html.php:2916
 msgid "Client"
 msgstr "Клиент"
 
-#: lib/html.php:2783
+#: lib/html.php:2917
 msgid "Help in Translating"
 msgstr "Помощь в переводе"
 
-#: lib/html.php:2784
+#: lib/html.php:2918
 msgid "Report a bug"
 msgstr "Сообщить об ошибке"
 
-#: lib/html.php:2786
+#: lib/html.php:2920
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2788
+#: lib/html.php:2922
 msgid "Click to Show/Hide Filter"
 msgstr "Нажмите, чтобы показать/скрыть фильтр"
 
-#: lib/html.php:2789
+#: lib/html.php:2923
 msgid "Clear Current Filter"
 msgstr "Очистить фильтр тока"
 
-#: lib/html.php:2790
+#: lib/html.php:2924
 msgid "Clipboard"
 msgstr "Буфер обмена"
 
-#: lib/html.php:2791
+#: lib/html.php:2925
 msgid "Clipboard ID"
 msgstr "ID буфера обмена"
 
-#: lib/html.php:2792
+#: lib/html.php:2926
 msgid "Copy operation is unavailable at this time"
 msgstr "Операция копирования в данный момент недоступна."
 
-#: lib/html.php:2793
+#: lib/html.php:2927
 msgid "Failed to find data to copy!"
 msgstr "Не удалось найти данные для копирования!"
 
-#: lib/html.php:2794
+#: lib/html.php:2928
 msgid "Clipboard has been updated"
 msgstr "Буфер обмена был обновлен"
 
-#: lib/html.php:2795
+#: lib/html.php:2929
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "Извините, ваш буфер обмена не может быть обновлен в это время."
 
-#: lib/html.php:2799
+#: lib/html.php:2933
 msgid "Passphrase length meets 8 character minimum"
 msgstr "Длина парольной фразы соответствует минимальной длине 8 символов."
 
-#: lib/html.php:2800
+#: lib/html.php:2934
 msgid "Passphrase too short"
 msgstr "Парольная фраза слишком коротка."
 
-#: lib/html.php:2801
+#: lib/html.php:2935
 msgid "Passphrase matches but too short"
 msgstr "Парольная фраза совпадает, но слишком коротка."
 
-#: lib/html.php:2802
+#: lib/html.php:2936
 msgid "Passphrase too short and not matching"
 msgstr "Парольная фраза слишком коротка и не соответствует действительности."
 
-#: lib/html.php:2803
+#: lib/html.php:2937
 msgid "Passphrases match"
 msgstr "Парольные фразы совпадают"
 
-#: lib/html.php:2804
+#: lib/html.php:2938
 msgid "Passphrases do not match"
 msgstr "Парольные фразы не совпадают."
 
-#: lib/html.php:2805
+#: lib/html.php:2939
 msgid "Sorry, we could not process your last action."
 msgstr "Извините, мы не смогли обработать ваше последнее действие."
 
-#: lib/html.php:2806
+#: lib/html.php:2940
 msgid "Error:"
 msgstr "Ошибка:"
 
-#: lib/html.php:2807
+#: lib/html.php:2941
 msgid "Reason:"
 msgstr "Причина:"
 
-#: lib/html.php:2808
+#: lib/html.php:2942
 msgid "Action failed"
 msgstr "Действие провалилось"
 
-#: lib/html.php:2809 pollers.php:804
+#: lib/html.php:2943 pollers.php:804
 msgid "Connection Successful"
 msgstr "Операция выполнена успешно"
 
-#: lib/html.php:2810 pollers.php:806
+#: lib/html.php:2944 pollers.php:806
 msgid "Connection Failed"
 msgstr "Ошибка подключения"
 
-#: lib/html.php:2811
+#: lib/html.php:2945
 msgid "The response to the last action was unexpected."
 msgstr "Реакция на последнее действие была неожиданной."
 
-#: lib/html.php:2812
+#: lib/html.php:2946
 msgid "Some Actions failed"
 msgstr "Не удалось выполнить некоторые действия"
 
-#: lib/html.php:2813
+#: lib/html.php:2947
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "Обратите внимание: мы не смогли обработать все ваши действия. Подробности ниже."
 
-#: lib/html.php:2814
+#: lib/html.php:2948
 msgid "Operation successful"
 msgstr "Операция выполнена успешно"
 
-#: lib/html.php:2815
+#: lib/html.php:2949
 msgid "The Operation was successful.  Details are below."
 msgstr "Операция прошла успешно.  Подробности ниже."
 
-#: lib/html.php:2817
+#: lib/html.php:2951
 msgid "Pause"
 msgstr "Пауза"
 
-#: lib/html.php:2820
+#: lib/html.php:2954
 msgid "Zoom In"
 msgstr "Приблизить"
 
-#: lib/html.php:2821
+#: lib/html.php:2955
 msgid "Zoom Out"
 msgstr "Уменьшить"
 
-#: lib/html.php:2822
+#: lib/html.php:2956
 msgid "Zoom Out Factor"
 msgstr "Коэффициент уменьшения"
 
-#: lib/html.php:2823
+#: lib/html.php:2957
 msgid "Timestamps"
 msgstr "Временные метки"
 
-#: lib/html.php:2824
+#: lib/html.php:2958
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2825
+#: lib/html.php:2959
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2826
+#: lib/html.php:2960
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2827
+#: lib/html.php:2961
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2828
+#: lib/html.php:2962
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2829
+#: lib/html.php:2963
 msgid "Zoom Out Positioning"
 msgstr "Уменьшение масштаба Позиционирование"
 
-#: lib/html.php:2830
+#: lib/html.php:2964
 msgid "Zoom Mode"
 msgstr "Режим масштабирования"
 
-#: lib/html.php:2832
+#: lib/html.php:2966
 msgid "Quick"
 msgstr "Quick(Быстро)"
 
-#: lib/html.php:2834
+#: lib/html.php:2968
 msgid "Open in new tab"
 msgstr "Открыть в новой вкладке"
 
-#: lib/html.php:2835
+#: lib/html.php:2969
 msgid "Save graph"
 msgstr "Сохранить график"
 
-#: lib/html.php:2836
+#: lib/html.php:2970
 msgid "Copy graph"
 msgstr "Копировать график"
 
-#: lib/html.php:2837
+#: lib/html.php:2971
 msgid "Copy graph link"
 msgstr "Скопировать ссылку на график"
 
-#: lib/html.php:2838
+#: lib/html.php:2972
 msgid "Always On"
 msgstr "Всегда Вкл"
 
-#: lib/html.php:2839
+#: lib/html.php:2973
 msgid "Auto"
 msgstr "Автоматически"
 
-#: lib/html.php:2840
+#: lib/html.php:2974
 msgid "Always Off"
 msgstr "Всегда Выкл"
 
-#: lib/html.php:2841
+#: lib/html.php:2975
 msgid "Begin with"
 msgstr "Начало"
 
-#: lib/html.php:2843
+#: lib/html.php:2977
 msgid "End with"
 msgstr "Дата окончания"
 
-#: lib/html.php:2845 lib/html_form.php:1433
+#: lib/html.php:2979 lib/html_form.php:1433
 msgid "Close"
 msgstr "Закрыть"
 
-#: lib/html.php:2847
+#: lib/html.php:2981
 msgid "3rd Mouse Button"
 msgstr "3-я кнопка мыши"
 
@@ -15369,11 +15379,11 @@ msgstr "Требуется: Kadupul >=%s"
 msgid "Not Stated"
 msgstr "Не указано"
 
-#: lib/poller.php:1998
+#: lib/poller.php:2026
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2022 lib/poller.php:2254
+#: lib/poller.php:2050 lib/poller.php:2282
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 

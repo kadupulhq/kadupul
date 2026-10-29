@@ -55,7 +55,6 @@ or deprecating anything. Do not remove a function on the count alone.
 | `validate_path_within` | 1 | 1 | 2 | 0 | Platform/Domain/Security |
 | `split_emaildetail` | 1 | 0 | 3 | 0 | Alerting/Application/Port/MailSender |
 | `cacti_redirect` | 1 | 0 | 9 | 0 | Platform/Presentation/Http |
-| `IgnoreErrorHandler` | 2 | 0 | 0 | 0 | Platform/Infrastructure/Legacy |
 | `cacti_gethostinfo` | 2 | 0 | 0 | 0 | Platform/Application/Port/NameResolver |
 | `cacti_oid_numeric_format` | 2 | 2 | 0 | 0 | Platform/Domain/Network |
 | `cacti_temp_file` | 2 | 0 | 0 | 0 | Platform/Application/Port/Filesystem |
@@ -64,6 +63,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `is_base64_encoded` | 2 | 2 | 0 | 0 | Platform/Domain/Text |
 | `is_function_enabled` | 2 | 2 | 0 | 0 | Platform/Application/Port/ProcessRunner |
 | `sanitize_cdef` | 2 | 2 | 0 | 0 | Platform/Domain/Security |
+| `IgnoreErrorHandler` | 2 | 0 | 1 | 0 | Platform/Infrastructure/Legacy |
 | `cacti_browser_zone_set` | 2 | 0 | 1 | 0 | Platform/Domain/Time |
 | `clog_authorized` | 2 | 1 | 1 | 0 | IdentityAccess |
 | `get_execution_user` | 2 | 1 | 1 | 0 | Platform/Application/Port/Filesystem |
@@ -84,10 +84,10 @@ or deprecating anything. Do not remove a function on the count alone.
 | `get_selective_log_level` | 2 | 1 | 4 | 0 | Platform/Infrastructure/Legacy |
 | `is_urlencoded` | 2 | 1 | 4 | 0 | Platform/Domain/Text |
 | `normalize_poller_multi_value_result` | 2 | 1 | 4 | 0 | DataInput/Application |
-| `CactiErrorHandler` | 2 | 2 | 5 | 0 | Platform/Infrastructure/Legacy |
 | `is_hex_string` | 2 | 2 | 5 | 0 | Platform/Domain/Text |
 | `get_full_test_script_path` | 2 | 0 | 6 | 0 | DataInput/Application |
 | `cacti_cookie_session_set` | 2 | 1 | 7 | 0 | IdentityAccess |
+| `CactiErrorHandler` | 2 | 2 | 8 | 0 | Platform/Infrastructure/Legacy |
 | `cacti_format_ipv6_colon` | 2 | 2 | 8 | 0 | Platform/Domain/Network |
 | `cacti_csv_safe` | 2 | 1 | 9 | 0 | Platform/Domain/Security |
 | `appendHeaderSuppression` | 2 | 2 | 11 | 0 | Navigation |

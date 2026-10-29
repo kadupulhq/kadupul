@@ -20,13 +20,14 @@ test('group removal serializes concurrent members while preserving transaction o
     $scenario = array('dsn' => $dsn, 'user' => getenv('KADUPUL_TEST_MYSQL_USER'), 'password' => getenv('KADUPUL_TEST_MYSQL_PASSWORD'), 'prefix' => 'auth_group_' . bin2hex(random_bytes(5)), 'action' => 'remove', 'nested' => $nested);
     $pdo = new PDO($dsn, $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $prefix = $scenario['prefix'];
-    $tables = array('user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'user_auth');
+    $tables = array('user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_group_perms', 'user_auth', 'user_auth_cache');
     try {
         $pdo->exec("CREATE TABLE {$prefix}_user_auth_group (id INT PRIMARY KEY) ENGINE=InnoDB");
         foreach (array_slice($tables, 1, 3) as $table) {
             $pdo->exec("CREATE TABLE {$prefix}_{$table} (group_id INT UNSIGNED NOT NULL, user_id INT UNSIGNED NOT NULL, PRIMARY KEY(group_id,user_id), KEY member_user(user_id)) ENGINE=InnoDB");
         }
         $pdo->exec("CREATE TABLE {$prefix}_user_auth (id INT PRIMARY KEY, reset_perms BIGINT DEFAULT 0) ENGINE=InnoDB");
+        $pdo->exec("CREATE TABLE {$prefix}_user_auth_cache (user_id INT UNSIGNED NOT NULL, token VARCHAR(191) NOT NULL) ENGINE=InnoDB");
         $pdo->exec("INSERT INTO {$prefix}_user_auth (id) VALUES (42),(43),(44)");
         $pdo->exec("INSERT INTO {$prefix}_user_auth_group VALUES (5)");
         $pdo->exec("INSERT INTO {$prefix}_user_auth_group_members VALUES (5,42)");
@@ -91,7 +92,7 @@ test('copying group grants cannot recreate children after concurrent parent dele
     $db = new PDO($dsn, $scenario['user'], $scenario['password'], array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $observer = new PDO($dsn, $admin_user, getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD'), array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     $prefix = $scenario['prefix'];
-    $tables = array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_perms', 'user_auth_group_realm');
+    $tables = array('user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_perms', 'user_auth_group_realm', 'user_auth_cache');
     $workers = array();
     try {
         $fields = array('name','description','graph_settings','login_opts','show_tree','show_list','show_preview','policy_graphs','policy_trees','policy_hosts','policy_graph_templates','enabled');
@@ -100,6 +101,7 @@ test('copying group grants cannot recreate children after concurrent parent dele
         $db->exec("CREATE TABLE {$prefix}_user_auth_group_realm (group_id INT,realm_id INT,PRIMARY KEY(group_id,realm_id)) ENGINE=InnoDB");
         $db->exec("CREATE TABLE {$prefix}_user_auth_group_members (group_id INT,user_id INT,PRIMARY KEY(group_id,user_id)) ENGINE=InnoDB");
         $db->exec("CREATE TABLE {$prefix}_user_auth (id INT PRIMARY KEY,reset_perms INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=InnoDB");
+        $db->exec("CREATE TABLE {$prefix}_user_auth_cache (user_id INT UNSIGNED NOT NULL, token VARCHAR(191) NOT NULL) ENGINE=InnoDB");
         $db->exec("INSERT INTO {$prefix}_user_auth_group(id) VALUES(5)");
         $db->exec("INSERT INTO {$prefix}_user_auth_group_perms VALUES(5,9,1)");
         $db->exec("INSERT INTO {$prefix}_user_auth_group_realm VALUES(5,1)");
