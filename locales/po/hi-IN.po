@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 22:06-0700\n"
+"POT-Creation-Date: 2026-10-28 23:42-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2404,7 +2404,7 @@ msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3799,7 +3799,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul पोलर अभी तक नहीं चला है।"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "अनुमति अस्वीकृत"
 
@@ -4753,13 +4753,13 @@ msgstr "FATAL: Kadupul के इस क्षेत्र तक पहुं�
 msgid "Login Again"
 msgstr "फिर से लॉगिन करें"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "यदि आपको लगता है कि यह एक त्रुटि है। कृपया अपने Kadupul प्रशासक से संपर्क करें।"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "आपको Kadupul के इस अनुभाग तक पहुंचने की अनुमति नहीं है।"
@@ -12047,430 +12047,430 @@ msgstr "पासवर्ड मेल नहीं खाते"
 msgid "System Device"
 msgstr "सिंक डिवाइस"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:73 lib/data_query.php:475
 msgid "Automation Execution for Data Query complete"
 msgstr "डाटा क्वेरी के लिए स्वचालन निष्पादन पूर्ण"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:76 lib/data_query.php:478
 msgid "Plugin Hooks complete"
 msgstr "प्लगइन हुक पूरा हुआ"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:94
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "डेटा क्वेरी चलाना [ %s]।"
 
-#: lib/data_query.php:97
+#: lib/data_query.php:106
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "मिला प्रकार = &#39; %s&#39; [ %s]।"
 
-#: lib/data_query.php:119
+#: lib/data_query.php:128
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "अज्ञात प्रकार = &#39; %s&#39;।"
 
-#: lib/data_query.php:154
+#: lib/data_query.php:163
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "चेतावनी: सॉर्ट फील्ड एसोसिएशन ने बदल दिया है। पुन: मैपिंग समस्याएँ हो सकती हैं!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:175
 msgid "Update Data Query Sort Cache complete"
 msgstr "अद्यतन डेटा क्वेरी सॉर्ट कैश पूर्ण करें"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:202
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "%s तालिकाओं को परिवर्तित करने के लिए मिला"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:308
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "सूचकांक परिवर्तन का पता चला! करंटइंडेक्स: %s, पिछलाइंडेक्स: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:332
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "सूचकांक हटाने का पता चला! पिछलाइंडेक्स: %s"
 
-#: lib/data_query.php:326
+#: lib/data_query.php:335
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "सूचकांक हटाने का पता चला! पिछलाइंडेक्स: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:375
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "%s लोकल डेटा आईडी का वेरिफ़िकेशन पूरा हो गया है"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:378
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "पाया गया%s और%s अनाथ स्थानीय डेटा ID का पुनः-मानचित्र पर।"
 
-#: lib/data_query.php:372
+#: lib/data_query.php:381
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "रेखांकन को उनके नए अनुक्रमितों में बदलना"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:387 lib/data_query.php:394
 msgid "Done updating Data Source Title Cache"
 msgstr "डुप्लिकेट डेटा स्रोत प्रोफ़ाइल"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:390 lib/data_query.php:397
 msgid "Done updating Graph Title Cache"
 msgstr "ग्राफ शीर्षक कैश अद्यतन किया गया"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:401
 msgid "Index Association with Local Data complete"
 msgstr "स्थानीय डेटा के साथ अनुक्रमणिका एसोसिएशन"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:407
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "री - इंडेक्स कैश अपडेट करना पूरा हुआ। %s इंडेक्स में बदलाव हुए थे, और %s अनाथ इंडेक्स थे।"
 
-#: lib/data_query.php:402
+#: lib/data_query.php:411
 msgid "Update Poller Cache for Query complete"
 msgstr "क्वेरी पूर्ण के लिए पोलर कैश अपडेट करें"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:413
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "कोई इंडेक्स चेंज नहीं हुआ, स्किपिंग रि-इंडेक्स और पोलर कैश री-जनसंख्या"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:467
 msgid "Automation Executing for Data Query complete"
 msgstr "डाटा क्वेरी के लिए स्वचालन निष्पादन पूर्ण"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:470
 msgid "Plugin hooks complete"
 msgstr "प्लगइन हुक पूरा"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:529
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "सॉर्ट फ़ील्ड परिवर्तन के लिए जाँच की जा रही है। कोई परिवर्तन नहीं पाया गया।"
 
-#: lib/data_query.php:525
+#: lib/data_query.php:534
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "नए सॉर्ट फ़ील्ड का पता लगाया: &#39; %s&#39; पुराना सॉर्ट फ़ील्ड &#39; %s&#39;"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:555
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "त्रुटि: नया सॉर्ट फ़ील्ड उपयुक्त नहीं है। सॉर्ट फील्ड नहीं बदलेगा।"
 
-#: lib/data_query.php:560
+#: lib/data_query.php:569
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "नए सॉर्ट फ़ील्ड को मान्य किया गया। सॉर्ट फील्ड अपडेट किया जाए।"
 
-#: lib/data_query.php:673
+#: lib/data_query.php:682
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "&#39; %s&#39; पर डेटा क्वेरी XML फ़ाइल नहीं मिल सकी"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:686
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39; पर डेटा क्वेरी XML फ़ाइल मिली"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
 msgid "Error parsing XML file into an array."
 msgstr "XML फ़ाइल को एक सरणी में पार्स करने में त्रुटि।"
 
-#: lib/data_query.php:705 lib/data_query.php:938
+#: lib/data_query.php:714 lib/data_query.php:947
 msgid "XML file parsed ok."
 msgstr "XML फ़ाइल ठीक है।"
 
-#: lib/data_query.php:713 lib/data_query.php:941
+#: lib/data_query.php:722 lib/data_query.php:950
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "अमान्य फ़ील्ड &lt;index_order&gt; %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:942
+#: lib/data_query.php:723 lib/data_query.php:951
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "केवल &lt;दिशा&gt; इनपुट &lt;/ दिशा&gt; या &lt;दिशा&gt; इनपुट-आउटपुट &lt;/ दिशा&gt; फ़ील्ड होना चाहिए"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:740
 msgid "Data Query returned no indexes."
 msgstr "त्रुटि: डेटा क्वेरी ने कोई अनुक्रमणिका वापस नहीं की।"
 
-#: lib/data_query.php:732
+#: lib/data_query.php:741
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "XML फ़ाइल में &lt;arg_num_indexes&gt; अनुपलब्ध, &#39;इंडेक्स काउंट चेंजेड&#39; समर्थित नहीं है"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:744
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "अनुक्रमित &#39; %s&#39; की संख्या के लिए निष्पादित स्क्रिप्ट"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:747
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "अनुक्रमित की संख्या: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:751
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "XML फ़ाइल में &lt;arg_num_indexes&gt; अनुपलब्ध, &#39;इंडेक्स काउंट चेंजेड&#39; समर्थित नहीं है"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:753
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; XML फ़ाइल में लापता, arg_index प्रविष्टियों की गणना करके &#39;सूचकांक गणना बदली गई&#39;"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:764
 msgid "ERROR: Data Query returned no indexes."
 msgstr "त्रुटि: डेटा क्वेरी ने कोई अनुक्रमणिका वापस नहीं की।"
 
-#: lib/data_query.php:759
+#: lib/data_query.php:768
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "अनुक्रमणिका &#39; %s&#39; की सूची के लिए निष्पादित स्क्रिप्ट, अनुक्रमणिका गणना: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:770
 msgid "Click to show Data Query output for 'index'"
 msgstr "&#39;सूचकांक&#39; के लिए डेटा क्वेरी आउटपुट दिखाने के लिए क्लिक करें"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:773
 #, php-format
 msgid "Found index: %s"
 msgstr "पाया सूचकांक: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1349
+#: lib/data_query.php:788 lib/data_query.php:1358
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "फ़ील्ड &#39; %s&#39; के लिए डेटा क्वेरी आउटपुट दिखाने के लिए क्लिक करें"
 
-#: lib/data_query.php:785
+#: lib/data_query.php:794
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "छांटें फ़ील्ड ने फ़ील्ड नाम %s के लिए कोई डेटा नहीं दिया, छोड़ रहे हैं"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:796
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "निष्पादित स्क्रिप्ट क्वेरी &#39; %s&#39;"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:807 lib/data_query.php:814
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "मिली वस्तु [ %s = &#39; %s&#39;] सूचकांक: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:854 lib/data_query.php:870
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "कुल:% f, डेल्टा:% f, %s"
 
-#: lib/data_query.php:928
+#: lib/data_query.php:937
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "अमान्य host_id: %s"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:961
 msgid "Auto Bulk Walk Size Selected."
 msgstr "ऑटो बल्क वॉक साइज़ चयनित।"
 
-#: lib/data_query.php:974 lib/data_query.php:1033
+#: lib/data_query.php:983 lib/data_query.php:1042
 msgid "Failed to load SNMP session."
 msgstr "SNMP सत्र लोड करने में विफल।"
 
-#: lib/data_query.php:984
+#: lib/data_query.php:993
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "बल्क वॉक साइज़ %d का परीक्षण %2.4f की प्रतिक्रिया के साथ किया गया।"
 
-#: lib/data_query.php:995
+#: lib/data_query.php:1004
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "बल्क वॉक साइज़ चुना गया %d था।"
 
-#: lib/data_query.php:998
+#: lib/data_query.php:1007
 msgid "Saving Bulk Walk Size to Device."
 msgstr "डिवाइस पर बल्क वॉक साइज़ सहेजा जा रहा है।"
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:1021
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "बल्क वॉक साइज़ %d पर नियत है।"
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1055
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "एसएनएमपी प्राप्त करने वाले अनुक्रमणिका @ &#39; %s&#39; सूचकांक की संख्या के लिए मिलता है: सूचकांक गणना: %s"
 
-#: lib/data_query.php:1048
+#: lib/data_query.php:1057
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; XML फ़ाइल में गुम, oid_index प्रविष्टियों की गणना करके &#39;इंडेक्स काउंट चेंजेड&#39; का अनुकरण किया गया"
 
-#: lib/data_query.php:1051
+#: lib/data_query.php:1060
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "अनुक्रमणिका @ &#39; %s&#39; सूचकांक की सूची के लिए SNMP पैदल चलना: %s"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1064
 msgid "No SNMP data returned"
 msgstr "कोई SNMP डेटा वापस नहीं आया"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1069
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "OID में पाया गया सूचकांक: &#39; %s&#39; मूल्य: &#39; %s&#39;"
 
-#: lib/data_query.php:1091
+#: lib/data_query.php:1100
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "अनुक्रमित @ &#39; %s&#39; सूचकांक की फ़िल्टरिंग सूची: %s"
 
-#: lib/data_query.php:1095
+#: lib/data_query.php:1104
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "फ़िल्टर सूचकांक OID में पाया गया: &#39; %s&#39; मान: &#39; %s&#39;"
 
-#: lib/data_query.php:1111
+#: lib/data_query.php:1120
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "अनुक्रमित @ &#39; %s&#39; सूचकांक की फ़िल्टरिंग सूची: %s"
 
-#: lib/data_query.php:1115
+#: lib/data_query.php:1124
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "फ़िल्टर सूचकांक OID में पाया गया: &#39; %s&#39; मान: &#39; %s&#39;"
 
-#: lib/data_query.php:1135
+#: lib/data_query.php:1144
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "&#39;Rewrite_index&#39; या &#39;oid_suffix&#39; के बाद से &#39; %s&#39; के लिए गलत &#39;विधि&#39; फ़ील्ड को परिभाषित किया गया है"
 
-#: lib/data_query.php:1142
+#: lib/data_query.php:1151
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "क्षेत्र &#39; %s&#39; [मूल्य = &#39; %s&#39;] के लिए सूचकांक डेटा सम्मिलित करना]"
 
-#: lib/data_query.php:1147
+#: lib/data_query.php:1156
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "स्थित इनपुट फ़ील्ड &#39; %s&#39; [प्राप्त करें]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1165
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "मिला OID पुनर्लेखन नियम: &#39;s / %s / %s /&#39;"
 
-#: lib/data_query.php:1167
+#: lib/data_query.php:1176
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "OID_rewrite OID में: &#39; %s&#39; नया OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1181
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "एसएनएमपी प्राप्त करने के लिए डेटा @ &#39; %s&#39; [मूल्य = &#39; %s&#39;] मिलता है"
 
-#: lib/data_query.php:1183
+#: lib/data_query.php:1192
 #, php-format
 msgid "Field '%s' %s"
 msgstr "फ़ील्ड &#39; %s&#39; %s"
 
-#: lib/data_query.php:1244
+#: lib/data_query.php:1253
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "%s oids के लिए SNMP प्राप्त करना ( %s)"
 
-#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
+#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "सॉर्ट फ़ील्ड में डेटा नहीं है। OID [ %s] के लिए पुन: अनुक्रमणिका जारी नहीं रख सकते"
 
-#: lib/data_query.php:1288
+#: lib/data_query.php:1297
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "डेटा के लिए परिणाम मिले @ &#39; %s&#39; [मूल्य = &#39; %s&#39;]"
 
-#: lib/data_query.php:1301
+#: lib/data_query.php:1310
 #, fuzzy, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "डेटा @ '{ 0 }' के लिए परिणाम सेट करना [key= '{ 1 }', value= '{ 2 }']"
 
-#: lib/data_query.php:1311
+#: lib/data_query.php:1320
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "डेटा @ &#39; %s&#39; [कुंजी = &#39; %s&#39;, मान = &#39; %s&#39;]"
 
-#: lib/data_query.php:1329
+#: lib/data_query.php:1338
 #, fuzzy, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "डेटा के लिए SNMP GET परिणाम मिला @ '{ 0 }' [VALUE= '{ 1 }'] (सूचकांक: %s)"
 
-#: lib/data_query.php:1343
+#: lib/data_query.php:1352
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "एसएनएमपी का निष्पादन डेटा @ &#39; %s&#39; [मूल्य = &#39;$ मूल्य&#39; के लिए मिलता है]"
 
-#: lib/data_query.php:1351
+#: lib/data_query.php:1360
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "स्थित इनपुट फ़ील्ड &#39; %s&#39; [चलना]"
 
-#: lib/data_query.php:1402
+#: lib/data_query.php:1411
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "डेटा @ &#39; %s&#39; के लिए SNMP चलना"
 
-#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
-#: lib/data_query.php:1579
+#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
+#: lib/data_query.php:1588
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "VALUE_INDEX_PARSE में कोई सूचकांक[%s] नहीं, छोड़ रहा है।"
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1471
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "मिली वस्तु [ %s = &#39; %s&#39;] सूचकांक: %s [ %s से]"
 
-#: lib/data_query.php:1504
+#: lib/data_query.php:1513
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "मिला OCTET STRING &#39; %s&#39; डिकोड किया गया मान: &#39; %s&#39;"
 
-#: lib/data_query.php:1510 lib/data_query.php:1559
+#: lib/data_query.php:1519 lib/data_query.php:1568
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "मिला आइटम [ %s = &#39; %s&#39;] सूचकांक: %s [regexp oid पार्स से]"
 
-#: lib/data_query.php:1587
+#: lib/data_query.php:1596
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "पाया गया आइटम [ %s = &#39; %s&#39;] सूचकांक: %s [regexp oid वैल्यू पार्स से]"
 
-#: lib/data_query.php:1822
+#: lib/data_query.php:1831
 #, fuzzy, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "फर्जी rewrite_value आइटम मिला, index='{ 0 }'"
 
-#: lib/data_query.php:1835
+#: lib/data_query.php:1844
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "अनुवाद मानचित्र का विश्लेषण नहीं किया जा सका (rewrite_value)"
 
-#: lib/data_query.php:1859
+#: lib/data_query.php:1868
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "OID_rewrite OID में: &#39; %s&#39; नया OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1973
+#: lib/data_query.php:1982
 msgid "Update graph data query cache complete"
 msgstr "अद्यतन डेटा क्वेरी सॉर्ट कैश पूर्ण करें"
 
-#: lib/data_query.php:1992
+#: lib/data_query.php:2001
 msgid "Re-Indexing Data Query complete"
 msgstr "डेटा क्वेरी फिर से अनुक्रमण करना"
 
-#: lib/data_query.php:2144
+#: lib/data_query.php:2153
 msgid "Unknown Index"
 msgstr "अज्ञात सूचकांक"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2764
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "आपको डेटा स्रोत ' %s' के लिए XML आउटपुट कॉलम चुनना होगा और चेकबॉक्स को इसके दाईं ओर टॉगल करना होगा"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2770
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "आपके ग्राफ़ टेम्प्लेट में उपयोग में डेटा टेम्प्लेट नहीं हैं। कृपया अपना ग्राफ़ टेम्पलेट सही करें"
 
@@ -12693,28 +12693,28 @@ msgstr "पिंग विफलता के कारण संदेश न�
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "निम्न त्रुटि के कारण Kadupul अक्षम प्लगइन %s: %s! अधिक जानकारी के लिए Kadupul logfile देखें।"
 
-#: lib/functions.php:6891
+#: lib/functions.php:6898
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "चेतावनी: PollerID:%s का एक अमान्य होस्टनाम है:%s।  क्या यह DNS के माध्यम से उपलब्ध नहीं है!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7351 lib/functions.php:7353
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- बीटा %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "संस्करण %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7353
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7588
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "चेतावनी:  कुंजी Kadupul फ़ाइल %s लापता शामिल करें।  कृपया इस फ़ाइल का पता लगाएँ और उसे बदलें"

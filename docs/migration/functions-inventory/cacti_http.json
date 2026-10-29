@@ -3,9 +3,9 @@
     "name": "cacti_http",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9188,
-        "end_line": 9244,
-        "line_count": 57,
+        "start_line": 9227,
+        "end_line": 9309,
+        "line_count": 83,
         "signature": {
             "parameters": [
                 {
@@ -43,13 +43,22 @@
                     "variadic": false,
                     "has_default": true,
                     "default": "0"
+                },
+                {
+                    "name": "connect_address",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "''"
                 }
             ],
             "return_type": null,
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 5, "core_outside_functions_php": 4, "tests": 12, "plugins": 0},
+        "fan_out": {"core": 5, "core_outside_functions_php": 4, "tests": 20, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],
