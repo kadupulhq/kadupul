@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 18:00-0700\n"
+"POT-Creation-Date: 2026-10-28 18:58-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -128,7 +128,7 @@ msgstr "点击 '继续' 删除以下聚合图形."
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
 #: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
-#: managers.php:1065 managers.php:1126 plugins.php:712 pollers.php:549
+#: managers.php:1065 managers.php:1126 plugins.php:713 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
@@ -1143,7 +1143,7 @@ msgstr "SNMP"
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
 #: package_import.php:548 package_import.php:633 plugins.php:497
-#: plugins.php:623 pollers.php:1007 templates_import.php:207
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
 #: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
 msgid "Status"
@@ -1201,7 +1201,7 @@ msgstr "清空已发现的设备"
 #: lib/spikekill.php:1802 lib/spikekill.php:1803 lib/spikekill.php:1804
 #: lib/spikekill.php:1805 lib/spikekill.php:1806 lib/spikekill.php:1807
 #: lib/spikekill.php:1808 lib/spikekill.php:1809 lib/spikekill.php:1810
-#: plugins.php:780 pollers.php:1115 user_admin.php:2261 utilities.php:738
+#: plugins.php:781 pollers.php:1115 user_admin.php:2261 utilities.php:738
 #: utilities.php:1190 utilities.php:2757 utilities.php:2885 utilities.php:2893
 #: utilities.php:2904 utilities.php:2915 utilities.php:2940 utilities.php:2990
 #: utilities.php:3226
@@ -2174,7 +2174,7 @@ msgid "Item"
 msgstr "项"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:510 plugins.php:641
+#: package_import.php:510 plugins.php:642
 #: templates/platform/permission_denied.html.twig
 msgid "Version"
 msgstr "版本"
@@ -6829,7 +6829,7 @@ msgstr "(编辑)"
 #: include/global_arrays.php:2765 include/global_arrays.php:2783
 #: include/global_arrays.php:2801 include/global_arrays.php:2825
 #: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:606
 msgid "Actions"
 msgstr "操作"
 
@@ -12394,11 +12394,11 @@ msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 
-#: lib/database.php:2405
+#: lib/database.php:2422
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "无法确定密码字段长度,无法继续,因为可能会损坏密码"
 
-#: lib/database.php:2412
+#: lib/database.php:2429
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "无法更改密码字段长度,无法继续,因为可能会损坏密码"
 
@@ -14636,7 +14636,7 @@ msgstr "不建议更新您已经修改过的模板。模板的升级不会删除
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "请在安装后选择您想要使用的设备模板. 如果您的操作系统是Windows,则需要确保选择 'Windows 设备' 模板.如果您的操作系统是Linux/UNIX,请确保选择 ' Local Linux Machine' 设备模板."
 
-#: lib/installer.php:2749 package_import.php:498 plugins.php:629
+#: lib/installer.php:2749 package_import.php:498 plugins.php:630
 msgid "Author"
 msgstr "作者"
 
@@ -15250,7 +15250,7 @@ msgstr "目录“%s”中的插件不包含安装函数“%s（）”。 要安�
 msgid "Legacy Plugin"
 msgstr "旧版插件"
 
-#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:595
+#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:596
 msgid "Plugins"
 msgstr "插件"
 
@@ -16515,7 +16515,7 @@ msgstr "替换数据源和图形模板建议值记录。 在数据查询重新�
 msgid "Package Import"
 msgstr "包导入"
 
-#: plugins.php:26 plugins.php:719
+#: plugins.php:26 plugins.php:720
 msgid "Uninstall"
 msgstr "卸载"
 
@@ -16539,7 +16539,7 @@ msgstr "等待升级"
 msgid "Plugin Management"
 msgstr "插件管理"
 
-#: plugins.php:502 plugins.php:764 plugins.php:775
+#: plugins.php:502 plugins.php:765 plugins.php:776
 msgid "Plugin Error"
 msgstr "插件错误"
 
@@ -16551,80 +16551,80 @@ msgstr "启动/安装"
 msgid "Configuration Issues"
 msgstr "配置问题"
 
-#: plugins.php:608
+#: plugins.php:609
 msgid "Actions available include 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
 msgstr "可用的操作包括'安装','激活','禁用','启用','卸载'."
 
-#: plugins.php:611
+#: plugins.php:612
 msgid "Plugin Name"
 msgstr "插件名称"
 
-#: plugins.php:614
+#: plugins.php:615
 msgid "The name for this Plugin.  The name is controlled by the directory it resides in."
 msgstr "这个插件的名字. 该名称由它所在的目录控制."
 
-#: plugins.php:617
+#: plugins.php:618
 msgid "Plugin Description"
 msgstr "插件说明"
 
-#: plugins.php:620
+#: plugins.php:621
 msgid "A description that the Plugins author has given to the Plugin."
 msgstr "插件作者给插件的描述."
 
-#: plugins.php:623
+#: plugins.php:624
 msgid "Main / Remote Status"
 msgstr "主/远程状态"
 
-#: plugins.php:626
+#: plugins.php:627
 msgid "The status of this Plugin."
 msgstr "这个插件的状态."
 
-#: plugins.php:632
+#: plugins.php:633
 msgid "The author of this Plugin."
 msgstr "这个插件的作者."
 
-#: plugins.php:635
+#: plugins.php:636
 msgid "Requires"
 msgstr "需要"
 
-#: plugins.php:638
+#: plugins.php:639
 msgid "This Plugin requires the following Plugins be installed first."
 msgstr "这个插件需要先安装以下插件."
 
-#: plugins.php:644
+#: plugins.php:645
 msgid "The version of this Plugin."
 msgstr "这个插件的版本."
 
-#: plugins.php:647
+#: plugins.php:648
 msgid "Load Order"
 msgstr "加载顺序"
 
-#: plugins.php:650
+#: plugins.php:651
 msgid "The load order of the Plugin.  You can change the load order by first sorting by it, then moving a Plugin either up or down."
 msgstr "插件的加载顺序. 您可以先通过排序来更改加载顺序,然后向上或向下移动插件."
 
-#: plugins.php:680
+#: plugins.php:681
 msgid "No Plugins Found"
 msgstr "没有找到插件"
 
-#: plugins.php:691
+#: plugins.php:692
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "卸载此插件将删除所有插件数据和设置.如果您确实要卸载插件,请单击下面的 '卸载'.否则点击'取消'"
 
-#: plugins.php:692
+#: plugins.php:693
 msgid "Are you sure you want to Uninstall?"
 msgstr "您确定要卸载吗?"
 
-#: plugins.php:762 plugins.php:773
+#: plugins.php:763 plugins.php:774
 #, php-format
 msgid "Not Compatible, %s"
 msgstr "不兼容, %s"
 
-#: plugins.php:804
+#: plugins.php:805
 msgid "Order Before Previous Plugin"
 msgstr "放在前一个插件之前"
 
-#: plugins.php:809
+#: plugins.php:810
 msgid "Order After Next Plugin"
 msgstr "放在下一个插件后"
 
@@ -16633,67 +16633,67 @@ msgstr "放在下一个插件后"
 msgid "Unable to Install Plugin.  The following Plugins must be installed first: %s"
 msgstr "无法安装插件. 必须先安装以下插件: %s"
 
-#: plugins.php:862
+#: plugins.php:863
 #, php-format
 msgid "Unable to Install Plugin: %s"
 msgstr ""
 
-#: plugins.php:864
+#: plugins.php:865
 msgid "Install Plugin"
 msgstr "安装插件"
 
-#: plugins.php:871 plugins.php:883
+#: plugins.php:872 plugins.php:884
 #, php-format
 msgid "Unable to Uninstall.  This Plugin is required by: %s"
 msgstr "无法卸载. 这个插件需要: %s"
 
-#: plugins.php:873 plugins.php:878 plugins.php:885
+#: plugins.php:874 plugins.php:879 plugins.php:886
 msgid "Uninstall Plugin"
 msgstr "卸载插件"
 
-#: plugins.php:875
+#: plugins.php:876
 msgid "Disable Plugin"
 msgstr "禁用插件"
 
-#: plugins.php:887
+#: plugins.php:888
 msgid "Enable Plugin"
 msgstr "启用插件"
 
-#: plugins.php:890
+#: plugins.php:891
 msgid "Plugin directory is missing!"
 msgstr "插件目录丢失!"
 
-#: plugins.php:893
+#: plugins.php:894
 msgid "Plugin is not compatible (Pre-1.x)"
 msgstr "插件不兼容(Pre-1.x)"
 
-#: plugins.php:896
+#: plugins.php:897
 msgid "Plugin directories can not include spaces"
 msgstr "插件目录不能包含空格"
 
-#: plugins.php:899
+#: plugins.php:900
 #, php-format
 msgid "Plugin directory is not correct.  Should be '%s' but is '%s'"
 msgstr "插件目录不正确. 应该是'%s', 但是'%s'"
 
-#: plugins.php:907
+#: plugins.php:908
 #, php-format
 msgid "Plugin directory '%s' is missing setup.php"
 msgstr "插件目录 '%s' 丢失 setup.php"
 
-#: plugins.php:909
+#: plugins.php:910
 msgid "Plugin is lacking an INFO file"
 msgstr "插件缺少INFO文件"
 
-#: plugins.php:911
+#: plugins.php:912
 msgid "Plugin is integrated into Kadupul core"
 msgstr "插件集成到 Kadupul 核心中"
 
-#: plugins.php:913
+#: plugins.php:914
 msgid "Plugin is not compatible"
 msgstr "插件不兼容"
 
-#: plugins.php:927
+#: plugins.php:928
 msgid "Enable Plugin Locally"
 msgstr "启用插件"
 
