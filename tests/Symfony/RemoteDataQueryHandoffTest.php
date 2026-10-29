@@ -26,7 +26,9 @@ final class RemoteQueryFixture
 {
     public static string $response;
     public static string $timeout = '30';
-    /** @var list<array{url: string, timeout: int, allowed: list<string>}> */
+    public static string $hostname = 'collector.invalid';
+    public static string $address = '10.20.30.40';
+    /** @var list<array{url: string, timeout: int, allowed: list<string>, connect: string}> */
     public static array $http = [];
     /** @var list<array{host: int, query: int}> */
     public static array $automation = [];
@@ -57,8 +59,13 @@ function db_fetch_cell_prepared(string $sql, array $parameters): string
     if (!str_contains($sql, 'SELECT hostname') || !str_contains($sql, 'FROM poller') || $parameters !== [2]) {
         throw new RuntimeException('Unexpected collector lookup');
     }
-    return 'collector.invalid';
+    return RemoteQueryFixture::$hostname;
 }
+function gethostbyname(string $name): string
+{
+    return RemoteQueryFixture::$address;
+}
+function cacti_log(string $message, bool $output = false, string $environ = 'CMDPHP'): void {}
 function cacti_sizeof(mixed $value): int
 {
     return is_array($value) ? count($value) : 0;
@@ -67,9 +74,9 @@ function get_url_type(): string
 {
     return 'https';
 }
-function cacti_http(string $url, int $timeout, array $allowed): string
+function cacti_http(string $url, int $timeout, array $allowed, int &$status = 0, string $connect = ''): string
 {
-    RemoteQueryFixture::$http[] = ['url' => $url, 'timeout' => $timeout, 'allowed' => $allowed];
+    RemoteQueryFixture::$http[] = ['url' => $url, 'timeout' => $timeout, 'allowed' => $allowed, 'connect' => $connect];
     return RemoteQueryFixture::$response;
 }
 function automation_execute_data_query(int $host, int $query): bool
@@ -103,6 +110,8 @@ final class RemoteDataQueryHandoffTest extends TestCase
         $GLOBALS['input_types'] = [];
         RemoteQueryFixture::$http = [];
         RemoteQueryFixture::$timeout = '30';
+        RemoteQueryFixture::$hostname = 'collector.invalid';
+        RemoteQueryFixture::$address = '10.20.30.40';
         RemoteQueryFixture::$automation = [];
         RemoteQueryFixture::$hooks = [];
     }
@@ -179,8 +188,47 @@ final class RemoteDataQueryHandoffTest extends TestCase
         yield 'string result' => ['{"result":"true","data_query":[]}'];
     }
 
+    #[DataProvider('refusedCollectors')]
+    public function testCollectorThatResolvesToAReservedAddressIsNotContacted(string $hostname, string $address): void
+    {
+        RemoteQueryFixture::$hostname = $hostname;
+        RemoteQueryFixture::$address = $address;
+        RemoteQueryFixture::$response = json_encode(['result' => true, 'data_query' => []], JSON_THROW_ON_ERROR);
+        self::assertFalse(run_data_query(7, 4));
+        self::assertSame([], RemoteQueryFixture::$http);
+        self::assertSame([], RemoteQueryFixture::$automation);
+    }
+
+    public static function refusedCollectors(): iterable
+    {
+        yield 'name resolving to the metadata address' => ['collector.invalid', '169.254.169.254'];
+        yield 'metadata address' => ['169.254.169.254', ''];
+        yield 'IPv4-mapped metadata address' => ['[::ffff:169.254.169.254]', ''];
+        yield 'NAT64 metadata address' => ['64:ff9b::a9fe:a9fe', ''];
+        yield 'IPv6 link-local' => ['fe80::1', ''];
+        yield 'this network' => ['0.0.0.0', ''];
+        yield 'unresolvable name' => ['collector.invalid', 'collector.invalid'];
+        yield 'header injection' => ["collector.invalid\r\nX-Injected: 1", '10.20.30.40'];
+    }
+
+    public function testCollectorRequestConnectsToTheCheckedAddress(): void
+    {
+        RemoteQueryFixture::$hostname = '[fd00::5]';
+        RemoteQueryFixture::$response = '';
+        self::assertFalse(run_data_query(7, 4));
+        self::assertSame([['url' => 'https://[fd00::5]/kadupul/remote_agent.php?action=runquery&host_id=7&data_query_id=4', 'timeout' => 30, 'allowed' => ['[fd00::5]'], 'connect' => 'fd00::5']], RemoteQueryFixture::$http);
+
+        foreach (['127.0.0.1', '10.1.2.3'] as $address) {
+            RemoteQueryFixture::$hostname = 'collector.invalid';
+            RemoteQueryFixture::$address = $address;
+            RemoteQueryFixture::$http = [];
+            run_data_query(7, 4);
+            self::assertSame($address, RemoteQueryFixture::$http[0]['connect']);
+        }
+    }
+
     private function assertRemoteRequest(): void
     {
-        self::assertSame([['url' => 'https://collector.invalid/kadupul/remote_agent.php?action=runquery&host_id=7&data_query_id=4', 'timeout' => 30, 'allowed' => ['collector.invalid']]], RemoteQueryFixture::$http);
+        self::assertSame([['url' => 'https://collector.invalid/kadupul/remote_agent.php?action=runquery&host_id=7&data_query_id=4', 'timeout' => 30, 'allowed' => ['collector.invalid'], 'connect' => '10.20.30.40']], RemoteQueryFixture::$http);
     }
 }

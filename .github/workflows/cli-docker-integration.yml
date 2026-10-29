@@ -45,29 +45,29 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          # The test merge and both of its parents.
+          fetch-depth: 2
           persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
       - name: Match changed paths
         id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-        run: |
-          set -euo pipefail
-          if [ "$EVENT_NAME" != pull_request ] && [ "$EVENT_NAME" != merge_group ]; then
-            echo 'relevant=true' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # A failed diff must fail the job, never read as "nothing relevant".
-          changed=$(git diff --name-only "$BASE_SHA" HEAD)
-          relevant=false
-          while IFS= read -r path; do
-            case "$path" in
-              cli/*|include/*|lib/*|cacti.sql|docs/audit_schema.sql|.dockerignore|composer.json|composer.lock|tests/e2e/docker/*|tests/tools/check_cli_version.sh|.github/workflows/cli-docker-integration.yml) relevant=true ;;
-            esac
-          done <<< "$changed"
-          echo "Relevant to this workflow: $relevant"
-          echo "relevant=$relevant" >> "$GITHUB_OUTPUT"
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          RELEVANT_PATHS: |
+            cli/*
+            include/*
+            lib/*
+            cacti.sql
+            docs/audit_schema.sql
+            .dockerignore
+            composer.json
+            composer.lock
+            tests/e2e/docker/*
+            tests/tools/check_cli_version.sh
+            .github/workflows/cli-docker-integration.yml
+        run: bash tests/tools/ci_change_scope.sh
 
   cli-database:
     needs: changes
@@ -84,10 +84,10 @@ jobs:
         with:
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Run CLI maintenance integration suite
         env:

@@ -60,6 +60,10 @@ function boost_get_arch_table_names(...$args)
 }
 function boost_get_rrd_filename_and_template($id)
 {
+    // A lookup that failed with the session is not a removed data source.
+    if ($GLOBALS['mode'] === 'lookup-failure' && $id === 42) {
+        return false;
+    }
     return array('rrd_template' => 'value', 'rrd_path' => 'sample-' . $id . '.rrd');
 }
 function array_rekey($values, ...$args)
@@ -83,7 +87,7 @@ function db_fetch_assoc($sql)
     }
     return array(
         array('local_data_id' => 42, 'data_template_id' => 1, 'timestamp' => '1699999800', 'rrd_name' => 'value', 'output' => '21'),
-        array('local_data_id' => $GLOBALS['mode'] === 'next-id-failure' ? 43 : 42,
+        array('local_data_id' => in_array($GLOBALS['mode'], array('next-id-failure', 'lookup-failure'), true) ? 43 : 42,
             'data_template_id' => 1, 'timestamp' => '1699999860', 'rrd_name' => 'value', 'output' => '22')
     );
 }

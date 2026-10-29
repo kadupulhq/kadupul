@@ -1021,7 +1021,7 @@ function data_query_item_edit()
 
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var graph_template_id_prev=<?php print $item;?>;
+	var graph_template_id_prev=<?php print (int) $item;?>;
 
 	$('.remover').on('click', function(event) {
 		event.preventDefault();
