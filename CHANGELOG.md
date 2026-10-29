@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Update billboard.js from 3.18.0 to 4.1.3 and the billboard stylesheet in every theme. The library is now installed from npm and checked against a pinned checksum like D3 and jQuery. Plugin charts keep working because the browser bundle still includes every chart method; 4.x also stops `javascript:` links spelled with a numeric character reference that omits its closing semicolon from reaching the default tooltip, custom tooltip contents and legend templates, which 3.18.0 allowed. Git-based installs must run `npm ci && npm run build` after pulling, because `include/js/billboard.js` is no longer tracked and `git pull` deletes it, leaving charts broken until the rebuild; packaged and offline releases are unaffected.
+
 - Replace the bundled fullscreen library with a native Fullscreen API shim that preserves the screenfull 3.x plugin interface.
 
 - Inventory bundled browser libraries and report dependency version drift during maintenance.
