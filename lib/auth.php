@@ -255,13 +255,15 @@ function check_auth_cookie()
                 }
                 $secret = hash('sha512', $token, false);
 
+                // The cookie expires 30 days after the row is written, so an older row only serves a copied cookie.
                 $found  = db_fetch_cell_prepared(
                     'SELECT user_id
 					FROM user_auth_cache
 					WHERE user_id = ?
 					AND token = ?
-					AND hostname = ?',
-                    array($user_info['id'], $secret, get_client_addr())
+					AND hostname = ?
+					AND last_update >= ?',
+                    array($user_info['id'], $secret, get_client_addr(), date('Y-m-d H:i:s', time() - 86400 * 30))
                 );
 
                 if (empty($found)) {
@@ -947,6 +949,9 @@ function auth_membership_reset_users($unit, $ids, $required = true)
                 throw new RuntimeException('Membership permission epochs were not confirmed');
             }
         }
+        // Remembered logins end with the permission change. A rolled-back unit
+        // that already removed them only costs the user a fresh sign-in.
+        auth_membership_execute($db, 'DELETE FROM user_auth_cache WHERE user_id IN (' . $placeholders . ')', $users);
     }
     if (isset($_SESSION['sess_user_id']) && in_array((int) $_SESSION['sess_user_id'], $ids, true)) {
         foreach (array('sess_user_realms', 'sess_user_config_array', 'sess_config_array', 'sess_auth_names') as $name) {
@@ -5279,7 +5284,7 @@ function rsa_check_keypair()
 
 /**
  * reset_group_perms - sets a flag for all users of a group logged in that their perms
- *   need to be reloaded from the database
+ *   need to be reloaded from the database, and expires their remembered logins
  *
  * @param  (int) $group_id - the id of the group to check
  *
@@ -5295,6 +5300,13 @@ function reset_group_perms($group_id)
     ), 'user_id', 'user_id');
 
     if (cacti_sizeof($users)) {
+        $user_ids = array_values(array_map('intval', $users));
+        db_execute_prepared(
+            'DELETE FROM user_auth_cache
+			WHERE user_id IN (' . implode(',', array_fill(0, count($user_ids), '?')) . ')',
+            $user_ids
+        );
+
         db_execute('UPDATE user_auth
 			SET reset_perms=FLOOR(RAND() * 4294967295) + 1
 			WHERE id IN (' . implode(',', $users) . ')');
@@ -5303,7 +5315,7 @@ function reset_group_perms($group_id)
 
 /**
  * reset_user_perms - sets a flag for all users logged in as this user that their perms
- *   need to be reloaded from the database
+ *   need to be reloaded from the database, and expires their remembered logins
  *
  * @param  (int) $user_id - the id of the current user
  *
@@ -5311,6 +5323,8 @@ function reset_group_perms($group_id)
  */
 function reset_user_perms($user_id)
 {
+    db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
+
     db_execute_prepared(
         'UPDATE user_auth
 		SET reset_perms=FLOOR(RAND() * 4294967295) + 1

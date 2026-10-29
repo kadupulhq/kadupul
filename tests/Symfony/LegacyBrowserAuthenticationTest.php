@@ -105,10 +105,12 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         yield 'account locked' => ['9,0,token', 'on', '127.0.0.1', 'on', 'on', '1'];
         yield 'auth policy disabled' => ['9,0,token', 'on', '127.0.0.1', 'on', '', '0'];
         yield 'auth policy malformed' => ['9,0,token', 'on', '127.0.0.1', 'on', '', 'oops'];
+        // GHSA-xq26-f282-f998: a copied cookie must not outlive the 30-day cookie it came from.
+        yield 'token older than the cookie lifetime' => ['9,0,token', 'on', '127.0.0.1', 'on', '', '1', '-31 days'];
     }
 
     #[DataProvider('rememberedRefusals')]
-    public function testRefusedRememberTokenPreservesCredential(string $cookie, string $cache, string $host, string $enabled, string $locked, string $method): void
+    public function testRefusedRememberTokenPreservesCredential(string $cookie, string $cache, string $host, string $enabled, string $locked, string $method, string $age = '-1 day'): void
     {
         $pdo = new PDO('sqlite::memory:');
         $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
@@ -118,8 +120,8 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         }
         $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT "", must_change_password TEXT DEFAULT "", password_change TEXT DEFAULT "")');
         $pdo->prepare('INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES (9, ?, 0, ?, ?)')->execute(['account', $enabled, $locked]);
-        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT)');
-        $pdo->prepare('INSERT INTO user_auth_cache VALUES (1, 9, ?, ?)')->execute([hash('sha512', 'token'), $host]);
+        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT, last_update TEXT)');
+        $pdo->prepare("INSERT INTO user_auth_cache VALUES (1, 9, ?, ?, datetime('now', ?))")->execute([hash('sha512', 'token'), $host, $age]);
         $_COOKIE = ['cacti_remembers' => $cookie];
         $request = Request::create('/about', 'GET', [], $_COOKIE, [], $_SERVER);
         $connection = $this->createMock(DatabaseConnection::class);
@@ -136,8 +138,8 @@ final class LegacyBrowserAuthenticationTest extends TestCase
         $pdo->exec("INSERT INTO settings VALUES ('auth_method','1'),('auth_cache_enabled','on'),('guest_user','3'),('force_https','')");
         $pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, realm INTEGER, enabled TEXT, locked TEXT, password TEXT DEFAULT "", must_change_password TEXT DEFAULT "", password_change TEXT DEFAULT "")');
         $pdo->exec("INSERT INTO user_auth(id,username,realm,enabled,locked) VALUES (9, 'account', 0, 'on', '')");
-        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT)');
-        $pdo->prepare('INSERT INTO user_auth_cache VALUES (1, 9, ?, ?)')->execute([hash('sha512', 'token'), '192.0.2.4']);
+        $pdo->exec('CREATE TABLE user_auth_cache (id INTEGER PRIMARY KEY, user_id INTEGER, token TEXT, hostname TEXT, last_update TEXT)');
+        $pdo->prepare("INSERT INTO user_auth_cache VALUES (1, 9, ?, ?, datetime('now'))")->execute([hash('sha512', 'token'), '192.0.2.4']);
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '192.0.2.4';
         $_COOKIE = ['cacti_remembers' => '9,0,token'];
         $request = Request::create('/about', 'GET', [], $_COOKIE, [], $_SERVER);

@@ -6,6 +6,9 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add `html_require_legacy_js()` so plugins can declare their need for Chart.js, dygraphs, jquery.sparkline or the jQuery colorpicker. Release 1.3 still loads all four on every page and its page head is unchanged; release 1.4 will load only the requested ones. These libraries are deprecated and no core page uses them.
+- Update billboard.js from 3.18.0 to 4.1.3 and the billboard stylesheet in every theme. The library is now installed from npm and checked against a pinned checksum like D3 and jQuery. Plugin charts keep working because the browser bundle still includes every chart method; 4.x also stops `javascript:` links spelled with a numeric character reference that omits its closing semicolon from reaching the default tooltip, custom tooltip contents and legend templates, which 3.18.0 allowed. Git-based installs must run `npm ci && npm run build` after pulling, because `include/js/billboard.js` is no longer tracked and `git pull` deletes it, leaving charts broken until the rebuild; packaged and offline releases are unaffected.
+
 - Replace the bundled fullscreen library with a native Fullscreen API shim that preserves the screenfull 3.x plugin interface.
 
 - Inventory bundled browser libraries and report dependency version drift during maintenance.
@@ -13,6 +16,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Load jQuery Migrate after jQuery 4 so existing widgets and plugins can use removed jQuery helpers. Keep its unsafe HTML and JSONP compatibility patches disabled.
 
 - Make the CSP report size limit reachable with a bounded body read, drop reports when the rate-limit directory cannot be trusted, and sweep expired rate-limit counters (ports the lts protection; upstream Cacti #7704).
+- Expire the remembered logins of the users a permission, realm, policy or group change affects, so their next visit needs a fresh sign-in; their open sessions keep reloading permissions as before. Remembered-login restoration also refuses a server-side token row older than the 30-day cookie lifetime instead of relying on the 90-day maintenance purge (upstream Cacti #7600, GHSA-xq26-f282-f998 from #8152).
 - On Windows, drop the characters cmd.exe acts on inside quotes (`" & | ^ < > ( )`) from device and receiver values in data input commands, data query script arguments, the Windows ping and SNMP trap arguments, and from the deprecated SNMPv3 auth string; hostnames also lose `%`. `cacti_escapeshellarg()` gains optional `$cmd` and `$strip_env` flags for this and is unchanged on Unix. `escape_command()` now turns a CR or LF into a space so an RRDtool command cannot carry a second line, and the SNMP auth and privacy protocol fields accept only the listed protocols, including SHA384 instead of the misspelt SHA392 (GHSA-rjvj-r52f-8v5q, upstream Cacti #8055, #8056 and #7732).
 - On Windows, drop the characters cmd.exe acts on inside quotes (`" & | ^ < > ( )`) from device and receiver values in data input commands, data query script arguments, the Windows ping and SNMP trap arguments, and from the deprecated SNMPv3 auth string. Those values also lose `%`, so cmd.exe cannot expand a variable, except SNMP communities, passwords and privacy passphrases. `cacti_escapeshellarg()` gains optional `$cmd` and `$keep_percent` flags for this and is unchanged on Unix. `escape_command()` now turns a CR or LF into a space so an RRDtool command cannot carry a second line, and the SNMP auth and privacy protocol fields accept only the listed protocols, including SHA384 instead of the misspelt SHA392 (GHSA-rjvj-r52f-8v5q, upstream Cacti #8055, #8056 and #7732).
 - Confine data source RRD paths to the RRA directory before RRDtool or the filesystem receives them, in RRD create, update, fetch, graph, info, tune, dump and restore, the Boost writer, `data_debug`, dsdebug, dsstats, rrdcheck, spike removal and the gap, heartbeat, float and restructure tools (upstream Cacti #7665, #8064, #8258 and #8314). A trailing slash on `path_rra`, a symlinked RRA directory and RRA subdirectories that do not exist yet are accepted. A file outside the directory, a link that leaves it, a dangling link and a `..` segment are refused. Samples queued for a refused path are moved to `poller_output_rejected` instead of piling up in the poller output. With the RRDtool proxy only the text of the path is checked, since the proxy resolves it. RRD files kept outside `path_rra` must be moved under it, or `path_rra` set to the directory that holds them.
@@ -42,6 +46,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Escape LIKE wildcards in the plugin list filter and bind the reverse-DNS name in the discovery sysName check, so `%`, `_` and a PTR record value match literally and cannot alter the query (upstream Cacti #7670, GHSA-jjfq-mj5r-2r95).
 - Keep the database user and password out of `mysqladmin` process arguments in `scripts/sql.php` and `scripts/ss_sql.php`. Both scripts pass a private option file that is removed after each call, and `ss_sql.php` requests `status` again, so it no longer always returns `U` (upstream Cacti #8545 and #8450).
 - Pass the SNMP port to the net-snmp command line and the native session target as an integer, so a stored port can no longer carry whitespace or other text into the target argument (upstream Cacti #7689).
+- Show the source value and the resulting branch in the tree automation rule matching preview as text, and remove control characters from SNMP community, username, password, privacy passphrase, context and engine ID when a device or notification receiver is saved (GHSA-f7jw-gfhr-cxwm, GHSA-m57p-vf3v-cpgg and GHSA-m3fh-gxqj-76hq, upstream Cacti #8152).
 - Check graph item input values against their field before a graph save writes them or a push-out copies them to existing graphs, refuse graph input saves and removals that name an input or item of another graph template, and refuse an imported graph template whose inputs name items outside it. Values now follow the existing storage ranges and UTF-8 character limits; decimal commas and blank optional numeric form fields are normalized before binding (#1159). This completes the lts/1.2 port of upstream Cacti #7669 and #7692 for CVE-2024-31458; main already restricted the input field itself.
 - Refuse remote data collector requests to link-local addresses, including the cloud metadata address, 0.0.0.0/8 and other reserved ranges, also when an IPv4-mapped, NAT64 or 6to4 address carries them. Loopback and private collectors stay reachable. Requests connect to the checked address, do not follow redirects, and keep the collector name for the Host header and TLS check. This covers the remote agent calls, remote data queries and device diagnostics, and ports the lts/1.2 protection from upstream Cacti #7672.
 - Verify package preview files only with the key the package reader has already trusted, return a shipped package key only when it is trusted, and skip the `package_public_keys` lookup when that table does not exist (ports the lts protection; upstream Cacti #7863, #8369, #8372; #1039).
@@ -137,6 +142,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Retain malformed MULTI poller samples without inventing all-unknown RRD updates; preserve the existing age-based discard policy and valid sibling samples (#763).
 
 - Preserve file and stdout log message text when PCRE line cleanup fails, while continuing to escape control characters (#948).
+- Log PHP deprecations (`E_DEPRECATED`, `E_USER_DEPRECATED`) as warnings without a backtrace instead of as errors, so library deprecations no longer read as failures in `cacti.log` (#1184).
 
 - Mark console welcome and navigation layout tables as presentational while preserving their text, links, classes and IDs (#946).
 
@@ -600,6 +606,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Normalize malformed device-removal worker acknowledgements to the safe uncertain-outcome response.
 
 - Add Symfony device-removal confirmation with graph/data retention choices, shared-dependency protection and verified remote cleanup.
+- Remove a device through `api_device_remove()` as one unit: its Graphs go first, then its dependent rows and the device row in one transaction (a savepoint inside a caller's transaction) after an InnoDB check, and remote collector cleanup after commit. Inside a caller transaction, cleanup is queued transactionally for the existing purge worker instead of contacting the collector before the caller commits. Malformed or fractional device IDs are refused before any side effect. A failure leaves the device and its rows in place, raises an error message and returns false. Report items of the device are now actually removed (upstream Cacti #7732).
 
 - Record structured audit events for site creation, editing, deletion and duplication, device creation, and device template assignment, using the correlation-aware contract that device edit introduced.
 
@@ -741,6 +748,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Back off failed drains, throttle repeated notifications, distinguish untrusted storage from lock contention, and classify native proxy sample errors.
 
 - Finish poller post-run services before reporting failed writes, and release writer leases between collection batches so maintenance can proceed.
+- Stop `cmd.php` and the realtime collector from reading or closing the PHP script server's pipes when the server could not be started. The run logs an error and its script server data sources report U for that cycle; `cmd.php` does not fall back to running each script through the shell (upstream Cacti #7196).
 
 - Keep Windows local RRD cleanup explicitly manual, preserve queued requests during rescans, and discard partial splice dumps after command failure.
 

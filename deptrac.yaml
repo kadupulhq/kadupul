@@ -1,0 +1,722 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Encodes docs/architecture.md. Run `make deptrac`. A module added under src/
+# must get its layers here; `--fail-on-uncovered` fails the run until it does.
+#
+# <Module>.Domain          its own Domain, PSR interfaces and, across modules,
+#                          another module's Contract
+# <Module>.Application     its own Domain and, across modules, another module's
+#                          Contract (not Platform's)
+# Contract                 public module APIs; another Contract at most
+# <Module>.Infrastructure  its own layers, any Contract and vendor code
+# <Module>.Legacy          Infrastructure/Legacy, the only layer that may read
+#                          superglobals
+#
+# Deptrac does not see calls to legacy functions (db_*, cacti_*) or `global`
+# and include statements; ArchitectureTest covers those outside Infrastructure.
+# $_ENV is allowed everywhere: it is process configuration, not legacy state.
+deptrac:
+  paths:
+    - ./src
+  analyser:
+    types:
+      - class
+      - class_superglobal
+      - use
+      - function
+      - function_superglobal
+  layers:
+    - name: Alerting.Domain
+      collectors:
+        - type: directory
+          value: src/Alerting/Domain/.*
+    - name: Alerting.Application
+      collectors:
+        - type: directory
+          value: src/Alerting/Application/.*
+    - name: Alerting.Legacy
+      collectors:
+        - type: directory
+          value: src/Alerting/Infrastructure/Legacy/.*
+    - name: Alerting.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Alerting/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Alerting/Infrastructure/Legacy/.*
+    - name: Automation.Domain
+      collectors:
+        - type: directory
+          value: src/Automation/Domain/.*
+    - name: Automation.Application
+      collectors:
+        - type: directory
+          value: src/Automation/Application/.*
+    - name: Automation.Legacy
+      collectors:
+        - type: directory
+          value: src/Automation/Infrastructure/Legacy/.*
+    - name: Automation.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Automation/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Automation/Infrastructure/Legacy/.*
+    - name: DataInput.Domain
+      collectors:
+        - type: directory
+          value: src/DataInput/Domain/.*
+    - name: DataInput.Application
+      collectors:
+        - type: directory
+          value: src/DataInput/Application/.*
+    - name: DataInput.Legacy
+      collectors:
+        - type: directory
+          value: src/DataInput/Infrastructure/Legacy/.*
+    - name: DataInput.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/DataInput/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/DataInput/Infrastructure/Legacy/.*
+    - name: GraphDefinition.Domain
+      collectors:
+        - type: directory
+          value: src/GraphDefinition/Domain/.*
+    - name: GraphDefinition.Application
+      collectors:
+        - type: directory
+          value: src/GraphDefinition/Application/.*
+    - name: GraphDefinition.Legacy
+      collectors:
+        - type: directory
+          value: src/GraphDefinition/Infrastructure/Legacy/.*
+    - name: GraphDefinition.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/GraphDefinition/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/GraphDefinition/Infrastructure/Legacy/.*
+    - name: Graphing.Domain
+      collectors:
+        - type: directory
+          value: src/Graphing/Domain/.*
+    - name: Graphing.Application
+      collectors:
+        - type: directory
+          value: src/Graphing/Application/.*
+    - name: Graphing.Legacy
+      collectors:
+        - type: directory
+          value: src/Graphing/Infrastructure/Legacy/.*
+    - name: Graphing.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Graphing/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Graphing/Infrastructure/Legacy/.*
+    - name: IdentityAccess.Domain
+      collectors:
+        - type: directory
+          value: src/IdentityAccess/Domain/.*
+    - name: IdentityAccess.Application
+      collectors:
+        - type: directory
+          value: src/IdentityAccess/Application/.*
+    - name: IdentityAccess.Legacy
+      collectors:
+        - type: directory
+          value: src/IdentityAccess/Infrastructure/Legacy/.*
+    - name: IdentityAccess.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/IdentityAccess/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/IdentityAccess/Infrastructure/Legacy/.*
+    - name: Inventory.Domain
+      collectors:
+        - type: directory
+          value: src/Inventory/Domain/.*
+    - name: Inventory.Application
+      collectors:
+        - type: directory
+          value: src/Inventory/Application/.*
+    - name: Inventory.Legacy
+      collectors:
+        - type: directory
+          value: src/Inventory/Infrastructure/Legacy/.*
+    - name: Inventory.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Inventory/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Inventory/Infrastructure/Legacy/.*
+    - name: ModelRegistry.Domain
+      collectors:
+        - type: directory
+          value: src/ModelRegistry/Domain/.*
+    - name: ModelRegistry.Application
+      collectors:
+        - type: directory
+          value: src/ModelRegistry/Application/.*
+    - name: ModelRegistry.Legacy
+      collectors:
+        - type: directory
+          value: src/ModelRegistry/Infrastructure/Legacy/.*
+    - name: ModelRegistry.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/ModelRegistry/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/ModelRegistry/Infrastructure/Legacy/.*
+    - name: Monitoring.Domain
+      collectors:
+        - type: directory
+          value: src/Monitoring/Domain/.*
+    - name: Monitoring.Application
+      collectors:
+        - type: directory
+          value: src/Monitoring/Application/.*
+    - name: Monitoring.Legacy
+      collectors:
+        - type: directory
+          value: src/Monitoring/Infrastructure/Legacy/.*
+    - name: Monitoring.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Monitoring/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Monitoring/Infrastructure/Legacy/.*
+    - name: Navigation.Domain
+      collectors:
+        - type: directory
+          value: src/Navigation/Domain/.*
+    - name: Navigation.Application
+      collectors:
+        - type: directory
+          value: src/Navigation/Application/.*
+    - name: Navigation.Legacy
+      collectors:
+        - type: directory
+          value: src/Navigation/Infrastructure/Legacy/.*
+    - name: Navigation.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Navigation/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Navigation/Infrastructure/Legacy/.*
+    - name: Platform.Domain
+      collectors:
+        - type: directory
+          value: src/Platform/Domain/.*
+    - name: Platform.Application
+      collectors:
+        - type: directory
+          value: src/Platform/Application/.*
+    - name: Platform.Legacy
+      collectors:
+        - type: directory
+          value: src/Platform/Infrastructure/Legacy/.*
+    - name: Platform.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Platform/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Platform/Infrastructure/Legacy/.*
+    - name: Reporting.Domain
+      collectors:
+        - type: directory
+          value: src/Reporting/Domain/.*
+    - name: Reporting.Application
+      collectors:
+        - type: directory
+          value: src/Reporting/Application/.*
+    - name: Reporting.Legacy
+      collectors:
+        - type: directory
+          value: src/Reporting/Infrastructure/Legacy/.*
+    - name: Reporting.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Reporting/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Reporting/Infrastructure/Legacy/.*
+    - name: Telemetry.Domain
+      collectors:
+        - type: directory
+          value: src/Telemetry/Domain/.*
+    - name: Telemetry.Application
+      collectors:
+        - type: directory
+          value: src/Telemetry/Application/.*
+    - name: Telemetry.Legacy
+      collectors:
+        - type: directory
+          value: src/Telemetry/Infrastructure/Legacy/.*
+    - name: Telemetry.Infrastructure
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Telemetry/Infrastructure/.*
+          must_not:
+            - type: directory
+              value: src/Telemetry/Infrastructure/Legacy/.*
+    - name: PlatformContract
+      collectors:
+        - type: directory
+          value: src/Platform/Contract/.*
+    - name: Contract
+      collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/[^/]+/Contract/.*
+          must_not:
+            - type: directory
+              value: src/Platform/Contract/.*
+    - name: Kernel
+      collectors:
+        - type: classNameRegex
+          value: '#^Kadupul\\Kernel$#'
+    - name: Psr
+      collectors:
+        - type: classNameRegex
+          value: '#^Psr\\#'
+    - name: Vendor
+      collectors:
+        - type: bool
+          must:
+            - type: classNameRegex
+              value: '#^[A-Za-z]#'
+          must_not:
+            - type: classNameRegex
+              value: '#^(Kadupul|Psr)\\#'
+            - type: php_internal
+              value: .*
+    - name: Superglobals
+      collectors:
+        - type: superglobal
+          value:
+            - _SESSION
+            - _SERVER
+            - _GET
+            - _POST
+            - _COOKIE
+            - _REQUEST
+            - _FILES
+            - GLOBALS
+  ruleset:
+    Alerting.Domain:
+      - Psr
+      - Contract
+    Alerting.Application:
+      - Alerting.Domain
+      - Psr
+      - Contract
+    Alerting.Infrastructure:
+      - Alerting.Domain
+      - Alerting.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Alerting.Legacy
+    Alerting.Legacy:
+      - Alerting.Domain
+      - Alerting.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Alerting.Infrastructure
+      - Superglobals
+    Automation.Domain:
+      - Psr
+      - Contract
+    Automation.Application:
+      - Automation.Domain
+      - Psr
+      - Contract
+    Automation.Infrastructure:
+      - Automation.Domain
+      - Automation.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Automation.Legacy
+    Automation.Legacy:
+      - Automation.Domain
+      - Automation.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Automation.Infrastructure
+      - Superglobals
+    DataInput.Domain:
+      - Psr
+      - Contract
+    DataInput.Application:
+      - DataInput.Domain
+      - Psr
+      - Contract
+    DataInput.Infrastructure:
+      - DataInput.Domain
+      - DataInput.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - DataInput.Legacy
+    DataInput.Legacy:
+      - DataInput.Domain
+      - DataInput.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - DataInput.Infrastructure
+      - Superglobals
+    GraphDefinition.Domain:
+      - Psr
+      - Contract
+    GraphDefinition.Application:
+      - GraphDefinition.Domain
+      - Psr
+      - Contract
+    GraphDefinition.Infrastructure:
+      - GraphDefinition.Domain
+      - GraphDefinition.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - GraphDefinition.Legacy
+    GraphDefinition.Legacy:
+      - GraphDefinition.Domain
+      - GraphDefinition.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - GraphDefinition.Infrastructure
+      - Superglobals
+    Graphing.Domain:
+      - Psr
+      - Contract
+    Graphing.Application:
+      - Graphing.Domain
+      - Psr
+      - Contract
+    Graphing.Infrastructure:
+      - Graphing.Domain
+      - Graphing.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Graphing.Legacy
+    Graphing.Legacy:
+      - Graphing.Domain
+      - Graphing.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Graphing.Infrastructure
+      - Superglobals
+    IdentityAccess.Domain:
+      - Psr
+      - Contract
+    IdentityAccess.Application:
+      - IdentityAccess.Domain
+      - Psr
+      - Contract
+    IdentityAccess.Infrastructure:
+      - IdentityAccess.Domain
+      - IdentityAccess.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - IdentityAccess.Legacy
+    IdentityAccess.Legacy:
+      - IdentityAccess.Domain
+      - IdentityAccess.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - IdentityAccess.Infrastructure
+      - Superglobals
+    Inventory.Domain:
+      - Psr
+      - Contract
+    Inventory.Application:
+      - Inventory.Domain
+      - Psr
+      - Contract
+    Inventory.Infrastructure:
+      - Inventory.Domain
+      - Inventory.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Inventory.Legacy
+    Inventory.Legacy:
+      - Inventory.Domain
+      - Inventory.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Inventory.Infrastructure
+      - Superglobals
+    ModelRegistry.Domain:
+      - Psr
+      - Contract
+    ModelRegistry.Application:
+      - ModelRegistry.Domain
+      - Psr
+      - Contract
+    ModelRegistry.Infrastructure:
+      - ModelRegistry.Domain
+      - ModelRegistry.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - ModelRegistry.Legacy
+    ModelRegistry.Legacy:
+      - ModelRegistry.Domain
+      - ModelRegistry.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - ModelRegistry.Infrastructure
+      - Superglobals
+    Monitoring.Domain:
+      - Psr
+      - Contract
+    Monitoring.Application:
+      - Monitoring.Domain
+      - Psr
+      - Contract
+    Monitoring.Infrastructure:
+      - Monitoring.Domain
+      - Monitoring.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Monitoring.Legacy
+    Monitoring.Legacy:
+      - Monitoring.Domain
+      - Monitoring.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Monitoring.Infrastructure
+      - Superglobals
+    Navigation.Domain:
+      - Psr
+      - Contract
+    Navigation.Application:
+      - Navigation.Domain
+      - Psr
+      - Contract
+    Navigation.Infrastructure:
+      - Navigation.Domain
+      - Navigation.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Navigation.Legacy
+    Navigation.Legacy:
+      - Navigation.Domain
+      - Navigation.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Navigation.Infrastructure
+      - Superglobals
+    Platform.Domain:
+      - Psr
+      - Contract
+    Platform.Application:
+      - Platform.Domain
+      - Psr
+      - Contract
+    Platform.Infrastructure:
+      - Platform.Domain
+      - Platform.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Platform.Legacy
+    Platform.Legacy:
+      - Platform.Domain
+      - Platform.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Platform.Infrastructure
+      - Superglobals
+    Reporting.Domain:
+      - Psr
+      - Contract
+    Reporting.Application:
+      - Reporting.Domain
+      - Psr
+      - Contract
+    Reporting.Infrastructure:
+      - Reporting.Domain
+      - Reporting.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Reporting.Legacy
+    Reporting.Legacy:
+      - Reporting.Domain
+      - Reporting.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Reporting.Infrastructure
+      - Superglobals
+    Telemetry.Domain:
+      - Psr
+      - Contract
+    Telemetry.Application:
+      - Telemetry.Domain
+      - Psr
+      - Contract
+    Telemetry.Infrastructure:
+      - Telemetry.Domain
+      - Telemetry.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Telemetry.Legacy
+    Telemetry.Legacy:
+      - Telemetry.Domain
+      - Telemetry.Application
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
+      - Telemetry.Infrastructure
+      - Superglobals
+    Contract:
+      - Contract
+      - PlatformContract
+    PlatformContract:
+      - Contract
+    Kernel:
+      - Alerting.Domain
+      - Alerting.Application
+      - Alerting.Infrastructure
+      - Alerting.Legacy
+      - Automation.Domain
+      - Automation.Application
+      - Automation.Infrastructure
+      - Automation.Legacy
+      - DataInput.Domain
+      - DataInput.Application
+      - DataInput.Infrastructure
+      - DataInput.Legacy
+      - GraphDefinition.Domain
+      - GraphDefinition.Application
+      - GraphDefinition.Infrastructure
+      - GraphDefinition.Legacy
+      - Graphing.Domain
+      - Graphing.Application
+      - Graphing.Infrastructure
+      - Graphing.Legacy
+      - IdentityAccess.Domain
+      - IdentityAccess.Application
+      - IdentityAccess.Infrastructure
+      - IdentityAccess.Legacy
+      - Inventory.Domain
+      - Inventory.Application
+      - Inventory.Infrastructure
+      - Inventory.Legacy
+      - ModelRegistry.Domain
+      - ModelRegistry.Application
+      - ModelRegistry.Infrastructure
+      - ModelRegistry.Legacy
+      - Monitoring.Domain
+      - Monitoring.Application
+      - Monitoring.Infrastructure
+      - Monitoring.Legacy
+      - Navigation.Domain
+      - Navigation.Application
+      - Navigation.Infrastructure
+      - Navigation.Legacy
+      - Platform.Domain
+      - Platform.Application
+      - Platform.Infrastructure
+      - Platform.Legacy
+      - Reporting.Domain
+      - Reporting.Application
+      - Reporting.Infrastructure
+      - Reporting.Legacy
+      - Telemetry.Domain
+      - Telemetry.Application
+      - Telemetry.Infrastructure
+      - Telemetry.Legacy
+      - Contract
+      - PlatformContract
+      - Psr
+      - Vendor
+      - Superglobals

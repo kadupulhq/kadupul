@@ -57,6 +57,7 @@
       <file>Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>Unit/Core/PathHelpersTest.php</file>
       <file>Unit/Core/Log/CactiLogControlCharacterTest.php</file>
+      <file>Unit/ErrorHandlerDeprecationTest.php</file>
       <file>Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
       <file>Unit/Security/Auth/ReportMutationCsrfTest.php</file>
       <file>Unit/Security/Auth/ProfileMutationCsrfTest.php</file>
@@ -73,6 +74,7 @@
       <file>Unit/TemplatesImportResultMessageTest.php</file>
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
+      <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/ShutdownOrphanCleanupTest.php</file>
       <file>Unit/Core/Poller/ProcessKillGuardNativeTest.php</file>
       <file>Unit/Core/Poller/ProcessIdentityUnreadableCwdTest.php</file>
@@ -104,6 +106,7 @@
       <file>Unit/Security/Auth/TreeConfirmationAuthorizationTest.php</file>
       <file>Unit/Security/Auth/TreeNodeAccessTest.php</file>
       <file>Unit/Security/NewGraphDeviceAccessTest.php</file>
+      <file>Unit/Core/DeviceRemovalAtomicityTest.php</file>
       <file>Unit/Security/Auth/NoAuthenticationRecoveryTest.php</file>
       <file>Unit/Security/Auth/GuestProfileAccessTest.php</file>
       <file>Unit/Security/Auth/LdapLoginErrorDisclosureTest.php</file>
@@ -125,6 +128,7 @@
       <file>Unit/Security/Auth/LocalLoginPolicyTest.php</file>
       <file>Unit/Security/Auth/LocalPasswordRehashTest.php</file>
       <file>Unit/Security/Auth/SessionlessPermissionResetTest.php</file>
+      <file>Unit/Security/Auth/PermissionChangeExpiresRememberedLoginTest.php</file>
       <file>Unit/Security/Auth/CredentialGenerationRehashTest.php</file>
       <file>Unit/Security/Auth/CredentialPreferenceIsolationTest.php</file>
       <file>Unit/Security/Auth/GroupChangeResetsPermsTest.php</file>
@@ -136,6 +140,7 @@
       <file>Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
       <file>Unit/Security/Auth/ChangePasswordUsernameRenderingTest.php</file>
       <file>Unit/SnmpPortIntegerTest.php</file>
+      <file>Unit/Security/AutomationPreviewAndSnmpCredentialTest.php</file>
       <file>Unit/Security/DsstatsLogPathAndAggregateGraphIdTest.php</file>
       <file>Unit/Security/LikeWildcardEscapeTest.php</file>
       <file>Unit/Security/Auth/GraphViewSettingOutputTest.php</file>

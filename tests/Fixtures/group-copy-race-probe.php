@@ -9,7 +9,7 @@ require_once __DIR__ . '/../Helpers/PhpSource.php';
 $scenario = json_decode(fgets(STDIN), true, 512, JSON_THROW_ON_ERROR);
 function copy_race_sql($sql)
 {
-    return preg_replace('/\b(user_auth(?:_group_members|_group_realm|_group_perms|_group)?)\b/', $GLOBALS['scenario']['prefix'] . '_$1', $sql);
+    return preg_replace('/\b(user_auth(?:_group_members|_group_realm|_group_perms|_group|_cache)?)\b/', $GLOBALS['scenario']['prefix'] . '_$1', $sql);
 }
 class GroupCopyRacePdo extends PDO
 {

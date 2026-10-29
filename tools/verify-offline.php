@@ -71,7 +71,7 @@ foreach ($manifest['files'] as $file => $digest) {
         throw new RuntimeException('Offline compatibility dependency mismatch: ' . $file);
     }
 }
-foreach (['include/js/purify.js', 'include/js/jquery-ui.js', 'include/js/d3.js', 'include/fa/css/all.css', 'include/vendor/flag-icons/flags/4x3/us.svg'] as $file) {
+foreach (['include/js/purify.js', 'include/js/jquery-ui.js', 'include/js/d3.js', 'include/js/billboard.js', 'include/fa/css/all.css', 'include/vendor/flag-icons/flags/4x3/us.svg'] as $file) {
     if (!is_file($root . '/' . $file) || filesize($root . '/' . $file) === 0) {
         throw new RuntimeException('Missing offline asset: ' . $file);
     }

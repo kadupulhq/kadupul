@@ -230,7 +230,10 @@ final readonly class LegacyBrowserAuthentication
             return null;
         }
         $hash = hash('sha512', $token);
-        $cached = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id FROM user_auth_cache WHERE user_id = ? AND token = ? AND hostname = ?' . ($database->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : ''), [(int) $user['id'], $hash, $ip]));
+        $mysql = $database->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql';
+        // The cookie expires 30 days after the row is written, so an older row only serves a copied cookie.
+        $cutoff = $mysql ? 'NOW() - INTERVAL 30 DAY' : "datetime('now', '-30 days')";
+        $cached = BrowserAuthenticationSql::row(BrowserAuthenticationSql::execute($database, 'SELECT id FROM user_auth_cache WHERE user_id = ? AND token = ? AND hostname = ? AND last_update >= ' . $cutoff . ($mysql ? ' FOR UPDATE' : ''), [(int) $user['id'], $hash, $ip]));
         return $cached === false ? null : ['user' => $user, 'cache' => (int) $cached['id'], 'hash' => $hash];
     }
 

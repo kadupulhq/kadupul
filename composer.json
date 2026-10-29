@@ -33,30 +33,48 @@
         "paragonie/constant_time_encoding": "^3.1",
         "paragonie/random_compat": "^9.99",
         "phpseclib/phpseclib": "^4.0",
+        "psr/clock": "^1.0",
+        "psr/log": "^3.0",
         "symfony/asset": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
         "symfony/cache": "7.4.*",
+        "symfony/cache-contracts": "^3.7",
         "symfony/clock": "7.4.*",
+        "symfony/config": "7.4.*",
         "symfony/console": "7.4.*",
+        "symfony/dependency-injection": "7.4.*",
         "symfony/doctrine-messenger": "7.4.*",
+        "symfony/event-dispatcher": "7.4.*",
         "symfony/filesystem": "7.4.*",
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
         "symfony/http-foundation": "7.4.*",
+        "symfony/http-kernel": "7.4.*",
         "symfony/lock": "7.4.*",
         "symfony/mailer": "7.4.*",
         "symfony/messenger": "7.4.*",
         "symfony/mime": "7.4.*",
+        "symfony/options-resolver": "7.4.*",
         "symfony/process": "7.4.*",
+        "symfony/routing": "7.4.*",
         "symfony/scheduler": "7.4.*",
         "symfony/security-csrf": "7.4.*",
         "symfony/translation": "7.4.*",
+        "symfony/translation-contracts": "^3.7",
         "symfony/twig-bundle": "7.4.*",
-        "symfony/yaml": "7.4.*"
+        "symfony/yaml": "7.4.*",
+        "twig/twig": "^3.29"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5"
+        "deptrac/deptrac": "^4.7",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.3",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.1",
+        "phpstan/phpstan-symfony": "^2.1",
+        "phpunit/phpunit": "^10.5",
+        "shipmonk/composer-dependency-analyser": "^1.8"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
@@ -65,7 +83,10 @@
             "php": "8.4.0"
         },
         "sort-packages": true,
-        "vendor-dir": "./include/vendor"
+        "vendor-dir": "./include/vendor",
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -84,6 +105,19 @@
         "post-update-cmd": [
             "@php tools/dependencies/install-legacy.php"
         ],
-        "test": "@php include/vendor/bin/phpunit --configuration phpunit-symfony.xml"
+        "test": "@php include/vendor/bin/phpunit --configuration phpunit-symfony.xml",
+        "phpstan": [
+            "@putenv APP_ENV=dev",
+            "@putenv APP_DEBUG=1",
+            "@php bin/console cache:warmup",
+            "@php include/vendor/bin/phpstan analyse --memory-limit=2G --no-progress"
+        ],
+        "deptrac": "@php include/vendor/bin/deptrac analyse --config-file=deptrac.yaml --fail-on-uncovered --no-progress",
+        "dependency-analyser": "@php include/vendor/bin/composer-dependency-analyser --config=tools/composer-dependency-analyser.php",
+        "analyse": [
+            "@phpstan",
+            "@deptrac",
+            "@dependency-analyser"
+        ]
     }
 }
