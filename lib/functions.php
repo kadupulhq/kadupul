@@ -3636,7 +3636,7 @@ function get_rrd_cfs($local_data_id, $rrdtool_pipe = false)
 
     $rrdfile = get_data_source_path($local_data_id, true);
 
-    $output = @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
+    $output = rrd_check_path($rrdfile, null, 'WEBLOG') ? @rrdtool_execute(array('info', $rrdfile), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe) : '';
 
     /* search for
      * 		rra[0].cf = 'LAST'

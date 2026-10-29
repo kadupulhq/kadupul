@@ -16,6 +16,7 @@ ini_set('output_buffering', 'Off');
 
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
+require_once($config['base_path'] . '/lib/rrd.php');
 
 if ($config['poller_id'] > 1) {
 	print "FATAL: This utility is designed for the main Data Collector only" . PHP_EOL;
@@ -346,6 +347,18 @@ if ($child == 0) {
 	foreach($rrdfiles as $rrdfile) {
 		$output     = array();
 		$return_var = 0;
+
+		if (!rrd_check_path($rrdfile['data_source_path'], null, 'SYSTEM')) {
+			db_execute_prepared('UPDATE graph_local_spikekill
+				SET started = NOW(), ended = NOW(), exit_code = 1
+				WHERE id = ?',
+				array($rrdfile['id']));
+
+			printf("FAILED:  Gap Fills skipped, RRDfile is outside the RRA directory:%s" . PHP_EOL, $rrdfile['data_source_path']);
+			$failed++;
+
+			continue;
+		}
 
 		// Format the command
 		$command = sprintf('%s -q %s --rrdfile=%s --outlier-start=%s --outlier-end=%s --method=%s --avgnan=%s',

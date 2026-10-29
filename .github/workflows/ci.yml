@@ -14,6 +14,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Decides which heavy jobs a pull request can affect. Required checks that
+  # are jobs themselves (PHP, style, JavaScript, gettext) do not depend on it.
+  scope:
+    name: Change scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.scope.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The test merge and both of its parents.
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
+      - name: Classify the change
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash tests/tools/ci_change_scope.sh
+
   gettext-catalogs:
     timeout-minutes: 15
     name: Gettext source and compiled catalogs
@@ -22,7 +47,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
@@ -32,7 +57,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/gettext-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/gettext-php/bin/php"
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
@@ -61,6 +86,8 @@ jobs:
   runtime-floor:
     timeout-minutes: 15
     name: PHP runtime boundary (${{ matrix.php }})
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     strategy:
       matrix:
@@ -70,7 +97,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '${{ matrix.php }}'
           coverage: none
@@ -78,7 +105,7 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/runtime-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/runtime-php/bin/php"
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12
           add_shims_to_path: false
@@ -93,12 +120,14 @@ jobs:
   windows-storage-preflight:
     timeout-minutes: 20
     name: Windows storage access
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           coverage: none
@@ -135,6 +164,8 @@ jobs:
       packages: read
     timeout-minutes: 45
     name: Database contracts (${{ matrix.database }})
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -172,28 +203,20 @@ jobs:
       with:
         persist-credentials: false
     - name: Authenticate to GitHub Container Registry
-      env:
-        GHCR_TOKEN: ${{ github.token }}
-        GHCR_USERNAME: ${{ github.actor }}
-      run: bash tests/tools/login_ghcr.sh
+      uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+      with:
+        token: ${{ github.token }}
+        username: ${{ github.actor }}
 
     - name: Install PHP 8.4
-      uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
       with:
         php-version: '8.4'
         extensions: dom, gd, gmp, intl, ldap, mbstring, mysqlnd, pdo_mysql, sockets, sqlite3, xml
         coverage: none
 
-    - name: Locate Composer download cache
-      id: composer-cache
-      run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
     - name: Cache Composer downloads
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: ${{ steps.composer-cache.outputs.directory }}
-        key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-        restore-keys: |
-          composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+      uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
     - name: Install application dependencies
       run: composer install --no-dev --no-interaction --no-progress --prefer-dist
@@ -248,6 +271,8 @@ jobs:
       contents: read
       packages: read
     name: CDEF references (${{ matrix.database }})
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ubuntu-22.04
     timeout-minutes: 40
     strategy:
@@ -278,11 +303,11 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, sqlite3, xml
@@ -292,20 +317,12 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/cdef-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/cdef-php/bin/php"
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
           add_shims_to_path: false
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
       - name: Cache npm downloads
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
@@ -339,7 +356,7 @@ jobs:
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
-            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|DbalMonitoringStoreDatabaseTest' \
+            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|DbalMonitoringStoreDatabaseTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
@@ -373,7 +390,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: ${{ matrix.php }}
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
@@ -399,16 +416,8 @@ jobs:
         if: hashFiles('composer.json') != ''
         run: composer validate --strict
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install dependencies
         if: hashFiles('composer.lock') != ''
@@ -426,7 +435,7 @@ jobs:
           # shellcheck disable=SC2016
           php -r '$manifest = json_decode(file_get_contents("composer.json"), true, 512, JSON_THROW_ON_ERROR); echo "available=" . (isset($manifest["scripts"]["test"]) ? "true" : "false") . PHP_EOL;' >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -510,34 +519,28 @@ jobs:
   spike-removal:
     timeout-minutes: 45
     name: Spike-removal contracts
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
           coverage: none
           tools: composer
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -584,6 +587,8 @@ jobs:
       contents: read
       packages: read
     name: Install, login and poller smoke
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 35
     steps:
@@ -591,15 +596,15 @@ jobs:
         with:
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
       - name: Install PHP for native process-boundary self-tests
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: posix
@@ -688,7 +693,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           coverage: none
@@ -728,6 +733,12 @@ jobs:
       - name: Check the aggregate job result gate
         run: bash tests/tools/test_require_job_results.sh
 
+      - name: Check the pull request change scope
+        run: bash tests/tools/test_ci_change_scope.sh
+
+      - name: Check the shared authentication shards
+        run: python3 -I tests/tools/test_session_bridge_shards.py
+
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh
 
@@ -754,7 +765,7 @@ jobs:
             echo "No package.json at the root yet; skipping."
           fi
 
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         if: steps.detect.outputs.found == 'true'
         with:
           node-version-file: .node-version
@@ -776,7 +787,7 @@ jobs:
         if: steps.detect.outputs.found == 'true'
         # The permission-filter JS test executes the actual PHP controllers.
         # Its SQLite fixture and HTML renderer need these runtime extensions.
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: pdo_sqlite, dom
@@ -836,9 +847,11 @@ jobs:
     name: CI result
     # Always reports: a required check reads a skipped job as passing.
     # Changelog is skipped by design outside pull requests and with the
-    # no-changelog label; any other skip fails.
+    # no-changelog label, and the heavy suites when the scope job finds only
+    # prose; any other skip fails.
     if: ${{ !cancelled() }}
     needs:
+      - scope
       - gettext-catalogs
       - runtime-floor
       - windows-storage-preflight
@@ -863,5 +876,9 @@ jobs:
       - name: Require every gating job to pass
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
-          ALLOWED_SKIPS: ${{ (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'no-changelog')) && 'changelog' || '' }}
+          ALLOWED_SKIPS: >-
+            ${{ format('{0} {1}',
+            (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'no-changelog')) && 'changelog' || '',
+            needs.scope.result == 'success' && needs.scope.outputs.code == 'false' &&
+            'runtime-floor windows-storage-preflight database-contracts cdef-reference-contracts spike-removal application-smoke' || '') }}
         run: bash tests/tools/require_job_results.sh

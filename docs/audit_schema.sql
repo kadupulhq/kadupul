@@ -648,6 +648,13 @@ INSERT INTO `table_columns` VALUES ('host_template_graph',1,'host_template_id','
 INSERT INTO `table_columns` VALUES ('host_template_graph',2,'graph_template_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('host_template_snmp_query',1,'host_template_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('host_template_snmp_query',2,'snmp_query_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',1,'id','bigint(20)','NO','PRI',NULL,'auto_increment',NULL);
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',2,'body','longtext','NO','',NULL,'','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',3,'headers','longtext','NO','',NULL,'','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',4,'queue_name','varchar(190)','NO','MUL',NULL,'','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',5,'created_at','datetime','NO','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',6,'available_at','datetime','NO','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('kadupul_messenger_messages',7,'delivered_at','datetime','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('kadupul_metric_binding',1,'device_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('kadupul_metric_binding',2,'metric','varchar(255)','NO','PRI',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('kadupul_metric_binding',3,'resource_kind','varchar(64)','NO','PRI',NULL,'','utf8mb4_unicode_ci');
@@ -767,7 +774,9 @@ INSERT INTO `table_columns` VALUES ('poller_output_boost',4,'output','varchar(51
 INSERT INTO `table_columns` VALUES ('poller_output_boost_local_data_ids',1,'local_data_id','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('poller_output_boost_local_data_ids',2,'process_handler','int(10) unsigned','YES','MUL','0','',NULL);
 INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',1,'sock_int_value','bigint(20) unsigned','NO','PRI',NULL,'auto_increment',NULL);
-INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',2,'status','varchar(255)','YES','',NULL,'','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',2,'run_id','char(32)','YES','MUL',NULL,'','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',3,'process_handler','int(10) unsigned','NO','','0','',NULL);
+INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',4,'status','varchar(255)','YES','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('poller_output_rejected',1,'local_data_id','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('poller_output_rejected',2,'rrd_name','varchar(19)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('poller_output_rejected',3,'time','timestamp','NO','PRI','current_timestamp()','',NULL);
@@ -1304,6 +1313,11 @@ INSERT INTO `table_indexes` VALUES ('host_template_graph',0,'PRIMARY',1,'host_te
 INSERT INTO `table_indexes` VALUES ('host_template_graph',0,'PRIMARY',2,'graph_template_id','A',96,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_template_snmp_query',0,'PRIMARY',1,'host_template_id','A',18,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('host_template_snmp_query',0,'PRIMARY',2,'snmp_query_id','A',37,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('kadupul_messenger_messages',1,'IDX_7CB5BDEEFB7336F0E3BD61CE16BA31DBBF396750',1,'queue_name','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('kadupul_messenger_messages',1,'IDX_7CB5BDEEFB7336F0E3BD61CE16BA31DBBF396750',2,'available_at','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('kadupul_messenger_messages',1,'IDX_7CB5BDEEFB7336F0E3BD61CE16BA31DBBF396750',3,'delivered_at','A',NULL,NULL,NULL,'YES','BTREE','');
+INSERT INTO `table_indexes` VALUES ('kadupul_messenger_messages',1,'IDX_7CB5BDEEFB7336F0E3BD61CE16BA31DBBF396750',4,'id','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('kadupul_messenger_messages',0,'PRIMARY',1,'id','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('kadupul_metric_binding',0,'PRIMARY',1,'device_id','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('kadupul_metric_binding',0,'PRIMARY',2,'metric','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('kadupul_metric_binding',0,'PRIMARY',3,'resource_kind','A',NULL,NULL,NULL,'','BTREE','');
@@ -1357,6 +1371,8 @@ INSERT INTO `table_indexes` VALUES ('poller_output_boost',0,'PRIMARY',3,'rrd_nam
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_local_data_ids',0,'PRIMARY',1,'local_data_id',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_local_data_ids',1,'process_handler',1,'process_handler',NULL,0,NULL,NULL,'YES','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'PRIMARY',1,'sock_int_value',NULL,0,NULL,NULL,'','HASH','');
+INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'run_partition',1,'run_id',NULL,0,NULL,NULL,'YES','HASH','');
+INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'run_partition',2,'process_handler',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',1,'local_data_id','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',2,'rrd_name','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',3,'time','A',NULL,NULL,NULL,'','BTREE','');

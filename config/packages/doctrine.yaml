@@ -1,5 +1,7 @@
 # Credentials come from include/config.php through
 # InstallationConnectionMiddleware at connect time, never from here.
+# The charset is set so DoctrineBundle does not probe a platform with an empty
+# server version, which DBAL reads as MySQL < 8 and reports as deprecated.
 doctrine:
     dbal:
         default_connection: local
@@ -7,9 +9,15 @@ doctrine:
             local:
                 driver: pdo_mysql
                 options: { kadupul_target: local }
+                charset: utf8mb4
+                default_table_options: { collation: utf8mb4_unicode_ci }
             main:
                 driver: pdo_mysql
                 options: { kadupul_target: main }
+                charset: utf8mb4
+                default_table_options: { collation: utf8mb4_unicode_ci }
             web:
                 driver: pdo_mysql
                 options: { kadupul_target: web }
+                charset: utf8mb4
+                default_table_options: { collation: utf8mb4_unicode_ci }

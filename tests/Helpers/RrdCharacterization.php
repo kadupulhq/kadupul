@@ -29,6 +29,13 @@ function rrd_characterization_run($test, array $scenario, bool $fatal = false): 
     $directory = sys_get_temp_dir() . '/rrd-characterization-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
     mkdir($directory . '/rra', 0700);
+    // Directories and links are named relative to the scenario directory; '<dir>' in a link target is that directory.
+    foreach ($scenario['directories'] ?? array() as $name) {
+        mkdir($directory . '/' . $name, 0700, true);
+    }
+    foreach ($scenario['links'] ?? array() as $name => $target) {
+        symlink(str_replace('<dir>', $directory, $target), $directory . '/' . $name);
+    }
     foreach ($scenario['files'] ?? array() as $file) {
         touch($directory . '/rra/' . $file);
     }
@@ -125,8 +132,9 @@ function rrd_characterization_run($test, array $scenario, bool $fatal = false): 
 
         return json_decode(str_replace($directory, '<DIR>', $output), true, 512, JSON_THROW_ON_ERROR);
     } finally {
-        foreach (array_merge(glob($directory . '/rra/*/*'), glob($directory . '/rra/*'), glob($directory . '/*')) as $file) {
-            is_dir($file) ? rmdir($file) : unlink($file);
+        // Children first, and a link is removed as a link, never followed.
+        foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $file) {
+            $file->isDir() && !$file->isLink() ? rmdir($file->getPathname()) : unlink($file->getPathname());
         }
         rmdir($directory);
     }

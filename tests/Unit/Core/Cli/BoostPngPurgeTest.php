@@ -67,6 +67,17 @@ test('the purge removes an old image it cannot write when the directory lets it'
     expect($left)->toBe(array());
 });
 
+test('the purge leaves the cache to the Messenger schedule when the scheduler owns Boost', function () {
+    putenv('KADUPUL_BOOST_SCHEDULER=1');
+    try {
+        list($left) = boost_png_purge_run(array('modern_lgi_7_rrai_1.png' => array(0644, 7200)));
+    } finally {
+        putenv('KADUPUL_BOOST_SCHEDULER');
+    }
+
+    expect($left)->toBe(array('modern_lgi_7_rrai_1.png'));
+});
+
 test('the purge keeps images younger than an hour and files that are not images', function () {
     list($left) = boost_png_purge_run(array('modern_lgi_7_rrai_1.png' => array(0444, 60), 'notes.txt' => array(0644, 7200), 'notes.png.bak' => array(0644, 7200), 'logo.JPG' => array(0644, 7200)));
     sort($left);

@@ -983,7 +983,7 @@ function debug_view()
         if (isset($check['info']['rrd_match_array']['tune'])) {
             $path = get_data_source_path($id, true);
 
-            if (is_writeable($path)) {
+            if (rrd_check_path($path, null, 'DSDEBUG') && is_writeable($path)) {
                 html_start_box(__('Repair Steps [ %s ]', '<a href="#" class="repairme linkEditMain" data-id="' . $id . '" style="cursor:pointer;">' . __('Apply Suggested Fixes') . '</a>'), '', '', '2', 'center', '');
             } else {
                 html_start_box(__('Repair Steps [ Run Fix from Command Line ]', $path), '', '', '2', 'center', '');
