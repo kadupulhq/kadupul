@@ -21,17 +21,47 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Decides whether a pull request can affect the jobs below; every other
+  # event runs them.
+  scope:
+    name: Change scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.scope.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The test merge and both of its parents.
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
+      - name: Classify the change
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash tests/tools/ci_change_scope.sh
+
   authentication:
     permissions:
       contents: read
       packages: read
-    name: Shared authentication (${{ matrix.backend }} sessions)
+    name: Shared authentication (${{ matrix.backend }} sessions, shard ${{ matrix.shard }})
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && !inputs.hosted-runners-only && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         backend: [files, database]
+        # Each shard starts its own stack and runs part of session_bridge.py;
+        # SHARDS there must list exactly these numbers.
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -63,14 +93,15 @@ jobs:
       - name: Verify complete shared authentication backend over HTTP
         env:
           SESSION_BACKEND: ${{ matrix.backend }}
-          AUTH_PROJECT: kadupul-offline-auth-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.backend }}
+          AUTH_SHARD: ${{ matrix.shard }}/3
+          AUTH_PROJECT: kadupul-offline-auth-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.backend }}-${{ matrix.shard }}
         run: |
           case "$SESSION_BACKEND" in
             files)
-              mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --project "$AUTH_PROJECT"
+              mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --shard "$AUTH_SHARD" --project "$AUTH_PROJECT"
               ;;
             database)
-              mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --project "$AUTH_PROJECT"
+              mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --shard "$AUTH_SHARD" --project "$AUTH_PROJECT"
               ;;
             *)
               echo "Unknown session backend" >&2
@@ -82,13 +113,13 @@ jobs:
     permissions:
       contents: read
       packages: read
-    needs: authentication
+    needs: [scope, authentication]
     # A superseded run is cancelled rather than reported as a failure.
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && !inputs.hosted-runners-only && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     timeout-minutes: 30
     steps:
-      - name: Require both authentication backends to pass
+      - name: Require every authentication backend and shard to pass
         if: ${{ needs.authentication.result != 'success' }}
         run: exit 1
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -153,6 +184,7 @@ jobs:
     # Always reports: a required check reads a skipped job as passing.
     if: ${{ !cancelled() }}
     needs:
+      - scope
       - authentication
       - bundle
     runs-on: ubuntu-latest
@@ -168,5 +200,5 @@ jobs:
       - name: Require every gating job to pass
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
-          ALLOWED_SKIPS: ''
+          ALLOWED_SKIPS: ${{ needs.scope.result == 'success' && needs.scope.outputs.code == 'false' && 'authentication bundle' || '' }}
         run: bash tests/tools/require_job_results.sh

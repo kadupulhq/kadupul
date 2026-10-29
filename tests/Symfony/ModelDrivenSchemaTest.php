@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ModelDrivenSchemaTest extends TestCase
 {
-    private const string STEP = '1.2.37';
+    private const string STEP = '1.2.38';
 
     public static function setUpBeforeClass(): void
     {
@@ -84,7 +84,7 @@ final class ModelDrivenSchemaTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         self::assertSame(self::STEP, trim((string) file_get_contents($root . '/include/cacti_version')));
-        self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.36'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.37'\\s*=>\\s*'0103',\\n\\);/m", (string) file_get_contents($root . '/include/global_arrays.php'));
+        self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.37'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.38'\\s*=>\\s*'0103',\\n\\);/m", (string) file_get_contents($root . '/include/global_arrays.php'));
         self::assertTrue(function_exists('upgrade_to_1_2_37'));
     }
 
