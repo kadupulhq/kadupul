@@ -24,7 +24,7 @@ final class Kernel extends BaseKernel implements CompilerPassInterface
         // In debug mode FrameworkBundle wraps every workflow in a profiler
         // decorator that needs symfony/stopwatch. Stopwatch is not installed,
         // and installing it would also trace every kernel event to stderr.
-        if (!class_exists(\Symfony\Component\Stopwatch\Stopwatch::class)) {
+        if (!class_exists('Symfony\\Component\\Stopwatch\\Stopwatch')) {
             foreach (array_keys($container->findTaggedServiceIds('workflow')) as $id) {
                 $container->removeDefinition('debug.' . $id);
             }
