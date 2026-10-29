@@ -169,7 +169,7 @@ if ($child == false) {
 		 * Check to see if the boost log is enabled and the file exists and
 		 * is writable.  If it does not exist, create an empty file.
 		 */
-		$debug_log = read_config_option('path_boost_log');
+		$debug_log = boost_debug_log_path();
 		if ($debug_log != '') {
 			if (!file_exists($debug_log)) {
 				if (is_writable(dirname($debug_log))) {
@@ -657,7 +657,7 @@ function boost_launch_children() {
 	}
 
 	$php_binary    = read_config_option('path_php_binary');
-	$boost_log     = read_config_option('path_boost_log');
+	$boost_log     = boost_debug_log_path();
 	$redirect_args = '';
 
 	if ($boost_log != '') {

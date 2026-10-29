@@ -359,6 +359,7 @@ Cacti CHANGELOG
 -security#7925: Keep mysqladmin credentials in a private option file and restore script-server status output
 -security#GHSA-p3rg-7pc3-2h86: Verify local login passwords once and refuse a password changed after verification
 -security#GHSA-2x86-jpm8-9vgp: Report data query XML files only inside resource/ in the editor and import preview
+-security#GHSA-m6wx-f538-m6q3: Require a .log suffix when saving or using the Boost debug log path
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
 -security: Set the Secure session cookie behind a trusted TLS-terminating proxy
