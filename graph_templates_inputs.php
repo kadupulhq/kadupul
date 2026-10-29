@@ -54,6 +54,18 @@ function form_save() {
 		$save['description'] = form_input_validate(get_nfilter_request_var('description'), 'description', '', true, 3);
 		$save['column_name'] = $column;
 
+		$requested_items = array();
+		foreach ($_POST as $var => $val) {
+			if (preg_match('/^i_(\d+)$/', $var, $matches)) {
+				$requested_items[] = $matches[1];
+			}
+		}
+
+		if (!graph_template_input_relationships_are_valid($save['id'], $save['graph_template_id'], $requested_items)) {
+			cacti_log('ERROR: Graph input save refused a cross-template relationship', false, 'SECURITY');
+			raise_message('graph_input_relationship_invalid', __('The Graph Item Input relationship is invalid.'), MESSAGE_LEVEL_ERROR);
+		}
+
 		if (!is_error_message()) {
 			$graph_template_input_id = sql_save($save, 'graph_template_input');
 
@@ -120,7 +132,13 @@ function input_remove() {
 	get_filter_request_var('graph_template_id');
 	/* ==================================================== */
 
-	db_execute_prepared('DELETE FROM graph_template_input WHERE id = ?', array(get_request_var('id')));
+	if (!graph_template_input_relationships_are_valid(get_request_var('id'), get_request_var('graph_template_id'), array())) {
+		cacti_log('ERROR: Graph input delete refused a cross-template relationship', false, 'SECURITY');
+
+		return;
+	}
+
+	db_execute_prepared('DELETE FROM graph_template_input WHERE id = ? AND graph_template_id = ?', array(get_request_var('id'), get_request_var('graph_template_id')));
 	db_execute_prepared('DELETE FROM graph_template_input_defs WHERE graph_template_input_id = ?', array(get_request_var('id')));
 }
 
