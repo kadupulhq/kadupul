@@ -26,7 +26,7 @@ test('Data Source statistics quote RRD paths and skip a path with a NUL', functi
     }
     $bootstrap .= '$root=' . var_export($root, true) . ';$rrd=' . var_export($rrd, true) . ';$binary=' . var_export($real ? $binary : '', true) . ';';
     $bootstrap .= <<<'SOURCE'
-$config = array('base_path' => $root, 'cacti_server_os' => 'unix');
+$config = array('base_path' => $root, 'cacti_server_os' => 'unix', 'rra_path' => dirname($rrd));
 $logged = $written = array();
 require $root . '/include/global_constants.php';
 function cacti_log($message, ...$args) { $GLOBALS['logged'][] = $message; }
