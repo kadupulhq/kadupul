@@ -97,6 +97,13 @@ Use the house wrappers instead of raw equivalents:
   forces TLS peer verification, disables redirects, and optionally enforces
   a host allowlist).
 
+## Static analysis
+
+New code in `src/` must pass PHPStan at level max without adding to
+`phpstan-baseline.neon`, and `deptrac.yaml` without violations. Run
+`make analyse` before pushing. Do not baseline a Deptrac violation; fix the
+dependency or raise it for review.
+
 ## Commit messages
 
 - Conventional Commits format: `fix(area): short description`,

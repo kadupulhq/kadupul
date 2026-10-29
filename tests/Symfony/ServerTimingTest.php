@@ -148,6 +148,28 @@ final class ServerTimingTest extends TestCase
         self::assertNull($record['queries']);
     }
 
+    public function testReportsNoQueryCountForAnUnusableHolderValue(): void
+    {
+        $holder = new class extends DebugDataHolder {
+            public function getData(): array
+            {
+                return ['unavailable' => null];
+            }
+        };
+        $listener = new ServerTiming(new RequestProfileLog($this->logPath), true, $holder);
+        $request = Request::create('/healthz');
+        $request->headers->set('X-Kadupul-Profile-Id', 'unusable-holder');
+        $response = new \Symfony\Component\HttpFoundation\Response();
+        $kernel = $this->createStub(HttpKernelInterface::class);
+
+        $listener->onResponse(new \Symfony\Component\HttpKernel\Event\ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response));
+        $listener->onTerminate(new TerminateEvent($kernel, $request, $response));
+
+        self::assertStringNotContainsString('db;', (string) $response->headers->get('Server-Timing'));
+        $record = json_decode((string) file_get_contents($this->logPath), true, flags: JSON_THROW_ON_ERROR);
+        self::assertNull($record['queries']);
+    }
+
     public function testWritesNothingWithoutTheIdHeader(): void
     {
         $kernel = new Kernel('test', true);

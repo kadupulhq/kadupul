@@ -107,11 +107,20 @@ test("disallows upstream redirects before any asset write", async () => {
 
 test("validates the entire batch before writing its first asset", async () => {
   const { asset, io, writes } = fixture();
+  let active = 0;
+  let maximum = 0;
+  io.fetch = async () => {
+    maximum = Math.max(maximum, ++active);
+    await new Promise((resolve) => setImmediate(resolve));
+    active--;
+    return new Response("upstream\r\n");
+  };
   await assert.rejects(
     syncAssets([asset, { ...asset, sha256: "bad" }], "--write", io),
     /checksum/,
   );
   assert.equal(writes.length, 0);
+  assert.equal(maximum, 1);
 });
 
 test("rejects invalid modes", async () => {
@@ -353,22 +362,42 @@ test("orders prerelease tags below the release", async () => {
 });
 
 test("an npm view failure propagates and is never reported as current", async () => {
+  const queried = [];
   const io = {
     npmLatest: async (name) => {
+      queried.push(name);
       if (name === "b") throw new Error("npm view failed: E404");
       return "1.0.0";
     },
   };
   const pins = new Map([
+    ["c", { version: "1.0.0", frozen: false }],
     ["a", { version: "1.0.0", frozen: false }],
     ["b", { version: "1.0.0", frozen: false }],
   ]);
   const { lines, failure } = await quiet(() => reportOutdated(pins, io));
   assert.match(failure.message, /E404/);
+  assert.deepEqual(queried, ["a", "b"]);
   assert.deepEqual(lines.filter((line) => line.startsWith("b:")), []);
   const exit = await quiet(() => runOutdated([], { b: "1.0.0" }, io));
   assert.match(exit.failure.message, /E404/);
 });
+
+for (const [name, pinned, latest, behind] of [
+  ["large core ascending", "1.9007199254740992.0", "1.9007199254740993.0", 1],
+  ["large core descending", "1.9007199254740993.0", "1.9007199254740992.0", 0],
+  ["large prerelease ascending", "1.0.0-9007199254740992", "1.0.0-9007199254740993", 1],
+  ["large prerelease descending", "1.0.0-9007199254740993", "1.0.0-9007199254740992", 0],
+]) {
+  test(`compares numeric SemVer identifiers exactly: ${name}`, async () => {
+    const { result } = await quiet(() =>
+      reportOutdated(new Map([["p", { version: pinned, frozen: false }]]), {
+        npmLatest: async () => latest,
+      }),
+    );
+    assert.equal(result, behind, `${pinned} vs ${latest}`);
+  });
+}
 
 test("the outdated run exits nonzero only when a pin is behind", async () => {
   const entries = [{ file: "x.js", package: "x", version: "1.0.0", tracked: true }];

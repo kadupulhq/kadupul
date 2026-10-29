@@ -1378,6 +1378,11 @@ function api_device_save(
         $save['snmp_engine_id']       = '';
     }
 
+    // SNMP credentials reach net-snmp command lines; control characters are never part of one.
+    foreach (array('snmp_community', 'snmp_username', 'snmp_password', 'snmp_priv_passphrase', 'snmp_context', 'snmp_engine_id') as $field) {
+        $save[$field] = preg_replace('/[\x00-\x1f\x7f]/', '', (string) $save[$field]);
+    }
+
     $save['snmp_port']            = form_input_validate($snmp_port, 'snmp_port', '^[0-9]+$', false, 3);
     $save['snmp_timeout']         = form_input_validate($snmp_timeout, 'snmp_timeout', '^[0-9]+$', false, 3);
 

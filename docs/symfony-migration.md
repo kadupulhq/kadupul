@@ -473,7 +473,8 @@ production and should be enabled only for a measurement.
 - A request that sends `X-Kadupul-Profile-Id` (1 to 64 letters, digits or
   hyphens) appends one JSON line per hop, `{id, path, ms, queries, peak_bytes}`,
   to `var/profile/requests.jsonl`, or to the path in `KADUPUL_PROFILE_LOG`.
-  `queries` is `null` when no counter was available. A redirect logs each hop
+  `queries` is `null` when no counter was available or its data could not be
+  counted. A redirect logs each hop
   under the same id because clients resend the header.
 - The log is never rotated or pruned. Enable profiling for the measurement,
   then unset it and delete the log.

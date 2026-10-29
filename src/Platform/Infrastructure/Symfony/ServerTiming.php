@@ -78,7 +78,16 @@ final readonly class ServerTiming
             return null;
         }
 
-        return array_sum(array_map(count(...), $this->queries->getData()));
+        $count = 0;
+        foreach ($this->queries->getData() as $queries) {
+            // The holder declares only array, without a type for its values.
+            if (!is_array($queries)) {
+                return null;
+            }
+            $count += count($queries);
+        }
+
+        return $count;
     }
 
     private function milliseconds(mixed $start): string
