@@ -16,7 +16,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
-function local_login_timing_run(string $username, string $password) : array {
+function local_login_timing_run(string $username, string $password, bool $locked = false, bool $replaced = false) : array {
 	$auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
 	$source = <<<'PHP'
@@ -63,6 +63,11 @@ function auth_checkclear_lockout($username, $realm) {
 }
 
 function auth_process_lockout_check($username, $realm) {
+	global $scenario, $error;
+	if ($scenario['locked'] && $username === 'alice') {
+		$error = true;
+		return true;
+	}
 	return false;
 }
 
@@ -74,7 +79,12 @@ function db_column_exists($table, $column) {
 }
 
 function db_fetch_row_prepared($sql, $params = array()) {
-	return $GLOBALS['users'][$params[0]] ?? array();
+	global $scenario;
+	$row = $GLOBALS['users'][$params[0]] ?? array();
+	if ($row && $scenario['replaced'] && str_contains($sql, 'SELECT *')) {
+		$row['password'] = 'replacement-hash';
+	}
+	return $row;
 }
 
 function db_fetch_cell_prepared($sql, $params = array()) {
@@ -107,7 +117,7 @@ PHP;
 	$source .= "\$user = local_auth_login_process(\$scenario['username']);\n";
 	$source .= "print json_encode(array('user' => \$user, 'error' => \$error, 'verify_calls' => \$GLOBALS['verify_calls'], 'verify_hashes' => \$GLOBALS['verify_hashes'], 'default_hash_info' => password_get_info(password_hash('x', PASSWORD_DEFAULT))));\n";
 
-	return cacti_test_run_php_source($source, array('username' => $username, 'password' => $password));
+	return cacti_test_run_php_source($source, array('username' => $username, 'password' => $password, 'locked' => $locked, 'replaced' => $replaced));
 }
 
 test('an unknown username runs as many password verifications as a known one', function () {
@@ -160,4 +170,25 @@ test('the dummy hash for an unknown username uses the cost of a new password has
 			->and($info['options'])->toBe($unknown['default_hash_info']['options'])
 			->and(password_verify('guess', $hash))->toBeFalse();
 	}
+});
+
+// GHSA-p3rg-7pc3-2h86: one verification per nonblank local login.
+test('local login does one password verification per admitted nonblank attempt', function (string $username, string $password, bool $locked) {
+	$result = local_login_timing_run($username, $password, $locked);
+	expect($result['verify_calls'])->toBe(trim($password) === '' ? 0 : 1);
+})->with(array(
+	'known wrong' => array('alice', 'guess', false),
+	'known right' => array('alice', 'right', false),
+	'known blank' => array('alice', '', false),
+	'unknown' => array('nobody', 'guess', false),
+	'unknown blank' => array('nobody', '', false),
+	'disabled' => array('bob', 'guess', false),
+	'disabled blank' => array('bob', '', false),
+	'locked' => array('alice', 'guess', true),
+	'locked blank' => array('alice', '', true),
+));
+
+test('a password reset between verification and account read refuses the local login', function () {
+	$result = local_login_timing_run('alice', 'right', false, true);
+	expect($result['user'])->toBe(array())->and($result['error'])->toBeTrue();
 });

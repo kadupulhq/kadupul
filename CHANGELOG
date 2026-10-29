@@ -357,6 +357,7 @@ Cacti CHANGELOG
 -security#7027: Detect reused process IDs before treating registry tasks as live
 -security#7484: Escape the stored username on the change password page when the account has no stored password
 -security#7925: Keep mysqladmin credentials in a private option file and restore script-server status output
+-security#GHSA-p3rg-7pc3-2h86: Verify local login passwords once and refuse a password changed after verification
 -security#GHSA-2x86-jpm8-9vgp: Report data query XML files only inside resource/ in the editor and import preview
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
@@ -370,6 +371,7 @@ Cacti CHANGELOG
 -security: Harden advisory command execution and database DDL sink validation
 -security: Restrict graph input fields across the template, graph and import handoffs
 -security: Treat a non-boolean signature result as a failure in import_package
+-security#1183: Check embedded IPv4 destinations in compatible, NAT64 and 6to4 collector addresses against the reserved-address policy
 -issue#1153: Apply requested character sets and collations when creating table columns
 -issue#7961: Preserve the full Plugin Management layout after dependency errors
 -issue#7809: Undefined array key "source" warning reindexing SNMP data queries with output-only fields
