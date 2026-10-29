@@ -743,6 +743,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Back off failed drains, throttle repeated notifications, distinguish untrusted storage from lock contention, and classify native proxy sample errors.
 
 - Finish poller post-run services before reporting failed writes, and release writer leases between collection batches so maintenance can proceed.
+- Stop `cmd.php` and the realtime collector from reading or closing the PHP script server's pipes when the server could not be started. The run logs an error and its script server data sources report U for that cycle; `cmd.php` does not fall back to running each script through the shell (upstream Cacti #7196).
 
 - Keep Windows local RRD cleanup explicitly manual, preserve queued requests during rescans, and discard partial splice dumps after command failure.
 

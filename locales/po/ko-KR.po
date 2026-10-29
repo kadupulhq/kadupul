@@ -15307,11 +15307,11 @@ msgstr "요구 사항 : Kadupul&gt; =  %s"
 msgid "Not Stated"
 msgstr "명시되지 않은"
 
-#: lib/poller.php:1998
+#: lib/poller.php:2026
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2022 lib/poller.php:2254
+#: lib/poller.php:2050 lib/poller.php:2282
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
