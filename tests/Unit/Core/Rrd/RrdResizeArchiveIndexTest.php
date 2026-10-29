@@ -110,6 +110,8 @@ test('actual RRDtool resize advice changes only the intended archive', function 
         expect($original)->not->toBeFalse();
         $scenario = rrd_resize_index_scenario(0, $change, true);
         $scenario['options']['path_rrdtool'] = $binary;
+        // The file is checked against the RRA directory, so the test directory is that directory.
+        $scenario['rra_path'] = $directory;
         $scenario['db'][0]['result']['data_source_path'] = $file;
         $scenario['calls'] = [['fn' => 'rrdtool_function_info', 'args' => [11]]];
         $scenario['info'] = rrd_characterization_run($this, $scenario)['results'][0]['returned'];

@@ -7,6 +7,7 @@
  */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once($config['base_path'] . '/lib/rrd.php');
 
 ini_set('max_execution_time', '0');
 
@@ -241,7 +242,10 @@ if ($rrdtool_bin == '') {
 }
 if (cacti_sizeof($rrdfiles)) {
 	foreach($rrdfiles as $f) {
-		if (file_exists($f['rrd'])) {
+		if (!rrd_check_path($f['rrd'], null, 'SYSTEM')) {
+			$tune_failed = true;
+			printf('WARNING: RRDfile \'%s\' is outside the RRA directory and was not tuned!' . PHP_EOL, $f['rrd']);
+		} elseif (file_exists($f['rrd'])) {
 			$command = cacti_escapeshellarg($rrdtool_bin) . ' tune ' . cacti_escapeshellarg($f['rrd']);
 
 			$data_sources = explode(',', $f['data_sources']);

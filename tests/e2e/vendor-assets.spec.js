@@ -1188,3 +1188,57 @@ test("Midwinter UAParser identifies the client and tolerates unknown agents", as
     libVersion: "1.0.41",
   });
 });
+
+test("jQuery Migrate keeps legacy helpers working in the production script order", async ({
+  page,
+}) => {
+  // Take the order from html_common_header() so a dropped or misplaced
+  // Migrate include fails here instead of in a plugin on jQuery 4.
+  const html = fs.readFileSync(path.resolve(__dirname, "../../lib/html.php"), "utf8");
+  const start = html.indexOf("function html_common_header(");
+  const end = html.indexOf("\nfunction ", start + 1);
+  expect(start).toBeGreaterThan(-1);
+  expect(end).toBeGreaterThan(start);
+  const header = html
+    .slice(start, end)
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .split("\n")
+    .filter((line) => !/^\s*(\/\/|#)/.test(line))
+    .join("\n");
+  const needed = ["jquery.js", "jquery-migrate.js", "jquery-ui.js", "jquery.timepicker.js"];
+  const order = [...header.matchAll(/get_md5_include_js\('include\/js\/([\w.-]+)'/g)]
+    .map((match) => match[1])
+    .filter((file) => needed.includes(file));
+  await page.goto("about:blank");
+  await page.setContent('<input id="when">');
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  const warnings = [];
+  page.on("console", (message) => {
+    if (message.type() === "warning") warnings.push(message.text());
+  });
+  await load(page, ...order);
+  const helpers = await page.evaluate(() =>
+    ["isFunction", "isArray", "trim", "isNumeric"].map((name) => typeof $[name]),
+  );
+  await page.evaluate(() => $("#when").datetimepicker());
+  await page.click("#when");
+  expect(errors).toEqual([]);
+  await expect(page.locator("#ui-datepicker-div")).toBeVisible();
+  const recorded = await page.evaluate(() => ({
+    muted: $.migrateMute,
+    // Both patches weaken HTML and script handling, so they must stay off.
+    selfClosedTags: $.migrateIsPatchEnabled("self-closed-tags"),
+    jsonpPromotion: $.migrateIsPatchEnabled("jsonp-promotion"),
+    trimmed: $.trim("  x  "),
+    messages: $.migrateMessages.length,
+  }));
+  expect(helpers).toEqual(["function", "function", "function", "function"]);
+  expect(recorded.muted).toBe(true);
+  expect(recorded.selfClosedTags).toBe(false);
+  expect(recorded.jsonpPromotion).toBe(false);
+  expect(recorded.trimmed).toBe("x");
+  expect(recorded.messages).toBeGreaterThan(0);
+  expect(warnings.filter((text) => text.startsWith("JQMIGRATE"))).toEqual([]);
+  expect(order).toEqual(needed);
+});

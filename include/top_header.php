@@ -30,7 +30,7 @@ if (!isset_request_var('headercontent')) {?>
 	<div class='cactiShadow'></div>
 	<?php } else {?>
 	<div id='navBar' class='navBar'><?php echo draw_navigation_text();?></div>
-	<title><?php print $page_title;?></title>
+	<title><?php print html_escape($page_title);?></title>
 	<?php } ?>
 	<div id='cactiContent' class='cactiContent'>
 		<div class='cactiConsoleNavigationArea' style='display:none;' id='navigation'>

@@ -62,7 +62,8 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         } elseif ($mode === 'output-legacy-lock') {
             expect($result)->toBe(array(-1, true, 60, 0));
         } elseif (strpos($mode, 'output-') === 0) {
-            expect($result)->toBe(array($mode === 'output-empty' ? 0 : -1, $mode !== 'output-init'));
+            $expected = array('output-empty' => 0, 'output-session-kept' => 1)[$mode] ?? -1;
+            expect($result)->toBe(array($expected, $mode !== 'output-init'));
         } else {
             expect($result[0])->toBe($mode === 'shutdown' ? null : $mode === 'success');
             expect(file($dir . '/reaped'))->toHaveCount(2);
@@ -94,4 +95,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         }
 
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-legacy-lock','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-legacy-lock','output-select','output-next-count','output-session-set','output-session-lost','output-session-kept','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));

@@ -540,12 +540,13 @@ function update_show_current()
 
     html_end_box();
 
-    $sql_where = '';
+    $sql_where  = '';
+    $sql_params = array();
 
     /* form the 'where' clause for our main sql query */
     if (get_request_var('filter') != '') {
-        $sql_where = "WHERE ($table.name LIKE " . db_qstr('%' . get_request_var('filter') . '%') . ' OR ' .
-            "$table.directory LIKE " . db_qstr('%' . get_request_var('filter') . '%') . ')';
+        $sql_where  = "WHERE ($table.name LIKE ? OR $table.directory LIKE ?)";
+        $sql_params = array_fill(0, 2, '%' . db_like_escape(get_request_var('filter')) . '%');
     }
 
     if (!isset_request_var('state')) {
@@ -572,10 +573,10 @@ function update_show_current()
         $rows = get_request_var('rows');
     }
 
-    $total_rows = db_fetch_cell("SELECT
+    $total_rows = db_fetch_cell_prepared("SELECT
 		count(*)
 		FROM $table
-		$sql_where");
+		$sql_where", $sql_params);
 
     $sql_order = get_order_string();
     $sql_limit = ' LIMIT ' . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
@@ -590,7 +591,7 @@ function update_show_current()
 		$sql_order
 		$sql_limit";
 
-    $plugins = db_fetch_assoc($sql);
+    $plugins = db_fetch_assoc_prepared($sql, $sql_params);
 
     $nav = html_nav_bar('plugins.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('Plugins'), 'page', 'main');
 
