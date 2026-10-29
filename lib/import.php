@@ -832,6 +832,9 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, 
             return false;
         }
     }
+    if (!graph_template_input_xml_items_are_valid($xml_array)) {
+        return false;
+    }
 
     /* track changes */
     $status = 0;
