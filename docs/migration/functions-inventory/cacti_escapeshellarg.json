@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 108, "core_outside_functions_php": 103, "tests": 54, "plugins": 0},
+        "fan_out": {"core": 108, "core_outside_functions_php": 103, "tests": 55, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

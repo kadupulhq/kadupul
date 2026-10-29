@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 22:06-0700\n"
+"POT-Creation-Date: 2026-10-28 23:42-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2398,7 +2398,7 @@ msgid "No Tree Rules Found"
 msgstr "לא נמצאו כללי עץ"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3829,7 +3829,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller עדיין לא רץ."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "ההרשאה נדחתה"
 
@@ -4783,12 +4783,12 @@ msgstr "פתאל: עליך להיות מחובר כדי לגשת לאזור זה
 msgid "Login Again"
 msgstr "היכנס שוב"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "אם אתה מרגיש שזאת טעות. אנא צור קשר עם מנהל Kadupul שלך."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "אינך מורשה לגשת לקטע זה של Kadupul."
@@ -12051,430 +12051,430 @@ msgstr "סיסמאות לא תואמות"
 msgid "System Device"
 msgstr "סנכרון התקנים"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:73 lib/data_query.php:475
 msgid "Automation Execution for Data Query complete"
 msgstr "ביצוע אוטומציה עבור שאילתת הנתונים הושלם"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:76 lib/data_query.php:478
 msgid "Plugin Hooks complete"
 msgstr "Plugin הוקס מלאה"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:94
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "הפעלת שאילתת נתונים [ %s]."
 
-#: lib/data_query.php:97
+#: lib/data_query.php:106
 #, fuzzy, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "נמצא סוג = '{ 0 }' [%s]."
 
-#: lib/data_query.php:119
+#: lib/data_query.php:128
 #, fuzzy, php-format
 msgid "Unknown Type = '%s'."
 msgstr "סוג לא ידוע"
 
-#: lib/data_query.php:154
+#: lib/data_query.php:163
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "אזהרה: ארגון שדה מיון השתנה. בעיות מיפוי מחדש עשויות להתרחש!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:175
 msgid "Update Data Query Sort Cache complete"
 msgstr "עדכן את מטמון המיון של שאילתת הנתונים במלואו"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:202
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "נמצאו טבלאות%s להמרה"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:308
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "מדד השינוי זוהה! נוכחי: %s, הקודםהבא: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:332
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
 
-#: lib/data_query.php:326
+#: lib/data_query.php:335
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:375
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "אימות של %s מזהה הנתונים המקומי הושלם"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:378
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "נמצא שהשתנו%s ו-%s מזהי נתונים מקומיים יתומים למפה מחדש."
 
-#: lib/data_query.php:372
+#: lib/data_query.php:381
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Remapping גרפים לאינדקסים החדשים שלהם"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:387 lib/data_query.php:394
 msgid "Done updating Data Source Title Cache"
 msgstr "פרופיל מקור נתונים כפולים"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:390 lib/data_query.php:397
 msgid "Done updating Graph Title Cache"
 msgstr "הסתיים עדכון מטמון כותרת הגרף"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:401
 msgid "Index Association with Local Data complete"
 msgstr "איגוד המדדים עם נתונים מקומיים הושלם"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:407
 #, fuzzy, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "עדכון מטמון אינדקס חוזר הושלם. היו %s שינויי אינדקס, ו -{ 1} אינדקסים יתומים."
 
-#: lib/data_query.php:402
+#: lib/data_query.php:411
 msgid "Update Poller Cache for Query complete"
 msgstr "עדכן את הקובץ השמור של השואל עבור שאילתה"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:413
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "לא נמצאו שינויים במדד, מדלגים מחדש אינדקס ומטמון פולר מחדש האוכלוסייה"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:467
 msgid "Automation Executing for Data Query complete"
 msgstr "ביצוע אוטומציה עבור שאילתת הנתונים הושלם"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:470
 msgid "Plugin hooks complete"
 msgstr "Plug- ווים מלאה"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:529
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "בדיקת שינוי שדה מיון. לא זוהו שינויים."
 
-#: lib/data_query.php:525
+#: lib/data_query.php:534
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "שדה מיון חדש זוהה: &#39; %s&#39; שדה מיון ישן &#39; %s&#39;"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:555
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "שגיאה: שדה מיון חדש אינו מתאים. שדה המיון לא ישתנה."
 
-#: lib/data_query.php:560
+#: lib/data_query.php:569
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "שדה מיון חדש תוקן. שדה המיון יעודכן."
 
-#: lib/data_query.php:673
+#: lib/data_query.php:682
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "לא ניתן למצוא קובץ XML לשאילתת נתונים ב- &#39; %s&#39;"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:686
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "נמצא קובץ שאילתת נתוני XML ב- &#39; %s&#39;"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
 msgid "Error parsing XML file into an array."
 msgstr "שגיאה בהעברת קובץ XML למערך."
 
-#: lib/data_query.php:705 lib/data_query.php:938
+#: lib/data_query.php:714 lib/data_query.php:947
 msgid "XML file parsed ok."
 msgstr "קובץ XML מנותח אישור."
 
-#: lib/data_query.php:713 lib/data_query.php:941
+#: lib/data_query.php:722 lib/data_query.php:950
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "שדה לא חוקי &lt;index_order&gt; %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:942
+#: lib/data_query.php:723 lib/data_query.php:951
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "חייב להכיל שדות &lt;כיוון&gt; כיוון &lt;/ כיוון&gt; או &lt;כיוון&gt; קלט / פלט &lt;/ כיוון&gt; בלבד"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:740
 msgid "Data Query returned no indexes."
 msgstr "שגיאה: שאילתת הנתונים החזירה לא אינדקסים."
 
-#: lib/data_query.php:732
+#: lib/data_query.php:741
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת אינדקס שונתה&#39; אינה נתמכת"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:744
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "ביצוע סקריפט עבור num של אינדקסים &#39; %s&#39;"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:747
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "נמצאו מספר אינדקסים: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:751
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת אינדקס שונתה&#39; אינה נתמכת"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:753
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת האינדקס שונתה&#39; חיקתה על ידי ספירת ערכי arg_index"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:764
 msgid "ERROR: Data Query returned no indexes."
 msgstr "שגיאה: שאילתת הנתונים החזירה לא אינדקסים."
 
-#: lib/data_query.php:759
+#: lib/data_query.php:768
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "ביצוע סקריפט לרשימה &#39; %s&#39; של אינדקסים, ספירת אינדקס: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:770
 msgid "Click to show Data Query output for 'index'"
 msgstr "לחץ כדי להציג פלט שאילתת נתונים עבור &#39;index&#39;"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:773
 #, php-format
 msgid "Found index: %s"
 msgstr "אינדקס נמצא: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1349
+#: lib/data_query.php:788 lib/data_query.php:1358
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "לחץ כדי להציג פלט שאילתת נתונים עבור השדה &#39; %s&#39;"
 
-#: lib/data_query.php:785
+#: lib/data_query.php:794
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "שדה המיון לא החזיר נתונים עבור שם השדה %s, מדלג"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:796
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "מבצעת שאילתת Script &#39; %s&#39;"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:807 lib/data_query.php:814
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;]: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:854 lib/data_query.php:870
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "סה&quot;כ:% f, דלתא:% f, %s"
 
-#: lib/data_query.php:928
+#: lib/data_query.php:937
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Host_id לא חוקי: %s"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:961
 msgid "Auto Bulk Walk Size Selected."
 msgstr "גודל ההליכה האוטומטית בכמות גדולה נבחר."
 
-#: lib/data_query.php:974 lib/data_query.php:1033
+#: lib/data_query.php:983 lib/data_query.php:1042
 msgid "Failed to load SNMP session."
 msgstr "טעינת הפעלת SNMP נכשלה."
 
-#: lib/data_query.php:984
+#: lib/data_query.php:993
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "גודל ההליכה בתפזורת נבדק %d עם תגובה של %2.4f."
 
-#: lib/data_query.php:995
+#: lib/data_query.php:1004
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "גודל ההליכה בכמות גדולה שנבחר היה %d."
 
-#: lib/data_query.php:998
+#: lib/data_query.php:1007
 msgid "Saving Bulk Walk Size to Device."
 msgstr "שמירת גודל הליכה בכמות גדולה במכשיר."
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:1021
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "גודל ההליכה בכמות גדולה קבוע ב- %d."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1055
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "ביצוע SNMP עבור מספר של אינדקסים @ &#39; %s&#39; אינדקס ספירה: %s"
 
-#: lib/data_query.php:1048
+#: lib/data_query.php:1057
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; חסר בקובץ XML, &#39;ספירת האינדקס שונתה&#39; חיקתה על ידי ספירת רשומות oid_index"
 
-#: lib/data_query.php:1051
+#: lib/data_query.php:1060
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "ביצוע SNMP עבור רשימת אינדקסים @ &#39; %s&#39; אינדקס ספירה: %s"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1064
 msgid "No SNMP data returned"
 msgstr "לא הוחזרו נתוני SNMP"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1069
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "אינדקס שנמצא ב- OID: &#39; %s&#39; ערך: &#39; %s&#39;"
 
-#: lib/data_query.php:1091
+#: lib/data_query.php:1100
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "סינון רשימת אינדקסים &#39;&#39; %s &#39;אינדקס ספירה: %s"
 
-#: lib/data_query.php:1095
+#: lib/data_query.php:1104
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "אינדקס מסונן נמצא ב- OID: &#39; %s&#39; ערך: &#39; %s&#39;"
 
-#: lib/data_query.php:1111
+#: lib/data_query.php:1120
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "סינון רשימת אינדקסים &#39;&#39; %s &#39;אינדקס ספירה: %s"
 
-#: lib/data_query.php:1115
+#: lib/data_query.php:1124
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "אינדקס מסונן נמצא ב- OID: &#39; %s&#39; ערך: &#39; %s&#39;"
 
-#: lib/data_query.php:1135
+#: lib/data_query.php:1144
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "תיקון שדה &#39;שיטה&#39; שגוי עבור &#39; %s&#39; מאחר ש- rewrite_index &#39;או&#39; oid_suffix &#39;מוגדר"
 
-#: lib/data_query.php:1142
+#: lib/data_query.php:1151
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "הוספת נתוני אינדקס לשדה &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1147
+#: lib/data_query.php:1156
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "שדה קלט ממוקם &#39; %s&#39; [get]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1165
 #, fuzzy, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "נמצא כלל לשכתוב OID: 's /{ 0 }/{ 1 }/'"
 
-#: lib/data_query.php:1167
+#: lib/data_query.php:1176
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite ב- OID: &#39; %s&#39; חדש OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1181
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "ביצוע SNMP עבור נתונים @ &#39; %s&#39; [ערך = &#39; %s&#39;]"
 
-#: lib/data_query.php:1183
+#: lib/data_query.php:1192
 #, php-format
 msgid "Field '%s' %s"
 msgstr "שדה &#39; %s&#39; %s"
 
-#: lib/data_query.php:1244
+#: lib/data_query.php:1253
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "ביצוע SNMP מקבל עבור %s oids ( %s)"
 
-#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
+#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "שדה מיון לא החזיר נתונים. לא ניתן להמשיך בהדפסה מחדש עבור OID [ %s]"
 
-#: lib/data_query.php:1288
+#: lib/data_query.php:1297
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "נמצאה תוצאה של נתונים @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1301
+#: lib/data_query.php:1310
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "הגדרת תוצאה עבור נתונים @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1311
+#: lib/data_query.php:1320
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "התוצאה דילגה עבור נתונים @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1329
+#: lib/data_query.php:1338
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "קיבלת תוצאה של SNMP עבור נתונים @ &#39; %s&#39; [value = &#39; %s&#39;] (index: %s)"
 
-#: lib/data_query.php:1343
+#: lib/data_query.php:1352
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "ביצוע SNMP עבור נתונים @ &#39; %s&#39; [value = &#39;$ value&#39;]"
 
-#: lib/data_query.php:1351
+#: lib/data_query.php:1360
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "שדה קלט נמצא &#39; %s&#39; [walk]"
 
-#: lib/data_query.php:1402
+#: lib/data_query.php:1411
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "ביצוע הליכה ב- SNMP עבור נתונים @ &#39; %s&#39;"
 
-#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
-#: lib/data_query.php:1579
+#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
+#: lib/data_query.php:1588
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "אין אינדקס[%s] ב - VALUE_INDEX_PARSE, מדלג."
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1471
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] אינדקס: %s [מ- %s]"
 
-#: lib/data_query.php:1504
+#: lib/data_query.php:1513
 #, fuzzy, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "נמצא מחרוזת אוקטט '{ 0 }' מפוענח ערך: '{ 1 }'"
 
-#: lib/data_query.php:1510 lib/data_query.php:1559
+#: lib/data_query.php:1519 lib/data_query.php:1568
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] index: %s [מתוך regexp oid לנתח]"
 
-#: lib/data_query.php:1587
+#: lib/data_query.php:1596
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] index: %s [מתוך rexxp oid value parse]"
 
-#: lib/data_query.php:1822
+#: lib/data_query.php:1831
 #, fuzzy, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "נמצא פריט REWRITE_VALUE מזויף, INDEX='{ 0 }'"
 
-#: lib/data_query.php:1835
+#: lib/data_query.php:1844
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "לא ניתן לנתח את מפת התרגום (REWRITE_VALUE)"
 
-#: lib/data_query.php:1859
+#: lib/data_query.php:1868
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite ב- OID: &#39; %s&#39; חדש OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1973
+#: lib/data_query.php:1982
 msgid "Update graph data query cache complete"
 msgstr "עדכן את מטמון המיון של שאילתת הנתונים במלואו"
 
-#: lib/data_query.php:1992
+#: lib/data_query.php:2001
 msgid "Re-Indexing Data Query complete"
 msgstr "ביצוע שאילתה מחדש של נתוני הנתונים הושלם"
 
-#: lib/data_query.php:2144
+#: lib/data_query.php:2153
 msgid "Unknown Index"
 msgstr "אינדקס לא ידוע"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2764
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנתונים' %s ולהעביר את תיבת הסימון שמימינה"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2770
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 
@@ -12696,28 +12696,28 @@ msgstr "ההודעה לא נשלחה עקב כשל ב- ping."
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul מושבת plugin %s עקב השגיאה הבאה: %s! לקבלת מידע נוסף, עיין בקובץ ה- Kadupul logfile."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6898
 #, fuzzy, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "אזהרה: ל - PollerID: ל -{ 0} יש שם מארח לא חוקי:%s.  האם לא ניתן להגיע אליו באמצעות DNS!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7351 lib/functions.php:7353
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- ביטא %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "גרסה %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7353
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7588
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "אזהרה:  מפתח Kadupul כלול קובץ %s חסר.  צריך לאתר ולהחליף את הקובץ הזה"
