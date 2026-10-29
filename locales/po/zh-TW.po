@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 23:42-0700\n"
+"POT-Creation-Date: 2026-10-29 01:09-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -131,10 +131,10 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
 #: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graph_view.php:1043 graphs.php:892 graphs.php:908 graphs.php:919
-#: graphs.php:930 graphs.php:938 graphs.php:953 graphs.php:970 graphs.php:979
-#: graphs.php:1181 graphs.php:1224 graphs.php:1246 graphs.php:1277
-#: graphs.php:1289 graphs.php:1872 host_templates.php:222
+#: graph_view.php:1043 graphs.php:904 graphs.php:920 graphs.php:931
+#: graphs.php:942 graphs.php:950 graphs.php:965 graphs.php:982 graphs.php:991
+#: graphs.php:1193 graphs.php:1236 graphs.php:1258 graphs.php:1289
+#: graphs.php:1301 graphs.php:1884 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:302
 #: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2819
 #: lib/html_form.php:1397 lib/html_form.php:1414 lib/html_form.php:1425
@@ -161,9 +161,9 @@ msgstr "取消"
 #: data_sources.php:664 data_templates.php:486 data_templates.php:498
 #: data_templates.php:514 graph_templates.php:373 graph_templates.php:385
 #: graph_templates.php:407 graph_templates.php:416 graph_templates.php:425
-#: graphs.php:892 graphs.php:908 graphs.php:919 graphs.php:930 graphs.php:953
-#: graphs.php:970 graphs.php:979 graphs.php:1181 graphs.php:1224
-#: graphs.php:1246 graphs.php:1277 graphs.php:1289 host_templates.php:222
+#: graphs.php:904 graphs.php:920 graphs.php:931 graphs.php:942 graphs.php:965
+#: graphs.php:982 graphs.php:991 graphs.php:1193 graphs.php:1236
+#: graphs.php:1258 graphs.php:1289 graphs.php:1301 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
 #: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
 #: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
@@ -178,7 +178,7 @@ msgid "Continue"
 msgstr "繼續"
 
 #: aggregate_graphs.php:370 aggregate_graphs.php:448 aggregate_graphs.php:473
-#: graphs.php:892
+#: graphs.php:904
 msgid "Delete Graph(s)"
 msgstr "刪除圖表"
 
@@ -193,8 +193,8 @@ msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能
 
 #: aggregate_graphs.php:409 aggregate_graphs.php:459 aggregate_graphs.php:507
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
-#: automation_snmp.php:245 graphs.php:1183 graphs.php:1233 graphs.php:1236
-#: graphs.php:1280 graphs.php:1872 include/auth.php:309
+#: automation_snmp.php:245 graphs.php:1195 graphs.php:1245 graphs.php:1248
+#: graphs.php:1292 graphs.php:1884 include/auth.php:309
 #: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1129
 #: templates/platform/permission_denied.html.twig
@@ -246,32 +246,32 @@ msgstr "匯總名稱："
 msgid "New Aggregate"
 msgstr "新聚合"
 
-#: aggregate_graphs.php:488 graphs.php:1261
+#: aggregate_graphs.php:488 graphs.php:1273
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "點擊“繼續”將選定的圖表添加到下面的報告中。"
 
-#: aggregate_graphs.php:492 graph_view.php:901 graphs.php:1265
+#: aggregate_graphs.php:492 graph_view.php:901 graphs.php:1277
 #: lib/html_reports.php:18 lib/html_reports.php:2133
 #, fuzzy
 msgid "Report Name"
 msgstr "報告名稱"
 
-#: aggregate_graphs.php:496 graph_view.php:908 graphs.php:1269
+#: aggregate_graphs.php:496 graph_view.php:908 graphs.php:1281
 #: lib/html_reports.php:1789
 #, fuzzy
 msgid "Timespan"
 msgstr "時間跨度"
 
-#: aggregate_graphs.php:500 graph_view.php:915 graphs.php:1273
+#: aggregate_graphs.php:500 graph_view.php:915 graphs.php:1285
 #, fuzzy
 msgid "Align"
 msgstr "對齊"
 
-#: aggregate_graphs.php:504 graphs.php:1277
+#: aggregate_graphs.php:504 graphs.php:1289
 msgid "Add Graphs to Report"
 msgstr "添加圖表到報告"
 
-#: aggregate_graphs.php:506 graphs.php:1279
+#: aggregate_graphs.php:506 graphs.php:1291
 #, fuzzy
 msgid "You currently have no reports defined."
 msgstr "您目前沒有定義報告。"
@@ -309,7 +309,7 @@ msgstr "單擊“繼續”將以下聚合圖放在樹枝下。"
 msgid "Destination Branch:"
 msgstr "目的地分支："
 
-#: aggregate_graphs.php:548 graphs.php:953
+#: aggregate_graphs.php:548 graphs.php:965
 msgid "Place Graph(s) on Tree"
 msgstr "將圖放在樹上"
 
@@ -372,17 +372,17 @@ msgstr "匯總預覽[%s]"
 msgid "Aggregate Preview %s"
 msgstr "匯總預覽[%s]"
 
-#: aggregate_graphs.php:766 graph.php:553 graphs.php:1705
+#: aggregate_graphs.php:766 graph.php:553 graphs.php:1717
 #, fuzzy
 msgid "RRDtool Command:"
 msgstr "RRDtool命令："
 
-#: aggregate_graphs.php:768 graph.php:562 graphs.php:1709
+#: aggregate_graphs.php:768 graph.php:562 graphs.php:1721
 #, fuzzy
 msgid "Not Checked"
 msgstr "檢查"
 
-#: aggregate_graphs.php:768 graph.php:558 graphs.php:1707
+#: aggregate_graphs.php:768 graph.php:558 graphs.php:1719
 #, fuzzy
 msgid "RRDtool Says:"
 msgstr "RRDtool說："
@@ -392,27 +392,27 @@ msgstr "RRDtool說："
 msgid "Aggregate Graph %s"
 msgstr "聚合圖%s"
 
-#: aggregate_graphs.php:823 aggregate_templates.php:408 graphs.php:1047
+#: aggregate_graphs.php:823 aggregate_templates.php:408 graphs.php:1059
 #, fuzzy
 msgid "Prefix Replacement Values"
 msgstr "替換模式"
 
-#: aggregate_graphs.php:824 aggregate_templates.php:409 graphs.php:1048
+#: aggregate_graphs.php:824 aggregate_templates.php:409 graphs.php:1060
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "您可以將這些替換值用於聚合圖中的前綴"
 
-#: aggregate_graphs.php:991 aggregate_templates.php:536 graphs.php:1130
+#: aggregate_graphs.php:991 aggregate_templates.php:536 graphs.php:1142
 #: lib/api_aggregate.php:2384
 #, fuzzy
 msgid "Total"
 msgstr "總計"
 
-#: aggregate_graphs.php:995 aggregate_templates.php:540 graphs.php:1132
+#: aggregate_graphs.php:995 aggregate_templates.php:540 graphs.php:1144
 #, fuzzy
 msgid "All Items"
 msgstr "所有項目"
 
-#: aggregate_graphs.php:1013 graphs.php:1720 lib/api_aggregate.php:2544
+#: aggregate_graphs.php:1013 graphs.php:1732 lib/api_aggregate.php:2544
 #, fuzzy
 msgid "Graph Configuration"
 msgstr "圖形配置"
@@ -440,7 +440,7 @@ msgstr "匹配圖"
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
 #: data_sources.php:1794 data_templates.php:1101 graph_templates.php:726
-#: graph_view.php:667 graphs.php:2127 graphs_new.php:526 host_templates.php:795
+#: graph_view.php:667 graphs.php:2139 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
 #: lib/clog_webapi.php:608 lib/html.php:268 lib/html_filter.php:46
@@ -459,8 +459,8 @@ msgstr "搜尋"
 
 #: aggregate_graphs.php:1291 aggregate_graphs.php:1327
 #: aggregate_graphs.php:1590 data_sources.php:1984 data_sources.php:2123
-#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2144
-#: graphs.php:2336 include/global_arrays.php:997 include/global_arrays.php:1233
+#: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2156
+#: graphs.php:2348 include/global_arrays.php:997 include/global_arrays.php:1233
 #: include/global_arrays.php:2019 lib/api_automation.php:283 lib/html.php:1955
 #: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
 #: lib/html_tree.php:1378 tree.php:938 tree.php:2387 user_admin.php:801
@@ -475,7 +475,7 @@ msgstr "圖表"
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
 #: data_queries.php:1383 data_sources.php:1804 data_templates.php:1130
-#: graph_templates.php:736 graph_view.php:743 graphs.php:2148
+#: graph_templates.php:736 graph_view.php:743 graphs.php:2160
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
 #: lib/api_automation.php:718 lib/api_automation.php:1082
@@ -499,7 +499,7 @@ msgstr "聚合的一部分"
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1744 data_templates.php:1151
-#: graph_templates.php:757 graph_view.php:675 graphs.php:2118
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
 #: lib/api_automation.php:1087 lib/clog_webapi.php:533 lib/html.php:1787
@@ -515,7 +515,7 @@ msgstr "送出"
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
 #: data_queries.php:1398 data_sources.php:1744 data_templates.php:1151
-#: graph_templates.php:757 graph_view.php:675 graphs.php:2118
+#: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
 #: pollers.php:914
@@ -532,7 +532,7 @@ msgstr "設置/刷新過濾器"
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
 #: data_queries.php:1399 data_sources.php:1745 data_templates.php:1152
-#: graph_templates.php:758 graph_view.php:676 graphs.php:2119
+#: graph_templates.php:758 graph_view.php:676 graphs.php:2131
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
 #: lib/api_automation.php:1088 lib/clog_webapi.php:534 lib/html_filter.php:68
@@ -549,7 +549,7 @@ msgstr "清除"
 #: aggregate_graphs.php:1307 aggregate_graphs.php:1600 automation_snmp.php:729
 #: data_debug.php:1140 data_queries.php:1399 data_sources.php:1745
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
-#: graphs.php:2119 graphs_new.php:516 host_templates.php:787
+#: graphs.php:2131 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
@@ -560,7 +560,7 @@ msgstr "清除"
 msgid "Clear Filters"
 msgstr "清除過濾器"
 
-#: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graphs.php:1210
+#: aggregate_graphs.php:1332 aggregate_graphs.php:1665 graphs.php:1222
 #: lib/api_automation.php:574 user_admin.php:809 user_group_admin.php:948
 #, fuzzy
 msgid "Graph Title"
@@ -569,7 +569,7 @@ msgstr "圖標題"
 #: aggregate_graphs.php:1333 aggregate_graphs.php:1666
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
 #: data_debug.php:517 data_queries.php:1484 data_sources.php:1978
-#: data_templates.php:1260 graph_templates.php:863 graphs.php:2352
+#: data_templates.php:1260 graph_templates.php:863 graphs.php:2364
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2327 user_admin.php:809 user_admin.php:924 user_admin.php:1073
 #: user_admin.php:1212 user_admin.php:1351 user_group_admin.php:741
@@ -585,7 +585,7 @@ msgid "Included in Aggregate"
 msgstr "包含在Aggregate中"
 
 #: aggregate_graphs.php:1335 aggregate_graphs.php:1668 graph_templates.php:880
-#: graph_view.php:832 graph_view.php:845 graphs.php:2370 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2382 lib/spikekill.php:1745
 #, fuzzy
 msgid "Size"
 msgstr "尺寸"
@@ -614,7 +614,7 @@ msgstr "否"
 msgid "Yes"
 msgstr "是"
 
-#: aggregate_graphs.php:1357 graphs.php:2412 lib/api_automation.php:601
+#: aggregate_graphs.php:1357 graphs.php:2424 lib/api_automation.php:601
 #, fuzzy
 msgid "No Graphs Found"
 msgstr "找不到圖表"
@@ -631,7 +631,7 @@ msgid "Aggregate Graphs"
 msgstr "聚合圖"
 
 #: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1713
-#: graph_view.php:699 graphs.php:2080 include/global_arrays.php:2899
+#: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2899
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
@@ -645,9 +645,9 @@ msgstr "模板"
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
-#: graphs.php:2084 graphs_items.php:270 lib/api_automation.php:26
+#: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3981 lib/auth.php:4030
+#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -664,8 +664,8 @@ msgstr "任何"
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:626 data_sources.php:1103
 #: data_sources.php:1718 data_sources.php:2039 data_templates.php:1323
-#: graph_templates_items.php:53 graphs.php:964 graphs.php:1609 graphs.php:1618
-#: graphs.php:2085 graphs_items.php:271 graphs_items.php:391
+#: graph_templates_items.php:53 graphs.php:976 graphs.php:1621 graphs.php:1630
+#: graphs.php:2097 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:527 include/global_arrays.php:585
 #: include/global_arrays.php:677 include/global_arrays.php:889
 #: include/global_arrays.php:1748 include/global_form.php:574
@@ -679,8 +679,8 @@ msgstr "任何"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3984
-#: lib/auth.php:4033 lib/auth.php:4079 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
+#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -705,7 +705,7 @@ msgstr "聚合圖的標題"
 msgid "The internal database identifier for this object"
 msgstr "此對象的內部數據庫標識符"
 
-#: aggregate_graphs.php:1667 graphs.php:1214
+#: aggregate_graphs.php:1667 graphs.php:1226
 #, fuzzy
 msgid "Aggregate Template"
 msgstr "聚合模板"
@@ -791,7 +791,7 @@ msgstr "可刪除"
 msgid "Graphs Using"
 msgstr "圖表使用"
 
-#: aggregate_templates.php:709 graphs.php:2139 host_templates.php:730
+#: aggregate_templates.php:709 graphs.php:2151 host_templates.php:730
 #: include/global_arrays.php:962 include/global_arrays.php:1368
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1965
@@ -864,7 +864,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr ""
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
 #, fuzzy
 msgid "Change Password"
 msgstr "更改密碼"
@@ -880,7 +880,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "請輸入您當前的密碼和新密碼<br>Kadupul密碼。"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6240
 #, fuzzy
 msgid "Username"
 msgstr "用戶名"
@@ -936,11 +936,11 @@ msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 
-#: auth_login.php:119 lib/auth.php:4395 lib/auth.php:4401 lib/auth.php:4491
-#: lib/auth.php:4500 lib/auth.php:4547 lib/auth.php:4572 lib/auth.php:4595
-#: lib/auth.php:4635 lib/auth.php:4647 lib/auth.php:4670 lib/auth.php:4793
-#: lib/auth.php:4813 lib/auth.php:5025 lib/auth.php:5067 lib/auth.php:5077
-#: lib/auth.php:5093 lib/auth.php:5107 lib/auth.php:5145
+#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
+#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
+#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
+#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
+#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
 msgid "Access Denied!  Login Failed."
 msgstr "拒絕訪問，禁用用戶帳戶。"
 
@@ -982,7 +982,7 @@ msgstr "用戶登錄"
 msgid "Enter your Username and Password below"
 msgstr "在下面輸入您的用戶名和密碼"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
 #, fuzzy
 msgid "Password"
 msgstr "密碼"
@@ -1346,7 +1346,7 @@ msgstr "清除發現的設備"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -1401,8 +1401,8 @@ msgstr "按“繼續”以刪除以下圖表規則。"
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "單擊“繼續”以復制以下規則。您可以選擇更改新圖表規則的標題格式。"
 
-#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:914
-#: graphs.php:925
+#: automation_graph_rules.php:305 automation_tree_rules.php:281 graphs.php:926
+#: graphs.php:937
 #, fuzzy
 msgid "Title Format"
 msgstr "標題格式:"
@@ -1483,7 +1483,7 @@ msgid "Graph Rules"
 msgstr "圖規則"
 
 #: automation_graph_rules.php:813 automation_graph_rules.php:963
-#: graphs.php:2140 include/global_arrays.php:1371
+#: graphs.php:2152 include/global_arrays.php:1371
 #: include/global_arrays.php:2898 include/global_form.php:1645
 #: include/global_form.php:2207
 #, fuzzy
@@ -2494,7 +2494,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "社群"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6236
 #, fuzzy
 msgid "Port"
 msgstr "端口"
@@ -2745,8 +2745,8 @@ msgstr "根部"
 msgid "No Tree Rules Found"
 msgstr "找不到樹規則"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3215,7 +3215,7 @@ msgstr "重新運行分析"
 msgid "Check"
 msgstr "檢查"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4468
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4470
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 #, fuzzy
 msgid "Value"
@@ -3329,7 +3329,7 @@ msgstr "個人資料"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
 #: data_sources.php:1757 data_sources.php:1777 data_templates.php:1111
-#: graphs.php:2137 graphs_new.php:488 host_templates.php:716
+#: graphs.php:2149 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
 #: settings.php:597 settings.php:619 settings.php:650 tree.php:935
@@ -3900,7 +3900,7 @@ msgstr "打開數據源信息模式。"
 msgid "Edit Graph: '%s'."
 msgstr "編輯圖表模板。"
 
-#: data_sources.php:1017 graphs.php:1571
+#: data_sources.php:1017 graphs.php:1583
 #, fuzzy
 msgid "Edit Device."
 msgstr "編輯設備。"
@@ -3930,10 +3930,10 @@ msgstr "選定的數據模板"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "為此數據模板指定的名稱。請注意，您只能將圖形模板更改為100％兼容的圖形模板，這意味著它包含相同的數據源。"
 
-#: data_sources.php:1101 graph_view.php:817 graphs.php:1614
+#: data_sources.php:1101 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:958 include/global_arrays.php:1007
 #: include/global_arrays.php:1695 include/global_arrays.php:1864
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 #, fuzzy
 msgid "Device"
@@ -3969,7 +3969,7 @@ msgstr "自定義數據"
 msgid "Data Source Item %s"
 msgstr "數據源項%s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2875
 #: package_import.php:643
 #, fuzzy
 msgid "New"
@@ -4018,11 +4018,11 @@ msgstr "數據來源[%s]"
 msgid "Bad Indexes"
 msgstr "索引"
 
-#: data_sources.php:1786 graphs.php:2113
+#: data_sources.php:1786 graphs.php:2125
 msgid "Note that this query may take some time to run."
 msgstr "請注意，此查詢可能需要一些時間才能運行。"
 
-#: data_sources.php:1786 graphs.php:2113
+#: data_sources.php:1786 graphs.php:2125
 #, fuzzy
 msgid "Orphaned"
 msgstr "孤"
@@ -4344,13 +4344,13 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2835
+#: lib/rrd.php:2837
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "Permission Denied"
 msgstr "存取被拒"
@@ -4553,22 +4553,26 @@ msgstr "結果圖的垂直標籤。"
 msgid "No Graph Templates Found"
 msgstr "找不到圖表模板"
 
-#: graph_templates_inputs.php:138
+#: graph_templates_inputs.php:66
+msgid "The Graph Item Input relationship is invalid."
+msgstr ""
+
+#: graph_templates_inputs.php:156
 #, fuzzy, php-format
 msgid "Graph Item Inputs [edit graph: %s]"
 msgstr "圖表項輸入[編輯圖：%s]"
 
-#: graph_templates_inputs.php:189
+#: graph_templates_inputs.php:207
 #, fuzzy
 msgid "Associated Graph Items"
 msgstr "相關圖表項"
 
-#: graph_templates_inputs.php:213
+#: graph_templates_inputs.php:231
 #, fuzzy, php-format
 msgid "Item #%s"
 msgstr "項目＃%s"
 
-#: graph_templates_inputs.php:225 lib/api_aggregate.php:2526 lib/html.php:1515
+#: graph_templates_inputs.php:243 lib/api_aggregate.php:2526 lib/html.php:1515
 #, fuzzy
 msgid "No Items"
 msgstr "沒有課程"
@@ -4674,13 +4678,13 @@ msgstr "所有圖表和模板"
 msgid "Not Templated"
 msgstr "沒有模板化"
 
-#: graph_view.php:812 graph_view.php:840 graphs.php:2346
+#: graph_view.php:812 graph_view.php:840 graphs.php:2358
 #: include/global_form.php:1884 lib/html_reports.php:1201 tree.php:1042
 #, fuzzy
 msgid "Graph Name"
 msgstr "圖名稱"
 
-#: graph_view.php:814 graph_view.php:842 graphs.php:2349
+#: graph_view.php:814 graph_view.php:842 graphs.php:2361
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“建議命名”規則生成。標題的最大長度在Settings-&gt; Visual下控制。"
 
@@ -4689,27 +4693,27 @@ msgstr "該圖的標題。通常以編程方式從“圖表模板”定義或“
 msgid "The device for this Graph."
 msgstr "該組的名稱。"
 
-#: graph_view.php:822 graphs.php:2358
+#: graph_view.php:822 graphs.php:2370
 #, fuzzy
 msgid "Source Type"
 msgstr "來源類型"
 
-#: graph_view.php:824 graphs.php:2361
+#: graph_view.php:824 graphs.php:2373
 #, fuzzy
 msgid "The underlying source that this Graph was based upon."
 msgstr "此Graph基於的基礎源。"
 
-#: graph_view.php:827 graphs.php:2364
+#: graph_view.php:827 graphs.php:2376
 #, fuzzy
 msgid "Source Name"
 msgstr "來源名稱"
 
-#: graph_view.php:829 graphs.php:2367
+#: graph_view.php:829 graphs.php:2379
 #, fuzzy
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "此圖表所基於的圖表模板或數據查詢。"
 
-#: graph_view.php:834 graph_view.php:847 graphs.php:2373
+#: graph_view.php:834 graph_view.php:847 graphs.php:2385
 #, fuzzy
 msgid "The size of this Graph when not in Preview mode."
 msgstr "未處於預覽模式時此圖表的大小。"
@@ -4796,27 +4800,27 @@ msgstr "摘要細節"
 msgid "Download"
 msgstr "下載"
 
-#: graphs.php:37 graphs.php:908 include/global_arrays.php:2093
+#: graphs.php:37 graphs.php:920 include/global_arrays.php:2093
 #, fuzzy
 msgid "Change Graph Template"
 msgstr "更改圖表模板"
 
-#: graphs.php:45 graphs.php:1181
+#: graphs.php:45 graphs.php:1193
 #, fuzzy
 msgid "Create Aggregate Graph"
 msgstr "創建聚合圖"
 
-#: graphs.php:46 graphs.php:1224
+#: graphs.php:46 graphs.php:1236
 #, fuzzy
 msgid "Create Aggregate from Template"
 msgstr "從模板創建聚合"
 
-#: graphs.php:47 graphs.php:1246
+#: graphs.php:47 graphs.php:1258
 #, fuzzy
 msgid "Apply Automation Rules"
 msgstr "應用自動化規則"
 
-#: graphs.php:53 graphs.php:930
+#: graphs.php:53 graphs.php:942
 #, fuzzy
 msgid "Convert to Graph Template"
 msgstr "轉換為圖形模板"
@@ -4826,245 +4830,249 @@ msgstr "轉換為圖形模板"
 msgid "Created graph: %s"
 msgstr "創建圖：%s"
 
-#: graphs.php:269 lib/template.php:2363 lib/template.php:2401
+#: graphs.php:269 lib/template.php:2372 lib/template.php:2410
 #, fuzzy
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "錯誤：沒有數據源關聯。檢查模板"
 
-#: graphs.php:673 graphs.php:934
+#: graphs.php:393
+msgid "A Graph Item Input contains an invalid value."
+msgstr ""
+
+#: graphs.php:685 graphs.php:946
 msgid "The selected Tree is not available."
 msgstr ""
 
-#: graphs.php:684
+#: graphs.php:696
 msgid "The selected Device is not available."
 msgstr ""
 
-#: graphs.php:703
+#: graphs.php:715
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
 msgstr ""
 
-#: graphs.php:859
+#: graphs.php:871
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "單擊“繼續”以刪除以下圖表。請注意，如果選擇“刪除數據源”，則只有那些未在其他地方使用的數據源也將被刪除。"
 
-#: graphs.php:863
+#: graphs.php:875
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "這些圖表正在使用以下數據源。"
 
-#: graphs.php:882
+#: graphs.php:894
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "刪除其他地方未使用的這些圖表引用的所有數據源。"
 
-#: graphs.php:884
+#: graphs.php:896
 msgid "Leave the Data Source(s) untouched."
 msgstr "保持數據源不變。"
 
-#: graphs.php:896
+#: graphs.php:908
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "選擇一個圖表模板，然後單擊“繼續”以更改以下圖表的圖表模板。請注意，僅顯示兼容的圖表模板。兼容性由具有相同數據源的人識別。"
 
-#: graphs.php:898 graphs_new.php:606
+#: graphs.php:910 graphs_new.php:606
 #, fuzzy
 msgid "New Graph Template"
 msgstr "新圖模板"
 
-#: graphs.php:912
+#: graphs.php:924
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "單擊“繼續”以復制以下圖表。您可以選擇更改新圖表的標題格式。"
 
-#: graphs.php:915
+#: graphs.php:927
 msgid "<graph_title> (1)"
 msgstr "<graph_title> （1）"
 
-#: graphs.php:919
+#: graphs.php:931
 msgid "Duplicate Graph(s)"
 msgstr "重複的圖表"
 
-#: graphs.php:923
+#: graphs.php:935
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "單擊“繼續”將以下圖表轉換為圖形模板。您可以選擇更改新圖形模板的標題格式。"
 
-#: graphs.php:926
+#: graphs.php:938
 msgid "<graph_title> Template"
 msgstr "<graph_title>模板"
 
-#: graphs.php:942
+#: graphs.php:954
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "單擊“繼續”將以下圖表放在下面選擇的樹枝下。"
 
-#: graphs.php:944
+#: graphs.php:956
 #, fuzzy
 msgid "Destination Branch"
 msgstr "目的地分支"
 
-#: graphs.php:957
+#: graphs.php:969
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "為這些圖表選擇一個新設備，然後單擊“繼續”。"
 
-#: graphs.php:959 include/global_arrays.php:991
+#: graphs.php:971 include/global_arrays.php:991
 #, fuzzy
 msgid "New Device"
 msgstr "新設備"
 
-#: graphs.php:970
+#: graphs.php:982
 msgid "Change Graph(s) Associated Device"
 msgstr "更改圖表關聯設備"
 
-#: graphs.php:974
+#: graphs.php:986
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "單擊“繼續”以將建議的命名重新應用於以下圖表。"
 
-#: graphs.php:979
+#: graphs.php:991
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "將建議的命名重新應用於圖表"
 
-#: graphs.php:995
+#: graphs.php:1007
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "單擊“繼續”以從選定的圖形創建聚合圖。"
 
-#: graphs.php:1004
+#: graphs.php:1016
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "這些圖表正在使用以下數據源。"
 
-#: graphs.php:1065
+#: graphs.php:1077
 msgid "Please confirm"
 msgstr "請確認"
 
-#: graphs.php:1203
+#: graphs.php:1215
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "選擇要使用的聚合模板，然後按“繼續”以創建聚合圖。否則按“取消”返回。"
 
-#: graphs.php:1228
+#: graphs.php:1240
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "目前沒有為此圖表模板定義聚合模板。請首先為選定的圖形圖模板創建聚合模板，然後重試，或者簡單地折疊未模板化的聚合圖。"
 
-#: graphs.php:1229
+#: graphs.php:1241
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "按“返回”返回並選擇不同的圖表。"
 
-#: graphs.php:1241
+#: graphs.php:1253
 #, fuzzy
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "單擊“繼續”將自動化規則應用於以下圖表。"
 
-#: graphs.php:1327
+#: graphs.php:1339
 #, fuzzy
 msgid "Graph Items [new]"
 msgstr "圖形項目[新]"
 
-#: graphs.php:1371
+#: graphs.php:1383
 #, fuzzy, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "圖表項[編輯：%s]"
 
-#: graphs.php:1495
+#: graphs.php:1507
 #, fuzzy, php-format
 msgid "Graph [edit: %s]"
 msgstr "圖[編輯：%s]"
 
-#: graphs.php:1505
+#: graphs.php:1517
 #, fuzzy
 msgid "Graph [new]"
 msgstr "圖[新]"
 
-#: graphs.php:1530
+#: graphs.php:1542
 #, fuzzy
 msgid "Turn Off Graph Debug Mode."
 msgstr "關閉圖形調試模式。"
 
-#: graphs.php:1532
+#: graphs.php:1544
 #, fuzzy
 msgid "Turn On Graph Debug Mode."
 msgstr "打開圖形調試模式。"
 
-#: graphs.php:1554
+#: graphs.php:1566
 #, fuzzy
 msgid "Edit Graph Template."
 msgstr "編輯圖表模板。"
 
-#: graphs.php:1566
+#: graphs.php:1578
 #, fuzzy, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "數據來源[%s]"
 
-#: graphs.php:1575
+#: graphs.php:1587
 #, fuzzy
 msgid "Unlock Graph."
 msgstr "解鎖圖表。"
 
-#: graphs.php:1577
+#: graphs.php:1589
 #, fuzzy
 msgid "Lock Graph."
 msgstr "鎖定圖。"
 
-#: graphs.php:1606
+#: graphs.php:1618
 #, fuzzy
 msgid "Selected Graph Template"
 msgstr "選定的圖形模板"
 
-#: graphs.php:1607
+#: graphs.php:1619
 #, fuzzy, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "選擇要應用於此圖表的圖表模板。請注意，您只能將圖形模板更改為100 %%兼容的圖形模板，這意味著它包含相同的數據源。"
 
-#: graphs.php:1615
+#: graphs.php:1627
 #, fuzzy
 msgid "Choose the Device that this Graph belongs to."
 msgstr "選擇此圖表所屬的設備。"
 
-#: graphs.php:1671
+#: graphs.php:1683
 #, fuzzy
 msgid "Supplemental Graph Template Data"
 msgstr "補充圖表模板數據"
 
-#: graphs.php:1673
+#: graphs.php:1685
 #, fuzzy
 msgid "Graph Fields"
 msgstr "圖形字段"
 
-#: graphs.php:1674
+#: graphs.php:1686
 #, fuzzy
 msgid "Graph Item Fields"
 msgstr "圖表項目字段"
 
-#: graphs.php:1918 spikekill.php:43
+#: graphs.php:1930 spikekill.php:43
 msgid "Graph access denied"
 msgstr ""
 
-#: graphs.php:2053
+#: graphs.php:2065
 #, fuzzy
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[自定義圖表列表已應用 - 從列表中過濾]"
 
-#: graphs.php:2055
+#: graphs.php:2067
 #, fuzzy
 msgid "Graph Management [ All Devices ]"
 msgstr "[所有設備]的新圖表"
 
-#: graphs.php:2057
+#: graphs.php:2069
 #, fuzzy
 msgid "Graph Management [ Non Device Based ]"
 msgstr "用戶組管理[編輯：%s]"
 
-#: graphs.php:2060
+#: graphs.php:2072
 #, fuzzy, php-format
 msgid "Graph Management [ %s ]"
 msgstr "圖形管理"
 
-#: graphs.php:2133
+#: graphs.php:2145
 msgid "Graph Source"
 msgstr "圖，數據源"
 
-#: graphs.php:2138
+#: graphs.php:2150
 msgid "Non Templated"
 msgstr "沒有模板化"
 
-#: graphs.php:2355
+#: graphs.php:2367
 #, fuzzy
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "此圖的內部數據庫ID。在執行自動化或調試時很有用。"
 
-#: graphs.php:2399
+#: graphs.php:2411
 #, fuzzy
 msgid "Empty Graph"
 msgstr "複製圖"
@@ -5140,7 +5148,7 @@ msgid "Save Filters"
 msgstr "儲存過濾條件"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4510
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4512
 #: utilities.php:866 utilities.php:1838
 #, fuzzy
 msgid "Rows"
@@ -5439,19 +5447,19 @@ msgstr "您必須登錄才能訪問Kadupul的這個區域。"
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "致命：您必須登錄才能訪問Kadupul的這個區域。"
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5638
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "Login Again"
 msgstr "再次登錄"
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果你覺得這是一個錯誤。請聯繫您的Kadupul管理員。"
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -6481,7 +6489,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "數字訂購"
 
-#: include/global_arrays.php:956 lib/rrd.php:4434
+#: include/global_arrays.php:956 lib/rrd.php:4436
 #, fuzzy
 msgid "Header"
 msgstr "頁首"
@@ -7932,7 +7940,7 @@ msgid "List Mode"
 msgstr "列表模式"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 #, fuzzy
 msgid "Console"
@@ -8441,7 +8449,7 @@ msgstr "心跳"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool記錄未知數據之前，數據可以丟失多長時間。如果您的數據源不穩定並且您希望繼承舊數據而不是在圖表中顯示間隙，請增加此值。此值乘以X-Files因子以確定實際的時間量。"
 
-#: include/global_form.php:226 lib/rrd.php:4513
+#: include/global_form.php:226 lib/rrd.php:4515
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
@@ -9143,7 +9151,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "顏色的不透明度/ alpha通道。"
 
-#: include/global_form.php:989 lib/rrd.php:4509
+#: include/global_form.php:989 lib/rrd.php:4511
 #, fuzzy
 msgid "Consolidation Function"
 msgstr "合併功能"
@@ -10123,8 +10131,8 @@ msgstr "數據"
 msgid "Visual"
 msgstr "視覺"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6239
+#: lib/functions.php:6244
 #, fuzzy
 msgid "Authentication"
 msgstr "認證"
@@ -10168,12 +10176,12 @@ msgstr "圖形字體"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail（）函數"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6220
 #, fuzzy
 msgid "Sendmail"
 msgstr "發郵件"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6226
 #, fuzzy
 msgid "SMTP"
 msgstr "SMTP"
@@ -12364,7 +12372,7 @@ msgstr "這是在電子郵件中的一行自動換行之前允許的字符數。
 msgid "Sendmail Options"
 msgstr "Sendmail選項"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6220
 #, fuzzy
 msgid "Sendmail Path"
 msgstr "Sendmail路徑"
@@ -13543,9 +13551,9 @@ msgstr "不起來"
 msgid "Recovering"
 msgstr "正在復原"
 
-#: lib/api_automation.php:33 lib/auth.php:3086 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 #, fuzzy
@@ -13554,7 +13562,7 @@ msgstr "未知"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4463
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4465
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 #, fuzzy
 msgid "Type"
@@ -13666,47 +13674,47 @@ msgstr "替換模式"
 msgid "No Tree Creation Criteria"
 msgstr "沒有樹創建標準"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 #, fuzzy
 msgid "Device Match Rule"
 msgstr "設備匹配規則"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 #, fuzzy
 msgid "Create Graph Rule"
 msgstr "創建圖規則"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 #, fuzzy
 msgid "Graph Match Rule"
 msgstr "圖匹配規則"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 #, fuzzy
 msgid "Create Tree Rule (Device)"
 msgstr "創建樹規則（設備）"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 #, fuzzy
 msgid "Create Tree Rule (Graph)"
 msgstr "創建樹規則（圖）"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, fuzzy, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "規則項[編輯%s的規則項：%s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, fuzzy, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "規則項[%s的新規則項：%s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 #, fuzzy
 msgid "Added by Kadupul Automation"
 msgstr "由Kadupul Automation添加"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "錯誤：不再支持採用 range1-range2 形式的 IP 範圍。"
 
@@ -13815,8 +13823,8 @@ msgstr "地點:"
 msgid "Contact:"
 msgstr "聯繫方式："
 
-#: lib/api_device.php:2099 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:2099 lib/functions.php:6253 lib/functions.php:6255
+#: lib/functions.php:6259
 #, fuzzy
 msgid "Ping Results"
 msgstr "Ping結果"
@@ -13836,130 +13844,130 @@ msgstr "新科"
 msgid "Web Basic"
 msgstr "Web Basic"
 
-#: lib/auth.php:2915
+#: lib/auth.php:2920
 #, fuzzy
 msgid "Device:(Hide Disabled)"
 msgstr "設備已禁用"
 
-#: lib/auth.php:2933 lib/auth.php:2935 lib/auth.php:2941 lib/auth.php:2943
+#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
 #, fuzzy, php-format
 msgid "Graph:(%s%s)"
 msgstr "圖表 :"
 
-#: lib/auth.php:2956 lib/auth.php:2962 lib/auth.php:3029 lib/auth.php:3031
-#: lib/auth.php:3035 lib/auth.php:3037
+#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
+#: lib/auth.php:3040 lib/auth.php:3042
 #, fuzzy, php-format
 msgid "Device:(%s%s)"
 msgstr "裝置："
 
-#: lib/auth.php:2970 lib/auth.php:2976 lib/auth.php:3045 lib/auth.php:3047
-#: lib/auth.php:3051 lib/auth.php:3053
+#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
+#: lib/auth.php:3056 lib/auth.php:3058
 #, fuzzy, php-format
 msgid "Template:(%s%s)"
 msgstr "模板"
 
-#: lib/auth.php:2983
+#: lib/auth.php:2988
 #, fuzzy, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "設備模板："
 
-#: lib/auth.php:3020 lib/auth.php:3022
+#: lib/auth.php:3025 lib/auth.php:3027
 #, fuzzy, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "設備模板："
 
-#: lib/auth.php:3066 lib/auth.php:3073 lib/auth.php:3082
+#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
 #, fuzzy
 msgid "Restricted By: "
 msgstr "受限 "
 
-#: lib/auth.php:3070
+#: lib/auth.php:3075
 #, fuzzy
 msgid "Granted By: "
 msgstr "授予方： "
 
-#: lib/auth.php:3077
+#: lib/auth.php:3082
 #, fuzzy
 msgid "Granted"
 msgstr "已授權權限數"
 
-#: lib/auth.php:3079 lib/auth.php:3084
+#: lib/auth.php:3084 lib/auth.php:3089
 #, fuzzy
 msgid "Restricted"
 msgstr "受限"
 
-#: lib/auth.php:3318 lib/auth.php:3353
+#: lib/auth.php:3323 lib/auth.php:3358
 #, fuzzy
 msgid "Branch:"
 msgstr "科："
 
-#: lib/auth.php:3327 lib/auth.php:3361 lib/html_tree.php:949
+#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
 #: lib/reports.php:1117
 #, fuzzy
 msgid "Device:"
 msgstr "裝置："
 
-#: lib/auth.php:4299 lib/auth.php:4390
+#: lib/auth.php:4304 lib/auth.php:4395
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 
-#: lib/auth.php:4349
+#: lib/auth.php:4354
 msgid "Access Denied!  Login Disabled."
 msgstr "拒絕訪問，禁用用戶帳戶。"
 
-#: lib/auth.php:4424
+#: lib/auth.php:4429
 #, fuzzy
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "已配置Web基本身份驗證，但未從Web服務器傳遞用戶名。請確保您在Web服務器上啟用了身份驗證。"
 
-#: lib/auth.php:4440
+#: lib/auth.php:4445
 #, fuzzy, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s由Web Server進行身份驗證，但模板和來賓用戶都未在Kadupul中定義。"
 
-#: lib/auth.php:4607 lib/auth.php:4806
+#: lib/auth.php:4612 lib/auth.php:4811
 msgid "Access Denied!  No password provided by user."
 msgstr "拒絕訪問！用戶未提供密碼。"
 
-#: lib/auth.php:4779 lib/auth.php:5845
+#: lib/auth.php:4784 lib/auth.php:5850
 #, fuzzy, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 
-#: lib/auth.php:4787
+#: lib/auth.php:4792
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5140
+#: lib/auth.php:5145
 #, fuzzy
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "您的Kadupul管理員已強制使用複雜的密碼登錄，而您當前的Kadupul密碼不符合新要求。因此，您必須立即更改密碼。"
 
-#: lib/auth.php:5180
+#: lib/auth.php:5185
 #, fuzzy, php-format
 msgid "Password must be at least %d characters!"
 msgstr "密碼必須至少為%d個字符！"
 
-#: lib/auth.php:5186
+#: lib/auth.php:5191
 #, fuzzy
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "您的密碼必須至少包含1個數字字符！"
 
-#: lib/auth.php:5190
+#: lib/auth.php:5195
 #, fuzzy
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "您的密碼必須包含小寫和大寫字符的混合！"
 
-#: lib/auth.php:5196
+#: lib/auth.php:5201
 #, fuzzy
 msgid "Your password must contain at least 1 special character!"
 msgstr "您的密碼必須包含至少1個特殊字符！"
 
-#: lib/auth.php:5631
+#: lib/auth.php:5636
 msgid "Kadupul Login Failure"
 msgstr "Kadupul Log清除"
 
-#: lib/auth.php:5931
+#: lib/auth.php:5936
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "之前未設置身份驗證。嘗試設置為本地身份驗證，但未找到管理員帳戶。"
 
@@ -14261,7 +14269,7 @@ msgstr "無法在&#39;%s&#39;找到數據查詢XML文件"
 msgid "Found data query XML file at '%s'"
 msgstr "在&#39;%s&#39;找到數據查詢XML文件"
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
 #, fuzzy
 msgid "Error parsing XML file into an array."
 msgstr "將XML文件解析為數組時出錯。"
@@ -14568,12 +14576,12 @@ msgstr "重新索引數據查詢完成"
 msgid "Unknown Index"
 msgstr "未知索引"
 
-#: lib/data_query.php:2764
+#: lib/data_query.php:2767
 #, fuzzy, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "您必須為數據源'%s'選擇XML輸出列，並將復選框切換到右側"
 
-#: lib/data_query.php:2770
+#: lib/data_query.php:2773
 #, fuzzy
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的圖表模板尚未使用數據模板。請更正您的圖表模板"
@@ -14657,205 +14665,205 @@ msgstr "未找到信息。"
 msgid "Error %s is not readable"
 msgstr "錯誤%s無法讀取"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Logged in a Guest"
 msgstr "登入"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4261 lib/functions.php:4279
 #, fuzzy
 msgid "Logged in as"
 msgstr "登入"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 #, fuzzy
 msgid "Login as Regular User"
 msgstr "以普通用戶身份登錄"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 #, fuzzy
 msgid "guest"
 msgstr "客人"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
 #, fuzzy
 msgid "User Community"
 msgstr "用戶社區"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
 #: lib/utility.php:1447
 #, fuzzy
 msgid "Documentation"
 msgstr "文件"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4282
 #, fuzzy, php-format
 msgid "Logged in as %s"
 msgstr "已使用 %s 名義登入"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2751
 #, fuzzy
 msgid "Edit Profile"
 msgstr "編輯個人資料"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2755
 #, fuzzy
 msgid "Logout"
 msgstr "登出"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4448
 #, fuzzy
 msgid "Leaf"
 msgstr "葉子"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4472 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 #, fuzzy
 msgid "Non Query Based"
 msgstr "非查詢"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4510
 #, fuzzy, php-format
 msgid "Link %s"
 msgstr "連結 %s"
 
-#: lib/functions.php:4968 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4972 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 #, fuzzy
 msgid "Copy"
 msgstr "複製"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5789
 #, fuzzy
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "郵件程序錯誤：沒有<b>TO</b>地址集！ <br>如果使用“ <i>測試郵件”</i>鏈接，請設置“ <b>警報電子郵件”</b>設置。"
 
-#: lib/functions.php:6164
+#: lib/functions.php:6183
 #, fuzzy, php-format
 msgid "Authentication failed: %s"
 msgstr "身份驗證失敗：%s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6187
 #, fuzzy, php-format
 msgid "HELO failed: %s"
 msgstr "HELO失敗了：%s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6190
 #, fuzzy, php-format
 msgid "Connect failed: %s"
 msgstr "連接失敗：%s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6193
 #, fuzzy
 msgid "SMTP error: "
 msgstr "SMTP錯誤： "
 
-#: lib/functions.php:6188
+#: lib/functions.php:6207
 #, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "這是Kadupul生成的測試消息。發送此消息是為了測試郵件設置的配置。"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6208
 #, fuzzy
 msgid "Your email settings are currently set as follows"
 msgstr "您的電子郵件設置目前設置如下"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6209
 #, fuzzy
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6211
 #, fuzzy
 msgid "Checking Configuration...<br>"
 msgstr "檢查配置...... <br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6218
 #, fuzzy
 msgid "PHP's Mailer Class"
 msgstr "PHP的郵件程序類"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6224
 #, fuzzy
 msgid "Method: SMTP"
 msgstr "方法：SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6241
 #, fuzzy
 msgid "Not Shown for Security Reasons"
 msgstr "未顯示安全原因"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6242
 #, fuzzy
 msgid "Security"
 msgstr "安全性"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6250
 #, fuzzy
 msgid "Ping Results:"
 msgstr "Ping結果"
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6250 lib/functions.php:6255
 #, fuzzy
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6259
 #, fuzzy
 msgid "Bypassed"
 msgstr "旁路"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6268
 #, fuzzy
 msgid "Creating Message Text..."
 msgstr "創建消息文本..."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6271
 #, fuzzy
 msgid "Sending Message..."
 msgstr "發送消息......"
 
-#: lib/functions.php:6256
+#: lib/functions.php:6275
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul測試消息"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6277
 #, fuzzy
 msgid "Success!"
 msgstr "成功！"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6280
 #, fuzzy
 msgid "Message Not Sent due to ping failure."
 msgstr "由於ping失敗而未發送消息。"
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6744 lib/functions.php:6814
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "由於以下錯誤，Kadupul禁用了插件%s：%s！有關更多詳細信息，請參閱Kadupul日誌文件。"
 
-#: lib/functions.php:6898
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr ""
 
-#: lib/functions.php:7351 lib/functions.php:7353
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, fuzzy, php-format
 msgid "- Beta %s"
 msgstr "-  Beta%s"
 
-#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, fuzzy, php-format
 msgid "Version %s %s"
 msgstr "版本%s%s"
 
-#: lib/functions.php:7353
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s - %s"
 
-#: lib/functions.php:7588
+#: lib/functions.php:7607
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr ""
@@ -16046,7 +16054,7 @@ msgstr "活動"
 msgid "Send Report"
 msgstr "發送報告"
 
-#: lib/html_reports.php:1644 lib/import.php:2957 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:2960 user_admin.php:1776
 #, fuzzy
 msgid "[new]"
 msgstr "[新]"
@@ -16351,104 +16359,104 @@ msgstr "不存在"
 msgid "not writable"
 msgstr "可寫入"
 
-#: lib/import.php:1970 lib/import.php:1991
+#: lib/import.php:1973 lib/import.php:1994
 #, fuzzy, php-format
 msgid "New Graph Template: %s"
 msgstr "圖[模板：%s]"
 
-#: lib/import.php:2005 lib/import.php:2017
+#: lib/import.php:2008 lib/import.php:2020
 #, fuzzy, php-format
 msgid "New Data Query: %s"
 msgstr "數據查詢[%s]"
 
-#: lib/import.php:2654
+#: lib/import.php:2657
 #, fuzzy
 msgid "Unknown Field"
 msgstr "未知的領域"
 
-#: lib/import.php:2870
+#: lib/import.php:2873
 msgid "Updated"
 msgstr "更新"
 
-#: lib/import.php:2874
+#: lib/import.php:2877
 msgid "Damaged"
 msgstr "數據源，圖表"
 
-#: lib/import.php:2876 package_import.php:637
+#: lib/import.php:2879 package_import.php:637
 msgid "Unchanged"
 msgstr "[不變]"
 
-#: lib/import.php:2912
+#: lib/import.php:2915
 #, fuzzy
 msgid "Import Preview Results"
 msgstr "導入預覽結果"
 
-#: lib/import.php:2912
+#: lib/import.php:2915
 #, fuzzy
 msgid "Import Results"
 msgstr "匯入結果"
 
-#: lib/import.php:2916
+#: lib/import.php:2919
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "如果導入包，Kadupul將進行以下更改："
 
-#: lib/import.php:2918
+#: lib/import.php:2921
 #, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul為包裝導入了以下物品："
 
-#: lib/import.php:2921
+#: lib/import.php:2924
 #, fuzzy
 msgid "Package Files"
 msgstr "包文件"
 
-#: lib/import.php:2925
+#: lib/import.php:2928
 #, fuzzy
 msgid "[preview] "
 msgstr "預覽 "
 
-#: lib/import.php:2930
+#: lib/import.php:2933
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "如果導入模板，Kadupul將進行以下更改："
 
-#: lib/import.php:2932
+#: lib/import.php:2935
 #, fuzzy
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul為模板導入了以下項目："
 
-#: lib/import.php:2947
+#: lib/import.php:2950
 #, fuzzy
 msgid "[success]"
 msgstr "成功！"
 
-#: lib/import.php:2949
+#: lib/import.php:2952
 #, fuzzy
 msgid "[fail]"
 msgstr "失敗"
 
-#: lib/import.php:2951
+#: lib/import.php:2954
 #, fuzzy
 msgid "[preview]"
 msgstr "預覽"
 
-#: lib/import.php:2955
+#: lib/import.php:2958
 #, fuzzy
 msgid "[updated]"
 msgstr "已更新"
 
-#: lib/import.php:2959
+#: lib/import.php:2962
 #, fuzzy
 msgid "[unchanged]"
 msgstr "[不變]"
 
-#: lib/import.php:2995
+#: lib/import.php:2998
 #, fuzzy
 msgid "Found Dependency:"
 msgstr "找到依賴關係："
 
-#: lib/import.php:2997
+#: lib/import.php:3000
 #, fuzzy
 msgid "Unmet Dependency:"
 msgstr "未滿足的依賴關係："
@@ -18012,216 +18020,216 @@ msgstr "添加報表圖項&#39; <i>%s</i> &#39;失敗已經存在"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
 
-#: lib/rrd.php:2446
+#: lib/rrd.php:2448
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2449
+#: lib/rrd.php:2451
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2816 lib/rrd.php:2819 lib/rrd.php:4720
+#: lib/rrd.php:2818 lib/rrd.php:2821 lib/rrd.php:4722
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2832
+#: lib/rrd.php:2834
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4251
+#: lib/rrd.php:4253
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必需的RRD步長為&#39;%s&#39;"
 
-#: lib/rrd.php:4287
+#: lib/rrd.php:4289
 #, fuzzy, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的類型應為&#39;%s&#39;"
 
-#: lib/rrd.php:4293
+#: lib/rrd.php:4295
 #, fuzzy, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的心跳應為&#39;%s&#39;"
 
-#: lib/rrd.php:4305
+#: lib/rrd.php:4307
 #, fuzzy, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的RRD最小值應為&#39;%s&#39;"
 
-#: lib/rrd.php:4314
+#: lib/rrd.php:4316
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少DS&#39;%s&#39;"
 
-#: lib/rrd.php:4328 lib/rrd.php:4329
+#: lib/rrd.php:4330 lib/rrd.php:4331
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4342 lib/rrd.php:4343
+#: lib/rrd.php:4344 lib/rrd.php:4345
 #, fuzzy, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4375
+#: lib/rrd.php:4377
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:4379
+#: lib/rrd.php:4381
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "KadupulRRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4385
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id&#39;%s&#39;的行數應為&#39;%s&#39;"
 
-#: lib/rrd.php:4400
+#: lib/rrd.php:4402
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRD文件中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4408
+#: lib/rrd.php:4410
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4430
+#: lib/rrd.php:4432
 #, fuzzy
 msgid "RRD File Information"
 msgstr "RRD文件信息"
 
-#: lib/rrd.php:4462
+#: lib/rrd.php:4464
 #, fuzzy
 msgid "Data Source Items"
 msgstr "數據源項目"
 
-#: lib/rrd.php:4464
+#: lib/rrd.php:4466
 #, fuzzy
 msgid "Minimal Heartbeat"
 msgstr "最小的心跳"
 
-#: lib/rrd.php:4465
+#: lib/rrd.php:4467
 #, fuzzy
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4468
 #, fuzzy
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4467
+#: lib/rrd.php:4469
 #, fuzzy
 msgid "Last DS"
 msgstr "最後一個DS"
 
-#: lib/rrd.php:4469
+#: lib/rrd.php:4471
 #, fuzzy
 msgid "Unknown Sec"
 msgstr "未知的秒"
 
-#: lib/rrd.php:4508
+#: lib/rrd.php:4510
 #, fuzzy
 msgid "Round Robin Archive"
 msgstr "Round Robin Archive"
 
-#: lib/rrd.php:4511
+#: lib/rrd.php:4513
 #, fuzzy
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4512
+#: lib/rrd.php:4514
 #, fuzzy
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:4514
+#: lib/rrd.php:4516
 #, fuzzy
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備值（0）"
 
-#: lib/rrd.php:4515
+#: lib/rrd.php:4517
 #, fuzzy
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP未知數據點（0）"
 
-#: lib/rrd.php:4600
+#: lib/rrd.php:4602
 msgid "Errors Found"
 msgstr "沒有 %s 找到"
 
-#: lib/rrd.php:4612
+#: lib/rrd.php:4614
 msgid "Optional Tuning Recommendations"
 msgstr "數據源字段"
 
-#: lib/rrd.php:4639 lib/rrd.php:4642
+#: lib/rrd.php:4641 lib/rrd.php:4644
 #, fuzzy, php-format
 msgid "rename %s to %s"
 msgstr "將%s重命名為%s"
 
-#: lib/rrd.php:4740
+#: lib/rrd.php:4742
 #, fuzzy, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "編寫XML文件時出錯：%s"
 
-#: lib/rrd.php:4746
+#: lib/rrd.php:4748
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4752
+#: lib/rrd.php:4754
 #, fuzzy, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4773
+#: lib/rrd.php:4775
 #, fuzzy
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4809 lib/rrd.php:4828
+#: lib/rrd.php:4811 lib/rrd.php:4830
 #, fuzzy
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:5046
+#: lib/rrd.php:5048
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "從RRD文件中刪除RRA（CF=%s，ROWS=%d，PDP_PER_ROW =%d，XFF =%1.2f）"
 
-#: lib/rrd.php:5084
+#: lib/rrd.php:5086
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA（CF =%s，ROWS =%d，PDP_PER_ROW =%d，XFF =%1.2f）添加到RRD文件"
 
-#: lib/rrd.php:5115 lib/rrd.php:5131
+#: lib/rrd.php:5117 lib/rrd.php:5133
 #, fuzzy, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "網站沒有%s的寫入權限，可能無法創建/更新RRD"
 
-#: lib/rrd.php:5127
+#: lib/rrd.php:5129
 #, fuzzy
 msgid "(Custom)"
 msgstr "自訂"
 
-#: lib/rrd.php:5133
+#: lib/rrd.php:5135
 #, fuzzy
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "無法打開數據文件，輪詢器可能尚未運行"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 #, fuzzy
 msgid "RRA Folder"
 msgstr "RRA文件夾"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 #, fuzzy
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:5216
+#: lib/rrd.php:5218
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"
@@ -18542,32 +18550,32 @@ msgstr ""
 msgid "WindKilled"
 msgstr ""
 
-#: lib/template.php:1646
+#: lib/template.php:1655
 #, fuzzy
 msgid "Attempting to Create Graph from Non-Template"
 msgstr "從模板創建聚合"
 
-#: lib/template.php:1660
+#: lib/template.php:1669
 #, fuzzy
 msgid "Attempting to Create Graph from Removed Graph Template"
 msgstr "嘗試從已刪除的圖形模板創建圖形"
 
-#: lib/template.php:2355 lib/template.php:2393
+#: lib/template.php:2364 lib/template.php:2402
 #, fuzzy, php-format
 msgid "Created: %s"
 msgstr "已建立%s"
 
-#: lib/template.php:2373 lib/template.php:2404
+#: lib/template.php:2382 lib/template.php:2413
 #, fuzzy
 msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "錯誤：白名單驗證失敗。檢查數據輸入方法"
 
-#: lib/template.php:2383
+#: lib/template.php:2392
 #, fuzzy, php-format
 msgid "Graph Not created for %s due to bad data"
 msgstr "圖形創建"
 
-#: lib/template.php:2414
+#: lib/template.php:2423
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr ""
