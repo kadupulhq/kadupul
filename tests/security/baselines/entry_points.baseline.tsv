@@ -279,9 +279,9 @@ include/themes/sunrise/default/index.php	anonymous-allowed	redirect-only
 include/themes/sunrise/images/index.php	anonymous-allowed	redirect-only
 include/themes/sunrise/index.php	anonymous-allowed	redirect-only
 include/themes/sunrise/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
-include/top_general_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 0b6c358bacb7; included by lib/functions.php
-include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 3499de0769a5; included by lib/functions.php
-include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 2ec65df77ed9; included by lib/functions.php
+include/top_general_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 6f1665c1cc2f; included by lib/functions.php
+include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 0304f405bb96; included by lib/functions.php
+include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 060d320b61c0; included by lib/functions.php
 include/vendor/	web-server-denied	nginx; apache .htaccess
 index.php	symfony:forward	forwards to app.php/console
 install/background.php	cli-only	guard: include/cli_check.php
