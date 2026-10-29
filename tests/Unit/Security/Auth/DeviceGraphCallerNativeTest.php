@@ -176,6 +176,17 @@ final class DeviceGraphCallerNativeTest extends TestCase
             self::assertSame('API changed', $state['hosts'][$id === 0 ? 3 : 1]['description']);
         }
     }
+    // GHSA-m3fh-gxqj-76hq (upstream Cacti #8152): SNMP credentials reach net-snmp command lines.
+    public function testActualWebApiStoresSnmpCredentialsWithoutControlCharacters(): void
+    {
+        $credentials = ['snmp_community' => "pub\nlic", 'snmp_username' => "op\x01erator", 'snmp_password' => "pass\rword1", 'snmp_priv_passphrase' => "priv\x7fphrase", 'snmp_context' => "ctx\t", 'snmp_engine_id' => "800\x1b0"];
+        $state = $this->runCaller(['api' => true,'id' => 12,'api_values' => ['snmp_version' => 3,'snmp_auth_protocol' => 'SHA','snmp_priv_protocol' => 'AES'] + $credentials]);
+        self::assertNull($state['api_error']);
+        self::assertGreaterThan(0, $state['api_result']);
+        $host = $state['hosts'][1];
+        self::assertSame(['public', 'operator', 'password1', 'privphrase', 'ctx', '8000'], array_map(static fn(string $field): string => (string) $host[$field], array_keys($credentials)));
+    }
+
     public static function apiCases(): iterable
     {
         yield 'permitted web save' => [12,true,false];
