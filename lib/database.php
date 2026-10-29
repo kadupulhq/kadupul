@@ -1975,6 +1975,14 @@ function db_table_create($table, $data, $log = true, $db_conn = false) {
 
 		$sql .= ') ENGINE = ' . $data['type'];
 
+		if (isset($data['charset'])) {
+			$sql .= ' DEFAULT CHARSET = ' . $data['charset'];
+		}
+
+		if (isset($data['collate'])) {
+			$sql .= ' COLLATE = ' . $data['collate'];
+		}
+
 		if (isset($data['comment'])) {
 			$sql .= ' COMMENT = ' . db_qstr($data['comment'], $db_conn);
 		}
@@ -1983,19 +1991,7 @@ function db_table_create($table, $data, $log = true, $db_conn = false) {
 			$sql .= ' ROW_FORMAT = ' . $data['row_format'];
 		}
 
-		if (db_execute($sql, $log, $db_conn)) {
-			if (isset($data['charset'])) {
-				db_execute("ALTER TABLE `$table` CHARSET = " . $data['charset'], $log, $db_conn);
-			}
-
-			if (isset($data['collate'])) {
-				db_execute("ALTER TABLE `$table` COLLATE = " . $data['collate'], $log, $db_conn);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
+		return db_execute($sql, $log, $db_conn);
 	}
 
 	return true;

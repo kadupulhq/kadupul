@@ -13542,11 +13542,11 @@ msgstr "Вы должны выбрать колонку вывода XML для 
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ваш шаблон графика не использует шаблоны данных.  Пожалуйста, исправьте ваш шаблон графика."
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Не удалось определить длину поля пароля, не может продолжаться, как и может повредить пароль"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Не удалось изменить длину поля пароля, не может продолжаться, как и может повредить пароль"
 
