@@ -21,9 +21,29 @@ source installation, compatibility exceptions and disconnected deployment.
 
 ## Browser assets
 
-`assets.json` records the exact upstream URLs, package versions and SHA-256
-checksums for the libraries refreshed in September 2026. This is a partial
-inventory, not a claim that every bundled library is current.
+`assets.json` inventories every file directly under `include/js`. Each entry
+sets exactly one of `url`, `tracked` or `owned`, and `owned`, `tracked` and
+`npm` must be JSON booleans; `sync.mjs` rejects anything else. Entries with a
+`url` are fetched from upstream by `--check` and `--write`, as below. Entries
+marked `tracked` are committed as shipped: `--check` compares the file against
+its recorded SHA-256. `--write` does not verify tracked bytes, so run `--check`
+after editing one. A `source` URL names the upstream release those bytes came
+from; a `modified` note lists any difference from it, and an entry with neither
+has no matching upstream release. `owned` entries are maintained in this
+repository and have no upstream, so they carry no checksum. They include
+`jquery.zoom.js` and `jquery.dropdown.js`, which are inherited Cacti code that
+keeps its Cacti Group GPL-2.0 headers, and the files written for this project.
+`--check` fails when a file directly under `include/js` has no entry, and when
+an entry names a file that no longer exists. The `LC_MESSAGES` datepicker
+locale files are not inventoried yet.
+
+An entry with `frozen` stays at its pinned version for the 1.3 line and the
+reason is recorded beside it. Inventory presence does not mean a library is
+current. `node tools/dependencies/sync.mjs --outdated` compares each pinned npm
+package, from `package.json` and the inventory, with `npm view <package>
+version`. It exits nonzero when a package that is not frozen is behind, and
+lists frozen packages without failing on them. The scheduled
+`vendor-drift.yml` workflow runs it weekly as an informational step.
 
 ```sh
 mise exec node@22 -- node tools/dependencies/sync.mjs --check
@@ -130,6 +150,15 @@ locked 4.19.1 and updates compatible test dependency patches.
   js-storage 1.1.0, pace-js 1.2.4 and Playwright 1.63.0 match the latest releases
   checked for this batch. An archived package having no newer release is not a
   security endorsement.
+
+jQuery Migrate 4.0.2 loads on every page directly after jQuery. jQuery 4 removed
+helpers such as `$.isFunction`, `$.trim`, `$.isNumeric` and `$.isWindow`, which
+the bundled timepicker, colorpicker, sparkline, zoom, tableDnD and tablesorter
+widgets still call, as do plugins written for Cacti 1.2. The manifest adds
+`jQuery.migrateMute = true` to the built file, so deprecated calls are recorded in
+`jQuery.migrateMessages` without console warnings; set it to `false` in the
+browser console to see them. Remove Migrate once the bundled widgets no longer
+use the removed APIs and supported plugins have had a release to migrate.
 
 Upstream references: [phpseclib migration](https://phpseclib.com/docs/intro/migrating),
 [Pest upgrade guide](https://pestphp.com/docs/upgrade-guide),

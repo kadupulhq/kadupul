@@ -150,6 +150,7 @@
       <file>Unit/Security/Misc/BoostDebugLogPathTest.php</file>
       <file>Unit/Security/Misc/DataQueryXmlPathTest.php</file>
       <file>Unit/SqlScriptCredentialsTest.php</file>
+      <file>Unit/Security/Misc/RemoteCollectorAddressTest.php</file>
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
     </testsuite>
   </testsuites>
