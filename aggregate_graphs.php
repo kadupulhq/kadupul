@@ -233,8 +233,10 @@ function form_save() {
 				$sequence++;
 			}
 
-			if ($items_changed) {
-				aggregate_graph_items_save($items_to_save, 'aggregate_graphs_graph_item');
+			if ($items_changed && !aggregate_graph_items_save($items_to_save, 'aggregate_graphs_graph_item')) {
+				raise_message('aggregate_items_save_failed', __('Unable to save aggregate graph items. Other graph settings may already have been saved.'), MESSAGE_LEVEL_ERROR);
+				header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
+				return;
 			}
 
 			if ($save_me || $items_changed) {
