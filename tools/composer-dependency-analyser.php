@@ -11,25 +11,25 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 // The legacy application is most of the code and the only user of several
 // runtime packages, so scanning src/ alone would report them as unused.
 return (new Configuration())
-    ->addPathToScan(__DIR__ . '/src', false)
+    ->addPathToScan(dirname(__DIR__) . '/src', false)
     ->addPathsToScan([
-        __DIR__ . '/bin',
-        __DIR__ . '/cli',
-        __DIR__ . '/config',
-        __DIR__ . '/include',
-        __DIR__ . '/lib',
-        __DIR__ . '/scripts',
-        __DIR__ . '/service',
-        __DIR__ . '/install',
-        __DIR__ . '/plugins',
+        dirname(__DIR__) . '/bin',
+        dirname(__DIR__) . '/cli',
+        dirname(__DIR__) . '/config',
+        dirname(__DIR__) . '/include',
+        dirname(__DIR__) . '/lib',
+        dirname(__DIR__) . '/scripts',
+        dirname(__DIR__) . '/service',
+        dirname(__DIR__) . '/install',
+        dirname(__DIR__) . '/plugins',
     ], false)
-    ->addPathToScan(__DIR__ . '/tests/Symfony', true)
+    ->addPathToScan(dirname(__DIR__) . '/tests/Symfony', true)
     ->addPathsToExclude([
-        __DIR__ . '/include/vendor',
-        __DIR__ . '/include/js',
-        __DIR__ . '/include/themes',
-        __DIR__ . '/include/fonts',
-        __DIR__ . '/include/content',
+        dirname(__DIR__) . '/include/vendor',
+        dirname(__DIR__) . '/include/js',
+        dirname(__DIR__) . '/include/themes',
+        dirname(__DIR__) . '/include/fonts',
+        dirname(__DIR__) . '/include/content',
     ])
 
     // Legacy procedural functions live in lib/ and are loaded by include, not

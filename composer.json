@@ -113,7 +113,7 @@
             "@php include/vendor/bin/phpstan analyse --memory-limit=2G --no-progress"
         ],
         "deptrac": "@php include/vendor/bin/deptrac analyse --config-file=deptrac.yaml --fail-on-uncovered --no-progress",
-        "dependency-analyser": "@php include/vendor/bin/composer-dependency-analyser",
+        "dependency-analyser": "@php include/vendor/bin/composer-dependency-analyser --config=tools/composer-dependency-analyser.php",
         "analyse": [
             "@phpstan",
             "@deptrac",
