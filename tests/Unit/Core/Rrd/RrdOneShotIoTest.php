@@ -46,7 +46,11 @@ test('one-shot execution drains output while sending the remaining input', funct
     mkdir($directory, 0700);
     $server = $directory . '/rrd-server';
     $source = <<<'PHP'
-$first = fgets(STDIN);
+// Answer after the first bytes, before the rest of the single command line arrives.
+$first = '';
+while (strlen($first) < 6 && !feof(STDIN)) {
+    $first .= fread(STDIN, 6 - strlen($first));
+}
 echo str_repeat("binary\0payload\n", 32768);
 fflush(STDOUT);
 $rest = stream_get_contents(STDIN);
@@ -55,7 +59,7 @@ echo hash('sha256', $first . $rest) . "\nOK u:0 s:0 r:0\n";
 PHP;
     file_put_contents($server, '#!' . PHP_BINARY . "\n<?php\n" . $source);
     chmod($server, 0700);
-    $command = "first\n" . str_repeat('remaining-input ', 65536);
+    $command = 'first ' . str_repeat('remaining-input ', 65536);
     try {
         $output = rrd_one_shot_run($this, [
             'options' => ['path_rrdtool' => $server],
@@ -208,7 +212,7 @@ PHP;
     'already expired poller budget' => ['silent', 1, -1],
 ]);
 
-test('real RRDtool can answer a batch larger than both pipe buffers', function () {
+test('real RRDtool output larger than both pipe buffers is drained', function () {
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required.');
@@ -217,18 +221,20 @@ test('real RRDtool can answer a batch larger than both pipe buffers', function (
     mkdir($directory, 0700);
     try {
         $path = $directory . '/sample.rrd';
-        $create = new Symfony\Component\Process\Process([$binary, 'create', $path, '--start', '1700000000', 'DS:value:GAUGE:600:U:U', 'RRA:AVERAGE:0.5:1:10']);
+        $create = new Symfony\Component\Process\Process([$binary, 'create', $path, '--start', '1700000000', 'DS:value:GAUGE:600:U:U', 'RRA:AVERAGE:0.5:1:20000']);
         $create->mustRun();
-        $command = rtrim(str_repeat("last '$path'\n", 8000), "\n");
+        // escape_command() keeps a command on one line, so one large answer
+        // replaces the former newline-separated batch of commands.
         $output = rrd_one_shot_run($this, ['options' => ['path_rrdtool' => $binary], 'calls' => [
             ['fn' => 'pcntl_alarm', 'args' => [15]],
-            ['fn' => 'rrdtool_execute', 'args' => [$command, false, 1], 'config' => ['rrd_command_timeout' => 10]],
+            ['fn' => 'rrdtool_execute', 'args' => ["dump '$path'", false, 1], 'config' => ['rrd_command_timeout' => 10]],
             ['fn' => 'pcntl_alarm', 'args' => [0]],
         ]]);
         $result = $output['results'][1];
         expect($result['diagnostics'])->toBe([])
-            ->and(preg_match_all('/^1700000000$/m', $result['returned']))->toBe(8000)
-            ->and(preg_match_all('/^OK u:/m', $result['returned']))->toBe(7999)
+            ->and(strlen($result['returned']))->toBeGreaterThan(2 * 65536)
+            ->and(substr_count($result['returned'], '<row>'))->toBe(20000)
+            ->and($result['returned'])->toContain('</rrd>')
             ->and($result['returned'])->not->toContain('ERROR:');
     } finally {
         if (is_file($directory . '/sample.rrd')) {
