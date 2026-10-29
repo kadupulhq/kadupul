@@ -41,6 +41,7 @@ $functions = file_get_contents($root . '/lib/functions.php');
 if ($functions === false) {
     throw new RuntimeException('Missing native session source.');
 }
+eval(test_php_function_source((string) file_get_contents($root . '/lib/html.php'), 'html_page_chrome_requested'));
 foreach (['cacti_session_start', 'cacti_session_regenerate', 'cacti_session_destroy', 'cacti_cookie_logout', 'cacti_cookie_session_logout', 'general_header', 'top_header', 'kill_session_var'] as $name) {
     eval(test_php_function_source($functions, $name));
 }

@@ -93,7 +93,7 @@ jobs:
         run: node tools/dependencies/sync.mjs --check
 
       - name: Run browser library compatibility suite
-        run: node node_modules/@playwright/test/cli.js test --config=playwright.config.js vendor-assets.spec.js billboard.spec.js
+        run: node node_modules/@playwright/test/cli.js test --config=playwright.config.js vendor-assets.spec.js billboard.spec.js legacy-js-partial.spec.js
         working-directory: tests/e2e
 
       - name: Cache Composer downloads

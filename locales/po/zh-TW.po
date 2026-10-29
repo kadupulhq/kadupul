@@ -136,7 +136,7 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: graphs.php:1193 graphs.php:1236 graphs.php:1258 graphs.php:1289
 #: graphs.php:1301 graphs.php:1884 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:302
-#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2819
+#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2953
 #: lib/html_form.php:1397 lib/html_form.php:1414 lib/html_form.php:1425
 #: lib/html_reports.php:632 managers.php:1065 managers.php:1126 plugins.php:713
 #: pollers.php:549 pollers.php:558 pollers.php:567 pollers.php:576
@@ -165,7 +165,7 @@ msgstr "取消"
 #: graphs.php:982 graphs.php:991 graphs.php:1193 graphs.php:1236
 #: graphs.php:1258 graphs.php:1289 graphs.php:1301 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2952
 #: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:783
 #: tree.php:792 tree.php:801 tree.php:810 user_admin.php:252 user_admin.php:292
@@ -864,7 +864,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr ""
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2888
 #, fuzzy
 msgid "Change Password"
 msgstr "更改密碼"
@@ -1017,7 +1017,7 @@ msgstr "登入"
 
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
-#: lib/html.php:2767 managers.php:24 user_admin.php:1741
+#: lib/html.php:2901 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 #, fuzzy
 msgid "General"
@@ -1030,19 +1030,19 @@ msgstr "用戶帳戶明細"
 
 #: auth_profile.php:313 include/global_arrays.php:861
 #: include/global_settings.php:2763 lib/html.php:2191 lib/html.php:2213
-#: lib/html.php:2748
+#: lib/html.php:2882
 #, fuzzy
 msgid "Tree View"
 msgstr "樹狀圖"
 
 #: auth_profile.php:317 include/global_arrays.php:862 lib/html.php:2198
-#: lib/html.php:2222 lib/html.php:2749
+#: lib/html.php:2222 lib/html.php:2883
 #, fuzzy
 msgid "List View"
 msgstr "清單檢視"
 
 #: auth_profile.php:321 include/global_arrays.php:863 lib/html.php:2205
-#: lib/html.php:2750
+#: lib/html.php:2884
 #, fuzzy
 msgid "Preview View"
 msgstr "預覽視圖"
@@ -1517,7 +1517,7 @@ msgstr "啟用"
 #: include/global_settings.php:1660 include/global_settings.php:1673
 #: include/global_settings.php:1698 include/global_settings.php:1712
 #: include/global_settings.php:1802 include/global_settings.php:2576
-#: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2978 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:611 pollers.php:33 user_admin.php:936 user_domains.php:396
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
@@ -2974,7 +2974,7 @@ msgstr "資料來源"
 msgid "The Data Source to Debug"
 msgstr "要調試的數據源"
 
-#: data_debug.php:506 lib/html.php:2771 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2905 utilities.php:1039 utilities.php:1160
 #, fuzzy
 msgid "User"
 msgstr "使用者"
@@ -3322,7 +3322,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr ""
 
 #: data_debug.php:1150 data_sources.php:1753 data_templates.php:1107
-#: lib/html.php:2780
+#: lib/html.php:2914
 #, fuzzy
 msgid "Profile"
 msgstr "個人資料"
@@ -4320,7 +4320,7 @@ msgstr "編輯圖表模板。"
 msgid "Click to view just this Graph in Real-time"
 msgstr "單擊以實時查看此圖表"
 
-#: graph.php:272 lib/html.php:2745
+#: graph.php:272 lib/html.php:2879
 #, fuzzy
 msgid "Utility View"
 msgstr "實用視圖"
@@ -4734,7 +4734,7 @@ msgstr "預覽模式"
 msgid "Add Selected Graphs to Report"
 msgstr "將所選圖表添加到報告中"
 
-#: graph_view.php:1049 lib/html.php:2816
+#: graph_view.php:1049 lib/html.php:2950
 #, fuzzy
 msgid "Ok"
 msgstr "確定"
@@ -5127,7 +5127,7 @@ msgstr "[所有設備]的新圖表"
 msgid "New Graphs for None Host Type"
 msgstr "無主機類型的新圖"
 
-#: graphs_new.php:440 lib/html.php:2743
+#: graphs_new.php:440 lib/html.php:2877
 #, fuzzy
 msgid "Filter Settings Saved"
 msgstr "過濾器設置已保存"
@@ -6042,7 +6042,7 @@ msgstr "右"
 msgid "Justified"
 msgstr "左右對齊"
 
-#: include/global_arrays.php:589 lib/html.php:2842
+#: include/global_arrays.php:589 lib/html.php:2976
 #, fuzzy
 msgid "Center"
 msgstr "置中"
@@ -6496,7 +6496,7 @@ msgstr "頁首"
 
 #: include/global_arrays.php:957 include/global_arrays.php:1008
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/html.php:2831
+#: lib/html.php:2965
 #, fuzzy
 msgid "Graph"
 msgstr "圖表"
@@ -6715,7 +6715,7 @@ msgid "Configuration"
 msgstr "組態"
 
 #: include/global_arrays.php:1034 include/global_arrays.php:1056
-#: lib/html.php:2549 lib/html.php:2846
+#: lib/html.php:2549 lib/html.php:2980
 #, fuzzy
 msgid "Settings"
 msgstr "設定"
@@ -7940,7 +7940,7 @@ msgid "List Mode"
 msgstr "列表模式"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 #, fuzzy
 msgid "Console"
@@ -8132,7 +8132,7 @@ msgstr "外部連結"
 msgid "(Action)"
 msgstr "動作"
 
-#: include/global_arrays.php:2633 lib/html.php:2785
+#: include/global_arrays.php:2633 lib/html.php:2919
 #, fuzzy
 msgid "About Kadupul"
 msgstr "關於Kadupul"
@@ -10625,7 +10625,7 @@ msgstr "如果設置為“簡單”，則只能從“新建圖形”創建圖形
 msgid "Simple"
 msgstr "簡單"
 
-#: include/global_settings.php:521 lib/html.php:2833
+#: include/global_settings.php:521 lib/html.php:2967
 #, fuzzy
 msgid "Advanced"
 msgstr "進階"
@@ -11126,7 +11126,7 @@ msgid "Theme Settings"
 msgstr "主題設定"
 
 #: include/global_settings.php:944 include/global_settings.php:1154
-#: include/global_settings.php:2611 lib/html.php:2781
+#: include/global_settings.php:2611 lib/html.php:2915
 #, fuzzy
 msgid "Theme"
 msgstr "佈景主題"
@@ -14684,12 +14684,12 @@ msgstr "以普通用戶身份登錄"
 msgid "guest"
 msgstr "客人"
 
-#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2904
 #, fuzzy
 msgid "User Community"
 msgstr "用戶社區"
 
-#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2906
 #: lib/utility.php:1447
 #, fuzzy
 msgid "Documentation"
@@ -14700,12 +14700,12 @@ msgstr "文件"
 msgid "Logged in as %s"
 msgstr "已使用 %s 名義登入"
 
-#: lib/functions.php:4284 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2885
 #, fuzzy
 msgid "Edit Profile"
 msgstr "編輯個人資料"
 
-#: lib/functions.php:4294 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2889
 #, fuzzy
 msgid "Logout"
 msgstr "登出"
@@ -14946,7 +14946,7 @@ msgstr "數據查詢："
 msgid "CSV Export of Graph Data"
 msgstr "圖形數據的CSV導出"
 
-#: lib/html.php:540 lib/html.php:2742
+#: lib/html.php:540 lib/html.php:2876
 #, fuzzy
 msgid "Time Graph View"
 msgstr "時間圖表視圖"
@@ -15068,392 +15068,392 @@ msgstr "幹運行間隙填充範圍"
 msgid "Dry Run Float Range"
 msgstr "幹運行浮動範圍"
 
-#: lib/html.php:2738
+#: lib/html.php:2872
 #, fuzzy
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "允許或限製表列以超出當前窗口限制。"
 
-#: lib/html.php:2739 lib/html_filter.php:48
+#: lib/html.php:2873 lib/html_filter.php:48
 #, fuzzy
 msgid "Enter a search term"
 msgstr "輸入搜索字詞"
 
-#: lib/html.php:2740
+#: lib/html.php:2874
 #, fuzzy
 msgid "Enter a regular expression"
 msgstr "輸入正則表達式"
 
-#: lib/html.php:2741
+#: lib/html.php:2875
 #, fuzzy
 msgid "No file selected"
 msgstr "尚未選取檔案"
 
-#: lib/html.php:2744 lib/html.php:2787
+#: lib/html.php:2878 lib/html.php:2921
 #, fuzzy
 msgid "SpikeKill Results"
 msgstr "SpikeKill結果"
 
-#: lib/html.php:2746
+#: lib/html.php:2880
 #, fuzzy
 msgid "Click to view just this Graph in Realtime"
 msgstr "單擊以實時查看此圖表"
 
-#: lib/html.php:2747
+#: lib/html.php:2881
 #, fuzzy
 msgid "Click again to take this Graph out of Realtime"
 msgstr "再次單擊可使此圖表脫離實時"
 
-#: lib/html.php:2756
+#: lib/html.php:2890
 #, fuzzy
 msgid "Standard Mode"
 msgstr "掃描模式"
 
-#: lib/html.php:2757
+#: lib/html.php:2891
 #, fuzzy
 msgid "Compact Mode"
 msgstr "縮放模式"
 
-#: lib/html.php:2758
+#: lib/html.php:2892
 #, fuzzy
 msgid "Dark Color Mode"
 msgstr "找不到顏色"
 
-#: lib/html.php:2759
+#: lib/html.php:2893
 #, fuzzy
 msgid "Light Color Mode"
 msgstr "列表模式"
 
-#: lib/html.php:2760
+#: lib/html.php:2894
 #, fuzzy
 msgid "Use System Color"
 msgstr "項目顏色"
 
-#: lib/html.php:2761
+#: lib/html.php:2895
 #, fuzzy
 msgid "Ignore System Color"
 msgstr "項目顏色"
 
-#: lib/html.php:2762
+#: lib/html.php:2896
 #, fuzzy
 msgid "Help"
 msgstr "說明"
 
-#: lib/html.php:2763
+#: lib/html.php:2897
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul之家"
 
-#: lib/html.php:2765
+#: lib/html.php:2899
 #, fuzzy
 msgid "Miscellaneous"
 msgstr "雜項"
 
-#: lib/html.php:2766
+#: lib/html.php:2900
 msgid "Dashboards"
 msgstr "儀表板"
 
-#: lib/html.php:2768
+#: lib/html.php:2902
 #, fuzzy
 msgid "Charts"
 msgstr "圖表"
 
-#: lib/html.php:2769
+#: lib/html.php:2903
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul項目"
 
-#: lib/html.php:2773
+#: lib/html.php:2907
 #, fuzzy
 msgid "Spine"
 msgstr "脊柱"
 
-#: lib/html.php:2774
+#: lib/html.php:2908
 msgid "RRDProxy"
 msgstr "RRD代理"
 
-#: lib/html.php:2775
+#: lib/html.php:2909
 #, fuzzy
 msgid "Keyboard"
 msgstr "鍵盤"
 
-#: lib/html.php:2776
+#: lib/html.php:2910
 #, fuzzy
 msgid "Shortcuts"
 msgstr "快捷鍵"
 
-#: lib/html.php:2777
+#: lib/html.php:2911
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "旋轉Kadupul日誌"
 
-#: lib/html.php:2778
+#: lib/html.php:2912
 msgid "Help in Developing"
 msgstr "幫助開發"
 
-#: lib/html.php:2779
+#: lib/html.php:2913
 msgid "Donation & Sponsoring"
 msgstr "捐贈與讚助"
 
-#: lib/html.php:2782
+#: lib/html.php:2916
 #, fuzzy
 msgid "Client"
 msgstr "客戶"
 
-#: lib/html.php:2783
+#: lib/html.php:2917
 msgid "Help in Translating"
 msgstr "幫助翻譯"
 
-#: lib/html.php:2784
+#: lib/html.php:2918
 #, fuzzy
 msgid "Report a bug"
 msgstr "回報臭蟲"
 
-#: lib/html.php:2786
+#: lib/html.php:2920
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2788
+#: lib/html.php:2922
 #, fuzzy
 msgid "Click to Show/Hide Filter"
 msgstr "單擊以顯示/隱藏篩選器"
 
-#: lib/html.php:2789
+#: lib/html.php:2923
 #, fuzzy
 msgid "Clear Current Filter"
 msgstr "清除電流濾波器"
 
-#: lib/html.php:2790
+#: lib/html.php:2924
 #, fuzzy
 msgid "Clipboard"
 msgstr "剪貼板"
 
-#: lib/html.php:2791
+#: lib/html.php:2925
 #, fuzzy
 msgid "Clipboard ID"
 msgstr "剪貼板ID"
 
-#: lib/html.php:2792
+#: lib/html.php:2926
 #, fuzzy
 msgid "Copy operation is unavailable at this time"
 msgstr "此時復制操作不可用"
 
-#: lib/html.php:2793
+#: lib/html.php:2927
 #, fuzzy
 msgid "Failed to find data to copy!"
 msgstr "無法找到要復制的數據！"
 
-#: lib/html.php:2794
+#: lib/html.php:2928
 #, fuzzy
 msgid "Clipboard has been updated"
 msgstr "剪貼板已更新"
 
-#: lib/html.php:2795
+#: lib/html.php:2929
 #, fuzzy
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "抱歉，您的剪貼板目前無法更新"
 
-#: lib/html.php:2799
+#: lib/html.php:2933
 #, fuzzy
 msgid "Passphrase length meets 8 character minimum"
 msgstr "密碼長度最少為8個字符"
 
-#: lib/html.php:2800
+#: lib/html.php:2934
 #, fuzzy
 msgid "Passphrase too short"
 msgstr "密碼太短了"
 
-#: lib/html.php:2801
+#: lib/html.php:2935
 #, fuzzy
 msgid "Passphrase matches but too short"
 msgstr "密碼短語但匹配太短"
 
-#: lib/html.php:2802
+#: lib/html.php:2936
 #, fuzzy
 msgid "Passphrase too short and not matching"
 msgstr "密碼太短而且不匹配"
 
-#: lib/html.php:2803
+#: lib/html.php:2937
 #, fuzzy
 msgid "Passphrases match"
 msgstr "密碼匹配"
 
-#: lib/html.php:2804
+#: lib/html.php:2938
 #, fuzzy
 msgid "Passphrases do not match"
 msgstr "密碼短語不匹配"
 
-#: lib/html.php:2805
+#: lib/html.php:2939
 #, fuzzy
 msgid "Sorry, we could not process your last action."
 msgstr "抱歉，我們無法處理您的上一個操作。"
 
-#: lib/html.php:2806
+#: lib/html.php:2940
 #, fuzzy
 msgid "Error:"
 msgstr "錯誤:"
 
-#: lib/html.php:2807
+#: lib/html.php:2941
 #, fuzzy
 msgid "Reason:"
 msgstr "原因："
 
-#: lib/html.php:2808
+#: lib/html.php:2942
 #, fuzzy
 msgid "Action failed"
 msgstr "行動失敗了"
 
-#: lib/html.php:2809 pollers.php:804
+#: lib/html.php:2943 pollers.php:804
 #, fuzzy
 msgid "Connection Successful"
 msgstr "操作成功"
 
-#: lib/html.php:2810 pollers.php:806
+#: lib/html.php:2944 pollers.php:806
 #, fuzzy
 msgid "Connection Failed"
 msgstr "連線失敗"
 
-#: lib/html.php:2811
+#: lib/html.php:2945
 #, fuzzy
 msgid "The response to the last action was unexpected."
 msgstr "對最後一次行動的回應是出乎意料的。"
 
-#: lib/html.php:2812
+#: lib/html.php:2946
 #, fuzzy
 msgid "Some Actions failed"
 msgstr "一些行動失敗了"
 
-#: lib/html.php:2813
+#: lib/html.php:2947
 #, fuzzy
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "請注意，我們無法處理您的所有操作。詳情如下。"
 
-#: lib/html.php:2814
+#: lib/html.php:2948
 #, fuzzy
 msgid "Operation successful"
 msgstr "操作成功"
 
-#: lib/html.php:2815
+#: lib/html.php:2949
 #, fuzzy
 msgid "The Operation was successful.  Details are below."
 msgstr "該行動是成功的。詳情如下。"
 
-#: lib/html.php:2817
+#: lib/html.php:2951
 #, fuzzy
 msgid "Pause"
 msgstr "暫停"
 
-#: lib/html.php:2820
+#: lib/html.php:2954
 #, fuzzy
 msgid "Zoom In"
 msgstr "放大"
 
-#: lib/html.php:2821
+#: lib/html.php:2955
 #, fuzzy
 msgid "Zoom Out"
 msgstr "縮小"
 
-#: lib/html.php:2822
+#: lib/html.php:2956
 #, fuzzy
 msgid "Zoom Out Factor"
 msgstr "縮小因子"
 
-#: lib/html.php:2823
+#: lib/html.php:2957
 #, fuzzy
 msgid "Timestamps"
 msgstr "時間戳"
 
-#: lib/html.php:2824
+#: lib/html.php:2958
 #, fuzzy
 msgid "2x"
 msgstr "2 倍"
 
-#: lib/html.php:2825
+#: lib/html.php:2959
 #, fuzzy
 msgid "4x"
 msgstr "4 倍"
 
-#: lib/html.php:2826
+#: lib/html.php:2960
 #, fuzzy
 msgid "8x"
 msgstr "8X"
 
-#: lib/html.php:2827
+#: lib/html.php:2961
 #, fuzzy
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2828
+#: lib/html.php:2962
 #, fuzzy
 msgid "32x"
 msgstr "32X"
 
-#: lib/html.php:2829
+#: lib/html.php:2963
 #, fuzzy
 msgid "Zoom Out Positioning"
 msgstr "縮小定位"
 
-#: lib/html.php:2830
+#: lib/html.php:2964
 #, fuzzy
 msgid "Zoom Mode"
 msgstr "縮放模式"
 
-#: lib/html.php:2832
+#: lib/html.php:2966
 #, fuzzy
 msgid "Quick"
 msgstr "快"
 
-#: lib/html.php:2834
+#: lib/html.php:2968
 #, fuzzy
 msgid "Open in new tab"
 msgstr "打開一個新標籤"
 
-#: lib/html.php:2835
+#: lib/html.php:2969
 #, fuzzy
 msgid "Save graph"
 msgstr "保存圖表"
 
-#: lib/html.php:2836
+#: lib/html.php:2970
 #, fuzzy
 msgid "Copy graph"
 msgstr "複製圖"
 
-#: lib/html.php:2837
+#: lib/html.php:2971
 #, fuzzy
 msgid "Copy graph link"
 msgstr "複製圖錶鍊接"
 
-#: lib/html.php:2838
+#: lib/html.php:2972
 #, fuzzy
 msgid "Always On"
 msgstr "永遠在線"
 
-#: lib/html.php:2839
+#: lib/html.php:2973
 #, fuzzy
 msgid "Auto"
 msgstr "自動"
 
-#: lib/html.php:2840
+#: lib/html.php:2974
 #, fuzzy
 msgid "Always Off"
 msgstr "總是關閉"
 
-#: lib/html.php:2841
+#: lib/html.php:2975
 #, fuzzy
 msgid "Begin with"
 msgstr "首先"
 
-#: lib/html.php:2843
+#: lib/html.php:2977
 #, fuzzy
 msgid "End with"
 msgstr "結束日期"
 
-#: lib/html.php:2845 lib/html_form.php:1433
+#: lib/html.php:2979 lib/html_form.php:1433
 #, fuzzy
 msgid "Close"
 msgstr "關閉"
 
-#: lib/html.php:2847
+#: lib/html.php:2981
 #, fuzzy
 msgid "3rd Mouse Button"
 msgstr "第三個鼠標按鈕"

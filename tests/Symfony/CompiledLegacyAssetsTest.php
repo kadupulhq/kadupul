@@ -184,12 +184,23 @@ final class CompiledLegacyAssetsTest extends TestCase
         $source = test_php_function_source((string) file_get_contents(self::$root . '/lib/html.php'), 'html_common_header');
         preg_match_all("~get_md5_include_(?:css|js)\\('([^']*)'(?:\\s*\\.\\s*\\\$selectedTheme\\s*\\.\\s*'([^']*)')?~", $source, $matches, PREG_SET_ORDER);
         $includes = [];
+        // The optional legacy libraries are listed in one registry, not inline.
+        $registry = test_php_function_source((string) file_get_contents(self::$root . '/lib/html.php'), 'html_legacy_js_registry');
+        preg_match_all("~'(include/js/[^']+)'~", $registry, $scripts);
+        preg_match_all("~'css'\\s*=>\\s*'([^']+)'~", $registry, $styles);
         foreach ($matches as $match) {
             $path = $match[1] . (isset($match[2]) ? $theme . $match[2] : '');
             // custom.css is emitted only when an operator adds one.
             if ($path !== 'include/themes/custom.css') {
                 $includes[] = $path;
             }
+        }
+
+        foreach ($scripts[1] as $script) {
+            $includes[] = $script;
+        }
+        foreach ($styles[1] as $style) {
+            $includes[] = 'include/themes/' . $theme . '/' . $style;
         }
 
         return $includes;
