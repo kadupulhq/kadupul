@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
+use Kadupul\Platform\Contract\LegacyWorkerRunner;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
@@ -18,7 +19,7 @@ use Symfony\Component\Process\Process;
  * stdin and ends its stdout with one "<marker>={json}" line. What it printed
  * before that line is the original script's output and is returned as is.
  */
-final readonly class LegacyWorkerProcess
+final readonly class LegacyWorkerProcess implements LegacyWorkerRunner
 {
     /**
      * @param string $php the interpreter. PHP_BINARY is right because these
@@ -31,10 +32,12 @@ final readonly class LegacyWorkerProcess
      * @param array<string, mixed> $command
      * @param ?float $timeout seconds, or null for none
      * @param ?\Closure(string, string): void $progress stdout lines except the protocol marker, and stderr chunks
-     * @return array{output: string, errors: string, ok: bool} ok only when the worker exited 0 and its marker said "ok"
+     * @return array{output: string, errors: string, ok: bool, result: array<mixed>} ok only when the worker exited 0 and its marker said "ok";
+     *     result is the decoded marker JSON, or [] when the marker is absent or not a JSON object
      * @throws \InvalidArgumentException when $script is not a bin/legacy-*.php worker name
      * @throws ProcessTimedOutException when the worker outlives $timeout; the worker is stopped first
      */
+    #[\Override]
     public function run(string $script, string $marker, array $command, ?float $timeout, ?\Closure $progress = null): array
     {
         // Only a plain worker name, so no caller can reach another bin/ file
@@ -64,13 +67,15 @@ final readonly class LegacyWorkerProcess
         }
         $output = $process->getOutput();
         $ok = false;
+        $result = [];
         $end = strrpos("\n" . $output, "\n" . $marker . '=');
         if ($end !== false) {
             $decoded = json_decode(trim(substr($output, $end + strlen($marker) + 1)), true);
-            $ok = $process->isSuccessful() && is_array($decoded) && ($decoded['status'] ?? null) === 'ok';
+            $result = is_array($decoded) ? $decoded : [];
+            $ok = $process->isSuccessful() && ($result['status'] ?? null) === 'ok';
             $output = substr($output, 0, $end);
         }
 
-        return ['output' => $output, 'errors' => $process->getErrorOutput(), 'ok' => $ok];
+        return ['output' => $output, 'errors' => $process->getErrorOutput(), 'ok' => $ok, 'result' => $result];
     }
 }

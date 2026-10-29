@@ -320,7 +320,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval)
             }
         }
 
-        $rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
+        $rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed, $rejected, read_config_option('realtime_cache_path'));
 
         /* make sure each .rrd file has complete data */
         foreach ($results as $item) {

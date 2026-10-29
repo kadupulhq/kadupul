@@ -41,6 +41,15 @@ $resolve_fixture_paths = static function ($value) use (&$resolve_fixture_paths, 
     return is_string($value) ? str_replace('<fixture_rra>', $directory . '/rra', $value) : $value;
 };
 $scenario['calls'] = $resolve_fixture_paths($scenario['calls']);
+// A scenario names a file outside the RRA directory as <fixture_dir>/..., since the directory is random.
+$resolve_fixture_dir = static function ($value) use (&$resolve_fixture_dir, $directory) {
+    if (is_array($value)) {
+        return array_map($resolve_fixture_dir, $value);
+    }
+
+    return is_string($value) ? str_replace('<fixture_dir>', $directory, $value) : $value;
+};
+$scenario['db'] = $resolve_fixture_dir($scenario['db'] ?? array());
 
 // Legends and business hours format dates in the process zone.
 date_default_timezone_set('UTC');
@@ -56,7 +65,7 @@ $config = array(
     'url_path' => '/',
     'library_path' => $root . '/lib',
     'include_path' => $root . '/include',
-    'rra_path' => $directory . '/rra',
+    'rra_path' => $scenario['rra_path'] ?? $directory . '/rra',
     'config_options_array' => ($scenario['options'] ?? array()) + array(
         'path_rrdtool' => $directory . '/rrdtool',
         'log_destination' => 0,
