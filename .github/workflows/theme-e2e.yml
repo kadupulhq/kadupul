@@ -19,7 +19,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Decides whether a pull request can affect the jobs below; every other
+  # event runs them.
+  scope:
+    name: Change scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.scope.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The test merge and both of its parents.
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
+      - name: Classify the change
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash tests/tools/ci_change_scope.sh
+
   theme-e2e:
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     timeout-minutes: 45
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
 
@@ -98,6 +125,7 @@ jobs:
     # Always reports: a required check reads a skipped job as passing.
     if: ${{ !cancelled() }}
     needs:
+      - scope
       - theme-e2e
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -112,5 +140,5 @@ jobs:
       - name: Require every gating job to pass
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
-          ALLOWED_SKIPS: ''
+          ALLOWED_SKIPS: ${{ needs.scope.result == 'success' && needs.scope.outputs.code == 'false' && 'theme-e2e' || '' }}
         run: bash tests/tools/require_job_results.sh

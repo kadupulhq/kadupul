@@ -31,29 +31,35 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
+          # The test merge and both of its parents.
+          fetch-depth: 2
           persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
       - name: Match changed paths
         id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}
-        run: |
-          set -euo pipefail
-          if [ "$EVENT_NAME" != pull_request ] && [ "$EVENT_NAME" != merge_group ]; then
-            echo 'relevant=true' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # A failed diff must fail the job, never read as "nothing relevant".
-          changed=$(git diff --name-only "$BASE_SHA" HEAD)
-          relevant=false
-          while IFS= read -r path; do
-            case "$path" in
-              lib/headers_secure.php|lib/csp_report_endpoint.php|include/global.php|include/global_settings.php|csp_report.php|tests/integration/*|tests/e2e/*|.github/workflows/csp-e2e.yml|tests/Unit/HeadersSecureTest.php|tests/Unit/CspReportEndpointTest.php|tests/Unit/HelpLocalDocumentationTest.php|tests/Unit/HelpSsrFTest.php|help.php|lib/html.php|include/themes/classic/*|tests/bootstrap-unit.php|tests/composer.json) relevant=true ;;
-            esac
-          done <<< "$changed"
-          echo "Relevant to this workflow: $relevant"
-          echo "relevant=$relevant" >> "$GITHUB_OUTPUT"
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          RELEVANT_PATHS: |
+            lib/headers_secure.php
+            lib/csp_report_endpoint.php
+            include/global.php
+            include/global_settings.php
+            csp_report.php
+            tests/integration/*
+            tests/e2e/*
+            .github/workflows/csp-e2e.yml
+            tests/Unit/HeadersSecureTest.php
+            tests/Unit/CspReportEndpointTest.php
+            tests/Unit/HelpLocalDocumentationTest.php
+            tests/Unit/HelpSsrFTest.php
+            help.php
+            lib/html.php
+            include/themes/classic/*
+            tests/bootstrap-unit.php
+            tests/composer.json
+        run: bash tests/tools/ci_change_scope.sh
 
   unit:
     needs: changes
