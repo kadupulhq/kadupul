@@ -1656,7 +1656,8 @@ function xml_to_data_query($hash, &$xml_array, &$hash_cache, &$files, $replace_s
 	if (isset($save['xml_path'])) {
 		$path = str_replace('<path_cacti>', $config['base_path'], $save['xml_path']);
 
-		if (!file_exists($path)) {
+		// Do not report whether a path outside the loader's boundary exists.
+		if (!cacti_path_is_within($path, $config['base_path'] . '/resource') || !is_file($path)) {
 			$files[$path] = 'missing';
 		} elseif (!is_readable($path)) {
 			$files[$path] = 'notreadable';

@@ -449,7 +449,7 @@ function form_save(): never {
 								if (!db_execute_prepared('UPDATE graph_templates_item
 									SET ' . $input['column_name'] . ' = ?
 									WHERE id = ?',
-									array($input_value, $item['id']))) {
+									array(graph_template_input_storage_value($input['column_name'], $input_value), $item['id']))) {
 									$mutation_failed = true;
 
 									break 2;

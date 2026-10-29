@@ -95,7 +95,7 @@ msgstr "يتم توزيع هذا البرنامج على أمل أن يكون م
 #: automation_tree_rules.php:33 cdef.php:29 cdef.php:630 color.php:29
 #: color_templates.php:28 color_templates.php:123 data_input.php:32
 #: data_input.php:828 data_input.php:912 data_queries.php:32
-#: data_queries.php:971 data_queries.php:1118 data_queries.php:1407
+#: data_queries.php:971 data_queries.php:1118 data_queries.php:1408
 #: data_source_profiles.php:31 data_source_profiles.php:796 data_sources.php:37
 #: data_sources.php:1167 data_templates.php:34 data_templates.php:879
 #: gprint_presets.php:28 graph_templates.php:37 graph_templates.php:556
@@ -453,7 +453,7 @@ msgstr "مطابقة الرسوم البيانية"
 #: automation_networks.php:1252 automation_snmp.php:714
 #: automation_templates.php:406 automation_tree_rules.php:905 cdef.php:755
 #: color.php:596 color_templates.php:548 data_debug.php:1138
-#: data_input.php:1030 data_queries.php:1525 data_source_profiles.php:1040
+#: data_input.php:1030 data_queries.php:1526 data_source_profiles.php:1040
 #: data_sources.php:1552 data_templates.php:1184 gprint_presets.php:340
 #: graph_templates.php:761 graph_view.php:654 graphs.php:2127
 #: graphs_new.php:463 host.php:1882 host_templates.php:935
@@ -496,7 +496,7 @@ msgstr "الرسوم"
 #: automation_snmp.php:728 automation_templates.php:420
 #: automation_tree_rules.php:929 cdef.php:769 color.php:610
 #: color_templates.php:564 data_debug.php:1152 data_input.php:1044
-#: data_queries.php:1539 data_source_profiles.php:1054
+#: data_queries.php:1540 data_source_profiles.php:1054
 #: data_source_profiles.php:1173 data_sources.php:1566 data_templates.php:1214
 #: gprint_presets.php:354 graph_templates.php:775 graph_view.php:732
 #: graphs.php:2152 graphs_new.php:477 host.php:1911 host_templates.php:949
@@ -526,7 +526,7 @@ msgstr "جزء من التجميع"
 #: automation_snmp.php:740 automation_templates.php:432
 #: automation_tree_rules.php:941 cdef.php:787 color.php:634
 #: color_templates.php:586 data_debug.php:1066 data_input.php:1056
-#: data_queries.php:1551 data_source_profiles.php:1072 data_sources.php:1505
+#: data_queries.php:1552 data_source_profiles.php:1072 data_sources.php:1505
 #: data_templates.php:1232 gprint_presets.php:372 graph_templates.php:793
 #: graph_view.php:666 graphs.php:2118 graphs_new.php:452 host.php:1872
 #: host_templates.php:926 lib/api_automation.php:248 lib/api_automation.php:547
@@ -544,7 +544,7 @@ msgstr "أذهب"
 #: aggregate_graphs.php:1277 aggregate_graphs.php:1575
 #: automation_devices.php:522 automation_snmp.php:740
 #: automation_templates.php:432 cdef.php:787 color.php:634 data_debug.php:1066
-#: data_input.php:1056 data_queries.php:1551 data_source_profiles.php:1072
+#: data_input.php:1056 data_queries.php:1552 data_source_profiles.php:1072
 #: data_sources.php:1505 data_templates.php:1232 gprint_presets.php:372
 #: graph_templates.php:793 graph_view.php:666 graphs.php:2118
 #: graphs_new.php:452 host.php:1872 host_templates.php:926
@@ -566,7 +566,7 @@ msgstr "مجموعة / تحديث الفلاتر"
 #: automation_snmp.php:741 automation_templates.php:433
 #: automation_tree_rules.php:942 cdef.php:788 color.php:635
 #: color_templates.php:587 data_debug.php:1067 data_input.php:1057
-#: data_queries.php:1552 data_source_profiles.php:1073 data_sources.php:1506
+#: data_queries.php:1553 data_source_profiles.php:1073 data_sources.php:1506
 #: data_templates.php:1233 gprint_presets.php:373 graph_templates.php:794
 #: graph_view.php:667 graphs.php:2119 graphs_new.php:453 host.php:1873
 #: host_templates.php:927 lib/api_automation.php:249 lib/api_automation.php:548
@@ -583,7 +583,7 @@ msgstr "واضح"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1576 automation_snmp.php:741
 #: automation_templates.php:433 cdef.php:788 color.php:635 data_debug.php:1067
-#: data_input.php:1057 data_queries.php:1552 data_source_profiles.php:1073
+#: data_input.php:1057 data_queries.php:1553 data_source_profiles.php:1073
 #: data_sources.php:1506 data_templates.php:1233 gprint_presets.php:373
 #: graph_templates.php:794 graph_view.php:667 graphs.php:2119
 #: graphs_new.php:453 host.php:1873 host_templates.php:927
@@ -607,7 +607,7 @@ msgstr "عنوان الرسم البياني"
 
 #: aggregate_graphs.php:1304 aggregate_graphs.php:1642
 #: automation_graph_rules.php:990 automation_tree_rules.php:1035
-#: data_debug.php:474 data_input.php:1143 data_queries.php:1637
+#: data_debug.php:474 data_input.php:1143 data_queries.php:1638
 #: data_sources.php:1731 data_templates.php:1341 graph_templates.php:899
 #: graphs.php:2329 host.php:1590 host_templates.php:1090
 #: lib/api_automation.php:343 pollers.php:1089 sites.php:679 tree.php:2406
@@ -631,7 +631,7 @@ msgstr "مداخل خلفية الحجم"
 
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:784 cdef.php:914 color.php:801 color.php:803
-#: color_templates.php:692 data_input.php:1188 data_queries.php:1689
+#: color_templates.php:692 data_input.php:1188 data_queries.php:1690
 #: data_source_profiles.php:1253 data_source_profiles.php:1254
 #: data_sources.php:1818 data_sources.php:1819 data_templates.php:1402
 #: gprint_presets.php:527 graph_templates.php:956 host_templates.php:1138
@@ -645,7 +645,7 @@ msgstr "لا"
 #: aggregate_graphs.php:1322 aggregate_templates.php:735
 #: automation_tree_rules.php:777 cdef.php:914 color.php:801 color.php:803
 #: color_templates.php:692 data_debug.php:714 data_debug.php:719
-#: data_debug.php:724 data_input.php:1188 data_queries.php:1689
+#: data_debug.php:724 data_input.php:1188 data_queries.php:1690
 #: data_source_profiles.php:1252 data_source_profiles.php:1253
 #: data_source_profiles.php:1254 data_sources.php:1818 data_sources.php:1819
 #: data_templates.php:1402 gprint_presets.php:527 graph_templates.php:956
@@ -805,15 +805,15 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "لا يمكن حذف القوالب التجميعية قيد الاستخدام. يتم تعريف الاستخدام على أنه مرجع من قبل Aggregate."
 
 #: aggregate_templates.php:718 cdef.php:897 color.php:778
-#: color_templates.php:663 data_input.php:1149 data_queries.php:1643
+#: color_templates.php:663 data_input.php:1149 data_queries.php:1644
 #: data_source_profiles.php:1178 data_sources.php:1749 data_templates.php:1347
 #: gprint_presets.php:487 graph_templates.php:905 host_templates.php:1096
 #: vdef.php:928
 msgid "Deletable"
 msgstr "به deletable"
 
-#: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1368
-#: data_queries.php:1648 gprint_presets.php:492 graph_templates.php:910
+#: aggregate_templates.php:719 cdef.php:898 color.php:779 data_queries.php:1369
+#: data_queries.php:1649 gprint_presets.php:492 graph_templates.php:910
 #: vdef.php:929
 msgid "Graphs Using"
 msgstr "الرسوم البيانية عن طريق"
@@ -1596,7 +1596,7 @@ msgstr "الاعدادات العامة"
 
 #: automation_networks.php:460 automation_snmp.php:521 data_input.php:739
 #: data_input.php:842 data_queries.php:899 data_queries.php:1041
-#: data_queries.php:1366 data_source_profiles.php:761 graph_templates.php:539
+#: data_queries.php:1367 data_source_profiles.php:761 graph_templates.php:539
 #: include/global_form.php:215 include/global_form.php:281
 #: include/global_form.php:338 include/global_form.php:358
 #: include/global_form.php:399 include/global_form.php:529
@@ -2328,7 +2328,7 @@ msgstr "البروتوكول الخاص"
 msgid "Context"
 msgstr "السياق"
 
-#: automation_snmp.php:563 data_queries.php:1370 utilities.php:2145
+#: automation_snmp.php:563 data_queries.php:1371 utilities.php:2145
 msgid "Action"
 msgstr "الإجراء"
 
@@ -2586,7 +2586,7 @@ msgid "No Tree Rules Found"
 msgstr "لم يتم العثور على قواعد شجرة"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6328 lib/functions.php:6397
-#: lib/functions.php:6503 lib/functions.php:7174 poller.php:410 poller.php:560
+#: lib/functions.php:6503 lib/functions.php:7181 poller.php:410 poller.php:560
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
@@ -2737,7 +2737,7 @@ msgstr "لا يمكن حذف CDEFs قيد الاستخدام. يتم تعريف 
 msgid "The number of Graphs using this CDEF."
 msgstr "عدد الرسوم البيانية باستخدام هذا CDEF."
 
-#: cdef.php:899 color.php:780 data_input.php:1160 data_queries.php:1654
+#: cdef.php:899 color.php:780 data_input.php:1160 data_queries.php:1655
 #: data_source_profiles.php:1206 gprint_presets.php:498 vdef.php:930
 msgid "Templates Using"
 msgstr "قوالب باستخدام"
@@ -3609,7 +3609,7 @@ msgstr "عدد مصادر البيانات التي تستخدم طريقة إد
 msgid "The number of Data Templates that use this Data Input Method."
 msgstr "عدد قوالب البيانات التي تستخدم طريقة إدخال البيانات هذه."
 
-#: data_input.php:1166 data_queries.php:1660 include/global_arrays.php:1374
+#: data_input.php:1166 data_queries.php:1661 include/global_arrays.php:1374
 #: include/global_form.php:584 include/global_form.php:1401
 msgid "Data Input Method"
 msgstr "طريقة إدخال البيانات"
@@ -3777,79 +3777,79 @@ msgstr "استعلامات البيانات [عدل: %s]"
 msgid "Data Queries [new]"
 msgstr "استعلامات البيانات [جديد]"
 
-#: data_queries.php:1352
+#: data_queries.php:1353
 msgid "Successfully located XML file"
 msgstr "تم العثور على ملف XML بنجاح"
 
-#: data_queries.php:1355
+#: data_queries.php:1356
 msgid "Could not locate XML file."
 msgstr "لا يمكن تحديد موقع ملف XML."
 
-#: data_queries.php:1363 host.php:837 host_templates.php:578
+#: data_queries.php:1364 host.php:837 host_templates.php:578
 #: include/global_arrays.php:2444
 msgid "Associated Graph Templates"
 msgstr "قوالب الرسم البياني المرتبطة"
 
-#: data_queries.php:1367 graph_templates.php:893 graphs_new.php:575
+#: data_queries.php:1368 graph_templates.php:893 graphs_new.php:575
 #: host.php:841 lib/api_automation.php:672
 msgid "Graph Template Name"
 msgstr "اسم قالب الرسم البياني"
 
-#: data_queries.php:1369
+#: data_queries.php:1370
 msgid "Mapping ID"
 msgstr "معرف التعيين"
 
-#: data_queries.php:1394
+#: data_queries.php:1395
 msgid "Association Read Only until XML file located"
 msgstr "الاقتران للقراءة فقط حتى تحديد موقع ملف XML"
 
-#: data_queries.php:1411
+#: data_queries.php:1412
 msgid "Mapped Graph Templates with Graphs are read only"
 msgstr "يتم قراءة قوالب Graph المعنونة مع الرسومات البيانية فقط"
 
-#: data_queries.php:1418
+#: data_queries.php:1419
 msgid "No Graph Templates Defined."
 msgstr "لا توجد قوالب الرسم البياني محددة."
 
-#: data_queries.php:1460
+#: data_queries.php:1461
 msgid "Delete Associated Graph"
 msgstr "حذف الرسم البياني المرتبط"
 
-#: data_queries.php:1516 data_queries.php:1535 data_queries.php:1667
+#: data_queries.php:1517 data_queries.php:1536 data_queries.php:1668
 #: include/global_arrays.php:1017 include/global_arrays.php:1243
 #: include/global_arrays.php:2426 lib/api_automation.php:1271
 msgid "Data Queries"
 msgstr "استعلامات البيانات"
 
-#: data_queries.php:1631 host.php:965 utilities.php:1935
+#: data_queries.php:1632 host.php:965 utilities.php:1935
 msgid "Data Query Name"
 msgstr "اسم استعلام البيانات"
 
-#: data_queries.php:1634
+#: data_queries.php:1635
 msgid "The name of this Data Query."
 msgstr "اسم هذا الاستعلام عن البيانات."
 
-#: data_queries.php:1640 graph_templates.php:902
+#: data_queries.php:1641 graph_templates.php:902
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
 msgstr "المعرف الداخلي لهذا القالب الرسم البياني. مفيد عند تنفيذ التشغيل الآلي أو التصحيح."
 
-#: data_queries.php:1645
+#: data_queries.php:1646
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "لا يمكن حذف &quot;استعلامات البيانات&quot; قيد الاستخدام. يتم تعريف الاستخدام على أنه يتم الرجوع إليه إما من خلال الرسم البياني أو قالب الرسم البياني."
 
-#: data_queries.php:1651
+#: data_queries.php:1652
 msgid "The number of Graphs using this Data Query."
 msgstr "عدد الرسوم البيانية باستخدام هذا الاستعلام البيانات."
 
-#: data_queries.php:1657
+#: data_queries.php:1658
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "عدد قوالب الرسومات البيانية التي تستخدم هذا الاستعلام عن البيانات."
 
-#: data_queries.php:1663
+#: data_queries.php:1664
 msgid "The Data Input Method used to collect data for Data Sources associated with this Data Query."
 msgstr "طريقة إدخال البيانات المستخدمة لجمع البيانات لمصادر البيانات المرتبطة بطلب البيانات هذا."
 
-#: data_queries.php:1697
+#: data_queries.php:1698
 msgid "No Data Queries Found"
 msgstr "لم يتم العثور على استعلامات البيانات"
 
@@ -4766,7 +4766,7 @@ msgstr "لم يعمل Cacti Poller بعد."
 msgid "Real-time has been disabled by your administrator."
 msgstr "لقد تم تعطيل الوقت الفعلي بواسطة المسؤول."
 
-#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7973
+#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7980
 #: permission_denied.php:46 permission_denied.php:53
 msgid "Permission Denied"
 msgstr "تم رفض الإذن"
@@ -6131,8 +6131,9 @@ msgstr "لم يتم العثور على قوالب الأجهزة"
 
 #: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
 #: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:4031 lib/auth.php:4050 lib/auth.php:4269
-#: lib/auth.php:4299 lib/auth.php:4325 lib/auth.php:4338
+#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
+#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
+#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
 msgid "Access Denied!  Login Failed."
 msgstr "تم رفض الوصول!  فشل تسجيل الدخول."
 
@@ -6148,16 +6149,16 @@ msgstr "يجب عليك تسجيل الدخول للوصول إلى هذه ال�
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "FATAL: يجب تسجيل الدخول للوصول إلى هذه المنطقة من Cacti."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:4784
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "تسجيل الدخول مرة أخرى"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "If you feel that this is an error. Please contact your Cacti Administrator."
 msgstr "إذا كنت تشعر أن هذا خطأ. يرجى الاتصال بمدير Cacti."
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
 msgstr "لا يسمح لك بالوصول إلى هذا القسم من Cacti."
 
@@ -13044,41 +13045,42 @@ msgstr "تم تكوين مصادقة الويب الأساسية ، ولكن ل�
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "%s مصادقته بواسطة خادم الويب ، ولكن لم يتم تعريف كل من المستخدمين القالب والمستخدمين الضيوف في Cacti."
 
-#: lib/auth.php:3873 lib/auth.php:4043 lib/auth.php:4309
+#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
+#: lib/auth.php:4651
 msgid "Access Denied!  No password provided by user."
 msgstr "تم رفض الوصول!  لا توجد كلمة مرور مقدمة من قبل المستخدم."
 
-#: lib/auth.php:4024 lib/auth.php:4982
+#: lib/auth.php:4273 lib/auth.php:5387
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "تم رفض الوصول!  معرف مستخدم القالب %s غير موجود.  الرجاء الاتصال بالمسؤول."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4720
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "فرض مسؤول Cacti كلمات مرور معقدة لعمليات تسجيل الدخول وكلمة مرور Cacti الحالية لا تطابق المتطلبات الجديدة. لذلك ، يجب عليك تغيير كلمة المرور الخاصة بك الآن."
 
-#: lib/auth.php:4390
+#: lib/auth.php:4751
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "يجب أن تتكون كلمة المرور من %d حرفا على الأقل!"
 
-#: lib/auth.php:4396
+#: lib/auth.php:4757
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف عددي واحد على الأقل!"
 
-#: lib/auth.php:4400
+#: lib/auth.php:4761
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على مزيج من الأحرف الصغيرة والأحرف الصغيرة!"
 
-#: lib/auth.php:4406
+#: lib/auth.php:4767
 msgid "Your password must contain at least 1 special character!"
 msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف خاص واحد على الأقل!"
 
-#: lib/auth.php:4777
+#: lib/auth.php:5182
 msgid "Cacti Login Failure"
 msgstr "فشل تسجيل الدخول إلى الصبار"
 
-#: lib/auth.php:5064
+#: lib/auth.php:5469
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "لم يتم تعيين المصادقة مسبقا.  حاولت التعيين إلى مصادقة محلية، ولكن لم يتم العثور على حساب إداري."
 
@@ -13890,7 +13892,7 @@ msgstr "الإصدار %s %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7174
+#: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
 msgstr "تحذير: مفتاح الصبار تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"
@@ -14848,7 +14850,7 @@ msgstr "الفعاليات"
 msgid "Send Report"
 msgstr "ارسال تبليغ"
 
-#: lib/html_reports.php:1603 lib/import.php:3142 user_admin.php:1925
+#: lib/html_reports.php:1603 lib/import.php:3143 user_admin.php:1925
 msgid "[new]"
 msgstr "[الجديد]"
 
@@ -15122,88 +15124,88 @@ msgstr "لا يوجد"
 msgid "not writable"
 msgstr "قابل للكتابة"
 
-#: lib/import.php:2023 lib/import.php:2040
+#: lib/import.php:2024 lib/import.php:2041
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "قالب رسم بياني جديد: %s"
 
-#: lib/import.php:2052 lib/import.php:2062
+#: lib/import.php:2053 lib/import.php:2063
 #, php-format
 msgid "New Data Query: %s"
 msgstr "استعلام بيانات جديد: %s"
 
-#: lib/import.php:2556
+#: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
 msgstr ""
 
-#: lib/import.php:2732
+#: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
 msgstr ""
 
-#: lib/import.php:2844
+#: lib/import.php:2845
 msgid "Unknown Field"
 msgstr "حقل غير معروف"
 
-#: lib/import.php:3097
+#: lib/import.php:3098
 msgid "Import Preview Results"
 msgstr "استيراد نتائج المعاينة"
 
-#: lib/import.php:3097
+#: lib/import.php:3098
 msgid "Import Results"
 msgstr "نتائج الاستيراد"
 
-#: lib/import.php:3101
+#: lib/import.php:3102
 msgid "Cacti would make the following changes if the Package was imported:"
 msgstr "الصبار سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
 
-#: lib/import.php:3103
+#: lib/import.php:3104
 msgid "Cacti has imported the following items for the Package:"
 msgstr "قامت Cacti باستيراد العناصر التالية للحزمة:"
 
-#: lib/import.php:3106
+#: lib/import.php:3107
 msgid "Package Files"
 msgstr "ملفات الحزمة"
 
-#: lib/import.php:3110
+#: lib/import.php:3111
 msgid "[preview] "
 msgstr "معاينة"
 
-#: lib/import.php:3115
+#: lib/import.php:3116
 msgid "Cacti would make the following changes if the Template was imported:"
 msgstr "الصبار سيجعل التغييرات التالية إذا تم استيراد القالب:"
 
-#: lib/import.php:3117
+#: lib/import.php:3118
 msgid "Cacti has imported the following items for the Template:"
 msgstr "قامت Cacti باستيراد العناصر التالية للقالب:"
 
-#: lib/import.php:3132
+#: lib/import.php:3133
 #, fuzzy
 msgid "[success]"
 msgstr "نجاح"
 
-#: lib/import.php:3134
+#: lib/import.php:3135
 msgid "[fail]"
 msgstr "فشل"
 
-#: lib/import.php:3136
+#: lib/import.php:3137
 msgid "[preview]"
 msgstr "معاينة"
 
-#: lib/import.php:3140
+#: lib/import.php:3141
 msgid "[updated]"
 msgstr "[updated]"
 
-#: lib/import.php:3144
+#: lib/import.php:3145
 msgid "[unchanged]"
 msgstr "[دون تغيير]"
 
-#: lib/import.php:3180
+#: lib/import.php:3181
 msgid "Found Dependency:"
 msgstr "وجدت التبعية:"
 
-#: lib/import.php:3182
+#: lib/import.php:3183
 msgid "Unmet Dependency:"
 msgstr "الإعالة غير الملباة:"
 
