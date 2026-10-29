@@ -5,6 +5,7 @@ import sys
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'Symfony'))
 import session_bridge
@@ -22,6 +23,14 @@ class ShardPartitionTest(unittest.TestCase):
 
     def test_default_runs_every_step_in_order(self):
         self.assertEqual(STEPS, selected_steps(None))
+
+    def test_plugin_menu_scenario_runs_in_the_assigned_shard(self):
+        selected = [step for step in selected_steps('3/3') if step.__name__ == 'plugin_menu']
+        self.assertEqual(1, len(selected))
+        fixture = SimpleNamespace(harness=object())
+        with patch('plugin_menu_scenarios.verify_plugin_menu') as verify:
+            selected[0](fixture)
+        verify.assert_called_once_with(fixture.harness, session_bridge.check)
 
     def test_account_deletion_stays_last_in_its_shard(self):
         for shard in SHARDS:
