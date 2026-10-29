@@ -5975,8 +5975,9 @@ msgstr "Geen apparaattemplates gevonden"
 
 #: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
 #: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:4031 lib/auth.php:4050 lib/auth.php:4269
-#: lib/auth.php:4299 lib/auth.php:4325 lib/auth.php:4338
+#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
+#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
+#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
 msgid "Access Denied!  Login Failed."
 msgstr "Toegang geweigerd, gebruikersaccount is uitgeschakeld."
 
@@ -5992,7 +5993,7 @@ msgstr "U dient ingelogd te zijn om dit deel van Cacti te gebruiken."
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "FATALE FOUT: U dient ingelogd te zijn om dit deel van Cacti te gebruiken."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:4784
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "Log nogmaals in"
@@ -12883,41 +12884,42 @@ msgstr "Web Basic Authentication is geconfigureerd, maar geen gebruikersnaam was
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "%s geautoriseerd door de webserver, maar zowel template als gast gebruikers zijn niet gedefinieerd in Cacti."
 
-#: lib/auth.php:3873 lib/auth.php:4043 lib/auth.php:4309
+#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
+#: lib/auth.php:4651
 msgid "Access Denied!  No password provided by user."
 msgstr "Toegang geweigerd! Geen wachtwoord verstrekt door gebruiker."
 
-#: lib/auth.php:4024 lib/auth.php:4982
+#: lib/auth.php:4273 lib/auth.php:5387
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Toegang geweigerd! Sjabloongebruikers-ID %s bestaat niet.  Neem contact op met uw beheerder."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4720
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Uw Cacti-beheerder heeft complexe wachtwoorden voor aanmeldingen geforceerd en uw huidige Cacti-wachtwoord komt niet overeen met de nieuwe vereisten. Daarom moet u nu uw wachtwoord wijzigen."
 
-#: lib/auth.php:4390
+#: lib/auth.php:4751
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Moet op zijn minst %d karakters lang zijn!"
 
-#: lib/auth.php:4396
+#: lib/auth.php:4757
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Het wachtwoord moet minstens 1 numeriek karakter bevatten!"
 
-#: lib/auth.php:4400
+#: lib/auth.php:4761
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Het wachtwoord moet een combinatie van kleine en hoofdletters bevatten!"
 
-#: lib/auth.php:4406
+#: lib/auth.php:4767
 msgid "Your password must contain at least 1 special character!"
 msgstr "Het wachtwoord moet tenminste 1 vreemd teken bevatten!"
 
-#: lib/auth.php:4777
+#: lib/auth.php:5182
 msgid "Cacti Login Failure"
 msgstr "Cacti log leeggemaakt"
 
-#: lib/auth.php:5064
+#: lib/auth.php:5469
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Verificatie was eerder niet ingesteld. Geprobeerd om lokale authenticatie in te stellen, maar er is geen beheerdersaccount gevonden."
 

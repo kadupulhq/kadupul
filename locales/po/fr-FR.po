@@ -5969,8 +5969,9 @@ msgstr "Aucun modèle d'équipement trouvé"
 
 #: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
 #: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:4031 lib/auth.php:4050 lib/auth.php:4269
-#: lib/auth.php:4299 lib/auth.php:4325 lib/auth.php:4338
+#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
+#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
+#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
 msgid "Access Denied!  Login Failed."
 msgstr "Accès refusé, compte d'utilisateur désactivé."
 
@@ -5986,7 +5987,7 @@ msgstr "Vous devez être connecté pour accéder à cette section de Cacti."
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "FATAL : Vous devez être connecté pour accéder à cette section de Cacti."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:4784
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "Se connecter de nouveau"
@@ -12878,41 +12879,42 @@ msgstr "L'Authentification Web de base a été configurée, mais aucun nom d'uti
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "Les %s authentifiés par le serveur Web, mais les utilisateurs de modèles et les utilisateurs invités ne sont pas définis dans Cacti."
 
-#: lib/auth.php:3873 lib/auth.php:4043 lib/auth.php:4309
+#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
+#: lib/auth.php:4651
 msgid "Access Denied!  No password provided by user."
 msgstr "Accès refusé! Aucun mot de passe fourni par l'utilisateur."
 
-#: lib/auth.php:4024 lib/auth.php:4982
+#: lib/auth.php:4273 lib/auth.php:5387
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Accès refusé ! L'ID utilisateur du modèle %s n'existe pas.  Veuillez contacter votre administrateur."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4720
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Votre administrateur Cacti a forcé des mots de passe complexes pour les connexions et votre mot de passe Cacti actuel ne correspond pas aux nouvelles exigences. Par conséquent, vous devez changer votre mot de passe maintenant."
 
-#: lib/auth.php:4390
+#: lib/auth.php:4751
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Le mot de passe doit contenir au moins %d caractères !"
 
-#: lib/auth.php:4396
+#: lib/auth.php:4757
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Votre mot de passe doit contenir au moins 1 caractère numérique !"
 
-#: lib/auth.php:4400
+#: lib/auth.php:4761
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Votre mot de passe doit contenir un mélange de minuscules et de majuscules !"
 
-#: lib/auth.php:4406
+#: lib/auth.php:4767
 msgid "Your password must contain at least 1 special character!"
 msgstr "Votre mot de passe doit contenir au moins 1 caractère spécial !"
 
-#: lib/auth.php:4777
+#: lib/auth.php:5182
 msgid "Cacti Login Failure"
 msgstr "Cacti Log Cleared"
 
-#: lib/auth.php:5064
+#: lib/auth.php:5469
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "L'authentification n'était pas définie auparavant. Tentative de définition de l'authentification locale, mais aucun compte administrateur n'a été trouvé."
 

@@ -357,6 +357,7 @@ Cacti CHANGELOG
 -security#7027: Detect reused process IDs before treating registry tasks as live
 -security#7484: Escape the stored username on the change password page when the account has no stored password
 -security#7925: Keep mysqladmin credentials in a private option file and restore script-server status output
+-security#GHSA-p3rg-7pc3-2h86: Verify local login passwords once and refuse a password changed after verification
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
 -security: Set the Secure session cookie behind a trusted TLS-terminating proxy
