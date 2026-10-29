@@ -3,8 +3,8 @@
     "name": "cacti_cookie_session_set",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8438,
-        "end_line": 8470,
+        "start_line": 8474,
+        "end_line": 8506,
         "line_count": 33,
         "signature": {
             "parameters": [

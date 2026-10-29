@@ -3,8 +3,8 @@
     "name": "sanitize_sql_column",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9296,
-        "end_line": 9305,
+        "start_line": 9361,
+        "end_line": 9370,
         "line_count": 10,
         "signature": {
             "parameters": [

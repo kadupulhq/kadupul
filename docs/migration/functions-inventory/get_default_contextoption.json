@@ -3,8 +3,8 @@
     "name": "get_default_contextoption",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6944,
-        "end_line": 6984,
+        "start_line": 6980,
+        "end_line": 7020,
         "line_count": 41,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 3, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 4, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],
@@ -40,7 +40,7 @@
                     "name": "fgc_contextoption",
                     "resolved": true,
                     "expression": null,
-                    "line": 6981
+                    "line": 7017
                 }
             ]
         },

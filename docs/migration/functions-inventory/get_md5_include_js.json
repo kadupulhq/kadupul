@@ -3,8 +3,8 @@
     "name": "get_md5_include_js",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7591,
-        "end_line": 7611,
+        "start_line": 7627,
+        "end_line": 7647,
         "line_count": 21,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 33, "core_outside_functions_php": 33, "tests": 8, "plugins": 0},
+        "fan_out": {"core": 34, "core_outside_functions_php": 34, "tests": 8, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

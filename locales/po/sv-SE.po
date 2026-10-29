@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 22:20-0700\n"
+"POT-Creation-Date: 2026-10-29 01:21-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -586,7 +586,7 @@ msgstr "Mall"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2084 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3980 lib/auth.php:4029
+#: lib/api_automation.php:450 lib/auth.php:3981 lib/auth.php:4030
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -617,8 +617,8 @@ msgstr "Alla"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3983
-#: lib/auth.php:4032 lib/auth.php:4078 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3984
+#: lib/auth.php:4033 lib/auth.php:4079 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -841,11 +841,11 @@ msgstr "Kadupul stöder inte längre läget No Authentication. Vänligen kontakt
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Det går inte att fastställa användarens inloggningsrealm eller domän. Vänligen kontakta din systemadministratör."
 
-#: auth_login.php:119 lib/auth.php:4394 lib/auth.php:4400 lib/auth.php:4490
-#: lib/auth.php:4499 lib/auth.php:4546 lib/auth.php:4571 lib/auth.php:4594
-#: lib/auth.php:4634 lib/auth.php:4646 lib/auth.php:4669 lib/auth.php:4792
-#: lib/auth.php:4812 lib/auth.php:5024 lib/auth.php:5066 lib/auth.php:5076
-#: lib/auth.php:5092 lib/auth.php:5106 lib/auth.php:5144
+#: auth_login.php:119 lib/auth.php:4395 lib/auth.php:4401 lib/auth.php:4491
+#: lib/auth.php:4500 lib/auth.php:4547 lib/auth.php:4572 lib/auth.php:4595
+#: lib/auth.php:4635 lib/auth.php:4647 lib/auth.php:4670 lib/auth.php:4793
+#: lib/auth.php:4813 lib/auth.php:5025 lib/auth.php:5067 lib/auth.php:5077
+#: lib/auth.php:5093 lib/auth.php:5107 lib/auth.php:5145
 msgid "Access Denied!  Login Failed."
 msgstr "Åtkomst nekad!  Inloggning misslyckades."
 
@@ -887,13 +887,13 @@ msgstr "Ange ditt användarnamn och lösenord nedan"
 msgid "Password"
 msgstr "Lösenord"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1038
-#: lib/auth.php:1060 lib/auth.php:1070 lib/auth.php:1075 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1039
+#: lib/auth.php:1061 lib/auth.php:1071 lib/auth.php:1076 user_admin.php:2124
 msgid "Local"
 msgstr "Lokal"
 
-#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1071
-#: lib/auth.php:1076
+#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1072
+#: lib/auth.php:1077
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -2391,7 +2391,7 @@ msgid "No Tree Rules Found"
 msgstr "Inga trädregler hittades"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6800
-#: lib/functions.php:6896 lib/functions.php:7557 poller.php:416 poller.php:583
+#: lib/functions.php:6903 lib/functions.php:7593 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3780,7 +3780,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "The Kadupul Poller har inte kört ännu."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8260 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8296 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Åtkomst nekad"
 
@@ -4728,17 +4728,17 @@ msgstr "Du måste vara inloggad för att komma åt denna del av Kadupul."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Du måste vara inloggad för att komma åt denna del av Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5637
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5638
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Logga in igen"
 
-#: include/auth.php:317 lib/functions.php:8261
+#: include/auth.php:317 lib/functions.php:8297
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Om du känner att detta är ett fel. Vänligen kontakta din Kadupul-administratör."
 
-#: include/auth.php:317 lib/functions.php:8261
+#: include/auth.php:317 lib/functions.php:8297
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Du har inte tillåtelse att besöka denna del av Kadupul."
@@ -11487,7 +11487,7 @@ msgstr "Inte uppe"
 msgid "Recovering"
 msgstr "Återhämtar"
 
-#: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3086 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11719,122 +11719,122 @@ msgstr "Ingen Ping- eller SNMP-tillgänglighetskontroll används"
 msgid "New Branch"
 msgstr "Ny filial"
 
-#: lib/auth.php:1077
+#: lib/auth.php:1078
 msgid "Web Basic"
 msgstr "Webb grundläggande"
 
-#: lib/auth.php:2914
+#: lib/auth.php:2915
 msgid "Device:(Hide Disabled)"
 msgstr "Enhet:(Dölj inaktiverad)"
 
-#: lib/auth.php:2932 lib/auth.php:2934 lib/auth.php:2940 lib/auth.php:2942
+#: lib/auth.php:2933 lib/auth.php:2935 lib/auth.php:2941 lib/auth.php:2943
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Graf:(%s%s)"
 
-#: lib/auth.php:2955 lib/auth.php:2961 lib/auth.php:3028 lib/auth.php:3030
-#: lib/auth.php:3034 lib/auth.php:3036
+#: lib/auth.php:2956 lib/auth.php:2962 lib/auth.php:3029 lib/auth.php:3031
+#: lib/auth.php:3035 lib/auth.php:3037
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Enhet:(%s%s)"
 
-#: lib/auth.php:2969 lib/auth.php:2975 lib/auth.php:3044 lib/auth.php:3046
-#: lib/auth.php:3050 lib/auth.php:3052
+#: lib/auth.php:2970 lib/auth.php:2976 lib/auth.php:3045 lib/auth.php:3047
+#: lib/auth.php:3051 lib/auth.php:3053
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Mall:(%s%s)"
 
-#: lib/auth.php:2982
+#: lib/auth.php:2983
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Graf+Anordning+Mall:(%s%s)"
 
-#: lib/auth.php:3019 lib/auth.php:3021
+#: lib/auth.php:3020 lib/auth.php:3022
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Enhet+Template:(%s%s)"
 
-#: lib/auth.php:3065 lib/auth.php:3072 lib/auth.php:3081
+#: lib/auth.php:3066 lib/auth.php:3073 lib/auth.php:3082
 msgid "Restricted By: "
 msgstr "Begränsad av: "
 
-#: lib/auth.php:3069
+#: lib/auth.php:3070
 msgid "Granted By: "
 msgstr "Beviljas av: "
 
-#: lib/auth.php:3076
+#: lib/auth.php:3077
 msgid "Granted"
 msgstr "Beviljade"
 
-#: lib/auth.php:3078 lib/auth.php:3083
+#: lib/auth.php:3079 lib/auth.php:3084
 msgid "Restricted"
 msgstr "Begränsat"
 
-#: lib/auth.php:3317 lib/auth.php:3352
+#: lib/auth.php:3318 lib/auth.php:3353
 msgid "Branch:"
 msgstr "Filial:"
 
-#: lib/auth.php:3326 lib/auth.php:3360 lib/html_tree.php:949
+#: lib/auth.php:3327 lib/auth.php:3361 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "Enhet:"
 
-#: lib/auth.php:4298 lib/auth.php:4389
+#: lib/auth.php:4299 lib/auth.php:4390
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Ditt konto har blivit låst.  Vänligen kontakta din administratör."
 
-#: lib/auth.php:4348
+#: lib/auth.php:4349
 msgid "Access Denied!  Login Disabled."
 msgstr "Åtkomst nekad!  Inloggning avaktiverad."
 
-#: lib/auth.php:4423
+#: lib/auth.php:4424
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web Basic Authentication konfigurerad, men inget användarnamn skickades från webbservern. Kontrollera att du har aktiverat autentisering på webbservern."
 
-#: lib/auth.php:4439
+#: lib/auth.php:4440
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s autentiserad av webbservern, men både Template och Guest Users är inte definierade i Kadupul."
 
-#: lib/auth.php:4606 lib/auth.php:4805
+#: lib/auth.php:4607 lib/auth.php:4806
 msgid "Access Denied!  No password provided by user."
 msgstr "Åtkomst nekad!  Användaren har inte angett något lösenord."
 
-#: lib/auth.php:4778 lib/auth.php:5844
+#: lib/auth.php:4779 lib/auth.php:5845
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Åtkomst nekad!  Mallens användar-ID %s finns inte.  Vänligen kontakta din administratör."
 
-#: lib/auth.php:4786
+#: lib/auth.php:4787
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5139
+#: lib/auth.php:5140
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Din Kadupul-administratör har tvingat fram komplexa lösenord för inloggningar och ditt nuvarande Kadupul-lösenord uppfyller inte de nya kraven.  Därför måste du ändra ditt lösenord nu."
 
-#: lib/auth.php:5179
+#: lib/auth.php:5180
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Lösenordet måste innehålla minst %d tecken!"
 
-#: lib/auth.php:5185
+#: lib/auth.php:5186
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ditt lösenord måste innehålla minst 1 numeriskt tecken!"
 
-#: lib/auth.php:5189
+#: lib/auth.php:5190
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ditt lösenord måste innehålla en blandning av små och stora bokstäver!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5196
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ditt lösenord måste innehålla minst 1 specialtecken!"
 
-#: lib/auth.php:5630
+#: lib/auth.php:5631
 msgid "Kadupul Login Failure"
 msgstr "Felaktig inloggning för Kadupul"
 
-#: lib/auth.php:5930
+#: lib/auth.php:5931
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Autentisering var tidigare inte inställd.  Försökte ställa in lokal autentisering, men inget administrativt konto hittades."
 
@@ -11977,430 +11977,430 @@ msgstr "Matchar inte"
 msgid "System Device"
 msgstr "System Enhet"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:73 lib/data_query.php:475
 msgid "Automation Execution for Data Query complete"
 msgstr "Automation Execution för Data Query komplett"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:76 lib/data_query.php:478
 msgid "Plugin Hooks complete"
 msgstr "Insticksmodul Hooks komplett"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:94
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Kör datafrågeställning [%s]."
 
-#: lib/data_query.php:97
+#: lib/data_query.php:106
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Hittad typ = '%s' [%s]."
 
-#: lib/data_query.php:119
+#: lib/data_query.php:128
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Okänd typ = '%s'."
 
-#: lib/data_query.php:154
+#: lib/data_query.php:163
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "VARNING: Sort Field Association har ändrats.  Problem med ommappning kan uppstå!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:175
 msgid "Update Data Query Sort Cache complete"
 msgstr "Uppdatera data Query Sortera Cache komplett"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:202
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Hittade %s ID:n för lokala data att verifiera"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:308
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Indexförändring upptäckt! AktuelltIndex: %s, FöregåendeIndex: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:332
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Övergående indexborttagning upptäckt! FöregåendeIndex: %s.  Ingen åtgärd vidtagen."
 
-#: lib/data_query.php:326
+#: lib/data_query.php:335
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Borttagning av index upptäckt! FöregåendeIndex: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:375
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Verifiering av %s lokala data-ID:n slutförd"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:378
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "Hittade ändrade %s och %s föräldralösa lokala data-ID:n för att återskapa."
 
-#: lib/data_query.php:372
+#: lib/data_query.php:381
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Klar med omplacering av grafer till deras nya index"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:387 lib/data_query.php:394
 msgid "Done updating Data Source Title Cache"
 msgstr "Klar med uppdatering av datakällans titelcache"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:390 lib/data_query.php:397
 msgid "Done updating Graph Title Cache"
 msgstr "Klar med uppdatering av Graph Title Cache"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:401
 msgid "Index Association with Local Data complete"
 msgstr "Index Association with Local Data komplett"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:407
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Uppdatering Re-Index Cache slutförd. Det fanns %s indexändringar och %s föräldralösa index."
 
-#: lib/data_query.php:402
+#: lib/data_query.php:411
 msgid "Update Poller Cache for Query complete"
 msgstr "Uppdatera Poller Cache för fullständig fråga"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:413
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "Inga indexändringar upptäckta, hoppar över återindexering och återfyllning av Poller-cache"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:467
 msgid "Automation Executing for Data Query complete"
 msgstr "Automation Executing för Data Query komplett"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:470
 msgid "Plugin hooks complete"
 msgstr "Insticksmodul Hooks komplett"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:529
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Kontrollerar för ändring av sorteringsfält.  Inga ändringar upptäckta."
 
-#: lib/data_query.php:525
+#: lib/data_query.php:534
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Detekterat Nytt sorteringsfält: '%s' Gammalt sorteringsfält '%s'"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:555
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "ERROR: Det nya sorteringsfältet är inte lämpligt.  Sorteringsfältet kommer inte att ändras."
 
-#: lib/data_query.php:560
+#: lib/data_query.php:569
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Nytt sorteringsfält validerat.  Sorteringsfältet ska uppdateras."
 
-#: lib/data_query.php:673
+#: lib/data_query.php:682
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Kunde inte hitta XML-filen för datafrågor vid '%s'"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:686
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "XML-fil med datafråga hittades vid '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
 msgid "Error parsing XML file into an array."
 msgstr "Fel vid parsning av XML-fil till en array."
 
-#: lib/data_query.php:705 lib/data_query.php:938
+#: lib/data_query.php:714 lib/data_query.php:947
 msgid "XML file parsed ok."
 msgstr "XML-filen tolkades ok."
 
-#: lib/data_query.php:713 lib/data_query.php:941
+#: lib/data_query.php:722 lib/data_query.php:950
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Ogiltigt fält &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:942
+#: lib/data_query.php:723 lib/data_query.php:951
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Får endast innehålla fälten &lt;direction&gt;input&lt;/direction&gt; eller &lt;direction&gt;input-output&lt;/direction&gt"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:740
 msgid "Data Query returned no indexes."
 msgstr "Data Query returnerade inga index."
 
-#: lib/data_query.php:732
+#: lib/data_query.php:741
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; finns i XML-filen men inga data returneras, 'Index Count Changed' stöds inte"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:744
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Exekverar skript för antal index '%s'"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:747
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Hittat antal index: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:751
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; saknas i XML-filen, \"Index Count Changed\" stöds inte"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:753
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; saknas i XML-filen, \"Index Count Changed\" emuleras genom att räkna arg_index-poster"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:764
 msgid "ERROR: Data Query returned no indexes."
 msgstr "FEL: Data Query returnerade inga index."
 
-#: lib/data_query.php:759
+#: lib/data_query.php:768
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Exekverar skript för lista över index '%s', Index Count: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:770
 msgid "Click to show Data Query output for 'index'"
 msgstr "Klicka för att visa Data Query-utdata för 'index'"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:773
 #, php-format
 msgid "Found index: %s"
 msgstr "Hittat index: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1349
+#: lib/data_query.php:788 lib/data_query.php:1358
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Klicka för att visa Data Query-utdata för fältet '%s'"
 
-#: lib/data_query.php:785
+#: lib/data_query.php:794
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Sorteringsfältet returnerade inga data för fältnamn %s, hoppar över"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:796
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Exekvering av skriptfråga '%s'"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:807 lib/data_query.php:814
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Hittat objekt [%s='%s'] index: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:854 lib/data_query.php:870
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Totalt: %f, Delta: %f, %s"
 
-#: lib/data_query.php:928
+#: lib/data_query.php:937
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Ogiltigt host_id: %s"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:961
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Auto Bulk Walk Storlek vald."
 
-#: lib/data_query.php:974 lib/data_query.php:1033
+#: lib/data_query.php:983 lib/data_query.php:1042
 msgid "Failed to load SNMP session."
 msgstr "Misslyckades med att ladda SNMP-sessionen."
 
-#: lib/data_query.php:984
+#: lib/data_query.php:993
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Testad Bulk Walk Size %d med ett svar på %2.4f."
 
-#: lib/data_query.php:995
+#: lib/data_query.php:1004
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Bulk Walk Size som valts var %d."
 
-#: lib/data_query.php:998
+#: lib/data_query.php:1007
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Spara Bulk Walk Size till enheten."
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:1021
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Bulk Walk Size är fast inställd på %d."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1055
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Exekverar SNMP för att hämta antal index @ '%s' Index Count: %s"
 
-#: lib/data_query.php:1048
+#: lib/data_query.php:1057
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; saknas i XML-filen, \"Index Count Changed\" emuleras genom att räkna oid_index-poster"
 
-#: lib/data_query.php:1051
+#: lib/data_query.php:1060
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Utför SNMP-undersökning för lista över index @ '%s' Index Count: %s"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1064
 msgid "No SNMP data returned"
 msgstr "Ingen SNMP-data returneras"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1069
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Index hittades på OID: '%s' värde: '%s'"
 
-#: lib/data_query.php:1091
+#: lib/data_query.php:1100
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Lista över index filtrerade efter värde @ '%s' Index Count: %s"
 
-#: lib/data_query.php:1095
+#: lib/data_query.php:1104
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Filtrerat index efter värde som hittades på OID: '%s' värde: '%s'"
 
-#: lib/data_query.php:1111
+#: lib/data_query.php:1120
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Filtrering av lista över index @ '%s' Index Count: %s"
 
-#: lib/data_query.php:1115
+#: lib/data_query.php:1124
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Filtrerat index hittades på OID: '%s' värde: '%s'"
 
-#: lib/data_query.php:1135
+#: lib/data_query.php:1144
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Åtgärdar felaktigt \"metod\"-fält för \"%s\" eftersom \"rewrite_index\" eller \"oid_suffix\" är definierat"
 
-#: lib/data_query.php:1142
+#: lib/data_query.php:1151
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Infoga indexdata för fältet '%s' [value='%s']"
 
-#: lib/data_query.php:1147
+#: lib/data_query.php:1156
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Lokaliserat inmatningsfält '%s' [hämta]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1165
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Hittade OID-omskrivningsregel: 's/%s/%s/'"
 
-#: lib/data_query.php:1167
+#: lib/data_query.php:1176
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite vid OID: '%s' ny OID: '%s'"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1181
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Kör SNMP get för data @ '%s' [värde='%s']"
 
-#: lib/data_query.php:1183
+#: lib/data_query.php:1192
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Fält '%s' %s"
 
-#: lib/data_query.php:1244
+#: lib/data_query.php:1253
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Utför SNMP-hämtning för %s oids (%s)"
 
-#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
+#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Sorteringsfältet returnerade inga data för OID[%s], hoppar över."
 
-#: lib/data_query.php:1288
+#: lib/data_query.php:1297
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Hittade resultat för data @ '%s' [value='%s']"
 
-#: lib/data_query.php:1301
+#: lib/data_query.php:1310
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Inställningsresultat för data @ '%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1311
+#: lib/data_query.php:1320
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Utelämnat resultat för data @ '%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1329
+#: lib/data_query.php:1338
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Fick SNMP get-resultat för data @ '%s' [värde='%s'] (index: %s)"
 
-#: lib/data_query.php:1343
+#: lib/data_query.php:1352
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Exekverar SNMP hämtning av data @ '%s' [value='$value']"
 
-#: lib/data_query.php:1351
+#: lib/data_query.php:1360
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Lokaliserat inmatningsfält '%s' [gå]"
 
-#: lib/data_query.php:1402
+#: lib/data_query.php:1411
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Utför SNMP walk för data @ '%s'"
 
-#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
-#: lib/data_query.php:1579
+#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
+#: lib/data_query.php:1588
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Inget index[%s] i value_index_parse, hoppar över."
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1471
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Hittade objekt [%s='%s'] index: %s [från %s]"
 
-#: lib/data_query.php:1504
+#: lib/data_query.php:1513
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Hittat OCTET STRING '%s' avkodat värde: '%s'"
 
-#: lib/data_query.php:1510 lib/data_query.php:1559
+#: lib/data_query.php:1519 lib/data_query.php:1568
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Hittade objekt [%s='%s'] index: %s [från regexp oid parse]"
 
-#: lib/data_query.php:1587
+#: lib/data_query.php:1596
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Hittade objekt [%s='%s'] index: %s [från regexp oid värde parse]"
 
-#: lib/data_query.php:1822
+#: lib/data_query.php:1831
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Felaktigt rewrite_value-objekt hittat, index='%s'"
 
-#: lib/data_query.php:1835
+#: lib/data_query.php:1844
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Kunde inte tolka översättningskartan (rewrite_value)"
 
-#: lib/data_query.php:1859
+#: lib/data_query.php:1868
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
-#: lib/data_query.php:1973
+#: lib/data_query.php:1982
 msgid "Update graph data query cache complete"
 msgstr "Uppdatering av grafdatafrågans cache slutförd"
 
-#: lib/data_query.php:1992
+#: lib/data_query.php:2001
 msgid "Re-Indexing Data Query complete"
 msgstr "Omindexering av datafrågan komplett"
 
-#: lib/data_query.php:2144
+#: lib/data_query.php:2153
 msgid "Unknown Index"
 msgstr "Okänt index"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2764
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Du måste välja en XML-utdatakolumn för datakällan '%s' och växla kryssrutan till höger om den"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2770
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Din Graph Template har inte Data Templates i bruk.  Vänligen korrigera din grafmall"
 
@@ -12621,28 +12621,28 @@ msgstr "Meddelande ej skickat på grund av ping-fel."
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul inaktiverade insticksmodul %s på grund av följande fel: %s!  Se Kadupuls loggfil för mer information."
 
-#: lib/functions.php:6896
+#: lib/functions.php:6903
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "VARNING: PollerID:%s har ett ogiltigt värdnamn:%s.  Är det inte nåbart via DNS!"
 
-#: lib/functions.php:7320 lib/functions.php:7322
+#: lib/functions.php:7356 lib/functions.php:7358
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7320 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7356 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Version %s %s"
 
-#: lib/functions.php:7322
+#: lib/functions.php:7358
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7557
+#: lib/functions.php:7593
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "VARNING:  Key Kadupul Include File %s saknas.  Vänligen hitta och ersätt den här filen"
