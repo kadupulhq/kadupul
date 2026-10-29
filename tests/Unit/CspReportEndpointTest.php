@@ -87,9 +87,35 @@ test('validator accepts Reporting API body format', function () {
 
 /* ---- rate-limit buckets ---- */
 
+$cspSavedServer = array();
+
+beforeEach(function () use (&$cspSavedServer) {
+	$cspSavedServer = $_SERVER;
+	$GLOBALS['csp_endpoint_owned_directories'] = array();
+});
+
+afterEach(function () use (&$cspSavedServer) {
+	foreach ($GLOBALS['csp_endpoint_owned_directories'] as $directory) {
+		$entries = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
+		foreach ($entries as $entry) {
+			if ($entry->isLink() || !$entry->isDir()) {
+				unlink($entry->getPathname());
+			} else {
+				rmdir($entry->getPathname());
+			}
+		}
+		rmdir($directory);
+	}
+	unset($GLOBALS['csp_endpoint_owned_directories']);
+	$_SERVER = $cspSavedServer;
+});
+
 function _csp_bucket_base() {
 	$base = sys_get_temp_dir() . '/kadupul-csp-test-' . bin2hex(random_bytes(4));
-	mkdir($base, 0700);
+	if (!mkdir($base, 0700)) {
+		throw new RuntimeException('Unable to create owned CSP test directory');
+	}
+	$GLOBALS['csp_endpoint_owned_directories'][] = $base;
 
 	return $base;
 }
@@ -112,8 +138,10 @@ test('rate limiter refuses a bucket directory other users can write', function (
 	chmod($base . '/kadupul_csp', 0777);
 	$_SERVER['REMOTE_ADDR'] = '192.0.2.11';
 
+	/* Logging uncapped here would let anyone flood the log once a local user
+	 * loosened the directory, so the report is dropped instead. */
 	for ($i = 0; $i < 35; $i++) {
-		expect(csp_report_should_log($base))->toBeTrue();
+		expect(csp_report_should_log($base))->toBeFalse();
 	}
 
 	expect(glob($base . '/kadupul_csp/*'))->toBe([]);
@@ -125,6 +153,34 @@ test('rate limiter refuses a symlinked bucket directory', function () {
 	symlink($target, $base . '/kadupul_csp');
 	$_SERVER['REMOTE_ADDR'] = '192.0.2.12';
 
-	expect(csp_report_should_log($base))->toBeTrue();
+	expect(csp_report_should_log($base))->toBeFalse();
 	expect(glob($target . '/*'))->toBe([]);
+});
+
+test('bucket sweep removes only expired counters this endpoint created', function () {
+	$base = _csp_bucket_base();
+	$dir  = $base . '/kadupul_csp';
+	mkdir($dir, 0700);
+	$expired = $dir . '/' . str_repeat('a', 64);
+	$current = $dir . '/' . str_repeat('b', 64);
+	$foreign = $dir . '/operator-notes.txt';
+	$target  = $base . '/outside';
+	$link    = $dir . '/' . str_repeat('c', 64);
+
+	foreach (array($expired, $current, $foreign, $target) as $file) {
+		file_put_contents($file, '1');
+	}
+	symlink($target, $link);
+	touch($expired, time() - 600);
+	touch($foreign, time() - 600);
+	touch($target, time() - 600);
+
+	csp_report_prune_buckets($dir, time() - 120);
+
+	clearstatcache();
+	expect(file_exists($expired))->toBeFalse();
+	expect(file_exists($current))->toBeTrue();
+	expect(file_exists($foreign))->toBeTrue();
+	expect(is_link($link))->toBeTrue();
+	expect(file_exists($target))->toBeTrue();
 });

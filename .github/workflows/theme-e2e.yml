@@ -19,7 +19,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Decides whether a pull request can affect the jobs below; every other
+  # event runs them.
+  scope:
+    name: Change scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.scope.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The test merge and both of its parents.
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
+      - name: Classify the change
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash tests/tools/ci_change_scope.sh
+
   theme-e2e:
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     timeout-minutes: 45
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
 
@@ -30,13 +57,13 @@ jobs:
           persist-credentials: false
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
 
       - name: Setup Node
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version-file: .node-version
           cache: 'npm'
@@ -69,16 +96,8 @@ jobs:
         run: node node_modules/@playwright/test/cli.js test --config=playwright.config.js vendor-assets.spec.js billboard.spec.js legacy-js-partial.spec.js
         working-directory: tests/e2e
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install PHP dependencies for asset compilation
         run: composer install --no-interaction --no-progress --prefer-dist
@@ -106,6 +125,7 @@ jobs:
     # Always reports: a required check reads a skipped job as passing.
     if: ${{ !cancelled() }}
     needs:
+      - scope
       - theme-e2e
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -120,5 +140,5 @@ jobs:
       - name: Require every gating job to pass
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
-          ALLOWED_SKIPS: ''
+          ALLOWED_SKIPS: ${{ needs.scope.result == 'success' && needs.scope.outputs.code == 'false' && 'theme-e2e' || '' }}
         run: bash tests/tools/require_job_results.sh

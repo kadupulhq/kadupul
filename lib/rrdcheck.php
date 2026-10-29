@@ -150,6 +150,17 @@ function do_rrdcheck($thread_id = 1)
 
             $file = $rrdval['data_source_path'];
 
+            if (!rrd_check_path($file, null, 'RRDCHECK')) {
+                db_execute_prepared(
+                    'INSERT INTO rrdcheck
+					(local_data_id, test_date, message)
+					VALUES	(?,NOW(),?)',
+                    array($local_data_id, 'RRDfile path is outside the RRA directory and was not checked')
+                );
+
+                continue;
+            }
+
             if ($use_proxy) {
                 $file_exists = rrdtool_execute(['file_exists', $file], true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
             } else {

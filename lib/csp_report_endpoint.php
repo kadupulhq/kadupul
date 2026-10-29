@@ -152,14 +152,23 @@ function csp_report_should_log(string $base = ''): bool
      * the shared temp directory lets another local user redirect the write. Keep
      * buckets in a directory only this user can write, and refuse any other.
      * Mode bits alone do not prove that: an ACL can let this user write another
-     * user's 0700 directory, so the owner has to match as well. */
+     * user's 0700 directory, so the owner has to match as well.
+     *
+     * When the directory cannot be trusted the report is dropped, not logged
+     * uncapped: a local user can arrange that condition on purpose, and an
+     * uncapped unauthenticated endpoint lets anyone fill the log. */
     if (!is_dir($dir)) {
         @mkdir($dir, 0700);
     }
 
     clearstatcache(true, $dir);
     if (is_link($dir) || !is_dir($dir) || !is_writable($dir) || (fileperms($dir) & 0077) !== 0 || fileowner($dir) !== csp_report_process_uid()) {
-        return true;
+        return false;
+    }
+
+    // One request in twenty sweeps; each one paying for a directory listing buys nothing.
+    if (random_int(1, 20) === 1) {
+        csp_report_prune_buckets($dir, time() - 120);
     }
 
     $bucket = $dir . '/' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
@@ -167,7 +176,7 @@ function csp_report_should_log(string $base = ''): bool
     // The bucket name is a SHA-256 hex digest of the client IP, so no request data reaches the path.
     $fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
     if ($fh === false) {
-        return true;
+        return false;
     }
 
     $logged = false;
@@ -186,13 +195,41 @@ function csp_report_should_log(string $base = ''): bool
     return $logged;
 }
 
+/* Each address and minute leaves one bucket behind, so without a sweep a
+ * reporting host accumulates files until it runs out of inodes. Only bucket
+ * names this endpoint creates are removed. */
+function csp_report_prune_buckets(string $dir, int $cutoff): void
+{
+    $entries = @scandir($dir);
+    if ($entries === false) {
+        return;
+    }
+
+    foreach ($entries as $entry) {
+        if (preg_match('/\A[0-9a-f]{64}\z/', $entry) !== 1) {
+            continue;
+        }
+
+        $path = $dir . '/' . $entry;
+        clearstatcache(true, $path);
+        if (is_link($path) || !is_file($path)) {
+            continue;
+        }
+
+        $mtime = @filemtime($path);
+        if ($mtime !== false && $mtime < $cutoff) {
+            @unlink($path);
+        }
+    }
+}
+
 /* --- Entry point ---------------------------------------------------------- */
 
 if (defined('CACTI_CSP_REPORT_TEST_MODE')) {
     return;
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     header('Allow: POST');
     exit;
@@ -207,10 +244,23 @@ if (isset($_SERVER['CONTENT_TYPE'])) {
     $contentType = $_SERVER['HTTP_CONTENT_TYPE'];
 }
 
-/* Cap the read at 16 KB; file_get_contents does not honour a length argument
- * for php://input on all SAPIs, so we slice after the fact. */
-$rawBody = (string) file_get_contents('php://input', false, null, 0, 16385);
-$rawBody = substr($rawBody, 0, 16384);
+/* Read at most one byte past the 16 KB cap. That extra byte is what lets the
+ * size check below reject an oversized body; slicing back to the cap made the
+ * check unreachable. The length argument to file_get_contents() is not honoured
+ * for php://input on every SAPI, so a bounded loop limits what is buffered. */
+$rawBody = '';
+$input = @fopen('php://input', 'rb');
+if ($input !== false) {
+    while (!feof($input) && strlen($rawBody) <= 16384) {
+        $chunk = fread($input, min(8192, 16385 - strlen($rawBody)));
+        if ($chunk === false || $chunk === '') {
+            break;
+        }
+        $rawBody .= $chunk;
+    }
+    fclose($input);
+}
+$rawBody = substr($rawBody, 0, 16385);
 
 $result = csp_report_validate_payload(
     array('CONTENT_TYPE' => $contentType),

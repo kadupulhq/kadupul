@@ -320,6 +320,88 @@ final class PackageSigningTest extends TestCase
         self::assertFalse(PackageSigning\package_validate_signature($untrusted));
     }
 
+    public function testUploadTrustGateWorksWithoutTheTrustTable(): void
+    {
+        $trusted = $this->directory . '/trusted.xml.gz';
+        $untrusted = $this->directory . '/untrusted.xml.gz';
+        $input = $this->write('unsigned.xml.gz', $this->unsigned());
+        $this->sign($input, $trusted, self::pem(self::key(4096)));
+        $this->sign($input, $untrusted, self::pem(self::key(2048)));
+
+        self::assertTrue(PackageSigning\package_validate_signature($trusted));
+        self::assertFalse(PackageSigning\package_validate_signature($untrusted));
+        self::assertSame([], $GLOBALS['package_signing']['queries'] ?? []);
+        self::assertStringNotContainsString('SQL Error', $this->logs());
+
+        $GLOBALS['package_signing']['trusted_keys'] = [self::publicKey(self::key(2048))];
+        self::assertTrue(PackageSigning\package_validate_signature($untrusted));
+    }
+
+    public function testTrustedKeyLookupFallsBackOnlyToAnExistingTable(): void
+    {
+        $operator = self::publicKey(self::key(2048));
+
+        self::assertFalse(PackageSigning\package_public_key_is_trusted(''));
+        self::assertTrue(PackageSigning\package_public_key_is_trusted(PackageSigning\get_public_key_sha256()));
+        self::assertTrue(PackageSigning\package_public_key_is_trusted(self::publicKey(self::key(4096))));
+        self::assertFalse(PackageSigning\package_public_key_is_trusted($operator));
+        self::assertSame([], $GLOBALS['package_signing']['queries'] ?? []);
+
+        $GLOBALS['package_signing']['trusted_keys'] = [$operator];
+        self::assertTrue(PackageSigning\package_public_key_is_trusted($operator));
+        self::assertFalse(PackageSigning\package_public_key_is_trusted(self::publicKey(self::key(3072))));
+        self::assertStringNotContainsString('SQL Error', $this->logs());
+    }
+
+    public function testTheRepositoryPreviewReturnsOnlyATrustedShippedKey(): void
+    {
+        $trusted = $this->directory . '/trusted.xml.gz';
+        $untrusted = $this->directory . '/untrusted.xml.gz';
+        $input = $this->write('unsigned.xml.gz', $this->unsigned());
+        $this->sign($input, $trusted, self::pem(self::key(4096)));
+        $this->sign($input, $untrusted, self::pem(self::key(2048)));
+
+        self::assertSame(self::publicKey(self::key(4096)), PackageSigning\import_validate_public_key($trusted));
+        self::assertSame(PackageSigning\get_public_key(), PackageSigning\import_validate_public_key($untrusted));
+
+        $GLOBALS['package_signing']['trusted_keys'] = [self::publicKey(self::key(2048))];
+        self::assertSame(self::publicKey(self::key(2048)), PackageSigning\import_validate_public_key($untrusted));
+    }
+
+    public function testThePreviewDiffRefusesAPackageSignedByAnUntrustedKeyWithoutWarnings(): void
+    {
+        $output = $this->directory . '/signed.xml.gz';
+        $this->sign($this->write('unsigned.xml.gz', $this->unsigned()), $output, self::pem(self::key(2048)));
+        $_SESSION['sess_import_package'] = file_get_contents($output);
+        $warnings = [];
+        set_error_handler(static function (int $level, string $message) use (&$warnings): bool {
+            $warnings[] = $message;
+
+            return true;
+        });
+        try {
+            $contents = PackageSigning\package_file_get_contents('scripts/ss_test.php');
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertFalse($contents);
+        self::assertSame([], $warnings);
+        self::assertStringContainsString('not a built-in trusted key', $this->logs());
+    }
+
+    public function testThePreviewDiffReadsASingleFilePackage(): void
+    {
+        $output = $this->directory . '/signed.xml.gz';
+        $xml = '<xml><info><name>Single</name></info><files>'
+            . '<file><name>scripts/ss_test.php</name><data>' . base64_encode('<?php echo 1;') . '</data></file>'
+            . '</files></xml>';
+        $this->sign($this->write('single.xml.gz', $xml), $output, self::pem(self::key(4096)));
+        $_SESSION['sess_import_package'] = file_get_contents($output);
+
+        self::assertSame('<?php echo 1;', PackageSigning\package_file_get_contents('scripts/ss_test.php'));
+    }
+
     /** @return iterable<string, array{string}> */
     public static function bundledPackages(): iterable
     {

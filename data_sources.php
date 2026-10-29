@@ -1509,28 +1509,8 @@ function data_source_path_is_allowed($path)
         return false;
     }
 
-    $relative = substr($candidate, strlen($base) + 1);
-    if ($relative === '' || preg_match('#(^|/)\.\.?(/|$)#', $relative)) {
-        return false;
-    }
-
-    $resolved = realpath($candidate);
-    if ($resolved !== false) {
-        return cacti_path_is_within($resolved, $base);
-    }
-
-    if (is_link($candidate)) {
-        return false;
-    }
-
-    $parent = dirname($candidate);
-    while (!file_exists($parent) && !is_link($parent) && $parent !== dirname($parent)) {
-        $parent = dirname($parent);
-    }
-
-    $resolved_parent = realpath($parent);
-
-    return $resolved_parent !== false && cacti_path_is_within($resolved_parent, $base);
+    // The poller, graphing and maintenance paths apply the same rule.
+    return rrd_path_is_contained($candidate, $base);
 }
 
 /**
