@@ -44,7 +44,7 @@ $database_sessions = array('native:0:auth' => $pdo);
 $_SESSION = array('sess_user_id' => 1);
 function group_probe_sql($sql)
 {
-    return preg_replace('/\b(user_auth(?:_group_members|_group_realm|_group_perms|_group)?)\b/', $GLOBALS['prefix'] . '_$1', $sql);
+    return preg_replace('/\b(user_auth(?:_group_members|_group_realm|_group_perms|_group|_cache)?)\b/', $GLOBALS['prefix'] . '_$1', $sql);
 }
 function db_begin_transaction()
 {

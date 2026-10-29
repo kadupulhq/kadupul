@@ -133,6 +133,7 @@ if ($nativeSqlite) {
 $epochColumn = $nativeSqlite ? 'INTEGER' : 'INT UNSIGNED';
 $db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, reset_perms ' . $epochColumn . ' DEFAULT 0)');
 $db->exec('INSERT INTO user_auth (id) VALUES (41), (42), (43), (44)');
+$db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, token VARCHAR(64))');
 $db->exec('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY)');
 $db->exec('INSERT INTO user_auth_group VALUES (42), (43)');
 foreach (array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates') as $policy) {

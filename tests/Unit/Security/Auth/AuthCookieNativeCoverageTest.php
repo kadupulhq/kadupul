@@ -46,6 +46,7 @@ final class AuthCookieNativeCoverageTest extends TestCase
             'legacy numeric principal' => array(array('identity' => '42'), 42, 0),
             'domain numeric principal' => array(array('identity' => '43', 'realm' => '3,'), 43, 3),
             'current generation token' => array(array('token' => 'v1.' . str_repeat('a', 64) . '.' . hash_hmac('sha256', str_repeat('a', 64), hash('sha256', ''))), 42, 0),
+            'token written within the cookie lifetime' => array(array('age_days' => 29), 42, 0),
         );
     }
 
@@ -88,6 +89,8 @@ final class AuthCookieNativeCoverageTest extends TestCase
             'cookie absent' => array(array('missing_cookie' => true)),
             'revoked generation token' => array(array('token' => 'v1.' . str_repeat('a', 64) . '.' . hash_hmac('sha256', str_repeat('a', 64), str_repeat('b', 64)))),
             'malformed generation token' => array(array('token' => 'v1.invalid')),
+            // GHSA-xq26-f282-f998: a copied cookie must not outlive the 30-day cookie it came from.
+            'token older than the cookie lifetime' => array(array('age_days' => 31)),
         );
     }
 

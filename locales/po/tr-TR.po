@@ -589,7 +589,7 @@ msgstr "Şablon"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
+#: lib/api_automation.php:450 lib/auth.php:3991 lib/auth.php:4040
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -620,8 +620,8 @@ msgstr "Herhangi"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
-#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3994
+#: lib/auth.php:4043 lib/auth.php:4089 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -846,11 +846,11 @@ msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 
-#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
-#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
-#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
-#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
-#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
+#: auth_login.php:119 lib/auth.php:4405 lib/auth.php:4411 lib/auth.php:4501
+#: lib/auth.php:4510 lib/auth.php:4557 lib/auth.php:4582 lib/auth.php:4605
+#: lib/auth.php:4645 lib/auth.php:4657 lib/auth.php:4680 lib/auth.php:4803
+#: lib/auth.php:4823 lib/auth.php:5035 lib/auth.php:5077 lib/auth.php:5087
+#: lib/auth.php:5103 lib/auth.php:5117 lib/auth.php:5155
 msgid "Access Denied!  Login Failed."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
@@ -892,13 +892,13 @@ msgstr "Kullanıcı adınızı ve şifrenizi aşağıya girin"
 msgid "Password"
 msgstr "Şifre"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1039
-#: lib/auth.php:1061 lib/auth.php:1071 lib/auth.php:1076 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1044
+#: lib/auth.php:1066 lib/auth.php:1076 lib/auth.php:1081 user_admin.php:2124
 msgid "Local"
 msgstr "Yerel"
 
-#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1072
-#: lib/auth.php:1077
+#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1077
+#: lib/auth.php:1082
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -4748,7 +4748,7 @@ msgstr "Bu Kadupul erişmek için giriş yapmalısınız."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Bu Kadupul alanına erişmek için giriş yapmalısınız."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5657
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Tekrar giriş yap"
@@ -11536,7 +11536,7 @@ msgstr "Up değil"
 msgid "Recovering"
 msgstr "kurtarma"
 
-#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11768,124 +11768,124 @@ msgstr "Ping veya SNMP Kullanılabilirliği Yok Giriş Yapın"
 msgid "New Branch"
 msgstr "Yeni dal"
 
-#: lib/auth.php:1078
+#: lib/auth.php:1083
 msgid "Web Basic"
 msgstr "Web Temel"
 
-#: lib/auth.php:2920
+#: lib/auth.php:2925
 msgid "Device:(Hide Disabled)"
 msgstr "Cihaz Devre Dışı"
 
-#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
+#: lib/auth.php:2943 lib/auth.php:2945 lib/auth.php:2951 lib/auth.php:2953
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Grafik:(%s%sn)"
 
-#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
-#: lib/auth.php:3040 lib/auth.php:3042
+#: lib/auth.php:2966 lib/auth.php:2972 lib/auth.php:3039 lib/auth.php:3041
+#: lib/auth.php:3045 lib/auth.php:3047
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Cihaz:(%s%s)"
 
-#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
-#: lib/auth.php:3056 lib/auth.php:3058
+#: lib/auth.php:2980 lib/auth.php:2986 lib/auth.php:3055 lib/auth.php:3057
+#: lib/auth.php:3061 lib/auth.php:3063
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Şablon:(%s%s)"
 
-#: lib/auth.php:2988
+#: lib/auth.php:2993
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Grafik+Cihaz+Şablon:(%s%s)"
 
-#: lib/auth.php:3025 lib/auth.php:3027
+#: lib/auth.php:3030 lib/auth.php:3032
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Cihaz+Şablon:(%s%s)"
 
-#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
+#: lib/auth.php:3076 lib/auth.php:3083 lib/auth.php:3092
 msgid "Restricted By: "
 msgstr "Kısıtlı"
 
-#: lib/auth.php:3075
+#: lib/auth.php:3080
 msgid "Granted By: "
 msgstr "Tarafından verilen:"
 
-#: lib/auth.php:3082
+#: lib/auth.php:3087
 msgid "Granted"
 msgstr "Verilen"
 
-#: lib/auth.php:3084 lib/auth.php:3089
+#: lib/auth.php:3089 lib/auth.php:3094
 msgid "Restricted"
 msgstr "Kısıtlı"
 
-#: lib/auth.php:3323 lib/auth.php:3358
+#: lib/auth.php:3328 lib/auth.php:3363
 msgid "Branch:"
 msgstr "Şube:"
 
-#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
+#: lib/auth.php:3337 lib/auth.php:3371 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "Cihaz:"
 
-#: lib/auth.php:4304 lib/auth.php:4395
+#: lib/auth.php:4309 lib/auth.php:4400
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 
-#: lib/auth.php:4354
+#: lib/auth.php:4359
 msgid "Access Denied!  Login Disabled."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
-#: lib/auth.php:4429
+#: lib/auth.php:4434
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web Temel Kimlik Doğrulaması yapılandırıldı, ancak web sunucusundan kullanıcı adı geçilmedi. Lütfen web sunucusunda kimlik doğrulamanın etkin olduğundan emin olun."
 
-#: lib/auth.php:4445
+#: lib/auth.php:4450
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s Web Sunucusu tarafından doğrulandı, ancak hem Şablon hem de Konuk Kullanıcılar Kadupul&#39;de tanımlanmadı."
 
-#: lib/auth.php:4612 lib/auth.php:4811
+#: lib/auth.php:4617 lib/auth.php:4816
 msgid "Access Denied!  No password provided by user."
 msgstr "Erişim reddedildi! Kullanıcı tarafından sağlanan şifre yok."
 
-#: lib/auth.php:4784 lib/auth.php:5850
+#: lib/auth.php:4789 lib/auth.php:5864
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Erişim Reddedildi!  Şablon kullanıcı kimliği %s mevcut değil.  Lütfen Yöneticinizle iletişime geçin."
 
-#: lib/auth.php:4792
+#: lib/auth.php:4797
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5145
+#: lib/auth.php:5150
 #, fuzzy
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
 
-#: lib/auth.php:5185
+#: lib/auth.php:5190
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Şifre en az% d karakter olmalı!"
 
-#: lib/auth.php:5191
+#: lib/auth.php:5196
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
 
-#: lib/auth.php:5195
+#: lib/auth.php:5200
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
 
-#: lib/auth.php:5201
+#: lib/auth.php:5206
 msgid "Your password must contain at least 1 special character!"
 msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
-#: lib/auth.php:5636
+#: lib/auth.php:5650
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul Günlüğü Temizlendi"
 
-#: lib/auth.php:5936
+#: lib/auth.php:5950
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Kimlik doğrulama önceden ayarlanmamıştı. Yerel Kimlik Doğrulamaya ayarlanmaya çalışıldı, ancak Yönetici hesabı bulunamadı."
 

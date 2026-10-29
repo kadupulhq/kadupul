@@ -11,7 +11,7 @@ test('permission invalidation works without an authenticated operator session', 
     $program .= <<<'PHP'
 $_SESSION=json_decode($argv[1],true);
 $writes=array();
-function db_execute_prepared($sql,$params){$GLOBALS['writes'][]=$params;return true;}
+function db_execute_prepared($sql,$params){$GLOBALS['writes'][]=array(preg_replace('/\s+/',' ',$sql),$params);return true;}
 function kill_session_var($name){unset($_SESSION[$name]);}
 reset_user_perms(42);
 print json_encode(array('writes'=>$writes,'session'=>$_SESSION));
@@ -23,7 +23,9 @@ PHP;
     fclose($pipes[2]);
     expect(proc_close($worker))->toBe(0)->and($error)->toBe('');
     $result = json_decode($output, true);
-    expect($result['writes'])->toBe(array(array(42)));
+    expect($result['writes'])->toHaveCount(2)
+        ->and($result['writes'][0])->toBe(array('DELETE FROM user_auth_cache WHERE user_id = ?', array(42)))
+        ->and($result['writes'][1][1])->toBe(array(42));
     if (($session['sess_user_id'] ?? null) === 42) {
         expect($result['session'])->not->toHaveKey('sess_user_realms');
     } else {
