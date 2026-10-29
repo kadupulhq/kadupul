@@ -131,6 +131,15 @@ locked 4.19.1 and updates compatible test dependency patches.
   checked for this batch. An archived package having no newer release is not a
   security endorsement.
 
+jQuery Migrate 4.0.2 loads on every page directly after jQuery. jQuery 4 removed
+helpers such as `$.isFunction`, `$.trim`, `$.isNumeric` and `$.isWindow`, which
+the bundled timepicker, colorpicker, sparkline, zoom, tableDnD and tablesorter
+widgets still call, as do plugins written for Cacti 1.2. The manifest adds
+`jQuery.migrateMute = true` to the built file, so deprecated calls are recorded in
+`jQuery.migrateMessages` without console warnings; set it to `false` in the
+browser console to see them. Remove Migrate once the bundled widgets no longer
+use the removed APIs and supported plugins have had a release to migrate.
+
 Upstream references: [phpseclib migration](https://phpseclib.com/docs/intro/migrating),
 [Pest upgrade guide](https://pestphp.com/docs/upgrade-guide),
 [jQuery 4 migration](https://jquery.com/upgrade-guide/4.0/),

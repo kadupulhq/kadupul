@@ -286,7 +286,9 @@ switch ($type) {
 					break; // Leave the row queued, then unregister this child below.
 				}
 				try {
-					if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
+					if (!rrd_check_path($data['rrd_path'], null, 'RFLOAT')) {
+						$exit_status = 1;
+					} elseif (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
 						db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
 							WHERE local_data_id = ?',
 							array($data['local_data_id']));

@@ -3,8 +3,8 @@
     "name": "get_debug_prefix",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7791,
-        "end_line": 7797,
+        "start_line": 7827,
+        "end_line": 7833,
         "line_count": 7,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

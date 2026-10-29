@@ -2025,6 +2025,22 @@ CREATE TABLE host_template_snmp_query (
 --
 
 --
+-- Table structure for table `kadupul_messenger_messages`
+--
+
+CREATE TABLE kadupul_messenger_messages (
+  id bigint NOT NULL auto_increment,
+  body longtext NOT NULL,
+  headers longtext NOT NULL,
+  queue_name varchar(190) NOT NULL,
+  created_at datetime NOT NULL,
+  available_at datetime NOT NULL,
+  delivered_at datetime default NULL,
+  PRIMARY KEY (id),
+  KEY IDX_7CB5BDEEFB7336F0E3BD61CE16BA31DBBF396750 (queue_name, available_at, delivered_at, id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
 -- Table structure for table `kadupul_metric_binding`
 --
 
@@ -2292,10 +2308,13 @@ CREATE TABLE `poller_output_boost_local_data_ids` (
 -- Table structure for table `poller_output_boost_processes`
 --
 
-CREATE TABLE `poller_output_boost_processes` (
-  `sock_int_value` bigint(20) unsigned NOT NULL auto_increment,
-  `status` varchar(255) default NULL,
-  PRIMARY KEY (`sock_int_value`)
+CREATE TABLE poller_output_boost_processes (
+  sock_int_value bigint(20) unsigned NOT NULL auto_increment,
+  run_id char(32) default NULL,
+  process_handler int(10) unsigned NOT NULL default 0,
+  status varchar(255) default NULL,
+  PRIMARY KEY (sock_int_value),
+  UNIQUE KEY run_partition (run_id, process_handler)
 ) ENGINE=MEMORY;
 
 --

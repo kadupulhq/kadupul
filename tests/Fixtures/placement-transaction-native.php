@@ -95,6 +95,11 @@ function __(string $message, mixed ...$arguments): string
     return $arguments ? sprintf($message, ...$arguments) : $message;
 }
 
+function __esc(string $message, mixed ...$arguments): string
+{
+    return htmlspecialchars(__($message, ...$arguments), ENT_QUOTES);
+}
+
 function sql_save(array $values, string $table): int|false
 {
     unset($values['id']);

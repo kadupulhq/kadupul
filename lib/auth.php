@@ -118,8 +118,6 @@ function clear_auth_cookie($db = false, $expire = null, $remembered = null)
         if ($user_id > 0) {
             $secret = hash('sha512', $token, false);
 
-            $expire();
-
             if (!is_array($revoked) || $revoked['user_id'] != $user_id || $revoked['hash'] !== $secret) {
                 $execute(
                     'DELETE FROM user_auth_cache
@@ -128,6 +126,9 @@ function clear_auth_cookie($db = false, $expire = null, $remembered = null)
                     array($user_id, $secret)
                 );
             }
+
+            // Revoke the server-side credential before clearing browser state.
+            $expire();
         }
     }
 }

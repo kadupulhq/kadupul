@@ -7,6 +7,7 @@
  */
 
 require(__DIR__ . '/include/cli_check.php');
+require_once($config['base_path'] . '/lib/rrd.php');
 
 ini_set('memory_limit', '-1');
 
@@ -225,6 +226,10 @@ function kill_spikes($templates, &$found) {
 
 	if (cacti_sizeof($rrdfiles)) {
 		foreach($rrdfiles as $f) {
+			if (!rrd_check_path($f, null, 'SPIKEKILL')) {
+				continue;
+			}
+
 			debug("Removing Spikes from '$f'");
 
 			$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
