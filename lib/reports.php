@@ -171,14 +171,14 @@ function reports_add_devices_locked($report_id, $device_ids, $timespan, $align)
                         )
                     );
 
-                    raise_message('reports_add_device_' . $device_id, __('Device \'%s\' successfully added to Report.', $description), MESSAGE_LEVEL_INFO);
+                    raise_message('reports_add_device_' . $device_id, __esc('Device \'%s\' successfully added to Report.', $description), MESSAGE_LEVEL_INFO);
                 } else {
                     $errors++;
                     raise_message('reports_device_not_found', __('Device not found! Unable to add to Report'), MESSAGE_LEVEL_ERROR);
                 }
             } else {
                 $errors++;
-                raise_message('reports_no_add_device_' . $device_id, __('Device \'%s\' not added to Report as it already exists on report.', $description), MESSAGE_LEVEL_WARN);
+                raise_message('reports_no_add_device_' . $device_id, __esc('Device \'%s\' not added to Report as it already exists on report.', $description), MESSAGE_LEVEL_WARN);
             }
         }
 
@@ -751,41 +751,44 @@ function reports_tree_has_graphs($tree_id, $branch_id, $effective_user, $search_
     );
 
     if ($device_id > 0) {
-        $graphs = array_rekey(db_fetch_assoc("SELECT gl.id
+        $graphs = array_rekey(db_fetch_assoc_prepared("SELECT gl.id
 			FROM graph_local AS gl
 			INNER JOIN graph_templates_graph AS gtg
 			ON gtg.local_graph_id=gl.id
-			WHERE gl.host_id = $device_id
-			$sql_swhere"), 'id', 'id');
+			WHERE gl.host_id = ?
+			$sql_swhere", array($device_id)), 'id', 'id');
     } else {
+        $parent_params = array();
+
         if ($branch_id > 0) {
-            $sql_where .= ' AND gti.parent=' . $branch_id;
+            $sql_where .= ' AND gti.parent = ?';
+            $parent_params[] = $branch_id;
         } else {
             $sql_where .= ' AND parent=0';
         }
 
-        $graphs = array_rekey(db_fetch_assoc("SELECT gl.id
+        $graphs = array_rekey(db_fetch_assoc_prepared("SELECT gl.id
 			FROM graph_local AS gl
 			INNER JOIN graph_tree_items AS gti
 			ON gti.local_graph_id=gl.id
 			INNER JOIN graph_templates_graph AS gtg
 			ON gtg.local_graph_id=gti.local_graph_id
 			WHERE gti.local_graph_id>0
-			AND graph_tree_id=$tree_id
+			AND graph_tree_id = ?
 			$sql_where
-			$sql_swhere"), 'id', 'id');
+			$sql_swhere", array_merge(array($tree_id), $parent_params)), 'id', 'id');
 
         /* get host graphs first */
-        $graphs = array_merge($graphs, array_rekey(db_fetch_assoc("SELECT gl.id
+        $graphs = array_merge($graphs, array_rekey(db_fetch_assoc_prepared("SELECT gl.id
 			FROM graph_local AS gl
 			INNER JOIN graph_tree_items AS gti
 			ON gl.host_id=gti.host_id
 			INNER JOIN graph_templates_graph AS gtg
 			ON gtg.local_graph_id=gl.id
-			WHERE gti.graph_tree_id=$tree_id
+			WHERE gti.graph_tree_id = ?
 			AND gti.host_id>0
 			$sql_where
-			$sql_swhere"), 'id', 'id'));
+			$sql_swhere", array_merge(array($tree_id), $parent_params)), 'id', 'id'));
     }
 
     /* verify permissions */
@@ -2105,12 +2108,12 @@ function reports_graphs_action_execute($action)
 
                         $id = sql_save($save, 'reports_items');
                         if ($id) {
-                            $message .= __('Created Report Graph Item \'<i>%s</i>\'', get_graph_title($local_graph_id)) . '<br>';
+                            $message .= __('Created Report Graph Item \'<i>%s</i>\'', html_escape(get_graph_title($local_graph_id))) . '<br>';
                         } else {
-                            $message .= __('Failed Adding Report Graph Item \'<i>%s</i>\' Already Exists', get_graph_title($local_graph_id)) . '<br>';
+                            $message .= __('Failed Adding Report Graph Item \'<i>%s</i>\' Already Exists', html_escape(get_graph_title($local_graph_id))) . '<br>';
                         }
                     } else {
-                        $message .= __('Skipped Report Graph Item \'<i>%s</i>\' Already Exists', get_graph_title($local_graph_id)) . '<br>';
+                        $message .= __('Skipped Report Graph Item \'<i>%s</i>\' Already Exists', html_escape(get_graph_title($local_graph_id))) . '<br>';
                     }
                 }
             }

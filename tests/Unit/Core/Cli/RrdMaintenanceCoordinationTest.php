@@ -27,6 +27,23 @@ function rrd_cli_fixture_remove($path)
     }
 }
 
+/**
+ * The path check from lib/rrd.php, for the stub lib/rrd.php these scripts load. The scripts
+ * check an RRD path before touching it, so the stub carries the real check, not a copy of it.
+ */
+function rrd_cli_containment_source(): string
+{
+    require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+    $source = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
+    $code   = 'function rrdtool_uses_proxy() { return false; }';
+    foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path') as $function) {
+        $code .= "\n" . test_php_function_source($source, $function);
+    }
+
+    return $code;
+}
+
 /** Collect real subprocess coverage without changing the copied CLI source. */
 function rrd_cli_coverage_arguments($test, $dir, $root, $scriptName, ?array $registration = null)
 {
@@ -106,7 +123,7 @@ test('native maintenance CLI coordinates before touching an RRD', function ($scr
         symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
         symlink($root . '/lib/maintenance_cli.php', $dir . '/lib/maintenance_cli.php');
         file_put_contents($dir . '/lib/poller.php', '<?php');
-        file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { touch(dirname(__DIR__) . "/fetch"); return array("data_source_names" => array("value")); }');
+        file_put_contents($dir . '/lib/rrd.php', '<?php ' . rrd_cli_containment_source() . ' function rrdtool_function_fetch(...$args) { touch(dirname(__DIR__) . "/fetch"); return array("data_source_names" => array("value")); }');
         $wrapper = $dir . '/rrdtool';
         file_put_contents($wrapper, "#!/bin/sh\ntouch " . escapeshellarg($dir . '/rrd-command') . "\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
         chmod($wrapper, 0700);
@@ -151,7 +168,7 @@ FIXTURE;
         }
         if ($failure === 'fetch-empty' || $failure === 'fetch-throw') {
             $behavior = $failure === 'fetch-empty' ? 'return array();' : 'throw new RuntimeException("fetch failed");';
-            file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { ' . $behavior . ' }');
+            file_put_contents($dir . '/lib/rrd.php', '<?php ' . rrd_cli_containment_source() . ' function rrdtool_function_fetch(...$args) { ' . $behavior . ' }');
         }
         if ($failure === 'missing-file') {
             $fixture = str_replace("'rrd' => \$rrd", "'rrd' => \$rrd . '.missing'", $fixture);
@@ -299,6 +316,7 @@ test('batch gap repair serializes queued files and reports worker outcomes', fun
         file_put_contents($dir . '/cli/removespikes.php', '<?php exit((int) getenv("TEST_REPAIR_STATUS"));');
         symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
         file_put_contents($dir . '/lib/poller.php', '<?php');
+        file_put_contents($dir . '/lib/rrd.php', '<?php ' . rrd_cli_containment_source());
         $fixture = <<<'FIXTURE'
 <?php
 $config = array('base_path' => dirname(__DIR__), 'rra_path' => dirname(__DIR__), 'poller_id' => 1);

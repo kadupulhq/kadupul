@@ -1,1 +1,9 @@
-{}
+{
+    "methods/config-own-form-tag.html": [
+        {
+            "reason": "draw_edit_form() now encodes the configured action, so a quote in post_to stays inside the action value instead of opening a new attribute (upstream Cacti #8437, #8439).",
+            "golden": "<form 2''=\"\" action=\"plugin.php?a=1&amp;b=\"",
+            "rendered": "<form action=\"plugin.php?a=1&amp;b=&apos;2&apos;\""
+        }
+    ]
+}
