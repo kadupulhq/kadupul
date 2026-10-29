@@ -36,16 +36,24 @@ function ss_sql() {
 	global $database_password;
 	global $database_hostname;
 
-	$args = array(
-		'--host=' . $database_hostname,
-		'--user=' . $database_username
-	);
+	// Keep credentials out of process arguments and remove the private file after use.
+	$option_file = db_client_option_file($database_username, $database_password);
 
-	if ($database_password != '') {
-		$args[] = '--password=' . $database_password;
+	if ($option_file === false) {
+		return 'U';
 	}
 
-	$result = cacti_exec_string('mysqladmin', $args);
+	$args = array(
+		'--defaults-extra-file=' . $option_file,
+		'--host=' . $database_hostname,
+		'status'
+	);
+
+	try {
+		$result = cacti_exec_string('mysqladmin', $args);
+	} finally {
+		unlink($option_file);
+	}
 	
 	$result = preg_replace('/: /', ':', $result);
 	$result = preg_replace('/  /', ' ', $result);

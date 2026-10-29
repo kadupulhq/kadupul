@@ -572,7 +572,7 @@ function display_help() {
 	print 'This utility will run in parallel with the given number of threads,' . PHP_EOL;
 
 	print 'Optional:' . PHP_EOL;
-	print ' --threads=N           - The number of threads to use to repopulate, default = 5' . PHP_EOL;
+	print ' --threads=N           - The number of threads to use to repopulate, default = Poller Command Concurrent Processes setting' . PHP_EOL;
 	print ' --host-id=N           - Run for a specific Device' . PHP_EOL;
 	print ' --host-template-id=N  - Run for a specific Device Template' . PHP_EOL;
 	print ' --data-template-id=N  - Run for a specific Data Template' . PHP_EOL;
