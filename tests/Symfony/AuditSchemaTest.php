@@ -354,8 +354,8 @@ final class AuditSchemaTest extends TestCase
     {
         $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
 
-        self::assertCount(1039, $baseline->columnRows);
-        self::assertCount(383, $baseline->indexRows);
+        self::assertCount(1048, $baseline->columnRows);
+        self::assertCount(390, $baseline->indexRows);
         self::assertSame(['data_source_profile_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_data', 'data_source_profile_id')));
         self::assertSame(['data_input_field_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_rrd', 'data_input_field_id')));
         self::assertSame(['class', 'time'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('user_auth_row_cache', 'class_time')));
@@ -580,6 +580,16 @@ final class AuditSchemaTest extends TestCase
 
         self::assertNotNull($baseline->column('host', 'hostname')?->collation);
         self::assertContains('data_debug', $baseline->tableNames());
+    }
+
+    public function testShippedBoostRunIdIsNullableSoLegacyChildRowsDoNotCollide(): void
+    {
+        $column = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'))->column('poller_output_boost_processes', 'run_id');
+
+        self::assertNotNull($column);
+        self::assertSame('char(32)', $column->type);
+        self::assertSame('YES', $column->null);
+        self::assertNull($column->default);
     }
 
     #[DataProvider('freshTimestampColumns')]

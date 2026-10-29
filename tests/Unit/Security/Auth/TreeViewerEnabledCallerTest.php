@@ -69,6 +69,9 @@ function tree_viewer_caller_arguments(): array
 test('viewer paths ask for an enabled tree', function () {
     expect(tree_viewer_caller_arguments())->toBe(array(
         'graph_view.php' => array('$tree_id, 0, true'),
+        // Editors place and change items on disabled trees as well.
+        'graphs.php' => array('$tree[\'id\']', '$matches[1]'),
+        'lib/api_tree.php' => array('$tree_id'),
         'lib/auth.php' => array('$h[\'tree_id\'], 0, true'),
         'lib/reports.php' => array('$item[\'tree_id\'], $report[\'user_id\'], true'),
     ));

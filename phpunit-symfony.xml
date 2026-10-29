@@ -48,6 +48,7 @@
             <file>install/upgrades/1_2_35.php</file>
             <file>install/upgrades/1_2_36.php</file>
             <file>install/upgrades/1_2_37.php</file>
+            <file>install/upgrades/1_2_38.php</file>
             <file>scripts/script_command.php</file>
             <file>scripts/ping.php</file>
             <file>scripts/unix_processes.php</file>

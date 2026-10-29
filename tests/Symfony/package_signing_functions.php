@@ -40,8 +40,20 @@ function load(): void
     eval('namespace ' . __NAMESPACE__ . '; ' . str_replace('function get_public_key_kadupul(', 'function production_public_key_kadupul(', $kadupul)); // nosemgrep: php.lang.security.eval-use.eval-use
 
     $page = file_get_contents($root . '/package_import.php');
-    foreach (['package_validate_signature', 'package_file_get_contents', 'package_import_file_name_matches', 'package_import_normalize_selected_file'] as $name) {
+    foreach (['package_validate_signature', 'package_file_get_contents', 'package_import_file_name_matches', 'package_import_normalize_selected_file', 'import_validate_public_key', 'package_public_key_is_trusted'] as $name) {
+        // A helper a branch does not define yet fails only the tests that call it.
+        if ($name === 'package_public_key_is_trusted' && !str_contains($page, "function {$name}(")) {
+            continue;
+        }
         eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($page, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+    }
+    $functions = file_get_contents($root . '/lib/functions.php');
+    foreach (['array_rekey', 'cacti_count'] as $name) {
+        eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($functions, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+    }
+    $xml = file_get_contents($root . '/lib/xml.php');
+    foreach (['xml2array', 'get_children'] as $name) {
+        eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($xml, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
 }
 
@@ -80,14 +92,29 @@ function validate_relative_path_within(): bool
     return false;
 }
 
-function db_fetch_assoc(): array
+/**
+ * The operator trust table is absent unless a test supplies its rows. A query
+ * against the absent table fails as the production wrapper does: it logs the
+ * SQL error and returns false.
+ */
+function db_table_exists(string $table, bool $log = true, mixed $connection = false): bool
 {
-    return [];
+    return $table === 'package_public_keys' && isset($GLOBALS['package_signing']['trusted_keys']);
 }
 
-function array_rekey(array $rows): array
+function db_fetch_assoc(string $sql, bool $log = true, mixed $connection = false): array|false
 {
-    return $rows;
+    $GLOBALS['package_signing']['queries'][] = $sql;
+    if (!str_contains($sql, 'package_public_keys')) {
+        throw new \RuntimeException('Unexpected query: ' . $sql);
+    }
+    if (!isset($GLOBALS['package_signing']['trusted_keys'])) {
+        cacti_log("SQL Error: Table 'cacti.package_public_keys' doesn't exist");
+
+        return false;
+    }
+
+    return array_map(static fn(string $key): array => ['public_key' => $key], $GLOBALS['package_signing']['trusted_keys']);
 }
 
 function package_import_write_session_file(): string
