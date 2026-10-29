@@ -1,168 +1,146 @@
-/*!
-* screenfull
-* v3.3.3 - 2018-09-04
-* (c) Sindre Sorhus; MIT License
-*/
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/*
+ * Fullscreen shim over the native Fullscreen API. It keeps the public surface
+ * of screenfull 3.x (enabled, isFullscreen, element, raw, request, exit,
+ * toggle, on, off, onchange, onerror, and `false` when unsupported) because
+ * third-party plugins call window.screenfull directly. Only the standard,
+ * WebKit-prefixed (Safari before 16.4) and Moz-prefixed (Firefox before 64)
+ * names are probed.
+ */
 (function () {
-	'use strict';
+    'use strict';
 
-	var document = typeof window !== 'undefined' && typeof window.document !== 'undefined' ? window.document : {};
-	var isCommonjs = typeof module !== 'undefined' && module.exports;
-	var keyboardAllowed = typeof Element !== 'undefined' && 'ALLOW_KEYBOARD_INPUT' in Element;
+    const doc = typeof window !== 'undefined' && typeof window.document !== 'undefined' ? window.document : {};
+    const isCommonjs = typeof module !== 'undefined' && module.exports;
 
-	var fn = (function () {
-		var val;
+    const nameMaps = [
+        ['requestFullscreen', 'exitFullscreen', 'fullscreenElement', 'fullscreenEnabled', 'fullscreenchange', 'fullscreenerror'],
+        ['webkitRequestFullscreen', 'webkitExitFullscreen', 'webkitFullscreenElement', 'webkitFullscreenEnabled', 'webkitfullscreenchange', 'webkitfullscreenerror'],
+        ['mozRequestFullScreen', 'mozCancelFullScreen', 'mozFullScreenElement', 'mozFullScreenEnabled', 'mozfullscreenchange', 'mozfullscreenerror'],
+    ];
 
-		var fnMap = [
-			[
-				'requestFullscreen',
-				'exitFullscreen',
-				'fullscreenElement',
-				'fullscreenEnabled',
-				'fullscreenchange',
-				'fullscreenerror'
-			],
-			// New WebKit
-			[
-				'webkitRequestFullscreen',
-				'webkitExitFullscreen',
-				'webkitFullscreenElement',
-				'webkitFullscreenEnabled',
-				'webkitfullscreenchange',
-				'webkitfullscreenerror'
+    // raw maps the standard names to whichever set this browser implements.
+    const raw = (function () {
+        for (const names of nameMaps) {
+            if (names[1] in doc) {
+                const found = {};
+                nameMaps[0].forEach((standard, index) => {
+                    found[standard] = names[index];
+                });
+                return found;
+            }
+        }
+        return false;
+    })();
 
-			],
-			// Old WebKit (Safari 5.1)
-			[
-				'webkitRequestFullScreen',
-				'webkitCancelFullScreen',
-				'webkitCurrentFullScreenElement',
-				'webkitCancelFullScreen',
-				'webkitfullscreenchange',
-				'webkitfullscreenerror'
+    function publish(value) {
+        if (isCommonjs) {
+            module.exports = value;
+        } else {
+            window.screenfull = value;
+        }
+    }
 
-			],
-			[
-				'mozRequestFullScreen',
-				'mozCancelFullScreen',
-				'mozFullScreenElement',
-				'mozFullScreenEnabled',
-				'mozfullscreenchange',
-				'mozfullscreenerror'
-			],
-			[
-				'msRequestFullscreen',
-				'msExitFullscreen',
-				'msFullscreenElement',
-				'msFullscreenEnabled',
-				'MSFullscreenChange',
-				'MSFullscreenError'
-			]
-		];
+    if (!raw) {
+        publish(false);
+        return;
+    }
 
-		var i = 0;
-		var l = fnMap.length;
-		var ret = {};
+    const eventNames = {
+        change: raw.fullscreenchange,
+        error: raw.fullscreenerror,
+    };
 
-		for (; i < l; i++) {
-			val = fnMap[i];
-			if (val && val[1] in document) {
-				for (i = 0; i < val.length; i++) {
-					ret[fnMap[0][i]] = val[i];
-				}
-				return ret;
-			}
-		}
+    // 3.x returned undefined, so legacy callers never catch. Marking the promise
+    // handled keeps their fire-and-forget calls from logging unhandled
+    // rejections; callers that chain still observe the rejection.
+    function handled(promise) {
+        promise.catch(() => {});
+        return promise;
+    }
 
-		return false;
-	})();
+    // Prefixed implementations return undefined, so settle on the next event.
+    function settle(start) {
+        let result;
+        try {
+            result = start();
+        } catch (error) {
+            return handled(Promise.reject(error));
+        }
+        if (result && typeof result.then === 'function') {
+            return handled(result);
+        }
+        return handled(new Promise((resolve, reject) => {
+            const finish = (callback, value) => {
+                doc.removeEventListener(eventNames.change, onChange, false);
+                doc.removeEventListener(eventNames.error, onError, false);
+                callback(value);
+            };
+            const onChange = () => finish(resolve);
+            const onError = () => finish(reject, new Error('Fullscreen request failed'));
+            doc.addEventListener(eventNames.change, onChange, false);
+            doc.addEventListener(eventNames.error, onError, false);
+        }));
+    }
 
-	var eventNameMap = {
-		change: fn.fullscreenchange,
-		error: fn.fullscreenerror
-	};
+    const screenfull = {
+        request(elem) {
+            elem = elem || doc.documentElement;
+            return settle(() => elem[raw.requestFullscreen]());
+        },
+        exit() {
+            if (!doc[raw.fullscreenElement]) {
+                return Promise.resolve();
+            }
+            return settle(() => doc[raw.exitFullscreen]());
+        },
+        toggle(elem) {
+            return this.isFullscreen ? this.exit() : this.request(elem);
+        },
+        onchange(callback) {
+            this.on('change', callback);
+        },
+        onerror(callback) {
+            this.on('error', callback);
+        },
+        on(event, callback) {
+            const name = eventNames[event];
+            if (name) {
+                doc.addEventListener(name, callback, false);
+            }
+        },
+        off(event, callback) {
+            const name = eventNames[event];
+            if (name) {
+                doc.removeEventListener(name, callback, false);
+            }
+        },
+        raw: raw,
+    };
 
-	var screenfull = {
-		request: function (elem) {
-			var request = fn.requestFullscreen;
+    Object.defineProperties(screenfull, {
+        isFullscreen: {
+            get() {
+                return Boolean(doc[raw.fullscreenElement]);
+            },
+        },
+        element: {
+            enumerable: true,
+            get() {
+                return doc[raw.fullscreenElement];
+            },
+        },
+        enabled: {
+            enumerable: true,
+            get() {
+                return Boolean(doc[raw.fullscreenEnabled]);
+            },
+        },
+    });
 
-			elem = elem || document.documentElement;
-
-			// Work around Safari 5.1 bug: reports support for
-			// keyboard in fullscreen even though it doesn't.
-			// Browser sniffing, since the alternative with
-			// setTimeout is even worse.
-			if (/ Version\/5\.1(?:\.\d+)? Safari\//.test(navigator.userAgent)) {
-				elem[request]();
-			} else {
-				elem[request](keyboardAllowed ? Element.ALLOW_KEYBOARD_INPUT : {});
-			}
-		},
-		exit: function () {
-			document[fn.exitFullscreen]();
-		},
-		toggle: function (elem) {
-			if (this.isFullscreen) {
-				this.exit();
-			} else {
-				this.request(elem);
-			}
-		},
-		onchange: function (callback) {
-			this.on('change', callback);
-		},
-		onerror: function (callback) {
-			this.on('error', callback);
-		},
-		on: function (event, callback) {
-			var eventName = eventNameMap[event];
-			if (eventName) {
-				document.addEventListener(eventName, callback, false);
-			}
-		},
-		off: function (event, callback) {
-			var eventName = eventNameMap[event];
-			if (eventName) {
-				document.removeEventListener(eventName, callback, false);
-			}
-		},
-		raw: fn
-	};
-
-	if (!fn) {
-		if (isCommonjs) {
-			module.exports = false;
-		} else {
-			window.screenfull = false;
-		}
-
-		return;
-	}
-
-	Object.defineProperties(screenfull, {
-		isFullscreen: {
-			get: function () {
-				return Boolean(document[fn.fullscreenElement]);
-			}
-		},
-		element: {
-			enumerable: true,
-			get: function () {
-				return document[fn.fullscreenElement];
-			}
-		},
-		enabled: {
-			enumerable: true,
-			get: function () {
-				// Coerce to boolean in case of old WebKit
-				return Boolean(document[fn.fullscreenEnabled]);
-			}
-		}
-	});
-
-	if (isCommonjs) {
-		module.exports = screenfull;
-	} else {
-		window.screenfull = screenfull;
-	}
+    publish(screenfull);
 })();

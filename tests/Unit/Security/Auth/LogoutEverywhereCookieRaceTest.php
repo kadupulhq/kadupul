@@ -27,7 +27,7 @@ $db->exec("CREATE TABLE user_auth(id INTEGER PRIMARY KEY,username TEXT,realm INT
     INSERT INTO sessions VALUES(42);
     CREATE TABLE user_auth_cache(user_id INTEGER,hostname TEXT,last_update TEXT,token TEXT);
     CREATE TABLE user_log(username TEXT,user_id INTEGER,result INTEGER,ip TEXT,time TEXT);");
-$db->prepare("INSERT INTO user_auth_cache VALUES(42,'127.0.0.1','',?)")->execute([hash('sha512','old-remembered-token')]);
+$db->prepare("INSERT INTO user_auth_cache VALUES(42,'127.0.0.1',?,?)")->execute([date('Y-m-d H:i:s'),hash('sha512','old-remembered-token')]);
 $_SESSION=[]; $_COOKIE=['cacti_remembers'=>'42,0,old-remembered-token'];
 define('POLLER_VERBOSITY_MEDIUM',3);
 function cacti_log(...$args) {}

@@ -21,6 +21,7 @@ final class PermissionMutationNativeTest extends TestCase
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
         $scenario['kind'] = 'single';
         $state = $this->runNative($scenario);
+        self::assertRememberedLoginsFollowEpochs($state);
         $failed = $scenario['failure'] !== '';
         self::assertSame(!$failed, $state['result']);
         self::assertNull($state['error']);
@@ -65,6 +66,7 @@ final class PermissionMutationNativeTest extends TestCase
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
         $scenario['self'] = true;
         $state = $this->runNative($scenario);
+        self::assertRememberedLoginsFollowEpochs($state);
         self::assertSame(!array_key_exists('affected_outcome', $scenario), $state['result']);
         self::assertNull($state['error']);
         self::assertSame($scenario['caller'], $state['transaction_open']);
@@ -102,6 +104,7 @@ final class PermissionMutationNativeTest extends TestCase
         $scenario['kind'] = 'mixed';
         $scenario['self'] = true;
         $state = $this->runNative($scenario);
+        self::assertRememberedLoginsFollowEpochs($state);
         self::assertSame('permsg', $state['result']);
         self::assertNull($state['error']);
         self::assertSame($scenario['caller'], $state['transaction_open']);
@@ -133,6 +136,7 @@ final class PermissionMutationNativeTest extends TestCase
     {
         $scenario['engine'] = getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite';
         $state = $this->runNative($scenario);
+        self::assertRememberedLoginsFollowEpochs($state);
         $failure = $scenario['failure'] ?? '';
         $failed = $failure !== '';
         self::assertSame(!$failed, $state['result']);
@@ -180,6 +184,9 @@ final class PermissionMutationNativeTest extends TestCase
             $cases['uint32 epoch ' . $epoch] = array(array('epoch' => $epoch));
         }
         $cases['legacy false mutation outcome'] = array(array('failure' => 'mutation'));
+        foreach (array(false, true) as $caller) {
+            $cases['remembered login expiry failure' . ($caller ? ' caller' : '')] = array(array('failure' => 'token', 'caller' => $caller));
+        }
         return $cases;
     }
 
@@ -188,12 +195,14 @@ final class PermissionMutationNativeTest extends TestCase
     {
         $scenario = array('engine' => getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite', 'kind' => 'batch', 'group' => $group, 'size' => 5000, 'members' => $members);
         $state = $this->runNative($scenario);
+        self::assertRememberedLoginsFollowEpochs($state);
         self::assertSame('permsg', $state['result']);
         self::assertNull($state['error']);
         self::assertFalse($state['transaction_open']);
         self::assertCount(1, $state['permissions']);
         self::assertSame(8, (int) array_column($state['epochs'], 'reset_perms', 'id')[42]);
-        self::assertLessThanOrEqual(3 * $scenario['size'] + 20, $state['mutation_queries']);
+        // Remembered-login expiry adds one statement per 1000-user epoch chunk.
+        self::assertLessThanOrEqual(3 * $scenario['size'] + 20 + intdiv($members + 999, 1000), $state['mutation_queries']);
         self::assertSame(array(), $state['messages']);
         if ($group) {
             self::assertCount($members + 2, $state['epochs']);
@@ -211,6 +220,7 @@ final class PermissionMutationNativeTest extends TestCase
     public function testFailureInLaterEpochChunkRollsBackEarlierChunkAndPermission(): void
     {
         $state = $this->runNative(array('engine' => getenv('PERMISSION_MUTATION_TEST_ENGINE') ?: 'sqlite', 'group' => true, 'members' => 2500, 'failure' => 'epoch', 'failed_user' => 1500));
+        self::assertRememberedLoginsFollowEpochs($state);
         self::assertFalse($state['result']);
         self::assertCount(3, $state['permissions']);
         self::assertFalse($state['transaction_open']);
@@ -233,6 +243,19 @@ final class PermissionMutationNativeTest extends TestCase
             self::assertCount(3, $state['permissions']);
             self::assertFalse($state['transaction_open']);
         }
+    }
+
+    /** A permission change that advanced a user's epoch also expires that user's remembered logins (upstream Cacti #7600). */
+    private static function assertRememberedLoginsFollowEpochs(array $state): void
+    {
+        $epochs = array_column($state['epochs'], 'reset_perms', 'id');
+        $unchanged = array();
+        foreach ($state['initial_epochs'] as $id => $epoch) {
+            if ((int) $epochs[$id] === (int) $epoch) {
+                $unchanged[] = (int) $id;
+            }
+        }
+        self::assertSame($unchanged, $state['remembered']);
     }
 
     private function runNative(array $scenario): array

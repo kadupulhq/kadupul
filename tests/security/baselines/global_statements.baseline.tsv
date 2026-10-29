@@ -93,7 +93,7 @@ lib/functions.php	65	86
 lib/graph_data_removal.php	3	9
 lib/graph_variables.php	3	3
 lib/graphs.php	1	1
-lib/html.php	14	25
+lib/html.php	14	24
 lib/html_filter.php	1	1
 lib/html_form.php	4	6
 lib/html_form_template.php	4	4
