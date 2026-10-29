@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Er zijn problemen met de pagina Wachtwoord wijzigen.  Neem direct contact op met uw Kadupul-beheerder."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
 msgid "Change Password"
 msgstr "Wijzig wachtwoord"
 
@@ -793,7 +793,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Voer alstublieft uw huidige en uw nieuwe<br>Kadupul wachtwoord in."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6240
 msgid "Username"
 msgstr "Gebruikersnaam"
 
@@ -886,7 +886,7 @@ msgstr "Gebruikerlogin"
 msgid "Enter your Username and Password below"
 msgstr "Voer uw gebruikersnaam en wachtwoord in"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
 msgid "Password"
 msgstr "Wachtwoord"
 
@@ -1193,7 +1193,7 @@ msgstr "Ontdekte apparaten verwijderen"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2184,7 +2184,7 @@ msgstr "Versie"
 msgid "Community"
 msgstr "Community"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6236
 msgid "Port"
 msgstr "Poort"
 
@@ -2394,8 +2394,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "Geen boomstructuur regels gevonden"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -2788,7 +2788,7 @@ msgstr "Herhaling van de analyse"
 msgid "Check"
 msgstr "Controleer"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4468
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4470
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Waarde"
@@ -3428,7 +3428,7 @@ msgstr "De naam van dit data template. Let op dat u alleen grafiek templates kun
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:958 include/global_arrays.php:1007
 #: include/global_arrays.php:1695 include/global_arrays.php:1864
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Apparaat"
@@ -3782,12 +3782,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool grafiek syntax"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2835
+#: lib/rrd.php:2837
 msgid "The Kadupul Poller has not run yet."
 msgstr "De Kadupul Poller heeft nog niet gelopen."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Toegang geweigerd"
 
@@ -4484,7 +4484,7 @@ msgid "Save Filters"
 msgstr "Filters opslaan"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4510
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4512
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Rijen"
@@ -4748,12 +4748,12 @@ msgstr "FATALE FOUT: U dient ingelogd te zijn om dit deel van Kadupul te gebruik
 msgid "Login Again"
 msgstr "Log nogmaals in"
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Als u van mening bent dat dit foutief is, neem dan alstublieft contact op met uw Kadupul beheerder."
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "U heeft geen toestemming voor dit deel van Kadupul."
@@ -5616,7 +5616,7 @@ msgstr "Natuurlijke sortering"
 msgid "Numeric Ordering"
 msgstr "Numerieke sortering"
 
-#: include/global_arrays.php:956 lib/rrd.php:4434
+#: include/global_arrays.php:956 lib/rrd.php:4436
 msgid "Header"
 msgstr "Kolomkop"
 
@@ -6830,7 +6830,7 @@ msgid "List Mode"
 msgstr "Lijst modus"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Console"
@@ -7254,7 +7254,7 @@ msgstr "Heartbeat"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Hoe lang kunnen gegevens ontbreken voordat RRDtool onbekende gegevens registreert.  Verhoog deze waarde als uw gegevensbron onstabiel is en u oude gegevens wilt overdragen in plaats van hiaten in uw grafieken te tonen.  Deze waarde wordt vermenigvuldigd met de X-Files Factor om de werkelijke hoeveelheid tijd te bepalen."
 
-#: include/global_form.php:226 lib/rrd.php:4513
+#: include/global_form.php:226 lib/rrd.php:4515
 msgid "X-Files Factor"
 msgstr "X-bestanden Factor"
 
@@ -7824,7 +7824,7 @@ msgstr "Opaciteit/Alpha-kanaal"
 msgid "The opacity/alpha channel of the color."
 msgstr "Het opaciteit/alfa kanaal van de kleur."
 
-#: include/global_form.php:989 lib/rrd.php:4509
+#: include/global_form.php:989 lib/rrd.php:4511
 msgid "Consolidation Function"
 msgstr "Kies een of meerdere consolidatie functie(s)"
 
@@ -8628,8 +8628,8 @@ msgstr "Data"
 msgid "Visual"
 msgstr "Visueel"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6239
+#: lib/functions.php:6244
 msgid "Authentication"
 msgstr "Authenticatie"
 
@@ -8665,11 +8665,11 @@ msgstr "Grafiek lettertypes"
 msgid "PHP Mail() Function"
 msgstr "PHP mail() functie"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6220
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6226
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10527,7 +10527,7 @@ msgstr "Dit is het aantal karakters dat wordt toegestaan voordat een regel in de
 msgid "Sendmail Options"
 msgstr "Sendmail opties"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6220
 msgid "Sendmail Path"
 msgstr "Sendmail path"
 
@@ -11521,7 +11521,7 @@ msgstr "Herstellende"
 
 #: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11529,7 +11529,7 @@ msgstr "Onbekend"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4463
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4465
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Type"
@@ -11738,8 +11738,8 @@ msgstr "Locatie:"
 msgid "Contact:"
 msgstr "Contactpersoon:"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:1986 lib/functions.php:6253 lib/functions.php:6255
+#: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "Ping resultaten"
 
@@ -12134,7 +12134,7 @@ msgstr "Het data query XML bestand kon niet worden gevonden in '%s'"
 msgid "Found data query XML file at '%s'"
 msgstr "Gevonden gegevens opvragen XML-bestand bij '%s'"
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
 msgid "Error parsing XML file into an array."
 msgstr "Fout bij het parseren van een XML-bestand in een array."
 
@@ -12427,12 +12427,12 @@ msgstr "Re-Indexing Data Query compleet"
 msgid "Unknown Index"
 msgstr "Onbekende index"
 
-#: lib/data_query.php:2764
+#: lib/data_query.php:2767
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "U moet een XML-uitvoerkolom selecteren voor Data Source '%s' en het selectievakje aan de rechterkant aankruisen."
 
-#: lib/data_query.php:2770
+#: lib/data_query.php:2773
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Uw Grafieksjabloon heeft geen datasjablonen in gebruik.  Gelieve uw Grafieksjabloon te corrigeren"
 
@@ -12504,177 +12504,177 @@ msgstr "Bericht niet gevonden."
 msgid "Error %s is not readable"
 msgstr "Fout %s is niet leesbaar"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Logged in a Guest"
 msgstr "Ingelogd als"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4261 lib/functions.php:4279
 msgid "Logged in as"
 msgstr "Ingelogd als"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Login as Regular User"
 msgstr "Log in als reguliere gebruiker"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "guest"
 msgstr "gast"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
 msgid "User Community"
 msgstr "Gebruikersgemeenschap"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Documentatie"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4282
 #, php-format
 msgid "Logged in as %s"
 msgstr "Ingelogd als %s"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "Wijzig profiel"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2755
 msgid "Logout"
 msgstr "Uitloggen"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4448
 msgid "Leaf"
 msgstr "Blad"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4472 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Niet query gebaseerd"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4510
 #, php-format
 msgid "Link %s"
 msgstr "Link %s"
 
-#: lib/functions.php:4968 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4972 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopiëren"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5789
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Fout in de mailer: Nee <b>TO</b> adres ingesteld! <br>Als u de link <i>Test Mail</i> gebruikt, stelt u de instelling <b>Alert e-mail</b> in."
 
-#: lib/functions.php:6164
+#: lib/functions.php:6183
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "Authenticatie mislukt: %s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6187
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO mislukt: %s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6190
 #, php-format
 msgid "Connect failed: %s"
 msgstr "Mislukte verbindingen: %s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6193
 msgid "SMTP error: "
 msgstr "SMTP fout: "
 
-#: lib/functions.php:6188
+#: lib/functions.php:6207
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Dit is een testbericht van Kadupul.  Dit bericht werd verzonden om de configuratie van uw e-mailinstellingen te testen."
 
-#: lib/functions.php:6189
+#: lib/functions.php:6208
 msgid "Your email settings are currently set as follows"
 msgstr "Uw e-mail instellingen zijn momenteel als volgt"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6209
 msgid "Method"
 msgstr "Methode"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6211
 msgid "Checking Configuration...<br>"
 msgstr "Configuratie controleren…<br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6218
 msgid "PHP's Mailer Class"
 msgstr "PHP's Mailer Class"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6224
 msgid "Method: SMTP"
 msgstr "Methode: SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6241
 msgid "Not Shown for Security Reasons"
 msgstr "Wordt vanwege beveiligingsredenen niet getoond"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6242
 msgid "Security"
 msgstr "Beveiliging"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6250
 msgid "Ping Results:"
 msgstr "Ping resultaten:"
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6250 lib/functions.php:6255
 msgid "Success"
 msgstr "Gelukt"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6259
 msgid "Bypassed"
 msgstr "Overgeslagen"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6268
 msgid "Creating Message Text..."
 msgstr "Berichttekst maken....."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6271
 msgid "Sending Message..."
 msgstr "Bericht wordt verstuurt..."
 
-#: lib/functions.php:6256
+#: lib/functions.php:6275
 msgid "Kadupul Test Message"
 msgstr "Kadupul testbericht"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6277
 msgid "Success!"
 msgstr "Gelukt!"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6280
 msgid "Message Not Sent due to ping failure."
 msgstr "Bericht Niet verzonden als gevolg van een pingstoring."
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6744 lib/functions.php:6814
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul uitgeschakeld plugin %s als gevolg van de volgende fout: %s!  Zie het Kadupul logbestand voor meer details."
 
-#: lib/functions.php:6898
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "WAARSCHUWING: PollerID:%s heeft een ongeldige hostnaam:%s.  Is het niet bereikbaar via DNS!"
 
-#: lib/functions.php:7351 lib/functions.php:7353
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Versie %s %s"
 
-#: lib/functions.php:7353
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7588
+#: lib/functions.php:7607
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "WAARSCHUWING:  Kadupul bevatten bestand %s ontbreekt.  Zoek en vervang dit bestand"
@@ -15390,198 +15390,198 @@ msgstr "Mislukt Rapportgrafiekitem '<i>%s</i>' Bestaat al"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Overgeslagen Rapport Grafiek Item '<i>%s</i>' Bestaat al"
 
-#: lib/rrd.php:2446
+#: lib/rrd.php:2448
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2449
+#: lib/rrd.php:2451
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2816 lib/rrd.php:2819 lib/rrd.php:4720
+#: lib/rrd.php:2818 lib/rrd.php:2821 lib/rrd.php:4722
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2832
+#: lib/rrd.php:2834
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "FOUT: RRD bestand %s is niet schrijfbaar"
 
-#: lib/rrd.php:4251
+#: lib/rrd.php:4253
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "De vereiste stapgrootte van het RRD-bestand is '%s' , maar de waargenomen stap is '%s'"
 
-#: lib/rrd.php:4287
+#: lib/rrd.php:4289
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Type voor gegevensbron \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4293
+#: lib/rrd.php:4295
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Hartslag voor gegevensbron \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4305
+#: lib/rrd.php:4307
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD minimum voor gegevensbron \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4314
+#: lib/rrd.php:4316
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS \"%s\" ontbreekt in de definitie van Kadupul"
 
-#: lib/rrd.php:4328 lib/rrd.php:4329
+#: lib/rrd.php:4330 lib/rrd.php:4331
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 
-#: lib/rrd.php:4342 lib/rrd.php:4343
+#: lib/rrd.php:4344 lib/rrd.php:4345
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Bestand RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 
-#: lib/rrd.php:4375
+#: lib/rrd.php:4377
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "De pdp_per_row van '%s' is ongeldig voor RRA '%s' moet '%s' zijn.  Overweeg om RRD-bestanden te verwijderen en toe te staan dat Kadupul deze opnieuw maken."
 
-#: lib/rrd.php:4379
+#: lib/rrd.php:4381
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF voor Kadupul RRA id \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4385
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Het aantal rijen voor Kadupul RRA-id '%s' is onjuist.  Het aantal rijen is '%s' maar moet '%s' zijn"
 
-#: lib/rrd.php:4400
+#: lib/rrd.php:4402
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA '%s' ontbreekt in het RRD bestand"
 
-#: lib/rrd.php:4408
+#: lib/rrd.php:4410
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA '%s' ontbreekt in de Kadupul definitie"
 
-#: lib/rrd.php:4430
+#: lib/rrd.php:4432
 msgid "RRD File Information"
 msgstr "RRD bestandsinformatie"
 
-#: lib/rrd.php:4462
+#: lib/rrd.php:4464
 msgid "Data Source Items"
 msgstr "50000 Data bron items (Standaard)"
 
-#: lib/rrd.php:4464
+#: lib/rrd.php:4466
 msgid "Minimal Heartbeat"
 msgstr "Minimale heartbeat"
 
-#: lib/rrd.php:4465
+#: lib/rrd.php:4467
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4468
 msgid "Max"
 msgstr "Max"
 
-#: lib/rrd.php:4467
+#: lib/rrd.php:4469
 msgid "Last DS"
 msgstr "Laatste DS"
 
-#: lib/rrd.php:4469
+#: lib/rrd.php:4471
 msgid "Unknown Sec"
 msgstr "Onbekend Sec."
 
-#: lib/rrd.php:4508
+#: lib/rrd.php:4510
 msgid "Round Robin Archive"
 msgstr "Ronde Robin Archief"
 
-#: lib/rrd.php:4511
+#: lib/rrd.php:4513
 msgid "Cur Row"
 msgstr "Huidige rij"
 
-#: lib/rrd.php:4512
+#: lib/rrd.php:4514
 msgid "PDP per Row"
 msgstr "PDP per rij"
 
-#: lib/rrd.php:4514
+#: lib/rrd.php:4516
 msgid "CDP Prep Value (0)"
 msgstr "CDP Prep Waarde (0)"
 
-#: lib/rrd.php:4515
+#: lib/rrd.php:4517
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Onbekende gegevenspunten (0)"
 
-#: lib/rrd.php:4600
+#: lib/rrd.php:4602
 msgid "Errors Found"
 msgstr "Geen %s gevonden"
 
-#: lib/rrd.php:4612
+#: lib/rrd.php:4614
 msgid "Optional Tuning Recommendations"
 msgstr "Data bron velden"
 
-#: lib/rrd.php:4639 lib/rrd.php:4642
+#: lib/rrd.php:4641 lib/rrd.php:4644
 #, php-format
 msgid "rename %s to %s"
 msgstr "hernoem %s naar %s"
 
-#: lib/rrd.php:4740
+#: lib/rrd.php:4742
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "FOUT tijdens het schrijven van XML bestand: %s"
 
-#: lib/rrd.php:4746
+#: lib/rrd.php:4748
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4752
+#: lib/rrd.php:4754
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "FOUT: RRD bestand %s is niet schrijfbaar"
 
-#: lib/rrd.php:4773
+#: lib/rrd.php:4775
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Fout tijdens het parsen van de RRDtool dump XML"
 
-#: lib/rrd.php:4809 lib/rrd.php:4828
+#: lib/rrd.php:4811 lib/rrd.php:4830
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Fout tijdens het parsen van de RRDtool dump XML"
 
-#: lib/rrd.php:5046
+#: lib/rrd.php:5048
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, RIJEN=%d, PDP_PER_RIJ=%d, XFF=%1.2f) verwijderd van RRD bestand"
 
-#: lib/rrd.php:5084
+#: lib/rrd.php:5086
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, RIJEN=%d, PDP_PER_RIJ=%d, XFF=%1.2f) toegevoegd aan RRD bestand"
 
-#: lib/rrd.php:5115 lib/rrd.php:5131
+#: lib/rrd.php:5117 lib/rrd.php:5133
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Website heeft geen schrijftoegang tot %s, kan niet in staat zijn om RRDs aan te maken/bij te werken"
 
-#: lib/rrd.php:5127
+#: lib/rrd.php:5129
 msgid "(Custom)"
 msgstr "Aangepast"
 
-#: lib/rrd.php:5133
+#: lib/rrd.php:5135
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Als het bestand niet wordt geopend, is het mogelijk dat de poller nog niet is uitgevoerd."
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 msgid "RRA Folder"
 msgstr "RRA-map"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:5216
+#: lib/rrd.php:5218
 msgid "Unknown RRDtool Error"
 msgstr "Onbekende RRDtool fout"
 

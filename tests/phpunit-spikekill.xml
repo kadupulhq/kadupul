@@ -153,6 +153,7 @@
       <file>Unit/SqlScriptCredentialsTest.php</file>
       <file>Unit/Security/Misc/RemoteCollectorAddressTest.php</file>
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
+      <file>Unit/Security/Shell/Win32CmdArgumentTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
