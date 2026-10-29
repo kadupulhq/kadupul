@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 19:47-0700\n"
+"POT-Creation-Date: 2026-10-28 20:34-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -628,7 +628,7 @@ msgstr "कोई भी@ label"
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
-#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:692
+#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:731
 #: settings.php:598 settings.php:620 settings.php:651
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
@@ -1148,7 +1148,7 @@ msgstr "SNMP"
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
-#: package_import.php:548 package_import.php:633 plugins.php:497
+#: package_import.php:587 package_import.php:672 plugins.php:497
 #: plugins.php:624 pollers.php:1007 templates_import.php:207
 #: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
@@ -2184,7 +2184,7 @@ msgid "Item"
 msgstr "मद"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:510 plugins.php:642
+#: package_import.php:549 plugins.php:642
 #: templates/platform/permission_denied.html.twig
 msgid "Version"
 msgstr "सरूप"
@@ -2626,7 +2626,7 @@ msgid "The Status of the Data Source Debug Check."
 msgstr "डेटा स्रोत डिबग चेक की स्थिति।"
 
 #: data_debug.php:529 lib/installer.php:2508 lib/installer.php:2540
-#: package_import.php:602
+#: package_import.php:641
 msgid "Writable"
 msgstr "लिखने योग्य"
 
@@ -3470,7 +3470,7 @@ msgid "Data Source Item %s"
 msgstr "डेटा स्रोत आइटम %s"
 
 #: data_sources.php:1267 data_templates.php:817 lib/import.php:2872
-#: package_import.php:604
+#: package_import.php:643
 msgid "New"
 msgstr "नया"
 
@@ -3550,7 +3550,7 @@ msgstr "यदि यह डेटा स्रोत रेखांकन द�
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "इस डेटा स्रोत के लिए डेटा एकत्र किया जाएगा या नहीं। डेटा टेम्प्लेट स्तर पर नियंत्रित।"
 
-#: data_sources.php:2008 package_import.php:630 templates_import.php:243
+#: data_sources.php:2008 package_import.php:669 templates_import.php:243
 #: user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "टेम्पलेट का नाम"
@@ -6051,7 +6051,7 @@ msgid "Data Input Field"
 msgstr "डेटा इनपुट फ़ील्ड"
 
 #: include/global_arrays.php:1366 include/global_form.php:579
-#: include/global_form.php:1679 package_import.php:868
+#: include/global_form.php:1679 package_import.php:907
 msgid "Data Source Profile"
 msgstr "डेटा स्रोत प्रोफ़ाइल"
 
@@ -7455,7 +7455,7 @@ msgid "The script/source used to gather data for this data source."
 msgstr "इस डेटा स्रोत के लिए डेटा इकट्ठा करने के लिए उपयोग की जाने वाली स्क्रिप्ट / स्रोत।"
 
 #: include/global_form.php:581 include/global_form.php:1681
-#: package_import.php:870
+#: package_import.php:909
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "डेटा स्रोत प्रोफ़ाइल का चयन करें। डेटा स्रोत प्रोफ़ाइल परिणामी डेटा स्रोतों के लिए मतदान अंतराल, डेटा एकत्रीकरण और अवधारण नीति को नियंत्रित करता है।"
 
@@ -8204,27 +8204,27 @@ msgstr "स्थानीय फ़ाइल से आयात टेम्�
 msgid "If the XML file containing template data is located on your local machine, select it here."
 msgstr "यदि टेम्प्लेट डेटा वाली XML फ़ाइल आपके स्थानीय मशीन पर स्थित है, तो इसे यहाँ चुनें।"
 
-#: include/global_form.php:1674 package_import.php:863
+#: include/global_form.php:1674 package_import.php:902
 msgid "Data Source Overrides"
 msgstr "डेटा स्रोत प्रोफ़ाइल"
 
-#: include/global_form.php:1683 package_import.php:872
+#: include/global_form.php:1683 package_import.php:911
 msgid "Create New from Template"
 msgstr "खाके से नया बनाएँ"
 
-#: include/global_form.php:1688 package_import.php:877
+#: include/global_form.php:1688 package_import.php:916
 msgid "Graph/Data Template Overrides"
 msgstr "ग्राफ टेम्पलेट विकल्प"
 
-#: include/global_form.php:1693 package_import.php:882
+#: include/global_form.php:1693 package_import.php:921
 msgid "Remove Orphaned Graph Items"
 msgstr "ऑर्फ़न ग्राफ़ आइटम निकालें"
 
-#: include/global_form.php:1695 package_import.php:884
+#: include/global_form.php:1695 package_import.php:923
 msgid "If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template."
 msgstr "यदि जाँच की जाती है, तो Kadupul, ग्राफ़ टेम्पलेट और संबंधित ग्राफ़ दोनों से किसी भी ग्राफ़ आइटम को हटा देगा, जो कि आयातित ग्राफ़ टेम्पलेट में शामिल नहीं है।"
 
-#: include/global_form.php:1700 package_import.php:889
+#: include/global_form.php:1700 package_import.php:928
 msgid "Replace Data Query Suggested Value Patterns"
 msgstr "डेटा क्वेरी के सुझाए गए वैल्यू पैटर्न बदलें"
 
@@ -8233,29 +8233,29 @@ msgid "Replace Data Source and Graph Template Suggested Value Records for Data Q
 msgstr "डेटा प्रश्नों के लिए डेटा स्रोत और ग्राफ़ टेम्पलेट सुझाए गए मूल्य रिकॉर्ड को बदलें।  ग्राफ़ और डेटा स्रोत या तो डेटा क्वेरी रीइंडेक्स के बाद या जबरन सुझाए गए मानों को बदलें प्रक्रिया का उपयोग करके नए नामों पर विचार करेंगे।"
 
 #: include/global_form.php:1707 include/global_settings.php:673
-#: package_import.php:896
+#: package_import.php:935
 msgid "Graph Template Image Format"
 msgstr "ग्राफ टेम्पलेट छवि प्रारूप"
 
-#: include/global_form.php:1708 package_import.php:897
+#: include/global_form.php:1708 package_import.php:936
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "सभी नए ग्राफ़ टेम्पलेट के लिए डिफ़ॉल्ट छवि प्रारूप का उपयोग किया जाना है।"
 
 #: include/global_form.php:1714 include/global_settings.php:680
-#: package_import.php:904
+#: package_import.php:943
 msgid "Graph Template Height"
 msgstr "ग्राफ टेम्पलेट ऊंचाई"
 
-#: include/global_form.php:1715 package_import.php:905
+#: include/global_form.php:1715 package_import.php:944
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "सभी नए ग्राफ़ टेम्पलेट के लिए डिफ़ॉल्ट ग्राफ़ चौड़ाई का उपयोग किया जाना है।"
 
 #: include/global_form.php:1722 include/global_settings.php:688
-#: package_import.php:913
+#: package_import.php:952
 msgid "Graph Template Width"
 msgstr "ग्राफ टेम्पलेट चौड़ाई"
 
-#: include/global_form.php:1723 package_import.php:914
+#: include/global_form.php:1723 package_import.php:953
 msgid "The Width to be used when importing or updating Graph Templates."
 msgstr "सभी नए ग्राफ़ टेम्पलेट के लिए डिफ़ॉल्ट ग्राफ़ चौड़ाई का उपयोग किया जाना है।"
 
@@ -10471,7 +10471,7 @@ msgstr "LDAP CN सेटिंग्स"
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "वह फ़ील्ड जो LDAP से लिया गया एक नया उपयोगकर्ता बनाते समय पूरा नाम बदल देगा। (खिड़कियों पर: displayname)"
 
-#: include/global_settings.php:1893 package_import.php:504
+#: include/global_settings.php:1893 package_import.php:543
 msgid "Email"
 msgstr "ईमेल"
 
@@ -11555,7 +11555,7 @@ msgstr "पुन: प्राप्त करना"
 #: lib/api_automation.php:33 lib/auth.php:3085 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
-#: package_import.php:528 package_import.php:606 utilities.php:211
+#: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "अज्ञात"
@@ -14005,7 +14005,7 @@ msgstr "अपडेट करें"
 msgid "Damaged"
 msgstr "डेटा स्रोत, ग्राफ़"
 
-#: lib/import.php:2876 package_import.php:598
+#: lib/import.php:2876 package_import.php:637
 msgid "Unchanged"
 msgstr "[अपरिवर्तित]"
 
@@ -14576,7 +14576,7 @@ msgstr "दूरदराज के मतदाताओं के लिए, 
 msgid "Required Writable at Install Time Only"
 msgstr "केवल समय स्थापित करने पर आवश्यक लेखन"
 
-#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:600
+#: lib/installer.php:2512 lib/installer.php:2544 package_import.php:639
 msgid "Not Writable"
 msgstr "लिखने योग्य"
 
@@ -14744,11 +14744,11 @@ msgstr "उन टेम्प्लेट को अपडेट करना �
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "कृपया उस इंस्ट्रूमेंट टेम्प्लेट को चुनें, जिसे आप इंस्टाल के बाद इस्तेमाल करना चाहते हैं। यदि आप ऑपरेटिंग सिस्टम विंडोज हैं, तो आपको यह सुनिश्चित करने की आवश्यकता है कि आप &#39;विंडोज डिवाइस&#39; टेम्पलेट का चयन करें। यदि आपका ऑपरेटिंग सिस्टम लिनक्स / यूनिक्स है, तो सुनिश्चित करें कि आप &#39;स्थानीय लिनक्स मशीन&#39; डिवाइस टेम्पलेट का चयन करें।"
 
-#: lib/installer.php:2749 package_import.php:498 plugins.php:630
+#: lib/installer.php:2749 package_import.php:537 plugins.php:630
 msgid "Author"
 msgstr "लेखक "
 
-#: lib/installer.php:2749 package_import.php:501
+#: lib/installer.php:2749 package_import.php:540
 msgid "Homepage"
 msgstr "होम पेज"
 
@@ -16522,120 +16522,120 @@ msgstr "पैकेज %s सफलतापूर्वक आयात कि
 msgid "The Package %s Import Failed"
 msgstr "पैकेज %s इम्पोर्ट नहीं हो सका"
 
-#: package_import.php:307
+#: package_import.php:315
 #, fuzzy
 msgid "Error: Invalid file path."
 msgstr "एक मान्य फ़ाइल पथ दर्ज करें"
 
-#: package_import.php:390 package_import.php:396 package_import.php:452
-#: package_import.php:455
+#: package_import.php:398 package_import.php:404 package_import.php:487
+#: package_import.php:490
 msgid "Error in Package"
 msgstr "डेटा क्वेरी में त्रुटि"
 
-#: package_import.php:390
+#: package_import.php:398
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
 msgstr "अधिक जानकारी के लिए cacti.log देखें।  ऐसा हो सकता है कि आपके पास या तो API कुंजी त्रुटि थी या पैकेज के साथ छेड़छाड़ की गई थी, या स्थान उपलब्ध नहीं है।"
 
-#: package_import.php:390
+#: package_import.php:398
 #, fuzzy, php-format
 msgid "The package \"%s\" download or validation failed"
 msgstr "पैकेज \"{ 0 }\" डाउनलोड या सत्यापन विफल रहा"
 
-#: package_import.php:396
+#: package_import.php:404
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
 msgstr "अधिक जानकारी के लिए cacti.log देखें।  ऐसा हो सकता है कि आपके पास या तो API कुंजी त्रुटि थी या पैकेज के साथ छेड़छाड़ की गई थी, या स्थान उपलब्ध नहीं है"
 
-#: package_import.php:396
+#: package_import.php:404
 msgid "The package download or validation failed"
 msgstr "पैकेज डाउनलोड या सत्यापन विफल रहा"
 
-#: package_import.php:452
+#: package_import.php:487
 msgid "Package XML File Damaged."
 msgstr "पैकेज फ़ाइलें"
 
-#: package_import.php:452
+#: package_import.php:487
 msgid "The XML files appears to be invalid.  Please contact the package author"
 msgstr "XML फ़ाइलें अमान्य प्रतीत होती हैं।  कृपया पैकेज के लेखक से संपर्क करें"
 
-#: package_import.php:455
+#: package_import.php:490
 msgid "Check the package repository file for files that should exist and find the one that is missing"
 msgstr "उन फ़ाइलों के लिए पैकेज रिपॉजिटरी फ़ाइल की जाँच करें जो मौजूद होनी चाहिए और जो मौजूद नहीं है उसे ढूंढें"
 
-#: package_import.php:455
+#: package_import.php:490
 msgid "The XML files for the package does not exist"
 msgstr "पैकेज के लिए XML फ़ाइलें मौजूद नहीं हैं"
 
-#: package_import.php:494
+#: package_import.php:533
 msgid "Packages Details"
 msgstr "पैकेज फ़ाइलें"
 
-#: package_import.php:507
+#: package_import.php:546
 msgid "Device class"
 msgstr "डिवाइस नियम"
 
-#: package_import.php:513
+#: package_import.php:552
 msgid "Copyright"
 msgstr "दायें"
 
-#: package_import.php:538
+#: package_import.php:577
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
 msgstr "पैकेज फ़ाइल नाम आयात करें [ कोई भी चयनित सभी आयात नहीं करता है, चुनिंदा रूप से आयात करने के लिए चेक करें]"
 
-#: package_import.php:542
+#: package_import.php:581
 msgid "Package"
 msgstr "पैकेज फ़ाइलें"
 
-#: package_import.php:545
+#: package_import.php:584
 msgid "Filename"
 msgstr "नाम बदलें"
 
-#: package_import.php:596 package_import.php:683 templates_import.php:322
+#: package_import.php:635 package_import.php:722 templates_import.php:322
 #, fuzzy
 msgid "Differences"
 msgstr "भिन्नताएँ:"
 
-#: package_import.php:623
+#: package_import.php:662
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr "पैकेज टेम्पलेट आयात करें [ कोई भी चयनित सभी आयात नहीं करता है, चुनिंदा रूप से आयात करने के लिए चेक करें]"
 
-#: package_import.php:627 templates_import.php:240
+#: package_import.php:666 templates_import.php:240
 msgid "Template Type"
 msgstr "टेम्प्लेट शीर्षक"
 
-#: package_import.php:636 templates_import.php:252
+#: package_import.php:675 templates_import.php:252
 msgid "Changes/Diffferences"
 msgstr "डिवाइस बदलें"
 
-#: package_import.php:687 templates_import.php:326
+#: package_import.php:726 templates_import.php:326
 msgid "Orphans"
 msgstr "अनाथ"
 
-#: package_import.php:740
+#: package_import.php:779
 msgid "File Differences for: "
 msgstr "इसके लिए फ़ाइल अंतर:"
 
-#: package_import.php:847
+#: package_import.php:886
 msgid "Local Package Import File"
 msgstr "पैकेज फ़ाइलें"
 
-#: package_import.php:848
+#: package_import.php:887
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
 msgstr "अपलोड करने और आयात करने के लिए आपकी स्थानीय मशीन पर स्थित *.xml.gz फ़ाइल।"
 
-#: package_import.php:853
+#: package_import.php:892
 msgid "Automatically Trust Signer"
 msgstr "स्वचालित रूप से कैक्टि में जोड़ें"
 
-#: package_import.php:855
+#: package_import.php:894
 #, fuzzy
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
 msgstr "यदि चेक किया जाता है, तो Kadupul स्वचालित रूप से इस और उस लेखक द्वारा भविष्य के किसी भी पैकेज के लिए हस्ताक्षरकर्ता पर भरोसा करेगा।"
 
-#: package_import.php:891
+#: package_import.php:930
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "डेटा स्रोत और ग्राफ़ टेम्पलेट सुझाए गए मूल्य रिकॉर्ड को बदलें।  ग्राफ़ और डेटा स्रोत या तो डेटा क्वेरी रीइंडेक्स के बाद या जबरन सुझाए गए मानों को बदलें प्रक्रिया का उपयोग करके नए नामों पर विचार करेंगे।"
 
-#: package_import.php:962
+#: package_import.php:1001
 msgid "Package Import"
 msgstr "आयात करें"
 
