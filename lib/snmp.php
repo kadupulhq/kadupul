@@ -142,7 +142,7 @@ function cacti_snmp_session($hostname, $community, $version, $auth_user = '', $a
 	}
 
 	try {
-		$session = @new SNMP($version, $snmp_hostname . ':' . $port, ($version == 3 ? $auth_user : $community), $timeout_us, $retries);
+		$session = @new SNMP($version, $snmp_hostname . ':' . (is_numeric($port) ? (int) $port : 161), ($version == 3 ? $auth_user : $community), $timeout_us, $retries);
 	} catch (Exception $e) {
 		return false;
 	}
@@ -1287,6 +1287,8 @@ function cacti_snmp_options_sanitize($version, $community, &$port, &$timeout, &$
 
 		return false;
 	}
+
+	$port = (int) $port;
 
 	return true;
 }
