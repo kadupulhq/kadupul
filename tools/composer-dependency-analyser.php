@@ -69,6 +69,10 @@ return (new Configuration())
         'symfony/translation',
     ], [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV])
 
+    // Registered in config/bundles.php for dev/test only; the production
+    // container test verifies that no profiler bundle or service is present.
+    ->ignoreErrorsOnPackage('symfony/web-profiler-bundle', [ErrorType::DEV_DEPENDENCY_IN_PROD])
+
     // Used but not declared. Tracked in the Phase 1 pull request as follow-ups:
     // the extensions ship with PHP builds, so declaring them changes what an
     // installation must provide.
