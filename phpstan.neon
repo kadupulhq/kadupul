@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# The phpstan extensions (symfony, doctrine, strict-rules) load through
+# phpstan/extension-installer, so they are not listed in `includes`.
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+    checkUninitializedProperties: true
+    checkImplicitMixed: true
+    reportUnmatchedIgnoredErrors: true
+    symfony:
+        # Written by `APP_ENV=dev APP_DEBUG=1 php bin/console cache:warmup`;
+        # `make phpstan` and the static-analysis job build it first.
+        containerXmlPath: var/cache/dev/Kadupul_KernelDevDebugContainer.xml
