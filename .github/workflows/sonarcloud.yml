@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up scope runner
-        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12
       - name: Install coverage artifact verifier
@@ -106,7 +106,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        # Same accounts as the CI database contracts job.
+        # Same server accounts as the CI database jobs.
         env:
           MARIADB_DATABASE: kadupul_test
           MARIADB_USER: cactiuser
@@ -134,13 +134,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -154,16 +154,8 @@ jobs:
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
@@ -185,7 +177,7 @@ jobs:
       # PCOV guesses its root from the working directory and would instrument
       # only tests/, so point it at the checkout.
       - name: Set up Node for application assets
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -204,8 +196,10 @@ jobs:
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
-          KADUPUL_TEST_MYSQL_USER: cactiuser
-          KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+          # The CDEF native probes create and drop their own databases, so the
+          # test account is root, as in the CI CDEF job.
+          KADUPUL_TEST_MYSQL_USER: root
+          KADUPUL_TEST_MYSQL_PASSWORD: cactiroot
           KADUPUL_TEST_MYSQL_ADMIN_USER: root
           KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
           SHARD: ${{ matrix.shard }}
@@ -267,13 +261,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -287,16 +281,8 @@ jobs:
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
@@ -311,7 +297,7 @@ jobs:
           composer install --no-progress --no-interaction
 
       - name: Set up Node for application assets
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -345,7 +331,7 @@ jobs:
           test -s tests/coverage.php
 
       - name: Set up integration runner
-        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
 
@@ -407,7 +393,7 @@ jobs:
         credentials:
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        # Same accounts as the CI database contracts job.
+        # Same server accounts as the CI database jobs.
         env:
           MARIADB_DATABASE: kadupul_test
           MARIADB_USER: cactiuser
@@ -435,13 +421,13 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Authenticate to GitHub Container Registry
-        env:
-          GHCR_TOKEN: ${{ github.token }}
-          GHCR_USERNAME: ${{ github.actor }}
-        run: bash tests/tools/login_ghcr.sh
+        uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
 
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
@@ -455,16 +441,8 @@ jobs:
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends rrdtool
 
-      - name: Locate Composer download cache
-        id: composer-cache
-        run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
       - name: Cache Composer downloads
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ${{ steps.composer-cache.outputs.directory }}
-          key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
-          restore-keys: |
-            composer-downloads-${{ runner.os }}-${{ runner.arch }}-
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
 
       - name: Install application dependencies
         run: composer install --no-interaction --no-progress
@@ -486,7 +464,7 @@ jobs:
       # PCOV guesses its root from the working directory and would instrument
       # only tests/, so point it at the checkout.
       - name: Set up Node for application assets
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
         with:
           node-version: '22.22.2'
           cache: npm
@@ -503,8 +481,10 @@ jobs:
       - name: Symfony module coverage
         env:
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_test;charset=utf8mb4
-          KADUPUL_TEST_MYSQL_USER: cactiuser
-          KADUPUL_TEST_MYSQL_PASSWORD: cactiuser
+          # The CDEF native probes create and drop their own databases, so the
+          # test account is root, as in the CI CDEF job.
+          KADUPUL_TEST_MYSQL_USER: root
+          KADUPUL_TEST_MYSQL_PASSWORD: cactiroot
           KADUPUL_TEST_MYSQL_ADMIN_USER: root
           KADUPUL_TEST_MYSQL_ADMIN_PASSWORD: cactiroot
         run: |
@@ -514,7 +494,7 @@ jobs:
           test -s var/symfony-coverage.php
 
       - name: Set up integration runner
-        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
 
@@ -619,7 +599,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up integration runner
-        uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
 

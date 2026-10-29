@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -7,18 +9,19 @@ test('the actual CSP endpoint enforces HTTP methods and report validation', func
     $root = dirname(__DIR__, 4);
     $directory = realpath(sys_get_temp_dir()) . '/csp-http-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
-    copy($root . '/lib/csp_report_endpoint.php', $directory . '/endpoint.php');
-    $coverage = $this->getTestResultObject()->getCodeCoverage();
-    $reservation = stream_socket_server('tcp://127.0.0.1:0', $errno, $error);
-    $this->assertIsResource($reservation, $error);
-    $address = stream_socket_get_name($reservation, false);
-    fclose($reservation);
-    $environment = getenv();
-    $environment['HELPER_UNION_HTTP_DIRECTORY'] = $directory;
-    $environment['HELPER_UNION_HTTP_COVERAGE'] = $coverage === null ? '0' : '1';
-    $command = [PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'sys_temp_dir=' . $directory, '-d', 'log_errors=1', '-d', 'error_log=' . $directory . '/endpoint.log', '-d', 'auto_prepend_file=' . $root . '/tests/Fixtures/csp-report-http-coverage.php', '-S', $address, '-t', $directory];
     $server = null;
+    $reservation = null;
     try {
+        copy($root . '/lib/csp_report_endpoint.php', $directory . '/endpoint.php');
+        $coverage = $this->getTestResultObject()->getCodeCoverage();
+        $reservation = stream_socket_server('tcp://127.0.0.1:0', $errno, $error);
+        $this->assertIsResource($reservation, $error);
+        $address = stream_socket_get_name($reservation, false);
+        fclose($reservation);
+        $environment = getenv();
+        $environment['HELPER_UNION_HTTP_DIRECTORY'] = $directory;
+        $environment['HELPER_UNION_HTTP_COVERAGE'] = $coverage === null ? '0' : '1';
+        $command = [PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'error_reporting=24575', '-d', 'sys_temp_dir=' . $directory, '-d', 'log_errors=1', '-d', 'error_log=' . $directory . '/endpoint.log', '-d', 'auto_prepend_file=' . $root . '/tests/Fixtures/csp-report-http-coverage.php', '-S', $address, '-t', $directory];
         $server = proc_open($command, [0 => ['pipe', 'r'], 1 => ['file', $directory . '/server.log', 'a'], 2 => ['file', $directory . '/server.log', 'a']], $pipes, $root, $environment);
         $this->assertIsResource($server);
         fclose($pipes[0]);
@@ -43,6 +46,8 @@ test('the actual CSP endpoint enforces HTTP methods and report validation', func
         }
         if ($expected === 204) {
             $this->assertStringContainsString('CSP violation: script-src blocked inline on https://example.test/', file_get_contents($directory . '/endpoint.log'));
+        } else {
+            $this->assertFileDoesNotExist($directory . '/endpoint.log');
         }
         if ($coverage !== null) {
             $deadline = microtime(true) + 5;
@@ -57,6 +62,9 @@ test('the actual CSP endpoint enforces HTTP methods and report validation', func
             $coverage->merge(unserialize(file_get_contents($reports[0])));
         }
     } finally {
+        if (is_resource($reservation)) {
+            fclose($reservation);
+        }
         if (is_resource($server)) {
             proc_terminate($server);
             proc_close($server);
@@ -71,4 +79,16 @@ test('the actual CSP endpoint enforces HTTP methods and report validation', func
     'GET requires POST' => ['GET', '', 405, ''],
     'invalid POST is rejected' => ['POST', 'not JSON', 400, 'Invalid JSON'],
     'valid POST is logged' => ['POST', '{"csp-report":{"violated-directive":"script-src","blocked-uri":"inline","document-uri":"https://example.test/"}}', 204, ''],
+    'report at the size limit is logged' => ['POST', cspReportOfLength(16384), 204, ''],
+    'report one byte over the limit is refused' => ['POST', cspReportOfLength(16385), 400, 'Body exceeds size limit'],
+    'large report is refused' => ['POST', cspReportOfLength(1048576), 400, 'Body exceeds size limit'],
 ]);
+
+/** A well-formed report padded to exactly $length bytes. */
+function cspReportOfLength(int $length): string
+{
+    $prefix = '{"csp-report":{"violated-directive":"script-src","blocked-uri":"inline","document-uri":"https://example.test/","original-policy":"';
+    $suffix = '"}}';
+
+    return $prefix . str_repeat('a', $length - strlen($prefix) - strlen($suffix)) . $suffix;
+}

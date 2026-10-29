@@ -15,6 +15,18 @@ parameters:
     kadupul.monitoring.rrd_paths: {}
     # Provisional ceiling on distinct series per metric for the normalizer.
     kadupul.telemetry.series_limit_per_metric: 1000
+    # Queue mode only. Used when KADUPUL_BOOST_TRANSPORT_DSN is unset.
+    # redeliver_timeout (partition_timeout + 600) keeps Doctrine from handing a
+    # running partition to a second consumer. It is a DSN option, not a transport
+    # option, because other transports reject options they do not know; a DSN
+    # that replaces this one must set its own.
+    kadupul.boost.default_dsn: 'doctrine://local?queue_name=boost&table_name=kadupul_messenger_messages&auto_setup=false&redeliver_timeout=15600'
+    # Seconds a consumer waits for one partition worker. The worker gives its
+    # child 3 * boost_rrd_update_max_runtime; this outer limit must exceed 3 times
+    # the largest runtime option in include/global_arrays.php ($boost_max_runtime,
+    # 4800), or it would kill the worker while the child is still inside its
+    # own deadline. 3 * 4800 + 600. default_dsn adds 600 for redeliver_timeout.
+    kadupul.boost.partition_timeout: 15000
 
 services:
     _defaults:
@@ -73,6 +85,8 @@ services:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalColumnWidening
     Kadupul\Platform\Infrastructure\Persistence\CactiSchemaFile: ~
     Kadupul\Platform\Infrastructure\Legacy\LegacyWorkerProcess: ~
+    Kadupul\Platform\Contract\LegacyWorkerRunner:
+        alias: Kadupul\Platform\Infrastructure\Legacy\LegacyWorkerProcess
     Kadupul\Platform\Application\Port\Clock:
         alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
     Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
@@ -338,6 +352,29 @@ services:
     Kadupul\Graphing\Infrastructure\:
         resource: '../src/Graphing/Infrastructure/'
         exclude: ['../src/Graphing/Infrastructure/Rrd/', '../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php']
+    Kadupul\Graphing\Application\Port\BoostPartitionWriter:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyBoostPartitionWriter
+    # Public so poller_boost.php can reach it through the kernel container when the
+    # master runs in queue mode.
+    Kadupul\Graphing\Infrastructure\Symfony\BoostPartitionDispatcher:
+        public: true
+    Kadupul\Graphing\Infrastructure\Symfony\FlushBoostPartitionHandler:
+        arguments:
+            $timeout: '%kadupul.boost.partition_timeout%'
+    Kadupul\Graphing\Application\Port\BoostImageCache:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\InstallationBoostImageCache
+    Kadupul\Graphing\Infrastructure\Legacy\InstallationBoostImageCache:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Graphing\Infrastructure\Symfony\BoostSchedule:
+        arguments:
+            $enabled: '%env(default::KADUPUL_BOOST_SCHEDULER)%'
+    Kadupul\Graphing\Infrastructure\Symfony\BoostRunHandler:
+        arguments:
+            $enabled: '%env(default::KADUPUL_BOOST_SCHEDULER)%'
+    Kadupul\Graphing\Infrastructure\Symfony\BoostState:
+        arguments:
+            $directory: '%kernel.project_dir%/var/scheduler'
     Kadupul\Graphing\Application\Query\ListPaletteColors: ~
     Kadupul\Graphing\Application\Query\FindPaletteColor: ~
     Kadupul\Graphing\Application\Query\FindPaletteColors: ~

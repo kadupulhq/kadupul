@@ -23,6 +23,7 @@ if (isset($scenario['publication'])) {
 $GLOBALS['cacheWriteCount'] = 0;
 $config = array('library_path' => $directory, 'base_path' => $root, 'poller_id' => 1, 'connection' => 'online');
 $context = array();
+require $root . '/include/vendor/autoload.php';
 require $root . '/include/global_constants.php';
 require $root . '/lib/time.php';
 require $root . '/tests/Helpers/PhpSource.php';
