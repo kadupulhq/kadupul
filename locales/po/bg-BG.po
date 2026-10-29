@@ -2581,7 +2581,7 @@ msgid "No Tree Rules Found"
 msgstr "Не са намерени правила за дърво"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6328 lib/functions.php:6397
-#: lib/functions.php:6503 lib/functions.php:7174 poller.php:410 poller.php:560
+#: lib/functions.php:6503 lib/functions.php:7181 poller.php:410 poller.php:560
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
@@ -4607,7 +4607,7 @@ msgstr "Cacti Poller все още не работи."
 msgid "Real-time has been disabled by your administrator."
 msgstr "Реално време е деактивирано от администратора ви."
 
-#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7973
+#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7980
 #: permission_denied.php:46 permission_denied.php:53
 msgid "Permission Denied"
 msgstr "Отказано разрешение"
@@ -5970,8 +5970,9 @@ msgstr "Не са намерени шаблони на устройства"
 
 #: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
 #: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:4031 lib/auth.php:4050 lib/auth.php:4269
-#: lib/auth.php:4299 lib/auth.php:4325 lib/auth.php:4338
+#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
+#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
+#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
 msgid "Access Denied!  Login Failed."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
@@ -5987,16 +5988,16 @@ msgstr "Трябва да сте влезли, за да имате достъп
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "FATAL: Трябва да сте влезли в системата за достъп до тази зона на Cacti."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:4784
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "Влезте отново"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "If you feel that this is an error. Please contact your Cacti Administrator."
 msgstr "Ако смятате, че това е грешка. Моля, свържете се с вашия Cacti Administrator."
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
 msgstr "Нямате достъп до този раздел на Cacti."
 
@@ -12879,41 +12880,42 @@ msgstr "Уеб базовото удостоверяване е конфигур
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "%s удостоверено от Web Server, но както шаблонът, така и гостът не са дефинирани в Cacti."
 
-#: lib/auth.php:3873 lib/auth.php:4043 lib/auth.php:4309
+#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
+#: lib/auth.php:4651
 msgid "Access Denied!  No password provided by user."
 msgstr "Отказан достъп! Не е предоставена парола от потребителя."
 
-#: lib/auth.php:4024 lib/auth.php:4982
+#: lib/auth.php:4273 lib/auth.php:5387
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Достъпът е отказан! Потребителският идентификатор на шаблона %s не съществува.  Моля, свържете се с вашия администратор."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4720
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Вашият Cacti администратор е принудил сложни пароли за влизания и текущата ви Cacti парола не отговаря на новите изисквания. Следователно трябва да промените паролата си сега."
 
-#: lib/auth.php:4390
+#: lib/auth.php:4751
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Паролата трябва да е поне% d знака!"
 
-#: lib/auth.php:4396
+#: lib/auth.php:4757
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Вашата парола трябва да съдържа поне 1 цифров знак!"
 
-#: lib/auth.php:4400
+#: lib/auth.php:4761
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Вашата парола трябва да съдържа комбинация от малки букви и главни букви!"
 
-#: lib/auth.php:4406
+#: lib/auth.php:4767
 msgid "Your password must contain at least 1 special character!"
 msgstr "Вашата парола трябва да съдържа поне 1 специален знак!"
 
-#: lib/auth.php:4777
+#: lib/auth.php:5182
 msgid "Cacti Login Failure"
 msgstr "Изчистена регистрация на кактуси"
 
-#: lib/auth.php:5064
+#: lib/auth.php:5469
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Удостоверяването преди това не е било зададено. Опит за настройка на локално удостоверяване, но не беше намерен административен акаунт."
 
@@ -13721,7 +13723,7 @@ msgstr "Версия %s %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7174
+#: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите кактуси включват липсващ файл %s. Моля, намерете и заменете този файл"

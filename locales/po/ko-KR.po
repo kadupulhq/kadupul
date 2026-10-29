@@ -2586,7 +2586,7 @@ msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6328 lib/functions.php:6397
-#: lib/functions.php:6503 lib/functions.php:7174 poller.php:410 poller.php:560
+#: lib/functions.php:6503 lib/functions.php:7181 poller.php:410 poller.php:560
 #: poller.php:635 poller.php:679 poller.php:827 poller.php:934
 #: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
@@ -4577,7 +4577,7 @@ msgstr "Cacti Poller는 아직 운영되지 않았습니다."
 msgid "Real-time has been disabled by your administrator."
 msgstr "관리자가 실시간을 비활성화했습니다."
 
-#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7973
+#: graph_realtime.php:88 include/auth.php:314 lib/functions.php:7980
 #: permission_denied.php:46 permission_denied.php:53
 msgid "Permission Denied"
 msgstr "사용 권한이 거부되었습니다."
@@ -5941,8 +5941,9 @@ msgstr "장치 템플릿을 찾을 수 없음"
 
 #: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
 #: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:4031 lib/auth.php:4050 lib/auth.php:4269
-#: lib/auth.php:4299 lib/auth.php:4325 lib/auth.php:4338
+#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
+#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
+#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
 msgid "Access Denied!  Login Failed."
 msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
 
@@ -5958,16 +5959,16 @@ msgstr "Cacti의이 영역에 액세스하려면 로그인해야합니다."
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "치명적 : Cacti의이 영역에 액세스하려면 로그인해야합니다."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:4784
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "다시 로그인"
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "If you feel that this is an error. Please contact your Cacti Administrator."
 msgstr "이것이 오류라고 생각하면. Cacti 관리자에게 문의하십시오."
 
-#: include/auth.php:315 lib/functions.php:7974 permission_denied.php:55
+#: include/auth.php:315 lib/functions.php:7981 permission_denied.php:55
 msgid "You are not permitted to access this section of Cacti."
 msgstr "Cacti의이 섹션에 액세스하는 것은 허용되지 않습니다."
 
@@ -12851,41 +12852,42 @@ msgstr "웹 기본 인증이 구성되었지만 사용자 이름이 웹 서버�
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "%s은 (는) Web Server에 의해 인증되었지만 Cacti에는 템플릿과 게스트 사용자가 모두 정의되어 있지 않습니다."
 
-#: lib/auth.php:3873 lib/auth.php:4043 lib/auth.php:4309
+#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
+#: lib/auth.php:4651
 msgid "Access Denied!  No password provided by user."
 msgstr "접근 불가! 사용자가 제공한 비밀번호가 없습니다."
 
-#: lib/auth.php:4024 lib/auth.php:4982
+#: lib/auth.php:4273 lib/auth.php:5387
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "액세스가 거부되었습니다! 템플릿 사용자 ID %s 이 (가) 존재하지 않습니다. 관리자에게 문의하십시오."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4720
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Cacti 관리자가 로그인을 위해 복잡한 비밀번호를 설정했으며 현재 Cacti 비밀번호가 새로운 요구 사항과 일치하지 않습니다. 따라서 지금 비밀번호를 변경해야합니다."
 
-#: lib/auth.php:4390
+#: lib/auth.php:4751
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "비밀번호는 % d 자 이상이어야합니다!"
 
-#: lib/auth.php:4396
+#: lib/auth.php:4757
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "비밀번호는 숫자가 1 자 이상이어야합니다!"
 
-#: lib/auth.php:4400
+#: lib/auth.php:4761
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "암호에는 소문자와 대문자가 혼합되어 있어야합니다."
 
-#: lib/auth.php:4406
+#: lib/auth.php:4767
 msgid "Your password must contain at least 1 special character!"
 msgstr "비밀번호는 적어도 1 개의 특수 문자를 포함해야합니다!"
 
-#: lib/auth.php:4777
+#: lib/auth.php:5182
 msgid "Cacti Login Failure"
 msgstr "선인장 로그 지워짐"
 
-#: lib/auth.php:5064
+#: lib/auth.php:5469
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "인증이 이전에 설정되지 않았습니다. 로컬 인증으로 설정하려고 했지만 관리 계정을 찾을 수 없습니다."
 
@@ -13693,7 +13695,7 @@ msgstr "버전  %s  %s"
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7174
+#: lib/functions.php:7181
 #, php-format
 msgid "WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 선인장 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"

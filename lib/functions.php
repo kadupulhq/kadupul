@@ -7104,16 +7104,23 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 	/* Refuse link-local (including the 169.254.169.254 metadata address),
 	 * 0.0.0.0/8 and the other reserved ranges. Loopback stays allowed, as in
 	 * 1.2.31, for a main and remote collector on one host or in host-network
-	 * containers. An IPv4-mapped IPv6 address is checked as the IPv4 address it
-	 * carries, so ::ffff:169.254.169.254 cannot bypass the refusal. RFC1918
+	 * containers. Mapped, compatible, NAT64 and 6to4 IPv6 addresses are checked
+	 * as the IPv4 address they carry. RFC1918
 	 * private ranges stay allowed because remote Data Collectors normally run
 	 * on internal networks. */
 	$target_ip = is_ipaddress($hostname) ? $hostname : gethostbyname($hostname);
 	$check_ip  = $target_ip;
 	$packed    = @inet_pton($target_ip);
 
-	if ($packed !== false && strlen($packed) == 16 && substr($packed, 0, 12) === str_repeat("\0", 10) . "\xff\xff") {
-		$packed   = substr($packed, 12);
+	if ($packed !== false && strlen($packed) == 16) {
+		if (str_starts_with($packed, str_repeat("\0", 10) . "\xff\xff")
+			|| str_starts_with($packed, "\x00\x64\xff\x9b" . str_repeat("\0", 8))
+			|| (str_starts_with($packed, str_repeat("\0", 12)) && ltrim(substr($packed, 12), "\0") !== '' && substr($packed, 12) !== "\0\0\0\1")) {
+			$packed = substr($packed, 12);
+		} elseif (str_starts_with($packed, "\x20\x02")) {
+			$packed = substr($packed, 2, 4);
+		}
+
 		$check_ip = inet_ntop($packed);
 	}
 
