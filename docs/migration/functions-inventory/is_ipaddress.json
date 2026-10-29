@@ -3,8 +3,8 @@
     "name": "is_ipaddress",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7236,
-        "end_line": 7258,
+        "start_line": 7272,
+        "end_line": 7294,
         "line_count": 23,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 16, "core_outside_functions_php": 13, "tests": 13, "plugins": 0},
+        "fan_out": {"core": 17, "core_outside_functions_php": 13, "tests": 14, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

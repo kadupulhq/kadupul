@@ -12,7 +12,7 @@ const issue = { key: 'sonar-1', rule: 'phpsecurity:S2076', component: 'project:h
 test('legacy device entry delegates to Symfony without emitting mutation links', () => {
   const source = readFileSync(new URL('../../host.php', import.meta.url), 'utf8');
   assert.match(source, /inventory\/devices\/legacy/);
-  assert.match(source, /kernel->handle/);
+  assert.match(source, /LegacyPageForwarder::run\(\$kernel, __DIR__, 'app\.php\/inventory\/devices\/legacy'\)/);
   assert.ok(!source.includes('host.php?action=reindex'));
   assert.ok(!source.includes('api_reindex_host'));
 });

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 23:56-0700\n"
+"POT-Creation-Date: 2026-10-29 01:09-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2399,7 +2399,7 @@ msgid "No Tree Rules Found"
 msgstr "لم يتم العثور على قواعد شجرة"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3881,7 +3881,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "لم يعمل Kadupul Poller بعد."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "تم رفض الإذن"
 
@@ -4843,12 +4843,12 @@ msgstr "FATAL: يجب تسجيل الدخول للوصول إلى هذه الم�
 msgid "Login Again"
 msgstr "تسجيل الدخول مرة أخرى"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "إذا كنت تشعر أن هذا خطأ. يرجى الاتصال بمدير Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "لا يسمح لك بالوصول إلى هذا القسم من Kadupul."
@@ -12119,430 +12119,430 @@ msgstr "لا يتطابق ملف RRD مع ملف تعريف البيانات"
 msgid "System Device"
 msgstr "جهاز النظام"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:73 lib/data_query.php:475
 msgid "Automation Execution for Data Query complete"
 msgstr "اكتمال التنفيذ التلقائي لاستعلام البيانات"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:76 lib/data_query.php:478
 msgid "Plugin Hooks complete"
 msgstr "البرنامج المساعد هوكس كاملة"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:94
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "تشغيل استعلام البيانات [%s]."
 
-#: lib/data_query.php:97
+#: lib/data_query.php:106
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "نوع العثور = \"%s\" [%s]."
 
-#: lib/data_query.php:119
+#: lib/data_query.php:128
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "نوع غير معروف = '%s'."
 
-#: lib/data_query.php:154
+#: lib/data_query.php:163
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "تحذير: تم تغيير &quot;اقتران مجال&quot; الفرز. قد تحدث مشكلات إعادة التخطيط!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:175
 msgid "Update Data Query Sort Cache complete"
 msgstr "اكتمال تحديث البيانات فرز ذاكرة التخزين المؤقت"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:202
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "تم العثور على %s معرفات البيانات المحلية للتحقق منها"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:308
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "تم اكتشاف تغيير في الفهرس! المؤشر الحالي: %s, السابقالفهرس: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:332
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "تم الكشف عن إزالة مؤشر عابر! السابقالفهرس: %s. لم يتم اتخاذ أي إجراء."
 
-#: lib/data_query.php:326
+#: lib/data_query.php:335
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "تم الكشف عن إزالة الفهرس! السابقفهرس: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:375
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "التحقق من اكتمال معرف البيانات المحلي %s"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:378
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "تم العثور على %s تم تغييرها ومعرف بيانات محلي معزول %s لإعادة تعيينه."
 
-#: lib/data_query.php:372
+#: lib/data_query.php:381
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "إعادة رسم الرسوم البيانية إلى فهارسها الجديدة"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:387 lib/data_query.php:394
 msgid "Done updating Data Source Title Cache"
 msgstr "تكرار مصدر بيانات الملف"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:390 lib/data_query.php:397
 msgid "Done updating Graph Title Cache"
 msgstr "تم تحديث ذاكرة التخزين المؤقت لعنوان الرسم البياني"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:401
 msgid "Index Association with Local Data complete"
 msgstr "اكتمال اقتران مؤشر مع البيانات المحلية"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:407
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "اكتمل تحديث ذاكرة التخزين المؤقت لإعادة الفهرسة. كانت هناك تغييرات %s في الفهرس ، و %s فهارس يتيمة."
 
-#: lib/data_query.php:402
+#: lib/data_query.php:411
 msgid "Update Poller Cache for Query complete"
 msgstr "اكتمل تحديث Poller Cache for Query"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:413
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "لم يتم اكتشاف أي تغييرات في الفهرس ، وإعادة تخطي إعادة الفهرسة وإعادة مخبأ Poller"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:467
 msgid "Automation Executing for Data Query complete"
 msgstr "اكتمال التنفيذ التلقائي لاستعلام البيانات"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:470
 msgid "Plugin hooks complete"
 msgstr "السنانير المساعد كاملة"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:529
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "التحقق من تغيير حقل الفرز. لم يتم اكتشاف أي تغييرات."
 
-#: lib/data_query.php:525
+#: lib/data_query.php:534
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "حقل فرز جديد تم اكتشافه: حقل فرز قديم \"%s\" %s\""
 
-#: lib/data_query.php:546
+#: lib/data_query.php:555
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "خطأ: حقل فرز جديد غير مناسب. حقل الفرز لن يتغير."
 
-#: lib/data_query.php:560
+#: lib/data_query.php:569
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "حقل فرز جديد تم التحقق منه. يتم تحديث حقل الفرز."
 
-#: lib/data_query.php:673
+#: lib/data_query.php:682
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "تعذر العثور على ملف XML استعلام البيانات في '%s'"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:686
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "تم العثور على ملف XML للاستعلام عن البيانات في \"%s\""
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
 msgid "Error parsing XML file into an array."
 msgstr "خطأ في تحليل ملف XML في صفيف."
 
-#: lib/data_query.php:705 lib/data_query.php:938
+#: lib/data_query.php:714 lib/data_query.php:947
 msgid "XML file parsed ok."
 msgstr "تحليل ملف XML موافق."
 
-#: lib/data_query.php:713 lib/data_query.php:941
+#: lib/data_query.php:722 lib/data_query.php:950
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "حقل غير صالح &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:942
+#: lib/data_query.php:723 lib/data_query.php:951
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "يجب أن تحتوي على حقول &lt;input&gt; input &lt;/ direction&gt; أو &lt;direction&gt; input-output &lt;/ direction&gt; فقط"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:740
 msgid "Data Query returned no indexes."
 msgstr "خطأ: لم يُرجع استعلام البيانات أي فهارس."
 
-#: lib/data_query.php:732
+#: lib/data_query.php:741
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; مفقودة في ملف XML ، &quot;عدد الفهرس غيرت&quot; غير مدعوم"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:744
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "تنفيذ البرنامج النصي لعدد الفهارس '%s'"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:747
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "تم العثور على عدد الفهارس: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:751
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; مفقودة في ملف XML ، &quot;عدد الفهرس غيرت&quot; غير مدعوم"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:753
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; في عداد المفقودين في ملف XML ، &#39;عدد الفهرس تم تغييره&#39; تمت محاكاته بواسطة عد إدخالات arg_index"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:764
 msgid "ERROR: Data Query returned no indexes."
 msgstr "خطأ: لم يُرجع استعلام البيانات أي فهارس."
 
-#: lib/data_query.php:759
+#: lib/data_query.php:768
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "تنفيذ البرنامج النصي لقائمة الفهارس '%s'، عدد الفهرسات: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:770
 msgid "Click to show Data Query output for 'index'"
 msgstr "انقر لعرض إخراج بيانات الاستعلام لـ &quot;الفهرس&quot;"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:773
 #, php-format
 msgid "Found index: %s"
 msgstr "العثور على فهرس: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1349
+#: lib/data_query.php:788 lib/data_query.php:1358
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "انقر لإظهار إخراج استعلام البيانات للحقل \"%s\""
 
-#: lib/data_query.php:785
+#: lib/data_query.php:794
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "لم يرجع حقل الفرز أي بيانات لاسم الحقل %s، متخطيا"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:796
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "تنفيذ استعلام البرنامج النصي '%s'"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:807 lib/data_query.php:814
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "تم العثور على العنصر [%s='%s'] فهرس: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:854 lib/data_query.php:870
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "المجموع: %f ، دلتا: %f ، %s"
 
-#: lib/data_query.php:928
+#: lib/data_query.php:937
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "host_id غير صالحة: %s"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:961
 msgid "Auto Bulk Walk Size Selected."
 msgstr "تم تحديد حجم السير الجماعي التلقائي."
 
-#: lib/data_query.php:974 lib/data_query.php:1033
+#: lib/data_query.php:983 lib/data_query.php:1042
 msgid "Failed to load SNMP session."
 msgstr "فشل تحميل جلسة SNMP."
 
-#: lib/data_query.php:984
+#: lib/data_query.php:993
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "حجم المشي المجمع الذي تم اختباره %d باستجابة %2.4f."
 
-#: lib/data_query.php:995
+#: lib/data_query.php:1004
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "تم تحديد حجم المسار المجمع %d."
 
-#: lib/data_query.php:998
+#: lib/data_query.php:1007
 msgid "Saving Bulk Walk Size to Device."
 msgstr "حفظ حجم المشي المجمع على الجهاز."
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:1021
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "تم إصلاح حجم الممر المجمع على %d."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1055
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "تنفيذ SNMP الحصول على عدد الفهارس @ \"%s\" عدد الفهرس: %s"
 
-#: lib/data_query.php:1048
+#: lib/data_query.php:1057
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; مفقودة في ملف XML ، &#39;عدد الفهرس المتغير&#39; الذي تمت محاكاته بواسطة إدخالات oid_index"
 
-#: lib/data_query.php:1051
+#: lib/data_query.php:1060
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "تنفيذ مسيرة SNMP لقائمة الفهارس @ '%s' عدد الفهرسات: %s"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1064
 msgid "No SNMP data returned"
 msgstr "لم يتم إرجاع أي بيانات SNMP"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1069
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "تم العثور على الفهرس في OID: القيمة \"%s\": \"%s\""
 
-#: lib/data_query.php:1091
+#: lib/data_query.php:1100
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "قائمة الفهارس التي تمت تصفيتها حسب القيمة @ '%s' عدد الفهرسات: %s"
 
-#: lib/data_query.php:1095
+#: lib/data_query.php:1104
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "الفهرس الذي تمت تصفيته حسب القيمة الموجودة في OID: القيمة \"%s\": \"%s\""
 
-#: lib/data_query.php:1111
+#: lib/data_query.php:1120
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "تصفية قائمة الفهارس @ \"%s\" عدد الفهرسات: %s"
 
-#: lib/data_query.php:1115
+#: lib/data_query.php:1124
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "تم العثور على الفهرس المصفى في OID: القيمة \"%s\": \"%s\""
 
-#: lib/data_query.php:1135
+#: lib/data_query.php:1144
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "إصلاح حقل \"الطريقة\" الخاطئ ل \"%s\" حيث تم تعريف \"rewrite_index\" أو \"oid_suffix\""
 
-#: lib/data_query.php:1142
+#: lib/data_query.php:1151
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "إدراج بيانات الفهرس للحقل '%s' [value='%s']"
 
-#: lib/data_query.php:1147
+#: lib/data_query.php:1156
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "حقل الإدخال الموجود \"%s\" [get]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1165
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "تم العثور على قاعدة إعادة كتابة OID : 's / %s / %s /'"
 
-#: lib/data_query.php:1167
+#: lib/data_query.php:1176
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite في OID: \"%s\" معرف جديد \"%s\""
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1181
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "تنفيذ SNMP الحصول على البيانات @ '%s' [value='%s']"
 
-#: lib/data_query.php:1183
+#: lib/data_query.php:1192
 #, php-format
 msgid "Field '%s' %s"
 msgstr "الحقل \"%s\" %s"
 
-#: lib/data_query.php:1244
+#: lib/data_query.php:1253
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "تنفيذ SNMP get ل %s oids (%s)"
 
-#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
+#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "لم يعرض حقل الفرز أي بيانات ل OID [%s] ، تخطي."
 
-#: lib/data_query.php:1288
+#: lib/data_query.php:1297
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "تم العثور على نتيجة للبيانات @ '%s' [value='%s']"
 
-#: lib/data_query.php:1301
+#: lib/data_query.php:1310
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "نتيجة الإعداد للبيانات @ '%s' [المفتاح = '%s' ، القيمة = '%s']"
 
-#: lib/data_query.php:1311
+#: lib/data_query.php:1320
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "تم تخطي النتيجة للبيانات @ '%s' [المفتاح = '%s' ، القيمة = '%s']"
 
-#: lib/data_query.php:1329
+#: lib/data_query.php:1338
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "حصلت على نتيجة SNMP للبيانات @ '%s' [value='%s'] (الفهرس: %s)"
 
-#: lib/data_query.php:1343
+#: lib/data_query.php:1352
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "تنفيذ SNMP الحصول على البيانات @ '%s' [value='$value']"
 
-#: lib/data_query.php:1351
+#: lib/data_query.php:1360
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "حقل الإدخال الموجود \"%s\" [المشي]"
 
-#: lib/data_query.php:1402
+#: lib/data_query.php:1411
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "تنفيذ المشي SNMP للبيانات @ '%s'"
 
-#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
-#: lib/data_query.php:1579
+#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
+#: lib/data_query.php:1588
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "لا يوجد فهرس [%s] في value_index_parse ، تخطي."
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1471
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "تم العثور على العنصر [%s='%s'] الفهرس: %s [من %s]"
 
-#: lib/data_query.php:1504
+#: lib/data_query.php:1513
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "تم العثور على ثماني توت STRING \"%s\" قيمة فك تشفيرها: \"%s\""
 
-#: lib/data_query.php:1510 lib/data_query.php:1559
+#: lib/data_query.php:1519 lib/data_query.php:1568
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "تم العثور على العنصر [%s='%s'] الفهرس: %s [من تحليل regexp oid ]"
 
-#: lib/data_query.php:1587
+#: lib/data_query.php:1596
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "تم العثور على العنصر [%s = '%s'] فهرس: %s [من تحليل قيمة regexp oid ]"
 
-#: lib/data_query.php:1822
+#: lib/data_query.php:1831
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "تم العثور على عنصر rewrite_value مزيف ، index = '%s'"
 
-#: lib/data_query.php:1835
+#: lib/data_query.php:1844
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "تعذر تحليل خريطة الترجمة (rewrite_value)"
 
-#: lib/data_query.php:1859
+#: lib/data_query.php:1868
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: \"%s\" = > \"%s\""
 
-#: lib/data_query.php:1973
+#: lib/data_query.php:1982
 msgid "Update graph data query cache complete"
 msgstr "اكتمال تحديث ذاكرة التخزين المؤقت لاستعلام بيانات الرسم البياني"
 
-#: lib/data_query.php:1992
+#: lib/data_query.php:2001
 msgid "Re-Indexing Data Query complete"
 msgstr "اكتمل إعادة فهرسة بيانات الاستعلام"
 
-#: lib/data_query.php:2144
+#: lib/data_query.php:2153
 msgid "Unknown Index"
 msgstr "فهرس غير معروف"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2764
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "يجب عليك تحديد عمود إخراج XML لمصدر البيانات '%s' وتبديل خانة الاختيار إلى يمينه"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2770
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "لا يحتوي قالب الرسم البياني على قوالب بيانات قيد الاستخدام. يرجى تصحيح قالب الرسم البياني الخاص بك"
 
@@ -12764,28 +12764,28 @@ msgstr "رسالة غير مرسلة بسبب فشل اختبار الاتصال
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "قام Kadupul بتعطيل البرنامج المساعد %s بسبب الخطأ التالي: %s!  راجع ملف سجل Kadupul لمزيد من التفاصيل."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6898
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "تحذير: يحتوي PollerID: %s على اسم مضيف غير صالح: %s. لا يمكن الوصول إليه عبر DNS!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7351 lib/functions.php:7353
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- بيتا %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "الإصدار %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7353
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7588
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "تحذير: مفتاح Kadupul تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"

@@ -11,6 +11,7 @@ const root = new URL('../../', import.meta.url);
 // Keep existing URLs and reviewed security patches while sourcing bytes from npm.
 const paths = {
   'jquery.js': 'jquery/dist/jquery.js',
+  'jquery-migrate.js': 'jquery-migrate/dist/jquery-migrate.js',
   'purify.js': 'dompurify/dist/purify.js',
   'purify.js.map': 'dompurify/dist/purify.js.map',
   'd3.js': 'd3/dist/d3.js',
