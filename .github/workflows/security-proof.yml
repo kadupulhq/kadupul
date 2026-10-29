@@ -29,9 +29,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Decides whether a pull request can affect the jobs below; every other
+  # event runs them.
+  scope:
+    name: Change scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.scope.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The test merge and both of its parents.
+          fetch-depth: 2
+          persist-credentials: false
+          sparse-checkout: tests/tools/ci_change_scope.sh
+          sparse-checkout-cone-mode: false
+      - name: Classify the change
+        id: scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: bash tests/tools/ci_change_scope.sh
+
   sink-inventory-guard:
     timeout-minutes: 20
     name: sink and architectural hotspot guard
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
@@ -57,17 +84,20 @@ jobs:
   entry-point-inventory:
     timeout-minutes: 30
     name: entry-point gate inventory
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          fetch-depth: 2
           persist-credentials: false
 
       # The classifier reads each page with nikic/php-parser, a locked dev
       # dependency, so it needs the application's PHP and composer install.
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: gd, gmp, intl, ldap, mbstring, pcntl, pdo_mysql, posix, sockets, xml
@@ -82,7 +112,7 @@ jobs:
       - name: Record the PHP interpreter
         run: echo "PHP=$(command -v php)" >> "$GITHUB_ENV"
 
-      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12
 
@@ -90,6 +120,25 @@ jobs:
       # entry point whose gate the generator cannot read from the code.
       - name: Verify entry-point gate inventory
         run: mise exec python@3.12.12 -- tests/security/verify_entry_point_inventory.sh
+
+      # Reads the baseline at the previous commit (HEAD^1: the base tip of a
+      # pull request's test merge, the queue base of a merge group, or the
+      # parent of a push), so a baseline edit cannot raise its own allowance.
+      - name: Verify legacy root web pages do not rise
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          # Only a manual or scheduled run has no previous commit to compare
+          # with, so it reports the count without enforcing it.
+          if [ "$EVENT" = pull_request ] || [ "$EVENT" = merge_group ] || [ "$EVENT" = push ]; then
+            mise exec python@3.12.12 -- python tests/security/check_legacy_page_ratchet.py --base HEAD^1
+          else
+            mise exec python@3.12.12 -- python tests/security/check_legacy_page_ratchet.py
+          fi
+
+      - name: Check the legacy page ratchet cases
+        run: mise exec python@3.12.12 -- python tests/security/test_check_legacy_page_ratchet.py
 
       - name: Check the inventory classifier fails closed
         run: mise exec python@3.12.12 -- python tests/security/test_entry_point_classifier.py
@@ -100,6 +149,8 @@ jobs:
   global-statement-ratchet:
     timeout-minutes: 20
     name: global statement ratchet
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     steps:
       # Two commits so a pull request's test merge can read the base tip's
@@ -112,7 +163,7 @@ jobs:
 
       # The counter uses only the tokenizer, so no Composer install is needed.
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           coverage: none
@@ -138,6 +189,8 @@ jobs:
       packages: read
     timeout-minutes: 20
     name: branding migration (utf8mb4 and latin1)
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     services:
       database:
@@ -159,7 +212,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: pdo_mysql
@@ -218,6 +271,7 @@ jobs:
     # The manual advisory proof matrix is not a merge gate and is left out.
     if: ${{ !cancelled() }}
     needs:
+      - scope
       - sink-inventory-guard
       - entry-point-inventory
       - global-statement-ratchet
@@ -235,5 +289,5 @@ jobs:
       - name: Require every gating job to pass
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
-          ALLOWED_SKIPS: ''
+          ALLOWED_SKIPS: ${{ needs.scope.result == 'success' && needs.scope.outputs.code == 'false' && 'sink-inventory-guard entry-point-inventory global-statement-ratchet branding-migration-guard' || '' }}
         run: bash tests/tools/require_job_results.sh

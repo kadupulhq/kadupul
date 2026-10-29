@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Log in to GHCR
+description: Log Docker in to the GitHub Container Registry with the caller's token.
+
+# Composite actions cannot read secrets, so the caller passes the token.
+inputs:
+  token:
+    description: Token with packages read access, normally github.token.
+    required: true
+  username:
+    description: Registry user name, normally github.actor.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GHCR_TOKEN: ${{ inputs.token }}
+        GHCR_USERNAME: ${{ inputs.username }}
+      run: bash tests/tools/login_ghcr.sh

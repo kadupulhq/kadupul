@@ -782,6 +782,143 @@ function rrdtool_def_path($path)
 }
 
 /**
+ * True when $path is a file below $base, the RRA directory, once symbolic
+ * links are resolved. The file and the directories above it may not exist yet,
+ * since structured paths are created on first use.
+ *
+ * The part of the path that exists is resolved with realpath(), so a link that
+ * leaves the RRA directory is refused wherever it sits in the path, while a
+ * link, or a root that is itself a link, that stays inside is followed. The part
+ * that does not exist is appended unchanged after the dot segments are refused.
+ * A dangling link is refused, since creating the file would write through it.
+ * A trailing slash on $base makes no difference, and a relative path is read
+ * against the working directory, as RRDtool will. With $lexical_only the
+ * filesystem is not consulted and only the text of the path is checked, for
+ * storage the RRDtool proxy resolves itself.
+ *
+ * @param mixed  $path         Expanded RRD file path.
+ * @param string $base         The RRA directory.
+ * @param bool   $lexical_only Check the text of the path only.
+ *
+ * @return bool
+ */
+function rrd_path_is_contained($path, $base, $lexical_only = false)
+{
+    if (!is_string($path) || $path === '' || !is_string($base) || strpbrk($path . $base, "\0\r\n") !== false) {
+        return false;
+    }
+
+    $windows = DIRECTORY_SEPARATOR === '\\';
+    if ($windows) {
+        $path = str_replace('\\', '/', $path);
+    }
+
+    // A dot segment names a different directory than the one the text suggests.
+    if (preg_match('~(^|/)\.\.?(/|$)~', $path) === 1) {
+        return false;
+    }
+
+    if ($lexical_only) {
+        return true;
+    }
+
+    $root = realpath($base);
+    if ($root === false) {
+        return false;
+    }
+
+    $root = rtrim($windows ? strtolower(str_replace('\\', '/', $root)) : $root, '/');
+    if ($root === '') {
+        return false;
+    }
+
+    // RRDtool resolves a relative path, such as the rra/name.rrd older installs stored,
+    // against the directory it is started in, and so does this check.
+    if (!str_starts_with($path, '/') && !($windows && preg_match('~^[A-Za-z]:/~', $path) === 1)) {
+        $cwd = getcwd();
+        if ($cwd === false) {
+            return false;
+        }
+
+        $path = ($windows ? str_replace('\\', '/', $cwd) : $cwd) . '/' . $path;
+    }
+
+    clearstatcache(true);
+
+    $resolved = realpath($path);
+    if ($resolved === false) {
+        $resolved = rrd_resolve_missing_path((string) preg_replace('~/+~', '/', $path), $windows);
+    }
+
+    if ($resolved === false) {
+        return false;
+    }
+
+    $resolved = $windows ? strtolower(str_replace('\\', '/', $resolved)) : $resolved;
+
+    return strncmp($resolved, $root . '/', strlen($root) + 1) === 0;
+}
+
+/**
+ * Resolve an absolute path whose last directories or file do not exist yet:
+ * realpath() of the deepest part that exists, then the rest as written. False
+ * when a missing part is a dangling link, which a create would follow.
+ */
+function rrd_resolve_missing_path($path, $windows)
+{
+    $parts = explode('/', ltrim($path, '/'));
+    $walk  = '';
+    if ($windows && preg_match('~^[A-Za-z]:$~', $parts[0]) === 1) {
+        $walk = array_shift($parts);
+    }
+
+    $resolved = false;
+    foreach ($parts as $index => $part) {
+        $next = $walk . '/' . $part;
+        $real = realpath($next);
+
+        if ($real === false) {
+            if ($resolved === false || is_link($next)) {
+                return false;
+            }
+
+            return rtrim($resolved, '/\\') . '/' . implode('/', array_slice($parts, $index));
+        }
+
+        $walk     = $next;
+        $resolved = $real;
+    }
+
+    return $resolved;
+}
+
+/**
+ * Check a data source RRD path before it reaches RRDtool or the filesystem.
+ * Every code path that takes a path from data_source_path, the poller cache or
+ * a caller-supplied file list calls this first. With the RRDtool proxy the
+ * proxy resolves paths under its own root, so only the text of the path is
+ * checked and a path relative to that root stays valid.
+ *
+ * @param mixed       $path     Expanded RRD file path.
+ * @param string|null $rra_base RRA directory; defaults to the rra_path setting.
+ * @param string|null $logopt   Log category; a refused path is logged under it.
+ *
+ * @return bool True when the path may be used.
+ */
+function rrd_check_path($path, $rra_base = null, $logopt = null)
+{
+    // Read, not declared global, so the global statement count in this file does not rise.
+
+    $allowed = rrd_path_is_contained($path, $rra_base ?? (string) ($GLOBALS['config']['rra_path'] ?? ''), rrdtool_uses_proxy());
+
+    if (!$allowed && $logopt !== null) {
+        cacti_log('ERROR: RRD path is outside the RRA directory or cannot be used, and was not accessed: ' . (is_string($path) ? $path : gettype($path)), false, $logopt);
+    }
+
+    return $allowed;
+}
+
+/**
  * The DS minimum as rrdtool_function_create() and boost_rrdtool_function_create()
  * write it, or false, logged under $logopt, when the RRD must not be created.
  *
@@ -898,6 +1035,13 @@ function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rr
     // only used once the file is created.
     if ($show_source == true) {
         return array('', null, null);
+    }
+
+    // The directory is made before RRDtool runs, so the path is checked first.
+    if (!rrd_check_path($data_source_path)) {
+        cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path is outside the RRA directory.', false, $logopt);
+
+        return false;
     }
 
     $quoted_path = rrdtool_create_path($data_source_path, $local_data_id, $logopt);
@@ -1697,6 +1841,10 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 
     $data_source_path = get_data_source_path($local_data_id, true);
 
+    if (!rrd_check_path($data_source_path, null, 'POLLER')) {
+        return false;
+    }
+
     /* ok, if that passes lets check to make sure an rra does not already
     exist, the last thing we want to do is overright data! */
     if ($show_source != true) {
@@ -1862,7 +2010,12 @@ function rrdtool_rejection_is_permanent($reason)
     );
 }
 
-function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null, &$rejected = null)
+/**
+ * Write the cached samples to their RRD files. Each path must be inside
+ * $rra_base, which is the RRA directory unless the caller updates files that
+ * live elsewhere, as the realtime poller does with its cache directory.
+ */
+function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null, &$rejected = null, $rra_base = null)
 {
     static $retained_logs = array();
     /* lets count the number of rrd files processed */
@@ -1876,6 +2029,19 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
         $create_rrd_file = false;
 
         if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
+            // Samples for a path outside the RRA directory would never be written, so they
+            // go to the dead letter table with the other refused samples instead of
+            // growing the poller output on every cycle.
+            if (!rrd_check_path($rrd_path, $rra_base)) {
+                cacti_log('ERROR: RRD samples moved aside for Data Source ' . $rrd_fields['local_data_id'] . '. Its path is outside the RRA directory.', false, 'POLLER');
+                foreach (array_keys($rrd_fields['times']) as $update_time) {
+                    $completed[$rrd_path][$update_time] = false;
+                }
+                $rejected[$rrd_path] = 'RRD path is outside the RRA directory';
+                $failed = true;
+                continue;
+            }
+
             // Samples for a path RRDtool cannot be given stay queued, as for
             // any other failed update.
             $quoted_path = rrdtool_command_path($rrd_path);
@@ -2057,6 +2223,10 @@ function rrdtool_function_tune($rrd_tune_array)
         }
     }
 
+    if (!rrd_check_path($data_source_path, null, 'WEBLOG')) {
+        return false;
+    }
+
     $rrd_tune = array();
     if ($rrd_tune_array['heartbeat'] != '') {
         $rrd_tune['--heartbeat'] = $data_source_name . ':' . $rrd_tune_array['heartbeat'];
@@ -2147,6 +2317,10 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
         $data_source_path = get_data_source_path($local_data_id, true);
     } else {
         $data_source_path = $rrdtool_file;
+    }
+
+    if (!rrd_check_path($data_source_path, null, 'POLLER')) {
+        return array();
     }
 
     // Find the correct resolution
@@ -2632,6 +2806,18 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     $data_source_path = $realtimeCachePath . '/user_' . $hash . '_' . $graph_item['local_data_id'] . '.rrd';
                 } else {
                     $data_source_path = get_data_source_path($graph_item['local_data_id'], true);
+
+                    if (!rrd_check_path($data_source_path, null, 'WEBLOG')) {
+                        if (isset($graph_data_array['export_csv'])) {
+                            return false;
+                        }
+
+                        if (isset($graph_data_array['get_error']) || isset($graph_data_array['print_source'])) {
+                            return __('ERROR: The RRD file path of this Data Source is outside the RRA directory.');
+                        }
+
+                        return rrdtool_create_error_image(__('ERROR: The RRD file path of this Data Source is outside the RRA directory.'));
+                    }
                 }
 
                 if (!rrdtool_file_exists($data_source_path, $rrdtool_pipe)) {
@@ -3842,6 +4028,10 @@ function rrdtool_function_info($local_data_id)
     /* Get the path to rrdtool file */
     $data_source_path = get_data_source_path($local_data_id, true);
 
+    if (!rrd_check_path($data_source_path, null, 'WEBLOG')) {
+        return false;
+    }
+
     /* Execute rrdtool info command */
     $output = rrdtool_execute(array('info', $data_source_path), RRDTOOL_OUTPUT_NULL, RRDTOOL_OUTPUT_STDOUT);
     if ($output == '') {
@@ -4381,6 +4571,10 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true)
         cacti_log('ERROR: Remote RRD resize is unavailable without atomic proxy replacement.', false, 'UTIL');
         return false;
     }
+    if (!$show_source && !rrd_check_path($rrd_file, null, 'UTIL')) {
+        return false;
+    }
+
     $rrd_path = read_config_option('path_rrdtool');
 
     $print_leaves = function ($array) use (&$print_leaves) {
@@ -4522,6 +4716,10 @@ function rrd_xml_transform($file_array, $debug, $parse_error, $logged, $mutate)
     return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $debug, $parse_error, $logged, $mutate) {
         /* iterate all given rrd files */
         foreach ($file_array as $file) {
+            if (!rrd_check_path($file, null, 'UTIL')) {
+                return array('err_msg' => __('ERROR: The RRD file path of this Data Source is outside the RRA directory.'));
+            }
+
             /* create a DOM document from an rrdtool dump */
             $dom = new domDocument;
             $xml = rrdtool_execute(array('dump', $file), false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');

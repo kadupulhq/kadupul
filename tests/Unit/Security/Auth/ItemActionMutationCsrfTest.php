@@ -62,6 +62,8 @@ function db_fetch_cell_prepared(...$args) {
     handler_reached();
 }
 function db_fetch_row(...$args) { handler_reached(); }
+// The real check reads the user's tree permissions from the database.
+function is_tree_allowed(...$args) { handler_reached(); }
 function db_fetch_row_prepared($sql, ...$args) {
     // The graph item GET now authorizes persisted ownership before its header.
     // Preserve the read-editor assertion by admitting those two actual guards;
@@ -268,7 +270,7 @@ test('pages send the device, tree, rule, data source and utility actions by POST
     $token = '[^;]*__csrf_magic\'?\s*:\s*csrfMagicToken';
 
     expect($source('host.php'))->toContain('/config/bootstrap.php')
-        ->toContain('/app.php/inventory/devices/legacy');
+        ->toContain("'app.php/inventory/devices/legacy'");
 
     expect($source('graphs_new.php'))->toMatch("/class='cactiPostAction' href='#' data-navigation='fullpage' data-url='\" \\. html_escape\\('host\\.php\\?action=query_verbose&/");
 

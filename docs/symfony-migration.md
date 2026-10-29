@@ -839,6 +839,125 @@ this without exposing database exception details; inspect again before retrying.
 A successful command reports remaining rows rather than claiming all cleanup is
 finished. Restart the scheduled worker afterward if that is the chosen owner.
 
+## Boost queue workers
+
+By default Boost forks its own child processes on every run. Setting Boost
+Processing Mode to Message queue workers (`boost_processing_mode=queue`) makes
+the master Boost process dispatch one partition per message to the `boost`
+Messenger transport instead. Each message runs `bin/legacy-boost-partition.php`,
+which starts the same `poller_boost.php --child=N --run=X` process as before.
+Queue mode applies to the main collector (`poller_id` 1) only. Remote collectors
+keep forked children whatever the setting says.
+
+The transport uses the table `kadupul_messenger_messages`, created by the 1.2.38
+upgrade. The transport does not create it (`auto_setup=false`), so run the
+upgrade before enabling queue mode. Retries are off (`max_retries: 0`) and there
+is no failure transport, so Messenger never replays a failed partition. The next
+Boost cycle retries it.
+
+To enable queue mode:
+
+1. Install `service/kadupul-boost-worker.service`, adjust the user, group and
+   paths, and start it. It runs `php bin/console messenger:consume boost
+   --time-limit=3600 --memory-limit=256M`, and the supervisor must restart it
+   after every exit.
+2. Set Boost Processing Mode to Message queue workers on the Performance tab of
+   Settings.
+
+Start the worker before changing the setting. With queue mode on and no worker
+consuming, a Boost run logs `ERROR: no Boost queue worker reported; run
+"bin/console messenger:consume boost"`, fails, and keeps its archives for the
+next cycle.
+
+### Scaling and timeouts
+
+The number of running workers bounds how many partitions run at once, and
+`boost_parallel` sets how many partitions a run is split into. With fewer
+workers than partitions, the remainder wait in the queue. Run one worker per
+partition (several instances of the unit) if the partitions should run together.
+
+The master waits up to three times `boost_rrd_update_max_runtime` seconds for
+every partition to report. If some have not, it logs `ERROR: Boost queue run
+timed out: N of M partitions reported; check "bin/console messenger:consume
+boost" worker capacity and logs.`, fails the run, and retains the archives. The
+next cycle processes them again. A timeout does not stop a partition that is
+already running.
+
+The `--time-limit=3600` does not interrupt a partition. Symfony's
+`StopWorkerOnTimeLimitListener` checks the limit on `WorkerRunningEvent`, which
+the worker dispatches after it has handled a message, so the consumer finishes
+its current message and then exits. The supervisor starts it again.
+
+### Redelivery and other transports
+
+The default DSN is
+`doctrine://local?queue_name=boost&table_name=kadupul_messenger_messages&auto_setup=false&redeliver_timeout=15600`.
+The Doctrine transport hands a message to another worker once it has been in
+handling for longer than `redeliver_timeout` seconds (the Symfony default is
+3600), which would start a second copy of a partition that is still running.
+A partition can run for up to `kadupul.boost.partition_timeout`, which is 15000
+seconds, so the default DSN uses 15600. If you set `KADUPUL_BOOST_TRANSPORT_DSN`
+to a different Doctrine DSN, set `redeliver_timeout` above 15000 yourself.
+
+Redis and AMQP need their Symfony transport packages, which Kadupul does not
+ship. Neither is installed or tested here, so this document does not state their
+redelivery settings. If you install one, read its documentation and confirm that
+an unacknowledged message is not redelivered before 15000 seconds have passed.
+An `in-memory://` DSN is only for tests: the worker is a separate process and
+cannot see messages held in the master's memory.
+
+### Verify before enabling
+
+Start one worker, set queue mode, and let one Boost cycle finish. Then check
+three things:
+
+1. The Boost log has no `ERROR: no Boost queue worker reported`, `ERROR: Boost
+   queue run timed out` or `ERROR: Boost could not queue its partitions` line
+   for that cycle.
+2. The `boost_poller_status` setting starts with `complete - end time:` followed
+   by the finish time. The status page does not show this text, so read it with
+   `SELECT value FROM settings WHERE name = 'boost_poller_status'`. A plain
+   `complete` with no end time means Boost was not due and nothing ran. Run
+   `php poller_boost.php --force` from the installation directory, or wait for
+   the next interval, then check again.
+3. Console > System Utilities > View Boost Status shows Idle in the Boost
+   On-demand Updating row.
+
+A failed run stores a value starting with `failed` in the setting and shows
+Other on the status page. It is `failed - end time:` followed by the time when
+partitions or dispatch failed, and `failed - preparation` when preparation
+failed. The archives stay in place for the next cycle.
+To roll back, set Boost Processing Mode to Forked processes, then stop the
+worker.
+
+### Boost scheduler
+
+By default poller.php launches the Boost master at the end of each polling
+cycle. With `KADUPUL_BOOST_SCHEDULER=1` the `scheduler_boost` consumer starts it
+instead, through `bin/legacy-boost-master.php`, and poller.php stops launching
+it. Only literal `1` enables it. The variable must reach both processes, or
+each starts its own master:
+
+- The poller. In its cron file, add the line `KADUPUL_BOOST_SCHEDULER=1` above
+  the poller entry, which passes it to every command below it, or put it in
+  front of the command, as in
+  `*/5 * * * * apache KADUPUL_BOOST_SCHEDULER=1 php /var/www/html/cacti/poller.php > /dev/null 2>&1`.
+  With cactid.service, add it to /etc/sysconfig/cactid, which the unit reads
+  through `EnvironmentFile=`.
+- The consumer. Add `Environment=KADUPUL_BOOST_SCHEDULER=1` to the `[Service]`
+  section of its systemd unit.
+
+Kadupul does not load `.env` files. config/bootstrap.php reads only the process
+environment and poller.php checks `getenv()`, so the variable set only in a
+Symfony `.env.local` file reaches neither the poller nor the consumer.
+
+Run `php bin/console messenger:consume scheduler_boost --time-limit=3600 --memory-limit=128M --failure-limit=1`
+under systemd or another process supervisor configured to restart the worker
+even after a successful time-limit exit. `--failure-limit=1` makes the worker exit
+on a failed message; its supervisor must restart it so a dropped database
+connection is replaced. See `service/README.md` for the image cache purge and
+for running `bin/console kadupul:boost:run` by hand.
+
 ## Site creation through Symfony
 
 `/app.php/inventory/sites/new` now renders a Symfony Form in Twig and dispatches

@@ -11,6 +11,7 @@
         "row_boost_parallel",
         "row_boost_png_cache_directory",
         "row_boost_poller_mem_limit",
+        "row_boost_processing_mode",
         "row_boost_redirect",
         "row_boost_rrd_update_interval",
         "row_boost_rrd_update_max_records",

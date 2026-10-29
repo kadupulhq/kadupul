@@ -35,7 +35,25 @@ final class LegacyWorkerProcessTest extends TestCase
     {
         $run = new LegacyWorkerProcess($this->root)->run('legacy-probe.php', 'PROBE', ['a' => 1], 10.0);
 
-        self::assertSame(['output' => "before\n", 'errors' => '', 'ok' => true], $run);
+        self::assertSame(['output' => "before\n", 'errors' => '', 'ok' => true, 'result' => ['status' => 'ok', 'in' => '{"a":1}']], $run);
+    }
+
+    public function testMarkerPayloadIsReturnedEvenWhenNotOk(): void
+    {
+        $this->worker('legacy-probe.php', 'print "PROBE={\\"status\\":\\"stale\\",\\"rows\\":0}\\n";');
+        $run = new LegacyWorkerProcess($this->root)->run('legacy-probe.php', 'PROBE', [], 5.0);
+
+        self::assertFalse($run['ok']);
+        self::assertSame(['status' => 'stale', 'rows' => 0], $run['result']);
+    }
+
+    public function testMissingOrInvalidMarkerGivesEmptyResult(): void
+    {
+        $this->worker('legacy-probe.php', 'print "no marker\\n";');
+        self::assertSame([], new LegacyWorkerProcess($this->root)->run('legacy-probe.php', 'PROBE', [], 5.0)['result']);
+
+        $this->worker('legacy-probe.php', 'print "PROBE=not json\\n";');
+        self::assertSame([], new LegacyWorkerProcess($this->root)->run('legacy-probe.php', 'PROBE', [], 5.0)['result']);
     }
 
     public function testProgressArrivesBeforeWorkerExitAndSplitMarkerNeverLeaks(): void
@@ -72,7 +90,7 @@ PHP);
             }
         );
         self::assertFileExists($exit);
-        self::assertSame(['output' => "waiting\n", 'errors' => "warning\n", 'ok' => true], $run);
+        self::assertSame(['output' => "waiting\n", 'errors' => "warning\n", 'ok' => true, 'result' => ['status' => 'ok']], $run);
         self::assertSame("waiting\n", $events[Process::OUT]);
         self::assertSame("warning\n", $events[Process::ERR]);
         self::assertStringNotContainsString('PROBE', implode('', $events));

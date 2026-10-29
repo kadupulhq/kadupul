@@ -15,6 +15,7 @@ if (isset_request_var('method') && !is_string(get_nfilter_request_var('method'))
     exit;
 }
 
+include_once($config['base_path'] . '/lib/rrd.php');
 include_once($config['base_path'] . '/lib/spikekill.php');
 
 $debug = false;
@@ -58,6 +59,10 @@ if (is_realm_allowed(1043)) {
         foreach ($local_data_ids as $local_data_id) {
             if ($local_data_id['local_data_id'] > 0) {
                 $data_source_path = get_data_source_path($local_data_id['local_data_id'], true);
+
+                if (!rrd_check_path($data_source_path, null, 'SPIKEKILL')) {
+                    $data_source_path = '';
+                }
             } else {
                 $data_source_path = '';
             }
