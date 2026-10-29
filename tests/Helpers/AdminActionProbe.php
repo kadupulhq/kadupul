@@ -66,6 +66,7 @@ register_shutdown_function(function () {
         'session' => $_SESSION,
         'memberships' => $GLOBALS['permission_sql'] ? $GLOBALS['database_sessions']['probe:0:auth']->query('SELECT group_id,user_id FROM user_auth_group_members ORDER BY group_id,user_id')->fetchAll(PDO::FETCH_ASSOC) : array(),
         'epochs' => $GLOBALS['permission_sql'] ? $GLOBALS['database_sessions']['probe:0:auth']->query('SELECT id,reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR) : array(),
+        'remembered' => $GLOBALS['permission_sql'] ? array_map('intval', $GLOBALS['database_sessions']['probe:0:auth']->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN)) : array(),
     )));
 });
 function probe_normalize($sql) { return trim(preg_replace('/\s+/', ' ', $sql)); }
@@ -133,7 +134,8 @@ $database_hostname='probe';$database_port=0;$database_default='auth';$database_s
 if($GLOBALS['permission_sql']){
     $probeDb=$database_sessions['probe:0:auth'];
     $probeDb->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER NOT NULL DEFAULT 1,policy_graphs INTEGER DEFAULT 1,policy_trees INTEGER DEFAULT 1,policy_hosts INTEGER DEFAULT 1,policy_graph_templates INTEGER DEFAULT 1)');
-    foreach($scenario['permission_users']??array(42,43) as $user){$query=$probeDb->prepare('INSERT INTO user_auth(id) VALUES(?)');$query->execute(array($user));}
+    $probeDb->exec('CREATE TABLE user_auth_cache(user_id INTEGER,token TEXT)');
+    foreach($scenario['permission_users']??array(42,43) as $user){$query=$probeDb->prepare('INSERT INTO user_auth(id) VALUES(?)');$query->execute(array($user));$query=$probeDb->prepare("INSERT INTO user_auth_cache VALUES(?,'remembered')");$query->execute(array($user));}
     $probeDb->exec("CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY,enabled TEXT DEFAULT '',policy_graphs INTEGER DEFAULT 1,policy_trees INTEGER DEFAULT 1,policy_hosts INTEGER DEFAULT 1,policy_graph_templates INTEGER DEFAULT 1)");
     foreach($scenario['permission_groups']??array(5,9) as $group){$query=$probeDb->prepare('INSERT INTO user_auth_group(id) VALUES(?)');$query->execute(array($group));}
     $probeDb->exec('CREATE TABLE user_auth_group_members(group_id INTEGER,user_id INTEGER,PRIMARY KEY(group_id,user_id))');

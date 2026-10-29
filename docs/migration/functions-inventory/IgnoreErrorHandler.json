@@ -3,8 +3,8 @@
     "name": "IgnoreErrorHandler",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6648,
-        "end_line": 6687,
+        "start_line": 6667,
+        "end_line": 6706,
         "line_count": 40,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 1, "plugins": 0},
         "body": {
             "uses_global": ["snmp_error"],
             "static_variables": [],

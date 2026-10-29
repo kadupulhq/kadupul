@@ -130,7 +130,7 @@ require $root . '/lib/database.php';
 require $root . '/src/IdentityAccess/Infrastructure/Legacy/PermissionAssociations.php';
 
 $engine = $driver === 'sqlite' ? '' : ' ENGINE=InnoDB';
-foreach (array('user_auth_group_members', 'user_auth_group_perms', 'user_auth_perms', 'user_auth_group', 'user_auth', 'caller_work') as $table) {
+foreach (array('user_auth_group_members', 'user_auth_group_perms', 'user_auth_perms', 'user_auth_group', 'user_auth', 'user_auth_cache', 'caller_work') as $table) {
     $db->exec('DROP TABLE IF EXISTS ' . $table);
 }
 $db->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, reset_perms ' . ($driver === 'sqlite' ? 'INTEGER' : 'INT UNSIGNED') . ' NOT NULL DEFAULT 0, policy_graphs INTEGER NOT NULL DEFAULT 2)' . $engine);
@@ -139,6 +139,7 @@ $db->exec('CREATE TABLE user_auth_perms (user_id INTEGER, item_id INTEGER, type 
 $db->exec('CREATE TABLE user_auth_group_perms (group_id INTEGER, item_id INTEGER, type INTEGER, PRIMARY KEY(group_id,item_id,type))' . $engine);
 $db->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER, PRIMARY KEY(group_id,user_id))' . $engine);
 $db->exec('CREATE TABLE caller_work (id INTEGER PRIMARY KEY)' . $engine);
+$db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, token VARCHAR(64))' . $engine);
 $db->exec('INSERT INTO user_auth VALUES (41,0,2),(42,' . (int) ($scenario['epoch'] ?? 7) . ',2),(43,7,2),(44,7,2)');
 $db->exec('INSERT INTO user_auth_group VALUES (42,2),(43,2)');
 $db->exec('INSERT INTO user_auth_group_members VALUES (42,42),(42,44),(43,43)');
@@ -152,6 +153,8 @@ if (($scenario['members'] ?? 2) > 2) {
         $membership->execute(array($i));
     }
 }
+$db->exec("INSERT INTO user_auth_cache (user_id, token) SELECT id, 'remembered' FROM user_auth");
+$initialEpochs = $db->query('SELECT id,reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR);
 $failure = $scenario['failure'] ?? '';
 if ($failure === 'epoch') {
     $id = (int) ($scenario['failed_user'] ?? 42);
@@ -166,6 +169,10 @@ if ($failure === 'epoch') {
     $db->exec($driver === 'sqlite'
         ? "CREATE TRIGGER reject_mutation BEFORE DELETE ON user_auth_perms BEGIN SELECT RAISE(ABORT,'native mutation rejection'); END"
         : "CREATE TRIGGER reject_mutation BEFORE DELETE ON user_auth_perms FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='native mutation rejection'");
+} elseif ($failure === 'token') {
+    $db->exec($driver === 'sqlite'
+        ? "CREATE TRIGGER reject_token BEFORE DELETE ON user_auth_cache BEGIN SELECT RAISE(ABORT,'native token rejection'); END"
+        : "CREATE TRIGGER reject_token BEFORE DELETE ON user_auth_cache FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='native token rejection'");
 } elseif ($failure === 'myisam') {
     $db->exec('ALTER TABLE user_auth ENGINE=MyISAM');
 } elseif ($failure === 'shadow') {
@@ -236,6 +243,8 @@ $queryCount = $db->calls - $startQueries;
 $mutationQueries = array_slice($db->queries, $startIndex);
 $state = array('result' => $result,'error' => $error,'transaction_open' => $db->inTransaction(),'epochs' => $db->query('SELECT id,reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC),'permissions' => $db->query('SELECT * FROM ' . ($group ? 'user_auth_group_perms' : 'user_auth_perms') . ' ORDER BY 1,2,3')->fetchAll(PDO::FETCH_ASSOC),'memberships' => $db->query('SELECT * FROM user_auth_group_members ORDER BY 1,2')->fetchAll(PDO::FETCH_ASSOC),'policy' => (int) $db->query('SELECT policy_graphs FROM ' . ($group ? 'user_auth_group' : 'user_auth') . ' WHERE id=42')->fetchColumn(),'messages' => $messages,'mutation_queries' => $queryCount,'first_mutation_queries' => array_slice($mutationQueries, 0, 18));
 $state['initial_session'] = $initialSession;
+$state['initial_epochs'] = $initialEpochs;
+$state['remembered'] = array_map('intval', $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN));
 $state['session'] = $_SESSION;
 if ($scenario['caller'] ?? false) {
     $state['caller_work'] = (int) $db->query('SELECT COUNT(*) FROM caller_work')->fetchColumn();

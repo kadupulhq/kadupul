@@ -36,6 +36,9 @@ $db->prepare('UPDATE user_auth SET enabled=?,locked=? WHERE id=?')->execute(arra
 if ($scenario['wrong_host'] ?? false) {
     $db->exec("UPDATE user_auth_cache SET hostname='192.0.2.1' WHERE user_id=42");
 }
+if (isset($scenario['age_days'])) {
+    $db->prepare('UPDATE user_auth_cache SET last_update=?')->execute(array(date('Y-m-d H:i:s', time() - 86400 * $scenario['age_days'])));
+}
 $_COOKIE = array('cacti_remembers' => ($scenario['identity'] ?? 'alice') . ',' . ($scenario['realm'] ?? '') . $old);
 if ($scenario['wrong_token'] ?? false) {
     $_COOKIE['cacti_remembers'] = 'alice,' . str_repeat('b', 64);

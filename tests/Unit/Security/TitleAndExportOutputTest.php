@@ -22,7 +22,7 @@ $html = file_get_contents($root . '/lib/html.php');
 if ($html === false) {
     throw new RuntimeException('Unreadable lib/html.php');
 }
-foreach (array('html_escape_charset', 'html_escape', 'html_common_header') as $function) {
+foreach (array('html_escape_charset', 'html_escape', 'html_legacy_js_registry', 'html_legacy_js_global', 'html_legacy_js_state', 'html_legacy_js_tags', 'html_legacy_js_head', 'html_common_header') as $function) {
     // Test-only: loads this repository's own function source into a private namespace.
     eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($html, $function));
 }

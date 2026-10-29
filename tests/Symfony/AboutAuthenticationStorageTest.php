@@ -66,8 +66,8 @@ final class AboutAuthenticationStorageTest extends TestCase
             $realm = $remembered ? 0 : 2;
             $db->exec("INSERT INTO user_auth (id,username,realm,enabled) VALUES (42,'storage-operator',$realm,'on')");
             $token = str_repeat('a', 64);
-            $statement = $db->prepare('INSERT INTO user_auth_cache (user_id,hostname,last_update,token) VALUES (42,?,?,?)');
-            $statement->execute(['127.0.0.1', '2026-01-01 00:00:00', hash('sha512', $token)]);
+            $statement = $db->prepare('INSERT INTO user_auth_cache (user_id,hostname,last_update,token) VALUES (42,?,NOW(),?)');
+            $statement->execute(['127.0.0.1', hash('sha512', $token)]);
             $observer = $this->realMariaDb();
             $observed = $observer->getNativeConnection();
             self::assertNotSame($db, $observed);

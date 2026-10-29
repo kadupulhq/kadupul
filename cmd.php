@@ -279,12 +279,6 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 	 * include file for script processing
 	 */
 	if ($script_server_calls > 0) {
-		$cactides = array(
-			0 => array('pipe', 'r'), // stdin is a pipe that the child will read from
-			1 => array('pipe', 'w'), // stdout is a pipe that the child will write to
-			2 => array('pipe', 'w')  // stderr is a pipe to write to
-		);
-
 		$php_path = cacti_escapeshellcmd(read_config_option('path_php_binary'));
 		$script   = cacti_escapeshellarg($config['base_path'] . '/script_server.php');
 
@@ -293,11 +287,18 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 			' --poller='  . cacti_escapeshellarg((string) $poller_id) .
 			' --mode='    . cacti_escapeshellarg($config['connection']);
 
-		$cactiphp = proc_open($command, $cactides, $pipes);
-		$output = fgets($pipes[1], 1024);
+		$cactiphp = poller_script_server_open($command, $pipes);
 
-		if (substr_count($output, 'Started') != 0) {
-			cacti_log('PHP Script Server Started Properly', $print_data_to_stdout, 'POLLER', POLLER_VERBOSITY_HIGH);
+		if ($cactiphp === false) {
+			/* Script server items then report U. The fallback that runs each
+			 * script through the shell is not used for them. */
+			cacti_log('ERROR: Unable to start the PHP Script Server; its data sources report U this cycle', $print_data_to_stdout, 'POLLER');
+		} else {
+			$output = fgets($pipes[1], 1024);
+
+			if (substr_count($output, 'Started') != 0) {
+				cacti_log('PHP Script Server Started Properly', $print_data_to_stdout, 'POLLER', POLLER_VERBOSITY_HIGH);
+			}
 		}
 
 		$using_proc_function = true;
@@ -440,7 +441,7 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 		cacti_log('WARNING: Long Responses Errors[' . cacti_sizeof($width_dses) . '] DS[' . implode(', ', $width_dses) . ']', false, 'POLLER');
 	}
 
-	if ($using_proc_function && $script_server_calls > 0) {
+	if ($using_proc_function && $script_server_calls > 0 && is_resource($cactiphp)) {
 		// close php server process
 		@fwrite($pipes[0], "quit\r\n");
 		fclose($pipes[0]);

@@ -205,6 +205,7 @@ function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 $db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->exec('CREATE TABLE user_auth(id INTEGER PRIMARY KEY, reset_perms INTEGER NOT NULL, policy_graphs INTEGER);
 CREATE TABLE user_auth_group(id INTEGER PRIMARY KEY, policy_graphs INTEGER);
+CREATE TABLE user_auth_cache(user_id INTEGER, token TEXT);
 CREATE TABLE user_auth_group_members(group_id INTEGER, user_id INTEGER);
 CREATE TABLE user_auth_perms(user_id INTEGER, item_id INTEGER, type INTEGER);
 CREATE TABLE user_auth_group_perms(group_id INTEGER, item_id INTEGER, type INTEGER);
