@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 18:00-0700\n"
+"POT-Creation-Date: 2026-10-28 18:58-0700\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -128,7 +128,7 @@ msgstr "Fare clic su \"Continua\" per eliminare i seguenti grafici aggregati."
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
 #: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
-#: managers.php:1065 managers.php:1126 plugins.php:712 pollers.php:549
+#: managers.php:1065 managers.php:1126 plugins.php:713 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
@@ -1143,7 +1143,7 @@ msgstr "SNMP"
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
 #: package_import.php:548 package_import.php:633 plugins.php:497
-#: plugins.php:623 pollers.php:1007 templates_import.php:207
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
 #: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
 msgid "Status"
@@ -1201,7 +1201,7 @@ msgstr "Spurgo dei dispositivi scoperti"
 #: lib/spikekill.php:1802 lib/spikekill.php:1803 lib/spikekill.php:1804
 #: lib/spikekill.php:1805 lib/spikekill.php:1806 lib/spikekill.php:1807
 #: lib/spikekill.php:1808 lib/spikekill.php:1809 lib/spikekill.php:1810
-#: plugins.php:780 pollers.php:1115 user_admin.php:2261 utilities.php:738
+#: plugins.php:781 pollers.php:1115 user_admin.php:2261 utilities.php:738
 #: utilities.php:1190 utilities.php:2757 utilities.php:2885 utilities.php:2893
 #: utilities.php:2904 utilities.php:2915 utilities.php:2940 utilities.php:2990
 #: utilities.php:3226
@@ -2174,7 +2174,7 @@ msgid "Item"
 msgstr "Elemento"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:510 plugins.php:641
+#: package_import.php:510 plugins.php:642
 #: templates/platform/permission_denied.html.twig
 msgid "Version"
 msgstr "Versione"
@@ -6850,7 +6850,7 @@ msgstr "(Modifica)"
 #: include/global_arrays.php:2765 include/global_arrays.php:2783
 #: include/global_arrays.php:2801 include/global_arrays.php:2825
 #: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:606
 msgid "Actions"
 msgstr "Azioni"
 
@@ -12420,11 +12420,11 @@ msgstr "È necessario selezionare una colonna di output XML per Data Source '%s'
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Il tuo modello grafico non ha modelli di dati in uso.  Per favore correggete il vostro modello grafico"
 
-#: lib/database.php:2405
+#: lib/database.php:2422
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Impossibile determinare la lunghezza del campo password, non può continuare come potrebbe corrompere la password"
 
-#: lib/database.php:2412
+#: lib/database.php:2429
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Impossibile modificare la lunghezza del campo password, non può continuare come potrebbe corrompere la password"
 
@@ -14670,7 +14670,7 @@ msgstr "Non è consigliabile aggiornare i modelli a cui sono già state apportat
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Selezionare i modelli di dispositivo che si desidera utilizzare dopo l'installazione.  Se il sistema operativo è Windows, è necessario assicurarsi di selezionare il modello \"Dispositivo Windows\".  Se il vostro sistema operativo è Linux/UNIX, assicuratevi di selezionare il template dispositivo \"Local Linux Machine\"."
 
-#: lib/installer.php:2749 package_import.php:498 plugins.php:629
+#: lib/installer.php:2749 package_import.php:498 plugins.php:630
 msgid "Author"
 msgstr "Autore"
 
@@ -15285,7 +15285,7 @@ msgstr "Il plugin nella directory '%s' non include una funzione di installazione
 msgid "Legacy Plugin"
 msgstr "Plugin Legacy"
 
-#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:595
+#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:596
 msgid "Plugins"
 msgstr "Plugins"
 
@@ -16553,7 +16553,7 @@ msgstr "Sostituire i record dei valori suggeriti dell'origine dati e del modello
 msgid "Package Import"
 msgstr "Importa"
 
-#: plugins.php:26 plugins.php:719
+#: plugins.php:26 plugins.php:720
 msgid "Uninstall"
 msgstr "Disinstalla"
 
@@ -16577,7 +16577,7 @@ msgstr "In attesa di aggiornamento"
 msgid "Plugin Management"
 msgstr "Gestione dei plugin"
 
-#: plugins.php:502 plugins.php:764 plugins.php:775
+#: plugins.php:502 plugins.php:765 plugins.php:776
 msgid "Plugin Error"
 msgstr "Errore di plugin"
 
@@ -16589,80 +16589,80 @@ msgstr "Attivo/installato"
 msgid "Configuration Issues"
 msgstr "Problemi di configurazione"
 
-#: plugins.php:608
+#: plugins.php:609
 msgid "Actions available include 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
 msgstr "Le azioni disponibili includono \"Installare\", \"Attivare\", \"Disattivare\", \"Abilitare\", \"Disinstallare\"."
 
-#: plugins.php:611
+#: plugins.php:612
 msgid "Plugin Name"
 msgstr "Nome del plugin"
 
-#: plugins.php:614
+#: plugins.php:615
 msgid "The name for this Plugin.  The name is controlled by the directory it resides in."
 msgstr "Il nome di questo plugin.  Il nome è controllato dalla directory in cui risiede."
 
-#: plugins.php:617
+#: plugins.php:618
 msgid "Plugin Description"
 msgstr "Descrizione file"
 
-#: plugins.php:620
+#: plugins.php:621
 msgid "A description that the Plugins author has given to the Plugin."
 msgstr "Una descrizione che l'autore dei plugin ha dato al plugin."
 
-#: plugins.php:623
+#: plugins.php:624
 msgid "Main / Remote Status"
 msgstr "Stato principale / remoto"
 
-#: plugins.php:626
+#: plugins.php:627
 msgid "The status of this Plugin."
 msgstr "Lo stato di questo plugin."
 
-#: plugins.php:632
+#: plugins.php:633
 msgid "The author of this Plugin."
 msgstr "L'autore di questo plugin."
 
-#: plugins.php:635
+#: plugins.php:636
 msgid "Requires"
 msgstr "Richiede"
 
-#: plugins.php:638
+#: plugins.php:639
 msgid "This Plugin requires the following Plugins be installed first."
 msgstr "Questo plugin richiede che siano installati prima i seguenti plugin."
 
-#: plugins.php:644
+#: plugins.php:645
 msgid "The version of this Plugin."
 msgstr "La versione di questo plugin."
 
-#: plugins.php:647
+#: plugins.php:648
 msgid "Load Order"
 msgstr "Carica ordine"
 
-#: plugins.php:650
+#: plugins.php:651
 msgid "The load order of the Plugin.  You can change the load order by first sorting by it, then moving a Plugin either up or down."
 msgstr "L'ordine di carico del Plugin.  È possibile modificare l'ordine di carico prima ordinandolo, poi spostando un plugin verso l'alto o verso il basso."
 
-#: plugins.php:680
+#: plugins.php:681
 msgid "No Plugins Found"
 msgstr "Nessun plugin trovato"
 
-#: plugins.php:691
+#: plugins.php:692
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "La disinstallazione di questo plugin rimuoverà tutti i dati e le impostazioni del plugin.  Se si desidera davvero disinstallare il plugin, fare clic su 'Disinstallare' qui sotto.  Altrimenti clicca su \"Annulla\"."
 
-#: plugins.php:692
+#: plugins.php:693
 msgid "Are you sure you want to Uninstall?"
 msgstr "Sei sicuro di voler disinstallare?"
 
-#: plugins.php:762 plugins.php:773
+#: plugins.php:763 plugins.php:774
 #, php-format
 msgid "Not Compatible, %s"
 msgstr "Non compatibile, %s"
 
-#: plugins.php:804
+#: plugins.php:805
 msgid "Order Before Previous Plugin"
 msgstr "Ordine prima del plugin precedente"
 
-#: plugins.php:809
+#: plugins.php:810
 msgid "Order After Next Plugin"
 msgstr "Ordine dopo il prossimo plugin"
 
@@ -16671,67 +16671,67 @@ msgstr "Ordine dopo il prossimo plugin"
 msgid "Unable to Install Plugin.  The following Plugins must be installed first: %s"
 msgstr "Impossibile installare il plugin.  Per prima cosa devono essere installati i seguenti plugin: %s"
 
-#: plugins.php:862
+#: plugins.php:863
 #, php-format
 msgid "Unable to Install Plugin: %s"
 msgstr ""
 
-#: plugins.php:864
+#: plugins.php:865
 msgid "Install Plugin"
 msgstr "Installa il Plugin"
 
-#: plugins.php:871 plugins.php:883
+#: plugins.php:872 plugins.php:884
 #, php-format
 msgid "Unable to Uninstall.  This Plugin is required by: %s"
 msgstr "Impossibile da disinstallare.  Questo plugin è richiesto da: %s"
 
-#: plugins.php:873 plugins.php:878 plugins.php:885
+#: plugins.php:874 plugins.php:879 plugins.php:886
 msgid "Uninstall Plugin"
 msgstr "Disinstallare il plugin"
 
-#: plugins.php:875
+#: plugins.php:876
 msgid "Disable Plugin"
 msgstr "Disabilita plugin"
 
-#: plugins.php:887
+#: plugins.php:888
 msgid "Enable Plugin"
 msgstr "Abilita plugin"
 
-#: plugins.php:890
+#: plugins.php:891
 msgid "Plugin directory is missing!"
 msgstr "Manca la directory dei plugin!"
 
-#: plugins.php:893
+#: plugins.php:894
 msgid "Plugin is not compatible (Pre-1.x)"
 msgstr "Il plugin non è compatibile (Pre-1.x)"
 
-#: plugins.php:896
+#: plugins.php:897
 msgid "Plugin directories can not include spaces"
 msgstr "Le directory dei plugin non possono includere spazi"
 
-#: plugins.php:899
+#: plugins.php:900
 #, php-format
 msgid "Plugin directory is not correct.  Should be '%s' but is '%s'"
 msgstr "La directory dei plugin non è corretta.  Dovrebbe essere \"%s\" ma è \"%s\"."
 
-#: plugins.php:907
+#: plugins.php:908
 #, php-format
 msgid "Plugin directory '%s' is missing setup.php"
 msgstr "La directory del plugin '%s' manca setup.php"
 
-#: plugins.php:909
+#: plugins.php:910
 msgid "Plugin is lacking an INFO file"
 msgstr "Il plugin manca di un file INFO"
 
-#: plugins.php:911
+#: plugins.php:912
 msgid "Plugin is integrated into Kadupul core"
 msgstr "Il plugin è integrato nel nucleo di Kadupul"
 
-#: plugins.php:913
+#: plugins.php:914
 msgid "Plugin is not compatible"
 msgstr "Il plugin non è compatibile"
 
-#: plugins.php:927
+#: plugins.php:928
 msgid "Enable Plugin Locally"
 msgstr "Abilita plugin"
 

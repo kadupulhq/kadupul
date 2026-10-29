@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 18:00-0700\n"
+"POT-Creation-Date: 2026-10-28 18:58-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -128,7 +128,7 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Biểu đồ Tổng
 #: host_templates.php:247 host_templates.php:302 host_templates.php:375
 #: lib/clog_webapi.php:225 lib/html.php:2819 lib/html_form.php:1397
 #: lib/html_form.php:1414 lib/html_form.php:1425 lib/html_reports.php:632
-#: managers.php:1065 managers.php:1126 plugins.php:712 pollers.php:549
+#: managers.php:1065 managers.php:1126 plugins.php:713 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:762
 #: tree.php:771 tree.php:780 tree.php:789 user_admin.php:252 user_admin.php:292
 #: user_admin.php:303 user_admin.php:314 user_admin.php:337
@@ -1145,7 +1145,7 @@ msgstr "SNMP"
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2054 managers.php:216
 #: package_import.php:548 package_import.php:633 plugins.php:497
-#: plugins.php:623 pollers.php:1007 templates_import.php:207
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
 #: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:2141
 msgid "Status"
@@ -1203,7 +1203,7 @@ msgstr "Thiết bị phát hiện"
 #: lib/spikekill.php:1802 lib/spikekill.php:1803 lib/spikekill.php:1804
 #: lib/spikekill.php:1805 lib/spikekill.php:1806 lib/spikekill.php:1807
 #: lib/spikekill.php:1808 lib/spikekill.php:1809 lib/spikekill.php:1810
-#: plugins.php:780 pollers.php:1115 user_admin.php:2261 utilities.php:738
+#: plugins.php:781 pollers.php:1115 user_admin.php:2261 utilities.php:738
 #: utilities.php:1190 utilities.php:2757 utilities.php:2885 utilities.php:2893
 #: utilities.php:2904 utilities.php:2915 utilities.php:2940 utilities.php:2990
 #: utilities.php:3226
@@ -2176,7 +2176,7 @@ msgid "Item"
 msgstr "Mục"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:510 plugins.php:641
+#: package_import.php:510 plugins.php:642
 #: templates/platform/permission_denied.html.twig
 msgid "Version"
 msgstr "Phiên bản"
@@ -6831,7 +6831,7 @@ msgstr "(Sửa)"
 #: include/global_arrays.php:2765 include/global_arrays.php:2783
 #: include/global_arrays.php:2801 include/global_arrays.php:2825
 #: lib/api_automation.php:1289 lib/api_automation.php:1352
-#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:605
+#: lib/api_automation.php:1422 lib/html_reports.php:1792 plugins.php:606
 msgid "Actions"
 msgstr "Hành động"
 
@@ -12395,11 +12395,11 @@ msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' v�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 
-#: lib/database.php:2405
+#: lib/database.php:2422
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Không thể xác định độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
-#: lib/database.php:2412
+#: lib/database.php:2429
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Không thể thay đổi độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
@@ -14642,7 +14642,7 @@ msgstr "Không nên cập nhật các Mẫu mà bạn đã thực hiện sửa �
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Vui lòng chọn Mẫu thiết bị bạn muốn sử dụng sau khi cài đặt. Nếu Hệ điều hành của bạn là Windows, bạn cần đảm bảo rằng bạn chọn Mẫu &#39;Thiết bị Windows&#39;. Nếu Hệ điều hành của bạn là Linux / UNIX, hãy đảm bảo bạn chọn Mẫu thiết bị &#39;Máy Linux cục bộ&#39;."
 
-#: lib/installer.php:2749 package_import.php:498 plugins.php:629
+#: lib/installer.php:2749 package_import.php:498 plugins.php:630
 msgid "Author"
 msgstr "Tác giả"
 
@@ -15256,7 +15256,7 @@ msgstr ""
 msgid "Legacy Plugin"
 msgstr "Plugin kế thừa"
 
-#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:595
+#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:596
 msgid "Plugins"
 msgstr "Gói mở rộng"
 
@@ -16521,7 +16521,7 @@ msgstr ""
 msgid "Package Import"
 msgstr "Nhập"
 
-#: plugins.php:26 plugins.php:719
+#: plugins.php:26 plugins.php:720
 msgid "Uninstall"
 msgstr "Gỡ cài đặt"
 
@@ -16545,7 +16545,7 @@ msgstr "Đang chờ nâng cấp"
 msgid "Plugin Management"
 msgstr "Quản Lý Trình Cắm"
 
-#: plugins.php:502 plugins.php:764 plugins.php:775
+#: plugins.php:502 plugins.php:765 plugins.php:776
 msgid "Plugin Error"
 msgstr "Lỗi plugin"
 
@@ -16557,80 +16557,80 @@ msgstr "Hoạt động / Cài đặt"
 msgid "Configuration Issues"
 msgstr "Các vấn đề cấu hình"
 
-#: plugins.php:608
+#: plugins.php:609
 msgid "Actions available include 'Install', 'Activate', 'Disable', 'Enable', 'Uninstall'."
 msgstr "Các hành động khả dụng bao gồm &#39;Cài đặt&#39;, &#39;Kích hoạt&#39;, &#39;Vô hiệu hóa&#39;, &#39;Kích hoạt&#39;, &#39;Gỡ cài đặt&#39;."
 
-#: plugins.php:611
+#: plugins.php:612
 msgid "Plugin Name"
 msgstr "Tên plugin"
 
-#: plugins.php:614
+#: plugins.php:615
 msgid "The name for this Plugin.  The name is controlled by the directory it resides in."
 msgstr "Tên của Plugin này. Tên được kiểm soát bởi thư mục mà nó cư trú."
 
-#: plugins.php:617
+#: plugins.php:618
 msgid "Plugin Description"
 msgstr "Mô tả Plugin"
 
-#: plugins.php:620
+#: plugins.php:621
 msgid "A description that the Plugins author has given to the Plugin."
 msgstr "Một mô tả mà tác giả Plugins đã đưa ra cho Plugin."
 
-#: plugins.php:623
+#: plugins.php:624
 msgid "Main / Remote Status"
 msgstr ""
 
-#: plugins.php:626
+#: plugins.php:627
 msgid "The status of this Plugin."
 msgstr "Trạng thái của Plugin này."
 
-#: plugins.php:632
+#: plugins.php:633
 msgid "The author of this Plugin."
 msgstr "Tác giả của Plugin này."
 
-#: plugins.php:635
+#: plugins.php:636
 msgid "Requires"
 msgstr "Đòi hỏi"
 
-#: plugins.php:638
+#: plugins.php:639
 msgid "This Plugin requires the following Plugins be installed first."
 msgstr "Plugin này yêu cầu các Plugin sau được cài đặt trước."
 
-#: plugins.php:644
+#: plugins.php:645
 msgid "The version of this Plugin."
 msgstr "Phiên bản của Plugin này."
 
-#: plugins.php:647
+#: plugins.php:648
 msgid "Load Order"
 msgstr "Đặt hàng"
 
-#: plugins.php:650
+#: plugins.php:651
 msgid "The load order of the Plugin.  You can change the load order by first sorting by it, then moving a Plugin either up or down."
 msgstr "Thứ tự tải của Plugin. Bạn có thể thay đổi thứ tự tải bằng cách sắp xếp trước theo thứ tự, sau đó di chuyển Plugin lên hoặc xuống."
 
-#: plugins.php:680
+#: plugins.php:681
 msgid "No Plugins Found"
 msgstr "Không tìm thấy plugin"
 
-#: plugins.php:691
+#: plugins.php:692
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Gỡ cài đặt Plugin này sẽ xóa tất cả Dữ liệu và Cài đặt của Plugin. Nếu bạn thực sự muốn Gỡ cài đặt Plugin, nhấp vào &#39;Gỡ cài đặt&#39; bên dưới. Nếu không, nhấp vào &#39;Hủy&#39;"
 
-#: plugins.php:692
+#: plugins.php:693
 msgid "Are you sure you want to Uninstall?"
 msgstr "Bạn có chắc là muốn gỡ cài đặt không?"
 
-#: plugins.php:762 plugins.php:773
+#: plugins.php:763 plugins.php:774
 #, php-format
 msgid "Not Compatible, %s"
 msgstr "Không tương thích, %s"
 
-#: plugins.php:804
+#: plugins.php:805
 msgid "Order Before Previous Plugin"
 msgstr "Đặt hàng trước Plugin trước"
 
-#: plugins.php:809
+#: plugins.php:810
 msgid "Order After Next Plugin"
 msgstr "Đặt hàng sau Plugin tiếp theo"
 
@@ -16639,67 +16639,67 @@ msgstr "Đặt hàng sau Plugin tiếp theo"
 msgid "Unable to Install Plugin.  The following Plugins must be installed first: %s"
 msgstr "Không thể cài đặt Plugin. Các plugin sau phải được cài đặt trước: %s"
 
-#: plugins.php:862
+#: plugins.php:863
 #, php-format
 msgid "Unable to Install Plugin: %s"
 msgstr ""
 
-#: plugins.php:864
+#: plugins.php:865
 msgid "Install Plugin"
 msgstr "Cài đặt Plugin"
 
-#: plugins.php:871 plugins.php:883
+#: plugins.php:872 plugins.php:884
 #, php-format
 msgid "Unable to Uninstall.  This Plugin is required by: %s"
 msgstr "Không thể gỡ cài đặt. Plugin này được yêu cầu bởi: %s"
 
-#: plugins.php:873 plugins.php:878 plugins.php:885
+#: plugins.php:874 plugins.php:879 plugins.php:886
 msgid "Uninstall Plugin"
 msgstr "Gỡ cài đặt Plugin"
 
-#: plugins.php:875
+#: plugins.php:876
 msgid "Disable Plugin"
 msgstr "Vô hiệu hóa Plugin"
 
-#: plugins.php:887
+#: plugins.php:888
 msgid "Enable Plugin"
 msgstr "Sử dụng Plugin"
 
-#: plugins.php:890
+#: plugins.php:891
 msgid "Plugin directory is missing!"
 msgstr "Thiếu thư mục plugin!"
 
-#: plugins.php:893
+#: plugins.php:894
 msgid "Plugin is not compatible (Pre-1.x)"
 msgstr "Plugin không tương thích (Pre-1.x)"
 
-#: plugins.php:896
+#: plugins.php:897
 msgid "Plugin directories can not include spaces"
 msgstr "Thư mục plugin không thể bao gồm dấu cách"
 
-#: plugins.php:899
+#: plugins.php:900
 #, php-format
 msgid "Plugin directory is not correct.  Should be '%s' but is '%s'"
 msgstr "Thư mục plugin không đúng. Nên là &#39; %s&#39; nhưng là &#39; %s&#39;"
 
-#: plugins.php:907
+#: plugins.php:908
 #, php-format
 msgid "Plugin directory '%s' is missing setup.php"
 msgstr "Thư mục plugin &#39; %s&#39; bị thiếu setup.php"
 
-#: plugins.php:909
+#: plugins.php:910
 msgid "Plugin is lacking an INFO file"
 msgstr "Plugin thiếu tệp INFO"
 
-#: plugins.php:911
+#: plugins.php:912
 msgid "Plugin is integrated into Kadupul core"
 msgstr "Plugin được tích hợp vào lõi Kadupul"
 
-#: plugins.php:913
+#: plugins.php:914
 msgid "Plugin is not compatible"
 msgstr "Plugin không tương thích"
 
-#: plugins.php:927
+#: plugins.php:928
 msgid "Enable Plugin Locally"
 msgstr "Sử dụng Plugin"
 
