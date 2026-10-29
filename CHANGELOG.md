@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Decide model-driven binding approval through a `metric_binding` state machine whose guard asks IdentityAccess for the signed-in actor and a binding-approval permission (Settings/Utilities realm), denies by default and audits every decision. Nothing calls approval yet and the RRD write gate stays closed.
+
 - Replace the bundled fullscreen library with a native Fullscreen API shim that preserves the screenfull 3.x plugin interface.
 
 - Inventory bundled browser libraries and report dependency version drift during maintenance.
