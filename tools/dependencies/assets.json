@@ -256,10 +256,9 @@
   {
     "file": "billboard.js",
     "package": "billboard.js",
-    "version": "3.18.0",
-    "tracked": true,
-    "source": "https://cdn.jsdelivr.net/npm/billboard.js@3.18.0/dist/billboard.js",
-    "sha256": "6fa776a50e9768637a46dc0362c5f947ead452a1319cdfdfa359aee6205e922c"
+    "version": "4.1.3",
+    "url": "https://cdn.jsdelivr.net/npm/billboard.js@4.1.3/dist/billboard.js",
+    "sha256": "c0670727b1b052eb0ae9b480b3a9ea7cc4b78234b7e8acf99f7f2995b3210b0a"
   },
   {
     "file": "dygraph-combined.js",

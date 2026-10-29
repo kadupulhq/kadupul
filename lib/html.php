@@ -2703,13 +2703,147 @@ function html_spikekill_js()
 	<?php
 }
 
+/* false for partial responses (header=false) that the browser inserts into an existing page */
+function html_page_chrome_requested(): bool
+{
+    return !isset_request_var('header') || get_nfilter_request_var('header') == 'true';
+}
+
+/**
+ * Libraries that core no longer uses but plugins may still expect on the page.
+ * Order within the head is fixed by the slots in html_common_header().
+ */
+function html_legacy_js_registry(): array
+{
+    return array(
+        'chart' => array(
+            'js' => array(array('include/js/Chart.js', true)),
+        ),
+        'dygraphs' => array(
+            'js' => array(array('include/js/dygraph-combined.js', true)),
+        ),
+        'sparkline' => array(
+            'js' => array(array('include/js/jquery.sparkline.js', true)),
+        ),
+        'colorpicker' => array(
+            'css'  => 'jquery.colorpicker.css',
+            'js'   => array(array('include/js/jquery.colorpicker.js', true)),
+            'lang' => 'path2colorpicker',
+        ),
+    );
+}
+
+/**
+ * 1.3 loads every legacy library in the head so plugins written before
+ * html_require_legacy_js() existed keep working. Release 1.4 changes this
+ * to return false, after which the head emits only requested libraries.
+ * Defining KADUPUL_LEGACY_JS_ON_DEMAND lets a plugin try that behavior now.
+ */
+function html_legacy_js_global(): bool
+{
+    return !defined('KADUPUL_LEGACY_JS_ON_DEMAND');
+}
+
+function &html_legacy_js_state()
+{
+    static $state = array('requested' => array(), 'emitted' => array(), 'head' => false, 'theme' => '');
+
+    return $state;
+}
+
+function html_legacy_js_tags(string $name, string $part, string $theme): string
+{
+    $registry = html_legacy_js_registry();
+
+    if (!isset($registry[$name][$part])) {
+        return '';
+    }
+
+    $entry = $registry[$name][$part];
+
+    if ($part == 'css') {
+        return get_md5_include_css('include/themes/' . $theme . '/' . $entry);
+    }
+
+    if ($part == 'lang') {
+        if (isset($GLOBALS[$entry]) && file_exists($GLOBALS[$entry])) {
+            return get_md5_include_js($GLOBALS[$entry]);
+        }
+
+        return '';
+    }
+
+    $tags = '';
+
+    foreach ($entry as $script) {
+        $tags .= get_md5_include_js($script[0], $script[1]);
+    }
+
+    return $tags;
+}
+
+/**
+ * Tags for one slot of the page head. Emits every library while
+ * html_legacy_js_global() is true, otherwise only those already requested.
+ */
+function html_legacy_js_head(string $name, string $part, string $theme): string
+{
+    $state = & html_legacy_js_state();
+
+    $state['head']  = true;
+    $state['theme'] = $theme;
+
+    if (!html_legacy_js_global() && !isset($state['requested'][$name])) {
+        return '';
+    }
+
+    $state['emitted'][$name][$part] = true;
+
+    return html_legacy_js_tags($name, $part, $theme);
+}
+
+/**
+ * Declare that the current page needs a legacy browser library: chart,
+ * dygraphs, sparkline or colorpicker. Unknown names are logged and ignored.
+ */
+function html_require_legacy_js(string $name): void
+{
+    $registry = html_legacy_js_registry();
+
+    if (!isset($registry[$name])) {
+        cacti_log('WARNING: Unknown legacy JavaScript library requested: ' . substr(preg_replace('/[^\x20-\x7e]/', '?', $name), 0, 64), false, 'WEBUI', POLLER_VERBOSITY_DEBUG);
+
+        return;
+    }
+
+    $state = & html_legacy_js_state();
+
+    $state['requested'][$name] = true;
+
+    // While loaded globally, or while a head is still to come, the head slot prints it.
+    // Without a head (a header=false response), print at the call site.
+    if (html_legacy_js_global() || (!$state['head'] && html_page_chrome_requested())) {
+        return;
+    }
+
+    $theme = $state['theme'] != '' ? $state['theme'] : get_selected_theme();
+
+    foreach (array_keys($registry[$name]) as $part) {
+        if (!isset($state['emitted'][$name][$part])) {
+            $state['emitted'][$name][$part] = true;
+
+            print html_legacy_js_tags($name, $part, $theme);
+        }
+    }
+}
+
 /* html_common_header - prints a common set of header, css and javascript links
    @arg title - the title of the page to place in the browser
    @arg selectedTheme - optionally sets a specific theme over the current one
 */
 function html_common_header($title, $selectedTheme = '')
 {
-    global $config, $path2calendar, $path2timepicker, $path2colorpicker, $path2ms, $path2msfilter;
+    global $config, $path2calendar, $path2timepicker, $path2ms, $path2msfilter;
 
     if ($selectedTheme == '') {
         $selectedTheme = get_selected_theme();
@@ -2855,7 +2989,7 @@ function html_common_header($title, $selectedTheme = '')
     print get_md5_include_css('include/themes/' . $selectedTheme . '/jquery.multiselect.css');
     print get_md5_include_css('include/themes/' . $selectedTheme . '/jquery.multiselect.filter.css');
     print get_md5_include_css('include/themes/' . $selectedTheme . '/jquery.timepicker.css');
-    print get_md5_include_css('include/themes/' . $selectedTheme . '/jquery.colorpicker.css');
+    print html_legacy_js_head('colorpicker', 'css', $selectedTheme);
     print get_md5_include_css('include/themes/' . $selectedTheme . '/billboard.css');
     print get_md5_include_css('include/themes/' . $selectedTheme . '/pace.css');
     print get_md5_include_css('include/themes/' . $selectedTheme . '/Diff.css');
@@ -2876,13 +3010,13 @@ function html_common_header($title, $selectedTheme = '')
     print get_md5_include_js('include/js/jquery.multiselect.js');
     print get_md5_include_js('include/js/jquery.multiselect.filter.js');
     print get_md5_include_js('include/js/jquery.timepicker.js');
-    print get_md5_include_js('include/js/jquery.colorpicker.js', true);
+    print html_legacy_js_head('colorpicker', 'js', $selectedTheme);
     print get_md5_include_js('include/js/jquery.tablesorter.js');
     print get_md5_include_js('include/js/jquery.tablesorter.widgets.js', true);
     print get_md5_include_js('include/js/jquery.tablesorter.pager.js', true);
-    print get_md5_include_js('include/js/jquery.sparkline.js', true);
-    print get_md5_include_js('include/js/Chart.js', true);
-    print get_md5_include_js('include/js/dygraph-combined.js', true);
+    print html_legacy_js_head('sparkline', 'js', $selectedTheme);
+    print html_legacy_js_head('chart', 'js', $selectedTheme);
+    print html_legacy_js_head('dygraphs', 'js', $selectedTheme);
     print get_md5_include_js('include/js/d3.js');
     print get_md5_include_js('include/js/billboard.js');
     print get_md5_include_js('include/layout.js');
@@ -2899,9 +3033,7 @@ function html_common_header($title, $selectedTheme = '')
         print get_md5_include_js($path2timepicker);
     }
 
-    if (isset($path2colorpicker) && file_exists($path2colorpicker)) {
-        print get_md5_include_js($path2colorpicker);
-    }
+    print html_legacy_js_head('colorpicker', 'lang', $selectedTheme);
 
     if (isset($path2ms) && file_exists($path2ms)) {
         print get_md5_include_js($path2ms);
