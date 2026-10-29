@@ -897,6 +897,7 @@ switch (get_request_var('action')) {
 		if ($('#boost_rrd_update_enable').is(':checked')){
 			$('#row_boost_rrd_update_interval').show();
 			$('#row_boost_parallel').show();
+			$('#row_boost_processing_mode').show();
 			$('#row_path_boost_log').show();
 			$('#row_boost_rrd_update_max_records').show();
 			$('#row_boost_rrd_update_max_records_per_select').show();
@@ -907,6 +908,7 @@ switch (get_request_var('action')) {
 		} else {
 			$('#row_boost_rrd_update_interval').hide();
 			$('#row_boost_parallel').hide();
+			$('#row_boost_processing_mode').hide();
 			$('#row_path_boost_log').hide();
 			$('#row_boost_rrd_update_max_records').hide();
 			$('#row_boost_rrd_update_max_records_per_select').hide();

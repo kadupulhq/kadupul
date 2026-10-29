@@ -7,6 +7,7 @@
  */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once($config['base_path'] . '/lib/rrd.php');
 
 if ($config['poller_id'] > 1) {
 	print 'FATAL: This utility is designed for the main Data Collector only' . PHP_EOL;
@@ -173,6 +174,15 @@ foreach ($data_sources as $info) {
 	$new_rrd_path  = $info['new_rrd_path'];
 	$old_rrd_path  = $info['rrd_path'];
 	$local_data_id = $info['local_data_id'];
+
+	/* the stored path names the file that is moved, so it must be inside the RRA directory */
+	if (!rrd_check_path($old_rrd_path, null, 'SYSTEM')) {
+		$warn_count++;
+
+		print "WARNING: Legacy RRA Path '$old_rrd_path' is outside the RRA directory, Skipping" . PHP_EOL;
+
+		continue;
+	}
 
     /* acquire lock in order to prevent race conditions */
     while (!db_fetch_cell("SELECT GET_LOCK('boost.single_ds.$local_data_id', 1)")) {

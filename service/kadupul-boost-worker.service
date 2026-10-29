@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[Unit]
+Description=Kadupul Boost Queue Worker
+After=network.target
+
+[Service]
+Type=simple
+User=apache
+Group=apache
+WorkingDirectory=/var/www/html/cacti
+ExecStart=/usr/bin/php /var/www/html/cacti/bin/console messenger:consume boost --time-limit=3600 --memory-limit=256M
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
