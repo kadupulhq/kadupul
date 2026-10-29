@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 21:24-0700\n"
+"POT-Creation-Date: 2026-10-28 22:20-0700\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2395,8 +2395,8 @@ msgstr "根(植物)"
 msgid "No Tree Rules Found"
 msgstr "ツリールールが見つかりません"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6800
+#: lib/functions.php:6896 lib/functions.php:7557 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3768,7 +3768,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Pollerはまだ実行されていません。"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8260 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "権限がありません"
 
@@ -4724,12 +4724,12 @@ msgstr "致命的：あなたはKadupulのこの地域にアクセスするに�
 msgid "Login Again"
 msgstr "再度ログイン"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8261
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "これがエラーだと感じたらKadupul管理者に連絡してください。"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8261
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -12624,33 +12624,33 @@ msgstr "成功！"
 msgid "Message Not Sent due to ping failure."
 msgstr "pingが失敗したため、メッセージが送信されませんでした。"
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6725 lib/functions.php:6800
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "次のエラーのため、Kadupulはプラグイン%sを無効にしました：%s! 詳細については、Kadupulログファイルを参照してください。"
 
-#: lib/functions.php:6891
+#: lib/functions.php:6896
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告： PollerID ：%sに無効なホスト名：%sがあります。DNS経由では到達できませんか？"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7320 lib/functions.php:7322
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "ベータ線 %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7320 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "バージョン%s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7322
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7557
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：キーKadupulインクルードファイル%sがありません。このファイルを見つけて置き換えてください"
