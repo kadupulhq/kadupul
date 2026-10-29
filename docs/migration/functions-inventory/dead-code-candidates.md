@@ -79,7 +79,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `send_mail` | 2 | 1 | 1 | 0 | Alerting/Application/Port/MailSender |
 | `clog_admin` | 2 | 2 | 2 | 0 | IdentityAccess |
 | `check_changed` | 2 | 1 | 3 | 0 | legacy-retained |
-| `get_default_contextoption` | 2 | 0 | 3 | 0 | Platform/Presentation/Http |
+| `get_default_contextoption` | 2 | 0 | 4 | 0 | Platform/Presentation/Http |
 | `get_format_message_instance` | 2 | 0 | 4 | 0 | Platform/Application/Port/FlashMessages |
 | `get_selective_log_level` | 2 | 1 | 4 | 0 | Platform/Infrastructure/Legacy |
 | `is_urlencoded` | 2 | 1 | 4 | 0 | Platform/Domain/Text |

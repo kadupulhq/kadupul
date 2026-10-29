@@ -36,16 +36,25 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
     $poller_id = $status['poller_id'];
 
     if ($poller_id != $config['poller_id']) {
-        $hostname = db_fetch_cell_prepared(
+        $hostname = \Kadupul\Platform\Contract\CollectorAddress::host(db_fetch_cell_prepared(
             'SELECT hostname
 			FROM poller
 			WHERE id = ?',
             array($poller_id)
-        );
+        ));
+        $address = $hostname === null ? null : \Kadupul\Platform\Contract\CollectorAddress::connectAddress($hostname, static fn(string $name): string => gethostbyname($name));
+
+        if ($address === null) {
+            cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s because its hostname is invalid, unresolvable or reserved', $poller_id), false, 'SECURITY');
+
+            return false;
+        }
 
         $url = $config['url_path'] . 'remote_agent.php?action=runquery&host_id=' . $host_id . '&data_query_id=' . $snmp_query_id;
+        $url_host = \Kadupul\Platform\Contract\CollectorAddress::urlHost($hostname);
+        $status = 0;
 
-        $response = cacti_http(get_url_type() . '://' . $hostname . $url, max(1, min(300, (int) read_config_option('remote_agent_timeout'))), array($hostname));
+        $response = cacti_http(get_url_type() . '://' . $url_host . $url, max(1, min(300, (int) read_config_option('remote_agent_timeout'))), array($url_host), $status, $address);
 
         if ($response != '') {
             $response = json_decode($response, true);
