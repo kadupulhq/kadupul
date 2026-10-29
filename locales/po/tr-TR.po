@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 22:06-0700\n"
+"POT-Creation-Date: 2026-10-28 23:55-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -126,7 +126,7 @@ msgstr "Aşağıdaki Toplam Grafiği / Grafikleri silmek için &#39;Devam Et&#39
 #: graphs.php:1181 graphs.php:1224 graphs.php:1246 graphs.php:1277
 #: graphs.php:1289 graphs.php:1872 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:302
-#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2819
+#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2953
 #: lib/html_form.php:1397 lib/html_form.php:1414 lib/html_form.php:1425
 #: lib/html_reports.php:632 managers.php:1065 managers.php:1126 plugins.php:713
 #: pollers.php:549 pollers.php:558 pollers.php:567 pollers.php:576
@@ -154,7 +154,7 @@ msgstr "İptal"
 #: graphs.php:970 graphs.php:979 graphs.php:1181 graphs.php:1224
 #: graphs.php:1246 graphs.php:1277 graphs.php:1289 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2952
 #: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:783
 #: tree.php:792 tree.php:801 tree.php:810 user_admin.php:252 user_admin.php:292
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Şifre Değiştirme sayfasında sorunlar var. Hemen Kadupul yöneticinizle iletişime geçin."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2888
 msgid "Change Password"
 msgstr "Şifre Değiştir"
 
@@ -917,7 +917,7 @@ msgstr "Giriş"
 
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
-#: lib/html.php:2767 managers.php:24 user_admin.php:1741
+#: lib/html.php:2901 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "Genel"
@@ -928,17 +928,17 @@ msgstr "Kullanıcı Hesap Detayları"
 
 #: auth_profile.php:313 include/global_arrays.php:861
 #: include/global_settings.php:2763 lib/html.php:2191 lib/html.php:2213
-#: lib/html.php:2748
+#: lib/html.php:2882
 msgid "Tree View"
 msgstr "Ağaç görünümü"
 
 #: auth_profile.php:317 include/global_arrays.php:862 lib/html.php:2198
-#: lib/html.php:2222 lib/html.php:2749
+#: lib/html.php:2222 lib/html.php:2883
 msgid "List View"
 msgstr "Liste Görünümü"
 
 #: auth_profile.php:321 include/global_arrays.php:863 lib/html.php:2205
-#: lib/html.php:2750
+#: lib/html.php:2884
 msgid "Preview View"
 msgstr "Önizleme Görünümü"
 
@@ -1354,7 +1354,7 @@ msgstr "Etkin"
 #: include/global_settings.php:1660 include/global_settings.php:1673
 #: include/global_settings.php:1698 include/global_settings.php:1712
 #: include/global_settings.php:1802 include/global_settings.php:2576
-#: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2978 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:611 pollers.php:33 user_admin.php:936 user_domains.php:396
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
@@ -2592,7 +2592,7 @@ msgstr "Veri Kaynağı"
 msgid "The Data Source to Debug"
 msgstr "Hata ayıklamak için veri kaynağı"
 
-#: data_debug.php:506 lib/html.php:2771 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2905 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "Kullanıcı"
 
@@ -2881,7 +2881,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Şu anda filtrelenmiş Veri Kaynaklarında kontrolleri çalıştırın ve diğer sonuçları koruyun"
 
 #: data_debug.php:1150 data_sources.php:1753 data_templates.php:1107
-#: lib/html.php:2780
+#: lib/html.php:2914
 msgid "Profile"
 msgstr "Profil"
 
@@ -3763,7 +3763,7 @@ msgstr "Grafik Şablonu Düzenle."
 msgid "Click to view just this Graph in Real-time"
 msgstr "Sadece bu Grafiği Gerçek Zamanlı olarak görüntülemek için tıklayın"
 
-#: graph.php:272 lib/html.php:2745
+#: graph.php:272 lib/html.php:2879
 msgid "Utility View"
 msgstr "Yardımcı Program Görünümü"
 
@@ -4119,7 +4119,7 @@ msgstr "Önizleme modu"
 msgid "Add Selected Graphs to Report"
 msgstr "Rapora Seçili Grafikler Ekleme"
 
-#: graph_view.php:1049 lib/html.php:2816
+#: graph_view.php:1049 lib/html.php:2950
 msgid "Ok"
 msgstr "Tamam"
 
@@ -4462,7 +4462,7 @@ msgstr "[Tüm Cihazlar] için Yeni Grafikler"
 msgid "New Graphs for None Host Type"
 msgstr "Hiçbiri Ana Bilgisayar Türü için Yeni Grafikler"
 
-#: graphs_new.php:440 lib/html.php:2743
+#: graphs_new.php:440 lib/html.php:2877
 msgid "Filter Settings Saved"
 msgstr "Kayıtlı Filtre Ayarları"
 
@@ -5227,7 +5227,7 @@ msgstr "Sağ"
 msgid "Justified"
 msgstr "Doğrula"
 
-#: include/global_arrays.php:589 lib/html.php:2842
+#: include/global_arrays.php:589 lib/html.php:2976
 msgid "Center"
 msgstr "Merkez"
 
@@ -5625,7 +5625,7 @@ msgstr "Başlık"
 
 #: include/global_arrays.php:957 include/global_arrays.php:1008
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/html.php:2831
+#: lib/html.php:2965
 msgid "Graph"
 msgstr "Grafik"
 
@@ -5804,7 +5804,7 @@ msgid "Configuration"
 msgstr "Yapılandırma"
 
 #: include/global_arrays.php:1034 include/global_arrays.php:1056
-#: lib/html.php:2549 lib/html.php:2846
+#: lib/html.php:2549 lib/html.php:2980
 msgid "Settings"
 msgstr "Ayarlar"
 
@@ -6834,7 +6834,7 @@ msgid "List Mode"
 msgstr "Liste Modu"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsol"
@@ -6995,7 +6995,7 @@ msgstr "Dış Bağlantı"
 msgid "(Action)"
 msgstr "Eylem:"
 
-#: include/global_arrays.php:2633 lib/html.php:2785
+#: include/global_arrays.php:2633 lib/html.php:2919
 msgid "About Kadupul"
 msgstr "Kadupul hakkında"
 
@@ -9044,7 +9044,7 @@ msgstr "Basit olarak ayarlandıysa, Grafikler ve Veri Kaynakları yalnızca Yeni
 msgid "Simple"
 msgstr "Basit"
 
-#: include/global_settings.php:521 lib/html.php:2833
+#: include/global_settings.php:521 lib/html.php:2967
 msgid "Advanced"
 msgstr "Gelişmiş"
 
@@ -9465,7 +9465,7 @@ msgid "Theme Settings"
 msgstr "Tema Ayarları"
 
 #: include/global_settings.php:944 include/global_settings.php:1154
-#: include/global_settings.php:2611 lib/html.php:2781
+#: include/global_settings.php:2611 lib/html.php:2915
 msgid "Theme"
 msgstr "Tema"
 
@@ -12531,11 +12531,11 @@ msgstr "Düzenli Kullanıcı Olarak Giriş Yapın"
 msgid "guest"
 msgstr "misafir"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2904
 msgid "User Community"
 msgstr "Kullanıcı Topluluğu"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Belgeler"
@@ -12545,11 +12545,11 @@ msgstr "Belgeler"
 msgid "Logged in as %s"
 msgstr "%s olarak giriş yaptınız"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4280 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Profili Düzenle"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4290 lib/html.php:2889
 msgid "Logout"
 msgstr "Çıkış"
 
@@ -12759,7 +12759,7 @@ msgstr "Veri sorgusu"
 msgid "CSV Export of Graph Data"
 msgstr "Grafik Verilerinin CSV Dışa Aktarılması"
 
-#: lib/html.php:540 lib/html.php:2742
+#: lib/html.php:540 lib/html.php:2876
 msgid "Time Graph View"
 msgstr "Zaman Grafiği Görünümü"
 
@@ -12863,323 +12863,323 @@ msgstr "Kuru Çalıştırma Boşluğu Doldurma Aralığı"
 msgid "Dry Run Float Range"
 msgstr "Kuru Çalışma Şamandıra Aralığı"
 
-#: lib/html.php:2738
+#: lib/html.php:2872
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "Tablo sütunlarının geçerli pencere sınırlarının ötesine genişlemesine izin verin veya sınırlayın."
 
-#: lib/html.php:2739 lib/html_filter.php:48
+#: lib/html.php:2873 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "Bir arama terimi girin"
 
-#: lib/html.php:2740
+#: lib/html.php:2874
 msgid "Enter a regular expression"
 msgstr "Düzenli bir ifade girin"
 
-#: lib/html.php:2741
+#: lib/html.php:2875
 msgid "No file selected"
 msgstr "Herhangi bir dosya seçilmemiş"
 
-#: lib/html.php:2744 lib/html.php:2787
+#: lib/html.php:2878 lib/html.php:2921
 msgid "SpikeKill Results"
 msgstr "SpikeKill Sonuçları"
 
-#: lib/html.php:2746
+#: lib/html.php:2880
 msgid "Click to view just this Graph in Realtime"
 msgstr "Sadece bu Grafiği Gerçek Zamanlı olarak görüntülemek için tıklayın"
 
-#: lib/html.php:2747
+#: lib/html.php:2881
 msgid "Click again to take this Graph out of Realtime"
 msgstr "Bu Grafiği Gerçek Zamanlı Durumdan çıkarmak için tekrar tıklayın"
 
-#: lib/html.php:2756
+#: lib/html.php:2890
 msgid "Standard Mode"
 msgstr "Standart Kip"
 
-#: lib/html.php:2757
+#: lib/html.php:2891
 msgid "Compact Mode"
 msgstr "Yakınlaştırma Modu"
 
-#: lib/html.php:2758
+#: lib/html.php:2892
 msgid "Dark Color Mode"
 msgstr "Renk Bulunamadı"
 
-#: lib/html.php:2759
+#: lib/html.php:2893
 msgid "Light Color Mode"
 msgstr "Liste Modu"
 
-#: lib/html.php:2760
+#: lib/html.php:2894
 msgid "Use System Color"
 msgstr "Öğe Rengi"
 
-#: lib/html.php:2761
+#: lib/html.php:2895
 msgid "Ignore System Color"
 msgstr "Öğe Rengi"
 
-#: lib/html.php:2762
+#: lib/html.php:2896
 msgid "Help"
 msgstr "Yardım"
 
-#: lib/html.php:2763
+#: lib/html.php:2897
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul Ana Sayfa"
 
-#: lib/html.php:2765
+#: lib/html.php:2899
 msgid "Miscellaneous"
 msgstr "Çeşitli"
 
-#: lib/html.php:2766
+#: lib/html.php:2900
 msgid "Dashboards"
 msgstr "Gösterge tabloları"
 
-#: lib/html.php:2768
+#: lib/html.php:2902
 msgid "Charts"
 msgstr "Grafikler"
 
-#: lib/html.php:2769
+#: lib/html.php:2903
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul Proje Sayfası"
 
-#: lib/html.php:2773
+#: lib/html.php:2907
 msgid "Spine"
 msgstr "Omurga"
 
-#: lib/html.php:2774
+#: lib/html.php:2908
 msgid "RRDProxy"
 msgstr "RRDProxy"
 
-#: lib/html.php:2775
+#: lib/html.php:2909
 msgid "Keyboard"
 msgstr "Klavye"
 
-#: lib/html.php:2776
+#: lib/html.php:2910
 msgid "Shortcuts"
 msgstr "Kısayollar"
 
-#: lib/html.php:2777
+#: lib/html.php:2911
 #, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Kadupul Günlüğünü Döndür"
 
-#: lib/html.php:2778
+#: lib/html.php:2912
 msgid "Help in Developing"
 msgstr "Geliştirmede Yardım"
 
-#: lib/html.php:2779
+#: lib/html.php:2913
 msgid "Donation & Sponsoring"
 msgstr "Bağış ve Sponsorluk"
 
-#: lib/html.php:2782
+#: lib/html.php:2916
 msgid "Client"
 msgstr "Müşteri"
 
-#: lib/html.php:2783
+#: lib/html.php:2917
 msgid "Help in Translating"
 msgstr "Çeviride Yardım"
 
-#: lib/html.php:2784
+#: lib/html.php:2918
 msgid "Report a bug"
 msgstr "Hata bildir"
 
-#: lib/html.php:2786
+#: lib/html.php:2920
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2788
+#: lib/html.php:2922
 msgid "Click to Show/Hide Filter"
 msgstr "Filtreyi Göster / Gizle&#39;yi tıkla"
 
-#: lib/html.php:2789
+#: lib/html.php:2923
 msgid "Clear Current Filter"
 msgstr "Geçerli Filtreyi Temizle"
 
-#: lib/html.php:2790
+#: lib/html.php:2924
 msgid "Clipboard"
 msgstr "Panoya Kopyala"
 
-#: lib/html.php:2791
+#: lib/html.php:2925
 msgid "Clipboard ID"
 msgstr "Pano Kimliği"
 
-#: lib/html.php:2792
+#: lib/html.php:2926
 msgid "Copy operation is unavailable at this time"
 msgstr "Kopyalama işlemi şu anda kullanılamıyor"
 
-#: lib/html.php:2793
+#: lib/html.php:2927
 msgid "Failed to find data to copy!"
 msgstr "Kopyalanacak veri bulunamadı!"
 
-#: lib/html.php:2794
+#: lib/html.php:2928
 msgid "Clipboard has been updated"
 msgstr "Pano güncellendi"
 
-#: lib/html.php:2795
+#: lib/html.php:2929
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "Maalesef, panonuz şu anda güncellenemedi"
 
-#: lib/html.php:2799
+#: lib/html.php:2933
 msgid "Passphrase length meets 8 character minimum"
 msgstr "Şifre uzunluğu minimum 8 karakter"
 
-#: lib/html.php:2800
+#: lib/html.php:2934
 msgid "Passphrase too short"
 msgstr "Şifre çok kısa"
 
-#: lib/html.php:2801
+#: lib/html.php:2935
 msgid "Passphrase matches but too short"
 msgstr "Parola eşleşiyor ancak çok kısa"
 
-#: lib/html.php:2802
+#: lib/html.php:2936
 msgid "Passphrase too short and not matching"
 msgstr "Parola çok kısa ve eşleşmiyor"
 
-#: lib/html.php:2803
+#: lib/html.php:2937
 msgid "Passphrases match"
 msgstr "Parola eşleşmesi"
 
-#: lib/html.php:2804
+#: lib/html.php:2938
 msgid "Passphrases do not match"
 msgstr "Parolalar eşleşmiyor"
 
-#: lib/html.php:2805
+#: lib/html.php:2939
 msgid "Sorry, we could not process your last action."
 msgstr "Maalesef, son işleminizi gerçekleştiremedik."
 
-#: lib/html.php:2806
+#: lib/html.php:2940
 msgid "Error:"
 msgstr "Hata:"
 
-#: lib/html.php:2807
+#: lib/html.php:2941
 msgid "Reason:"
 msgstr "Nedeni:"
 
-#: lib/html.php:2808
+#: lib/html.php:2942
 msgid "Action failed"
 msgstr "Eylem başarısız"
 
-#: lib/html.php:2809 pollers.php:804
+#: lib/html.php:2943 pollers.php:804
 msgid "Connection Successful"
 msgstr "Operasyon Başarılı"
 
-#: lib/html.php:2810 pollers.php:806
+#: lib/html.php:2944 pollers.php:806
 msgid "Connection Failed"
 msgstr "AÄ adresi ayarlanÄ±yor"
 
-#: lib/html.php:2811
+#: lib/html.php:2945
 msgid "The response to the last action was unexpected."
 msgstr "Son eyleme verilen yanıt beklenmiyordu."
 
-#: lib/html.php:2812
+#: lib/html.php:2946
 msgid "Some Actions failed"
 msgstr "Bazı İşlemler başarısız oldu"
 
-#: lib/html.php:2813
+#: lib/html.php:2947
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "Not, tüm işlemlerinizi işleme koyamadık. Detaylar aşağıda."
 
-#: lib/html.php:2814
+#: lib/html.php:2948
 msgid "Operation successful"
 msgstr "Operasyon Başarılı"
 
-#: lib/html.php:2815
+#: lib/html.php:2949
 msgid "The Operation was successful.  Details are below."
 msgstr "Operasyon başarılı oldu. Detaylar aşağıda."
 
-#: lib/html.php:2817
+#: lib/html.php:2951
 msgid "Pause"
 msgstr "Duraklat"
 
-#: lib/html.php:2820
+#: lib/html.php:2954
 msgid "Zoom In"
 msgstr "Yakınlaştır"
 
-#: lib/html.php:2821
+#: lib/html.php:2955
 msgid "Zoom Out"
 msgstr "Uzaklaştır"
 
-#: lib/html.php:2822
+#: lib/html.php:2956
 msgid "Zoom Out Factor"
 msgstr "Uzaklaştırma Faktörü"
 
-#: lib/html.php:2823
+#: lib/html.php:2957
 msgid "Timestamps"
 msgstr "Zaman etiketleri"
 
-#: lib/html.php:2824
+#: lib/html.php:2958
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2825
+#: lib/html.php:2959
 msgid "4x"
 msgstr "4x"
 
-#: lib/html.php:2826
+#: lib/html.php:2960
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2827
+#: lib/html.php:2961
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2828
+#: lib/html.php:2962
 msgid "32x"
 msgstr "32x"
 
-#: lib/html.php:2829
+#: lib/html.php:2963
 msgid "Zoom Out Positioning"
 msgstr "Uzaklaştır Konumlandırma"
 
-#: lib/html.php:2830
+#: lib/html.php:2964
 msgid "Zoom Mode"
 msgstr "Yakınlaştırma Modu"
 
-#: lib/html.php:2832
+#: lib/html.php:2966
 msgid "Quick"
 msgstr "Hızlı"
 
-#: lib/html.php:2834
+#: lib/html.php:2968
 msgid "Open in new tab"
 msgstr "Yeni sekmede aç"
 
-#: lib/html.php:2835
+#: lib/html.php:2969
 msgid "Save graph"
 msgstr "Grafiği kaydet"
 
-#: lib/html.php:2836
+#: lib/html.php:2970
 msgid "Copy graph"
 msgstr "Grafiği kopyala"
 
-#: lib/html.php:2837
+#: lib/html.php:2971
 msgid "Copy graph link"
 msgstr "Grafik bağlantısını kopyala"
 
-#: lib/html.php:2838
+#: lib/html.php:2972
 msgid "Always On"
 msgstr "Her Zaman Açık"
 
-#: lib/html.php:2839
+#: lib/html.php:2973
 msgid "Auto"
 msgstr "Otomatik"
 
-#: lib/html.php:2840
+#: lib/html.php:2974
 msgid "Always Off"
 msgstr "Her Zaman Kapalı"
 
-#: lib/html.php:2841
+#: lib/html.php:2975
 msgid "Begin with"
 msgstr "İle başlar"
 
-#: lib/html.php:2843
+#: lib/html.php:2977
 msgid "End with"
 msgstr "Bitiş Tarihi"
 
-#: lib/html.php:2845 lib/html_form.php:1433
+#: lib/html.php:2979 lib/html_form.php:1433
 msgid "Close"
 msgstr "Kapat"
 
-#: lib/html.php:2847
+#: lib/html.php:2981
 msgid "3rd Mouse Button"
 msgstr "3. Fare Düğmesi"
 

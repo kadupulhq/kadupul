@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-28 22:06-0700\n"
+"POT-Creation-Date: 2026-10-28 23:55-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -126,7 +126,7 @@ msgstr "다음 집계 그래프를 삭제하려면 &#39;계속&#39;을 클릭하
 #: graphs.php:1181 graphs.php:1224 graphs.php:1246 graphs.php:1277
 #: graphs.php:1289 graphs.php:1872 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:302
-#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2819
+#: host_templates.php:375 lib/clog_webapi.php:225 lib/html.php:2953
 #: lib/html_form.php:1397 lib/html_form.php:1414 lib/html_form.php:1425
 #: lib/html_reports.php:632 managers.php:1065 managers.php:1126 plugins.php:713
 #: pollers.php:549 pollers.php:558 pollers.php:567 pollers.php:576
@@ -154,7 +154,7 @@ msgstr "취소"
 #: graphs.php:970 graphs.php:979 graphs.php:1181 graphs.php:1224
 #: graphs.php:1246 graphs.php:1277 graphs.php:1289 host_templates.php:222
 #: host_templates.php:236 host_templates.php:247 host_templates.php:303
-#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2818
+#: host_templates.php:376 lib/clog_webapi.php:226 lib/html.php:2952
 #: lib/html_reports.php:574 managers.php:1065 managers.php:1126 pollers.php:549
 #: pollers.php:558 pollers.php:567 pollers.php:576 pollers.php:585 tree.php:783
 #: tree.php:792 tree.php:801 tree.php:810 user_admin.php:252 user_admin.php:292
@@ -780,7 +780,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "비밀번호 변경 페이지에 문제가 있습니다. 즉시 Kadupul 관리자에게 문의하세요."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2888
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
@@ -917,7 +917,7 @@ msgstr "로그인"
 
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
-#: lib/html.php:2767 managers.php:24 user_admin.php:1741
+#: lib/html.php:2901 managers.php:24 user_admin.php:1741
 #: user_group_admin.php:1763
 msgid "General"
 msgstr "일반"
@@ -928,17 +928,17 @@ msgstr "사용자 계정 정보"
 
 #: auth_profile.php:313 include/global_arrays.php:861
 #: include/global_settings.php:2763 lib/html.php:2191 lib/html.php:2213
-#: lib/html.php:2748
+#: lib/html.php:2882
 msgid "Tree View"
 msgstr "트리 보기"
 
 #: auth_profile.php:317 include/global_arrays.php:862 lib/html.php:2198
-#: lib/html.php:2222 lib/html.php:2749
+#: lib/html.php:2222 lib/html.php:2883
 msgid "List View"
 msgstr "목록형식 보기"
 
 #: auth_profile.php:321 include/global_arrays.php:863 lib/html.php:2205
-#: lib/html.php:2750
+#: lib/html.php:2884
 msgid "Preview View"
 msgstr "미리보기"
 
@@ -1354,7 +1354,7 @@ msgstr "활성화"
 #: include/global_settings.php:1660 include/global_settings.php:1673
 #: include/global_settings.php:1698 include/global_settings.php:1712
 #: include/global_settings.php:1802 include/global_settings.php:2576
-#: lib/api_automation.php:28 lib/html.php:2844 lib/html_reports.php:2037
+#: lib/api_automation.php:28 lib/html.php:2978 lib/html_reports.php:2037
 #: lib/html_reports.php:2188 lib/html_utility.php:1340 managers.php:241
 #: managers.php:611 pollers.php:33 user_admin.php:936 user_domains.php:396
 #: user_group_admin.php:756 utilities.php:2147 utilities.php:2699
@@ -2590,7 +2590,7 @@ msgstr "데이터 원본"
 msgid "The Data Source to Debug"
 msgstr "디버깅 할 데이터 소스"
 
-#: data_debug.php:506 lib/html.php:2771 utilities.php:1039 utilities.php:1160
+#: data_debug.php:506 lib/html.php:2905 utilities.php:1039 utilities.php:1160
 msgid "User"
 msgstr "사용자"
 
@@ -2879,7 +2879,7 @@ msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "현재 필터링된 데이터 원본에 대한 검사를 실행하고 다른 결과 보존"
 
 #: data_debug.php:1150 data_sources.php:1753 data_templates.php:1107
-#: lib/html.php:2780
+#: lib/html.php:2914
 msgid "Profile"
 msgstr "프로필"
 
@@ -3742,7 +3742,7 @@ msgstr "그래프 템플릿 편집."
 msgid "Click to view just this Graph in Real-time"
 msgstr "실시간으로이 그래프 만 보려면 클릭하십시오."
 
-#: graph.php:272 lib/html.php:2745
+#: graph.php:272 lib/html.php:2879
 msgid "Utility View"
 msgstr "유틸리티보기"
 
@@ -4098,7 +4098,7 @@ msgstr "RTL Mode"
 msgid "Add Selected Graphs to Report"
 msgstr "선택한 그래프를 보고서에 추가"
 
-#: graph_view.php:1049 lib/html.php:2816
+#: graph_view.php:1049 lib/html.php:2950
 msgid "Ok"
 msgstr "확인"
 
@@ -4441,7 +4441,7 @@ msgstr "[모든 장치]의 새로운 그래프"
 msgid "New Graphs for None Host Type"
 msgstr "없음 호스트 유형에 대한 새 그래프"
 
-#: graphs_new.php:440 lib/html.php:2743
+#: graphs_new.php:440 lib/html.php:2877
 msgid "Filter Settings Saved"
 msgstr "저장된 필터 설정"
 
@@ -5198,7 +5198,7 @@ msgstr "오른쪽"
 msgid "Justified"
 msgstr "양쪽 맞춤"
 
-#: include/global_arrays.php:589 lib/html.php:2842
+#: include/global_arrays.php:589 lib/html.php:2976
 msgid "Center"
 msgstr "중앙"
 
@@ -5596,7 +5596,7 @@ msgstr "헤더"
 
 #: include/global_arrays.php:957 include/global_arrays.php:1008
 #: include/global_arrays.php:1694 include/global_arrays.php:1863
-#: lib/html.php:2831
+#: lib/html.php:2965
 msgid "Graph"
 msgstr "그래프"
 
@@ -5775,7 +5775,7 @@ msgid "Configuration"
 msgstr "구성"
 
 #: include/global_arrays.php:1034 include/global_arrays.php:1056
-#: lib/html.php:2549 lib/html.php:2846
+#: lib/html.php:2549 lib/html.php:2980
 msgid "Settings"
 msgstr "설정"
 
@@ -6805,7 +6805,7 @@ msgid "List Mode"
 msgstr "목록 모드"
 
 #: include/global_arrays.php:2069 include/global_arrays.php:2075
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "콘솔"
@@ -6966,7 +6966,7 @@ msgstr "외부 링크"
 msgid "(Action)"
 msgstr "실행"
 
-#: include/global_arrays.php:2633 lib/html.php:2785
+#: include/global_arrays.php:2633 lib/html.php:2919
 msgid "About Kadupul"
 msgstr "Kadupul 소개"
 
@@ -9011,7 +9011,7 @@ msgstr "단순으로 설정하면 그래프 및 데이터 소스는 새 그래�
 msgid "Simple"
 msgstr "단순"
 
-#: include/global_settings.php:521 lib/html.php:2833
+#: include/global_settings.php:521 lib/html.php:2967
 msgid "Advanced"
 msgstr "고급"
 
@@ -9431,7 +9431,7 @@ msgid "Theme Settings"
 msgstr "테마 설정"
 
 #: include/global_settings.php:944 include/global_settings.php:1154
-#: include/global_settings.php:2611 lib/html.php:2781
+#: include/global_settings.php:2611 lib/html.php:2915
 msgid "Theme"
 msgstr "테마"
 
@@ -12491,11 +12491,11 @@ msgstr "일반 사용자로 로그인"
 msgid "guest"
 msgstr "명"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2904
 msgid "User Community"
 msgstr "사용자 커뮤니티"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "문서"
@@ -12505,11 +12505,11 @@ msgstr "문서"
 msgid "Logged in as %s"
 msgstr "%s으로 로그인됨"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4280 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "프로필 수정"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4290 lib/html.php:2889
 msgid "Logout"
 msgstr "로그아웃"
 
@@ -12719,7 +12719,7 @@ msgstr "데이터 쿼리 :"
 msgid "CSV Export of Graph Data"
 msgstr "그래프 데이터의 CSV 내보내기"
 
-#: lib/html.php:540 lib/html.php:2742
+#: lib/html.php:540 lib/html.php:2876
 msgid "Time Graph View"
 msgstr "시간 그래프보기"
 
@@ -12823,322 +12823,322 @@ msgstr "드라이 런 갭 충진 범위"
 msgid "Dry Run Float Range"
 msgstr "드라이 런 플로트 범위"
 
-#: lib/html.php:2738
+#: lib/html.php:2872
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
 msgstr "현재 창 제한을 초과하여 확장하도록 테이블 열을 허용하거나 제한합니다."
 
-#: lib/html.php:2739 lib/html_filter.php:48
+#: lib/html.php:2873 lib/html_filter.php:48
 msgid "Enter a search term"
 msgstr "검색어 입력"
 
-#: lib/html.php:2740
+#: lib/html.php:2874
 msgid "Enter a regular expression"
 msgstr "정규 표현식 입력"
 
-#: lib/html.php:2741
+#: lib/html.php:2875
 msgid "No file selected"
 msgstr "선택된 파일이 없음"
 
-#: lib/html.php:2744 lib/html.php:2787
+#: lib/html.php:2878 lib/html.php:2921
 msgid "SpikeKill Results"
 msgstr "스파이크 킬 결과"
 
-#: lib/html.php:2746
+#: lib/html.php:2880
 msgid "Click to view just this Graph in Realtime"
 msgstr "실시간으로이 그래프 만 보려면 클릭하십시오."
 
-#: lib/html.php:2747
+#: lib/html.php:2881
 msgid "Click again to take this Graph out of Realtime"
 msgstr "이 그래프를 실시간으로 가져 오려면 다시 클릭하십시오."
 
-#: lib/html.php:2756
+#: lib/html.php:2890
 msgid "Standard Mode"
 msgstr "스캔 모드"
 
-#: lib/html.php:2757
+#: lib/html.php:2891
 msgid "Compact Mode"
 msgstr "줌 모드"
 
-#: lib/html.php:2758
+#: lib/html.php:2892
 msgid "Dark Color Mode"
 msgstr "색상 없음"
 
-#: lib/html.php:2759
+#: lib/html.php:2893
 msgid "Light Color Mode"
 msgstr "목록 모드"
 
-#: lib/html.php:2760
+#: lib/html.php:2894
 msgid "Use System Color"
 msgstr "이이템 색상"
 
-#: lib/html.php:2761
+#: lib/html.php:2895
 msgid "Ignore System Color"
 msgstr "이이템 색상"
 
-#: lib/html.php:2762
+#: lib/html.php:2896
 msgid "Help"
 msgstr "도움말"
 
-#: lib/html.php:2763
+#: lib/html.php:2897
 #, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul 홈"
 
-#: lib/html.php:2765
+#: lib/html.php:2899
 msgid "Miscellaneous"
 msgstr "기타"
 
-#: lib/html.php:2766
+#: lib/html.php:2900
 msgid "Dashboards"
 msgstr "Dashboards"
 
-#: lib/html.php:2768
+#: lib/html.php:2902
 msgid "Charts"
 msgstr "차트"
 
-#: lib/html.php:2769
+#: lib/html.php:2903
 #, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul 프로젝트 페이지"
 
-#: lib/html.php:2773
+#: lib/html.php:2907
 msgid "Spine"
 msgstr "스파인"
 
-#: lib/html.php:2774
+#: lib/html.php:2908
 msgid "RRDProxy"
 msgstr "RRD프록시"
 
-#: lib/html.php:2775
+#: lib/html.php:2909
 msgid "Keyboard"
 msgstr "키보드"
 
-#: lib/html.php:2776
+#: lib/html.php:2910
 msgid "Shortcuts"
 msgstr "바로가기"
 
-#: lib/html.php:2777
+#: lib/html.php:2911
 msgid "Contribute to the Kadupul Project"
 msgstr "Kadupul 로그 회전"
 
-#: lib/html.php:2778
+#: lib/html.php:2912
 msgid "Help in Developing"
 msgstr "개발에 도움"
 
-#: lib/html.php:2779
+#: lib/html.php:2913
 msgid "Donation & Sponsoring"
 msgstr "기부 및 후원"
 
-#: lib/html.php:2782
+#: lib/html.php:2916
 msgid "Client"
 msgstr "고객"
 
-#: lib/html.php:2783
+#: lib/html.php:2917
 msgid "Help in Translating"
 msgstr "번역에 도움"
 
-#: lib/html.php:2784
+#: lib/html.php:2918
 msgid "Report a bug"
 msgstr "버그 보고하기"
 
-#: lib/html.php:2786
+#: lib/html.php:2920
 #, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
-#: lib/html.php:2788
+#: lib/html.php:2922
 msgid "Click to Show/Hide Filter"
 msgstr "클릭하여 필터 표시 / 숨기기"
 
-#: lib/html.php:2789
+#: lib/html.php:2923
 msgid "Clear Current Filter"
 msgstr "현재 필터 지우기"
 
-#: lib/html.php:2790
+#: lib/html.php:2924
 msgid "Clipboard"
 msgstr "클립보드"
 
-#: lib/html.php:2791
+#: lib/html.php:2925
 msgid "Clipboard ID"
 msgstr "클립 보드 ID"
 
-#: lib/html.php:2792
+#: lib/html.php:2926
 msgid "Copy operation is unavailable at this time"
 msgstr "현재 복사 작업을 사용할 수 없습니다."
 
-#: lib/html.php:2793
+#: lib/html.php:2927
 msgid "Failed to find data to copy!"
 msgstr "복사 할 데이터를 찾지 못했습니다!"
 
-#: lib/html.php:2794
+#: lib/html.php:2928
 msgid "Clipboard has been updated"
 msgstr "클립 보드가 업데이트되었습니다."
 
-#: lib/html.php:2795
+#: lib/html.php:2929
 msgid "Sorry, your clipboard could not be updated at this time"
 msgstr "죄송합니다. 현재 클립 보드를 업데이트 할 수 없습니다."
 
-#: lib/html.php:2799
+#: lib/html.php:2933
 msgid "Passphrase length meets 8 character minimum"
 msgstr "암호 길이가 최소 8자를 충족시킵니다."
 
-#: lib/html.php:2800
+#: lib/html.php:2934
 msgid "Passphrase too short"
 msgstr "암호가 너무 짧다."
 
-#: lib/html.php:2801
+#: lib/html.php:2935
 msgid "Passphrase matches but too short"
 msgstr "암호는 일치하지만 너무 짧습니다."
 
-#: lib/html.php:2802
+#: lib/html.php:2936
 msgid "Passphrase too short and not matching"
 msgstr "암호가 너무 짧고 일치하지 않습니다."
 
-#: lib/html.php:2803
+#: lib/html.php:2937
 msgid "Passphrases match"
 msgstr "암호가 일치 함"
 
-#: lib/html.php:2804
+#: lib/html.php:2938
 msgid "Passphrases do not match"
 msgstr "암호가 일치하지 않습니다."
 
-#: lib/html.php:2805
+#: lib/html.php:2939
 msgid "Sorry, we could not process your last action."
 msgstr "죄송합니다. 마지막 작업을 처리 할 수 없습니다."
 
-#: lib/html.php:2806
+#: lib/html.php:2940
 msgid "Error:"
 msgstr "오류:"
 
-#: lib/html.php:2807
+#: lib/html.php:2941
 msgid "Reason:"
 msgstr "이유:"
 
-#: lib/html.php:2808
+#: lib/html.php:2942
 msgid "Action failed"
 msgstr "작업이 실패했습니다."
 
-#: lib/html.php:2809 pollers.php:804
+#: lib/html.php:2943 pollers.php:804
 msgid "Connection Successful"
 msgstr "작업 성공"
 
-#: lib/html.php:2810 pollers.php:806
+#: lib/html.php:2944 pollers.php:806
 msgid "Connection Failed"
 msgstr "연결 실패"
 
-#: lib/html.php:2811
+#: lib/html.php:2945
 msgid "The response to the last action was unexpected."
 msgstr "마지막 행동에 대한 반응은 예상치 못했습니다."
 
-#: lib/html.php:2812
+#: lib/html.php:2946
 msgid "Some Actions failed"
 msgstr "일부 조치가 실패했습니다."
 
-#: lib/html.php:2813
+#: lib/html.php:2947
 msgid "Note, we could not process all your actions.  Details are below."
 msgstr "모든 행동을 처리 할 수는 없습니다. 세부 사항은 아래와 같습니다."
 
-#: lib/html.php:2814
+#: lib/html.php:2948
 msgid "Operation successful"
 msgstr "작업 성공"
 
-#: lib/html.php:2815
+#: lib/html.php:2949
 msgid "The Operation was successful.  Details are below."
 msgstr "작업이 성공적으로 완료되었습니다. 세부 사항은 아래와 같습니다."
 
-#: lib/html.php:2817
+#: lib/html.php:2951
 msgid "Pause"
 msgstr "일시 정지"
 
-#: lib/html.php:2820
+#: lib/html.php:2954
 msgid "Zoom In"
 msgstr "확대"
 
-#: lib/html.php:2821
+#: lib/html.php:2955
 msgid "Zoom Out"
 msgstr "축소"
 
-#: lib/html.php:2822
+#: lib/html.php:2956
 msgid "Zoom Out Factor"
 msgstr "축소 계수"
 
-#: lib/html.php:2823
+#: lib/html.php:2957
 msgid "Timestamps"
 msgstr "타임스탬프"
 
-#: lib/html.php:2824
+#: lib/html.php:2958
 msgid "2x"
 msgstr "2x"
 
-#: lib/html.php:2825
+#: lib/html.php:2959
 msgid "4x"
 msgstr "4 배"
 
-#: lib/html.php:2826
+#: lib/html.php:2960
 msgid "8x"
 msgstr "8x"
 
-#: lib/html.php:2827
+#: lib/html.php:2961
 msgid "16x"
 msgstr "16x"
 
-#: lib/html.php:2828
+#: lib/html.php:2962
 msgid "32x"
 msgstr "32 배"
 
-#: lib/html.php:2829
+#: lib/html.php:2963
 msgid "Zoom Out Positioning"
 msgstr "위치 조정 축소"
 
-#: lib/html.php:2830
+#: lib/html.php:2964
 msgid "Zoom Mode"
 msgstr "줌 모드"
 
-#: lib/html.php:2832
+#: lib/html.php:2966
 msgid "Quick"
 msgstr "빨리"
 
-#: lib/html.php:2834
+#: lib/html.php:2968
 msgid "Open in new tab"
 msgstr "새 탭으로 열기"
 
-#: lib/html.php:2835
+#: lib/html.php:2969
 msgid "Save graph"
 msgstr "그래프 저장"
 
-#: lib/html.php:2836
+#: lib/html.php:2970
 msgid "Copy graph"
 msgstr "그래프 복사"
 
-#: lib/html.php:2837
+#: lib/html.php:2971
 msgid "Copy graph link"
 msgstr "그래프 링크 복사"
 
-#: lib/html.php:2838
+#: lib/html.php:2972
 msgid "Always On"
 msgstr "항상 켬"
 
-#: lib/html.php:2839
+#: lib/html.php:2973
 msgid "Auto"
 msgstr "자동"
 
-#: lib/html.php:2840
+#: lib/html.php:2974
 msgid "Always Off"
 msgstr "항상 꺼짐"
 
-#: lib/html.php:2841
+#: lib/html.php:2975
 msgid "Begin with"
 msgstr "시작하다"
 
-#: lib/html.php:2843
+#: lib/html.php:2977
 msgid "End with"
 msgstr "종료일"
 
-#: lib/html.php:2845 lib/html_form.php:1433
+#: lib/html.php:2979 lib/html_form.php:1433
 msgid "Close"
 msgstr "닫기"
 
-#: lib/html.php:2847
+#: lib/html.php:2981
 msgid "3rd Mouse Button"
 msgstr "세 번째 마우스 버튼"
 

@@ -27,16 +27,17 @@ for (const [library, loaded] of libraries) {
 
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
+    const fixtureBody = `
+      <!doctype html><html><body><div id="main"></div>
+      <script nonce="${nonce}" src="/include/js/jquery.js"></script>
+      <script nonce="${nonce}">
+        window.violations = [];
+        document.addEventListener('securitypolicyviolation', event => violations.push(event.violatedDirective));
+      </script></body></html>`;
     await page.route('**/*', async route => {
       const url = new URL(route.request().url());
       if (url.pathname === '/fixture') {
-        await route.fulfill({ contentType: 'text/html', headers: { 'Content-Security-Policy': policy }, body: `
-          <!doctype html><html><body><div id="main"></div>
-          <script nonce="${nonce}" src="/include/js/jquery.js"></script>
-          <script nonce="${nonce}">
-            window.violations = [];
-            document.addEventListener('securitypolicyviolation', event => violations.push(event.violatedDirective));
-          </script></body></html>` });
+        await route.fulfill({ contentType: 'text/html', headers: { 'Content-Security-Policy': policy }, body: fixtureBody });
       } else if (url.pathname === '/partial') {
         await route.fulfill({ contentType: 'text/html', body: partial });
       } else if (url.pathname.startsWith('/include/js/')) {
