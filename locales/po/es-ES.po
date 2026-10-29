@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-29 00:36-0700\n"
+"POT-Creation-Date: 2026-10-29 01:13-0700\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2392,7 +2392,7 @@ msgid "No Tree Rules Found"
 msgstr "No se encontraron reglas de árbol"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6891 lib/functions.php:7552 poller.php:416 poller.php:583
+#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3782,7 +3782,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "La Sonda de Kadupul no se ha ejecutado aún."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8255 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Permiso denegado"
 
@@ -4735,12 +4735,12 @@ msgstr "FATAL: Debes iniciar sesión para acceder a esta área de Kadupul."
 msgid "Login Again"
 msgstr "Volver a Ingresar"
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Si crees que este es un error. Por favor contacta a tu Administrador de Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8256
+#: include/auth.php:317 lib/functions.php:8292
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "No estás autorizado a acceder esta sección de Kadupul."
@@ -11983,430 +11983,430 @@ msgstr "Las contraseñas no coinciden"
 msgid "System Device"
 msgstr "Sincronizar dispositivos"
 
-#: lib/data_query.php:64 lib/data_query.php:466
+#: lib/data_query.php:73 lib/data_query.php:475
 msgid "Automation Execution for Data Query complete"
 msgstr "Ejecución de Automatización de Consultas de Datos completada"
 
-#: lib/data_query.php:67 lib/data_query.php:469
+#: lib/data_query.php:76 lib/data_query.php:478
 msgid "Plugin Hooks complete"
 msgstr "Ganchos de Plugin completados"
 
-#: lib/data_query.php:85
+#: lib/data_query.php:94
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Ejecutando Consulta de Datos [%s]."
 
-#: lib/data_query.php:97
+#: lib/data_query.php:106
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Tipo encontrado = '%s' [%s]."
 
-#: lib/data_query.php:119
+#: lib/data_query.php:128
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Tipo desconocido = '%s'."
 
-#: lib/data_query.php:154
+#: lib/data_query.php:163
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "ADVERTENCIA: La asociación de campos de clasificación ha cambiado. Puede haber problemas de re asignación!"
 
-#: lib/data_query.php:166
+#: lib/data_query.php:175
 msgid "Update Data Query Sort Cache complete"
 msgstr "Actualización de orden del caché de consulta de datos completado"
 
-#: lib/data_query.php:193
+#: lib/data_query.php:202
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Se encontraron%s ID de datos locales para verificar"
 
-#: lib/data_query.php:299
+#: lib/data_query.php:308
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Cambio de índices detectado! Actual: %s, Anterior: %s"
 
-#: lib/data_query.php:323
+#: lib/data_query.php:332
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Eliminación de índices detectada! Índices anteriores: %s"
 
-#: lib/data_query.php:326
+#: lib/data_query.php:335
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Eliminación de índices detectada! Índices anteriores: %s"
 
-#: lib/data_query.php:366
+#: lib/data_query.php:375
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Verificación de %s ID de datos locales completa"
 
-#: lib/data_query.php:369
+#: lib/data_query.php:378
 #, php-format
 msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr "Encontrado Modificado%sy%s Huérfano ID de datos locales para reasignar."
 
-#: lib/data_query.php:372
+#: lib/data_query.php:381
 msgid "Done remapping Graphs to their new Indexes"
 msgstr "Re asignando gráficos a sus nuevos índices"
 
-#: lib/data_query.php:378 lib/data_query.php:385
+#: lib/data_query.php:387 lib/data_query.php:394
 msgid "Done updating Data Source Title Cache"
 msgstr "Duplicar perfil de Data Source"
 
-#: lib/data_query.php:381 lib/data_query.php:388
+#: lib/data_query.php:390 lib/data_query.php:397
 msgid "Done updating Graph Title Cache"
 msgstr "Terminé de actualizar la caché de títulos de gráficos"
 
-#: lib/data_query.php:392
+#: lib/data_query.php:401
 msgid "Index Association with Local Data complete"
 msgstr "Asociación de índices con datos locales completada"
 
-#: lib/data_query.php:398
+#: lib/data_query.php:407
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Actualización de la caché de reíndice completada. Hubo %s cambios en el índice y %s índices huérfanos."
 
-#: lib/data_query.php:402
+#: lib/data_query.php:411
 msgid "Update Poller Cache for Query complete"
 msgstr "Actualización de caché de Sonda desde la consulta completada"
 
-#: lib/data_query.php:404
+#: lib/data_query.php:413
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "No se detectó ningún cambio de índice, se omitió la re indexación y rellenado del caché de la Sonda"
 
-#: lib/data_query.php:458
+#: lib/data_query.php:467
 msgid "Automation Executing for Data Query complete"
 msgstr "Ejecución de Automatización de Consultas de Datos completada"
 
-#: lib/data_query.php:461
+#: lib/data_query.php:470
 msgid "Plugin hooks complete"
 msgstr "Ganchos de Plugin completados"
 
-#: lib/data_query.php:520
+#: lib/data_query.php:529
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Verificación de la modificación del campo de clasificación.  No se han detectado cambios."
 
-#: lib/data_query.php:525
+#: lib/data_query.php:534
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Campo de clasificación nuevo detectado: '%s' Campo de clasificación antiguo '%s"
 
-#: lib/data_query.php:546
+#: lib/data_query.php:555
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "ERROR: Nuevo campo de clasificación no adecuado.  El campo Sort no cambiará."
 
-#: lib/data_query.php:560
+#: lib/data_query.php:569
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Validación del nuevo campo de ordenación.  Campo de clasificación se actualice."
 
-#: lib/data_query.php:673
+#: lib/data_query.php:682
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "No se pudo encontrar el archivo XML de consulta de datos en '%s'"
 
-#: lib/data_query.php:677
+#: lib/data_query.php:686
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Archivo XML de consulta de datos encontrado en '%s'"
 
-#: lib/data_query.php:701 lib/data_query.php:934 lib/data_query.php:2631
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
 msgid "Error parsing XML file into an array."
 msgstr "Error al analizar archivo XML dentro de una matriz."
 
-#: lib/data_query.php:705 lib/data_query.php:938
+#: lib/data_query.php:714 lib/data_query.php:947
 msgid "XML file parsed ok."
 msgstr "Análisis de archivo XML ok."
 
-#: lib/data_query.php:713 lib/data_query.php:941
+#: lib/data_query.php:722 lib/data_query.php:950
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Campo inválido &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:714 lib/data_query.php:942
+#: lib/data_query.php:723 lib/data_query.php:951
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Debe contener campos &lt;dirección&gt;entrada&lt;/dirección&gt; o &lt;dirección&gt;entrada-salida&lt;/dirección&gt; solamente"
 
-#: lib/data_query.php:731
+#: lib/data_query.php:740
 msgid "Data Query returned no indexes."
 msgstr "ERROR: Consulta de Datos no devolvió índices."
 
-#: lib/data_query.php:732
+#: lib/data_query.php:741
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; faltan en el archivo XML, 'Recuento de Cambio de índices' no admitido"
 
-#: lib/data_query.php:735
+#: lib/data_query.php:744
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Ejecutando script para números de índices ' %s '"
 
-#: lib/data_query.php:738
+#: lib/data_query.php:747
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Número de índices encontrados: %s"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:751
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; faltan en el archivo XML, 'Recuento de Cambio de índices' no admitido"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:753
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; faltan en el archivo XML, 'Recuento de cambio de índices' emulado contando entradas arg_index"
 
-#: lib/data_query.php:755
+#: lib/data_query.php:764
 msgid "ERROR: Data Query returned no indexes."
 msgstr "ERROR: Consulta de Datos no devolvió índices."
 
-#: lib/data_query.php:759
+#: lib/data_query.php:768
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Ejecutando script para lista de índices '%s', Conteo de índices: %s"
 
-#: lib/data_query.php:761
+#: lib/data_query.php:770
 msgid "Click to show Data Query output for 'index'"
 msgstr "Haga clic para mostrar la salida de consulta de datos para 'index'"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:773
 #, php-format
 msgid "Found index: %s"
 msgstr "Índice encontrado: %s"
 
-#: lib/data_query.php:779 lib/data_query.php:1349
+#: lib/data_query.php:788 lib/data_query.php:1358
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Haga clic para mostrar la salida de consulta de datos para el campo '%s'"
 
-#: lib/data_query.php:785
+#: lib/data_query.php:794
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "El campo Ordenar no devolvió datos para el nombre del campo %s, omitiendo"
 
-#: lib/data_query.php:787
+#: lib/data_query.php:796
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Ejecutando script de consulta '%s'"
 
-#: lib/data_query.php:798 lib/data_query.php:805
+#: lib/data_query.php:807 lib/data_query.php:814
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Item encontrado [%s='%s'] índice: %s"
 
-#: lib/data_query.php:845 lib/data_query.php:861
+#: lib/data_query.php:854 lib/data_query.php:870
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Total: %f, Delta: %f, %s"
 
-#: lib/data_query.php:928
+#: lib/data_query.php:937
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Host_id: %s no válido"
 
-#: lib/data_query.php:952
+#: lib/data_query.php:961
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Todos los Sitios seleccionados"
 
-#: lib/data_query.php:974 lib/data_query.php:1033
+#: lib/data_query.php:983 lib/data_query.php:1042
 msgid "Failed to load SNMP session."
 msgstr "No se pudo cargar la sesión SNMP."
 
-#: lib/data_query.php:984
+#: lib/data_query.php:993
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Tamaño de caminata masivo probado %d con una respuesta de %2.4f."
 
-#: lib/data_query.php:995
+#: lib/data_query.php:1004
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "El tamaño de caminata masiva seleccionado fue %d."
 
-#: lib/data_query.php:998
+#: lib/data_query.php:1007
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Ahorro de tamaño de caminata a granel en el dispositivo."
 
-#: lib/data_query.php:1012
+#: lib/data_query.php:1021
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "El tamaño de caminata masiva se fija en %d."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1055
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Ejecutando SNMP Get para NUM de índices @ ' %s ' conteo de índices: %s"
 
-#: lib/data_query.php:1048
+#: lib/data_query.php:1057
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; faltantes en el archivo XML, 'recuento de índices cambió', emulado contando entradas oid_index"
 
-#: lib/data_query.php:1051
+#: lib/data_query.php:1060
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Ejecutando SNMP Walk para la lista de índices @ '%s' cuenta de índice: %s"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1064
 msgid "No SNMP data returned"
 msgstr "No se devolvió ningún dato SNMP"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1069
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Índice encontrado en OID: '%s' valor: '%s'"
 
-#: lib/data_query.php:1091
+#: lib/data_query.php:1100
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Filtrando lista de índices @ '%s' Conteo de índices: %s"
 
-#: lib/data_query.php:1095
+#: lib/data_query.php:1104
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Índice filtrado encontrado en OID: '%s' valor: '%s'"
 
-#: lib/data_query.php:1111
+#: lib/data_query.php:1120
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Filtrando lista de índices @ '%s' Conteo de índices: %s"
 
-#: lib/data_query.php:1115
+#: lib/data_query.php:1124
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Índice filtrado encontrado en OID: '%s' valor: '%s'"
 
-#: lib/data_query.php:1135
+#: lib/data_query.php:1144
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Solucionando campo 'método' equivocado para '%s' ya que 'rewrite_index' u 'oid_index' está definido"
 
-#: lib/data_query.php:1142
+#: lib/data_query.php:1151
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Insertando datos de índice para el campo '%s' [valor = '%s']"
 
-#: lib/data_query.php:1147
+#: lib/data_query.php:1156
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Campo de entrada localizado '%s' [get]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1165
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Regla de reescritura OID encontrada: 's/%s/%s/'"
 
-#: lib/data_query.php:1167
+#: lib/data_query.php:1176
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite en el OID: '%s' nuevo OID: '%s'"
 
-#: lib/data_query.php:1172
+#: lib/data_query.php:1181
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Ejecutando SNMP get para datos @ '%s' [valor='%s']"
 
-#: lib/data_query.php:1183
+#: lib/data_query.php:1192
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Campo '%s' %s"
 
-#: lib/data_query.php:1244
+#: lib/data_query.php:1253
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Ejecutando SNMP get para %s oids (%s)"
 
-#: lib/data_query.php:1282 lib/data_query.php:1389 lib/data_query.php:1397
+#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "El campo Sort devuelve no los datos.  No se puede continuar con el Re-Index para OID[%s]."
 
-#: lib/data_query.php:1288
+#: lib/data_query.php:1297
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Resultados encontrados para datos @ '%s' [valor='%s']"
 
-#: lib/data_query.php:1301
+#: lib/data_query.php:1310
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Ajustando resultado para datos @ '%s' [[clave='%s', valor='%s']"
 
-#: lib/data_query.php:1311
+#: lib/data_query.php:1320
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Resultado omitido para los datos @ '%s' [clave = '%s'] (valor: %s)"
 
-#: lib/data_query.php:1329
+#: lib/data_query.php:1338
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Obtenidor esultado SNMP get para los datos @ '%s' [value = '%s'] (índice: %s)"
 
-#: lib/data_query.php:1343
+#: lib/data_query.php:1352
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Ejecutando SNMP get para datos @ '%s' [valor='$value']"
 
-#: lib/data_query.php:1351
+#: lib/data_query.php:1360
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Campo de entrada localizado '%s' [walk]"
 
-#: lib/data_query.php:1402
+#: lib/data_query.php:1411
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Ejecutando SNMP Walk para datos @ '%s'"
 
-#: lib/data_query.php:1421 lib/data_query.php:1479 lib/data_query.php:1528
-#: lib/data_query.php:1579
+#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
+#: lib/data_query.php:1588
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Sin índice[%s] en value_index_parse, omitiendo."
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1471
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Elemento encontrado [%s='%s'] índice: %s [de %s]"
 
-#: lib/data_query.php:1504
+#: lib/data_query.php:1513
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "OCTET STRING encontrado '%s' valor decodificado: '%s'"
 
-#: lib/data_query.php:1510 lib/data_query.php:1559
+#: lib/data_query.php:1519 lib/data_query.php:1568
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Elemento encontrado [%s = '%s'] índice: %s [de análisis REGEXP OID]"
 
-#: lib/data_query.php:1587
+#: lib/data_query.php:1596
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Elemento encontrado [%s = '%s'] índice: %s [de análisis REGEXP de valor OID]"
 
-#: lib/data_query.php:1822
+#: lib/data_query.php:1831
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Elemento rewrite_value falso encontrado, index='%s'"
 
-#: lib/data_query.php:1835
+#: lib/data_query.php:1844
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "No se ha podido analizar el mapa de traducción (rewrite_value)"
 
-#: lib/data_query.php:1859
+#: lib/data_query.php:1868
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite en el OID: '%s' nuevo OID: '%s'"
 
-#: lib/data_query.php:1973
+#: lib/data_query.php:1982
 msgid "Update graph data query cache complete"
 msgstr "Actualización de orden del caché de consulta de datos completado"
 
-#: lib/data_query.php:1992
+#: lib/data_query.php:2001
 msgid "Re-Indexing Data Query complete"
 msgstr "Re indexación de Consultas de Datos completada"
 
-#: lib/data_query.php:2144
+#: lib/data_query.php:2153
 msgid "Unknown Index"
 msgstr "Índice desconocido"
 
-#: lib/data_query.php:2755
+#: lib/data_query.php:2764
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Debe seleccionar una columna de salida XML para Fuente de datos '%s' y activar la casilla de verificación a su derecha"
 
-#: lib/data_query.php:2761
+#: lib/data_query.php:2770
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Su plantilla de gráfico no tiene plantillas de datos en uso.  Por favor, corrija su plantilla de gráficos"
 
@@ -12627,28 +12627,28 @@ msgstr "Mensaje no enviado debido al fallo de ping."
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul ha deshabilitado plugin %s debido al siguiente error: %s! Para más detalles, consulte el registro de Kadupul."
 
-#: lib/functions.php:6891
+#: lib/functions.php:6898
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ADVERTENCIA: PollerID:%s tiene un nombre de host no válido:%s.  ¡No es accesible a través de DNS!"
 
-#: lib/functions.php:7315 lib/functions.php:7317
+#: lib/functions.php:7351 lib/functions.php:7353
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7315 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Versión %s %s"
 
-#: lib/functions.php:7317
+#: lib/functions.php:7353
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7552
+#: lib/functions.php:7588
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ADVERTENCIA: Falta el archivo de inclusión de Kadupul clave %s.  Por favor, localice y reemplace este archivo"
