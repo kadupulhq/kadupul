@@ -313,6 +313,15 @@ final class PluginMenuParityTest extends TestCase
         self::assertSame(2, $this->workerRuns());
     }
 
+    public function testUnsupportedAcceptLanguagesShareOneEntry(): void
+    {
+        foreach (['xx-YY', 'zz;q=0.9, qq'] as $header) {
+            $this->menu([8], null, Request::create('https://example.test/kadupul/app.php/x', server: ['HTTP_ACCEPT_LANGUAGE' => $header]))->sections();
+        }
+
+        self::assertSame(1, $this->workerRuns());
+    }
+
     public function testSlowWorkerIsStoppedAndTheStaticMenuShown(): void
     {
         touch($this->root . '/slow');
@@ -374,9 +383,12 @@ final class PluginMenuParityTest extends TestCase
         yield 'missing entries' => [['status' => 'ok', 'actor' => 7]];
         yield 'keyed entries' => [['status' => 'ok', 'actor' => 7, 'entries' => ['a' => $entry]]];
         yield 'extra field' => [['status' => 'ok', 'actor' => 7, 'entries' => [$entry + ['href' => 'x']]]];
-        yield 'label type' => [['status' => 'ok', 'actor' => 7, 'entries' => [['label' => ['x']] + $entry]]];
-        yield 'realm type' => [['status' => 'ok', 'actor' => 7, 'entries' => [['realm' => '150'] + $entry]]];
-        yield 'oversized label' => [['status' => 'ok', 'actor' => 7, 'entries' => [['label' => str_repeat('x', 1025)] + $entry]]];
+        // array_replace() keeps the key order, so each case reaches its own check.
+        yield 'label type' => [['status' => 'ok', 'actor' => 7, 'entries' => [array_replace($entry, ['label' => ['x']])]]];
+        yield 'section type' => [['status' => 'ok', 'actor' => 7, 'entries' => [array_replace($entry, ['section' => 5])]]];
+        yield 'realm type' => [['status' => 'ok', 'actor' => 7, 'entries' => [array_replace($entry, ['realm' => '150'])]]];
+        yield 'oversized label' => [['status' => 'ok', 'actor' => 7, 'entries' => [array_replace($entry, ['label' => str_repeat('x', 1025)])]]];
+        yield 'oversized path' => [['status' => 'ok', 'actor' => 7, 'entries' => [array_replace($entry, ['path' => str_repeat('x', 1025)])]]];
         yield 'too many entries' => [['status' => 'ok', 'actor' => 7, 'entries' => array_fill(0, 1001, $entry)]];
     }
 
@@ -388,6 +400,28 @@ final class PluginMenuParityTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         $this->plugins(self::request())->entries(7, ['Management']);
+    }
+
+    public function testTheLongestAcceptedFieldIsKept(): void
+    {
+        $entry = ['section' => 'Management', 'label' => str_repeat('x', 1024), 'path' => 'plugins/menu_parity/parity.php', 'realm' => 150];
+        file_put_contents($this->root . '/result.json', json_encode(['status' => 'ok', 'actor' => 7, 'entries' => [$entry]], JSON_THROW_ON_ERROR));
+
+        self::assertSame([$entry], $this->plugins(self::request())->entries(7, ['Management']));
+    }
+
+    public function testUnreadableConfigurationStillAsksTheWorkerUnderItsOwnCacheEntry(): void
+    {
+        $unreadable = self::createStub(LegacyConfiguration::class);
+        $unreadable->method('values')->willThrowException(new \RuntimeException('include/config.php is unreadable'));
+
+        $entries = $this->plugins(self::request(), configuration: $unreadable)->entries(7, ['Management']);
+        self::assertContains('plugins/menu_parity/parity.php', array_column($entries, 'path'));
+        self::assertSame(1, $this->workerRuns());
+
+        // An online collector does not reuse the answer given while it was unknown.
+        $this->plugins(self::request())->entries(7, ['Management']);
+        self::assertSame(2, $this->workerRuns());
     }
 
     public function testRuntimeReportsEveryMenuItemWithItsRealmAndSectionName(): void
@@ -450,7 +484,7 @@ final class PluginMenuParityTest extends TestCase
         return is_file($this->root . '/handoff.jsonl') ? count(file($this->root . '/handoff.jsonl', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) : 0;
     }
 
-    private function plugins(Request $request, ?string $preferred = null, float $timeout = 3.0, int $actor = 7): LegacyPluginConsoleMenu
+    private function plugins(Request $request, ?string $preferred = null, float $timeout = 3.0, int $actor = 7, ?LegacyConfiguration $configuration = null): LegacyPluginConsoleMenu
     {
         $database = new readonly class ($this->pdo) implements DatabaseConnection {
             public function __construct(private \PDO $pdo) {}
@@ -468,8 +502,10 @@ final class PluginMenuParityTest extends TestCase
         $worker = new LegacyBrowserWorker($this->root, $requests, $session, $database, new InstallationConfiguration($this->root), new NullLogger(), $timeout);
         $locale = self::createStub(LocalePreference::class);
         $locale->method('preferredLocale')->willReturn($preferred);
-        $configuration = self::createStub(LegacyConfiguration::class);
-        $configuration->method('values')->willReturn(['collector_id' => 1]);
+        if ($configuration === null) {
+            $configuration = self::createStub(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['collector_id' => 1]);
+        }
 
         return new LegacyPluginConsoleMenu(static fn(): LegacyBrowserWorker => $worker, $database, $this->cache, $requests, $locale, $configuration, dirname(__DIR__, 2));
     }

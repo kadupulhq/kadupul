@@ -30,6 +30,11 @@ define('KADUPUL_THROW_DATABASE_ERRORS', true);
 $phase = 'handoff';
 ob_start();
 try {
+    // A worker that omits a setting must fail closed, not skip its check.
+    if (array_keys($consoleHandoff) !== ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json']
+        || !is_int($consoleHandoff['realm']) && $consoleHandoff['realm'] !== null) {
+        throw new LogicException('Invalid console handoff configuration.');
+    }
     $raw = stream_get_contents(STDIN, 65538);
     $command = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
     $pathKey = $consoleHandoff['path'];

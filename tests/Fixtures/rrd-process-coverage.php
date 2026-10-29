@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE')) {
+if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE') || defined('CONSOLE_HANDOFF_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -504,6 +504,11 @@ if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
+}
+if (defined('CONSOLE_HANDOFF_TEST_COVERAGE')) {
+    // Only the console worker under test; its stand-in bootstrap is not measured.
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    $coverageFilter->includeFile(defined('RRD_TEST_CLI_COVERAGE_COPY') ? RRD_TEST_CLI_COVERAGE_COPY : $coverageRoot . '/' . CONSOLE_HANDOFF_TEST_COVERAGE);
 }
 if (defined('INPUT_WHITELIST_RUNTIME_TEST_COVERAGE')) {
     // The runtime producer measures the actual predicate, with no copied or
