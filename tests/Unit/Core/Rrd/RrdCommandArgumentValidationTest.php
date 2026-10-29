@@ -78,6 +78,12 @@ function rrdtool_uses_proxy()
     return false;
 }
 
+// These cases use paths that do not exist; RrdPathContainmentTest covers the check against a real directory.
+function rrd_check_path($path, $rra_base = null, $logopt = null)
+{
+    return true;
+}
+
 function rrdtool_command_path($path)
 {
     return "'" . $path . "'";
@@ -132,7 +138,7 @@ function rrdtool_rejection_is_permanent($reason)
 
 $root  = dirname(__DIR__, 4);
 $files = array(
-    'lib/rrd.php'      => array('rrdtool_ds_name_is_valid', 'rrdtool_ds_template_is_valid', 'rrdtool_create_minimum', 'rrdtool_create_maximum', 'rrdtool_create_ds', 'rrdtool_function_update', 'rrdtool_tune'),
+    'lib/rrd.php'      => array('rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrdtool_ds_name_is_valid', 'rrdtool_ds_template_is_valid', 'rrdtool_create_minimum', 'rrdtool_create_maximum', 'rrdtool_create_ds', 'rrdtool_function_update', 'rrdtool_tune'),
     'lib/boost.php'    => array('boost_rrdtool_function_update'),
     'lib/poller.php'   => array('exec_background', 'file_escaped'),
     'data_sources.php' => array('data_source_path_is_allowed'),

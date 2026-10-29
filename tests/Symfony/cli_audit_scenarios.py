@@ -77,7 +77,8 @@ BEHIND_PLUGINS = ("INSERT INTO plugin_config (directory, name, status, author, w
 UNPARSABLE = 'INSERT INTO kadupul_parity_nowhere VALUES (1);'
 # Upgrade output and its log carry elapsed seconds, which are clock readings too.
 SECONDS = re.compile(r'in \d+\.\d{2} seconds')
-# cacti_log(..., true) printed "<date> <time> - UPGRADE ..." to stdout.
+# cacti_log(..., true) printed "<date> <time> - UPGRADE ..." to stdout. The two runs
+# can fall either side of midnight, so only the date's format is compared.
 STAMP = re.compile(r'^(\S+) \d{2}:\d{2}:\d{2} - ', re.M)
 # db_execute() followed each failed statement with a backtrace; the shim logs
 # the statement's error line alone, as the other write commands do.
@@ -263,7 +264,7 @@ def schema(harness, with_dump=True, imported=False):
 
 
 def masked(text):
-    return SECONDS.sub('in N seconds', STAMP.sub(r'\1 HH:MM:SS - ', normalise(text)))
+    return SECONDS.sub('in N seconds', STAMP.sub(lambda match: re.sub(r'\d', '9', match[1]) + ' HH:MM:SS - ', normalise(text)))
 
 
 def masked_audit(text):

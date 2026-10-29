@@ -2141,6 +2141,16 @@ $settings = array(
                 20 => __('%d Processes', 20),
             )
         ),
+        'boost_processing_mode' => array(
+            'friendly_name' => __('Boost Processing Mode'),
+            'description' => __('How Boost distributes RRD updates. Forked processes start the number of Boost processes above on every run. Message queue workers hand each partition to Messenger workers instead.'),
+            'default' => 'children',
+            'method' => 'drop_array',
+            'array' => array(
+                'children' => __('Forked processes'),
+                'queue'    => __('Message queue workers'),
+            )
+        ),
         'boost_rrd_update_max_records' => array(
             'friendly_name' => __('Maximum Records'),
             'description' => __('If the boost output table exceeds this size, in records, an update will take place.'),

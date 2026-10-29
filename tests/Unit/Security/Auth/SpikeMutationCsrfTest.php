@@ -10,6 +10,8 @@ test('spike removal requires explicit POST intent before RRD access', function (
     mkdir($dir . '/lib', 0700);
     file_put_contents($dir . '/include/auth.php', '<?php');
     file_put_contents($dir . '/lib/spikekill.php', '<?php');
+    // This request never reaches RRDtool; the path check is the unit under test in RrdPathContainmentTest.
+    file_put_contents($dir . '/lib/rrd.php', '<?php function rrd_check_path($path, $rra_base = null, $logopt = null) { return true; }');
     $program = <<<'PHP'
 function csrf_startup() {
     csrf_conf('rewrite', false);
