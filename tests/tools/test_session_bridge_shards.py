@@ -51,6 +51,13 @@ class ShardPartitionTest(unittest.TestCase):
         finally:
             session_bridge.SHARDS = original
 
+    def test_offline_bundle_runs_every_shard(self):
+        workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/offline-bundle.yml').read_text()
+        count = len(SHARDS)
+        self.assertIn('        shard: [' + ', '.join(str(number) for number in range(1, count + 1)) + ']\n', workflow)
+        self.assertIn(f'AUTH_SHARD: ${{{{ matrix.shard }}}}/{count}\n', workflow)
+        self.assertEqual(2, workflow.count('--shard "$AUTH_SHARD"'))
+
     def test_malformed_selectors_are_refused(self):
         count = len(SHARDS)
         for selector in ('', '0/' + str(count), f'{count + 1}/{count}', f'1/{count + 1}', '1', 'a/b', f' 1/{count}'):
