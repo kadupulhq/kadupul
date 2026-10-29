@@ -371,6 +371,7 @@ Cacti CHANGELOG
 -security: Harden advisory command execution and database DDL sink validation
 -security: Restrict graph input fields across the template, graph and import handoffs
 -security: Treat a non-boolean signature result as a failure in import_package
+-security#1170: Require tree mutation permission for graph placement and offer only permitted destinations
 -security#1183: Check embedded IPv4 destinations in compatible, NAT64 and 6to4 collector addresses against the reserved-address policy
 -issue#1153: Apply requested character sets and collations when creating table columns
 -issue#1159: Match graph input validation to storage limits, preserve UTF-8 character lengths, and normalize decimal widths before saving

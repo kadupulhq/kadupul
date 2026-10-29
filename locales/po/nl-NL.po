@@ -134,7 +134,7 @@ msgstr "Associeer met aggregaat"
 msgid "Disassociate with Aggregate"
 msgstr "Dissocieer van geaggregeerde"
 
-#: aggregate_graphs.php:84 graphs.php:204 host.php:273
+#: aggregate_graphs.php:84 graphs.php:212 host.php:273
 #, php-format
 msgid "Place on a Tree (%s)"
 msgstr "Plaats in een menu (%s)"
@@ -160,10 +160,10 @@ msgstr "Klik op 'Volgende' om de volgende geaggregeerde grafiek te verwijderen."
 #: data_sources.php:595 data_templates.php:515 data_templates.php:525
 #: data_templates.php:541 gprint_presets.php:216 graph_templates.php:411
 #: graph_templates.php:421 graph_templates.php:443 graph_templates.php:452
-#: graph_templates.php:461 graph_view.php:1028 graphs.php:971 graphs.php:987
-#: graphs.php:998 graphs.php:1009 graphs.php:1024 graphs.php:1038
-#: graphs.php:1047 graphs.php:1247 graphs.php:1290 graphs.php:1312
-#: graphs.php:1341 graphs.php:1353 graphs.php:1911 host.php:462 host.php:471
+#: graph_templates.php:461 graph_view.php:1028 graphs.php:985 graphs.php:1001
+#: graphs.php:1012 graphs.php:1023 graphs.php:1041 graphs.php:1055
+#: graphs.php:1064 graphs.php:1264 graphs.php:1307 graphs.php:1329
+#: graphs.php:1358 graphs.php:1370 graphs.php:1928 host.php:462 host.php:471
 #: host.php:518 host.php:527 host.php:536 host.php:550 host.php:564
 #: host.php:573 host.php:602 host.php:614 host_templates.php:280
 #: host_templates.php:294 host_templates.php:305 host_templates.php:392
@@ -178,6 +178,7 @@ msgstr "Klik op 'Volgende' om de volgende geaggregeerde grafiek te verwijderen."
 #: user_domains.php:278 user_domains.php:287 user_domains.php:296
 #: user_group_admin.php:526 user_group_admin.php:545 user_group_admin.php:556
 #: user_group_admin.php:567 vdef.php:279 vdef.php:289 vdef.php:359
+#: graphs.php:1026
 msgid "Cancel"
 msgstr "Annuleer"
 
@@ -198,10 +199,10 @@ msgstr "Annuleer"
 #: data_sources.php:595 data_templates.php:515 data_templates.php:525
 #: data_templates.php:541 gprint_presets.php:216 graph_templates.php:411
 #: graph_templates.php:421 graph_templates.php:443 graph_templates.php:452
-#: graph_templates.php:461 graphs.php:971 graphs.php:987 graphs.php:998
-#: graphs.php:1009 graphs.php:1024 graphs.php:1038 graphs.php:1047
-#: graphs.php:1247 graphs.php:1290 graphs.php:1312 graphs.php:1341
-#: graphs.php:1353 host.php:462 host.php:471 host.php:518 host.php:527
+#: graph_templates.php:461 graphs.php:985 graphs.php:1001 graphs.php:1012
+#: graphs.php:1023 graphs.php:1041 graphs.php:1055 graphs.php:1064
+#: graphs.php:1264 graphs.php:1307 graphs.php:1329 graphs.php:1358
+#: graphs.php:1370 host.php:462 host.php:471 host.php:518 host.php:527
 #: host.php:536 host.php:550 host.php:564 host.php:573 host.php:602
 #: host.php:614 host_templates.php:280 host_templates.php:294
 #: host_templates.php:305 host_templates.php:393 host_templates.php:478
@@ -219,7 +220,7 @@ msgid "Continue"
 msgstr "Volgende"
 
 #: aggregate_graphs.php:357 aggregate_graphs.php:430 aggregate_graphs.php:455
-#: graphs.php:971
+#: graphs.php:985
 msgid "Delete Graph(s)"
 msgstr "Verwijder grafiek(en)"
 
@@ -233,8 +234,8 @@ msgstr "Voordat u deze geaggregeerde grafiek kunt migreren naar een template geb
 
 #: aggregate_graphs.php:393 aggregate_graphs.php:441 aggregate_graphs.php:487
 #: auth_changepassword.php:380 auth_profile.php:443 automation_networks.php:408
-#: automation_snmp.php:261 graphs.php:1249 graphs.php:1299 graphs.php:1302
-#: graphs.php:1344 graphs.php:1911 host.php:605 include/auth.php:307
+#: automation_snmp.php:261 graphs.php:1266 graphs.php:1316 graphs.php:1319
+#: graphs.php:1361 graphs.php:1928 host.php:605 include/auth.php:307
 #: lib/api_aggregate.php:1647 lib/api_aggregate.php:1662 lib/html_form.php:1661
 #: lib/html_reports.php:634 managers.php:1207 permission_denied.php:31
 #: permission_denied.php:33
@@ -282,29 +283,29 @@ msgstr "Naam van aggregatie:"
 msgid "New Aggregate"
 msgstr "Nieuwe aggregatie"
 
-#: aggregate_graphs.php:468 graphs.php:1325 host.php:586
+#: aggregate_graphs.php:468 graphs.php:1342 host.php:586
 msgid "Click 'Continue' to add the selected Graphs to the Report below."
 msgstr "Klik op 'Doorgaan' om de geselecteerde grafieken toe te voegen aan het onderstaande rapport."
 
-#: aggregate_graphs.php:472 graph_view.php:887 graphs.php:1329 host.php:590
+#: aggregate_graphs.php:472 graph_view.php:887 graphs.php:1346 host.php:590
 #: lib/html_reports.php:36 lib/html_reports.php:2141
 msgid "Report Name"
 msgstr "Rapportagenaam"
 
 #: aggregate_graphs.php:476 graph_realtime.php:495 graph_view.php:894
-#: graphs.php:1333 host.php:594 lib/html_reports.php:1747
+#: graphs.php:1350 host.php:594 lib/html_reports.php:1747
 msgid "Timespan"
 msgstr "Tijdspanne"
 
-#: aggregate_graphs.php:480 graph_view.php:901 graphs.php:1337 host.php:598
+#: aggregate_graphs.php:480 graph_view.php:901 graphs.php:1354 host.php:598
 msgid "Align"
 msgstr "Uitlijnen"
 
-#: aggregate_graphs.php:484 graphs.php:1341
+#: aggregate_graphs.php:484 graphs.php:1358
 msgid "Add Graphs to Report"
 msgstr "Grafieken toevoegen aan rapport"
 
-#: aggregate_graphs.php:486 graphs.php:1343
+#: aggregate_graphs.php:486 graphs.php:1360
 msgid "You currently have no reports defined."
 msgstr "U heeft momenteel geen rapporten gedefinieerd."
 
@@ -340,7 +341,7 @@ msgstr "Klik op 'Volgende' om de volgende geaggregeerde grafiek onder de boomstr
 msgid "Destination Branch:"
 msgstr "Bestemming structuur:"
 
-#: aggregate_graphs.php:526 graphs.php:1024
+#: aggregate_graphs.php:526 graphs.php:1041
 msgid "Place Graph(s) on Tree"
 msgstr "Plaats grafieken in de boomstructuur"
 
@@ -395,15 +396,15 @@ msgstr "Geaggregeerd voorbeeld [%s]"
 msgid "Aggregate Preview %s"
 msgstr "Geaggregeerd voorbeeld [%s]"
 
-#: aggregate_graphs.php:735 graph.php:947 graphs.php:1744
+#: aggregate_graphs.php:735 graph.php:947 graphs.php:1761
 msgid "RRDtool Command:"
 msgstr "RRDtool opdracht:"
 
-#: aggregate_graphs.php:737 graph.php:956 graphs.php:1748
+#: aggregate_graphs.php:737 graph.php:956 graphs.php:1765
 msgid "Not Checked"
 msgstr "Niet Gecontroleerd"
 
-#: aggregate_graphs.php:737 graph.php:952 graphs.php:1746
+#: aggregate_graphs.php:737 graph.php:952 graphs.php:1763
 msgid "RRDtool Says:"
 msgstr "RRDtool zegt:"
 
@@ -412,24 +413,24 @@ msgstr "RRDtool zegt:"
 msgid "Aggregate Graph %s"
 msgstr "Aggregeer grafiek %s"
 
-#: aggregate_graphs.php:790 aggregate_templates.php:416 graphs.php:1113
+#: aggregate_graphs.php:790 aggregate_templates.php:416 graphs.php:1130
 msgid "Prefix Replacement Values"
 msgstr "Vervangingspatroon"
 
-#: aggregate_graphs.php:791 aggregate_templates.php:417 graphs.php:1114
+#: aggregate_graphs.php:791 aggregate_templates.php:417 graphs.php:1131
 msgid "You may use these replacement values for the Prefix in the Aggregate Graph"
 msgstr "U kunt deze vervangende waarden gebruiken voor het voorvoegsel in de samengevoegde grafiek"
 
-#: aggregate_graphs.php:958 aggregate_templates.php:544 graphs.php:1196
+#: aggregate_graphs.php:958 aggregate_templates.php:544 graphs.php:1213
 #: lib/api_aggregate.php:1775
 msgid "Total"
 msgstr "Totaal"
 
-#: aggregate_graphs.php:962 aggregate_templates.php:548 graphs.php:1198
+#: aggregate_graphs.php:962 aggregate_templates.php:548 graphs.php:1215
 msgid "All Items"
 msgstr "Alle items"
 
-#: aggregate_graphs.php:980 graphs.php:1759 lib/api_aggregate.php:1932
+#: aggregate_graphs.php:980 graphs.php:1776 lib/api_aggregate.php:1932
 msgid "Graph Configuration"
 msgstr "Grafiekconfiguratie"
 
@@ -455,7 +456,7 @@ msgstr "Overeenkomende grafieken"
 #: color.php:596 color_templates.php:548 data_debug.php:1138
 #: data_input.php:1030 data_queries.php:1526 data_source_profiles.php:1040
 #: data_sources.php:1552 data_templates.php:1184 gprint_presets.php:340
-#: graph_templates.php:761 graph_view.php:654 graphs.php:2127
+#: graph_templates.php:761 graph_view.php:654 graphs.php:2144
 #: graphs_new.php:463 host.php:1882 host_templates.php:935
 #: lib/api_automation.php:180 lib/api_automation.php:556
 #: lib/api_automation.php:825 lib/api_automation.php:1219
@@ -479,7 +480,7 @@ msgstr "Zoeken"
 #: aggregate_graphs.php:1255 aggregate_graphs.php:1298
 #: aggregate_graphs.php:1559 color_templates.php:668 data_sources.php:1737
 #: data_sources.php:1871 graph_view.php:492 graph_view.php:728
-#: graph_view.php:789 graphs.php:2148 graphs.php:2313 host.php:1596
+#: graph_view.php:789 graphs.php:2165 graphs.php:2330 host.php:1596
 #: include/global_arrays.php:1011 include/global_arrays.php:1246
 #: include/global_arrays.php:2040 lib/api_automation.php:344 lib/html.php:2102
 #: lib/html.php:2104 lib/html.php:2182 lib/html_graph.php:220
@@ -499,7 +500,7 @@ msgstr "Grafieken"
 #: data_queries.php:1540 data_source_profiles.php:1054
 #: data_source_profiles.php:1173 data_sources.php:1566 data_templates.php:1214
 #: gprint_presets.php:354 graph_templates.php:775 graph_view.php:732
-#: graphs.php:2152 graphs_new.php:477 host.php:1911 host_templates.php:949
+#: graphs.php:2169 graphs_new.php:477 host.php:1911 host_templates.php:949
 #: include/global_form.php:256 lib/api_automation.php:236
 #: lib/api_automation.php:579 lib/api_automation.php:848
 #: lib/api_automation.php:1275 lib/html_reports.php:2053 links.php:343
@@ -528,7 +529,7 @@ msgstr "Onderdeel van aggregatie"
 #: color_templates.php:586 data_debug.php:1066 data_input.php:1056
 #: data_queries.php:1552 data_source_profiles.php:1072 data_sources.php:1505
 #: data_templates.php:1232 gprint_presets.php:372 graph_templates.php:793
-#: graph_view.php:666 graphs.php:2118 graphs_new.php:452 host.php:1872
+#: graph_view.php:666 graphs.php:2135 graphs_new.php:452 host.php:1872
 #: host_templates.php:926 lib/api_automation.php:248 lib/api_automation.php:547
 #: lib/api_automation.php:860 lib/api_automation.php:1287
 #: lib/clog_webapi.php:569 lib/html.php:1950 lib/html_filter.php:81
@@ -546,7 +547,7 @@ msgstr "Ga"
 #: automation_templates.php:432 cdef.php:787 color.php:634 data_debug.php:1066
 #: data_input.php:1056 data_queries.php:1552 data_source_profiles.php:1072
 #: data_sources.php:1505 data_templates.php:1232 gprint_presets.php:372
-#: graph_templates.php:793 graph_view.php:666 graphs.php:2118
+#: graph_templates.php:793 graph_view.php:666 graphs.php:2135
 #: graphs_new.php:452 host.php:1872 host_templates.php:926
 #: lib/html_graph.php:201 managers.php:184 managers.php:540 managers.php:804
 #: plugins.php:522 pollers.php:1008 sites.php:599 tree.php:2342
@@ -568,7 +569,7 @@ msgstr "Stel in/vernieuw filters"
 #: color_templates.php:587 data_debug.php:1067 data_input.php:1057
 #: data_queries.php:1553 data_source_profiles.php:1073 data_sources.php:1506
 #: data_templates.php:1233 gprint_presets.php:373 graph_templates.php:794
-#: graph_view.php:667 graphs.php:2119 graphs_new.php:453 host.php:1873
+#: graph_view.php:667 graphs.php:2136 graphs_new.php:453 host.php:1873
 #: host_templates.php:927 lib/api_automation.php:249 lib/api_automation.php:548
 #: lib/api_automation.php:861 lib/api_automation.php:1288
 #: lib/clog_webapi.php:570 lib/html_filter.php:86 lib/html_graph.php:202
@@ -585,7 +586,7 @@ msgstr "Herstel"
 #: automation_templates.php:433 cdef.php:788 color.php:635 data_debug.php:1067
 #: data_input.php:1057 data_queries.php:1553 data_source_profiles.php:1073
 #: data_sources.php:1506 data_templates.php:1233 gprint_presets.php:373
-#: graph_templates.php:794 graph_view.php:667 graphs.php:2119
+#: graph_templates.php:794 graph_view.php:667 graphs.php:2136
 #: graphs_new.php:453 host.php:1873 host_templates.php:927
 #: lib/html_graph.php:202 lib/html_tree.php:1027 managers.php:185
 #: managers.php:541 managers.php:805 plugins.php:523 pollers.php:1009
@@ -600,7 +601,7 @@ msgstr "Herstel"
 msgid "Clear Filters"
 msgstr "Stel filters opnieuw in"
 
-#: aggregate_graphs.php:1303 aggregate_graphs.php:1641 graphs.php:1276
+#: aggregate_graphs.php:1303 aggregate_graphs.php:1641 graphs.php:1293
 #: lib/api_automation.php:670 user_admin.php:939 user_group_admin.php:994
 msgid "Graph Title"
 msgstr "Grafiektitel"
@@ -609,7 +610,7 @@ msgstr "Grafiektitel"
 #: automation_graph_rules.php:990 automation_tree_rules.php:1035
 #: data_debug.php:474 data_input.php:1143 data_queries.php:1638
 #: data_sources.php:1731 data_templates.php:1341 graph_templates.php:899
-#: graphs.php:2329 host.php:1590 host_templates.php:1090
+#: graphs.php:2346 host.php:1590 host_templates.php:1090
 #: lib/api_automation.php:343 pollers.php:1089 sites.php:679 tree.php:2406
 #: user_admin.php:939 user_admin.php:1053 user_admin.php:1200
 #: user_admin.php:1349 user_admin.php:1490 user_group_admin.php:790
@@ -624,7 +625,7 @@ msgstr "Opgenomen in aggregatie"
 
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1644 graph_realtime.php:518
 #: graph_templates.php:916 graph_view.php:818 graph_view.php:831
-#: graphs.php:2347 lib/html_graph.php:354 lib/html_tree.php:1173
+#: graphs.php:2364 lib/html_graph.php:354 lib/html_tree.php:1173
 #: lib/spikekill.php:1782
 msgid "Size"
 msgstr "Grootte"
@@ -658,7 +659,7 @@ msgstr "Nee"
 msgid "Yes"
 msgstr "Ja"
 
-#: aggregate_graphs.php:1328 graphs.php:2389 lib/api_automation.php:697
+#: aggregate_graphs.php:1328 graphs.php:2406 lib/api_automation.php:697
 msgid "No Graphs Found"
 msgstr "Geen grafieken gevonden"
 
@@ -672,7 +673,7 @@ msgid "Aggregate Graphs"
 msgstr "Geaggregeerde grafieken"
 
 #: aggregate_graphs.php:1537 data_debug.php:1040 data_sources.php:1479
-#: graph_view.php:690 graphs.php:2083 host.php:1823
+#: graph_view.php:690 graphs.php:2100 host.php:1823
 #: include/global_arrays.php:2920 include/global_settings.php:627
 #: lib/api_automation.php:525 lib/html_graph.php:164 lib/html_tree.php:990
 #: rrdcleaner.php:393 user_admin.php:2688 user_admin.php:2911
@@ -685,7 +686,7 @@ msgstr "Template"
 #: automation_devices.php:571 automation_graph_rules.php:845
 #: automation_graph_rules.php:867 automation_tree_rules.php:919
 #: data_debug.php:1044 data_sources.php:1483 graph_templates_items.php:570
-#: graphs.php:2087 graphs_items.php:383 host.php:1792 host.php:1810
+#: graphs.php:2104 graphs_items.php:383 host.php:1792 host.php:1810
 #: host.php:1827 host.php:1896 lib/api_automation.php:203
 #: lib/api_automation.php:221 lib/api_automation.php:512
 #: lib/api_automation.php:529 lib/api_automation.php:1242
@@ -705,7 +706,7 @@ msgstr "Alle"
 #: automation_networks.php:481 automation_tree_rules.php:1047
 #: data_debug.php:1045 data_sources.php:1013 data_sources.php:1484
 #: data_sources.php:1792 data_templates.php:1404 graph_templates_items.php:66
-#: graphs.php:1648 graphs.php:1657 graphs.php:2088 graphs_items.php:384
+#: graphs.php:1665 graphs.php:1674 graphs.php:2105 graphs_items.php:384
 #: graphs_items.php:496 host.php:312 host.php:1235 host.php:1246 host.php:1793
 #: host.php:1828 include/global_arrays.php:541 include/global_arrays.php:599
 #: include/global_arrays.php:691 include/global_arrays.php:903
@@ -744,7 +745,7 @@ msgstr "De titel van de geaggregeerde grafieken"
 msgid "The internal database identifier for this object"
 msgstr "De interne database identifier voor dit object"
 
-#: aggregate_graphs.php:1643 graphs.php:1280
+#: aggregate_graphs.php:1643 graphs.php:1297
 msgid "Aggregate Template"
 msgstr "Geaggregeerde template"
 
@@ -818,7 +819,7 @@ msgstr "Verwijderbaar"
 msgid "Graphs Using"
 msgstr "Grafiek gebruikt"
 
-#: aggregate_templates.php:720 graphs.php:2143 host_templates.php:872
+#: aggregate_templates.php:720 graphs.php:2160 host_templates.php:872
 #: include/global_arrays.php:976 include/global_arrays.php:1378
 #: include/global_form.php:1420 include/global_form.php:1656
 #: lib/html_reports.php:1137 tree.php:2046
@@ -1344,8 +1345,8 @@ msgstr "Klik op 'Volgende' om de volgende grafiekregels te verwijderen."
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Graph Rules."
 msgstr "Klik op 'Volgende' om de volgende regels te kopiëren. U kunt optioneel de indeling van de titel voor de nieuwe grafiekregels wijzigen."
 
-#: automation_graph_rules.php:326 automation_tree_rules.php:302 graphs.php:993
-#: graphs.php:1004
+#: automation_graph_rules.php:326 automation_tree_rules.php:302 graphs.php:1007
+#: graphs.php:1018
 msgid "Title Format"
 msgstr "Indeling titel"
 
@@ -1420,7 +1421,7 @@ msgid "Graph Rules"
 msgstr "Grafiekregels"
 
 #: automation_graph_rules.php:841 automation_graph_rules.php:991
-#: graphs.php:2144 include/global_arrays.php:1381
+#: graphs.php:2161 include/global_arrays.php:1381
 #: include/global_arrays.php:2919 include/global_form.php:1666
 #: include/global_form.php:2228
 msgid "Data Query"
@@ -3336,7 +3337,7 @@ msgstr "Profiel"
 
 #: data_debug.php:1081 data_debug.php:1097 data_debug.php:1108
 #: data_sources.php:1518 data_sources.php:1535 data_templates.php:1198
-#: graphs.php:2141 graphs_new.php:430 host.php:1848 host_templates.php:861
+#: graphs.php:2158 graphs_new.php:430 host.php:1848 host_templates.php:861
 #: host_templates.php:876 lib/clog_webapi.php:585 lib/html.php:256
 #: lib/html_reports.php:1094 lib/html_reports.php:2287 plugins.php:496
 #: settings.php:549 settings.php:571 settings.php:602 tree.php:1005
@@ -4176,7 +4177,7 @@ msgstr "Data bron info modus inschakelen."
 msgid "Edit Graph: '%s'."
 msgstr "Bewerk grafiek"
 
-#: data_sources.php:931 graphs.php:1610
+#: data_sources.php:931 graphs.php:1627
 msgid "Edit Device."
 msgstr "Wijzig apparaat."
 
@@ -4200,7 +4201,7 @@ msgstr "Geselecteerde data template"
 msgid "The name given to this data template.  Please note that you may only change Graph Templates to a 100%$ compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "De naam van dit data template. Let op dat u alleen grafiek templates kunt wijzigen naar een 100% compatible grafiek template, dit betekent dat deze dezelfde data bronnen moeten hebben."
 
-#: data_sources.php:1011 graph_view.php:803 graphs.php:1653
+#: data_sources.php:1011 graph_view.php:803 graphs.php:1670
 #: include/global_arrays.php:972 include/global_arrays.php:1021
 #: include/global_arrays.php:1716 include/global_arrays.php:1885
 #: lib/api_automation.php:508 lib/functions.php:5784 lib/html.php:2462
@@ -4274,11 +4275,11 @@ msgstr "Data bronnen [%s]"
 msgid "Bad Indexes"
 msgstr "Index"
 
-#: data_sources.php:1544 graphs.php:2113
+#: data_sources.php:1544 graphs.php:2130
 msgid "Note that this query may take some time to run."
 msgstr "Houd er rekening mee dat het enige tijd kan duren voordat deze query wordt uitgevoerd."
 
-#: data_sources.php:1544 graphs.php:2113
+#: data_sources.php:1544 graphs.php:2130
 msgid "Orphaned"
 msgstr "Overerfd"
 
@@ -4904,12 +4905,12 @@ msgstr "Alle grafiektemplates"
 msgid "Not Templated"
 msgstr "Niet getempereerd"
 
-#: graph_view.php:798 graph_view.php:826 graphs.php:2323
+#: graph_view.php:798 graph_view.php:826 graphs.php:2340
 #: include/global_form.php:1905 lib/html_reports.php:1157 tree.php:1124
 msgid "Graph Name"
 msgstr "Grafieknaam"
 
-#: graph_view.php:800 graph_view.php:828 graphs.php:2326
+#: graph_view.php:800 graph_view.php:828 graphs.php:2343
 msgid "The Title of this Graph.  Generally programmatically generated from the Graph Template definition or Suggested Naming rules.  The max length of the Title is controlled under Settings->Visual."
 msgstr "De titel van deze grafiek. Geprogrammeerd uit de definities van de grafiektemplate of gesuggereerde naamgeving. De maximale lengte van de titel wordt beheerd in instellingen->visueel."
 
@@ -4917,23 +4918,23 @@ msgstr "De titel van deze grafiek. Geprogrammeerd uit de definities van de grafi
 msgid "The device for this Graph."
 msgstr "De naam van deze groep."
 
-#: graph_view.php:808 graphs.php:2335
+#: graph_view.php:808 graphs.php:2352
 msgid "Source Type"
 msgstr "Brontype"
 
-#: graph_view.php:810 graphs.php:2338
+#: graph_view.php:810 graphs.php:2355
 msgid "The underlying source that this Graph was based upon."
 msgstr "De onderliggende bron waarop deze grafiek is gebaseerd."
 
-#: graph_view.php:813 graphs.php:2341
+#: graph_view.php:813 graphs.php:2358
 msgid "Source Name"
 msgstr "Bronnaam"
 
-#: graph_view.php:815 graphs.php:2344
+#: graph_view.php:815 graphs.php:2361
 msgid "The Graph Template or Data Query that this Graph was based upon."
 msgstr "De Grafieksjabloon of Data Query waarop deze grafiek is gebaseerd."
 
-#: graph_view.php:820 graph_view.php:833 graphs.php:2350
+#: graph_view.php:820 graph_view.php:833 graphs.php:2367
 msgid "The size of this Graph when not in Preview mode."
 msgstr "De afmetingen van deze grafiek wanneer niet in voorvertoning modus."
 
@@ -5004,23 +5005,23 @@ msgstr "Samenvatting details"
 msgid "Download"
 msgstr "Download"
 
-#: graphs.php:52 graphs.php:987 include/global_arrays.php:2114
+#: graphs.php:52 graphs.php:1001 include/global_arrays.php:2114
 msgid "Change Graph Template"
 msgstr "Wijzig grafiektemplate"
 
-#: graphs.php:60 graphs.php:1247
+#: graphs.php:60 graphs.php:1264
 msgid "Create Aggregate Graph"
 msgstr "Maak geaggregeerde grafiek"
 
-#: graphs.php:61 graphs.php:1290
+#: graphs.php:61 graphs.php:1307
 msgid "Create Aggregate from Template"
 msgstr "Maak geaggregeerde grafiek vanaf template"
 
-#: graphs.php:62 graphs.php:1312 host.php:47
+#: graphs.php:62 graphs.php:1329 host.php:47
 msgid "Apply Automation Rules"
 msgstr "Automatiseringsregels toepassen"
 
-#: graphs.php:68 graphs.php:1009
+#: graphs.php:68 graphs.php:1023
 msgid "Convert to Graph Template"
 msgstr "Converteer naar grafiektemplate"
 
@@ -5028,225 +5029,225 @@ msgstr "Converteer naar grafiektemplate"
 msgid "No Device - "
 msgstr "Geen apparaat"
 
-#: graphs.php:259
+#: graphs.php:268
 #, php-format
 msgid "Created graph: %s"
 msgstr "Grafiek: %s gemaakt"
 
-#: graphs.php:267 lib/template.php:2169 lib/template.php:2203
+#: graphs.php:276 lib/template.php:2169 lib/template.php:2203
 msgid "ERROR: No Data Source associated. Check Template"
 msgstr "ERROR: Geen gegevensbron geassocieerd. Sjabloon controleren"
 
-#: graphs.php:403
+#: graphs.php:412
 msgid "A Graph Item Input contains an invalid field or value."
 msgstr ""
 
-#: graphs.php:415 graphs.php:465
+#: graphs.php:424 graphs.php:474
 msgid "Graph Item Input changes could not be saved."
 msgstr ""
 
-#: graphs.php:443
+#: graphs.php:452
 msgid "A Graph Item Input contains an invalid value."
 msgstr ""
 
-#: graphs.php:938
+#: graphs.php:952
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
 msgstr "Klik op 'Volgende' om de volgende grafiek(en) te verwijderen. Let op: als u ervoor kiest om de data bronnen te verwijderen, zullen uitsluitend de data bronnen die niet in gebruik zijn worden verwijderd."
 
-#: graphs.php:942
+#: graphs.php:956
 msgid "The following Data Source(s) are in use by these Graph(s)."
 msgstr "De volgende data bron(nen) zijn/is in gebruik bij deze grafiek(en)."
 
-#: graphs.php:961
+#: graphs.php:975
 msgid "Delete all Data Source(s) referenced by these Graph(s) that are not in use elsewhere."
 msgstr "Verwijder alle data bron(nen) gekoppeld aan deze grafiek(en) die niet elders in gebruik zijn."
 
-#: graphs.php:963
+#: graphs.php:977
 msgid "Leave the Data Source(s) untouched."
 msgstr "Laat de data bron(nen) ongemoeid."
 
-#: graphs.php:975
+#: graphs.php:989
 msgid "Choose a Graph Template and click 'Continue' to change the Graph Template for the following Graph(s). Please note, that only compatible Graph Templates will be displayed.  Compatible is identified by those having identical Data Sources."
 msgstr "Kies een grafiektemplate an klik op 'Volgende' om de grafiektemplate voor de volgende grafiek(en) te wijzigen. Let op: alleen compatible grafiektemplates zullen worden getoond. Compatible grafiektemplates hebben dezelfde identieke data bronnen."
 
-#: graphs.php:977 graphs_new.php:542
+#: graphs.php:991 graphs_new.php:542
 msgid "New Graph Template"
 msgstr "Nieuw grafiektemplate"
 
-#: graphs.php:991
+#: graphs.php:1005
 msgid "Click 'Continue' to duplicate the following Graph(s). You can optionally change the title format for the new Graph(s)."
 msgstr "Klik op 'Volgende' om de volgende grafiek(en) te dupliceren. Optioneel kunt u de opmaak van de titel voor de nieuwe grafiek(en) wijzigen."
 
-#: graphs.php:994
+#: graphs.php:1008
 msgid "<graph_title> (1)"
 msgstr "<graph_title> (1)"
 
-#: graphs.php:998
+#: graphs.php:1012
 msgid "Duplicate Graph(s)"
 msgstr "Dupliceer grafiek(en)"
 
-#: graphs.php:1002
+#: graphs.php:1016
 msgid "Click 'Continue' to convert the following Graph(s) into Graph Template(s).  You can optionally change the title format for the new Graph Template(s)."
 msgstr "Klik op 'Volgende' om de volgende grafiek(en) in grafiektemplate(s) te converteren. Optioneel kunt u de naam van het/de nieuwe grafiektemplate(s) wijzigen."
 
-#: graphs.php:1005
+#: graphs.php:1019
 msgid "<graph_title> Template"
 msgstr "<graph_title> Template"
 
-#: graphs.php:1013
+#: graphs.php:1030
 msgid "Click 'Continue' to place the following Graph(s) under the Tree Branch selected below."
 msgstr "Klik op 'Volgende' om de volgende grafiek(en) in de selecteerde boomstructuur te plaatsen."
 
-#: graphs.php:1015
+#: graphs.php:1032
 msgid "Destination Branch"
 msgstr "Bestemming structuur:"
 
-#: graphs.php:1028
+#: graphs.php:1045
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Kies een nieuw apparaat voor deze grafiek(en) en klik op 'Volgende'."
 
-#: graphs.php:1030 include/global_arrays.php:1005
+#: graphs.php:1047 include/global_arrays.php:1005
 msgid "New Device"
 msgstr "Nieuw apparaat"
 
-#: graphs.php:1038
+#: graphs.php:1055
 msgid "Change Graph(s) Associated Device"
 msgstr "Wijzig grafiek(en) van gekoppeld apparaat"
 
-#: graphs.php:1042
+#: graphs.php:1059
 msgid "Click 'Continue' to re-apply suggested naming to the following Graph(s)."
 msgstr "Klik op 'Volgende' om de gesuggereerde namen opnieuw toe te passen op de volgende grafiek(en)."
 
-#: graphs.php:1047
+#: graphs.php:1064
 msgid "Reapply Suggested Naming to Graph(s)"
 msgstr "Gesuggereerde namen opnieuw toepassen op de grafiek(en)"
 
-#: graphs.php:1063
+#: graphs.php:1080
 msgid "Click 'Continue' to create an Aggregate Graph from the selected Graph(s)."
 msgstr "Klik op 'Volgende' om een geaggregeerde grafiek te maken van de geselecteerde grafiek(en)."
 
-#: graphs.php:1072
+#: graphs.php:1089
 msgid "The following Data Sources are in use by these Graphs:"
 msgstr "De volgende data bron(nen) zijn/is in gebruik bij deze grafiek(en)."
 
-#: graphs.php:1131
+#: graphs.php:1148
 msgid "Please confirm"
 msgstr "Bevestig alstublieft"
 
-#: graphs.php:1269
+#: graphs.php:1286
 msgid "Select the Aggregate Template to use and press 'Continue' to create your Aggregate Graph.  Otherwise press 'Cancel' to return."
 msgstr "Selecteer het geaggregeerde template dat u wilt gebruiken en druk op 'Volgende' om deze te maken. Druk op 'Annuleren' om terug te gaan."
 
-#: graphs.php:1294
+#: graphs.php:1311
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
 msgstr "Er zijn geen geaggregeerde templates gedefinieerd voor dit grafiektemplate. Maak een geaggregeerd template voor de geselecteerde grafiek template en probeer het opnieuw of gebruik een niet getempleteerd geaggregeerde grafiek."
 
-#: graphs.php:1295
+#: graphs.php:1312
 msgid "Press 'Return' to return and select different Graphs."
 msgstr "Druk op 'enter' om terug te gaan en een andere grafiek te selecteren."
 
-#: graphs.php:1307
+#: graphs.php:1324
 msgid "Click 'Continue' to apply Automation Rules to the following Graphs."
 msgstr "Klik op 'Volgende' om de automatiseringsregels op de volgende grafieken toe te passen."
 
-#: graphs.php:1397
+#: graphs.php:1414
 msgid "Graph Items [new]"
 msgstr "Grafiek items [nieuw]"
 
-#: graphs.php:1437
+#: graphs.php:1454
 #, php-format
 msgid "Graph Items [edit: %s]"
 msgstr "Grafiek items [wijzig: %s]"
 
-#: graphs.php:1542
+#: graphs.php:1559
 #, php-format
 msgid "Graph [edit: %s]"
 msgstr "Grafiek [wijzig: %s]"
 
-#: graphs.php:1548
+#: graphs.php:1565
 msgid "Graph [new]"
 msgstr "Grafiek [nieuw]"
 
-#: graphs.php:1573
+#: graphs.php:1590
 msgid "Turn Off Graph Debug Mode."
 msgstr "Grafiek debug modus uitschakelen."
 
-#: graphs.php:1575
+#: graphs.php:1592
 msgid "Turn On Graph Debug Mode."
 msgstr "Grafiek debug modus inschakelen."
 
-#: graphs.php:1595
+#: graphs.php:1612
 msgid "Edit Graph Template."
 msgstr "Wijzig grafiektemplate."
 
-#: graphs.php:1605
+#: graphs.php:1622
 #, php-format
 msgid "Edit Data Source: '%s'."
 msgstr "Data bronnen: %s"
 
-#: graphs.php:1614
+#: graphs.php:1631
 msgid "Unlock Graph."
 msgstr "Grafiek vrijgeven."
 
-#: graphs.php:1616
+#: graphs.php:1633
 msgid "Lock Graph."
 msgstr "Vergrendel grafiek."
 
-#: graphs.php:1645
+#: graphs.php:1662
 msgid "Selected Graph Template"
 msgstr "Geselecteerde grafiektemplate"
 
-#: graphs.php:1646
+#: graphs.php:1663
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
 msgstr "Kies een grafieksjabloon om op deze grafiek toe te passen. Houd er rekening mee dat u grafieksjablonen alleen kunt wijzigen in een 100%% compatibele grafieksjabloon, wat betekent dat deze identieke gegevensbronnen bevat."
 
-#: graphs.php:1654
+#: graphs.php:1671
 msgid "Choose the Device that this Graph belongs to."
 msgstr "Kies het apparaat waar deze grafiek toe behoort."
 
-#: graphs.php:1710
+#: graphs.php:1727
 msgid "Supplemental Graph Template Data"
 msgstr "Aanvullende grafiektemplate data"
 
-#: graphs.php:1712
+#: graphs.php:1729
 msgid "Graph Fields"
 msgstr "Grafiekveld"
 
-#: graphs.php:1713
+#: graphs.php:1730
 msgid "Graph Item Fields"
 msgstr "Grafiek item veld"
 
-#: graphs.php:2056
+#: graphs.php:2073
 msgid "Graph Management [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[ Aangepaste grafieklijst toegepast - Filter VAN lijst ]"
 
-#: graphs.php:2058
+#: graphs.php:2075
 msgid "Graph Management [ All Devices ]"
 msgstr "Nieuwe grafieken voor [ Alle apparaten ]"
 
-#: graphs.php:2060
+#: graphs.php:2077
 msgid "Graph Management [ Non Device Based ]"
 msgstr "Gebruikersgroepbeheer [bewerken: %s]"
 
-#: graphs.php:2063
+#: graphs.php:2080
 #, fuzzy, php-format
 msgid "Graph Management [ %s ]"
 msgstr "Grafiekmanagement"
 
-#: graphs.php:2137
+#: graphs.php:2154
 msgid "Graph Source"
 msgstr "Grafiek, data bron"
 
-#: graphs.php:2142
+#: graphs.php:2159
 msgid "Non Templated"
 msgstr "Niet getempereerd"
 
-#: graphs.php:2332
+#: graphs.php:2349
 msgid "The internal database ID for this Graph.  Useful when performing automation or debugging."
 msgstr "De interne database ID van deze grafiek. Handig voor automation of debugging."
 
-#: graphs.php:2376
+#: graphs.php:2393
 msgid "Empty Graph"
 msgstr "Grafiek kopiëren"
 
@@ -18778,6 +18779,7 @@ msgstr "Geblokkeerd"
 
 #: tree.php:233 tree.php:634
 #, fuzzy
+#: graphs.php:652 graphs.php:1025
 msgid "You do not have permission to modify this tree."
 msgstr "Toestemming geweigerd. Je hebt geen toestemming voor de gevraagde actie."
 

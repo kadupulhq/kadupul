@@ -76,6 +76,7 @@ test('viewer paths ask for an enabled tree and editor paths keep the permission 
 	expect(tree_viewer_caller_arguments())->toBe(array(
 		'auth_profile.php' => array('$value'),
 		'graph_view.php'   => array('$tree_id, 0, true'),
+		'graphs.php'       => array('$tree_id'),
 		'lib/api_tree.php' => array('$tree_id', '$tree_id', '$tree_id', '$tree_id', '$tree_id'),
 		'lib/auth.php'     => array('$h[\'tree_id\'], 0, true'),
 		'lib/reports.php'  => array('$item[\'tree_id\'], $report[\'user_id\'], true'),
