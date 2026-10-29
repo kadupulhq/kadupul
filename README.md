@@ -102,6 +102,11 @@ files, governing how data is stored in them and how it is retrieved.
 
 Graphs are created by RRDtool from the data source definitions.
 
+Aggregate graph and template item updates require persistent InnoDB tables.
+If item replacement fails, the previous items remain and graph propagation
+stops. Other graph settings saved earlier in the request may remain changed;
+review the reported error before retrying.
+
 ### Templating
 
 Graph, data source and RRA templates allow the creation and consumption of

@@ -1975,6 +1975,14 @@ function db_table_create($table, $data, $log = true, $db_conn = false) {
 
 		$sql .= ') ENGINE = ' . $data['type'];
 
+		if (isset($data['charset'])) {
+			$sql .= ' DEFAULT CHARSET = ' . $data['charset'];
+		}
+
+		if (isset($data['collate'])) {
+			$sql .= ' COLLATE = ' . $data['collate'];
+		}
+
 		if (isset($data['comment'])) {
 			$sql .= ' COMMENT = ' . db_qstr($data['comment'], $db_conn);
 		}
@@ -1983,19 +1991,7 @@ function db_table_create($table, $data, $log = true, $db_conn = false) {
 			$sql .= ' ROW_FORMAT = ' . $data['row_format'];
 		}
 
-		if (db_execute($sql, $log, $db_conn)) {
-			if (isset($data['charset'])) {
-				db_execute("ALTER TABLE `$table` CHARSET = " . $data['charset'], $log, $db_conn);
-			}
-
-			if (isset($data['collate'])) {
-				db_execute("ALTER TABLE `$table` COLLATE = " . $data['collate'], $log, $db_conn);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
+		return db_execute($sql, $log, $db_conn);
 	}
 
 	return true;
@@ -2718,6 +2714,55 @@ function db_dump_data($database = '', $tables = '', $credentials = array(), $out
 	}
 
 	return $retval;
+}
+
+/**
+ * db_client_option_file - write MySQL client credentials to a private option
+ *   file so they never appear in a client's process arguments. Pass the path
+ *   as the client's first argument with --defaults-extra-file= and unlink it
+ *   once the client exits.
+ *
+ * The client reads this file after the global option files, so these
+ * credentials still override them. The invoking account's own ~/.my.cnf is
+ * read later and can override them, which command-line flags did not allow.
+ * An empty password writes no password line, as the old calls omitted
+ * --password.
+ *
+ * @param  (string) $username - client user name
+ * @param  (string) $password - client password, or '' for none
+ *
+ * @return (string|false) the option file path, or false when it was not written
+ */
+function db_client_option_file($username, $password) {
+	$username = (string) $username;
+	$password = (string) $password;
+
+	// An option file value cannot carry a line break or NUL.
+	if (strpbrk($username . $password, "\r\n\0") !== false) {
+		return false;
+	}
+
+	// tempnam() creates the file exclusively with mode 0600.
+	$path = tempnam(sys_get_temp_dir(), 'kadupul-mysql-');
+
+	if ($path === false) {
+		return false;
+	}
+
+	$quote    = static fn($value) => '"' . addcslashes($value, '\\"') . '"';
+	$contents = '[client]' . PHP_EOL . 'user=' . $quote($username) . PHP_EOL;
+
+	if ($password !== '') {
+		$contents .= 'password=' . $quote($password) . PHP_EOL;
+	}
+
+	if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
+		unlink($path);
+
+		return false;
+	}
+
+	return $path;
 }
 
 /**
