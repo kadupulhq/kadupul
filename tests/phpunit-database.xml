@@ -13,6 +13,7 @@
       <file>integration/BoostRecoveryDatabaseTest.php</file>
       <file>integration/BoostConnectionLossDatabaseTest.php</file>
       <file>Unit/Core/Rrd/BoostOnDemandInsertNativeTest.php</file>
+      <file>integration/BoostQueueDatabaseTest.php</file>
       <file>integration/OfflineCmdOutputDatabaseTest.php</file>
       <file>integration/GroupMembershipConcurrencyTest.php</file>
       <file>integration/DeviceMutationSelectionDatabaseTest.php</file>

@@ -419,6 +419,15 @@ function boost_return_cached_image(&$graph_data_array)
  */
 function boost_graph_cache_render_key($graph_data_array)
 {
+    return boost_graph_cache_key(0, 0, 0, $graph_data_array)->renderKey();
+}
+
+/**
+ * Resolves the viewer's inputs, which the Graphing domain object may not read
+ * from the session, cookies or settings itself.
+ */
+function boost_graph_cache_key($local_graph_id, $rra_id, $timespan, $graph_data_array)
+{
     if (isset($graph_data_array['graph_theme'])) {
         $theme = cacti_validate_theme($graph_data_array['graph_theme']);
     } else {
@@ -430,74 +439,39 @@ function boost_graph_cache_render_key($graph_data_array)
         $color_mode = $_COOKIE['CactiColorMode'];
     }
 
-    $parts = array('theme' => $theme, 'color_mode' => $color_mode);
-
     /* the fonts rrdtool_function_theme_font_options() draws with, resolved from
      * the theme, the site and the viewer; settings that resolve alike share a key */
-    $parts['fonts'] = rrdtool_graph_font_profile(rrdtool_theme_fonts($theme))->fingerprint();
+    $viewer = array(
+        'theme'          => (string) $theme,
+        'selected_theme' => (string) get_selected_theme(),
+        'color_mode'     => $color_mode,
+        'fonts'          => rrdtool_graph_font_profile(rrdtool_theme_fonts($theme))->fingerprint(),
+        /* the From/To legend comment, as rrdtool_function_format_graph_date() resolves it */
+        'date_format'    => (string) read_user_setting('default_date_format', read_config_option('default_date_format')),
+        'datechar'       => (string) read_user_setting('default_datechar', read_config_option('default_datechar')),
+        /* cacti_time_zone_set() moves both zones to the viewer's browser offset; PHP
+         * dates the legend while RRDtool dates the axis. rrdtool_set_language() sets
+         * LANG from CACTI_LOCALE before each render, so the viewer's language is
+         * keyed through the locale globals below; LANG here is the web server's */
+        'php_tz'         => date_default_timezone_get(),
+        'tz'             => (string) getenv('TZ'),
+        'lang'           => (string) getenv('LANG'),
+        /* number_format_i18n() formats |sum:| legends from these whatever LANG holds */
+        'locale'         => (string) ($GLOBALS['cacti_locale'] ?? ''),
+        'country'        => (string) ($GLOBALS['cacti_country'] ?? ''),
+    );
 
-    /* the From/To legend comment, as rrdtool_function_format_graph_date() resolves it */
-    $parts['date_format'] = (string) read_user_setting('default_date_format', read_config_option('default_date_format'));
-    $parts['datechar']    = (string) read_user_setting('default_datechar', read_config_option('default_datechar'));
-
-    /* cacti_time_zone_set() moves both zones to the viewer's browser offset; PHP
-     * dates the legend while RRDtool dates the axis. rrdtool_set_language() sets
-     * LANG from CACTI_LOCALE before each render, so the viewer's language is
-     * keyed through the locale globals below; LANG here is the web server's */
-    $parts['php_tz'] = date_default_timezone_get();
-    $parts['tz']     = (string) getenv('TZ');
-    $parts['lang']   = (string) getenv('LANG');
-
-    /* number_format_i18n() formats |sum:| legends from these whatever LANG holds */
-    $parts['locale']  = (string) ($GLOBALS['cacti_locale'] ?? '');
-    $parts['country'] = (string) ($GLOBALS['cacti_country'] ?? '');
-
-    /* the window a preset resolves to follows the viewer's first weekday and day
-     * shift; graph pages anchor it on the last poller run, so it holds for one interval.
-     * A window the caller leaves out is keyed as absent, as the check sees it */
-    $parts['graph_start'] = (string) ($graph_data_array['graph_start'] ?? '');
-    $parts['graph_end']   = (string) ($graph_data_array['graph_end'] ?? '');
-
-    /* The filename casts dimensions and uses isset() for thumbnail names,
-     * while the renderer validates dimensions and tests the legend value.
-     * Keep the original values and omission state to avoid those collisions. */
-    foreach (array('graph_width', 'graph_height', 'graph_nolegend') as $field) {
-        $parts[$field] = array(array_key_exists($field, $graph_data_array), $graph_data_array[$field] ?? null);
-    }
-
-    /* graph_json.php asks for graphv output, and image_format=png overrides an SVG template */
-    $parts['graphv']       = isset($graph_data_array['graphv']) ? 'on' : '';
-    $parts['image_format'] = (string) ($graph_data_array['image_format'] ?? '');
-
-    /* serialize() is binary safe, so no part has to be valid UTF-8 */
-    return hash('sha256', serialize($parts));
+    return \Kadupul\Graphing\Domain\BoostGraphCacheKey::fromGraphRequest((int) $local_graph_id, (int) $rra_id, (int) $timespan, $graph_data_array, $viewer);
 }
 
+/* A negative id has no graph to cache, so it gets no file name instead of an exception in the page. */
 function boost_graph_cache_filename($cache_directory, $local_graph_id, $rra_id, $timespan, $graph_data_array)
 {
-    if ($rra_id > 0) {
-        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id;
-    } else {
-        $cache_file = $cache_directory . '/' . get_selected_theme() . '_lgi_' . $local_graph_id . '_rrai_' . $rra_id . '_tsi_' . $timespan;
+    try {
+        return boost_graph_cache_key($local_graph_id, $rra_id, $timespan, $graph_data_array)->fileName($cache_directory);
+    } catch (\InvalidArgumentException $e) {
+        return '';
     }
-
-    if (isset($graph_data_array['graph_height'])) {
-        $cache_file .= '_height_' . (int) $graph_data_array['graph_height'];
-    }
-
-    if (isset($graph_data_array['graph_width'])) {
-        $cache_file .= '_width_' . (int) $graph_data_array['graph_width'];
-    }
-
-    $cache_file .= '_rk_' . boost_graph_cache_render_key($graph_data_array);
-
-    if (isset($graph_data_array['graph_nolegend'])) {
-        $cache_file .= '_thumb.png';
-    } else {
-        $cache_file .= '.png';
-    }
-
-    return $cache_file;
 }
 
 /**
@@ -1788,6 +1762,17 @@ function boost_poller_bottom()
         $redirect_args = '';
 
         boost_update_snmp_statistics();
+
+        /* With the Messenger scheduler enabled, kadupul:boost:run starts the
+         * master and this launch would race it. This early return is the
+         * guard, so both the poller's and the scheduler worker's environments
+         * must set KADUPUL_BOOST_SCHEDULER=1. The master's register_process_start()
+         * (poller_boost.php:169) is only a best-effort backstop: it is a
+         * check-then-insert without a lock, so two masters starting together
+         * can both register. */
+        if (getenv('KADUPUL_BOOST_SCHEDULER') === '1') {
+            return;
+        }
 
         $boost_log     = boost_debug_log_path();
         $boost_logdir  = dirname($boost_log);
