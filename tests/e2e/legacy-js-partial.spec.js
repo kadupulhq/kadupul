@@ -27,6 +27,7 @@ for (const [library, loaded] of libraries) {
 
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
+    const fixtureHeaders = { 'Content-Security-Policy': policy };
     const fixtureBody = `
       <!doctype html><html><body><div id="main"></div>
       <script nonce="${nonce}" src="/include/js/jquery.js"></script>
@@ -37,7 +38,7 @@ for (const [library, loaded] of libraries) {
     await page.route('**/*', async route => {
       const url = new URL(route.request().url());
       if (url.pathname === '/fixture') {
-        await route.fulfill({ contentType: 'text/html', headers: { 'Content-Security-Policy': policy }, body: fixtureBody });
+        await route.fulfill({ contentType: 'text/html', headers: fixtureHeaders, body: fixtureBody });
       } else if (url.pathname === '/partial') {
         await route.fulfill({ contentType: 'text/html', body: partial });
       } else if (url.pathname.startsWith('/include/js/')) {
