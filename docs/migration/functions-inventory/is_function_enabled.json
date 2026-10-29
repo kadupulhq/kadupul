@@ -3,8 +3,8 @@
     "name": "is_function_enabled",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8277,
-        "end_line": 8282,
+        "start_line": 8296,
+        "end_line": 8301,
         "line_count": 6,
         "signature": {
             "parameters": [

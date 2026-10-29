@@ -3,8 +3,8 @@
     "name": "cacti_ntoc",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8019,
-        "end_line": 8032,
+        "start_line": 8038,
+        "end_line": 8051,
         "line_count": 14,
         "signature": {
             "parameters": [

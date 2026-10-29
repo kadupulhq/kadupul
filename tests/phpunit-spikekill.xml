@@ -18,8 +18,10 @@
       <file>Unit/Security/ImportPreviewDifferenceNamesTest.php</file>
       <file>Unit/Security/TitleAndExportOutputTest.php</file>
       <file>Unit/Security/SqlListBindingTest.php</file>
+      <file>Unit/Security/AutomationSqlIdentifierTest.php</file>
       <file>Unit/Security/Auth/AdminMutationCsrfTest.php</file>
       <file>Unit/Security/GraphTemplateInputTest.php</file>
+      <file>Unit/Security/GraphTemplateInputValueTest.php</file>
       <file>Unit/Installer/InstallerEndpointCsrfTest.php</file>
       <file>Unit/Security/Auth/GraphTemplateBulkCsrfTest.php</file>
       <file>Unit/BundledDependencyCompatibilityTest.php</file>
@@ -54,6 +56,7 @@
       <file>Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>Unit/Core/PathHelpersTest.php</file>
       <file>Unit/Core/Log/CactiLogControlCharacterTest.php</file>
+      <file>Unit/ErrorHandlerDeprecationTest.php</file>
       <file>Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
       <file>Unit/Security/Auth/ReportMutationCsrfTest.php</file>
       <file>Unit/Security/Auth/ProfileMutationCsrfTest.php</file>
@@ -133,6 +136,7 @@
       <file>Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
       <file>Unit/Security/Auth/ChangePasswordUsernameRenderingTest.php</file>
       <file>Unit/SnmpPortIntegerTest.php</file>
+      <file>Unit/Security/DsstatsLogPathAndAggregateGraphIdTest.php</file>
       <file>Unit/Security/LikeWildcardEscapeTest.php</file>
       <file>Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>Unit/Security/Auth/ProfileSettingValidationTest.php</file>
@@ -151,6 +155,7 @@
       <file>Unit/SqlScriptCredentialsTest.php</file>
       <file>Unit/Security/Misc/RemoteCollectorAddressTest.php</file>
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
+      <file>Unit/Security/Shell/Win32CmdArgumentTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

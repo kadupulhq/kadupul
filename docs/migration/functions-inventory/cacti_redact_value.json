@@ -3,8 +3,8 @@
     "name": "cacti_redact_value",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8969,
-        "end_line": 8972,
+        "start_line": 8988,
+        "end_line": 8991,
         "line_count": 4,
         "signature": {
             "parameters": [

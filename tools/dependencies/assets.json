@@ -387,11 +387,8 @@
   },
   {
     "file": "screenfull.js",
-    "package": "screenfull",
-    "version": "3.3.3",
-    "tracked": true,
-    "source": "https://cdn.jsdelivr.net/npm/screenfull@3.3.3/dist/screenfull.js",
-    "sha256": "e3cb58305b04dca3c181a8518e093d6f4111506573ce8b452d1f2f0a17c084a1"
+    "owned": true,
+    "note": "Maintained here under GPL-3.0-or-later; replaces screenfull 3.3.3 with a shim over the native Fullscreen API that keeps the 3.x global API. screenfull 6 is ESM-only and was deliberately not adopted."
   },
   {
     "file": "jquery.dropdown.js",
