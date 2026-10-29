@@ -3,12 +3,12 @@
     "name": "get_installed_rrdtool_version",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7481,
-        "end_line": 7504,
+        "start_line": 7517,
+        "end_line": 7540,
         "line_count": 24,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
-        "fan_out": {"core": 3, "core_outside_functions_php": 3, "tests": 3, "plugins": 0},
+        "fan_out": {"core": 3, "core_outside_functions_php": 3, "tests": 4, "plugins": 0},
         "body": {
             "uses_global": ["config", "rrdtool_versions"],
             "static_variables": ["version"],

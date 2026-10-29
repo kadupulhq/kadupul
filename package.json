@@ -17,6 +17,7 @@
     "dompurify": "3.4.17",
     "flag-icons": "7.6.0",
     "jquery": "4.0.0",
+    "jquery-migrate": "4.0.2",
     "jquery-ui": "1.14.2",
     "tablesorter": "2.32.0"
   },

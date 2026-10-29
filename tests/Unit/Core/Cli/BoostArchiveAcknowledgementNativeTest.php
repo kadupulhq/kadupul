@@ -66,19 +66,22 @@ function boost_archive_run($coverage, $mode, bool $renamed = false)
 test('production Boost archive consumer deletes only acknowledged samples and isolates failed data sources', function ($mode) {
     $result = boost_archive_run($this->getTestResultObject()->getCodeCoverage(), $mode);
     $expectedResult = array('archive-failure' => false, 'next-id-failure' => 1, 'split-failure' => 0,
-        'last-failure' => 0, 'delete-failure' => false, 'assignment-failure' => false, 'success' => 2)[$mode];
+        'last-failure' => 0, 'delete-failure' => false, 'assignment-failure' => false, 'lookup-failure' => 1, 'success' => 2)[$mode];
     expect($result['result'])->toBe($expectedResult)
         ->and($result['handler_restored'])->toBeTrue();
     $deletes = array_values(array_filter($result['writes'], fn($write) => str_starts_with($write[0], 'DELETE')));
     $archive = array_values(array_filter($deletes, fn($write) => str_contains($write[0], 'poller_output_boost_arch_')));
     $first = array(42, 'value', '1699999800', '21');
-    $second = array($mode === 'next-id-failure' ? 43 : 42, 'value', '1699999860', '22');
+    $second = array(in_array($mode, array('next-id-failure', 'lookup-failure'), true) ? 43 : 42, 'value', '1699999860', '22');
     // Samples of a failed data source stay queued; later data sources are still acknowledged.
     $expectedArchive = array('delete-failure' => array($first, $second), 'assignment-failure' => array($first, $second),
-        'success' => array($first, $second), 'next-id-failure' => array($second))[$mode] ?? array();
+        'success' => array($first, $second), 'next-id-failure' => array($second), 'lookup-failure' => array($second))[$mode] ?? array();
     // Every acknowledged tuple of a table is removed by one statement.
     expect($archive)->toHaveCount($expectedArchive ? 1 : 0)
         ->and($result['updates'])->toHaveCount(array('archive-failure' => 0, 'next-id-failure' => 2)[$mode] ?? 1);
+    if ($mode === 'lookup-failure') {
+        expect(array_column($result['updates'], 0))->toBe(array(43));
+    }
     if ($expectedArchive) {
         expect($archive[0][0])->toBe('DELETE FROM poller_output_boost_arch_fixture WHERE ' . implode(' OR ', array_fill(0, count($expectedArchive), '(local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))')))
             ->and($archive[0][1])->toBe(array_merge(...$expectedArchive));
@@ -91,9 +94,9 @@ test('production Boost archive consumer deletes only acknowledged samples and is
     expect($result['dead_letters'])->toBe(in_array($mode, array('next-id-failure', 'split-failure'), true)
         ? array(array(42, 'sample-42.rrd', "unknown DS name 'value'", array('poller_output_boost_arch_fixture'))) : array());
     $retained = array_values(array_filter($result['messages'], fn($message) => str_contains($message, 'retained samples')));
-    expect($retained)->toBe(in_array($mode, array('next-id-failure', 'split-failure', 'last-failure'), true)
+    expect($retained)->toBe(in_array($mode, array('next-id-failure', 'split-failure', 'last-failure', 'lookup-failure'), true)
         ? array('WARNING: Boost retained samples for Local Data IDs 42 after RRD update failures.') : array());
-})->with(array('archive-failure', 'next-id-failure', 'split-failure', 'last-failure', 'delete-failure', 'assignment-failure', 'success'));
+})->with(array('archive-failure', 'next-id-failure', 'split-failure', 'last-failure', 'delete-failure', 'assignment-failure', 'lookup-failure', 'success'));
 
 test('unmapped MULTI and invalid Boost outputs are acknowledged without an RRD write', function () {
     $result = boost_archive_run($this->getTestResultObject()->getCodeCoverage(), 'multi');

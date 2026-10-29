@@ -28,8 +28,8 @@ function api_device_cache_crc_update($poller_id, $variable = 'poller_replicate_d
  * Graphs and data sources go first, then the device's dependent rows and the
  * device row itself in one transaction, so a failure never leaves a deleted or
  * flagged device with live poller items. A caller's open transaction is kept:
- * the removal then runs under a savepoint. Remote collector cleanup runs only
- * after the local removal commits.
+ * the removal then runs under a savepoint and queues remote collector cleanup
+ * in that transaction. Otherwise cleanup follows the local commit.
  *
  * @param  $device_id - the id of the device to remove
  *
@@ -39,7 +39,8 @@ function api_device_remove($device_id)
 {
     global $config;
 
-    if (!is_numeric($device_id) || (int) $device_id <= 0) {
+    if ((!is_int($device_id) && (!is_string($device_id) || !ctype_digit($device_id)))
+        || (float) $device_id < 1 || (float) $device_id > 16777215) {
         return false;
     }
     $device_id = (int) $device_id;
@@ -85,7 +86,7 @@ function api_device_remove($device_id)
         return false;
     }
 
-    if ($poller_id > 1) {
+    if ($poller_id > 1 && !$db->inTransaction()) {
         api_device_purge_from_remote($device_id, $poller_id);
     }
 
@@ -128,6 +129,12 @@ function api_device_remove_rows($db, $device_id, $poller_id)
     );
 
     $owned = !$db->inTransaction();
+    if (!$owned && $poller_id > 1) {
+        // A released savepoint is not a commit. The existing purge worker sees
+        // this command only after the caller commits; rollback removes it too.
+        $statements[] = array('DELETE FROM poller_command WHERE poller_id = ? AND action = ? AND command = ?', array($poller_id, POLLER_COMMAND_PURGE, (string) $device_id));
+        $statements[] = array('INSERT INTO poller_command (poller_id, time, action, command) VALUES (?, CURRENT_TIMESTAMP, ?, ?)', array($poller_id, POLLER_COMMAND_PURGE, (string) $device_id));
+    }
     $savepoint = 'kadupul_device_remove_' . bin2hex(random_bytes(8));
 
     try {

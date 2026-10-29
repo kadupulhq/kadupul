@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Cache Composer downloads
+description: Restore and save the Composer download cache keyed on both lock files.
+
+runs:
+  using: composite
+  steps:
+    - name: Locate Composer download cache
+      id: composer-cache
+      shell: bash
+      run: echo "directory=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+    - name: Cache Composer downloads
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.composer-cache.outputs.directory }}
+        key: composer-downloads-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('composer.lock', 'tests/composer.lock') }}
+        restore-keys: |
+          composer-downloads-${{ runner.os }}-${{ runner.arch }}-

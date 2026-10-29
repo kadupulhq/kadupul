@@ -3,12 +3,12 @@
     "name": "get_client_addr",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7811,
-        "end_line": 7877,
+        "start_line": 7847,
+        "end_line": 7913,
         "line_count": 67,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
-        "fan_out": {"core": 25, "core_outside_functions_php": 25, "tests": 24, "plugins": 0},
+        "fan_out": {"core": 26, "core_outside_functions_php": 26, "tests": 26, "plugins": 0},
         "body": {
             "uses_global": ["allowed_proxy_headers", "config"],
             "static_variables": [],

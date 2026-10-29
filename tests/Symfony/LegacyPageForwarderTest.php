@@ -44,7 +44,43 @@ final class LegacyPageForwarderTest extends TestCase
 
     public static function scripts(): array
     {
-        return [['about.php', '/about/legacy']];
+        return [
+            ['about.php', '/about/legacy'],
+            ['automation_templates.php', '/automation/templates/legacy'],
+            ['cdef.php', '/graph-definitions/cdefs/legacy'],
+            ['color.php', '/graphing/colors/legacy'],
+            ['data_input.php', '/data-inputs/legacy'],
+            ['data_source_profiles.php', '/graphing/data-source-profiles/legacy'],
+            ['gprint_presets.php', '/graphing/gprint-presets/legacy'],
+            ['host.php', '/inventory/devices/legacy'],
+            ['links.php', '/links/legacy'],
+            ['sites.php', '/inventory/sites/legacy'],
+            ['vdef.php', '/graph-definitions/vdefs/legacy'],
+        ];
+    }
+
+    public function testEveryForwardingShimUsesTheSharedForwarder(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $lines = file($root . '/tests/security/baselines/entry_points.baseline.tsv', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        self::assertIsArray($lines);
+        $shims = [];
+        foreach (array_slice($lines, 1) as $line) {
+            [$entry, $gate, $detail] = array_pad(explode("\t", rtrim($line, "\r")), 3, '');
+            if (str_contains($entry, '/') || $gate !== 'symfony:forward') {
+                continue;
+            }
+            self::assertMatchesRegularExpression('~\Aforwards to app\.php/[a-z0-9/-]+\z~', $detail, $entry);
+            $shims[$entry] = substr($detail, strlen('forwards to '));
+        }
+        self::assertNotEmpty($shims);
+        foreach ($shims as $entry => $fixedUri) {
+            $source = file_get_contents($root . '/' . $entry);
+            self::assertIsString($source, $entry);
+            self::assertStringContainsString('LegacyPageForwarder::run(', $source, $entry);
+            self::assertStringNotContainsString('createFromGlobals', $source, $entry);
+            self::assertStringContainsString("'" . $fixedUri . "'", $source, $entry);
+        }
     }
 
     public function testRootDeploymentUsesRootFrontController(): void

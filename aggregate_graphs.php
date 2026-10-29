@@ -375,21 +375,24 @@ function form_actions()
                     $local_graph_ids[] = $matches[1];
                 }
             }
-            $lgid = implode(',', $local_graph_ids);
 
             /* for whatever reason,  subquery performance in mysql is sub-optimal.  Therefore, let's do this
              * as a few queries instead.
              */
-            $task_items = array_rekey(db_fetch_assoc("SELECT DISTINCT task_item_id
+            $task_items = array_rekey(db_fetch_assoc_prepared(
+                'SELECT DISTINCT task_item_id
 				FROM graph_templates_item
-				WHERE local_graph_id IN($lgid)"), 'task_item_id', 'task_item_id');
+				WHERE local_graph_id IN (' . trim(str_repeat('?, ', cacti_sizeof($local_graph_ids)), ', ') . ')',
+                array_values($local_graph_ids)
+            ), 'task_item_id', 'task_item_id');
 
             if (cacti_sizeof($task_items)) {
-                $task_items = implode(',', $task_items);
-
-                $graph_templates = db_fetch_assoc("SELECT DISTINCT graph_template_id
+                $graph_templates = db_fetch_assoc_prepared(
+                    'SELECT DISTINCT graph_template_id
 					FROM graph_templates_item
-					WHERE task_item_id IN ($task_items) AND graph_template_id>0");
+					WHERE task_item_id IN (' . trim(str_repeat('?, ', cacti_sizeof($task_items)), ', ') . ') AND graph_template_id>0',
+                    array_values($task_items)
+                );
             } else {
                 $graph_templates = array();
             }
@@ -1405,7 +1408,7 @@ function aggregate_make_sql_where($sql_where, $items, $field)
                 } elseif (strtolower($i) == 'or') {
                     $sql_where .= ' OR ';
                 } else {
-                    $sql_where .= ($termcount > 0 ? ' OR ' : '') . $field . " LIKE '%" . trim($i) . "%'";
+                    $sql_where .= ($termcount > 0 ? ' OR ' : '') . $field . ' LIKE ' . db_qstr('%' . db_like_escape(trim($i)) . '%');
                     $termcount++;
                 }
             }

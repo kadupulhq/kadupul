@@ -699,8 +699,8 @@ function discoverDevices($network_id, $thread)
                                     'SELECT COUNT(*)
 									FROM host
 									WHERE snmp_sysName = ?
-									AND (hostname = ? OR hostname LIKE "' . $hostname . '%")',
-                                    array($snmp_sysName, $device['ip_address'])
+									AND (hostname = ? OR hostname LIKE ?)',
+                                    array($snmp_sysName, $device['ip_address'], db_like_escape($hostname) . '%')
                                 );
 
                                 if ($isCactiSysName) {
