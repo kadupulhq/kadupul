@@ -601,6 +601,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Normalize malformed device-removal worker acknowledgements to the safe uncertain-outcome response.
 
 - Add Symfony device-removal confirmation with graph/data retention choices, shared-dependency protection and verified remote cleanup.
+- Remove a device through `api_device_remove()` as one unit: its Graphs go first, then its dependent rows and the device row in one transaction (a savepoint inside a caller's transaction) after an InnoDB check, and remote collector cleanup after commit. Inside a caller transaction, cleanup is queued transactionally for the existing purge worker instead of contacting the collector before the caller commits. Malformed or fractional device IDs are refused before any side effect. A failure leaves the device and its rows in place, raises an error message and returns false. Report items of the device are now actually removed (upstream Cacti #7732).
 
 - Record structured audit events for site creation, editing, deletion and duplication, device creation, and device template assignment, using the correlation-aware contract that device edit introduced.
 

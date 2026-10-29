@@ -7086,7 +7086,7 @@ msgid "Tree Rule Items"
 msgstr "עץ כלל פריטים"
 
 #: include/global_arrays.php:2862 include/global_arrays.php:2878
-#: lib/api_device.php:1952
+#: lib/api_device.php:2065
 msgid "days"
 msgstr "ימים"
 
@@ -7102,11 +7102,11 @@ msgstr "דקות"
 msgid "secs"
 msgstr "שניות"
 
-#: include/global_arrays.php:2879 lib/api_device.php:1952
+#: include/global_arrays.php:2879 lib/api_device.php:2065
 msgid "hours"
 msgstr "שעות"
 
-#: include/global_arrays.php:2880 lib/api_device.php:1952
+#: include/global_arrays.php:2880 lib/api_device.php:2065
 msgid "minutes"
 msgstr "דקות"
 
@@ -9725,7 +9725,7 @@ msgstr "שיטת בחירת גופן"
 msgid "How do you wish fonts to be handled by default?"
 msgstr "כיצד ברצונך לטפל בגופנים כברירת מחדל?"
 
-#: include/global_settings.php:1153 lib/api_device.php:1907
+#: include/global_settings.php:1153 lib/api_device.php:2020
 msgid "System"
 msgstr "מערכת"
 
@@ -11707,92 +11707,102 @@ msgstr "נוסף על ידי אוטומציה Kadupul"
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "שגיאה: טווחי IP בצורה של range1-range2 אינם נתמכים עוד."
 
-#: lib/api_device.php:155 lib/api_device.php:158 lib/api_device.php:385
-#: lib/api_device.php:389 lib/api_device.php:451 lib/api_device.php:456
-#: lib/api_device.php:501 lib/api_device.php:505 lib/api_device.php:581
-#: lib/api_device.php:585 lib/api_device.php:640 lib/api_device.php:644
-#: lib/api_device.php:710 lib/api_device.php:713 lib/api_device.php:788
-#: lib/api_device.php:791 lib/api_device.php:840 lib/api_device.php:843
-#: lib/api_device.php:886 lib/api_device.php:889 lib/api_device.php:1312
-#: lib/api_device.php:1325 lib/api_device.php:1329 lib/api_device.php:1374
-#: lib/api_device.php:1377 lib/api_device.php:1564 lib/api_device.php:1568
-#: lib/api_device.php:1604 lib/api_device.php:1608 lib/api_device.php:1653
-#: lib/api_device.php:1657 lib/api_device.php:1718 lib/api_device.php:1722
+#: lib/api_device.php:76
+#, php-format
+msgid "Unable to remove Device %s because its Graphs could not all be removed."
+msgstr ""
+
+#: lib/api_device.php:84
+#, php-format
+msgid "Unable to remove Device %s because its database records could not be removed together."
+msgstr ""
+
+#: lib/api_device.php:268 lib/api_device.php:271 lib/api_device.php:498
+#: lib/api_device.php:502 lib/api_device.php:564 lib/api_device.php:569
+#: lib/api_device.php:614 lib/api_device.php:618 lib/api_device.php:694
+#: lib/api_device.php:698 lib/api_device.php:753 lib/api_device.php:757
+#: lib/api_device.php:823 lib/api_device.php:826 lib/api_device.php:901
+#: lib/api_device.php:904 lib/api_device.php:953 lib/api_device.php:956
+#: lib/api_device.php:999 lib/api_device.php:1002 lib/api_device.php:1425
+#: lib/api_device.php:1438 lib/api_device.php:1442 lib/api_device.php:1487
+#: lib/api_device.php:1490 lib/api_device.php:1677 lib/api_device.php:1681
+#: lib/api_device.php:1717 lib/api_device.php:1721 lib/api_device.php:1766
+#: lib/api_device.php:1770 lib/api_device.php:1831 lib/api_device.php:1835
 #: lib/utility.php:744
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "הסמן המרוחק %s מושבת, יהיה עליך לבצע FullSync ברגע שהוא יעלה שוב"
 
-#: lib/api_device.php:549
+#: lib/api_device.php:662
 msgid "Device replication failed. A FullSync is required; see the log for details."
 msgstr ""
 
-#: lib/api_device.php:1828
+#: lib/api_device.php:1941
 msgid "ERROR: Device ID is Blank"
 msgstr "שגיאה: מזהה המכשיר הוא ריק"
 
-#: lib/api_device.php:1841 lib/api_device.php:1843
+#: lib/api_device.php:1954 lib/api_device.php:1956
 msgid "ERROR: Device["
 msgstr "שגיאה: התקן ["
 
-#: lib/api_device.php:1859
+#: lib/api_device.php:1972
 msgid "ERROR: Failed to connect to remote collector."
 msgstr "שגיאה: נכשל חיבור לאספן מרוחק."
 
-#: lib/api_device.php:1866
+#: lib/api_device.php:1979
 msgid "Device is Disabled"
 msgstr "המכשיר מושבת"
 
-#: lib/api_device.php:1867
+#: lib/api_device.php:1980
 msgid "Device Availability Check Bypassed"
 msgstr "זמינות זמינות המחסומים"
 
-#: lib/api_device.php:1874
+#: lib/api_device.php:1987
 msgid "SNMP Information"
 msgstr "מידע SNMP"
 
-#: lib/api_device.php:1878
+#: lib/api_device.php:1991
 msgid "SNMP not in use"
 msgstr "SNMP לא בשימוש"
 
-#: lib/api_device.php:1899 lib/api_device.php:1907 lib/api_device.php:1926
+#: lib/api_device.php:2012 lib/api_device.php:2020 lib/api_device.php:2039
 msgid "SNMP error"
 msgstr "שגיאת SNMP"
 
-#: lib/api_device.php:1899
+#: lib/api_device.php:2012
 msgid "Session"
 msgstr "סשנים"
 
-#: lib/api_device.php:1926
+#: lib/api_device.php:2039
 msgid "Host"
 msgstr "שרת מארח"
 
-#: lib/api_device.php:1944
+#: lib/api_device.php:2057
 msgid "System:"
 msgstr "מערכת הפעלה:"
 
-#: lib/api_device.php:1951
+#: lib/api_device.php:2064
 msgid "Uptime:"
 msgstr "זמן פעילות השרת"
 
-#: lib/api_device.php:1953
+#: lib/api_device.php:2066
 msgid "Hostname:"
 msgstr "שם מארח:"
 
-#: lib/api_device.php:1954
+#: lib/api_device.php:2067
 msgid "Location:"
 msgstr "מיקום:"
 
-#: lib/api_device.php:1955
+#: lib/api_device.php:2068
 msgid "Contact:"
 msgstr "איש קשר:"
 
-#: lib/api_device.php:1986 lib/functions.php:6253 lib/functions.php:6255
+#: lib/api_device.php:2099 lib/functions.php:6253 lib/functions.php:6255
 #: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "תוצאות פינג"
 
-#: lib/api_device.php:1991
+#: lib/api_device.php:2104
 msgid "No Ping or SNMP Availability Check in Use"
 msgstr "אין פינג או SNMP זמינות בדוק שימוש"
 

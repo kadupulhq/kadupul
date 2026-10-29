@@ -104,6 +104,7 @@
       <file>Unit/Security/Auth/TreeConfirmationAuthorizationTest.php</file>
       <file>Unit/Security/Auth/TreeNodeAccessTest.php</file>
       <file>Unit/Security/NewGraphDeviceAccessTest.php</file>
+      <file>Unit/Core/DeviceRemovalAtomicityTest.php</file>
       <file>Unit/Security/Auth/NoAuthenticationRecoveryTest.php</file>
       <file>Unit/Security/Auth/GuestProfileAccessTest.php</file>
       <file>Unit/Security/Auth/LdapLoginErrorDisclosureTest.php</file>
