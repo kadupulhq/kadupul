@@ -3,8 +3,8 @@
     "name": "cacti_html_context_escape",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9098,
-        "end_line": 9142,
+        "start_line": 9117,
+        "end_line": 9161,
         "line_count": 45,
         "signature": {
             "parameters": [
