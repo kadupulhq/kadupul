@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Replace the bundled fullscreen library with a native Fullscreen API shim that preserves the screenfull 3.x plugin interface.
+
 - Inventory bundled browser libraries and report dependency version drift during maintenance.
 
 - Load jQuery Migrate after jQuery 4 so existing widgets and plugins can use removed jQuery helpers. Keep its unsafe HTML and JSONP compatibility patches disabled.
