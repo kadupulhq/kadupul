@@ -1,0 +1,22 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Set up mise
+description: Install pinned runtimes through the pinned mise-action release.
+
+inputs:
+  install_args:
+    description: Tools to install, for example python@3.12.12 node@22.22.2.
+    required: true
+  add_shims_to_path:
+    # Matches the mise-action default so callers that omit it are unchanged.
+    description: Whether mise shims are added to PATH.
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+      with:
+        install_args: ${{ inputs.install_args }}
+        add_shims_to_path: ${{ inputs.add_shims_to_path }}

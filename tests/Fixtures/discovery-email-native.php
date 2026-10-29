@@ -239,6 +239,8 @@ function db_table_exists($table, ...$arguments)
     return (bool) discovery_query("SELECT name FROM sqlite_master WHERE type='table' AND name=?", array($table))->fetchColumn();
 }
 
+require_once $root . '/tests/Helpers/PhpSource.php';
+eval(test_php_function_source((string) file_get_contents($root . '/lib/database.php'), 'db_like_escape')); // nosemgrep: php.lang.security.eval-use.eval-use
 function db_qstr($value, ...$arguments)
 {
     return $GLOBALS['db']->quote((string) $value);

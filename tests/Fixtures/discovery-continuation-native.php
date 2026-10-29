@@ -13,7 +13,7 @@ use PDO;
 use RuntimeException;
 
 require __DIR__ . '/../Helpers/PhpSource.php';
-foreach (['poller_automation.php' => ['discoverDevices'], 'lib/api_automation.php' => ['automation_update_device']] as $path => $functions) {
+foreach (['poller_automation.php' => ['discoverDevices'], 'lib/api_automation.php' => ['automation_update_device'], 'lib/database.php' => ['db_like_escape']] as $path => $functions) {
     $source = file_get_contents(dirname(__DIR__, 2) . '/' . $path);
     if (!is_string($source)) {
         throw new RuntimeException('Missing discovery source');

@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/../Helpers/PhpSource.php';
+
 $functionsSource = file_get_contents(__DIR__ . '/../../lib/functions.php');
 $helpSource      = file_get_contents(__DIR__ . '/../../help.php');
 $pluginsSource   = file_get_contents(__DIR__ . '/../../lib/plugins.php');
@@ -47,16 +49,12 @@ test('cacti_exec returns empty array on empty stdout not array with empty string
 });
 
 test('cacti_http rejects non-http(s) schemes', function () use ($functionsSource) {
-    $start = strpos($functionsSource, 'function cacti_http(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($functionsSource, $start, 2200);
+    $body = test_php_function_source($functionsSource, 'cacti_http');
     expect($body)->toContain("\$scheme !== 'http' && \$scheme !== 'https'");
 });
 
 test('cacti_http verifies HTTPS unless the explicit unsafe option is enabled', function () use ($functionsSource) {
-    $start = strpos($functionsSource, 'function cacti_http(');
-    $body  = substr($functionsSource, $start, 2200);
+    $body = test_php_function_source($functionsSource, 'cacti_http');
 
     expect($body)->toContain("'verify_peer'       => read_config_option('allow_unsafe_https') != 'on' ? true : false");
     expect($body)->toContain("'verify_peer_name'  => read_config_option('allow_unsafe_https') != 'on' ? true : false");
@@ -64,16 +62,14 @@ test('cacti_http verifies HTTPS unless the explicit unsafe option is enabled', f
 });
 
 test('cacti_http disables redirect following', function () use ($functionsSource) {
-    $start = strpos($functionsSource, 'function cacti_http(');
-    $body  = substr($functionsSource, $start, 2200);
+    $body = test_php_function_source($functionsSource, 'cacti_http');
 
     expect($body)->toContain("'follow_location' => 0");
     expect($body)->toContain("'max_redirects'   => 0");
 });
 
 test('cacti_http honours host allowlist when supplied', function () use ($functionsSource) {
-    $start = strpos($functionsSource, 'function cacti_http(');
-    $body  = substr($functionsSource, $start, 2200);
+    $body = test_php_function_source($functionsSource, 'cacti_http');
 
     expect($body)->toContain('!in_array($host_lower, $allowed, true)');
 });
