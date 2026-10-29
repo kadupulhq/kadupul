@@ -44,16 +44,12 @@ test('sql.php passes host argument as structured mysqladmin flag', function () u
 	expect($contents)->toContain("'--host=' . \$database_hostname");
 });
 
-test('sql.php passes user argument as structured mysqladmin flag', function () use ($sqlPhpPath) {
+test('sql.php passes credentials through a private option file', function () use ($sqlPhpPath) {
 	$contents = file_get_contents($sqlPhpPath);
 
-	expect($contents)->toContain("'--user=' . \$database_username");
-});
-
-test('sql.php passes password argument as structured mysqladmin flag', function () use ($sqlPhpPath) {
-	$contents = file_get_contents($sqlPhpPath);
-
-	expect($contents)->toContain("'--password=' . \$database_password");
+	expect($contents)->toContain('db_client_option_file($database_username, $database_password)')
+		->and($contents)->not->toContain("'--user='")
+		->and($contents)->not->toContain("'--password='");
 });
 
 test('sql.php does not call shell_exec directly', function () use ($sqlPhpPath) {
@@ -90,16 +86,12 @@ test('ss_sql.php passes host argument as structured mysqladmin flag', function (
 	expect($contents)->toContain("'--host=' . \$database_hostname");
 });
 
-test('ss_sql.php passes user argument as structured mysqladmin flag', function () use ($ssSqlPhpPath) {
+test('ss_sql.php passes credentials through a private option file', function () use ($ssSqlPhpPath) {
 	$contents = file_get_contents($ssSqlPhpPath);
 
-	expect($contents)->toContain("'--user=' . \$database_username");
-});
-
-test('ss_sql.php passes password argument as structured mysqladmin flag', function () use ($ssSqlPhpPath) {
-	$contents = file_get_contents($ssSqlPhpPath);
-
-	expect($contents)->toContain("'--password=' . \$database_password");
+	expect($contents)->toContain('db_client_option_file($database_username, $database_password)')
+		->and($contents)->not->toContain("'--user='")
+		->and($contents)->not->toContain("'--password='");
 });
 
 test('ss_sql.php does not call shell_exec directly', function () use ($ssSqlPhpPath) {
@@ -123,6 +115,10 @@ test('ss_sql() returns U when cacti_exec_string produces no output', function ()
 		function cacti_exec_string($binary, array $args = array()) {
 			return '';
 		}
+	}
+
+	if (!function_exists('db_client_option_file')) {
+		require_once dirname(__DIR__, 3) . '/lib/database.php';
 	}
 
 	/* Provide dummy globals so the function can build its command string. */

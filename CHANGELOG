@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Keep data input field values literal whatever quoting the input string puts around them (GHSA-5v3j-wcrr-jxjg). Fields are substituted in one pass. An input string that places a field or backslash inside backticks or ${...}, uses $'...' or $"..." quoting, places a field directly after an unescaped $, puts a backslash inside $(...), contains a newline, a word-initial # or << at the top level, or uses grouping, case, comments or redirection inside $(...) now produces no command. Test Data Source drops a script server function name only when it is a plain word. The shipped data input methods produce the same commands as 1.2.31
 -issue: Upgrade phpseclib to 4.0.1 with matching RSA and RRDproxy namespaces, retaining existing encrypted proxy framing and legacy key compatibility
 -security: Require configured data input validation before collection; invalid or missing approvals stop affected methods. Unconfigured installations retain their existing behavior; refresh configured approvals with the input whitelist CLI before resuming collection.
 -issue: Use Spine's engine-first counter, including zero after a reset, for PHP uptime-backwards reindex baselines and assertions while retaining the device-display uptime heuristic
@@ -24,6 +25,7 @@ Cacti CHANGELOG
 -issue: Move an LDAP or Domains login to the next configured server only when the current one cannot be reached, so a wrong password is no longer tried against every server and counted by each directory, and bind the user on the server whose search found them. A search that does not find the user still tries the next server, and in No Searching mode a rejected bind still does, as in 1.2.31
 -security: Refuse LDAP group membership of type Username when more than one directory entry matches the bound name, instead of checking whichever entry the server returned first
 -security: Leave the packet level out of the libldap debug level that Selective DEBUG sets on the login page, as a precaution against bind packets reaching the web server error log; no password was seen there at the old level with libldap 2.4.46, 2.5 and 2.6
+-issue#1021: rebuild_poller_cache.php --help names the Poller Command Concurrent Processes setting as the --threads default instead of 5
 -feature: Add csrf_field(), which prints the CSRF token field the output handler adds to POST forms, so plugin forms can include it directly. Nothing calls it yet, and a plugin that defines its own csrf_field() keeps it
 -security: Keep the CSRF token out of text the browser does not parse as a form. The output handler now skips comments and the contents of textarea, script, style, title and other raw-text elements, does not add the token to a form start tag that the browser drops because another form is still open, and only counts a base element the browser would parse
 -issue: The Utilities page script that posts the cache and log actions no longer breaks on a full page load; the output handler added the token field inside the script's quoted form markup and ended the string
@@ -353,6 +355,8 @@ Cacti CHANGELOG
 -security: Restore the Cacti error handler on LDAP bind-only and empty-password paths
 -security: Harden CLI shell arguments, database credentials, and temporary RRD files
 -security#7027: Detect reused process IDs before treating registry tasks as live
+-security#7484: Escape the stored username on the change password page when the account has no stored password
+-security#7925: Keep mysqladmin credentials in a private option file and restore script-server status output
 -security#GHSA-m6wx-f538-m6q3: Require a .log suffix when saving or using the Boost debug log path
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
@@ -366,6 +370,7 @@ Cacti CHANGELOG
 -security: Harden advisory command execution and database DDL sink validation
 -security: Restrict graph input fields across the template, graph and import handoffs
 -security: Treat a non-boolean signature result as a failure in import_package
+-issue#1153: Apply requested character sets and collations when creating table columns
 -issue#7961: Preserve the full Plugin Management layout after dependency errors
 -issue#7809: Undefined array key "source" warning reindexing SNMP data queries with output-only fields
 -issue#7810: Stop using null as a graph CF cache offset on PHP 8.5
