@@ -73,7 +73,7 @@ function api_device_remove($device_id)
 
         $remaining = db_fetch_cell_prepared('SELECT COUNT(*) FROM graph_local WHERE host_id = ?', array($device_id));
         if ($remaining === false || (int) $remaining > 0) {
-            raise_message('device_remove_failed_' . $device_id, __('Unable to remove Device %s because its Graphs could not all be removed.', $device_id), MESSAGE_LEVEL_ERROR);
+            raise_message('device_remove_failed_' . $device_id, __esc('Unable to remove Device %s because its Graphs could not all be removed.', $device_id), MESSAGE_LEVEL_ERROR);
 
             return false;
         }
@@ -81,7 +81,7 @@ function api_device_remove($device_id)
 
     $db = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::select(false);
     if (!$db instanceof PDO || !api_device_remove_rows($db, $device_id, (int) $poller_id)) {
-        raise_message('device_remove_failed_' . $device_id, __('Unable to remove Device %s because its database records could not be removed together.', $device_id), MESSAGE_LEVEL_ERROR);
+        raise_message('device_remove_failed_' . $device_id, __esc('Unable to remove Device %s because its database records could not be removed together.', $device_id), MESSAGE_LEVEL_ERROR);
 
         return false;
     }

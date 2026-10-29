@@ -19,6 +19,7 @@ function device_removal_run(array $scenario): array
 {
     $source = file_get_contents(dirname(__DIR__, 3) . '/lib/api_device.php');
     $program = test_php_function_source($source, 'api_device_remove') . "\n";
+    $program .= test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/include/global_languages.php'), '__esc') . "\n";
     if (str_contains($source, 'function api_device_remove_rows(')) {
         $program .= test_php_function_source($source, 'api_device_remove_rows') . "\n";
     }
