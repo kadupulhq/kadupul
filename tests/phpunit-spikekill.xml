@@ -18,6 +18,7 @@
       <file>Unit/Security/ImportPreviewDifferenceNamesTest.php</file>
       <file>Unit/Security/TitleAndExportOutputTest.php</file>
       <file>Unit/Security/SqlListBindingTest.php</file>
+      <file>Unit/Security/AutomationSqlIdentifierTest.php</file>
       <file>Unit/Security/Auth/AdminMutationCsrfTest.php</file>
       <file>Unit/Security/GraphTemplateInputTest.php</file>
       <file>Unit/Installer/InstallerEndpointCsrfTest.php</file>
@@ -133,7 +134,6 @@
       <file>Unit/Security/Auth/ChangePasswordLockoutTest.php</file>
       <file>Unit/Security/Auth/ChangePasswordUsernameRenderingTest.php</file>
       <file>Unit/SnmpPortIntegerTest.php</file>
-      <file>Unit/Security/AutomationSqlIdentifierTest.php</file>
       <file>Unit/Security/LikeWildcardEscapeTest.php</file>
       <file>Unit/Security/Auth/GraphViewSettingOutputTest.php</file>
       <file>Unit/Security/Auth/ProfileSettingValidationTest.php</file>
