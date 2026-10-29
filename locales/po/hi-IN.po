@@ -11665,41 +11665,41 @@ msgstr "पैटर्न रिप्लेस करें"
 msgid "No Tree Creation Criteria"
 msgstr "नो ट्री क्रिएशन क्राइटेरिया"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "डिवाइस मैच नियम"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "ग्राफ नियम बनाएँ"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "ग्राफ मैच नियम"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "ट्री नियम (डिवाइस) बनाएँ"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "ट्री नियम बनाएँ (ग्राफ़)"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "नियम आइटम [ %s के लिए नियम आइटम संपादित करें: %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "नियम आइटम [ %s के लिए नया नियम आइटम: %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "Kadupul स्वचालन द्वारा जोड़ा गया"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "त्रुटि: श्रेणी1-श्रेणी2 के रूप में IP श्रेणियां अब समर्थित नहीं हैं।"
 

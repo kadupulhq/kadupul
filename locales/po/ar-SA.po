@@ -11725,41 +11725,41 @@ msgstr "استبدال نمط"
 msgid "No Tree Creation Criteria"
 msgstr "لا توجد معايير إنشاء الشجرة"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "قاعدة مطابقة الجهاز"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "إنشاء قاعدة الرسم البياني"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "قاعدة مطابقة الرسم البياني"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "إنشاء قاعدة شجرة (جهاز)"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "إنشاء قاعدة شجرة (رسم بياني)"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "عنصر القاعدة [تحرير عنصر القاعدة ل %s: %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "بند القاعدة [بند قاعدة جديد ل %s: %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "أضيفت بواسطة Kadupul الأتمتة"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "خطأ: لم تعد نطاقات IP في شكل range1-range2 مدعومة."
 

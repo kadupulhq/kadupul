@@ -18,6 +18,7 @@
       <file>Unit/Security/ImportPreviewDifferenceNamesTest.php</file>
       <file>Unit/Security/TitleAndExportOutputTest.php</file>
       <file>Unit/Security/SqlListBindingTest.php</file>
+      <file>Unit/Security/AutomationSqlIdentifierTest.php</file>
       <file>Unit/Security/Auth/AdminMutationCsrfTest.php</file>
       <file>Unit/Security/GraphTemplateInputTest.php</file>
       <file>Unit/Security/GraphTemplateInputValueTest.php</file>

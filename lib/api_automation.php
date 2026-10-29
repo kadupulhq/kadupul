@@ -1559,18 +1559,58 @@ function duplicate_automation_tree_rules($_id, $_title)
     }
 }
 
+/**
+ * Quote a stored field name as a possibly dotted SQL identifier.
+ *
+ * Backticks quote an identifier, they do not escape one, so each dot separated
+ * part is confined to identifier characters first. A part left empty (for
+ * example the tail of "a.") makes the whole name unusable.
+ *
+ * @param mixed $field_name Stored field name, such as "hostname" or "h.hostname".
+ *
+ * @return string The quoted identifier, or an empty string when nothing usable remains.
+ */
+function automation_quote_field_identifier($field_name)
+{
+    $parts = array();
+
+    foreach (explode('.', (string) $field_name) as $part) {
+        $clean = sanitize_sql_column($part);
+
+        if ($clean === '') {
+            return '';
+        }
+
+        $parts[] = $clean;
+    }
+
+    return '`' . implode('`.`', $parts) . '`';
+}
+
 function build_graph_object_sql_having($rule, $filter)
 {
     if ($filter != '') {
         $field_names = get_field_names($rule['snmp_query_id']);
+        $sql_having  = '';
 
         if (cacti_sizeof($field_names)) {
             $sql_having = ' HAVING (';
             $i = 0;
 
             foreach ($field_names as $column) {
-                $sql_having .= ($i == 0 ? '' : ' OR ') . '`' . implode('`.`', explode('.', $column['field_name'])) . '`' . ' LIKE ' . db_qstr('%' . $filter . '%');
+                $identifier = automation_quote_field_identifier($column['field_name']);
+
+                if ($identifier === '') {
+                    continue;
+                }
+
+                $sql_having .= ($i == 0 ? '' : ' OR ') . $identifier . ' LIKE ' . db_qstr('%' . $filter . '%');
                 $i++;
+            }
+
+            /* a filter whose every field was dropped must match nothing rather than leave invalid SQL */
+            if ($i == 0) {
+                return ' HAVING (1 = 0)';
             }
 
             $sql_having .= ')';
@@ -1592,7 +1632,7 @@ function build_data_query_sql($rule)
     if (cacti_sizeof($field_names) > 0) {
         foreach ($field_names as $column) {
             $field_name = $column['field_name'];
-            $sql_query .= ", MAX(CASE WHEN field_name='$field_name' THEN field_value ELSE NULL END) AS '$field_name'";
+            $sql_query .= ', MAX(CASE WHEN field_name = ' . db_qstr($field_name) . ' THEN field_value ELSE NULL END) AS ' . db_qstr($field_name);
             $i++;
         }
     }
@@ -1678,7 +1718,16 @@ function build_rule_item_filter($automation_rule_items, $prefix = '')
 
             # field name
             if ($automation_rule_item['field'] != '') {
-                $sql_filter .= (' ' . $prefix . '`' . implode('`.`', explode('.', sanitize_sql_column($automation_rule_item['field']))) . '`');
+                $identifier = automation_quote_field_identifier($automation_rule_item['field']);
+
+                if ($identifier === '') {
+                    /* the operation token may already be present; complete it with a predicate that matches nothing */
+                    $sql_filter .= ' 1 = 0';
+
+                    continue;
+                }
+
+                $sql_filter .= ' ' . $prefix . $identifier;
                 #
                 $sql_filter .= ' ' . $automation_op_array['op'][$automation_rule_item['operator']] . ' ';
                 if ($automation_op_array['binary'][$automation_rule_item['operator']]) {
@@ -2844,7 +2893,7 @@ function create_dq_graphs($host_id, $snmp_query_id, $rule): bool
     $i = 0;
     if (cacti_sizeof($field_names) > 0) {
         foreach ($field_names as $column) {
-            $sql_query .= ", MAX(CASE WHEN field_name ='$column' THEN field_value ELSE NULL END) AS '$column'";
+            $sql_query .= ', MAX(CASE WHEN field_name = ' . db_qstr($column) . ' THEN field_value ELSE NULL END) AS ' . db_qstr($column);
             $i++;
         }
     }

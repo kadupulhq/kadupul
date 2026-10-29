@@ -13674,47 +13674,47 @@ msgstr "替換模式"
 msgid "No Tree Creation Criteria"
 msgstr "沒有樹創建標準"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 #, fuzzy
 msgid "Device Match Rule"
 msgstr "設備匹配規則"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 #, fuzzy
 msgid "Create Graph Rule"
 msgstr "創建圖規則"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 #, fuzzy
 msgid "Graph Match Rule"
 msgstr "圖匹配規則"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 #, fuzzy
 msgid "Create Tree Rule (Device)"
 msgstr "創建樹規則（設備）"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 #, fuzzy
 msgid "Create Tree Rule (Graph)"
 msgstr "創建樹規則（圖）"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, fuzzy, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "規則項[編輯%s的規則項：%s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, fuzzy, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "規則項[%s的新規則項：%s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 #, fuzzy
 msgid "Added by Kadupul Automation"
 msgstr "由Kadupul Automation添加"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "錯誤：不再支持採用 range1-range2 形式的 IP 範圍。"
 
