@@ -776,7 +776,11 @@ function form_actions() {
 						$aggregate_graph_items[]             = $item_new;
 					}
 
-					aggregate_graph_items_save($aggregate_graph_items, 'aggregate_graphs_graph_item');
+					if (!aggregate_graph_items_save($aggregate_graph_items, 'aggregate_graphs_graph_item')) {
+						raise_message('aggregate_items_save_failed', __('Unable to save aggregate graph items. Other graph settings may already have been saved.'), MESSAGE_LEVEL_ERROR);
+						header('Location: graphs.php?header=false');
+						exit;
+					}
 				} else {
 					$aggregate_graph_items = db_fetch_assoc_prepared('SELECT *
 						FROM aggregate_graph_templates_item

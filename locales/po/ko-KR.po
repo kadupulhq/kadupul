@@ -13455,11 +13455,11 @@ msgstr "데이터 소스 ' %s'에 대한 XML 출력 열을 선택하고 오른�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "그래프 템플릿에 데이터 템플릿이 사용되지 않았습니다. 그래프 템플릿을 수정하십시오."
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "암호 필드 길이를 확인하지 못했습니다. 암호가 손상 될 수 있으므로 계속할 수 없습니다."
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "암호 필드 길이를 변경하는 데 실패했으며 암호를 손상시킬 수 있으므로 계속할 수 없습니다."
 
@@ -20672,4 +20672,8 @@ msgstr ""
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
+msgstr ""
+
+#: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
+msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
 msgstr ""

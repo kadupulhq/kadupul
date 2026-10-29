@@ -13559,11 +13559,11 @@ msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנת
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "הגדרת אורך השדה של הסיסמה נכשלה, לא ניתן להמשיך כסיסמה פגומה"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "נכשל שינוי אורך השדה סיסמה, לא יכול להמשיך כמו סיסמה פגומה"
 
@@ -20901,4 +20901,8 @@ msgstr ""
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
+msgstr ""
+
+#: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
+msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
 msgstr ""

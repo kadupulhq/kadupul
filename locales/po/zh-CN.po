@@ -13452,11 +13452,11 @@ msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "无法确定密码字段长度,无法继续,因为可能会损坏密码"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "无法更改密码字段长度,无法继续,因为可能会损坏密码"
 
@@ -20668,4 +20668,8 @@ msgstr ""
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
+msgstr ""
+
+#: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
+msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
 msgstr ""

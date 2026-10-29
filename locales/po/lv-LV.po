@@ -13528,11 +13528,11 @@ msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēd
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Jūsu diagrammas veidnē netiek izmantotas datu veidnes. Lūdzu, izlabojiet diagrammas veidni"
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Neizdevās noteikt paroles lauka garumu, nevar turpināt, jo var tikt bojāta parole"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Neizdevās mainīt paroles lauka garumu, nevar turpināt, jo var tikt bojāta parole"
 
@@ -20827,4 +20827,8 @@ msgstr ""
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
+msgstr ""
+
+#: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
+msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
 msgstr ""

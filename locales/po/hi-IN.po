@@ -13488,11 +13488,11 @@ msgstr "आपको डेटा स्रोत ' %s' के लिए XML आ
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "आपके ग्राफ़ टेम्प्लेट में उपयोग में डेटा टेम्प्लेट नहीं हैं। कृपया अपना ग्राफ़ टेम्पलेट सही करें"
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "पासवर्ड फ़ील्ड की लंबाई निर्धारित करने में विफल, भ्रष्ट पासवर्ड जारी नहीं रख सकता"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "पासवर्ड फ़ील्ड की लंबाई बदलने में विफल, भ्रष्ट पासवर्ड के रूप में जारी नहीं रह सकता है"
 
@@ -20746,4 +20746,8 @@ msgstr ""
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
+msgstr ""
+
+#: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
+msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
 msgstr ""

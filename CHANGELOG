@@ -355,6 +355,8 @@ Cacti CHANGELOG
 -security: Restore the Cacti error handler on LDAP bind-only and empty-password paths
 -security: Harden CLI shell arguments, database credentials, and temporary RRD files
 -security#7027: Detect reused process IDs before treating registry tasks as live
+-security#7484: Escape the stored username on the change password page when the account has no stored password
+-security#7925: Keep mysqladmin credentials in a private option file and restore script-server status output
 -security: Update bundled DOMPurify to 3.4.14
 -security: Cast graph and device ids to int in get_allowed_* permission filters
 -security: Set the Secure session cookie behind a trusted TLS-terminating proxy
@@ -368,6 +370,7 @@ Cacti CHANGELOG
 -security: Restrict graph input fields across the template, graph and import handoffs
 -security: Treat a non-boolean signature result as a failure in import_package
 -security#1170: Require tree mutation permission for graph placement and offer only permitted destinations
+-issue#1153: Apply requested character sets and collations when creating table columns
 -issue#7961: Preserve the full Plugin Management layout after dependency errors
 -issue#7809: Undefined array key "source" warning reindexing SNMP data queries with output-only fields
 -issue#7810: Stop using null as a graph CF cache offset on PHP 8.5

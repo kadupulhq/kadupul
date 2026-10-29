@@ -13492,11 +13492,11 @@ msgstr "Você deve selecionar uma coluna de saída XML para '%s' da Fonte de Dad
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "O seu modelo de gráfico não tem modelos de dados em uso.  Por favor, corrija o seu modelo de gráfico"
 
-#: lib/database.php:2527
+#: lib/database.php:2523
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Falha ao determinar o comprimento do campo de senha, não pode continuar, pois pode corromper a senha"
 
-#: lib/database.php:2534
+#: lib/database.php:2530
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Falha ao alterar o comprimento do campo de senha, não pode continuar, pois pode corromper a senha"
 
@@ -20750,4 +20750,8 @@ msgstr ""
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
+msgstr ""
+
+#: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
+msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
 msgstr ""
