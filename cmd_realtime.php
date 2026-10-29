@@ -88,16 +88,17 @@ if (cacti_sizeof($idbyhost)) {
 
 	/* startup Kadupul php polling server and include the include file for script processing */
 	if ($script_server_calls > 0) {
-		$cactides = array(
-			0 => array('pipe', 'r'), // stdin is a pipe that the child will read from
-			1 => array('pipe', 'w'), // stdout is a pipe that the child will write to
-			2 => array('pipe', 'w')  // stderr is a pipe to write to
-		);
-
 		if (function_exists('proc_open')) {
-			$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-			$output = fgets($pipes[1], 1024);
-			$using_proc_function = true;
+			$cactiphp = poller_script_server_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $pipes);
+
+			if ($cactiphp === false) {
+				/* Script server items then report U. */
+				cacti_log('ERROR: Unable to start the PHP Script Server for realtime graphs', false, 'POLLER');
+				$using_proc_function = false;
+			} else {
+				$output = fgets($pipes[1], 1024);
+				$using_proc_function = true;
+			}
 		} else {
 			$using_proc_function = false;
 		}

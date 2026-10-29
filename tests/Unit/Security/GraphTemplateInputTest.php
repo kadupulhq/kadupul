@@ -67,6 +67,8 @@ function get_hash_graph_template(...$args) { return 'hash'; }
 function form_input_validate($value, ...$args) { return $value; }
 function sql_save(...$args) { echo 'MUTATION'; exit; }
 function db_execute_prepared(...$args) { echo 'MUTATION'; exit; }
+// Input 1 belongs to template 2, so the ownership check admits it.
+function db_fetch_cell_prepared(...$args) { return '1'; }
 $_SERVER['REQUEST_METHOD'] = $argv[3];
 $_REQUEST = array('action' => $argv[4] === 'array' ? array($argv[2]) : $argv[2], 'save_component_input' => '1', 'id' => '1', 'graph_template_input_id' => '1', 'graph_template_id' => '2', 'column_name' => 'text_format', 'name' => 'test', 'description' => 'test');
 if (isset($argv[6])) $_REQUEST['column_name'] = json_decode($argv[6], true);
@@ -279,4 +281,54 @@ PHP;
     'bulk confirmation for a foreign graph' => array(array('action' => 'actions', 'drp_action' => '1', 'chk_3' => 'on')),
     'graph editor for a foreign graph' => array(array('action' => 'graph_edit', 'id' => '3')),
     'item list for a foreign graph' => array(array('action' => 'item', 'id' => '3')),
+));
+
+test('graph input save and removal refuse an input or item of another template', function ($action, $owner) {
+    $program = <<<'PHP'
+function csrf_startup() {
+    csrf_conf('rewrite', false);
+    csrf_conf('defer', true);
+    csrf_conf('auto-session', false);
+    csrf_conf('secret', 'graph-input-test-secret');
+}
+require $argv[1] . '/include/vendor/csrf/csrf-magic.php';
+require $argv[1] . '/include/global_constants.php';
+require $argv[1] . '/lib/html_utility.php';
+$config = array('url_path' => '/');
+session_id('graph-input-test-session');
+$_SESSION = array('sess_user_id' => 42);
+function read_config_option($key) { return '0'; }
+function cacti_log(...$args) {}
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function __($text, ...$args) { return $text; }
+function raise_message(...$args) { $GLOBALS['graph_input_error'] = true; }
+function is_error_message() { return !empty($GLOBALS['graph_input_error']); }
+function get_hash_graph_template(...$args) { return 'hash'; }
+function form_input_validate($value, ...$args) { return $value; }
+function sql_save(...$args) { echo 'MUTATION'; exit; }
+function db_execute_prepared(...$args) { echo 'MUTATION'; exit; }
+// Answers the ownership counts: the input row, then the selected template items.
+function db_fetch_cell_prepared($sql, $params) {
+    if (str_contains($sql, 'FROM graph_template_input')) {
+        return $GLOBALS['argv'][3] === 'foreign-input' ? '0' : '1';
+    }
+    return $GLOBALS['argv'][3] === 'foreign-item' ? (string) (count($params) - 2) : (string) (count($params) - 1);
+}
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_REQUEST = array('action' => $argv[2], 'save_component_input' => '1', 'id' => '1', 'graph_template_input_id' => '1', 'graph_template_id' => '2', 'column_name' => 'text_format', 'name' => 'test', 'description' => 'test', 'i_5' => 'on', 'i_6' => 'on');
+$_POST = $_REQUEST;
+$_GET = array();
+$_POST['__csrf_magic'] = csrf_get_tokens();
+register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+require $argv[1] . '/graph_templates_inputs.php';
+PHP;
+    $output = runGraphInputProbe($program, array($action, $owner), $this->getTestResultObject()->getCodeCoverage());
+
+    expect(str_contains($output, 'MUTATION'))->toBe($owner === 'own');
+})->with(array(
+    'save' => array('save', 'own'),
+    'save, input of another template' => array('save', 'foreign-input'),
+    'save, item of another template' => array('save', 'foreign-item'),
+    'remove' => array('input_remove', 'own'),
+    'remove, input of another template' => array('input_remove', 'foreign-input'),
 ));

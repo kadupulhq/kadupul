@@ -3,8 +3,8 @@
     "name": "cacti_cookie_session_logout",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8508,
-        "end_line": 8538,
+        "start_line": 8532,
+        "end_line": 8562,
         "line_count": 31,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,

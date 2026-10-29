@@ -26,6 +26,7 @@ $functions = file_get_contents($root . '/lib/functions.php');
 if ($functions === false) {
     throw new RuntimeException('Cannot read native message and header functions');
 }
+eval(test_php_function_source((string) file_get_contents($root . '/lib/html.php'), 'html_page_chrome_requested'));
 foreach (['raise_message', 'get_message_level', 'get_message_max_type', 'get_format_message_instance', 'display_output_messages', 'clear_messages', 'top_header'] as $function) {
     eval(test_php_function_source($functions, $function));
 }

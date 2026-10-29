@@ -196,6 +196,11 @@ final class PermissionMutation
                         throw new PermissionEpochFailure('Permission epoch update was not confirmed.');
                     }
                 }
+                // Remembered logins end with the permission change; failure undoes the change.
+                $query = $db->prepare('DELETE FROM user_auth_cache WHERE user_id IN (' . $placeholders . ')');
+                if ($query === false || !$query->execute($ids) || $query->errorCode() !== '00000') {
+                    throw new PermissionEpochFailure('Remembered login expiry failed.');
+                }
             }
             if ($owned) {
                 if (!$db->commit()) {

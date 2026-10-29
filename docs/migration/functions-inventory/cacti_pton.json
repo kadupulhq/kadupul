@@ -3,8 +3,8 @@
     "name": "cacti_pton",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7943,
-        "end_line": 7997,
+        "start_line": 7967,
+        "end_line": 8021,
         "line_count": 55,
         "signature": {
             "parameters": [

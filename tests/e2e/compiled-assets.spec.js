@@ -4,6 +4,7 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('node:child_process');
 
 // Loads the stylesheets html_common_header() emits once asset-map:compile has
 // run, through the same <url_path>public/assets/ URLs, and checks that every
@@ -15,9 +16,20 @@ const themes = fs.readdirSync(path.join(root, 'include/themes'), { withFileTypes
   .map(entry => entry.name)
   .sort();
 
-const header = fs.readFileSync(path.join(root, 'lib/html.php'), 'utf8');
-const stylesheets = theme => [...header.matchAll(/get_md5_include_css\('([^']*)'(?:\s*\.\s*\$selectedTheme\s*\.\s*'([^']*)')?/g)]
-  .map(([, head, tail]) => (tail === undefined ? head : head + theme + tail))
+const includes = JSON.parse(execFileSync(process.env.PHP_BINARY || 'php', ['-r', `
+  require $argv[1] . '/tests/Helpers/PhpSource.php';
+  $source = file_get_contents($argv[1] . '/lib/html.php');
+  if ($source === false) { throw new RuntimeException('Cannot read header source'); }
+  eval(test_php_function_source($source, 'html_legacy_js_registry'));
+  echo json_encode(['header' => test_php_function_source($source, 'html_common_header'),
+    'legacy' => html_legacy_js_registry()], JSON_THROW_ON_ERROR);
+`, root], { encoding: 'utf8' }));
+const stylesheets = theme => [
+  ...[...includes.header.matchAll(/get_md5_include_css\('([^']*)'(?:\s*\.\s*\$selectedTheme\s*\.\s*'([^']*)')?/g)]
+    .map(([, head, tail]) => (tail === undefined ? head : head + theme + tail)),
+  ...Object.values(includes.legacy).filter(entry => entry.css)
+    .map(entry => `include/themes/${theme}/${entry.css}`),
+]
   .filter(file => file !== 'include/themes/custom.css');
 
 function manifest() {

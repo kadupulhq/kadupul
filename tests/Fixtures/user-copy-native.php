@@ -101,7 +101,7 @@ $case = $scenario;
             $db->setAttribute(PDO::ATTR_STATEMENT_CLASS, array(CopyFaultStatement::class,array($db)));
             $sqlite = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite';
             $database_sessions = array('native-copy:0:copy' => $db);
-            foreach (array('user_auth', 'user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree', 'user_auth_group', 'user_auth_group_members') as $table) {
+            foreach (array('user_auth', 'user_auth_perms', 'user_auth_realm', 'settings_user', 'settings_tree', 'user_auth_group', 'user_auth_group_members', 'user_auth_cache') as $table) {
                 if (!preg_match('/CREATE TABLE `?' . preg_quote($table, '/') . '`? \([\s\S]*?;/', $schemaSql, $matches)) {
                     throw new RuntimeException('Actual table definition missing');
                 }

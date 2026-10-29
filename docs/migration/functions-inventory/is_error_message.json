@@ -8,7 +8,7 @@
         "line_count": 10,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": true,
-        "fan_out": {"core": 90, "core_outside_functions_php": 89, "tests": 24, "plugins": 0},
+        "fan_out": {"core": 90, "core_outside_functions_php": 89, "tests": 25, "plugins": 0},
         "body": {
             "uses_global": ["config", "messages"],
             "static_variables": [],

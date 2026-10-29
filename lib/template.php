@@ -542,6 +542,15 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
     }
 
     if (cacti_sizeof($values_to_apply)) {
+        // A stored value comes from earlier saves and imports; refuse the push-out if any is malformed.
+        foreach ($values_to_apply as $value) {
+            if ($value[$column] !== null && !graph_template_input_value_is_allowed($column, $value[$column])) {
+                cacti_log('ERROR: push_out_graph_input() refused an invalid graph input value', false, 'SECURITY');
+
+                return false;
+            }
+        }
+
         foreach ($values_to_apply as $value) {
             /* this is just an extra check that i threw in to prevent users' graphs from getting really messed up */
             if (!(($column == 'task_item_id') && (empty($value[$column])))) {
