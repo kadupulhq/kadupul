@@ -185,6 +185,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Serve the Data Source Profile list, editor, RRAs, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the Data Source Profiles realm in its transaction, a profile used by data sources refuses structural changes to its RRAs as well as its step, factor and functions, and deletion refuses the default profile and refuses the whole selection when any profile is in use. Old `data_source_profiles.php` links navigate and its size and span lookups still answer; posts to it no longer change data.
 - Add native Symfony/Twig list views for users, groups, authentication domains, discovered devices, collectors, trees, recorded RRD cleanup candidates, SNMP agent objects, notification history and login history. Existing PHP forms retain editing and operational actions (#1008).
+- Forward ten more legacy root pages through the shared Symfony forwarder, and fail CI when a change adds a legacy root web page. The plan for the remaining Twig migration is in `docs/migrations/twig-completion-plan.md`.
 
 ## [1.3.0-alpha.1]
 
