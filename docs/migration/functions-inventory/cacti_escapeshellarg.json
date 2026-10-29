@@ -3,9 +3,9 @@
     "name": "cacti_escapeshellarg",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5363,
-        "end_line": 5407,
-        "line_count": 45,
+        "start_line": 5372,
+        "end_line": 5426,
+        "line_count": 55,
         "signature": {
             "parameters": [
                 {
@@ -25,13 +25,31 @@
                     "variadic": false,
                     "has_default": true,
                     "default": "true"
+                },
+                {
+                    "name": "cmd",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
+                },
+                {
+                    "name": "keep_percent",
+                    "type": null,
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "false"
                 }
             ],
             "return_type": null,
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 108, "core_outside_functions_php": 103, "tests": 55, "plugins": 0},
+        "fan_out": {"core": 110, "core_outside_functions_php": 105, "tests": 59, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

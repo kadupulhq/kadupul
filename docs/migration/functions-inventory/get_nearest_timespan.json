@@ -3,8 +3,8 @@
     "name": "get_nearest_timespan",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4601,
-        "end_line": 4619,
+        "start_line": 4605,
+        "end_line": 4623,
         "line_count": 19,
         "signature": {
             "parameters": [

@@ -590,7 +590,7 @@ msgstr "模板"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3981 lib/auth.php:4030
+#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -621,8 +621,8 @@ msgstr "任何"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3984
-#: lib/auth.php:4033 lib/auth.php:4079 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
+#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -781,7 +781,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "更改密码页面有问题。请立即联系您的Kadupul管理员。"
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
 msgid "Change Password"
 msgstr "更改密码"
 
@@ -794,7 +794,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "请输入您的Kadupul新密码."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6240
 msgid "Username"
 msgstr "用户名"
 
@@ -845,11 +845,11 @@ msgstr "访问被拒绝,请联系Kadupul 管理员."
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "访问被拒绝,请联系Kadupul 管理员."
 
-#: auth_login.php:119 lib/auth.php:4395 lib/auth.php:4401 lib/auth.php:4491
-#: lib/auth.php:4500 lib/auth.php:4547 lib/auth.php:4572 lib/auth.php:4595
-#: lib/auth.php:4635 lib/auth.php:4647 lib/auth.php:4670 lib/auth.php:4793
-#: lib/auth.php:4813 lib/auth.php:5025 lib/auth.php:5067 lib/auth.php:5077
-#: lib/auth.php:5093 lib/auth.php:5107 lib/auth.php:5145
+#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
+#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
+#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
+#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
+#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
 msgid "Access Denied!  Login Failed."
 msgstr "拒绝访问,用户帐号被禁用."
 
@@ -887,7 +887,7 @@ msgstr "用户登录"
 msgid "Enter your Username and Password below"
 msgstr "在下面输入您的用户名和密码"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
 msgid "Password"
 msgstr "密码"
 
@@ -1194,7 +1194,7 @@ msgstr "清空已发现的设备"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2184,7 +2184,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "团体名"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6236
 msgid "Port"
 msgstr "端口"
 
@@ -2394,8 +2394,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "未找到树规则"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -2785,7 +2785,7 @@ msgstr "重新运行分析"
 msgid "Check"
 msgstr "检查"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4468
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4470
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "值"
@@ -3406,7 +3406,7 @@ msgstr "给这个数据模板的名字。 请注意，您只能将图形模板�
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "设备"
@@ -3760,12 +3760,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool 图形语法"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2835
+#: lib/rrd.php:2837
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller 尚未运行."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "没有权限"
 
@@ -4462,7 +4462,7 @@ msgid "Save Filters"
 msgstr "保存过滤器"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4510
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4512
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "行数"
@@ -4721,17 +4721,17 @@ msgstr "您必须先登录才能访问该区域的Kadupul."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5638
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "重新登录"
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果您觉得这是一个报错,请联系Kadupul 管理员."
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您不能访问Kadupul 的这个部分."
@@ -5598,7 +5598,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "数字排序"
 
-#: include/global_arrays.php:959 lib/rrd.php:4434
+#: include/global_arrays.php:959 lib/rrd.php:4436
 msgid "Header"
 msgstr "头部"
 
@@ -6812,7 +6812,7 @@ msgid "List Mode"
 msgstr "列表模式"
 
 #: include/global_arrays.php:2072 include/global_arrays.php:2078
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "控制台"
@@ -7236,7 +7236,7 @@ msgstr "心跳"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool 记录未知数据之前数据可能会丢失多久. 如果您的数据源不稳定并且您希望继承旧数据而不是显示图形中的空白,请增加此值. 该值乘以X-Files Factor以确定实际时间量."
 
-#: include/global_form.php:226 lib/rrd.php:4513
+#: include/global_form.php:226 lib/rrd.php:4515
 msgid "X-Files Factor"
 msgstr "X Files 因子"
 
@@ -7806,7 +7806,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "颜色的不透明度/ Alpha通道."
 
-#: include/global_form.php:989 lib/rrd.php:4509
+#: include/global_form.php:989 lib/rrd.php:4511
 msgid "Consolidation Function"
 msgstr "合并功能"
 
@@ -8610,8 +8610,8 @@ msgstr "数据"
 msgid "Visual"
 msgstr "外观"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6239
+#: lib/functions.php:6244
 msgid "Authentication"
 msgstr "认证"
 
@@ -8647,11 +8647,11 @@ msgstr "图形字体"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() 函数"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6220
 msgid "Sendmail"
 msgstr "发送邮件"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6226
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10504,7 +10504,7 @@ msgstr "这是在电子邮件中的一行被自动换行之前允许多少个字
 msgid "Sendmail Options"
 msgstr "Sendmail 选项"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6220
 msgid "Sendmail Path"
 msgstr "Sendmail 路径"
 
@@ -11494,9 +11494,9 @@ msgstr "不在线"
 msgid "Recovering"
 msgstr "恢复中"
 
-#: lib/api_automation.php:33 lib/auth.php:3086 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11504,7 +11504,7 @@ msgstr "未知"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4463
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4465
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Type"
@@ -11595,41 +11595,41 @@ msgstr "替换样式"
 msgid "No Tree Creation Criteria"
 msgstr "无树创建标准"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "设备匹配规则"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "创建图规则"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "图匹配规则"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "创建树规则(设备)"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "创建树规则(图)"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "规则项目[编辑规则项目 %s: %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "规则项目[新的规则项目 %s: %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "由Kadupul 自动化添加"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "错误：不再支持采用 range1-range2 形式的 IP 范围。"
 
@@ -11713,8 +11713,8 @@ msgstr "位置:"
 msgid "Contact:"
 msgstr "联系人:"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:1986 lib/functions.php:6253 lib/functions.php:6255
+#: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "Ping 结果"
 
@@ -11730,118 +11730,118 @@ msgstr "新分支"
 msgid "Web Basic"
 msgstr "基于Web"
 
-#: lib/auth.php:2915
+#: lib/auth.php:2920
 msgid "Device:(Hide Disabled)"
 msgstr "设备已禁用"
 
-#: lib/auth.php:2933 lib/auth.php:2935 lib/auth.php:2941 lib/auth.php:2943
+#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "图形:(%s%s)"
 
-#: lib/auth.php:2956 lib/auth.php:2962 lib/auth.php:3029 lib/auth.php:3031
-#: lib/auth.php:3035 lib/auth.php:3037
+#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
+#: lib/auth.php:3040 lib/auth.php:3042
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "设备:(%s%s)"
 
-#: lib/auth.php:2970 lib/auth.php:2976 lib/auth.php:3045 lib/auth.php:3047
-#: lib/auth.php:3051 lib/auth.php:3053
+#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
+#: lib/auth.php:3056 lib/auth.php:3058
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "阈值模板 :(%s%s)"
 
-#: lib/auth.php:2983
+#: lib/auth.php:2988
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "设备模板:(%s%s)"
 
-#: lib/auth.php:3020 lib/auth.php:3022
+#: lib/auth.php:3025 lib/auth.php:3027
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "设备模板:(%s%s)"
 
-#: lib/auth.php:3066 lib/auth.php:3073 lib/auth.php:3082
+#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
 msgid "Restricted By: "
 msgstr "受限的: "
 
-#: lib/auth.php:3070
+#: lib/auth.php:3075
 msgid "Granted By: "
 msgstr "授予访问权限: "
 
-#: lib/auth.php:3077
+#: lib/auth.php:3082
 msgid "Granted"
 msgstr "授予"
 
-#: lib/auth.php:3079 lib/auth.php:3084
+#: lib/auth.php:3084 lib/auth.php:3089
 msgid "Restricted"
 msgstr "受限的"
 
-#: lib/auth.php:3318 lib/auth.php:3353
+#: lib/auth.php:3323 lib/auth.php:3358
 msgid "Branch:"
 msgstr "分支:"
 
-#: lib/auth.php:3327 lib/auth.php:3361 lib/html_tree.php:949
+#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "设备:"
 
-#: lib/auth.php:4299 lib/auth.php:4390
+#: lib/auth.php:4304 lib/auth.php:4395
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "访问被拒绝,请联系Kadupul 管理员."
 
-#: lib/auth.php:4349
+#: lib/auth.php:4354
 msgid "Access Denied!  Login Disabled."
 msgstr "拒绝访问,用户帐号被禁用."
 
-#: lib/auth.php:4424
+#: lib/auth.php:4429
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "已配置Web 基本身份认证,但没有从Web 服务器传递用户名. 请确保您在Web服务器上启用了身份认证."
 
-#: lib/auth.php:4440
+#: lib/auth.php:4445
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s 通过Web 服务器进行身份认证, 但 '模板'和'来宾用户'在Kadupul 中未定义."
 
-#: lib/auth.php:4607 lib/auth.php:4806
+#: lib/auth.php:4612 lib/auth.php:4811
 msgid "Access Denied!  No password provided by user."
 msgstr "拒绝访问！用户未提供密码。"
 
-#: lib/auth.php:4779 lib/auth.php:5845
+#: lib/auth.php:4784 lib/auth.php:5850
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "访问被拒绝！模板用户id%s不存在。请与管理员联系。"
 
-#: lib/auth.php:4787
+#: lib/auth.php:4792
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5140
+#: lib/auth.php:5145
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "您的Kadupul管理员已强制使用复杂的密码登录，而您当前的Kadupul密码不符合新要求。因此，您必须立即更改密码。"
 
-#: lib/auth.php:5180
+#: lib/auth.php:5185
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "密码必须至少包含 %d 个字符!"
 
-#: lib/auth.php:5186
+#: lib/auth.php:5191
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "您的密码必须至少包含1个数字字符!"
 
-#: lib/auth.php:5190
+#: lib/auth.php:5195
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "您的密码必须包含小写字母和大写字母的混合形式!"
 
-#: lib/auth.php:5196
+#: lib/auth.php:5201
 msgid "Your password must contain at least 1 special character!"
 msgstr "您的密码必须至少包含1个特殊字符!"
 
-#: lib/auth.php:5631
+#: lib/auth.php:5636
 msgid "Kadupul Login Failure"
 msgstr "Kadupul 日志已清除"
 
-#: lib/auth.php:5931
+#: lib/auth.php:5936
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "之前未设置身份验证。尝试设置为本地身份验证，但未找到管理员帐户。"
 
@@ -12109,7 +12109,7 @@ msgstr "未找到数据查询XML 文件'%s'"
 msgid "Found data query XML file at '%s'"
 msgstr "找到数据查询XML 文件 '%s'"
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
 msgid "Error parsing XML file into an array."
 msgstr "将XML 文件解析为数组时出错."
 
@@ -12402,12 +12402,12 @@ msgstr "重新索引数据查询完成"
 msgid "Unknown Index"
 msgstr "未知索引"
 
-#: lib/data_query.php:2764
+#: lib/data_query.php:2767
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到右侧"
 
-#: lib/data_query.php:2770
+#: lib/data_query.php:2773
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 
@@ -12479,177 +12479,177 @@ msgstr "未找到警报消息。"
 msgid "Error %s is not readable"
 msgstr "出错: %s 不可读"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Logged in a Guest"
 msgstr "当前登录的用户为"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4261 lib/functions.php:4279
 msgid "Logged in as"
 msgstr "当前登录的用户为"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Login as Regular User"
 msgstr "以普通用户身份登录"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "guest"
 msgstr "客户"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
 msgid "User Community"
 msgstr "社区"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "文档"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4282
 #, php-format
 msgid "Logged in as %s"
 msgstr "登入为 %s"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2755
 msgid "Logout"
 msgstr "退出"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4448
 msgid "Leaf"
 msgstr "叶子"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4472 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "非基于查询"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4510
 #, php-format
 msgid "Link %s"
 msgstr "链接 %s"
 
-#: lib/functions.php:4968 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4972 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "复制"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5789
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Error: 没有设置<b> 收件人 </b>地址!! 如果使用 <i>邮件测试</i> 链接,请设置<b> 报警邮件 </b>设置."
 
-#: lib/functions.php:6164
+#: lib/functions.php:6183
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "认证失败: %s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6187
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO 失败: %s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6190
 #, php-format
 msgid "Connect failed: %s"
 msgstr "连接失败: %s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6193
 msgid "SMTP error: "
 msgstr "SMTP error: "
 
-#: lib/functions.php:6188
+#: lib/functions.php:6207
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "这是从Kadupul 生成的测试消息. 发送此邮件是为了测试您的邮件设置的配置."
 
-#: lib/functions.php:6189
+#: lib/functions.php:6208
 msgid "Your email settings are currently set as follows"
 msgstr "您的电子邮件设置目前设置如下"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6209
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6211
 msgid "Checking Configuration...<br>"
 msgstr "检查配置... <br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6218
 msgid "PHP's Mailer Class"
 msgstr "PHP Mailer 的类"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6224
 msgid "Method: SMTP"
 msgstr "方法: SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6241
 msgid "Not Shown for Security Reasons"
 msgstr "由于安全原因没有显示"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6242
 msgid "Security"
 msgstr "安全"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6250
 msgid "Ping Results:"
 msgstr "Ping 结果:"
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6250 lib/functions.php:6255
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6259
 msgid "Bypassed"
 msgstr "绕过"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6268
 msgid "Creating Message Text..."
 msgstr "创建消息文本..."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6271
 msgid "Sending Message..."
 msgstr "正在发送消息..."
 
-#: lib/functions.php:6256
+#: lib/functions.php:6275
 msgid "Kadupul Test Message"
 msgstr "Kadupul 测试消息"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6277
 msgid "Success!"
 msgstr "成功!"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6280
 msgid "Message Not Sent due to ping failure."
 msgstr "由于ping 失败,邮件未发送."
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6744 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 禁用了插件 %s 因为以下错误: %s! 更多详细信息,请参考Kadupul 日志文件."
 
-#: lib/functions.php:6898
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告：PollerID：%s 的主机名无效：%s。 是否无法通过DNS访问！"
 
-#: lib/functions.php:7351 lib/functions.php:7353
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "版本 %s %s"
 
-#: lib/functions.php:7353
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7588
+#: lib/functions.php:7607
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"
@@ -15359,198 +15359,198 @@ msgstr "添加已存在报表图形项目'<i>%s</i>'失败"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "跳过已存在的报告图项目 '<i>%s</i>'"
 
-#: lib/rrd.php:2446
+#: lib/rrd.php:2448
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2449
+#: lib/rrd.php:2451
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2816 lib/rrd.php:2819 lib/rrd.php:4720
+#: lib/rrd.php:2818 lib/rrd.php:2821 lib/rrd.php:4722
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2832
+#: lib/rrd.php:2834
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERROR: RRD 文件 %s 不可写入"
 
-#: lib/rrd.php:4251
+#: lib/rrd.php:4253
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "所需的RRD文件步长为'%s'，但观察到的步长为'%s'"
 
-#: lib/rrd.php:4287
+#: lib/rrd.php:4289
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "数据源'%s' 的类型应该是'%s'"
 
-#: lib/rrd.php:4293
+#: lib/rrd.php:4295
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "数据源'%s' 的心跳应该是'%s'"
 
-#: lib/rrd.php:4305
+#: lib/rrd.php:4307
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "数据源'%s'的RRD最小值应为'%s'"
 
-#: lib/rrd.php:4314
+#: lib/rrd.php:4316
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS'%s' 在Kadupul 定义中缺失"
 
-#: lib/rrd.php:4328 lib/rrd.php:4329
+#: lib/rrd.php:4330 lib/rrd.php:4331
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA '%s' 具有与 '%s' 相同的CF/步数(%s,%s)"
 
-#: lib/rrd.php:4342 lib/rrd.php:4343
+#: lib/rrd.php:4344 lib/rrd.php:4345
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA '%s'具有相同的CF/步(%s,%s)为'%s'"
 
-#: lib/rrd.php:4375
+#: lib/rrd.php:4377
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "“%s”的pdp_per_row对于RRA“%s”应为“%s”无效。 请考虑删除并允许 Kadupul 重新创建 RRDfile。"
 
-#: lib/rrd.php:4379
+#: lib/rrd.php:4381
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XAF的Kadupul RRA id'%s' '应该是'%s'"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4385
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id'%s'的行数不正确。行数为'%s'，但应为'%s'"
 
-#: lib/rrd.php:4400
+#: lib/rrd.php:4402
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "在RRDfile中缺少RRA '%s'"
 
-#: lib/rrd.php:4408
+#: lib/rrd.php:4410
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "在Kadupul 定义中缺少RRA'%s'"
 
-#: lib/rrd.php:4430
+#: lib/rrd.php:4432
 msgid "RRD File Information"
 msgstr "RRD 文件信息"
 
-#: lib/rrd.php:4462
+#: lib/rrd.php:4464
 msgid "Data Source Items"
 msgstr "数据源的项目"
 
-#: lib/rrd.php:4464
+#: lib/rrd.php:4466
 msgid "Minimal Heartbeat"
 msgstr "最小心跳"
 
-#: lib/rrd.php:4465
+#: lib/rrd.php:4467
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4468
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4467
+#: lib/rrd.php:4469
 msgid "Last DS"
 msgstr "上一个 DS"
 
-#: lib/rrd.php:4469
+#: lib/rrd.php:4471
 msgid "Unknown Sec"
 msgstr "未知"
 
-#: lib/rrd.php:4508
+#: lib/rrd.php:4510
 msgid "Round Robin Archive"
 msgstr "循环存档"
 
-#: lib/rrd.php:4511
+#: lib/rrd.php:4513
 msgid "Cur Row"
 msgstr "Cur 行"
 
-#: lib/rrd.php:4512
+#: lib/rrd.php:4514
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:4514
+#: lib/rrd.php:4516
 msgid "CDP Prep Value (0)"
 msgstr "CDP 预设值(0)"
 
-#: lib/rrd.php:4515
+#: lib/rrd.php:4517
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP 未知数据点(0)"
 
-#: lib/rrd.php:4600
+#: lib/rrd.php:4602
 msgid "Errors Found"
 msgstr "未找到 %s"
 
-#: lib/rrd.php:4612
+#: lib/rrd.php:4614
 msgid "Optional Tuning Recommendations"
 msgstr "数据源字段"
 
-#: lib/rrd.php:4639 lib/rrd.php:4642
+#: lib/rrd.php:4641 lib/rrd.php:4644
 #, php-format
 msgid "rename %s to %s"
 msgstr "将 %s 重命名为 %s"
 
-#: lib/rrd.php:4740
+#: lib/rrd.php:4742
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "写入XML 文件时出错: %s"
 
-#: lib/rrd.php:4746
+#: lib/rrd.php:4748
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4752
+#: lib/rrd.php:4754
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ERROR: RRD 文件 %s 不可写入"
 
-#: lib/rrd.php:4773
+#: lib/rrd.php:4775
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool 转储的XML 时出错"
 
-#: lib/rrd.php:4809 lib/rrd.php:4828
+#: lib/rrd.php:4811 lib/rrd.php:4830
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析RRDtool 转储的XML 时出错"
 
-#: lib/rrd.php:5046
+#: lib/rrd.php:5048
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) 从RRD 文件中删除"
 
-#: lib/rrd.php:5084
+#: lib/rrd.php:5086
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f)添加到RRD 文件"
 
-#: lib/rrd.php:5115 lib/rrd.php:5131
+#: lib/rrd.php:5117 lib/rrd.php:5133
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "网站没有 %s 的写入权限,可能无法创建/更新RRD"
 
-#: lib/rrd.php:5127
+#: lib/rrd.php:5129
 msgid "(Custom)"
 msgstr "(自定义)"
 
-#: lib/rrd.php:5133
+#: lib/rrd.php:5135
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "无法打开数据文件,poller 可能尚未运行"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 msgid "RRA Folder"
 msgstr "RRA 文件夹"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 msgid "Root"
 msgstr "根目录"
 
-#: lib/rrd.php:5216
+#: lib/rrd.php:5218
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool 错误"
 

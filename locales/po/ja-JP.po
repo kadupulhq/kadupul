@@ -587,7 +587,7 @@ msgstr "テンプレート"
 #: data_debug.php:1114 data_sources.php:1717 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3981 lib/auth.php:4030
+#: lib/api_automation.php:450 lib/auth.php:3986 lib/auth.php:4035
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -618,8 +618,8 @@ msgstr "任意"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3984
-#: lib/auth.php:4033 lib/auth.php:4079 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3989
+#: lib/auth.php:4038 lib/auth.php:4084 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -778,7 +778,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "パスワードの変更ページに問題があります。すぐにKadupul管理者に連絡してください。"
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4281 lib/html.php:2754
+#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2754
 msgid "Change Password"
 msgstr "パスワードの変更"
 
@@ -793,7 +793,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "現在のパスワードと新しいパスワードを入力してください<br>Kadupulのパスワード。"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6221
+#: include/global_settings.php:1851 lib/functions.php:6240
 msgid "Username"
 msgstr "ユーザー名"
 
@@ -844,11 +844,11 @@ msgstr "アクセス拒否されました。Kadupul 管理者に連絡してく�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "アクセス拒否されました。Kadupul 管理者に連絡してください。"
 
-#: auth_login.php:119 lib/auth.php:4395 lib/auth.php:4401 lib/auth.php:4491
-#: lib/auth.php:4500 lib/auth.php:4547 lib/auth.php:4572 lib/auth.php:4595
-#: lib/auth.php:4635 lib/auth.php:4647 lib/auth.php:4670 lib/auth.php:4793
-#: lib/auth.php:4813 lib/auth.php:5025 lib/auth.php:5067 lib/auth.php:5077
-#: lib/auth.php:5093 lib/auth.php:5107 lib/auth.php:5145
+#: auth_login.php:119 lib/auth.php:4400 lib/auth.php:4406 lib/auth.php:4496
+#: lib/auth.php:4505 lib/auth.php:4552 lib/auth.php:4577 lib/auth.php:4600
+#: lib/auth.php:4640 lib/auth.php:4652 lib/auth.php:4675 lib/auth.php:4798
+#: lib/auth.php:4818 lib/auth.php:5030 lib/auth.php:5072 lib/auth.php:5082
+#: lib/auth.php:5098 lib/auth.php:5112 lib/auth.php:5150
 msgid "Access Denied!  Login Failed."
 msgstr "アクセスが拒否されました。ユーザーアカウントは無効です。"
 
@@ -887,7 +887,7 @@ msgstr "ユーザーログイン"
 msgid "Enter your Username and Password below"
 msgstr "以下にユーザー名とパスワードを入力してください"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6222
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
 msgid "Password"
 msgstr "パスワード"
 
@@ -1194,7 +1194,7 @@ msgstr "検出されたデバイスの削除"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6580 lib/functions.php:6585
+#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2186,7 +2186,7 @@ msgstr "バージョン"
 msgid "Community"
 msgstr "コミュニティ"
 
-#: automation_snmp.php:543 lib/functions.php:6217
+#: automation_snmp.php:543 lib/functions.php:6236
 msgid "Port"
 msgstr "ポート"
 
@@ -2396,8 +2396,8 @@ msgstr "根(植物)"
 msgid "No Tree Rules Found"
 msgstr "ツリールールが見つかりません"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6725 lib/functions.php:6795
-#: lib/functions.php:6898 lib/functions.php:7588 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -2789,7 +2789,7 @@ msgstr "再解析"
 msgid "Check"
 msgstr "チェック"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4468
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4470
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "値"
@@ -3410,7 +3410,7 @@ msgstr "このデータテンプレートに付けられた名前。グラフテ
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6216 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "デバイス"
@@ -3764,12 +3764,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtoolグラフの構文"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2835
+#: lib/rrd.php:2837
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Pollerはまだ実行されていません。"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8291 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "権限がありません"
 
@@ -4467,7 +4467,7 @@ msgid "Save Filters"
 msgstr "フィルタを保存"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4510
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4512
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "行"
@@ -4728,17 +4728,17 @@ msgstr "あなたはKadupulのこの地域にアクセスするためにログ�
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "致命的：あなたはKadupulのこの地域にアクセスするにはログインしなければなりません。"
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5638
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5643
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "再度ログイン"
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "これがエラーだと感じたらKadupul管理者に連絡してください。"
 
-#: include/auth.php:317 lib/functions.php:8292
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -5607,7 +5607,7 @@ msgstr "ナチュラルオーダー"
 msgid "Numeric Ordering"
 msgstr "数字順"
 
-#: include/global_arrays.php:959 lib/rrd.php:4434
+#: include/global_arrays.php:959 lib/rrd.php:4436
 msgid "Header"
 msgstr "ヘッダー"
 
@@ -6823,7 +6823,7 @@ msgid "List Mode"
 msgstr "一覧モード"
 
 #: include/global_arrays.php:2072 include/global_arrays.php:2078
-#: lib/functions.php:4503 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
+#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2764
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "コンソール"
@@ -7248,7 +7248,7 @@ msgstr "ハートビート"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtoolが未知のデータを記録するまでにデータが失われる可能性がある期間。データソースが不安定で、グラフにギャップを表示せずに古いデータを繰り越したい場合は、この値を大きくします。この値にXファイル係数を掛けて、実際の時間を決定します。"
 
-#: include/global_form.php:226 lib/rrd.php:4513
+#: include/global_form.php:226 lib/rrd.php:4515
 msgid "X-Files Factor"
 msgstr "Xファイル係数"
 
@@ -7818,7 +7818,7 @@ msgstr "不透明度/アルファチャンネル"
 msgid "The opacity/alpha channel of the color."
 msgstr "色の不透明度/アルファチャンネル。"
 
-#: include/global_form.php:989 lib/rrd.php:4509
+#: include/global_form.php:989 lib/rrd.php:4511
 msgid "Consolidation Function"
 msgstr "連結機能"
 
@@ -8622,8 +8622,8 @@ msgstr "データ"
 msgid "Visual"
 msgstr "ビジュアル"
 
-#: include/global_settings.php:112 lib/functions.php:6220
-#: lib/functions.php:6225
+#: include/global_settings.php:112 lib/functions.php:6239
+#: lib/functions.php:6244
 msgid "Authentication"
 msgstr "認証"
 
@@ -8659,11 +8659,11 @@ msgstr "グラフフォント"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail（）関数"
 
-#: include/global_settings.php:153 lib/functions.php:6201
+#: include/global_settings.php:153 lib/functions.php:6220
 msgid "Sendmail"
 msgstr "注文確定"
 
-#: include/global_settings.php:154 lib/functions.php:6207
+#: include/global_settings.php:154 lib/functions.php:6226
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10517,7 +10517,7 @@ msgstr "これは、Eメール内の行が自動的にワードラップされ�
 msgid "Sendmail Options"
 msgstr "Sendmailのオプション"
 
-#: include/global_settings.php:1972 lib/functions.php:6201
+#: include/global_settings.php:1972 lib/functions.php:6220
 msgid "Sendmail Path"
 msgstr "Sendmailのパス"
 
@@ -11506,9 +11506,9 @@ msgstr "上"
 msgid "Recovering"
 msgstr "復元中"
 
-#: lib/api_automation.php:33 lib/auth.php:3086 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3091 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4486 lib/rrd.php:4498 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11516,7 +11516,7 @@ msgstr "不明"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4463
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4465
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "タイプ"
@@ -11607,41 +11607,41 @@ msgstr "パターン置換"
 msgid "No Tree Creation Criteria"
 msgstr "ツリー作成基準なし"
 
-#: lib/api_automation.php:2148 lib/api_automation.php:2219
+#: lib/api_automation.php:2197 lib/api_automation.php:2268
 msgid "Device Match Rule"
 msgstr "デバイス一致ルール"
 
-#: lib/api_automation.php:2171
+#: lib/api_automation.php:2220
 msgid "Create Graph Rule"
 msgstr "グラフルールを作成"
 
-#: lib/api_automation.php:2222
+#: lib/api_automation.php:2271
 msgid "Graph Match Rule"
 msgstr "グラフ一致ルール"
 
-#: lib/api_automation.php:2256
+#: lib/api_automation.php:2305
 msgid "Create Tree Rule (Device)"
 msgstr "ツリールールの作成（デバイス）"
 
-#: lib/api_automation.php:2259
+#: lib/api_automation.php:2308
 msgid "Create Tree Rule (Graph)"
 msgstr "ツリールールを作成する（グラフ）"
 
-#: lib/api_automation.php:2307
+#: lib/api_automation.php:2356
 #, php-format
 msgid "Rule Item [edit rule item for %s: %s]"
 msgstr "ルールアイテム[%sのルールアイテムを編集: %s]"
 
-#: lib/api_automation.php:2309
+#: lib/api_automation.php:2358
 #, php-format
 msgid "Rule Item [new rule item for %s: %s]"
 msgstr "ルールアイテム[%sの新しいルールアイテム: %s]"
 
-#: lib/api_automation.php:3344
+#: lib/api_automation.php:3393
 msgid "Added by Kadupul Automation"
 msgstr "Kadupul Automationが追加しました"
 
-#: lib/api_automation.php:3638
+#: lib/api_automation.php:3687
 msgid "ERROR: IP ranges in the form of range1-range2 are no longer supported."
 msgstr "エラー：range1-range2の形式のIP範囲はサポートされなくなりました。"
 
@@ -11725,8 +11725,8 @@ msgstr "位置:"
 msgid "Contact:"
 msgstr "連絡先:"
 
-#: lib/api_device.php:1986 lib/functions.php:6234 lib/functions.php:6236
-#: lib/functions.php:6240
+#: lib/api_device.php:1986 lib/functions.php:6253 lib/functions.php:6255
+#: lib/functions.php:6259
 msgid "Ping Results"
 msgstr "pingの結果"
 
@@ -11742,119 +11742,119 @@ msgstr "新しい支店"
 msgid "Web Basic"
 msgstr "ウェブ Basic 認証"
 
-#: lib/auth.php:2915
+#: lib/auth.php:2920
 msgid "Device:(Hide Disabled)"
 msgstr "デバイスは無効です"
 
-#: lib/auth.php:2933 lib/auth.php:2935 lib/auth.php:2941 lib/auth.php:2943
+#: lib/auth.php:2938 lib/auth.php:2940 lib/auth.php:2946 lib/auth.php:2948
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "グラフ： （%s%s秒）"
 
-#: lib/auth.php:2956 lib/auth.php:2962 lib/auth.php:3029 lib/auth.php:3031
-#: lib/auth.php:3035 lib/auth.php:3037
+#: lib/auth.php:2961 lib/auth.php:2967 lib/auth.php:3034 lib/auth.php:3036
+#: lib/auth.php:3040 lib/auth.php:3042
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "デバイス：(%s %s)"
 
-#: lib/auth.php:2970 lib/auth.php:2976 lib/auth.php:3045 lib/auth.php:3047
-#: lib/auth.php:3051 lib/auth.php:3053
+#: lib/auth.php:2975 lib/auth.php:2981 lib/auth.php:3050 lib/auth.php:3052
+#: lib/auth.php:3056 lib/auth.php:3058
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "テンプレート: (%s%s)"
 
-#: lib/auth.php:2983
+#: lib/auth.php:2988
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "グラフ+デバイス+テンプレート： （%s%s）"
 
-#: lib/auth.php:3020 lib/auth.php:3022
+#: lib/auth.php:3025 lib/auth.php:3027
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "デバイス+テンプレート： （%s%s）"
 
-#: lib/auth.php:3066 lib/auth.php:3073 lib/auth.php:3082
+#: lib/auth.php:3071 lib/auth.php:3078 lib/auth.php:3087
 msgid "Restricted By: "
 msgstr "メンバーに限定"
 
-#: lib/auth.php:3070
+#: lib/auth.php:3075
 msgid "Granted By: "
 msgstr "許可を与える："
 
-#: lib/auth.php:3077
+#: lib/auth.php:3082
 msgid "Granted"
 msgstr "付与されているパーミッションは何ですか?"
 
-#: lib/auth.php:3079 lib/auth.php:3084
+#: lib/auth.php:3084 lib/auth.php:3089
 msgid "Restricted"
 msgstr "メンバーに限定"
 
-#: lib/auth.php:3318 lib/auth.php:3353
+#: lib/auth.php:3323 lib/auth.php:3358
 msgid "Branch:"
 msgstr "支店:"
 
-#: lib/auth.php:3327 lib/auth.php:3361 lib/html_tree.php:949
+#: lib/auth.php:3332 lib/auth.php:3366 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "機器:"
 
-#: lib/auth.php:4299 lib/auth.php:4390
+#: lib/auth.php:4304 lib/auth.php:4395
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "アクセス拒否されました。Kadupul 管理者に連絡してください。"
 
-#: lib/auth.php:4349
+#: lib/auth.php:4354
 msgid "Access Denied!  Login Disabled."
 msgstr "アクセスが拒否されました。ユーザーアカウントは無効です。"
 
-#: lib/auth.php:4424
+#: lib/auth.php:4429
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web基本認証が構成されましたが、Webサーバーからユーザー名が渡されませんでした。 Webサーバーで認証が有効になっていることを確認してください。"
 
-#: lib/auth.php:4440
+#: lib/auth.php:4445
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%sはWebサーバーによって認証されましたが、テンプレートとゲストユーザーの両方がKadupulで定義されていません。"
 
-#: lib/auth.php:4607 lib/auth.php:4806
+#: lib/auth.php:4612 lib/auth.php:4811
 msgid "Access Denied!  No password provided by user."
 msgstr "アクセスが拒否されました！ユーザーからパスワードが提供されていません。"
 
-#: lib/auth.php:4779 lib/auth.php:5845
+#: lib/auth.php:4784 lib/auth.php:5850
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "アクセスが拒否されました！テンプレートユーザーID %sは存在しません。管理者に連絡してください。"
 
-#: lib/auth.php:4787
+#: lib/auth.php:4792
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5140
+#: lib/auth.php:5145
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Kadupul管理者がログインに複雑なパスワードを強制しているため、現在のKadupulパスワードが新しい要件に一致しません。したがって、今すぐパスワードを変更する必要があります。"
 
-#: lib/auth.php:5180
+#: lib/auth.php:5185
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "パスワードは少なくとも %d 文字にする必要があります!"
 
-#: lib/auth.php:5186
+#: lib/auth.php:5191
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "あなたのパスワードは少なくとも1つの数字を含まなければなりません！"
 
-#: lib/auth.php:5190
+#: lib/auth.php:5195
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "パスワードには、小文字と大文字が混在している必要があります。"
 
-#: lib/auth.php:5196
+#: lib/auth.php:5201
 msgid "Your password must contain at least 1 special character!"
 msgstr "パスワードには少なくとも1つの特殊文字を含める必要があります。"
 
-#: lib/auth.php:5631
+#: lib/auth.php:5636
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupulログをクリアしました"
 
-#: lib/auth.php:5931
+#: lib/auth.php:5936
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "以前は認証が設定されていませんでした。ローカル認証に設定しようとしましたが、管理者アカウントが見つかりませんでした。"
 
@@ -12122,7 +12122,7 @@ msgstr "'%s'にデータクエリXMLファイルが見つかりませんでし�
 msgid "Found data query XML file at '%s'"
 msgstr "'%s'にデータクエリXMLファイルが見つかりました"
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2640
+#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
 msgid "Error parsing XML file into an array."
 msgstr "XMLファイルを配列に解析中にエラーが発生しました。"
 
@@ -12415,12 +12415,12 @@ msgstr "データの再索引付けが完了しました"
 msgid "Unknown Index"
 msgstr "未知のインデックス"
 
-#: lib/data_query.php:2764
+#: lib/data_query.php:2767
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "データソース'%s'のXML出力列を選択し、その右側のチェックボックスを切り替える必要があります"
 
-#: lib/data_query.php:2770
+#: lib/data_query.php:2773
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "グラフテンプレートはデータテンプレートを使用していません。グラフテンプレートを修正してください"
 
@@ -12492,178 +12492,178 @@ msgstr "メッセージが見つかりません。"
 msgid "Error %s is not readable"
 msgstr "エラー%sは読み取れません"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Logged in a Guest"
 msgstr "ログイン中"
 
-#: lib/functions.php:4257 lib/functions.php:4275
+#: lib/functions.php:4261 lib/functions.php:4279
 msgid "Logged in as"
 msgstr "ログイン中"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "Login as Regular User"
 msgstr "一般ユーザーとしてログイン"
 
-#: lib/functions.php:4257
+#: lib/functions.php:4261
 msgid "guest"
 msgstr "人"
 
-#: lib/functions.php:4260 lib/functions.php:4285 lib/html.php:2770
+#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2770
 msgid "User Community"
 msgstr "ユーザーコミュニティ"
 
-#: lib/functions.php:4261 lib/functions.php:4286 lib/html.php:2772
+#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2772
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "ドキュメント"
 
-#: lib/functions.php:4278
+#: lib/functions.php:4282
 #, php-format
 msgid "Logged in as %s"
 msgstr "%sとしてログイン中"
 
-#: lib/functions.php:4280 lib/html.php:2751
+#: lib/functions.php:4284 lib/html.php:2751
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
 
-#: lib/functions.php:4290 lib/html.php:2755
+#: lib/functions.php:4294 lib/html.php:2755
 msgid "Logout"
 msgstr "ログアウト"
 
-#: lib/functions.php:4444
+#: lib/functions.php:4448
 msgid "Leaf"
 msgstr "葉っぱ"
 
-#: lib/functions.php:4468 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4472 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "非クエリベース"
 
-#: lib/functions.php:4506
+#: lib/functions.php:4510
 #, php-format
 msgid "Link %s"
 msgstr "リンク%s"
 
-#: lib/functions.php:4968 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4972 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "コピー"
 
-#: lib/functions.php:5770
+#: lib/functions.php:5789
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "メーラーのエラー：いいえ設定したアドレス<b>に</b> !! <br> [ <i>テストメール]</i>リンクを使用している場合は、[ <b>警告メール]</b>設定を設定してください。"
 
-#: lib/functions.php:6164
+#: lib/functions.php:6183
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "認証に失敗しました：%s"
 
-#: lib/functions.php:6168
+#: lib/functions.php:6187
 #, php-format
 msgid "HELO failed: %s"
 msgstr "ヘロが失敗しました：%s"
 
-#: lib/functions.php:6171
+#: lib/functions.php:6190
 #, php-format
 msgid "Connect failed: %s"
 msgstr "接続に失敗しました: %s"
 
-#: lib/functions.php:6174
+#: lib/functions.php:6193
 msgid "SMTP error: "
 msgstr "SMTPエラー："
 
-#: lib/functions.php:6188
+#: lib/functions.php:6207
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "これはKadupulから生成されたテストメッセージです。このメッセージはメール設定の設定をテストするために送信されました。"
 
-#: lib/functions.php:6189
+#: lib/functions.php:6208
 msgid "Your email settings are currently set as follows"
 msgstr "あなたのEメール設定は現在以下のように設定されています"
 
-#: lib/functions.php:6190
+#: lib/functions.php:6209
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6192
+#: lib/functions.php:6211
 msgid "Checking Configuration...<br>"
 msgstr "設定を確認しています... <br>"
 
-#: lib/functions.php:6199
+#: lib/functions.php:6218
 msgid "PHP's Mailer Class"
 msgstr "PHPのメーラクラス"
 
-#: lib/functions.php:6205
+#: lib/functions.php:6224
 msgid "Method: SMTP"
 msgstr "方法：SMTP"
 
-#: lib/functions.php:6222
+#: lib/functions.php:6241
 msgid "Not Shown for Security Reasons"
 msgstr "セキュリティ上の理由から表示されていません"
 
-#: lib/functions.php:6223
+#: lib/functions.php:6242
 msgid "Security"
 msgstr "セキュリティ"
 
-#: lib/functions.php:6231
+#: lib/functions.php:6250
 msgid "Ping Results:"
 msgstr "pingの結果："
 
-#: lib/functions.php:6231 lib/functions.php:6236
+#: lib/functions.php:6250 lib/functions.php:6255
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6240
+#: lib/functions.php:6259
 msgid "Bypassed"
 msgstr "バイパス"
 
-#: lib/functions.php:6249
+#: lib/functions.php:6268
 msgid "Creating Message Text..."
 msgstr "メッセージテキストを作成しています..."
 
-#: lib/functions.php:6252
+#: lib/functions.php:6271
 msgid "Sending Message..."
 msgstr "メッセージを送信しています…"
 
-#: lib/functions.php:6256
+#: lib/functions.php:6275
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupulテストメッセージ"
 
-#: lib/functions.php:6258
+#: lib/functions.php:6277
 msgid "Success!"
 msgstr "成功！"
 
-#: lib/functions.php:6261
+#: lib/functions.php:6280
 msgid "Message Not Sent due to ping failure."
 msgstr "pingが失敗したため、メッセージが送信されませんでした。"
 
-#: lib/functions.php:6725 lib/functions.php:6795
+#: lib/functions.php:6744 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "次のエラーのため、Kadupulはプラグイン%sを無効にしました：%s! 詳細については、Kadupulログファイルを参照してください。"
 
-#: lib/functions.php:6898
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告： PollerID ：%sに無効なホスト名：%sがあります。DNS経由では到達できませんか？"
 
-#: lib/functions.php:7351 lib/functions.php:7353
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "ベータ線 %s"
 
-#: lib/functions.php:7351 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "バージョン%s %s"
 
-#: lib/functions.php:7353
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7588
+#: lib/functions.php:7607
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：キーKadupulインクルードファイル%sがありません。このファイルを見つけて置き換えてください"
@@ -15380,198 +15380,198 @@ msgstr "レポートグラフアイテム<i>'%s'</i>の追加に失敗しまし�
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "スキップされたレポートグラフアイテム<i>'%s'</i>は既に存在します"
 
-#: lib/rrd.php:2446
+#: lib/rrd.php:2448
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2449
+#: lib/rrd.php:2451
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2816 lib/rrd.php:2819 lib/rrd.php:4720
+#: lib/rrd.php:2818 lib/rrd.php:2821 lib/rrd.php:4722
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2832
+#: lib/rrd.php:2834
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "エラー： RRDファイル%sは書き込み可能ではありません"
 
-#: lib/rrd.php:4251
+#: lib/rrd.php:4253
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必要なRRDfileステップサイズは'%s'ですが、観察されたステップは'%s'です"
 
-#: lib/rrd.php:4287
+#: lib/rrd.php:4289
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "データソース'%s'のタイプは'%s'である必要があります"
 
-#: lib/rrd.php:4293
+#: lib/rrd.php:4295
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "データソース'%s'のハートビートは'%s'である必要があります"
 
-#: lib/rrd.php:4305
+#: lib/rrd.php:4307
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "データソース'%s'のRRD最小値は'%s'である必要があります"
 
-#: lib/rrd.php:4314
+#: lib/rrd.php:4316
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupulの定義にDS '%s'がありません"
 
-#: lib/rrd.php:4328 lib/rrd.php:4329
+#: lib/rrd.php:4330 lib/rrd.php:4331
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA '%s'は'%s'と同じCF/ステップ（%s、%s）を持っています"
 
-#: lib/rrd.php:4342 lib/rrd.php:4343
+#: lib/rrd.php:4344 lib/rrd.php:4345
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "ファイルRRA '%s'は'%s'と同じCF/ステップ（%s、%s）を持っています"
 
-#: lib/rrd.php:4375
+#: lib/rrd.php:4377
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s'のpdp_per_rowは、RRA '%s'が'%s'であるために無効です。KadupulがRRDファイルを再作成できるように削除することを検討してください。"
 
-#: lib/rrd.php:4379
+#: lib/rrd.php:4381
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul RRA IDのXFFは'%s'ですが、'%s'である必要があります"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4385
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s'の行数が正しくありません。行数は'%s'ですが、'%s'でなければなりません"
 
-#: lib/rrd.php:4400
+#: lib/rrd.php:4402
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "既存のKadupul RRDファイルにRRA '%s'がありません"
 
-#: lib/rrd.php:4408
+#: lib/rrd.php:4410
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul定義にRRA '%s'がありません"
 
-#: lib/rrd.php:4430
+#: lib/rrd.php:4432
 msgid "RRD File Information"
 msgstr "RRDファイル情報"
 
-#: lib/rrd.php:4462
+#: lib/rrd.php:4464
 msgid "Data Source Items"
 msgstr "データソース項目"
 
-#: lib/rrd.php:4464
+#: lib/rrd.php:4466
 msgid "Minimal Heartbeat"
 msgstr "最小ハートビート"
 
-#: lib/rrd.php:4465
+#: lib/rrd.php:4467
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4468
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4467
+#: lib/rrd.php:4469
 msgid "Last DS"
 msgstr "最後のDS"
 
-#: lib/rrd.php:4469
+#: lib/rrd.php:4471
 msgid "Unknown Sec"
 msgstr "不明な秒"
 
-#: lib/rrd.php:4508
+#: lib/rrd.php:4510
 msgid "Round Robin Archive"
 msgstr "ラウンドロビンアーカイブ"
 
-#: lib/rrd.php:4511
+#: lib/rrd.php:4513
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4512
+#: lib/rrd.php:4514
 msgid "PDP per Row"
 msgstr "1行あたりのPDP"
 
-#: lib/rrd.php:4514
+#: lib/rrd.php:4516
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備値（0）"
 
-#: lib/rrd.php:4515
+#: lib/rrd.php:4517
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP不明データポイント（0）"
 
-#: lib/rrd.php:4600
+#: lib/rrd.php:4602
 msgid "Errors Found"
 msgstr "%sが見つかりませんでした。"
 
-#: lib/rrd.php:4612
+#: lib/rrd.php:4614
 msgid "Optional Tuning Recommendations"
 msgstr "データソースフィールド"
 
-#: lib/rrd.php:4639 lib/rrd.php:4642
+#: lib/rrd.php:4641 lib/rrd.php:4644
 #, php-format
 msgid "rename %s to %s"
 msgstr "%sの名前を%sに変更"
 
-#: lib/rrd.php:4740
+#: lib/rrd.php:4742
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XMLファイルの書き込み中にエラーが発生しました: %s"
 
-#: lib/rrd.php:4746
+#: lib/rrd.php:4748
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4752
+#: lib/rrd.php:4754
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "エラー： RRDファイル%sは書き込み可能ではありません"
 
-#: lib/rrd.php:4773
+#: lib/rrd.php:4775
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "rrdtool dumpのXMLの構文解析中にエラーが発生しました"
 
-#: lib/rrd.php:4809 lib/rrd.php:4828
+#: lib/rrd.php:4811 lib/rrd.php:4830
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtoolダンプのXMLの構文解析中にエラーが発生しました"
 
-#: lib/rrd.php:5046
+#: lib/rrd.php:5048
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRDファイルから削除されたRRA （ CF =%s、行=%d、PDP_PER_ROW =%d、XFF =%1.2f）"
 
-#: lib/rrd.php:5084
+#: lib/rrd.php:5086
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRDファイルに追加するRRA （ CF =%s、行=%d、PDP_PER_ROW =%d、XFF =%1.2f）"
 
-#: lib/rrd.php:5115 lib/rrd.php:5131
+#: lib/rrd.php:5117 lib/rrd.php:5133
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "ウェブサイトには%sへの書き込みアクセス権がありません。RRDを作成/更新できない可能性があります"
 
-#: lib/rrd.php:5127
+#: lib/rrd.php:5129
 msgid "(Custom)"
 msgstr "(自定义)"
 
-#: lib/rrd.php:5133
+#: lib/rrd.php:5135
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "データファイルを開けませんでした。ポーラーはまだ実行されていない可能性があります"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 msgid "RRA Folder"
 msgstr "RRAフォルダ"
 
-#: lib/rrd.php:5136
+#: lib/rrd.php:5138
 msgid "Root"
 msgstr "ルート"
 
-#: lib/rrd.php:5216
+#: lib/rrd.php:5218
 msgid "Unknown RRDtool Error"
 msgstr "不明なRRDtoolエラー"
 
