@@ -3,8 +3,8 @@
     "name": "version_to_decimal",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7415,
-        "end_line": 7448,
+        "start_line": 7439,
+        "end_line": 7472,
         "line_count": 34,
         "signature": {
             "parameters": [
@@ -31,7 +31,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 3, "core_outside_functions_php": 0, "tests": 4, "plugins": 0},
+        "fan_out": {"core": 3, "core_outside_functions_php": 0, "tests": 5, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

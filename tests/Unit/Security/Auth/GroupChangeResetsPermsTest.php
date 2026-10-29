@@ -7,7 +7,8 @@
  * A live session caches its realms and tree permissions and drops the cache
  * only when user_auth.reset_perms changes. Group membership, group deletion,
  * policy and permission edits must therefore reset the affected users, or a
- * user keeps revoked access until they log out.
+ * user keeps revoked access until they log out. The same change expires the
+ * affected users' remembered logins (upstream Cacti #7600).
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AdminActionProbe.php';
@@ -34,7 +35,8 @@ test('adding or removing a group member resets that member', function (string $a
         'associate_member' => 1, 'id' => 5, 'drp_action' => $action, 'chk_42' => 'on', 'chk_43' => 'on',
     ));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2)
+        ->and($result['remembered'])->toBe(array());
 })->with(array('add' => '1', 'remove' => '2'));
 
 test('granting or revoking a group permission resets the group', function (string $flag) {
@@ -42,19 +44,22 @@ test('granting or revoking a group permission resets the group', function (strin
         $flag => 1, 'id' => 5, 'drp_action' => '2', 'chk_9' => 'on',
     ));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2)
+        ->and($result['remembered'])->toBe(array());
 })->with(array('associate_host', 'associate_graph', 'associate_template', 'associate_tree'));
 
 test('a group policy change resets the group', function () {
     $result = group_reset_run('user_group_admin.php', 'update_policies', array('id' => 5, 'policy_trees' => 2, 'tab' => 'permstr'));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2)
+        ->and($result['remembered'])->toBe(array());
 });
 
 test('removing one group permission resets the group', function () {
     $result = group_reset_run('user_group_admin.php', 'perm_remove', array('id' => 9, 'group_id' => 5, 'type' => 'tree'));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(2)
+        ->and($result['remembered'])->toBe(array());
 });
 
 test('deleting a group resets the members it had', function () {
@@ -91,19 +96,22 @@ test('changing a user\'s groups or permissions resets that user', function (stri
         $flag => 1, 'id' => 42, 'drp_action' => '2', 'chk_9' => 'on',
     ));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1)
+        ->and($result['remembered'])->toBe(array(43));
 })->with(array('associate_groups', 'associate_host', 'associate_graph', 'associate_template', 'associate_tree'));
 
 test('a user policy change resets the user', function () {
     $result = group_reset_run('user_admin.php', 'update_policies', array('id' => 42, 'policy_graphs' => 2, 'tab' => 'permsg'));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1)
+        ->and($result['remembered'])->toBe(array(43));
 });
 
 test('removing one user permission resets the user', function () {
     $result = group_reset_run('user_admin.php', 'perm_remove', array('id' => 9, 'user_id' => 42, 'type' => 'graph'));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1)
+        ->and($result['remembered'])->toBe(array(43));
 });
 
 test('adding a permission from the graph permissions form resets the user', function (string $button) {
@@ -112,5 +120,6 @@ test('adding a permission from the graph permissions form resets the user', func
         'perm_graphs' => 9, 'perm_trees' => 9, 'perm_hosts' => 9, 'perm_graph_templates' => 9,
     ));
 
-    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1);
+    expect((int) $result['epochs'][42])->toBe(2)->and((int) $result['epochs'][43])->toBe(1)
+        ->and($result['remembered'])->toBe(array(43));
 })->with(array('add_graph_x', 'add_tree_x', 'add_host_x', 'add_graph_template_x'));

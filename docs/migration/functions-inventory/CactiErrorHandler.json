@@ -3,9 +3,9 @@
     "name": "CactiErrorHandler",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6689,
-        "end_line": 6755,
-        "line_count": 67,
+        "start_line": 6708,
+        "end_line": 6779,
+        "line_count": 72,
         "signature": {
             "parameters": [
                 {
@@ -58,7 +58,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 2, "core_outside_functions_php": 2, "tests": 5, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 2, "tests": 8, "plugins": 0},
         "body": {
             "uses_global": ["phperrors"],
             "static_variables": [],
