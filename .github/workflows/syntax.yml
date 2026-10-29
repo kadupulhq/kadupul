@@ -126,6 +126,14 @@ jobs:
         php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
         php vendor/bin/pest --configuration=phpunit-auth-policy-mariadb.xml --colors=never
 
+    - name: Aggregate item replacement contracts
+      working-directory: tests
+      env:
+        KADUPUL_AGGREGATE_TEST_PORT: '3306'
+        KADUPUL_AGGREGATE_TEST_USER: root
+        KADUPUL_AGGREGATE_TEST_PASSWORD: cactiroot
+      run: php vendor/bin/pest --configuration=phpunit-aggregate.xml --fail-on-empty-test-suite --colors=never
+
   boost-contracts:
     name: Boost contracts
     runs-on: ubuntu-22.04
