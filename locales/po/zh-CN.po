@@ -2393,8 +2393,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "未找到树规则"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
-#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3764,7 +3764,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller 尚未运行."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "没有权限"
 
@@ -4725,12 +4725,12 @@ msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 msgid "Login Again"
 msgstr "重新登录"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果您觉得这是一个报错,请联系Kadupul 管理员."
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您不能访问Kadupul 的这个部分."
@@ -12618,33 +12618,33 @@ msgstr "成功!"
 msgid "Message Not Sent due to ping failure."
 msgstr "由于ping 失败,邮件未发送."
 
-#: lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6744 lib/functions.php:6819
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 禁用了插件 %s 因为以下错误: %s! 更多详细信息,请参考Kadupul 日志文件."
 
-#: lib/functions.php:6917
+#: lib/functions.php:6922
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告：PollerID：%s 的主机名无效：%s。 是否无法通过DNS访问！"
 
-#: lib/functions.php:7370 lib/functions.php:7372
+#: lib/functions.php:7375 lib/functions.php:7377
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "版本 %s %s"
 
-#: lib/functions.php:7372
+#: lib/functions.php:7377
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7607
+#: lib/functions.php:7612
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"

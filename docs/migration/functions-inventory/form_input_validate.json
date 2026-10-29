@@ -58,7 +58,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 374, "core_outside_functions_php": 372, "tests": 29, "plugins": 0},
+        "fan_out": {"core": 374, "core_outside_functions_php": 372, "tests": 30, "plugins": 0},
         "body": {
             "uses_global": ["messages"],
             "static_variables": [],

@@ -3,8 +3,8 @@
     "name": "get_include_relpath",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7585,
-        "end_line": 7611,
+        "start_line": 7590,
+        "end_line": 7616,
         "line_count": 27,
         "signature": {
             "parameters": [

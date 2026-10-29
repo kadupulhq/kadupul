@@ -6765,6 +6765,11 @@ function CactiErrorHandler($level, $message, $file, $line, $context = array())
             cacti_log($error, false, 'ERROR');
             cacti_debug_backtrace('PHP ERROR STRICT', false, true, 0, 1);
             break;
+        case E_DEPRECATED:
+        case E_USER_DEPRECATED:
+            /* library deprecations are not failures, so no ERROR tag and no backtrace */
+            cacti_log($error, false, 'WARNING');
+            break;
         default:
             cacti_log($error, false, 'ERROR');
             cacti_debug_backtrace('PHP ERROR', false, true, 0, 1);

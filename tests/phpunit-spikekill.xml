@@ -56,6 +56,7 @@
       <file>Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>Unit/Core/PathHelpersTest.php</file>
       <file>Unit/Core/Log/CactiLogControlCharacterTest.php</file>
+      <file>Unit/ErrorHandlerDeprecationTest.php</file>
       <file>Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
       <file>Unit/Security/Auth/ReportMutationCsrfTest.php</file>
       <file>Unit/Security/Auth/ProfileMutationCsrfTest.php</file>

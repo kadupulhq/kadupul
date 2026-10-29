@@ -2391,8 +2391,8 @@ msgstr "RAIZ"
 msgid "No Tree Rules Found"
 msgstr "No se encontraron reglas de árbol"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
-#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3782,7 +3782,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "La Sonda de Kadupul no se ha ejecutado aún."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Permiso denegado"
 
@@ -4743,12 +4743,12 @@ msgstr "FATAL: Debes iniciar sesión para acceder a esta área de Kadupul."
 msgid "Login Again"
 msgstr "Volver a Ingresar"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Si crees que este es un error. Por favor contacta a tu Administrador de Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "No estás autorizado a acceder esta sección de Kadupul."
@@ -12630,33 +12630,33 @@ msgstr "Exito!"
 msgid "Message Not Sent due to ping failure."
 msgstr "Mensaje no enviado debido al fallo de ping."
 
-#: lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6744 lib/functions.php:6819
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul ha deshabilitado plugin %s debido al siguiente error: %s! Para más detalles, consulte el registro de Kadupul."
 
-#: lib/functions.php:6917
+#: lib/functions.php:6922
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ADVERTENCIA: PollerID:%s tiene un nombre de host no válido:%s.  ¡No es accesible a través de DNS!"
 
-#: lib/functions.php:7370 lib/functions.php:7372
+#: lib/functions.php:7375 lib/functions.php:7377
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Versión %s %s"
 
-#: lib/functions.php:7372
+#: lib/functions.php:7377
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7607
+#: lib/functions.php:7612
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ADVERTENCIA: Falta el archivo de inclusión de Kadupul clave %s.  Por favor, localice y reemplace este archivo"

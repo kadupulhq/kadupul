@@ -136,6 +136,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Retain malformed MULTI poller samples without inventing all-unknown RRD updates; preserve the existing age-based discard policy and valid sibling samples (#763).
 
 - Preserve file and stdout log message text when PCRE line cleanup fails, while continuing to escape control characters (#948).
+- Log PHP deprecations (`E_DEPRECATED`, `E_USER_DEPRECATED`) as warnings without a backtrace instead of as errors, so library deprecations no longer read as failures in `cacti.log` (#1184).
 
 - Mark console welcome and navigation layout tables as presentational while preserving their text, links, classes and IDs (#946).
 

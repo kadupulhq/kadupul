@@ -2403,8 +2403,8 @@ msgstr "बूट्सConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
-#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3799,7 +3799,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul पोलर अभी तक नहीं चला है।"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "अनुमति अस्वीकृत"
 
@@ -4761,13 +4761,13 @@ msgstr "FATAL: Kadupul के इस क्षेत्र तक पहुं�
 msgid "Login Again"
 msgstr "फिर से लॉगिन करें"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "यदि आपको लगता है कि यह एक त्रुटि है। कृपया अपने Kadupul प्रशासक से संपर्क करें।"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "आपको Kadupul के इस अनुभाग तक पहुंचने की अनुमति नहीं है।"
@@ -12696,33 +12696,33 @@ msgstr "सफ़ल!"
 msgid "Message Not Sent due to ping failure."
 msgstr "पिंग विफलता के कारण संदेश नहीं भेजा गया।"
 
-#: lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6744 lib/functions.php:6819
 #, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "निम्न त्रुटि के कारण Kadupul अक्षम प्लगइन %s: %s! अधिक जानकारी के लिए Kadupul logfile देखें।"
 
-#: lib/functions.php:6917
+#: lib/functions.php:6922
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "चेतावनी: PollerID:%s का एक अमान्य होस्टनाम है:%s।  क्या यह DNS के माध्यम से उपलब्ध नहीं है!"
 
-#: lib/functions.php:7370 lib/functions.php:7372
+#: lib/functions.php:7375 lib/functions.php:7377
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- बीटा %s"
 
-#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "संस्करण %s %s"
 
-#: lib/functions.php:7372
+#: lib/functions.php:7377
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7607
+#: lib/functions.php:7612
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "चेतावनी:  कुंजी Kadupul फ़ाइल %s लापता शामिल करें।  कृपया इस फ़ाइल का पता लगाएँ और उसे बदलें"

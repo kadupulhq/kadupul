@@ -2395,8 +2395,8 @@ msgstr "ROOTConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6814
-#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3768,7 +3768,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "사용 권한이 거부되었습니다."
 
@@ -4730,12 +4730,12 @@ msgstr "치명적 : Kadupul의이 영역에 액세스하려면 로그인해야�
 msgid "Login Again"
 msgstr "다시 로그인"
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "이것이 오류라고 생각하면. Kadupul 관리자에게 문의하십시오."
 
-#: include/auth.php:317 lib/functions.php:8311
+#: include/auth.php:317 lib/functions.php:8316
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Kadupul의이 섹션에 액세스하는 것은 허용되지 않습니다."
@@ -12628,33 +12628,33 @@ msgstr "성공!"
 msgid "Message Not Sent due to ping failure."
 msgstr "핑 실패로 인해 메시지가 전송되지 않았습니다."
 
-#: lib/functions.php:6744 lib/functions.php:6814
+#: lib/functions.php:6744 lib/functions.php:6819
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 플러그인  %s이 (가) 다음 오류 때문에 비활성화되었습니다 :  %s! 자세한 내용은 Kadupul 로그 파일을 참조하십시오."
 
-#: lib/functions.php:6917
+#: lib/functions.php:6922
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "경고: PollerID: %s 에 유효하지 않은 호스트 이름: %s 이 (가) 있습니다. DNS를 통해 연결할 수 없습니까!"
 
-#: lib/functions.php:7370 lib/functions.php:7372
+#: lib/functions.php:7375 lib/functions.php:7377
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- 베타  %s"
 
-#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "버전  %s  %s"
 
-#: lib/functions.php:7372
+#: lib/functions.php:7377
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7607
+#: lib/functions.php:7612
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
