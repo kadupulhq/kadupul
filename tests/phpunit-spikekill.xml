@@ -7,6 +7,7 @@
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
+      <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>
       <file>Unit/Security/HostReindexExecutionTest.php</file>
       <file>Unit/Security/RealtimePollerExecutionTest.php</file>

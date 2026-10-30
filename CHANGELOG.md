@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
+- Treat the obsolete data source delete action as an unknown action instead of calling an undefined handler; use bulk Actions for deletion (#685).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
 - Add `html_require_legacy_js()` so plugins can declare their need for Chart.js, dygraphs, jquery.sparkline or the jQuery colorpicker. Release 1.3 still loads all four on every page and its page head is unchanged; release 1.4 will load only the requested ones. These libraries are deprecated and no core page uses them.
