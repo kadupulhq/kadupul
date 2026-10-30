@@ -14,6 +14,7 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Infrastructure\Legacy\ConsoleUpgradeRequired;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorker;
+use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorkerRunner;
 use Kadupul\Platform\Infrastructure\Symfony\ConsoleHomeExceptionSubscriber;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -42,7 +43,7 @@ final class ConsoleUpgradeRedirectTest extends TestCase
             $request->attributes->set('_route', 'platform_console');
             $requests = new RequestStack();
             $requests->push($request);
-            $worker = new LegacyBrowserWorker($root, $requests, $session, $database, new InstallationConfiguration($root), new NullLogger());
+            $worker = new LegacyBrowserWorker(new LegacyBrowserWorkerRunner($root, $requests, $session, $database, new InstallationConfiguration($root), new NullLogger()), $requests, new InstallationConfiguration($root));
             try {
                 $worker->console(7);
                 self::fail('A mismatched schema must not execute the console.');

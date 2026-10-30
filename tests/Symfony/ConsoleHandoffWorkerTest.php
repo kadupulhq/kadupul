@@ -71,6 +71,35 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame(['/kadupul/about.php', $this->directory . '/about.php', 'GET', self::SESSION_ID, $this->directory . '/sessions', $this->directory . '/include'], $run['state']);
     }
 
+    public function testTrustedMutationInputLimitAcceptsLargeCommands(): void
+    {
+        $wrapper = (string) file_get_contents($this->directory . '/bin/legacy-console-menu.php');
+        $wrapper = str_replace("    'json' => JSON_INVALID_UTF8_SUBSTITUTE,", "    'json' => JSON_INVALID_UTF8_SUBSTITUTE,\n    'input_limit' => 1048576,", $wrapper, $count);
+        self::assertSame(1, $count);
+        file_put_contents($this->directory . '/bin/legacy-console-menu.php', $wrapper);
+        $command = $this->command();
+        $command['server']['HTTP_USER_AGENT'] = str_repeat('a', 70000);
+        $run = $this->worker('bin/legacy-console-menu.php', $command);
+        self::assertSame(0, $run['exit']);
+        self::assertSame('', $run['stderr']);
+        $command['server']['HTTP_USER_AGENT'] = str_repeat('a', 1048576);
+        $run = $this->worker('bin/legacy-console-menu.php', $command);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
+    public function testAnExplicitNullInputLimitIsNotTheDefault(): void
+    {
+        $wrapper = (string) file_get_contents($this->directory . '/bin/legacy-console-menu.php');
+        $wrapper = str_replace("    'json' => JSON_INVALID_UTF8_SUBSTITUTE,", "    'json' => JSON_INVALID_UTF8_SUBSTITUTE,\n    'input_limit' => null,", $wrapper, $count);
+        self::assertSame(1, $count);
+        file_put_contents($this->directory . '/bin/legacy-console-menu.php', $wrapper);
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command());
+        self::assertSame(1, $run['exit']);
+        self::assertSame('LogicException', json_decode($run['stderr'], true, 8, JSON_THROW_ON_ERROR)['class']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
     /** @return iterable<string, array{string, string, string, string}> */
     public static function refusals(): iterable
     {

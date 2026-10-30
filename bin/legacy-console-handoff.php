@@ -23,7 +23,9 @@ if (PHP_SAPI !== 'cli') {
 // path, the command key carrying its URL path; suffix, the required path
 // ending; keys and valid, the worker's extra command keys and their check;
 // realm, a realm the actor must also hold, or null; run, which returns the
-// result once the actor is confirmed; json, extra json_encode flags.
+// result once the actor is confirmed; json, extra json_encode flags. An optional
+// final input_limit setting allows a bounded 1 MiB mutation payload; older
+// read workers retain their 64 KiB budget. This setting is never command input.
 define('KADUPUL_BROWSER_COMPATIBILITY', true);
 define('KADUPUL_REDACT_DATABASE_LOGS', true);
 define('KADUPUL_THROW_DATABASE_ERRORS', true);
@@ -31,14 +33,20 @@ $phase = 'handoff';
 ob_start();
 try {
     // A worker that omits a setting must fail closed, not skip its check.
-    if (array_keys($consoleHandoff) !== ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json']
+    $inputLimit = array_key_exists('input_limit', $consoleHandoff) ? $consoleHandoff['input_limit'] : 65536;
+    $settings = ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json'];
+    if (array_key_exists('input_limit', $consoleHandoff)) {
+        $settings[] = 'input_limit';
+    }
+    if (array_keys($consoleHandoff) !== $settings
+        || !in_array($inputLimit, [65536, 1048576], true)
         || !is_int($consoleHandoff['realm']) && $consoleHandoff['realm'] !== null) {
         throw new LogicException('Invalid console handoff configuration.');
     }
-    $raw = stream_get_contents(STDIN, 65538);
+    $raw = stream_get_contents(STDIN, $inputLimit + 2);
     $command = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
     $pathKey = $consoleHandoff['path'];
-    if (strlen($raw) > 65536 || !is_array($command)
+    if (strlen($raw) > $inputLimit || !is_array($command)
         || array_diff(array_keys($command), ['actor', 'credential', 'session_id', 'session_path', $pathKey, ...$consoleHandoff['keys'], 'server', 'cookies', 'query']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_string($command['credential'] ?? null) || preg_match('/\A[a-f0-9]{64}\z/D', $command['credential']) !== 1
