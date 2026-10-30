@@ -108,12 +108,64 @@ WORKER);
         $this->runner('POST')->run('legacy-outside.php', [], 7, mode: BrowserWorkerMode::Mutation);
     }
 
-    private function runner(string $method): LegacyBrowserWorkerRunner
+    /** @return iterable<string, array{string, string}> */
+    public static function invalidOutputs(): iterable
+    {
+        yield 'malformed JSON' => ['echo "not JSON";', 'invalid response'];
+        yield 'wrong actor' => ['echo json_encode(["status" => "ok", "actor" => 9]);', 'could not be confirmed'];
+        yield 'failed exit' => ['fwrite(STDERR, "credential-canary"); exit(1);', 'could not be confirmed'];
+        yield 'oversized stdout' => ['echo str_repeat("x", 8388609);', 'exceeds its limit'];
+        yield 'oversized stderr' => ['fwrite(STDERR, str_repeat("x", 8388609));', 'exceeds its limit'];
+        yield 'non-object envelope keys' => ['echo json_encode(["status" => "ok", "actor" => 7, 0 => "value"]);', 'invalid response'];
+    }
+
+    #[DataProvider('invalidOutputs')]
+    public function testInvalidWorkerOutputFailsClosed(string $body, string $message): void
+    {
+        file_put_contents($this->directory . '/bin/legacy-probe.php', '<?php ' . $body);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage($message);
+        $this->runner('POST')->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
+    }
+
+    public function testTimeoutStopsTheChildBeforeItCanFinish(): void
+    {
+        file_put_contents($this->directory . '/bin/legacy-probe.php', '<?php usleep(1000000); file_put_contents(__DIR__ . "/finished", "unexpected");');
+        try {
+            $this->runner('POST')->run('legacy-probe.php', [], 7, timeout: 0.02, mode: BrowserWorkerMode::Mutation);
+            self::fail('The child must time out.');
+        } catch (\Symfony\Component\Process\Exception\ProcessTimedOutException) {
+            self::assertFileDoesNotExist($this->directory . '/bin/finished');
+        }
+    }
+
+    public function testMalformedUtf8IsRejectedBeforeStartingTheWorker(): void
+    {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\BadRequestHttpException::class);
+        $this->runner('POST')->run('legacy-probe.php', ['notes' => "\xff"], 7, mode: BrowserWorkerMode::Mutation);
+    }
+
+    public function testUnavailableSchemaIsRejected(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('installation version is unavailable');
+        $this->runner('POST', schema: '')->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
+    }
+
+    public function testUnavailableConfiguredInterpreterIsRejected(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('configured PHP interpreter is unavailable');
+        $this->runner('POST', binary: $this->directory . '/missing-php')->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
+    }
+
+    private function runner(string $method, string $schema = '1.3.0', string $binary = PHP_BINARY): LegacyBrowserWorkerRunner
     {
         $pdo = new \PDO('sqlite::memory:');
         $pdo->exec("CREATE TABLE version (cacti TEXT); INSERT INTO version VALUES ('1.3.0'); CREATE TABLE settings (name TEXT, value TEXT)");
+        $pdo->prepare('UPDATE version SET cacti = ?')->execute([$schema]);
         $statement = $pdo->prepare('INSERT INTO settings VALUES (?, ?)');
-        $statement->execute(['path_php_binary', PHP_BINARY]);
+        $statement->execute(['path_php_binary', $binary]);
         $database = $this->createMock(DatabaseConnection::class);
         $database->method('get')->willReturn($pdo);
         $session = $this->createMock(BrowserSession::class);
