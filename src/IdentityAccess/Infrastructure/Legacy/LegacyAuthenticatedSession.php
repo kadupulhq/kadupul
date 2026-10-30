@@ -10,11 +10,12 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 use Kadupul\IdentityAccess\Application\Port\AuthenticatedSession;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuthenticatedAccess;
+use Kadupul\IdentityAccess\Contract\BindingApprovalPermission;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\RealmGrants;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
-final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess, RealmGrants
+final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess, RealmGrants, BindingApprovalPermission
 {
     public function __construct(private SharedSession $session, private DatabaseConnection $database) {}
 
@@ -58,6 +59,16 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
     public function canManageDevices(Actor $actor): bool
     {
         return $actor->id > 0 && $this->hasRealm($actor->id, 3);
+    }
+
+    /**
+     * Realm 15, Settings/Utilities, until a dedicated realm exists. Adding one
+     * changes the realm list operators assign, which VERSIONING.md covers, so it
+     * is a separate decision.
+     */
+    public function mayApproveBindings(Actor $actor): bool
+    {
+        return $actor->id > 0 && $this->hasRealm($actor->id, 15);
     }
 
     public function grantedRealms(Actor $actor, array $realmIds): array
