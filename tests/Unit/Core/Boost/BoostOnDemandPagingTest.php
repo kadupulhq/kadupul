@@ -106,7 +106,17 @@ function boostPaging_rrd_close($pipe) {
 }
 
 function boostPaging_boost_get_rrd_filename_and_template($local_data_id) {
-	return array('rrd_path' => '/rra/7.rrd', 'rrd_template' => 'traffic_in:traffic_out');
+	return array('rrd_path' => $GLOBALS['boost_paging']['template_path'], 'rrd_template' => 'traffic_in:traffic_out');
+}
+
+function boostPaging_db_fetch_row_prepared($sql, $params = array(), $log = true, $db_conn = false) {
+	$GLOBALS['boost_paging']['path_queries']++;
+	return $GLOBALS['boost_paging']['path_row'];
+}
+
+function boostPaging_db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true, $db_conn = false) {
+	$row = boostPaging_db_fetch_row_prepared($sql, $params, $log, $db_conn);
+	return is_array($row) && isset($row['rrd_path']) ? $row['rrd_path'] : false;
 }
 
 function boostPaging_cacti_log($message) {
@@ -133,7 +143,7 @@ function boostPagingLoad($root) {
 
 	$source = file_get_contents($root . '/lib/boost.php');
 	expect($source)->toBeString();
-	$names  = 'boost_rrdtool_pipe_creates|boost_process_poller_output|boost_limit_complete_timestamp_page|boost_rrdtool_function_update|boost_get_rrd_filename_and_template|boost_get_arch_table_names|boost_get_unused_data_source_names|boost_get_input_field_names|boost_timer|read_config_option|db_fetch_assoc_prepared|db_fetch_cell|db_execute_prepared|db_execute|db_affected_rows|rrd_init|rrd_close|cacti_log|cacti_system_zone_set|cacti_version_compare|get_rrdtool_version|cacti_sizeof|cacti_count';
+	$names  = 'boost_rrdtool_pipe_creates|boost_process_poller_output|boost_limit_complete_timestamp_page|boost_rrdtool_function_update|boost_get_rrd_filename_and_template|boost_get_arch_table_names|boost_get_unused_data_source_names|boost_get_input_field_names|boost_timer|read_config_option|db_fetch_assoc_prepared|db_fetch_row_prepared|db_fetch_cell_prepared|db_fetch_cell|db_execute_prepared|db_execute|db_affected_rows|rrd_init|rrd_close|cacti_log|cacti_system_zone_set|cacti_version_compare|get_rrdtool_version|cacti_sizeof|cacti_count';
 
 	foreach (array('boost_limit_complete_timestamp_page', 'boost_process_poller_output') as $name) {
 		eval(preg_replace('/\b(' . $names . ')\(/', 'boostPaging_$1(', test_php_function_source($source, $name)));
@@ -158,6 +168,9 @@ function boostPagingReset($timestamps, array $options = array()) {
 
 	$GLOBALS['boost_paging'] = array(
 		'rows'             => $rows,
+		'template_path'    => '/rra/7.rrd',
+		'path_row'         => array('rrd_path' => '/rra/7.rrd'),
+		'path_queries'     => 0,
 		'fields'           => array(),
 		'options'          => $options + array('boost_rrd_update_string_length' => 2000),
 		'page_sizes'       => array(),
@@ -196,6 +209,43 @@ afterEach(function () {
 	unlink($this->library . '/rrd.php');
 	rmdir($this->library);
 });
+
+test('a failed fallback path read retains samples and respects pipe ownership', function ($borrowed) {
+	boostPagingReset(1);
+	$GLOBALS['boost_paging']['template_path'] = '';
+	$GLOBALS['boost_paging']['path_row'] = false;
+	$pipe = $borrowed ? fopen('php://memory', 'w') : '';
+
+	try {
+		expect(boostPaging_boost_process_poller_output(7, $pipe))->toBe(-1)
+			->and(boostPagingDeletes())->toBe(0)
+			->and(boostPaging_state()['update_calls'])->toBe(0)
+			->and(boostPaging_state()['pipes_closed'])->toBe($borrowed ? 0 : 1);
+
+		$GLOBALS['boost_paging']['path_row'] = array('rrd_path' => '/rra/7.rrd');
+		expect(boostPaging_boost_process_poller_output(7, $pipe))->toBe(2)
+			->and(boostPagingDeletes())->toBe(1)
+			->and(boostPaging_state()['written'][1700000300])->toBe(array('2', '3'));
+	} finally {
+		if ($borrowed) {
+			fclose($pipe);
+		}
+	}
+})->with(array('owned' => false, 'borrowed' => true));
+
+test('a successful fallback path lookup preserves normal queue acknowledgement', function ($row) {
+	boostPagingReset(1);
+	$GLOBALS['boost_paging']['template_path'] = '';
+	$GLOBALS['boost_paging']['path_row'] = $row;
+
+	expect(boostPaging_boost_process_poller_output(7))->toBe(2)
+		->and(boostPagingDeletes())->toBe(1)
+		->and(boostPaging_state()['path_queries'])->toBe(1);
+})->with(array(
+	'polled data source' => array(array('rrd_path' => '/rra/7.rrd')),
+	'deleted data source' => array(array()),
+	'explicit empty path' => array(array('rrd_path' => '')),
+));
 
 test('a data source above the default 50000 row page is written in full on demand', function () {
 	boostPagingReset(30001);

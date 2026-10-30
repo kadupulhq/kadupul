@@ -1,5 +1,21 @@
 # Retained-sample first-SELECT diagnostics
 
+## Failed fallback path reads
+
+Status: implemented on LTS for #738. The on-demand writer uses a row lookup
+to distinguish a failed `poller_item` path query from a successful empty result.
+A failed read returns failure before RRD updates or queue acknowledgement, and
+the existing `finally` releases the owned pipe and preserves a borrowed pipe.
+A retry after the read recovers reaches normal acknowledgement. A successful empty result still
+allows removed-source cleanup; a valid fallback path still reaches the writer.
+
+PHP 8.1.34: the failure regression fails before the fix and passes afterward.
+The shared-process Boost directory passes 239 cases with eight explicit skips.
+The focused paging fixture records database and RRD boundaries rather than
+executing an installed collector. No schema, runtime or configuration change is
+required. Current-head CI and review remain required before merge. Reverting
+restores the old lookup and cannot recover previously discarded samples.
+
 ## Non-finite sample handling
 
 Status: implemented on LTS for #739. Scheduled and on-demand Boost writers turn

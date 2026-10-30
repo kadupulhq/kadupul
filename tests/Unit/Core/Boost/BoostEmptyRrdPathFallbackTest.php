@@ -56,9 +56,9 @@ function resolve(string $block, string $path) : array {
 		. ' function boost_get_rrd_filename_and_template($id) {'
 		. '   return array("rrd_path" => ' . var_export($path, true) . ', "rrd_template" => "a:b");'
 		. ' }'
-		. ' function db_fetch_cell_prepared($sql, $params = array()) {'
+		. ' function db_fetch_row_prepared($sql, $params = array(), $log = true, $db_conn = false) {'
 		. '   $GLOBALS["berp_fallback"] = true;'
-		. '   return "/var/lib/cacti/rra/from_poller_item.rrd";'
+		. '   return array("rrd_path" => "/var/lib/cacti/rra/from_poller_item.rrd");'
 		. ' }'
 		. ' function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }'
 		. ' ' . $block
