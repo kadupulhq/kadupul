@@ -19,6 +19,7 @@ use Kadupul\Graphing\Infrastructure\Symfony\Form\GprintPresetDeletionType;
 use Kadupul\Graphing\Infrastructure\Symfony\Form\PaletteColorDeletionType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Bulk confirmation and item deletion pages must keep the markup they had
@@ -40,7 +41,7 @@ final class ActionTemplateRenderingTest extends TestCase
     /** @return array<string, array{string, string, \Closure(): array<string, mixed>}> */
     public static function cases(): array
     {
-        $form = static fn(string $type, array $data, array $options = []): \Closure => static fn(\Psr\Container\ContainerInterface $container): object => $container->get('form.factory')->create($type, $data, ['csrf_protection' => false] + $options)->createView();
+        $form = static fn(string $type, array $data, array $options = []): \Closure => static fn(ContainerInterface $container): object => $container->get('form.factory')->create($type, $data, ['csrf_protection' => false] + $options)->createView();
         $bulk = ['selection' => '3,4', 'revisions' => 'a,b'];
         $item = ['revision' => 'r1'];
 
