@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
 - Treat the obsolete data source delete action as an unknown action instead of calling an undefined handler; use bulk Actions for deletion (#685).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).

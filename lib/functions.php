@@ -8212,7 +8212,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
     $stdout    = '';
     $stderr    = '';
     $deadline  = $timeout === null ? null : hrtime(true) / 1000000000 + (int) $timeout;
-    $exit      = false;
+    $exit      = -1;
 
     while (($remaining = $deadline === null ? 1 : $deadline - hrtime(true) / 1000000000) > 0) {
         $read   = array($pipes[1], $pipes[2]);
@@ -8251,7 +8251,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
         return 1;
     }
 
-    proc_close($process);
+    $close_exit = proc_close($process);
 
     if (!empty($stderr)) {
         cacti_log('WARNING: cacti_exec() stderr: ' . trim($stderr), false, 'SYSTEM');
@@ -8260,7 +8260,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
     $stdout  = rtrim($stdout, "\n");
     $output  = ($stdout === '') ? array() : explode("\n", $stdout);
 
-    return $exit;
+    return $exit >= 0 ? $exit : ($status['exitcode'] >= 0 ? $status['exitcode'] : $close_exit);
 }
 
 /**
