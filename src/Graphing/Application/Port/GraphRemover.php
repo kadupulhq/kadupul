@@ -15,13 +15,15 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 interface GraphRemover
 {
     /**
-     * Runs api_delete_graphs() with the delete-data-sources option the original used.
+     * Runs api_delete_graphs(). The cli/ tools removed the data sources the graphs
+     * reference unless asked to keep them, so that is the default.
      *
      * @param list<int> $localGraphIds
+     * @param bool $keepDataSources true keeps them (api_delete_graphs type 1), false removes them where possible (type 2)
      * @return int how many graphs the worker finished
      *
      * @phpstan-impure
      * @throws \RuntimeException when the outcome is unknown
      */
-    public function remove(OperatorDatabase $database, array $localGraphIds): int;
+    public function remove(OperatorDatabase $database, array $localGraphIds, bool $keepDataSources = false): int;
 }
