@@ -3,8 +3,8 @@
     "name": "recursive_chown",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7712,
-        "end_line": 7736,
+        "start_line": 7710,
+        "end_line": 7734,
         "line_count": 25,
         "signature": {
             "parameters": [

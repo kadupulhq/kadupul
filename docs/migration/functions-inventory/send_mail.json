@@ -76,7 +76,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 1, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 2, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

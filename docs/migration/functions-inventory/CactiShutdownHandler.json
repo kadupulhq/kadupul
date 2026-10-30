@@ -3,8 +3,8 @@
     "name": "CactiShutdownHandler",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6778,
-        "end_line": 6821,
+        "start_line": 6776,
+        "end_line": 6819,
         "line_count": 44,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

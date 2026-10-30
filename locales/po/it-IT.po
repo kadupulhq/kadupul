@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-29 01:09-0700\n"
+"POT-Creation-Date: 2026-10-30 01:34-0700\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -794,7 +794,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Inserisci la tua password attuale e la tua nuova password Kadupul."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6237
+#: include/global_settings.php:1851 lib/functions.php:6235
 msgid "Username"
 msgstr "Nome utente"
 
@@ -887,7 +887,7 @@ msgstr "User Login"
 msgid "Enter your Username and Password below"
 msgstr "Inserisci il tuo nome utente e la tua password qui sotto"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6238
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6236
 msgid "Password"
 msgstr "Password"
 
@@ -1194,7 +1194,7 @@ msgstr "Spurgo dei dispositivi scoperti"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6596 lib/functions.php:6601
+#: data_debug.php:698 lib/functions.php:6594 lib/functions.php:6599
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2184,7 +2184,7 @@ msgstr "Versione"
 msgid "Community"
 msgstr "Comunità"
 
-#: automation_snmp.php:543 lib/functions.php:6233
+#: automation_snmp.php:543 lib/functions.php:6231
 msgid "Port"
 msgstr "Porta"
 
@@ -2394,8 +2394,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "Nessuna regola d'albero trovata"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6741 lib/functions.php:6816
-#: lib/functions.php:6919 lib/functions.php:7609 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6739 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3427,7 +3427,7 @@ msgstr "Il nome dato a questo modello di dati.  Si prega di notare che è possib
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6232 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6230 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Dispositivo"
@@ -3786,7 +3786,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Il Kadupul Poller non ha ancora funzionato."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8312 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Permesso Negato"
 
@@ -4747,12 +4747,12 @@ msgstr "FATAL: Devi essere loggato per accedere a quest'area di Kadupul."
 msgid "Login Again"
 msgstr "Accedi nuovamente"
 
-#: include/auth.php:317 lib/functions.php:8313
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Se ritieni che questo sia un errore. Si prega di contattare il proprio Amministratore Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8313
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Non sei autorizzato ad accedere a questa sezione di Kadupul."
@@ -8632,8 +8632,8 @@ msgstr "Dati"
 msgid "Visual"
 msgstr "Visuale"
 
-#: include/global_settings.php:112 lib/functions.php:6236
-#: lib/functions.php:6241
+#: include/global_settings.php:112 lib/functions.php:6234
+#: lib/functions.php:6239
 msgid "Authentication"
 msgstr "Autenticazione"
 
@@ -8669,11 +8669,11 @@ msgstr "Caratteri del grafico"
 msgid "PHP Mail() Function"
 msgstr "Funzione PHP Mail()"
 
-#: include/global_settings.php:153 lib/functions.php:6217
+#: include/global_settings.php:153 lib/functions.php:6215
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6223
+#: include/global_settings.php:154 lib/functions.php:6221
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10529,7 +10529,7 @@ msgstr "Questo è il numero di caratteri consentiti prima che una riga dell'e-ma
 msgid "Sendmail Options"
 msgstr "Opzioni di invio"
 
-#: include/global_settings.php:1972 lib/functions.php:6217
+#: include/global_settings.php:1972 lib/functions.php:6215
 msgid "Sendmail Path"
 msgstr "Percorso Sendmail"
 
@@ -11748,8 +11748,8 @@ msgstr "Località:"
 msgid "Contact:"
 msgstr "Contatto:"
 
-#: lib/api_device.php:2104 lib/functions.php:6250 lib/functions.php:6252
-#: lib/functions.php:6256
+#: lib/api_device.php:2104 lib/functions.php:6248 lib/functions.php:6250
+#: lib/functions.php:6254
 msgid "Ping Results"
 msgstr "Risultati del Ping"
 
@@ -12576,107 +12576,107 @@ msgstr "Copia"
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Errore di Mailer: No <b>TO</b>indirizzo impostato! <br>Se si utilizza il link <i>Test Mail</i>, impostare l'impostazione <b>Avviso e-mail</b>."
 
-#: lib/functions.php:6188
+#: lib/functions.php:6186
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO fallito: %s"
 
-#: lib/functions.php:6191
+#: lib/functions.php:6189
 msgid "SMTP error: "
 msgstr "Errore SMTP:"
 
-#: lib/functions.php:6204
+#: lib/functions.php:6202
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Questo è un messaggio di prova generato da Kadupul.  Questo messaggio è stato inviato per verificare la configurazione delle impostazioni della posta."
 
-#: lib/functions.php:6205
+#: lib/functions.php:6203
 msgid "Your email settings are currently set as follows"
 msgstr "Le impostazioni e-mail sono attualmente impostate come segue"
 
-#: lib/functions.php:6206
+#: lib/functions.php:6204
 msgid "Method"
 msgstr "Metodo"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6206
 msgid "Checking Configuration...<br>"
 msgstr "Verifica della configurazione....<br>...<br>."
 
-#: lib/functions.php:6215
+#: lib/functions.php:6213
 msgid "PHP's Mailer Class"
 msgstr "Classe Mailer di PHP"
 
-#: lib/functions.php:6221
+#: lib/functions.php:6219
 msgid "Method: SMTP"
 msgstr "Metodo: SMTP"
 
-#: lib/functions.php:6238
+#: lib/functions.php:6236
 msgid "Not Shown for Security Reasons"
 msgstr "Non indicato per motivi di sicurezza"
 
-#: lib/functions.php:6239
+#: lib/functions.php:6237
 msgid "Security"
 msgstr "Sicurezza"
 
-#: lib/functions.php:6247
+#: lib/functions.php:6245
 msgid "Ping Results:"
 msgstr "Risultati Ping:"
 
-#: lib/functions.php:6247 lib/functions.php:6252
+#: lib/functions.php:6245 lib/functions.php:6250
 msgid "Success"
 msgstr "Successo"
 
-#: lib/functions.php:6256
+#: lib/functions.php:6254
 msgid "Bypassed"
 msgstr "Bypass"
 
-#: lib/functions.php:6265
+#: lib/functions.php:6263
 msgid "Creating Message Text..."
 msgstr "Creazione di messaggi di testo....."
 
-#: lib/functions.php:6268
+#: lib/functions.php:6266
 msgid "Sending Message..."
 msgstr "Inviando il messaggio..."
 
-#: lib/functions.php:6272
+#: lib/functions.php:6270
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Messaggio di test dei Kadupul"
 
-#: lib/functions.php:6274
+#: lib/functions.php:6272
 msgid "Success!"
 msgstr "Riuscito!"
 
-#: lib/functions.php:6277
+#: lib/functions.php:6275
 msgid "Message Not Sent due to ping failure."
 msgstr "Messaggio non inviato a causa di un errore di ping."
 
-#: lib/functions.php:6741 lib/functions.php:6816
+#: lib/functions.php:6739 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul ha disabilitato il plugin %s a causa del seguente errore: %s!  Vedere il file di log Kadupul per maggiori dettagli."
 
-#: lib/functions.php:6919
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "ATTENZIONE: PollerID:%s ha un nome host non valido:%s.  Non è raggiungibile via DNS!"
 
-#: lib/functions.php:7372 lib/functions.php:7374
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7372 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Versione %s %s"
 
-#: lib/functions.php:7374
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7609
+#: lib/functions.php:7607
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ATTENZIONE: manca il file Key Kadupul Include %s.  Individua e sostituisci questo file"

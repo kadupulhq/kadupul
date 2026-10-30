@@ -3,8 +3,8 @@
     "name": "get_compiled_asset_path",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7625,
-        "end_line": 7641,
+        "start_line": 7623,
+        "end_line": 7639,
         "line_count": 17,
         "signature": {
             "parameters": [

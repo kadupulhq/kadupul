@@ -3,8 +3,8 @@
     "name": "version_to_decimal",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7436,
-        "end_line": 7469,
+        "start_line": 7434,
+        "end_line": 7467,
         "line_count": 34,
         "signature": {
             "parameters": [

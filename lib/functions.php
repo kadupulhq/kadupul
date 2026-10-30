@@ -6150,7 +6150,7 @@ function create_emailtext($e)
 
 function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure = 'none')
 {
-    global $config, $cacti_locale;
+    global $config;
 
     require_once($config['include_path'] . '/vendor/phpmailer/src/Exception.php');
     require_once($config['include_path'] . '/vendor/phpmailer/src/PHPMailer.php');
@@ -6164,8 +6164,6 @@ function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure
     $mail->SMTPAuth = $user != '';
     $mail->Username = $user;
     $mail->Password = $password;
-    $language = explode('-', $cacti_locale ?? 'en-US');
-    PHPMailer\PHPMailer\PHPMailer::setLanguage($language[0], $config['include_path'] . '/vendor/phpmailer/language/');
 
     if (!empty($secure) && $secure != 'none') {
         $mail->SMTPSecure = $secure == 'tls' ? $mail::ENCRYPTION_STARTTLS : $mail::ENCRYPTION_SMTPS;

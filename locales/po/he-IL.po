@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-29 01:09-0700\n"
+"POT-Creation-Date: 2026-10-30 01:34-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -797,7 +797,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "הזן את הסיסמה הנוכחית ואת החדש <br> סיסמת Kadupul."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6237
+#: include/global_settings.php:1851 lib/functions.php:6235
 msgid "Username"
 msgstr "שם משתמש"
 
@@ -890,7 +890,7 @@ msgstr "פרטי הכניסה של המשתמש"
 msgid "Enter your Username and Password below"
 msgstr "הזן את שם המשתמש והסיסמה שלך למטה"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6238
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6236
 msgid "Password"
 msgstr "סיסמה"
 
@@ -1197,7 +1197,7 @@ msgstr "טיהור התגלה התקנים"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6596 lib/functions.php:6601
+#: data_debug.php:698 lib/functions.php:6594 lib/functions.php:6599
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2188,7 +2188,7 @@ msgstr "גרסה"
 msgid "Community"
 msgstr "קהילה"
 
-#: automation_snmp.php:543 lib/functions.php:6233
+#: automation_snmp.php:543 lib/functions.php:6231
 msgid "Port"
 msgstr "פורט"
 
@@ -2398,8 +2398,8 @@ msgstr "‫Root"
 msgid "No Tree Rules Found"
 msgstr "לא נמצאו כללי עץ"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6741 lib/functions.php:6816
-#: lib/functions.php:6919 lib/functions.php:7609 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6739 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3471,7 +3471,7 @@ msgstr "השם שניתן לתבנית נתונים זו. לידיעתך, תוכ
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6232 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6230 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "התקן"
@@ -3830,7 +3830,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller עדיין לא רץ."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8312 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "ההרשאה נדחתה"
 
@@ -4792,12 +4792,12 @@ msgstr "פתאל: עליך להיות מחובר כדי לגשת לאזור זה
 msgid "Login Again"
 msgstr "היכנס שוב"
 
-#: include/auth.php:317 lib/functions.php:8313
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "אם אתה מרגיש שזאת טעות. אנא צור קשר עם מנהל Kadupul שלך."
 
-#: include/auth.php:317 lib/functions.php:8313
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "אינך מורשה לגשת לקטע זה של Kadupul."
@@ -8679,8 +8679,8 @@ msgstr "נתונים"
 msgid "Visual"
 msgstr "חזותי"
 
-#: include/global_settings.php:112 lib/functions.php:6236
-#: lib/functions.php:6241
+#: include/global_settings.php:112 lib/functions.php:6234
+#: lib/functions.php:6239
 msgid "Authentication"
 msgstr "שיטת האימות לא חוקי"
 
@@ -8716,11 +8716,11 @@ msgstr "גופני תרשים"
 msgid "PHP Mail() Function"
 msgstr "PHP PHP () פונקציה"
 
-#: include/global_settings.php:153 lib/functions.php:6217
+#: include/global_settings.php:153 lib/functions.php:6215
 msgid "Sendmail"
 msgstr "& Sendmail@ option"
 
-#: include/global_settings.php:154 lib/functions.php:6223
+#: include/global_settings.php:154 lib/functions.php:6221
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10581,7 +10581,7 @@ msgstr "זה כמה תווים יהיה מותר לפני שורה בדוא&quot
 msgid "Sendmail Options"
 msgstr "אפשרויות Sendmail"
 
-#: include/global_settings.php:1972 lib/functions.php:6217
+#: include/global_settings.php:1972 lib/functions.php:6215
 msgid "Sendmail Path"
 msgstr "נתיב Sendmail"
 
@@ -11802,8 +11802,8 @@ msgstr "מיקום:"
 msgid "Contact:"
 msgstr "איש קשר:"
 
-#: lib/api_device.php:2104 lib/functions.php:6250 lib/functions.php:6252
-#: lib/functions.php:6256
+#: lib/api_device.php:2104 lib/functions.php:6248 lib/functions.php:6250
+#: lib/functions.php:6254
 msgid "Ping Results"
 msgstr "תוצאות פינג"
 
@@ -12630,107 +12630,107 @@ msgstr "העתק"
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "שגיאת מיילר: לא כתובת <b>TO</b> מוגדר! <br> אם אתה משתמש בקישור <i>Test Mail (דואר בדיקה)</i> , הגדר את הגדרת <b>הדואר האלקטרוני של ההתראה</b> ."
 
-#: lib/functions.php:6188
+#: lib/functions.php:6186
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO נכשל: %s"
 
-#: lib/functions.php:6191
+#: lib/functions.php:6189
 msgid "SMTP error: "
 msgstr "שגיאת SMTP:"
 
-#: lib/functions.php:6204
+#: lib/functions.php:6202
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "זוהי הודעת בדיקה שנוצרה על ידי Kadupul. הודעה זו נשלחה לבדיקת התצורה של הגדרות הדואר שלך."
 
-#: lib/functions.php:6205
+#: lib/functions.php:6203
 msgid "Your email settings are currently set as follows"
 msgstr "הגדרות הדוא&quot;ל שלך מוגדרות באופן הבא"
 
-#: lib/functions.php:6206
+#: lib/functions.php:6204
 msgid "Method"
 msgstr "שיטה"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6206
 msgid "Checking Configuration...<br>"
 msgstr "בודק את התצורה ... <br>"
 
-#: lib/functions.php:6215
+#: lib/functions.php:6213
 msgid "PHP's Mailer Class"
 msgstr "בכיתה מיילר של PHP"
 
-#: lib/functions.php:6221
+#: lib/functions.php:6219
 msgid "Method: SMTP"
 msgstr "שיטה: SMTP"
 
-#: lib/functions.php:6238
+#: lib/functions.php:6236
 msgid "Not Shown for Security Reasons"
 msgstr "לא מוצג מסיבות אבטחה"
 
-#: lib/functions.php:6239
+#: lib/functions.php:6237
 msgid "Security"
 msgstr "אבטחה"
 
-#: lib/functions.php:6247
+#: lib/functions.php:6245
 msgid "Ping Results:"
 msgstr "פינג תוצאות:"
 
-#: lib/functions.php:6247 lib/functions.php:6252
+#: lib/functions.php:6245 lib/functions.php:6250
 msgid "Success"
 msgstr "הצלחה"
 
-#: lib/functions.php:6256
+#: lib/functions.php:6254
 msgid "Bypassed"
 msgstr "עקף"
 
-#: lib/functions.php:6265
+#: lib/functions.php:6263
 msgid "Creating Message Text..."
 msgstr "יוצר טקסט הודעה ..."
 
-#: lib/functions.php:6268
+#: lib/functions.php:6266
 msgid "Sending Message..."
 msgstr "לשלוח הודעה..."
 
-#: lib/functions.php:6272
+#: lib/functions.php:6270
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "הודעה מבחן Kadupul"
 
-#: lib/functions.php:6274
+#: lib/functions.php:6272
 msgid "Success!"
 msgstr "הצלחה!"
 
-#: lib/functions.php:6277
+#: lib/functions.php:6275
 msgid "Message Not Sent due to ping failure."
 msgstr "ההודעה לא נשלחה עקב כשל ב- ping."
 
-#: lib/functions.php:6741 lib/functions.php:6816
+#: lib/functions.php:6739 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul מושבת plugin %s עקב השגיאה הבאה: %s! לקבלת מידע נוסף, עיין בקובץ ה- Kadupul logfile."
 
-#: lib/functions.php:6919
+#: lib/functions.php:6917
 #, fuzzy, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "אזהרה: ל - PollerID: ל -{ 0} יש שם מארח לא חוקי:%s.  האם לא ניתן להגיע אליו באמצעות DNS!"
 
-#: lib/functions.php:7372 lib/functions.php:7374
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- ביטא %s"
 
-#: lib/functions.php:7372 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "גרסה %s %s"
 
-#: lib/functions.php:7374
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7609
+#: lib/functions.php:7607
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "אזהרה:  מפתח Kadupul כלול קובץ %s חסר.  צריך לאתר ולהחליף את הקובץ הזה"

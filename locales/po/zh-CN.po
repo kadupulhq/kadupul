@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-29 01:09-0700\n"
+"POT-Creation-Date: 2026-10-30 01:34-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -794,7 +794,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "请输入您的Kadupul新密码."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6237
+#: include/global_settings.php:1851 lib/functions.php:6235
 msgid "Username"
 msgstr "用户名"
 
@@ -887,7 +887,7 @@ msgstr "用户登录"
 msgid "Enter your Username and Password below"
 msgstr "在下面输入您的用户名和密码"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6238
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6236
 msgid "Password"
 msgstr "密码"
 
@@ -1194,7 +1194,7 @@ msgstr "清空已发现的设备"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6596 lib/functions.php:6601
+#: data_debug.php:698 lib/functions.php:6594 lib/functions.php:6599
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2184,7 +2184,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "团体名"
 
-#: automation_snmp.php:543 lib/functions.php:6233
+#: automation_snmp.php:543 lib/functions.php:6231
 msgid "Port"
 msgstr "端口"
 
@@ -2394,8 +2394,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "未找到树规则"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6741 lib/functions.php:6816
-#: lib/functions.php:6919 lib/functions.php:7609 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6739 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3406,7 +3406,7 @@ msgstr "给这个数据模板的名字。 请注意，您只能将图形模板�
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6232 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6230 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "设备"
@@ -3765,7 +3765,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller 尚未运行."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8312 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "没有权限"
 
@@ -4726,12 +4726,12 @@ msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 msgid "Login Again"
 msgstr "重新登录"
 
-#: include/auth.php:317 lib/functions.php:8313
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果您觉得这是一个报错,请联系Kadupul 管理员."
 
-#: include/auth.php:317 lib/functions.php:8313
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您不能访问Kadupul 的这个部分."
@@ -8610,8 +8610,8 @@ msgstr "数据"
 msgid "Visual"
 msgstr "外观"
 
-#: include/global_settings.php:112 lib/functions.php:6236
-#: lib/functions.php:6241
+#: include/global_settings.php:112 lib/functions.php:6234
+#: lib/functions.php:6239
 msgid "Authentication"
 msgstr "认证"
 
@@ -8647,11 +8647,11 @@ msgstr "图形字体"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() 函数"
 
-#: include/global_settings.php:153 lib/functions.php:6217
+#: include/global_settings.php:153 lib/functions.php:6215
 msgid "Sendmail"
 msgstr "发送邮件"
 
-#: include/global_settings.php:154 lib/functions.php:6223
+#: include/global_settings.php:154 lib/functions.php:6221
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10504,7 +10504,7 @@ msgstr "这是在电子邮件中的一行被自动换行之前允许多少个字
 msgid "Sendmail Options"
 msgstr "Sendmail 选项"
 
-#: include/global_settings.php:1972 lib/functions.php:6217
+#: include/global_settings.php:1972 lib/functions.php:6215
 msgid "Sendmail Path"
 msgstr "Sendmail 路径"
 
@@ -11723,8 +11723,8 @@ msgstr "位置:"
 msgid "Contact:"
 msgstr "联系人:"
 
-#: lib/api_device.php:2104 lib/functions.php:6250 lib/functions.php:6252
-#: lib/functions.php:6256
+#: lib/api_device.php:2104 lib/functions.php:6248 lib/functions.php:6250
+#: lib/functions.php:6254
 msgid "Ping Results"
 msgstr "Ping 结果"
 
@@ -12550,106 +12550,106 @@ msgstr "复制"
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Error: 没有设置<b> 收件人 </b>地址!! 如果使用 <i>邮件测试</i> 链接,请设置<b> 报警邮件 </b>设置."
 
-#: lib/functions.php:6188
+#: lib/functions.php:6186
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO 失败: %s"
 
-#: lib/functions.php:6191
+#: lib/functions.php:6189
 msgid "SMTP error: "
 msgstr "SMTP error: "
 
-#: lib/functions.php:6204
+#: lib/functions.php:6202
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "这是从Kadupul 生成的测试消息. 发送此邮件是为了测试您的邮件设置的配置."
 
-#: lib/functions.php:6205
+#: lib/functions.php:6203
 msgid "Your email settings are currently set as follows"
 msgstr "您的电子邮件设置目前设置如下"
 
-#: lib/functions.php:6206
+#: lib/functions.php:6204
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6206
 msgid "Checking Configuration...<br>"
 msgstr "检查配置... <br>"
 
-#: lib/functions.php:6215
+#: lib/functions.php:6213
 msgid "PHP's Mailer Class"
 msgstr "PHP Mailer 的类"
 
-#: lib/functions.php:6221
+#: lib/functions.php:6219
 msgid "Method: SMTP"
 msgstr "方法: SMTP"
 
-#: lib/functions.php:6238
+#: lib/functions.php:6236
 msgid "Not Shown for Security Reasons"
 msgstr "由于安全原因没有显示"
 
-#: lib/functions.php:6239
+#: lib/functions.php:6237
 msgid "Security"
 msgstr "安全"
 
-#: lib/functions.php:6247
+#: lib/functions.php:6245
 msgid "Ping Results:"
 msgstr "Ping 结果:"
 
-#: lib/functions.php:6247 lib/functions.php:6252
+#: lib/functions.php:6245 lib/functions.php:6250
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6256
+#: lib/functions.php:6254
 msgid "Bypassed"
 msgstr "绕过"
 
-#: lib/functions.php:6265
+#: lib/functions.php:6263
 msgid "Creating Message Text..."
 msgstr "创建消息文本..."
 
-#: lib/functions.php:6268
+#: lib/functions.php:6266
 msgid "Sending Message..."
 msgstr "正在发送消息..."
 
-#: lib/functions.php:6272
+#: lib/functions.php:6270
 msgid "Kadupul Test Message"
 msgstr "Kadupul 测试消息"
 
-#: lib/functions.php:6274
+#: lib/functions.php:6272
 msgid "Success!"
 msgstr "成功!"
 
-#: lib/functions.php:6277
+#: lib/functions.php:6275
 msgid "Message Not Sent due to ping failure."
 msgstr "由于ping 失败,邮件未发送."
 
-#: lib/functions.php:6741 lib/functions.php:6816
+#: lib/functions.php:6739 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 禁用了插件 %s 因为以下错误: %s! 更多详细信息,请参考Kadupul 日志文件."
 
-#: lib/functions.php:6919
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告：PollerID：%s 的主机名无效：%s。 是否无法通过DNS访问！"
 
-#: lib/functions.php:7372 lib/functions.php:7374
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7372 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "版本 %s %s"
 
-#: lib/functions.php:7374
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7609
+#: lib/functions.php:7607
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"

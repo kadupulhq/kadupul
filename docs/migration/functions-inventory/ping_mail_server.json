@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 6151,
-        "end_line": 6198,
-        "line_count": 48,
+        "end_line": 6196,
+        "line_count": 46,
         "signature": {
             "parameters": [
                 {
@@ -67,9 +67,9 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 2, "plugins": 0},
         "body": {
-            "uses_global": ["cacti_locale", "config"],
+            "uses_global": ["config"],
             "static_variables": [],
             "superglobals": [],
             "session": {"references": 0, "keys": []},
