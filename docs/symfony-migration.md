@@ -1708,6 +1708,30 @@ Known differences from `cli/add_perms.php`:
 - `--list-groups` still prints `This option has not yet been implemented` and
   lists nothing; under `bin/console` it fails with exit 1.
 
+`php bin/console kadupul:graph:reapply-titles --host-id=<all|0|id,id,...>`
+reapplies the suggested graph titles to existing graphs and refreshes their
+cached titles. It runs the same `api_reapply_suggested_graph_title()` and
+`update_graph_title_cache()` the web uses, in a worker that takes up to 500
+graphs a time, so plugin hooks are unchanged. `--filter=<text>` keeps graphs
+whose title or graph template name contains it. It needs the Console Access
+and Graphs realms, the realm `graphs.php` requires. `--dry-run` lists the
+graphs and renames none. `--json` prints `status`, `database`, `dry_run`,
+`selected`, `reapplied` and `graphs`, the local graph ids.
+
+Known differences from `cli/poller_graphs_reapply_names.php`:
+
+- It needs an operator with the Console Access and Graphs realms, checked on
+  the database it works on, and the run is audited. The original ran for anyone
+  who could run it.
+- The filter is bound as a parameter. The original put it inside the SQL text,
+  so a quote broke the query. `%` and `_` in the filter are still wildcards.
+- Graphs are taken in local graph id order. The original had no ordering.
+- With `--debug`, the lines for each graph print after its batch has run, not
+  around each rename. The text of the lines is unchanged.
+- An invalid flag prints the error and help without the version line.
+- The selector error `Specify --host-id=all ...` still goes to standard error
+  and exits 1. Under `bin/console` an invalid `--host-id` exits 2.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or
