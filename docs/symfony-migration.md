@@ -1594,6 +1594,63 @@ Known differences from `cli/audit_database.php`:
   unauthorized operator` and exit 1. The original ignored `--as` and printed
   the help.
 
+`php bin/console kadupul:user:copy <template> <new>` copies a local account,
+with its permissions, realms, settings and group memberships, to a new
+account. It runs the same `user_copy()` the web uses, in a worker, so plugin
+hooks and the transaction are unchanged. It needs the Console Access and User
+Management realms, the realm `user_admin.php` requires. `--dry-run` checks the
+template and the new name and copies nothing. `--json` prints `status`,
+`database`, `dry_run`, `result` (`copied`, `planned`, `template-missing`,
+`new-user-exists` or `not-copied`), `template` and `new`.
+
+Known differences from `cli/copy_user.php`:
+
+- It needs an operator with the Console Access and User Management realms,
+  checked on the database it works on. The original ran for anyone who could
+  run it. An admin who has not yet changed the initial password is refused.
+- A missing or empty `<new user>` prints the usage and exits 1. The original
+  copied to a null or empty username, with a PHP warning in the first case,
+  and created an account with no name.
+- A missing template and a refused copy print `Error: User not copied!`, as
+  before. The original's `Template user does not exist!` check could not fire,
+  because `db_fetch_row()` returns an empty array rather than null.
+- The copy is audited with the new username's hash, never the name.
+
+`php bin/console kadupul:permission:add` gives a user access to one graph,
+tree, device (`host`) or graph template, and
+`php bin/console kadupul:permission:list <target>` lists what can be named
+(`users`, `trees`, `hosts`, `graphs` with `--host-id`, `graph-templates`).
+Both need the Console Access and User Management realms. The grant is the
+statement the web's user form sends, through `PermissionMutation::write()`.
+`--dry-run` runs every check and grants nothing. `--json` prints `status`,
+`database`, `dry_run`, `result`, `user_id`, `item_type` and `item_id` for a
+grant, and `rows` keyed by column name for a listing.
+
+Known differences from `cli/add_perms.php`:
+
+- It needs an operator with the Console Access and User Management realms,
+  for a listing as well as a grant. The original ran for anyone who could run
+  it.
+- A grant raises the user's permission epoch and ends their remembered
+  logins, as the web does. The original wrote the row directly, so the
+  user's cached permissions stayed stale until they were next reset.
+- `Invalid Userid` names the id that was given. The original printed the value
+  of the last argument on the command line.
+- The ids are bound, not interpolated into SQL. A value that is not a whole
+  number is reported as an invalid id; the original sent it to the server, where
+  it was a syntax error or a comparison on text.
+- A write the server refuses prints `ERROR: Permission not granted` and exits
+  1. The original ignored the result and exited 0.
+- An invalid flag prints the error and help without the version line.
+- `--quiet` is `--no-headings` under `bin/console`, because Symfony reserves
+  `--quiet`. The shim accepts `--quiet`.
+- Under `bin/console` a grant needs `--user-id`. The shim keeps the original,
+  which checked the item and granted nothing when no user was named.
+- Tree sort methods are listed with their English names. The original
+  translated them with the installation's default language.
+- `--list-groups` still prints `This option has not yet been implemented` and
+  lists nothing; under `bin/console` it fails with exit 1.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or
