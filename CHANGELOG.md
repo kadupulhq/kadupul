@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
+- Refuse online collector administration while either ordinary or Boost output is pending or unreadable, preserving the native recovery boundary before routing reads to the primary database (#759).
 
 - Include client timing, dataset, connection outcome and server diagnostics in failed RRDtool proxy interoperability tests to investigate intermittent fixture failures (#1244).
 - Register native database sessions through `SessionHandlerInterface` to avoid PHP 8.4 callback-registration deprecations, retaining the existing callbacks and shutdown behavior.
