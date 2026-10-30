@@ -213,6 +213,7 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyBoostPartitionWriter.php',
                 'src/Graphing/Infrastructure/Symfony/BoostRunHandler.php',
+                'src/IdentityAccess/Infrastructure/Legacy/LegacyUserCopier.php',
                 'config/services.yaml',
             ],
             'LegacyInstallationUpgrade' => [

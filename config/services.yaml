@@ -121,6 +121,11 @@ services:
     Kadupul\IdentityAccess\Contract\ConsoleOperator:
         alias: Kadupul\IdentityAccess\Infrastructure\Cli\CliConsoleAccess
 
+    Kadupul\IdentityAccess\Application\Command\UserCommandAccess: ~
+    Kadupul\IdentityAccess\Application\Command\CopyUser: ~
+    Kadupul\IdentityAccess\Application\Port\UserCopier:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserCopier
+
     # Session expiry/revocation must commit independently of application writes.
     # Rolling back a site edit must never restore a rejected credential.
     kadupul.session_database:
