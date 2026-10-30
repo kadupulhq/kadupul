@@ -344,8 +344,8 @@ dynamic_include	./lib/api_device.php:1307	    include_once($config['base_path'] 
 dynamic_include	./lib/api_device.php:1308	    include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:1309	    include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/api_device.php:1310	    include_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./lib/boost.php:1481	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/boost.php:1758	        include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:1489	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/boost.php:1766	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:358	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:490	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:856	    include_once($config['library_path'] . '/rrd.php');

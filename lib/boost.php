@@ -1017,13 +1017,21 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '')
             if (cacti_sizeof($path_template)) {
                 $rrd_path = $path_template['rrd_path'];
                 $rrd_tmpl = $path_template['rrd_template'];
-            } else {
-                $rrd_path = db_fetch_cell_prepared(
+            }
+            if ($rrd_path == '') {
+                $path_row = db_fetch_row_prepared(
                     'SELECT rrd_path
 				FROM poller_item
 				WHERE local_data_id = ?',
                     array($local_data_id)
                 );
+                // A cell lookup conflates a failed read with a removed source.
+                if ($path_row === false) {
+                    cacti_log("ERROR: Boost could not read the RRD path for Local Data ID '$local_data_id';"
+                        . ' queued rows were retained.', false, 'BOOST');
+                    return -1;
+                }
+                $rrd_path = $path_row['rrd_path'] ?? '';
             }
 
             cacti_log('The RRDpath is ' . $rrd_path, false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
