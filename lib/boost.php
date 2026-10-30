@@ -1530,8 +1530,11 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 				array($local_data_id));
 			// A cell lookup conflates a failed read with a removed data source.
 			if ($path_row === false) {
-				cacti_log("ERROR: Boost could not read the RRD path for Local Data ID '$local_data_id';"
-					. ' queued rows were retained.', false, 'BOOST');
+				cacti_log(
+					"ERROR: Boost could not read the RRD path for Local Data ID '$local_data_id'; queued rows were retained.",
+					false,
+					'BOOST'
+				);
 				return -1;
 			}
 			$rrd_path = isset($path_row['rrd_path']) ? $path_row['rrd_path'] : '';
