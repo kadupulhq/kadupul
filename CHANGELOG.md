@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add ten Symfony/Twig views for graph and data-source relationships, report contents, tree placements, collector devices and network discovery results, with bounded reads and existing resource permissions.
+
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).

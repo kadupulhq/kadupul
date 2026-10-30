@@ -2133,11 +2133,11 @@ const ADMINISTRATION_LIST_ACCESS_SOURCES = [
 
 // Reviewed management route defaults, actor/realm admission and scoped inputs.
 const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '40b5a0c78d075c9b17e648b891fef944e213d5b11546027ff336e485e6c7a3f3',
-    'src/Navigation/Contract/Management/CatalogScreen.php' => 'baed17d0ea795c70815402844a4e84d06a4f16a126b9a9285c10014ab4873d15',
+    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '271bdf0f87d037c6f8863d7c89bda1a34dad7de41e690b0b3a930a65dbf86cae',
+    'src/Navigation/Contract/Management/CatalogScreen.php' => 'fc48e051d8e33b70e0aa7623cd9f85c55cd9027aadb3d63379012e74ee857f32',
     'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd33928dadc140353aad969ce74626e21b79c772d1f546bf93cca6a12f53fbc0a',
-    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => '007e1b1bbbf42125e701410fe1d37a02ea0d7bf0acb4d4d9247ed43be659fe6d',
-    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => 'c8b3780e8a5314d4c31bb8fa8326723b054688685f2ab4ae339cd44f56d606a9',
+    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => 'b910f1953547da9d654f80d0844ec1e6ab086e09f1075320a0aeda9c52f21f89',
+    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => '0e08209565d610b81cb2bbf7451bce78926b4b607d9984fa5796420b9b9fd803',
 ];
 
 // Route prefix => feature realm, its access contract, the contract's only
@@ -2153,6 +2153,78 @@ const RELATIONSHIP_ACCESS_SOURCES = [
 ];
 
 const REVIEWED_FEATURE_ACCESS = [
+    '/management/graph-items' => [
+        'label' => 'management catalog',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/graph-data-sources' => [
+        'additional_realms' => [3],
+        'label' => 'management catalog',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/aggregate-members' => [
+        'label' => 'management catalog',
+        'realm' => 5,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/data-source-definitions' => [
+        'label' => 'management catalog',
+        'realm' => 3,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/data-source-graphs' => [
+        'additional_realms' => [5],
+        'label' => 'management catalog',
+        'realm' => 3,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/report-items' => [
+        'label' => 'management catalog',
+        'realm' => 21,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/my-report-items' => [
+        'label' => 'management catalog',
+        'realm' => 22,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/tree-items' => [
+        'label' => 'management catalog',
+        'realm' => 4,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/collector-devices' => [
+        'label' => 'management catalog',
+        'realm' => 3,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
+    '/management/network-devices' => [
+        'label' => 'management catalog',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Navigation\\Application\\Port\\ManagementCatalogAccess',
+        'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalManagementCatalogAccess',
+        'sources' => MANAGEMENT_CATALOG_ACCESS_SOURCES,
+    ],
     '/management/graph-input-items' => [
         'label' => 'management catalog',
         'realm' => 10,
