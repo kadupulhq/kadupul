@@ -24,6 +24,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Guide installer setup with grouped optional settings, explicit backup and recovery checklists, actionable runtime checks and read-only post-installation evidence. Add local unattended configuration validation, environment-backed SNMP secret references and authenticated redacted diagnostic downloads. Include English/French guidance and keyboard/browser regression coverage (#1313).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
+- Add an explicit-connection administrative actor policy for native mutation workers, with transactional credential, account and realm revalidation; existing entry points remain unchanged.
+
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
