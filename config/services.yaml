@@ -125,6 +125,12 @@ services:
     Kadupul\IdentityAccess\Application\Command\CopyUser: ~
     Kadupul\IdentityAccess\Application\Port\UserCopier:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserCopier
+    Kadupul\IdentityAccess\Application\Command\GrantItemPermission: ~
+    Kadupul\IdentityAccess\Application\Command\ListPermissionTargets: ~
+    Kadupul\IdentityAccess\Application\Port\ItemPermissions:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyItemPermissions
+    Kadupul\IdentityAccess\Application\Port\PermissionCatalog:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalPermissionCatalog
 
     # Session expiry/revocation must commit independently of application writes.
     # Rolling back a site edit must never restore a rejected credential.
