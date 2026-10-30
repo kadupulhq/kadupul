@@ -9,6 +9,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 foreach (array(
     'poller_boost.php' => array('boost_process_local_data_ids', 'boost_process_output'),
     'lib/boost.php' => array('boost_limit_complete_timestamp_page'),
+    'lib/functions.php' => array('array_rekey'),
 ) as $file => $functions) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
     foreach ($functions as $function) {
@@ -19,6 +20,8 @@ foreach (array(
 const BOOST_TIMER_START = 1;
 const BOOST_TIMER_END = 2;
 const SQL_NO_CACHE = '';
+const POLLER_VERBOSITY_HIGH = 4;
+const POLLER_VERBOSITY_NONE = 1;
 function set_error_handler($handler) {}
 function restore_error_handler() {}
 function get_installed_rrdtool_version() { return '1.7.2'; }
@@ -26,20 +29,20 @@ function get_rrdtool_version() { return '1.7.2'; }
 function cacti_version_compare($a, $b, $op) { return version_compare($a, $b, $op); }
 function read_config_option($name) { return $name === 'boost_rrd_update_string_length' ? $GLOBALS['isolation_buffer'] : ''; }
 function boost_get_arch_table_names($table) { return array('poller_output_boost_arch_1'); }
-function array_rekey($rows, ...$args) { return array(); }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function boost_timer(...$args) {}
 function boost_debug(...$args) {}
 function cacti_log($message, ...$args) { $GLOBALS['isolation_logs'][] = $message; }
 function boost_get_unused_data_source_names($id) { return array(); }
-function boost_get_rrd_filename_and_template($id) { return array('rrd_template' => 'value', 'rrd_path' => "/rra/$id.rrd"); }
+function boost_get_rrd_filename_and_template($id) { return array('rrd_template' => $GLOBALS['isolation_template'], 'rrd_path' => "/rra/$id.rrd"); }
+function boost_get_input_field_names($id, $templated = true) { return array('uncached' => 'value', 'peer' => 'peer'); }
 function boost_rrdtool_function_update($id, $path, $template, $values, $pipe) {
     $GLOBALS['isolation_updates'][] = array($id, $values);
     $failing = $id == 2 && ($GLOBALS['isolation_fail_values'] === '' || strpos($values, $GLOBALS['isolation_fail_values']) !== false);
     return $failing || $GLOBALS['isolation_all_fail'] ? 'ERROR: permission denied; retain samples for retry' : 'OK';
 }
 function db_fetch_assoc_prepared($sql, $params = array()) {
-    if (strpos($sql, 'poller_data_template_field_mappings') !== false) { return array(); }
+    if (strpos($sql, 'poller_data_template_field_mappings') !== false) { return $GLOBALS['isolation_fields']; }
     $statement = $GLOBALS['isolation_db']->prepare($sql);
     $statement->execute($params);
     return $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -73,6 +76,8 @@ beforeEach(function () {
     $GLOBALS['isolation_all_fail'] = false;
     $GLOBALS['isolation_buffer'] = 2000;
     $GLOBALS['isolation_fail_values'] = '';
+    $GLOBALS['isolation_template'] = 'value';
+    $GLOBALS['isolation_fields'] = array();
     $GLOBALS['isolation_logs'] = $GLOBALS['isolation_updates'] = array();
     $GLOBALS['config'] = array('library_path' => sys_get_temp_dir() . '/boost-isolation-' . bin2hex(random_bytes(8)));
     mkdir($GLOBALS['config']['library_path']);
@@ -126,3 +131,28 @@ test('a source that fails after an acknowledged flush hands back only the unwrit
         ->and($db->query('SELECT time FROM poller_output_boost ORDER BY time')->fetchAll(\PDO::FETCH_COLUMN))
             ->toBe(array('2020-01-01 00:10:00', '2020-01-01 00:15:00'));
 });
+
+test('the scheduled Boost writer normalizes samples through scalar and both MULTI mappings', function ($sample, $expected, $format) {
+    $db = $GLOBALS['isolation_db'];
+    $db->exec('DELETE FROM poller_output_boost_arch_1');
+    $db->exec('DELETE FROM poller_output_boost_local_data_ids WHERE local_data_id != 1');
+    $GLOBALS['isolation_template'] = 'value:peer';
+    $GLOBALS['isolation_fields'] = array(
+        array('keyname' => '0_cached', 'data_source_name' => 'value'),
+        array('keyname' => '0_peer', 'data_source_name' => 'peer'),
+    );
+    $insert = $db->prepare('INSERT INTO poller_output_boost_arch_1 VALUES (1,?,\'2020-01-01 00:00:00\',?)');
+    if ($format === 'scalar') {
+        $insert->execute(array('value', $sample));
+        $insert->execute(array('peer', '7'));
+    } else {
+        $insert->execute(array('', $format . ':' . $sample . ' peer:7'));
+    }
+
+    expect(boost_process_local_data_ids(1, false, 100))->toBe($format === 'scalar' ? 2 : 1)
+        ->and($GLOBALS['isolation_updates'][0][1])->toBe(strtotime('2020-01-01 00:00:00 UTC') . ':' . $expected . ':7')
+        ->and($db->query('SELECT cursor_time FROM poller_output_boost_local_data_ids')->fetchColumn())->toBe('2020-01-01 00:00:00');
+})->with(array(
+    array('1e999', 'U'), array('-1e999', 'U'), array('0', '0'),
+    array('-1.5', '-1.5'), array('1e3', '1e3'), array('U', 'U'),
+))->with(array('scalar', 'cached', 'uncached'));

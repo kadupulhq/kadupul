@@ -21,6 +21,8 @@
 
 $root = dirname(__DIR__, 4);
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 foreach (array('BOOST_TIMER_START' => 1, 'BOOST_TIMER_END' => 0, 'POLLER_VERBOSITY_MEDIUM' => 3, 'POLLER_VERBOSITY_HIGH' => 4) as $name => $value) {
 	if (!defined($name)) {
 		define($name, $value);
@@ -118,7 +120,7 @@ function boostPaging_db_affected_rows() { return 0; }
 function boostPaging_boost_timer($area, $action) {}
 function boostPaging_cacti_system_zone_set() {}
 function boostPaging_boost_get_unused_data_source_names($local_data_id) { return array(); }
-function boostPaging_boost_get_input_field_names($local_data_id, $templated) { return array(); }
+function boostPaging_boost_get_input_field_names($local_data_id, $templated) { return $GLOBALS['boost_paging']['fields']; }
 function boostPaging_get_rrdtool_version() { return '1.7.2'; }
 function boostPaging_cacti_version_compare($a, $b, $operator) { return version_compare($a, $b, $operator); }
 function boostPaging_cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
@@ -130,16 +132,11 @@ function boostPagingLoad($root) {
 	}
 
 	$source = file_get_contents($root . '/lib/boost.php');
+	expect($source)->toBeString();
 	$names  = 'boost_rrdtool_pipe_creates|boost_process_poller_output|boost_limit_complete_timestamp_page|boost_rrdtool_function_update|boost_get_rrd_filename_and_template|boost_get_arch_table_names|boost_get_unused_data_source_names|boost_get_input_field_names|boost_timer|read_config_option|db_fetch_assoc_prepared|db_fetch_cell|db_execute_prepared|db_execute|db_affected_rows|rrd_init|rrd_close|cacti_log|cacti_system_zone_set|cacti_version_compare|get_rrdtool_version|cacti_sizeof|cacti_count';
 
 	foreach (array('boost_limit_complete_timestamp_page', 'boost_process_poller_output') as $name) {
-		$start = strpos($source, 'function ' . $name . '(');
-		$end   = strpos($source, "\nfunction ", $start + 1);
-
-		expect($start)->not->toBeFalse()
-			->and($end)->not->toBeFalse();
-
-		eval(preg_replace('/\b(' . $names . ')\(/', 'boostPaging_$1(', substr($source, $start, $end - $start)));
+		eval(preg_replace('/\b(' . $names . ')\(/', 'boostPaging_$1(', test_php_function_source($source, $name)));
 	}
 }
 
@@ -161,6 +158,7 @@ function boostPagingReset($timestamps, array $options = array()) {
 
 	$GLOBALS['boost_paging'] = array(
 		'rows'             => $rows,
+		'fields'           => array(),
 		'options'          => $options + array('boost_rrd_update_string_length' => 2000),
 		'page_sizes'       => array(),
 		'executed'         => array(),
@@ -254,5 +252,45 @@ test('a failed RRD update stops paging and keeps the staged rows', function () {
 
 	expect(boostPaging_boost_process_poller_output(7))->toBe(-1)
 		->and(count(boostPaging_state()['page_sizes']))->toBe(1)
+		->and(boostPagingDeletes())->toBe(0);
+});
+
+test('Boost normalizes non-finite samples while preserving finite siblings', function ($sample, $expected, $multi) {
+	boostPagingReset(1);
+	if ($multi) {
+		$GLOBALS['boost_paging']['fields'] = array('in' => 'traffic_in', 'out' => 'traffic_out');
+		$row = $GLOBALS['boost_paging']['rows'][0];
+		$row['rrd_name'] = '';
+		$row['output'] = 'in:' . $sample . ' out:3';
+		$GLOBALS['boost_paging']['rows'] = array($row);
+	} else {
+		$GLOBALS['boost_paging']['rows'][0]['output'] = $sample;
+	}
+
+	expect(boostPaging_boost_process_poller_output(7))->toBe($multi ? 1 : 2)
+		->and(boostPaging_state()['written'][1700000300])->toBe(array($expected, '3'))
+		->and(boostPagingDeletes())->toBe(1);
+})->with(array(
+	'scalar overflow' => array('1e999', 'U', false),
+	'scalar negative overflow' => array('-1e999', 'U', false),
+	'scalar zero' => array('0', '0', false),
+	'scalar negative fraction' => array('-1.5', '-1.5', false),
+	'scalar finite exponent' => array('1e3', '1e3', false),
+	'scalar unknown' => array('U', 'U', false),
+	'multi overflow' => array('1e999', 'U', true),
+	'multi negative overflow' => array('-1e999', 'U', true),
+	'multi zero' => array('0', '0', true),
+	'multi negative fraction' => array('-1.5', '-1.5', true),
+	'multi finite exponent' => array('1e3', '1e3', true),
+	'multi unknown' => array('U', 'U', true),
+));
+
+test('a failed normalized Boost update retains its queue rows', function () {
+	boostPagingReset(1);
+	$GLOBALS['boost_paging']['rows'][0]['output'] = '1e999';
+	$GLOBALS['boost_paging']['fail_update_call'] = 1;
+
+	expect(boostPaging_boost_process_poller_output(7))->toBe(-1)
+		->and(boostPaging_state()['written'][1700000300])->toBe(array('U', '3'))
 		->and(boostPagingDeletes())->toBe(0);
 });
