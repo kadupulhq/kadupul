@@ -423,10 +423,6 @@ jobs:
         if: hashFiles('composer.lock') != ''
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Static analysis
-        if: hashFiles('phpstan.neon', 'phpstan.neon.dist', '.phpstan.neon') != ''
-        run: composer run-script phpstan
-
       - name: Detect Composer test script
         id: composer-test
         if: hashFiles('composer.json') != ''
@@ -516,6 +512,39 @@ jobs:
 
   # The two spike-removal runs took 13 of the 18 minutes of PHP 8.4. They run
   # here, in parallel, with the same PHP, dependencies and built assets.
+  static-analysis:
+    timeout-minutes: 30
+    name: Static analysis
+    needs: scope
+    if: ${{ needs.scope.outputs.code == 'true' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
+        with:
+          php-version: '8.4'
+          extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
+          coverage: none
+          tools: composer
+
+      - name: Cache Composer downloads
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: PHPStan
+        run: composer run-script phpstan
+
+      - name: Deptrac
+        run: composer run-script deptrac
+
+      - name: Dependency analyser
+        run: composer run-script dependency-analyser
+
   spike-removal:
     timeout-minutes: 45
     name: Spike-removal contracts
@@ -858,6 +887,7 @@ jobs:
       - database-contracts
       - cdef-reference-contracts
       - php
+      - static-analysis
       - spike-removal
       - application-smoke
       - style
@@ -880,5 +910,5 @@ jobs:
             ${{ format('{0} {1}',
             (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'no-changelog')) && 'changelog' || '',
             needs.scope.result == 'success' && needs.scope.outputs.code == 'false' &&
-            'runtime-floor windows-storage-preflight database-contracts cdef-reference-contracts spike-removal application-smoke' || '') }}
+            'runtime-floor windows-storage-preflight database-contracts cdef-reference-contracts static-analysis spike-removal application-smoke' || '') }}
         run: bash tests/tools/require_job_results.sh
