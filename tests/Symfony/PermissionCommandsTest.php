@@ -13,6 +13,7 @@ use Doctrine\DBAL\Connection;
 use Kadupul\IdentityAccess\Application\Command\GrantItemPermission;
 use Kadupul\IdentityAccess\Application\Command\ListPermissionTargets;
 use Kadupul\IdentityAccess\Application\Command\UserCommandAccess;
+use Kadupul\IdentityAccess\Application\Port\PermissionCatalog;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\IdentityAccess\Contract\CollectorTopology;
 use Kadupul\IdentityAccess\Domain\ListTarget;
@@ -212,6 +213,29 @@ final class PermissionCommandsTest extends TestCase
 
         self::assertSame(0, $tester->execute($input));
         self::assertSame($expected, $tester->getDisplay());
+    }
+
+    public function testLegacyEmptyListingsKeepTheirHeadingAndClosingBlankLine(): void
+    {
+        $this->presentation->forLegacy(LegacyRequest::Run);
+        // A stub returns an empty array for every listing.
+        $list = new ListPermissionTargets($this->access(), $this->permissions, $this->createStub(PermissionCatalog::class));
+        $tester = new CommandTester(new Command(null, new ListPermissionsCommand($list, $this->version(), $this->presentation, new ResultRenderer())));
+
+        self::assertSame(0, $tester->execute(['target' => 'trees']));
+        self::assertSame("Known Trees: (id, sort method, name)\n\n", $tester->getDisplay());
+        self::assertSame(0, $tester->execute(['target' => 'users', '--no-headings' => true]));
+        self::assertSame('', $tester->getDisplay());
+    }
+
+    public function testAnEmptyHumanListingSaysSo(): void
+    {
+        $list = new ListPermissionTargets($this->access(), new InMemoryItemPermissions(items: ['3:6']), new InMemoryPermissionCatalog());
+        $tester = new CommandTester(new Command(null, new ListPermissionsCommand($list, $this->version(), $this->presentation, new ResultRenderer())));
+
+        // Device 6 exists but has no graphs.
+        self::assertSame(0, $tester->execute(['target' => 'graphs', '--host-id' => '6']));
+        self::assertStringContainsString('Nothing to list.', $tester->getDisplay());
     }
 
     public function testLegacyGraphsOfAMissingDevicePrintTheErrorAndTheHelp(): void

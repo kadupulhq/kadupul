@@ -161,8 +161,8 @@ def perms_seed(harness):
     perms_reset(harness)
     harness.sql(
         f"INSERT INTO user_auth (username, password, realm, full_name, enabled) VALUES ('{PERMS_USER}', 'x', 0, 'Parity Grantee', 'on'); "
-        f"INSERT INTO host (description, hostname) VALUES ('{PREFIX}device', '{PREFIX}device.example'); "
-        f"INSERT INTO graph_tree (name, sort_type) VALUES ('{PREFIX}tree', 2); "
+        f"INSERT INTO host (description, hostname) VALUES ('{PREFIX}device', '{PREFIX}device.example'), ('{PREFIX}adjacent', '{PREFIX}adjacent.example'); "
+        f"INSERT INTO graph_tree (name, sort_type) VALUES ('{PREFIX}tree', 2), ('{PREFIX}tree-adjacent', 1); "
         f"INSERT INTO graph_templates (hash, name) VALUES ('{PREFIX}00000000000000000', '{PREFIX}template');")
     ids = {
         'user': int(harness.sql(f"SELECT id FROM user_auth WHERE username = '{PERMS_USER}'").strip()),
@@ -170,9 +170,13 @@ def perms_seed(harness):
         'tree': int(harness.sql(f"SELECT id FROM graph_tree WHERE name = '{PREFIX}tree'").strip()),
         'template': int(harness.sql(f"SELECT id FROM graph_templates WHERE name = '{PREFIX}template'").strip()),
     }
+    ids['adjacent'] = int(harness.sql(f"SELECT id FROM host WHERE description = '{PREFIX}adjacent'").strip())
     harness.sql(f"INSERT INTO graph_local (graph_template_id, host_id) VALUES ({ids['template']}, {ids['host']})")
     ids['graph'] = int(harness.sql(f"SELECT MAX(id) FROM graph_local WHERE host_id = {ids['host']}").strip())
-    harness.sql(f"INSERT INTO graph_templates_graph (local_graph_id, graph_template_id, title_cache) VALUES ({ids['graph']}, {ids['template']}, '{PREFIX}graph')")
+    harness.sql(f"INSERT INTO graph_local (graph_template_id, host_id) VALUES ({ids['template']}, {ids['adjacent']})")
+    adjacent_graph = int(harness.sql(f"SELECT MAX(id) FROM graph_local WHERE host_id = {ids['adjacent']}").strip())
+    harness.sql(f"INSERT INTO graph_templates_graph (local_graph_id, graph_template_id, title_cache) VALUES ({ids['graph']}, {ids['template']}, '{PREFIX}graph'), "
+                f"({adjacent_graph}, {ids['template']}, '{PREFIX}graph-adjacent')")
     return ids
 
 
@@ -223,6 +227,20 @@ def verify_perms_cases(harness, check):
     perms_reset(harness)
 
 
+def verify_perms_scoping(harness, check):
+    """A device's graph listing holds its own graphs only, and the other listings keep the adjacent rows in id order."""
+    ids = perms_seed(harness)
+    own = run(harness, PERMS_SHIM, ['--list-graphs', f"--host-id={ids['host']}"])['stdout']
+    check(f'{PREFIX}graph\t' in own and f'{PREFIX}graph-adjacent' not in own, 'a graph listing is scoped to its own device')
+    devices = run(harness, PERMS_SHIM, ['--list-hosts'])['stdout']
+    check(devices.find(f'{PREFIX}device.example') != -1 and devices.find(f'{PREFIX}device.example') < devices.find(f'{PREFIX}adjacent.example'),
+          'a device listing holds the adjacent device after its own, in id order')
+    trees = run(harness, PERMS_SHIM, ['--list-trees'])['stdout']
+    check(trees.find(f'{PREFIX}tree\n') != -1 and trees.find(f'{PREFIX}tree\n') < trees.find(f'{PREFIX}tree-adjacent'),
+          'a tree listing holds the adjacent tree after its own, in id order')
+    perms_reset(harness)
+
+
 def verify_perms_differences(harness, check):
     ids = perms_seed(harness)
     host = str(ids['host'])
@@ -270,6 +288,7 @@ def verify_user_parity(harness, check):
         verify_copy_cases(harness, check)
         verify_copy_differences(harness, check)
         verify_perms_cases(harness, check)
+        verify_perms_scoping(harness, check)
         verify_perms_differences(harness, check)
     finally:
         reset(harness)
