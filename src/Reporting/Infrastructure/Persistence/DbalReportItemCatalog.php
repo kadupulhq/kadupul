@@ -46,7 +46,7 @@ final readonly class DbalReportItemCatalog implements ManagementCatalog
             'SELECT id, item_text AS name, sequence, item_type AS type,
             local_graph_id AS graph_id, host_id AS device_id, tree_id, timespan, align AS alignment
             FROM reports_items WHERE report_id = ? AND item_text LIKE ? ORDER BY `' . $filters->sortColumn . '` '
-            . $filters->sortDirection . ', id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows),
+            . $filters->sortDirection . ', id ASC LIMIT ' . $filters->fetchLimit() . ' OFFSET ' . $filters->offset(),
             [$parentId, '%' . $filters->filter . '%']
         );
         return CatalogPage::fromRows($rows, $name);
