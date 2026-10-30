@@ -374,6 +374,7 @@ Cacti CHANGELOG
 -security: Treat a non-boolean signature result as a failure in import_package
 -security#1170: Require tree mutation permission for graph placement and offer only permitted destinations
 -security#1183: Check embedded IPv4 destinations in compatible, NAT64 and 6to4 collector addresses against the reserved-address policy
+-issue#739: Normalize non-finite Boost samples to unknown in scheduled and on-demand scalar and MULTI updates
 -issue#1132: Accept the shipped max-access column in validated DDL identifiers
 -issue#1153: Apply requested character sets and collations when creating table columns
 -issue#1159: Match graph input validation to storage limits, preserve UTF-8 character lengths, and normalize decimal widths before saving

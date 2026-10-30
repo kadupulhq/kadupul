@@ -1,5 +1,25 @@
 # Retained-sample first-SELECT diagnostics
 
+## Non-finite sample handling
+
+Status: implemented on LTS for #739. Scheduled and on-demand Boost writers turn
+numeric values that overflow to infinity into RRDtool's `U`, matching the direct
+writer's unknown-value contract. Finite numeric strings retain their original
+representation, including zero, negative fractions and exponents. MULTI output
+keeps valid sibling fields, and failed writes retain queued samples.
+
+PHP 8.1.34: `BoostOnDemandPagingTest` and `BoostFailedRrdIsolationTest` pass
+41 cases with 140 assertions. The new cases reproduce eleven failures before
+the correction across on-demand updates and both scheduled MULTI mappings.
+The scheduled fixture uses SQLite for queue and cursor effects; RRDtool is a
+recording boundary. The shared-process Boost directory passes 234 cases with
+eight explicit skips. These checks do not establish installed polling throughput
+or native RRDtool behavior. No schema, runtime or configuration change is
+required. Current-head CI remains required before merge; reverting restores the
+previous serialization and does not repair values already stored in RRD files.
+
+## Queue diagnostics
+
 The benchmark defaults to one million InnoDB queue rows. CI also runs the legacy
 MEMORY fixture separately. Each fixture has 250,000 sources, two RRD fields
 and two timestamps per source. It runs the production-shaped joined first-page
