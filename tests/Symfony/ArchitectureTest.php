@@ -230,6 +230,7 @@ final class ArchitectureTest extends TestCase
                 'src/Platform/Contract/LegacyWorkerRunner.php',
                 'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyBoostPartitionWriter.php',
+                'src/Graphing/Infrastructure/Legacy/LegacyGraphTitleReapplier.php',
                 'src/Graphing/Infrastructure/Symfony/BoostRunHandler.php',
                 'src/IdentityAccess/Infrastructure/Legacy/LegacyItemPermissions.php',
                 'src/IdentityAccess/Infrastructure/Legacy/LegacyUserCopier.php',

@@ -370,6 +370,12 @@ services:
         exclude: ['../src/Graphing/Infrastructure/Rrd/', '../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php']
     Kadupul\Graphing\Application\Port\BoostPartitionWriter:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyBoostPartitionWriter
+    Kadupul\Graphing\Application\Command\GraphCommandAccess: ~
+    Kadupul\Graphing\Application\Command\ReapplyGraphTitles: ~
+    Kadupul\Graphing\Application\Port\GraphTitleCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphTitleCatalog
+    Kadupul\Graphing\Application\Port\GraphTitleReapplier:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGraphTitleReapplier
     # Public so poller_boost.php can reach it through the kernel container when the
     # master runs in queue mode.
     Kadupul\Graphing\Infrastructure\Symfony\BoostPartitionDispatcher:
