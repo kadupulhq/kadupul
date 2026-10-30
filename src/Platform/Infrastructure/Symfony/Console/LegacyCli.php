@@ -52,7 +52,7 @@ final class LegacyCli
         $application->setAutoExit(false);
         $application->setCatchExceptions(false);
 
-        return $application->run(new ArrayInput(['command' => $command] + $input), $output);
+        return $application->run(new ArrayInput(['command' => $arguments->route($input, $command)] + $input), $output);
     }
 
     /**
