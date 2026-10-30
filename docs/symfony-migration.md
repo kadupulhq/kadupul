@@ -368,6 +368,12 @@ their existing behavior and do not refresh it. Cache refresh has a 120-second
 timeout; a failure stops the upgrade before schema or version writes. Ensure
 the upgrade user can write `var/cache/`, correct the reported problem and retry.
 
+Run scheduled Symfony commands as the deployment or service account that owns
+`var/cache/`. A root cron job can create root-owned files in `var/cache/prod`
+and prevent later web requests or workers from rebuilding the cache. If this
+happens, stop the affected processes, restore the deployment's intended cache
+ownership, and clear and warm the cache as that account before restarting them.
+
 For deployments that skip the installer and database upgrade command, or after
 changing `asset_mapper.yaml`, run this from the application directory as the
 deployment user before restoring traffic:
