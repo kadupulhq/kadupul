@@ -1,9 +1,9 @@
 parameters:
     # Model-driven RRD writes. The gate is closed and no environment variable
-    # feeds it. Binding approval and plan activation have no IdentityAccess
-    # authorizer yet, so nothing can be approved and opening the gate would
-    # have no effect; keep it false until an authorizer exists and this
-    # comment is replaced by the decision that opens it.
+    # feeds it. Binding approval is decided by the metric_binding workflow guard
+    # through IdentityAccess; plan activation has no authorizer yet. The gate
+    # stays false: an approved binding does not open it, and it opens only by a
+    # separate decision that replaces this comment.
     kadupul.monitoring.rrd_writes_enabled: false
     # Empty means unconfigured. The sink then refuses every storage call
     # instead of guessing a binary or a directory; nothing reads the legacy
@@ -149,6 +149,9 @@ services:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
 
     Kadupul\IdentityAccess\Contract\ConsoleAccess:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
+
+    Kadupul\IdentityAccess\Contract\BindingApprovalPermission:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
 
     Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail: ~
@@ -536,10 +539,14 @@ services:
         alias: Kadupul\Monitoring\Application\ResolveBinding
     Kadupul\Monitoring\Application\ResolveBinding: ~
     Kadupul\Monitoring\Application\RegisterBinding: ~
-    # No authorizer is wired, so approval and activation are denied.
+    # Approval is decided by the metric_binding state machine's guard. No plan
+    # activation authorizer is wired, so activation is denied.
+    Kadupul\Monitoring\Infrastructure\Workflow\WorkflowBindingApprovalAuthorizer:
+        arguments:
+            $bindingWorkflow: '@state_machine.metric_binding'
     Kadupul\Monitoring\Application\ApproveBinding:
         arguments:
-            $authorizer: null
+            $authorizer: '@Kadupul\Monitoring\Infrastructure\Workflow\WorkflowBindingApprovalAuthorizer'
     Kadupul\Monitoring\Domain\ActivationPolicy: ~
     Kadupul\Monitoring\Application\ActivateCollectionPlan:
         arguments:
@@ -582,6 +589,23 @@ when@test:
             autowire: true
             autoconfigure: true
         Kadupul\Tests\Fixtures\PresentationProbeCommand: ~
+        # The guard audits every decision; tests must not append to log/.
+        Kadupul\Tests\Monitoring\Fakes\RecordingAuditTrail: ~
+        Kadupul\Monitoring\Infrastructure\Workflow\BindingApprovalGuard:
+            arguments:
+                $audit: '@Kadupul\Tests\Monitoring\Fakes\RecordingAuditTrail'
+        test.model_driven.binding_workflow:
+            alias: state_machine.metric_binding
+            public: true
+        test.model_driven.capability_workflow:
+            alias: state_machine.capability
+            public: true
+        test.model_driven.binding_authorizer:
+            alias: Kadupul\Monitoring\Infrastructure\Workflow\WorkflowBindingApprovalAuthorizer
+            public: true
+        test.model_driven.audit_trail:
+            alias: Kadupul\Tests\Monitoring\Fakes\RecordingAuditTrail
+            public: true
         # Private services are removed when unused; these public aliases let the
         # wiring test resolve them through test.service_container.
         test.model_driven.sample_sink:
