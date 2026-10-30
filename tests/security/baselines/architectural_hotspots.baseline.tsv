@@ -22,13 +22,13 @@ cmd_exec	./lib/functions.php:2612	                    $output = shell_exec($php 
 cmd_exec	./lib/functions.php:2932	                        $output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:3490	        return exec('whoami');
 cmd_exec	./lib/functions.php:4218	        exec($command_line, $out, $err);
-cmd_exec	./lib/functions.php:7548	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v');
-cmd_exec	./lib/functions.php:7550	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
-cmd_exec	./lib/functions.php:7807	            exec('id -nu', $o, $r);
-cmd_exec	./lib/functions.php:7817	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
-cmd_exec	./lib/functions.php:8159	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:8201	    $process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:8270	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:7543	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v');
+cmd_exec	./lib/functions.php:7545	            $shell = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' -v 2>&1');
+cmd_exec	./lib/functions.php:7802	            exec('id -nu', $o, $r);
+cmd_exec	./lib/functions.php:7812	            exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
+cmd_exec	./lib/functions.php:8154	 * shell_exec() callers that already assemble the command string.
+cmd_exec	./lib/functions.php:8196	    $process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:8265	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3703	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3739	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:854	            $process = @proc_open(

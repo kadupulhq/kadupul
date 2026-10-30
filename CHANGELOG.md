@@ -8,11 +8,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add ten Symfony/Twig views for graph and data-source relationships, report contents, tree placements, collector devices and network discovery results, with bounded reads and existing resource permissions.
 
+- Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
 - Run `cli/copy_user.php` and `cli/add_perms.php` through the `kadupul:user:copy`, `kadupul:permission:add` and `kadupul:permission:list` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and User Management realms, a permission grant ends the user's remembered logins and raises their permission epoch as the web form does, a missing or empty new username prints the usage instead of creating an unnamed account, and the ids are bound instead of concatenated into SQL (#1213).
 - Treat the obsolete data source delete action as an unknown action instead of calling an undefined handler; use bulk Actions for deletion (#685).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
+- Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
 - Convert non-finite numeric Boost samples to unknown before scheduled and on-demand RRD writes, preserving valid sibling fields and original queue acknowledgement values (#739).
 - Add `html_require_legacy_js()` so plugins can declare their need for Chart.js, dygraphs, jquery.sparkline or the jQuery colorpicker. Release 1.3 still loads all four on every page and its page head is unchanged; release 1.4 will load only the requested ones. These libraries are deprecated and no core page uses them.

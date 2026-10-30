@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-29 01:09-0700\n"
+"POT-Creation-Date: 2026-10-30 01:34-0700\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -793,7 +793,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "現在のパスワードと新しいパスワードを入力してください<br>Kadupulのパスワード。"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6240
+#: include/global_settings.php:1851 lib/functions.php:6235
 msgid "Username"
 msgstr "ユーザー名"
 
@@ -887,7 +887,7 @@ msgstr "ユーザーログイン"
 msgid "Enter your Username and Password below"
 msgstr "以下にユーザー名とパスワードを入力してください"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6236
 msgid "Password"
 msgstr "パスワード"
 
@@ -1194,7 +1194,7 @@ msgstr "検出されたデバイスの削除"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
+#: data_debug.php:698 lib/functions.php:6594 lib/functions.php:6599
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2186,7 +2186,7 @@ msgstr "バージョン"
 msgid "Community"
 msgstr "コミュニティ"
 
-#: automation_snmp.php:543 lib/functions.php:6236
+#: automation_snmp.php:543 lib/functions.php:6231
 msgid "Port"
 msgstr "ポート"
 
@@ -2396,8 +2396,8 @@ msgstr "根(植物)"
 msgid "No Tree Rules Found"
 msgstr "ツリールールが見つかりません"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
-#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6739 lib/functions.php:6814
+#: lib/functions.php:6917 lib/functions.php:7607 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3410,7 +3410,7 @@ msgstr "このデータテンプレートに付けられた名前。グラフテ
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6230 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "デバイス"
@@ -3769,7 +3769,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Pollerはまだ実行されていません。"
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8310 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "権限がありません"
 
@@ -4733,12 +4733,12 @@ msgstr "致命的：あなたはKadupulのこの地域にアクセスするに�
 msgid "Login Again"
 msgstr "再度ログイン"
 
-#: include/auth.php:317 lib/functions.php:8316
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "これがエラーだと感じたらKadupul管理者に連絡してください。"
 
-#: include/auth.php:317 lib/functions.php:8316
+#: include/auth.php:317 lib/functions.php:8311
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -8622,8 +8622,8 @@ msgstr "データ"
 msgid "Visual"
 msgstr "ビジュアル"
 
-#: include/global_settings.php:112 lib/functions.php:6239
-#: lib/functions.php:6244
+#: include/global_settings.php:112 lib/functions.php:6234
+#: lib/functions.php:6239
 msgid "Authentication"
 msgstr "認証"
 
@@ -8659,11 +8659,11 @@ msgstr "グラフフォント"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail（）関数"
 
-#: include/global_settings.php:153 lib/functions.php:6220
+#: include/global_settings.php:153 lib/functions.php:6215
 msgid "Sendmail"
 msgstr "注文確定"
 
-#: include/global_settings.php:154 lib/functions.php:6226
+#: include/global_settings.php:154 lib/functions.php:6221
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10517,7 +10517,7 @@ msgstr "これは、Eメール内の行が自動的にワードラップされ�
 msgid "Sendmail Options"
 msgstr "Sendmailのオプション"
 
-#: include/global_settings.php:1972 lib/functions.php:6220
+#: include/global_settings.php:1972 lib/functions.php:6215
 msgid "Sendmail Path"
 msgstr "Sendmailのパス"
 
@@ -11735,8 +11735,8 @@ msgstr "位置:"
 msgid "Contact:"
 msgstr "連絡先:"
 
-#: lib/api_device.php:2104 lib/functions.php:6253 lib/functions.php:6255
-#: lib/functions.php:6259
+#: lib/api_device.php:2104 lib/functions.php:6248 lib/functions.php:6250
+#: lib/functions.php:6254
 msgid "Ping Results"
 msgstr "pingの結果"
 
@@ -12563,117 +12563,107 @@ msgstr "コピー"
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "メーラーのエラー：いいえ設定したアドレス<b>に</b> !! <br> [ <i>テストメール]</i>リンクを使用している場合は、[ <b>警告メール]</b>設定を設定してください。"
 
-#: lib/functions.php:6183
-#, php-format
-msgid "Authentication failed: %s"
-msgstr "認証に失敗しました：%s"
-
-#: lib/functions.php:6187
+#: lib/functions.php:6186
 #, php-format
 msgid "HELO failed: %s"
 msgstr "ヘロが失敗しました：%s"
 
-#: lib/functions.php:6190
-#, php-format
-msgid "Connect failed: %s"
-msgstr "接続に失敗しました: %s"
-
-#: lib/functions.php:6193
+#: lib/functions.php:6189
 msgid "SMTP error: "
 msgstr "SMTPエラー："
 
-#: lib/functions.php:6207
+#: lib/functions.php:6202
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "これはKadupulから生成されたテストメッセージです。このメッセージはメール設定の設定をテストするために送信されました。"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6203
 msgid "Your email settings are currently set as follows"
 msgstr "あなたのEメール設定は現在以下のように設定されています"
 
-#: lib/functions.php:6209
+#: lib/functions.php:6204
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:6211
+#: lib/functions.php:6206
 msgid "Checking Configuration...<br>"
 msgstr "設定を確認しています... <br>"
 
-#: lib/functions.php:6218
+#: lib/functions.php:6213
 msgid "PHP's Mailer Class"
 msgstr "PHPのメーラクラス"
 
-#: lib/functions.php:6224
+#: lib/functions.php:6219
 msgid "Method: SMTP"
 msgstr "方法：SMTP"
 
-#: lib/functions.php:6241
+#: lib/functions.php:6236
 msgid "Not Shown for Security Reasons"
 msgstr "セキュリティ上の理由から表示されていません"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6237
 msgid "Security"
 msgstr "セキュリティ"
 
-#: lib/functions.php:6250
+#: lib/functions.php:6245
 msgid "Ping Results:"
 msgstr "pingの結果："
 
-#: lib/functions.php:6250 lib/functions.php:6255
+#: lib/functions.php:6245 lib/functions.php:6250
 msgid "Success"
 msgstr "成功"
 
-#: lib/functions.php:6259
+#: lib/functions.php:6254
 msgid "Bypassed"
 msgstr "バイパス"
 
-#: lib/functions.php:6268
+#: lib/functions.php:6263
 msgid "Creating Message Text..."
 msgstr "メッセージテキストを作成しています..."
 
-#: lib/functions.php:6271
+#: lib/functions.php:6266
 msgid "Sending Message..."
 msgstr "メッセージを送信しています…"
 
-#: lib/functions.php:6275
+#: lib/functions.php:6270
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupulテストメッセージ"
 
-#: lib/functions.php:6277
+#: lib/functions.php:6272
 msgid "Success!"
 msgstr "成功！"
 
-#: lib/functions.php:6280
+#: lib/functions.php:6275
 msgid "Message Not Sent due to ping failure."
 msgstr "pingが失敗したため、メッセージが送信されませんでした。"
 
-#: lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6739 lib/functions.php:6814
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "次のエラーのため、Kadupulはプラグイン%sを無効にしました：%s! 詳細については、Kadupulログファイルを参照してください。"
 
-#: lib/functions.php:6922
+#: lib/functions.php:6917
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告： PollerID ：%sに無効なホスト名：%sがあります。DNS経由では到達できませんか？"
 
-#: lib/functions.php:7375 lib/functions.php:7377
+#: lib/functions.php:7370 lib/functions.php:7372
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "ベータ線 %s"
 
-#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7370 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "バージョン%s %s"
 
-#: lib/functions.php:7377
+#: lib/functions.php:7372
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7612
+#: lib/functions.php:7607
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：キーKadupulインクルードファイル%sがありません。このファイルを見つけて置き換えてください"
