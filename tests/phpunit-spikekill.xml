@@ -36,6 +36,8 @@
       <file>Unit/Installer/DataInputIndexUpgradeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>Unit/Core/Cli/BoostWorkerNativeTest.php</file>
+      <file>Unit/Core/Cli/BoostArchiveAcknowledgementNativeTest.php</file>
+      <file>Unit/Core/Rrd/BoostAcknowledgedDeletionNativeTest.php</file>
       <file>Unit/Core/Cli/BoostPartitionWorkerNativeTest.php</file>
       <file>Unit/Core/Cli/BoostQueueMasterNativeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterWorkerNativeTest.php</file>
