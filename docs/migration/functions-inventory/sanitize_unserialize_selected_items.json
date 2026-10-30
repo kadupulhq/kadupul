@@ -3,8 +3,8 @@
     "name": "sanitize_unserialize_selected_items",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5309,
-        "end_line": 5337,
+        "start_line": 5314,
+        "end_line": 5342,
         "line_count": 29,
         "signature": {
             "parameters": [

@@ -3,8 +3,8 @@
     "name": "get_graph_group",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3877,
-        "end_line": 3947,
+        "start_line": 3882,
+        "end_line": 3952,
         "line_count": 71,
         "signature": {
             "parameters": [

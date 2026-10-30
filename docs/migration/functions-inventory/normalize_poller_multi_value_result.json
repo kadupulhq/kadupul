@@ -3,8 +3,8 @@
     "name": "normalize_poller_multi_value_result",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2283,
-        "end_line": 2300,
+        "start_line": 2288,
+        "end_line": 2305,
         "line_count": 18,
         "signature": {
             "parameters": [

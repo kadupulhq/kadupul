@@ -16,6 +16,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Run `cli/repair_graphs.php` and `cli/remove_broken_graphs.php` through the `kadupul:graph:repair-items` and `kadupul:graph:remove-broken` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and Graphs realms, ids are bound instead of concatenated into SQL, and the broken-graph list is no longer cut off at `group_concat_max_len`.
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
+- Use the current response time when inconsistent device counters leave a zero average divisor (#1101).
 - Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values; test-data-source templates retain their empty-field omission (#1103).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
 - Convert non-finite numeric Boost samples to unknown before scheduled and on-demand RRD writes, preserving valid sibling fields and original queue acknowledgement values (#739).

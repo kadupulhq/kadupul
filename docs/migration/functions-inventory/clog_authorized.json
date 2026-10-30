@@ -3,8 +3,8 @@
     "name": "clog_authorized",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6422,
-        "end_line": 6447,
+        "start_line": 6427,
+        "end_line": 6452,
         "line_count": 26,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

@@ -3,8 +3,8 @@
     "name": "test_data_source",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2479,
-        "end_line": 2948,
+        "start_line": 2484,
+        "end_line": 2953,
         "line_count": 470,
         "signature": {
             "parameters": [
