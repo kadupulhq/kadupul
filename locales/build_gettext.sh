@@ -56,17 +56,19 @@ fi
 # Merge any changes to POT file into language files
 echo "Merging updates to language files..."
 
-for file in `ls -1 locales/po/*.po`;do
+for file in locales/po/*.po; do
+	[ -f "$file" ] || continue
 	echo "Updating $file from cacti.pot"
-	msgmerge --backup off --no-wrap --no-fuzzy-matching --update -F $file locales/po/cacti.pot
+	msgmerge --backup off --no-wrap --no-fuzzy-matching --update -F "$file" locales/po/cacti.pot
 done
 
-for file in `ls -1 locales/po/*.po`;do
+for file in locales/po/*.po; do
+  [ -f "$file" ] || continue
   ofile="${file##*/}"
   ofile="${ofile%.po}"
   echo "Converting $file to LC_MESSAGES/${ofile}.mo"
   msgattrib --no-obsolete --no-wrap "$file" -o "$file"
-  msgfmt --check-format ${file} -o locales/LC_MESSAGES/${ofile}.mo
+  msgfmt --check-format "$file" -o "locales/LC_MESSAGES/${ofile}.mo"
 done
 
 if mise exec python@3.12.12 -- python locales/merge_historical_compatibility.py; then
