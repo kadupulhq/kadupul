@@ -5139,9 +5139,9 @@ function sanitize_uri($uri)
         $uri = urldecode($uri);
     }
 
-    if (strpos($uri, 'graph_view.php')) {
-        if (!strpos($uri, 'action=')) {
-            $uri = $uri . (strpos($uri, '?') ? '&' : '?') . 'action=' . get_nfilter_request_var('action');
+    if (strpos($uri, 'graph_view.php') !== false) {
+        if (strpos($uri, 'action=') === false) {
+            $uri = $uri . (strpos($uri, '?') !== false ? '&' : '?') . 'action=' . get_nfilter_request_var('action');
         }
     }
 
