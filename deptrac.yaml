@@ -247,8 +247,22 @@ deptrac:
           value: src/Platform/Application/.*
     - name: Platform.Legacy
       collectors:
+        - type: bool
+          must:
+            - type: directory
+              value: src/Platform/Infrastructure/Legacy/.*
+          must_not:
+            - type: directory
+              value: src/Platform/Infrastructure/Legacy/InstallationVersion\.php
+    # The toolkit every module's console commands share: the result renderer,
+    # legacy argument maps and output modes. Commands, inputs and argument maps
+    # of one tool stay in their own module's layer.
+    - name: ConsoleSupport
+      collectors:
         - type: directory
-          value: src/Platform/Infrastructure/Legacy/.*
+          value: src/Platform/Infrastructure/Symfony/Console/(ResultRenderer|LegacyArguments|CommandResult|OutputMode|CliPresentation|LegacyRequest|InvalidLegacyArgument|LegacyCli)\.php
+        - type: directory
+          value: src/Platform/Infrastructure/Legacy/InstallationVersion\.php
     - name: Platform.Infrastructure
       collectors:
         - type: bool
@@ -258,6 +272,8 @@ deptrac:
           must_not:
             - type: directory
               value: src/Platform/Infrastructure/Legacy/.*
+            - type: directory
+              value: src/Platform/Infrastructure/Symfony/Console/(ResultRenderer|LegacyArguments|CommandResult|OutputMode|CliPresentation|LegacyRequest|InvalidLegacyArgument|LegacyCli)\.php
     - name: Reporting.Domain
       collectors:
         - type: directory
@@ -479,6 +495,7 @@ deptrac:
       - Vendor
       - Contract
       - PlatformContract
+      - ConsoleSupport
       - IdentityAccess.Legacy
     IdentityAccess.Legacy:
       - IdentityAccess.Domain
@@ -600,6 +617,16 @@ deptrac:
       - Contract
       - PlatformContract
       - Platform.Legacy
+      - ConsoleSupport
+    ConsoleSupport:
+      - Platform.Domain
+      - Platform.Application
+      - Platform.Infrastructure
+      - Platform.Legacy
+      - Psr
+      - Vendor
+      - Contract
+      - PlatformContract
     Platform.Legacy:
       - Platform.Domain
       - Platform.Application
@@ -608,6 +635,7 @@ deptrac:
       - Contract
       - PlatformContract
       - Platform.Infrastructure
+      - ConsoleSupport
       - Superglobals
     Reporting.Domain:
       - Psr

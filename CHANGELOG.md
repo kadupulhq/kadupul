@@ -8,6 +8,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
+- Run `cli/copy_user.php` and `cli/add_perms.php` through the `kadupul:user:copy`, `kadupul:permission:add` and `kadupul:permission:list` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and User Management realms, a permission grant ends the user's remembered logins and raises their permission epoch as the web form does, a missing or empty new username prints the usage instead of creating an unnamed account, and the ids are bound instead of concatenated into SQL (#1213).
 - Treat the obsolete data source delete action as an unknown action instead of calling an undefined handler; use bulk Actions for deletion (#685).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).

@@ -34,4 +34,10 @@ interface ConsoleOperator
      * realm guards, so command-line schema changes need it too.
      */
     public function canUpgradeInstallation(Actor $actor): bool;
+
+    /**
+     * Realm 1, User Management: user_admin.php (include/global_arrays.php:1310),
+     * where the web copies users and edits their item permissions.
+     */
+    public function canManageUsers(Actor $actor): bool;
 }
