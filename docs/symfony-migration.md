@@ -477,6 +477,10 @@ so a hook cannot vary the cached entries on client-chosen input. Edits to plugin
 the built-in menu, and the failure is cached under the same key for 60 seconds
 so a broken plugin does not cost the full budget on every page.
 
+Cache hits are shape-validated too. An unusable session-cookie name refuses
+worker startup; an invalid cached value leaves the built-in menu and logs a
+warning. Clearing the pool retries a corrupt cached entry immediately.
+
 Three differences from `draw_menu()` are deliberate. Plugin items whose script
 has no realm, or realm -1, are hidden; legacy showed them inside a section
 that already had a visible item. Labels are escaped as text, so HTML a plugin

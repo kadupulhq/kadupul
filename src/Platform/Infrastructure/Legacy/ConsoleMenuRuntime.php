@@ -42,7 +42,7 @@ final class ConsoleMenuRuntime
                     $path = array_key_first($label);
                     $label = $path === null ? null : $label[$path];
                 }
-                if (!is_string($label) || $path === null) {
+                if (!is_string($label)) {
                     continue;
                 }
                 $realm = filter_var($realm, FILTER_VALIDATE_INT);

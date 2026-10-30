@@ -68,7 +68,11 @@ final readonly class LegacyPluginConsoleMenu implements PluginConsoleMenu
         try {
             $query = $this->database->get()->prepare(self::FINGERPRINT);
             $query->execute([$actorId, $actorId]);
-            $rows = array_map(static fn(array $row): string => implode(':', $row), $query->fetchAll(\PDO::FETCH_NUM));
+            $rows = [];
+            // Every fingerprint SELECT returns its kind and three HEX strings.
+            $query->fetchAll(\PDO::FETCH_FUNC, static function (string $kind, ?string $first, ?string $second, ?string $third) use (&$rows): void {
+                $rows[] = implode(':', [$kind, $first ?? '', $second ?? '', $third ?? '']);
+            });
         } catch (\PDOException) {
             // api_plugin_hook() runs nothing without the plugin tables either.
             return [];
@@ -116,7 +120,7 @@ final readonly class LegacyPluginConsoleMenu implements PluginConsoleMenu
             throw new \RuntimeException('The plugin console menu worker failed recently.');
         }
 
-        return $entries;
+        return self::validated($entries);
     }
 
     private function acceptedLocale(): ?string
