@@ -38,7 +38,7 @@ final class CollectorSiteDatabaseTest extends TestCase
     #[DataProvider('recoveryStates')]
     public function testPrimaryAdmissionMatchesBothNativeRecoveryQueues(?string $state, bool $admitted): void
     {
-        $database = $this->realMariaDb();
+        $database = $this->realMariaDb(true);
         $schemas = [];
         $directory = sys_get_temp_dir() . '/collector-recovery-' . bin2hex(random_bytes(8));
         self::assertTrue(mkdir($directory . '/include', 0700, true));

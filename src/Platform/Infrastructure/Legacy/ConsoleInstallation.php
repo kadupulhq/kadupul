@@ -25,9 +25,15 @@ final class ConsoleInstallation
             return $values + ['connection_status' => 'online'];
         }
         $local = self::connect($targets['local']);
-        $queued = $local->query('SELECT COUNT(*) FROM poller_output_boost')->fetchColumn();
-        $version = $local->query('SELECT cacti FROM version LIMIT 1')->fetchColumn();
-        if (!is_string($version) || $version === '' || $queued === false) {
+        $queued = $output = false;
+        try {
+            $queued = self::value($local, 'SELECT COUNT(*) FROM poller_output_boost');
+            $output = self::value($local, 'SELECT EXISTS(SELECT 1 FROM poller_output LIMIT 1)');
+        } catch (\PDOException) {
+            // A failed queue read cannot establish that local recovery ended.
+        }
+        $version = self::value($local, 'SELECT cacti FROM version LIMIT 1');
+        if (!is_string($version) || $version === '') {
             throw new \RuntimeException('Collector state is unavailable.');
         }
         $online = false;
@@ -40,7 +46,7 @@ final class ConsoleInstallation
                 // store, exactly as the offline legacy console does.
             }
         }
-        $state = !$online ? 'offline' : ((int) $queued > 0 ? 'recovery' : 'online');
+        $state = !$online ? 'offline' : (($queued !== 0 && $queued !== '0') || ($output !== 0 && $output !== '0') ? 'recovery' : 'online');
         if ($state === 'online' && $version !== 'new_install') {
             $values = array_replace($values, $targets['main']);
         }
@@ -50,6 +56,19 @@ final class ConsoleInstallation
             'console_schema_version' => $version,
             'database_sessions' => $values['database_sessions'] && $state === 'online',
         ]);
+    }
+
+    private static function value(\PDO $database, string $sql): string|int|bool|null
+    {
+        $statement = $database->query($sql);
+        if (!$statement instanceof \PDOStatement) {
+            return false;
+        }
+        $value = $statement->fetchColumn();
+        if (!$statement->closeCursor()) {
+            return false;
+        }
+        return $value;
     }
 
     /** @param array<string, mixed> $values */

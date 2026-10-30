@@ -10639,12 +10639,6 @@ parameters:
 			path: src/Platform/Infrastructure/Legacy/ConsoleInstallation.php
 
 		-
-			message: '#^Cannot call method fetchColumn\(\) on PDOStatement\|false\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Platform/Infrastructure/Legacy/ConsoleInstallation.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 1
