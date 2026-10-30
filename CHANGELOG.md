@@ -201,6 +201,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add native Symfony/Twig list views for users, groups, authentication domains, discovered devices, collectors, trees, recorded RRD cleanup candidates, SNMP agent objects, notification history and login history. Existing PHP forms retain editing and operational actions (#1008).
 - Forward ten more legacy root pages through the shared Symfony forwarder, and fail CI when a change adds a legacy root web page. The plan for the remaining Twig migration is in `docs/migrations/twig-completion-plan.md`.
 - Profile requests. With `KADUPUL_PROFILE=1`, legacy pages append wall time, peak memory and query count to `var/profile/requests.jsonl`; the Symfony profiler runs in dev and test, and `tests/tools/profile_routes.py` compares each legacy URL with its Symfony route on time and query count.
+- Fail Sonar-analysed pull requests and merge groups when a changed executable line is not covered by tests.
 
 ## [1.3.0-alpha.1]
 
