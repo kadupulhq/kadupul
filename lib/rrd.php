@@ -812,12 +812,10 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 				if ($cap !== null && $cap < $deadline) {
 					$deadline = $cap;
 				}
-				$result = rrdtool_windows_oneshot(
-					array(read_config_option('path_rrdtool'), '-'),
-					escape_command($command_line) . "\r\nquit\r\n",
-					$deadline,
-					$output_flag !== RRDTOOL_OUTPUT_NULL
-				);
+				$command = array(read_config_option('path_rrdtool'), '-');
+				$input = escape_command($command_line) . "\r\nquit\r\n";
+				$capture = $output_flag !== RRDTOOL_OUTPUT_NULL;
+				$result = rrdtool_windows_oneshot($command, $input, $deadline, $capture);
 				$output = $result['completed'] ? $result['output'] : false;
 				$status = $result['status'];
 				unset($result);
@@ -4097,10 +4095,12 @@ function rrdtool_function_info_from_ds($data_source_id) {
 		WHERE local_data_id = ?',
 		array($data_source_id));
 
-	$data_template_id = db_fetch_cell_prepared('SELECT data_template_id
+	$data_template_id = db_fetch_cell_prepared(
+	   'SELECT data_template_id
 		FROM data_local
 		WHERE id = ?',
-		array($data_source_id));
+	   array($data_source_id)
+	);
 
 	/* get cacti DS information */
 	if ($data_template_id > 0) {
