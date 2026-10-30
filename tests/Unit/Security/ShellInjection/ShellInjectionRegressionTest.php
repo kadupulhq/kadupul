@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -56,9 +57,30 @@ test('GHSA-7vw4: file_exists_2gb body is a single-line delegation', function () 
 });
 
 // GHSA-c4qp: test-script path expansion must shell-escape data_input values.
-test('GHSA-c4qp: test-script path expansion shell-escapes data_input values', function () use ($functionsSource) {
-	expect($functionsSource)->toContain("function get_full_test_script_path(");
-	expect($functionsSource)->toContain("\$value = cacti_escapeshellarg((string) \$item['value']);");
+test('GHSA-c4qp: test-script path expansion shell-escapes data_input values', function (): void {
+	$root = dirname(__DIR__, 4);
+	$payload = "literal \$(printf EXPANDED); ' \" & | > <";
+	$program = <<<'PHP'
+$root = $argv[1];
+$config = array('is_web' => false, 'cacti_server_os' => 'unix', 'base_path' => '/fixture',
+    'config_options_array' => array('path_php_binary' => '/usr/bin/php', 'path_snmpget' => '/usr/bin/snmpget'));
+require $root . '/include/global_constants.php';
+require $root . '/lib/functions.php';
+require $root . '/tests/fixtures/data-input-substitution-native.php';
+$command = data_input_command('test', 'collector <empty> <arg1> tail', array('empty' => '', 'arg1' => $argv[2]), array('id' => 9));
+echo json_encode(data_input_shell_words($command), JSON_THROW_ON_ERROR);
+PHP;
+	$process = proc_open(array(PHP_BINARY, '-r', $program, $root, $payload),
+		array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+	expect(is_resource($process))->toBeTrue();
+	$output = stream_get_contents($pipes[1]);
+	$error = stream_get_contents($pipes[2]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+	expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe(array(
+		'status' => 0, 'words' => array('collector', $payload, 'tail'), 'err' => '',
+	));
 });
 
 test('GHSA-c4qp: get_full_test_script_path does not wrap raw field values in manual quotes', function () use ($functionsSource) {
