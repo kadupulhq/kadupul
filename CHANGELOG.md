@@ -6,7 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Refuse online collector administration while either ordinary or Boost output is pending or unreadable, preserving the native recovery boundary before routing reads to the primary database (#759).
+- Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
 
 - Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
