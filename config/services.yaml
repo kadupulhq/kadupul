@@ -376,6 +376,9 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphTitleCatalog
     Kadupul\Graphing\Application\Port\GraphTitleReapplier:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGraphTitleReapplier
+    Kadupul\Graphing\Application\Command\RepairGraphItems: ~
+    Kadupul\Graphing\Application\Port\GraphItemRepairs:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphItemRepairs
     # Public so poller_boost.php can reach it through the kernel container when the
     # master runs in queue mode.
     Kadupul\Graphing\Infrastructure\Symfony\BoostPartitionDispatcher:
