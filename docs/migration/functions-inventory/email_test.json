@@ -3,12 +3,12 @@
     "name": "email_test",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6203,
-        "end_line": 6285,
+        "start_line": 6199,
+        "end_line": 6281,
         "line_count": 83,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,
-        "fan_out": {"core": 1, "core_outside_functions_php": 1, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 1, "core_outside_functions_php": 1, "tests": 2, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

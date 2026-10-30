@@ -3,8 +3,8 @@
     "name": "raise_ajax_permission_denied",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8312,
-        "end_line": 8319,
+        "start_line": 8308,
+        "end_line": 8315,
         "line_count": 8,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

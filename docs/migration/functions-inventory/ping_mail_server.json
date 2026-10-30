@@ -3,9 +3,9 @@
     "name": "ping_mail_server",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6151,
-        "end_line": 6201,
-        "line_count": 51,
+        "start_line": 6152,
+        "end_line": 6197,
+        "line_count": 46,
         "signature": {
             "parameters": [
                 {
@@ -67,7 +67,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 2, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

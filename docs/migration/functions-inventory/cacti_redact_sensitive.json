@@ -3,8 +3,8 @@
     "name": "cacti_redact_sensitive",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8935,
-        "end_line": 8950,
+        "start_line": 8931,
+        "end_line": 8946,
         "line_count": 16,
         "signature": {
             "parameters": [

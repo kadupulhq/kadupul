@@ -3,8 +3,8 @@
     "name": "cacti_format_ipv6_colon",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 8785,
-        "end_line": 8800,
+        "start_line": 8781,
+        "end_line": 8796,
         "line_count": 16,
         "signature": {
             "parameters": [

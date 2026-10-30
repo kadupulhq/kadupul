@@ -16,8 +16,8 @@ direct web access to the command directory.
 | Schema tools | `convert_tables.php`, `fix_mediumint.php` | Merged in #434 |
 | Audit | `audit_database.php` | Merged in #802 (from the closed #451): new command implemented; hardened compatibility CLI retained pending migration acceptance |
 | Repair | `repair_database.php` | In progress, after the audit command |
-| Users and permissions | `copy_user.php`, `add_perms.php` | In progress |
-| Graphs and trees | `add_graphs.php`, `add_graph_template.php`, `add_tree.php`, `remove_graphs.php`, `remove_broken_graphs.php`, `repair_graphs.php`, `poller_graphs_reapply_names.php` | Planned |
+| Users and permissions | `copy_user.php`, `add_perms.php` | Merged in #1213 |
+| Graphs and trees | `add_graphs.php`, `add_graph_template.php`, `add_tree.php`, `remove_graphs.php`, `remove_broken_graphs.php`, `repair_graphs.php`, `poller_graphs_reapply_names.php` | In progress: `poller_graphs_reapply_names.php`, `repair_graphs.php` and `remove_broken_graphs.php` first, then `remove_graphs.php`, then the three that create |
 | Data sources and queries | `add_datasource.php`, `add_data_query.php`, `reorder_data_query.php`, `poller_data_sources_reapply_names.php`, `rebuild_poller_cache.php`, `poller_output_empty.php`, `poller_replicate.php`, `replay_rejected_samples.php` | Planned |
 | Templates, import and automation | `import_template.php`, `import_package.php`, `repair_templates.php`, `input_whitelist.php`, `apply_automation_rules.php` | Planned |
 | RRD tools | `splice_rrd.php`, `float_rrdfiles.php`, `batchgapfix.php`, `removespikes.php`, `structure_rra_paths.php`, `update_heartbeat.php` | Planned |

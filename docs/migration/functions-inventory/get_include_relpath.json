@@ -3,8 +3,8 @@
     "name": "get_include_relpath",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7590,
-        "end_line": 7616,
+        "start_line": 7586,
+        "end_line": 7612,
         "line_count": 27,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 21, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 0, "tests": 23, "plugins": 0},
         "body": {
             "uses_global": ["config"],
             "static_variables": [],

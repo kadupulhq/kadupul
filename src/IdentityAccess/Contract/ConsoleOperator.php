@@ -40,4 +40,10 @@ interface ConsoleOperator
      * where the web copies users and edits their item permissions.
      */
     public function canManageUsers(Actor $actor): bool;
+
+    /**
+     * Realm 5, Graphs: graphs.php and graphs_new.php (include/global_arrays.php:1288),
+     * where the web edits, repairs and removes graphs and renames them from a template.
+     */
+    public function canManageGraphs(Actor $actor): bool;
 }
