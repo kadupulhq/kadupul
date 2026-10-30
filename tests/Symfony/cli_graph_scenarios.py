@@ -21,6 +21,10 @@ REPAIR_SHIM = 'cli/repair_graphs.php'
 BROKEN_ORIGINAL = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php'
 BROKEN_SHIM = 'cli/remove_broken_graphs.php'
 BROKEN_FIRST_GRAPH = 4000000001
+REMOVE_ORIGINAL = 'tests/Fixtures/legacy-cli/remove_graphs.php'
+REMOVE_SHIM = 'cli/remove_graphs.php'
+# Every id the removal cases print is fixed (below 16777215, the largest device template id), because the original and the shim each start from a fresh seed.
+REMOVE_FIRST = 9000001
 # BSD stty says "stdin isn't a terminal", GNU stty "'standard input': Inappropriate ioctl for device".
 STTY = re.compile(r'^stty: .*\n', re.MULTILINE)
 # The original also raised PHP deprecations on a terminal-less run; both sides run with display_errors off.
@@ -391,10 +395,156 @@ def verify_broken_differences(harness, check):
     broken_reset(harness)
 
 
+def remove_seed(harness):
+    """Three devices on two device templates, five graphs (one on no device), and a data source behind the first graph."""
+    remove_reset(harness)
+    a, b, c = REMOVE_FIRST, REMOVE_FIRST + 1, REMOVE_FIRST + 2
+    harness.sql(
+        f"INSERT INTO host_template (id, hash, name) VALUES ({a}, '{'0' * 31}7', '{PREFIX}RmRouter'), ({b}, '{'0' * 31}8', '{PREFIX}RmSwitch'); "
+        f"INSERT INTO graph_templates (id, hash, name) VALUES ({a}, '{'0' * 31}9', '{PREFIX}RmTraffic'), ({b}, '{'0' * 30}10', '{PREFIX}RmLoad'); "
+        f'INSERT INTO host_template_graph (host_template_id, graph_template_id) VALUES ({a}, {a}), ({a}, {b}), ({b}, {a}); '
+        f"INSERT INTO host (id, description, hostname, host_template_id) VALUES ({a}, '{PREFIX}rmcore', '{PREFIX}rmcore.example', {a}), "
+        f"({b}, '{PREFIX}rmedge', '{PREFIX}rmedge.example', {a}), ({c}, '{PREFIX}rmfar', '{PREFIX}rmfar.example', {b}); "
+        f'INSERT INTO data_local (id, data_template_id, host_id) VALUES ({a}, 0, {a}); '
+        f"INSERT INTO data_template_data (local_data_id, name_cache) VALUES ({a}, '{PREFIX}rm-data'); "
+        f"INSERT INTO data_template_rrd (id, local_data_id, data_source_name) VALUES ({a}, {a}, 'traffic_in')")
+    graphs = ((a, a, a, 'core-traffic'), (a + 1, b, a, 'core-load'), (a + 2, a, b, 'edge-traffic'), (a + 3, a, c, 'far-traffic'), (a + 4, b, 0, 'floating'))
+    for graph, template, host, label in graphs:
+        harness.sql(f'INSERT INTO graph_local (id, graph_template_id, host_id) VALUES ({graph}, {template}, {host}); '
+                    f"INSERT INTO graph_templates_graph (local_graph_id, graph_template_id, title_cache) VALUES ({graph}, {template}, '{PREFIX}rm-{label}')")
+    harness.sql(f'INSERT INTO graph_templates_item (graph_template_id, local_graph_id, local_graph_template_item_id, task_item_id) VALUES ({a}, {a}, 0, {a})')
+
+
+def remove_reset(harness):
+    harness.sql(
+        f"DELETE FROM graph_templates_item WHERE local_graph_id >= {REMOVE_FIRST}; "
+        f"DELETE FROM graph_templates_graph WHERE title_cache LIKE '{PREFIX}rm-%'; "
+        f'DELETE FROM graph_local WHERE id >= {REMOVE_FIRST}; '
+        f'DELETE FROM data_template_rrd WHERE local_data_id >= {REMOVE_FIRST}; '
+        f'DELETE FROM data_template_data WHERE local_data_id >= {REMOVE_FIRST}; '
+        f'DELETE FROM data_local WHERE id >= {REMOVE_FIRST}; '
+        f'DELETE FROM host_template_graph WHERE host_template_id >= {REMOVE_FIRST}; '
+        f'DELETE FROM host WHERE id >= {REMOVE_FIRST}; '
+        f'DELETE FROM host_template WHERE id >= {REMOVE_FIRST}; '
+        f'DELETE FROM graph_templates WHERE id >= {REMOVE_FIRST}')
+
+
+def remove_rows(harness):
+    """The graphs and data sources the removal cases may leave behind."""
+    return harness.sql(f'SELECT (SELECT GROUP_CONCAT(id ORDER BY id) FROM graph_local WHERE id >= {REMOVE_FIRST}), '
+                       f'(SELECT COUNT(*) FROM data_local WHERE id >= {REMOVE_FIRST})')
+
+
+def remove_cases():
+    a, b = REMOVE_FIRST, REMOVE_FIRST + 1
+    mine = f'--graph-regex=^{PREFIX}rm-'
+    return [
+        ('remove count by device', [f'--host-id={a}']),
+        ('remove count by two devices', [f'--host-id={a}', f'--host-id={b}']),
+        ('remove count by device template', [f'--host-template-id={a}']),
+        ('remove count by graph template', [f'--graph-template-id={b}']),
+        ('remove count by expression', [mine]),
+        ('remove count by two expressions', [f'--graph-regex=^{PREFIX}rm-core', f'--graph-regex=^{PREFIX}rm-edge']),
+        ('remove count narrows together', [f'--host-id={a}', f'--graph-template-id={a}', mine]),
+        ('remove count with an alternation is cleaned', [f'--graph-regex=^{PREFIX}rm-(core|far)']),
+        ('remove count with nothing selected', [f'--host-id={a + 99}']),
+        ('remove count ignores a device that has no graphs on this template', [f'--host-id={a + 2}', f'--graph-template-id={b}']),
+        ('remove list by device', [f'--host-id={a}', '--list']),
+        ('remove list by expression', [mine, '--list']),
+        ('remove list without a selector', ['--list', '--host-id=' + str(a + 99)]),
+        ('remove list nothing', [mine + 'nomatch', '--list']),
+        ('remove force by expression', [mine, '--force']),
+        ('remove force by expression keeps the data sources', [mine, '--force', '--preserve']),
+        ('remove force one device', [f'--host-id={a + 2}', '--force']),
+        ('remove force one graph template', [f'--graph-template-id={b}', '--force', '--preserve']),
+        ('remove force nothing matching', [f'--host-id={a + 99}', '--force']),
+        ('remove with no selector is refused', ['--force']),
+        ('remove count with no selector is refused', ['--preserve']),
+        ('remove list and force are exclusive', ['--list', '--force']),
+        ('remove bad device id', ['--host-id=abc']),
+        ('remove zero device id', ['--host-id=0']),
+        ('remove negative device template id', [f'--host-template-id=-{a}']),
+        ('remove bad graph template id', ['--graph-template-id=x']),
+        ('remove device template error comes first', ['--host-id=x', '--graph-template-id=y', '--host-template-id=z']),
+        ('remove graph template error comes before device', ['--host-id=x', '--graph-template-id=y']),
+        ('remove exponent id is numeric', [f'--host-id={a}e0']),
+        ('remove bare device id', ['--host-id']),
+        ('remove empty device id is not seen', ['--host-id=']),
+        ('remove empty expression is not seen', ['--graph-regex=', f'--host-id={a}']),
+        ('remove quiet is named invalid and ignored', ['--quiet', f'--host-id={a}']),
+        ('remove graph type is named invalid and ignored', ['--graph-type=line', f'--host-id={a}']),
+        ('remove graph type without a value', ['--graph-type', f'--host-id={a}']),
+        ('remove list devices', ['--list-hosts']),
+        ('remove list devices of a template', ['--list-hosts', f'--host-template-id={a}']),
+        ('remove list devices of two templates', ['--list-hosts', f'--host-template-id={a}', f'--host-template-id={b}']),
+        ('remove list devices with a bad template', ['--list-hosts', '--host-template-id=x']),
+        ('remove list device templates', ['--list-host-templates']),
+        ('remove list graph templates', ['--list-graph-templates']),
+        ('remove list graph templates of a template', ['--list-graph-templates', f'--host-template-id={b}']),
+        ('remove list modes: devices win', ['--list-graph-templates', '--list-host-templates', '--list-hosts']),
+        ('remove list modes: device templates beat graph templates', ['--list-graph-templates', '--list-host-templates']),
+        ('remove list modes ignore force', ['--list-hosts', '--force']),
+        ('remove help', ['-h']),
+        ('remove upper help', ['-H']),
+        ('remove long help', ['--help']),
+        ('remove version', ['-v']),
+        ('remove upper version', ['-V']),
+        ('remove long version', ['--version']),
+        ('remove no arguments', []),
+    ]
+
+
+def verify_remove_cases(harness, check):
+    for label, arguments in remove_cases():
+        remove_seed(harness)
+        original = run(harness, QUIET_PHP + REMOVE_ORIGINAL, arguments)
+        original_rows = remove_rows(harness)
+        remove_seed(harness)
+        native = run(harness, QUIET_PHP + REMOVE_SHIM, arguments)
+        native_rows = remove_rows(harness)
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(normalise(original['stdout']) == normalise(native['stdout']), f'{label} prints the same lines')
+        check(STTY.sub('', normalise(original['stderr'])) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same graphs and data sources')
+    remove_reset(harness)
+
+
+def verify_remove_differences(harness, check):
+    a = REMOVE_FIRST
+    mine = f'^{PREFIX}rm-'
+    remove_seed(harness)
+    # validate_is_regex() was meant to refuse these, but its caller tested for false, which it never returns.
+    for label, expression in (('an expression over 50 bytes', mine + 'x' * 50), ('an expression with a semicolon', mine + ';x'),
+                              ('an expression with nothing after the flag', None), ('an expression of only dropped characters', '||')):
+        # A bare --graph-regex gave RLIKE '', which matches every title; "--graph-regex=" was not seen at all.
+        refused = run(harness, REMOVE_SHIM, ['--graph-regex' if expression is None else f'--graph-regex={expression}', '--force'])
+        check(refused['exit'] == 1 and 'is not a valid Regex!' in refused['stdout'], f'{label} is refused')
+    check(remove_rows(harness).strip().split('\t')[0].count(',') == 4, 'a refused expression removes no graph')
+    # getopt() skipped a flag it did not know; an unknown flag is refused here as in the other tools.
+    unknown = run(harness, REMOVE_SHIM, ['--bogus', f'--host-id={a}'])
+    check(unknown['exit'] == 1 and unknown['stdout'].startswith('ERROR: Invalid Parameter --bogus\n'), 'an unknown flag is an error with the help')
+    # Without graph management nothing is read or removed.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 5')
+    try:
+        for arguments in (['--all', '--force'], ['--list'], ['--list-hosts'], ['--list-host-templates']):
+            denied = run(harness, REMOVE_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without graph management is refused")
+        check(remove_rows(harness).strip().split('\t')[0].count(',') == 4, 'a refused removal removes no graph')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 5)')
+    json_report = run(harness, 'bin/console', ['kadupul:graph:remove', f'--host-id={a}', '--json'])
+    check(json_report['exit'] == 0 and '"matched":2' in json_report['stdout'] and '"mode":"count"' in json_report['stdout'], 'bin/console counts as json without removing')
+    both = run(harness, 'bin/console', ['kadupul:graph:remove', '--list', '--force'])
+    check(both['exit'] == 2, 'bin/console treats --list with --force as invalid input')
+    remove_reset(harness)
+
+
 def verify_graph_parity(harness, check):
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, REPAIR_ORIGINAL)
     install_original(harness, BROKEN_ORIGINAL)
+    install_original(harness, REMOVE_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
     saved = harness.sql("SELECT value FROM settings WHERE name='admin_user'")
     try:
@@ -408,10 +558,13 @@ def verify_graph_parity(harness, check):
         verify_repair_differences(harness, check)
         verify_broken_cases(harness, check)
         verify_broken_differences(harness, check)
+        verify_remove_cases(harness, check)
+        verify_remove_differences(harness, check)
     finally:
         titles_reset(harness)
         repair_reset(harness)
         broken_reset(harness)
+        remove_reset(harness)
         harness.sql("DELETE FROM settings WHERE name='admin_user'")
         for value in saved.splitlines():
             harness.sql(f"INSERT INTO settings (name,value) VALUES ('admin_user',CONVERT(UNHEX('{value.encode().hex()}') USING utf8mb4))")
