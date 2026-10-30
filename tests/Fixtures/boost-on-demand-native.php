@@ -51,6 +51,9 @@ function db_fetch_assoc_prepared($sql, $params)
         return $GLOBALS['samples'];
     }
     if (str_contains($sql, 'SELECT DISTINCT data_source_name')) {
+        if (str_starts_with($GLOBALS['mode'], 'fallback-')) {
+            return array();
+        }
         return array(array('data_source_name' => 'value', 'rrd_name' => 'value', 'rrd_path' => $GLOBALS['directory'] . '/sample.rrd'));
     }
     if (str_contains($sql, 'gti.task_item_id IS NULL')) {
@@ -68,6 +71,15 @@ function db_fetch_cell_prepared($sql, $params)
 }
 function db_fetch_row_prepared($sql, $params)
 {
+    if (str_contains($sql, 'FROM poller_item')) {
+        return match ($GLOBALS['mode']) {
+            'fallback-failure' => false,
+            'fallback-absent' => array(),
+            'fallback-empty' => array('rrd_path' => ''),
+            'fallback-valid' => array('rrd_path' => $GLOBALS['directory'] . '/sample.rrd'),
+            default => throw new RuntimeException('Unexpected fallback: ' . $sql),
+        };
+    }
     return array('data_template_id' => 1);
 }
 function db_execute($sql, ...$args)
