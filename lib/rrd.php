@@ -814,7 +814,9 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 				}
 				$result = rrdtool_windows_oneshot(
 					array(read_config_option('path_rrdtool'), '-'),
-					escape_command($command_line) . "\r\nquit\r\n", $deadline, $output_flag !== RRDTOOL_OUTPUT_NULL
+					escape_command($command_line) . "\r\nquit\r\n",
+					$deadline,
+					$output_flag !== RRDTOOL_OUTPUT_NULL
 				);
 				$output = $result['completed'] ? $result['output'] : false;
 				$status = $result['status'];
