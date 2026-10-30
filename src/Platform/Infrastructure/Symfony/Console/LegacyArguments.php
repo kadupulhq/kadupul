@@ -36,6 +36,18 @@ abstract class LegacyArguments
     }
 
     /**
+     * Everything the original printed for an unknown argument: the lines of
+     * invalid(), then its help. A script that stopped at the error without the
+     * help overrides this.
+     *
+     * @return list<string>
+     */
+    public function invalidOutput(string $argument): array
+    {
+        return [...$this->invalid($argument), ...$this->help()];
+    }
+
+    /**
      * The command that runs the translated input. A script whose old flags
      * select between several commands, such as a --list-* mode, overrides this;
      * the others run the one command their shim names.
