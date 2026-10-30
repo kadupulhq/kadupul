@@ -8,6 +8,7 @@ require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd_process.php');
+$coverageFilter->includeFile($coverageRoot . '/lib/rrd_windows_process.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/dsdebug.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd_maintenance.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
