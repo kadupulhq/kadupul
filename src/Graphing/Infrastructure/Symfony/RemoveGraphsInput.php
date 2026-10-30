@@ -51,6 +51,16 @@ final class RemoveGraphsInput
     #[Option(name: 'list-graph-templates', description: 'List the graph templates of the device templates, optionally of --host-template-id.')]
     public bool $listGraphTemplates = false;
 
+    /**
+     * Old options the shim passes on by name: remove_graphs.php listed --quiet and
+     * --graph-type without handling them, and named each as invalid. --quiet
+     * cannot be declared here because the console defines it for every command.
+     *
+     * @var list<string>
+     */
+    #[Option(description: 'Old option names to report as invalid and ignore (quiet, graph-type).')]
+    public array $ignored = [];
+
     #[Option(description: 'On a remote collector, use its local database instead of the main one.')]
     public bool $local = false;
 

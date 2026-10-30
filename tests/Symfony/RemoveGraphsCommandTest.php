@@ -186,6 +186,14 @@ final class RemoveGraphsCommandTest extends TestCase
         self::assertSame(['ok', 'remove', 2, 2, 'kept'], [$json['status'], $json['mode'], $json['matched'], $json['removed'], $json['data_sources']]);
     }
 
+    public function testQuietAndGraphTypeAreNamedAsInvalidAndTheRunGoesOn(): void
+    {
+        $tester = $this->tester($this->graphs());
+
+        self::assertSame(0, $tester->execute(['--host-id' => ['3'], '--ignored' => ['graph-type', 'quiet']]));
+        self::assertSame("ERROR: Invalid Argument: (graph-type)\n\nERROR: Invalid Argument: (quiet)\n\nThere are 2 Graphs to Remove.  Use the --force option to remove these Graphs.\n  Use the --list option to view the list of Graphs\n", $tester->getDisplay());
+    }
+
     public function testBinConsoleRejectsInvalidInputAsInvalid(): void
     {
         $this->presentation = new CliPresentation();
@@ -200,6 +208,10 @@ final class RemoveGraphsCommandTest extends TestCase
 
         self::assertNull($request);
         self::assertSame(['--all' => true, '--list-hosts' => true, '--host-id' => ['1', '2'], '--graph-regex' => ['']], $input);
+        // "--host-id=" with nothing after the "=" was not seen by getopt(), so it is dropped.
+        self::assertSame([], (new RemoveGraphsLegacyArguments())->translate(['--host-id=', '--graph-regex='])[0]);
+        self::assertSame(LegacyRequest::Help, (new RemoveGraphsLegacyArguments())->translate([])[1]);
+        self::assertSame(['--ignored' => ['quiet', 'graph-type']], (new RemoveGraphsLegacyArguments())->translate(['--quiet', '--graph-type=x'])[0]);
     }
 
     public function testAnUnknownFlagIsRefusedAndHelpIsASpecialRequest(): void
@@ -207,6 +219,6 @@ final class RemoveGraphsCommandTest extends TestCase
         $arguments = new RemoveGraphsLegacyArguments();
         self::assertSame(LegacyRequest::Help, $arguments->translate(['--all', '--help'])[1]);
         $this->expectException(InvalidLegacyArgument::class);
-        $arguments->translate(['--quiet']);
+        $arguments->translate(['--bogus']);
     }
 }

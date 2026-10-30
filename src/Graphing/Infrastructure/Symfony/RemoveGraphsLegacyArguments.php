@@ -15,11 +15,16 @@ use Kadupul\Graphing\Application\Port\RemovalChoice;
 use Kadupul\Graphing\Application\Port\RemovalDevice;
 use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
+use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 
 /**
  * remove_graphs.php read its options with getopt(): a value only after "=", a
  * repeated option as a list, and a value-taking option with none as an empty
- * value that the script refused later with its own message.
+ * value that the script refused later with its own message. An option written
+ * as "--name=" with nothing after the "=" was not seen at all.
+ *
+ * --quiet and --graph-type were in its option list but never handled: it printed
+ * an error line for each and carried on, so they are accepted and ignored here.
  */
 final class RemoveGraphsLegacyArguments extends LegacyArguments
 {
@@ -34,6 +39,8 @@ final class RemoveGraphsLegacyArguments extends LegacyArguments
         foreach (self::LISTS as $flag => $option) {
             $flags[$flag] = [$option, true];
         }
+        $flags['--quiet'] = ['quiet', false];
+        $flags['--graph-type'] = ['graph-type', false];
 
         return [...$flags, ...self::versionAndHelp()];
     }
@@ -44,6 +51,9 @@ final class RemoveGraphsLegacyArguments extends LegacyArguments
         $flags = $this->flags();
         $input = [];
         $lists = [];
+        if ($argv === []) {
+            return [[], LegacyRequest::Help];
+        }
         foreach ($argv as $argument) {
             [$flag, $value] = str_contains($argument, '=') ? explode('=', $argument, 2) : [$argument, ''];
             if (!array_key_exists($flag, $flags)) {
@@ -53,7 +63,13 @@ final class RemoveGraphsLegacyArguments extends LegacyArguments
             if ($option === null) {
                 return [[], $this->special($flag)];
             }
-            if ($takesValue) {
+            if ($option === 'quiet' || $option === 'graph-type') {
+                // Named in argv order, as getopt() reported them; any value is dropped.
+                $lists['ignored'][] = $option;
+            } elseif ($takesValue) {
+                if (str_contains($argument, '=') && $value === '') {
+                    continue;
+                }
                 $lists[$option][] = $value;
             } else {
                 $input['--' . $option] = true;
@@ -95,6 +111,20 @@ final class RemoveGraphsLegacyArguments extends LegacyArguments
             '    --list-hosts [--host-template-id=ID]',
             '    --list-graph-templates [--host-template-id=ID]',
             '    --list-host-templates', ''];
+    }
+
+    /**
+     * @param list<string> $names the ignored options that were given
+     * @return list<string>
+     */
+    public function ignored(array $names): array
+    {
+        $lines = [];
+        foreach ($names as $name) {
+            array_push($lines, "ERROR: Invalid Argument: ($name)", '');
+        }
+
+        return $lines;
     }
 
     /** @return list<string> */

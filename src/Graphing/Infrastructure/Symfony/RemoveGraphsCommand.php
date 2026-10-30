@@ -51,6 +51,17 @@ final readonly class RemoveGraphsCommand
         if ($early !== null) {
             return $early;
         }
+        // getopt() listed these two without handling them, so the original named each as invalid and went on.
+        $ignored = $input->ignored;
+        if ($ignored !== []) {
+            if ($mode === OutputMode::Legacy) {
+                foreach ($legacy->ignored($ignored) as $line) {
+                    $output->writeln($line, OutputInterface::OUTPUT_RAW);
+                }
+            } elseif ($mode === OutputMode::Human) {
+                $io->warning(sprintf('Ignored: --%s.', implode(', --', $ignored)));
+            }
+        }
         // The original checked in this order: expressions, --list with --force, then each id list.
         $patterns = [];
         foreach ($input->graphRegex as $expression) {
