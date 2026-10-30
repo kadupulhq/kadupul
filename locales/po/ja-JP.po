@@ -4756,11 +4756,11 @@ msgstr "現時点では、インストール/アップグレード権限を持�
 msgid "There is an Installation or Upgrade in progress."
 msgstr "進行中のインストールまたはアップグレードがあります。"
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "このData CollectorがメインのKadupulサイトと完全に同期した最後の時。"
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "メインデータコレクターがオフラインまたはリカバリステータスになりました"
 
@@ -12434,11 +12434,11 @@ msgstr "データソース'%s'のXML出力列を選択し、その右側のチ�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "グラフテンプレートはデータテンプレートを使用していません。グラフテンプレートを修正してください"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "パスワードフィールドの長さを特定できませんでした。パスワードを破損する可能性があるため続行できません"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "パスワードフィールド長の変更に失敗しました。パスワードを破損する可能性があるため続行できません"
 

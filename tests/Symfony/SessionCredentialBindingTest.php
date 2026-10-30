@@ -21,7 +21,9 @@ final class SessionCredentialBindingTest extends TestCase
             ? \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage()
             : null;
         try {
-            $process = proc_open([PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . dirname(__DIR__, 2), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', dirname(__DIR__) . '/Fixtures/symfony-credential-session-native.php', $scenario, $directory, $storage, $coverage !== null ? 'coverage' : ''], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+            // A debug kernel raises SHELL_VERBOSITY to 3 when it is unset, which
+            // sends its debug log to stderr; pin it so test order cannot decide.
+            $process = proc_open([PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . dirname(__DIR__, 2), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', dirname(__DIR__) . '/Fixtures/symfony-credential-session-native.php', $scenario, $directory, $storage, $coverage !== null ? 'coverage' : ''], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, ['SHELL_VERBOSITY' => '0'] + getenv());
             self::assertIsResource($process);
             $output = stream_get_contents($pipes[1]);
             $errors = stream_get_contents($pipes[2]);

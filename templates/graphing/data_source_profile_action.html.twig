@@ -2,27 +2,15 @@
 SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 SPDX-License-Identifier: GPL-3.0-or-later
 #}
-{% extends 'base.html.twig' %}
-{% set heading = operation == 'delete' ? 'Delete Data Source Profiles' : 'Duplicate Data Source Profiles' %}
-{% block title %}{{ heading|trans({}, 'data_source_profile') }} · Kadupul{% endblock %}
-{% block body %}
-<main>
-    <h1>{{ heading|trans({}, 'data_source_profile') }}</h1>
-    <p>{{ (operation == 'delete' ? 'Click Continue to delete the following Data Source Profiles.' : 'Click Continue to duplicate the following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles.')|trans({}, 'data_source_profile') }}</p>
-    <ul>
-        {% for profile in profiles %}
-            <li>{{ profile.name }}{% if operation == 'delete' and profile.isDefault %} ({{ 'default'|trans({}, 'data_source_profile') }}){% elseif operation == 'delete' and not profile.deletable %} ({{ 'used by %sources% data sources and %templates% templates'|trans({'%sources%': profile.dataSources, '%templates%': profile.templates}, 'data_source_profile') }}){% endif %}</li>
-        {% endfor %}
-    </ul>
-    {% if used %}<p role="alert">{{ 'The default profile and profiles in use by Data Templates or Data Sources can not be deleted.'|trans({}, 'data_source_profile') }}</p>{% endif %}
-    {{ form_start(form) }}
-        {{ form_errors(form) }}
-        {% if form.title_format is defined %}{{ form_row(form.title_format) }}{% endif %}
-        {{ form_widget(form.selection) }}
-        {{ form_widget(form.revisions) }}
-        {% if not used %}<button type="submit">{{ 'Continue'|trans({}, 'data_source_profile') }}</button>{% endif %}
-        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
-        <a href="{{ path('data_source_profile_list', filters) }}">{{ 'Cancel'|trans({}, 'data_source_profile') }}</a>
-    {{ form_end(form) }}
-</main>
+{% extends '_action_confirm.html.twig' %}
+{% set domain = 'data_source_profile' %}
+{% set heading = operation == 'delete' ? t('Delete Data Source Profiles', {}, 'data_source_profile') : t('Duplicate Data Source Profiles', {}, 'data_source_profile') %}
+{% set intro = operation == 'delete' ? t('Click Continue to delete the following Data Source Profiles.', {}, 'data_source_profile') : t('Click Continue to duplicate the following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles.', {}, 'data_source_profile') %}
+{% set used_message = t('The default profile and profiles in use by Data Templates or Data Sources can not be deleted.', {}, 'data_source_profile') %}
+{% set cancel_url = path('data_source_profile_list', filters) %}
+{% block extra_fields %}{% if form.title_format is defined %}{{ form_row(form.title_format) }}{% endif %}{% endblock %}
+{% block items %}
+    {% for profile in profiles %}
+        <li>{{ profile.name }}{% if operation == 'delete' and profile.isDefault %} ({{ 'default'|trans({}, 'data_source_profile') }}){% elseif operation == 'delete' and not profile.deletable %} ({{ 'used by %sources% data sources and %templates% templates'|trans({'%sources%': profile.dataSources, '%templates%': profile.templates}, 'data_source_profile') }}){% endif %}</li>
+    {% endfor %}
 {% endblock %}

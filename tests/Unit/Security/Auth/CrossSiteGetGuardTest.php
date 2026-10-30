@@ -72,6 +72,7 @@ function cross_site_bootstrap_run(array $headers, string $query): array
         }
         file_put_contents($directory . '/include/global_constants.php', '<?php require ' . var_export($root . '/include/global_constants.php', true) . ';');
         file_put_contents($directory . '/include/vendor/autoload.php', '<?php');
+        file_put_contents($directory . '/include/request_profile.php', '<?php function kadupul_register_request_profile(): void {}');
         // The actual CSRF implementation and its dependencies are retained.
         symlink($root . '/include/vendor/csrf', $directory . '/include/vendor/csrf');
         file_put_contents($directory . '/include/csrf.php', '<?php require ' . var_export($root . '/include/csrf.php', true) . ';');

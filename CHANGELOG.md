@@ -6,8 +6,11 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
 - Run `cli/copy_user.php` and `cli/add_perms.php` through the `kadupul:user:copy`, `kadupul:permission:add` and `kadupul:permission:list` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and User Management realms, a permission grant ends the user's remembered logins and raises their permission epoch as the web form does, a missing or empty new username prints the usage instead of creating an unnamed account, and the ids are bound instead of concatenated into SQL (#1213).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
+- Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
+- Convert non-finite numeric Boost samples to unknown before scheduled and on-demand RRD writes, preserving valid sibling fields and original queue acknowledgement values (#739).
 - Add `html_require_legacy_js()` so plugins can declare their need for Chart.js, dygraphs, jquery.sparkline or the jQuery colorpicker. Release 1.3 still loads all four on every page and its page head is unchanged; release 1.4 will load only the requested ones. These libraries are deprecated and no core page uses them.
 - Update billboard.js from 3.18.0 to 4.1.3 and the billboard stylesheet in every theme. The library is now installed from npm and checked against a pinned checksum like D3 and jQuery. Plugin charts keep working because the browser bundle still includes every chart method; 4.x also stops `javascript:` links spelled with a numeric character reference that omits its closing semicolon from reaching the default tooltip, custom tooltip contents and legend templates, which 3.18.0 allowed. Git-based installs must run `npm ci && npm run build` after pulling, because `include/js/billboard.js` is no longer tracked and `git pull` deletes it, leaving charts broken until the rebuild; packaged and offline releases are unaffected.
 - Decide model-driven binding approval through a `metric_binding` state machine whose guard asks IdentityAccess for the signed-in actor and a binding-approval permission (Settings/Utilities realm), denies by default and audits every decision. Nothing calls approval yet and the RRD write gate stays closed.
@@ -201,6 +204,10 @@ follows [Semantic Versioning](VERSIONING.md).
 - Serve the Data Source Profile list, editor, RRAs, duplication and deletion through Symfony and Twig. Every change is revision-checked and rechecks the Data Source Profiles realm in its transaction, a profile used by data sources refuses structural changes to its RRAs as well as its step, factor and functions, and deletion refuses the default profile and refuses the whole selection when any profile is in use. Old `data_source_profiles.php` links navigate and its size and span lookups still answer; posts to it no longer change data.
 - Add native Symfony/Twig list views for users, groups, authentication domains, discovered devices, collectors, trees, recorded RRD cleanup candidates, SNMP agent objects, notification history and login history. Existing PHP forms retain editing and operational actions (#1008).
 - Forward ten more legacy root pages through the shared Symfony forwarder, and fail CI when a change adds a legacy root web page. The plan for the remaining Twig migration is in `docs/migrations/twig-completion-plan.md`.
+- Profile requests. With `KADUPUL_PROFILE=1`, legacy pages append wall time, peak memory and query count to `var/profile/requests.jsonl`; the Symfony profiler runs in dev and test, and `tests/tools/profile_routes.py` compares each legacy URL with its Symfony route on time and query count.
+- Fail Sonar-analysed pull requests and merge groups when a changed executable line is not covered by tests.
+- Show plugin menu entries added through the `config_arrays` hook on Twig console pages. A plugin menu that fails to load falls back to the built-in menu.
+- Render eight confirmation pages from two shared Twig templates without changing their HTML.
 
 ## [1.3.0-alpha.1]
 

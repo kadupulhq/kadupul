@@ -26,6 +26,9 @@ final readonly class LegacyBrowserWorker
         private DatabaseConnection $database,
         private InstallationConfiguration $configuration,
         private LoggerInterface $logger,
+        // The menu sits on every page, so it gets a short budget; a timeout
+        // leaves the built-in menu.
+        private float $menuTimeout = 3.0,
     ) {}
 
     /** @return array<string, mixed> */
@@ -41,10 +44,32 @@ final readonly class LegacyBrowserWorker
     }
 
     /**
-     * @param array<string, string> $entry the native script path the worker presents to include/auth.php
+     * The menu after every config_arrays hook. about.php has no realm, so any
+     * console account bootstraps; each entry carries its own realm instead.
+     *
+     * @param list<string> $sections
+     * @return array<string, mixed>|null null when the request is not a GET or
+     *     HEAD, which the worker handoff refuses
+     */
+    public function consoleMenu(int $actorId, array $sections): ?array
+    {
+        $method = $this->requests->getCurrentRequest()?->getMethod();
+        if ($method !== 'GET' && $method !== 'HEAD') {
+            return null;
+        }
+
+        return $this->run('legacy-console-menu.php', ['page_path' => $this->configuration->urlPath() . '/about.php', 'sections' => $sections], $actorId, $this->menuTimeout, false);
+    }
+
+    /**
+     * @param array<string, mixed> $entry the native script path the worker presents to include/auth.php, and its operation input
+     * @param float $timeout seconds before the worker is stopped
+     * @param bool $forwardRequest false hands over only what resumes the
+     *     session, so a cached result cannot vary on client-chosen query
+     *     strings, cookies or referrers
      * @return array<string, mixed>
      */
-    private function run(string $script, array $entry, int $actorId): array
+    private function run(string $script, array $entry, int $actorId, float $timeout = 60, bool $forwardRequest = true): array
     {
         $request = $this->requests->getCurrentRequest();
         $snapshot = $this->session->read();
@@ -71,6 +96,14 @@ final readonly class LegacyBrowserWorker
         if ($binary === false || !is_file($binary) || !is_executable($binary)) {
             throw new \RuntimeException('The configured PHP interpreter is unavailable.');
         }
+        $cookies = $request->cookies->all();
+        if (!$forwardRequest) {
+            $sessionName = $configuration['session_name'] ?? null;
+            if (!is_string($sessionName) || $sessionName === '') {
+                throw new \RuntimeException('The console session cookie name is unavailable.');
+            }
+            $cookies = array_intersect_key($cookies, [$sessionName => true]);
+        }
         // Native cookie ownership has already been checked by SharedSession.
         // Credentials travel only over the private worker pipe, never argv/logs.
         $command = [
@@ -81,10 +114,10 @@ final readonly class LegacyBrowserWorker
             ...$entry,
             'server' => array_intersect_key($request->server->all(), array_flip([
                 'HTTPS', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_PORT', 'REMOTE_ADDR', 'HTTP_USER_AGENT', 'HTTP_ACCEPT_LANGUAGE',
-                'HTTP_ORIGIN', 'HTTP_REFERER', 'HTTP_X_REQUESTED_WITH', 'QUERY_STRING',
+                ...($forwardRequest ? ['HTTP_ORIGIN', 'HTTP_REFERER', 'HTTP_X_REQUESTED_WITH', 'QUERY_STRING'] : []),
             ])),
-            'cookies' => $request->cookies->all(),
-            'query' => $request->query->all(),
+            'cookies' => $cookies,
+            'query' => $forwardRequest ? $request->query->all() : [],
         ];
         try {
             $input = json_encode($command, JSON_THROW_ON_ERROR);
@@ -94,7 +127,7 @@ final readonly class LegacyBrowserWorker
         if (strlen($input) > 65536) {
             throw new BadRequestHttpException('Console request is too large.');
         }
-        $process = new Process([$binary, $this->projectDir . '/bin/' . $script], $this->projectDir, null, $input, 60);
+        $process = new Process([$binary, $this->projectDir . '/bin/' . $script], $this->projectDir, null, $input, $timeout);
         $bytes = 0;
         try {
             $process->run(static function (string $type, string $chunk) use (&$bytes): void {

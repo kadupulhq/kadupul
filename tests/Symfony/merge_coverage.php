@@ -73,7 +73,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'gprint_preset_scenarios.py', 'color_template_scenarios.py', 'cdef_scenarios.py', 'automation_template_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'gprint_preset_scenarios.py', 'color_template_scenarios.py', 'cdef_scenarios.py', 'automation_template_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py', 'cli_user_scenarios.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         // Bind the bodyless contract without inventing coverage for its declaration.
@@ -83,6 +83,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
         $sourcePaths[] = 'tests/Symfony/console_home_http.py';
         $sourcePaths[] = 'tests/Symfony/permission_denied_scenarios.py';
+        $sourcePaths[] = 'tests/Symfony/plugin_menu_scenarios.py';
         $sourcePaths[] = 'tests/Symfony/console_browser_probe.cjs';
         $sourcePaths[] = 'include/js/console-home.js';
         foreach (['console_home', 'console_home_body', 'console_home_fragment', 'console_home_shell', 'help'] as $template) {
@@ -91,6 +92,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/e2e/browser-coverage.js';
         $sourcePaths[] = 'public/js/vdef-item.js';
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
+        $sourcePaths[] = 'tests/Fixtures/plugins/menu_parity/setup.php';
         // cli_parity_scenarios.py, cli_schema_scenarios.py and
         // cli_audit_scenarios.py compare the shims against these frozen originals.
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
@@ -98,6 +100,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/audit_database.php';
         $sourcePaths[] = 'tests/Fixtures/native-cli/audit_database.php';
+        // cli_user_scenarios.py compares the user and permission shims with these.
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/copy_user.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/add_perms.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -108,6 +113,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'console schema mismatch preserves the native installer redirect before worker startup',
         'permission denied renders in place: /permission_denied.php',
         'custom_denied runs once with OPER_MODE_NATIVE for the native page path',
+        'real worker reports the config_arrays entry and its plugin realm (plugin_realms.id + 100)',
+        'revoking plugin realm id + 100 hides its menu entries',
         'custom_denied reskin replaces the page',
         'console native login preserves the installation subdirectory',
         'help return link retains the installation subdirectory: /public/index.php/help',
@@ -621,7 +628,28 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'audit --dry-run through bin/console plans the repair and changes nothing, not even the audit tables',
         'audit --repair through bin/console without --force plans the repair and changes nothing',
         'audit refuses a remote collector before any statement, --help included',
-        'audit scenarios leave the schema, settings, grants and docs/ as they found them'];
+        'audit scenarios leave the schema, settings, grants and docs/ as they found them',
+        'copy user prints the same lines',
+        'copy user leaves the same rows',
+        'copy over an existing account leaves the same rows',
+        'copy a missing template prints the same lines',
+        'copy without a new user prints usage instead of copying to a null name',
+        'copy to an empty name creates no account',
+        'copy without user management is refused',
+        'a refused copy creates no account',
+        'grant a device leaves the same permissions',
+        'grant a graph leaves the same permissions',
+        'grant to a user that does not exist prints the same lines',
+        'grant an item that does not exist prints the same lines',
+        'list users prints the same lines',
+        'list trees prints the same lines',
+        'list graphs of a device prints the same lines',
+        'list groups prints the same lines',
+        'a missing user is reported by its own id, not the last argument',
+        'a grant raises the permission epoch and ends remembered logins',
+        'a grant without user management is refused',
+        'a refused grant writes nothing',
+        'a listing without user management is refused'];
     if ($handler !== 'none') {
         $checks = array_merge($checks, required_audit_baseline_failure_checks());
     }
@@ -678,7 +706,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php', 'cli/copy_user.php', 'cli/add_perms.php', 'bin/legacy-user-copy.php', 'bin/legacy-item-permission.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -707,6 +735,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
         'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
         'bin/legacy-permission-denied.php', 'permission_denied.php',
+        'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleMenuRuntime.php',
+        'src/Platform/Infrastructure/Legacy/LegacyPluginConsoleMenu.php',
         'src/Platform/Infrastructure/Legacy/PermissionDeniedRuntime.php',
         'src/Platform/Infrastructure/Symfony/Controller/PermissionDeniedController.php',
         'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',
@@ -742,6 +773,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'vdef.php',
         'data_source_profiles.php', 'lib/data_source_profile_integrity.php',
+        'automation_templates.php', 'gprint_presets.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
@@ -987,7 +1019,24 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseLegacyArguments.php',
         'src/Platform/Infrastructure/Symfony/Console/AuditDatabaseCommand.php',
         'src/Platform/Infrastructure/Legacy/LegacyInstallationUpgrade.php',
-        'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php'];
+        'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php',
+        'cli/copy_user.php',
+        'bin/legacy-user-copy.php',
+        'src/IdentityAccess/Application/Command/UserCommandAccess.php',
+        'src/IdentityAccess/Application/Command/CopyUser.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyUserCopier.php',
+        'src/IdentityAccess/Infrastructure/Symfony/CopyUserCommand.php',
+        'src/IdentityAccess/Infrastructure/Symfony/CopyUserLegacyArguments.php',
+        'cli/add_perms.php',
+        'bin/legacy-item-permission.php',
+        'src/IdentityAccess/Domain/ItemPermissionRequest.php',
+        'src/IdentityAccess/Application/Command/GrantItemPermission.php',
+        'src/IdentityAccess/Application/Command/ListPermissionTargets.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyItemPermissions.php',
+        'src/IdentityAccess/Infrastructure/Persistence/DbalPermissionCatalog.php',
+        'src/IdentityAccess/Infrastructure/Symfony/AddPermissionCommand.php',
+        'src/IdentityAccess/Infrastructure/Symfony/AddPermsLegacyArguments.php',
+        'src/IdentityAccess/Infrastructure/Symfony/ListPermissionsCommand.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';

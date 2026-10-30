@@ -4785,11 +4785,11 @@ msgstr "इंस्टॉल / अपग्रेड विशेषाधि�
 msgid "There is an Installation or Upgrade in progress."
 msgstr "कोई स्थापना या नवीनीकरण प्रगति पर है।"
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "पिछली बार इस डेटा कलेक्टर को मुख्य कैक्टि साइट के साथ पूरा किया गया था।"
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "मुख्य डेटा कलेक्टर ऑफ़लाइन या रिकवरी स्टेटस पर चला गया है"
 
@@ -12497,11 +12497,11 @@ msgstr "आपको डेटा स्रोत ' %s' के लिए XML आ
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "आपके ग्राफ़ टेम्प्लेट में उपयोग में डेटा टेम्प्लेट नहीं हैं। कृपया अपना ग्राफ़ टेम्पलेट सही करें"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "पासवर्ड फ़ील्ड की लंबाई निर्धारित करने में विफल, भ्रष्ट पासवर्ड जारी नहीं रख सकता"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "पासवर्ड फ़ील्ड की लंबाई बदलने में विफल, भ्रष्ट पासवर्ड के रूप में जारी नहीं रह सकता है"
 

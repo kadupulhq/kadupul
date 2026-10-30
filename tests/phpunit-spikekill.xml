@@ -36,6 +36,8 @@
       <file>Unit/Installer/DataInputIndexUpgradeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>Unit/Core/Cli/BoostWorkerNativeTest.php</file>
+      <file>Unit/Core/Cli/BoostArchiveAcknowledgementNativeTest.php</file>
+      <file>Unit/Core/Rrd/BoostAcknowledgedDeletionNativeTest.php</file>
       <file>Unit/Core/Cli/BoostPartitionWorkerNativeTest.php</file>
       <file>Unit/Core/Cli/BoostQueueMasterNativeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterWorkerNativeTest.php</file>
@@ -84,6 +86,7 @@
       <file>Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
       <file>Unit/Core/Rrd/BoostReadFailureNativeTest.php</file>
       <file>Unit/Core/Rrd/BoostLookupFailureNativeTest.php</file>
+      <file>Unit/Core/Rrd/BoostFallbackPathNativeTest.php</file>
       <file>Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
       <file>Unit/Core/Poller/PollerAcknowledgementTest.php</file>
       <file>Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>

@@ -1,0 +1,127 @@
+# Compares each legacy URL with its Symfony route on median wall time (more
+# than 10% and 2 ms slower fails) and query count (no increase), per docs/enterprise-readiness.md. The
+# seeded tests/tools/route-pairs.json lists the 16 forwarding shims against
+# their direct app.php route; those shims already serve Symfony, so the pairs
+# measure forwarding overhead and exercise the tool end to end. Real
+# migrated-route pairs are added as each batch ships.
+name: Route profile
+
+on:
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: Measured requests per URL
+        type: string
+        default: '20'
+  pull_request:
+    types: [labeled, synchronize, reopened]
+
+permissions:
+  contents: read
+
+# Both passes bind port 8080 on the runner, and runs share nothing else.
+concurrency:
+  group: route-profile-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  profile:
+    name: Profile legacy and Symfony routes
+    # Adding any other label to a labeled PR must not start a second run.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.action == 'labeled' && github.event.label.name == 'performance') ||
+      (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'performance'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: read
+    env:
+      # Fixture credentials of the throwaway tests/e2e stack, not a real account.
+      KADUPUL_PROFILE_USER: admin
+      KADUPUL_PROFILE_PASSWORD: admin
+      RUNS: ${{ inputs.runs || '20' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.4'
+          extensions: curl, dom, gd, gmp, intl, ldap, mbstring, pdo_mysql, snmp, sockets, sqlite3, xml
+          coverage: none
+          tools: composer
+      - name: Preserve selected PHP for mise
+        run: |
+          mkdir -p "$RUNNER_TEMP/profile-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/profile-php/bin/php"
+      - uses: jdx/mise-action@08ae2a091c038e1e05ec6f5115dc5c69d5a2a6b8 # v5.1.2
+        with:
+          install_args: python@3.12.12 node@22.22.2
+          add_shims_to_path: false
+      - name: Register and verify actual PHP patch version
+        run: bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/profile-php" 8.4
+      - name: Install locked dependencies and application assets
+        run: |
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" -- composer install --no-progress --no-interaction --prefer-dist
+          mise exec node@22.22.2 -- npm ci --ignore-scripts
+          mise exec node@22.22.2 -- npm run build
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php bin/console asset-map:compile
+      - name: Verify the profiler's own tests
+        run: mise exec python@3.12.12 -- python tests/tools/test_profile_routes.py
+      - name: Authenticate to GitHub Container Registry
+        env:
+          GHCR_TOKEN: ${{ github.token }}
+          GHCR_USERNAME: ${{ github.actor }}
+        run: bash tests/tools/login_ghcr.sh
+      - name: Time pass (APP_ENV=prod, no profiling)
+        working-directory: tests/e2e
+        env:
+          APP_ENV: prod
+          KADUPUL_PROFILE: '0'
+        run: |
+          set -euo pipefail
+          compose=(docker compose -f docker-compose.yml -f docker-compose.profile.yml)
+          "${compose[@]}" up -d --build --wait
+          cd ../..
+          mise exec python@3.12.12 -- python tests/tools/profile_routes.py --base-url http://localhost:8080/ \
+            --pairs tests/tools/route-pairs.json --pass time --runs "$RUNS" --warmup 3 --out var/route-profile-time.json
+          cd tests/e2e
+          "${compose[@]}" down -v
+      - name: Counts pass (APP_ENV=test, legacy profiling on)
+        working-directory: tests/e2e
+        env:
+          APP_ENV: test
+          # DoctrineBundle only registers its query counter when debug is on.
+          APP_DEBUG: '1'
+          KADUPUL_PROFILE: '1'
+        run: |
+          set -euo pipefail
+          compose=(docker compose -f docker-compose.yml -f docker-compose.profile.yml)
+          "${compose[@]}" up -d --build --wait
+          # var/ is private to www-data; let the runner traverse it to read the log.
+          "${compose[@]}" exec -T php chmod o+x var
+          cd ../..
+          mise exec python@3.12.12 -- python tests/tools/profile_routes.py --base-url http://localhost:8080/ \
+            --pairs tests/tools/route-pairs.json --pass counts --log var/profile/requests.jsonl \
+            --runs "$RUNS" --warmup 3 --out var/route-profile-counts.json
+      - name: Compare against the budget
+        run: |
+          mise exec python@3.12.12 -- python tests/tools/profile_routes.py \
+            --compare var/route-profile-time.json var/route-profile-counts.json \
+            2>&1 | tee var/route-profile-summary.txt
+      - name: Stop the stack
+        if: always()
+        working-directory: tests/e2e
+        run: docker compose -f docker-compose.yml -f docker-compose.profile.yml down -v
+      - name: Upload profile results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: route-profile
+          path: |
+            var/route-profile-time.json
+            var/route-profile-counts.json
+            var/route-profile-summary.txt
+          if-no-files-found: error

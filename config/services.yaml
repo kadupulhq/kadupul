@@ -601,6 +601,11 @@ when@test:
         _defaults:
             autowire: true
             autoconfigure: true
+        # Console rendering fixtures replace the shared session adapter through
+        # ConsoleAccess. Keep workflow permission checks on their real adapter
+        # when the profiler instantiates workflow guards during collection.
+        Kadupul\IdentityAccess\Contract\BindingApprovalPermission:
+            class: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
         Kadupul\Tests\Fixtures\PresentationProbeCommand: ~
         # The guard audits every decision; tests must not append to log/.
         Kadupul\Tests\Monitoring\Fakes\RecordingAuditTrail: ~

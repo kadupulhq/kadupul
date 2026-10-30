@@ -176,6 +176,9 @@ final class ListTemplateRenderingTest extends TestCase
                 }
             });
 
+            // A closure builds a value that needs the booted container, such as a form view.
+            $context = array_map(static fn(mixed $value): mixed => $value instanceof \Closure ? $value($container) : $value, $context);
+
             return $container->get('twig')->render($template, $context);
         } finally {
             $kernel->shutdown();

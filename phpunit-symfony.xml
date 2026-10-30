@@ -14,6 +14,8 @@
         <include>
             <directory suffix=".php">src</directory>
             <file>bin/legacy-console-home.php</file>
+            <file>bin/legacy-console-menu.php</file>
+            <file>bin/legacy-console-handoff.php</file>
             <file>index.php</file>
             <file>login.php</file>
             <file>lib/headers_secure.php</file>
@@ -59,6 +61,12 @@
             <file>scripts/motorola_surfboard_SB6141.php</file>
             <file>scripts/ss_apache_stats.php</file>
             <file>tools/edit-package.php</file>
+            <file>include/request_profile.php</file>
+            <file>automation_templates.php</file>
+            <file>cdef.php</file>
+            <file>data_source_profiles.php</file>
+            <file>gprint_presets.php</file>
+            <file>host.php</file>
         </include>
     </source>
 </phpunit>

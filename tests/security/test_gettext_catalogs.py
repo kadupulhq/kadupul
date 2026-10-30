@@ -5,6 +5,7 @@
 """Exercise exact native catalog admission and reviewed compatibility boundaries."""
 
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -162,6 +163,40 @@ class GettextCatalogIntegrityTest(unittest.TestCase):
         self.assertIn("Console Twig extraction failed", result.stderr)
         self.assertIn("artifacts remain incomplete", result.stderr)
         self.assertEqual(original, (po.read_bytes(), mo.read_bytes()))
+
+    def catalog_build(self):
+        build = self.directory / "glob-build"
+        for directory in ("include", "src", "locales/po", "locales/LC_MESSAGES", "bin"):
+            (build / directory).mkdir(parents=True)
+        shutil.copy2(ROOT / "locales/build_gettext.sh", build / "locales/build_gettext.sh")
+        (build / "include/cacti_version").write_text("1.3.0")
+        (build / "fixture.php").write_text("<?php __('Delete');\n")
+        # The historical merger requires the full shipped locale set; its
+        # admission and failure paths are exercised separately above.
+        mise = build / "bin/mise"
+        mise.write_text("#!/bin/sh\nexit 0\n")
+        mise.chmod(0o755)
+        environment = os.environ | {"PATH": str(build / "bin") + os.pathsep + os.environ["PATH"]}
+        return build, environment
+
+    def test_build_without_po_files_has_no_listing_errors(self):
+        build, environment = self.catalog_build()
+        result = subprocess.run(["sh", "locales/build_gettext.sh"], cwd=build, env=environment, capture_output=True, text=True, timeout=30)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("", result.stderr)
+        self.assertTrue((build / "locales/po/cacti.pot").is_file())
+        self.assertEqual([], list((build / "locales/LC_MESSAGES").iterdir()))
+
+    def test_build_keeps_catalog_names_with_whitespace_intact(self):
+        build, environment = self.catalog_build()
+        names = ("fr-FR", "test locale", "line\nbreak")
+        for name in names:
+            (build / f"locales/po/{name}.po").write_text('msgid ""\nmsgstr ""\n"Content-Type: text/plain; charset=UTF-8\\n"\n\nmsgid "Delete"\nmsgstr "Supprimer"\n')
+        result = subprocess.run(["sh", "locales/build_gettext.sh"], cwd=build, env=environment, capture_output=True, text=True, timeout=30)
+        self.assertEqual(0, result.returncode, result.stderr)
+        for name in names:
+            self.assertTrue((build / f"locales/LC_MESSAGES/{name}.mo").is_file(), name)
+            self.assertEqual("Supprimer", entries((build / f"locales/po/{name}.po").read_text())[("", "Delete", "")]["msgstr"])
 
 
 if __name__ == "__main__":

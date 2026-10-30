@@ -102,7 +102,7 @@ Profiling uses the framework's own collectors: WebProfilerBundle and Stopwatch i
 **Files:**
 - Modify: `composer.json`, `composer.lock` (require-dev `symfony/web-profiler-bundle` and `symfony/stopwatch`, 7.4)
 - Modify: `config/bundles.php` (`WebProfilerBundle` for dev and test)
-- Create: `config/packages/web_profiler.yaml` (`when@dev`, `when@test`), `config/routes/web_profiler.yaml`
+- Create: `config/packages/web_profiler.php` (dev and test, skipped when the bundle is not installed), `config/routes/web_profiler.yaml`
 - Create: `src/Platform/Infrastructure/Profiling/RequestProfileLog.php`, `src/Platform/Infrastructure/Symfony/ServerTiming.php`
 - Create: `include/request_profile.php`; modify `include/global.php` to include it and `lib/database.php` to add `db_statement_count()` at `db_execute_prepared()`, the single statement-execution choke point
 - Test: `tests/Symfony/ServerTimingTest.php`, `tests/Symfony/LegacyRequestProfileTest.php` with `tests/Fixtures/legacy-request-profile-native.php`
@@ -228,6 +228,6 @@ Order is by risk and by dependency: later batches reuse readers and forms from e
 ## Self-review notes
 
 - Spec coverage: Twig for every web page (Phases 1 to 5, R4/R5); whole workflow including writes (R3, R11); profiling (Tasks 0.3, 0.4, R8); coverage (Task 0.5, R6); globals (R9, Phase 7); PHP 8.4 idioms and Kadupul idioms (Global Constraints); DRY (Tasks 0.1, 0.2, 0.6 and the reuse rule in R2).
-- Coverage gate scope: Task 0.5's gate runs only where Sonar analysis runs. Whether ordinary PRs get the gate (by setting `SONAR_ALL_PRS` or moving the gate) is an open policy decision.
+- Coverage gate scope: Task 0.5's gate runs only where Sonar analysis runs. Migration batches use `sonar/` branches so the gate binds them. `SONAR_ALL_PRS` stays unset (decided 2026-10-28), because it would make the Sonar gate required on every open PR and run the full coverage pipeline for every merge-queue entry.
 - Not converted to Twig by design: process entry points (Phase 6) and non-HTML endpoints, because they produce no HTML.
 - Decided 2026-10-27: identity moves to the Symfony Security firewall. Until Phase 5 ships, unmigrated legacy pages must still accept the firewall's session, so the ADR defines one session owner and how the legacy bootstrap reads it.

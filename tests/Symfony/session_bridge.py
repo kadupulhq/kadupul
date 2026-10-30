@@ -89,6 +89,11 @@ def permission_denied(fixture):
     verify_permission_denied(fixture.harness, check)
 
 
+def plugin_menu(fixture):
+    from plugin_menu_scenarios import verify_plugin_menu
+    verify_plugin_menu(fixture.harness, check)
+
+
 def anonymous_entry(fixture):
     anonymous = Session(fixture.harness.base)
     response = anonymous.request('/app.php/session')
@@ -316,7 +321,7 @@ def account_lifecycle(fixture):
 
 
 STEPS = (
-    console_home, console_collectors, console_prefix, permission_denied, anonymous_entry,
+    console_home, console_collectors, console_prefix, permission_denied, plugin_menu, anonymous_entry,
     script_server, cli_parity, tree_cli, schema_parity, audit_parity, user_parity, forged_session,
     login_policy, cdef_legacy_pages, data_inputs, about_authentication, about, inventory,
     data_source_profile_deletion, data_source_profile_heartbeat, site_edit, links,
@@ -378,7 +383,7 @@ LASTING_STATE = {
 SHARDS = (
     ('schema_parity', 'audit_parity'),
     ('cdef_legacy_pages', 'inventory', 'device_create'),
-    ('console_home', 'console_collectors', 'console_prefix', 'permission_denied', 'anonymous_entry',
+    ('console_home', 'console_collectors', 'console_prefix', 'permission_denied', 'plugin_menu', 'anonymous_entry',
      'script_server', 'cli_parity', 'tree_cli', 'user_parity', 'forged_session', 'login_policy', 'data_inputs',
      'about_authentication', 'about', 'data_source_profile_deletion', 'data_source_profile_heartbeat',
      'site_edit', 'links', 'site_create', 'site_lifecycle', 'palette_colors', 'gprint_presets',

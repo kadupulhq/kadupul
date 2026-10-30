@@ -1,0 +1,9 @@
+framework:
+    cache:
+        pools:
+            # Plugin console menu entries from the legacy worker. The key
+            # fingerprints plugin, realm, locale and collector state, so the
+            # lifetime only bounds changes made to plugin code on disk.
+            cache.plugin_console_menu:
+                adapter: cache.adapter.filesystem
+                default_lifetime: 300

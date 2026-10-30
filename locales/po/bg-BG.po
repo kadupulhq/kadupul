@@ -4766,11 +4766,11 @@ msgstr "Само Kadupul Администратори с привилегия з
 msgid "There is an Installation or Upgrade in progress."
 msgstr "В процес на изпълнение е инсталация или надстройка."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Последният път, когато този Data Collector е бил напълно синхронизиран с главния Kadupul сайт."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Основният събирач на данни е преминал към статус офлайн или възстановяване"
 
@@ -12445,11 +12445,11 @@ msgstr "Трябва да изберете изходна колона XML за 
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Шаблонът ви на графиката не се използва. Моля, коригирайте шаблона на графиката си"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Неуспех при определяне на дължината на полето за парола, не може да продължи, както може да повреди паролата"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Не можа да се промени дължината на полето за парола, не може да продължи, тъй като може да повреди паролата"
 

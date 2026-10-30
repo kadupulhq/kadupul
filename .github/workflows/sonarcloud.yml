@@ -49,6 +49,9 @@ jobs:
       - name: Verify coverage artifact failure handling
         run: |
           "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m unittest discover -s tests/tools -p 'test_sonar_coverage_artifacts.py' -v
+      - name: Verify patch coverage gate
+        run: |
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" -m unittest discover -s tests/tools -p 'test_patch_coverage.py' -v
       - name: Verify scope classification
         run: mise exec python@3.12.12 -- python -m unittest discover -s tests/security -p test_sonar_change_scope.py -v
       - name: Classify the complete tested change
@@ -642,6 +645,24 @@ jobs:
           args: -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=600
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # Runs on the remapped reports, so Clover paths sit under this checkout.
+      # After the scan, so a coverage failure still publishes Sonar results.
+      # A pull request checks out its merge commit, whose first parent is the
+      # base it was merged onto; a merge group names its base. fetch-depth 0
+      # above keeps both. var/offline-coverage.xml is not passed: it is
+      # Cobertura for Python files, and the offline PHP tools already merge
+      # into var/symfony-coverage.xml.
+      - name: Require full coverage of changed lines
+        if: ${{ !cancelled() && (github.event_name == 'pull_request' || github.event_name == 'merge_group') }}
+        env:
+          BASE: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || 'HEAD^1' }}
+        run: |
+          "$RUNNER_TEMP/sonar-artifact-tools/bin/python" tests/tools/patch_coverage.py \
+            --base "$BASE" --clover tests/coverage.xml --clover var/symfony-coverage.xml \
+            --require 100 --paths 'src/**/*.php' 'config/**/*.php' 'lib/**/*.php' 'include/**/*.php' 'bin/**/*.php' \
+              'cli/**/*.php' 'scripts/**/*.php' 'install/**/*.php' 'tools/**/*.php' '*.php' \
+            --exclude 'include/vendor/**'
 
   quality-gate:
     name: Sonar Quality Gate

@@ -4770,11 +4770,11 @@ msgstr "Μόνο οι διαχειριστές Kadupul με δικαιώματα
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Υπάρχει μια εγκατάσταση ή αναβάθμιση σε εξέλιξη."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Την τελευταία φορά που αυτός ο Συλλέκτης Δεδομένων συντάχθηκε πλήρως με τον κύριο ιστότοπο του Kadupul."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Ο κύριος συλλέκτης δεδομένων έχει μεταβεί σε κατάσταση εκτός σύνδεσης ή ανάκτησης"
 
@@ -12439,11 +12439,11 @@ msgstr "Πρέπει να επιλέξετε μια στήλη εξόδου XML 
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Το πρότυπο γραφήματος δεν χρησιμοποιεί πρότυπα δεδομένων. Διορθώστε το πρότυπο γραφήματος"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Αποτυχία προσδιορισμού του μήκους πεδίου κωδικού πρόσβασης, δεν μπορεί να συνεχιστεί καθώς μπορεί να καταστραφεί ο κωδικός πρόσβασης"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Αποτυχία αλλαγής του μήκους πεδίου κωδικού πρόσβασης, δεν μπορεί να συνεχιστεί καθώς μπορεί να καταστραφεί ο κωδικός πρόσβασης"
 
