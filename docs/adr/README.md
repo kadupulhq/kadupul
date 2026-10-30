@@ -35,5 +35,6 @@ Files are named `NNNN-short-title.md`. Add a row to the index when adding a reco
 | [0007](0007-raw-samples-and-rrd-sink-semantics.md) | Raw samples and RRD sink semantics | Proposed |
 | [0008](0008-data-source-ownership-and-bindings.md) | Data-source ownership and bindings | Proposed |
 | [0009](0009-durable-binding-and-ownership-store.md) | Durable binding and ownership store | Proposed |
+| [0010](0010-symfony-security-authentication.md) | Symfony Security for login and logout | Proposed |
 
 The design these records support is in [model-driven monitoring](../model-driven-monitoring.md).
