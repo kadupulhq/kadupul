@@ -175,3 +175,20 @@ to the shared filter renderer, which no longer declares a global. Native cases
 cover custom/empty catalogs and catalog changes in tab hooks. See
 [scope and verification](migrations/permission-filter-row-context.md). Indirect
 request/database dependencies and installed collector/session acceptance remain.
+
+### Non-finite Boost samples
+
+Status: implemented for #739. Scheduled and on-demand writers convert numeric
+overflow to `U` before RRDtool handoff, including cached and fallback MULTI
+mappings. Finite values retain their string representation. Exact queue
+acknowledgements still compare the original sample, and failed writes retain it.
+PHP 8.4.25: 158 native-process cases pass with 2,260 assertions; 46 fail against
+the previous serializers. Database and RRDtool operations are recording ports
+in these cases. A separate RRDtool 1.11.0 probe accepts the production-generated
+scalar and MULTI commands for both GAUGE and COUNTER files and confirms the
+following finite sample in all four runs. Native database behavior, installed
+polling and throughput are not established by these checks.
+The two extended files are registered in the required ordinary and privileged
+legacy suite. LTS correction is tracked in #1210; current-head CI remains a
+merge gate. No schema or configuration changes are needed. Reverting restores
+the old serialization and cannot repair previously stored values.

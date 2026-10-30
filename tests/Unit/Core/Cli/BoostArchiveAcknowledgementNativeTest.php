@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 /** Runs the production archive consumer in a child and returns its recorded effects. */
-function boost_archive_run($coverage, $mode, bool $renamed = false)
+function boost_archive_run($coverage, $mode, bool $renamed = false, array $environment = array())
 {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/boost-archive-' . bin2hex(random_bytes(8));
@@ -31,7 +31,7 @@ function boost_archive_run($coverage, $mode, bool $renamed = false)
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             null,
-            array_merge(getenv(), array('BOOST_FIXTURE' => $dir, 'BOOST_MODE' => $mode))
+            array_merge(getenv(), $environment, array('BOOST_FIXTURE' => $dir, 'BOOST_MODE' => $mode))
         );
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
@@ -62,6 +62,24 @@ function boost_archive_run($coverage, $mode, bool $renamed = false)
 
     }
 }
+
+test('the scheduled Boost writer normalizes scalar and both MULTI sample mappings', function ($sample, $expected, $format) {
+    $result = boost_archive_run(
+        $this->getTestResultObject()->getCodeCoverage(),
+        'finite-sample',
+        false,
+        array('BOOST_SAMPLE' => $sample, 'BOOST_FORMAT' => $format)
+    );
+
+    expect($result['result'])->toBe($format === 'scalar' ? 2 : 1)
+        ->and($result['updates'][0][2])->toBe('1699999800:' . $expected . ':7');
+    $archive = array_values(array_filter($result['writes'], fn($write) => str_starts_with($write[0], 'DELETE FROM poller_output_boost_arch_')));
+    expect($archive)->toHaveCount(1)
+        ->and($archive[0][1][3])->toBe($format === 'scalar' ? $sample : $format . ':' . $sample . ' peer:7');
+})->with(array(
+    array('1e999', 'U'), array('-1e999', 'U'), array('0', '0'),
+    array('-1.5', '-1.5'), array('1e3', '1e3'), array('U', 'U'),
+))->with(array('scalar', 'cached', 'uncached'));
 
 test('production Boost archive consumer deletes only acknowledged samples and isolates failed data sources', function ($mode) {
     $result = boost_archive_run($this->getTestResultObject()->getCodeCoverage(), $mode);

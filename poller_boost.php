@@ -1232,8 +1232,8 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
             if (strpos($value, 'DNP') !== false) {
                 /* continue, bad time */
             } elseif ((is_numeric($value)) || ($value == 'U' && $item['rrd_name'] !== '')) {
-                $tv_tmpl[$item['rrd_name']] = $value;
-                $buflen += strlen(':' . $value);
+                $tv_tmpl[$item['rrd_name']] = is_finite((float) $value) ? $value : 'U';
+                $buflen += strlen(':' . $tv_tmpl[$item['rrd_name']]);
                 $vals_in_buffer++;
             } elseif ((function_exists('is_hexadecimal')) && (is_hexadecimal($value))) {
                 $tval = hexdec($value);
@@ -1288,8 +1288,8 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
                             }
 
                             if (is_numeric($matches[1]) || ($matches[1] == 'U')) {
-                                $tv_tmpl[$field] = $matches[1];
-                                $buflen += strlen(':' . $matches[1]);
+                                $tv_tmpl[$field] = is_finite((float) $matches[1]) ? $matches[1] : 'U';
+                                $buflen += strlen(':' . $tv_tmpl[$field]);
                             } elseif ((function_exists('is_hexadecimal')) && (is_hexadecimal($matches[1]))) {
                                 $tval = hexdec($matches[1]);
                                 $tv_tmpl[$field] = $tval;
@@ -1354,8 +1354,8 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
                                     }
 
                                     if (is_numeric($matches[1]) || ($matches[1] == 'U')) {
-                                        $tv_tmpl[$field] = $matches[1];
-                                        $buflen += strlen(':' . $matches[1]);
+                                        $tv_tmpl[$field] = is_finite((float) $matches[1]) ? $matches[1] : 'U';
+                                        $buflen += strlen(':' . $tv_tmpl[$field]);
                                     } elseif ((function_exists('is_hexadecimal')) && (is_hexadecimal($matches[1]))) {
                                         $tval = hexdec($matches[1]);
                                         $tv_tmpl[$field] = $tval;

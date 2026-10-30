@@ -19,6 +19,10 @@ $samples = array(
     array('local_data_id' => 42, 'data_template_id' => 1, 'timestamp' => 1699999800, 'rrd_name' => 'value', 'output' => '21'),
     array('local_data_id' => 42, 'data_template_id' => 1, 'timestamp' => 1699999860, 'rrd_name' => 'value', 'output' => '22'),
 );
+if (isset($argv[6])) {
+    $samples[0]['output'] = $argv[7] === 'multi' ? 'value:' . $argv[6] : $argv[6];
+    $samples[0]['rrd_name'] = $argv[7] === 'multi' ? '' : 'value';
+}
 function cacti_system_zone_set() {}
 function cacti_log($message, ...$args)
 {
@@ -58,6 +62,9 @@ function db_fetch_assoc_prepared($sql, $params)
     }
     if (str_contains($sql, 'gti.task_item_id IS NULL')) {
         return array();
+    }
+    if (str_contains($sql, 'dif.data_name')) {
+        return array(array('data_name' => 'value', 'data_source_name' => 'value'));
     }
     throw new RuntimeException('Unexpected fixture read: ' . $sql);
 }
