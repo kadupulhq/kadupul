@@ -49,7 +49,7 @@ function run_data_sources($method, $action, array $request = array(), array $ser
 	foreach (array(
 		'ds' => 'list', 'ds_edit' => 'ds_edit', 'data_edit' => 'data_edit', 'form_save' => 'save',
 		'form_actions' => 'actions', 'ds_rrd_add' => 'rrd_add', 'ds_rrd_remove' => 'rrd_remove',
-		'ds_enable' => 'ds_enable', 'ds_disable' => 'ds_disable', 'ds_remove' => 'ds_remove',
+		'ds_enable' => 'ds_enable', 'ds_disable' => 'ds_disable',
 		'get_allowed_ajax_hosts' => 'ajax_hosts',
 	) as $function => $name) {
 		$stubs .= 'function ' . $function . '($x = null, $y = null, $z = null) { $GLOBALS["reached"][] = "' . $name . '"; }' . "\n";
@@ -110,8 +110,15 @@ test('data source bulk actions refuse any GET that carries selected_items', func
  * @return array<int, string>
  */
 function data_source_mutations() {
-	return array('ds_enable', 'ds_disable', 'ds_remove', 'rrd_add', 'rrd_remove');
+	return array('ds_enable', 'ds_disable', 'rrd_add', 'rrd_remove');
 }
+
+test('the obsolete data source remove action remains a read-only list request', function () {
+	// Do not supply a stub for a handler that production does not define.
+	foreach (array('GET', 'POST') as $method) {
+		expect(run_data_sources($method, 'ds_remove', array('id' => '3')))->toBe('list');
+	}
+});
 
 test('per-data-source mutations refuse any GET, including a same-site one', function () {
 	foreach (data_source_mutations() as $action) {

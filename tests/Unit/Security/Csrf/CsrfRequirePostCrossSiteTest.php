@@ -42,7 +42,7 @@ function page_guards() {
 			'save' => true, 'actions' => false, 'change_leaf' => false, 'item_movedown' => false,
 			'item_moveup' => false, 'item_remove' => false, 'remove' => false,
 		),
-		'color.php'                  => array('save' => true, 'actions' => false, 'remove' => false),
+		'color.php'                  => array('save' => true, 'actions' => false),
 		'data_queries.php'           => array(
 			'save' => true, 'actions' => false, 'item_moveup_dssv' => true, 'item_movedown_dssv' => true,
 			'item_remove_dssv' => true, 'item_moveup_gsv' => true, 'item_movedown_gsv' => true,
