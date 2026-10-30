@@ -170,7 +170,7 @@ msgstr "다음 집계 그래프를 삭제하려면 &#39;계속&#39;을 클릭하
 #: host_templates.php:477 lib/clog_webapi.php:262 lib/html.php:2934
 #: lib/html_form.php:1635 lib/html_form.php:1652 lib/html_form.php:1663
 #: lib/html_reports.php:634 links.php:202 links.php:211 links.php:220
-#: managers.php:1136 managers.php:1204 plugins.php:697 pollers.php:581
+#: managers.php:1139 managers.php:1207 plugins.php:697 pollers.php:581
 #: pollers.php:590 pollers.php:599 pollers.php:608 pollers.php:617
 #: sites.php:441 sites.php:451 tree.php:850 tree.php:859 tree.php:868
 #: tree.php:877 user_admin.php:382 user_admin.php:422 user_admin.php:433
@@ -207,8 +207,8 @@ msgstr "취소"
 #: host.php:614 host_templates.php:280 host_templates.php:294
 #: host_templates.php:305 host_templates.php:393 host_templates.php:478
 #: lib/clog_webapi.php:263 lib/html.php:2933 lib/html_reports.php:570
-#: links.php:202 links.php:211 links.php:220 managers.php:1136
-#: managers.php:1204 pollers.php:581 pollers.php:590 pollers.php:599
+#: links.php:202 links.php:211 links.php:220 managers.php:1139
+#: managers.php:1207 pollers.php:581 pollers.php:590 pollers.php:599
 #: pollers.php:608 pollers.php:617 sites.php:441 sites.php:451 tree.php:850
 #: tree.php:859 tree.php:868 tree.php:877 user_admin.php:382 user_admin.php:422
 #: user_admin.php:433 user_admin.php:444 user_admin.php:467
@@ -237,7 +237,7 @@ msgstr "아래의 집계 그래프를 템플릿 기반 집계로 마이그레이
 #: automation_snmp.php:261 graphs.php:1266 graphs.php:1316 graphs.php:1319
 #: graphs.php:1361 graphs.php:1928 host.php:605 include/auth.php:307
 #: lib/api_aggregate.php:1647 lib/api_aggregate.php:1662 lib/html_form.php:1661
-#: lib/html_reports.php:634 managers.php:1207 permission_denied.php:31
+#: lib/html_reports.php:634 managers.php:1210 permission_denied.php:31
 #: permission_denied.php:33
 msgid "Return"
 msgstr "반환"
@@ -17302,7 +17302,7 @@ msgstr "알림"
 msgid "SNMP Notification Receivers"
 msgstr "SNMP 알림 수신자"
 
-#: managers.php:168 managers.php:238 managers.php:524 managers.php:862
+#: managers.php:168 managers.php:238 managers.php:524 managers.php:865
 msgid "Receivers"
 msgstr "수신자 "
 
@@ -17355,59 +17355,59 @@ msgstr "중요도"
 msgid "Purge Notification Log"
 msgstr "알림 로그 제거"
 
-#: managers.php:857 utilities.php:3479
+#: managers.php:860 utilities.php:3480
 msgid "Time"
 msgstr "시간"
 
-#: managers.php:858 utilities.php:3479
+#: managers.php:861 utilities.php:3480
 msgid "Notification"
 msgstr "알림"
 
-#: managers.php:859 utilities.php:3479
+#: managers.php:862 utilities.php:3480
 msgid "Varbinds"
 msgstr "Varbinds"
 
-#: managers.php:876
+#: managers.php:879
 msgid "Severity Level"
 msgstr "심각도 수준"
 
-#: managers.php:897 utilities.php:3501
+#: managers.php:900 utilities.php:3502
 msgid "No SNMP Notification Log Entries"
 msgstr "SNMP 알림 로그 항목 없음"
 
-#: managers.php:1122
+#: managers.php:1125
 msgid "Click 'Continue' to delete the following Notification Receiver"
 msgid_plural "Click 'Continue' to delete following Notification Receiver"
 msgstr[0] "다음 알림 수신기를 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
-#: managers.php:1124
+#: managers.php:1127
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
 msgstr[0] "&#39;계속&#39;을 클릭하여 다음 알림 수신기를 사용하도록 설정하십시오."
 
-#: managers.php:1126
+#: managers.php:1129
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
 msgstr[0] "다음 알림 수신자를 사용 중지하려면 &#39;계속&#39;을 클릭하십시오."
 
-#: managers.php:1136
+#: managers.php:1139
 #, php-format
 msgid "%s Notification Receivers"
 msgstr "알림 수신기  %s 개"
 
-#: managers.php:1194
+#: managers.php:1197
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
 msgstr "다음 알림 개체를이 알림 수신자로 전달하려면 &#39;계속&#39;을 클릭하십시오."
 
-#: managers.php:1195
+#: managers.php:1198
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
 msgstr "다음 알림 개체를이 알림 수신자로 전달하지 않으려면 &#39;계속&#39;을 클릭하십시오."
 
-#: managers.php:1204
+#: managers.php:1207
 msgid "Disable Notification Objects"
 msgstr "알림 개체 사용 안 함"
 
-#: managers.php:1206
+#: managers.php:1209
 msgid "You must select at least one notification object."
 msgstr "하나 이상의 알림 개체를 선택해야합니다."
 
@@ -20470,15 +20470,15 @@ msgstr "스칼라"
 msgid "SNMP Agent Notification Log"
 msgstr "SNMPAgent 알림 로그"
 
-#: utilities.php:3388 utilities.php:3479
+#: utilities.php:3388 utilities.php:3480
 msgid "Receiver"
 msgstr "받는 사람"
 
-#: utilities.php:3471
+#: utilities.php:3472
 msgid "Log Entries"
 msgstr "로그 항목"
 
-#: utilities.php:3486
+#: utilities.php:3487
 #, php-format
 msgid "Severity Level: %s"
 msgstr "심각도 수준 :  %s"

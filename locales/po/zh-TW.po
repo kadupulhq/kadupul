@@ -184,7 +184,7 @@ msgstr "單擊“繼續”以刪除以下聚合圖。"
 #: host_templates.php:477 lib/clog_webapi.php:262 lib/html.php:2934
 #: lib/html_form.php:1635 lib/html_form.php:1652 lib/html_form.php:1663
 #: lib/html_reports.php:634 links.php:202 links.php:211 links.php:220
-#: managers.php:1136 managers.php:1204 plugins.php:697 pollers.php:581
+#: managers.php:1139 managers.php:1207 plugins.php:697 pollers.php:581
 #: pollers.php:590 pollers.php:599 pollers.php:608 pollers.php:617
 #: sites.php:441 sites.php:451 tree.php:850 tree.php:859 tree.php:868
 #: tree.php:877 user_admin.php:382 user_admin.php:422 user_admin.php:433
@@ -222,8 +222,8 @@ msgstr "取消"
 #: host.php:614 host_templates.php:280 host_templates.php:294
 #: host_templates.php:305 host_templates.php:393 host_templates.php:478
 #: lib/clog_webapi.php:263 lib/html.php:2933 lib/html_reports.php:570
-#: links.php:202 links.php:211 links.php:220 managers.php:1136
-#: managers.php:1204 pollers.php:581 pollers.php:590 pollers.php:599
+#: links.php:202 links.php:211 links.php:220 managers.php:1139
+#: managers.php:1207 pollers.php:581 pollers.php:590 pollers.php:599
 #: pollers.php:608 pollers.php:617 sites.php:441 sites.php:451 tree.php:850
 #: tree.php:859 tree.php:868 tree.php:877 user_admin.php:382 user_admin.php:422
 #: user_admin.php:433 user_admin.php:444 user_admin.php:467
@@ -254,7 +254,7 @@ msgstr "為了將下面的聚合圖遷移到基於模板的聚合，它們只能
 #: automation_snmp.php:261 graphs.php:1266 graphs.php:1316 graphs.php:1319
 #: graphs.php:1361 graphs.php:1928 host.php:605 include/auth.php:307
 #: lib/api_aggregate.php:1647 lib/api_aggregate.php:1662 lib/html_form.php:1661
-#: lib/html_reports.php:634 managers.php:1207 permission_denied.php:31
+#: lib/html_reports.php:634 managers.php:1210 permission_denied.php:31
 #: permission_denied.php:33
 #, fuzzy
 msgid "Return"
@@ -20183,7 +20183,7 @@ msgstr "通知"
 msgid "SNMP Notification Receivers"
 msgstr "SNMP通知接收器"
 
-#: managers.php:168 managers.php:238 managers.php:524 managers.php:862
+#: managers.php:168 managers.php:238 managers.php:524 managers.php:865
 #, fuzzy
 msgid "Receivers"
 msgstr "寄送群組"
@@ -20248,64 +20248,64 @@ msgstr "重要性"
 msgid "Purge Notification Log"
 msgstr "清除通知日誌"
 
-#: managers.php:857 utilities.php:3479
+#: managers.php:860 utilities.php:3480
 #, fuzzy
 msgid "Time"
 msgstr "時間"
 
-#: managers.php:858 utilities.php:3479
+#: managers.php:861 utilities.php:3480
 #, fuzzy
 msgid "Notification"
 msgstr "通知"
 
-#: managers.php:859 utilities.php:3479
+#: managers.php:862 utilities.php:3480
 #, fuzzy
 msgid "Varbinds"
 msgstr "變量綁定"
 
-#: managers.php:876
+#: managers.php:879
 #, fuzzy
 msgid "Severity Level"
 msgstr "嚴重程度"
 
-#: managers.php:897 utilities.php:3501
+#: managers.php:900 utilities.php:3502
 #, fuzzy
 msgid "No SNMP Notification Log Entries"
 msgstr "沒有SNMP通知日誌條目"
 
-#: managers.php:1122
+#: managers.php:1125
 msgid "Click 'Continue' to delete the following Notification Receiver"
 msgid_plural "Click 'Continue' to delete following Notification Receiver"
 msgstr[0] "單擊“繼續”以刪除以下通知接收器"
 
-#: managers.php:1124
+#: managers.php:1127
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
 msgstr[0] "單擊“繼續”以啟用以下通知接收器"
 
-#: managers.php:1126
+#: managers.php:1129
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
 msgstr[0] "單擊“繼續”以禁用以下通知接收器"
 
-#: managers.php:1136
+#: managers.php:1139
 #, fuzzy, php-format
 msgid "%s Notification Receivers"
 msgstr "％s通知接收者"
 
-#: managers.php:1194
+#: managers.php:1197
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
 msgstr "單擊“繼續”將以下通知對象轉發到此通知接收器。"
 
-#: managers.php:1195
+#: managers.php:1198
 msgid "Click 'Continue' to disable forwarding the following Notification Objects to this Notification Receiver."
 msgstr "單擊“繼續”以禁用將以下通知對象轉發到此通知接收器。"
 
-#: managers.php:1204
+#: managers.php:1207
 msgid "Disable Notification Objects"
 msgstr "禁用通知對象"
 
-#: managers.php:1206
+#: managers.php:1209
 msgid "You must select at least one notification object."
 msgstr "您必須至少選擇一個通知對象。"
 
@@ -23868,17 +23868,17 @@ msgstr "純量"
 msgid "SNMP Agent Notification Log"
 msgstr "SNMPAgent通知日誌"
 
-#: utilities.php:3388 utilities.php:3479
+#: utilities.php:3388 utilities.php:3480
 #, fuzzy
 msgid "Receiver"
 msgstr "接收人/裝置"
 
-#: utilities.php:3471
+#: utilities.php:3472
 #, fuzzy
 msgid "Log Entries"
 msgstr "紀錄細節"
 
-#: utilities.php:3486
+#: utilities.php:3487
 #, fuzzy, php-format
 msgid "Severity Level: %s"
 msgstr "嚴重級別：%s"

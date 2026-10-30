@@ -149,6 +149,7 @@ jobs:
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
         php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
         php vendor/bin/pest --configuration=phpunit-auth-policy-mariadb.xml --colors=never
+        php vendor/bin/pest --configuration=phpunit-unit.xml Unit/DataCollection/Snmp/SnmpEventDescriptionIdentityTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
 
     - name: Aggregate item replacement contracts
       working-directory: tests
