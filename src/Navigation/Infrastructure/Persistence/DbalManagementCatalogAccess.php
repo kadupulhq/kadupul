@@ -33,11 +33,11 @@ final readonly class DbalManagementCatalogAccess implements ManagementCatalogAcc
 
     public function authorize(CatalogScreen $screen): Actor
     {
-        $actor = $screen === CatalogScreen::MyReports ? $this->identity->authenticatedActor() : $this->console->consoleActor();
+        $actor = $screen->personalReport() ? $this->identity->authenticatedActor() : $this->console->consoleActor();
         if ($actor === null) {
             throw new AdministrationListDenied(true);
         }
-        if (!$this->accountAllows($actor->id) || ($screen !== CatalogScreen::MyReports && !$this->hasRealm($actor->id, self::CONSOLE_REALM)) || !$this->hasRealm($actor->id, $screen->realm())) {
+        if (!$this->accountAllows($actor->id) || (!$screen->personalReport() && !$this->hasRealm($actor->id, self::CONSOLE_REALM)) || !$this->hasRealm($actor->id, $screen->realm())) {
             throw new AdministrationListDenied(false);
         }
         foreach ($screen->relatedRealms() as $realm) {

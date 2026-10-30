@@ -39,6 +39,11 @@ SPDX-License-Identifier: GPL-2.0-or-later
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Enum-owned script/action and URL-encoded numeric record/parent identities. #}
                 <a href="{{ installation_path(screen.recordScript) }}?{{ screen.legacyQuery(parentId, record.id)|url_encode }}">{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}</a>
                 {% set children = {
+                    'graphs': {'management_graph_items': 'Graph Items', 'management_graph_data_sources': 'Data Sources'},
+                    'data-sources': {'management_data_source_definitions': 'Definitions', 'management_data_source_graphs': 'Graphs'},
+                    'aggregate-graphs': {'management_aggregate_members': 'Member Graphs'},
+                    'reports': {'management_report_items': 'Contents'},
+                    'my-reports': {'management_my_report_items': 'Contents'},
                     'graph-template-inputs': {'management_graph_input_items': 'Associations'},
                     'data-query-graphs': {'management_query_data_sources': 'Data Source Mappings', 'management_query_graph_suggestions': 'Graph Suggestions', 'management_query_data_suggestions': 'Data Suggestions'}
                 } %}
@@ -46,7 +51,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
                     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed child routes and the record's numeric primary key. #}
                     <a href="{{ path(destination, {id: record.id}) }}">{{ label|trans }}</a>
                 {% endfor %}
-            {% elseif column == 'name' and screen.metadataView %}{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}
+            {% elseif column == 'name' and (screen.metadataView or screen.instanceView) %}{{ value is null or value is same as('') ? 'Unnamed'|trans : value }}
                 {% set children = {
                     'snmp-mibs': {'management_mib_objects': 'Objects', 'management_mib_conventions': 'Textual Conventions', 'management_mib_notification_attributes': 'Notification Attributes'}
                 } %}
