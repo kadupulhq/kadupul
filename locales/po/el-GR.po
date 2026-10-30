@@ -50,7 +50,7 @@ msgstr "Το πρόγραμμα αυτό διανέμεται με την ελπ
 #: data_queries.php:1254 data_sources.php:23 data_sources.php:1249
 #: data_templates.php:19 data_templates.php:791 graph_templates.php:22
 #: graph_templates.php:516 graphs.php:32 host_templates.php:20
-#: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1659
+#: host_templates.php:485 host_templates.php:542 include/global_arrays.php:1662
 #: include/global_settings.php:325 lib/api_automation.php:1324
 #: lib/api_automation.php:1387 lib/api_automation.php:1458 lib/html.php:1505
 #: lib/html_form.php:1398 lib/html_reports.php:1937 managers.php:13
@@ -419,12 +419,13 @@ msgstr "Αναζήτηση"
 #: aggregate_graphs.php:1291 aggregate_graphs.php:1327
 #: aggregate_graphs.php:1590 data_sources.php:1984 data_sources.php:2123
 #: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2156
-#: graphs.php:2348 include/global_arrays.php:997 include/global_arrays.php:1233
-#: include/global_arrays.php:2019 lib/api_automation.php:283 lib/html.php:1955
-#: lib/html.php:2024 lib/html_graph.php:197 lib/html_tree.php:1022
-#: lib/html_tree.php:1378 tree.php:938 tree.php:2387 user_admin.php:801
-#: user_admin.php:1073 user_admin.php:2347 user_group_admin.php:940
-#: user_group_admin.php:1095 user_group_admin.php:2148 utilities.php:320
+#: graphs.php:2348 include/global_arrays.php:1000
+#: include/global_arrays.php:1236 include/global_arrays.php:2022
+#: lib/api_automation.php:283 lib/html.php:1955 lib/html.php:2024
+#: lib/html_graph.php:197 lib/html_tree.php:1022 lib/html_tree.php:1378
+#: tree.php:938 tree.php:2387 user_admin.php:801 user_admin.php:1073
+#: user_admin.php:2347 user_group_admin.php:940 user_group_admin.php:1095
+#: user_group_admin.php:2148 utilities.php:320
 msgid "Graphs"
 msgstr "Γραφήματα"
 
@@ -569,12 +570,12 @@ msgid " [ Custom Graphs List Applied - Clear to Reset ]"
 msgstr "[Εφαρμογή προσαρμοσμένης γραφήματος - Φίλτρο από λίστα]"
 
 #: aggregate_graphs.php:1550 aggregate_graphs.php:1656
-#: include/global_arrays.php:2771
+#: include/global_arrays.php:2774
 msgid "Aggregate Graphs"
 msgstr "Συγκεντρωτικά γραφήματα"
 
 #: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1713
-#: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2899
+#: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2902
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:63
@@ -607,9 +608,9 @@ msgstr "Οποιοδήποτε"
 #: data_sources.php:1718 data_sources.php:2039 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:976 graphs.php:1621 graphs.php:1630
 #: graphs.php:2097 graphs_items.php:271 graphs_items.php:391
-#: include/global_arrays.php:527 include/global_arrays.php:585
-#: include/global_arrays.php:677 include/global_arrays.php:889
-#: include/global_arrays.php:1748 include/global_form.php:574
+#: include/global_arrays.php:530 include/global_arrays.php:588
+#: include/global_arrays.php:680 include/global_arrays.php:892
+#: include/global_arrays.php:1751 include/global_form.php:574
 #: include/global_form.php:883 include/global_form.php:891
 #: include/global_form.php:899 include/global_form.php:938
 #: include/global_form.php:945 include/global_form.php:971
@@ -686,12 +687,12 @@ msgid "Aggregate Template [new]"
 msgstr "Συνολικό πρότυπο [νέο]"
 
 #: aggregate_templates.php:598 aggregate_templates.php:697
-#: include/global_arrays.php:2753
+#: include/global_arrays.php:2756
 msgid "Aggregate Templates"
 msgstr "Συγκεντρωτικά πρότυπα"
 
-#: aggregate_templates.php:612 include/global_arrays.php:1006
-#: include/global_arrays.php:1070 lib/installer.php:2748 user_admin.php:2365
+#: aggregate_templates.php:612 include/global_arrays.php:1009
+#: include/global_arrays.php:1073 lib/installer.php:2748 user_admin.php:2365
 #: user_group_admin.php:2160
 msgid "Templates"
 msgstr "Πρότυπα"
@@ -719,7 +720,7 @@ msgid "Graphs Using"
 msgstr "Χρήση γραφημάτων"
 
 #: aggregate_templates.php:709 graphs.php:2151 host_templates.php:730
-#: include/global_arrays.php:962 include/global_arrays.php:1368
+#: include/global_arrays.php:965 include/global_arrays.php:1371
 #: include/global_form.php:1399 include/global_form.php:1635
 #: lib/html_reports.php:1181 tree.php:1965
 msgid "Graph Template"
@@ -895,7 +896,7 @@ msgstr "Κωδικός"
 msgid "Local"
 msgstr "Τοπικό"
 
-#: auth_login.php:364 include/global_arrays.php:877 lib/auth.php:1077
+#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1077
 #: lib/auth.php:1082
 msgid "LDAP"
 msgstr "LDAP"
@@ -924,18 +925,18 @@ msgstr "Γενικά"
 msgid "User Account Details"
 msgstr "Στοιχεία λογαριασμού χρήστη"
 
-#: auth_profile.php:313 include/global_arrays.php:861
+#: auth_profile.php:313 include/global_arrays.php:864
 #: include/global_settings.php:2763 lib/html.php:2191 lib/html.php:2213
 #: lib/html.php:2882
 msgid "Tree View"
 msgstr "Προβολή δέντρου"
 
-#: auth_profile.php:317 include/global_arrays.php:862 lib/html.php:2198
+#: auth_profile.php:317 include/global_arrays.php:865 lib/html.php:2198
 #: lib/html.php:2222 lib/html.php:2883
 msgid "List View"
 msgstr "Προβολή Λίστας"
 
-#: auth_profile.php:321 include/global_arrays.php:863 lib/html.php:2205
+#: auth_profile.php:321 include/global_arrays.php:866 lib/html.php:2205
 #: lib/html.php:2884
 msgid "Preview View"
 msgstr "Προβολή προεπισκόπησης"
@@ -1083,8 +1084,8 @@ msgid "Delete Device(s)"
 msgstr "Διαγραφή συσκευών"
 
 #: automation_devices.php:262 automation_devices.php:578
-#: include/global_arrays.php:994 include/global_arrays.php:1050
-#: include/global_arrays.php:2333 lib/api_automation.php:178
+#: include/global_arrays.php:997 include/global_arrays.php:1053
+#: include/global_arrays.php:2336 lib/api_automation.php:178
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:937 tree.php:2381 user_admin.php:1065 user_admin.php:2359
@@ -1126,12 +1127,12 @@ msgstr "Περιγραφή"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:278 include/global_arrays.php:528
+#: automation_devices.php:278 include/global_arrays.php:531
 msgid "Uptime"
 msgstr "Χρόνος λειτουργίας"
 
 #: automation_devices.php:279 automation_devices.php:560
-#: include/global_arrays.php:1022 utilities.php:2156
+#: include/global_arrays.php:1025 utilities.php:2156
 msgid "SNMP"
 msgstr "SNMP (απλό πρωτόκολλο διαχείρισης δικτύου)"
 
@@ -1211,13 +1212,13 @@ msgstr "Μη Διαθέσιμο"
 #: automation_graph_rules.php:14 automation_snmp.php:15
 #: automation_tree_rules.php:14 data_queries.php:17 data_templates.php:20
 #: graph_templates.php:23 graphs.php:52 host_templates.php:21
-#: include/global_arrays.php:1656
+#: include/global_arrays.php:1659
 msgid "Duplicate"
 msgstr "Αντιγραφή"
 
 #: automation_graph_rules.php:15 automation_networks.php:18
 #: automation_tree_rules.php:15 data_sources.php:26
-#: include/global_arrays.php:1657 include/global_settings.php:1803
+#: include/global_arrays.php:1660 include/global_settings.php:1803
 #: managers.php:14 managers.php:20 plugins.php:24 pollers.php:20
 #: user_admin.php:19 user_domains.php:17 user_domains.php:396
 #: user_group_admin.php:21
@@ -1226,7 +1227,7 @@ msgstr "Ενεργοποίηση"
 
 #: automation_graph_rules.php:16 automation_networks.php:17
 #: automation_tree_rules.php:16 data_sources.php:27
-#: include/global_arrays.php:1658 managers.php:15 managers.php:19
+#: include/global_arrays.php:1661 managers.php:15 managers.php:19
 #: plugins.php:25 pollers.php:19 user_admin.php:20 user_domains.php:16
 #: user_group_admin.php:22
 msgid "Disable"
@@ -1314,14 +1315,14 @@ msgid "Graph Creation Criteria"
 msgstr "Κριτήρια δημιουργίας γραφήματος"
 
 #: automation_graph_rules.php:798 automation_graph_rules.php:845
-#: automation_graph_rules.php:952 include/global_arrays.php:1017
-#: include/global_arrays.php:2789
+#: automation_graph_rules.php:952 include/global_arrays.php:1020
+#: include/global_arrays.php:2792
 msgid "Graph Rules"
 msgstr "Κανόνες γραφήματος"
 
 #: automation_graph_rules.php:813 automation_graph_rules.php:963
-#: graphs.php:2152 include/global_arrays.php:1371
-#: include/global_arrays.php:2898 include/global_form.php:1645
+#: graphs.php:2152 include/global_arrays.php:1374
+#: include/global_arrays.php:2901 include/global_form.php:1645
 #: include/global_form.php:2207
 msgid "Data Query"
 msgstr "Ερώτημα δεδομένων"
@@ -1330,7 +1331,7 @@ msgstr "Ερώτημα δεδομένων"
 #: automation_graph_rules.php:981 automation_networks.php:535
 #: automation_tree_rules.php:854 automation_tree_rules.php:974
 #: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1778
-#: include/global_arrays.php:921 include/global_form.php:1527
+#: include/global_arrays.php:924 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
 #: lib/html_reports.php:2141 lib/html_reports.php:2152
@@ -1345,8 +1346,8 @@ msgstr "Ενεργοποιημένο"
 #: automation_graph_rules.php:841 automation_graph_rules.php:981
 #: automation_networks.php:1090 automation_tree_rules.php:855
 #: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1779
-#: data_templates.php:1325 include/global_arrays.php:920
-#: include/global_arrays.php:1580 include/global_arrays.php:1872
+#: data_templates.php:1325 include/global_arrays.php:923
+#: include/global_arrays.php:1583 include/global_arrays.php:1875
 #: include/global_settings.php:437 include/global_settings.php:453
 #: include/global_settings.php:1384 include/global_settings.php:1646
 #: include/global_settings.php:1660 include/global_settings.php:1673
@@ -1444,7 +1445,7 @@ msgstr "Εκτελέστε εντοπισμό στη λειτουργία εντ
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να ακυρώσετε τη λειτουργία Ανακάλυψης Δικτύου (Network Discovery)."
 
-#: automation_networks.php:401 include/global_arrays.php:513
+#: automation_networks.php:401 include/global_arrays.php:516
 msgid "SNMP Get"
 msgstr "SNMP Get"
 
@@ -1453,17 +1454,17 @@ msgid "Manual"
 msgstr "Χειροκίνητα"
 
 #: automation_networks.php:409 automation_networks.php:1064
-#: include/global_arrays.php:1886 include/global_settings.php:1385
+#: include/global_arrays.php:1889 include/global_settings.php:1385
 msgid "Daily"
 msgstr "Καθημερινά"
 
 #: automation_networks.php:410 automation_networks.php:1065
-#: include/global_arrays.php:1887
+#: include/global_arrays.php:1890
 msgid "Weekly"
 msgstr "Εβδομαδιαία"
 
 #: automation_networks.php:411 automation_networks.php:1066
-#: include/global_arrays.php:1888
+#: include/global_arrays.php:1891
 msgid "Monthly"
 msgstr "Μηνιαία"
 
@@ -1586,11 +1587,11 @@ msgstr "% d Νήμα"
 #: automation_networks.php:505 automation_networks.php:506
 #: automation_networks.php:507 automation_networks.php:508
 #: automation_networks.php:509 automation_networks.php:510
-#: automation_networks.php:511 include/global_arrays.php:824
-#: include/global_arrays.php:825 include/global_arrays.php:826
-#: include/global_arrays.php:827 include/global_arrays.php:828
-#: include/global_arrays.php:829 include/global_arrays.php:830
-#: include/global_arrays.php:831 include/global_arrays.php:832
+#: automation_networks.php:511 include/global_arrays.php:827
+#: include/global_arrays.php:828 include/global_arrays.php:829
+#: include/global_arrays.php:830 include/global_arrays.php:831
+#: include/global_arrays.php:832 include/global_arrays.php:833
+#: include/global_arrays.php:834 include/global_arrays.php:835
 #, php-format
 msgid "%d Threads"
 msgstr "% d Νήματα"
@@ -1611,19 +1612,19 @@ msgstr "% d λεπτά"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1537 include/global_arrays.php:715
-#: include/global_arrays.php:716 include/global_arrays.php:717
-#: include/global_arrays.php:718 include/global_arrays.php:755
-#: include/global_arrays.php:756 include/global_arrays.php:758
-#: include/global_arrays.php:759 include/global_arrays.php:760
-#: include/global_arrays.php:761 include/global_arrays.php:762
-#: include/global_arrays.php:763 include/global_arrays.php:1212
-#: include/global_arrays.php:1213 include/global_arrays.php:1587
-#: include/global_arrays.php:1591 include/global_arrays.php:1599
-#: include/global_arrays.php:1600 include/global_arrays.php:1624
-#: include/global_arrays.php:1625 include/global_arrays.php:1626
-#: include/global_arrays.php:1627 include/global_arrays.php:1628
-#: include/global_arrays.php:1641 include/global_settings.php:1714
+#: data_sources.php:1537 include/global_arrays.php:718
+#: include/global_arrays.php:719 include/global_arrays.php:720
+#: include/global_arrays.php:721 include/global_arrays.php:758
+#: include/global_arrays.php:759 include/global_arrays.php:761
+#: include/global_arrays.php:762 include/global_arrays.php:763
+#: include/global_arrays.php:764 include/global_arrays.php:765
+#: include/global_arrays.php:766 include/global_arrays.php:1215
+#: include/global_arrays.php:1216 include/global_arrays.php:1590
+#: include/global_arrays.php:1594 include/global_arrays.php:1602
+#: include/global_arrays.php:1603 include/global_arrays.php:1627
+#: include/global_arrays.php:1628 include/global_arrays.php:1629
+#: include/global_arrays.php:1630 include/global_arrays.php:1631
+#: include/global_arrays.php:1644 include/global_settings.php:1714
 #: include/global_settings.php:1715 include/global_settings.php:1716
 #: include/global_settings.php:1717 include/global_settings.php:1718
 #: include/global_settings.php:2689 include/global_settings.php:2897
@@ -1633,28 +1634,28 @@ msgstr "% d λεπτά"
 msgid "%d Minutes"
 msgstr "%d λεπτά"
 
-#: automation_networks.php:526 include/global_arrays.php:764
-#: include/global_arrays.php:774 include/global_arrays.php:1461
+#: automation_networks.php:526 include/global_arrays.php:767
+#: include/global_arrays.php:777 include/global_arrays.php:1464
 #, php-format
 msgid "%d Hour"
 msgstr "%d ώρα"
 
 #: automation_networks.php:527 automation_networks.php:528
-#: automation_networks.php:529 include/global_arrays.php:720
-#: include/global_arrays.php:721 include/global_arrays.php:722
-#: include/global_arrays.php:723 include/global_arrays.php:724
-#: include/global_arrays.php:765 include/global_arrays.php:766
-#: include/global_arrays.php:767 include/global_arrays.php:768
-#: include/global_arrays.php:775 include/global_arrays.php:776
-#: include/global_arrays.php:777 include/global_arrays.php:778
-#: include/global_arrays.php:1462 include/global_arrays.php:1463
-#: include/global_arrays.php:1464 include/global_arrays.php:1465
-#: include/global_arrays.php:1532 include/global_arrays.php:1533
-#: include/global_arrays.php:1534 include/global_arrays.php:1535
-#: include/global_arrays.php:1536 include/global_arrays.php:1553
-#: include/global_arrays.php:1554 include/global_arrays.php:1555
-#: include/global_arrays.php:1556 include/global_arrays.php:1557
-#: include/global_arrays.php:1563 include/global_arrays.php:1564
+#: automation_networks.php:529 include/global_arrays.php:723
+#: include/global_arrays.php:724 include/global_arrays.php:725
+#: include/global_arrays.php:726 include/global_arrays.php:727
+#: include/global_arrays.php:768 include/global_arrays.php:769
+#: include/global_arrays.php:770 include/global_arrays.php:771
+#: include/global_arrays.php:778 include/global_arrays.php:779
+#: include/global_arrays.php:780 include/global_arrays.php:781
+#: include/global_arrays.php:1465 include/global_arrays.php:1466
+#: include/global_arrays.php:1467 include/global_arrays.php:1468
+#: include/global_arrays.php:1535 include/global_arrays.php:1536
+#: include/global_arrays.php:1537 include/global_arrays.php:1538
+#: include/global_arrays.php:1539 include/global_arrays.php:1556
+#: include/global_arrays.php:1557 include/global_arrays.php:1558
+#: include/global_arrays.php:1559 include/global_arrays.php:1560
+#: include/global_arrays.php:1566 include/global_arrays.php:1567
 #: include/global_settings.php:1720 include/global_settings.php:1721
 #: include/global_settings.php:1722 include/global_settings.php:1723
 #: include/global_settings.php:2901 include/global_settings.php:2902
@@ -1764,37 +1765,37 @@ msgid "What Day(s) of the week will this Network Range be discovered."
 msgstr "Τι ημέρα (-ες) της εβδομάδας θα ανακαλυφθεί αυτή η περιοχή δικτύου."
 
 #: automation_networks.php:636 automation_networks.php:694
-#: include/global_arrays.php:1944
+#: include/global_arrays.php:1947
 msgid "Sunday"
 msgstr "Κυριακή"
 
 #: automation_networks.php:637 automation_networks.php:695
-#: include/global_arrays.php:1945
+#: include/global_arrays.php:1948
 msgid "Monday"
 msgstr "Δευτέρα"
 
 #: automation_networks.php:638 automation_networks.php:696
-#: include/global_arrays.php:1946
+#: include/global_arrays.php:1949
 msgid "Tuesday"
 msgstr "Τρίτη"
 
 #: automation_networks.php:639 automation_networks.php:697
-#: include/global_arrays.php:1947
+#: include/global_arrays.php:1950
 msgid "Wednesday"
 msgstr "Τετάρτη"
 
 #: automation_networks.php:640 automation_networks.php:698
-#: include/global_arrays.php:1948
+#: include/global_arrays.php:1951
 msgid "Thursday"
 msgstr "Πέμπτη"
 
 #: automation_networks.php:641 automation_networks.php:699
-#: include/global_arrays.php:1949
+#: include/global_arrays.php:1952
 msgid "Friday"
 msgstr "Παρασκευή"
 
 #: automation_networks.php:642 automation_networks.php:700
-#: include/global_arrays.php:1950
+#: include/global_arrays.php:1953
 msgid "Saturday"
 msgstr "Σάββατο"
 
@@ -1806,51 +1807,51 @@ msgstr "Μήνες του έτους"
 msgid "What Months(s) of the Year will this Network Range be discovered."
 msgstr "Τις Μήνες του Έτους θα ανακαλυφθεί αυτή η Περιοχή Δικτύου."
 
-#: automation_networks.php:652 include/global_arrays.php:1898
+#: automation_networks.php:652 include/global_arrays.php:1901
 msgid "January"
 msgstr "Ιανουάριος"
 
-#: automation_networks.php:653 include/global_arrays.php:1899
+#: automation_networks.php:653 include/global_arrays.php:1902
 msgid "February"
 msgstr "Φεβρουάριος"
 
-#: automation_networks.php:654 include/global_arrays.php:1900
+#: automation_networks.php:654 include/global_arrays.php:1903
 msgid "March"
 msgstr "Μάρτιος"
 
-#: automation_networks.php:655 include/global_arrays.php:1901
+#: automation_networks.php:655 include/global_arrays.php:1904
 msgid "April"
 msgstr "Απρίλιος"
 
-#: automation_networks.php:656 include/global_arrays.php:1902
+#: automation_networks.php:656 include/global_arrays.php:1905
 msgid "May"
 msgstr "Μάιος"
 
-#: automation_networks.php:657 include/global_arrays.php:1903
+#: automation_networks.php:657 include/global_arrays.php:1906
 msgid "June"
 msgstr "Ιούνιος"
 
-#: automation_networks.php:658 include/global_arrays.php:1904
+#: automation_networks.php:658 include/global_arrays.php:1907
 msgid "July"
 msgstr "Ιούλιος"
 
-#: automation_networks.php:659 include/global_arrays.php:1905
+#: automation_networks.php:659 include/global_arrays.php:1908
 msgid "August"
 msgstr "Αύγουστος"
 
-#: automation_networks.php:660 include/global_arrays.php:1906
+#: automation_networks.php:660 include/global_arrays.php:1909
 msgid "September"
 msgstr "Σεπτέμβριος"
 
-#: automation_networks.php:661 include/global_arrays.php:1907
+#: automation_networks.php:661 include/global_arrays.php:1910
 msgid "October"
 msgstr "Οκτώβριος"
 
-#: automation_networks.php:662 include/global_arrays.php:1908
+#: automation_networks.php:662 include/global_arrays.php:1911
 msgid "November"
 msgstr "Νοέμβριος"
 
-#: automation_networks.php:663 include/global_arrays.php:1909
+#: automation_networks.php:663 include/global_arrays.php:1912
 msgid "December"
 msgstr "Δεκέμβριος"
 
@@ -1983,7 +1984,7 @@ msgid "Network Filters"
 msgstr "Φίλτρα δικτύου"
 
 #: automation_networks.php:1054 automation_networks.php:1186
-#: include/global_arrays.php:1014
+#: include/global_arrays.php:1017
 msgid "Networks"
 msgstr "Δίκτυα"
 
@@ -2040,8 +2041,8 @@ msgstr "Τρέχουσες"
 msgid "Idle"
 msgstr "Στροφές βραδυπορίας"
 
-#: automation_networks.php:1150 include/global_arrays.php:895
-#: include/global_arrays.php:1214 include/global_settings.php:2602
+#: automation_networks.php:1150 include/global_arrays.php:898
+#: include/global_arrays.php:1217 include/global_settings.php:2602
 #: lib/html_reports.php:2183 user_admin.php:2115
 msgid "Never"
 msgstr "Ποτέ"
@@ -2058,19 +2059,19 @@ msgstr "Ανανέωση"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1533 include/global_arrays.php:713
-#: include/global_arrays.php:749 include/global_arrays.php:750
-#: include/global_arrays.php:751 include/global_arrays.php:752
-#: include/global_arrays.php:753 include/global_arrays.php:754
-#: include/global_arrays.php:1207 include/global_arrays.php:1208
-#: include/global_arrays.php:1209 include/global_arrays.php:1210
-#: include/global_arrays.php:1581 include/global_arrays.php:1582
-#: include/global_arrays.php:1583 include/global_arrays.php:1584
-#: include/global_arrays.php:1585 include/global_arrays.php:1620
-#: include/global_arrays.php:1621 include/global_arrays.php:1633
-#: include/global_arrays.php:1634 include/global_arrays.php:1635
-#: include/global_arrays.php:1636 include/global_arrays.php:1637
-#: include/global_arrays.php:1638 include/global_arrays.php:1639
+#: data_sources.php:1533 include/global_arrays.php:716
+#: include/global_arrays.php:752 include/global_arrays.php:753
+#: include/global_arrays.php:754 include/global_arrays.php:755
+#: include/global_arrays.php:756 include/global_arrays.php:757
+#: include/global_arrays.php:1210 include/global_arrays.php:1211
+#: include/global_arrays.php:1212 include/global_arrays.php:1213
+#: include/global_arrays.php:1584 include/global_arrays.php:1585
+#: include/global_arrays.php:1586 include/global_arrays.php:1587
+#: include/global_arrays.php:1588 include/global_arrays.php:1623
+#: include/global_arrays.php:1624 include/global_arrays.php:1636
+#: include/global_arrays.php:1637 include/global_arrays.php:1638
+#: include/global_arrays.php:1639 include/global_arrays.php:1640
+#: include/global_arrays.php:1641 include/global_arrays.php:1642
 #: include/global_settings.php:1285 include/global_settings.php:1286
 #: include/global_settings.php:1287 include/global_settings.php:1288
 #: include/global_settings.php:2685 include/global_settings.php:2686
@@ -2365,8 +2366,8 @@ msgid "Are you sure you wish to continue?"
 msgstr "Είστε σίγουροι ότι επιθυμείτε να συνεχίσετε;"
 
 #: automation_tree_rules.php:834 automation_tree_rules.php:859
-#: automation_tree_rules.php:959 include/global_arrays.php:1018
-#: include/global_arrays.php:2813
+#: automation_tree_rules.php:959 include/global_arrays.php:1021
+#: include/global_arrays.php:2816
 msgid "Tree Rules"
 msgstr "Κανόνες δέντρων"
 
@@ -2578,7 +2579,7 @@ msgstr ""
 
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1166 data_templates.php:719 graphs_items.php:387
-#: include/global_arrays.php:1009 include/global_form.php:960
+#: include/global_arrays.php:1012 include/global_form.php:960
 #: lib/api_aggregate.php:2378 lib/html.php:1363
 msgid "Data Source"
 msgstr "Ανεπεξέργαστη πηγή"
@@ -2670,8 +2671,8 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Οποιαδήποτε τυχόν περιληπτικά ζητήματα βρέθηκαν για την Πηγή δεδομένων."
 
 #: data_debug.php:646 data_debug.php:1220 data_sources.php:1800
-#: data_sources.php:1962 include/global_arrays.php:998
-#: include/global_arrays.php:1044 include/global_arrays.php:2315
+#: data_sources.php:1962 include/global_arrays.php:1001
+#: include/global_arrays.php:1047 include/global_arrays.php:2318
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
 msgid "Data Sources"
@@ -3181,7 +3182,7 @@ msgstr "Αρχείο XML με επιτυχία"
 msgid "Could not locate XML file."
 msgstr "Δεν ήταν δυνατή η εύρεση αρχείου XML."
 
-#: data_queries.php:1208 host_templates.php:466 include/global_arrays.php:2423
+#: data_queries.php:1208 host_templates.php:466 include/global_arrays.php:2426
 msgid "Associated Graph Templates"
 msgstr "Σχετικά πρότυπα γραφήματος"
 
@@ -3211,8 +3212,8 @@ msgid "Delete Associated Graph"
 msgstr "Διαγράψτε το σχετικό γράφημα"
 
 #: data_queries.php:1364 data_queries.php:1379 data_queries.php:1514
-#: include/global_arrays.php:1003 include/global_arrays.php:1230
-#: include/global_arrays.php:2405 lib/api_automation.php:1078
+#: include/global_arrays.php:1006 include/global_arrays.php:1233
+#: include/global_arrays.php:2408 lib/api_automation.php:1078
 msgid "Data Queries"
 msgstr "Ερωτήματα δεδομένων"
 
@@ -3244,7 +3245,7 @@ msgstr "Χρήση προτύπων"
 msgid "The number of Graphs Templates using this Data Query."
 msgstr "Ο αριθμός των προτύπων γραφημάτων που χρησιμοποιούν αυτό το ερώτημα δεδομένων."
 
-#: data_queries.php:1507 include/global_arrays.php:1364
+#: data_queries.php:1507 include/global_arrays.php:1367
 #: include/global_form.php:570 include/global_form.php:1380
 msgid "Data Input Method"
 msgstr "Μέθοδος εισαγωγής δεδομένων"
@@ -3424,8 +3425,8 @@ msgid "The name given to this data template.  Please note that you may only chan
 msgstr "Το όνομα που δίνεται σε αυτό το πρότυπο δεδομένων. Λάβετε υπόψη ότι μπορείτε να αλλάξετε μόνο πρότυπα γραφήματος σε ένα πρότυπο γραφήματος συμβατό με 100%, πράγμα που σημαίνει ότι περιλαμβάνει ίδιες πηγές δεδομένων."
 
 #: data_sources.php:1101 graph_view.php:817 graphs.php:1626
-#: include/global_arrays.php:958 include/global_arrays.php:1007
-#: include/global_arrays.php:1695 include/global_arrays.php:1864
+#: include/global_arrays.php:961 include/global_arrays.php:1010
+#: include/global_arrays.php:1698 include/global_arrays.php:1867
 #: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
@@ -3456,7 +3457,7 @@ msgstr "Προσαρμοσμένα δεδομένα"
 msgid "Data Source Item %s"
 msgstr "Στοιχείο προέλευσης δεδομένων %s"
 
-#: data_sources.php:1267 data_templates.php:817 lib/import.php:2875
+#: data_sources.php:1267 data_templates.php:817 lib/import.php:2949
 #: package_import.php:643
 msgid "New"
 msgstr "Νέο"
@@ -3473,9 +3474,9 @@ msgstr "RRDtool Tune Info"
 msgid "External"
 msgstr "Εξωτερικός"
 
-#: data_sources.php:1535 include/global_arrays.php:714
-#: include/global_arrays.php:1211 include/global_arrays.php:1586
-#: include/global_arrays.php:1622 include/global_arrays.php:1640
+#: data_sources.php:1535 include/global_arrays.php:717
+#: include/global_arrays.php:1214 include/global_arrays.php:1589
+#: include/global_arrays.php:1625 include/global_arrays.php:1643
 #: include/global_settings.php:1713 include/global_settings.php:2688
 msgid "1 Minute"
 msgstr "1 λεπτό"
@@ -3558,7 +3559,7 @@ msgstr "Δεν βρέθηκαν πηγές δεδομένων"
 msgid "No Graphs"
 msgstr "Γραφήματα"
 
-#: data_sources.php:2129 include/global_arrays.php:999
+#: data_sources.php:2129 include/global_arrays.php:1002
 msgid "Aggregates"
 msgstr "Μακροοικονομικά μεγέθη"
 
@@ -3670,7 +3671,7 @@ msgid "After you uncheck this checkbox and then Save the Data Template, any exis
 msgstr "Αφού καταργήσετε την επιλογή αυτού του πλαισίου ελέγχου και, στη συνέχεια, αποθηκεύσετε το πρότυπο δεδομένων, τυχόν υπάρχουσες πηγές δεδομένων που βασίζονται σε αυτό το πρότυπο δεδομένων θα χάσουν τα Προσαρμοσμένα δεδομένα τους. Αυτό μπορεί να οδηγήσει σε κατεστραμμένη συλλογή δεδομένων και γραφήματα"
 
 #: data_templates.php:1092 data_templates.php:1126 data_templates.php:1296
-#: include/global_arrays.php:1241 include/global_arrays.php:2297
+#: include/global_arrays.php:1244 include/global_arrays.php:2300
 msgid "Data Templates"
 msgstr "Πρότυπα δεδομένων"
 
@@ -3894,7 +3895,7 @@ msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; γ�
 msgid "Graph Template Items [edit: %s]"
 msgstr "Στοιχεία πρότυπου γραφήματος [επεξεργασία: %s]"
 
-#: graph_templates.php:496 include/global_arrays.php:2267
+#: graph_templates.php:496 include/global_arrays.php:2270
 msgid "Graph Item Inputs"
 msgstr "Στοιχείο γραφήματος Εισαγωγές"
 
@@ -3925,8 +3926,8 @@ msgid "Check this checkbox if you wish to allow the user to override the value o
 msgstr "Επιλέξτε αυτό το πλαίσιο ελέγχου αν θέλετε να επιτρέψετε στο χρήστη να παρακάμψει την τιμή στα δεξιά κατά τη δημιουργία του Graph."
 
 #: graph_templates.php:717 graph_templates.php:732 graph_templates.php:899
-#: graphs_new.php:637 include/global_arrays.php:1240
-#: include/global_arrays.php:2243 lib/html_tree.php:541 user_admin.php:1204
+#: graphs_new.php:637 include/global_arrays.php:1243
+#: include/global_arrays.php:2246 lib/html_tree.php:541 user_admin.php:1204
 #: user_group_admin.php:1223
 msgid "Graph Templates"
 msgstr "Πρότυπα διαγραμμάτων"
@@ -4049,7 +4050,7 @@ msgstr "[Εφαρμογή προσαρμοσμένης γραφήματος - Φ
 msgid "View"
 msgstr "Προβολή"
 
-#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1219
+#: graph_view.php:677 graph_view.php:929 include/global_arrays.php:1222
 msgid "View Graphs"
 msgstr "Προβολή γραφημάτων"
 
@@ -4066,7 +4067,7 @@ msgstr "Αναφορά"
 msgid "All Graphs & Templates"
 msgstr "Όλες οι γραφικές παραστάσεις και τα πρότυπα"
 
-#: graph_view.php:704 include/global_arrays.php:2897 lib/graphs.php:40
+#: graph_view.php:704 include/global_arrays.php:2900 lib/graphs.php:40
 #: lib/graphs.php:49 lib/html.php:221 lib/html_graph.php:144
 #: lib/html_tree.php:978
 msgid "Not Templated"
@@ -4109,7 +4110,7 @@ msgstr "Το μέγεθος αυτού του γραφήματος όταν δε
 msgid "Select the Report to add the selected Graphs to."
 msgstr "Επιλέξτε την αναφορά για να προσθέσετε τα επιλεγμένα Γραφήματα σε."
 
-#: graph_view.php:995 include/global_arrays.php:2043
+#: graph_view.php:995 include/global_arrays.php:2046
 #: include/global_settings.php:2759
 msgid "Preview Mode"
 msgstr "Λειτουργία προεπισκόπησης"
@@ -4171,7 +4172,7 @@ msgstr "Συνοπτικές λεπτομέρειες"
 msgid "Download"
 msgstr "Λήψη"
 
-#: graphs.php:37 graphs.php:920 include/global_arrays.php:2093
+#: graphs.php:37 graphs.php:920 include/global_arrays.php:2096
 msgid "Change Graph Template"
 msgstr "Αλλαγή προτύπου γραφήματος"
 
@@ -4272,7 +4273,7 @@ msgstr "Υποκατάστημα προορισμού"
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
 msgstr "Επιλέξτε μια νέα συσκευή για αυτά τα γραφήματα και κάντε κλικ στο κουμπί &quot;Συνέχεια&quot;."
 
-#: graphs.php:971 include/global_arrays.php:991
+#: graphs.php:971 include/global_arrays.php:994
 msgid "New Device"
 msgstr "Νέα συσκευή"
 
@@ -4430,7 +4431,7 @@ msgstr "Πηγές δεδομένων [Χωρίς συσκευή]"
 msgid "Data Sources [%s]"
 msgstr "Πηγές δεδομένων [ %s]"
 
-#: graphs_items.php:266 include/global_arrays.php:1363
+#: graphs_items.php:266 include/global_arrays.php:1366
 #: include/global_form.php:1640
 msgid "Data Template"
 msgstr "Πρότυπο δεδομένων"
@@ -4499,8 +4500,8 @@ msgstr "Δημιουργία νέας συσκευής"
 msgid "(Select a graph type to create)"
 msgstr "(Επιλέξτε έναν τύπο γραφήματος για δημιουργία)"
 
-#: graphs_new.php:631 include/global_arrays.php:989
-#: include/global_arrays.php:1067 lib/html_form.php:1418 lib/html_form.php:1431
+#: graphs_new.php:631 include/global_arrays.php:992
+#: include/global_arrays.php:1070 lib/html_form.php:1418 lib/html_form.php:1431
 #: tree.php:1683
 msgid "Create"
 msgstr "Δημιουργία"
@@ -4676,7 +4677,7 @@ msgid "Delete Item from Device Template"
 msgstr "Διαγραφή προτύπου συσκευής"
 
 #: host_templates.php:703 host_templates.php:801 host_templates.php:968
-#: include/global_arrays.php:1242 include/global_arrays.php:2279
+#: include/global_arrays.php:1245 include/global_arrays.php:2282
 msgid "Device Templates"
 msgstr "Πρότυπα συσκευών"
 
@@ -4721,7 +4722,7 @@ msgstr "Συσκευές που χρησιμοποιούν"
 msgid "The number of Devices using this Device Template."
 msgstr "Ο αριθμός των συσκευών που χρησιμοποιούν αυτό το πρότυπο συσκευής."
 
-#: host_templates.php:993 include/global_arrays.php:1105
+#: host_templates.php:993 include/global_arrays.php:1108
 msgid "Unassigned"
 msgstr "Μη ανατεθειμένο"
 
@@ -4954,518 +4955,522 @@ msgid "Unable to change password.  User account not found."
 msgstr "Δεν είναι δυνατή η αλλαγή κωδικού πρόσβασης. Ο λογαριασμός χρήστη δεν βρέθηκε."
 
 #: include/global_arrays.php:274
+msgid "Data Source Item field holds a value the Data Source form would reject."
+msgstr ""
+
+#: include/global_arrays.php:277
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "Η είσοδος δεδομένων αποθηκεύτηκε. Πρέπει να ενημερώσετε τα πρότυπα δεδομένων που αναφέρονται σε αυτή τη μέθοδο εισαγωγής δεδομένων πριν δημιουργήσετε γραφήματα ή πηγές δεδομένων."
 
-#: include/global_arrays.php:277
+#: include/global_arrays.php:280
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Η είσοδος δεδομένων αποθηκεύτηκε. Πρέπει να ενημερώσετε τα πρότυπα δεδομένων που αναφέρονται σε αυτή τη μέθοδο εισαγωγής δεδομένων προτού οι συλλέκτες δεδομένων αρχίσουν να χρησιμοποιούν νέα ή τροποποιημένα πεδία εισαγωγής δεδομένων."
 
-#: include/global_arrays.php:280
+#: include/global_arrays.php:283
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
 msgstr "Το πεδίο εισαγωγής δεδομένων αποθηκεύτηκε. Πρέπει να ενημερώσετε τα πρότυπα δεδομένων που αναφέρονται σε αυτή τη μέθοδο εισαγωγής δεδομένων πριν δημιουργήσετε γραφήματα ή πηγές δεδομένων."
 
-#: include/global_arrays.php:283
+#: include/global_arrays.php:286
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Το πεδίο εισαγωγής δεδομένων αποθηκεύτηκε. Πρέπει να ενημερώσετε τα πρότυπα δεδομένων που αναφέρονται σε αυτή τη μέθοδο εισαγωγής δεδομένων προτού οι συλλέκτες δεδομένων αρχίσουν να χρησιμοποιούν νέα ή τροποποιημένα πεδία εισαγωγής δεδομένων."
 
-#: include/global_arrays.php:286
+#: include/global_arrays.php:289
 msgid "Log file specified is not a Kadupul log or archive file."
 msgstr "Το αρχείο καταγραφής που καθορίζεται δεν είναι αρχείο καταγραφής Kadupul ή αρχείο αρχειοθέτησης."
 
-#: include/global_arrays.php:289
+#: include/global_arrays.php:292
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Το αρχείο καταγραφής που καθορίστηκε ήταν αρχείο αρχείου Kadupul και καταργήθηκε."
 
-#: include/global_arrays.php:292
+#: include/global_arrays.php:295
 msgid "Kadupul log purged successfully"
 msgstr "Το ημερολόγιο Kadupul καθαρίστηκε με επιτυχία"
 
-#: include/global_arrays.php:295
+#: include/global_arrays.php:298
 msgid "If you force a password change, you must also allow the user to change their password."
 msgstr "Αν επιβάλλετε μια αλλαγή κωδικού πρόσβασης, πρέπει επίσης να επιτρέψετε στο χρήστη να αλλάξει τον κωδικό πρόσβασής του."
 
-#: include/global_arrays.php:298
+#: include/global_arrays.php:301
 msgid "You are not allowed to change your password."
 msgstr "Δεν επιτρέπεται να αλλάξετε τον κωδικό πρόσβασής σας."
 
-#: include/global_arrays.php:301
+#: include/global_arrays.php:304
 msgid "Unable to determine size of password field, please check permissions of db user"
 msgstr "Δεν είναι δυνατός ο προσδιορισμός του μεγέθους του πεδίου κωδικού πρόσβασης, ελέγξτε τα δικαιώματα του χρήστη db"
 
-#: include/global_arrays.php:304
+#: include/global_arrays.php:307
 #, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Δεν είναι δυνατή η αύξηση του μεγέθους του πεδίου κωδικού πρόσβασης, δικαίωμα ελέγχου πρόσβασης του χρήστη db"
 
-#: include/global_arrays.php:307
+#: include/global_arrays.php:310
 msgid "LDAP/AD based password change not supported."
 msgstr "Η αλλαγή κωδικού πρόσβασης που βασίζεται σε LDAP / AD δεν υποστηρίζεται."
 
-#: include/global_arrays.php:310
+#: include/global_arrays.php:313
 msgid "Password successfully changed."
 msgstr "Ο κωδικός πρόσβασης άλλαξε με επιτυχία."
 
-#: include/global_arrays.php:313
+#: include/global_arrays.php:316
 msgid "Unable to clear log, no write permissions"
 msgstr "Δεν είναι δυνατή η εκκαθάριση αρχείου καταγραφής, δεν υπάρχουν δικαιώματα εγγραφής"
 
-#: include/global_arrays.php:316
+#: include/global_arrays.php:319
 msgid "Unable to clear log, file does not exist"
 msgstr "Δεν είναι δυνατή η διαγραφή του αρχείου καταγραφής, το αρχείο δεν υπάρχει"
 
-#: include/global_arrays.php:319
+#: include/global_arrays.php:322
 msgid "CSRF Timeout, refreshing page."
 msgstr "CSRF Timeout, ανανέωση σελίδας."
 
-#: include/global_arrays.php:322
+#: include/global_arrays.php:325
 msgid "CSRF Timeout occurred due to inactivity, page refreshed."
 msgstr "Το CSRF Timeout προέκυψε λόγω αδράνειας, ανανεώθηκε η σελίδα."
 
-#: include/global_arrays.php:325
+#: include/global_arrays.php:328
 msgid "Invalid timestamp. Select timestamp in the future."
 msgstr "Μη έγκυρο χρονικό σήμα. Επιλέξτε χρονική σήμανση στο μέλλον."
 
-#: include/global_arrays.php:328
+#: include/global_arrays.php:331
 msgid "Data Collector(s) synchronized for offline operation"
 msgstr "Συλλέκτες δεδομένων συγχρονισμένοι για λειτουργία εκτός σύνδεσης"
 
-#: include/global_arrays.php:331
+#: include/global_arrays.php:334
 msgid "Data Collector(s) not found when attempting synchronization"
 msgstr "Οι συλλέκτες δεδομένων δεν βρέθηκαν κατά την προσπάθεια συγχρονισμού"
 
-#: include/global_arrays.php:334
+#: include/global_arrays.php:337
 msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "Δεν είναι δυνατή η δημιουργία σύνδεσης MySQL με το Remote Data Collector."
 
-#: include/global_arrays.php:337
+#: include/global_arrays.php:340
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "Ο συγχρονισμός συλλέκτη δεδομένων πρέπει να ξεκινήσει από τον κύριο διακομιστή Kadupul."
 
-#: include/global_arrays.php:340
+#: include/global_arrays.php:343
 msgid "Synchronization does not include the Central Kadupul Database server."
 msgstr "Ο συγχρονισμός δεν περιλαμβάνει τον κεντρικό διακομιστή βάσης δεδομένων Kadupul."
 
-#: include/global_arrays.php:343
+#: include/global_arrays.php:346
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
 msgstr "Κατά την αποθήκευση ενός απομακρυσμένου συλλέκτη δεδομένων, το όνομα κεντρικού υπολογιστή βάσης δεδομένων πρέπει να είναι μοναδικό από όλα τα άλλα."
 
-#: include/global_arrays.php:346
+#: include/global_arrays.php:349
 msgid "Your Remote Database Hostname must be something other than 'localhost' for each Remote Data Collector."
 msgstr "Το όνομα κεντρικού υπολογιστή βάσης δεδομένων απομακρυσμένης βάσης δεδομένων πρέπει να είναι κάτι διαφορετικό από το &quot;localhost&quot; για κάθε απομακρυσμένο συλλέκτη δεδομένων."
 
-#: include/global_arrays.php:349
+#: include/global_arrays.php:352
 msgid "Path variables on this page were only saved locally."
 msgstr "Οι μεταβλητές διαδρομής σε αυτήν τη σελίδα αποθηκεύτηκαν μόνο τοπικά."
 
-#: include/global_arrays.php:352
+#: include/global_arrays.php:355
 msgid "Report Saved"
 msgstr "Αναφορά αποθηκεύτηκε"
 
-#: include/global_arrays.php:355
+#: include/global_arrays.php:358
 msgid "Report Save Failed"
 msgstr "Η αναφορά Αποθήκευση απέτυχε"
 
-#: include/global_arrays.php:358
+#: include/global_arrays.php:361
 msgid "Report Item Saved"
 msgstr "Το στοιχείο αναφοράς αποθηκεύτηκε"
 
-#: include/global_arrays.php:361
+#: include/global_arrays.php:364
 msgid "Report Item Save Failed"
 msgstr "Το στοιχείο αναφοράς Αποθήκευση απέτυχε"
 
-#: include/global_arrays.php:364
+#: include/global_arrays.php:367
 msgid "Graph was not found attempting to Add to Report"
 msgstr "Το γράφημα δεν βρέθηκε προσπαθώντας να προσθέσει στην αναφορά"
 
-#: include/global_arrays.php:367
+#: include/global_arrays.php:370
 msgid "Unable to Add Graphs.  Current user is not owner"
 msgstr "Δεν είναι δυνατή η προσθήκη γραφημάτων. Ο τρέχων χρήστης δεν είναι ιδιοκτήτης"
 
-#: include/global_arrays.php:370
+#: include/global_arrays.php:373
 msgid "Unable to Add all Graphs.  See error message for details."
 msgstr "Δεν είναι δυνατή η προσθήκη όλων των γραφημάτων. Δείτε το μήνυμα σφάλματος για λεπτομέρειες."
 
-#: include/global_arrays.php:373
+#: include/global_arrays.php:376
 msgid "You must select at least one Graph to add to a Report."
 msgstr "Πρέπει να επιλέξετε τουλάχιστον ένα γράφημα για να προσθέσετε σε μια αναφορά."
 
-#: include/global_arrays.php:376
+#: include/global_arrays.php:379
 msgid "All Graphs have been added to the Report.  Duplicate Graphs with the same Timespan were skipped."
 msgstr "Όλα τα γραφήματα έχουν προστεθεί στην αναφορά. Διπλά Γράφημα με το ίδιο χρονικό διάστημα παραλήφθηκαν."
 
-#: include/global_arrays.php:379
+#: include/global_arrays.php:382
 msgid "Poller Resource Cache cleared.  Main Data Collector will rebuild at the next poller start, and Remote Data Collectors will sync afterwards."
 msgstr "Η Polar Resource Cache διαγράφηκε. Ο Κύριος Συλλέκτης Δεδομένων θα ανοικοδομηθεί κατά την επόμενη εκκίνηση του Poller και οι Συλλέκτες Δεδομένων θα συλλέγουν αργότερα."
 
-#: include/global_arrays.php:382
+#: include/global_arrays.php:385
 msgid "Permission Denied.  You do not have permission to the requested action."
 msgstr "Η άδεια απορρίφθηκε. Δεν έχετε άδεια για την ενέργεια που ζητήσατε."
 
-#: include/global_arrays.php:385
+#: include/global_arrays.php:388
 msgid "Page is not defined.  Therefore, it can not be displayed."
 msgstr "Η σελίδα δεν έχει οριστεί. Επομένως, δεν μπορεί να εμφανιστεί."
 
-#: include/global_arrays.php:388
+#: include/global_arrays.php:391
 msgid "Unexpected error occurred"
 msgstr "Παρουσιάστηκε μη αναμενόμενο σφάλμα"
 
-#: include/global_arrays.php:503 include/global_arrays.php:926
+#: include/global_arrays.php:506 include/global_arrays.php:929
 msgid "Function"
 msgstr "Συνάρτηση"
 
-#: include/global_arrays.php:504 include/global_arrays.php:928
+#: include/global_arrays.php:507 include/global_arrays.php:931
 msgid "Special Data Source"
 msgstr "Ειδική πηγή δεδομένων"
 
-#: include/global_arrays.php:505 include/global_arrays.php:930
+#: include/global_arrays.php:508 include/global_arrays.php:933
 msgid "Custom String"
 msgstr "Custom String"
 
-#: include/global_arrays.php:509 include/global_arrays.php:967
+#: include/global_arrays.php:512 include/global_arrays.php:970
 msgid "Current Graph Item Data Source"
 msgstr "Τρέχουσα προέλευση δεδομένων στοιχείου γραφήματος"
 
-#: include/global_arrays.php:514
+#: include/global_arrays.php:517
 msgid "SNMP Query"
 msgstr "Ερώτημα SNMP"
 
-#: include/global_arrays.php:515 include/global_arrays.php:522
+#: include/global_arrays.php:518 include/global_arrays.php:525
 msgid "Script/Command"
 msgstr "Script / εντολή"
 
-#: include/global_arrays.php:516
+#: include/global_arrays.php:519
 msgid "Script Query"
 msgstr "Ερώτημα δέσμης ενεργειών"
 
-#: include/global_arrays.php:517 include/global_arrays.php:523
+#: include/global_arrays.php:520 include/global_arrays.php:526
 #: utilities.php:2158
 msgid "Script Server"
 msgstr "Script Server"
 
-#: include/global_arrays.php:518
+#: include/global_arrays.php:521
 msgid "Script Server Query"
 msgstr "Script Server"
 
-#: include/global_arrays.php:529
+#: include/global_arrays.php:532
 msgid "Index Count"
 msgstr "Καταμέτρηση ευρετηρίων"
 
-#: include/global_arrays.php:530
+#: include/global_arrays.php:533
 msgid "Verify All"
 msgstr "Επαλήθευση όλων"
 
-#: include/global_arrays.php:534
+#: include/global_arrays.php:537
 msgid "All Re-Indexing will be manual or managed through scripts or Device Automation."
 msgstr "Όλη η επανεξέλιξη θα είναι χειροκίνητη ή θα διαχειρίζεται μέσω δέσμης ενεργειών ή Συσκευής Συσκευής."
 
-#: include/global_arrays.php:535
+#: include/global_arrays.php:538
 msgid "When the Devices SNMP uptime goes backward, a Re-Index will be performed."
 msgstr "Όταν το Ώρα λειτουργίας του Devices SNMP πηγαίνει προς τα πίσω, θα εκτελεστεί επανέκδοση."
 
-#: include/global_arrays.php:536
+#: include/global_arrays.php:539
 msgid "When the Data Query index count changes, a Re-Index will be performed."
 msgstr "Όταν αλλάζει ο αριθμός ευρετηρίου δεδομένων ερωτήματος, θα εκτελεστεί ένας νέος δείκτης."
 
-#: include/global_arrays.php:537
+#: include/global_arrays.php:540
 msgid "Every polling cycle, a Re-Index will be performed.  Very expensive."
 msgstr "Κάθε κύκλος δημοσκόπησης θα εκτελεστεί ένα Re-Index. Πολύ ακριβό."
 
-#: include/global_arrays.php:541
+#: include/global_arrays.php:544
 msgid "SNMP Field Name (Dropdown)"
 msgstr "Όνομα πεδίου SNMP (Διάλυση)"
 
-#: include/global_arrays.php:542
+#: include/global_arrays.php:545
 msgid "SNMP Field Value (From User)"
 msgstr "Τιμή πεδίου SNMP (από χρήστη)"
 
-#: include/global_arrays.php:543
+#: include/global_arrays.php:546
 msgid "SNMP Output Type (Dropdown)"
 msgstr "Τύπος εξόδου SNMP (Διέλευση)"
 
-#: include/global_arrays.php:567 include/global_arrays.php:573
+#: include/global_arrays.php:570 include/global_arrays.php:576
 msgid "Normal"
 msgstr "Κανονικό"
 
-#: include/global_arrays.php:568
+#: include/global_arrays.php:571
 msgid "Light"
 msgstr "Φωτεινό"
 
-#: include/global_arrays.php:569 include/global_arrays.php:574
+#: include/global_arrays.php:572 include/global_arrays.php:577
 msgid "Mono"
 msgstr "Μονο"
 
-#: include/global_arrays.php:578
+#: include/global_arrays.php:581
 msgid "North"
 msgstr "Βόρεια"
 
-#: include/global_arrays.php:579
+#: include/global_arrays.php:582
 msgid "South"
 msgstr "Νότια"
 
-#: include/global_arrays.php:580
+#: include/global_arrays.php:583
 msgid "West"
 msgstr "Δυτικά"
 
-#: include/global_arrays.php:581
+#: include/global_arrays.php:584
 msgid "East"
 msgstr "Ανατολικός"
 
-#: include/global_arrays.php:586
+#: include/global_arrays.php:589
 msgid "Left"
 msgstr "Αριστερά"
 
-#: include/global_arrays.php:587
+#: include/global_arrays.php:590
 msgid "Right"
 msgstr "Δεξιά"
 
-#: include/global_arrays.php:588
+#: include/global_arrays.php:591
 msgid "Justified"
 msgstr "Πλήρης στοίχιση"
 
-#: include/global_arrays.php:589 lib/html.php:2976
+#: include/global_arrays.php:592 lib/html.php:2976
 msgid "Center"
 msgstr "Κέντρο"
 
-#: include/global_arrays.php:593
+#: include/global_arrays.php:596
 msgid "Top -> Down"
 msgstr "Αρχή -&gt; Κάτω"
 
-#: include/global_arrays.php:594
+#: include/global_arrays.php:597
 msgid "Bottom -> Up"
 msgstr "Κάτω -&gt; επάνω"
 
-#: include/global_arrays.php:598 tree.php:1787
+#: include/global_arrays.php:601 tree.php:1787
 msgid "Numeric"
 msgstr "Αριθμός"
 
-#: include/global_arrays.php:599
+#: include/global_arrays.php:602
 msgid "Timestamp"
 msgstr "Χρονοσφραγίδα"
 
-#: include/global_arrays.php:600
+#: include/global_arrays.php:603
 msgid "Duration"
 msgstr "Διάρκεια"
 
-#: include/global_arrays.php:638
+#: include/global_arrays.php:641
 msgid "Not In Use"
 msgstr "Δε χρησιμοποιείται"
 
-#: include/global_arrays.php:639 include/global_arrays.php:640
-#: include/global_arrays.php:641 include/global_arrays.php:884
-#: include/global_arrays.php:885
+#: include/global_arrays.php:642 include/global_arrays.php:643
+#: include/global_arrays.php:644 include/global_arrays.php:887
+#: include/global_arrays.php:888
 #, php-format
 msgid "Version %d"
 msgstr "Έκδοση% d"
 
-#: include/global_arrays.php:645 include/global_arrays.php:655
+#: include/global_arrays.php:648 include/global_arrays.php:658
 msgid "[None]"
 msgstr "[Κανένα]"
 
-#: include/global_arrays.php:646
+#: include/global_arrays.php:649
 msgid "MD5"
 msgstr "MD5"
 
-#: include/global_arrays.php:647
+#: include/global_arrays.php:650
 msgid "SHA"
 msgstr "ARG"
 
-#: include/global_arrays.php:648
+#: include/global_arrays.php:651
 msgid "SHA-224"
 msgstr "SHA-224"
 
-#: include/global_arrays.php:649
+#: include/global_arrays.php:652
 msgid "SHA-256"
 msgstr "SHA-256"
 
-#: include/global_arrays.php:650
+#: include/global_arrays.php:653
 #, fuzzy
 msgid "SHA-384"
 msgstr "SHA-392"
 
-#: include/global_arrays.php:651
+#: include/global_arrays.php:654
 msgid "SHA-512"
 msgstr "SHA-512"
 
-#: include/global_arrays.php:656
+#: include/global_arrays.php:659
 msgid "DES"
 msgstr "DES"
 
-#: include/global_arrays.php:657
+#: include/global_arrays.php:660
 msgid "AES"
 msgstr "DES"
 
-#: include/global_arrays.php:658
+#: include/global_arrays.php:661
 msgid "AES-128"
 msgstr "AES-128"
 
-#: include/global_arrays.php:659
+#: include/global_arrays.php:662
 msgid "AES-192"
 msgstr "AES-192"
 
-#: include/global_arrays.php:660
+#: include/global_arrays.php:663
 msgid "AES-192-C"
 msgstr "AES-192"
 
-#: include/global_arrays.php:661
+#: include/global_arrays.php:664
 msgid "AES-256"
 msgstr "AES-256"
 
-#: include/global_arrays.php:662
+#: include/global_arrays.php:665
 msgid "AES-256-C"
 msgstr "AES-256"
 
-#: include/global_arrays.php:671
+#: include/global_arrays.php:674
 msgid "Logfile Only"
 msgstr "Μόνο αρχείο καταγραφής"
 
-#: include/global_arrays.php:672
+#: include/global_arrays.php:675
 msgid "Logfile and Syslog/Eventlog"
 msgstr "Λογαριασμός Logfile και Syslog / Eventlog"
 
-#: include/global_arrays.php:673
+#: include/global_arrays.php:676
 msgid "Syslog/Eventlog Only"
 msgstr "Syslog / Eventlog Μόνο"
 
-#: include/global_arrays.php:678
+#: include/global_arrays.php:681
 msgid "Ping and SNMP Uptime"
 msgstr "Ping και SNMP Uptime"
 
-#: include/global_arrays.php:679
+#: include/global_arrays.php:682
 msgid "Ping or SNMP Uptime"
 msgstr "Ping ή SNMP Uptime"
 
-#: include/global_arrays.php:680
+#: include/global_arrays.php:683
 msgid "SNMP Uptime"
 msgstr "SNMP Uptime"
 
-#: include/global_arrays.php:681
+#: include/global_arrays.php:684
 msgid "SNMP Desc"
 msgstr "SNMP Desc"
 
-#: include/global_arrays.php:682
+#: include/global_arrays.php:685
 msgid "SNMP getNext"
 msgstr "SNMP getNext"
 
-#: include/global_arrays.php:683
+#: include/global_arrays.php:686
 msgid "Ping"
 msgstr "Ping"
 
-#: include/global_arrays.php:687
+#: include/global_arrays.php:690
 msgid "ICMP Ping"
 msgstr "ICMP Ping"
 
-#: include/global_arrays.php:688
+#: include/global_arrays.php:691
 msgid "TCP Ping"
 msgstr "TCP Ping"
 
-#: include/global_arrays.php:689
+#: include/global_arrays.php:692
 #, fuzzy
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
-#: include/global_arrays.php:690
+#: include/global_arrays.php:693
 msgid "UDP Ping"
 msgstr "UDP Ping"
 
-#: include/global_arrays.php:694
+#: include/global_arrays.php:697
 msgid "NONE - Syslog Only if Selected"
 msgstr "NONE - Syslog Μόνο αν επιλεγεί"
 
-#: include/global_arrays.php:695
+#: include/global_arrays.php:698
 msgid "LOW - Statistics and Errors"
 msgstr "LOW - Στατιστικά στοιχεία και σφάλματα"
 
-#: include/global_arrays.php:696
+#: include/global_arrays.php:699
 msgid "MEDIUM - Statistics, Errors and Results"
 msgstr "ΜΕΣΟ - Στατιστικά στοιχεία, σφάλματα και αποτελέσματα"
 
-#: include/global_arrays.php:697
+#: include/global_arrays.php:700
 msgid "HIGH - Statistics, Errors, Results and Major I/O Events"
 msgstr "HIGH - Στατιστικά στοιχεία, Λάθη, Αποτελέσματα και Σημαντικά γεγονότα I / O"
 
-#: include/global_arrays.php:698
+#: include/global_arrays.php:701
 msgid "DEBUG - Statistics, Errors, Results, I/O and Program Flow"
 msgstr "DEBUG - Στατιστικά στοιχεία, Λάθη, Αποτελέσματα, I / O και ροή προγραμμάτων"
 
-#: include/global_arrays.php:699
+#: include/global_arrays.php:702
 msgid "DEVEL - Developer DEBUG Level"
 msgstr "DEVEL - Επίπεδο DEBUG για προγραμματιστές"
 
-#: include/global_arrays.php:712
+#: include/global_arrays.php:715
 msgid "Selected Poller Interval"
 msgstr "Επιλεγμένο χρονικό διάστημα"
 
-#: include/global_arrays.php:719 include/global_arrays.php:1531
-#: include/global_arrays.php:1552 include/global_arrays.php:1562
-#: include/global_arrays.php:1592 include/global_arrays.php:1601
-#: include/global_arrays.php:1629 include/global_settings.php:1420
+#: include/global_arrays.php:722 include/global_arrays.php:1534
+#: include/global_arrays.php:1555 include/global_arrays.php:1565
+#: include/global_arrays.php:1595 include/global_arrays.php:1604
+#: include/global_arrays.php:1632 include/global_settings.php:1420
 #: include/global_settings.php:1719 include/global_settings.php:2900
 msgid "1 Hour"
 msgstr "1 Ώρα"
 
-#: include/global_arrays.php:725 include/global_arrays.php:769
-#: include/global_arrays.php:779 include/global_arrays.php:1466
+#: include/global_arrays.php:728 include/global_arrays.php:772
+#: include/global_arrays.php:782 include/global_arrays.php:1469
 #, php-format
 msgid "%d Day"
 msgstr "% d Ημέρα"
 
-#: include/global_arrays.php:726 include/global_arrays.php:782
-#: include/global_arrays.php:1470 rrdcleaner.php:529 rrdcleaner.php:530
+#: include/global_arrays.php:729 include/global_arrays.php:785
+#: include/global_arrays.php:1473 rrdcleaner.php:529 rrdcleaner.php:530
 #, php-format
 msgid "%d Week"
 msgstr "% d Εβδομάδα"
 
-#: include/global_arrays.php:730 include/global_arrays.php:731
-#: include/global_arrays.php:732 include/global_arrays.php:733
-#: include/global_arrays.php:803 include/global_arrays.php:804
-#: include/global_arrays.php:805 include/global_arrays.php:806
+#: include/global_arrays.php:733 include/global_arrays.php:734
+#: include/global_arrays.php:735 include/global_arrays.php:736
+#: include/global_arrays.php:806 include/global_arrays.php:807
+#: include/global_arrays.php:808 include/global_arrays.php:809
 #, php-format
 msgid "Every %d Seconds"
 msgstr "Κάθε% d δευτερόλεπτα"
 
-#: include/global_arrays.php:734 include/global_arrays.php:807
-#: include/global_arrays.php:852
+#: include/global_arrays.php:737 include/global_arrays.php:810
+#: include/global_arrays.php:855
 msgid "Every Minute"
 msgstr "Κάθε Λεπτό"
 
-#: include/global_arrays.php:735 include/global_arrays.php:736
-#: include/global_arrays.php:737 include/global_arrays.php:738
-#: include/global_arrays.php:739 include/global_arrays.php:808
-#: include/global_arrays.php:813 include/global_arrays.php:853
+#: include/global_arrays.php:738 include/global_arrays.php:739
+#: include/global_arrays.php:740 include/global_arrays.php:741
+#: include/global_arrays.php:742 include/global_arrays.php:811
+#: include/global_arrays.php:816 include/global_arrays.php:856
 #, php-format
 msgid "Every %d Minutes"
 msgstr "Κάθε %d λεπτά"
 
-#: include/global_arrays.php:740 include/global_arrays.php:814
+#: include/global_arrays.php:743 include/global_arrays.php:817
 msgid "Every Hour"
 msgstr "Κάθε ώρα"
 
-#: include/global_arrays.php:741 include/global_arrays.php:742
-#: include/global_arrays.php:743 include/global_arrays.php:744
-#: include/global_arrays.php:815 include/global_arrays.php:816
-#: include/global_arrays.php:817 include/global_arrays.php:818
-#: include/global_arrays.php:1874 include/global_arrays.php:1875
-#: include/global_arrays.php:1876 include/global_arrays.php:1877
-#: include/global_arrays.php:1878 include/global_settings.php:2577
+#: include/global_arrays.php:744 include/global_arrays.php:745
+#: include/global_arrays.php:746 include/global_arrays.php:747
+#: include/global_arrays.php:818 include/global_arrays.php:819
+#: include/global_arrays.php:820 include/global_arrays.php:821
+#: include/global_arrays.php:1877 include/global_arrays.php:1878
+#: include/global_arrays.php:1879 include/global_arrays.php:1880
+#: include/global_arrays.php:1881 include/global_settings.php:2577
 #: include/global_settings.php:2578
 #, php-format
 msgid "Every %d Hours"
 msgstr "Κάθε% d Ώρες"
 
-#: include/global_arrays.php:745
+#: include/global_arrays.php:748
 #, php-format
 msgid "Every %d Day"
 msgstr "Κάθε %d ημέρα"
 
-#: include/global_arrays.php:757
+#: include/global_arrays.php:760
 #, fuzzy, php-format
 msgid "%0.1f Minutes"
 msgstr "${ 0 } λεπτά"
 
-#: include/global_arrays.php:770 include/global_arrays.php:780
-#: include/global_arrays.php:781 include/global_arrays.php:1467
-#: include/global_arrays.php:1468 include/global_arrays.php:1469
+#: include/global_arrays.php:773 include/global_arrays.php:783
+#: include/global_arrays.php:784 include/global_arrays.php:1470
+#: include/global_arrays.php:1471 include/global_arrays.php:1472
 #: include/global_settings.php:1647 include/global_settings.php:1648
 #: include/global_settings.php:1649 include/global_settings.php:1650
 #: include/global_settings.php:1661 include/global_settings.php:1662
@@ -5474,818 +5479,818 @@ msgstr "${ 0 } λεπτά"
 msgid "%d Days"
 msgstr "%d Ημέρες"
 
-#: include/global_arrays.php:783 include/global_arrays.php:784
-#: include/global_arrays.php:1471 include/global_settings.php:2905
+#: include/global_arrays.php:786 include/global_arrays.php:787
+#: include/global_arrays.php:1474 include/global_settings.php:2905
 #: include/global_settings.php:2906 include/global_settings.php:2907
 #: rrdcleaner.php:531 rrdcleaner.php:532
 #, php-format
 msgid "%d Weeks"
 msgstr "% d εβδομάδες"
 
-#: include/global_arrays.php:785 include/global_arrays.php:1472
+#: include/global_arrays.php:788 include/global_arrays.php:1475
 #: rrdcleaner.php:533
 #, php-format
 msgid "%d Month"
 msgstr "% d Μήνα"
 
-#: include/global_arrays.php:786 include/global_arrays.php:787
-#: include/global_arrays.php:788 include/global_arrays.php:789
-#: include/global_arrays.php:1473 include/global_arrays.php:1474
-#: include/global_arrays.php:1475 include/global_arrays.php:1476
+#: include/global_arrays.php:789 include/global_arrays.php:790
+#: include/global_arrays.php:791 include/global_arrays.php:792
+#: include/global_arrays.php:1476 include/global_arrays.php:1477
+#: include/global_arrays.php:1478 include/global_arrays.php:1479
 #: rrdcleaner.php:534 rrdcleaner.php:535 rrdcleaner.php:536
 #, php-format
 msgid "%d Months"
 msgstr "% d Μήνας"
 
-#: include/global_arrays.php:790 include/global_arrays.php:1477
+#: include/global_arrays.php:793 include/global_arrays.php:1480
 #: include/global_settings.php:1651 rrdcleaner.php:537
 #, php-format
 msgid "%d Year"
 msgstr "% d Έτος"
 
-#: include/global_arrays.php:791 include/global_arrays.php:792
-#: include/global_arrays.php:793 include/global_arrays.php:794
-#: include/global_arrays.php:795 include/global_arrays.php:796
-#: include/global_arrays.php:797 include/global_arrays.php:798
-#: include/global_arrays.php:799 include/global_arrays.php:1478
+#: include/global_arrays.php:794 include/global_arrays.php:795
+#: include/global_arrays.php:796 include/global_arrays.php:797
+#: include/global_arrays.php:798 include/global_arrays.php:799
+#: include/global_arrays.php:800 include/global_arrays.php:801
+#: include/global_arrays.php:802 include/global_arrays.php:1481
 #: include/global_settings.php:1652
 #, php-format
 msgid "%d Years"
 msgstr "% d Έτη"
 
-#: include/global_arrays.php:812
+#: include/global_arrays.php:815
 msgid "Disabled/Manual"
 msgstr "Απενεργοποιημένο / Μη αυτόματο"
 
-#: include/global_arrays.php:819
+#: include/global_arrays.php:822
 msgid "Every day"
 msgstr "Κάθε μέρα"
 
-#: include/global_arrays.php:823
+#: include/global_arrays.php:826
 msgid "1 Thread"
 msgstr "% d Νήμα"
 
-#: include/global_arrays.php:867
+#: include/global_arrays.php:870
 msgid "Builtin Authentication"
 msgstr "Builtin Authentication"
 
-#: include/global_arrays.php:868
+#: include/global_arrays.php:871
 msgid "Web Basic Authentication"
 msgstr "Βασικός έλεγχος ταυτότητας ιστού"
 
-#: include/global_arrays.php:872
+#: include/global_arrays.php:875
 msgid "LDAP Authentication"
 msgstr "Έλεγχος ταυτότητας LDAP"
 
-#: include/global_arrays.php:873
+#: include/global_arrays.php:876
 msgid "Multiple LDAP/AD Domains"
 msgstr "Πολλαπλοί τομείς LDAP / AD"
 
-#: include/global_arrays.php:878
+#: include/global_arrays.php:881
 msgid "Active Directory"
 msgstr "υπηρεσία καταλόγου Active Directory"
 
-#: include/global_arrays.php:890
+#: include/global_arrays.php:893
 msgid "LDAPS"
 msgstr "LDAP"
 
-#: include/global_arrays.php:891
+#: include/global_arrays.php:894
 msgid "LDAP + TLS"
 msgstr "LDAP + TLS"
 
-#: include/global_arrays.php:896
+#: include/global_arrays.php:899
 msgid "Hard"
 msgstr "Δύσκολο"
 
-#: include/global_arrays.php:897
+#: include/global_arrays.php:900
 msgid "Demand"
 msgstr "Εντολή"
 
-#: include/global_arrays.php:898 user_admin.php:653 user_group_admin.php:795
+#: include/global_arrays.php:901 user_admin.php:653 user_group_admin.php:795
 msgid "Allow"
 msgstr "允许"
 
-#: include/global_arrays.php:899
+#: include/global_arrays.php:902
 msgid "Try"
 msgstr "Προσπαθήστε"
 
-#: include/global_arrays.php:903
+#: include/global_arrays.php:906
 msgid "No Searching"
 msgstr "Δεν υπάρχει αναζήτηση"
 
-#: include/global_arrays.php:904
+#: include/global_arrays.php:907
 msgid "Anonymous Searching"
 msgstr "Ανώνυμη αναζήτηση"
 
-#: include/global_arrays.php:905
+#: include/global_arrays.php:908
 msgid "Specific Searching"
 msgstr "Ειδική αναζήτηση"
 
-#: include/global_arrays.php:922
+#: include/global_arrays.php:925
 msgid "Enabled (strict mode)"
 msgstr "Ενεργοποίηση (αυστηρή λειτουργία)"
 
-#: include/global_arrays.php:927 include/global_form.php:2132
+#: include/global_arrays.php:930 include/global_form.php:2132
 #: include/global_form.php:2174 lib/api_automation.php:1288
 #: lib/api_automation.php:1351
 msgid "Operator"
 msgstr "Χειριστής"
 
-#: include/global_arrays.php:929
+#: include/global_arrays.php:932
 msgid "Another CDEF"
 msgstr "Ένα άλλο CDEF"
 
-#: include/global_arrays.php:948
+#: include/global_arrays.php:951
 msgid "Inherit Parent Sorting"
 msgstr "Κληρονομήστε τη γονική ταξινόμηση"
 
-#: include/global_arrays.php:949
+#: include/global_arrays.php:952
 msgid "Manual Ordering (No Sorting)"
 msgstr "Χειροκίνητη παραγγελία (χωρίς ταξινόμηση)"
 
-#: include/global_arrays.php:950
+#: include/global_arrays.php:953
 msgid "Alphabetic Ordering"
 msgstr "Αλφαβητική παραγγελία"
 
-#: include/global_arrays.php:951
+#: include/global_arrays.php:954
 msgid "Natural Ordering"
 msgstr "Φυσική παραγγελία"
 
-#: include/global_arrays.php:952
+#: include/global_arrays.php:955
 msgid "Numeric Ordering"
 msgstr "Αριθμητική παραγγελία"
 
-#: include/global_arrays.php:956 lib/rrd.php:4436
+#: include/global_arrays.php:959 lib/rrd.php:4436
 msgid "Header"
 msgstr "Κεφαλίδα"
 
-#: include/global_arrays.php:957 include/global_arrays.php:1008
-#: include/global_arrays.php:1694 include/global_arrays.php:1863
+#: include/global_arrays.php:960 include/global_arrays.php:1011
+#: include/global_arrays.php:1697 include/global_arrays.php:1866
 #: lib/html.php:2965
 msgid "Graph"
 msgstr "Γραφικό Σχήμα"
 
-#: include/global_arrays.php:963 tree.php:1974
+#: include/global_arrays.php:966 tree.php:1974
 msgid "Data Query Index"
 msgstr "Δείκτης ερωτήματος δεδομένων"
 
-#: include/global_arrays.php:968
+#: include/global_arrays.php:971
 msgid "Current Graph Item Polling Interval"
 msgstr "Τρέχον χρονικό διάστημα του στοιχείου γραφήματος"
 
-#: include/global_arrays.php:969
+#: include/global_arrays.php:972
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "Όλες οι πηγές δεδομένων (Μην συμπεριλαμβάνετε διπλότυπα)"
 
-#: include/global_arrays.php:970
+#: include/global_arrays.php:973
 msgid "All Data Sources (Include Duplicates)"
 msgstr "Όλες οι πηγές δεδομένων (συμπεριλαμβάνουν διπλότυπα)"
 
-#: include/global_arrays.php:971
+#: include/global_arrays.php:974
 msgid "All Similar Data Sources (Do not Include Duplicates)"
 msgstr "Όλες οι παρόμοιες πηγές δεδομένων (Μην συμπεριλαμβάνετε διπλότυπα)"
 
-#: include/global_arrays.php:972
+#: include/global_arrays.php:975
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
 msgstr "Όλες οι παρόμοιες πηγές δεδομένων (Μην συμπεριλαμβάνετε διπλότυπα)"
 
-#: include/global_arrays.php:973
+#: include/global_arrays.php:976
 msgid "All Similar Data Sources (Include Duplicates)"
 msgstr "Όλες οι παρόμοιες πηγές δεδομένων (συμπεριλαμβάνουν διπλότυπα)"
 
-#: include/global_arrays.php:974
+#: include/global_arrays.php:977
 msgid "Current Data Source Item: Minimum Value"
 msgstr "Τρέχον στοιχείο προέλευσης δεδομένων: Ελάχιστη τιμή"
 
-#: include/global_arrays.php:975
+#: include/global_arrays.php:978
 msgid "Current Data Source Item: Maximum Value"
 msgstr "Τρέχον στοιχείο προέλευσης δεδομένων: Μέγιστη τιμή"
 
-#: include/global_arrays.php:976
+#: include/global_arrays.php:979
 msgid "Graph: Lower Limit"
 msgstr "Γράφημα: Κάτω όριο"
 
-#: include/global_arrays.php:977
+#: include/global_arrays.php:980
 msgid "Graph: Upper Limit"
 msgstr "Γράφημα: Άνω όριο"
 
-#: include/global_arrays.php:978
+#: include/global_arrays.php:981
 msgid "Count of All Data Sources (Do not Include Duplicates)"
 msgstr "Αριθμός όλων των πηγών δεδομένων (Μην συμπεριλαμβάνετε διπλότυπα)"
 
-#: include/global_arrays.php:979
+#: include/global_arrays.php:982
 msgid "Count of All Data Sources (Include Duplicates)"
 msgstr "Καταμέτρηση όλων των πηγών δεδομένων (συμπεριλάβετε διπλότυπα)"
 
-#: include/global_arrays.php:980
+#: include/global_arrays.php:983
 msgid "Count of All Similar Data Sources (Do not Include Duplicates)"
 msgstr "Καταμέτρηση όλων των παρόμοιων πηγών δεδομένων (Μην συμπεριλαμβάνετε διπλότυπα)"
 
-#: include/global_arrays.php:981
+#: include/global_arrays.php:984
 msgid "Count of All Similar Data Sources (Include Duplicates)"
 msgstr "Καταμέτρηση όλων των παρόμοιων πηγών δεδομένων (συμπεριλάβετε διπλότυπα)"
 
-#: include/global_arrays.php:986 include/global_arrays.php:1066
+#: include/global_arrays.php:989 include/global_arrays.php:1069
 msgid "Main Console"
 msgstr "Κονσόλα"
 
-#: include/global_arrays.php:987
+#: include/global_arrays.php:990
 msgid "Console Page"
 msgstr "Κορυφή της σελίδας της κονσόλας"
 
-#: include/global_arrays.php:990 lib/html_form_template.php:627
+#: include/global_arrays.php:993 lib/html_form_template.php:627
 #: lib/html_form_template.php:639
 msgid "New Graphs"
 msgstr "Νέα γραφήματα"
 
-#: include/global_arrays.php:993 include/global_arrays.php:1049
-#: include/global_arrays.php:1068
+#: include/global_arrays.php:996 include/global_arrays.php:1052
+#: include/global_arrays.php:1071
 msgid "Management"
 msgstr "Διοίκηση"
 
-#: include/global_arrays.php:995 tree.php:936 tree.php:2369
+#: include/global_arrays.php:998 tree.php:936 tree.php:2369
 msgid "Sites"
 msgstr "Ιστοσελίδες"
 
-#: include/global_arrays.php:996 include/global_arrays.php:1234 tree.php:2229
+#: include/global_arrays.php:999 include/global_arrays.php:1237 tree.php:2229
 #: tree.php:2244 tree.php:2311 user_admin.php:1343 user_admin.php:2371
 #: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
 msgid "Trees"
 msgstr "Δέντρα"
 
-#: include/global_arrays.php:1001 include/global_arrays.php:1052
-#: include/global_arrays.php:1069
+#: include/global_arrays.php:1004 include/global_arrays.php:1055
+#: include/global_arrays.php:1072
 msgid "Data Collection"
 msgstr "Συλλογή δεδομένων"
 
-#: include/global_arrays.php:1002 include/global_arrays.php:1053
-#: include/global_arrays.php:2207 pollers.php:860
+#: include/global_arrays.php:1005 include/global_arrays.php:1056
+#: include/global_arrays.php:2210 pollers.php:860
 msgid "Data Collectors"
 msgstr "Συλλέκτες δεδομένων"
 
-#: include/global_arrays.php:1004 include/global_arrays.php:1229
-#: include/global_arrays.php:2369
+#: include/global_arrays.php:1007 include/global_arrays.php:1232
+#: include/global_arrays.php:2372
 msgid "Data Input Methods"
 msgstr "Μέθοδοι εισαγωγής δεδομένων"
 
-#: include/global_arrays.php:1010 include/global_arrays.php:2900
+#: include/global_arrays.php:1013 include/global_arrays.php:2903
 msgid "Aggregate"
 msgstr "Άθροισμα"
 
-#: include/global_arrays.php:1011 include/global_form.php:975
+#: include/global_arrays.php:1014 include/global_form.php:975
 #: include/global_form.php:2089
 msgid "Color"
 msgstr "Χρώμα"
 
-#: include/global_arrays.php:1013 include/global_arrays.php:1071
-#: include/global_arrays.php:1226 include/global_settings.php:623
+#: include/global_arrays.php:1016 include/global_arrays.php:1074
+#: include/global_arrays.php:1229 include/global_settings.php:623
 msgid "Automation"
 msgstr "Αυτοματισμός"
 
-#: include/global_arrays.php:1015
+#: include/global_arrays.php:1018
 msgid "Discovered Devices"
 msgstr "Ανακαλυφθείσες συσκευές"
 
-#: include/global_arrays.php:1016
+#: include/global_arrays.php:1019
 msgid "Device Rules"
 msgstr "Κανόνες συσκευών"
 
-#: include/global_arrays.php:1020 include/global_arrays.php:1072
-#: include/global_arrays.php:1238 lib/html_filter.php:160
+#: include/global_arrays.php:1023 include/global_arrays.php:1075
+#: include/global_arrays.php:1241 lib/html_filter.php:160
 #: lib/html_graph.php:243 lib/html_tree.php:1065
 msgid "Presets"
 msgstr "Προρυθμίσεις"
 
-#: include/global_arrays.php:1021
+#: include/global_arrays.php:1024
 msgid "Data Profiles"
 msgstr "Προφίλ δεδομένων"
 
-#: include/global_arrays.php:1023 include/global_arrays.php:2141
+#: include/global_arrays.php:1026 include/global_arrays.php:2144
 msgid "CDEFs"
 msgstr "CDEFs"
 
-#: include/global_arrays.php:1024 include/global_arrays.php:2531
+#: include/global_arrays.php:1027 include/global_arrays.php:2534
 msgid "VDEFs"
 msgstr "VDEFs"
 
-#: include/global_arrays.php:1025 include/global_arrays.php:2231
+#: include/global_arrays.php:1028 include/global_arrays.php:2234
 msgid "Colors"
 msgstr "Χρώματα"
 
-#: include/global_arrays.php:1026
+#: include/global_arrays.php:1029
 msgid "GPRINTs"
 msgstr "GPRINTs"
 
-#: include/global_arrays.php:1028 include/global_arrays.php:1073
+#: include/global_arrays.php:1031 include/global_arrays.php:1076
 msgid "Import/Export"
 msgstr "Εισαγωγή/Εξαγωγή"
 
-#: include/global_arrays.php:1029 include/global_arrays.php:1245
-#: include/global_arrays.php:2657
+#: include/global_arrays.php:1032 include/global_arrays.php:1248
+#: include/global_arrays.php:2660
 msgid "Import Templates"
 msgstr "Εισαγωγή προτύπων"
 
-#: include/global_arrays.php:1030 include/global_arrays.php:2663
+#: include/global_arrays.php:1033 include/global_arrays.php:2666
 msgid "Import Packages"
 msgstr "Εισαγωγή προτύπων"
 
-#: include/global_arrays.php:1031 include/global_arrays.php:1244
-#: include/global_arrays.php:2645 templates_export.php:142
+#: include/global_arrays.php:1034 include/global_arrays.php:1247
+#: include/global_arrays.php:2648 templates_export.php:142
 msgid "Export Templates"
 msgstr "Εξαγωγή προτύπων"
 
-#: include/global_arrays.php:1033 include/global_arrays.php:1055
-#: include/global_arrays.php:1074 lib/plugins.php:1337
+#: include/global_arrays.php:1036 include/global_arrays.php:1058
+#: include/global_arrays.php:1077 lib/plugins.php:1337
 msgid "Configuration"
 msgstr "Παραμετροποίηση"
 
-#: include/global_arrays.php:1034 include/global_arrays.php:1056
+#: include/global_arrays.php:1037 include/global_arrays.php:1059
 #: lib/html.php:2549 lib/html.php:2980
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: include/global_arrays.php:1035 include/global_arrays.php:2585
+#: include/global_arrays.php:1038 include/global_arrays.php:2588
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
 #: user_group_admin.php:2172
 msgid "Users"
 msgstr "Χρήστες"
 
-#: include/global_arrays.php:1036 include/global_arrays.php:2615
+#: include/global_arrays.php:1039 include/global_arrays.php:2618
 msgid "User Groups"
 msgstr "Ομάδες χρηστών"
 
-#: include/global_arrays.php:1037 include/global_arrays.php:2603
+#: include/global_arrays.php:1040 include/global_arrays.php:2606
 #: user_domains.php:633 user_domains.php:727
 msgid "User Domains"
 msgstr "Τομείς χρηστών"
 
-#: include/global_arrays.php:1039 include/global_arrays.php:1058
-#: include/global_arrays.php:1075 include/global_arrays.php:2459
+#: include/global_arrays.php:1042 include/global_arrays.php:1061
+#: include/global_arrays.php:1078 include/global_arrays.php:2462
 msgid "Utilities"
 msgstr "Παροχές"
 
-#: include/global_arrays.php:1040 include/global_arrays.php:1059
+#: include/global_arrays.php:1043 include/global_arrays.php:1062
 msgid "System Utilities"
 msgstr "Βοηθητικά προγράμματα συστήματος"
 
-#: include/global_arrays.php:1041 include/global_arrays.php:1076
-#: include/global_arrays.php:1119 include/global_arrays.php:1222
-#: include/global_arrays.php:2219 user_admin.php:1497 user_group_admin.php:1519
+#: include/global_arrays.php:1044 include/global_arrays.php:1079
+#: include/global_arrays.php:1122 include/global_arrays.php:1225
+#: include/global_arrays.php:2222 user_admin.php:1497 user_group_admin.php:1519
 msgid "External Links"
 msgstr "Εξωτερικοί σύνδεσμοι"
 
-#: include/global_arrays.php:1043 include/global_arrays.php:1078
+#: include/global_arrays.php:1046 include/global_arrays.php:1081
 msgid "Troubleshooting"
 msgstr "Αντιμετώπιση προβλημάτων"
 
-#: include/global_arrays.php:1077
+#: include/global_arrays.php:1080
 msgid "Support"
 msgstr "Υποστήριξη"
 
-#: include/global_arrays.php:1082
+#: include/global_arrays.php:1085
 msgid "Access Points, Controllers"
 msgstr "Σημεία πρόσβασης, ελεγκτές"
 
-#: include/global_arrays.php:1083
+#: include/global_arrays.php:1086
 msgid "Application Related"
 msgstr "Εφαρμόστε τους Κανόνες Αυτοματισμού"
 
-#: include/global_arrays.php:1084
+#: include/global_arrays.php:1087
 msgid "Kadupul Related"
 msgstr "Έκθεση Kadupul"
 
-#: include/global_arrays.php:1085
+#: include/global_arrays.php:1088
 msgid "Database Related"
 msgstr "Βάση δεδομένων"
 
-#: include/global_arrays.php:1086
+#: include/global_arrays.php:1089
 msgid "Facilities Related"
 msgstr "Σχετικά με τις εγκαταστάσεις"
 
-#: include/global_arrays.php:1087
+#: include/global_arrays.php:1090
 msgid "Generic Device"
 msgstr "Γενικό επίπεδο καταγραφής"
 
-#: include/global_arrays.php:1088
+#: include/global_arrays.php:1091
 msgid "HPC/Grid Computing"
 msgstr "Επιλογές Πλέγματος"
 
-#: include/global_arrays.php:1089
+#: include/global_arrays.php:1092
 msgid "Hypervisor Related"
 msgstr "Σχετικά με τον Υπεργολάβο"
 
-#: include/global_arrays.php:1090
+#: include/global_arrays.php:1093
 msgid "ILO, IPMI, iDrac, etc."
 msgstr "ILO, IPMI, iDrac κ.λπ."
 
-#: include/global_arrays.php:1091
+#: include/global_arrays.php:1094
 msgid "Licensing Related"
 msgstr "Σχετικά με την αδειοδότηση"
 
-#: include/global_arrays.php:1092
+#: include/global_arrays.php:1095
 msgid "Linux Related"
 msgstr "Σχετίζεται με το Linux"
 
-#: include/global_arrays.php:1093
+#: include/global_arrays.php:1096
 msgid "Load Balancer"
 msgstr "Εξισορρόπηση φορτίου"
 
-#: include/global_arrays.php:1094
+#: include/global_arrays.php:1097
 msgid "Network Switch"
 msgstr "Φίλτρα δικτύου"
 
-#: include/global_arrays.php:1095
+#: include/global_arrays.php:1098
 msgid "Network Router"
 msgstr "Φίλτρα δικτύου"
 
-#: include/global_arrays.php:1096
+#: include/global_arrays.php:1099
 msgid "NAS/SAN Related"
 msgstr "Σχετικό με NAS/SAN"
 
-#: include/global_arrays.php:1097
+#: include/global_arrays.php:1100
 msgid "Network Firewalls"
 msgstr "Φίλτρα δικτύου"
 
-#: include/global_arrays.php:1098
+#: include/global_arrays.php:1101
 msgid "Power Related PDUs/STS, etc."
 msgstr "PDUs/STS που σχετίζονται με την ενέργεια κ.λπ."
 
-#: include/global_arrays.php:1099
+#: include/global_arrays.php:1102
 msgid "Printer Related"
 msgstr "Βάση δεδομένων"
 
-#: include/global_arrays.php:1100
+#: include/global_arrays.php:1103
 msgid "Storage Related"
 msgstr "Σχετικά με την αποθήκευση"
 
-#: include/global_arrays.php:1101
+#: include/global_arrays.php:1104
 msgid "Telco Related"
 msgstr "Επιλογή Πρότυπου"
 
-#: include/global_arrays.php:1102
+#: include/global_arrays.php:1105
 msgid "Web Server Related"
 msgstr "Σχετικός διακομιστής ιστού"
 
-#: include/global_arrays.php:1103
+#: include/global_arrays.php:1106
 msgid "Windows Related"
 msgstr "Σχετικά με τα Windows"
 
-#: include/global_arrays.php:1104
+#: include/global_arrays.php:1107
 msgid "UPS Related"
 msgstr "Σχετικά με το UPS"
 
-#: include/global_arrays.php:1128
+#: include/global_arrays.php:1131
 msgid "All Lines"
 msgstr "Όλες οι γραμμές"
 
-#: include/global_arrays.php:1129 include/global_arrays.php:1130
-#: include/global_arrays.php:1131 include/global_arrays.php:1132
-#: include/global_arrays.php:1133 include/global_arrays.php:1134
-#: include/global_arrays.php:1135 include/global_arrays.php:1136
-#: include/global_arrays.php:1137 include/global_arrays.php:1138
-#: include/global_arrays.php:1139 include/global_arrays.php:1140
+#: include/global_arrays.php:1132 include/global_arrays.php:1133
+#: include/global_arrays.php:1134 include/global_arrays.php:1135
+#: include/global_arrays.php:1136 include/global_arrays.php:1137
+#: include/global_arrays.php:1138 include/global_arrays.php:1139
+#: include/global_arrays.php:1140 include/global_arrays.php:1141
+#: include/global_arrays.php:1142 include/global_arrays.php:1143
 #, php-format
 msgid "%d Lines"
 msgstr "% d Γραμμές"
 
-#: include/global_arrays.php:1218
+#: include/global_arrays.php:1221
 msgid "Console Access"
 msgstr "Πρόσβαση στην κονσόλα"
 
-#: include/global_arrays.php:1220
+#: include/global_arrays.php:1223
 msgid "Realtime Graphs"
 msgstr "Γράφημα πραγματικού χρόνου"
 
-#: include/global_arrays.php:1221
+#: include/global_arrays.php:1224
 msgid "Update Profile"
 msgstr "Ενημέρωση Προφίλ"
 
-#: include/global_arrays.php:1224
+#: include/global_arrays.php:1227
 msgid "Users/Groups"
 msgstr "Ομάδες χρηστών"
 
-#: include/global_arrays.php:1225
+#: include/global_arrays.php:1228
 msgid "Settings/Utilities"
 msgstr "Ρυθμίσεις / Βοηθητικά προγράμματα"
 
-#: include/global_arrays.php:1227
+#: include/global_arrays.php:1230
 msgid "Installation/Upgrades"
 msgstr "Εγκατάσταση / αναβαθμίσεις"
 
-#: include/global_arrays.php:1232
+#: include/global_arrays.php:1235
 msgid "Sites/Devices/Data"
 msgstr "Sites / Συσκευές / Δεδομένα"
 
-#: include/global_arrays.php:1235
+#: include/global_arrays.php:1238
 msgid "Spike Handling"
 msgstr "Spike Kill Ρυθμίσεις"
 
-#: include/global_arrays.php:1237
+#: include/global_arrays.php:1240
 msgid "Data Source Profiles"
 msgstr "Προφίλ πηγών δεδομένων"
 
-#: include/global_arrays.php:1247 utilities.php:2384
+#: include/global_arrays.php:1250 utilities.php:2384
 msgid "Log Administration"
 msgstr "Διαχείριση αρχείων καταγραφής"
 
-#: include/global_arrays.php:1248
+#: include/global_arrays.php:1251
 msgid "Log Viewing"
 msgstr "Προβολή καταγραφών"
 
-#: include/global_arrays.php:1250
+#: include/global_arrays.php:1253
 msgid "Reports Administration"
 msgstr "Διαχείριση αρχείων καταγραφής"
 
-#: include/global_arrays.php:1251
+#: include/global_arrays.php:1254
 msgid "Reports Creation"
 msgstr "Δημιουργία αναφορών"
 
-#: include/global_arrays.php:1252
+#: include/global_arrays.php:1255
 msgid "Show Graph Action Icons"
 msgstr "Εμφάνιση τίτλου γραφήματος"
 
-#: include/global_arrays.php:1253
+#: include/global_arrays.php:1256
 msgid "Show User Help Links"
 msgstr "Εμφάνιση συνδέσμων βοήθειας χρήστη"
 
-#: include/global_arrays.php:1254
+#: include/global_arrays.php:1257
 msgid "Plugin Administration"
 msgstr "Διαχείριση αρχείων καταγραφής"
 
-#: include/global_arrays.php:1258
+#: include/global_arrays.php:1261
 msgid "Normal User"
 msgstr "Απλός Χρήστης"
 
-#: include/global_arrays.php:1259
+#: include/global_arrays.php:1262
 msgid "Template Editor"
 msgstr "Πρόγραμμα επεξεργασίας προτύπων"
 
-#: include/global_arrays.php:1260
+#: include/global_arrays.php:1263
 msgid "General Administration"
 msgstr "Γενική Διοίκηση"
 
-#: include/global_arrays.php:1261
+#: include/global_arrays.php:1264
 msgid "System Administration"
 msgstr "Διαχείριση συστήματος"
 
-#: include/global_arrays.php:1360 lib/html.php:1367
+#: include/global_arrays.php:1363 lib/html.php:1367
 msgid "CDEF"
 msgstr "CDEF"
 
-#: include/global_arrays.php:1361
+#: include/global_arrays.php:1364
 msgid "CDEF Item"
 msgstr "Στοιχείο CDEF"
 
-#: include/global_arrays.php:1362
+#: include/global_arrays.php:1365
 msgid "GPRINT Preset"
 msgstr "Προεπιλεγμένη ρύθμιση GPRINT"
 
-#: include/global_arrays.php:1365
+#: include/global_arrays.php:1368
 msgid "Data Input Field"
 msgstr "Πεδίο εισαγωγής δεδομένων"
 
-#: include/global_arrays.php:1366 include/global_form.php:579
+#: include/global_arrays.php:1369 include/global_form.php:579
 #: include/global_form.php:1679 package_import.php:907
 msgid "Data Source Profile"
 msgstr "Προφίλ προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1367
+#: include/global_arrays.php:1370
 msgid "Data Template Item"
 msgstr "Στοιχείο πρότυπου δεδομένων"
 
-#: include/global_arrays.php:1369
+#: include/global_arrays.php:1372
 msgid "Graph Template Item"
 msgstr "Στοιχείο πρότυπου γραφήματος"
 
-#: include/global_arrays.php:1370
+#: include/global_arrays.php:1373
 msgid "Graph Template Input"
 msgstr "Εισαγωγή προτύπου γραφήματος"
 
-#: include/global_arrays.php:1372 include/global_form.php:1211
+#: include/global_arrays.php:1375 include/global_form.php:1211
 #: include/global_form.php:1630 lib/html_reports.php:1160
 msgid "Device Template"
 msgstr "Πρότυπο συσκευής"
 
-#: include/global_arrays.php:1373 lib/html.php:1368
+#: include/global_arrays.php:1376 lib/html.php:1368
 msgid "VDEF"
 msgstr "VDEF"
 
-#: include/global_arrays.php:1374
+#: include/global_arrays.php:1377
 msgid "VDEF Item"
 msgstr "Στοιχείο VDEF"
 
-#: include/global_arrays.php:1428
+#: include/global_arrays.php:1431
 msgid "Last Half Hour"
 msgstr "Τελευταία ώρα ημιχρόνου"
 
-#: include/global_arrays.php:1429
+#: include/global_arrays.php:1432
 msgid "Last Hour"
 msgstr "Τελευταία ώρα"
 
-#: include/global_arrays.php:1430 include/global_arrays.php:1431
-#: include/global_arrays.php:1432 include/global_arrays.php:1433
+#: include/global_arrays.php:1433 include/global_arrays.php:1434
+#: include/global_arrays.php:1435 include/global_arrays.php:1436
 #, php-format
 msgid "Last %d Hours"
 msgstr "Τελευταία% d ώρες"
 
-#: include/global_arrays.php:1434
+#: include/global_arrays.php:1437
 msgid "Last Day"
 msgstr "Τελευταία μέρα"
 
-#: include/global_arrays.php:1435 include/global_arrays.php:1436
-#: include/global_arrays.php:1437
+#: include/global_arrays.php:1438 include/global_arrays.php:1439
+#: include/global_arrays.php:1440
 #, php-format
 msgid "Last %d Days"
 msgstr "Τελευταίες %d ημέρες"
 
-#: include/global_arrays.php:1438
+#: include/global_arrays.php:1441
 msgid "Last Week"
 msgstr "Τελευταία Εβδομάδα"
 
-#: include/global_arrays.php:1439
+#: include/global_arrays.php:1442
 #, php-format
 msgid "Last %d Weeks"
 msgstr "Τελευταία% d εβδομάδες"
 
-#: include/global_arrays.php:1440
+#: include/global_arrays.php:1443
 msgid "Last Month"
 msgstr "Τον Τελευταίο Μήνα"
 
-#: include/global_arrays.php:1441 include/global_arrays.php:1442
-#: include/global_arrays.php:1443 include/global_arrays.php:1444
+#: include/global_arrays.php:1444 include/global_arrays.php:1445
+#: include/global_arrays.php:1446 include/global_arrays.php:1447
 #, php-format
 msgid "Last %d Months"
 msgstr "Τελευταία% d Μήνες"
 
-#: include/global_arrays.php:1445
+#: include/global_arrays.php:1448
 msgid "Last Year"
 msgstr "Προηγούμενο έτος"
 
-#: include/global_arrays.php:1446
+#: include/global_arrays.php:1449
 #, php-format
 msgid "Last %d Years"
 msgstr "Τελευταία% d έτη"
 
-#: include/global_arrays.php:1447
+#: include/global_arrays.php:1450
 msgid "Day Shift"
 msgstr "Ημερήσια βάρδια"
 
-#: include/global_arrays.php:1448
+#: include/global_arrays.php:1451
 msgid "This Day"
 msgstr "Καθημερινά"
 
-#: include/global_arrays.php:1449
+#: include/global_arrays.php:1452
 msgid "This Week"
 msgstr "Αυτή την Εβδομάδα"
 
-#: include/global_arrays.php:1450
+#: include/global_arrays.php:1453
 msgid "This Month"
 msgstr "Αυτόν το Μήνα"
 
-#: include/global_arrays.php:1451
+#: include/global_arrays.php:1454
 msgid "This Year"
 msgstr "Αυτή την Χρονιά"
 
-#: include/global_arrays.php:1452
+#: include/global_arrays.php:1455
 msgid "Previous Day"
 msgstr "Προηγούμενη ημέρα"
 
-#: include/global_arrays.php:1453
+#: include/global_arrays.php:1456
 msgid "Previous Week"
 msgstr "Προηγούμενη εβδομάδα"
 
-#: include/global_arrays.php:1454
+#: include/global_arrays.php:1457
 msgid "Previous Month"
 msgstr "Προηγούμενος Μήνας"
 
-#: include/global_arrays.php:1455
+#: include/global_arrays.php:1458
 msgid "Previous Year"
 msgstr "Προηγούμενο έτος"
 
-#: include/global_arrays.php:1460
+#: include/global_arrays.php:1463
 #, php-format
 msgid "%d Min"
 msgstr "% d Ελάχ"
 
-#: include/global_arrays.php:1515
+#: include/global_arrays.php:1518
 msgid "Month Number, Day, Year"
 msgstr "Μήνας Αριθμός, Ημέρα, Έτος"
 
-#: include/global_arrays.php:1516
+#: include/global_arrays.php:1519
 msgid "Month Name, Day, Year"
 msgstr "Μήνα Όνομα, Ημέρα, Έτος"
 
-#: include/global_arrays.php:1517
+#: include/global_arrays.php:1520
 msgid "Day, Month Number, Year"
 msgstr "Ημέρα, Μήνας Αριθμός, Έτος"
 
-#: include/global_arrays.php:1518
+#: include/global_arrays.php:1521
 msgid "Day, Month Name, Year"
 msgstr "Ημέρα, Όνομα Μήνα, Έτος"
 
-#: include/global_arrays.php:1519
+#: include/global_arrays.php:1522
 msgid "Year, Month Number, Day"
 msgstr "Έτος, Μήνας Αριθμός, Ημέρα"
 
-#: include/global_arrays.php:1520
+#: include/global_arrays.php:1523
 msgid "Year, Month Name, Day"
 msgstr "Έτος, Μήνα, Ημέρα"
 
-#: include/global_arrays.php:1530 include/global_arrays.php:1561
+#: include/global_arrays.php:1533 include/global_arrays.php:1564
 msgid "After Boost"
 msgstr "Μετά την ώθηση"
 
-#: include/global_arrays.php:1540 include/global_arrays.php:1541
-#: include/global_arrays.php:1542 include/global_arrays.php:1543
-#: include/global_arrays.php:1544 include/global_arrays.php:1606
-#: include/global_arrays.php:1607
+#: include/global_arrays.php:1543 include/global_arrays.php:1544
+#: include/global_arrays.php:1545 include/global_arrays.php:1546
+#: include/global_arrays.php:1547 include/global_arrays.php:1609
+#: include/global_arrays.php:1610
 #, php-format
 msgid "%d MBytes"
 msgstr "% d MBytes"
 
-#: include/global_arrays.php:1545
+#: include/global_arrays.php:1548
 msgid "1 GByte"
 msgstr "1 GByte"
 
-#: include/global_arrays.php:1546 include/global_arrays.php:1609
+#: include/global_arrays.php:1549 include/global_arrays.php:1612
 #: lib/boost.php:124
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBytes"
 
-#: include/global_arrays.php:1547 include/global_arrays.php:1548
-#: include/global_arrays.php:1610 include/global_arrays.php:1611
-#: include/global_arrays.php:1612 include/global_arrays.php:1613
-#: include/global_arrays.php:1614 include/global_arrays.php:1615
+#: include/global_arrays.php:1550 include/global_arrays.php:1551
+#: include/global_arrays.php:1613 include/global_arrays.php:1614
+#: include/global_arrays.php:1615 include/global_arrays.php:1616
+#: include/global_arrays.php:1617 include/global_arrays.php:1618
 #, php-format
 msgid "%d GBytes"
 msgstr "% d GBytes"
 
-#: include/global_arrays.php:1568
+#: include/global_arrays.php:1571
 msgid "2,000 Data Source Items"
 msgstr "2.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1569
+#: include/global_arrays.php:1572
 msgid "5,000 Data Source Items"
 msgstr "5.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1570
+#: include/global_arrays.php:1573
 msgid "10,000 Data Source Items"
 msgstr "10.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1571
+#: include/global_arrays.php:1574
 msgid "15,000 Data Source Items"
 msgstr "15.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1572
+#: include/global_arrays.php:1575
 msgid "25,000 Data Source Items"
 msgstr "25.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1573
+#: include/global_arrays.php:1576
 msgid "50,000 Data Source Items (Default)"
 msgstr "50.000 στοιχεία προέλευσης δεδομένων (προεπιλογή)"
 
-#: include/global_arrays.php:1574
+#: include/global_arrays.php:1577
 msgid "100,000 Data Source Items"
 msgstr "100.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1575
+#: include/global_arrays.php:1578
 msgid "200,000 Data Source Items"
 msgstr "200.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1576
+#: include/global_arrays.php:1579
 msgid "400,000 Data Source Items"
 msgstr "400.000 στοιχεία προέλευσης δεδομένων"
 
-#: include/global_arrays.php:1593
+#: include/global_arrays.php:1596
 msgid "2 Hours"
 msgstr "2 Ώρες"
 
-#: include/global_arrays.php:1594
+#: include/global_arrays.php:1597
 msgid "4 Hours"
 msgstr "4 Ώρες"
 
-#: include/global_arrays.php:1595
+#: include/global_arrays.php:1598
 msgid "6 Hours"
 msgstr "6 Ώρες"
 
-#: include/global_arrays.php:1602 include/global_settings.php:1503
+#: include/global_arrays.php:1605 include/global_settings.php:1503
 #: include/global_settings.php:1504 include/global_settings.php:1505
 #, php-format
 msgid "%s Hours"
 msgstr "%s Ώρες"
 
-#: include/global_arrays.php:1608
+#: include/global_arrays.php:1611
 #, php-format
 msgid "%d GByte"
 msgstr "% d GBytes"
 
-#: include/global_arrays.php:1616 utilities.php:2850 utilities.php:2851
+#: include/global_arrays.php:1619 utilities.php:2850 utilities.php:2851
 #: utilities.php:2900
 msgid "Unlimited"
 msgstr "Απεριόριστα"
 
-#: include/global_arrays.php:1623 include/global_settings.php:1402
+#: include/global_arrays.php:1626 include/global_settings.php:1402
 #: include/global_settings.php:1403 include/global_settings.php:1404
 #: include/global_settings.php:1405 include/global_settings.php:1415
 #: include/global_settings.php:1416 include/global_settings.php:1417
@@ -6301,769 +6306,769 @@ msgstr "Απεριόριστα"
 msgid "%s Minutes"
 msgstr "%s λεπτά"
 
-#: include/global_arrays.php:1645
+#: include/global_arrays.php:1648
 msgid "1 Megabyte"
 msgstr "1 Megabyte"
 
-#: include/global_arrays.php:1646 include/global_arrays.php:1647
-#: include/global_arrays.php:1648 include/global_arrays.php:1649
-#: include/global_arrays.php:1650 include/global_arrays.php:1651
+#: include/global_arrays.php:1649 include/global_arrays.php:1650
+#: include/global_arrays.php:1651 include/global_arrays.php:1652
+#: include/global_arrays.php:1653 include/global_arrays.php:1654
 #, php-format
 msgid "%d Megabytes"
 msgstr "% d Megabytes"
 
-#: include/global_arrays.php:1655
+#: include/global_arrays.php:1658
 msgid "Send Now"
 msgstr "Αποστολή τώρα"
 
-#: include/global_arrays.php:1663
+#: include/global_arrays.php:1666
 msgid "Take Ownership"
 msgstr "Παίρνω ιδιοκτησία"
 
-#: include/global_arrays.php:1667
+#: include/global_arrays.php:1670
 msgid "Inline PNG Image"
 msgstr "Ενσωματωμένη εικόνα PNG"
 
-#: include/global_arrays.php:1672
+#: include/global_arrays.php:1675
 msgid "Inline JPEG Image"
 msgstr "Ενσωματωμένη εικόνα JPEG"
 
-#: include/global_arrays.php:1673
+#: include/global_arrays.php:1676
 msgid "Inline GIF Image"
 msgstr "Ενσωματωμένη εικόνα GIF"
 
-#: include/global_arrays.php:1676
+#: include/global_arrays.php:1679
 msgid "Attached PNG Image"
 msgstr "Επισυναπτόμενη εικόνα PNG"
 
-#: include/global_arrays.php:1679
+#: include/global_arrays.php:1682
 msgid "Attached JPEG Image"
 msgstr "Εγγεγραμμένη εικόνα JPEG"
 
-#: include/global_arrays.php:1680
+#: include/global_arrays.php:1683
 msgid "Attached GIF Image"
 msgstr "Επισυνάπτεται εικόνα GIF"
 
-#: include/global_arrays.php:1684
+#: include/global_arrays.php:1687
 msgid "Inline PNG Image, LN Style"
 msgstr "Ενσωματωμένη εικόνα PNG, στυλ LN"
 
-#: include/global_arrays.php:1686
+#: include/global_arrays.php:1689
 msgid "Inline JPEG Image, LN Style"
 msgstr "Ενσωματωμένη εικόνα JPEG, στυλ LN"
 
-#: include/global_arrays.php:1687
+#: include/global_arrays.php:1690
 msgid "Inline GIF Image, LN Style"
 msgstr "Ενσωματωμένη εικόνα GIF, στυλ LN"
 
-#: include/global_arrays.php:1692
+#: include/global_arrays.php:1695
 msgid "Text"
 msgstr "Κείμενο"
 
-#: include/global_arrays.php:1693 include/global_form.php:2252
+#: include/global_arrays.php:1696 include/global_form.php:2252
 msgid "Tree"
 msgstr "Δέντρο"
 
-#: include/global_arrays.php:1696
+#: include/global_arrays.php:1699
 msgid "Horizontal Rule"
 msgstr "Οριζόντιος κανόνας"
 
-#: include/global_arrays.php:1700
+#: include/global_arrays.php:1703
 msgid "left"
 msgstr "αριστερά"
 
-#: include/global_arrays.php:1701
+#: include/global_arrays.php:1704
 msgid "center"
 msgstr "κέντρο"
 
-#: include/global_arrays.php:1702
+#: include/global_arrays.php:1705
 msgid "right"
 msgstr "δεξιά"
 
-#: include/global_arrays.php:1706
+#: include/global_arrays.php:1709
 msgid "Minute(s)"
 msgstr "Λεπτό(α)"
 
-#: include/global_arrays.php:1707
+#: include/global_arrays.php:1710
 msgid "Hour(s)"
 msgstr "Ώρα(ες)"
 
-#: include/global_arrays.php:1708
+#: include/global_arrays.php:1711
 msgid "Day(s)"
 msgstr "Ημέρα(ες)"
 
-#: include/global_arrays.php:1709
+#: include/global_arrays.php:1712
 msgid "Week(s)"
 msgstr "Εβδομάδα(ες) %s"
 
-#: include/global_arrays.php:1710
+#: include/global_arrays.php:1713
 msgid "Month(s), Day of Month"
 msgstr "Μήνας (-ες), ημέρα του μήνα"
 
-#: include/global_arrays.php:1711
+#: include/global_arrays.php:1714
 msgid "Month(s), Day of Week"
 msgstr "Μήνας (-ες), ημέρα της εβδομάδας"
 
-#: include/global_arrays.php:1712
+#: include/global_arrays.php:1715
 msgid "Year(s)"
 msgstr "Έτος(η)"
 
-#: include/global_arrays.php:1716
+#: include/global_arrays.php:1719
 msgid "Keep Graph Types"
 msgstr "Διατήρηση τύπων γραφημάτων"
 
-#: include/global_arrays.php:1717
+#: include/global_arrays.php:1720
 msgid "Keep Type and STACK"
 msgstr "Κρατήστε Τύπος και STACK"
 
-#: include/global_arrays.php:1718
+#: include/global_arrays.php:1721
 msgid "Convert to AREA/STACK Graph"
 msgstr "Μετατροπή σε γράφημα AREA / STACK"
 
-#: include/global_arrays.php:1719
+#: include/global_arrays.php:1722
 msgid "Convert to LINE1 Graph"
 msgstr "Μετατροπή σε γράφημα LINE1"
 
-#: include/global_arrays.php:1720
+#: include/global_arrays.php:1723
 msgid "Convert to LINE2 Graph"
 msgstr "Μετατροπή σε γράφημα LINE2"
 
-#: include/global_arrays.php:1721
+#: include/global_arrays.php:1724
 msgid "Convert to LINE3 Graph"
 msgstr "Μετατροπή σε γράφημα LINE3"
 
-#: include/global_arrays.php:1722
+#: include/global_arrays.php:1725
 msgid "Convert to LINE1/STACK Graph"
 msgstr "Μετατροπή σε γράφημα LINE1"
 
-#: include/global_arrays.php:1723
+#: include/global_arrays.php:1726
 msgid "Convert to LINE2/STACK Graph"
 msgstr "Μετατροπή σε γράφημα LINE2"
 
-#: include/global_arrays.php:1724
+#: include/global_arrays.php:1727
 msgid "Convert to LINE3/STACK Graph"
 msgstr "Μετατροπή σε γράφημα LINE3"
 
-#: include/global_arrays.php:1728
+#: include/global_arrays.php:1731
 msgid "No Totals"
 msgstr "Δεν σύνολα"
 
-#: include/global_arrays.php:1729
+#: include/global_arrays.php:1732
 msgid "Print All Legend Items"
 msgstr "Εκτυπώστε όλα τα στοιχεία Legend"
 
-#: include/global_arrays.php:1730
+#: include/global_arrays.php:1733
 msgid "Print Totaling Legend Items Only"
 msgstr "Εκτυπώστε συνολικά μόνο τα στοιχεία λεζάντων"
 
-#: include/global_arrays.php:1734
+#: include/global_arrays.php:1737
 msgid "Total Similar Data Sources"
 msgstr "Σύνολο παρόμοιων πηγών δεδομένων"
 
-#: include/global_arrays.php:1735
+#: include/global_arrays.php:1738
 msgid "Total All Data Sources"
 msgstr "Σύνολο όλων των πηγών δεδομένων"
 
-#: include/global_arrays.php:1739
+#: include/global_arrays.php:1742
 msgid "No Reordering"
 msgstr "Καμία αναδιάταξη"
 
-#: include/global_arrays.php:1740
+#: include/global_arrays.php:1743
 msgid "Data Source, Graph"
 msgstr "Πηγή δεδομένων, γράφημα"
 
-#: include/global_arrays.php:1741
+#: include/global_arrays.php:1744
 msgid "Graph, Data Source"
 msgstr "Γράφημα, Πηγή δεδομένων"
 
-#: include/global_arrays.php:1742
+#: include/global_arrays.php:1745
 msgid "Base Graph Order"
 msgstr "Έχει γραφήματα"
 
-#: include/global_arrays.php:1749
+#: include/global_arrays.php:1752
 msgid "contains"
 msgstr "περιέχει"
 
-#: include/global_arrays.php:1750
+#: include/global_arrays.php:1753
 msgid "does not contain"
 msgstr "δεν περιέχει"
 
-#: include/global_arrays.php:1751
+#: include/global_arrays.php:1754
 msgid "begins with"
 msgstr "αρχίζει με"
 
-#: include/global_arrays.php:1752
+#: include/global_arrays.php:1755
 msgid "does not begin with"
 msgstr "δεν αρχίζει με"
 
-#: include/global_arrays.php:1753
+#: include/global_arrays.php:1756
 msgid "ends with"
 msgstr "结束于"
 
-#: include/global_arrays.php:1754
+#: include/global_arrays.php:1757
 msgid "does not end with"
 msgstr "δεν τελειώνει με"
 
-#: include/global_arrays.php:1755
+#: include/global_arrays.php:1758
 msgid "matches"
 msgstr "ταξίδια"
 
-#: include/global_arrays.php:1756
+#: include/global_arrays.php:1759
 msgid "is not equal to"
 msgstr "δεν είναι ίσο με"
 
-#: include/global_arrays.php:1757
+#: include/global_arrays.php:1760
 msgid "is less than"
 msgstr "είναι μικρότερο από"
 
-#: include/global_arrays.php:1758
+#: include/global_arrays.php:1761
 msgid "is less than or equal"
 msgstr "είναι μικρότερη ή ίση"
 
-#: include/global_arrays.php:1759
+#: include/global_arrays.php:1762
 msgid "is greater than"
 msgstr "είναι μεγαλύτερο από"
 
-#: include/global_arrays.php:1760
+#: include/global_arrays.php:1763
 msgid "is greater than or equal"
 msgstr "είναι μεγαλύτερη ή ίση"
 
-#: include/global_arrays.php:1761
+#: include/global_arrays.php:1764
 msgid "is unknown"
 msgstr "Άγνωστο"
 
-#: include/global_arrays.php:1762
+#: include/global_arrays.php:1765
 msgid "is not unknown"
 msgstr "δεν είναι άγνωστο"
 
-#: include/global_arrays.php:1763
+#: include/global_arrays.php:1766
 msgid "is empty"
 msgstr "是空的"
 
-#: include/global_arrays.php:1764
+#: include/global_arrays.php:1767
 msgid "is not empty"
 msgstr "不是空的"
 
-#: include/global_arrays.php:1765
+#: include/global_arrays.php:1768
 msgid "matches regular expression"
 msgstr "ταιριάζει με κανονική έκφραση"
 
-#: include/global_arrays.php:1766
+#: include/global_arrays.php:1769
 msgid "does not match regular expression"
 msgstr "δεν ταιριάζει με την κανονική έκφραση"
 
-#: include/global_arrays.php:1868
+#: include/global_arrays.php:1871
 msgid "Fixed String"
 msgstr "Σταθερή ακολουθία"
 
-#: include/global_arrays.php:1873
+#: include/global_arrays.php:1876
 msgid "Every 1 Hour"
 msgstr "Κάθε 1 ώρα"
 
-#: include/global_arrays.php:1879
+#: include/global_arrays.php:1882
 msgid "Every Day"
 msgstr "Καθημερινά"
 
-#: include/global_arrays.php:1880
+#: include/global_arrays.php:1883
 msgid "Every Week"
 msgstr "Κάθε Εβδομάδα"
 
-#: include/global_arrays.php:1881 include/global_arrays.php:1882
+#: include/global_arrays.php:1884 include/global_arrays.php:1885
 #, php-format
 msgid "Every %d Weeks"
 msgstr "Κάθε% d εβδομάδες"
 
-#: include/global_arrays.php:1913
+#: include/global_arrays.php:1916
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr "Ιαν"
 
-#: include/global_arrays.php:1914
+#: include/global_arrays.php:1917
 msgctxt "A short textual representation of a month, three letters"
 msgid "Feb"
 msgstr "Φεβ"
 
-#: include/global_arrays.php:1915
+#: include/global_arrays.php:1918
 msgctxt "A short textual representation of a month, three letters"
 msgid "Mar"
 msgstr "Μαρ"
 
-#: include/global_arrays.php:1916
+#: include/global_arrays.php:1919
 msgctxt "A short textual representation of a month, three letters"
 msgid "Apr"
 msgstr "Απρ"
 
-#: include/global_arrays.php:1917
+#: include/global_arrays.php:1920
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Μάιος"
 
-#: include/global_arrays.php:1918
+#: include/global_arrays.php:1921
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Ιουν"
 
-#: include/global_arrays.php:1919
+#: include/global_arrays.php:1922
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jul"
 msgstr "Ιουλ"
 
-#: include/global_arrays.php:1920
+#: include/global_arrays.php:1923
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Αυγ"
 
-#: include/global_arrays.php:1921
+#: include/global_arrays.php:1924
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Σεπ"
 
-#: include/global_arrays.php:1922
+#: include/global_arrays.php:1925
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Οκτ"
 
-#: include/global_arrays.php:1923
+#: include/global_arrays.php:1926
 msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Νοε"
 
-#: include/global_arrays.php:1924
+#: include/global_arrays.php:1927
 msgctxt "A short textual representation of a month, three letters"
 msgid "Dec"
 msgstr "Δεκ"
 
-#: include/global_arrays.php:1928
+#: include/global_arrays.php:1931
 msgid "Use the First Handler Found"
 msgstr "Χρησιμοποιήστε το PHP GetText Handler"
 
-#: include/global_arrays.php:1932
+#: include/global_arrays.php:1935
 msgid "Use the PHP GetText Handler"
 msgstr "Χρησιμοποιήστε το PHP GetText Handler"
 
-#: include/global_arrays.php:1936
+#: include/global_arrays.php:1939
 msgid "Use the Oscarotero GetText Handler"
 msgstr "Χρησιμοποιήστε το Oscarotero GetText Handler"
 
-#: include/global_arrays.php:1940
+#: include/global_arrays.php:1943
 msgid "Use the MonoTranslator GetText Handler"
 msgstr "Χρησιμοποιήστε το MonoTranslator GetText Handler"
 
-#: include/global_arrays.php:1954
+#: include/global_arrays.php:1957
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Κυρ"
 
-#: include/global_arrays.php:1955
+#: include/global_arrays.php:1958
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "Δευ"
 
-#: include/global_arrays.php:1956
+#: include/global_arrays.php:1959
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "Τρι"
 
-#: include/global_arrays.php:1957
+#: include/global_arrays.php:1960
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "Τετ"
 
-#: include/global_arrays.php:1958
+#: include/global_arrays.php:1961
 msgctxt "A textual representation of a day, three letters"
 msgid "Thu"
 msgstr "Πεμ"
 
-#: include/global_arrays.php:1959
+#: include/global_arrays.php:1962
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "Παρ"
 
-#: include/global_arrays.php:1960
+#: include/global_arrays.php:1963
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "Σαβ"
 
-#: include/global_arrays.php:1964
+#: include/global_arrays.php:1967
 msgid "Arabic"
 msgstr "Αραβικά"
 
-#: include/global_arrays.php:1965
+#: include/global_arrays.php:1968
 msgid "Bulgarian"
 msgstr "Βουλγαρικά"
 
-#: include/global_arrays.php:1966
+#: include/global_arrays.php:1969
 msgid "Chinese (China)"
 msgstr "Κινέζικη (Κίνα)"
 
-#: include/global_arrays.php:1967
+#: include/global_arrays.php:1970
 msgid "Chinese (Taiwan)"
 msgstr "Κινέζικη (Taiwan)"
 
-#: include/global_arrays.php:1968
+#: include/global_arrays.php:1971
 msgid "Dutch"
 msgstr "Ολλανδικά"
 
-#: include/global_arrays.php:1969
+#: include/global_arrays.php:1972
 msgid "English"
 msgstr "Αγγλικά"
 
-#: include/global_arrays.php:1970
+#: include/global_arrays.php:1973
 msgid "French"
 msgstr "Γαλλικά"
 
-#: include/global_arrays.php:1971
+#: include/global_arrays.php:1974
 msgid "German"
 msgstr "Γερμανικά"
 
-#: include/global_arrays.php:1972
+#: include/global_arrays.php:1975
 msgid "Greek"
 msgstr "Ελληνικά"
 
-#: include/global_arrays.php:1973
+#: include/global_arrays.php:1976
 msgid "Hebrew"
 msgstr "Εβραϊκά"
 
-#: include/global_arrays.php:1974
+#: include/global_arrays.php:1977
 msgid "Hindi"
 msgstr "Χίντι"
 
-#: include/global_arrays.php:1975
+#: include/global_arrays.php:1978
 msgid "Italian"
 msgstr "Ιταλικά"
 
-#: include/global_arrays.php:1976
+#: include/global_arrays.php:1979
 msgid "Japanese"
 msgstr "Ιαπωνικά"
 
-#: include/global_arrays.php:1977
+#: include/global_arrays.php:1980
 msgid "Korean"
 msgstr "Κορεατικά"
 
-#: include/global_arrays.php:1978
+#: include/global_arrays.php:1981
 msgid "Polish"
 msgstr "Πολωνικά"
 
-#: include/global_arrays.php:1979
+#: include/global_arrays.php:1982
 msgid "Portuguese"
 msgstr "Πορτογαλικά"
 
-#: include/global_arrays.php:1980
+#: include/global_arrays.php:1983
 msgid "Portuguese (Brazil)"
 msgstr "Πορτογαλικά (Βραζιλία)"
 
-#: include/global_arrays.php:1981
+#: include/global_arrays.php:1984
 msgid "Russian"
 msgstr "Ρώσικα"
 
-#: include/global_arrays.php:1982
+#: include/global_arrays.php:1985
 msgid "Spanish"
 msgstr "Ισπανικά"
 
-#: include/global_arrays.php:1983
+#: include/global_arrays.php:1986
 msgid "Swedish"
 msgstr "Σουηδικά"
 
-#: include/global_arrays.php:1984
+#: include/global_arrays.php:1987
 msgid "Turkish"
 msgstr "Τούρκικα"
 
-#: include/global_arrays.php:1985
+#: include/global_arrays.php:1988
 msgid "Vietnamese"
 msgstr "Βιετναμέζικα"
 
-#: include/global_arrays.php:1989
+#: include/global_arrays.php:1992
 msgid "Classic"
 msgstr "Κλασικό"
 
-#: include/global_arrays.php:1990
+#: include/global_arrays.php:1993
 msgid "Modern"
 msgstr "Σύγχρονο"
 
-#: include/global_arrays.php:1991
+#: include/global_arrays.php:1994
 msgid "Dark"
 msgstr "Σκούρο"
 
-#: include/global_arrays.php:1992
+#: include/global_arrays.php:1995
 msgid "Paper-plane"
 msgstr "Χαρτί-αεροπλάνο"
 
-#: include/global_arrays.php:1993
+#: include/global_arrays.php:1996
 msgid "Paw"
 msgstr "Πόδι ζώου"
 
-#: include/global_arrays.php:1994
+#: include/global_arrays.php:1997
 msgid "Sunrise"
 msgstr "Sunrise"
 
-#: include/global_arrays.php:1998
+#: include/global_arrays.php:2001
 msgid "[Fail]"
 msgstr "Αποτυχία"
 
-#: include/global_arrays.php:1999
+#: include/global_arrays.php:2002
 msgid "[Warning]"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:"
 
-#: include/global_arrays.php:2000
+#: include/global_arrays.php:2003
 msgid "[Restart]"
 msgstr "Περιορισμένη"
 
-#: include/global_arrays.php:2001
+#: include/global_arrays.php:2004
 msgid "[Success]"
 msgstr "Επιτυχία!"
 
-#: include/global_arrays.php:2002
+#: include/global_arrays.php:2005
 msgid "[Skipped]"
 msgstr "[Παράλειψη]"
 
-#: include/global_arrays.php:2007 include/global_arrays.php:2013
+#: include/global_arrays.php:2010 include/global_arrays.php:2016
 msgid "User Profile (Edit)"
 msgstr "Προφίλ χρήστη (Επεξεργασία)"
 
-#: include/global_arrays.php:2025 include/global_arrays.php:2031
+#: include/global_arrays.php:2028 include/global_arrays.php:2034
 msgid "Tree Mode"
 msgstr "Δέντρο Mode"
 
-#: include/global_arrays.php:2037
+#: include/global_arrays.php:2040
 msgid "List Mode"
 msgstr "Λειτουργία λίστας"
 
-#: include/global_arrays.php:2069 include/global_arrays.php:2075
+#: include/global_arrays.php:2072 include/global_arrays.php:2078
 #: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Κονσόλα"
 
-#: include/global_arrays.php:2081
+#: include/global_arrays.php:2084
 msgid "Graph Management"
 msgstr "Διαχείριση γραφημάτων"
 
-#: include/global_arrays.php:2087 include/global_arrays.php:2129
-#: include/global_arrays.php:2147 include/global_arrays.php:2201
-#: include/global_arrays.php:2213 include/global_arrays.php:2225
-#: include/global_arrays.php:2237 include/global_arrays.php:2249
-#: include/global_arrays.php:2285 include/global_arrays.php:2303
-#: include/global_arrays.php:2321 include/global_arrays.php:2339
-#: include/global_arrays.php:2357 include/global_arrays.php:2381
-#: include/global_arrays.php:2417 include/global_arrays.php:2543
-#: include/global_arrays.php:2567 include/global_arrays.php:2591
-#: include/global_arrays.php:2609 include/global_arrays.php:2621
-#: include/global_arrays.php:2735 include/global_arrays.php:2759
-#: include/global_arrays.php:2777 include/global_arrays.php:2795
-#: include/global_arrays.php:2819
+#: include/global_arrays.php:2090 include/global_arrays.php:2132
+#: include/global_arrays.php:2150 include/global_arrays.php:2204
+#: include/global_arrays.php:2216 include/global_arrays.php:2228
+#: include/global_arrays.php:2240 include/global_arrays.php:2252
+#: include/global_arrays.php:2288 include/global_arrays.php:2306
+#: include/global_arrays.php:2324 include/global_arrays.php:2342
+#: include/global_arrays.php:2360 include/global_arrays.php:2384
+#: include/global_arrays.php:2420 include/global_arrays.php:2546
+#: include/global_arrays.php:2570 include/global_arrays.php:2594
+#: include/global_arrays.php:2612 include/global_arrays.php:2624
+#: include/global_arrays.php:2738 include/global_arrays.php:2762
+#: include/global_arrays.php:2780 include/global_arrays.php:2798
+#: include/global_arrays.php:2822
 msgid "(Edit)"
 msgstr "(Eπεξεργασία)"
 
-#: include/global_arrays.php:2099 include/global_arrays.php:2165
-#: include/global_arrays.php:2255 include/global_arrays.php:2291
-#: include/global_arrays.php:2309 include/global_arrays.php:2327
-#: include/global_arrays.php:2345 include/global_arrays.php:2375
-#: include/global_arrays.php:2411 include/global_arrays.php:2441
-#: include/global_arrays.php:2537 include/global_arrays.php:2741
-#: include/global_arrays.php:2765 include/global_arrays.php:2783
-#: include/global_arrays.php:2801 include/global_arrays.php:2825
+#: include/global_arrays.php:2102 include/global_arrays.php:2168
+#: include/global_arrays.php:2258 include/global_arrays.php:2294
+#: include/global_arrays.php:2312 include/global_arrays.php:2330
+#: include/global_arrays.php:2348 include/global_arrays.php:2378
+#: include/global_arrays.php:2414 include/global_arrays.php:2444
+#: include/global_arrays.php:2540 include/global_arrays.php:2744
+#: include/global_arrays.php:2768 include/global_arrays.php:2786
+#: include/global_arrays.php:2804 include/global_arrays.php:2828
 #: lib/api_automation.php:1290 lib/api_automation.php:1353
 #: lib/api_automation.php:1423 lib/html_reports.php:1792 plugins.php:606
 msgid "Actions"
 msgstr "Ενέργειες"
 
-#: include/global_arrays.php:2105 lib/api_aggregate.php:2373
+#: include/global_arrays.php:2108 lib/api_aggregate.php:2373
 msgid "Graph Items"
 msgstr "Στοιχεία γραφήματος"
 
-#: include/global_arrays.php:2111
+#: include/global_arrays.php:2114
 msgid "Create New Graphs"
 msgstr "Δημιουργία νέων γραφημάτων"
 
-#: include/global_arrays.php:2117
+#: include/global_arrays.php:2120
 msgid "Create Graphs from Data Query"
 msgstr "Δημιουργία γραφημάτων από το ερώτημα δεδομένων"
 
-#: include/global_arrays.php:2123
+#: include/global_arrays.php:2126
 msgid "GPRINT Presets"
 msgstr "Προεπιλογές GPRINT"
 
-#: include/global_arrays.php:2135 include/global_arrays.php:2153
-#: include/global_arrays.php:2273 include/global_arrays.php:2363
-#: include/global_arrays.php:2387 include/global_arrays.php:2549
+#: include/global_arrays.php:2138 include/global_arrays.php:2156
+#: include/global_arrays.php:2276 include/global_arrays.php:2366
+#: include/global_arrays.php:2390 include/global_arrays.php:2552
 msgid "(Remove)"
 msgstr "Αφαίρεση"
 
-#: include/global_arrays.php:2159
+#: include/global_arrays.php:2162
 msgid "CDEF Items"
 msgstr "Στοιχεία CDEF"
 
-#: include/global_arrays.php:2171 include/global_arrays.php:2177
-#: include/global_arrays.php:2183 include/global_arrays.php:2189
-#: include/global_arrays.php:2483
+#: include/global_arrays.php:2174 include/global_arrays.php:2180
+#: include/global_arrays.php:2186 include/global_arrays.php:2192
+#: include/global_arrays.php:2486
 msgid "View Log"
 msgstr "Προβολή αρχείου καταγραφής"
 
-#: include/global_arrays.php:2195
+#: include/global_arrays.php:2198
 msgid "Graph Trees"
 msgstr "Γράφημα δέντρα"
 
-#: include/global_arrays.php:2261 lib/api_aggregate.php:2373
+#: include/global_arrays.php:2264 lib/api_aggregate.php:2373
 msgid "Graph Template Items"
 msgstr "Στοιχεία πρότυπου γραφήματος"
 
-#: include/global_arrays.php:2351
+#: include/global_arrays.php:2354
 msgid "Round Robin Archives"
 msgstr "Αρχεία Round Robin"
 
-#: include/global_arrays.php:2393
+#: include/global_arrays.php:2396
 msgid "Data Input Fields"
 msgstr "Πεδία εισαγωγής δεδομένων"
 
-#: include/global_arrays.php:2399 include/global_arrays.php:2429
+#: include/global_arrays.php:2402 include/global_arrays.php:2432
 msgid "(Remove Item)"
 msgstr "(Κατάργηση στοιχείου)"
 
-#: include/global_arrays.php:2435 include/global_settings.php:310
+#: include/global_arrays.php:2438 include/global_settings.php:310
 #: rrdcleaner.php:321
 msgid "RRD Cleaner"
 msgstr "RRD Cleaner"
 
-#: include/global_arrays.php:2447
+#: include/global_arrays.php:2450
 msgid "List unused Files"
 msgstr "Λίστα αχρησιμοποίητων αρχείων"
 
-#: include/global_arrays.php:2453
+#: include/global_arrays.php:2456
 msgid "RRD Check"
 msgstr "Εκτέλεση ελέγχου"
 
-#: include/global_arrays.php:2465 include/global_arrays.php:2477
+#: include/global_arrays.php:2468 include/global_arrays.php:2480
 #: utilities.php:2395
 msgid "View Poller Cache"
 msgstr "Προβολή πολικής προσωρινής αποθήκευσης"
 
-#: include/global_arrays.php:2471 utilities.php:2399
+#: include/global_arrays.php:2474 utilities.php:2399
 msgid "View Data Query Cache"
 msgstr "Προβολή δεδομένων προσωρινής αποθήκευσης ερωτήματος δεδομένων"
 
-#: include/global_arrays.php:2489
+#: include/global_arrays.php:2492
 msgid "Clear Log"
 msgstr "Διαγραφή αρχείου καταγραφής"
 
-#: include/global_arrays.php:2495 utilities.php:2388
+#: include/global_arrays.php:2498 utilities.php:2388
 msgid "View User Log"
 msgstr "Δείτε το αρχείο καταγραφής χρήστη"
 
-#: include/global_arrays.php:2501
+#: include/global_arrays.php:2504
 msgid "Clear User Log"
 msgstr "Εκκαθάριση αρχείου καταγραφής χρήστη"
 
-#: include/global_arrays.php:2507 utilities.php:2379 utilities.php:2380
+#: include/global_arrays.php:2510 utilities.php:2379 utilities.php:2380
 msgid "Technical Support"
 msgstr "Τεχνική υποστήριξη"
 
-#: include/global_arrays.php:2513 utilities.php:2570
+#: include/global_arrays.php:2516 utilities.php:2570
 msgid "Boost Status"
 msgstr "Κατάσταση ενίσχυσης"
 
-#: include/global_arrays.php:2519 utilities.php:2454
+#: include/global_arrays.php:2522 utilities.php:2454
 msgid "View SNMP Agent Cache"
 msgstr "Προβολή SNMP Agent Cache"
 
-#: include/global_arrays.php:2525 utilities.php:2465
+#: include/global_arrays.php:2528 utilities.php:2465
 msgid "View SNMP Agent Notification Log"
 msgstr "Προβολή αρχείου καταγραφής ειδοποιήσεων παραμέτρων παραμέτρων SNMP"
 
-#: include/global_arrays.php:2555
+#: include/global_arrays.php:2558
 msgid "VDEF Items"
 msgstr "Στοιχεία VDEF"
 
-#: include/global_arrays.php:2561
+#: include/global_arrays.php:2564
 msgid "View SNMP Notification Receivers"
 msgstr "Δείτε τους δέκτες ειδοποίησης SNMP"
 
-#: include/global_arrays.php:2573
+#: include/global_arrays.php:2576
 msgid "Kadupul Settings"
 msgstr "Ρυθμίσεις Kadupul"
 
-#: include/global_arrays.php:2579
+#: include/global_arrays.php:2582
 msgid "External Link"
 msgstr "Εξωτερική σύνδεση"
 
-#: include/global_arrays.php:2597 include/global_arrays.php:2627
+#: include/global_arrays.php:2600 include/global_arrays.php:2630
 msgid "(Action)"
 msgstr "Ενέργεια:"
 
-#: include/global_arrays.php:2633 lib/html.php:2919
+#: include/global_arrays.php:2636 lib/html.php:2919
 msgid "About Kadupul"
 msgstr "Σχετικά με το Kadupul"
 
-#: include/global_arrays.php:2639
+#: include/global_arrays.php:2642
 msgid "Kadupul Help"
 msgstr "Kadupul Home"
 
-#: include/global_arrays.php:2651
+#: include/global_arrays.php:2654
 msgid "Export Results"
 msgstr "Εξαγωγή Αποτελεσμάτων"
 
-#: include/global_arrays.php:2669 include/global_arrays.php:2699
+#: include/global_arrays.php:2672 include/global_arrays.php:2702
 #: lib/html.php:1963 lib/html.php:2037
 msgid "Reporting"
 msgstr "Αναφορές"
 
-#: include/global_arrays.php:2675 include/global_arrays.php:2705
+#: include/global_arrays.php:2678 include/global_arrays.php:2708
 msgid "Report Add"
 msgstr "Προσθήκη αναφοράς"
 
-#: include/global_arrays.php:2681 include/global_arrays.php:2711
+#: include/global_arrays.php:2684 include/global_arrays.php:2714
 msgid "Report Delete"
 msgstr "Αναφορά διαγραφής"
 
-#: include/global_arrays.php:2687 include/global_arrays.php:2717
+#: include/global_arrays.php:2690 include/global_arrays.php:2720
 msgid "Report Edit"
 msgstr "Επεξεργασία αναφοράς"
 
-#: include/global_arrays.php:2693 include/global_arrays.php:2723
+#: include/global_arrays.php:2696 include/global_arrays.php:2726
 msgid "Report Edit Item"
 msgstr "Αναφορά επεξεργασίας στοιχείου"
 
-#: include/global_arrays.php:2729
+#: include/global_arrays.php:2732
 msgid "Color Templates"
 msgstr "Πρότυπα χρωμάτων"
 
-#: include/global_arrays.php:2747
+#: include/global_arrays.php:2750
 msgid "Color Template Items"
 msgstr "Στοιχεία πρότυπου χρώματος"
 
-#: include/global_arrays.php:2807
+#: include/global_arrays.php:2810
 msgid "Graph Rule Items"
 msgstr "Στοιχεία κανόνων γραφήματος"
 
-#: include/global_arrays.php:2831
+#: include/global_arrays.php:2834
 msgid "Tree Rule Items"
 msgstr "Στοιχεία διασταύρωσης"
 
-#: include/global_arrays.php:2862 include/global_arrays.php:2878
+#: include/global_arrays.php:2865 include/global_arrays.php:2881
 #: lib/api_device.php:2070
 msgid "days"
 msgstr "ημέρες"
 
-#: include/global_arrays.php:2863
+#: include/global_arrays.php:2866
 msgid "hrs"
 msgstr "ώρες"
 
-#: include/global_arrays.php:2864
+#: include/global_arrays.php:2867
 msgid "mins"
 msgstr "λεπτά"
 
-#: include/global_arrays.php:2865
+#: include/global_arrays.php:2868
 msgid "secs"
 msgstr "δευτερόλεπτα"
 
-#: include/global_arrays.php:2879 lib/api_device.php:2070
+#: include/global_arrays.php:2882 lib/api_device.php:2070
 msgid "hours"
 msgstr "ώρες"
 
-#: include/global_arrays.php:2880 lib/api_device.php:2070
+#: include/global_arrays.php:2883 lib/api_device.php:2070
 msgid "minutes"
 msgstr "λεπτά"
 
-#: include/global_arrays.php:2881
+#: include/global_arrays.php:2884
 msgid "seconds"
 msgstr "δευτερόλεπτα"
 
@@ -11508,7 +11513,7 @@ msgid "Recovering"
 msgstr "αναληπτικό"
 
 #: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:401 lib/plugins.php:1393
+#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
@@ -13673,7 +13678,7 @@ msgstr "Εκδηλώσεις"
 msgid "Send Report"
 msgstr "Αποστολή αναφοράς"
 
-#: lib/html_reports.php:1644 lib/import.php:2960 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
 msgid "[new]"
 msgstr "[νέος]"
 
@@ -13912,117 +13917,117 @@ msgstr "Σφάλμα επικύρωσης για μεταβλητή %s με τι
 msgid "Validation Error"
 msgstr "Σφάλμα επικύρωσης"
 
-#: lib/import.php:328
+#: lib/import.php:332
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
 msgstr ""
 
-#: lib/import.php:709
+#: lib/import.php:713
 msgid "kept"
 msgstr ""
 
-#: lib/import.php:726 lib/import.php:745
+#: lib/import.php:730 lib/import.php:749
 msgid "written"
 msgstr "γραπτός"
 
-#: lib/import.php:728
+#: lib/import.php:732
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:731
+#: lib/import.php:735
 msgid "could not open"
 msgstr "δεν μπορούσε να ανοίξει"
 
-#: lib/import.php:737
+#: lib/import.php:741
 msgid "not exists"
 msgstr "δεν υπάρχει"
 
-#: lib/import.php:740
+#: lib/import.php:744
 msgid "not writable"
 msgstr "Εγγράψιμος"
 
-#: lib/import.php:1973 lib/import.php:1994
+#: lib/import.php:2047 lib/import.php:2068
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Γράφημα [Πρότυπο: %s]"
 
-#: lib/import.php:2008 lib/import.php:2020
+#: lib/import.php:2082 lib/import.php:2094
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Ερώτημα δεδομένων [ %s]"
 
-#: lib/import.php:2657
+#: lib/import.php:2731
 msgid "Unknown Field"
 msgstr "Άγνωστο πεδίο"
 
-#: lib/import.php:2873
+#: lib/import.php:2947
 msgid "Updated"
 msgstr "Ενημέρωση"
 
-#: lib/import.php:2877
+#: lib/import.php:2951
 msgid "Damaged"
 msgstr "Πηγή δεδομένων, γράφημα"
 
-#: lib/import.php:2879 package_import.php:637
+#: lib/import.php:2953 package_import.php:637
 msgid "Unchanged"
 msgstr "Καμία αλλαγή"
 
-#: lib/import.php:2915
+#: lib/import.php:2989
 msgid "Import Preview Results"
 msgstr "Εισαγωγή προεπισκόπησης"
 
-#: lib/import.php:2915
+#: lib/import.php:2989
 msgid "Import Results"
 msgstr "Εισαγωγή Αποτελεσμάτων"
 
-#: lib/import.php:2919
+#: lib/import.php:2993
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Ο Kadupul θα πραγματοποιήσει τις ακόλουθες αλλαγές εάν εισήχθη το πακέτο:"
 
-#: lib/import.php:2921
+#: lib/import.php:2995
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Ο Kadupul εισήγαγε τα παρακάτω στοιχεία για τη Συσκευασία:"
 
-#: lib/import.php:2924
+#: lib/import.php:2998
 msgid "Package Files"
 msgstr "Αρχεία πακέτων"
 
-#: lib/import.php:2928
+#: lib/import.php:3002
 msgid "[preview] "
 msgstr "Προεπισκόπηση"
 
-#: lib/import.php:2933
+#: lib/import.php:3007
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Ο Kadupul θα πραγματοποιήσει τις παρακάτω αλλαγές εάν το Πρότυπο εισήχθη:"
 
-#: lib/import.php:2935
+#: lib/import.php:3009
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Ο Kadupul εισήγαγε τα ακόλουθα στοιχεία για το Πρότυπο:"
 
-#: lib/import.php:2950
+#: lib/import.php:3024
 msgid "[success]"
 msgstr "Επιτυχία!"
 
-#: lib/import.php:2952
+#: lib/import.php:3026
 msgid "[fail]"
 msgstr "Αποτυχία"
 
-#: lib/import.php:2954
+#: lib/import.php:3028
 msgid "[preview]"
 msgstr "Προεπισκόπηση"
 
-#: lib/import.php:2958
+#: lib/import.php:3032
 msgid "[updated]"
 msgstr "Ενημερώθηκε"
 
-#: lib/import.php:2962
+#: lib/import.php:3036
 msgid "[unchanged]"
 msgstr "Καμία αλλαγή"
 
-#: lib/import.php:2998
+#: lib/import.php:3072
 msgid "Found Dependency:"
 msgstr "Βρήκε Εξάρτηση:"
 
-#: lib/import.php:3000
+#: lib/import.php:3074
 msgid "Unmet Dependency:"
 msgstr "Εξατομικευμένη εξάρτηση:"
 

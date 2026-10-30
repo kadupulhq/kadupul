@@ -13,6 +13,7 @@
       <file>Unit/Security/WhitelistExecutionTest.php</file>
       <file>Unit/Security/AggregateItemQueryTest.php</file>
       <file>Unit/Security/ImportPreviewOutputTest.php</file>
+      <file>Unit/Security/ImportDataSourceItemValidationTest.php</file>
       <file>Unit/Security/FormOutputEncodingTest.php</file>
       <file>Unit/Security/GraphsNewFilterInputTest.php</file>
       <file>Unit/Security/ImportPreviewDifferenceNamesTest.php</file>
