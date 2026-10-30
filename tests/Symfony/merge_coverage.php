@@ -739,6 +739,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Legacy/PermissionDeniedRuntime.php',
         'src/Platform/Infrastructure/Symfony/Controller/PermissionDeniedController.php',
         'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',
+        'src/Platform/Infrastructure/Legacy/LegacyBrowserWorkerRunner.php',
         'src/Platform/Infrastructure/Legacy/ConsoleExtensionRuntime.php',
         'src/Platform/Infrastructure/Legacy/ConsoleInstallation.php',
         'src/Platform/Infrastructure/Symfony/Controller/ConsoleHomeController.php',
