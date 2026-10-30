@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 6151,
-        "end_line": 6201,
-        "line_count": 51,
+        "end_line": 6198,
+        "line_count": 48,
         "signature": {
             "parameters": [
                 {
@@ -69,7 +69,7 @@
         "docblock": false,
         "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
         "body": {
-            "uses_global": ["config"],
+            "uses_global": ["cacti_locale", "config"],
             "static_variables": [],
             "superglobals": [],
             "session": {"references": 0, "keys": []},

@@ -3,8 +3,8 @@
     "name": "get_validated_language",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7754,
-        "end_line": 7761,
+        "start_line": 7751,
+        "end_line": 7758,
         "line_count": 8,
         "signature": {
             "parameters": [

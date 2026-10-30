@@ -3,8 +3,8 @@
     "name": "log_client_addr_proxy_diagnostic",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7860,
-        "end_line": 7869,
+        "start_line": 7857,
+        "end_line": 7866,
         "line_count": 10,
         "signature": {"parameters": [], "return_type": "void", "returns_reference": false},
         "docblock": true,

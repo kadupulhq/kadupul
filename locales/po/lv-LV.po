@@ -795,7 +795,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Lūdzu, ievadiet savu jauno Kadupul paroli."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6240
+#: include/global_settings.php:1851 lib/functions.php:6237
 msgid "Username"
 msgstr "Lietotājvārds"
 
@@ -887,7 +887,7 @@ msgstr "Lietotāja autorizēšanās"
 msgid "Enter your Username and Password below"
 msgstr "Zemāk ievadiet savu lietotājvārdu un paroli"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6238
 msgid "Password"
 msgstr "Parole"
 
@@ -1195,7 +1195,7 @@ msgstr "Iztīrīt atklātās ierīces"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
+#: data_debug.php:698 lib/functions.php:6596 lib/functions.php:6601
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2187,7 +2187,7 @@ msgstr "Versija"
 msgid "Community"
 msgstr "Kopiena"
 
-#: automation_snmp.php:543 lib/functions.php:6236
+#: automation_snmp.php:543 lib/functions.php:6233
 msgid "Port"
 msgstr "Ports"
 
@@ -2397,8 +2397,8 @@ msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei
 msgid "No Tree Rules Found"
 msgstr "Koku noteikumi netika atrasti"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
-#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6741 lib/functions.php:6816
+#: lib/functions.php:6919 lib/functions.php:7609 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3452,7 +3452,7 @@ msgstr "Šai datu veidnei piešķirtais nosaukums. Lūdzu, ņemiet vērā, ka di
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6232 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Ierīce"
@@ -3811,7 +3811,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul aptaujātajs vēl nav bijis palaists."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8312 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Atļauja liegta"
 
@@ -4774,12 +4774,12 @@ msgstr "FATAL: Jums ir jāpiesakās, lai piekļūtu šim Kadupul apgabalam."
 msgid "Login Again"
 msgstr "Pieteikties vēlreiz"
 
-#: include/auth.php:317 lib/functions.php:8316
+#: include/auth.php:317 lib/functions.php:8313
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Ja jūtat, ka tā ir kļūda. Lūdzu, sazinieties ar savu Kadupul administratoru."
 
-#: include/auth.php:317 lib/functions.php:8316
+#: include/auth.php:317 lib/functions.php:8313
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Jums nav atļauts piekļūt šai Kadupul sadaļai."
@@ -8667,8 +8667,8 @@ msgstr "Dati"
 msgid "Visual"
 msgstr "Vizuāli"
 
-#: include/global_settings.php:112 lib/functions.php:6239
-#: lib/functions.php:6244
+#: include/global_settings.php:112 lib/functions.php:6236
+#: lib/functions.php:6241
 msgid "Authentication"
 msgstr "Autentifikācija"
 
@@ -8704,11 +8704,11 @@ msgstr "Grafika fonti"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() funkcija"
 
-#: include/global_settings.php:153 lib/functions.php:6220
+#: include/global_settings.php:153 lib/functions.php:6217
 msgid "Sendmail"
 msgstr "Nosūtīt pastu"
 
-#: include/global_settings.php:154 lib/functions.php:6226
+#: include/global_settings.php:154 lib/functions.php:6223
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10569,7 +10569,7 @@ msgstr "Šis ir tas, cik rakstzīmju būs atļauts, pirms e-pasta rindiņa tiek 
 msgid "Sendmail Options"
 msgstr "Sendmail opcijas"
 
-#: include/global_settings.php:1972 lib/functions.php:6220
+#: include/global_settings.php:1972 lib/functions.php:6217
 msgid "Sendmail Path"
 msgstr "Sendmail ceļš"
 
@@ -11793,8 +11793,8 @@ msgstr "Atrašanās vieta:"
 msgid "Contact:"
 msgstr "Kontaktinformācija:"
 
-#: lib/api_device.php:2104 lib/functions.php:6253 lib/functions.php:6255
-#: lib/functions.php:6259
+#: lib/api_device.php:2104 lib/functions.php:6250 lib/functions.php:6252
+#: lib/functions.php:6256
 msgid "Ping Results"
 msgstr "Ping rezultāti"
 
@@ -12622,118 +12622,108 @@ msgstr "Kopēt"
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Pasta sūtītāja kļūda: nav iestatīta adresāta adrese!<br> Ja izmantojat saiti <i>Test Mail</i> , lūdzu, iestatiet <b>brīdinājuma e-pasta</b> iestatījumu."
 
-#: lib/functions.php:6183
-#, php-format
-msgid "Authentication failed: %s"
-msgstr "Autentifikācija neizdevās: %s"
-
-#: lib/functions.php:6187
+#: lib/functions.php:6188
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO neizdevās: %s"
 
-#: lib/functions.php:6190
-#, php-format
-msgid "Connect failed: %s"
-msgstr "Neizdevās izveidot savienojumu: %s"
-
-#: lib/functions.php:6193
+#: lib/functions.php:6191
 msgid "SMTP error: "
 msgstr "SMTP kļūda: "
 
-#: lib/functions.php:6207
+#: lib/functions.php:6204
 #, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Šis ir testa ziņojums, kas ģenerēts no Kadupul. Šis ziņojums tika nosūtīts, lai pārbaudītu jūsu pasta iestatījumu konfigurāciju."
 
-#: lib/functions.php:6208
+#: lib/functions.php:6205
 msgid "Your email settings are currently set as follows"
 msgstr "Jūsu e-pasta iestatījumi pašlaik ir iestatīti šādi"
 
-#: lib/functions.php:6209
+#: lib/functions.php:6206
 msgid "Method"
 msgstr "Metode"
 
-#: lib/functions.php:6211
+#: lib/functions.php:6208
 msgid "Checking Configuration...<br>"
 msgstr "Notiek konfigurācijas pārbaude...<br>"
 
-#: lib/functions.php:6218
+#: lib/functions.php:6215
 msgid "PHP's Mailer Class"
 msgstr "PHP pasta klase"
 
-#: lib/functions.php:6224
+#: lib/functions.php:6221
 msgid "Method: SMTP"
 msgstr "Metode: SMTP"
 
-#: lib/functions.php:6241
+#: lib/functions.php:6238
 msgid "Not Shown for Security Reasons"
 msgstr "Nav parādīts drošības apsvērumu dēļ"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6239
 msgid "Security"
 msgstr "Drošība"
 
-#: lib/functions.php:6250
+#: lib/functions.php:6247
 msgid "Ping Results:"
 msgstr "Ping rezultāti:"
 
-#: lib/functions.php:6250 lib/functions.php:6255
+#: lib/functions.php:6247 lib/functions.php:6252
 msgid "Success"
 msgstr "Izpildīts"
 
-#: lib/functions.php:6259
+#: lib/functions.php:6256
 msgid "Bypassed"
 msgstr "Apbraukts"
 
-#: lib/functions.php:6268
+#: lib/functions.php:6265
 msgid "Creating Message Text..."
 msgstr "Notiek ziņojuma teksta izveide..."
 
-#: lib/functions.php:6271
+#: lib/functions.php:6268
 msgid "Sending Message..."
 msgstr "Notiek ziņas sūtīšana..."
 
-#: lib/functions.php:6275
+#: lib/functions.php:6272
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul testa ziņojums"
 
-#: lib/functions.php:6277
+#: lib/functions.php:6274
 msgid "Success!"
 msgstr "Izdevās!"
 
-#: lib/functions.php:6280
+#: lib/functions.php:6277
 msgid "Message Not Sent due to ping failure."
 msgstr "Ziņojums nav nosūtīts ping kļūmes dēļ."
 
-#: lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6741 lib/functions.php:6816
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul atspējoja spraudni %s šādas kļūdas dēļ: %s! Plašāku informāciju skatiet Kadupul žurnālfailā."
 
-#: lib/functions.php:6922
+#: lib/functions.php:6919
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "BRĪDINĀJUMS: PollerID:%s ir nederīgs resursdatora nosaukums:%s.  Vai tas nav sasniedzams, izmantojot DNS!"
 
-#: lib/functions.php:7375 lib/functions.php:7377
+#: lib/functions.php:7372 lib/functions.php:7374
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7372 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Versija %s %s"
 
-#: lib/functions.php:7377
+#: lib/functions.php:7374
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7612
+#: lib/functions.php:7609
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "BRĪDINĀJUMS: trūkst atslēgas Kadupul iekļaut failu %s.  Lūdzu, atrodiet un aizstājiet šo failu"

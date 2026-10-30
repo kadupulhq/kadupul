@@ -6150,52 +6150,49 @@ function create_emailtext($e)
 
 function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure = 'none')
 {
-    global $config;
+    global $config, $cacti_locale;
 
     require_once($config['include_path'] . '/vendor/phpmailer/src/Exception.php');
     require_once($config['include_path'] . '/vendor/phpmailer/src/PHPMailer.php');
     require_once($config['include_path'] . '/vendor/phpmailer/src/SMTP.php');
 
-    //Create a new SMTP instance
-    $smtp = new PHPMailer\PHPMailer\SMTP;
+    $mail = new PHPMailer\PHPMailer\PHPMailer;
+    $mail->isSMTP();
+    $mail->Host = $host;
+    $mail->Port = $port;
+    $mail->Timeout = $timeout;
+    $mail->SMTPAuth = $user != '';
+    $mail->Username = $user;
+    $mail->Password = $password;
+    $language = explode('-', $cacti_locale ?? 'en-US');
+    PHPMailer\PHPMailer\PHPMailer::setLanguage($language[0], $config['include_path'] . '/vendor/phpmailer/language/');
 
     if (!empty($secure) && $secure != 'none') {
+        $mail->SMTPSecure = $secure == 'tls' ? $mail::ENCRYPTION_STARTTLS : $mail::ENCRYPTION_SMTPS;
         if (substr_count($host, ':') == 0) {
-            $host = $secure . '://' . $host;
+            $mail->Host = $secure . '://' . $host;
         }
+    } else {
+        $mail->SMTPAutoTLS = false;
+        $mail->SMTPSecure = false;
     }
-
-    //Enable connection-level debug output
-    $smtp->do_debug = 0;
-    //$smtp->do_debug = SMTP::DEBUG_LOWLEVEL;
 
     $results = true;
     try {
-        //Connect to an SMTP server
-        if ($smtp->connect($host, $port, $timeout)) {
-            //Say hello
-            if ($smtp->hello(gethostbyname(gethostname()))) { //Put your host name in here
-                //Authenticate
-                if ($user != '') {
-                    if ($smtp->authenticate($user, $password)) {
-                        $results = true;
-                    } else {
-                        throw new Exception(__('Authentication failed: %s', $smtp->getLastReply()));
-                    }
-                }
-            } else {
-                throw new Exception(__('HELO failed: %s', $smtp->getLastReply()));
-            }
-        } else {
-            throw new Exception(__('Connect failed: %s', $smtp->getLastReply()));
+        // Share the sender's STARTTLS, certificate, authentication and host parsing.
+        if (!$mail->smtpConnect()) {
+            throw new Exception($mail->ErrorInfo);
+        }
+        // smtpConnect() can return true after a rejected greeting without auth.
+        if ($mail->getSMTPInstance()->getServerExtList() === null) {
+            throw new Exception(__('HELO failed: %s', $mail->getSMTPInstance()->getLastReply()));
         }
     } catch (Exception $e) {
         $results = __('SMTP error: ') . $e->getMessage();
         cacti_log($results);
+    } finally {
+        $mail->smtpClose();
     }
-
-    //Whatever happened, close the connection.
-    $smtp->quit(true);
 
     return $results;
 }

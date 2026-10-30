@@ -3,8 +3,8 @@
     "name": "is_ipaddress",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7296,
-        "end_line": 7318,
+        "start_line": 7293,
+        "end_line": 7315,
         "line_count": 23,
         "signature": {
             "parameters": [

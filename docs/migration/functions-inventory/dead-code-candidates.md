@@ -67,7 +67,6 @@ or deprecating anything. Do not remove a function on the count alone.
 | `cacti_browser_zone_set` | 2 | 0 | 1 | 0 | Platform/Domain/Time |
 | `clog_authorized` | 2 | 1 | 1 | 0 | IdentityAccess |
 | `get_execution_user` | 2 | 1 | 1 | 0 | Platform/Application/Port/Filesystem |
-| `get_md5_hash` | 2 | 0 | 1 | 0 | Navigation |
 | `get_message_max_type` | 2 | 0 | 1 | 0 | Platform/Application/Port/FlashMessages |
 | `get_rrd_cfs` | 2 | 0 | 1 | 0 | Graphing/Domain |
 | `get_uptime` | 2 | 2 | 1 | 0 | Platform/Domain/Time |
@@ -79,6 +78,7 @@ or deprecating anything. Do not remove a function on the count alone.
 | `send_mail` | 2 | 1 | 1 | 0 | Alerting/Application/Port/MailSender |
 | `clog_admin` | 2 | 2 | 2 | 0 | IdentityAccess |
 | `check_changed` | 2 | 1 | 3 | 0 | legacy-retained |
+| `get_md5_hash` | 2 | 0 | 3 | 0 | Navigation |
 | `get_default_contextoption` | 2 | 0 | 4 | 0 | Platform/Presentation/Http |
 | `get_format_message_instance` | 2 | 0 | 4 | 0 | Platform/Application/Port/FlashMessages |
 | `get_selective_log_level` | 2 | 1 | 4 | 0 | Platform/Infrastructure/Legacy |
@@ -94,4 +94,4 @@ or deprecating anything. Do not remove a function on the count alone.
 | `graph_font_size` | 2 | 1 | 12 | 0 | Graphing/Domain |
 | `clear_user_setting` | 2 | 0 | 15 | 0 | Platform/Application/Port/UserSettings |
 | `debounce_claim_notification` | 2 | 2 | 16 | 0 | Inventory/Application |
-| `get_include_relpath` | 2 | 0 | 21 | 0 | Platform/Application/Port/Filesystem |
+| `get_include_relpath` | 2 | 0 | 23 | 0 | Platform/Application/Port/Filesystem |
