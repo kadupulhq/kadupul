@@ -72,7 +72,8 @@ cmd_exec	./lib/poller.php:66	 * @param  (resource) $proc_fd - the file descripto
 cmd_exec	./lib/rrd.php:120			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 cmd_exec	./lib/rrd.php:153		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:1670						$fp = popen($rrdtool_cmd, 'r');
-cmd_exec	./lib/rrd.php:808				$process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptorspec, $pipes);
+cmd_exec	./lib/rrd.php:823					$process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptorspec, $pipes);
+cmd_exec	./lib/rrd_windows_process.php:44			$process = proc_open($command, [0 => $stdin, 1 => $stdout], $pipes);
 cmd_exec	./lib/rrdcheck.php:806		$process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:277			exec(snmp_exec_prefix() . $command, $snmp_value);
 cmd_exec	./lib/snmp.php:377			exec(snmp_exec_prefix() . $command, $snmp_value);

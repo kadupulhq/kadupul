@@ -62,6 +62,12 @@ jobs:
           if ($observed.quoted -cne '""' -or $observed.arguments.Count -ne 3 -or $observed.arguments[0] -cne 'before' -or $observed.arguments[1] -cne '' -or $observed.arguments[2] -cne 'tail') {
             throw 'The empty argument was lost or later arguments shifted'
           }
+      - name: Verify bounded Windows RRDtool execution
+        shell: pwsh
+        timeout-minutes: 3
+        run: |
+          php tests/integration/rrd_windows_oneshot.php --native-windows
+          if ($LASTEXITCODE -ne 0) { throw 'RRDtool Windows execution regression failed' }
       - name: Verify a writable directory with the read-only attribute
         shell: pwsh
         run: |
