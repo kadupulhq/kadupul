@@ -1708,6 +1708,80 @@ Known differences from `cli/add_perms.php`:
 - `--list-groups` still prints `This option has not yet been implemented` and
   lists nothing; under `bin/console` it fails with exit 1.
 
+`php bin/console kadupul:graph:reapply-titles --host-id=<all|0|id,id,...>`
+reapplies the suggested graph titles to existing graphs and refreshes their
+cached titles. It runs the same `api_reapply_suggested_graph_title()` and
+`update_graph_title_cache()` the web uses, in a worker that takes up to 500
+graphs a time, so plugin hooks are unchanged. `--filter=<text>` keeps graphs
+whose title or graph template name contains it. It needs the Console Access
+and Graphs realms, the realm `graphs.php` requires. `--dry-run` lists the
+graphs and renames none. `--json` prints `status`, `database`, `dry_run`,
+`selected`, `reapplied` and `graphs`, the local graph ids.
+
+Known differences from `cli/poller_graphs_reapply_names.php`:
+
+- It needs an operator with the Console Access and Graphs realms, checked on
+  the database it works on, and the run is audited. The original ran for anyone
+  who could run it.
+- The filter is bound as a parameter. The original put it inside the SQL text,
+  so a quote broke the query. `%` and `_` in the filter are still wildcards.
+- Graphs are taken in local graph id order. The original had no ordering.
+- With `--debug`, the lines for each graph print after its batch has run, not
+  around each rename. The text of the lines is unchanged.
+- An invalid flag prints the error and help without the version line.
+- The selector error `Specify --host-id=all ...` still goes to standard error
+  and exits 1. Under `bin/console` an invalid `--host-id` exits 2.
+
+`php bin/console kadupul:graph:repair-items --graph-template-id=<id> --data-template-id=<id>`
+points graph items back at the RRD item of their device's data source: for
+each graph of the template, the items that follow the data template but name
+another RRD item. `--host-id=<id>` limits it to one device. Without `--execute`
+it only reports; `--show-sql` prints the `UPDATE` for each graph. It needs the
+Console Access and Graphs realms, and an executed run is audited. `--json`
+prints `status`, `database`, `executed`, `checked`, `repointed` and `entries`.
+
+Known differences from `cli/repair_graphs.php`:
+
+- It needs an operator with the Console Access and Graphs realms, checked on
+  the database it works on. The original ran for anyone who could run it.
+- The ids are bound and must be whole numbers; spaces around one are trimmed.
+  The original accepted anything `is_numeric()` did, so `1.5` or `1e3` ran and
+  matched nothing. Those now print the same error as any other bad id.
+- A data template with several RRD items makes the server refuse the
+  original's scalar subquery. The original treated that as no wrong items and
+  went on; the command stops with `Graph repair failed` and exit 1.
+- A device's data source is looked up once, and the first data source and RRD
+  item are the lowest ids. The original took whichever the server returned first.
+- An invalid flag prints the error and help without the version line. `--help`
+  and a run with no mode print the help without it, as the original did.
+- Under `bin/console` a run without `--execute` reports and exits 0. The shim
+  keeps the original, which printed the help when neither `--execute` nor
+  `--show-sql` was given.
+
+`php bin/console kadupul:graph:remove-broken` reports the graphs that have an
+item pointing at a missing data source, by graph template, and with `--remove`
+removes them through `api_delete_graphs()` in a worker, with the delete-data-
+sources option the original used, so the data sources those graphs still
+reference are deleted too. It needs the Console Access and Graphs realms, and a
+removal is audited. `--json` prints `status`, `database`, `removing`, `broken`,
+`removed` and `templates`.
+
+Known differences from `cli/remove_broken_graphs.php`:
+
+- It needs an operator with the Console Access and Graphs realms. The original
+  ran for anyone who could run it.
+- Every broken graph is listed, in id order. The original read `GROUP_CONCAT`,
+  which the server cuts off at `group_concat_max_len`, so a template with many
+  broken graphs listed and removed only some of them.
+- The graphs of a template go to the worker in batches of 500, not one process
+  call each. The `Removing Graph` lines print before their batch runs.
+- Without a terminal the original wrote `stty: stdin isn't a terminal` to
+  standard error and, on PHP 8.1 and later, a deprecation notice. Neither is
+  printed. The report width comes from the terminal, or 80 columns.
+- An invalid flag prints the error and help without the version line.
+- Under `bin/console`, `--report` with `--remove` exits 2. The shim keeps the
+  original's error and help and exits 1.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or
