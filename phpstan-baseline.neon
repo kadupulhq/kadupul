@@ -4063,20 +4063,8 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
 
 		-
-			message: '#^Function auth_session_credential_generation not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
 			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
 			identifier: booleanNot.exprNotBoolean
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
-
-		-
-			message: '#^Parameter \#1 \$known_string of function hash_equals expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php
 
@@ -4177,12 +4165,6 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
 
 		-
-			message: '#^Function auth_session_credential_generation not found\.$#'
-			identifier: function.notFound
-			count: 3
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
 			message: '#^Method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\LegacyBrowserAuthentication\:\:eligible\(\) has parameter \$user with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -4225,12 +4207,6 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
 
 		-
-			message: '#^Parameter \#1 \$known_string of function hash_equals expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
 			message: '#^Parameter \#1 \$string of function trim expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 2
@@ -4262,12 +4238,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#3 \$options of function setcookie expects array\{expires\?\: int, path\?\: string, domain\?\: string, secure\?\: bool, httponly\?\: bool, samesite\?\: ''Lax''\|''lax''\|''None''\|''none''\|''Strict''\|''strict''\}, array\{expires\: int\<2592001, max\>, path\: mixed, domain\: mixed, secure\: bool, httponly\: true, samesite\: ''Strict''\} given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php
-
-		-
-			message: '#^Parameter \#4 \$credential of method Kadupul\\IdentityAccess\\Infrastructure\\Legacy\\NativeAuthenticationSession\:\:establish\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php

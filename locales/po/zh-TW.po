@@ -648,7 +648,7 @@ msgstr "模板"
 #: data_debug.php:1114 data_sources.php:1712 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3991 lib/auth.php:4040
+#: lib/api_automation.php:450 lib/auth.php:3994 lib/auth.php:4043
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -680,8 +680,8 @@ msgstr "任何"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3994
-#: lib/auth.php:4043 lib/auth.php:4089 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3997
+#: lib/auth.php:4046 lib/auth.php:4092 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -937,11 +937,11 @@ msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 
-#: auth_login.php:119 lib/auth.php:4405 lib/auth.php:4411 lib/auth.php:4501
-#: lib/auth.php:4510 lib/auth.php:4557 lib/auth.php:4582 lib/auth.php:4605
-#: lib/auth.php:4645 lib/auth.php:4657 lib/auth.php:4680 lib/auth.php:4803
-#: lib/auth.php:4823 lib/auth.php:5035 lib/auth.php:5077 lib/auth.php:5087
-#: lib/auth.php:5103 lib/auth.php:5117 lib/auth.php:5155
+#: auth_login.php:119 lib/auth.php:4408 lib/auth.php:4414 lib/auth.php:4504
+#: lib/auth.php:4513 lib/auth.php:4560 lib/auth.php:4585 lib/auth.php:4608
+#: lib/auth.php:4648 lib/auth.php:4660 lib/auth.php:4683 lib/auth.php:4806
+#: lib/auth.php:4826 lib/auth.php:5038 lib/auth.php:5080 lib/auth.php:5090
+#: lib/auth.php:5106 lib/auth.php:5120 lib/auth.php:5158
 msgid "Access Denied!  Login Failed."
 msgstr "拒絕訪問，禁用用戶帳戶。"
 
@@ -988,14 +988,14 @@ msgstr "在下面輸入您的用戶名和密碼"
 msgid "Password"
 msgstr "密碼"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1044
-#: lib/auth.php:1066 lib/auth.php:1076 lib/auth.php:1081 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1047
+#: lib/auth.php:1069 lib/auth.php:1079 lib/auth.php:1084 user_admin.php:2124
 #, fuzzy
 msgid "Local"
 msgstr "本地"
 
-#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1077
-#: lib/auth.php:1082
+#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1080
+#: lib/auth.php:1085
 #, fuzzy
 msgid "LDAP"
 msgstr "LDAP"
@@ -5448,7 +5448,7 @@ msgstr "您必須登錄才能訪問Kadupul的這個區域。"
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "致命：您必須登錄才能訪問Kadupul的這個區域。"
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5657
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5660
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "Login Again"
@@ -13556,7 +13556,7 @@ msgstr "不起來"
 msgid "Recovering"
 msgstr "正在復原"
 
-#: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3099 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4488 lib/rrd.php:4500 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -13844,135 +13844,135 @@ msgstr "無Ping或SNMP可用性檢查正在使用中"
 msgid "New Branch"
 msgstr "新科"
 
-#: lib/auth.php:1083
+#: lib/auth.php:1086
 #, fuzzy
 msgid "Web Basic"
 msgstr "Web Basic"
 
-#: lib/auth.php:2925
+#: lib/auth.php:2928
 #, fuzzy
 msgid "Device:(Hide Disabled)"
 msgstr "設備已禁用"
 
-#: lib/auth.php:2943 lib/auth.php:2945 lib/auth.php:2951 lib/auth.php:2953
+#: lib/auth.php:2946 lib/auth.php:2948 lib/auth.php:2954 lib/auth.php:2956
 #, fuzzy, php-format
 msgid "Graph:(%s%s)"
 msgstr "圖表 :"
 
-#: lib/auth.php:2966 lib/auth.php:2972 lib/auth.php:3039 lib/auth.php:3041
-#: lib/auth.php:3045 lib/auth.php:3047
+#: lib/auth.php:2969 lib/auth.php:2975 lib/auth.php:3042 lib/auth.php:3044
+#: lib/auth.php:3048 lib/auth.php:3050
 #, fuzzy, php-format
 msgid "Device:(%s%s)"
 msgstr "裝置："
 
-#: lib/auth.php:2980 lib/auth.php:2986 lib/auth.php:3055 lib/auth.php:3057
-#: lib/auth.php:3061 lib/auth.php:3063
+#: lib/auth.php:2983 lib/auth.php:2989 lib/auth.php:3058 lib/auth.php:3060
+#: lib/auth.php:3064 lib/auth.php:3066
 #, fuzzy, php-format
 msgid "Template:(%s%s)"
 msgstr "模板"
 
-#: lib/auth.php:2993
+#: lib/auth.php:2996
 #, fuzzy, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "設備模板："
 
-#: lib/auth.php:3030 lib/auth.php:3032
+#: lib/auth.php:3033 lib/auth.php:3035
 #, fuzzy, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "設備模板："
 
-#: lib/auth.php:3076 lib/auth.php:3083 lib/auth.php:3092
+#: lib/auth.php:3079 lib/auth.php:3086 lib/auth.php:3095
 #, fuzzy
 msgid "Restricted By: "
 msgstr "受限 "
 
-#: lib/auth.php:3080
+#: lib/auth.php:3083
 #, fuzzy
 msgid "Granted By: "
 msgstr "授予方： "
 
-#: lib/auth.php:3087
+#: lib/auth.php:3090
 #, fuzzy
 msgid "Granted"
 msgstr "已授權權限數"
 
-#: lib/auth.php:3089 lib/auth.php:3094
+#: lib/auth.php:3092 lib/auth.php:3097
 #, fuzzy
 msgid "Restricted"
 msgstr "受限"
 
-#: lib/auth.php:3328 lib/auth.php:3363
+#: lib/auth.php:3331 lib/auth.php:3366
 #, fuzzy
 msgid "Branch:"
 msgstr "科："
 
-#: lib/auth.php:3337 lib/auth.php:3371 lib/html_tree.php:949
+#: lib/auth.php:3340 lib/auth.php:3374 lib/html_tree.php:949
 #: lib/reports.php:1117
 #, fuzzy
 msgid "Device:"
 msgstr "裝置："
 
-#: lib/auth.php:4309 lib/auth.php:4400
+#: lib/auth.php:4312 lib/auth.php:4403
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 
-#: lib/auth.php:4359
+#: lib/auth.php:4362
 msgid "Access Denied!  Login Disabled."
 msgstr "拒絕訪問，禁用用戶帳戶。"
 
-#: lib/auth.php:4434
+#: lib/auth.php:4437
 #, fuzzy
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "已配置Web基本身份驗證，但未從Web服務器傳遞用戶名。請確保您在Web服務器上啟用了身份驗證。"
 
-#: lib/auth.php:4450
+#: lib/auth.php:4453
 #, fuzzy, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s由Web Server進行身份驗證，但模板和來賓用戶都未在Kadupul中定義。"
 
-#: lib/auth.php:4617 lib/auth.php:4816
+#: lib/auth.php:4620 lib/auth.php:4819
 msgid "Access Denied!  No password provided by user."
 msgstr "拒絕訪問！用戶未提供密碼。"
 
-#: lib/auth.php:4789 lib/auth.php:5864
+#: lib/auth.php:4792 lib/auth.php:5867
 #, fuzzy, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
 
-#: lib/auth.php:4797
+#: lib/auth.php:4800
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5150
+#: lib/auth.php:5153
 #, fuzzy
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "您的Kadupul管理員已強制使用複雜的密碼登錄，而您當前的Kadupul密碼不符合新要求。因此，您必須立即更改密碼。"
 
-#: lib/auth.php:5190
+#: lib/auth.php:5193
 #, fuzzy, php-format
 msgid "Password must be at least %d characters!"
 msgstr "密碼必須至少為%d個字符！"
 
-#: lib/auth.php:5196
+#: lib/auth.php:5199
 #, fuzzy
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "您的密碼必須至少包含1個數字字符！"
 
-#: lib/auth.php:5200
+#: lib/auth.php:5203
 #, fuzzy
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "您的密碼必須包含小寫和大寫字符的混合！"
 
-#: lib/auth.php:5206
+#: lib/auth.php:5209
 #, fuzzy
 msgid "Your password must contain at least 1 special character!"
 msgstr "您的密碼必須包含至少1個特殊字符！"
 
-#: lib/auth.php:5650
+#: lib/auth.php:5653
 msgid "Kadupul Login Failure"
 msgstr "Kadupul Log清除"
 
-#: lib/auth.php:5950
+#: lib/auth.php:5953
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "之前未設置身份驗證。嘗試設置為本地身份驗證，但未找到管理員帳戶。"
 
