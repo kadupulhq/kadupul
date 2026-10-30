@@ -47,6 +47,11 @@ jobs:
         with:
           php-version: '8.1'
           coverage: none
+      - name: Verify RRDtool response trailers on Windows
+        shell: pwsh
+        run: |
+          php tests/integration/rrd_output_trailers.php --native-windows
+          if ($LASTEXITCODE -ne 0) { throw 'RRDtool trailer regression failed' }
       - name: Verify a writable directory with the read-only attribute
         shell: pwsh
         run: |
