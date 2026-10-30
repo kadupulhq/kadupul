@@ -2997,13 +2997,14 @@ function get_full_test_script_path($data_template_id, $host_id)
             $credential = in_array($item['data_name'], array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true)
                 || in_array($item['type_code'] ?? '', array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true);
             if (isset($host[$item['data_name']])) {
-                $value = cacti_escapeshellarg($host[$item['data_name']], true, true, $credential);
+                $value = $host[$item['data_name']] === '' ? '' : cacti_escapeshellarg($host[$item['data_name']], true, true, $credential);
             } elseif ($item['data_name'] == 'host_id' || $item['data_name'] == 'hostid') {
-                $value = cacti_escapeshellarg($host['id']);
+                $value = $host['id'] === '' ? '' : cacti_escapeshellarg($host['id']);
             } else {
-                $value = cacti_escapeshellarg((string) $item['value'], true, true, $credential);
+                $value = (string) $item['value'] === '' ? '' : cacti_escapeshellarg((string) $item['value'], true, true, $credential);
             }
 
+            // Empty fields remain omitted in this template caller.
             // The first row for a name wins, as it did with str_replace().
             $escaped_values += array($item['data_name'] => $value);
         }
@@ -5373,7 +5374,7 @@ function cacti_escapeshellarg($string, $quote = true, $cmd = false, $keep_percen
 {
     global $config;
 
-    if ($string == '') {
+    if ($string == '' && ($string !== '' || !$quote)) {
         return $string;
     }
 
