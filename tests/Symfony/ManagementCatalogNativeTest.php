@@ -74,7 +74,7 @@ final class ManagementCatalogNativeTest extends TestCase
         $configuration->setMiddlewares([new \Doctrine\DBAL\Logging\Middleware($logger)]);
         $this->database = DriverManager::getConnection(['driver' => 'pdo_mysql', 'host' => $options['host'] ?? '127.0.0.1', 'port' => (int) ($options['port'] ?? 3306), 'dbname' => $this->schema, 'user' => $user, 'password' => $password, 'charset' => 'utf8mb4'], $configuration);
         $this->database->executeStatement("SET SESSION sql_mode = 'STRICT_ALL_TABLES,NO_ENGINE_SUBSTITUTION'");
-        $this->catalogs = [new DbalGraphingManagementCatalog($this->database, new ManagementGraphScope($this->database)), new DbalQueryGraphCatalog($this->database), new DbalReportManagementCatalog($this->database), new DbalPluginManagementCatalog($this->database)];
+        $this->catalogs = [new DbalGraphingManagementCatalog($this->database, new ManagementGraphScope(new \Kadupul\IdentityAccess\Infrastructure\Persistence\DbalManagementVisibility($this->database))), new DbalQueryGraphCatalog($this->database), new DbalReportManagementCatalog($this->database), new DbalPluginManagementCatalog($this->database)];
         $this->database->executeStatement("INSERT INTO version (cacti) VALUES ('1.3.0')");
         $this->database->executeStatement("INSERT INTO settings (name,value) VALUES ('auth_method','1'),('graph_auth_method','3')");
         $this->database->executeStatement("INSERT INTO user_auth (id,username,enabled,policy_graphs,policy_hosts,policy_graph_templates) VALUES (42,'operator','on',2,2,2),(43,'other','on',2,2,2)");
@@ -115,7 +115,7 @@ final class ManagementCatalogNativeTest extends TestCase
     public function testEveryScreenSortsEveryPublicColumnInBothDirectionsOnTheActualSchema(): void
     {
         foreach (CatalogScreen::cases() as $screen) {
-            if ($screen->metadataView()) {
+            if ($screen->metadataView() || $screen->instanceView()) {
                 continue;
             }
             foreach (array_keys($screen->columns()) as $column) {
@@ -145,7 +145,7 @@ final class ManagementCatalogNativeTest extends TestCase
         $this->database->executeStatement('INSERT INTO graph_local (id,host_id,graph_template_id) VALUES (999,999,10)');
         $this->database->executeStatement("INSERT INTO graph_templates_graph (local_graph_id,graph_template_id,title_cache) VALUES (999,10,'Missing device')");
         $this->database->executeStatement('INSERT INTO user_auth_perms (user_id,item_id,type) VALUES (42,999,1)');
-        $scope = (new ManagementGraphScope($this->database))->forActor(42);
+        $scope = (new ManagementGraphScope(new \Kadupul\IdentityAccess\Infrastructure\Persistence\DbalManagementVisibility($this->database)))->forActor(42);
         self::assertContains(999, array_map('intval', $this->database->fetchFirstColumn($scope['graphs'])));
         self::assertNotContains(999, array_map('intval', array_column($this->read(CatalogScreen::Graphs)->records, 'id')), 'A permitted graph still needs an existing permitted device, or host_id=0.');
         $this->expectException(CatalogParentNotFound::class);
@@ -171,7 +171,7 @@ final class ManagementCatalogNativeTest extends TestCase
             foreach ([1,2] as $default) {
                 $this->database->executeStatement("UPDATE settings SET value=? WHERE name='graph_auth_method'", [(string) $mode]);
                 $this->database->executeStatement('UPDATE user_auth SET policy_graphs=?,policy_hosts=?,policy_graph_templates=? WHERE id=42', [$default,$default,$default]);
-                $scope = (new ManagementGraphScope($this->database))->forActor(42);
+                $scope = (new ManagementGraphScope(new \Kadupul\IdentityAccess\Infrastructure\Persistence\DbalManagementVisibility($this->database)))->forActor(42);
                 $actual = [];
                 foreach ($scope as $kind => $sql) {
                     $actual[$kind] = array_map('intval', $this->database->fetchFirstColumn($sql));
@@ -213,7 +213,7 @@ final class ManagementCatalogNativeTest extends TestCase
             $this->database->executeStatement('DELETE FROM user_auth_realm WHERE user_id=42');
             $this->deny($access, $screen);
             $this->database->executeStatement('INSERT INTO user_auth_realm (user_id,realm_id) VALUES (42,?)', [$screen->realm()]);
-            if ($screen === CatalogScreen::MyReports) {
+            if ($screen->personalReport()) {
                 self::assertSame(42, $access->authorize($screen)->id);
             } else {
                 $this->deny($access, $screen);

@@ -2695,12 +2695,6 @@ parameters:
 			path: src/Graphing/Infrastructure/Persistence/DbalTemplateRelationships.php
 
 		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 4
-			path: src/Graphing/Infrastructure/Persistence/ManagementGraphScope.php
-
-		-
 			message: '#^Constant GRAPH_ITEM_TYPE_AREA not found\.$#'
 			identifier: constant.notFound
 			count: 1
@@ -9377,12 +9371,6 @@ parameters:
 			identifier: booleanOr.rightNotBoolean
 			count: 1
 			path: src/Navigation/Contract/Management/CatalogFilters.php
-
-		-
-			message: '#^Match expression does not handle remaining values\: Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:GraphDeviceTemplates\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:InputItems\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:MibAttributes\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:MibConventions\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:MibObjects\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:Mibs\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:QueryDataSuggestions\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:QueryDeviceTemplates\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:QueryGraphSuggestions\|Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:QuerySources$#'
-			identifier: match.unhandled
-			count: 1
-			path: src/Navigation/Contract/Management/CatalogScreen.php
 
 		-
 			message: '#^Method Kadupul\\Navigation\\Contract\\Management\\CatalogScreen\:\:legacyQuery\(\) return type has no value type specified in iterable type array\.$#'

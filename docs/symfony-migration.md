@@ -2575,6 +2575,13 @@ with the verification evidence. LTS is unchanged.
 
 ## System Utilities diagnostic views
 
+The [ten instance browsing views](migrations/instance-catalogs-batch-10.md) add
+native graph/data-source relationships, report contents, tree placements,
+collector devices and discovery results. They retain resource visibility and
+personal report ownership, reuse the management catalog rendering, and link to
+the existing operation pages. Their readers use injected connections and a shared
+IdentityAccess visibility contract; legacy writers and globals remain separate.
+
 The [ten-view diagnostics slice](migrations/system-diagnostics-batch-10.md) adds
 Symfony/Twig views for System Utilities, six technical-support tabs, Boost status
 and the two device caches. These views receive explicit read models and retain

@@ -157,7 +157,53 @@ final class ManagementCatalogRoutesTest extends TestCase
     {
         $this->consoleAllowed = false;
         self::assertSame(200, $this->get('/management/my-reports')->getStatusCode());
+        self::assertSame(200, $this->get('/management/my-report-items/4')->getStatusCode());
         self::assertSame(401, $this->get('/management/reports')->getStatusCode());
+        self::assertSame(401, $this->get('/management/report-items/4')->getStatusCode());
+    }
+
+    public static function instanceScreens(): iterable
+    {
+        foreach (self::screens() as $name => [$screen, $path]) {
+            if ($screen->instanceView()) {
+                yield $name => [$screen, $path];
+            }
+        }
+    }
+
+    #[DataProvider('instanceScreens')]
+    public function testInstanceOutcomesAndSubdirectoryLinks(CatalogScreen $screen, string $path): void
+    {
+        $this->missing = true;
+        self::assertSame(404, $this->get($path)->getStatusCode());
+        $this->missing = false;
+        $this->failure = true;
+        $failed = $this->get($path);
+        self::assertSame(502, $failed->getStatusCode());
+        self::assertStringNotContainsString('Private database', (string) $failed->getContent());
+        $this->failure = false;
+        $this->empty = true;
+        self::assertStringContainsString('No records found.', (string) $this->get($path)->getContent());
+        $this->empty = false;
+        $response = $this->kernel->handle(Request::create('https://localhost/monitor/app.php' . $path, server: [
+            'SCRIPT_NAME' => '/monitor/app.php', 'SCRIPT_FILENAME' => '/srv/monitor/app.php', 'PHP_SELF' => '/monitor/app.php' . $path,
+        ]));
+        self::assertSame(200, $response->getStatusCode());
+        self::assertStringContainsString('/monitor/app.php' . $path . '?', (string) $response->getContent());
+        $reads = count($this->reads);
+        self::assertSame(400, $this->get(substr($path, 0, strrpos($path, '/') + 1) . ($screen->maximumParentId() + 1))->getStatusCode());
+        self::assertCount($reads, $this->reads);
+    }
+
+    public function testParentCatalogsExposeEveryNewNativeView(): void
+    {
+        foreach (['graphs' => ['graph-items', 'graph-data-sources'], 'data-sources' => ['data-source-definitions', 'data-source-graphs'],
+            'aggregate-graphs' => ['aggregate-members'], 'reports' => ['report-items'], 'my-reports' => ['my-report-items']] as $parent => $children) {
+            $html = (string) $this->get('/management/' . $parent)->getContent();
+            foreach ($children as $child) {
+                self::assertStringContainsString('/management/' . $child . '/7', $html);
+            }
+        }
     }
 
     public function testMissingParentsFailedReadsAndEmptyListsHaveDifferentOutcomes(): void
@@ -246,6 +292,10 @@ final class ManagementCatalogRoutesTest extends TestCase
         try {
             $container = $kernel->getContainer()->get('test.service_container');
             $catalogs = [
+                $container->get(\Kadupul\Automation\Infrastructure\Persistence\DbalNetworkDeviceCatalog::class),
+                $container->get(\Kadupul\Graphing\Infrastructure\Persistence\DbalInstanceCatalog::class),
+                $container->get(\Kadupul\Reporting\Infrastructure\Persistence\DbalReportItemCatalog::class),
+                $container->get(\Kadupul\Platform\Infrastructure\Persistence\DbalCollectorDeviceCatalog::class),
                 $container->get(\Kadupul\Graphing\Infrastructure\Persistence\DbalMappingCatalog::class),
                 $container->get(\Kadupul\Platform\Infrastructure\Persistence\DbalMibCatalog::class),
                 $container->get(\Kadupul\Graphing\Infrastructure\Persistence\DbalGraphingManagementCatalog::class),
