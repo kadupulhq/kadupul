@@ -3,8 +3,8 @@
     "name": "cacti_validate_sort_column",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 9200,
-        "end_line": 9207,
+        "start_line": 9195,
+        "end_line": 9202,
         "line_count": 8,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 5, "core_outside_functions_php": 3, "tests": 33, "plugins": 0},
+        "fan_out": {"core": 5, "core_outside_functions_php": 3, "tests": 34, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

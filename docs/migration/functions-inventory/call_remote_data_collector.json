@@ -3,8 +3,8 @@
     "name": "call_remote_data_collector",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6899,
-        "end_line": 6972,
+        "start_line": 6894,
+        "end_line": 6967,
         "line_count": 74,
         "signature": {
             "parameters": [

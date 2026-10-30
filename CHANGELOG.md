@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
 - Run `cli/copy_user.php` and `cli/add_perms.php` through the `kadupul:user:copy`, `kadupul:permission:add` and `kadupul:permission:list` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and User Management realms, a permission grant ends the user's remembered logins and raises their permission epoch as the web form does, a missing or empty new username prints the usage instead of creating an unnamed account, and the ids are bound instead of concatenated into SQL (#1213).
