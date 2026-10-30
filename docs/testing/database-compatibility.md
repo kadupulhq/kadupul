@@ -21,6 +21,22 @@ For each new difference, retain a reproducer, exact engine version and settings,
 
 Plan assertions request `EXPLAIN FORMAT=TRADITIONAL` explicitly. The MySQL 9.7.2 image returned a different default format, so assuming `key`/`type` columns was a test-adapter error. [MySQL documents the explicit format and session-dependent defaults](https://dev.mysql.com/doc/refman/9.7/en/explain.html). This is distinct from a failed index-use assertion.
 
+## DDL identifier compatibility
+
+Status: implemented for LTS issue #1132. The shared DDL identifier check admits
+hyphens used by the shipped `snmpagent_cache.max-access` column. Quotes, dots,
+spaces, NUL bytes and SQL syntax remain refused. No schema or runtime change is
+required; main already admits hyphens.
+
+PHP 8.1.34: the five `DbQualifiedIdentifierTest` cases pass with 388 assertions,
+including every quoted column in `cacti.sql`; eight adjacent advisory-hardening
+cases also pass. A disposable MariaDB 10.11.19 test using the shipped table
+definition and `STRICT_ALL_TABLES` reproduces `db_column_exists()` returning
+false before the fix and true afterward. Missing and unsafe identifiers return
+false in both runs. Other database engines and installed audit/upgrade workflows
+were not executed for this change. Current-head CI and review remain required;
+reverting the helper restores its former validation.
+
 ## Mixed character sets
 
 A binary cast alone compares storage bytes against connection bytes. With a latin1 queue column and a utf8mb4 connection, even an unchanged `café` could remain unacknowledged. Convert both operands to utf8mb4 before the binary comparison. The contract matrix covers both collations, case and trailing-space replacements, and non-ASCII unchanged samples. This preserves exact character comparison without relying on identical storage and connection encodings.

@@ -9,6 +9,23 @@
 
 require_once dirname(__DIR__, 3) . '/lib/database.php';
 
+test('DDL identifiers admit every quoted column in the shipped schema', function () {
+	$schema = file_get_contents(dirname(__DIR__, 3) . '/cacti.sql');
+	expect($schema)->toBeString();
+	$matched = preg_match_all('/^\s*`([^`]+)`/m', $schema, $columns);
+	expect($matched)->toBeGreaterThan(0);
+	expect($columns[1])->toContain('max-access');
+	foreach (array_unique($columns[1]) as $column) {
+		expect(db_is_safe_identifier($column))->toBeTrue();
+	}
+});
+
+test('DDL identifiers still reject quotes and SQL syntax', function () {
+	foreach (array('', 'column`name', "column'name", 'column.name', 'column name', 'column;DROP TABLE users', "column\0name", array(), null, 1) as $identifier) {
+		expect(db_is_safe_identifier($identifier))->toBeFalse();
+	}
+});
+
 test('qualified table identifiers are validated and quoted per component', function () {
 	expect(db_format_qualified_identifier('syslog_logs'))->toBe('`syslog_logs`')
 		->and(db_format_qualified_identifier('syslog_prod.syslog_logs'))->toBe('`syslog_prod`.`syslog_logs`')

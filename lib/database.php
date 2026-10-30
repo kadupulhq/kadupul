@@ -917,7 +917,7 @@ function db_affected_rows($db_conn = false) {
  * @return (bool) True when safe for backtick-quoted DDL
  */
 function db_is_safe_identifier($identifier) {
-	return is_string($identifier) && preg_match('/^[A-Za-z0-9_]+$/', $identifier) === 1;
+	return is_string($identifier) && preg_match('/^[A-Za-z0-9_-]+$/', $identifier) === 1;
 }
 
 /**
