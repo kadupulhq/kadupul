@@ -120,7 +120,8 @@ final readonly class NativeAdministrativeActorPolicy implements AdministrativeAc
         $tables = implode(', ', array_map(static fn(string $table): string => '`' . $table . '`', self::TABLES));
         $this->rows('SELECT * FROM ' . $tables . ' LIMIT 0', []);
         $placeholders = implode(',', array_fill(0, count(self::TABLES), '?'));
-        $metadata = $this->rows('SELECT table_name AS name, engine FROM information_schema.tables
+        // Alias every metadata column: MySQL preserves physical ENGINE casing.
+        $metadata = $this->rows('SELECT table_name AS name, engine AS engine FROM information_schema.tables
             WHERE table_schema = DATABASE() AND table_name IN (' . $placeholders . ')', self::TABLES);
         $engines = [];
         foreach ($metadata as $table) {
