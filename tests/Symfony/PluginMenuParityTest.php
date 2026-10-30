@@ -258,6 +258,45 @@ final class PluginMenuParityTest extends TestCase
         self::assertSame(2, $this->workerRuns());
     }
 
+    public static function invalidSessionNames(): iterable
+    {
+        yield 'array' => [[]];
+        yield 'empty' => [''];
+        yield 'integer' => [17];
+    }
+
+    #[DataProvider('invalidSessionNames')]
+    public function testAnInvalidSessionCookieNameDoesNotStartTheWorker(mixed $name): void
+    {
+        file_put_contents($this->root . '/include/config.php', '<?php $url_path = "/kadupul/"; $cacti_session_name = ' . var_export($name, true) . ';');
+        try {
+            $this->plugins(self::request())->entries(7, ['Management']);
+            self::fail('An invalid session cookie name was accepted.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('The console session cookie name is unavailable.', $error->getMessage());
+        }
+        self::assertFileDoesNotExist($this->root . '/handoff.jsonl');
+    }
+
+    public function testAnInvalidCachedValueProducesAControlledFailure(): void
+    {
+        $plugins = $this->plugins(self::request());
+        self::assertNotEmpty($plugins->entries(7, ['Management']));
+        $keys = array_keys($this->cache->getValues());
+        self::assertCount(1, $keys);
+        $item = $this->cache->getItem($keys[0]);
+        $item->set(true);
+        $this->cache->save($item);
+
+        try {
+            $plugins->entries(7, ['Management']);
+            self::fail('An invalid cached menu was accepted.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('Invalid plugin console menu.', $error->getMessage());
+        }
+        self::assertSame(1, $this->workerRuns());
+    }
+
     public function testAFailureIsRememberedForAMinuteThenRetried(): void
     {
         touch($this->root . '/fail');

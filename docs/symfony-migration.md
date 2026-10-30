@@ -477,6 +477,10 @@ so a hook cannot vary the cached entries on client-chosen input. Edits to plugin
 the built-in menu, and the failure is cached under the same key for 60 seconds
 so a broken plugin does not cost the full budget on every page.
 
+Cache hits are shape-validated too. An unusable session-cookie name refuses
+worker startup; an invalid cached value leaves the built-in menu and logs a
+warning. Clearing the pool retries a corrupt cached entry immediately.
+
 Three differences from `draw_menu()` are deliberate. Plugin items whose script
 has no realm, or realm -1, are hidden; legacy showed them inside a section
 that already had a visible item. Labels are escaped as text, so HTML a plugin
@@ -500,7 +504,8 @@ production and should be enabled only for a measurement.
 - A request that sends `X-Kadupul-Profile-Id` (1 to 64 letters, digits or
   hyphens) appends one JSON line per hop, `{id, path, ms, queries, peak_bytes}`,
   to `var/profile/requests.jsonl`, or to the path in `KADUPUL_PROFILE_LOG`.
-  `queries` is `null` when no counter was available. A redirect logs each hop
+  `queries` is `null` when no counter was available or its data could not be
+  counted. A redirect logs each hop
   under the same id because clients resend the header.
 - The log is never rotated or pruned. Enable profiling for the measurement,
   then unset it and delete the log.

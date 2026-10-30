@@ -96,6 +96,14 @@ final readonly class LegacyBrowserWorker
         if ($binary === false || !is_file($binary) || !is_executable($binary)) {
             throw new \RuntimeException('The configured PHP interpreter is unavailable.');
         }
+        $cookies = $request->cookies->all();
+        if (!$forwardRequest) {
+            $sessionName = $configuration['session_name'] ?? null;
+            if (!is_string($sessionName) || $sessionName === '') {
+                throw new \RuntimeException('The console session cookie name is unavailable.');
+            }
+            $cookies = array_intersect_key($cookies, [$sessionName => true]);
+        }
         // Native cookie ownership has already been checked by SharedSession.
         // Credentials travel only over the private worker pipe, never argv/logs.
         $command = [
@@ -108,8 +116,7 @@ final readonly class LegacyBrowserWorker
                 'HTTPS', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_PORT', 'REMOTE_ADDR', 'HTTP_USER_AGENT', 'HTTP_ACCEPT_LANGUAGE',
                 ...($forwardRequest ? ['HTTP_ORIGIN', 'HTTP_REFERER', 'HTTP_X_REQUESTED_WITH', 'QUERY_STRING'] : []),
             ])),
-            'cookies' => $forwardRequest ? $request->cookies->all()
-                : array_intersect_key($request->cookies->all(), [$configuration['session_name'] => true]),
+            'cookies' => $cookies,
             'query' => $forwardRequest ? $request->query->all() : [],
         ];
         try {
