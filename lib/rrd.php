@@ -4095,12 +4095,10 @@ function rrdtool_function_info_from_ds($data_source_id) {
 		WHERE local_data_id = ?',
 		array($data_source_id));
 
-	$data_template_id = db_fetch_cell_prepared(
-	   'SELECT data_template_id
+	$data_template_query = 'SELECT data_template_id
 		FROM data_local
-		WHERE id = ?',
-	   array($data_source_id)
-	);
+		WHERE id = ?';
+	$data_template_id = db_fetch_cell_prepared($data_template_query, array($data_source_id));
 
 	/* get cacti DS information */
 	if ($data_template_id > 0) {
