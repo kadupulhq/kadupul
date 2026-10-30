@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
 -issue: Retain queued Boost samples when the fallback RRD path query fails, while preserving cleanup for a successfully confirmed missing data source (#738)
 -issue: Treat obsolete colour and data source delete action names as unknown actions instead of calling undefined handlers; bulk deletion remains available (#685)
 -security: Keep data input field values literal whatever quoting the input string puts around them (GHSA-5v3j-wcrr-jxjg). Fields are substituted in one pass. An input string that places a field or backslash inside backticks or ${...}, uses $'...' or $"..." quoting, places a field directly after an unescaped $, puts a backslash inside $(...), contains a newline, a word-initial # or << at the top level, or uses grouping, case, comments or redirection inside $(...) now produces no command. Test Data Source drops a script server function name only when it is a plain word. The shipped data input methods produce the same commands as 1.2.31
