@@ -3,8 +3,8 @@
     "name": "get_dns_from_ip",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6286,
-        "end_line": 6390,
+        "start_line": 6287,
+        "end_line": 6391,
         "line_count": 105,
         "signature": {
             "parameters": [
