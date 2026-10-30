@@ -13,6 +13,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Inventory bundled browser libraries and report dependency version drift during maintenance.
 
+- Compare dependency-report versions without rounding large numeric SemVer identifiers, and keep asset verification and npm lookups in explicit serial order.
+
 - Load jQuery Migrate after jQuery 4 so existing widgets and plugins can use removed jQuery helpers. Keep its unsafe HTML and JSONP compatibility patches disabled.
 
 - Make the CSP report size limit reachable with a bounded body read, drop reports when the rate-limit directory cannot be trusted, and sweep expired rate-limit counters (ports the lts protection; upstream Cacti #7704).
