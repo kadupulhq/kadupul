@@ -31,6 +31,7 @@ $legacyValues = array(
 );
 
 $roundTripValues = array(
+	'empty'                    => '',
 	'plain'                    => 'Traffic In',
 	'apostrophe'               => "it's",
 	'apostrophe breakout'      => "t' --width=1234 --title='pwned",

@@ -52,6 +52,16 @@ jobs:
         run: |
           php tests/integration/rrd_output_trailers.php --native-windows
           if ($LASTEXITCODE -ne 0) { throw 'RRDtool trailer regression failed' }
+      - name: Preserve an empty shell argument on Windows
+        shell: pwsh
+        run: |
+          $scenario = @{os='win32'; value=''; quote=$true; native=$true} | ConvertTo-Json -Compress
+          $output = $scenario | php tests/fixtures/empty-shell-argument.php .
+          if ($LASTEXITCODE -ne 0) { throw 'Native shell argument fixture failed' }
+          $observed = $output | ConvertFrom-Json
+          if ($observed.quoted -cne '""' -or $observed.arguments.Count -ne 3 -or $observed.arguments[0] -cne 'before' -or $observed.arguments[1] -cne '' -or $observed.arguments[2] -cne 'tail') {
+            throw 'The empty argument was lost or later arguments shifted'
+          }
       - name: Verify a writable directory with the read-only attribute
         shell: pwsh
         run: |
