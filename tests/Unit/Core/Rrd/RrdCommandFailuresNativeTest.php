@@ -37,7 +37,7 @@ function rrd_command_failure_run($test, string $scenario, int $flag = 1) : array
 			if (is_resource($probe)) {
 				$commandLine = stream_get_contents($probePipes[1]);
 				fclose($probePipes[1]); proc_close($probe);
-				if (strpos($commandLine, $directory . '/rrd-server') !== false) { posix_kill($pid, SIGKILL); }
+				if (strpos($commandLine, $directory . '/rrd') !== false) { posix_kill($pid, SIGKILL); }
 			}
 		}
 		foreach (glob($directory . '/*') as $file) { unlink($file); }
@@ -65,6 +65,13 @@ test('one-shot exchanges send all input while draining binary output', function 
 		expect(base64_decode($result['returned']))->toBe($payload)->and($result['printed'])->toBe('');
 	}
 })->with([0, 1, 2, 3, 5]);
+
+test('one-shot executable paths with spaces and shell metacharacters remain one argument', function () {
+	$result = rrd_command_failure_run($this, 'oneshot-hostile-path')['result'];
+	$hash = hash('sha256', 'first ' . str_repeat('remaining-input ', 65536) . "\r\nquit\r\n");
+	expect($result['hash'])->toBe($hash)->and($result['alive'])->toBeFalse()
+		->and(base64_decode($result['returned']))->toBe(str_repeat("binary\0payload\n", 32768) . $hash . "\n");
+});
 
 test('one-shot timeouts reject partial results and reap children ignoring SIGTERM', function ($scenario, $flag) {
 	$result = rrd_command_failure_run($this, $scenario, $flag);

@@ -72,7 +72,7 @@ cmd_exec	./lib/poller.php:66	 * @param  (resource) $proc_fd - the file descripto
 cmd_exec	./lib/rrd.php:120			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 cmd_exec	./lib/rrd.php:153		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:1670						$fp = popen($rrdtool_cmd, 'r');
-cmd_exec	./lib/rrd.php:696				$process = proc_open(cacti_escapeshellarg(read_config_option('path_rrdtool')) . ' - ' . $debug, $descriptorspec, $pipes);
+cmd_exec	./lib/rrd.php:808				$process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptorspec, $pipes);
 cmd_exec	./lib/rrdcheck.php:806		$process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:250			exec(snmp_exec_prefix() . $command, $snmp_value);
 cmd_exec	./lib/snmp.php:350			exec(snmp_exec_prefix() . $command, $snmp_value);

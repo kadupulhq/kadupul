@@ -33,10 +33,14 @@ function socket_create($domain, $type, $protocol) {
 	$GLOBALS['proxy_created'][] = $socket;
 	return $socket;
 }
-function socket_connect($socket, $address, $port) { return false; }
+function socket_connect($socket, $address, $port) { $GLOBALS['proxy_connect_ports'][] = $port; return false; }
+function random_int($minimum, $maximum) { return 2; }
 function socket_close($socket) { $GLOBALS['proxy_closed'][] = $socket; \socket_close($socket); }
 function cacti_log(...$arguments) {}
-function read_config_option($name) { return ['rrdp_server' => '127.0.0.1', 'rrdp_server_backup' => '127.0.0.1', 'rrdp_port' => 1, 'rrdp_port_backup' => 2][$name] ?? ''; }
+function read_config_option($name) {
+	if ($name === 'rrdp_load_balancing') { return $GLOBALS['proxy_load_balance'] ?? ''; }
+	return ['rrdp_server' => '127.0.0.1', 'rrdp_server_backup' => '127.0.0.1', 'rrdp_port' => 1, 'rrdp_port_backup' => 2][$name] ?? '';
+}
 
 test('proxy writes retry positive short writes and stop on failure', function ($fail) {
 	$GLOBALS['proxy_written'] = '';
@@ -45,14 +49,17 @@ test('proxy writes retry positive short writes and stop on failure', function ($
 		->and($GLOBALS['proxy_written'])->toBe($fail ? 'com' : 'command_EOT_');
 })->with([false, true]);
 
-test('both failed proxy connection attempts close their own socket', function () {
+test('both failed proxy connection attempts close their own socket', function ($balancing, $ports) {
 	if (!defined('POLLER_VERBOSITY_LOW')) { define('POLLER_VERBOSITY_LOW', 2); }
 	$GLOBALS['proxy_created'] = $GLOBALS['proxy_closed'] = [];
+	$GLOBALS['proxy_connect_ports'] = [];
+	$GLOBALS['proxy_load_balance'] = $balancing;
 	expect(__rrd_proxy_init())->toBeFalse()
 		->and($GLOBALS['proxy_created'])->toHaveCount(2)
 		->and($GLOBALS['proxy_closed'])->toBe($GLOBALS['proxy_created']);
 	expect($GLOBALS['proxy_created'][0])->not->toBe($GLOBALS['proxy_created'][1]);
-});
+	expect($GLOBALS['proxy_connect_ports'])->toBe($ports);
+})->with([['', [1, 2]], ['on', [2, 1]]]);
 
 test('proxy execution cannot treat a positive short write as a complete frame', function () {
 	foreach (['POLLER_VERBOSITY_LOW' => 2, 'POLLER_VERBOSITY_DEBUG' => 5, 'RRDTOOL_OUTPUT_NULL' => 0, 'RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_GRAPH_DATA' => 3] as $name => $value) {

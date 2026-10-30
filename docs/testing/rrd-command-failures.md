@@ -20,13 +20,27 @@ uses the operating system's connect timeout.
 
 ## Verification
 
-On 30 October 2026, the changes based on LTS revision `87aa922d1a` passed
+On 30 October 2026, initial revision `37cf547cdb`, based on LTS `87aa922d1a`, passed
 123 tests across 15 focused files on PHP 8.1.34. These include real process and
 socket exchanges, encrypted proxy interoperability, short-write injection,
 failed-connect cleanup, stalled and dripping peers, large binary output, children
 ignoring SIGTERM, fetch statistics consumers, existing path guards, and measured
 zero values. The same regression scenarios reproduce failures on the unchanged
 LTS base, including an ignored 150 ms proxy budget and a truncated command frame.
+
+The CI follow-up passed 133 focused tests across 16 files on PHP 8.1.34,
+with no skips. It exercises both proxy connection orders using `random_int()`
+and an executable path containing spaces and shell metacharacters. The former
+shell-quoting source assertion now requires the argument-array invocation, while
+the behavioral check verifies the executable and command bytes. Both sink guards
+pass after reviewing and replacing only the changed process-invocation signature.
+The initial full CI unit matrix found this stale source assertion on PHP 8.1–8.4;
+those failed runs remain historical evidence, not passing acceptance.
+
+Review rule: when a process boundary moves from shell text to an argument array,
+audit its callers, retain behavioral path/argument coverage, and update its exact
+sink signatures. Use `random_int()` for new load-balancing draws. Preserve LTS's
+documented tabs and same-line braces even when general style advisories disagree.
 
 Main at `9b9bbfdd4f` passed 79 existing tests across `RrdOneShotIoTest`,
 `RrdProxyDeadlineNativeTest`, `RrdProxyNativeTest` and `RrdFetchFailureTest` on
@@ -54,8 +68,8 @@ production readiness or a throughput improvement.
 The tested LTS production source is identified by SHA-256:
 
 ```text
-lib/rrd.php          82d4f2effdbaa0163ce23d2599b363144ec2dfe54a68788965468e56ced092fd
-lib/rrd_process.php  a4211bde2623042cfd8a11ac8d264b17347be7219a830687c2735c629838525c
+lib/rrd.php          db8e31607ba502eb7a592f95c61659ddfc479009f65f3fcf0699f934ed61a7c8
+lib/rrd_process.php  a5b4d5a1dc0e05266aa452ba389fdd7a399f7f1f6b4cb4dc6cb25cf135ab5ef4
 ```
 
 ## Deployment and recovery

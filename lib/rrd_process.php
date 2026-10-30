@@ -12,7 +12,9 @@ declare(strict_types=1);
  * @param array<int, resource> $pipes
  * @return array{completed: bool, status: int, output: string}
  */
-function rrdtool_oneshot_exchange($process, array $pipes, string $input, int|float $deadline, bool $captureOutput) : array {
+function rrdtool_oneshot_exchange(
+	$process, array $pipes, string $input, int|float $deadline, bool $captureOutput
+) : array {
 	$output = '';
 	$offset = 0;
 	$length = strlen($input);

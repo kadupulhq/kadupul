@@ -55,7 +55,7 @@ if (str_starts_with($scenario, 'fetch-')) {
 		$result = ['fetch' => $result, 'stats' => rrdtool_function_stats([11 => ['value']], 1700000000, 1700000600, 95, 300), 'bandwidth' => bandwidth_summation(11, 1700000000, 1700000600, 1, 300)];
 	}
 } elseif (str_starts_with($scenario, 'oneshot-')) {
-	$mode = substr($scenario, 8);
+	$mode = $scenario === 'oneshot-hostile-path' ? 'large' : substr($scenario, 8);
 	$server = '#!' . PHP_BINARY . "\n<?php\n" . '$mode = ' . var_export($mode, true) . ';' . <<<'SERVER'
 pcntl_async_signals(true);
 pcntl_signal(SIGTERM, SIG_IGN);
@@ -79,8 +79,10 @@ if ($mode === 'partial') { print 'partial'; fflush(STDOUT); }
 if ($mode === 'closed-output') { fclose(STDOUT); }
 while (true) { usleep(10000); }
 SERVER;
-	file_put_contents($directory . '/rrd-server', $server);
-	chmod($directory . '/rrd-server', 0700);
+	$binary = $directory . ($scenario === 'oneshot-hostile-path' ? '/rrd server;echo injected' : '/rrd-server');
+	$options['path_rrdtool'] = $binary;
+	file_put_contents($binary, $server);
+	chmod($binary, 0700);
 	$command = in_array($mode, ['large', 'not-reading'], true) ? 'first ' . str_repeat('remaining-input ', 65536) : 'info fixture';
 	ob_start();
 	$returned = __rrd_execute($command, false, $flag);
