@@ -1524,10 +1524,16 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		// is polled but has no graph item comes back with an empty path, and an
 		// empty path is discarded as a deleted data source further down.
 		if ($rrd_path == '') {
-			$rrd_path = db_fetch_cell_prepared('SELECT rrd_path
+			$path_row = db_fetch_row_prepared('SELECT rrd_path
 				FROM poller_item
 				WHERE local_data_id = ?',
 				array($local_data_id));
+			// A cell lookup conflates a failed read with a removed data source.
+			if ($path_row === false) {
+				cacti_log("ERROR: Boost RRD path read failed for Local Data ID '$local_data_id'; retaining rows.", false, 'BOOST');
+				return -1;
+			}
+			$rrd_path = isset($path_row['rrd_path']) ? $path_row['rrd_path'] : '';
 		}
 
 		cacti_log('The RRDpath is ' . $rrd_path, false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
