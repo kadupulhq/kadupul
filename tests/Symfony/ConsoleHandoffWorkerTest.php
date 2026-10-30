@@ -279,7 +279,7 @@ final class ConsoleHandoffWorkerTest extends TestCase
         $session ??= ['sess_user_id' => 7, 'sess_user_credential' => str_repeat('a', 64)];
         $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'session' => $session, 'realms' => $realms];
         file_put_contents($this->directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
-        $label = $script . ' ' . (is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR)) . ' ' . json_encode($scenario, JSON_THROW_ON_ERROR);
+        $label = hash('sha256', $script . ' ' . (is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR)) . ' ' . json_encode($scenario, JSON_THROW_ON_ERROR));
         [$options, $environment] = $this->coverageOptions($measured, true, $label);
         $process = new Process([PHP_BINARY, ...$options, $this->directory . '/' . $script], $this->directory, $environment);
         $process->setInput(is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR));
