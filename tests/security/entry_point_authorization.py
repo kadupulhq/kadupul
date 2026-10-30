@@ -293,6 +293,46 @@ def route_fixtures(rig, rows, ids):
                 raise RuntimeError('Missing concrete metadata parent: ' + prefix)
             ids[prefix] = {'id': int(value)}
 
+    instance_parents = {
+        'graph-items': 'graph', 'graph-data-sources': 'graph',
+        'aggregate-members': 'aggregate', 'data-source-definitions': 'source',
+        'data-source-graphs': 'source', 'report-items': 'report',
+        'my-report-items': 'report', 'tree-items': 'tree',
+        'collector-devices': 'collector', 'network-devices': 'network',
+    }
+    instance_queries = {
+        'graph': 'SELECT MIN(gl.id) FROM graph_local gl INNER JOIN graph_templates_graph gtg ON gtg.local_graph_id = gl.id',
+        'source': 'SELECT MIN(dl.id) FROM data_local dl INNER JOIN data_template_data dtd ON dtd.local_data_id = dl.id',
+        'aggregate': 'SELECT MIN(ag.id) FROM aggregate_graphs ag INNER JOIN graph_local gl ON gl.id = ag.local_graph_id INNER JOIN graph_templates_graph gtg ON gtg.local_graph_id = gl.id',
+        'report': "SELECT MIN(r.id) FROM reports r INNER JOIN user_auth u ON u.id = r.user_id WHERE u.username = 'admin'",
+        'tree': 'SELECT MIN(id) FROM graph_tree',
+        'collector': 'SELECT MIN(id) FROM poller',
+        'network': 'SELECT MIN(id) FROM automation_networks',
+    }
+    # Fresh installations may have no local graphs, data sources or reports.
+    # Seed only fixture-owned configuration: no polling, discovery or mail runs.
+    instance_inserts = {
+        'graph': "INSERT INTO graph_local (host_id) VALUES ({device}); SET @entry_graph = LAST_INSERT_ID(); INSERT INTO graph_templates_graph (local_graph_id,title_cache) VALUES (@entry_graph,'entry-sweep'); SELECT @entry_graph",
+        'source': "INSERT INTO data_local (host_id) VALUES ({device}); SET @entry_source = LAST_INSERT_ID(); INSERT INTO data_template_data (local_data_id,name_cache) VALUES (@entry_source,'entry-sweep'); SELECT @entry_source",
+        'aggregate': "INSERT INTO graph_local (host_id) VALUES ({device}); SET @entry_graph = LAST_INSERT_ID(); INSERT INTO graph_templates_graph (local_graph_id,title_cache) VALUES (@entry_graph,'entry-sweep'); INSERT INTO aggregate_graphs (aggregate_template_id,local_graph_id,title_format,graph_template_id,gprint_prefix,graph_type,total,total_type,total_prefix,order_type,user_id) VALUES (0,@entry_graph,'entry-sweep',0,'',1,0,1,'',0,0); SELECT LAST_INSERT_ID()",
+        'report': "INSERT INTO reports (user_id,name,from_name,from_email,email,bcc,enabled) SELECT id,'entry-sweep','','','','','' FROM user_auth WHERE username = 'admin'; SELECT LAST_INSERT_ID()",
+        'tree': "INSERT INTO graph_tree (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()",
+        'network': "INSERT INTO automation_networks (name,enabled) VALUES ('entry-sweep',''); SELECT LAST_INSERT_ID()",
+    }
+    instance_ids = {}
+    for route, kind in instance_parents.items():
+        prefix = 'management/' + route
+        if not present(prefix):
+            continue
+        if kind not in instance_ids:
+            value = rig.sql(instance_queries[kind]).strip()
+            if (not value.isdecimal() or int(value) < 1) and kind in instance_inserts:
+                value = rig.sql(instance_inserts[kind].format(device=ids['devices'])).strip()
+            if not value.isdecimal() or int(value) < 1:
+                raise RuntimeError('Missing concrete instance parent: ' + prefix)
+            instance_ids[kind] = int(value)
+        ids[prefix] = {'id': instance_ids[kind]}
+
     relationship_tables = {'device-template-queries': 'host_template', 'data-template-definitions': 'data_template', 'aggregate-template-items': 'aggregate_graph_templates', 'snmp-option-entries': 'automation_snmp', 'graph-rule-device-criteria': 'automation_graph_rules', 'graph-rule-query-criteria': 'automation_graph_rules', 'tree-rule-device-criteria': 'automation_tree_rules', 'tree-rule-steps': 'automation_tree_rules', 'receiver-subscriptions': 'snmpagent_managers', 'receiver-history': 'snmpagent_managers'}
     # Existing aggregate/device-template fixtures must be created before their
     # relationship IDs are sampled. Fresh installs also have empty rule and
