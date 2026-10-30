@@ -1844,8 +1844,13 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
 			}
 
 			/* average time */
-			$host['avg_time'] = (($host['total_polls'] - 1 - $host['failed_polls'])
-				* $host['avg_time'] + $ping_time) / ($host['total_polls'] - $host['failed_polls']);
+			if ($host['total_polls'] - $host['failed_polls'] == 0) {
+				// Inconsistent stored counters cannot supply a previous successful sample.
+				$host['avg_time'] = $ping_time;
+			} else {
+				$host['avg_time'] = (($host['total_polls'] - 1 - $host['failed_polls'])
+					* $host['avg_time'] + $ping_time) / ($host['total_polls'] - $host['failed_polls']);
+			}
 		}
 
 		/* the host was down, now it's recovering */
