@@ -94,7 +94,11 @@ function receiverFixtureSetup(): void
 {
     global $config, $snmpagent_event_severity;
     $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
-    $db = new \PDO($dsn ?: 'sqlite::memory:', getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+    if ($password === false) {
+        $password = getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '';
+    }
+    $db = new \PDO($dsn ?: 'sqlite::memory:', getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $GLOBALS['snmpagent_disabled_database'] = $db;
     $GLOBALS['snmpagent_disabled_schema'] = null;
     if ($dsn) {
