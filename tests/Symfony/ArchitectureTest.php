@@ -11,6 +11,19 @@ use PHPUnit\Framework\TestCase;
 
 final class ArchitectureTest extends TestCase
 {
+    /** Keep in step with the ConsoleSupport layer in deptrac.yaml. */
+    private const array CONSOLE_SUPPORT = [
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\CliPresentation',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\CommandResult',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\InvalidLegacyArgument',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\LegacyArguments',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\LegacyCli',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\LegacyRequest',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\OutputMode',
+        'Kadupul\\Platform\\Infrastructure\\Symfony\\Console\\ResultRenderer',
+        'Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationVersion',
+    ];
+
     public function testModuleDependenciesPointInwardAndCrossOnlyContracts(): void
     {
         $root = dirname(__DIR__, 2) . '/src/';
@@ -52,6 +65,11 @@ final class ArchitectureTest extends TestCase
                         self::assertNotSame('Platform', $targetModule, $relative . ' imports technical integration API ' . $name);
                     }
                     if ($targetModule !== $module) {
+                        // The shared console toolkit (Deptrac layer ConsoleSupport) is the one
+                        // non-Contract API a module's own Infrastructure commands may import.
+                        if ($layer === 'Infrastructure' && in_array($name, self::CONSOLE_SUPPORT, true)) {
+                            continue;
+                        }
                         self::assertSame('Contract', $targetLayer, $relative . ' imports ' . $name);
                     } elseif ($layer === 'Domain') {
                         self::assertSame('Domain', $targetLayer, $relative . ' imports ' . $name);
