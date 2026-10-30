@@ -79,7 +79,10 @@ its own record.
   stored, and storage can move without changing plans.
 - Bindings and claims are in memory. A durable store needs a schema and an
   upgrade path, which this work does not add.
-- Approval is denied in production until an IdentityAccess authorizer exists.
+- Approval is decided by the `metric_binding` workflow guard through
+  IdentityAccess's `BindingApprovalPermission`, currently realm 15, and is denied
+  to everyone else. The RRD write gate is still closed, and approval does not
+  change writer ownership.
 - Discovery is tested on SQLite only, and its field-name semantics cover six
   reviewed interface names.
 - The `Contract` enums mirror the domain enums and are kept equal by a test.
