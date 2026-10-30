@@ -2,6 +2,7 @@
 <phpunit bootstrap="vendor/autoload.php" colors="true">
   <testsuites>
     <testsuite name="Poller database contracts">
+      <file>Unit/SnmpagentDisabledReceiverTest.php</file>
       <file>integration/PollerAcknowledgementDatabaseTest.php</file>
       <file>integration/PollerRejectedSamplesDatabaseTest.php</file>
       <file>integration/PollerStaleItemsDatabaseTest.php</file>

@@ -29,6 +29,10 @@ if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('SNMP_RECEIVER_DELIVERY_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/snmpagent.php');
+}
+
 if (defined('PERMISSION_CLI_NATIVE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/api_automation_tools.php');
 }
