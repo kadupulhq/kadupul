@@ -8,6 +8,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add `html_require_legacy_js()` so plugins can declare their need for Chart.js, dygraphs, jquery.sparkline or the jQuery colorpicker. Release 1.3 still loads all four on every page and its page head is unchanged; release 1.4 will load only the requested ones. These libraries are deprecated and no core page uses them.
 - Update billboard.js from 3.18.0 to 4.1.3 and the billboard stylesheet in every theme. The library is now installed from npm and checked against a pinned checksum like D3 and jQuery. Plugin charts keep working because the browser bundle still includes every chart method; 4.x also stops `javascript:` links spelled with a numeric character reference that omits its closing semicolon from reaching the default tooltip, custom tooltip contents and legend templates, which 3.18.0 allowed. Git-based installs must run `npm ci && npm run build` after pulling, because `include/js/billboard.js` is no longer tracked and `git pull` deletes it, leaving charts broken until the rebuild; packaged and offline releases are unaffected.
+- Decide model-driven binding approval through a `metric_binding` state machine whose guard asks IdentityAccess for the signed-in actor and a binding-approval permission (Settings/Utilities realm), denies by default and audits every decision. Nothing calls approval yet and the RRD write gate stays closed.
 
 - Replace the bundled fullscreen library with a native Fullscreen API shim that preserves the screenfull 3.x plugin interface.
 

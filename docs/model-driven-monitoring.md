@@ -769,7 +769,7 @@ merged only with a working use case and tests.
 | 2. Capability state | Discovery result and reconciliation; in-memory stores | Done |
 | 3. Packs and planner | Pack loading and validation; planner producing plans | Done |
 | 4. Storage foundation | Raw sample values, `SampleSink`, bindings, writer ownership, legacy discovery, gated RRD sink, plan v2 | Done |
-| 5. Production wiring | Service configuration, a durable binding store with its schema and upgrade, a `local_data_id`-to-file adapter, an IdentityAccess authorizer, an audit event for approval and activation | Slice A (service configuration) and slice B (durable binding and ownership stores, schema step 1.2.37) done. Remaining: durable plan, pack and capability stores, the `local_data_id`-to-file adapter, the authorizers, the audit event, a source for the running version so `PackLifecycle` can be wired |
+| 5. Production wiring | Service configuration, a durable binding store with its schema and upgrade, a `local_data_id`-to-file adapter, an IdentityAccess authorizer, an audit event for approval and activation | Slice A (service configuration) and slice B (durable binding and ownership stores, schema step 1.2.37) done. Remaining: durable plan, pack and capability stores, the `local_data_id`-to-file adapter, the plan activation authorizer, audit events for plan approval and activation, a source for the running version so `PackLifecycle` can be wired |
 | 6. First protocol adapter | One real adapter behind `CapabilityProvider`, using an actual library, and a collector that executes a plan end to end | Not started; needs a protocol library |
 | 7. Poller handoff | A decision record and legacy-side tests for [moving a legacy field](#future-poller-handoff), then the implementation | Not started; proposal only |
 | 8. New series and presentation | Creating RRD files for new series, graphing and alerting from metric ids, template parity and migration guidance | Not started |
@@ -790,9 +790,14 @@ connection.
 Service wiring defaults. `kadupul.monitoring.rrd_writes_enabled` is `false` and
 no environment variable feeds it, so `SampleSink` resolves to `RecordSamples`
 with a closed gate and every sample is refused as `WritesDisabled`. Binding
-approval and plan activation have no authorizer, so no binding is approved and
-opening the gate would not store anything; do not change the parameter until an
-authorizer exists. `kadupul.monitoring.rrdtool_binary` and
+approval is decided by the `metric_binding` workflow guard, which asks
+IdentityAccess for the signed-in actor and the `BindingApprovalPermission`
+(realm 15, Settings/Utilities, until a dedicated realm is decided), denies by
+default and audits every decision. Plan activation has no authorizer, so no plan
+is activated. The gate stays closed: approving a binding does not open it or give
+its field to a new writer, and no default or environment variable was changed;
+do not change the parameter without a separate decision.
+`kadupul.monitoring.rrdtool_binary` and
 `kadupul.monitoring.rrd_root` are empty by default. While either is empty,
 `RrdStorageFactory` returns `UnconfiguredRrdStorage`, which refuses every storage
 call, so nothing guesses a binary or a directory and nothing reads the legacy
@@ -806,6 +811,7 @@ validator needs the running product version and no non-legacy source exists yet.
 | Item | Status |
 | --- | --- |
 | Architecture decision records 0001 to 0009 | Written, proposed |
+| Workflows: `capability` and `metric_binding` state machines | Implemented in `config/packages/workflow.yaml`; diagrams in [model-driven monitoring workflows](model-driven-monitoring-workflows.md). `ModelDrivenWorkflowTest` compares both with the domain for every pair of states |
 | Pack JSON Schema and example | Written; validated against its example, see below |
 | Collection plan JSON Schemas (v1, v2) and examples | Written; validated against their examples, see below |
 | Telemetry contract: `MetricId`, `ResourceId`, `Sample`, `CounterValue`, `CounterNormalizer` and related | Implemented; tests in `tests/Symfony/Telemetry`. Samples carry a device id and a `CollectionProtocol`; a decrease is a rollover only on a declared 32-bit counter and a reset otherwise, as [0004](adr/0004-common-telemetry-contracts.md) specifies |
@@ -815,18 +821,18 @@ validator needs the running product version and no non-legacy source exists yet.
 | Monitoring: capability discovery result | Implemented: `DiscoverDeviceCapabilities`, `InMemoryDeviceCapabilityStore`. The `CapabilityProvider` port is scaffolding: no protocol adapter exists |
 | Monitoring: pack loading and validation | Implemented: `PackValidator`, `JsonPackReader` (JSON only), `PackLifecycle`, `InMemoryPackRepository` |
 | Monitoring: planner and collection plan | Implemented: `MonitoringPlanner`, `CollectionPlan`, `PlanSerializer` (v1 and v2), `ActivateCollectionPlan`, `InMemoryCollectionPlanStore`. Scaffolding: `PlanActivationAuthorizer` has no IdentityAccess adapter, so activation is always denied outside tests |
-| Monitoring: metric bindings | Implemented: `MetricBinding`, `BindingKey`, `StorageField`, `RegisterBinding`, `ApproveBinding`, `ResolveBinding` behind `BindingCatalog`, `DbalBindingRepository` (wired) and `InMemoryBindingRepository` (tests). `DbalMonitoringStoreDatabaseTest` runs against MariaDB or MySQL when `KADUPUL_TEST_MYSQL_DSN` is set and skips otherwise. Scaffolding: `BindingApprovalAuthorizer` has no adapter, so approval is denied outside tests |
+| Monitoring: metric bindings | Implemented: `MetricBinding`, `BindingKey`, `StorageField`, `RegisterBinding`, `ApproveBinding`, `ResolveBinding` behind `BindingCatalog`, `DbalBindingRepository` (wired) and `InMemoryBindingRepository` (tests). `DbalMonitoringStoreDatabaseTest` runs against MariaDB or MySQL when `KADUPUL_TEST_MYSQL_DSN` is set and skips otherwise. `BindingApprovalAuthorizer` is implemented by `WorkflowBindingApprovalAuthorizer` over the `metric_binding` guard (`BindingApprovalGuard`); nothing calls `ApproveBinding` from a controller or command yet. `BindingApprovalDatabaseTest` shows a denied approval leaves the stored row unchanged |
 | Monitoring: writer ownership | Implemented: `WriterOwnershipRegistry` over the `WriterOwnershipProbe` port, with claims in `DbalWriterClaimStore` (wired) or `InMemoryWriterClaimStore` (tests); legacy side is `LegacyDataSourceDiscovery::ownership()` |
 | Schema: `kadupul_metric_binding`, `kadupul_writer_ownership` | Implemented: `cacti.sql`, `docs/audit_schema.sql` and the 1.2.37 upgrade step, compared by `ModelDrivenSchemaTest` and, on a server, `ModelDrivenSchemaDatabaseTest` |
 | Monitoring: legacy data-source discovery | Implemented and read-only: `LegacyDataSourceDiscovery`, `LegacyExistingMonitoring` (also the `ExistingMonitoring` adapter used for overlaps). Tested on SQLite only; no caller in the application |
 | Graphing: gated sample write | Implemented: `RecordSamples`, `WriteGate`, `RrdUpdateFormatter`, `RrdtoolInspector`, `RrdtoolUpdater`, `RrdtoolProcess`, `ConfiguredRootTargetLocator`. Tested with real RRDtool files in a temporary directory; wired as the `SampleSink` with a closed gate and unconfigured storage by default; no production caller |
 | Clock adapters: `Telemetry\Infrastructure\Clock\SymfonyClock`, `Graphing\Infrastructure\Clock\SymfonyClock` | Scaffolding: each implements its module's `Clock` port over Symfony's `ClockInterface` and returns UTC with microseconds; tested with `MockClock` in `SymfonyClockTest`; wired to the `Clock` ports in `config/services.yaml`, while unit tests still use `FixedClock` |
-| Audit event for plan approval, activation and binding approval | Future |
+| Audit event for plan approval, activation and binding approval | Binding approval: implemented for the authorization decision (`monitoring.binding.authorize`, allowed and denied), not for the later write. Plan approval and activation: future |
 | Capability reconciliation and caching | Reconciliation on rediscovery implemented in `DiscoverDeviceCapabilities`; time-to-live caching and operator overrides future |
 | Resource enumeration (interfaces and other pack resources) | Future; the planner takes resources as input |
 | Production wiring of the sink: `local_data_id`-to-file adapter, configuration | Future |
 | Durable storage for plans, packs and capabilities | Future |
-| IdentityAccess authorizers for plan activation and binding approval | Future |
+| IdentityAccess authorizers for plan activation and binding approval | Binding approval: implemented (`BindingApprovalPermission`, realm 15). Plan activation: future. A dedicated realm for binding approval is future and needs a VERSIONING.md decision |
 | Creation of RRD files for new series | Future |
 | Poller handoff of a legacy field | Future; proposal only |
 | Protocol libraries (php-redfish, php-gnmi, php-yang, php-netconf, php-restconf, php-openconfig) | Future; packages do not exist |

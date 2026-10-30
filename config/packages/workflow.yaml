@@ -1,0 +1,52 @@
+# Lifecycles of the model-driven monitoring state. Both are state machines
+# over places that mirror the domain enums; tests compare every pair of states
+# with the domain rules (BindingStatus::canMoveTo, the merge in
+# DiscoverDeviceCapabilities), so a change to one without the other fails.
+framework:
+    workflows:
+        capability:
+            type: state_machine
+            marking_store:
+                service: Kadupul\Monitoring\Infrastructure\Workflow\StatusMarkingStore
+            supports:
+                - Kadupul\Monitoring\Infrastructure\Workflow\CapabilitySubject
+            initial_marking: advertised
+            places: [advertised, verified, partial, unsupported, unknown]
+            transitions:
+                verify:
+                    from: [advertised, unknown, partial, unsupported]
+                    to: verified
+                mark_partial:
+                    from: [advertised, unknown, verified, unsupported]
+                    to: partial
+                mark_unsupported:
+                    from: [advertised, unknown, verified, partial]
+                    to: unsupported
+                mark_unknown:
+                    from: advertised
+                    to: unknown
+                advertise:
+                    from: unknown
+                    to: advertised
+
+        metric_binding:
+            type: state_machine
+            marking_store:
+                service: Kadupul\Monitoring\Infrastructure\Workflow\StatusMarkingStore
+            supports:
+                - Kadupul\Monitoring\Infrastructure\Workflow\BindingSubject
+            initial_marking: proposed
+            places: [proposed, approved, verified, rejected, stale]
+            transitions:
+                approve:
+                    from: proposed
+                    to: approved
+                verify:
+                    from: approved
+                    to: verified
+                mark_stale:
+                    from: [approved, verified]
+                    to: stale
+                reject:
+                    from: [proposed, approved, stale]
+                    to: rejected
