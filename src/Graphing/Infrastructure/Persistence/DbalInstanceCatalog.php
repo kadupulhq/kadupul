@@ -85,7 +85,7 @@ final readonly class DbalInstanceCatalog implements ManagementCatalog
         $rows = $this->database->fetchAllAssociative(
             'SELECT listing.* FROM (' . $source . ') listing
             WHERE COALESCE(listing.name, \'\') LIKE ? ORDER BY listing.`' . $filters->sortColumn . '` ' . $filters->sortDirection
-            . ', listing.id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows),
+            . ', listing.id ASC LIMIT ' . $filters->fetchLimit() . ' OFFSET ' . $filters->offset(),
             [$parentId, '%' . $filters->filter . '%']
         );
         return CatalogPage::fromRows($rows, $name);
@@ -102,7 +102,7 @@ final readonly class DbalInstanceCatalog implements ManagementCatalog
             'SELECT id, title AS name, parent, position,
             local_graph_id AS graph_id, host_id AS device_id, site_id FROM graph_tree_items
             WHERE graph_tree_id = ? AND COALESCE(title, \'\') LIKE ? ORDER BY `' . $filters->sortColumn . '` '
-            . $filters->sortDirection . ', id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows),
+            . $filters->sortDirection . ', id ASC LIMIT ' . $filters->fetchLimit() . ' OFFSET ' . $filters->offset(),
             [$parentId, '%' . $filters->filter . '%']
         );
         return CatalogPage::fromRows($records, $name);
