@@ -35,7 +35,7 @@ final class LegacyCli
         try {
             [$input, $special] = $arguments->translate(array_slice($argv, 1));
         } catch (InvalidLegacyArgument $error) {
-            foreach ([...$arguments->invalid($error->argument), ...$arguments->help()] as $line) {
+            foreach ($arguments->invalidOutput($error->argument) as $line) {
                 $output->writeln($line, OutputInterface::OUTPUT_RAW);
             }
 

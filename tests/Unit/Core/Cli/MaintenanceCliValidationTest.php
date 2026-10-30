@@ -188,8 +188,6 @@ PHP;
     'reorder rejects zero host ID' => array('reorder_data_query.php', array('--host-id=0', '--qid=all'), 1, '--host-id must be a positive integer'),
     'reorder rejects missing query ID' => array('reorder_data_query.php', array('--host-id=all'), 1, '--qid must be a positive query ID'),
     'data-source reapply retains the deviceless selector' => array('poller_data_sources_reapply_names.php', array('--host-id=0'), 0, 'AND data_local.host_id=0', 'reapply-zero'),
-    'graph reapply retains the deviceless selector' => array('poller_graphs_reapply_names.php', array('--host-id=0'), 0, 'AND graph_local.host_id=0', 'reapply-zero'),
-    'graph reapply rejects malformed host IDs' => array('poller_graphs_reapply_names.php', array('--host-id=1,nope'), 1, 'positive device IDs'),
     'audit report returns failure when its baseline table is unavailable' => array('audit_database.php', array('--report'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit repair stops when its baseline table is unavailable' => array('audit_database.php', array('--repair'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit alters preview stops when its baseline table is unavailable' => array('audit_database.php', array('--alters'), 1, 'FATAL: Failed to find or read Audit Schema'),

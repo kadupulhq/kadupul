@@ -343,4 +343,20 @@ final class CliConsoleAccessTest extends TestCase
         $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 1)');
         self::assertTrue($access->canManageUsers($actor), 'a direct grant does');
     }
+
+    public function testGraphManagementIsRealm5AndRealm15DoesNotImplyIt(): void
+    {
+        $access = $this->access('ops');
+        $actor = $access->actor() ?? self::fail('ops resolves');
+        self::assertFalse($access->canManageGraphs($actor));
+
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (9, 5)');
+        self::assertTrue($access->canManageGraphs($actor), 'an enabled group grants it');
+
+        $this->db->executeStatement("UPDATE user_auth_group SET enabled = '' WHERE id = 9");
+        self::assertFalse($access->canManageGraphs($actor), 'a disabled group does not');
+
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 5)');
+        self::assertTrue($access->canManageGraphs($actor), 'a direct grant does');
+    }
 }

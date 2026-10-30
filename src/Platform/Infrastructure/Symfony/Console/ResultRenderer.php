@@ -41,8 +41,9 @@ final readonly class ResultRenderer
     /** Only a cli/ shim asks for version or help this way, and it cannot pass --json. */
     public function legacyRequest(LegacyRequest $request, string $versionLine, LegacyArguments $arguments, OutputInterface $output): int
     {
-        $lines = [$versionLine];
-        if (in_array($request, [LegacyRequest::Help, LegacyRequest::Usage], true)) {
+        $help = in_array($request, [LegacyRequest::Help, LegacyRequest::Usage], true);
+        $lines = $help && !$arguments->helpPrintsVersion() ? [] : [$versionLine];
+        if ($help) {
             $lines = [...$lines, ...$arguments->help()];
         }
 
