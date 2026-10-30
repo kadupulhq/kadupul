@@ -593,6 +593,11 @@ def main():
         failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
+    for source in ('tests/Symfony/cli_user_scenarios.py',
+                   'tests/Fixtures/legacy-cli/copy_user.php',
+                   'tests/Fixtures/legacy-cli/add_perms.php'):
+        failures['missing-runner-registration-' + source] = 'Integration test source differs'
+        failures['stale-runner-registration-' + source] = 'Integration test source differs'
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
         scratch = Path(directory)
         (scratch / 'raw').mkdir()

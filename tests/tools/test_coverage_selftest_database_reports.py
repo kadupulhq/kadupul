@@ -3,6 +3,7 @@
 
 """Negative coverage probes retain separate real database measurements."""
 import copy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -18,6 +19,27 @@ SPEC.loader.exec_module(SELFTEST)
 SOURCE = '/var/www/html/src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php'
 OBSERVER = '/var/www/html/lib/api_device.php'
 OTHER_IMPORTED = '/var/www/html/src/IdentityAccess/Infrastructure/Legacy/SharedSession.php'
+
+
+class UserCliProducerRegistrationTest(unittest.TestCase):
+    def test_published_http_manifests_pin_user_cli_scenarios_and_frozen_oracles(self):
+        spec = importlib.util.spec_from_file_location('coverage_support', ROOT / 'tests/Symfony/coverage_support.py')
+        support = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(support)
+        for database_sessions in (False, True):
+            with self.subTest(database_sessions=database_sessions), tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary)
+                (output / 'raw').mkdir()
+                (output / 'raw/coverage-probe.json').write_text('{}')
+                support.publish_coverage(output, database_sessions, ['retained check'])
+                manifest = json.loads((output / 'observations.json').read_text())
+                self.assertEqual('database' if database_sessions else 'files', manifest['session_handler'])
+                self.assertEqual(['retained check'], manifest['checks'])
+                for source in ('tests/Symfony/cli_user_scenarios.py',
+                               'tests/Fixtures/legacy-cli/copy_user.php',
+                               'tests/Fixtures/legacy-cli/add_perms.php'):
+                    self.assertEqual(hashlib.sha256((ROOT / source).read_bytes()).hexdigest(),
+                                     manifest['source_sha256'].get(source), source)
 
 
 class DatabaseReportPreservationTest(unittest.TestCase):
