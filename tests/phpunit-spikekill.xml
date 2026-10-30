@@ -7,6 +7,7 @@
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
+      <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>
       <file>Unit/Security/HostReindexExecutionTest.php</file>
       <file>Unit/Security/RealtimePollerExecutionTest.php</file>
@@ -36,6 +37,8 @@
       <file>Unit/Installer/DataInputIndexUpgradeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>Unit/Core/Cli/BoostWorkerNativeTest.php</file>
+      <file>Unit/Core/Cli/BoostArchiveAcknowledgementNativeTest.php</file>
+      <file>Unit/Core/Rrd/BoostAcknowledgedDeletionNativeTest.php</file>
       <file>Unit/Core/Cli/BoostPartitionWorkerNativeTest.php</file>
       <file>Unit/Core/Cli/BoostQueueMasterNativeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterWorkerNativeTest.php</file>

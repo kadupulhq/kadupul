@@ -14,9 +14,12 @@ define('COPYRIGHT_YEARS', '2026');
 define('BOOST_TIMER_START', 0);
 define('BOOST_TIMER_END', 1);
 define('SQL_NO_CACHE', '');
+define('POLLER_VERBOSITY_HIGH', 4);
+define('POLLER_VERBOSITY_NONE', 1);
 // The batched delete is production code, not a fixture boundary.
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php'), 'array_rekey'));
 function get_cacti_version()
 {
     return 'fixture';
@@ -64,18 +67,28 @@ function boost_get_rrd_filename_and_template($id)
     if ($GLOBALS['mode'] === 'lookup-failure' && $id === 42) {
         return false;
     }
-    return array('rrd_template' => 'value', 'rrd_path' => 'sample-' . $id . '.rrd');
+    return array('rrd_template' => $GLOBALS['mode'] === 'finite-sample' ? 'value:peer' : 'value', 'rrd_path' => 'sample-' . $id . '.rrd');
 }
-function array_rekey($values, ...$args)
+function db_fetch_assoc_prepared($sql, $params = array())
 {
-    return $values;
-}
-function db_fetch_assoc_prepared(...$args)
-{
+    if ($GLOBALS['mode'] === 'finite-sample') {
+        if (str_contains($sql, 'poller_data_template_field_mappings')) {
+            return array(array('keyname' => '1_cached', 'data_source_name' => 'value'), array('keyname' => '1_peer', 'data_source_name' => 'peer'));
+        }
+        if (str_contains($sql, 'dif.data_name')) {
+            return array(array('data_name' => 'uncached', 'data_source_name' => 'value'), array('data_name' => 'peer', 'data_source_name' => 'peer'));
+        }
+    }
     return array();
 }
 function db_fetch_assoc($sql)
 {
+    if ($GLOBALS['mode'] === 'finite-sample') {
+        $sample = getenv('BOOST_SAMPLE');
+        $format = getenv('BOOST_FORMAT');
+        $first = array('local_data_id' => 42, 'data_template_id' => 1, 'timestamp' => '1699999800', 'rrd_name' => $format === 'scalar' ? 'value' : '', 'output' => $format === 'scalar' ? $sample : $format . ':' . $sample . ' peer:7');
+        return $format === 'scalar' ? array($first, array_replace($first, array('rrd_name' => 'peer', 'output' => '7'))) : array($first);
+    }
     if ($GLOBALS['mode'] === 'multi') {
         // Templated and untemplated sources, each with unmapped MULTI and invalid output.
         return array(

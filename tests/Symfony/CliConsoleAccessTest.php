@@ -326,4 +326,21 @@ final class CliConsoleAccessTest extends TestCase
         $this->expectException(\LogicException::class);
         (new CliConsoleAccess($this->db, $this->db))->actor();
     }
+
+    public function testUserManagementIsRealm1AndRealm15DoesNotImplyIt(): void
+    {
+        $access = $this->access('ops');
+        $actor = $access->actor() ?? self::fail('ops resolves');
+        // ops holds realms 15 and 8 through group 9 only.
+        self::assertFalse($access->canManageUsers($actor));
+
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (9, 1)');
+        self::assertTrue($access->canManageUsers($actor), 'an enabled group grants it');
+
+        $this->db->executeStatement("UPDATE user_auth_group SET enabled = '' WHERE id = 9");
+        self::assertFalse($access->canManageUsers($actor), 'a disabled group does not');
+
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 1)');
+        self::assertTrue($access->canManageUsers($actor), 'a direct grant does');
+    }
 }

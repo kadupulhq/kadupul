@@ -15,13 +15,6 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
     copy($root . '/cli/' . $script, $dir . '/cli/' . $script);
     foreach (array('utility.php', 'api_data_source.php', 'api_graph.php', 'api_automation_tools.php', 'poller.php', 'snmp.php', 'data_query.php', 'reapply_names.php') as $library) {
         $libraryStub = '<?php ';
-        if ($library === 'api_automation_tools.php') {
-            $libraryStub .= 'function getHosts() { return array(); } function getGraphTemplates() { return array(); }'
-                . 'function displayUsers() { print "LIST_OK"; } function displayTrees() { print "LIST_OK"; }'
-                . 'function displayHosts($rows, $quiet = false) { print "LIST_OK"; }'
-                . 'function displayHostGraphs($host, $quiet = false) { print "LIST_OK"; }'
-                . 'function displayGraphTemplates($rows, $quiet = false) { print "LIST_OK"; }';
-        }
         file_put_contents($dir . '/lib/' . $library, $libraryStub);
     }
     copy($root . '/lib/reapply_names.php', $dir . '/lib/reapply_names.php');
@@ -197,7 +190,6 @@ PHP;
     'data-source reapply retains the deviceless selector' => array('poller_data_sources_reapply_names.php', array('--host-id=0'), 0, 'AND data_local.host_id=0', 'reapply-zero'),
     'graph reapply retains the deviceless selector' => array('poller_graphs_reapply_names.php', array('--host-id=0'), 0, 'AND graph_local.host_id=0', 'reapply-zero'),
     'graph reapply rejects malformed host IDs' => array('poller_graphs_reapply_names.php', array('--host-id=1,nope'), 1, 'positive device IDs'),
-    'add permissions list mode exits successfully' => array('add_perms.php', array('--list-users'), 0, 'LIST_OK'),
     'audit report returns failure when its baseline table is unavailable' => array('audit_database.php', array('--report'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit repair stops when its baseline table is unavailable' => array('audit_database.php', array('--repair'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit alters preview stops when its baseline table is unavailable' => array('audit_database.php', array('--alters'), 1, 'FATAL: Failed to find or read Audit Schema'),

@@ -87,3 +87,41 @@ PHP;
     expect($result[2])->toBeGreaterThanOrEqual(1);
     expect($result[2])->toBeLessThan(4);
 });
+
+test('argv execution preserves an exit first read after the polling deadline', function (int $exit): void {
+    $program = <<<'PHP'
+require $argv[1] . '/tests/Helpers/PhpSource.php';
+$source = test_php_function_source(file_get_contents($argv[1] . '/lib/functions.php'), 'cacti_exec');
+$schedule = <<<'CODE'
+namespace LateExitProbe;
+function proc_open($command, $descriptors, &$pipes, $cwd = null, $environment = null, $options = array()) {
+    $process = \proc_open($command, $descriptors, $pipes, $cwd, $environment, $options);
+    if (!is_resource($process)) {
+        throw new \RuntimeException('Cannot start the native exit probe');
+    }
+    $deadline = microtime(true) + 2;
+    do {
+        $status = \proc_get_status($process);
+        if (!$status['running']) {
+            $GLOBALS['native_exit'] = $status['exitcode'];
+            return $process;
+        }
+        usleep(1000);
+    } while (microtime(true) < $deadline);
+    \proc_terminate($process, 9);
+    foreach ($pipes as $pipe) fclose($pipe);
+    \proc_close($process);
+    throw new \RuntimeException('Native exit probe did not finish');
+}
+CODE;
+// PHP >=8.3 caches the real native exit across status reads. Only scheduling
+// is controlled; the tested helper still uses native status and close calls.
+eval($schedule . $source);
+$output = array();
+$exit = (int) $argv[2];
+$result = \LateExitProbe\cacti_exec(PHP_BINARY, array('-r', 'exit((int) $argv[1]);', (string) $exit), $output, 0);
+echo json_encode(array($result, $GLOBALS['native_exit']));
+PHP;
+    $result = json_decode(runWhitelistProbe($this, $program, array((string) $exit)), true, 512, JSON_THROW_ON_ERROR);
+    expect($result)->toBe(array($exit, $exit));
+})->with(array(0, 7));

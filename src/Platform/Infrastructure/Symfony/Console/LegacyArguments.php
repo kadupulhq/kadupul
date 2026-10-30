@@ -36,6 +36,18 @@ abstract class LegacyArguments
     }
 
     /**
+     * The command that runs the translated input. A script whose old flags
+     * select between several commands, such as a --list-* mode, overrides this;
+     * the others run the one command their shim names.
+     *
+     * @param array<string, mixed> $input the result of translate()
+     */
+    public function route(array $input, string $default): string
+    {
+        return $default;
+    }
+
+    /**
      * Name of the special mode a null-mapped flag selects: version for the
      * versionAndHelp() version flags, help for every other.
      */

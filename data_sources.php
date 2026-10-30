@@ -68,11 +68,6 @@ switch (get_request_var('action')) {
     case 'ds_enable':
         ds_enable();
         break;
-    case 'ds_remove':
-        ds_remove();
-
-        header('Location: data_sources.php');
-        break;
     case 'ds_edit':
         ds_edit();
 

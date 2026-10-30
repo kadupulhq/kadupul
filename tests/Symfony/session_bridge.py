@@ -130,6 +130,11 @@ def audit_parity(fixture):
     verify_audit_parity(fixture.harness, check)
 
 
+def user_parity(fixture):
+    from cli_user_scenarios import verify_user_parity
+    verify_user_parity(fixture.harness, check)
+
+
 def forged_session(fixture):
     harness = fixture.harness
     # A syntactically valid, attacker-selected ID must never be adopted.
@@ -317,7 +322,7 @@ def account_lifecycle(fixture):
 
 STEPS = (
     console_home, console_collectors, console_prefix, permission_denied, plugin_menu, anonymous_entry,
-    script_server, cli_parity, tree_cli, schema_parity, audit_parity, forged_session,
+    script_server, cli_parity, tree_cli, schema_parity, audit_parity, user_parity, forged_session,
     login_policy, cdef_legacy_pages, data_inputs, about_authentication, about, inventory,
     data_source_profile_deletion, data_source_profile_heartbeat, site_edit, links,
     site_create, site_lifecycle, device_create, palette_colors, gprint_presets,
@@ -344,6 +349,8 @@ LASTING_STATE = {
                          "DELETE FROM settings WHERE name='compatibility_denied_reskin'",
     # Revoked realm checks reinsert the admin grants unconditionally.
     'schema_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},15),({user_id},26)',
+    # The refused-copy case removes realm 1 and puts it back.
+    'user_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},1),({user_id},8)',
     # The policy checks end by writing both rows explicitly.
     'login_policy': "REPLACE INTO settings (name,value) VALUES ('force_https',''),('guest_user','0')",
     'data_inputs': "UPDATE settings SET value='1' WHERE name='auth_method'; "
@@ -377,7 +384,7 @@ SHARDS = (
     ('schema_parity', 'audit_parity'),
     ('cdef_legacy_pages', 'inventory', 'device_create'),
     ('console_home', 'console_collectors', 'console_prefix', 'permission_denied', 'plugin_menu', 'anonymous_entry',
-     'script_server', 'cli_parity', 'tree_cli', 'forged_session', 'login_policy', 'data_inputs',
+     'script_server', 'cli_parity', 'tree_cli', 'user_parity', 'forged_session', 'login_policy', 'data_inputs',
      'about_authentication', 'about', 'data_source_profile_deletion', 'data_source_profile_heartbeat',
      'site_edit', 'links', 'site_create', 'site_lifecycle', 'palette_colors', 'gprint_presets',
      'color_templates', 'vdefs', 'rrdcheck', 'cdefs', 'automation_templates', 'account_lifecycle'),
