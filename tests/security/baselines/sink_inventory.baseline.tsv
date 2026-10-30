@@ -702,7 +702,6 @@ header_redirect	./color.php:124					header('Location: color.php?action=import');
 header_redirect	./color.php:129				header('Location: color.php?action=import');
 header_redirect	./color.php:225			header('Location: color.php?header=false');
 header_redirect	./color.php:268			header('Location: color.php?header=false');
-header_redirect	./color.php:50			header ('Location: color.php');
 header_redirect	./color_templates.php:168		header('Location: color_templates.php?header=false&action=template_edit&color_template_id=' . (empty($color_template_id) ? get_nfilter_request_var('color_template_id') : $color_template_id));
 header_redirect	./color_templates.php:204			header('Location: color_templates.php?header=false');
 header_redirect	./color_templates.php:268			header('Location: color_templates.php?header=false');
@@ -767,7 +766,6 @@ header_redirect	./data_sources.php:810		header('Location: data_sources.php?heade
 header_redirect	./data_sources.php:819		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
 header_redirect	./data_sources.php:828		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
 header_redirect	./data_sources.php:868				header ('Location: data_sources.php');
-header_redirect	./data_sources.php:99			header ('Location: data_sources.php');
 header_redirect	./data_templates.php:173					header('Location: data_templates.php?header=false&action=template_edit&id=' . (empty($data_template_id) ? get_request_var('data_template_id') : $data_template_id) . (isempty_request_var('current_rrd') ? '' : '&view_rrd=' . (get_nfilter_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : get_request_var('data_template_rrd_id'))));
 header_redirect	./data_templates.php:360			header('Location: data_templates.php?header=false&action=template_edit&id=' . (empty($data_template_id) ? get_request_var('data_template_id') : $data_template_id) . (isempty_request_var('current_rrd') ? '' : '&view_rrd=' . (get_nfilter_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : $data_template_rrd_id)));
 header_redirect	./data_templates.php:480			header('Location: data_templates.php?header=false');

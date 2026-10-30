@@ -91,13 +91,6 @@ switch (get_request_var('action')) {
 
 		ds_enable();
 		break;
-	case 'ds_remove':
-		csrf_require_post(true);
-
-		ds_remove();
-
-		header ('Location: data_sources.php');
-		break;
 	case 'ds_edit':
 		ds_edit();
 
