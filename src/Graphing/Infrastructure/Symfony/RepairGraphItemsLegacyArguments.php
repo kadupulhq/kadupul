@@ -81,6 +81,12 @@ final class RepairGraphItemsLegacyArguments extends LegacyArguments
     }
 
     #[\Override]
+    public function helpPrintsVersion(): bool
+    {
+        return false;
+    }
+
+    #[\Override]
     public function help(): array
     {
         return ['usage: repair_graphs.php [--host-id=ID] --data-template-id=[ID]',

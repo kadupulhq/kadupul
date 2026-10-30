@@ -126,13 +126,20 @@ final class RepairGraphItemsCommandTest extends TestCase
         self::assertSame("ERROR: You must supply a valid graph-template-id!\n", $tester->getDisplay());
     }
 
-    public function testLegacyHelpExitsZeroAndUsageNeedsNoVersionLine(): void
+    public function testLegacyHelpAndUsageHaveNoVersionLineButVersionStillPrintsIt(): void
     {
-        $this->presentation->forLegacy(LegacyRequest::Help);
         $tester = $this->tester($this->repairs());
-
+        $this->presentation->forLegacy(LegacyRequest::Help);
         self::assertSame(0, $tester->execute([]));
-        self::assertStringEndsWith($this->help(), $tester->getDisplay());
+        self::assertSame($this->help(), $tester->getDisplay());
+
+        $this->presentation->forLegacy(LegacyRequest::Usage);
+        self::assertSame(1, $tester->execute([]));
+        self::assertSame($this->help(), $tester->getDisplay());
+
+        $this->presentation->forLegacy(LegacyRequest::Version);
+        self::assertSame(0, $tester->execute([]));
+        self::assertSame("Kadupul Graph Repair Tool, Version 1.3.0 (DB: 1.3.0), Copyright (C) 2004-2031 The Cacti Group\n", $tester->getDisplay());
     }
 
     public function testJsonListsTheEntriesAndTheSqlOnlyWhenAsked(): void

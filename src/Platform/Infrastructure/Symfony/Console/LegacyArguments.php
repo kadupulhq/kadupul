@@ -36,6 +36,15 @@ abstract class LegacyArguments
     }
 
     /**
+     * Whether the original printed its version line above the help for --help
+     * and for a run without enough arguments. Most did; repair_graphs.php did not.
+     */
+    public function helpPrintsVersion(): bool
+    {
+        return true;
+    }
+
+    /**
      * Everything the original printed for an unknown argument: the lines of
      * invalid(), then its help. A script that stopped at the error without the
      * help overrides this.
