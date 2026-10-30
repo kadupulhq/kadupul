@@ -11,6 +11,7 @@ namespace Kadupul\Tests;
 
 use Doctrine\DBAL\DriverManager;
 use Kadupul\Kernel;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Platform\Infrastructure\Profiling\RequestProfileLog;
 use Kadupul\Platform\Infrastructure\Symfony\ServerTiming;
 use PHPUnit\Framework\TestCase;
@@ -53,6 +54,25 @@ final class ServerTimingTest extends TestCase
                 '/\Aapp;dur=\d+(\.\d+)?, db;desc="\d+ queries", mem;desc="\d+"\z/',
                 (string) $response->headers->get('Server-Timing'),
             );
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testProfilerCollectsWorkflowsWithAConsoleOnlyRenderingFixture(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $container->set(ConsoleAccess::class, $this->createStub(ConsoleAccess::class));
+
+            $request = Request::create('/healthz');
+            $response = $kernel->handle($request);
+            $kernel->terminate($request, $response);
+
+            self::assertSame(200, $response->getStatusCode());
+            self::assertTrue($response->headers->has('Server-Timing'));
         } finally {
             $kernel->shutdown();
         }
