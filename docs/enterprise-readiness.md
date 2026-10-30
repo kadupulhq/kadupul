@@ -197,3 +197,10 @@ The two extended files are registered in the required ordinary and privileged
 legacy suite. LTS correction is tracked in #1210; current-head CI remains a
 merge gate. No schema or configuration changes are needed. Reverting restores
 the old serialization and cannot repair previously stored values.
+
+### Device response-time average (#1101)
+
+- Status: implemented.
+- Acceptance: inconsistent stored poll counters must not abort a successful device status update with division by zero; valid weighted averages remain unchanged.
+- Verification: focused production-function regression covers the bound host update for zero and nonzero divisors, database string counters and failed polls. Hosted branch checks remain pending.
+- Scope: main legacy poller helper; equivalent LTS correction is prepared separately. No schema or runtime change. Not released.

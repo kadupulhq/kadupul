@@ -3,8 +3,8 @@
     "name": "admin_email",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5521,
-        "end_line": 5525,
+        "start_line": 5526,
+        "end_line": 5530,
         "line_count": 5,
         "signature": {
             "parameters": [
