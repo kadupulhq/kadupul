@@ -48,7 +48,7 @@ final readonly class DbalCollectorDeviceCatalog implements ManagementCatalog
             'SELECT id, description AS name, hostname, disabled, status
             FROM host WHERE poller_id = ? AND id IN (' . $scope['devices'] . ')
             AND description LIKE ? ORDER BY `' . $filters->sortColumn . '` ' . $filters->sortDirection
-            . ', id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows),
+            . ', id ASC LIMIT ' . $filters->fetchLimit() . ' OFFSET ' . $filters->offset(),
             [$parentId, '%' . $filters->filter . '%']
         );
         return CatalogPage::fromRows($records, $name);

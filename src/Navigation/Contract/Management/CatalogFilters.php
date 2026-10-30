@@ -39,6 +39,16 @@ final readonly class CatalogFilters
         return new self($filter, (int) $rows, (int) $page, $column, $direction);
     }
 
+    public function fetchLimit(): int
+    {
+        return $this->rows + 1;
+    }
+
+    public function offset(): int
+    {
+        return ($this->page - 1) * $this->rows;
+    }
+
     /** @return array<string, string> */
     public function query(): array
     {

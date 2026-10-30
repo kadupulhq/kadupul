@@ -44,7 +44,7 @@ final readonly class DbalNetworkDeviceCatalog implements ManagementCatalog
         $records = $this->database->fetchAllAssociative(
             'SELECT id, REPLACE(sysName, \':\', \' \') AS name, hostname, ip, REPLACE(os, \':\', \' \') AS os, known, up
             FROM automation_devices WHERE network_id = ? AND sysName LIKE ? ORDER BY `' . $filters->sortColumn . '` '
-            . $filters->sortDirection . ', id ASC LIMIT ' . ($filters->rows + 1) . ' OFFSET ' . (($filters->page - 1) * $filters->rows),
+            . $filters->sortDirection . ', id ASC LIMIT ' . $filters->fetchLimit() . ' OFFSET ' . $filters->offset(),
             [$parentId, '%' . $filters->filter . '%']
         );
         return CatalogPage::fromRows($records, $name);
