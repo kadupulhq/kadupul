@@ -7,10 +7,13 @@
 
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
-final readonly class CollectorIdentity
+use Kadupul\IdentityAccess\Contract\CollectorTopology;
+
+final readonly class CollectorIdentity implements CollectorTopology
 {
     public function __construct(private InstallationConfiguration $configuration) {}
 
+    #[\Override]
     public function isRemoteCollector(): bool
     {
         // Read on each call, not at construction: the container builds this

@@ -90,6 +90,8 @@ services:
     Kadupul\Platform\Application\Port\Clock:
         alias: Kadupul\Platform\Infrastructure\Symfony\SystemClock
     Kadupul\Platform\Application\Command\AnalyzeDatabase: ~
+    Kadupul\IdentityAccess\Contract\CollectorTopology:
+        alias: Kadupul\Platform\Infrastructure\Legacy\CollectorIdentity
     Kadupul\Platform\Application\Command\MaintenanceTarget: ~
     Kadupul\Platform\Application\Command\SchemaChangeAudit: ~
     Kadupul\Platform\Application\Command\TableConversionStep: ~
