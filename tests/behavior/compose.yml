@@ -34,6 +34,7 @@ services:
     volumes:
       - ../Support/Behavior:/harness:ro
       - ../Fixtures/plugins/compatibility_test:/var/www/html/plugins/compatibility_test:ro
+      - ../Fixtures/plugins/menu_parity:/var/www/html/plugins/menu_parity:ro
   snmp:
     build:
       context: ../..

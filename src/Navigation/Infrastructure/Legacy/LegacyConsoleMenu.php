@@ -15,6 +15,8 @@ use Kadupul\Navigation\Contract\Management\CatalogScreen;
 use Kadupul\IdentityAccess\Contract\RealmGrants;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Contract\PluginConsoleMenu;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Attribute\AsTwigFunction;
 
@@ -122,6 +124,8 @@ final class LegacyConsoleMenu
         private readonly LegacyConfiguration $configuration,
         private readonly DatabaseConnection $database,
         private readonly TranslatorInterface $translator,
+        private readonly PluginConsoleMenu $plugins,
+        private readonly LoggerInterface $logger,
     ) {}
 
     /**
@@ -144,6 +148,15 @@ final class LegacyConsoleMenu
     public static function isAppPath(string $path): bool
     {
         return preg_match('~\A[a-z0-9_]+\.php(?:/[a-z0-9_-]+)*(?:\?[a-z0-9_]+=[0-9]+)?\z~D', $path) === 1;
+    }
+
+    /**
+     * Accept a plugin script as plugins add it to $menu: plugins/<name>/ and a
+     * PHP file, with an optional query of plain names and values.
+     */
+    public static function isPluginPath(string $path): bool
+    {
+        return preg_match('~\Aplugins/[A-Za-z0-9_-]+/(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+\.php(?:\?[A-Za-z0-9_]+=[A-Za-z0-9_-]*(?:&[A-Za-z0-9_]+=[A-Za-z0-9_-]*)*)?\z~D', $path) === 1;
     }
 
     /** Existing PHP URLs remain available for forms and advanced operations. */
@@ -178,7 +191,8 @@ final class LegacyConsoleMenu
                 return [];
             }
             $links = $this->consoleLinks();
-            $realms = [];
+            $plugins = $this->pluginEntries($actor->id);
+            $realms = array_column($plugins, 'realm');
             foreach ($definition as $items) {
                 foreach ($items as [, $realm]) {
                     $realms[] = $realm;
@@ -232,9 +246,19 @@ final class LegacyConsoleMenu
             $sections[$section]['items'][] = ['label' => $link['title'], 'path' => 'link.php?id=' . $link['id']];
         }
 
+        foreach ($plugins as $entry) {
+            if (!isset($granted[$entry['realm']])) {
+                continue;
+            }
+            // Plugin labels are shown as given; Twig escapes them like any text.
+            $label = in_array($entry['section'], self::namedSections(), true) ? $this->translator->trans($entry['section'], [], 'menu') : $entry['section'];
+            $sections[$entry['section']] ??= ['label' => $label, 'items' => []];
+            $sections[$entry['section']]['items'][] = ['label' => $entry['label'], 'path' => $entry['path']];
+        }
+
         $menu = [];
         foreach ($sections as $section) {
-            $section['items'] = array_values(array_filter($section['items'], static fn(array $item): bool => self::isAppPath($item['path'])));
+            $section['items'] = array_values(array_filter($section['items'], static fn(array $item): bool => self::isAppPath($item['path']) || self::isPluginPath($item['path'])));
             if ($section['items'] !== []) {
                 $menu[] = $section;
             }
@@ -258,6 +282,50 @@ final class LegacyConsoleMenu
         }
 
         return ($values['connection_status'] ?? 'online') === 'online';
+    }
+
+    /**
+     * What plugins added to the legacy $menu. Built-in items, plugins.php and
+     * console links are already drawn above, and an entry needs a positive realm
+     * and a relative script path. A failing worker leaves the built-in menu.
+     *
+     * @return list<array{section: string, label: string, path: string, realm: int}>
+     */
+    private function pluginEntries(int $actorId): array
+    {
+        try {
+            $entries = $this->plugins->entries($actorId, self::namedSections());
+        } catch (\RuntimeException $error) {
+            $this->logger->warning('Plugin console menu entries are unavailable; showing the built-in menu. class={class}', ['class' => $error::class]);
+            return [];
+        }
+        $builtIn = ['plugins.php' => true];
+        foreach ([self::SECTIONS, self::OFFLINE_SECTIONS] as $definition) {
+            foreach ($definition as $items) {
+                $builtIn += array_fill_keys(array_keys($items), true);
+            }
+        }
+        $added = [];
+        foreach ($entries as $entry) {
+            if (isset($builtIn[$entry['path']]) || str_starts_with($entry['path'], 'link.php?')
+                || $entry['realm'] === null || $entry['realm'] <= 0
+                || !self::isAppPath($entry['path']) && !self::isPluginPath($entry['path'])) {
+                continue;
+            }
+            $added[] = $entry;
+        }
+
+        return $added;
+    }
+
+    /**
+     * Sections this menu labels itself, which a plugin entry joins in any locale.
+     *
+     * @return list<string>
+     */
+    private static function namedSections(): array
+    {
+        return [...array_keys(self::SECTIONS), 'Reports', 'External Links'];
     }
 
     /** @return list<array{id: int, title: string, section: string}> */
