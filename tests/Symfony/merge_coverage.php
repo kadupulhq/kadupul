@@ -105,6 +105,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/add_perms.php';
         // cli_graph_scenarios.py compares the graph shims with these.
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/repair_graphs.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -1047,7 +1049,19 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Infrastructure/Legacy/LegacyGraphTitleReapplier.php',
         'src/Graphing/Infrastructure/Persistence/DbalGraphTitleCatalog.php',
         'src/Graphing/Infrastructure/Symfony/ReapplyGraphTitlesCommand.php',
-        'src/Graphing/Infrastructure/Symfony/ReapplyGraphTitlesLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/ReapplyGraphTitlesLegacyArguments.php',
+        'cli/repair_graphs.php',
+        'src/Graphing/Application/Command/RepairGraphItems.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphItemRepairs.php',
+        'src/Graphing/Infrastructure/Symfony/RepairGraphItemsCommand.php',
+        'src/Graphing/Infrastructure/Symfony/RepairGraphItemsLegacyArguments.php',
+        'cli/remove_broken_graphs.php',
+        'bin/legacy-graph-remove.php',
+        'src/Graphing/Application/Command/RemoveBrokenGraphs.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGraphRemover.php',
+        'src/Graphing/Infrastructure/Persistence/DbalBrokenGraphCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsCommand.php',
+        'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
