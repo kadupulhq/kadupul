@@ -7,6 +7,8 @@ compares stdout, stderr, the exit code and the rows each leaves behind. A case
 that cannot match, because the original misbehaved, is checked on its own in
 the differences.
 """
+import re
+
 from cli_parity_scenarios import install_original, normalise, run
 
 PREFIX = 'kadupul_parity_graph_'
@@ -19,7 +21,8 @@ REPAIR_SHIM = 'cli/repair_graphs.php'
 BROKEN_ORIGINAL = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php'
 BROKEN_SHIM = 'cli/remove_broken_graphs.php'
 BROKEN_FIRST_GRAPH = 4000000001
-STTY = "stty: stdin isn't a terminal\n"
+# BSD stty says "stdin isn't a terminal", GNU stty "'standard input': Inappropriate ioctl for device".
+STTY = re.compile(r'^stty: .*\n', re.MULTILINE)
 # The original also raised PHP deprecations on a terminal-less run; both sides run with display_errors off.
 QUIET_PHP = '-d display_errors=0 '
 
@@ -358,7 +361,7 @@ def verify_broken_cases(harness, check):
         check(original['exit'] == native['exit'], f'{label} keeps its exit code')
         check(expected == normalise(native['stdout']), f'{label} prints the same lines')
         # Run without a terminal, the original's `stty size` complained on stderr.
-        check(normalise(original['stderr']).replace(STTY, '') == normalise(native['stderr']), f'{label} prints the same errors')
+        check(STTY.sub('', normalise(original['stderr'])) == normalise(native['stderr']), f'{label} prints the same errors')
         check(original_rows == native_rows, f'{label} leaves the same graphs')
     # With nothing broken from the seed, both say so.
     broken_reset(harness)
