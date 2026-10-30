@@ -54,9 +54,10 @@ test('rrdtool stdin command paths and bounds are validated at sinks', function (
 	expect($rrdSource)->toContain('rrd_create_definition($local_data_id, \'POLLER\')');
 });
 
-test('shell command binaries and rrdfile arguments are escaped', function () use ($rrdSource, $pollerLibSource, $spikekillSource) {
+test('shell arguments are escaped and one-shot RRDtool uses an argument array', function () use ($rrdSource, $pollerLibSource, $spikekillSource) {
 	expect($rrdSource)->toContain('$rrdtool = cacti_escapeshellarg(read_config_option(\'path_rrdtool\'))');
-	expect($rrdSource)->toContain('proc_open(cacti_escapeshellarg(read_config_option(\'path_rrdtool\'))');
+	// Native RrdCommandFailuresNativeTest exercises a path with shell metacharacters.
+	expect($rrdSource)->toContain('proc_open(array(read_config_option(\'path_rrdtool\'), \'-\'), $descriptorspec, $pipes)');
 	expect($pollerLibSource)->toContain('$safe_filename = cacti_escapeshellarg($filename)');
 	expect($spikekillSource)->toContain("' --rrdfile=' . cacti_escapeshellarg(\$f)");
 });

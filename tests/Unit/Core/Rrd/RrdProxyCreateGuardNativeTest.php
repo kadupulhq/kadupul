@@ -46,7 +46,7 @@ elseif($operation==='boost-create'){$result=boost_rrdtool_function_create(1,fals
 else{$result=rrdtool_function_create(1,false,$pipe);}
 $command=socket_read($sockets[1],4096,PHP_BINARY_READ);
 echo json_encode(array($result,$values,$command));
-socket_close($sockets[0]);socket_close($sockets[1]);
+rrdtool_proxy_abort($sockets[0]);socket_close($sockets[1]);
 PHP;
     file_put_contents($dir . '/probe.php', $program);
     try {
