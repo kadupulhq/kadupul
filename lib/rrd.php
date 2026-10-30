@@ -237,58 +237,39 @@ function __rrd_proxy_init($logopt = 'WEBLOG') {
 	$terminator = "_EOT_\r\n";
 	$encryption = true;
 
-	$rrdp_socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-	if ($rrdp_socket === false) {
-		cacti_log('CACTI2RRDP ERROR: Unable to create socket to connect to RRDtool Proxy Server', false, $logopt, POLLER_VERBOSITY_LOW);
-		return false;
-	}
-
-	if ( read_config_option('rrdp_load_balancing') == 'on' ) {
-		$rrdp_id = rand(1,2);
-		$rrdp = @socket_connect($rrdp_socket, (($rrdp_id == 1 ) ? read_config_option('rrdp_server') : read_config_option('rrdp_server_backup')), (($rrdp_id == 1 ) ? read_config_option('rrdp_port') : read_config_option('rrdp_port_backup')) );
-	} else {
-		$rrdp_id = 1;
-		$rrdp = @socket_connect($rrdp_socket, read_config_option('rrdp_server'), read_config_option('rrdp_port'));
-	}
-
-	if ($rrdp === false) {
-		/* log entry ... */
-		cacti_log('CACTI2RRDP ERROR: Unable to connect to RRDtool Proxy Server #' . $rrdp_id, false, $logopt, POLLER_VERBOSITY_LOW);
-
-		/* ... and try to use backup path */
-		$rrdp_id = ($rrdp_id + 1) % 2;
-		$rrdp = @socket_connect($rrdp_socket, (($rrdp_id == 1 ) ? read_config_option('rrdp_server') : read_config_option('rrdp_server_backup')), (($rrdp_id == 1 ) ? read_config_option('rrdp_port') : read_config_option('rrdp_port_backup')) );
-
-		if ($rrdp === false) {
-			cacti_log('CACTI2RRDP ERROR: Unable to connect to RRDtool Proxy Server #' . $rrdp_id, false, $logopt, POLLER_VERBOSITY_LOW);
+	$order = read_config_option('rrdp_load_balancing') == 'on' && rand(1, 2) === 2 ? array(2, 1) : array(1, 2);
+	$rrdp_socket = false;
+	foreach ($order as $rrdp_id) {
+		$rrdp_socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		if ($rrdp_socket === false) {
+			cacti_log('CACTI2RRDP ERROR: Unable to create socket to connect to RRDtool Proxy Server', false, $logopt, POLLER_VERBOSITY_LOW);
 			return false;
 		}
+		$suffix = $rrdp_id === 1 ? '' : '_backup';
+		if (@socket_connect($rrdp_socket, (string) read_config_option('rrdp_server' . $suffix), (int) read_config_option('rrdp_port' . $suffix))) {
+			break;
+		}
+		cacti_log('CACTI2RRDP ERROR: Unable to connect to RRDtool Proxy Server #' . $rrdp_id, false, $logopt, POLLER_VERBOSITY_LOW);
+		// A failed connection must not be reused for the backup or leaked.
+		socket_close($rrdp_socket);
+		$rrdp_socket = false;
+	}
+	if ($rrdp_socket === false) {
+		return false;
 	}
 
 	$rrdp_fingerprint = ($rrdp_id == 1 ) ? read_config_option('rrdp_fingerprint') : read_config_option('rrdp_fingerprint_backup');
 
-	socket_write($rrdp_socket, read_config_option('rsa_public_key') . $terminator);
+	if (!rrdtool_proxy_write($rrdp_socket, read_config_option('rsa_public_key') . $terminator)) {
+		rrdtool_proxy_abort($rrdp_socket);
+		return false;
+	}
 
 	/* read public key being returned by the proxy server */
-	$rrdp_public_key = '';
-	while(1) {
-		$recv = socket_read($rrdp_socket, 1000, PHP_BINARY_READ );
-		if ($recv === false) {
-			/* timeout  */
-			cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
-			$rrdp_public_key = false;
-			break;
-		} elseif ($recv == '') {
-			cacti_log('CACTI2RRDP ERROR: Session closed by Proxy.', false, $logopt, POLLER_VERBOSITY_LOW);
-			/* session closed by Proxy */
-			break;
-		} else {
-			$rrdp_public_key .= $recv;
-			if (strpos($rrdp_public_key, $terminator) !== false) {
-				$rrdp_public_key = trim(trim($rrdp_public_key, $terminator));
-				break;
-			}
-		}
+	$rrdp_public_key = rrdtool_proxy_read_key($rrdp_socket, $logopt);
+	if ($rrdp_public_key === false) {
+		rrdtool_proxy_abort($rrdp_socket);
+		return false;
 	}
 
 	try {
@@ -318,6 +299,59 @@ function __rrd_proxy_init($logopt = 'WEBLOG') {
 		 * and would then carry every command and its output in clear text */
 		return $rrdproxy;
 	}
+}
+
+/** Read a complete, bounded proxy key within ten seconds. */
+function rrdtool_proxy_read_key($socket, $logopt, $timeout = 10, $max_bytes = 16384) {
+	$terminator = "_EOT_\r\n";
+	$deadline = hrtime(true) + (int) ($timeout * 1000000000);
+	$received = '';
+
+	while (($end = strpos($received, $terminator)) === false) {
+		if (strlen($received) >= $max_bytes + strlen($terminator)) {
+			cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy reply exceeds ' . $max_bytes . ' bytes.', false, $logopt, POLLER_VERBOSITY_LOW);
+			return false;
+		}
+		$remaining = $deadline - hrtime(true);
+		if ($remaining <= 0) {
+			cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
+			return false;
+		}
+		if (!socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => intdiv($remaining, 1000000000), 'usec' => max(1, intdiv($remaining % 1000000000, 1000))))) {
+			return false;
+		}
+		// Never ask for more than the cap leaves, so the buffer cannot outgrow it.
+		$recv = @socket_read($socket, min(4096, $max_bytes + strlen($terminator) - strlen($received)), PHP_BINARY_READ);
+		if ($recv === false) {
+			cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
+			return false;
+		}
+		if ($recv === '') {
+			cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Session closed by Proxy.', false, $logopt, POLLER_VERBOSITY_LOW);
+			return false;
+		}
+		$received .= $recv;
+	}
+	// Command replies apply their own total deadline after the exchange.
+	socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 0, 'usec' => 0));
+
+	if ($end > $max_bytes) {
+		cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy reply exceeds ' . $max_bytes . ' bytes.', false, $logopt, POLLER_VERBOSITY_LOW);
+		return false;
+	}
+	// The proxy says nothing more until the client sends a command.
+	if ($end + strlen($terminator) !== strlen($received)) {
+		cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Unexpected data after the proxy key.', false, $logopt, POLLER_VERBOSITY_LOW);
+		return false;
+	}
+
+	$key = trim(substr($received, 0, $end));
+	if ($key === 'Authentication failed') {
+		cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy did not accept this server\'s RSA key.', false, $logopt, POLLER_VERBOSITY_LOW);
+		return false;
+	}
+
+	return $key;
 }
 
 function rrd_close() {
@@ -376,16 +410,57 @@ function __rrd_close($rrdtool_pipe) {
 	rrdtool_reset_language();
 }
 
+/** Complete a frame under one deadline, including positive short writes. */
+function rrdtool_proxy_write($socket, $data, $deadline = null) {
+	$deadline = $deadline ?? hrtime(true) + 10000000000;
+	$offset = 0;
+	try {
+		while ($offset < strlen($data)) {
+			$remaining = $deadline - hrtime(true);
+			if ($remaining <= 0) {
+				return false;
+			}
+			$read = $except = null;
+			$write = array($socket);
+			if (@socket_select($read, $write, $except, intdiv($remaining, 1000000000), intdiv($remaining % 1000000000, 1000)) !== 1) {
+				return false;
+			}
+			$remaining = $deadline - hrtime(true);
+			if ($remaining <= 0 || !socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => intdiv($remaining, 1000000000), 'usec' => max(1, intdiv($remaining % 1000000000, 1000))))) {
+				return false;
+			}
+			$written = @socket_write($socket, substr($data, $offset, 8192));
+			if ($written === false || $written === 0) {
+				return false;
+			}
+			$offset += $written;
+		}
+	} catch (\Error $e) {
+		// Callers may retain a pipe array after a previous command discarded it.
+		return false;
+	}
+	return true;
+}
+
+/** Discard a failed connection without another potentially blocking command. */
+function rrdtool_proxy_abort(\Socket $socket) : void {
+	try {
+		@socket_shutdown($socket, 2);
+		@socket_close($socket);
+	} catch (\Error $e) {
+		// Closing a stale caller-owned pipe must be harmless.
+	}
+}
+
 function __rrd_proxy_close($rrdp) {
 	/* close the rrdtool proxy server connection */
 	$terminator = "_EOT_\r\n";
 	if ($rrdp) {
 		$packet = encrypt('quit', $rrdp[1]);
 		if ($packet !== false) {
-			socket_write($rrdp[0], $packet . $terminator);
+			rrdtool_proxy_write($rrdp[0], $packet . $terminator);
 		}
-		@socket_shutdown($rrdp[0], 2);
-		@socket_close($rrdp[0]);
+		rrdtool_proxy_abort($rrdp[0]);
 		return;
 	}
 }
@@ -693,14 +768,30 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
                 }
             }
 
-			$process = proc_open(cacti_escapeshellarg(read_config_option('path_rrdtool')) . ' - ' . $debug, $descriptorspec, $pipes);
+			if ($debug !== '') {
+				$descriptorspec[2] = array('redirect', 1);
+			}
+			$process = proc_open(array(read_config_option('path_rrdtool'), '-'), $descriptorspec, $pipes);
 
 			if (!is_resource($process)) {
 				unset($process);
 			} else {
-				fwrite($pipes[0], escape_command($command_line) . "\r\nquit\r\n");
-				fclose($pipes[0]);
-				$fp = $pipes[1];
+				if ($config['cacti_server_os'] === 'unix') {
+					require_once __DIR__ . '/rrd_process.php';
+					$deadline = hrtime(true) + max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60))) * 1000000000;
+					$cap = rrd_command_deadline();
+					if ($cap !== null && $cap < $deadline) {
+						$deadline = $cap;
+					}
+					$capture = in_array($output_flag, array(RRDTOOL_OUTPUT_STDOUT, RRDTOOL_OUTPUT_GRAPH_DATA, RRDTOOL_OUTPUT_STDERR, RRDTOOL_OUTPUT_RETURN_STDERR));
+					$result = rrdtool_oneshot_exchange($process, $pipes, escape_command($command_line) . "\r\nquit\r\n", $deadline, $capture);
+					$output = $result['completed'] ? $result['output'] : false;
+					unset($process, $result);
+				} else {
+					fwrite($pipes[0], escape_command($command_line) . "\r\nquit\r\n");
+					fclose($pipes[0]);
+					$fp = $pipes[1];
+				}
 			}
 		} else {
 			cacti_log("ERROR: RRDtool executable not found, not executable or error in path '" . read_config_option('path_rrdtool') . "'.  No output written to RRDfile.");
@@ -757,7 +848,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 	/* store the last command to provide rrdtool segfault diagnostics */
 	$last_command = $command_line;
 
-	if (!isset($fp)) {
+	if (isset($output) && $output === false) {
+		cacti_log('ERROR: RRDtool one-shot response was unavailable or timed out; command outcome is unconfirmed.', false, $logopt);
+		return false;
+	}
+	if (!isset($fp) && !isset($output)) {
 		return (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) ? false : null;
 	}
 
@@ -782,9 +877,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 	switch ($output_flag) {
 		case RRDTOOL_OUTPUT_STDOUT:
 		case RRDTOOL_OUTPUT_GRAPH_DATA:
-			$output = '';
-			while (!feof($fp)) {
-				$output .= fgets($fp, 4096);
+			if (isset($fp)) {
+				$output = '';
+				while (!feof($fp)) {
+					$output .= fgets($fp, 4096);
+				}
 			}
 
 			if (isset($process)) {
@@ -798,9 +895,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 			break;
 		case RRDTOOL_OUTPUT_STDERR:
 		case RRDTOOL_OUTPUT_RETURN_STDERR:
-			$output = '';
-			while (!feof($fp)) {
-				$output .= fgets($fp, 4096);
+			if (isset($fp)) {
+				$output = '';
+				while (!feof($fp)) {
+					$output .= fgets($fp, 4096);
+				}
 			}
 
 			if (isset($process)) {
@@ -830,8 +929,10 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 			/* Even callers discarding output must wait for queued writes
 			 * before the maintenance lock can be released. Drain first so
 			 * the child cannot block on a full stdout pipe. */
-			while (!feof($fp)) {
-				fread($fp, 8192);
+			if (isset($fp)) {
+				while (!feof($fp)) {
+					fread($fp, 8192);
+				}
 			}
 			if (isset($process)) {
 				fclose($fp);
@@ -909,6 +1010,11 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 
 	$rrdp_socket = $rrdp[0];
 	$rrdp_public_key = $rrdp[1];
+	$deadline = hrtime(true) + max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60))) * 1000000000;
+	$cap = rrd_command_deadline();
+	if ($cap !== null && $cap < $deadline) {
+		$deadline = $cap;
+	}
 
 	if (strlen($command_line) >= 8192) {
 		$command_line = gzencode($command_line, 1);
@@ -924,44 +1030,69 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 		return null;
 	}
 
-	socket_write($rrdp_socket, $packet . $end_of_sequence);
+	if (!rrdtool_proxy_write($rrdp_socket, $packet . $end_of_sequence, $deadline)) {
+		cacti_log('CACTI2RRDP ERROR: Data Transfer - Unable to send command before deadline.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+		rrdtool_proxy_abort($rrdp_socket);
+		return null;
+	}
 
 	$input = '';
 	$output = '';
 
 	while(1) {
-		$recv = socket_read($rrdp_socket, 100000, PHP_BINARY_READ );
+		$remaining = $deadline - hrtime(true);
+		$read = array($rrdp_socket);
+		$write = $except = null;
+		$ready = $remaining > 0
+			? @socket_select($read, $write, $except, intdiv($remaining, 1000000000), intdiv($remaining % 1000000000, 1000))
+			: 0;
+		if ($ready === false || $ready === 0) {
+			cacti_log('CACTI2RRDP ERROR: Data Transfer - Time-out while reading.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+			rrdtool_proxy_abort($rrdp_socket);
+			return null;
+		}
+		$recv = @socket_read($rrdp_socket, 100000, PHP_BINARY_READ);
 		if ($recv === false) {
 			cacti_log('CACTI2RRDP ERROR: Data Transfer - Time-out while reading.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
-			break;
+			rrdtool_proxy_abort($rrdp_socket);
+			return null;
 		} elseif ($recv == '') {
 			/* session closed by Proxy */
 			if ($output) {
 				cacti_log('CACTI2RRDP ERROR: Session closed by Proxy.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
 			}
-			break;
+			rrdtool_proxy_abort($rrdp_socket);
+			return null;
 		} else {
 			$input .= $recv;
 			if (str_contains($input, $end_of_sequence)) {
 				$input = str_replace($end_of_sequence, '', $input);
 				$transactions = explode($end_of_packet, $input);
 				foreach ($transactions as $transaction) {
+					if ($transaction === '') {
+						continue;
+					}
 					$packet = $transaction;
 					$transaction = decrypt($transaction);
 					if ($transaction === false) {
 						cacti_log('CACTI2RRDP ERROR: Proxy message decryption failed: ###' . $packet . '###', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
 
-						break 2;
+						rrdtool_proxy_abort($rrdp_socket);
+						return null;
 					}
 					if (str_starts_with($transaction, "\x1f\x8b")) {
-						$transaction = gzdecode($transaction);
+						$transaction = @gzdecode($transaction);
+						if ($transaction === false) {
+							rrdtool_proxy_abort($rrdp_socket);
+							return null;
+						}
 					}
 					$output .= $transaction;
-					if (substr_count($output, 'OK u') || substr_count($output, 'ERROR:')) {
-						cacti_log('RRDP: ' . $output, $log_to_stdout, $logopt, POLLER_VERBOSITY_DEBUG);
-						break 2;
-					}
 				}
+				cacti_log('RRDP: ' . $output, $log_to_stdout, $logopt, POLLER_VERBOSITY_DEBUG);
+				// A complete sequence without an acknowledgement is a failure,
+				// not a reason to wait for the next command's response.
+				break;
 			}
 		}
 	}
@@ -975,7 +1106,19 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			return;
 		case RRDTOOL_OUTPUT_STDOUT:
 		case RRDTOOL_OUTPUT_GRAPH_DATA:
-			return rtrim(substr($output, 0, strpos($output, 'OK u')));
+			$error_status = preg_match('/^ERROR:([^\r\n]*)/m', $output, $error);
+			if ($error_status !== 0) {
+				if ($error_status === 1) {
+					$rejection =& rrdtool_last_rejection();
+					$rejection = trim($error[1]);
+				}
+				return false;
+			}
+			$okpos = strrpos($output, 'OK');
+			if ($okpos === false || preg_match('/\AOK(?: u:[^\r\n]+)?(?:\r?\n)?\z/', substr($output, $okpos)) !== 1) {
+				return false;
+			}
+			return rtrim(substr($output, 0, $okpos));
 			break;
 		case RRDTOOL_OUTPUT_STDERR:
 		case RRDTOOL_OUTPUT_RETURN_STDERR:
@@ -1690,6 +1833,9 @@ function rrdtool_function_tune($rrd_tune_array) {
  * RRDtool emits one bucket after the requested end; keep consumers on (start, end].
  */
 function rrdtool_parse_fetch_output($output, $normalized_end_time, $show_unknown = false) {
+	if (str_starts_with(ltrim($output), 'ERROR:')) {
+		return array();
+	}
 	$fetch_array        = array();
 	$lines              = explode("\n", $output);
 	$first              = true;
@@ -3404,12 +3550,17 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			if (isset($graph_data_array['get_error'])) {
 				return rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_STDERR);
 			} elseif (isset($graph_data_array['export'])) {
-				rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe);
+				if (rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe) === false) {
+					return false;
+				}
 
 				return 0;
 			} elseif (isset($graph_data_array['export_realtime'])) {
 				$output_flag = RRDTOOL_OUTPUT_GRAPH_DATA;
 				$output = rrdtool_execute("graph $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe);
+				if (!is_string($output) || $output === '') {
+					return false;
+				}
 
 				if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
 					fwrite($fp, $output, strlen($output));

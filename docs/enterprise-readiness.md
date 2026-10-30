@@ -1,0 +1,7 @@
+# LTS enterprise readiness
+
+Statuses describe the stated requirement only; they do not certify the release.
+
+| Requirement and acceptance criteria | Subsystem | Status | Evidence | Gaps and risks | Release gate |
+|---|---|---|---|---|---|
+| RRDtool one-shot and proxy failures terminate under their deadlines, preserve failure results, and never parse a failed fetch as measured zero. Partial proxy writes are completed and failed sockets are closed. | Collection and graphing | implemented | [Maintenance scope and regression evidence](testing/rrd-command-failures.md): 123 LTS tests on PHP 8.1.34, including 44 new transport/caller cases. | Full CI, measured coverage, deployed proxy/browser/database workflows and Windows one-shot behavior remain unverified. A remote timeout cannot roll back an executed mutation. | Require branch CI and independent review before release. No release is claimed. |
