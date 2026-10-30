@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
+- Treat the obsolete data source delete action as an unknown action instead of calling an undefined handler; use bulk Actions for deletion (#685).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
 - Convert non-finite numeric Boost samples to unknown before scheduled and on-demand RRD writes, preserving valid sibling fields and original queue acknowledgement values (#739).
