@@ -4748,11 +4748,11 @@ msgstr "此时只有具有安装/升级权限的Kadupul 管理员才能登录"
 msgid "There is an Installation or Upgrade in progress."
 msgstr "正在进行安装或升级."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "此数据采集器最后一次与主Kadupul 站点完全同步"
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "主数据收集器已进入离线或恢复状态"
 
@@ -12421,11 +12421,11 @@ msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "无法确定密码字段长度,无法继续,因为可能会损坏密码"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "无法更改密码字段长度,无法继续,因为可能会损坏密码"
 

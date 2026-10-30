@@ -4771,11 +4771,11 @@ msgstr "Alleen Kadupul Beheerders met het recht om te installeren/upgrade te upg
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Er is een installatie of upgrade in uitvoering."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "De laatste keer dat deze Dataverzamelaar volledig gesynchroniseerd werd met de hoofdsite van Kadupul."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "De hoofdgegevensverzamelaar is naar een offline of herstellende status gegaan"
 
@@ -12451,11 +12451,11 @@ msgstr "U moet een XML-uitvoerkolom selecteren voor Data Source '%s' en het sele
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Uw Grafieksjabloon heeft geen datasjablonen in gebruik.  Gelieve uw Grafieksjabloon te corrigeren"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Mislukt om wachtwoord veldlengte te bepalen, kan niet verdergaan als kan corrupt wachtwoord corrupt wachtwoord"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Mislukt om wachtwoord veldlengte te wijzigen, kan niet verdergaan als kan corrupt wachtwoord corrupt wachtwoord"
 

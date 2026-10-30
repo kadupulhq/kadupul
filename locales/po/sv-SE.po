@@ -4764,11 +4764,11 @@ msgstr "Endast Kadupul-administratörer med behörigheten Install/Upgrade kan lo
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Det pågår en installation eller uppgradering."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Huvuddatainsamlaren har återgått till online-status"
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Huvuddatainsamlaren har gått till en offline- eller återställningsstatus"
 
@@ -12427,11 +12427,11 @@ msgstr "Du måste välja en XML-utdatakolumn för datakällan '%s' och växla kr
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Din Graph Template har inte Data Templates i bruk.  Vänligen korrigera din grafmall"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Misslyckades med att bestämma lösenordsfältets längd, kan inte fortsätta eftersom lösenordet kan skadas"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Misslyckades med att ändra lösenordsfältets längd, kan inte fortsätta eftersom lösenordet kan skadas"
 

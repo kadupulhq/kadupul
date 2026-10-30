@@ -4769,11 +4769,11 @@ msgstr "Solo gli amministratori Kadupul con privilegi di installazione/aggiornam
 msgid "There is an Installation or Upgrade in progress."
 msgstr "È in corso un'installazione o un aggiornamento."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "L'ultima volta che questo Data Collector è stato completamente sincronizzato con il sito principale di Kadupul."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "L'utilità di raccolta dati principale è passata a uno stato offline o di recupero"
 
@@ -12447,11 +12447,11 @@ msgstr "È necessario selezionare una colonna di output XML per Data Source '%s'
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Il tuo modello grafico non ha modelli di dati in uso.  Per favore correggete il vostro modello grafico"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Impossibile determinare la lunghezza del campo password, non può continuare come potrebbe corrompere la password"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Impossibile modificare la lunghezza del campo password, non può continuare come potrebbe corrompere la password"
 

@@ -1,0 +1,9 @@
+# Request profiling exists only in dev and test (ServerTiming is #[When] those
+# environments). RequestProfileLog reads this default through its #[Autowire];
+# it is kept out of services.yaml, whose content the entry-point classifier
+# pins as a reviewed authentication source.
+when@dev: &profiling
+    parameters:
+        env(KADUPUL_PROFILE_LOG): '%kernel.project_dir%/var/profile/requests.jsonl'
+
+when@test: *profiling

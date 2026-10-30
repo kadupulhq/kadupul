@@ -4814,11 +4814,11 @@ msgstr "רק מנהלי מערכת של Kadupul בעלי הרשאת התקנה /
 msgid "There is an Installation or Upgrade in progress."
 msgstr "יש התקנה או שדרוג בתהליך."
 
-#: include/global.php:583
+#: include/global.php:585
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "בפעם האחרונה זה נתונים אספן היה מלא synced עם האתר הראשי Kadupul."
 
-#: include/global.php:587
+#: include/global.php:589
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "מלקט הנתונים הראשי עבר למצב לא מקוון או משחזר"
 
@@ -12501,11 +12501,11 @@ msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנת
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 
-#: lib/database.php:2422
+#: lib/database.php:2442
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "הגדרת אורך השדה של הסיסמה נכשלה, לא ניתן להמשיך כסיסמה פגומה"
 
-#: lib/database.php:2429
+#: lib/database.php:2449
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "נכשל שינוי אורך השדה סיסמה, לא יכול להמשיך כמו סיסמה פגומה"
 

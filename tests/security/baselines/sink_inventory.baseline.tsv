@@ -12,7 +12,7 @@ cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:265				$result = exec($command, $output, $return_code);
 cmd_exec	./install/functions.php:594	            $myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:108			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
-cmd_exec	./lib/database.php:2638	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
+cmd_exec	./lib/database.php:2658	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1103	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/functions.php:2594	                $output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:2612	                    $output = shell_exec($php . ' -q ' . $script);
@@ -297,6 +297,7 @@ dynamic_include	./include/global.php:567	include_once($config['library_path'] . 
 dynamic_include	./include/global.php:568	include_once($config['library_path'] . '/api_automation.php');
 dynamic_include	./include/global.php:569	include_once($config['include_path'] . '/csrf.php');
 dynamic_include	./include/global.php:570	include_once($config['include_path'] . '/vendor/autoload.php');
+dynamic_include	./include/global.php:571	include_once($config['include_path'] . '/request_profile.php');
 dynamic_include	./include/global_languages.php:156				require_once($providerFull);
 dynamic_include	./install/background.php:11	include_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./install/background.php:12	include_once($config['base_path'] . '/lib/api_data_source.php');
@@ -559,8 +560,8 @@ fs_write	./lib/csp_report_endpoint.php:151	    /* Bucket names are predictable, 
 fs_write	./lib/csp_report_endpoint.php:177	    $fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./lib/csp_report_endpoint.php:252	$input = @fopen('php://input', 'rb');
 fs_write	./lib/database.php:209	                file_put_contents(
-fs_write	./lib/database.php:2449	    file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
-fs_write	./lib/database.php:2697	    if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
+fs_write	./lib/database.php:2469	    file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
+fs_write	./lib/database.php:2717	    if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
 fs_write	./lib/database.php:75	                file_put_contents(
 fs_write	./lib/functions.php:1660	        $fp = @fopen($logfile, 'a');
 fs_write	./lib/functions.php:1738	    $fp = fopen($file_name, 'r');
@@ -608,6 +609,7 @@ fs_write	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:70	       
 fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:70	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
 fs_write	./src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php:276	            $this->filesystem->dumpFile($path, $process->getOutput());
 fs_write	./src/Platform/Infrastructure/Persistence/DbalSystemDiagnostics.php:142	        $handle = @fopen($this->projectDir . '/CHANGELOG.md', 'rb');
+fs_write	./src/Platform/Infrastructure/Profiling/RequestProfileLog.php:46	        file_put_contents($this->path, $line . "\n", FILE_APPEND | LOCK_EX);
 fs_write	./src/Platform/Infrastructure/Symfony/Console/SignPackageCommand.php:126	        if (file_put_contents($temporary, $bytes) !== strlen($bytes) || !chmod($temporary, $mode) || !rename($temporary, $target)) {
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:120	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {

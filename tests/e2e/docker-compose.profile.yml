@@ -1,0 +1,15 @@
+# Route-profile overlay. Compose with:
+#
+#   APP_ENV=prod docker compose -f docker-compose.yml -f docker-compose.profile.yml up -d
+#   APP_ENV=test APP_DEBUG=1 KADUPUL_PROFILE=1 docker compose -f ... up -d
+#
+# The time pass runs APP_ENV=prod with no profiling so debug overhead is not
+# charged to the migrated route; the counts pass runs APP_ENV=test with legacy
+# profiling on. Other workflows never load this file.
+
+services:
+  php:
+    environment:
+      APP_ENV: ${APP_ENV:-prod}
+      APP_DEBUG: ${APP_DEBUG:-0}
+      KADUPUL_PROFILE: ${KADUPUL_PROFILE:-0}

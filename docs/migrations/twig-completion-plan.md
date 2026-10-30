@@ -102,7 +102,7 @@ Profiling uses the framework's own collectors: WebProfilerBundle and Stopwatch i
 **Files:**
 - Modify: `composer.json`, `composer.lock` (require-dev `symfony/web-profiler-bundle` and `symfony/stopwatch`, 7.4)
 - Modify: `config/bundles.php` (`WebProfilerBundle` for dev and test)
-- Create: `config/packages/web_profiler.yaml` (`when@dev`, `when@test`), `config/routes/web_profiler.yaml`
+- Create: `config/packages/web_profiler.php` (dev and test, skipped when the bundle is not installed), `config/routes/web_profiler.yaml`
 - Create: `src/Platform/Infrastructure/Profiling/RequestProfileLog.php`, `src/Platform/Infrastructure/Symfony/ServerTiming.php`
 - Create: `include/request_profile.php`; modify `include/global.php` to include it and `lib/database.php` to add `db_statement_count()` at `db_execute_prepared()`, the single statement-execution choke point
 - Test: `tests/Symfony/ServerTimingTest.php`, `tests/Symfony/LegacyRequestProfileTest.php` with `tests/Fixtures/legacy-request-profile-native.php`

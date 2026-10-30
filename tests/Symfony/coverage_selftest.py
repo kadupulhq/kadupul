@@ -112,6 +112,7 @@ def main():
         'src/Platform/Infrastructure/Legacy/InstallationProductVersion.php',
         'vdef.php',
         'data_source_profiles.php', 'lib/data_source_profile_integrity.php',
+        'automation_templates.php', 'gprint_presets.php',
         'src/GraphDefinition/Infrastructure/Legacy/LegacyVdefEditor.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefItemController.php',
         'src/GraphDefinition/Infrastructure/Symfony/Controller/VdefActionController.php',
