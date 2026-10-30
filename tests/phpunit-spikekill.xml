@@ -2,6 +2,7 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>Unit/Core/Rrd/RrdOutputTrailerTest.php</file>
       <file>Unit/Core/Rrd/RrdCommandFailuresNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyWriteRegressionTest.php</file>
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
