@@ -3,8 +3,8 @@
     "name": "poller_maintenance",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6397,
-        "end_line": 6411,
+        "start_line": 6398,
+        "end_line": 6412,
         "line_count": 15,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

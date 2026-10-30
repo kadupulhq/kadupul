@@ -2070,8 +2070,13 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
             }
 
             /* average time */
-            $host['avg_time'] = (($host['total_polls'] - 1 - $host['failed_polls'])
-                * $host['avg_time'] + $ping_time) / ($host['total_polls'] - $host['failed_polls']);
+            if ($host['total_polls'] - $host['failed_polls'] == 0) {
+                // Inconsistent stored counters cannot supply a previous successful sample.
+                $host['avg_time'] = $ping_time;
+            } else {
+                $host['avg_time'] = (($host['total_polls'] - 1 - $host['failed_polls'])
+                    * $host['avg_time'] + $ping_time) / ($host['total_polls'] - $host['failed_polls']);
+            }
         }
 
         /* the host was down, now it's recovering */
@@ -2997,13 +3002,14 @@ function get_full_test_script_path($data_template_id, $host_id)
             $credential = in_array($item['data_name'], array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true)
                 || in_array($item['type_code'] ?? '', array('snmp_community', 'snmp_password', 'snmp_priv_passphrase'), true);
             if (isset($host[$item['data_name']])) {
-                $value = cacti_escapeshellarg($host[$item['data_name']], true, true, $credential);
+                $value = $host[$item['data_name']] === '' ? '' : cacti_escapeshellarg($host[$item['data_name']], true, true, $credential);
             } elseif ($item['data_name'] == 'host_id' || $item['data_name'] == 'hostid') {
-                $value = cacti_escapeshellarg($host['id']);
+                $value = $host['id'] === '' ? '' : cacti_escapeshellarg($host['id']);
             } else {
-                $value = cacti_escapeshellarg((string) $item['value'], true, true, $credential);
+                $value = (string) $item['value'] === '' ? '' : cacti_escapeshellarg((string) $item['value'], true, true, $credential);
             }
 
+            // Empty fields remain omitted in this template caller.
             // The first row for a name wins, as it did with str_replace().
             $escaped_values += array($item['data_name'] => $value);
         }
@@ -5139,9 +5145,9 @@ function sanitize_uri($uri)
         $uri = urldecode($uri);
     }
 
-    if (strpos($uri, 'graph_view.php')) {
-        if (!strpos($uri, 'action=')) {
-            $uri = $uri . (strpos($uri, '?') ? '&' : '?') . 'action=' . get_nfilter_request_var('action');
+    if (strpos($uri, 'graph_view.php') !== false) {
+        if (strpos($uri, 'action=') === false) {
+            $uri = $uri . (strpos($uri, '?') !== false ? '&' : '?') . 'action=' . get_nfilter_request_var('action');
         }
     }
 
@@ -5373,7 +5379,7 @@ function cacti_escapeshellarg($string, $quote = true, $cmd = false, $keep_percen
 {
     global $config;
 
-    if ($string == '') {
+    if ($string == '' && ($string !== '' || !$quote)) {
         return $string;
     }
 
@@ -6156,46 +6162,41 @@ function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure
     require_once($config['include_path'] . '/vendor/phpmailer/src/PHPMailer.php');
     require_once($config['include_path'] . '/vendor/phpmailer/src/SMTP.php');
 
-    //Create a new SMTP instance
-    $smtp = new PHPMailer\PHPMailer\SMTP;
+    $mail = new PHPMailer\PHPMailer\PHPMailer;
+    $mail->isSMTP();
+    $mail->Host = $host;
+    $mail->Port = $port;
+    $mail->Timeout = $timeout;
+    $mail->SMTPAuth = $user != '';
+    $mail->Username = $user;
+    $mail->Password = $password;
 
     if (!empty($secure) && $secure != 'none') {
+        $mail->SMTPSecure = $secure == 'tls' ? $mail::ENCRYPTION_STARTTLS : $mail::ENCRYPTION_SMTPS;
         if (substr_count($host, ':') == 0) {
-            $host = $secure . '://' . $host;
+            $mail->Host = $secure . '://' . $host;
         }
+    } else {
+        $mail->SMTPAutoTLS = false;
+        $mail->SMTPSecure = false;
     }
-
-    //Enable connection-level debug output
-    $smtp->do_debug = 0;
-    //$smtp->do_debug = SMTP::DEBUG_LOWLEVEL;
 
     $results = true;
     try {
-        //Connect to an SMTP server
-        if ($smtp->connect($host, $port, $timeout)) {
-            //Say hello
-            if ($smtp->hello(gethostbyname(gethostname()))) { //Put your host name in here
-                //Authenticate
-                if ($user != '') {
-                    if ($smtp->authenticate($user, $password)) {
-                        $results = true;
-                    } else {
-                        throw new Exception(__('Authentication failed: %s', $smtp->getLastReply()));
-                    }
-                }
-            } else {
-                throw new Exception(__('HELO failed: %s', $smtp->getLastReply()));
-            }
-        } else {
-            throw new Exception(__('Connect failed: %s', $smtp->getLastReply()));
+        // Share the sender's STARTTLS, certificate, authentication and host parsing.
+        if (!$mail->smtpConnect()) {
+            throw new Exception($mail->ErrorInfo);
+        }
+        // smtpConnect() can return true after a rejected greeting without auth.
+        if ($mail->getSMTPInstance()->getServerExtList() === null) {
+            throw new Exception(__('HELO failed: %s', $mail->getSMTPInstance()->getLastReply()));
         }
     } catch (Exception $e) {
         $results = __('SMTP error: ') . $e->getMessage();
         cacti_log($results);
+    } finally {
+        $mail->smtpClose();
     }
-
-    //Whatever happened, close the connection.
-    $smtp->quit(true);
 
     return $results;
 }

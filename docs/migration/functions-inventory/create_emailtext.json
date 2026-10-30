@@ -3,8 +3,8 @@
     "name": "create_emailtext",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6136,
-        "end_line": 6149,
+        "start_line": 6142,
+        "end_line": 6155,
         "line_count": 14,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 1, "core_outside_functions_php": 0, "tests": 1, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

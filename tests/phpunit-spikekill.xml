@@ -2,12 +2,15 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>Unit/MailPreflightTest.php</file>
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
+      <file>Unit/EmptyShellArgumentTest.php</file>
+      <file>Unit/HostStatusAverageTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>
       <file>Unit/Security/HostReindexExecutionTest.php</file>
       <file>Unit/Security/RealtimePollerExecutionTest.php</file>
@@ -165,6 +168,7 @@
       <file>Unit/Security/Misc/RemoteCollectorAddressTest.php</file>
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
       <file>Unit/Security/Shell/Win32CmdArgumentTest.php</file>
+      <file>Unit/SanitizeUriPositionTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

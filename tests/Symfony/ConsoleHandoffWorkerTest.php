@@ -71,6 +71,14 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame(['/kadupul/about.php', $this->directory . '/about.php', 'GET', self::SESSION_ID, $this->directory . '/sessions', $this->directory . '/include'], $run['state']);
     }
 
+    public function testHandoffDoesNotPolluteTheEarlyNativeSettingsReader(): void
+    {
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), settingsProbe: true);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        self::assertSame('', $run['stderr']);
+        self::assertSame('ok', json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR)['status']);
+    }
+
     public function testTrustedMutationInputLimitAcceptsLargeCommands(): void
     {
         $wrapper = (string) file_get_contents($this->directory . '/bin/legacy-console-menu.php');
@@ -274,10 +282,10 @@ final class ConsoleHandoffWorkerTest extends TestCase
      * @param list<int> $realms
      * @return array{exit: ?int, stdout: string, stderr: string, state: ?list<mixed>}
      */
-    private function worker(string $script, array|string $input, ?array $session = null, array $realms = [8], bool $hookClosesSession = false, string $measured = self::HANDOFF): array
+    private function worker(string $script, array|string $input, ?array $session = null, array $realms = [8], bool $hookClosesSession = false, string $measured = self::HANDOFF, bool $settingsProbe = false): array
     {
         $session ??= ['sess_user_id' => 7, 'sess_user_credential' => str_repeat('a', 64)];
-        $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'session' => $session, 'realms' => $realms];
+        $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'settings_probe' => $settingsProbe, 'session' => $session, 'realms' => $realms];
         file_put_contents($this->directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
         $label = hash('sha256', $script . ' ' . (is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR)) . ' ' . json_encode($scenario, JSON_THROW_ON_ERROR));
         [$options, $environment] = $this->coverageOptions($measured, true, $label);
@@ -324,7 +332,7 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertCount(1, $reports);
         $producer = 'tests/Fixtures/console-handoff-native.php';
         $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
-            'tests/Fixtures/console-handoff-bootstrap.php', 'tests/Symfony/ConsoleHandoffWorkerTest.php', $measured];
+            'tests/Fixtures/console-handoff-bootstrap.php', 'tests/Symfony/ConsoleHandoffWorkerTest.php', 'lib/functions.php', $measured];
         $markers = ['console-handoff-worker-terminated'];
         $child = \NativeChildCoverageEvidence::load($reports[0], $this->root, $producer, $scenario, $sources, $markers, [$measured]);
         if (!self::$rejectionsVerified) {

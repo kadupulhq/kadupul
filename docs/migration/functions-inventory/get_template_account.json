@@ -3,8 +3,8 @@
     "name": "get_template_account",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3424,
-        "end_line": 3465,
+        "start_line": 3430,
+        "end_line": 3471,
         "line_count": 42,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
                     "name": "get_template_account",
                     "resolved": true,
                     "expression": null,
-                    "line": 3441
+                    "line": 3447
                 }
             ]
         },

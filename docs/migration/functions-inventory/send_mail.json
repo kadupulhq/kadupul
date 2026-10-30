@@ -3,8 +3,8 @@
     "name": "send_mail",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5526,
-        "end_line": 5567,
+        "start_line": 5532,
+        "end_line": 5573,
         "line_count": 42,
         "signature": {
             "parameters": [
@@ -76,7 +76,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 1, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 2, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

@@ -3,8 +3,8 @@
     "name": "move_graph_group",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 3759,
-        "end_line": 3866,
+        "start_line": 3765,
+        "end_line": 3872,
         "line_count": 108,
         "signature": {
             "parameters": [

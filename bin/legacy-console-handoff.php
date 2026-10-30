@@ -33,20 +33,20 @@ $phase = 'handoff';
 ob_start();
 try {
     // A worker that omits a setting must fail closed, not skip its check.
-    $inputLimit = array_key_exists('input_limit', $consoleHandoff) ? $consoleHandoff['input_limit'] : 65536;
-    $settings = ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json'];
+    $consoleHandoffInputLimit = array_key_exists('input_limit', $consoleHandoff) ? $consoleHandoff['input_limit'] : 65536;
+    $consoleHandoffKeys = ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json'];
     if (array_key_exists('input_limit', $consoleHandoff)) {
-        $settings[] = 'input_limit';
+        $consoleHandoffKeys[] = 'input_limit';
     }
-    if (array_keys($consoleHandoff) !== $settings
-        || !in_array($inputLimit, [65536, 1048576], true)
+    if (array_keys($consoleHandoff) !== $consoleHandoffKeys
+        || !in_array($consoleHandoffInputLimit, [65536, 1048576], true)
         || !is_int($consoleHandoff['realm']) && $consoleHandoff['realm'] !== null) {
         throw new LogicException('Invalid console handoff configuration.');
     }
-    $raw = stream_get_contents(STDIN, $inputLimit + 2);
+    $raw = stream_get_contents(STDIN, $consoleHandoffInputLimit + 2);
     $command = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
     $pathKey = $consoleHandoff['path'];
-    if (strlen($raw) > $inputLimit || !is_array($command)
+    if (strlen($raw) > $consoleHandoffInputLimit || !is_array($command)
         || array_diff(array_keys($command), ['actor', 'credential', 'session_id', 'session_path', $pathKey, ...$consoleHandoff['keys'], 'server', 'cookies', 'query']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_string($command['credential'] ?? null) || preg_match('/\A[a-f0-9]{64}\z/D', $command['credential']) !== 1
@@ -59,6 +59,7 @@ try {
         || !is_array($command['server'] ?? null) || !is_array($command['cookies'] ?? null) || !is_array($command['query'] ?? null)) {
         throw new InvalidArgumentException('Invalid console handoff.');
     }
+    unset($consoleHandoffKeys, $consoleHandoffInputLimit);
     $root = dirname(__DIR__);
     $queryString = $command['server']['QUERY_STRING'] ?? '';
     if (!is_string($queryString)) {

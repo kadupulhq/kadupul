@@ -8,6 +8,27 @@
 // and functions the legacy bootstrap leaves for the workers.
 $consoleHandoffFixture = json_decode((string) file_get_contents(dirname(__DIR__) . '/scenario.json'), true, 8, JSON_THROW_ON_ERROR);
 require $consoleHandoffFixture['autoload'];
+if ($consoleHandoffFixture['settings_probe'] ?? false) {
+    // Real global.php reads a default for cacti_log_file() before loading
+    // global_settings.php. A handoff-local $settings must not leak into that
+    // production helper's expected nested configuration arrays.
+    set_error_handler(static function (int $severity, string $message, string $file, int $line): never {
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    });
+    try {
+        require dirname($consoleHandoffFixture['autoload'], 3) . '/lib/functions.php';
+        if (read_default_config_option('path_cactilog') !== null) {
+            throw new RuntimeException('Unexpected early default configuration.');
+        }
+        $settings = ['general' => ['handoff_default_probe' => ['default' => 'native-default']]];
+        if (read_default_config_option('handoff_default_probe') !== 'native-default') {
+            throw new RuntimeException('Native default configuration is unavailable.');
+        }
+        unset($settings);
+    } finally {
+        restore_error_handler();
+    }
+}
 session_start();
 file_put_contents(dirname(__DIR__) . '/state.json', json_encode([$_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_FILENAME'], $_SERVER['REQUEST_METHOD'], session_id(), session_save_path(), getcwd()], JSON_THROW_ON_ERROR));
 $_SESSION = $consoleHandoffFixture['session'];

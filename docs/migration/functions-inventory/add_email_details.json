@@ -3,8 +3,8 @@
     "name": "add_email_details",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5998,
-        "end_line": 6022,
+        "start_line": 6004,
+        "end_line": 6028,
         "line_count": 25,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 5, "core_outside_functions_php": 0, "tests": 4, "plugins": 0},
+        "fan_out": {"core": 5, "core_outside_functions_php": 0, "tests": 5, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

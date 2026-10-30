@@ -3,8 +3,8 @@
     "name": "is_urlencoded",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5158,
-        "end_line": 5165,
+        "start_line": 5164,
+        "end_line": 5171,
         "line_count": 8,
         "signature": {
             "parameters": [
@@ -22,7 +22,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 4, "plugins": 0},
+        "fan_out": {"core": 2, "core_outside_functions_php": 1, "tests": 5, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

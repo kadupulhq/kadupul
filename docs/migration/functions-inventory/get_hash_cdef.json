@@ -3,8 +3,8 @@
     "name": "get_hash_cdef",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4792,
-        "end_line": 4815,
+        "start_line": 4798,
+        "end_line": 4821,
         "line_count": 24,
         "signature": {
             "parameters": [

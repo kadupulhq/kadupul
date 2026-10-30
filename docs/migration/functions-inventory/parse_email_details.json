@@ -3,8 +3,8 @@
     "name": "parse_email_details",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 6024,
-        "end_line": 6078,
+        "start_line": 6030,
+        "end_line": 6084,
         "line_count": 55,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
             "returns_reference": false
         },
         "docblock": false,
-        "fan_out": {"core": 5, "core_outside_functions_php": 0, "tests": 0, "plugins": 0},
+        "fan_out": {"core": 5, "core_outside_functions_php": 0, "tests": 1, "plugins": 0},
         "body": {
             "uses_global": [],
             "static_variables": [],

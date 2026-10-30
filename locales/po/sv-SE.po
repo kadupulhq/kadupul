@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-29 01:09-0700\n"
+"POT-Creation-Date: 2026-10-30 01:34-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -778,7 +778,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Det är problem med sidan Ändra lösenord.  Kontakta genast din Kadupul-administratör."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4285 lib/html.php:2888
+#: include/global_form.php:1552 lib/functions.php:4291 lib/html.php:2888
 msgid "Change Password"
 msgstr "Ändra lösenord"
 
@@ -791,7 +791,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Vänligen ange ditt nya lösenord för Kadupul."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6240
+#: include/global_settings.php:1851 lib/functions.php:6241
 msgid "Username"
 msgstr "Användarnamn"
 
@@ -884,7 +884,7 @@ msgstr "Logga in"
 msgid "Enter your Username and Password below"
 msgstr "Ange ditt användarnamn och lösenord nedan"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6241
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6242
 msgid "Password"
 msgstr "Lösenord"
 
@@ -1191,7 +1191,7 @@ msgstr "Rensning av upptäckta enheter"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6599 lib/functions.php:6604
+#: data_debug.php:698 lib/functions.php:6600 lib/functions.php:6605
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2181,7 +2181,7 @@ msgstr "Version"
 msgid "Community"
 msgstr "Gemenskap"
 
-#: automation_snmp.php:543 lib/functions.php:6236
+#: automation_snmp.php:543 lib/functions.php:6237
 msgid "Port"
 msgstr "Port"
 
@@ -2391,8 +2391,8 @@ msgstr "ROT"
 msgid "No Tree Rules Found"
 msgstr "Inga trädregler hittades"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6744 lib/functions.php:6819
-#: lib/functions.php:6922 lib/functions.php:7612 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6745 lib/functions.php:6820
+#: lib/functions.php:6923 lib/functions.php:7613 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
@@ -3422,7 +3422,7 @@ msgstr "Namnet som ges till denna datamall.  Observera att du endast kan ändra 
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6235 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6236 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Enhet"
@@ -3781,7 +3781,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "The Kadupul Poller har inte kört ännu."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8315 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8316 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Åtkomst nekad"
 
@@ -4742,12 +4742,12 @@ msgstr "FATAL: Du måste vara inloggad för att komma åt denna del av Kadupul."
 msgid "Login Again"
 msgstr "Logga in igen"
 
-#: include/auth.php:317 lib/functions.php:8316
+#: include/auth.php:317 lib/functions.php:8317
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Om du känner att detta är ett fel. Vänligen kontakta din Kadupul-administratör."
 
-#: include/auth.php:317 lib/functions.php:8316
+#: include/auth.php:317 lib/functions.php:8317
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Du har inte tillåtelse att besöka denna del av Kadupul."
@@ -6826,7 +6826,7 @@ msgid "List Mode"
 msgstr "List läget"
 
 #: include/global_arrays.php:2072 include/global_arrays.php:2078
-#: lib/functions.php:4507 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
+#: lib/functions.php:4513 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsol"
@@ -8623,8 +8623,8 @@ msgstr "Data"
 msgid "Visual"
 msgstr "Visuell"
 
-#: include/global_settings.php:112 lib/functions.php:6239
-#: lib/functions.php:6244
+#: include/global_settings.php:112 lib/functions.php:6240
+#: lib/functions.php:6245
 msgid "Authentication"
 msgstr "Autentisering"
 
@@ -8660,11 +8660,11 @@ msgstr "Grafiska typsnitt"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail()-funktion"
 
-#: include/global_settings.php:153 lib/functions.php:6220
+#: include/global_settings.php:153 lib/functions.php:6221
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6226
+#: include/global_settings.php:154 lib/functions.php:6227
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10512,7 +10512,7 @@ msgstr "Här anges hur många tecken som tillåts innan en rad i e-postmeddeland
 msgid "Sendmail Options"
 msgstr "Alternativ för Sendmail"
 
-#: include/global_settings.php:1972 lib/functions.php:6220
+#: include/global_settings.php:1972 lib/functions.php:6221
 msgid "Sendmail Path"
 msgstr "Sendmail sökväg"
 
@@ -11729,8 +11729,8 @@ msgstr "Plats:"
 msgid "Contact:"
 msgstr "Kontakt:"
 
-#: lib/api_device.php:2104 lib/functions.php:6253 lib/functions.php:6255
-#: lib/functions.php:6259
+#: lib/api_device.php:2104 lib/functions.php:6254 lib/functions.php:6256
+#: lib/functions.php:6260
 msgid "Ping Results"
 msgstr "Ping-resultat"
 
@@ -12495,177 +12495,167 @@ msgstr "Meddelandet hittades inte."
 msgid "Error %s is not readable"
 msgstr "Fel %s är inte läsbart"
 
-#: lib/functions.php:4261
+#: lib/functions.php:4267
 msgid "Logged in a Guest"
 msgstr "Loggade in som gäst"
 
-#: lib/functions.php:4261 lib/functions.php:4279
+#: lib/functions.php:4267 lib/functions.php:4285
 msgid "Logged in as"
 msgstr "Inloggad som"
 
-#: lib/functions.php:4261
+#: lib/functions.php:4267
 msgid "Login as Regular User"
 msgstr "Logga in som vanlig användare"
 
-#: lib/functions.php:4261
+#: lib/functions.php:4267
 msgid "guest"
 msgstr "gäst"
 
-#: lib/functions.php:4264 lib/functions.php:4289 lib/html.php:2904
+#: lib/functions.php:4270 lib/functions.php:4295 lib/html.php:2904
 msgid "User Community"
 msgstr "Användargemenskap"
 
-#: lib/functions.php:4265 lib/functions.php:4290 lib/html.php:2906
+#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lib/functions.php:4282
+#: lib/functions.php:4288
 #, php-format
 msgid "Logged in as %s"
 msgstr "Inloggad som %s"
 
-#: lib/functions.php:4284 lib/html.php:2885
+#: lib/functions.php:4290 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Redigera profil"
 
-#: lib/functions.php:4294 lib/html.php:2889
+#: lib/functions.php:4300 lib/html.php:2889
 msgid "Logout"
 msgstr "Logga ut"
 
-#: lib/functions.php:4448
+#: lib/functions.php:4454
 msgid "Leaf"
 msgstr "Blad"
 
-#: lib/functions.php:4472 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4478 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Icke-frågebaserad"
 
-#: lib/functions.php:4510
+#: lib/functions.php:4516
 #, php-format
 msgid "Link %s"
 msgstr "Länk %s"
 
-#: lib/functions.php:4972 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4978 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopiera"
 
-#: lib/functions.php:5789
+#: lib/functions.php:5795
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Fel i utskicket: Ingen mottagaradress angiven!!!<br>Om du använder <i>Test Mail</i> -länken, vänligen ställ in <b>e-postinställningen för Alert</b>."
 
-#: lib/functions.php:6183
-#, php-format
-msgid "Authentication failed: %s"
-msgstr "Autentiseringen misslyckades: %s"
-
-#: lib/functions.php:6187
+#: lib/functions.php:6192
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO misslyckades: %s"
 
-#: lib/functions.php:6190
-#, php-format
-msgid "Connect failed: %s"
-msgstr "Anslutningen misslyckades: %s"
-
-#: lib/functions.php:6193
+#: lib/functions.php:6195
 msgid "SMTP error: "
 msgstr "SMTP-fel: "
 
-#: lib/functions.php:6207
+#: lib/functions.php:6208
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Detta är ett testmeddelande som genererats från Kadupul.  Det här meddelandet skickades för att testa konfigurationen av dina e-postinställningar."
 
-#: lib/functions.php:6208
+#: lib/functions.php:6209
 msgid "Your email settings are currently set as follows"
 msgstr "Dina e-postinställningar är för närvarande inställda enligt följande"
 
-#: lib/functions.php:6209
+#: lib/functions.php:6210
 msgid "Method"
 msgstr "Metod"
 
-#: lib/functions.php:6211
+#: lib/functions.php:6212
 msgid "Checking Configuration...<br>"
 msgstr "Kontrollerar konfigurationen...<br>"
 
-#: lib/functions.php:6218
+#: lib/functions.php:6219
 msgid "PHP's Mailer Class"
 msgstr "PHP:s Mailer-klass"
 
-#: lib/functions.php:6224
+#: lib/functions.php:6225
 msgid "Method: SMTP"
 msgstr "Metod: SMTP"
 
-#: lib/functions.php:6241
+#: lib/functions.php:6242
 msgid "Not Shown for Security Reasons"
 msgstr "Visas inte av säkerhetsskäl"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6243
 msgid "Security"
 msgstr "Säkerhet"
 
-#: lib/functions.php:6250
+#: lib/functions.php:6251
 msgid "Ping Results:"
 msgstr "Ping resultat:"
 
-#: lib/functions.php:6250 lib/functions.php:6255
+#: lib/functions.php:6251 lib/functions.php:6256
 msgid "Success"
 msgstr "Lyckades"
 
-#: lib/functions.php:6259
+#: lib/functions.php:6260
 msgid "Bypassed"
 msgstr "Förbikopplad"
 
-#: lib/functions.php:6268
+#: lib/functions.php:6269
 msgid "Creating Message Text..."
 msgstr "Skapa meddelandetext..."
 
-#: lib/functions.php:6271
+#: lib/functions.php:6272
 msgid "Sending Message..."
 msgstr "Sänder meddelande..."
 
-#: lib/functions.php:6275
+#: lib/functions.php:6276
 msgid "Kadupul Test Message"
 msgstr "Testmeddelande för Kadupul"
 
-#: lib/functions.php:6277
+#: lib/functions.php:6278
 msgid "Success!"
 msgstr "Klart!"
 
-#: lib/functions.php:6280
+#: lib/functions.php:6281
 msgid "Message Not Sent due to ping failure."
 msgstr "Meddelande ej skickat på grund av ping-fel."
 
-#: lib/functions.php:6744 lib/functions.php:6819
+#: lib/functions.php:6745 lib/functions.php:6820
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul inaktiverade insticksmodul %s på grund av följande fel: %s!  Se Kadupuls loggfil för mer information."
 
-#: lib/functions.php:6922
+#: lib/functions.php:6923
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "VARNING: PollerID:%s har ett ogiltigt värdnamn:%s.  Är det inte nåbart via DNS!"
 
-#: lib/functions.php:7375 lib/functions.php:7377
+#: lib/functions.php:7376 lib/functions.php:7378
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7375 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7376 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Version %s %s"
 
-#: lib/functions.php:7377
+#: lib/functions.php:7378
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7612
+#: lib/functions.php:7613
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "VARNING:  Key Kadupul Include File %s saknas.  Vänligen hitta och ersätt den här filen"

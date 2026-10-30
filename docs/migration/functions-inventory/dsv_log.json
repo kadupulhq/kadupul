@@ -3,8 +3,8 @@
     "name": "dsv_log",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 2410,
-        "end_line": 2415,
+        "start_line": 2415,
+        "end_line": 2420,
         "line_count": 6,
         "signature": {
             "parameters": [

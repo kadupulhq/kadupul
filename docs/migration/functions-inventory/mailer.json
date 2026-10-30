@@ -3,8 +3,8 @@
     "name": "mailer",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5636,
-        "end_line": 5988,
+        "start_line": 5642,
+        "end_line": 5994,
         "line_count": 353,
         "signature": {
             "parameters": [
@@ -112,7 +112,7 @@
             "returns_reference": false
         },
         "docblock": true,
-        "fan_out": {"core": 6, "core_outside_functions_php": 2, "tests": 18, "plugins": 0},
+        "fan_out": {"core": 6, "core_outside_functions_php": 2, "tests": 19, "plugins": 0},
         "body": {
             "uses_global": ["cacti_locale", "config", "mail_methods"],
             "static_variables": [],
