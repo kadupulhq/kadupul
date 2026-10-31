@@ -11,8 +11,10 @@ namespace Kadupul\Tests\GraphXport;
  * Runs the shipped graph_xport.php in a child process. The page is evaluated
  * inside a namespace that supplies header(), because the CLI keeps no header
  * list to read back.
+ *
+ * @param array<array-key, array<string, mixed>>|null $data Optional producer rows; omission retains the single-row fixture.
  */
-function runExport(array $meta): array
+function runExport(array $meta, ?array $data = null): array
 {
     $root = dirname(__DIR__, 2);
     $work = sys_get_temp_dir() . '/kadupul-xport-' . bin2hex(random_bytes(6));
@@ -56,7 +58,15 @@ function runExport(array $meta): array
             $pipes,
             $work
         );
-        fwrite($pipes[0], json_encode(array('meta' => $meta, 'data' => array(array('col1' => '1', 'timestamp' => 0)))));
+        $input = json_encode(array('meta' => $meta, 'data' => $data ?? array(array('col1' => '1', 'timestamp' => 0))), JSON_THROW_ON_ERROR);
+        $offset = 0;
+        while ($offset < strlen($input)) {
+            $written = fwrite($pipes[0], substr($input, $offset));
+            if ($written === false || $written === 0) {
+                throw new \RuntimeException('Unable to send the complete export scenario.');
+            }
+            $offset += $written;
+        }
         fclose($pipes[0]);
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
