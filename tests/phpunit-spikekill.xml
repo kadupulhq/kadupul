@@ -170,6 +170,10 @@
       <file>Unit/Security/Shell/DataInputQuotedPlaceholderTest.php</file>
       <file>Unit/Security/Shell/Win32CmdArgumentTest.php</file>
       <file>Unit/SanitizeUriPositionTest.php</file>
+      <file>Unit/RedirectGraphActionTest.php</file>
+      <file>Unit/PhpStatementSourceTest.php</file>
+      <file>Unit/GraphZoomNativeControllerTest.php</file>
+      <file>Unit/GraphInvalidLocalGraphIdTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

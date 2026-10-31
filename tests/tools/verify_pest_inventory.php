@@ -63,16 +63,34 @@ final class PestInventory
      *
      * @param list<string> $files
      * @param list<string> $reports
+     * @param string|null $root Test root used to bind native discovery files.
      * @return array<string, array{discovered: int, recorded: int, skipped: int}>
      */
-    public static function verify(array $files, string $discovery, array $reports): array
+    public static function verify(array $files, string $discovery, array $reports, ?string $root = null): array
     {
+        $root = realpath($root ?? dirname(__DIR__));
+        if ($root === false) {
+            throw new RuntimeException('Test root not found.');
+        }
         $counts = array_fill_keys($files, ['discovered' => 0, 'recorded' => 0, 'skipped' => 0]);
+        $nativeClasses = [];
+        $nativeFiles = [];
         foreach (self::xml($discovery)->getElementsByTagName('testClass') as $class) {
             // Pest 4 emits its generated class under P\ followed by the test
             // path. The XML file attribute points at eval() in its factory.
             $name = $class->getAttribute('name');
+            if ($name === '' || isset($nativeClasses[$name])) {
+                throw new RuntimeException('Discovered class has a missing or duplicate name.');
+            }
             $file = str_starts_with($name, 'P\\') ? str_replace('\\', '/', substr($name, 2)) . '.php' : '';
+            if (!str_starts_with($name, 'P\\')) {
+                // Native PHPUnit classes use their real file, not Pest's eval path.
+                $physical = realpath($class->getAttribute('file'));
+                $file = $physical !== false && str_starts_with($physical, $root . '/')
+                    ? substr($physical, strlen($root) + 1) : '';
+                $nativeClasses[$name] = $file;
+                $nativeFiles[$file] = true;
+            }
             if (!isset($counts[$file]) || $counts[$file]['discovered'] !== 0) {
                 throw new RuntimeException('Unexpected or duplicate discovered class: ' . $name);
             }
@@ -90,6 +108,20 @@ final class PestInventory
             $recorded = array_fill_keys($files, 0);
             foreach (self::xml($report)->getElementsByTagName('testcase') as $case) {
                 $file = explode('::', $case->getAttribute('file'), 2)[0];
+                $class = $case->getAttribute('class');
+                $classname = $case->getAttribute('classname');
+                $native = $nativeClasses[$class ?: $classname] ?? null;
+                if ($native !== null) {
+                    if (($class !== '' && $classname !== '' && $class !== $classname)
+                        || (isset($counts[$file]) && $file !== $native)) {
+                        throw new RuntimeException('Conflicting native JUnit identity: ' . $file);
+                    }
+                    // Pest formats native JUnit file attributes as display labels.
+                    // Bind them to the class already verified by physical discovery.
+                    $file = $native;
+                } elseif (isset($nativeFiles[$file])) {
+                    throw new RuntimeException('Missing or unknown native JUnit class: ' . $file);
+                }
                 if (!isset($counts[$file])) {
                     throw new RuntimeException('Unexpected JUnit case file: ' . $file);
                 }
@@ -134,7 +166,7 @@ final class PestInventory
             $process = new Process([PHP_BINARY, 'vendor/bin/pest', '--test-directory=.', '--configuration=' . $configuration, '--list-tests-xml=' . $discovery, ...$files], dirname($configuration));
             $process->setTimeout(60);
             $process->mustRun();
-            $counts = self::verify($files, $discovery, array_slice($arguments, 2));
+            $counts = self::verify($files, $discovery, array_slice($arguments, 2), dirname($configuration));
             foreach ($counts as $file => $count) {
                 printf("%s: discovered=%d recorded=%d skipped=%d\n", $file, $count['discovered'], $count['recorded'], $count['skipped']);
             }
