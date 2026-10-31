@@ -1868,7 +1868,7 @@ function reviewed_upgrade_signal(string $root): bool
                 default => [],
             };
             foreach ($interfaces as $interface) {
-                if ($interface->toString() === $contract && $node->namespacedName?->toString() !== $expected) {
+                if (strcasecmp($interface->toString(), $contract) === 0 && $node->namespacedName?->toString() !== $expected) {
                     return false;
                 }
             }
