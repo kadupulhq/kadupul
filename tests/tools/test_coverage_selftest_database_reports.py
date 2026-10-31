@@ -37,6 +37,24 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             capture_output=True, text=True, timeout=30,
         )
 
+    def test_measured_graph_cli_sources_survive_the_production_import_guard(self):
+        admitted = [
+            'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php',
+            'cli/repair_graphs.php', 'cli/remove_broken_graphs.php',
+            'bin/legacy-graph-remove.php', 'cli/remove_graphs.php',
+            'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php',
+            'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
+            'graphs.php',
+        ]
+        excluded = [
+            'include/vendor/autoload.php', 'include/config.php',
+            'var/cache/prod/App_Kernel.php', 'plugins/example/setup.php',
+            'tests/Fixtures/legacy-cli/remove_graphs.php',
+        ]
+        result = self.guard('import-paths', admitted + excluded)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(admitted, json.loads(result.stdout))
+
     def test_actual_producer_and_merger_require_the_same_complete_source_inventory(self):
         result = self.guard('paths')
         self.assertEqual(0, result.returncode, result.stderr)
@@ -121,7 +139,11 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
                 needle = '!in_array($relative, $requiredPaths, true) && '
                 self.assertIn(needle, original)
                 broken = root / 'previous-import-predicate.php'
-                broken.write_text(original.replace(needle, '', 1))
+                previous = original.replace(needle, '', 1)
+                guard = next(line for line in previous.splitlines() if "if (!str_starts_with($relative, 'src/')" in line)
+                old_guard = guard.replace("'cli/poller_graphs_reapply_names.php', ", '')
+                self.assertNotEqual(guard, old_guard)
+                broken.write_text(previous.replace(guard, old_guard, 1))
                 refused = invoke('import', str(ROOT), payload, broken)
                 self.assertNotEqual(0, refused.returncode)
                 self.assertIn('Missing measured execution: cli/poller_graphs_reapply_names.php', refused.stderr)

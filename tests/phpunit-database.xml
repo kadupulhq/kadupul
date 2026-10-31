@@ -2,6 +2,7 @@
 <phpunit bootstrap="vendor/autoload.php" colors="true">
   <testsuites>
     <testsuite name="Poller database contracts">
+      <file>integration/SqlSaveNullableNumericDatabaseTest.php</file>
       <file>integration/PollerAcknowledgementDatabaseTest.php</file>
       <file>integration/PollerRejectedSamplesDatabaseTest.php</file>
       <file>integration/PollerStaleItemsDatabaseTest.php</file>
@@ -13,6 +14,7 @@
       <file>integration/BoostRecoveryDatabaseTest.php</file>
       <file>integration/BoostConnectionLossDatabaseTest.php</file>
       <file>Unit/Core/Rrd/BoostOnDemandInsertNativeTest.php</file>
+      <file>Unit/SnmpEventDescriptionIdentityTest.php</file>
       <file>integration/BoostQueueDatabaseTest.php</file>
       <file>integration/OfflineCmdOutputDatabaseTest.php</file>
       <file>integration/GroupMembershipConcurrencyTest.php</file>

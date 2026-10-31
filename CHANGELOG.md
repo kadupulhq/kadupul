@@ -7,7 +7,10 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Share the authenticated native browser-worker transport across Symfony adapters, retaining read-only console admission and adding POST-only mutation admission with a bounded private command pipe. Keep handoff metadata out of the native settings globals during bootstrap.
+- Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
+
 - Bound Windows RRDtool one-shot commands by the command/poller deadline and prevent large input/output deadlocks using temporary file handles. Windows now requires writable temporary storage (#782).
+- Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.
 
 - Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
@@ -17,9 +20,11 @@ follows [Semantic Versioning](VERSIONING.md).
 - Run `cli/poller_graphs_reapply_names.php` through the `kadupul:graph:reapply-titles` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, the filter is bound instead of concatenated into SQL, and the run is audited.
 - Run `cli/repair_graphs.php` and `cli/remove_broken_graphs.php` through the `kadupul:graph:repair-items` and `kadupul:graph:remove-broken` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and Graphs realms, ids are bound instead of concatenated into SQL, and the broken-graph list is no longer cut off at `group_concat_max_len`.
 - Run `cli/add_graph_template.php` through the `kadupul:device:add-graph-template` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Devices realms, binds its ids, audits the change, and refuses an unknown device or graph template instead of writing an orphan `host_graph` row.
+- Run `cli/add_tree.php` through the `kadupul:tree:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Trees realms, binds its ids and names instead of concatenating them into SQL, audits what it adds, and refuses a graph id with SQL after the number.
 - Run `cli/remove_graphs.php` through the `kadupul:graph:remove` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, ids and expressions are bound instead of concatenated into SQL, the removal is audited, and an expression over 50 bytes, with `;`, or empty is refused as `validate_is_regex()` intended.
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
+- Try configured SNMP after a failed Ping-or-SNMP ping, and carry SNMP settings into command-poller availability checks for devices without poller items (#1105).
 - Use the current response time when inconsistent device counters leave a zero average divisor (#1101).
 - Preserve refresh rendering when a SAPI omits REQUEST_URI, retaining the LTS empty-string fallback and existing logout policy (#1104).
 - Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values; test-data-source templates retain their empty-field omission (#1103).

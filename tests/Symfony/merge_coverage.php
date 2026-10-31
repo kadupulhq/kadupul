@@ -31,7 +31,6 @@ function symfony_integration_required_paths(string $handler, array $legacyCaller
         'src/Platform/Infrastructure/Legacy/PermissionDeniedRuntime.php',
         'src/Platform/Infrastructure/Symfony/Controller/PermissionDeniedController.php',
         'src/Platform/Infrastructure/Legacy/LegacyBrowserWorker.php',
-        'src/Platform/Infrastructure/Legacy/LegacyBrowserWorkerRunner.php',
         'src/Platform/Infrastructure/Legacy/ConsoleExtensionRuntime.php',
         'src/Platform/Infrastructure/Legacy/ConsoleInstallation.php',
         'src/Platform/Infrastructure/Symfony/Controller/ConsoleHomeController.php',
@@ -363,7 +362,16 @@ function symfony_integration_required_paths(string $handler, array $legacyCaller
         'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
         'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateAssignmentCatalog.php',
         'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateCommand.php',
-        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php',
+        'cli/add_tree.php',
+        'bin/legacy-tree-save.php',
+        'src/Graphing/Application/Command/AddTree.php',
+        'src/Graphing/Application/Command/AddTreeNode.php',
+        'src/Graphing/Application/Command/ListTreeChoices.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyTreeWriter.php',
+        'src/Graphing/Infrastructure/Persistence/DbalTreeCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/AddTreeCommand.php',
+        'src/Graphing/Infrastructure/Symfony/AddTreeLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
@@ -1055,7 +1063,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, $requiredPaths, true) && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php', 'cli/copy_user.php', 'cli/add_perms.php', 'bin/legacy-user-copy.php', 'bin/legacy-item-permission.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $requiredPaths, true) && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php', 'cli/copy_user.php', 'cli/add_perms.php', 'bin/legacy-user-copy.php', 'bin/legacy-item-permission.php', 'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php', 'cli/repair_graphs.php', 'cli/remove_broken_graphs.php', 'bin/legacy-graph-remove.php', 'cli/remove_graphs.php', 'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;

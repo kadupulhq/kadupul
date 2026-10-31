@@ -202,6 +202,57 @@ final class RemoveGraphsCommandTest extends TestCase
         self::assertSame(Command::INVALID, $tester->execute(['--list' => true, '--force' => true]));
     }
 
+    public function testEachLegacySelectorReachesTheActiveCommand(): void
+    {
+        foreach ([
+            ['--host-id=5', 'hostIds', [5]],
+            ['--host-template-id=4', 'hostTemplateIds', [4]],
+            ['--graph-template-id=3', 'graphTemplateIds', [3]],
+            ['--graph-regex=^edge', 'patterns', ['^edge']],
+        ] as [$argument, $field, $expected]) {
+            $graphs = $this->graphs();
+            [$input, $request] = (new RemoveGraphsLegacyArguments())->translate([$argument]);
+
+            self::assertNull($request);
+            self::assertSame(0, $this->tester($graphs)->execute($input));
+            self::assertCount(1, $graphs->filters);
+            self::assertSame($expected, $graphs->filters[0]->{$field});
+            self::assertFalse($graphs->filters[0]->all);
+            self::assertSame([], $graphs->batches);
+        }
+    }
+
+    public function testCombinedAndRepeatedLegacySelectorsReachTheActiveCommand(): void
+    {
+        $graphs = $this->graphs();
+        [$input] = (new RemoveGraphsLegacyArguments())->translate(['--host-id=5', '--host-id=7', '--host-id=9', '--graph-template-id=3']);
+
+        self::assertSame(0, $this->tester($graphs)->execute($input));
+        self::assertCount(1, $graphs->filters);
+        self::assertSame([5, 7, 9], $graphs->filters[0]->hostIds);
+        self::assertSame([3], $graphs->filters[0]->graphTemplateIds);
+    }
+
+    public function testLegacyHelpDescribesTheActiveSelectorSafetyContract(): void
+    {
+        $help = implode("\n", (new RemoveGraphsLegacyArguments())->help());
+        self::assertStringNotContainsString('Mandatory', $help);
+        self::assertStringNotContainsString('you must provide from one to many graph-template-id', $help);
+        self::assertStringNotContainsString('the one mode that accepts no', $help);
+        self::assertStringNotContainsString('\\', $help);
+        self::assertStringContainsString('refused', $help);
+        self::assertStringContainsString('lists every Graph', $help);
+        $start = strpos($help, 'usage: remove_graphs.php');
+        $end = strpos($help, 'Kadupul utility');
+        self::assertNotFalse($start);
+        self::assertNotFalse($end);
+        $usage = substr($help, $start, $end - $start);
+        self::assertSame(substr_count($usage, '['), substr_count($usage, ']'));
+        foreach (['--graph-template-id', '--host-template-id', '--host-id', '--graph-regex', '--all', '--list', '--force', '--preserve'] as $option) {
+            self::assertStringContainsString($option, $usage);
+        }
+    }
+
     public function testTheOldFlagsBecomeListsAndAnEmptyValueIsKept(): void
     {
         [$input, $request] = (new RemoveGraphsLegacyArguments())->translate(['--host-id=1', '--host-id=2', '--graph-regex', '--all', '--list-hosts']);
