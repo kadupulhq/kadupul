@@ -203,5 +203,12 @@ the old serialization and cannot repair previously stored values.
 
 - Status: implemented.
 - Acceptance: inconsistent stored poll counters must not abort a successful device status update with division by zero; valid weighted averages remain unchanged.
-- Verification: focused production-function regression covers the bound host update for zero and nonzero divisors, database string counters and failed polls. Hosted branch checks remain pending.
-- Scope: main legacy poller helper; equivalent LTS correction is prepared separately. No schema or runtime change. Not released.
+- Verification: PHP 8.1.34 and 8.4.25 each run 13 focused production-function cases covering the bound host update for zero and nonzero divisors, database string counters and failed polls. Six fail against the original implementation. LTS #1231 and main #1232 are merged after current-head checks passed. Database I/O is stubbed in these focused cases.
+- Scope: shared legacy poller helper; both supported branches are fixed. No schema or runtime change. Not released.
+
+### Session refresh without REQUEST_URI (#1104)
+
+- Status: implemented.
+- Acceptance: all five request-URI refresh paths render without warnings when the SAPI omits the URI, retaining existing refresh and logout decisions.
+- Verification: PHP 8.4.25 runs 16 native include/render cases with 80 assertions for missing and supplied URIs and existing login/session cases; five fail against the original source. Session helpers are recording boundaries; no browser execution is claimed.
+- Scope: main compatibility fragment; LTS already uses the same empty fallback. No deployment or data migration.

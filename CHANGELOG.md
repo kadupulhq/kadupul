@@ -20,6 +20,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
 - Use the current response time when inconsistent device counters leave a zero average divisor (#1101).
+- Preserve refresh rendering when a SAPI omits REQUEST_URI, retaining the LTS empty-string fallback and existing logout policy (#1104).
 - Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values; test-data-source templates retain their empty-field omission (#1103).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
 - Convert non-finite numeric Boost samples to unknown before scheduled and on-demand RRD writes, preserving valid sibling fields and original queue acknowledgement values (#739).
