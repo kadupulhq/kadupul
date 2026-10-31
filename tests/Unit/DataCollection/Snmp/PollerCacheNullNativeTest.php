@@ -5,7 +5,7 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-test('native cache producer preserves nullable host values under strict SQL', function ($variant) {
+test('native cache producer preserves nullable host values under strict SQL', function (string $variant): void {
     if (!getenv('KADUPUL_TEST_MYSQL_DSN')) $this->markTestSkipped('Disposable database required.');
     $root = dirname(__DIR__, 4);
     $process = proc_open([PHP_BINARY, $root . '/tests/fixtures/poller-cache-null-native.php', $variant], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
@@ -32,3 +32,34 @@ test('native cache producer preserves nullable host values under strict SQL', fu
         }
     }
 })->with(['null-host', 'null-override', 'values', 'invalid', 'invalid-community', 'disabled', 'non-device']);
+
+
+test('cache fixture uses configured nonempty credentials when no administrator override exists', function (): void {
+    if (!getenv('KADUPUL_TEST_MYSQL_DSN')) $this->markTestSkipped('Disposable database required.');
+    $database = new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $user = 'cache_fixture_' . bin2hex(random_bytes(8));
+    $password = bin2hex(random_bytes(24));
+    $account = $database->quote($user) . "@'%'";
+    $created = false;
+    try {
+        $database->exec('CREATE USER ' . $account . ' IDENTIFIED BY ' . $database->quote($password));
+        $created = true;
+        $database->exec('GRANT ALL ON `cache_null_%`.* TO ' . $account);
+        $environment = getenv();
+        unset($environment['KADUPUL_TEST_MYSQL_ADMIN_USER'], $environment['KADUPUL_TEST_MYSQL_ADMIN_PASSWORD']);
+        $environment['KADUPUL_TEST_MYSQL_USER'] = $user;
+        $environment['KADUPUL_TEST_MYSQL_PASSWORD'] = $password;
+        $root = dirname(__DIR__, 4);
+        $process = proc_open([PHP_BINARY, $root . '/tests/fixtures/poller-cache-null-native.php', 'null-host'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $environment);
+        expect(is_resource($process))->toBeTrue();
+        $output = stream_get_contents($pipes[1]);
+        $errors = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($errors)->toBe('')->and(str_contains($output . $errors, $password))->toBeFalse();
+        $state = json_decode($output, true, 16, JSON_THROW_ON_ERROR);
+        expect($state['record']['snmp_username'])->toBe('')->and(str_starts_with($state['database_actor'], $user . '@'))->toBeTrue();
+    } finally {
+        if ($created) $database->exec('DROP USER ' . $account);
+    }
+});
