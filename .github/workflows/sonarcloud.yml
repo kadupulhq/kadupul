@@ -439,11 +439,10 @@ jobs:
           coverage: pcov
           tools: composer
 
-      - name: Preserve and register PHP for coverage manifest subprocesses
+      - name: Preserve PHP for coverage manifest subprocesses
         run: |
           mkdir -p "$RUNNER_TEMP/coverage-manifest-php/bin"
           ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/coverage-manifest-php/bin/php"
-          bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/coverage-manifest-php" 8.4
 
       - name: Install RRDtool for native writer coverage
         run: |
@@ -506,6 +505,9 @@ jobs:
         uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12 node@22.22.2
+
+      - name: Register preserved PHP after mise setup
+        run: bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/coverage-manifest-php" 8.4
 
       - name: Install coverage artifact verifier
         run: |
