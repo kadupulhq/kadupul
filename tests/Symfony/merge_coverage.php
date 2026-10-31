@@ -1077,7 +1077,14 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Infrastructure/Legacy/LegacyTreeWriter.php',
         'src/Graphing/Infrastructure/Persistence/DbalTreeCatalog.php',
         'src/Graphing/Infrastructure/Symfony/AddTreeCommand.php',
-        'src/Graphing/Infrastructure/Symfony/AddTreeLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/AddTreeLegacyArguments.php',
+        'cli/add_graphs.php',
+        'bin/legacy-graph-add.php',
+        'src/Graphing/Application/Command/AddGraphs.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGraphWriter.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphCreationCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/AddGraphsCommand.php',
+        'src/Graphing/Infrastructure/Symfony/AddGraphsLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
