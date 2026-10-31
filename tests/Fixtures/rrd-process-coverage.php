@@ -5,7 +5,11 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE') || defined('CONSOLE_HANDOFF_TEST_COVERAGE')) {
+if (defined('RRD_TEST_PARENT_COVERAGE_STACK')) {
+    require_once $coverageRoot . '/tests/Symfony/NativeCoverageStack.php';
+    if (!is_array(RRD_TEST_PARENT_COVERAGE_STACK)) throw new RuntimeException('Invalid parent coverage stack.');
+    $testVendorPath = Kadupul\Tests\NativeCoverageStack::bootstrap($coverageRoot, RRD_TEST_PARENT_COVERAGE_STACK);
+} elseif (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE') || defined('CONSOLE_HANDOFF_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -24,7 +28,9 @@ if (!$testLoader instanceof Composer\Autoload\ClassLoader) {
 if (!class_exists(SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class)) {
     class_exists(SebastianBergmann\CodeCoverage\RawCodeCoverageData::class);
 }
-$coveragePackageVersion = Composer\InstalledVersions::getVersion('phpunit/php-code-coverage');
+$coveragePackageVersion = defined('RRD_TEST_PARENT_COVERAGE_STACK')
+    ? RRD_TEST_PARENT_COVERAGE_STACK['version']
+    : Composer\InstalledVersions::getVersion('phpunit/php-code-coverage');
 if (!is_string($coveragePackageVersion)) {
     throw new RuntimeException('Unable to determine the active code-coverage version');
 }

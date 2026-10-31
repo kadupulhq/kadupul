@@ -6,7 +6,7 @@
 /** Bind native child coverage to its producer, inputs, measured sources and completion. */
 final class NativeChildCoverageEvidence
 {
-    public static function snapshot(string $root, string $producer, string $scenario, array $sources): array
+    public static function snapshot(string $root, string $producer, string $scenario, array $sources, ?array $coverageStack = null): array
     {
         $hashes = [];
         foreach (array_unique(array_merge([$producer], $sources)) as $path) {
@@ -16,7 +16,13 @@ final class NativeChildCoverageEvidence
             }
             $hashes[$path] = $hash;
         }
-        return ['producer' => $producer, 'scenario' => hash('sha256', $scenario), 'sources' => $hashes];
+        $snapshot = ['producer' => $producer, 'scenario' => hash('sha256', $scenario), 'sources' => $hashes];
+        if ($coverageStack !== null) {
+            require_once $root . '/tests/Symfony/NativeCoverageStack.php';
+            Kadupul\Tests\NativeCoverageStack::verify($root, $coverageStack);
+            $snapshot['coverage_stack'] = $coverageStack;
+        }
+        return $snapshot;
     }
 
     public static function write(string $report, string $root, array $snapshot, array $markers): void
@@ -33,7 +39,7 @@ final class NativeChildCoverageEvidence
         }
     }
 
-    public static function load(string $report, string $root, string $producer, string $scenario, array $sources, array $markers, array $hitSources): SebastianBergmann\CodeCoverage\CodeCoverage
+    public static function load(string $report, string $root, string $producer, string $scenario, array $sources, array $markers, array $hitSources, ?array $coverageStack = null): SebastianBergmann\CodeCoverage\CodeCoverage
     {
         if (!is_file($report) || !is_file($report . '.json') || filesize($report) === 0) {
             throw new RuntimeException('Native coverage report or evidence is missing.');
@@ -49,6 +55,19 @@ final class NativeChildCoverageEvidence
                 throw new RuntimeException('Native coverage completion marker is missing: ' . $marker);
             }
         }
+        if ($coverageStack === null && array_key_exists('coverage_stack', $evidence)) {
+            require_once $root . '/tests/Symfony/NativeCoverageStack.php';
+            $coverageStack = Kadupul\Tests\NativeCoverageStack::capture($root);
+        }
+        if ($coverageStack !== null) {
+            if (($evidence['coverage_stack'] ?? null) !== $coverageStack) {
+                throw new RuntimeException('Native coverage stack is missing or stale.');
+            }
+            require_once $root . '/tests/Symfony/NativeCoverageStack.php';
+            Kadupul\Tests\NativeCoverageStack::verify($root, $coverageStack);
+        }
+        // Check the opted-in library identity before deserializing an object
+        // whose class layout may differ between the installed test stacks.
         $coverage = unserialize(file_get_contents($report));
         if (!$coverage instanceof SebastianBergmann\CodeCoverage\CodeCoverage) {
             throw new RuntimeException('Native coverage report is invalid.');
@@ -84,15 +103,15 @@ final class NativeChildCoverageEvidence
     }
 
     /** Negative self-tests mutate only the owned report and always restore it. */
-    public static function verifyRejections(string $report, string $root, string $producer, string $scenario, array $sources, array $markers, array $hitSources, string $unexecutedSource): int
+    public static function verifyRejections(string $report, string $root, string $producer, string $scenario, array $sources, array $markers, array $hitSources, string $unexecutedSource, ?array $coverageStack = null): int
     {
         $originalReport = file_get_contents($report);
         $originalEvidence = file_get_contents($report . '.json');
         $evidence = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
         $count = 0;
-        $reject = static function (array $requiredHits, string $message) use ($report, $root, $producer, $scenario, $sources, $markers, &$count): void {
+        $reject = static function (array $requiredHits, string $message) use ($report, $root, $producer, $scenario, $sources, $markers, $coverageStack, &$count): void {
             try {
-                self::load($report, $root, $producer, $scenario, $sources, $markers, $requiredHits);
+                self::load($report, $root, $producer, $scenario, $sources, $markers, $requiredHits, $coverageStack);
             } catch (RuntimeException $error) {
                 if (!str_contains($error->getMessage(), $message)) {
                     throw $error;
@@ -103,6 +122,15 @@ final class NativeChildCoverageEvidence
             throw new RuntimeException('Incomplete native coverage evidence was accepted.');
         };
         try {
+            if ($coverageStack !== null) {
+                foreach (['missing', 'stack', 'version', 'class_sha256', 'autoload'] as $field) {
+                    $changed = $evidence;
+                    if ($field === 'missing') unset($changed['coverage_stack']);
+                    else $changed['coverage_stack'][$field] = 'foreign';
+                    file_put_contents($report . '.json', json_encode($changed, JSON_THROW_ON_ERROR));
+                    $reject($hitSources, 'coverage stack');
+                }
+            }
             foreach (['producer', 'scenario', 'report', 'markers', ...$sources, $producer] as $missing) {
                 $changed = $evidence;
                 if (in_array($missing, array_merge($sources, [$producer]), true)) {
