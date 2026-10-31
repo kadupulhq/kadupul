@@ -441,44 +441,64 @@ function poll_for_data() {
 		return;
 	}
 
-	$i = 0;
-
+	// Validate the whole selection before acquiring a batch-owned worker.
 	if (cacti_sizeof($local_data_ids)) {
-		foreach($local_data_ids as $local_data_id) {
-			input_validate_input_number($local_data_id);
+		foreach ($local_data_ids as $local_data_id) input_validate_input_number($local_data_id);
+	}
 
-			$items = db_fetch_assoc_prepared('SELECT *
-				FROM poller_item
-				WHERE host_id = ?
-				AND local_data_id = ?',
-				array($host_id, $local_data_id));
+	$i = 0;
+	$server_attempted = false;
+	$using_proc_function = false;
+	$cactiphp = false;
+	$pipes = array();
 
-			$script_server_calls = db_fetch_cell_prepared('SELECT COUNT(*)
-				FROM poller_item
-				WHERE host_id = ?
-				AND local_data_id = ?
-				AND action = 2',
-				array($host_id, $local_data_id));
+	try {
+		if (cacti_sizeof($local_data_ids)) {
+			foreach($local_data_ids as $local_data_id) {
+				$items = db_fetch_assoc_prepared('SELECT *
+					FROM poller_item
+					WHERE host_id = ?
+					AND local_data_id = ?',
+					array($host_id, $local_data_id));
 
-			if (cacti_sizeof($items)) {
-				foreach($items as $item) {
-					switch ($item['action']) {
-					case POLLER_ACTION_SNMP: /* snmp */
-						if (($item['snmp_version'] == 0) || (($item['snmp_community'] == '') && ($item['snmp_version'] != 3))) {
-							$output = 'U';
-						} else {
-							$host = db_fetch_row_prepared('SELECT ping_retries, max_oids FROM host WHERE hostname = ?', array($item['hostname']));
-							$session = cacti_snmp_session($item['hostname'], $item['snmp_community'], $item['snmp_version'],
-								$item['snmp_username'], $item['snmp_password'], $item['snmp_auth_protocol'], $item['snmp_priv_passphrase'],
-								$item['snmp_priv_protocol'], $item['snmp_context'], $item['snmp_engine_id'], $item['snmp_port'],
-								$item['snmp_timeout'], $host['ping_retries'], $host['max_oids']);
-
-							if ($session === false) {
+				if (cacti_sizeof($items)) {
+					foreach($items as $item) {
+						switch ($item['action']) {
+						case POLLER_ACTION_SNMP: /* snmp */
+							if (($item['snmp_version'] == 0) || (($item['snmp_community'] == '') && ($item['snmp_version'] != 3))) {
 								$output = 'U';
 							} else {
-								$output = cacti_snmp_session_get($session, $item['arg1']);
-								$session->close();
+								$host = db_fetch_row_prepared('SELECT ping_retries, max_oids FROM host WHERE hostname = ?', array($item['hostname']));
+								$session = cacti_snmp_session($item['hostname'], $item['snmp_community'], $item['snmp_version'],
+									$item['snmp_username'], $item['snmp_password'], $item['snmp_auth_protocol'], $item['snmp_priv_passphrase'],
+									$item['snmp_priv_protocol'], $item['snmp_context'], $item['snmp_engine_id'], $item['snmp_port'],
+									$item['snmp_timeout'], $host['ping_retries'], $host['max_oids']);
+
+								if ($session === false) {
+									$output = 'U';
+								} else {
+									$output = cacti_snmp_session_get($session, $item['arg1']);
+									$session->close();
+								}
+
+								if (prepare_validate_result($output) === false) {
+									if (strlen($output) > 20) {
+										$strout = 20;
+									} else {
+										$strout = strlen($output);
+									}
+
+									$output = 'U';
+								}
 							}
+
+							$return[$i]['value']         = $output;
+							$return[$i]['rrd_name']      = $item['rrd_name'];
+							$return[$i]['local_data_id'] = $local_data_id;
+
+							break;
+						case POLLER_ACTION_SCRIPT: /* script (popen) */
+							$output = trim(exec_poll($item['arg1']));
 
 							if (prepare_validate_result($output) === false) {
 								if (strlen($output) > 20) {
@@ -489,84 +509,81 @@ function poll_for_data() {
 
 								$output = 'U';
 							}
-						}
 
-						$return[$i]['value']         = $output;
-						$return[$i]['rrd_name']      = $item['rrd_name'];
-						$return[$i]['local_data_id'] = $local_data_id;
+							$return[$i]['value']         = $output;
+							$return[$i]['rrd_name']      = $item['rrd_name'];
+							$return[$i]['local_data_id'] = $local_data_id;
 
-						break;
-					case POLLER_ACTION_SCRIPT: /* script (popen) */
-						$output = trim(exec_poll($item['arg1']));
-
-						if (prepare_validate_result($output) === false) {
-							if (strlen($output) > 20) {
-								$strout = 20;
-							} else {
-								$strout = strlen($output);
+							break;
+						case POLLER_ACTION_SCRIPT_PHP: /* script (php script server) */
+							$command = trim((string) $item['arg1']);
+							// The server reads one command with fgets(STDIN, 1024).
+							$valid_command = $command !== '' && strlen($command) <= 1023 &&
+								strpbrk($command, "\r\n") === false && !str_starts_with($command, 'quit');
+							if ($valid_command && !$server_attempted) {
+								$server_attempted = true;
+								$php_bin = (string) read_config_option('path_php_binary');
+								if ($php_bin !== '' && function_exists('proc_open')) {
+									// The old stderr pipe was discarded; do not let a batch fill it.
+									$cactides = array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'),
+										2 => array('file', PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null', 'w'));
+									$cactiphp = @proc_open(array($php_bin, '-q', $config['base_path'] . '/script_server.php', 'realtime', $poller_id), $cactides, $pipes);
+									if (is_resource($cactiphp) && isset($pipes[0], $pipes[1]) && is_resource($pipes[0]) && is_resource($pipes[1])) {
+										$greeting = fgets($pipes[1], 1024);
+										$using_proc_function = is_string($greeting) && str_starts_with($greeting, 'PHP Script Server has Started') && str_ends_with($greeting, "\n");
+									}
+								}
 							}
 
-							$output = 'U';
-						}
+							if ($using_proc_function) {
+								$server_status = proc_get_status($cactiphp);
+								$using_proc_function = $server_status !== false && $server_status['running'] && !feof($pipes[1]);
+							}
 
-						$return[$i]['value']         = $output;
-						$return[$i]['rrd_name']      = $item['rrd_name'];
-						$return[$i]['local_data_id'] = $local_data_id;
+							if ($valid_command && $using_proc_function) {
+								$output = trim(str_replace("\n", '', exec_poll_php($command, $using_proc_function, $pipes, $cactiphp)));
 
-						break;
-					case POLLER_ACTION_SCRIPT_PHP: /* script (php script server) */
-						$cactides = array(
-							0 => array('pipe', 'r'), // stdin is a pipe that the child will read from
-							1 => array('pipe', 'w'), // stdout is a pipe that the child will write to
-							2 => array('pipe', 'w')  // stderr is a pipe to write to
-						);
+								if (prepare_validate_result($output) === false) {
+									if (strlen($output) > 20) {
+										$strout = 20;
+									} else {
+										$strout = strlen($output);
+									}
 
-						if (function_exists('proc_open')) {
-							$php_bin  = cacti_escapeshellcmd(read_config_option('path_php_binary'));
-							$srv_path = cacti_escapeshellarg($config['base_path'] . '/script_server.php');
-							$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-							$output = fgets($pipes[1], 1024);
-							$using_proc_function = true;
-						} else {
-							$using_proc_function = false;
-						}
-
-						if ($using_proc_function == true) {
-							$output = trim(str_replace("\n", '', exec_poll_php($item['arg1'], $using_proc_function, $pipes, $cactiphp)));
-
-							if (prepare_validate_result($output) === false) {
-								if (strlen($output) > 20) {
-									$strout = 20;
-								} else {
-									$strout = strlen($output);
+									$output = 'U';
 								}
-
+							} else {
 								$output = 'U';
 							}
-						} else {
-							$output = 'U';
+
+							$return[$i]['value']         = $output;
+							$return[$i]['rrd_name']      = $item['rrd_name'];
+							$return[$i]['local_data_id'] = $local_data_id;
+
+							break;
 						}
 
-						$return[$i]['value']         = $output;
-						$return[$i]['rrd_name']      = $item['rrd_name'];
-						$return[$i]['local_data_id'] = $local_data_id;
-
-						if (($using_proc_function == true) && ($script_server_calls > 0)) {
-							/* close php server process */
-							fwrite($pipes[0], "quit\r\n");
-							fclose($pipes[0]);
-							fclose($pipes[1]);
-							fclose($pipes[2]);
-
-							$return_value = proc_close($cactiphp);
-						}
-
-						break;
+						$i++;
 					}
-
-					$i++;
 				}
 			}
+		}
+	} finally {
+		if (is_resource($cactiphp)) {
+			$server_status = proc_get_status($cactiphp);
+			if (isset($pipes[0]) && is_resource($pipes[0]) && ($server_status === false || $server_status['running'])) {
+				$remaining = "quit\r\n";
+				while ($remaining !== '') {
+					$written = @fwrite($pipes[0], $remaining);
+					if ($written === false || $written === 0) {
+						proc_terminate($cactiphp, 9);
+						break;
+					}
+					$remaining = substr($remaining, $written);
+				}
+			}
+			foreach ($pipes as $pipe) if (is_resource($pipe)) fclose($pipe);
+			proc_close($cactiphp);
 		}
 	}
 

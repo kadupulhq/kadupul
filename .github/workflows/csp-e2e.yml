@@ -26,6 +26,12 @@ on:
       - lib/database.php
       - lib/data_query.php
       - graph_image.php
+      - remote_agent.php
+      - lib/poller.php
+      - lib/html_validate.php
+      - tests/Helpers/PhpSource.php
+      - tests/fixtures/realtime-script-server.php
+      - tests/Unit/RealtimeScriptServerBatchTest.php
       - csp_report.php
       - tests/Unit/Security/Auth/ClientAddrTrustedProxyTest.php
       - tests/Unit/Security/Xss/DebugLogRemoteMarkupTest.php
@@ -85,6 +91,7 @@ jobs:
             Unit/Security/Xss/DebugLogRemoteMarkupTest.php \
             Unit/Security/Auth/RemoteAgentGraphUserTest.php \
             Unit/Security/Auth/RemoteGraphResponseTest.php \
+            Unit/RealtimeScriptServerBatchTest.php \
             Unit/Database/SqlSaveLogRedactionTest.php \
             Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php; do
             report="$RUNNER_TEMP/$(basename "$test_file" .php).xml"
