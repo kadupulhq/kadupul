@@ -179,6 +179,7 @@
       <file>Unit/GraphZoomNativeControllerTest.php</file>
       <file>Unit/GraphInvalidLocalGraphIdTest.php</file>
       <file>Unit/PercentileRankRegressionTest.php</file>
+      <file>Unit/Core/Rrd/UnknownStatisticsRegressionTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
