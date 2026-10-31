@@ -204,15 +204,44 @@ function cacti_db_session_clean($max) {
 	return true;
 }
 
-// register database session handling
-session_set_save_handler(
-	'cacti_db_session_open',
-	'cacti_db_session_close',
-	'cacti_db_session_read',
-	'cacti_db_session_write',
-	'cacti_db_session_destroy',
-	'cacti_db_session_clean'
-);
+// Object registration preserves the native callbacks without PHP 8.4's
+// deprecated individual-callback registration API.
+final class CactiDatabaseSessionHandler implements SessionHandlerInterface
+{
+	public function open(string $path, string $name): bool
+	{
+		return cacti_db_session_open($path, $name);
+	}
+
+	public function close(): bool
+	{
+		return cacti_db_session_close();
+	}
+
+	public function read(string $id): string|false
+	{
+		return cacti_db_session_read($id);
+	}
+
+	public function write(string $id, string $data): bool
+	{
+		return cacti_db_session_write($id, $data);
+	}
+
+	public function destroy(string $id): bool
+	{
+		return cacti_db_session_destroy($id);
+	}
+
+	public function gc(int $max_lifetime): int|false
+	{
+		// The historical callback acknowledges cleanup with true, which the
+		// callback API converted to integer 1. Retain that acknowledgement.
+		return cacti_db_session_clean($max_lifetime);
+	}
+}
+
+session_set_save_handler(new CactiDatabaseSessionHandler(), false);
 
 register_shutdown_function('session_write_close');
 
