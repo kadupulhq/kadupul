@@ -1194,8 +1194,8 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 			return $default;
 		}
 	}
-
-	$safe = sanitize_uri($ref_path . ($ref_query !== null ? '?' . $ref_query : ''));
+	// A redirect destination owns its action and must not inherit the source request's action.
+	$safe = sanitize_uri($ref_path . ($ref_query !== null ? '?' . $ref_query : ''), false, false);
 	if ($safe === '' || strpos($safe, '//') === 0) {
 		return $default;
 	}
