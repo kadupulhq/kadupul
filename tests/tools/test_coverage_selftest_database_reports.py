@@ -37,6 +37,15 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             capture_output=True, text=True, timeout=30,
         )
 
+    def test_required_workers_are_importable_without_a_second_manual_allowlist(self):
+        required = ['bin/legacy-tree-save.php', 'cli/add_graphs.php',
+                    'bin/legacy-graph-add.php', 'bin/future-required-worker.php']
+        excluded = ['bin/unregistered-worker.php', 'include/config.php',
+                    'include/vendor/autoload.php', 'var/cache/generated.php']
+        result = self.guard('required-import-paths', {'required': required, 'paths': required + excluded})
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(required, json.loads(result.stdout))
+
     def test_measured_graph_cli_sources_survive_the_production_import_guard(self):
         admitted = [
             'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php',
