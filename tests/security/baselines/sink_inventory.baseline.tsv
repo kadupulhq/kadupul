@@ -99,6 +99,7 @@ dynamic_include	./bin/legacy-audit-upgrade.php:131	                            i
 dynamic_include	./bin/legacy-graph-remove.php:19	require_once $config['base_path'] . '/lib/api_data_source.php';
 dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
+dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
@@ -137,8 +138,6 @@ dynamic_include	./cli/add_graphs.php:18	require_once($config['base_path'] . '/li
 dynamic_include	./cli/add_graphs.php:19	require_once($config['base_path'] . '/lib/sort.php');
 dynamic_include	./cli/add_graphs.php:20	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/add_graphs.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/add_tree.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/add_tree.php:12	require_once($config['base_path'] . '/lib/api_tree.php');
 dynamic_include	./cli/apply_automation_rules.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/apply_automation_rules.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/apply_automation_rules.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
