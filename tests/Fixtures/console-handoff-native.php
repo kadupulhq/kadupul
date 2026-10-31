@@ -20,7 +20,8 @@ $GLOBALS['nativeChildCoverageSnapshot'] = NativeChildCoverageEvidence::snapshot(
     (string) getenv('KADUPUL_CONSOLE_HANDOFF_SCENARIO'), [
         'composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
         'tests/Fixtures/console-handoff-bootstrap.php', 'tests/Symfony/ConsoleHandoffWorkerTest.php', 'lib/functions.php',
-        'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php', CONSOLE_HANDOFF_TEST_COVERAGE,
+        'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php',
+        'src/Platform/Infrastructure/Legacy/BrowserWorkerSession.php', CONSOLE_HANDOFF_TEST_COVERAGE,
     ]);
 // Registered after the collector's own shutdown hook, which defers the write
 // to a later hook, so the marker exists only once the worker has finished.

@@ -22,6 +22,7 @@ final class BrowserRealmDenialCoverageRegistration
         'bin/legacy-console-handoff.php','lib/auth.php','lib/database.php','lib/functions.php','lib/plugins.php',
         'include/global_constants.php','include/global_arrays.php','include/global_languages.php','include/global_settings.php',
         'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php',
+        'src/Platform/Infrastructure/Legacy/BrowserWorkerSession.php',
         'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php',
         'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php',
         'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php',

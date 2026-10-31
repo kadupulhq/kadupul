@@ -13,7 +13,7 @@ requests retain the original renderer, hook order and headers.
 The handoff catches that marker only during bootstrap and only for the opted-in
 worker. It verifies that the actual native session is active, that its actor and
 credential match the private command, and that native session close succeeds.
-It discards buffered bootstrap output before returning the fixed actor-bound
+The close helper treats native handler write warnings as failure, delegates unrelated errors to the prior handler and restores it. It discards buffered bootstrap output before returning the fixed actor-bound
 `outcome: denied` envelope. A mismatch or unconfirmed session close remains a
 fixed failed transport result; no actor is authenticated by the marker alone.
 
@@ -24,7 +24,7 @@ actual web compatibility path. Installation redirects, password-change flows,
 login/cookie/Basic-auth transitions and session-eligibility exits also retain
 their existing bootstrap behavior and are not converted into typed realm results.
 
-There is no schema, dependency or runtime change. Deploy the helper class,
+There is no schema, dependency or runtime change. Deploy the helper classes,
 `include/auth.php` and handoff together before opting a feature worker in. Revert
 feature opt-ins before reverting this integration. Installed acceptance covers
 both native session backends and real plugin dispatch; complete feature HTTP and
