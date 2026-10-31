@@ -71,6 +71,57 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame(['/kadupul/about.php', $this->directory . '/about.php', 'GET', self::SESSION_ID, $this->directory . '/sessions', $this->directory . '/include'], $run['state']);
     }
 
+    public function testSourceOwnedQueryContextOverridesClientPageAndNeverReplaysPostOrFiles(): void
+    {
+        $script = 'bin/legacy-context-fixture.php';
+        $wrapper = <<<'PHP'
+<?php
+$consoleHandoff=[
+    'page'=>'about.php','path'=>'page_path','suffix'=>'/about.php','keys'=>['sections'],
+    'valid'=>static fn(array $command):bool=>is_array($command['sections'] ?? null),
+    'realm'=>8,
+    'run'=>static fn(array $command):array=>['context'=>[$_GET,$_REQUEST,$_POST,$_FILES,$_COOKIE,$_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI']]],
+    'json'=>0,
+    'query'=>static fn(array $command):array=>['action'=>'edit','id'=>'5','tab'=>'settings'],
+];
+require __DIR__.'/legacy-console-handoff.php';
+PHP;
+        file_put_contents($this->directory . '/' . $script, $wrapper);
+        $command = $this->command();
+        $command['query'] = ['action' => 'delete','id' => '99','tab' => 'realms','extension' => 'native'];
+        $command['cookies']['plugin_context'] = 'cookie-value';
+        $command['server']['QUERY_STRING'] = 'id=99&action=delete&tab=realms&extension=native';
+        $run = $this->worker($script, $command);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        $context = json_decode($run['stdout'], true, 16, JSON_THROW_ON_ERROR)['context'];
+        self::assertSame(['action' => 'edit','id' => '5','tab' => 'settings','extension' => 'native'], $context[0]);
+        self::assertSame($context[0], $context[1]);
+        self::assertSame([], $context[2]);
+        self::assertSame([], $context[3]);
+        self::assertSame('cookie-value', $context[4]['plugin_context']);
+        self::assertSame('action=edit&id=5&tab=settings&extension=native', $context[5]);
+        self::assertSame('/kadupul/about.php?' . $context[5], $context[6]);
+        $command['query'] = [];
+        $command['server']['QUERY_STRING'] = '';
+        $run = $this->worker($script, $command);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        self::assertSame(['action' => 'edit','id' => '5','tab' => 'settings'], json_decode($run['stdout'], true, 16, JSON_THROW_ON_ERROR)['context'][0]);
+        // A client cannot opt into a different descriptor callback.
+        $command['query_context'] = ['id' => '6'];
+        $run = $this->worker($script, $command);
+        self::assertSame(1, $run['exit']);
+        self::assertSame('{"status":"failed"}', $run['stdout']);
+        unset($command['query_context']);
+        foreach (["[]", "static fn(array \$command):string=>'invalid'", "static fn(array \$command):array=>[0=>'invalid']", "static fn(array \$command):array=>array_fill_keys(range(1,17),'invalid')", "static fn(array \$command):array=>['id'=>[]]", "static fn(array \$command):array=>['id'=>str_repeat('x',4097)]"] as $invalidDescriptor) {
+            $invalidWrapper = str_replace("static fn(array \$command):array=>['action'=>'edit','id'=>'5','tab'=>'settings']", $invalidDescriptor, $wrapper, $replacements);
+            self::assertSame(1, $replacements);
+            file_put_contents($this->directory . '/' . $script, $invalidWrapper);
+            $run = $this->worker($script, $command);
+            self::assertSame(1, $run['exit']);
+            self::assertSame('{"status":"failed"}', $run['stdout']);
+        }
+    }
+
     public function testHandoffDoesNotPolluteTheEarlyNativeSettingsReader(): void
     {
         $run = $this->worker('bin/legacy-console-menu.php', $this->command(), settingsProbe: true);
