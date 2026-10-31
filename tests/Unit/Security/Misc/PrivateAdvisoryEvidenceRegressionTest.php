@@ -37,11 +37,18 @@ test('GHSA-8522-5p3m-754c: script-server PHP binary path is shell-escaped before
 	expect($src)->toContain("cacti_escapeshellcmd(read_config_option('path_php_binary'))");
 });
 
-test('GHSA-fwmp-mq8j-4r8f: remote agent proc_open command escapes binary and script path', function () {
+test('GHSA-fwmp-mq8j-4r8f: remote agent passes executable and script as distinct arguments', function () {
 	$src = file_get_contents(__DIR__ . '/../../../../remote_agent.php');
+	expect($src)->not->toBeFalse();
+	$body = test_php_function_source($src, 'poll_for_data');
 
-	expect($src)->toContain("\$php_bin  = cacti_escapeshellcmd(read_config_option('path_php_binary'));");
-	expect($src)->toContain("\$srv_path = cacti_escapeshellarg(\$config['base_path'] . '/script_server.php');");
+	// Native path-with-spaces and shell-metacharacter cases also exercise this boundary.
+	expect($body)->toContain("\$php_bin = (string) read_config_option('path_php_binary');");
+	$tokens = array_filter(token_get_all('<?php ' . $body), static function ($token) {
+		return !is_array($token) || !in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true);
+	});
+	$compact = implode('', array_map(static function ($token) { return is_array($token) ? $token[1] : $token; }, $tokens));
+	expect($compact)->toContain("@proc_open(array(\$php_bin,'-q',\$config['base_path'].'/script_server.php','realtime',\$poller_id),\$cactides,\$pipes)");
 });
 
 test('package file writes use anchored script/resource paths and canonical validation', function () {

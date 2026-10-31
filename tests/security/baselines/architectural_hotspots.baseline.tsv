@@ -92,7 +92,7 @@ cmd_exec	./lib/utility.php:1917		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./lib/utility.php:1985		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:2117		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./poller_spikekill.php:278				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./remote_agent.php:527								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
+cmd_exec	./remote_agent.php:532										$cactiphp = @proc_open(array(
 cmd_exec	./script_server.php:214					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:50			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');
 cmd_exec	./snmpagent_mibcache.php:52			exec($php . ' ' . $extra_args . ' > /dev/null &');
