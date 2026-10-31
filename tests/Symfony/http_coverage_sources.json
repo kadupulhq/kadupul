@@ -23,6 +23,7 @@
     "tests/Fixtures/legacy-cli/convert_tables.php",
     "tests/Fixtures/legacy-cli/copy_user.php",
     "tests/Fixtures/legacy-cli/fix_mediumint.php",
+    "tests/Fixtures/legacy-cli/poller_data_sources_reapply_names.php",
     "tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php",
     "tests/Fixtures/legacy-cli/remove_broken_graphs.php",
     "tests/Fixtures/legacy-cli/remove_graphs.php",

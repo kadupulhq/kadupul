@@ -40,6 +40,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
     def test_measured_graph_cli_sources_survive_the_production_import_guard(self):
         admitted = [
             'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php',
+            'cli/poller_data_sources_reapply_names.php', 'bin/legacy-data-source-titles.php',
             'cli/repair_graphs.php', 'cli/remove_broken_graphs.php',
             'bin/legacy-graph-remove.php', 'cli/remove_graphs.php',
             'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php',

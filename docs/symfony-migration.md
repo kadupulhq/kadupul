@@ -1732,6 +1732,33 @@ Known differences from `cli/poller_graphs_reapply_names.php`:
 - The selector error `Specify --host-id=all ...` still goes to standard error
   and exits 1. Under `bin/console` an invalid `--host-id` exits 2.
 
+`php bin/console kadupul:data-source:reapply-titles --host-id=<all|0|id,id,...>`
+reapplies the suggested names to existing data sources and refreshes their
+cached titles. It runs the same `api_reapply_suggested_data_source_data()` and
+`update_data_source_title_cache()` the web uses, in a worker that takes up to
+500 data sources a time, so plugin hooks are unchanged. `--filter=<text>` keeps
+data sources whose title, data id, data template name or data input method name
+contains it. It needs the Console Access and Devices realms, the realm
+`data_sources.php` requires. `--dry-run` lists the data sources and renames
+none. `--json` prints `status`, `database`, `dry_run`, `selected`, `reapplied`
+and `data_sources`, the local data ids.
+
+Known differences from `cli/poller_data_sources_reapply_names.php`:
+
+- It needs an operator with the Console Access and Devices realms, checked on
+  the database it works on, and the run is audited. The original ran for anyone
+  who could run it.
+- The filter is bound as a parameter. The original put it inside the SQL text,
+  so a quote broke the query. `%` and `_` in the filter are still wildcards.
+- Data sources are taken in local data id order. The original had no ordering.
+- With `--debug` and nothing selected, the selection SQL is not printed; the
+  warning line is unchanged.
+- With `--debug`, the lines for each data source print after its batch has
+  run, not around each rename. The text of the lines is unchanged.
+- An invalid flag prints the error and help without the version line.
+- The selector error `Specify --host-id=all ...` still goes to standard error
+  and exits 1. Under `bin/console` an invalid `--host-id` exits 2.
+
 `php bin/console kadupul:graph:repair-items --graph-template-id=<id> --data-template-id=<id>`
 points graph items back at the RRD item of their device's data source: for
 each graph of the template, the items that follow the data template but name
