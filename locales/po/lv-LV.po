@@ -13530,11 +13530,11 @@ msgstr "Jums ir jāatlasa XML izvades kolonna datu avotam “%s” un jāieslēd
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Jūsu diagrammas veidnē netiek izmantotas datu veidnes. Lūdzu, izlabojiet diagrammas veidni"
 
-#: lib/database.php:2523
+#: lib/database.php:2527
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Neizdevās noteikt paroles lauka garumu, nevar turpināt, jo var tikt bojāta parole"
 
-#: lib/database.php:2530
+#: lib/database.php:2534
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Neizdevās mainīt paroles lauka garumu, nevar turpināt, jo var tikt bojāta parole"
 

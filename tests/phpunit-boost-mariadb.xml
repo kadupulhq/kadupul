@@ -7,6 +7,7 @@
 		<testsuite name="Boost MariaDB">
 			<file>./integration/BoostProcessTableMariaDbTest.php</file>
 			<file>Unit/Database/DdlCharsetNativeTest.php</file>
+			<file>Unit/Database/SqlSaveOutcomeNativeTest.php</file>
 			<file>./integration/BoostRecoveryRetryMariaDbTest.php</file>
 			<file>./integration/DurablePollerQueueMariaDbTest.php</file>
 			<file>integration/ImportParentRollbackMariaDbTest.php</file>

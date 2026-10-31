@@ -2261,6 +2261,7 @@ function _db_replace($db_conn, $table, $fieldArray, $keyCols) {
 
 	if (!$return_code) {
 		cacti_log("ERROR: SQL Save Failed for Table '$table'.  SQL:'" . clean_up_lines($sql) . "'", false, 'DBCALL');
+		return false;
 	}
 
 	return db_fetch_insert_id($db_conn);
@@ -2342,6 +2343,9 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
 	}
 
 	$replace_result = _db_replace($db_conn, $table_name, $array_items, $key_cols);
+	if ($replace_result === false) {
+		return false;
+	}
 
 	/* get the last AUTO_ID and return it */
 	if (!$replace_result || db_fetch_insert_id($db_conn) == '0') {
