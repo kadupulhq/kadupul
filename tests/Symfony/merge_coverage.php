@@ -109,6 +109,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_graphs.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/add_graph_template.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/add_tree.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -1078,7 +1079,16 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
         'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateAssignmentCatalog.php',
         'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateCommand.php',
-        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php',
+        'cli/add_tree.php',
+        'bin/legacy-tree-save.php',
+        'src/Graphing/Application/Command/AddTree.php',
+        'src/Graphing/Application/Command/AddTreeNode.php',
+        'src/Graphing/Application/Command/ListTreeChoices.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyTreeWriter.php',
+        'src/Graphing/Infrastructure/Persistence/DbalTreeCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/AddTreeCommand.php',
+        'src/Graphing/Infrastructure/Symfony/AddTreeLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
