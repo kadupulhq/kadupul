@@ -7,6 +7,12 @@ main use that registration. This reliability fix registers a
 It keeps the explicit shutdown callback and disables automatic shutdown
 registration on the object API to avoid adding a second registration.
 
+The entry-point classifier permits only the reviewed registration expression
+and the exact normalized handler declaration. Six method signatures/bodies,
+constructor/destructor additions, inheritance, traits, aliases, call arguments
+and return changes are bound by 16 rejection controls plus admitted and
+formatting-only cases. This preserves the fragment's pre-authentication gate.
+
 The callback functions remain public. Their SQL, transaction ownership, error
 handling, return values and session serialization are unchanged. The GC
 callback's historical `true` acknowledgement still converts to integer 1 at

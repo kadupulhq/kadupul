@@ -1075,6 +1075,42 @@ def main():
     # Mutate owned copies of the actual source; unchanged action/adapter bytes
     # must not leave the realm annotation identical after removing enforcement.
     source_root = Path(__file__).resolve().parents[2]
+    with tempfile.TemporaryDirectory(prefix='session-object-inventory-') as directory:
+        root = tree(directory)
+        (root / 'session_host.php').write_text("<?php require './include/session.php';\n")
+        original = (source_root / 'include/session.php').read_text()
+        admitted = gate(root, 'include/session.php', original)
+        count += 1
+        if admitted[0] != 'anonymous-allowed':
+            failures.append('actual native session object fragment must remain admitted: ' + repr(admitted))
+        mutations = {
+            'constructor': ('implements SessionHandlerInterface\n{', "implements SessionHandlerInterface\n{\n public function __construct() { unlink('/tmp/x'); }"),
+            'destructor': ('implements SessionHandlerInterface\n{', "implements SessionHandlerInterface\n{\n public function __destruct() { unlink('/tmp/x'); }"),
+            'parent': ('implements SessionHandlerInterface', 'extends UnknownParent implements SessionHandlerInterface'),
+            'trait': ('implements SessionHandlerInterface\n{', 'implements SessionHandlerInterface\n{\n use UnknownTrait;'),
+            'aliased interface': ('<?php', '<?php\nuse ForeignSessionHandler as SessionHandlerInterface;'),
+            'extra open effect': ('return cacti_db_session_open($path, $name);', "unlink('/tmp/x'); return cacti_db_session_open($path, $name);"),
+            'extra read effect': ('return cacti_db_session_read($id);', "unlink('/tmp/x'); return cacti_db_session_read($id);"),
+            'changed open arguments': ('return cacti_db_session_open($path, $name);', 'return cacti_db_session_open($name, $path);'),
+            'changed write arguments': ('return cacti_db_session_write($id, $data);', 'return cacti_db_session_write($data, $id);'),
+            'changed close return': ('return cacti_db_session_close();', 'cacti_db_session_close(); return false;'),
+            'changed read return': ('return cacti_db_session_read($id);', 'return "invented";'),
+            'changed destroy return': ('return cacti_db_session_destroy($id);', 'return false;'),
+            'changed gc signature': ('public function gc(int $max_lifetime): int|false', 'public function gc(int $max_lifetime): int'),
+            'changed gc argument': ('return cacti_db_session_clean($max_lifetime);', 'return cacti_db_session_clean(0);'),
+            'different registered object': ('new CactiDatabaseSessionHandler()', 'new OtherSessionHandler()'),
+            'duplicate shutdown registration': ('new CactiDatabaseSessionHandler(), false', 'new CactiDatabaseSessionHandler(), true'),
+        }
+        for name, (before, after) in mutations.items():
+            if before not in original:
+                raise AssertionError('Native session mutation target missing: ' + name)
+            count += 1
+            if gate(root, 'include/session.php', original.replace(before, after, 1))[0] != 'unknown':
+                failures.append('native session object mutation was admitted: ' + name)
+        count += 1
+        formatted = original.replace('return cacti_db_session_open', '/* formatting only */\n        return cacti_db_session_open', 1)
+        if gate(root, 'include/session.php', formatted) != admitted:
+            failures.append('native session delegate token pin changed on whitespace/comments')
     with tempfile.TemporaryDirectory(prefix='data-input-inventory-') as directory:
         root = tree(directory)
         paths = ('src/DataInput/Infrastructure/Symfony/Controller/DataInputController.php',
