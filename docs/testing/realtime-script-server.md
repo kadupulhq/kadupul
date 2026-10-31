@@ -28,7 +28,7 @@ control passes. Twenty items originally start twenty children. The correction
 starts one child and removes the redundant count query: twenty selected sources
 perform twenty item queries rather than forty combined queries.
 
-The focused suite passes 28 cases and 118 assertions on LTS/PHP 8.1.34 and
+The focused suite passes 29 cases and 125 assertions on LTS/PHP 8.1.34 and
 main/PHP 8.4.25. It covers startup refusal, worker exit, malformed commands,
 selection validation, denied hosts, later database exceptions, stderr pressure,
 paths containing spaces, and positive-short/failed shutdown writes. Main also
