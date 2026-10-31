@@ -119,6 +119,22 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
     }
 
+    public function testTypedDenialRequiresActualNativeHandlerWriteSuccess(): void
+    {
+        $this->realmDenialOptIn();
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), realmDenied: true, closeWriteFailure: true);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+        self::assertStringNotContainsString(str_repeat('a', 64), $run['stdout'] . $run['stderr']);
+    }
+
+    public function testNormalWorkerAlsoRequiresActualNativeHandlerWriteSuccess(): void
+    {
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), closeWriteFailure: true);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
     public function testCommandCannotSelectTheNativeRealmDenialMode(): void
     {
         $command = $this->command();
@@ -197,7 +213,7 @@ final class ConsoleHandoffWorkerTest extends TestCase
         yield 'rotated credential' => ['credential', 'identity', 'RuntimeException', $revoked];
         yield 'console realm revoked' => ['realm', 'identity', 'RuntimeException', $revoked];
         yield 'permission denied page actor revoked' => ['denied-page', 'identity', 'RuntimeException', $revoked];
-        yield 'session closed by a hook' => ['hook-closed-session', 'session', 'RuntimeException', "throw new RuntimeException('Console session changes could not be persisted.');"];
+        yield 'session closed by a hook' => ['hook-closed-session', 'session', 'RuntimeException', "throw new \RuntimeException('Native session close could not be confirmed.');"];
     }
 
     #[DataProvider('refusals')]
@@ -273,7 +289,8 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame('{"status":"failed"}', $run['stdout']);
         $diagnostic = json_decode($run['stderr'], true, 4, JSON_THROW_ON_ERROR);
         self::assertSame(['phase', 'class', 'file', 'line'], array_keys($diagnostic));
-        self::assertSame([$phase, $class, basename(self::HANDOFF), $this->line($statement)], array_values($diagnostic));
+        $diagnosticSource = $case === 'hook-closed-session' ? 'src/Platform/Infrastructure/Legacy/BrowserWorkerSession.php' : self::HANDOFF;
+        self::assertSame([$phase, $class, basename($diagnosticSource), $this->line($statement, $diagnosticSource)], array_values($diagnostic));
     }
 
     public function testTheLargestAcceptedCommandStillReachesTheBootstrap(): void
@@ -353,10 +370,10 @@ final class ConsoleHandoffWorkerTest extends TestCase
      * @param list<int> $realms
      * @return array{exit: ?int, stdout: string, stderr: string, state: ?list<mixed>}
      */
-    private function worker(string $script, array|string $input, ?array $session = null, array $realms = [8], bool $hookClosesSession = false, string $measured = self::HANDOFF, bool $settingsProbe = false, bool $realmDenied = false): array
+    private function worker(string $script, array|string $input, ?array $session = null, array $realms = [8], bool $hookClosesSession = false, string $measured = self::HANDOFF, bool $settingsProbe = false, bool $realmDenied = false, bool $closeWriteFailure = false): array
     {
         $session ??= ['sess_user_id' => 7, 'sess_user_credential' => str_repeat('a', 64)];
-        $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'settings_probe' => $settingsProbe, 'realm_denied' => $realmDenied, 'session' => $session, 'realms' => $realms];
+        $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'settings_probe' => $settingsProbe, 'realm_denied' => $realmDenied, 'close_write_failure' => $closeWriteFailure, 'session' => $session, 'realms' => $realms];
         file_put_contents($this->directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
         $label = hash('sha256', $script . ' ' . (is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR)) . ' ' . json_encode($scenario, JSON_THROW_ON_ERROR));
         [$options, $environment] = $this->coverageOptions($measured, true, $label);
@@ -404,7 +421,8 @@ final class ConsoleHandoffWorkerTest extends TestCase
         $producer = 'tests/Fixtures/console-handoff-native.php';
         $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
             'tests/Fixtures/console-handoff-bootstrap.php', 'tests/Symfony/ConsoleHandoffWorkerTest.php', 'lib/functions.php',
-            'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php', $measured];
+            'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php',
+            'src/Platform/Infrastructure/Legacy/BrowserWorkerSession.php', $measured];
         $markers = ['console-handoff-worker-terminated'];
         $child = \NativeChildCoverageEvidence::load($reports[0], $this->root, $producer, $scenario, $sources, $markers, [$measured]);
         if (!self::$rejectionsVerified) {
@@ -416,9 +434,9 @@ final class ConsoleHandoffWorkerTest extends TestCase
         unlink($reports[0]);
     }
 
-    private function line(string $statement): int
+    private function line(string $statement, string $source = self::HANDOFF): int
     {
-        $lines = array_keys(array_map('trim', file($this->root . '/' . self::HANDOFF, FILE_IGNORE_NEW_LINES)), $statement, true);
+        $lines = array_keys(array_map('trim', file($this->root . '/' . $source, FILE_IGNORE_NEW_LINES)), $statement, true);
         self::assertCount(1, $lines, $statement);
 
         return $lines[0] + 1;

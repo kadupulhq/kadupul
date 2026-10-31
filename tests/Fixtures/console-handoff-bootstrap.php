@@ -29,6 +29,11 @@ if ($consoleHandoffFixture['settings_probe'] ?? false) {
         restore_error_handler();
     }
 }
+if ($consoleHandoffFixture['close_write_failure'] ?? false) {
+    session_set_save_handler(new class extends SessionHandler {
+        public function write(string $id, string $data): bool { return false; }
+    }, true);
+}
 session_start();
 file_put_contents(dirname(__DIR__) . '/state.json', json_encode([$_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_FILENAME'], $_SERVER['REQUEST_METHOD'], session_id(), session_save_path(), getcwd()], JSON_THROW_ON_ERROR));
 $_SESSION = $consoleHandoffFixture['session'];
