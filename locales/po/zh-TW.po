@@ -3729,7 +3729,7 @@ msgstr "重新運行分析"
 msgid "Check"
 msgstr "檢查"
 
-#: data_debug.php:841 include/global_form.php:1032 lib/rrd.php:4064
+#: data_debug.php:841 include/global_form.php:1032 lib/rrd.php:4070
 #: utilities.php:833 utilities.php:850 utilities.php:3182
 #, fuzzy
 msgid "Value"
@@ -4077,7 +4077,7 @@ msgstr "用於收集此數據輸入方法的信息的方法。"
 #: data_input.php:1191 host.php:1903 lib/api_automation.php:228
 #: lib/api_automation.php:1267 lib/auth.php:2498 lib/clog_webapi.php:926
 #: lib/html_utility.php:1470 lib/import.php:424 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:4089 lib/rrd.php:4101 lib/spikekill.php:302
+#: lib/plugins.php:1244 lib/rrd.php:4095 lib/rrd.php:4107 lib/spikekill.php:302
 #: package_import.php:561 package_import.php:639 utilities.php:246
 #: utilities.php:247 utilities.php:2733
 #, fuzzy
@@ -4436,7 +4436,7 @@ msgstr "步驟"
 
 #: data_source_profiles.php:765 graphs_new.php:473 include/global_form.php:298
 #: lib/html.php:704 lib/html_filter.php:73 lib/installer.php:2765
-#: lib/rrd.php:4118 utilities.php:901 utilities.php:1844
+#: lib/rrd.php:4124 utilities.php:901 utilities.php:1844
 #, fuzzy
 msgid "Rows"
 msgstr "行"
@@ -7793,7 +7793,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "數字訂購"
 
-#: include/global_arrays.php:970 lib/rrd.php:4030
+#: include/global_arrays.php:970 lib/rrd.php:4036
 #, fuzzy
 msgid "Header"
 msgstr "頁首"
@@ -9671,7 +9671,7 @@ msgstr "從數據源收集數據的頻率？"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool記錄未知數據之前，數據可以丟失多長時間。如果您的數據源不穩定並且您希望繼承舊數據而不是在圖表中顯示間隙，請增加此值。此值乘以X-Files因子以確定實際的時間量。"
 
-#: include/global_form.php:240 lib/rrd.php:4121
+#: include/global_form.php:240 lib/rrd.php:4127
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
@@ -10354,7 +10354,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "顏色的不透明度/ alpha通道。"
 
-#: include/global_form.php:1003 lib/rrd.php:4117
+#: include/global_form.php:1003 lib/rrd.php:4123
 #, fuzzy
 msgid "Consolidation Function"
 msgstr "合併功能"
@@ -14776,7 +14776,7 @@ msgstr "匹配設備"
 
 #: lib/api_automation.php:199 lib/api_automation.php:1238
 #: lib/clog_webapi.php:579 lib/html_reports.php:1073 lib/html_reports.php:1745
-#: lib/html_reports.php:2148 lib/html_reports.php:2159 lib/rrd.php:4059
+#: lib/html_reports.php:2148 lib/html_reports.php:2159 lib/rrd.php:4065
 #: utilities.php:391 utilities.php:1497 utilities.php:3182
 #, fuzzy
 msgid "Type"
@@ -19179,204 +19179,204 @@ msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:3824
+#: lib/rrd.php:3830
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必需的RRD步長為&#39;%s&#39;"
 
-#: lib/rrd.php:3884
+#: lib/rrd.php:3890
 #, fuzzy, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的類型應為&#39;%s&#39;"
 
-#: lib/rrd.php:3890
+#: lib/rrd.php:3896
 #, fuzzy, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的心跳應為&#39;%s&#39;"
 
-#: lib/rrd.php:3902
+#: lib/rrd.php:3908
 #, fuzzy, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的RRD最小值應為&#39;%s&#39;"
 
-#: lib/rrd.php:3911
+#: lib/rrd.php:3917
 #, fuzzy, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "Cacti定義中缺少DS&#39;%s&#39;"
 
-#: lib/rrd.php:3925 lib/rrd.php:3926
+#: lib/rrd.php:3931 lib/rrd.php:3932
 #, fuzzy, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Cacti RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:3939 lib/rrd.php:3940
+#: lib/rrd.php:3945 lib/rrd.php:3946
 #, fuzzy, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:3972
+#: lib/rrd.php:3978
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:3976
+#: lib/rrd.php:3982
 #, fuzzy, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "仙人掌RRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
-#: lib/rrd.php:3980
+#: lib/rrd.php:3986
 #, fuzzy, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Cacti RRA id&#39;%s&#39;的行數應為&#39;%s&#39;"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:4003
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "RRD文件中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4005
+#: lib/rrd.php:4011
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "Cacti定義中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4026
+#: lib/rrd.php:4032
 #, fuzzy
 msgid "RRD File Information"
 msgstr "RRD文件信息"
 
-#: lib/rrd.php:4058
+#: lib/rrd.php:4064
 #, fuzzy
 msgid "Data Source Items"
 msgstr "數據源項目"
 
-#: lib/rrd.php:4060
+#: lib/rrd.php:4066
 #, fuzzy
 msgid "Minimal Heartbeat"
 msgstr "最小的心跳"
 
-#: lib/rrd.php:4061
+#: lib/rrd.php:4067
 #, fuzzy
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4062
+#: lib/rrd.php:4068
 #, fuzzy
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4063
+#: lib/rrd.php:4069
 #, fuzzy
 msgid "Last DS"
 msgstr "最後一個DS"
 
-#: lib/rrd.php:4065
+#: lib/rrd.php:4071
 #, fuzzy
 msgid "Unknown Sec"
 msgstr "未知的秒"
 
-#: lib/rrd.php:4116
+#: lib/rrd.php:4122
 #, fuzzy
 msgid "Round Robin Archive"
 msgstr "Round Robin Archive"
 
-#: lib/rrd.php:4119
+#: lib/rrd.php:4125
 #, fuzzy
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4120
+#: lib/rrd.php:4126
 #, fuzzy
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:4122
+#: lib/rrd.php:4128
 #, fuzzy
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備值（0）"
 
-#: lib/rrd.php:4123
+#: lib/rrd.php:4129
 #, fuzzy
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP未知數據點（0）"
 
-#: lib/rrd.php:4186
+#: lib/rrd.php:4192
 msgid "Errors Found"
 msgstr "沒有 %s 找到"
 
-#: lib/rrd.php:4198
+#: lib/rrd.php:4204
 msgid "Optional Tuning Recommendations"
 msgstr "數據源字段"
 
-#: lib/rrd.php:4225 lib/rrd.php:4228
+#: lib/rrd.php:4231 lib/rrd.php:4234
 #, fuzzy, php-format
 msgid "rename %s to %s"
 msgstr "將%s重命名為%s"
 
-#: lib/rrd.php:4301 lib/rrd.php:4382 lib/rrd.php:4450
+#: lib/rrd.php:4307 lib/rrd.php:4388 lib/rrd.php:4456
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "輸入有效的文件路徑"
 
-#: lib/rrd.php:4311
+#: lib/rrd.php:4317
 #, fuzzy
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4343 lib/rrd.php:4410 lib/rrd.php:4478
+#: lib/rrd.php:4349 lib/rrd.php:4416 lib/rrd.php:4484
 #, fuzzy, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "編寫XML文件時出錯：%s"
 
-#: lib/rrd.php:4350 lib/rrd.php:4417 lib/rrd.php:4485
+#: lib/rrd.php:4356 lib/rrd.php:4423 lib/rrd.php:4491
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4356 lib/rrd.php:4423 lib/rrd.php:4491
+#: lib/rrd.php:4362 lib/rrd.php:4429 lib/rrd.php:4497
 #, fuzzy, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4392 lib/rrd.php:4460
+#: lib/rrd.php:4398 lib/rrd.php:4466
 #, fuzzy
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4710
+#: lib/rrd.php:4716
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "從RRD文件中刪除RRA（CF=%s，ROWS=%d，PDP_PER_ROW =%d，XFF =%1.2f）"
 
-#: lib/rrd.php:4748
+#: lib/rrd.php:4754
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA（CF =%s，ROWS =%d，PDP_PER_ROW =%d，XFF =%1.2f）添加到RRD文件"
 
-#: lib/rrd.php:4780 lib/rrd.php:4794
+#: lib/rrd.php:4786 lib/rrd.php:4800
 #, fuzzy, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "網站沒有%s的寫入權限，可能無法創建/更新RRD"
 
-#: lib/rrd.php:4790
+#: lib/rrd.php:4796
 #, fuzzy
 msgid "(Custom)"
 msgstr "自訂"
 
-#: lib/rrd.php:4796
+#: lib/rrd.php:4802
 #, fuzzy
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "無法打開數據文件，輪詢器可能尚未運行"
 
-#: lib/rrd.php:4799
+#: lib/rrd.php:4805
 #, fuzzy
 msgid "RRA Folder"
 msgstr "RRA文件夾"
 
-#: lib/rrd.php:4799
+#: lib/rrd.php:4805
 #, fuzzy
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:4908
+#: lib/rrd.php:4914
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"

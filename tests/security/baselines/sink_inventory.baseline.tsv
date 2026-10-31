@@ -425,9 +425,9 @@ dynamic_include	./lib/rrd.php:2212		include_once($config['library_path'] . '/gra
 dynamic_include	./lib/rrd.php:2213		include_once($config['library_path'] . '/boost.php');
 dynamic_include	./lib/rrd.php:2214		include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/rrd.php:2215		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3539			include($rrdtheme);
-dynamic_include	./lib/rrd.php:4234		include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:5111			include($themefile);
+dynamic_include	./lib/rrd.php:3541			include($rrdtheme);
+dynamic_include	./lib/rrd.php:4240		include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:5117			include($themefile);
 dynamic_include	./lib/rrdcheck.php:724			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:754			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:50		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
@@ -583,7 +583,7 @@ fs_write	./lib/poller.php:1648												file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1677								file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1717			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1757			$f = fopen($fn, 'wb');
-fs_write	./lib/rrd.php:3414					if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
+fs_write	./lib/rrd.php:3416					if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
 fs_write	./lib/rrd_maintenance.php:203	            $handle = @fopen($probe, 'x+b');
 fs_write	./lib/rrd_maintenance.php:83		$handle = @fopen($canonical, 'r');
 fs_write	./lib/spikekill.php:1145				$handle    = @fopen($desired_path, 'xb');

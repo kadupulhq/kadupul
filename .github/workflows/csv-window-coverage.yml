@@ -9,6 +9,8 @@ on:
       - 'lib/graph_variables.php'
       - 'phpunit-csv.xml'
       - 'tests/Unit/Core/Rrd/RrdFetchWindowTest.php'
+      - 'tests/Unit/Core/Rrd/RrdXportWindowTest.php'
+      - 'tests/Helpers/RrdGraphHarness.php'
       - 'tests/Unit/Core/Rrd/BandwidthEffectiveStepTest.php'
       - 'tests/Unit/Ui/Graph/CsvWindowResolutionContractTest.php'
       - 'tests/Unit/Ui/Graph/PercentileResolutionBehaviorTest.php'
@@ -23,6 +25,8 @@ on:
       - 'lib/graph_variables.php'
       - 'phpunit-csv.xml'
       - 'tests/Unit/Core/Rrd/RrdFetchWindowTest.php'
+      - 'tests/Unit/Core/Rrd/RrdXportWindowTest.php'
+      - 'tests/Helpers/RrdGraphHarness.php'
       - 'tests/Unit/Core/Rrd/BandwidthEffectiveStepTest.php'
       - 'tests/Unit/Ui/Graph/CsvWindowResolutionContractTest.php'
       - 'tests/Unit/Ui/Graph/PercentileResolutionBehaviorTest.php'
@@ -90,6 +94,7 @@ jobs:
           fi
           for test_file in \
             Unit/Core/Rrd/RrdFetchWindowTest.php \
+            Unit/Core/Rrd/RrdXportWindowTest.php \
             Unit/Core/Rrd/BandwidthEffectiveStepTest.php \
             Unit/Ui/Graph/CsvWindowResolutionContractTest.php \
             Unit/Ui/Graph/PercentileResolutionBehaviorTest.php \
