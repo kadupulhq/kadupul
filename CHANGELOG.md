@@ -26,6 +26,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
 - Try configured SNMP after a failed Ping-or-SNMP ping, and carry SNMP settings into command-poller availability checks for devices without poller items (#1105).
 - Use the current response time when inconsistent device counters leave a zero average divisor (#1101).
+- Schedule system-MIB collection from its own per-poller timestamp after four hours, matching LTS and avoiding repeated or missed collection from timestamp modulo arithmetic (#1106).
 - Preserve refresh rendering when a SAPI omits REQUEST_URI, retaining the LTS empty-string fallback and existing logout policy (#1104).
 - Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values; test-data-source templates retain their empty-field omission (#1103).
 - Preserve destination graph-view actions and default-mode selection when validating redirects, fixing source-action leakage introduced by #1102 (#1241).
