@@ -485,7 +485,8 @@ if ($allhost) {
 	$params    = array($poller_id, $first, $last);
 }
 
-$hosts = db_fetch_assoc_prepared("SELECT h.id, h.hostname, h.ping_port, h.ping_method, h.ping_retries, h.ping_timeout, h.availability_method,
+$hosts = db_fetch_assoc_prepared("SELECT h.id, h.hostname, h.ping_port, h.ping_method,
+	h.ping_retries, h.ping_timeout, h.availability_method,
 	h.snmp_community, h.snmp_version, h.snmp_username, h.snmp_password, h.snmp_auth_protocol,
 	h.snmp_priv_passphrase, h.snmp_priv_protocol, h.snmp_context, h.snmp_engine_id, h.snmp_port, h.snmp_timeout
 	FROM host AS h
