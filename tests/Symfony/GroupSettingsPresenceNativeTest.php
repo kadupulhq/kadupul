@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 use Kadupul\Tests\Fixtures\RealMariaDb;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
@@ -26,7 +27,14 @@ final class GroupSettingsPresenceNativeTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->database = $this->realMariaDb(true);
+        $configured = $this->realMariaDb();
+        $parameters = $configured->getParams();
+        $administrator = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER');
+        $administratorPassword = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+        if ($administrator !== false) $parameters['user'] = $administrator;
+        if ($administratorPassword !== false) $parameters['password'] = $administratorPassword;
+        $configured->close();
+        $this->database = DriverManager::getConnection($parameters);
         $this->schema = 'group_settings_presence_' . bin2hex(random_bytes(8));
         $this->database->executeStatement('CREATE DATABASE `' . $this->schema . '` CHARACTER SET utf8mb4');
         $this->created = true;
