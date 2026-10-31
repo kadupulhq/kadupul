@@ -3473,8 +3473,11 @@ function snmpagent_utilities_run_eventlog()
 		FROM snmpagent_notifications_log AS snl
 		INNER JOIN snmpagent_managers AS sm
 		ON sm.id = snl.manager_id
-		LEFT JOIN snmpagent_cache AS sc
-		ON sc.name = snl.notification
+		LEFT JOIN (
+			SELECT mib, name, MIN(description) AS description
+			FROM snmpagent_cache
+			GROUP BY mib, name
+		) AS sc ON sc.name = snl.notification AND sc.mib = snl.mib
 		WHERE $sql_where
 		LIMIT " . ($rows * (get_request_var('page') - 1)) . ',' . $rows;
 
@@ -3482,8 +3485,6 @@ function snmpagent_utilities_run_eventlog()
 		FROM snmpagent_notifications_log AS snl
 		INNER JOIN snmpagent_managers AS sm
 		ON sm.id = snl.manager_id
-		LEFT JOIN snmpagent_cache AS sc
-		ON sc.name = snl.notification
 		WHERE $sql_where");
 
     $logs = db_fetch_assoc($sql_query);

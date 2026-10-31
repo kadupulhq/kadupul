@@ -75,6 +75,7 @@ $mode = $argv[2];
 $input = json_decode($argv[3], true, 512, JSON_THROW_ON_ERROR);
 $config = array('url_path' => '/app/');
 $_SESSION = array('sess_user_id' => 42);
+$_REQUEST = array('action' => $input['action'] ?? '');
 $_SERVER = array('SERVER_NAME' => 'app.example', 'SERVER_PORT' => '443');
 $GLOBALS['logout_count'] = 0;
 function read_config_option($name) { return $name === 'auth_method' ? 2 : ($GLOBALS['input']['custom'] ?? ''); }
@@ -171,6 +172,16 @@ test('login destinations keep their own graph action while the current URI retai
     array('REDIRECT_URL', '/app/graph_view.php?id=2&action=', 'preview', '/app/graph_view.php?id=2&action='),
     array('REQUEST_URI', '/app/graph_view.php?id=2', 'tree', '/app/graph_view.php?id=2&action=tree'),
     array('REQUEST_URI', '/app/graph_view.php?id=2&action=preview', 'tree', '/app/graph_view.php?id=2&action=preview'),
+));
+
+test('login redirects preserve destination graph actions despite a source action', function (string $source, string $url) {
+    $result = auth_hardening_contract_run('redirect', array('source' => $source, 'url' => $url, 'action' => 'zoom'));
+    expect($result['redirect'])->toBe('Location: ' . $url);
+})->with(array(
+    array('HTTP_REFERER', '/app/graph_view.php?id=2'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2'),
+    array('HTTP_REFERER', '/app/graph_view.php?id=2&action=tree'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2&action=tree'),
 ));
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {
