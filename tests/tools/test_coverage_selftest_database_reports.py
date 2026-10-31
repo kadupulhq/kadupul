@@ -71,6 +71,61 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
                             self.assertNotEqual(0, refused.returncode)
                             self.assertIn('Integration test source differs from checkout: ' + source, refused.stderr)
 
+    def test_every_required_measured_source_reaches_the_actual_import_guard(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture = ROOT / 'tests/Fixtures/http-coverage-source-guard.php'
+            def invoke(operation, argument, payload=None, merger=None):
+                command = [os.environ.get('PHP', 'php'), str(fixture), operation, argument]
+                if merger is not None:
+                    command.append(str(merger))
+                return subprocess.run(command, input=json.dumps(payload) if payload is not None else '',
+                                      capture_output=True, text=True, timeout=30)
+            for handler in ('files', 'database', 'none'):
+                listed = invoke('required', handler)
+                self.assertEqual(0, listed.returncode, listed.stderr)
+                paths = json.loads(listed.stdout)
+                report = {'php': '8.4.25', 'files': {}}
+                for path in paths:
+                    report['files']['/var/www/html/' + path] = {
+                        'sha256': hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
+                        'lines': {'1': 1},
+                    }
+                # Unexpected configuration/plugin reports stay outside the closed inventory.
+                report['files']['/var/www/html/include/config.php'] = {'sha256': '0' * 64, 'lines': {'1': 1}}
+                filename = root / 'coverage-admitted.json'
+                filename.write_text(json.dumps(report))
+                payload = {'handler': handler, 'reports': [str(filename)]}
+                admitted = invoke('import', str(ROOT), payload)
+                self.assertEqual(0, admitted.returncode, admitted.stderr)
+                self.assertEqual(set(paths), set(json.loads(admitted.stdout)))
+                if handler == 'none':
+                    continue
+                graph_sources = [path for path in paths if path.startswith(('cli/', 'bin/legacy-graph'))]
+                self.assertIn('cli/poller_graphs_reapply_names.php', graph_sources)
+                self.assertIn('bin/legacy-graph-titles.php', graph_sources)
+                for path in graph_sources:
+                    for mutation in ('missing', 'unmeasured'):
+                        changed = copy.deepcopy(report)
+                        if mutation == 'missing':
+                            del changed['files']['/var/www/html/' + path]
+                        else:
+                            changed['files']['/var/www/html/' + path]['lines'] = {'1': -1}
+                        filename.write_text(json.dumps(changed))
+                        refused = invoke('import', str(ROOT), payload)
+                        self.assertNotEqual(0, refused.returncode)
+                        self.assertIn('Missing measured execution: ' + path, refused.stderr)
+                filename.write_text(json.dumps(report))
+                # Restore the old production predicate while retaining the real inventories.
+                original = (ROOT / 'tests/Symfony/merge_coverage.php').read_text()
+                needle = '!in_array($relative, $requiredPaths, true) && '
+                self.assertIn(needle, original)
+                broken = root / 'previous-import-predicate.php'
+                broken.write_text(original.replace(needle, '', 1))
+                refused = invoke('import', str(ROOT), payload, broken)
+                self.assertNotEqual(0, refused.returncode)
+                self.assertIn('Missing measured execution: cli/poller_graphs_reapply_names.php', refused.stderr)
+
     def test_imported_local_scenarios_and_their_frozen_cli_oracles_are_registered(self):
         paths = set(self.support.http_coverage_sources(ROOT))
         for path in sorted(paths):
