@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Kadupul\Graphing\Application\Command;
 
 use Kadupul\Graphing\Application\Port\GraphRemovalCatalog;
-use Kadupul\Graphing\Application\Port\RemovalChoice;
-use Kadupul\Graphing\Application\Port\RemovalDevice;
+use Kadupul\Graphing\Application\Port\CatalogChoice;
+use Kadupul\Graphing\Application\Port\CatalogDevice;
 
 /** The --list-hosts, --list-host-templates and --list-graph-templates modes of remove_graphs.php. */
 final readonly class ListRemovalChoices
@@ -23,7 +23,7 @@ final readonly class ListRemovalChoices
     /**
      * @param ?string $operator account to act as; null means the admin_user setting
      * @param list<int> $hostTemplateIds
-     * @return list<RemovalDevice>
+     * @return list<CatalogDevice>
      * @throws GraphManagementDenied
      */
     public function devices(bool $local, ?string $operator, array $hostTemplateIds): array
@@ -33,7 +33,7 @@ final readonly class ListRemovalChoices
 
     /**
      * @param ?string $operator account to act as; null means the admin_user setting
-     * @return list<RemovalChoice>
+     * @return list<CatalogChoice>
      * @throws GraphManagementDenied
      */
     public function deviceTemplates(bool $local, ?string $operator): array
@@ -44,7 +44,7 @@ final readonly class ListRemovalChoices
     /**
      * @param ?string $operator account to act as; null means the admin_user setting
      * @param list<int> $hostTemplateIds
-     * @return list<RemovalChoice>
+     * @return list<CatalogChoice>
      * @throws GraphManagementDenied
      */
     public function graphTemplates(bool $local, ?string $operator, array $hostTemplateIds): array

@@ -11,8 +11,8 @@ namespace Kadupul\Graphing\Infrastructure\Symfony;
 
 use Kadupul\Graphing\Application\Command\GraphRemovalMode;
 use Kadupul\Graphing\Application\Command\GraphRemovalReport;
-use Kadupul\Graphing\Application\Port\RemovalChoice;
-use Kadupul\Graphing\Application\Port\RemovalDevice;
+use Kadupul\Graphing\Application\Port\CatalogChoice;
+use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
@@ -158,33 +158,33 @@ final class RemoveGraphsLegacyArguments extends LegacyArguments
     }
 
     /**
-     * @param list<RemovalDevice> $devices
+     * @param list<CatalogDevice> $devices
      * @return list<string>
      */
     public function devices(array $devices): array
     {
         return ['Known Devices: (id, hostname, template, description)',
-            ...array_map(static fn(RemovalDevice $device): string => $device->id . "\t" . $device->hostname . "\t" . $device->hostTemplateId . "\t" . $device->description, $devices), ''];
+            ...array_map(static fn(CatalogDevice $device): string => $device->id . "\t" . $device->hostname . "\t" . $device->hostTemplateId . "\t" . $device->description, $devices), ''];
     }
 
     /**
-     * @param list<RemovalChoice> $templates
+     * @param list<CatalogChoice> $templates
      * @return list<string>
      */
     public function deviceTemplates(array $templates): array
     {
         return ['Valid Device Templates: (id, name)', "0\tNone",
-            ...array_map(static fn(RemovalChoice $template): string => $template->id . "\t" . $template->name, $templates), ''];
+            ...array_map(static fn(CatalogChoice $template): string => $template->id . "\t" . $template->name, $templates), ''];
     }
 
     /**
-     * @param list<RemovalChoice> $templates
+     * @param list<CatalogChoice> $templates
      * @return list<string>
      */
     public function graphTemplates(array $templates): array
     {
         return ['Known Graph Templates: (id, name)',
-            ...array_map(static fn(RemovalChoice $template): string => $template->id . "\t" . $template->name, $templates), ''];
+            ...array_map(static fn(CatalogChoice $template): string => $template->id . "\t" . $template->name, $templates), ''];
     }
 
     /**

@@ -25,18 +25,18 @@ interface GraphRemovalCatalog
 
     /**
      * @param list<int> $hostTemplateIds empty for every device
-     * @return list<RemovalDevice> ordered by id
+     * @return list<CatalogDevice> ordered by id
      */
     public function devices(OperatorDatabase $database, array $hostTemplateIds): array;
 
-    /** @return list<RemovalChoice> ordered by id, without the "None" entry the list adds */
+    /** @return list<CatalogChoice> ordered by id, without the "None" entry the list adds */
     public function deviceTemplates(OperatorDatabase $database): array;
 
     /**
      * Graph templates attached to a device template, once each, ordered by name.
      *
      * @param list<int> $hostTemplateIds empty for every device template
-     * @return list<RemovalChoice>
+     * @return list<CatalogChoice>
      */
     public function graphTemplates(OperatorDatabase $database, array $hostTemplateIds): array;
 }
