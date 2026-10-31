@@ -431,6 +431,7 @@ def main():
         **{f'missing-profile-heartbeat-check-{index}': 'Incomplete Symfony integration' for index in range(len(profile_checks))},
         'data-source-profile-test-hash': 'Integration test source differs',
         'about-authentication-test-hash': 'Integration test source differs',
+        'link-collector-test-hash': 'Integration test source differs',
         'missing-data-source-profile-test-hash': 'Integration test source differs',
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -618,6 +619,8 @@ def main():
                 evidence['source_sha256'][case.removeprefix('stale-runner-registration-')] = '0' * 64
             elif case == 'data-source-profile-test-hash':
                 evidence['source_sha256']['tests/Symfony/data_source_profile_scenarios.py'] = '0' * 64
+            elif case == 'link-collector-test-hash':
+                evidence['source_sha256']['tests/Symfony/link_collector_scenarios.py'] = '0' * 64
             elif case == 'about-authentication-test-hash':
                 evidence['source_sha256']['tests/Symfony/about_authentication_scenarios.py'] = '0' * 64
             elif case.startswith('missing-about-authentication-check-'):
