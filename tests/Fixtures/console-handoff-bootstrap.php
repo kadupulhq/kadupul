@@ -41,6 +41,9 @@ $menu = ['Gestion' => ['host.php' => 'Devices', 'plugins/fixture/fixture.php' =>
 $user_auth_realm_filenames = ['host.php' => 3, 'fixture.php' => 150];
 // Output before the result proves the worker discards bootstrap noise.
 print 'bootstrap output';
+if ($consoleHandoffFixture['realm_denied'] ?? false) {
+    throw new \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerRealmDenied();
+}
 
 function is_realm_allowed(int $realm): bool
 {
