@@ -31,7 +31,7 @@ if (($argv[1] ?? '') === 'required') {
 } elseif (($argv[1] ?? '') === 'import') {
     $input = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
     $handler = $input['handler'];
-    $legacyCallerPaths = [];
+    $legacyCallerPaths = $input['legacy'] ?? [];
     $requiredPaths = symfony_integration_required_paths($handler, $legacyCallerPaths);
     $reports = $input['reports'];
     $observed = $mapped = [];

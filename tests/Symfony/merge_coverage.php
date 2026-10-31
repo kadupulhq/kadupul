@@ -376,7 +376,8 @@ function symfony_integration_required_paths(string $handler, array $legacyCaller
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
     }
-    return array_merge($requiredPaths, $legacyCallerPaths);
+    $requiredPaths = array_merge($requiredPaths, $legacyCallerPaths);
+    return $requiredPaths;
 }
 
 /** @return list<string> */
