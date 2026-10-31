@@ -19,6 +19,36 @@ function require_symfony_integration_checks(array $manifest, array $checks): voi
     }
 }
 
+/** @return list<string> */
+function symfony_http_coverage_sources(string $root): array
+{
+    $registry = json_decode(file_get_contents($root . '/tests/Symfony/http_coverage_sources.json'), true, 512, JSON_THROW_ON_ERROR);
+    $paths = $registry['source_paths'] ?? null;
+    if (($registry['version'] ?? null) !== 1 || ($registry['suite'] ?? null) !== 'symfony-http'
+        || !is_array($paths) || !array_is_list($paths) || $paths === []) {
+        throw new RuntimeException('Invalid HTTP coverage source registry');
+    }
+    $seen = [];
+    foreach ($paths as $path) {
+        if (!is_string($path) || $path === '' || str_starts_with($path, '/') || str_contains($path, '\\')
+            || in_array('..', explode('/', $path), true) || isset($seen[$path])) {
+            throw new RuntimeException('Invalid HTTP coverage source registry');
+        }
+        $seen[$path] = true;
+    }
+    return $paths;
+}
+
+/** @param array<string,mixed> $manifest @param list<string> $sourcePaths */
+function require_symfony_integration_sources(array $manifest, array $sourcePaths, string $root): void
+{
+    foreach ($sourcePaths as $path) {
+        if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
+            throw new RuntimeException('Integration test source differs from checkout: ' . $path);
+        }
+    }
+}
+
 /**
  * Require the intentional failure exit and unchanged state, rather than the
  * frozen original's successful exit when its audit baseline cannot be loaded.
@@ -73,46 +103,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'gprint_preset_scenarios.py', 'color_template_scenarios.py', 'cdef_scenarios.py', 'automation_template_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py', 'cli_user_scenarios.py', 'cli_graph_scenarios.py'];
-    $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
-    if ($handler !== 'none') {
-        // Bind the bodyless contract without inventing coverage for its declaration.
-        $sourcePaths[] = 'src/Platform/Contract/ReferenceWriteTransactionRunner.php';
-        $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php';
-        $sourcePaths[] = 'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php';
-        $sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';
-        $sourcePaths[] = 'tests/Symfony/console_home_http.py';
-        $sourcePaths[] = 'tests/Symfony/permission_denied_scenarios.py';
-        $sourcePaths[] = 'tests/Symfony/plugin_menu_scenarios.py';
-        $sourcePaths[] = 'tests/Symfony/console_browser_probe.cjs';
-        $sourcePaths[] = 'include/js/console-home.js';
-        foreach (['console_home', 'console_home_body', 'console_home_fragment', 'console_home_shell', 'help'] as $template) {
-            $sourcePaths[] = 'templates/platform/' . $template . '.html.twig';
-        }
-        $sourcePaths[] = 'tests/e2e/browser-coverage.js';
-        $sourcePaths[] = 'public/js/vdef-item.js';
-        $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
-        $sourcePaths[] = 'tests/Fixtures/plugins/menu_parity/setup.php';
-        // cli_parity_scenarios.py, cli_schema_scenarios.py and
-        // cli_audit_scenarios.py compare the shims against these frozen originals.
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/convert_tables.php';
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/audit_database.php';
-        $sourcePaths[] = 'tests/Fixtures/native-cli/audit_database.php';
-        // cli_user_scenarios.py compares the user and permission shims with these.
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/copy_user.php';
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/add_perms.php';
-        // cli_graph_scenarios.py compares the graph shims with these.
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php';
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/repair_graphs.php';
-        $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php';
-    }
-    foreach ($sourcePaths as $path) {
-        if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
-            throw new RuntimeException('Integration test source differs from checkout');
-        }
-    }
+    $sourcePaths = $handler === 'none' ? ['tests/Symfony/offline_coverage.py'] : symfony_http_coverage_sources($root);
+    require_symfony_integration_sources($manifest, $sourcePaths, $root);
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'console schema mismatch preserves the native installer redirect before worker startup',
         'permission denied renders in place: /permission_denied.php',
@@ -1062,7 +1054,22 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Infrastructure/Legacy/LegacyGraphRemover.php',
         'src/Graphing/Infrastructure/Persistence/DbalBrokenGraphCatalog.php',
         'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsCommand.php',
-        'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsLegacyArguments.php',
+        'cli/remove_graphs.php',
+        'src/Graphing/Domain/GraphRemovalFilter.php',
+        'src/Graphing/Application/Command/RemoveGraphs.php',
+        'src/Graphing/Application/Command/ListRemovalChoices.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphRemovalCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/RemoveGraphsCommand.php',
+        'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php',
+        'cli/add_graph_template.php',
+        'bin/legacy-graph-template-attach.php',
+        'src/Graphing/Application/Command/AttachGraphTemplate.php',
+        'src/Graphing/Application/Command/ListAttachmentChoices.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateAssignmentCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateCommand.php',
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';

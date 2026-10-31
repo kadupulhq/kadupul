@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Keep the HTTP fixture's successful controls faithful to rendered forms."""
+import json
+import os
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -61,7 +64,14 @@ class RenderedFormTest(unittest.TestCase):
         for marker in REQUIRED_CHECKS:
             with self.subTest(marker=marker):
                 self.assertIn(repr(marker) + ',', consumer)
-        self.assertIn("$sourcePaths[] = 'tests/Symfony/cdef_legacy_page_scenarios.py';", consumer)
+        # Query the production consumer's source guard; its inventory is shared
+        # with publishers rather than repeated as PHP assignment statements.
+        result = subprocess.run(
+            [os.environ.get('PHP', 'php'), str(Path(__file__).resolve().parents[1] / 'Fixtures/http-coverage-source-guard.php'), 'paths'],
+            capture_output=True, text=True, timeout=30,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIn('tests/Symfony/cdef_legacy_page_scenarios.py', json.loads(result.stdout))
         self.assertIn('$requiredPaths = array_merge($requiredPaths, $legacyCallerPaths);', consumer)
 
     def test_navigation_links_decode_html_entities_without_changing_query_bytes(self):

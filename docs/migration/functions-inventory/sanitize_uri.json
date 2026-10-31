@@ -16,6 +16,15 @@
                     "variadic": false,
                     "has_default": false,
                     "default": null
+                },
+                {
+                    "name": "preserve_graph_action",
+                    "type": "bool",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "true"
                 }
             ],
             "return_type": null,

@@ -1782,6 +1782,62 @@ Known differences from `cli/remove_broken_graphs.php`:
 - Under `bin/console`, `--report` with `--remove` exits 2. The shim keeps the
   original's error and help and exits 1.
 
+`php bin/console kadupul:graph:remove` counts, lists or removes the graphs that
+the selectors pick, as `cli/remove_graphs.php` did: `--host-id`,
+`--host-template-id`, `--graph-template-id` and `--graph-regex`, each repeatable
+and narrowing together, or `--all`. With no selector it refuses, except for
+`--list`. A removal runs `api_delete_graphs()` in a worker in batches of 500, and
+removes the data sources the graphs reference where possible unless `--preserve`
+is given. `--list-hosts`, `--list-host-templates` and `--list-graph-templates`
+print the ids the selectors take. It needs the Console Access and Graphs realms,
+and a removal is audited. `--json` prints `status`, `database`, `mode`,
+`matched`, `removed`, `data_sources` and `graphs`.
+
+Known differences from `cli/remove_graphs.php`:
+
+- It needs an operator with the Console Access and Graphs realms. The original
+  ran for anyone who could run it.
+- The regular expression is checked as `validate_is_regex()` meant it to be: more
+  than 50 bytes or a `;` is refused with the original's error. The original
+  tested for `false`, which that function never returns, so it accepted both.
+  An expression that is empty once `|`, `{`, `}` and NUL are dropped, which
+  matches every title, is refused too; a bare `--graph-regex` could remove every
+  graph with a device. `--graph-regex=` with nothing after the `=` is not seen,
+  as before.
+- Graphs are listed in id order. The original had no `ORDER BY`. A graph on no
+  device is never selected, not even by `--all`, as before.
+- Ids are bound instead of concatenated into SQL, so `--list-hosts` with
+  `--host-template-id=1.5` reads template 1, as the removal always did.
+- `--quiet` and `--graph-type` are named as invalid and ignored, as before. Any
+  other unknown flag prints the error and help, where `getopt()` skipped it.
+- The deletion runs in batches of 500 graphs, and a worker that cannot confirm
+  its result fails the run instead of printing `Delete Operation Completed`.
+- Under `bin/console`, `--list` with `--force` exits 2. The shim keeps the
+  original's message and exits 1.
+
+`php bin/console kadupul:device:add-graph-template --host-id=ID --graph-template-id=ID`
+associates a graph template with a device. A worker writes the `host_graph` row,
+runs `automation_hook_graph_template()` and the `add_graph_template_to_host`
+plugin hook, as the original did. `--list-hosts` and `--list-graph-templates`
+print the ids. It needs the Console Access and Devices realms (realm 3, the one
+`host.php` needs), and an association is audited. `--json` prints `status`,
+`database`, `device` and `graph_template`.
+
+Known differences from `cli/add_graph_template.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it.
+- An unknown device or graph template is refused with the original's
+  `Unknown Host Id` or `Unknown Graph Template Id` line. The original tested the
+  result of `db_fetch_cell()`, which is `false` for no row, with `isset()`, so it
+  accepted any id and wrote an orphan `host_graph` row.
+- Ids are bound instead of concatenated into SQL. A numeric id written as `7e0`
+  still finds device 7, and `1.5` still finds none.
+- An argument error prints the error and help without the version line.
+- `--quiet` reaches `bin/console` as `--no-headers`, because the console already
+  defines `--quiet`. Under `bin/console` a bad id exits 2; the shim keeps the
+  original's message and exits 1.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or
