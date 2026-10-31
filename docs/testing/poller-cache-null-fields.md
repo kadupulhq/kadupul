@@ -28,6 +28,9 @@ invalid SNMP versions or communities, and host-zero script cache entries. The tw
 NULL cases and the non-device numeric-default case fail before their corrections;
 all seven pass afterward. RRD path/scheduling callbacks return fixed fixture values;
 this regression does not claim installed authentication or remote propagation.
+An additional generated-password account case verifies configured credentials are
+used when no administrator override exists, and rejects a silent root fallback.
+
 LTS uses PHP 8.1.34; main uses PHP 8.4.25. Other engines await current-head CI.
 
 Reverting restores the prior serialization and strict-SQL failure. Existing
