@@ -1,0 +1,16 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Graphing\Application\Port;
+
+/** One --snmp-field with the value or expression its indexes must have. */
+final readonly class SnmpFilter
+{
+    public function __construct(public string $field, public ?string $value, public ?string $expression) {}
+}
