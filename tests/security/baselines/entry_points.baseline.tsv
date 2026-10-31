@@ -108,25 +108,35 @@ app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; Cons
 app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
 app.php/management/aggregate-graphs	symfony:management_aggregate_graphs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
+app.php/management/aggregate-members/{id}	symfony:management_aggregate_members	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
+app.php/management/collector-devices/{id}	symfony:management_collector_devices	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
 app.php/management/data-query-graphs/{id}	symfony:management_data_query_graphs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 13
+app.php/management/data-source-definitions/{id}	symfony:management_data_source_definitions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
+app.php/management/data-source-graphs/{id}	symfony:management_data_source_graphs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3 + realm 5
 app.php/management/data-sources	symfony:management_data_sources	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/management/device-template-graphs/{id}	symfony:management_device_template_graphs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 12
+app.php/management/graph-data-sources/{id}	symfony:management_graph_data_sources	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5 + realm 3
 app.php/management/graph-device-templates/{id}	symfony:management_graph_device_templates	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10 + realm 12
 app.php/management/graph-input-items/{id}	symfony:management_graph_input_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
+app.php/management/graph-items/{id}	symfony:management_graph_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
 app.php/management/graph-template-inputs/{id}	symfony:management_graph_template_inputs	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
 app.php/management/graph-template-items/{id}	symfony:management_graph_template_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
 app.php/management/graphs	symfony:management_graphs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
 app.php/management/mib-conventions/{id}	symfony:management_mib_conventions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
 app.php/management/mib-notification-attributes/{id}	symfony:management_mib_notification_attributes	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
 app.php/management/mib-objects/{id}	symfony:management_mib_objects	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
+app.php/management/my-report-items/{id}	symfony:management_my_report_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; AuthenticatedAccess signed-in account + realm 22
 app.php/management/my-reports	symfony:management_my_reports	methods=GET|HEAD; AuthenticatedAccess signed-in account + realm 22
+app.php/management/network-devices/{id}	symfony:management_network_devices	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/management/plugins	symfony:management_plugins	methods=GET|HEAD; ConsoleAccess realm 8 + realm 101
 app.php/management/query-data-sources/{id}	symfony:management_query_data_sources	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 13
 app.php/management/query-data-suggestions/{id}	symfony:management_query_data_suggestions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 13
 app.php/management/query-device-templates/{id}	symfony:management_query_device_templates	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 13 + realm 12
 app.php/management/query-graph-suggestions/{id}	symfony:management_query_graph_suggestions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 13
+app.php/management/report-items/{id}	symfony:management_report_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 21
 app.php/management/reports	symfony:management_reports	methods=GET|HEAD; ConsoleAccess realm 8 + realm 21
 app.php/management/snmp-mibs	symfony:management_snmp_mibs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/management/tree-items/{id}	symfony:management_tree_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 4
 app.php/permission-denied	symfony:platform_permission_denied	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
 app.php/relationships/aggregate-template-items/{id}	symfony:relationships_aggregate_template_items	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
 app.php/relationships/data-template-definitions/{id}	symfony:relationships_data_template_definitions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 11
