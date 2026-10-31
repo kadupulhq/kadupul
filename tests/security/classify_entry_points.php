@@ -1781,6 +1781,50 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, ?Closure $
     return [];
 }
 
+/** Admit only the reviewed, sole final installation-signal getter. */
+function reviewed_upgrade_signal(string $root): bool
+{
+    static $cache = [];
+    if (array_key_exists($root, $cache)) {
+        return $cache[$root];
+    }
+    $cache[$root] = false;
+    foreach ([
+        'src/Platform/Contract/InstallationUpgradeRequired.php' => 'd3be0468e515e2dddef3ed1319ad52d1c2bf036c0d4dc3a682d18e2bbefdcf29',
+        'src/Platform/Infrastructure/Legacy/ConsoleUpgradeRequired.php' => '593466e65b5551bcedbd76ef28d7a28c01b08215a8cf5190fcae891759e7d5cd',
+    ] as $source => $hash) {
+        if (!is_file($root . '/' . $source) || hash_file('sha256', $root . '/' . $source) !== $hash) {
+            return false;
+        }
+    }
+    $contract = 'Kadupul\\Platform\\Contract\\InstallationUpgradeRequired';
+    $expected = 'Kadupul\\Platform\\Infrastructure\\Legacy\\ConsoleUpgradeRequired';
+    $directory = new RecursiveDirectoryIterator($root . '/src', FilesystemIterator::SKIP_DOTS);
+    foreach (new RecursiveIteratorIterator($directory) as $file) {
+        if (!$file->isFile() || $file->getExtension() !== 'php') {
+            continue;
+        }
+        $source = substr($file->getPathname(), strlen($root) + 1);
+        $nodes = parse_file($root, $source, true);
+        if ($nodes === null) {
+            return false;
+        }
+        foreach (walk($nodes) as $node) {
+            $interfaces = match (true) {
+                $node instanceof Stmt\Class_, $node instanceof Stmt\Enum_ => $node->implements,
+                $node instanceof Stmt\Interface_ => $node->extends,
+                default => [],
+            };
+            foreach ($interfaces as $interface) {
+                if ($interface->toString() === $contract && $node->namespacedName?->toString() !== $expected) {
+                    return false;
+                }
+            }
+        }
+    }
+    return $cache[$root] = true;
+}
+
 /**
  * True when every node under $nodes only reads, computes or builds a response,
  * so running it ahead of a guard changes nothing. Anything else, including a
@@ -1799,9 +1843,13 @@ function pure(string $root, mixed $nodes, Closure $type_of): bool
         }
         $calls = [];
         $receivers = [];
+        $upgrade = count($node->types) === 1
+            && $node->types[0]->toString() === 'Kadupul\\Platform\\Contract\\InstallationUpgradeRequired'
+            && reviewed_upgrade_signal($root);
         foreach (walk($node->stmts, false) as $inner) {
             if ($inner instanceof Expr\MethodCall && is_variable($inner->var, $node->var->name) && $inner->args === []
-                && $inner->name instanceof Node\Identifier && $inner->name->toLowerString() === 'getmessage') {
+                && $inner->name instanceof Node\Identifier
+                && ($inner->name->toLowerString() === 'getmessage' || $upgrade && $inner->name->toLowerString() === 'location')) {
                 $calls[spl_object_id($inner)] = true;
                 $receivers[spl_object_id($inner->var)] = true;
             } elseif (($inner instanceof Expr\PropertyFetch || $inner instanceof Expr\NullsafePropertyFetch)
