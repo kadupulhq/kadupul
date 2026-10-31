@@ -93,6 +93,31 @@ function rrd_proxy_interop_payloads(): array
     return array('', 'x', str_repeat('a', 15), str_repeat('b', 16), str_repeat('c', 17), gzencode('OK u:0.00', 1), random_bytes(100000));
 }
 
+test('fake proxy failure reports retain the client context and server stderr', function () {
+    $directory = sys_get_temp_dir() . '/rrd-proxy-diagnostic-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    file_put_contents($directory . '/proxy.stderr', "fixture stderr\n");
+    $process = proc_open(array(PHP_BINARY, '-r', 'exit(4);'), array(1 => array('pipe', 'w')), $pipes);
+    $context = 'dataset=slow startup; client connected=false; problems=["connection refused"]';
+    try {
+        $failure = null;
+        try {
+            rrd_fake_proxy_finish($directory, $process, $pipes[1], $context);
+        } catch (\PHPUnit\Framework\ExpectationFailedException $error) {
+            $failure = $error;
+        }
+        expect($failure)->not->toBeNull();
+        expect($failure->getMessage())->toContain($context, 'fixture stderr');
+    } finally {
+        if (is_resource($process)) {
+            proc_terminate($process);
+            proc_close($process);
+        }
+        unlink($directory . '/proxy.stderr');
+        rmdir($directory);
+    }
+});
+
 /** Run a proxy session: the fake proxy in one process, the client in another. */
 function rrd_proxy_interop_session($test, ?array $rrdproxy, array $client, array $proxy, string $command = 'info /fixture/sample.rrd'): array
 {
@@ -105,6 +130,7 @@ function rrd_proxy_interop_session($test, ?array $rrdproxy, array $client, array
             'autoload' => $rrdproxy['autoload'] ?? $root . '/include/vendor/autoload.php',
             'rrdproxy' => $rrdproxy['source'] ?? null,
         ));
+        $proxy_ready = hrtime(true);
         $options = $client + array('storage_location' => 1, 'rrdp_server' => '127.0.0.1', 'rrdp_port' => $port);
         $program = '$root=' . var_export($root, true) . ';$options=' . var_export($options, true) . ';$command=' . var_export($command, true) . ';' . <<<'PHP'
 $config = array('rra_path' => '/fixture');
@@ -123,8 +149,17 @@ echo json_encode(array('connected' => $rrdp !== false, 'output' => $output, 'pro
     return strpos($message, 'CACTI2RRDP ERROR') === 0 || strpos($message, 'CACTI2RRDP WARNING') === 0;
 }))));
 PHP;
+        $client_dispatch = hrtime(true);
         $result = json_decode(rrd_proxy_interop_php($test, $program, array(), true), true, 512, JSON_THROW_ON_ERROR);
-        $result['proxy_received'] = rrd_fake_proxy_finish($directory, $server, $stdout);
+        $context = sprintf(
+            '%s; ready-to-dispatch=%.3fs; client=%.3fs; connected=%s; problems=%s',
+            $test->nameWithDataSet(),
+            ($client_dispatch - $proxy_ready) / 1e9,
+            (hrtime(true) - $client_dispatch) / 1e9,
+            json_encode($result['connected'], JSON_THROW_ON_ERROR),
+            json_encode($result['problems'], JSON_THROW_ON_ERROR)
+        );
+        $result['proxy_received'] = rrd_fake_proxy_finish($directory, $server, $stdout, $context);
 
         return $result;
     } finally {
