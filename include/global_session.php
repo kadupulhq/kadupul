@@ -64,7 +64,7 @@ if (isset($_SESSION['refresh'])) {
     }
 
     if (isset($_SESSION['refresh']['page'])) {
-        $myrefresh['page'] = sanitize_uri($_SESSION['refresh']['page']);
+        $myrefresh['page'] = sanitize_uri($_SESSION['refresh']['page'], false);
     } else {
         $myrefresh['page'] = $config['url_path'] . 'logout.php?action=timeout';
         $refreshIsLogout   = 'true';
@@ -73,7 +73,7 @@ if (isset($_SESSION['refresh'])) {
     unset($_SESSION['refresh']);
 } elseif (isset($refresh) && is_array($refresh)) {
     $myrefresh['seconds'] = $refresh['seconds'];
-    $myrefresh['page']    = sanitize_uri(appendHeaderSuppression($refresh['page']));
+    $myrefresh['page']    = sanitize_uri(appendHeaderSuppression($refresh['page']), false);
     $refreshIsLogout      = 'false';
 } elseif (isset($refresh)) {
     $myrefresh['seconds'] = $refresh;
