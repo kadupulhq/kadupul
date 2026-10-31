@@ -31,6 +31,10 @@ final class AdministrativePolicyFaultPdo extends PDO
 
     public function prepare(string $query, array $options = []): PDOStatement|false
     {
+        if ($this->fault === 'credential_prepare' && str_contains($query, 'auth_credential_generation')) {
+            $this->injected = true;
+            return false;
+        }
         $statement = $this->connection->prepare($query, $options);
         $metadata = str_contains($query, 'information_schema.tables');
         $actor = str_starts_with($query, 'SELECT username, password');

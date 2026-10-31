@@ -183,6 +183,29 @@ final class NativeAdministrativeActorPolicyTest extends TestCase
         (new NativeAdministrativeActorPolicy($this->pdo(), 15))->authorize(42, $this->credential);
     }
 
+    public function testCredentialReadFailureDoesNotExposeStoredPasswordInExceptionArguments(): void
+    {
+        $pdo = $this->pdo();
+        $pdo->beginTransaction();
+        $connection = new AdministrativePolicyFaultPdo($pdo, 'credential_prepare');
+        $previous = ini_set('zend.exception_ignore_args', '0');
+        self::assertNotFalse($previous);
+        try {
+            try {
+                (new NativeAdministrativeActorPolicy($connection, 15))->authorize(42, $this->credential);
+                self::fail('A failed credential read was admitted.');
+            } catch (\RuntimeException $error) {
+                self::assertTrue($connection->injected);
+                self::assertTrue($pdo->inTransaction());
+                $frames = array_values(array_filter($error->getTrace(), static fn(array $frame): bool => $frame['function'] === 'auth_session_credential_generation'));
+                self::assertCount(1, $frames);
+                self::assertInstanceOf(\SensitiveParameterValue::class, $frames[0]['args'][1] ?? null);
+            }
+        } finally {
+            ini_set('zend.exception_ignore_args', $previous);
+        }
+    }
+
     public function testMalformedCredentialsAreDeniedBeforeInspectingAnInactiveConnection(): void
     {
         $policy = new NativeAdministrativeActorPolicy($this->pdo(), 15);
