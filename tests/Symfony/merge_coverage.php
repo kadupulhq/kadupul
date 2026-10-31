@@ -108,6 +108,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/repair_graphs.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_graphs.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/add_graph_template.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -1069,7 +1070,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Application/Command/ListRemovalChoices.php',
         'src/Graphing/Infrastructure/Persistence/DbalGraphRemovalCatalog.php',
         'src/Graphing/Infrastructure/Symfony/RemoveGraphsCommand.php',
-        'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php',
+        'cli/add_graph_template.php',
+        'bin/legacy-graph-template-attach.php',
+        'src/Graphing/Application/Command/AttachGraphTemplate.php',
+        'src/Graphing/Application/Command/ListAttachmentChoices.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateAssignmentCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateCommand.php',
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
