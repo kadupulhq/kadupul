@@ -94,4 +94,4 @@ foreach ($owned as [$process, $pipes]) {
 	foreach ($pipes as $pipe) if (is_resource($pipe)) fclose($pipe);
 	\proc_close($process);
 }
-echo json_encode(['output' => $output, 'exception' => $exception, 'trace' => $trace, 'events' => $events, 'open_processes_before_harness_cleanup' => $open, 'elapsed_ns' => $elapsed], JSON_THROW_ON_ERROR);
+echo json_encode(['output' => $output, 'exception' => $exception, 'trace' => $trace, 'events' => $events, 'open_processes_before_harness_cleanup' => $open, 'elapsed_ns' => $elapsed, 'php_path' => read_config_option('path_php_binary'), 'script_path' => $config['base_path'] . '/script_server.php', 'injected_file_exists' => file_exists($directory . '/injected')], JSON_THROW_ON_ERROR);

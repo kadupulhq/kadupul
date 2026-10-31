@@ -37,8 +37,8 @@ event('eof');
 PHP;
 	file_put_contents($directory . '/script root/script_server.php', $server);
 	if (!empty($scenario['spaced_php'])) {
-		if (!symlink(PHP_BINARY, $directory . '/php binary')) throw new RuntimeException('Cannot create executable-path fixture');
-		$scenario['php_path'] = $directory . '/php binary';
+		if (!symlink(PHP_BINARY, $directory . (!empty($scenario['metachar_php']) ? '/php binary ; $(touch injected)' : '/php binary'))) throw new RuntimeException('Cannot create executable-path fixture');
+		$scenario['php_path'] = $directory . (!empty($scenario['metachar_php']) ? '/php binary ; $(touch injected)' : '/php binary');
 	}
 	file_put_contents($directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
 	$process = null;
@@ -196,14 +196,17 @@ test('batch stderr cannot fill a pipe', function (): void {
 		->and($result['open_processes_before_harness_cleanup'])->toBe(0);
 });
 
-test('configured executable paths with spaces remain executable', function (): void {
+test('configured executable paths stay literal arguments', function (bool $metacharacters): void {
 	$scenario = realtime_server_scenario(1);
 	$scenario['spaced_php'] = true;
+	$scenario['metachar_php'] = $metacharacters;
 	$result = realtime_server_batch($scenario);
 	expect($result['exception'])->toBeNull()
 		->and(array_column(json_decode($result['output'], true, 512, JSON_THROW_ON_ERROR), 'value'))->toBe(['0'])
-		->and($result['open_processes_before_harness_cleanup'])->toBe(0);
-});
+		->and($result['open_processes_before_harness_cleanup'])->toBe(0)
+		->and($result['trace']['opens'][0])->toBe([$result['php_path'], '-q', $result['script_path'], 'realtime', 'BatchA1'])
+		->and($result['injected_file_exists'])->toBeFalse();
+})->with([false, true]);
 
 test('shutdown handles positive short writes and failed writes', function (string $mode): void {
 	$scenario = realtime_server_scenario(1);
