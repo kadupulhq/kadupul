@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Include client timing, dataset, connection outcome and server diagnostics in failed RRDtool proxy interoperability tests to investigate intermittent fixture failures (#1244).
+- Register native database sessions through `SessionHandlerInterface` to avoid PHP 8.4 callback-registration deprecations, retaining the existing callbacks and shutdown behavior.
 
 - Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
 - Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero in poller cache entries under strict SQL, preserving stored host settings and explicit overrides.
