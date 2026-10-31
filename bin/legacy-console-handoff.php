@@ -101,9 +101,7 @@ try {
     // Persist compatibility extension session changes under the original native
     // handler and lock, instead of copying a stale parent snapshot back later.
     $phase = 'session';
-    if (!session_write_close()) {
-        throw new RuntimeException('Console session changes could not be persisted.');
-    }
+    \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerSession::close();
     while (ob_get_level() > 0) {
         ob_end_clean();
     }
@@ -123,9 +121,7 @@ try {
                 throw new RuntimeException('Console denial identity could not be confirmed.');
             }
             $phase = 'denial-session';
-            if (!session_write_close()) {
-                throw new RuntimeException('Console denial session could not be persisted.');
-            }
+            \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerSession::close();
             while (ob_get_level() > 0) {
                 ob_end_clean();
             }
