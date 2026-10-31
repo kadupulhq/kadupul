@@ -407,7 +407,7 @@ msgstr "マッチンググラフ"
 #: settings.php:622 settings.php:681
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:959 tree.php:994 tree.php:1029 tree.php:2238 user_admin.php:2074
-#: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
+#: user_domains.php:642 user_group_admin.php:1995 utilities.php:1094
 #: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
 #: utilities.php:3387
 msgid "Search"
@@ -422,7 +422,7 @@ msgstr "検索"
 #: lib/html_graph.php:197 lib/html_tree.php:1022 lib/html_tree.php:1378
 #: tree.php:938 tree.php:2387 user_admin.php:801 user_admin.php:1073
 #: user_admin.php:2347 user_group_admin.php:940 user_group_admin.php:1095
-#: user_group_admin.php:2148 utilities.php:320
+#: user_group_admin.php:2150 utilities.php:320
 msgid "Graphs"
 msgstr "グラフ"
 
@@ -439,7 +439,7 @@ msgstr "グラフ"
 #: pollers.php:879 rrdcleaner.php:545
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
 #: tree.php:2248 user_admin.php:2135 user_domains.php:18 user_domains.php:652
-#: user_domains.php:738 user_group_admin.php:2003 utilities.php:1076
+#: user_domains.php:738 user_group_admin.php:2005 utilities.php:1076
 #: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
 msgid "Default"
 msgstr "デフォルト"
@@ -474,7 +474,7 @@ msgstr "Go"
 #: pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
 #: tree.php:2263 user_admin.php:2150 user_domains.php:664
-#: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
+#: user_group_admin.php:2020 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
 msgid "Set/Refresh Filters"
 msgstr "フィルタの設定/更新"
@@ -505,7 +505,7 @@ msgstr "クリア"
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
 #: tree.php:2264 user_admin.php:2151 user_domains.php:665
-#: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
+#: user_group_admin.php:2021 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
 msgid "Clear Filters"
 msgstr "絞り込み条件を解除する"
@@ -542,7 +542,7 @@ msgstr "サイズ"
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1439 tree.php:2420
 #: tree.php:2421 user_admin.php:2269 user_domains.php:757
-#: user_group_admin.php:2086
+#: user_group_admin.php:2088
 msgid "No"
 msgstr "いいえ"
 
@@ -554,7 +554,7 @@ msgstr "いいえ"
 #: include/global_settings.php:1942 lib/api_automation.php:1439
 #: lib/installer.php:2134 lib/installer.php:2162 lib/installer.php:4027
 #: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
-#: user_domains.php:757 user_group_admin.php:2084
+#: user_domains.php:757 user_group_admin.php:2086
 msgid "Yes"
 msgstr "はい"
 
@@ -690,7 +690,7 @@ msgstr "集約テンプレート"
 
 #: aggregate_templates.php:612 include/global_arrays.php:1009
 #: include/global_arrays.php:1073 lib/installer.php:2748 user_admin.php:2365
-#: user_group_admin.php:2160
+#: user_group_admin.php:2162
 msgid "Templates"
 msgstr "テンプレート"
 
@@ -917,7 +917,7 @@ msgstr "ログイン"
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
 #: lib/html.php:2901 managers.php:24 user_admin.php:1741
-#: user_group_admin.php:1763
+#: user_group_admin.php:1765
 msgid "General"
 msgstr "一般"
 
@@ -991,7 +991,7 @@ msgstr "どこからでもログアウト"
 msgid "Clear all your Login Session Tokens."
 msgstr "ログインセッショントークンをすべて消去します。"
 
-#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1770
+#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1772
 msgid "User Settings"
 msgstr "ユーザー設定"
 
@@ -1089,7 +1089,7 @@ msgstr "デバイスを削除"
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:937 tree.php:2381 user_admin.php:1065 user_admin.php:2359
-#: user_group_admin.php:1087 user_group_admin.php:2154 utilities.php:315
+#: user_group_admin.php:1087 user_group_admin.php:2156 utilities.php:315
 msgid "Devices"
 msgstr "デバイス"
 
@@ -1119,7 +1119,7 @@ msgstr "お問い合わせ"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2054 lib/installer.php:2749
 #: managers.php:214 user_admin.php:924 user_admin.php:1073
-#: user_group_admin.php:1095 user_group_admin.php:2072
+#: user_group_admin.php:1095 user_group_admin.php:2074
 msgid "Description"
 msgstr "説明"
 
@@ -1338,7 +1338,7 @@ msgstr "データ問合せ"
 #: lib/html_reports.php:2188 managers.php:241 managers.php:611
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:334 user_domains.php:742 user_group_admin.php:76
-#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
+#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2078
 #: utilities.php:2146 utilities.php:3008
 msgid "Enabled"
 msgstr "有効"
@@ -5701,7 +5701,7 @@ msgstr "サイト"
 
 #: include/global_arrays.php:999 include/global_arrays.php:1237 tree.php:2229
 #: tree.php:2244 tree.php:2311 user_admin.php:1343 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
+#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2168
 msgid "Trees"
 msgstr "木"
 
@@ -5798,7 +5798,7 @@ msgstr "設定"
 
 #: include/global_arrays.php:1038 include/global_arrays.php:2588
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
-#: user_group_admin.php:2172
+#: user_group_admin.php:2174
 msgid "Users"
 msgstr "ユーザー"
 
@@ -17201,17 +17201,17 @@ msgstr "更新からの経過時間"
 msgid "RRDfiles"
 msgstr "RRDファイル"
 
-#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2018
-#: user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
-#: user_group_admin.php:2172
+#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2020
+#: user_group_admin.php:2150 user_group_admin.php:2156
+#: user_group_admin.php:2162 user_group_admin.php:2168
+#: user_group_admin.php:2174
 msgctxt "filter: use"
 msgid "Go"
 msgstr "Go"
 
-#: rrdcleaner.php:561 user_group_admin.php:2019 user_group_admin.php:2148
-#: user_group_admin.php:2154 user_group_admin.php:2160
-#: user_group_admin.php:2166
+#: rrdcleaner.php:561 user_group_admin.php:2021 user_group_admin.php:2150
+#: user_group_admin.php:2156 user_group_admin.php:2162
+#: user_group_admin.php:2168
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr "クリア"
@@ -18090,8 +18090,8 @@ msgstr "アクセス権を取り消す"
 msgid "Grant Access"
 msgstr "アクセス許可"
 
-#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1999
-#: user_group_admin.php:2061
+#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:2001
+#: user_group_admin.php:2063
 msgid "Groups"
 msgstr "グループ"
 
@@ -18108,14 +18108,14 @@ msgid "Non Member"
 msgstr "非会員"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
-#: user_group_admin.php:2095
+#: user_admin.php:2293 user_group_admin.php:2095 user_group_admin.php:2096
+#: user_group_admin.php:2097
 msgid "ALLOW"
 msgstr "許可"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
-#: user_group_admin.php:2095
+#: user_admin.php:2293 user_group_admin.php:2095 user_group_admin.php:2096
+#: user_group_admin.php:2097
 msgid "DENY"
 msgstr "拒否"
 
@@ -18220,7 +18220,7 @@ msgstr "ツリー権限"
 msgid "User Settings %s"
 msgstr "ユーザー設定 %s"
 
-#: user_admin.php:1742 user_group_admin.php:1765
+#: user_admin.php:1742 user_group_admin.php:1767
 msgid "Permissions"
 msgstr "権限"
 
@@ -18228,19 +18228,19 @@ msgstr "権限"
 msgid "Group Membership"
 msgstr "グループメンバーシップ"
 
-#: user_admin.php:1744 user_group_admin.php:1766
+#: user_admin.php:1744 user_group_admin.php:1768
 msgid "Graph Perms"
 msgstr "グラフパーマ"
 
-#: user_admin.php:1745 user_group_admin.php:1767
+#: user_admin.php:1745 user_group_admin.php:1769
 msgid "Device Perms"
 msgstr "デバイスパーマ"
 
-#: user_admin.php:1746 user_group_admin.php:1768
+#: user_admin.php:1746 user_group_admin.php:1770
 msgid "Template Perms"
 msgstr "テンプレートパーマ"
 
-#: user_admin.php:1747 user_group_admin.php:1769
+#: user_admin.php:1747 user_group_admin.php:1771
 msgid "Tree Perms"
 msgstr "ツリーパーマ"
 
@@ -18306,15 +18306,15 @@ msgstr "ドメイン"
 msgid "User ID"
 msgstr "ユーザーID"
 
-#: user_admin.php:2250 user_group_admin.php:2073
+#: user_admin.php:2250 user_group_admin.php:2075
 msgid "Graph Policy"
 msgstr "デフォルトグラフポリシ"
 
-#: user_admin.php:2251 user_group_admin.php:2074
+#: user_admin.php:2251 user_group_admin.php:2076
 msgid "Device Policy"
 msgstr "デバイスポリシー"
 
-#: user_admin.php:2252 user_group_admin.php:2075
+#: user_admin.php:2252 user_group_admin.php:2077
 msgid "Template Policy"
 msgstr "テンプレートポリシー"
 
@@ -18326,7 +18326,7 @@ msgstr "予約不可"
 msgid "No Users Found"
 msgstr "ユーザーが見つかりません"
 
-#: user_admin.php:2347 user_group_admin.php:2148
+#: user_admin.php:2347 user_group_admin.php:2150
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "グラフ権限%s"
@@ -18336,23 +18336,23 @@ msgstr "グラフ権限%s"
 msgid "Group Membership %s"
 msgstr "グループメンバーシップ%s"
 
-#: user_admin.php:2359 user_group_admin.php:2154
+#: user_admin.php:2359 user_group_admin.php:2156
 #, php-format
 msgid "Devices Permission %s"
 msgstr "デバイス権限%s"
 
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
+#: user_admin.php:2377 user_group_admin.php:2150 user_group_admin.php:2156
+#: user_group_admin.php:2162 user_group_admin.php:2168
 msgid "Only Show Exceptions"
 msgstr "例外を表示"
 
-#: user_admin.php:2365 user_group_admin.php:2160
+#: user_admin.php:2365 user_group_admin.php:2162
 #, php-format
 msgid "Template Permission %s"
 msgstr "テンプレート権限%s"
 
-#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2166
+#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2168
 #, php-format
 msgid "Tree Permission %s"
 msgstr "ツリー権限%s"
@@ -18515,7 +18515,7 @@ msgstr "デフォルトでグラフ画面を表示します。"
 msgid "Restrict Access"
 msgstr "アクセス制限"
 
-#: user_group_admin.php:62 user_group_admin.php:2070
+#: user_group_admin.php:62 user_group_admin.php:2072
 msgid "Group Name"
 msgstr "グループ名"
 
@@ -18663,33 +18663,33 @@ msgstr "このユーザグループのデフォルトグラフテンプレート
 msgid "Default Tree Policy for this User Group"
 msgstr "このユーザグループのデフォルトのツリーポリシー"
 
-#: user_group_admin.php:1764 user_group_admin.php:2071
+#: user_group_admin.php:1766 user_group_admin.php:2073
 msgid "Members"
 msgstr "メンバー"
 
-#: user_group_admin.php:1783
+#: user_group_admin.php:1785
 #, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "ユーザーグループ管理[編集：%s]"
 
-#: user_group_admin.php:1785
+#: user_group_admin.php:1787
 msgid "User Group Management [new]"
 msgstr "ユーザグループ管理[new]"
 
-#: user_group_admin.php:1978
+#: user_group_admin.php:1980
 msgid "User Group Management"
 msgstr "ユーザグループ管理"
 
-#: user_group_admin.php:2101
+#: user_group_admin.php:2103
 msgid "No User Groups Found"
 msgstr "ユーザーグループが見つかりません"
 
-#: user_group_admin.php:2172
+#: user_group_admin.php:2174
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "クリア"
 
-#: user_group_admin.php:2172
+#: user_group_admin.php:2174
 msgid "Show Members"
 msgstr "メンバーを表示"
 
