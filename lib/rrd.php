@@ -1405,29 +1405,43 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
             }
 
             $web_context->prepareProcess((bool) $config['is_web'], $config['is_web'] ? ($_COOKIE['CactiTimeZone'] ?? null) : null);
-            $process = rrdtool_pipe_process($descriptorspec, $pipes);
-
-            if (!is_resource($process)) {
-                unset($process);
+            if ($config['cacti_server_os'] === 'win32') {
+                require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/WindowsOneShotRrdtool.php';
+                $timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
+                $deadline = hrtime(true) + $timeout * 1000000000;
+                $cap = rrd_command_deadline();
+                if ($cap !== null && $cap < $deadline) {
+                    $deadline = $cap;
+                }
+                $command = array(read_config_option('path_rrdtool'), '-');
+                $input = escape_command($command_line) . "\r\nquit\r\n";
+                $capture = $output_flag !== RRDTOOL_OUTPUT_NULL;
+                $exchange = new \Kadupul\Graphing\Infrastructure\Rrd\WindowsOneShotRrdtool();
+                $result = $exchange->run($command, $input, $deadline, $capture);
+                $output = $result['completed'] ? $result['output'] : false;
+                $status = $result['status'];
+                unset($result);
             } else {
-                if ($config['cacti_server_os'] === 'unix') {
-                    require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php';
-                    $timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
-                    $deadline = hrtime(true) + $timeout * 1000000000;
-                    $cap = rrd_command_deadline();
-                    if ($cap !== null && $cap < $deadline) {
-                        $deadline = $cap;
-                    }
-                    $capture = in_array($output_flag, array(RRDTOOL_OUTPUT_STDOUT, RRDTOOL_OUTPUT_GRAPH_DATA, RRDTOOL_OUTPUT_STDERR, RRDTOOL_OUTPUT_RETURN_STDERR));
-                    $input = escape_command($command_line) . "\r\nquit\r\n";
-                    $exchange = new \Kadupul\Graphing\Infrastructure\Rrd\OneShotRrdtool();
-                    $result = $exchange->run($process, $pipes, $input, $deadline, $capture);
-                    $output = $result['completed'] ? $result['output'] : false;
-                    unset($process, $result);
+                $process = rrdtool_pipe_process($descriptorspec, $pipes);
+
+                if (!is_resource($process)) {
+                    unset($process);
                 } else {
-                    fwrite($pipes[0], escape_command($command_line) . "\r\nquit\r\n");
-                    fclose($pipes[0]);
-                    $fp = $pipes[1];
+                    if ($config['cacti_server_os'] === 'unix') {
+                        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php';
+                        $timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
+                        $deadline = hrtime(true) + $timeout * 1000000000;
+                        $cap = rrd_command_deadline();
+                        if ($cap !== null && $cap < $deadline) {
+                            $deadline = $cap;
+                        }
+                        $capture = in_array($output_flag, array(RRDTOOL_OUTPUT_STDOUT, RRDTOOL_OUTPUT_GRAPH_DATA, RRDTOOL_OUTPUT_STDERR, RRDTOOL_OUTPUT_RETURN_STDERR));
+                        $input = escape_command($command_line) . "\r\nquit\r\n";
+                        $exchange = new \Kadupul\Graphing\Infrastructure\Rrd\OneShotRrdtool();
+                        $result = $exchange->run($process, $pipes, $input, $deadline, $capture);
+                        $output = $result['completed'] ? $result['output'] : false;
+                        unset($process, $result);
+                    }
                 }
             }
         } else {
@@ -1494,19 +1508,11 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
     }
 
     if ((defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN)) {
-        stream_set_timeout($fp, 60);
-        $output = stream_get_contents($fp);
-        $metadata = stream_get_meta_data($fp);
-        if ($metadata['timed_out']) {
-            proc_terminate($process);
-        }
-        fclose($fp);
-        $status = proc_close($process);
-        if (!$metadata['timed_out'] && is_string($output) && preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
+        if (is_string($output) && preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
             $rejection = & rrdtool_last_rejection();
             $rejection = trim($error[1]);
         }
-        return !$metadata['timed_out'] && $status === 0 && is_string($output)
+        return $status === 0 && is_string($output)
             && preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1
             && preg_match('/^ERROR:/m', $output) !== 1;
     }

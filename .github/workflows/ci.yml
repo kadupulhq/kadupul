@@ -131,6 +131,12 @@ jobs:
         with:
           php-version: '8.4'
           coverage: none
+      - name: Verify bounded Windows RRDtool execution
+        shell: pwsh
+        timeout-minutes: 3
+        run: |
+          php tests/integration/rrd_windows_oneshot.php --native-windows
+          if ($LASTEXITCODE -ne 0) { throw 'RRDtool Windows execution regression failed' }
       - name: Preserve an empty shell argument on Windows
         shell: pwsh
         run: |

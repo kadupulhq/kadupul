@@ -2,6 +2,7 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
       <file>Unit/MailPreflightTest.php</file>
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
