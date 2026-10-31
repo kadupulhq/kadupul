@@ -47,8 +47,10 @@ final class ConsoleUpgradeRedirectTest extends TestCase
             try {
                 $worker->console(7);
                 self::fail('A mismatched schema must not execute the console.');
-            } catch (ConsoleUpgradeRequired $error) {
+            } catch (\Kadupul\Platform\Contract\InstallationUpgradeRequired $error) {
                 self::assertSame('/kadupul/install/', $error->location);
+                self::assertInstanceOf(ConsoleUpgradeRequired::class, $error);
+                self::assertSame($error->location, $error->location());
                 $event = new ExceptionEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST, $error);
                 $subscriber = new ConsoleHomeExceptionSubscriber(static fn() => throw new \LogicException('Login must not be selected.'), new NullLogger());
                 $subscriber->onException($event);
