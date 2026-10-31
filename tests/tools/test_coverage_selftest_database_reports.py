@@ -221,6 +221,8 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
                 listed = invoke('required', handler)
                 self.assertEqual(0, listed.returncode, listed.stderr)
                 paths = json.loads(listed.stdout)
+                legacy = ['graphs.php'] if handler != 'none' else []
+                paths += legacy
                 report = {'php': '8.4.25', 'files': {}}
                 for path in paths:
                     report['files']['/var/www/html/' + path] = {
@@ -231,7 +233,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
                 report['files']['/var/www/html/include/config.php'] = {'sha256': '0' * 64, 'lines': {'1': 1}}
                 filename = root / 'coverage-admitted.json'
                 filename.write_text(json.dumps(report))
-                payload = {'handler': handler, 'reports': [str(filename)]}
+                payload = {'handler': handler, 'reports': [str(filename)], 'legacy': legacy}
                 admitted = invoke('import', str(ROOT), payload)
                 self.assertEqual(0, admitted.returncode, admitted.stderr)
                 self.assertEqual(set(paths), set(json.loads(admitted.stdout)))
