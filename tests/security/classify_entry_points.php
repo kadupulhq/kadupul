@@ -218,7 +218,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
-    'lib/auth.php' => '7c3f9e812f5b538aafb410bba0f19a68ecbf104ea36b755720d7fccbb1d6016e',
+    'lib/auth.php' => 'b433c35e4fa373396566d01e9549fc3ddac2369c1617bde596dc45af4b993d89',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '54b0ce28240fac51fb0faa0df442b85610fdfbe87fb4dbc84fc484d09370eade',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
