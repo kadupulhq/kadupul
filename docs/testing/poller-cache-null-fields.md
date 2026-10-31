@@ -30,6 +30,8 @@ all seven pass afterward. RRD path/scheduling callbacks return fixed fixture val
 this regression does not claim installed authentication or remote propagation.
 An additional generated-password account case verifies configured credentials are
 used when no administrator override exists, and rejects a silent root fallback.
+It starts from an inaccessible caller schema and verifies that only the newly
+owned fixture schema is required.
 
 LTS uses PHP 8.1.34; main uses PHP 8.4.25. Other engines await current-head CI.
 

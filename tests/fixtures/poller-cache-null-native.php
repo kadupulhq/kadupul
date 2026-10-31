@@ -13,7 +13,12 @@ $root = dirname(__DIR__, 2);
 require $root . '/tests/Helpers/PhpSource.php';
 require $root . '/include/global_constants.php';
 if (!defined('SQL_NO_CACHE')) define('SQL_NO_CACHE', '');
-$database = new PDO(getenv('KADUPUL_TEST_MYSQL_DSN'), getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);
+$dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
+if (!is_string($dsn) || !str_starts_with($dsn, 'mysql:')) throw new RuntimeException('Disposable MySQL connection required.');
+// This fixture owns a fresh schema; its scoped account need not enter the CI
+// runner's unrelated initial schema before creating the owned one.
+$dsn = 'mysql:' . implode(';', array_filter(explode(';', substr($dsn, 6)), static fn(string $part): bool => !str_starts_with($part, 'dbname=')));
+$database = new PDO($dsn, getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => false]);
 $schema = 'cache_null_' . bin2hex(random_bytes(8));
 $created = false;
 function db_fetch_row_prepared(string $sql, array $parameters): array {

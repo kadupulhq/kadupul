@@ -40,15 +40,21 @@ test('cache fixture uses configured nonempty credentials when no administrator o
     $user = 'cache_fixture_' . bin2hex(random_bytes(8));
     $password = bin2hex(random_bytes(24));
     $account = $database->quote($user) . "@'%'";
+    $context = 'cache_fixture_context_' . bin2hex(random_bytes(8));
     $created = false;
+    $contextCreated = false;
     try {
         $database->exec('CREATE USER ' . $account . ' IDENTIFIED BY ' . $database->quote($password));
         $created = true;
         $database->exec('GRANT ALL ON `cache_null_%`.* TO ' . $account);
+        $database->exec('CREATE DATABASE `' . $context . '`');
+        $contextCreated = true;
         $environment = getenv();
         unset($environment['KADUPUL_TEST_MYSQL_ADMIN_USER'], $environment['KADUPUL_TEST_MYSQL_ADMIN_PASSWORD']);
         $environment['KADUPUL_TEST_MYSQL_USER'] = $user;
         $environment['KADUPUL_TEST_MYSQL_PASSWORD'] = $password;
+        $parts = array_filter(explode(';', substr($environment['KADUPUL_TEST_MYSQL_DSN'], 6)), static fn(string $part): bool => !str_starts_with($part, 'dbname='));
+        $environment['KADUPUL_TEST_MYSQL_DSN'] = 'mysql:' . implode(';', $parts) . ';dbname=' . $context;
         $root = dirname(__DIR__, 4);
         $process = proc_open([PHP_BINARY, $root . '/tests/fixtures/poller-cache-null-native.php', 'null-host'], [1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, $environment);
         expect(is_resource($process))->toBeTrue();
@@ -60,6 +66,7 @@ test('cache fixture uses configured nonempty credentials when no administrator o
         $state = json_decode($output, true, 16, JSON_THROW_ON_ERROR);
         expect($state['record']['snmp_username'])->toBe('')->and(str_starts_with($state['database_actor'], $user . '@'))->toBeTrue();
     } finally {
+        if ($contextCreated) $database->exec('DROP DATABASE `' . $context . '`');
         if ($created) $database->exec('DROP USER ' . $account);
     }
 });
