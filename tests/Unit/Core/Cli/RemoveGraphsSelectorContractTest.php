@@ -9,10 +9,11 @@ namespace RemoveGraphsSelectorContractTest;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-$root = dirname(__DIR__, 4);
+// Characterize the frozen pre-migration oracle; live adapter/command coverage is
+// in tests/Symfony/RemoveGraphsCommandTest.php and DbalGraphRemovalCatalogTest.php.
 
 /**
- * Run the real selection block of cli/remove_graphs.php for one invocation and
+ * Run the frozen original selection block for one invocation and
  * report what it decided, without a database. The block is taken from the file
  * so the help below is checked against the behaviour, not against a copy.
  *
@@ -24,7 +25,7 @@ $root = dirname(__DIR__, 4);
  */
 function selection_outcome(array $selectors, $all = false, $list = false)
 {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/tests/Fixtures/legacy-cli/remove_graphs.php');
     expect($source)->not->toBeFalse();
 
     $start = strpos($source, "\$sql_where  = 'WHERE gl.id > 0';");
@@ -135,7 +136,7 @@ test('--all ignores the other selectors', function () {
  */
 function rendered_help()
 {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/tests/Fixtures/legacy-cli/remove_graphs.php');
     expect($source)->not->toBeFalse();
 
     $functions = '';
@@ -247,7 +248,7 @@ test('the help does not call --list the only selectorless mode', function () {
  */
 function parsed_selection(array $argv)
 {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/tests/Fixtures/legacy-cli/remove_graphs.php');
     expect($source)->not->toBeFalse();
 
     // The spec and the mapping loop, taken from the file rather than retyped.
