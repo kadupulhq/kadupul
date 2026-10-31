@@ -553,8 +553,8 @@ def main():
         failures['missing-tree-check-' + str(index)] = 'Incomplete Symfony integration checks'
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
     failures['missing-selected-runner-check'] = 'Incomplete Symfony integration'
-    for source in ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
-                   'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']:
+    from coverage_support import http_coverage_sources
+    for source in http_coverage_sources(Path(__file__).resolve().parents[2]):
         failures['missing-runner-registration-' + source] = 'Integration test source differs'
         failures['stale-runner-registration-' + source] = 'Integration test source differs'
     for source in ['tests/Symfony/console_home_http.py', 'tests/Symfony/console_browser_probe.cjs', 'include/js/console-home.js', 'templates/platform/console_home_body.html.twig', 'tests/Symfony/permission_denied_scenarios.py', 'tests/Symfony/plugin_menu_scenarios.py']:
