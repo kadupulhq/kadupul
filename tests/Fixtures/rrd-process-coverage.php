@@ -5,7 +5,7 @@
 
 // Loaded only when the parent PHPUnit run is collecting real coverage.
 $coverageRoot = dirname(__DIR__, 2);
-if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE') || defined('CONSOLE_HANDOFF_TEST_COVERAGE')) {
+if (defined('POLLER_OUTPUT_TYPE_TEST_COVERAGE') || defined('LEGACY_COMMAND_OUTPUT_TEST_COVERAGE') || defined('AUDIT_TRAIL_TEST_COVERAGE') || defined('SYMFONY_SESSION_TEST_COVERAGE') || defined('DATA_INPUT_LIST_TEST_COVERAGE') || defined('UTILITY_LOG_TEST_COVERAGE') || defined('MEMBERSHIP_EPOCH_TEST_COVERAGE') || (defined('GROUP_COPY_TEST_COVERAGE') && !defined('GROUP_COPY_UNIT_TEST_COVERAGE')) || defined('USER_COPY_TEST_COVERAGE') || defined('CONSOLE_HANDOFF_TEST_COVERAGE') || defined('BROWSER_REALM_DENIAL_TEST_COVERAGE')) {
     require_once $coverageRoot . '/include/vendor/autoload.php';
     // Symfony's module suite uses the application's PHPUnit 11 / code-coverage
     // 10 stack. Child reports are serialized into that parent process, so they
@@ -532,6 +532,23 @@ if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
         $coverageFilter->includeFile($coverageRoot . '/' . $file);
     }
 }
+if (defined('BROWSER_REALM_DENIAL_TEST_COVERAGE')) {
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+}
+if (defined('RRD_TEST_ADDITIONAL_COVERAGE_COPIES')) {
+    foreach (RRD_TEST_ADDITIONAL_COVERAGE_COPIES as $additionalCoverageCopy => $additionalCoverageSource) {
+        if (!is_string($additionalCoverageCopy) || !is_string($additionalCoverageSource) || !is_file($additionalCoverageCopy) || !is_file($additionalCoverageSource)) {
+            throw new RuntimeException('Additional native source path is unavailable');
+        }
+        $additionalCopyHash = hash_file('sha256', $additionalCoverageCopy);
+        $additionalSourceHash = hash_file('sha256', $additionalCoverageSource);
+        if ($additionalCopyHash === false || $additionalSourceHash === false || !hash_equals($additionalSourceHash, $additionalCopyHash)) {
+            throw new RuntimeException('Additional native source copy differs before measurement');
+        }
+        $coverageFilter->includeFile($additionalCoverageCopy);
+    }
+    unset($additionalCoverageCopy, $additionalCoverageSource, $additionalCopyHash, $additionalSourceHash);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -580,6 +597,36 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
             // Both filter APIs now report only canonical paths. No global
             // temporary manifest or deferred source restoration is needed.
 
+        }
+        if (defined('RRD_TEST_ADDITIONAL_COVERAGE_COPIES')) {
+            $mapping = array();
+            foreach (RRD_TEST_ADDITIONAL_COVERAGE_COPIES as $copy => $source) {
+                $copyHash = hash_file('sha256', $copy);
+                $sourceHash = hash_file('sha256', $source);
+                if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
+                    throw new RuntimeException('Additional native source copy changed while measuring coverage');
+                }
+                $copyPath = realpath($copy);
+                $sourcePath = realpath($source);
+                if ($copyPath === false || $sourcePath === false) {
+                    throw new RuntimeException('Additional native source path is unavailable');
+                }
+                $mapping[$copyPath] = $sourcePath;
+                $childCoverage->getData(true)->renameFile($copyPath, $sourcePath);
+            }
+            // Both installed filter APIs preserve the complete filter. Only
+            // hash-verified native copies change their canonical filenames.
+            $canonicalFilter = new SebastianBergmann\CodeCoverage\Filter();
+            foreach ($childCoverage->filter()->files() as $file) {
+                $canonicalFilter->includeFile($mapping[$file] ?? $file);
+            }
+            $canonicalCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
+                (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($canonicalFilter),
+                $canonicalFilter
+            );
+            $canonicalCoverage->setData($childCoverage->getData(true));
+            $canonicalCoverage->setTests($childCoverage->getTests());
+            $childCoverage = $canonicalCoverage;
         }
         $serializedCoverage = serialize($childCoverage);
         if (file_put_contents($childCoverageFile, $serializedCoverage) !== strlen($serializedCoverage)) {

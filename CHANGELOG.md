@@ -6,11 +6,11 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Share the authenticated native browser-worker transport across Symfony adapters, retaining read-only console admission and adding POST-only mutation admission with a bounded private command pipe. Keep handoff metadata out of the native settings globals during bootstrap.
 - Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
 
 - Bound Windows RRDtool one-shot commands by the command/poller deadline and prevent large input/output deadlocks using temporary file handles. Windows now requires writable temporary storage (#782).
 - Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.
-
 
 - Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
