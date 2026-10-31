@@ -212,7 +212,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
-    'lib/auth.php' => '816375f3318417cda3d954967198f9ec5a117e9e7a3bdf86c0e51b26d3d4d125',
+    'lib/auth.php' => '3c2bda4e24227bc6abf25d375f2c8348c70208ae539ebcee3ee76fae033f2211',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '54b0ce28240fac51fb0faa0df442b85610fdfbe87fb4dbc84fc484d09370eade',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
@@ -221,7 +221,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'bcb7f0ee1a504614473e80d9428f9b540d37b58bd0c933bb4b3921a59a2229bb',
+    'config/services.yaml' => '950c89d47d016e4c8bbf1c783bd4afec93cb35203179d2fcabbe5dd48aa5df56',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter

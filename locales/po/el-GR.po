@@ -590,7 +590,7 @@ msgstr "Πρότυπο"
 #: data_debug.php:1114 data_sources.php:1712 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3991 lib/auth.php:4040
+#: lib/api_automation.php:450 lib/auth.php:3994 lib/auth.php:4043
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -621,8 +621,8 @@ msgstr "Οποιοδήποτε"
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3994
-#: lib/auth.php:4043 lib/auth.php:4089 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3997
+#: lib/auth.php:4046 lib/auth.php:4092 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -845,11 +845,11 @@ msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνή�
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: auth_login.php:119 lib/auth.php:4405 lib/auth.php:4411 lib/auth.php:4501
-#: lib/auth.php:4510 lib/auth.php:4557 lib/auth.php:4582 lib/auth.php:4605
-#: lib/auth.php:4645 lib/auth.php:4657 lib/auth.php:4680 lib/auth.php:4803
-#: lib/auth.php:4823 lib/auth.php:5035 lib/auth.php:5077 lib/auth.php:5087
-#: lib/auth.php:5103 lib/auth.php:5117 lib/auth.php:5155
+#: auth_login.php:119 lib/auth.php:4408 lib/auth.php:4414 lib/auth.php:4504
+#: lib/auth.php:4513 lib/auth.php:4560 lib/auth.php:4585 lib/auth.php:4608
+#: lib/auth.php:4648 lib/auth.php:4660 lib/auth.php:4683 lib/auth.php:4806
+#: lib/auth.php:4826 lib/auth.php:5038 lib/auth.php:5080 lib/auth.php:5090
+#: lib/auth.php:5106 lib/auth.php:5120 lib/auth.php:5158
 msgid "Access Denied!  Login Failed."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
@@ -891,13 +891,13 @@ msgstr "Εισαγάγετε το όνομα χρήστη και τον κωδι
 msgid "Password"
 msgstr "Κωδικός"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1044
-#: lib/auth.php:1066 lib/auth.php:1076 lib/auth.php:1081 user_admin.php:2124
+#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1047
+#: lib/auth.php:1069 lib/auth.php:1079 lib/auth.php:1084 user_admin.php:2124
 msgid "Local"
 msgstr "Τοπικό"
 
-#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1077
-#: lib/auth.php:1082
+#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1080
+#: lib/auth.php:1085
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -4742,7 +4742,7 @@ msgstr "Πρέπει να είστε συνδεδεμένοι για να απο
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Πρέπει να είστε συνδεδεμένοι για να αποκτήσετε πρόσβαση σε αυτή την περιοχή του Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5657
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5660
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Σύνδεση Ξανά"
@@ -11512,7 +11512,7 @@ msgstr "Δεν είναι επάνω"
 msgid "Recovering"
 msgstr "αναληπτικό"
 
-#: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3099 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4494 lib/rrd.php:4506 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11754,122 +11754,122 @@ msgstr "Δεν υπάρχει διαθεσιμότητα Ping ή SNMP"
 msgid "New Branch"
 msgstr "Νέο υποκατάστημα"
 
-#: lib/auth.php:1083
+#: lib/auth.php:1086
 msgid "Web Basic"
 msgstr "Web Basic"
 
-#: lib/auth.php:2925
+#: lib/auth.php:2928
 msgid "Device:(Hide Disabled)"
 msgstr "Η συσκευή είναι απενεργοποιημένη"
 
-#: lib/auth.php:2943 lib/auth.php:2945 lib/auth.php:2951 lib/auth.php:2953
+#: lib/auth.php:2946 lib/auth.php:2948 lib/auth.php:2954 lib/auth.php:2956
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr "Γράφημα:(%s%s)"
 
-#: lib/auth.php:2966 lib/auth.php:2972 lib/auth.php:3039 lib/auth.php:3041
-#: lib/auth.php:3045 lib/auth.php:3047
+#: lib/auth.php:2969 lib/auth.php:2975 lib/auth.php:3042 lib/auth.php:3044
+#: lib/auth.php:3048 lib/auth.php:3050
 #, php-format
 msgid "Device:(%s%s)"
 msgstr "Συσκευή:(%s%s)"
 
-#: lib/auth.php:2980 lib/auth.php:2986 lib/auth.php:3055 lib/auth.php:3057
-#: lib/auth.php:3061 lib/auth.php:3063
+#: lib/auth.php:2983 lib/auth.php:2989 lib/auth.php:3058 lib/auth.php:3060
+#: lib/auth.php:3064 lib/auth.php:3066
 #, php-format
 msgid "Template:(%s%s)"
 msgstr "Πρότυπο:(%s%s)"
 
-#: lib/auth.php:2993
+#: lib/auth.php:2996
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "Γράφημα+Συσκευή+Πρότυπο:(%s%s)"
 
-#: lib/auth.php:3030 lib/auth.php:3032
+#: lib/auth.php:3033 lib/auth.php:3035
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Συσκευή+πρότυπο:(%s%s)"
 
-#: lib/auth.php:3076 lib/auth.php:3083 lib/auth.php:3092
+#: lib/auth.php:3079 lib/auth.php:3086 lib/auth.php:3095
 msgid "Restricted By: "
 msgstr "Περιορισμένη"
 
-#: lib/auth.php:3080
+#: lib/auth.php:3083
 msgid "Granted By: "
 msgstr "Χορηγείται από:"
 
-#: lib/auth.php:3087
+#: lib/auth.php:3090
 msgid "Granted"
 msgstr "Χορήγηση"
 
-#: lib/auth.php:3089 lib/auth.php:3094
+#: lib/auth.php:3092 lib/auth.php:3097
 msgid "Restricted"
 msgstr "Περιορισμένη"
 
-#: lib/auth.php:3328 lib/auth.php:3363
+#: lib/auth.php:3331 lib/auth.php:3366
 msgid "Branch:"
 msgstr "Κλαδί:"
 
-#: lib/auth.php:3337 lib/auth.php:3371 lib/html_tree.php:949
+#: lib/auth.php:3340 lib/auth.php:3374 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr "设备："
 
-#: lib/auth.php:4309 lib/auth.php:4400
+#: lib/auth.php:4312 lib/auth.php:4403
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση, επικοινωνήστε με τον διαχειριστή του Kadupul."
 
-#: lib/auth.php:4359
+#: lib/auth.php:4362
 msgid "Access Denied!  Login Disabled."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
-#: lib/auth.php:4434
+#: lib/auth.php:4437
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Ο βασικός έλεγχος ταυτότητας Web έχει ρυθμιστεί, αλλά δεν μεταβιβάστηκε κανένα όνομα χρήστη από το διακομιστή ιστού. Βεβαιωθείτε ότι έχετε ενεργοποιήσει τον έλεγχο ταυτότητας στον διακομιστή ιστού."
 
-#: lib/auth.php:4450
+#: lib/auth.php:4453
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "Το %s έχει πιστοποιηθεί από τον διακομιστή Web, αλλά και οι δύο χρήστες και οι χρήστες δεν έχουν οριστεί στο Kadupul."
 
-#: lib/auth.php:4617 lib/auth.php:4816
+#: lib/auth.php:4620 lib/auth.php:4819
 msgid "Access Denied!  No password provided by user."
 msgstr "Δεν επιτρέπεται η πρόσβαση! Δεν παρέχεται κωδικός πρόσβασης από τον χρήστη."
 
-#: lib/auth.php:4789 lib/auth.php:5864
+#: lib/auth.php:4792 lib/auth.php:5867
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Δεν επιτρέπεται η πρόσβαση!  Το αναγνωριστικό χρήστη προτύπου %s δεν υπάρχει.  Επικοινωνήστε με τον διαχειριστή σας."
 
-#: lib/auth.php:4797
+#: lib/auth.php:4800
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5150
+#: lib/auth.php:5153
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ο διαχειριστής του Kadupul έχει επιβάλει σύνθετους κωδικούς πρόσβασης για σύνδεση και ο τρέχων κωδικός πρόσβασης Kadupul δεν ταιριάζει με τις νέες απαιτήσεις. Επομένως, πρέπει να αλλάξετε τον κωδικό πρόσβασής σας τώρα."
 
-#: lib/auth.php:5190
+#: lib/auth.php:5193
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Ο κωδικός πρόσβασης πρέπει να είναι τουλάχιστον% d χαρακτήρες!"
 
-#: lib/auth.php:5196
+#: lib/auth.php:5199
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν αριθμητικό χαρακτήρα!"
 
-#: lib/auth.php:5200
+#: lib/auth.php:5203
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ο κωδικός πρόσβασής σας πρέπει να περιέχει ένα μείγμα πεζών και κεφαλαίων χαρακτήρων!"
 
-#: lib/auth.php:5206
+#: lib/auth.php:5209
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ο κωδικός σας πρέπει να περιέχει τουλάχιστον έναν ειδικό χαρακτήρα!"
 
-#: lib/auth.php:5650
+#: lib/auth.php:5653
 msgid "Kadupul Login Failure"
 msgstr "Εγγραφή Kadupul Clear"
 
-#: lib/auth.php:5950
+#: lib/auth.php:5953
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Ο έλεγχος ταυτότητας δεν είχε οριστεί προηγουμένως. Επιχειρήθηκε να οριστεί σε Τοπικό έλεγχο ταυτότητας, αλλά δεν βρέθηκε λογαριασμός διαχειριστή."
 
