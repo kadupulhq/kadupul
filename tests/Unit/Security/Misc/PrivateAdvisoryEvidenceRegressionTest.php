@@ -44,7 +44,11 @@ test('GHSA-fwmp-mq8j-4r8f: remote agent passes executable and script as distinct
 
 	// Native path-with-spaces and shell-metacharacter cases also exercise this boundary.
 	expect($body)->toContain("\$php_bin = (string) read_config_option('path_php_binary');");
-	expect($body)->toContain("@proc_open(array(\$php_bin, '-q', \$config['base_path'] . '/script_server.php', 'realtime', \$poller_id), \$cactides, \$pipes)");
+	$tokens = array_filter(token_get_all('<?php ' . $body), static function ($token) {
+		return !is_array($token) || !in_array($token[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true);
+	});
+	$compact = implode('', array_map(static function ($token) { return is_array($token) ? $token[1] : $token; }, $tokens));
+	expect($compact)->toContain("@proc_open(array(\$php_bin,'-q',\$config['base_path'].'/script_server.php','realtime',\$poller_id),\$cactides,\$pipes)");
 });
 
 test('package file writes use anchored script/resource paths and canonical validation', function () {

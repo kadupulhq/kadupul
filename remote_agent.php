@@ -443,7 +443,9 @@ function poll_for_data() {
 
 	// Validate the whole selection before acquiring a batch-owned worker.
 	if (cacti_sizeof($local_data_ids)) {
-		foreach ($local_data_ids as $local_data_id) input_validate_input_number($local_data_id);
+		foreach ($local_data_ids as $local_data_id) {
+			input_validate_input_number($local_data_id);
+		}
 	}
 
 	$i = 0;
@@ -527,10 +529,15 @@ function poll_for_data() {
 									// The old stderr pipe was discarded; do not let a batch fill it.
 									$cactides = array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'),
 										2 => array('file', PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null', 'w'));
-									$cactiphp = @proc_open(array($php_bin, '-q', $config['base_path'] . '/script_server.php', 'realtime', $poller_id), $cactides, $pipes);
-									if (is_resource($cactiphp) && isset($pipes[0], $pipes[1]) && is_resource($pipes[0]) && is_resource($pipes[1])) {
+									$cactiphp = @proc_open(array(
+										$php_bin, '-q', $config['base_path'] . '/script_server.php', 'realtime', $poller_id
+									), $cactides, $pipes);
+									if (is_resource($cactiphp) && isset($pipes[0], $pipes[1]) &&
+										is_resource($pipes[0]) && is_resource($pipes[1])) {
 										$greeting = fgets($pipes[1], 1024);
-										$using_proc_function = is_string($greeting) && str_starts_with($greeting, 'PHP Script Server has Started') && str_ends_with($greeting, "\n");
+										$using_proc_function = is_string($greeting) &&
+											str_starts_with($greeting, 'PHP Script Server has Started') &&
+											str_ends_with($greeting, "\n");
 									}
 								}
 							}
@@ -582,7 +589,11 @@ function poll_for_data() {
 					$remaining = substr($remaining, $written);
 				}
 			}
-			foreach ($pipes as $pipe) if (is_resource($pipe)) fclose($pipe);
+			foreach ($pipes as $pipe) {
+				if (is_resource($pipe)) {
+					fclose($pipe);
+				}
+			}
 			proc_close($cactiphp);
 		}
 	}
