@@ -19,7 +19,6 @@ cli/import_package.php	1	1
 cli/import_template.php	1	1
 cli/install_cacti.php	2	2
 cli/md5sum.php	3	5
-cli/poller_data_sources_reapply_names.php	1	1
 cli/poller_reindex_hosts.php	1	1
 cli/rebuild_poller_cache.php	5	9
 cli/remove_device.php	1	1
