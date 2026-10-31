@@ -13541,11 +13541,11 @@ msgstr "Sie müssen eine XML-Ausgabespalte für die Datenquelle'%s' auswählen u
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ihre Grafikvorlage hat keine Datenvorlagen in Verwendung.  Bitte korrigieren Sie Ihre Grafikvorlage."
 
-#: lib/database.php:2523
+#: lib/database.php:2527
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Die Länge des Passwortfeldes konnte nicht bestimmt werden, kann nicht fortgesetzt werden, da das Passwort beschädigt werden kann."
 
-#: lib/database.php:2530
+#: lib/database.php:2534
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Die Länge des Passwortfeldes konnte nicht geändert werden, kann nicht fortgesetzt werden, da das Passwort beschädigt werden kann."
 
