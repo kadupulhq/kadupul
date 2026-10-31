@@ -1012,7 +1012,7 @@ class Installer implements JsonSerializable
     {
         $enabled = read_config_option('install_automation_mode', true);
         log_install_debug('automation', 'automation_mode: ' . clean_up_lines($enabled));
-        if ($enabled == NULL && db_table_exists('automation_networks')) {
+        if ($enabled === NULL && db_table_exists('automation_networks')) {
             $row = db_fetch_row('SELECT id, enabled FROM automation_networks LIMIT 1');
             log_install_debug('automation', 'Network data: ' . clean_up_lines(var_export($row, true)));
             $enabled = 0;
@@ -1034,7 +1034,7 @@ class Installer implements JsonSerializable
      *         invalid value is passed */
     private function setAutomationMode($param_mode = null)
     {
-        if ($param_mode != null) {
+        if ($param_mode !== null) {
             if (!$this->setTrueFalse($param_mode, $this->automationMode, 'automation_mode')) {
                 $this->addError(Installer::STEP_PROFILE_AND_AUTOMATION, 'Automation', 'Mode', __('Failed to apply specified mode: %s', $param_mode));
             }
