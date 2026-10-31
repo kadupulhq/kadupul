@@ -553,7 +553,11 @@ def main():
         failures['missing-tree-check-' + str(index)] = 'Incomplete Symfony integration checks'
     failures['missing-legacy-page-test-hash'] = 'Integration test source differs'
     failures['missing-selected-runner-check'] = 'Incomplete Symfony integration'
-    for source in ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
+    cli_sources = ['tests/Symfony/cli_user_scenarios.py', 'tests/Symfony/cli_graph_scenarios.py']
+    cli_sources += [f'tests/Fixtures/legacy-cli/{name}.php' for name in (
+        'copy_user', 'add_perms', 'poller_graphs_reapply_names', 'repair_graphs',
+        'remove_broken_graphs', 'remove_graphs', 'add_graph_template')]
+    for source in cli_sources + ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
                    'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php']:
         failures['missing-runner-registration-' + source] = 'Integration test source differs'
         failures['stale-runner-registration-' + source] = 'Integration test source differs'
