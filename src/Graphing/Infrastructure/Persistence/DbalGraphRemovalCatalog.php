@@ -14,8 +14,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Kadupul\Graphing\Application\Port\GraphRemovalCatalog;
 use Kadupul\Graphing\Application\Port\GraphTitle;
-use Kadupul\Graphing\Application\Port\RemovalChoice;
-use Kadupul\Graphing\Application\Port\RemovalDevice;
+use Kadupul\Graphing\Application\Port\CatalogChoice;
+use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Graphing\Domain\GraphRemovalFilter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
@@ -66,7 +66,7 @@ final readonly class DbalGraphRemovalCatalog implements GraphRemovalCatalog
             . ($hostTemplateIds === [] ? '' : ' WHERE ht.id IN (?)') . '
             ORDER BY h.id', $hostTemplateIds === [] ? [] : [$hostTemplateIds], $hostTemplateIds === [] ? [] : [ArrayParameterType::INTEGER]);
 
-        return array_map(static fn(array $row): RemovalDevice => new RemovalDevice(self::int($row[0]), self::text($row[1]), self::int($row[3]), self::text($row[2])), $rows);
+        return array_map(static fn(array $row): CatalogDevice => new CatalogDevice(self::int($row[0]), self::text($row[1]), self::int($row[3]), self::text($row[2])), $rows);
     }
 
     #[\Override]
@@ -74,7 +74,7 @@ final readonly class DbalGraphRemovalCatalog implements GraphRemovalCatalog
     {
         $rows = $this->connection($database)->fetchAllNumeric('SELECT id, name FROM host_template ORDER BY id');
 
-        return array_map(static fn(array $row): RemovalChoice => new RemovalChoice(self::int($row[0]), self::text($row[1])), $rows);
+        return array_map(static fn(array $row): CatalogChoice => new CatalogChoice(self::int($row[0]), self::text($row[1])), $rows);
     }
 
     #[\Override]
@@ -88,7 +88,7 @@ final readonly class DbalGraphRemovalCatalog implements GraphRemovalCatalog
         // A graph template attached to several device templates is listed once.
         $choices = [];
         foreach ($rows as $row) {
-            $choices[self::int($row[0])] ??= new RemovalChoice(self::int($row[0]), self::text($row[1]));
+            $choices[self::int($row[0])] ??= new CatalogChoice(self::int($row[0]), self::text($row[1]));
         }
 
         return array_values($choices);

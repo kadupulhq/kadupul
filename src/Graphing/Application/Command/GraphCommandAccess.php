@@ -17,8 +17,9 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
 /**
  * Target database, operator and audit for the command-line graph tools. The
- * web pages for the same actions, graphs.php and graphs_new.php, need realm 5;
- * the operator additionally needs console access (realm 8), which actor() checks.
+ * web pages for the same actions need realm 5 (graphs.php and graphs_new.php) or
+ * realm 3 (host.php), see ManagedArea; the operator additionally needs console
+ * access (realm 8), which actor() checks.
  */
 final readonly class GraphCommandAccess
 {
@@ -41,9 +42,10 @@ final readonly class GraphCommandAccess
      * because it reads the same rows.
      *
      * @param ?string $operator account to act as; null means the admin_user setting
+     * @param ManagedArea $area the realm the matching web page needs besides console access
      * @throws GraphManagementDenied
      */
-    public function select(string $action, bool $local, ?string $operator, bool $apply): GraphCommandScope
+    public function select(string $action, bool $local, ?string $operator, bool $apply, ManagedArea $area = ManagedArea::Graphs): GraphCommandScope
     {
         $database = !$local && $this->topology->isRemoteCollector() ? OperatorDatabase::Main : OperatorDatabase::Local;
         try {
@@ -53,7 +55,7 @@ final readonly class GraphCommandAccess
             }
             $this->operator->select($operator, $database);
             $actor = $this->operator->actor();
-            if ($actor === null || !$this->operator->canManageGraphs($actor)) {
+            if ($actor === null || !($area === ManagedArea::Devices ? $this->operator->canManageDevices($actor) : $this->operator->canManageGraphs($actor))) {
                 throw new GraphManagementDenied($actor?->id, $database);
             }
         } catch (GraphManagementDenied $denied) {

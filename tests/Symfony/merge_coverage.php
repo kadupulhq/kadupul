@@ -1060,7 +1060,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Application/Command/ListRemovalChoices.php',
         'src/Graphing/Infrastructure/Persistence/DbalGraphRemovalCatalog.php',
         'src/Graphing/Infrastructure/Symfony/RemoveGraphsCommand.php',
-        'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php',
+        'cli/add_graph_template.php',
+        'bin/legacy-graph-template-attach.php',
+        'src/Graphing/Application/Command/AttachGraphTemplate.php',
+        'src/Graphing/Application/Command/ListAttachmentChoices.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateAssignmentCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateCommand.php',
+        'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';

@@ -14,8 +14,8 @@ use Kadupul\Graphing\Application\Command\GraphCommandAccess;
 use Kadupul\Graphing\Application\Command\ListRemovalChoices;
 use Kadupul\Graphing\Application\Command\RemoveGraphs;
 use Kadupul\Graphing\Application\Port\GraphTitle;
-use Kadupul\Graphing\Application\Port\RemovalChoice;
-use Kadupul\Graphing\Application\Port\RemovalDevice;
+use Kadupul\Graphing\Application\Port\CatalogChoice;
+use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Graphing\Infrastructure\Symfony\RemoveGraphsCommand;
 use Kadupul\Graphing\Infrastructure\Symfony\RemoveGraphsLegacyArguments;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
@@ -54,9 +54,9 @@ final class RemoveGraphsCommandTest extends TestCase
     {
         return new InMemoryGraphRemoval(
             [new GraphTitle(10, 'Core traffic'), new GraphTitle(11, 'Edge traffic')],
-            [new RemovalDevice(3, 'core1', 2, 'Core router')],
-            [new RemovalChoice(2, 'Router')],
-            [new RemovalChoice(5, 'Traffic'), new RemovalChoice(6, 'Errors')],
+            [new CatalogDevice(3, 'core1', 2, 'Core router')],
+            [new CatalogChoice(2, 'Router')],
+            [new CatalogChoice(5, 'Traffic'), new CatalogChoice(6, 'Errors')],
         );
     }
 
