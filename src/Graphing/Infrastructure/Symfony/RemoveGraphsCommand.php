@@ -15,8 +15,8 @@ use Kadupul\Graphing\Application\Command\GraphRemovalReport;
 use Kadupul\Graphing\Application\Command\ListRemovalChoices;
 use Kadupul\Graphing\Application\Command\RemoveGraphs;
 use Kadupul\Graphing\Application\Port\GraphTitle;
-use Kadupul\Graphing\Application\Port\RemovalChoice;
-use Kadupul\Graphing\Application\Port\RemovalDevice;
+use Kadupul\Graphing\Application\Port\CatalogChoice;
+use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Graphing\Domain\GraphRemovalFilter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
@@ -123,11 +123,11 @@ final readonly class RemoveGraphsCommand
     }
 
     /**
-     * @param list<RemovalDevice> $devices
+     * @param list<CatalogDevice> $devices
      */
     private function devices(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, RemoveGraphsLegacyArguments $legacy, array $devices): int
     {
-        $rows = array_map(static fn(RemovalDevice $device): array => ['id' => $device->id, 'hostname' => $device->hostname, 'host_template_id' => $device->hostTemplateId, 'description' => $device->description], $devices);
+        $rows = array_map(static fn(CatalogDevice $device): array => ['id' => $device->id, 'hostname' => $device->hostname, 'host_template_id' => $device->hostTemplateId, 'description' => $device->description], $devices);
         if ($mode === OutputMode::Human) {
             $io->table(['ID', 'Hostname', 'Template', 'Description'], array_map(array_values(...), $rows));
 
@@ -138,12 +138,12 @@ final readonly class RemoveGraphsCommand
     }
 
     /**
-     * @param callable(list<RemovalChoice>): list<string> $lines
-     * @param list<RemovalChoice> $templates
+     * @param callable(list<CatalogChoice>): list<string> $lines
+     * @param list<CatalogChoice> $templates
      */
     private function templates(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $key, string $title, callable $lines, array $templates): int
     {
-        $rows = array_map(static fn(RemovalChoice $template): array => ['id' => $template->id, 'name' => $template->name], $templates);
+        $rows = array_map(static fn(CatalogChoice $template): array => ['id' => $template->id, 'name' => $template->name], $templates);
         if ($mode === OutputMode::Human) {
             $io->section($title);
             $io->table(['ID', 'Name'], array_map(array_values(...), $rows));

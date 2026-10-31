@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Application\Port;
 
-/** A device template or graph template as the --list-* modes print it. */
-final readonly class RemovalChoice
+/** A device template or graph template as the --list-* modes of the graph tools print it. */
+final readonly class CatalogChoice
 {
     public function __construct(public int $id, public string $name) {}
 }

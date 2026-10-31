@@ -386,6 +386,12 @@ services:
     Kadupul\Graphing\Application\Command\ListRemovalChoices: ~
     Kadupul\Graphing\Application\Port\GraphRemovalCatalog:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphRemovalCatalog
+    Kadupul\Graphing\Application\Command\AttachGraphTemplate: ~
+    Kadupul\Graphing\Application\Command\ListAttachmentChoices: ~
+    Kadupul\Graphing\Application\Port\GraphTemplateAssignmentCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphTemplateAssignmentCatalog
+    Kadupul\Graphing\Application\Port\GraphTemplateAttacher:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGraphTemplateAttacher
     Kadupul\Graphing\Application\Port\GraphItemRepairs:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphItemRepairs
     # Public so poller_boost.php can reach it through the kernel container when the

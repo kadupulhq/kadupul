@@ -23,6 +23,9 @@ BROKEN_SHIM = 'cli/remove_broken_graphs.php'
 BROKEN_FIRST_GRAPH = 4000000001
 REMOVE_ORIGINAL = 'tests/Fixtures/legacy-cli/remove_graphs.php'
 REMOVE_SHIM = 'cli/remove_graphs.php'
+ADD_TEMPLATE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_graph_template.php'
+ADD_TEMPLATE_SHIM = 'cli/add_graph_template.php'
+ADD_TEMPLATE_UTILITY = 'Kadupul Add Graph Template Utility'
 # Every id the removal cases print is fixed (below 16777215, the largest device template id), because the original and the shim each start from a fresh seed.
 REMOVE_FIRST = 9000001
 # BSD stty says "stdin isn't a terminal", GNU stty "'standard input': Inappropriate ioctl for device".
@@ -423,6 +426,7 @@ def remove_reset(harness):
         f'DELETE FROM data_template_rrd WHERE local_data_id >= {REMOVE_FIRST}; '
         f'DELETE FROM data_template_data WHERE local_data_id >= {REMOVE_FIRST}; '
         f'DELETE FROM data_local WHERE id >= {REMOVE_FIRST}; '
+        f'DELETE FROM host_graph WHERE host_id >= {REMOVE_FIRST}; '
         f'DELETE FROM host_template_graph WHERE host_template_id >= {REMOVE_FIRST}; '
         f'DELETE FROM host WHERE id >= {REMOVE_FIRST}; '
         f'DELETE FROM host_template WHERE id >= {REMOVE_FIRST}; '
@@ -540,18 +544,120 @@ def verify_remove_differences(harness, check):
     remove_reset(harness)
 
 
+def add_template_seed(harness):
+    """The removal seed plus one association, device 1 with graph template 1."""
+    remove_seed(harness)
+    harness.sql(f'INSERT INTO host_graph (host_id, graph_template_id) VALUES ({REMOVE_FIRST}, {REMOVE_FIRST})')
+
+
+def add_template_rows(harness):
+    """The associations of the seeded devices and how many graphs they have, which automation may add to."""
+    return harness.sql(f"SELECT (SELECT GROUP_CONCAT(CONCAT(host_id, '-', graph_template_id) ORDER BY host_id, graph_template_id) FROM host_graph WHERE host_id >= {REMOVE_FIRST}), "
+                       f'(SELECT COUNT(*) FROM graph_local WHERE host_id >= {REMOVE_FIRST})')
+
+
+def add_template_cases():
+    a, b, c = REMOVE_FIRST, REMOVE_FIRST + 1, REMOVE_FIRST + 2
+    return [
+        ('add template to a device', [f'--host-id={a}', f'--graph-template-id={b}']),
+        ('add template to another device', [f'--host-id={c}', f'--graph-template-id={a}']),
+        ('add template twice is refused', [f'--host-id={a}', f'--graph-template-id={a}']),
+        ('add template with the debug flag', ['-d', f'--host-id={b}', f'--graph-template-id={a}']),
+        ('add template with float-written ids', [f'--host-id={b}e0', f'--graph-template-id={a}.0']),
+        ('add template with a padded template id', [f'--host-id={b}', f'--graph-template-id= {a}']),
+        ('add template last id wins', [f'--host-id=x', f'--host-id={b}', f'--graph-template-id={a}']),
+        ('add template quiet changes nothing for an add', [f'--host-id={b}', f'--graph-template-id={b}', '--quiet']),
+        ('add template bad host id', ['--host-id=abc', f'--graph-template-id={a}']),
+        ('add template bare host id', ['--host-id', f'--graph-template-id={a}']),
+        ('add template empty host id', ['--host-id=', f'--graph-template-id={a}']),
+        ('add template bad graph template id', [f'--host-id={a}', '--graph-template-id=abc']),
+        ('add template bad id stops the run', ['--host-id=abc', '--bogus']),
+        ('add template bad id stops before help', ['--graph-template-id=abc', '--help']),
+        ('add template missing host id', [f'--graph-template-id={a}']),
+        ('add template missing graph template id', [f'--host-id={a}']),
+        ('add template unknown argument', ['--bogus']),
+        ('add template unknown argument with a value', ['--bogus=1', f'--host-id={a}']),
+        ('add template a leading = is no separator', ['=1']),
+        ('add template list devices', ['--list-hosts']),
+        ('add template list devices quietly', ['--list-hosts', '--quiet']),
+        ('add template list graph templates', ['--list-graph-templates']),
+        ('add template list graph templates quietly', ['--quiet', '--list-graph-templates']),
+        ('add template list devices win', ['--list-graph-templates', '--list-hosts']),
+        ('add template list ignores a missing id', ['--list-hosts', f'--host-id={a}']),
+        ('add template list takes a value it ignores', ['--list-hosts=yes']),
+        ('add template list with a bad id', ['--list-hosts', '--host-id=abc']),
+        ('add template help', ['-h']),
+        ('add template upper help', ['-H']),
+        ('add template long help', ['--help']),
+        ('add template version', ['-v']),
+        ('add template upper version', ['-V']),
+        ('add template long version', ['--version']),
+        ('add template version takes a value it ignores', ['--version=3']),
+        ('add template no arguments', []),
+    ]
+
+
+def verify_add_template_cases(harness, check):
+    for label, arguments in add_template_cases():
+        add_template_seed(harness)
+        original = run(harness, QUIET_PHP + ADD_TEMPLATE_ORIGINAL, arguments)
+        original_rows = add_template_rows(harness)
+        add_template_seed(harness)
+        native = run(harness, QUIET_PHP + ADD_TEMPLATE_SHIM, arguments)
+        native_rows = add_template_rows(harness)
+        # Only an argument error loses the version line above the help; the rest must match byte for byte.
+        expected = without_utility(normalise(original['stdout']), ADD_TEMPLATE_UTILITY) if native['stdout'].startswith('ERROR: Invalid Argument') else normalise(original['stdout'])
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+        check(STTY.sub('', normalise(original['stderr'])) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same associations and graphs')
+    remove_reset(harness)
+
+
+def verify_add_template_differences(harness, check):
+    a, b = REMOVE_FIRST, REMOVE_FIRST + 1
+    unknown = REMOVE_FIRST + 900
+    add_template_seed(harness)
+    # db_fetch_cell() returns false for no row and the script tested isset(), so an unknown id passed and the script wrote an orphan row.
+    original = run(harness, QUIET_PHP + ADD_TEMPLATE_ORIGINAL, [f'--host-id={unknown}', f'--graph-template-id={a}'])
+    check(original['exit'] == 0 and original['stdout'].startswith('Success: Graph Template associated'), 'the original accepted an unknown device')
+    check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id = {unknown}').strip() == '1', 'the original wrote a row for an unknown device')
+    harness.sql(f'DELETE FROM host_graph WHERE host_id = {unknown}')
+    for label, arguments, expected in (('an unknown device', [f'--host-id={unknown}', f'--graph-template-id={a}'], f'ERROR: Unknown Host Id ({unknown})\n'),
+                                       ('an unknown graph template', [f'--host-id={a}', f'--graph-template-id={unknown}'], f'ERROR: Unknown Graph Template Id ({unknown})\n')):
+        refused = run(harness, ADD_TEMPLATE_SHIM, arguments)
+        check(refused['exit'] == 1 and refused['stdout'] == expected, f'{label} is refused')
+    check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id = {unknown} OR graph_template_id = {unknown}').strip() == '0', 'a refused association writes nothing')
+    # The web page for this is host.php, realm 3; graph management alone is not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    try:
+        for arguments in ([f'--host-id={b}', f'--graph-template-id={b}'], ['--list-hosts'], ['--list-graph-templates']):
+            denied = run(harness, ADD_TEMPLATE_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without device management is refused")
+        check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id = {b}').strip() == '0', 'a refused association writes nothing for the device')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    report = run(harness, 'bin/console', ['kadupul:device:add-graph-template', f'--host-id={b}', f'--graph-template-id={b}', '--json'])
+    check(report['exit'] == 0 and '"status":"attached"' in report['stdout'], 'bin/console associates and prints json')
+    invalid = run(harness, 'bin/console', ['kadupul:device:add-graph-template', '--host-id=abc'])
+    check(invalid['exit'] == 2, 'bin/console treats a bad id as invalid input')
+    remove_reset(harness)
+
+
 def verify_graph_parity(harness, check):
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, REPAIR_ORIGINAL)
     install_original(harness, BROKEN_ORIGINAL)
     install_original(harness, REMOVE_ORIGINAL)
+    install_original(harness, ADD_TEMPLATE_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
     saved = harness.sql("SELECT value FROM settings WHERE name='admin_user'")
     try:
         # With no --as the shim acts as settings.admin_user, which needs
         # Console Access (8) and Graphs (5).
         harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}'); "
-                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5)')
+                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},3)')
         verify_titles_cases(harness, check)
         verify_titles_differences(harness, check)
         verify_repair_cases(harness, check)
@@ -560,6 +666,8 @@ def verify_graph_parity(harness, check):
         verify_broken_differences(harness, check)
         verify_remove_cases(harness, check)
         verify_remove_differences(harness, check)
+        verify_add_template_cases(harness, check)
+        verify_add_template_differences(harness, check)
     finally:
         titles_reset(harness)
         repair_reset(harness)

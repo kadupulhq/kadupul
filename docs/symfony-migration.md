@@ -1815,6 +1815,29 @@ Known differences from `cli/remove_graphs.php`:
 - Under `bin/console`, `--list` with `--force` exits 2. The shim keeps the
   original's message and exits 1.
 
+`php bin/console kadupul:device:add-graph-template --host-id=ID --graph-template-id=ID`
+associates a graph template with a device. A worker writes the `host_graph` row,
+runs `automation_hook_graph_template()` and the `add_graph_template_to_host`
+plugin hook, as the original did. `--list-hosts` and `--list-graph-templates`
+print the ids. It needs the Console Access and Devices realms (realm 3, the one
+`host.php` needs), and an association is audited. `--json` prints `status`,
+`database`, `device` and `graph_template`.
+
+Known differences from `cli/add_graph_template.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it.
+- An unknown device or graph template is refused with the original's
+  `Unknown Host Id` or `Unknown Graph Template Id` line. The original tested the
+  result of `db_fetch_cell()`, which is `false` for no row, with `isset()`, so it
+  accepted any id and wrote an orphan `host_graph` row.
+- Ids are bound instead of concatenated into SQL. A numeric id written as `7e0`
+  still finds device 7, and `1.5` still finds none.
+- An argument error prints the error and help without the version line.
+- `--quiet` reaches `bin/console` as `--no-headers`, because the console already
+  defines `--quiet`. Under `bin/console` a bad id exits 2; the shim keeps the
+  original's message and exits 1.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or

@@ -12,8 +12,8 @@ namespace Kadupul\Tests\Fixtures;
 use Kadupul\Graphing\Application\Port\GraphRemovalCatalog;
 use Kadupul\Graphing\Application\Port\GraphRemover;
 use Kadupul\Graphing\Application\Port\GraphTitle;
-use Kadupul\Graphing\Application\Port\RemovalChoice;
-use Kadupul\Graphing\Application\Port\RemovalDevice;
+use Kadupul\Graphing\Application\Port\CatalogChoice;
+use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Graphing\Domain\GraphRemovalFilter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
@@ -34,9 +34,9 @@ final class InMemoryGraphRemoval implements GraphRemovalCatalog, GraphRemover
 
     /**
      * @param list<GraphTitle> $graphs
-     * @param list<RemovalDevice> $devices
-     * @param list<RemovalChoice> $deviceTemplates
-     * @param list<RemovalChoice> $graphTemplates
+     * @param list<CatalogDevice> $devices
+     * @param list<CatalogChoice> $deviceTemplates
+     * @param list<CatalogChoice> $graphTemplates
      */
     public function __construct(
         private readonly array $graphs = [],

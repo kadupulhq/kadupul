@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Application\Port;
 
-/** A device as --list-hosts prints it. */
-final readonly class RemovalDevice
+/** A device as the --list-hosts modes of the graph tools print it. */
+final readonly class CatalogDevice
 {
     public function __construct(public int $id, public string $hostname, public int $hostTemplateId, public string $description) {}
 }
