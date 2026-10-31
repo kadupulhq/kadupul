@@ -2226,8 +2226,8 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
             strstr($cols[$key]['type'], 'decimal') !== false) {
             if ($value == '') {
                 if ($cols[$key]['null'] == 'YES') {
-                    // TODO: We should make 'NULL', but there are issues that need to be addressed first
-                    $array_items[$key] = 0;
+                    // Keep missing numeric values distinct from zero and legacy false values.
+                    $array_items[$key] = ($value === '' || $value === null) ? 'NULL' : 0;
                 } elseif (str_contains($cols[$key]['extra'], 'auto_increment')) {
                     $array_items[$key] = 0;
                 } elseif ($cols[$key]['default'] == '') {
