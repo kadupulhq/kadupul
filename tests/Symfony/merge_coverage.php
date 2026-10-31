@@ -686,48 +686,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (!$reports) {
         throw new RuntimeException('Missing integration coverage reports');
     }
-    $observed = [];
-    $wrapperObserved = false;
-    foreach ($reports as $report) {
-        $data = json_decode(file_get_contents($report), true, 512, JSON_THROW_ON_ERROR);
-        if (!is_array($data['files'] ?? null) || !is_string($data['php'] ?? null)) {
-            throw new RuntimeException('Malformed integration coverage report');
-        }
-        foreach ($data['files'] as $path => $file) {
-            if (!str_starts_with($path, '/var/www/html/')) {
-                throw new RuntimeException('Unexpected integration source path');
-            }
-            $relative = substr($path, strlen('/var/www/html/'));
-            // Legacy application coverage has its own report. Never import
-            // generated configuration/cache, dependencies or installed plugins.
-            // The script server and cli/ shims are listed
-            // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php', 'cli/copy_user.php', 'cli/add_perms.php', 'bin/legacy-user-copy.php', 'bin/legacy-item-permission.php', 'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php', 'cli/repair_graphs.php', 'cli/remove_broken_graphs.php', 'bin/legacy-graph-remove.php', 'cli/remove_graphs.php', 'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php'], true)) {
-                continue;
-            }
-            $local = $root . '/' . $relative;
-            if (realpath($local) !== $local || !is_file($local)) {
-                throw new RuntimeException('Invalid integration source path');
-            }
-            if (!is_array($file) || ($file['sha256'] ?? null) !== hash_file('sha256', $local)) {
-                throw new RuntimeException('Covered source differs from checkout: ' . $relative . ' (' . $handler . ', ' . basename($report) . ')');
-            }
-            if (!is_array($file['lines'] ?? null)) {
-                throw new RuntimeException('Invalid line coverage inventory');
-            }
-            $lineCount = substr_count(file_get_contents($local), "\n") + 1;
-            foreach ($file['lines'] as $line => $hit) {
-                if (!is_int($line) || $line < 1 || $line > $lineCount || !in_array($hit, [-1, 1], true)) {
-                    throw new RuntimeException('Invalid PCOV line observation');
-                }
-                $mapped[$local][$line] = max($mapped[$local][$line] ?? -1, $hit);
-                $observed[$relative] = ($observed[$relative] ?? false) || $hit === 1;
-                if ($relative === 'lib/utility.php' && $line === $wrapperLine && $hit === 1) {
-                    $wrapperObserved = true;
-                }
-            }
-        }
-    }
+    // Required entry points must survive import before their execution is checked.
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
         'bin/legacy-console-home.php', 'index.php', 'login.php', 'lib/headers_secure.php',
         'bin/legacy-permission-denied.php', 'permission_denied.php',
@@ -1090,6 +1049,48 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $requiredPaths[] = 'include/session.php';
     }
     $requiredPaths = array_merge($requiredPaths, $legacyCallerPaths);
+    $observed = [];
+    $wrapperObserved = false;
+    foreach ($reports as $report) {
+        $data = json_decode(file_get_contents($report), true, 512, JSON_THROW_ON_ERROR);
+        if (!is_array($data['files'] ?? null) || !is_string($data['php'] ?? null)) {
+            throw new RuntimeException('Malformed integration coverage report');
+        }
+        foreach ($data['files'] as $path => $file) {
+            if (!str_starts_with($path, '/var/www/html/')) {
+                throw new RuntimeException('Unexpected integration source path');
+            }
+            $relative = substr($path, strlen('/var/www/html/'));
+            // Legacy application coverage has its own report. Never import
+            // generated configuration/cache, dependencies or installed plugins.
+            // The script server and cli/ shims are listed
+            // because only a subprocess or an HTTP request can reach their entry guards.
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, $legacyCallerPaths, true) && !in_array($relative, $requiredPaths, true) && !in_array($relative, ['bin/legacy-console-home.php', 'bin/legacy-console-menu.php', 'bin/legacy-console-handoff.php', 'bin/legacy-permission-denied.php', 'permission_denied.php', 'index.php', 'login.php', 'lib/headers_secure.php', 'include/session.php', 'bin/legacy-data-input.php', 'bin/legacy-data-input-handoff.php', 'lib/data_input_worker.php', 'lib/api_device.php', 'data_input.php', 'script_server.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php', 'links.php', 'about.php', 'color.php', 'vdef.php', 'data_source_profiles.php', 'lib/data_source_profile_integrity.php', 'bin/legacy-device-associations.php', 'bin/legacy-device-maintenance.php', 'bin/legacy-device-placement.php', 'host.php', 'automation_templates.php', 'gprint_presets.php', 'include/global.php', 'include/themes/midwinter/update_hash.php', 'cli/audit_database.php', 'bin/legacy-audit-upgrade.php', 'cli/add_tree.php', 'lib/api_tree.php', 'cli/copy_user.php', 'cli/add_perms.php', 'bin/legacy-user-copy.php', 'bin/legacy-item-permission.php', 'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php', 'cli/repair_graphs.php', 'cli/remove_broken_graphs.php', 'bin/legacy-graph-remove.php', 'cli/remove_graphs.php', 'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php'], true)) {
+                continue;
+            }
+            $local = $root . '/' . $relative;
+            if (realpath($local) !== $local || !is_file($local)) {
+                throw new RuntimeException('Invalid integration source path');
+            }
+            if (!is_array($file) || ($file['sha256'] ?? null) !== hash_file('sha256', $local)) {
+                throw new RuntimeException('Covered source differs from checkout: ' . $relative . ' (' . $handler . ', ' . basename($report) . ')');
+            }
+            if (!is_array($file['lines'] ?? null)) {
+                throw new RuntimeException('Invalid line coverage inventory');
+            }
+            $lineCount = substr_count(file_get_contents($local), "\n") + 1;
+            foreach ($file['lines'] as $line => $hit) {
+                if (!is_int($line) || $line < 1 || $line > $lineCount || !in_array($hit, [-1, 1], true)) {
+                    throw new RuntimeException('Invalid PCOV line observation');
+                }
+                $mapped[$local][$line] = max($mapped[$local][$line] ?? -1, $hit);
+                $observed[$relative] = ($observed[$relative] ?? false) || $hit === 1;
+                if ($relative === 'lib/utility.php' && $line === $wrapperLine && $hit === 1) {
+                    $wrapperObserved = true;
+                }
+            }
+        }
+    }
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);

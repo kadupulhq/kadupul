@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Import required application coverage entry points before validating their execution, retaining tree and graph CLI worker evidence as migrations add new sources (#1255).
+
 - Include client timing, dataset, connection outcome and server diagnostics in failed RRDtool proxy interoperability tests to investigate intermittent fixture failures (#1244).
 
 - Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
