@@ -18,6 +18,16 @@ if ($collect === '1') {
         $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root,
             RrdOneShotCoverageRegistration::PRODUCER, $encoded_scenario, RrdOneShotCoverageRegistration::SOURCES);
         define('RRD_ONE_SHOT_TEST_COVERAGE', true);
+    } elseif (($scenario['coverage_contract'] ?? null) === 'rrd-observed-window') {
+        require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
+        require $root . '/tests/Helpers/RrdObservedWindowCoverageRegistration.php';
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot(
+            $root,
+            RrdObservedWindowCoverageRegistration::PRODUCER,
+            $encoded_scenario,
+            RrdObservedWindowCoverageRegistration::SOURCES
+        );
+        define('RRD_OBSERVED_WINDOW_TEST_COVERAGE', true);
     }
     // Keep legacy bootstrap deprecations out of this child process; the
     // application scenario below runs with every error level enabled.
@@ -244,6 +254,16 @@ $results = array();
 foreach ($scenario['calls'] as $call) {
     $config['config_options_array'] = array_replace($config['config_options_array'], $call['options'] ?? array());
     $args = $call['args'];
+    if (isset($call['clock_time'], $call['clock_argument'])) {
+        $args[$call['clock_argument']] = new class ($call['clock_time']) implements \Kadupul\Platform\Application\Port\Clock {
+            public function __construct(private int $time) {}
+            public function now(): DateTimeImmutable
+            {
+                return new DateTimeImmutable('@' . $this->time);
+            }
+        };
+    }
+
     mt_srand(20260923);
     // Warnings are part of today's behavior. Record them without file and line
     // so moving the code does not change the golden.
@@ -315,5 +335,11 @@ if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
         throw new RuntimeException('One-shot coverage scenario did not complete its calls.');
     }
     $nativeChildCoverageMarkers = RrdOneShotCoverageRegistration::MARKERS;
+}
+if (defined('RRD_OBSERVED_WINDOW_TEST_COVERAGE')) {
+    if (!$results || count($results) !== count($scenario['calls'])) {
+        throw new RuntimeException('Observed-window coverage scenario did not complete its calls.');
+    }
+    $nativeChildCoverageMarkers = RrdObservedWindowCoverageRegistration::MARKERS;
 }
 echo $encoded_result;

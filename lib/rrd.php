@@ -2331,16 +2331,22 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
         return array();
     }
 
+    // Resolve numeric relative bounds once, including the parser's end bound.
+    $fetch_now = rrdtool_clock_now();
+    $fetch_start = is_numeric($start_time) && $start_time < 0 ? $fetch_now->getTimestamp() + $start_time : $start_time;
+    $normalized_end = is_numeric($end_time) ? ($end_time < 0 ? $fetch_now->getTimestamp() + $end_time : $end_time) : null;
+    $fetch_end = $normalized_end ?? $end_time;
+
     // Find the correct resolution
     if ($resolution == 0) {
-        $resolution = rrdtool_function_get_resstep($local_data_id, $start_time, $end_time, 'res');
+        $resolution = rrdtool_function_get_resstep($local_data_id, $start_time, $end_time, 'res', $fetch_now);
     }
 
     /* update the rrdfile if performing a fetch */
     boost_fetch_cache_check($local_data_id, $rrdtool_pipe);
 
     /* build and run the rrdtool fetch command with all of our data */
-    $cmd_line = array('fetch', $data_source_path, $cf, '-s', $start_time, '-e', $end_time);
+    $cmd_line = array('fetch', $data_source_path, $cf, '-s', $fetch_start, '-e', $fetch_end);
     if ($resolution > 0) {
         array_push($cmd_line, '-r', $resolution);
     }
@@ -2368,6 +2374,9 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
             } elseif ($line != '') {
                 /* process the data sources into an array */
                 $parts     = explode(':', $line);
+                if ($normalized_end !== null && is_numeric($parts[0]) && $parts[0] > $normalized_end) {
+                    continue;
+                }
                 $timestamp = $parts[0];
                 $data      = explode(' ', trim($parts[1]));
 
@@ -2754,10 +2763,15 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
         $graph_opts = rrd_function_process_graph_options($graph_start, $graph_end, $graph, $graph_data_array, $now);
     } else {
         /* basic export options */
+        $export_start = $graph_start < 0 ? $now->getTimestamp() + $graph_start : $graph_start;
+        $export_end = $graph_end < 0 ? $now->getTimestamp() + $graph_end : $graph_end;
+        $export_rows = (int) ceil(abs($export_end - $export_start) / max(1, $rra_seconds)) + 10;
+        $graph_start = $export_start;
+        $graph_end = $export_end;
         $graph_opts =
-            '--start=' . rrdtool_pipe_quote($graph_start - 1) . RRD_NL .
+            '--start=' . rrdtool_pipe_quote($graph_start) . RRD_NL .
             '--end=' . rrdtool_pipe_quote($graph_end) . RRD_NL .
-            '--maxrows=10000' . RRD_NL;
+            '--maxrows=' . max(10000, $export_rows) . RRD_NL;
     }
 
     /* +++++++++++++++++++++++ LEGEND: MAGIC +++++++++++++++++++++++ */
@@ -2848,7 +2862,8 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
                     to a function that matches the digits with letters. rrdtool likes letters instead
                     of numbers in DEF names; especially with CDEFs. CDEFs are created
                     the same way, except a 'cdef' is put on the beginning of the hash */
-                    $graph_defs .= 'DEF:' . generate_graph_def_name(strval($i)) . '=' . rrdtool_def_path($data_source_path) . ':' . rrdtool_pipe_quote($graph_item['data_source_name']) . ':' . $consolidation_functions[$graph_cf] . RRD_NL;
+                    $def_step = isset($graph_data_array['export_csv']) ? ':step=' . max(1, $rra_seconds) : '';
+                    $graph_defs .= 'DEF:' . generate_graph_def_name(strval($i)) . '=' . rrdtool_def_path($data_source_path) . ':' . rrdtool_pipe_quote($graph_item['data_source_name']) . ':' . $consolidation_functions[$graph_cf] . $def_step . RRD_NL;
 
                     $cf_ds_cache[$graph_item['data_template_rrd_id']][$graph_cf] = "$i";
 
@@ -3570,6 +3585,10 @@ function __rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $
         $output_flag = RRDTOOL_OUTPUT_STDOUT;
 
         $xport_array = rrdxport2array(rrdtool_execute("xport $graph_opts$graph_defs$txt_graph_items", false, $output_flag, $rrdtool_pipe));
+
+        if (is_array($xport_array)) {
+            $xport_array = rrdtool_trim_xport_window($xport_array, $export_start, $export_end);
+        }
 
         /* add host and graph information */
         $xport_array['meta']['stacked_columns'] = $stacked_columns;
@@ -5670,4 +5689,29 @@ function add_business_hours($data, ?\DateTimeImmutable $now = null)
     }
 
     return $data;
+}
+
+/** Keep XPORT rows within the numeric end bound used by graph statistics.
+ *
+ * @param array<string, mixed> $xport_array Parsed RRDtool export response.
+ * @return array<string, mixed> Response with matching row-count and end metadata.
+ */
+function rrdtool_trim_xport_window(array $xport_array, int|float $export_start, int|float $export_end): array
+{
+    // XPORT rounds an unaligned end up; statistics use complete samples
+    // at or before the requested end. Keep their observed window equal.
+    if (isset($xport_array['meta']['end'], $xport_array['meta']['step']) &&
+        $xport_array['meta']['step'] > 0 && is_array($xport_array['data'] ?? null)) {
+        while ($xport_array['meta']['end'] > $export_end && !empty($xport_array['data'])) {
+            array_pop($xport_array['data']);
+            $xport_array['meta']['end'] = (string) ($xport_array['meta']['end'] - $xport_array['meta']['step']);
+            $xport_array['meta']['rows'] = (string) count($xport_array['data']);
+            if (empty($xport_array['data'])) {
+                $xport_array['meta']['start'] = (string) $export_start;
+                $xport_array['meta']['end'] = (string) $export_end;
+            }
+        }
+    }
+
+    return $xport_array;
 }
