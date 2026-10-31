@@ -74,7 +74,7 @@ cmd_exec	./lib/utility.php:1946	    $json     = shell_exec($php . ' -q ' . $php_
 cmd_exec	./lib/utility.php:2082	    $json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./poller_boost.php:646	        $process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_spikekill.php:235				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./remote_agent.php:497	                                        $cactiphp = @proc_open(array($php_bin, '-q', $config['base_path'] . '/script_server.php', 'realtime', $poller_id), $cactides, $pipes);
+cmd_exec	./remote_agent.php:497	                                        $cactiphp = @proc_open(array(
 cmd_exec	./script_server.php:196	                exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./scripts/script_command.php:67	    $process = proc_open($command, $descriptors, $pipes, null, array_replace($inherited, $environment));
 cmd_exec	./snmpagent_mibcache.php:32			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');

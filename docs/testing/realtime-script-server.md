@@ -50,3 +50,6 @@ redundant queries without changing stored samples. The existing blocking worker
 I/O and script execution deadlines are outside this correction; it does not
 establish hung-script recovery, hostile-plugin isolation, device interoperability
 or a production capacity/latency budget. No release or deployment is claimed.
+
+Review new worker lifecycle code for one statement per line, braced cleanup loops
+and wrapped process arguments/predicates, while preserving branch brace style.
