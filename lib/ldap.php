@@ -1129,7 +1129,7 @@ function cacti_ldap_tls_settle_requirement()
     // The update only fills an empty row, so a value saved meanwhile wins.
     db_execute_prepared(
         "INSERT INTO settings (name, value) VALUES (?, ?)
-		ON DUPLICATE KEY UPDATE value = IF(value = '', VALUES(value), value)",
+\t\tON DUPLICATE KEY UPDATE value = IF(value = '', VALUES(value), value)",
         array('ldap_tls_certificate', (string) $level)
     );
 
