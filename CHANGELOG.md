@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
+- Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero in poller cache entries under strict SQL, preserving stored host settings and explicit overrides.
 
 - Bound Windows RRDtool one-shot commands by the command/poller deadline and prevent large input/output deadlocks using temporary file handles. Windows now requires writable temporary storage (#782).
 - Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.
