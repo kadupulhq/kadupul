@@ -532,6 +532,12 @@ if (defined('RRD_ONE_SHOT_TEST_COVERAGE')) {
         $coverageFilter->includeFile($coverageRoot . '/' . $file);
     }
 }
+if (defined('RRD_OBSERVED_WINDOW_TEST_COVERAGE')) {
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    foreach (RrdObservedWindowCoverageRegistration::HITS as $file) {
+        $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    }
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter

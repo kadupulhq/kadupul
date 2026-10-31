@@ -570,13 +570,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 2
           persist-credentials: false
 
       - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
         with:
           php-version: '8.4'
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
-          coverage: none
+          ini-values: opcache.jit=off, opcache.jit_buffer_size=0
+          coverage: pcov
           tools: composer
 
       - name: Cache Composer downloads
@@ -616,6 +618,31 @@ jobs:
         working-directory: tests
         run: php tools/verify_pest_inventory.php phpunit-spikekill.xml "$RUNNER_TEMP/legacy-normal.xml" "$RUNNER_TEMP/legacy-privileged.xml"
 
+      - name: Set up patch coverage verifier
+        uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
+        with:
+          install_args: python@3.12.12
+
+      - name: Verify native RRD window coverage and evidence admission
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          BASE: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || 'HEAD^1' }}
+        run: |
+          php -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration=phpunit-rrd-window.xml \
+            --fail-on-empty-test-suite --fail-on-risky --fail-on-warning --colors=never \
+            --log-junit="$RUNNER_TEMP/rrd-window-junit.xml" \
+            --coverage-php="$RUNNER_TEMP/rrd-window-coverage.php" \
+            --coverage-clover="$RUNNER_TEMP/rrd-window-coverage.xml"
+          test -s "$RUNNER_TEMP/rrd-window-coverage.php"
+          test -s "$RUNNER_TEMP/rrd-window-coverage.xml"
+          php tools/verify_pest_inventory.php phpunit-rrd-window.xml "$RUNNER_TEMP/rrd-window-junit.xml"
+          mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/rrd-window-tools"
+          "$RUNNER_TEMP/rrd-window-tools/bin/python" -m pip install --require-hashes -r tools/requirements.txt
+          "$RUNNER_TEMP/rrd-window-tools/bin/python" tools/patch_coverage.py \
+            --root "$GITHUB_WORKSPACE" --base "$BASE" --phpunit-config tests/phpunit-rrd-window.xml \
+            --clover "$RUNNER_TEMP/rrd-window-coverage.xml" --require 100 --paths 'lib/rrd.php'
+
       - name: Preserve spike-removal execution evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -625,6 +652,9 @@ jobs:
           path: |
             ${{ runner.temp }}/legacy-normal.xml
             ${{ runner.temp }}/legacy-privileged.xml
+            ${{ runner.temp }}/rrd-window-junit.xml
+            ${{ runner.temp }}/rrd-window-coverage.php
+            ${{ runner.temp }}/rrd-window-coverage.xml
           if-no-files-found: error
 
   application-smoke:
