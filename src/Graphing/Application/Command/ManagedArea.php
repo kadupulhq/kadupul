@@ -17,4 +17,7 @@ enum ManagedArea
 
     /** Realm 3: host.php. */
     case Devices;
+
+    /** Realm 4: tree.php. */
+    case Trees;
 }

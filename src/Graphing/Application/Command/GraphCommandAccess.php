@@ -55,7 +55,11 @@ final readonly class GraphCommandAccess
             }
             $this->operator->select($operator, $database);
             $actor = $this->operator->actor();
-            if ($actor === null || !($area === ManagedArea::Devices ? $this->operator->canManageDevices($actor) : $this->operator->canManageGraphs($actor))) {
+            if ($actor === null || !match ($area) {
+                ManagedArea::Devices => $this->operator->canManageDevices($actor),
+                ManagedArea::Trees => $this->operator->canManageTrees($actor),
+                ManagedArea::Graphs => $this->operator->canManageGraphs($actor),
+            }) {
                 throw new GraphManagementDenied($actor?->id, $database);
             }
         } catch (GraphManagementDenied $denied) {

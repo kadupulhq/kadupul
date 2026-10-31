@@ -52,4 +52,10 @@ interface ConsoleOperator
      * associates graph templates and data queries with a device.
      */
     public function canManageDevices(Actor $actor): bool;
+
+    /**
+     * Realm 4, Trees: tree.php (include/global_arrays.php:1289), where the web
+     * creates graph trees and adds header, graph, device and site nodes to them.
+     */
+    public function canManageTrees(Actor $actor): bool;
 }

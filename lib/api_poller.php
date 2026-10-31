@@ -39,7 +39,7 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 			$host['id'] = 0;
 			$host['poller_id']      = 1;
 			$host['snmp_community'] = '';
-			$host['snmp_timeout'] = '';
+			$host['snmp_timeout'] = 0;
 			$host['snmp_username'] = '';
 			$host['snmp_password'] = '';
 			$host['snmp_auth_protocol'] = '';
@@ -47,8 +47,8 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 			$host['snmp_priv_protocol'] = '';
 			$host['snmp_context'] = '';
 			$host['snmp_engine_id'] = '';
-			$host['snmp_version'] = '';
-			$host['snmp_port'] = '';
+			$host['snmp_version'] = 0;
+			$host['snmp_port'] = 0;
 			$host['hostname'] = 'None';
 
 			$hosts[0] = $host;
@@ -57,6 +57,16 @@ function api_poller_cache_item_add($host_id, $host_field_override, $local_data_i
 		/* the $host_field_override array can be used to override certain host fields in the poller cache */
 		if (cacti_sizeof($host_field_override)) {
 			$host = array_merge($host, $host_field_override);
+		}
+
+		// host permits NULL SNMP text; poller_item stores these fields as
+		// non-null strings. Preserve empty-value semantics under strict SQL,
+		// including explicit NULL overrides, without changing stored settings.
+		foreach (array('snmp_community', 'snmp_username', 'snmp_password', 'snmp_auth_protocol',
+			'snmp_priv_passphrase', 'snmp_priv_protocol') as $field) {
+			if (array_key_exists($field, $host) && $host[$field] === null) {
+				$host[$field] = '';
+			}
 		}
 
 		// don't add to poller cache for wrong snmp information

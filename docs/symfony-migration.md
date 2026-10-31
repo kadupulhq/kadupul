@@ -1838,6 +1838,75 @@ Known differences from `cli/add_graph_template.php`:
   defines `--quiet`. Under `bin/console` a bad id exits 2; the shim keeps the
   original's message and exits 1.
 
+`php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
+creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
+adds a node to one, under `--parent-node=ID` or at the root. A worker saves the
+tree or node through `sql_save()` and `api_tree_item_save()` and sorts the branch,
+as the original did. `--list-sites`, `--list-hosts`, `--list-trees`,
+`--list-nodes --tree-id=ID` and `--list-graphs --host-id=ID` print what the
+options name. It needs the Console Access and Trees realms (realm 4, the one
+`tree.php` needs), and what it adds is audited. `--json` prints `status`,
+`database` and the new `tree_id` or `node_id`.
+
+Known differences from `cli/add_tree.php`:
+
+- It needs an operator with the Console Access and Trees realms. The original
+  ran for anyone who could run it.
+- Names and ids are bound instead of concatenated into SQL. A name with a quote
+  is looked up as written, and a `--graph-id` with SQL after the number is
+  refused with the `No such graph-id` line; the original read it as SQL.
+- A tree that cannot be saved prints `ERROR: Failed to create the tree.` on
+  standard error and exits 1. The original printed `Tree Created` with an empty id.
+- An argument error prints the error and help without the version line.
+- `--quiet` reaches `bin/console` as `--no-headers`, because the console already
+  defines `--quiet`. Under `bin/console` an unknown `--type` exits 2; the shim
+  keeps the original's message and exits 1.
+- A `--sort-method` that is not one of the four saves a node with inherited
+  sorting, as the original did; a tree still refuses it.
+
+`php bin/console kadupul:graph:add --graph-type=cg|ds --graph-template-id=ID --host-id=ID`
+creates a graph from a graph template (`cg`), or one graph for each data query
+index that `--snmp-field`, with `--snmp-value` or `--snmp-value-regex`, selects
+(`ds`, with `--snmp-query-id` and `--snmp-query-type-id`). A data query the
+device does not have yet is associated with it and run once, with
+`--reindex-method` (0 to 3, or none, uptime, index or fields). `--input-fields`
+gives a template graph's custom data, `--graph-title` a title, and `--force`
+creates a template graph the device has already. `--list-hosts`,
+`--list-graph-templates` (with `--host-template-id`), `--list-input-fields`,
+`--list-snmp-queries`, `--list-query-types`, `--list-snmp-fields` and
+`--list-snmp-values` print what the options name. A worker creates the graph with
+`create_complete_graph_from_template()` and pushes its data sources to the
+poller, as the original did; the other steps only read. It needs the Console
+Access and Graphs realms (realm 5, the one `graphs_new.php` needs), and what it
+creates is audited. `--json` prints `status`, `database` and each graph's result,
+id and data sources.
+
+Known differences from `cli/add_graphs.php`:
+
+- It needs an operator with the Console Access and Graphs realms. The original
+  ran for anyone who could run it.
+- Ids, fields and values are bound instead of concatenated into SQL. They are
+  still found as PHP found them: an id must be the canonical spelling of an
+  array key (`07` and `7.0` are unknown), a value matches by loose equality
+  (`1.0` finds `1`), and `0` or an empty value is not checked.
+- An unknown device is refused before a data query is associated with it. The
+  original wrote a `host_snmp_query` row for it, ran the query, and only then
+  reported the device.
+- An option the script does not know prints `ERROR: Invalid Argument` and the
+  help, where `getopt()` skipped it. An argument error prints the error and help
+  without the version line.
+- A write that fails after the script has begun prints what was done, then
+  `ERROR: Failed to create the graph.` on standard error and exits 1. The
+  original ended with an uncaught exception (exit 255) where the poller cache
+  could not be written.
+- An empty word in `--input-fields` is reported as an unknown input field; the
+  original stopped with a `ValueError` for a template that has input fields.
+- When several options are wrong, the order the errors are reported in may
+  differ from the order `getopt()` reported the options in.
+- `--quiet` reaches `bin/console` as `--no-headers`, because the console already
+  defines `--quiet`. Under `bin/console` an unknown `--graph-type` exits 2; the
+  shim keeps the original's message and exits 1.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or

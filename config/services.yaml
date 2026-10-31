@@ -394,6 +394,18 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphTemplateAssignmentCatalog
     Kadupul\Graphing\Application\Port\GraphTemplateAttacher:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGraphTemplateAttacher
+    Kadupul\Graphing\Application\Command\AddTree: ~
+    Kadupul\Graphing\Application\Command\AddTreeNode: ~
+    Kadupul\Graphing\Application\Command\ListTreeChoices: ~
+    Kadupul\Graphing\Application\Port\TreeCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalTreeCatalog
+    Kadupul\Graphing\Application\Port\TreeWriter:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyTreeWriter
+    Kadupul\Graphing\Application\Command\AddGraphs: ~
+    Kadupul\Graphing\Application\Port\GraphCreationCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphCreationCatalog
+    Kadupul\Graphing\Application\Port\GraphWriter:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGraphWriter
     Kadupul\Graphing\Application\Port\GraphItemRepairs:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphItemRepairs
     # Public so poller_boost.php can reach it through the kernel container when the

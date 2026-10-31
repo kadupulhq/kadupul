@@ -15,6 +15,7 @@
       <file>integration/BoostConnectionLossDatabaseTest.php</file>
       <file>Unit/Core/Rrd/BoostOnDemandInsertNativeTest.php</file>
       <file>Unit/SnmpEventDescriptionIdentityTest.php</file>
+      <file>Unit/PollerCacheNullNativeTest.php</file>
       <file>integration/BoostQueueDatabaseTest.php</file>
       <file>integration/OfflineCmdOutputDatabaseTest.php</file>
       <file>integration/GroupMembershipConcurrencyTest.php</file>
