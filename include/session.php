@@ -206,28 +206,35 @@ function cacti_db_session_clean($max) {
 
 // Object registration preserves the native callbacks without PHP 8.4's
 // deprecated individual-callback registration API.
-final class CactiDatabaseSessionHandler implements SessionHandlerInterface {
-	public function open(string $path, string $name): bool {
+final class CactiDatabaseSessionHandler implements SessionHandlerInterface
+{
+	public function open(string $path, string $name): bool
+	{
 		return cacti_db_session_open($path, $name);
 	}
 
-	public function close(): bool {
+	public function close(): bool
+	{
 		return cacti_db_session_close();
 	}
 
-	public function read(string $id): string|false {
+	public function read(string $id): string|false
+	{
 		return cacti_db_session_read($id);
 	}
 
-	public function write(string $id, string $data): bool {
+	public function write(string $id, string $data): bool
+	{
 		return cacti_db_session_write($id, $data);
 	}
 
-	public function destroy(string $id): bool {
+	public function destroy(string $id): bool
+	{
 		return cacti_db_session_destroy($id);
 	}
 
-	public function gc(int $max_lifetime): int|false {
+	public function gc(int $max_lifetime): int|false
+	{
 		// The historical callback acknowledges cleanup with true, which the
 		// callback API converted to integer 1. Retain that acknowledgement.
 		return cacti_db_session_clean($max_lifetime);
