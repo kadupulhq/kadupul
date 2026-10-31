@@ -120,6 +120,9 @@ function cacti_test_rrd_harness_run(array $scenario) : array {
 		}
 	}
 
+	require_once __DIR__ . '/PhpSource.php';
+	$shipped .= test_php_function_source($fsrc, 'cacti_count') . "\n\n";
+
 	$shipped .= cacti_test_rrd_function_source($hsrc, 'html_escape') . "\n\n";
 	$shipped .= cacti_test_rrd_function_source($fsrc, 'get_rrd_cfs') . "\n\n";
 	$shipped .= cacti_test_rrd_function_source(file_get_contents($root . '/lib/rrdcheck.php'), 'rrdcheck_rrdtool_execute') . "\n";
@@ -322,6 +325,39 @@ try {
 				$out['cfs'][] = get_rrd_cfs($i + 1);
 			}
 
+			break;
+		case 'xport_window':
+			putenv('RRDCACHED_ADDRESS=');
+			require $scenario['root'] . '/lib/xml.php';
+			require $scenario['root'] . '/tests/Helpers/PhpSource.php';
+			require $scenario['root'] . '/tests/Helpers/PhpStatementSource.php';
+			$source = file_get_contents($scenario['root'] . '/lib/rrd.php');
+			if ($source === false) throw new RuntimeException('Cannot read production export');
+			$graph_source = '<?php ' . test_php_function_source($source, 'rrdtool_function_graph');
+			$graph_start = $scenario['start'];
+			$graph_end = $scenario['end'];
+			$export_start = $graph_start;
+			$export_end = $graph_end;
+			$graph_opts = '';
+			$graph_defs = 'DEF:value=' . rrdtool_quote_argument(rrdtool_escape_string($scenario['path'])) . ':value:AVERAGE:step=300' . RRD_NL;
+			$txt_graph_items = 'XPORT:value:value' . RRD_NL;
+			$rrdtool_pipe = false;
+			$output_flag = RRDTOOL_OUTPUT_STDOUT;
+			$rra_seconds = 300;
+			$first = test_php_assignment_source($graph_source, '$export_now', 'time');
+			$last = test_php_assignment_source($graph_source, '$graph_opts', 'rrdtool_quote_argument');
+			$first_offset = strpos($graph_source, $first);
+			$last_offset = strpos($graph_source, $last);
+			if ($first_offset === false || $last_offset === false || $last_offset < $first_offset || substr_count($graph_source, $first) !== 1 || substr_count($graph_source, $last) !== 1) throw new RuntimeException('Export prelude is incomplete or ambiguous');
+			// Both endpoints are complete token-extracted assignments; execute all intervening production statements.
+			eval(substr($graph_source, $first_offset, $last_offset + strlen($last) - $first_offset));
+			eval(test_php_assignment_source($graph_source, '$xport_array', 'rrdxport2array'));
+			if (str_contains($graph_source, 'rrdtool_trim_xport_window(')) {
+				eval(test_php_assignment_source($graph_source, '$xport_array', 'rrdtool_trim_xport_window'));
+			}
+			$out['xport'] = $xport_array;
+			$out['options'] = $graph_opts;
+			$out['window'] = array($export_start, $export_end);
 			break;
 		case 'font':
 			$out['font'] = rrdtool_function_set_font($scenario['type'], $scenario['no_legend'] ?? '', $scenario['themefonts'] ?? array());

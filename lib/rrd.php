@@ -2616,6 +2616,8 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 		$export_end   = $graph_end < 0 ? $export_now + $graph_end : $graph_end;
 		$export_step  = max(1, $rra_seconds);
 		$export_rows  = (int) ceil(abs($export_end - $export_start) / $export_step) + 10;
+		$graph_start = $export_start;
+		$graph_end = $export_end;
 		$graph_opts =
 			'--start=' . rrdtool_quote_argument($graph_start) . RRD_NL .
 			'--end=' . rrdtool_quote_argument($graph_end) . RRD_NL .
@@ -3666,6 +3668,10 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 				),
 				'data' => array(),
 			);
+		}
+
+		if (is_array($xport_array)) {
+			$xport_array = rrdtool_trim_xport_window($xport_array, $export_start, $export_end);
 		}
 
 		/* add host and graph information */
@@ -5666,4 +5672,28 @@ function add_business_hours($data) {
     }
 
     return $data;
+}
+
+/** Keep XPORT rows within the numeric end bound used by graph statistics.
+ *
+ * @param array<string, mixed> $xport_array Parsed RRDtool export response.
+ * @return array<string, mixed> Response with matching row-count and end metadata.
+ */
+function rrdtool_trim_xport_window(array $xport_array, int|float $export_start, int|float $export_end) : array {
+	// XPORT rounds an unaligned end up; statistics use complete samples
+	// at or before the requested end. Keep their observed window equal.
+	if (isset($xport_array['meta']['end'], $xport_array['meta']['step']) &&
+		$xport_array['meta']['step'] > 0 && is_array($xport_array['data'] ?? null)) {
+		while ($xport_array['meta']['end'] > $export_end && !empty($xport_array['data'])) {
+			array_pop($xport_array['data']);
+			$xport_array['meta']['end'] = (string) ($xport_array['meta']['end'] - $xport_array['meta']['step']);
+			$xport_array['meta']['rows'] = (string) count($xport_array['data']);
+			if (empty($xport_array['data'])) {
+				$xport_array['meta']['start'] = (string) $export_start;
+				$xport_array['meta']['end'] = (string) $export_end;
+			}
+		}
+	}
+
+	return $xport_array;
 }
