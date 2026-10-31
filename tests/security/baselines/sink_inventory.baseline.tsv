@@ -911,11 +911,11 @@ header_redirect	./user_admin.php:967	                header('Location: user_admi
 header_redirect	./user_domains.php:150		header('Location: user_domains.php?header=false&action=edit&domain_id=' . (empty($domain_id) ? get_nfilter_request_var('domain_id') : $domain_id));
 header_redirect	./user_domains.php:184			header('Location: user_domains.php?header=false');
 header_redirect	./user_domains.php:250			header('Location: user_domains.php?header=false');
-header_redirect	./user_group_admin.php:1854	                header('Location: user_group_admin.php&header=false');
+header_redirect	./user_group_admin.php:1850	                header('Location: user_group_admin.php&header=false');
 header_redirect	./user_group_admin.php:185	    header('Location: user_group_admin.php?header=false');
-header_redirect	./user_group_admin.php:1862	                header('Location: user_group_admin.php&header=false');
-header_redirect	./user_group_admin.php:1873	                header('Location: user_group_admin.php&header=false');
-header_redirect	./user_group_admin.php:1881	                header('Location: user_group_admin.php&header=false');
+header_redirect	./user_group_admin.php:1858	                header('Location: user_group_admin.php&header=false');
+header_redirect	./user_group_admin.php:1869	                header('Location: user_group_admin.php&header=false');
+header_redirect	./user_group_admin.php:1877	                header('Location: user_group_admin.php&header=false');
 header_redirect	./user_group_admin.php:356	    header('Location: user_group_admin.php?action=edit&header=false&tab=' . get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
 header_redirect	./user_group_admin.php:374	        header('Location: user_group_admin.php?action=edit&header=false&tab=' . $association_tab . '&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:422	        header('Location: user_group_admin.php?header=false');
