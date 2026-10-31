@@ -839,8 +839,11 @@ function manager_logs($id, $header_label) {
 	$sql_where .= ' ORDER by `id` DESC';
 	$sql_query = "SELECT snl.*, sc.description
 		FROM snmpagent_notifications_log AS snl
-		LEFT JOIN snmpagent_cache AS sc
-		ON sc.name = snl.notification
+		LEFT JOIN (
+			SELECT mib, name, MIN(description) AS description
+			FROM snmpagent_cache
+			GROUP BY mib, name
+		) AS sc ON sc.name = snl.notification AND sc.mib = snl.mib
 		WHERE $sql_where
 		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
