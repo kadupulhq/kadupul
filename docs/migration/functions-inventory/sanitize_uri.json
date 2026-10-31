@@ -3,8 +3,8 @@
     "name": "sanitize_uri",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5113,
-        "end_line": 5150,
+        "start_line": 5118,
+        "end_line": 5155,
         "line_count": 38,
         "signature": {
             "parameters": [
@@ -16,6 +16,15 @@
                     "variadic": false,
                     "has_default": false,
                     "default": null
+                },
+                {
+                    "name": "preserve_graph_action",
+                    "type": "bool",
+                    "nullable": false,
+                    "by_ref": false,
+                    "variadic": false,
+                    "has_default": true,
+                    "default": "true"
                 }
             ],
             "return_type": null,

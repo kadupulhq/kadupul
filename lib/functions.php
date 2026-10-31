@@ -2070,8 +2070,13 @@ function update_host_status($status, $host_id, &$ping, $ping_availability, $prin
             }
 
             /* average time */
-            $host['avg_time'] = (($host['total_polls'] - 1 - $host['failed_polls'])
-                * $host['avg_time'] + $ping_time) / ($host['total_polls'] - $host['failed_polls']);
+            if ($host['total_polls'] - $host['failed_polls'] == 0) {
+                // Inconsistent stored counters cannot supply a previous successful sample.
+                $host['avg_time'] = $ping_time;
+            } else {
+                $host['avg_time'] = (($host['total_polls'] - 1 - $host['failed_polls'])
+                    * $host['avg_time'] + $ping_time) / ($host['total_polls'] - $host['failed_polls']);
+            }
         }
 
         /* the host was down, now it's recovering */
@@ -5101,16 +5106,16 @@ function sanitize_search_string($string)
 }
 
 /**
- * cleans up a URI, e.g. from REQUEST_URI and/or QUERY_STRING
- * in case of XSS attack, expect the result to be broken
- * we do NOT sanitize in a way, that attacks are converted to valid HTML
- * it is ok, when the result is broken but the application stays alive
+ * Clean a URI from REQUEST_URI or QUERY_STRING.
+ * Hostile input may produce a broken URL.
+ * Graph links can retain the current request's action.
  *
  * @param string $uri   - the uri to be sanitized
+ * @param bool $preserve_graph_action - copy a missing graph action from the current request
  *
  * @return string    - the sanitized uri
  */
-function sanitize_uri($uri)
+function sanitize_uri($uri, bool $preserve_graph_action = true)
 {
     static $drop_char_match = array(
         '^', '$',
@@ -5140,7 +5145,7 @@ function sanitize_uri($uri)
         $uri = urldecode($uri);
     }
 
-    if (strpos($uri, 'graph_view.php') !== false) {
+    if ($preserve_graph_action && strpos($uri, 'graph_view.php') !== false) {
         if (strpos($uri, 'action=') === false) {
             $uri = $uri . (strpos($uri, '?') !== false ? '&' : '?') . 'action=' . get_nfilter_request_var('action');
         }

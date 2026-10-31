@@ -3,8 +3,8 @@
     "name": "get_hash_gprint",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4825,
-        "end_line": 4834,
+        "start_line": 4830,
+        "end_line": 4839,
         "line_count": 10,
         "signature": {
             "parameters": [
