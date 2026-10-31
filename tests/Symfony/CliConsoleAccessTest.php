@@ -359,4 +359,21 @@ final class CliConsoleAccessTest extends TestCase
         $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 5)');
         self::assertTrue($access->canManageGraphs($actor), 'a direct grant does');
     }
+
+    public function testDeviceManagementIsRealm3AndGraphsDoNotImplyIt(): void
+    {
+        $access = $this->access('ops');
+        $actor = $access->actor() ?? self::fail('ops resolves');
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (9, 5)');
+        self::assertFalse($access->canManageDevices($actor), 'realm 5 is not realm 3');
+
+        $this->db->executeStatement('INSERT INTO user_auth_group_realm VALUES (9, 3)');
+        self::assertTrue($access->canManageDevices($actor), 'an enabled group grants it');
+
+        $this->db->executeStatement("UPDATE user_auth_group SET enabled = '' WHERE id = 9");
+        self::assertFalse($access->canManageDevices($actor), 'a disabled group does not');
+
+        $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 3)');
+        self::assertTrue($access->canManageDevices($actor), 'a direct grant does');
+    }
 }
