@@ -30,6 +30,7 @@ on:
       - tests/Unit/Security/Auth/ClientAddrTrustedProxyTest.php
       - tests/Unit/Security/Xss/DebugLogRemoteMarkupTest.php
       - tests/Unit/Security/Auth/RemoteAgentGraphUserTest.php
+      - tests/Unit/Security/Auth/RemoteGraphResponseTest.php
       - tests/Unit/Database/SqlSaveLogRedactionTest.php
       - tests/Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php
       - install/functions.php
@@ -83,6 +84,7 @@ jobs:
             Unit/Security/Auth/ClientAddrTrustedProxyTest.php \
             Unit/Security/Xss/DebugLogRemoteMarkupTest.php \
             Unit/Security/Auth/RemoteAgentGraphUserTest.php \
+            Unit/Security/Auth/RemoteGraphResponseTest.php \
             Unit/Database/SqlSaveLogRedactionTest.php \
             Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php; do
             report="$RUNNER_TEMP/$(basename "$test_file" .php).xml"
