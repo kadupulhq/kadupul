@@ -1766,18 +1766,20 @@ function user_group_settings_edit($header_label) {
 
 			if ((isset($field_array['items'])) && (is_array($field_array['items']))) {
 				foreach ($field_array['items'] as $sub_field_name => $sub_field_array) {
-					if (graph_config_value_exists($sub_field_name, get_request_var('id'))) {
+					$stored_setting = db_fetch_row_prepared('SELECT value FROM settings_user_group WHERE name = ? AND group_id = ?', array($sub_field_name, get_request_var('id')));
+					if (is_array($stored_setting) && array_key_exists('value', $stored_setting)) {
 						$form_array[$field_name]['items'][$sub_field_name]['form_id'] = 1;
 					}
 
-					$form_array[$field_name]['items'][$sub_field_name]['value'] =  db_fetch_cell_prepared('SELECT value FROM settings_user_group WHERE name = ? AND group_id = ?', array($sub_field_name, get_request_var('id')));
+					$form_array[$field_name]['items'][$sub_field_name]['value'] = $stored_setting['value'] ?? '';
 				}
 			} else {
-				if (graph_config_value_exists($field_name, get_request_var('id'))) {
+				$stored_setting = db_fetch_row_prepared('SELECT value FROM settings_user_group WHERE name = ? AND group_id = ?', array($field_name, get_request_var('id')));
+				if (is_array($stored_setting) && array_key_exists('value', $stored_setting)) {
 					$form_array[$field_name]['form_id'] = 1;
 				}
 
-				$form_array[$field_name]['value'] = db_fetch_cell_prepared('SELECT value FROM settings_user_group WHERE name = ? AND group_id = ?', array($field_name, get_request_var('id')));
+				$form_array[$field_name]['value'] = $stored_setting['value'] ?? '';
 			}
 		}
 
