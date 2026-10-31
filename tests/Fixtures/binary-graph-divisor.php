@@ -49,6 +49,9 @@ namespace BinaryGraphDivisorProbe {
         if ($source === false) {
             throw new \RuntimeException('Cannot read production source');
         }
+        if ($file === 'lib/graph_variables.php' && str_contains($source, 'function cacti_percentile_index(')) {
+            array_unshift($names, 'cacti_percentile_index');
+        }
         foreach ($names as $name) {
             eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name));
         }

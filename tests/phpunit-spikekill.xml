@@ -178,6 +178,7 @@
       <file>Unit/PhpStatementSourceTest.php</file>
       <file>Unit/GraphZoomNativeControllerTest.php</file>
       <file>Unit/GraphInvalidLocalGraphIdTest.php</file>
+      <file>Unit/PercentileRankRegressionTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
