@@ -25,7 +25,7 @@ test('percentile index is based on observed samples', function () use ($graphVar
 	eval($source);
 
 	// Verified against rrdtool VDEF PERCENT for 28/29/30/31-day months
-	// (N = 8064/8352/8640/8928): the index is N - round(0.95 * N).
+	// (N = 8064/8352/8640/8928): N - 1 - round(0.95 * (N - 1)).
 	expect(issue7070_percentile_index(8064, 95))->toBe(403);
 	expect(issue7070_percentile_index(8352, 95))->toBe(418);
 	expect(issue7070_percentile_index(8640, 95))->toBe(432);

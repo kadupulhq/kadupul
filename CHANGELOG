@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
+-issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)
 -issue: Store explicitly empty or null nullable numeric fields as SQL NULL in sql_save; preserve explicit zero, omitted fields and non-nullable defaults, leaving existing stored zeros unchanged (#1108)
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
