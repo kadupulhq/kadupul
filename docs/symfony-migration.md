@@ -1838,6 +1838,32 @@ Known differences from `cli/add_graph_template.php`:
   defines `--quiet`. Under `bin/console` a bad id exits 2; the shim keeps the
   original's message and exits 1.
 
+`php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
+creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
+adds a node to one, under `--parent-node=ID` or at the root. A worker saves the
+tree or node through `sql_save()` and `api_tree_item_save()` and sorts the branch,
+as the original did. `--list-sites`, `--list-hosts`, `--list-trees`,
+`--list-nodes --tree-id=ID` and `--list-graphs --host-id=ID` print what the
+options name. It needs the Console Access and Trees realms (realm 4, the one
+`tree.php` needs), and what it adds is audited. `--json` prints `status`,
+`database` and the new `tree_id` or `node_id`.
+
+Known differences from `cli/add_tree.php`:
+
+- It needs an operator with the Console Access and Trees realms. The original
+  ran for anyone who could run it.
+- Names and ids are bound instead of concatenated into SQL. A name with a quote
+  is looked up as written, and a `--graph-id` with SQL after the number is
+  refused with the `No such graph-id` line; the original read it as SQL.
+- A tree that cannot be saved prints `ERROR: Failed to create the tree.` on
+  standard error and exits 1. The original printed `Tree Created` with an empty id.
+- An argument error prints the error and help without the version line.
+- `--quiet` reaches `bin/console` as `--no-headers`, because the console already
+  defines `--quiet`. Under `bin/console` an unknown `--type` exits 2; the shim
+  keeps the original's message and exits 1.
+- A `--sort-method` that is not one of the four saves a node with inherited
+  sorting, as the original did; a tree still refuses it.
+
 ### Package signing
 
 `php bin/console kadupul:package:sign <package> [<output>]` signs an unsigned or

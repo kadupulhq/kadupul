@@ -26,10 +26,17 @@ REMOVE_SHIM = 'cli/remove_graphs.php'
 ADD_TEMPLATE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_graph_template.php'
 ADD_TEMPLATE_SHIM = 'cli/add_graph_template.php'
 ADD_TEMPLATE_UTILITY = 'Kadupul Add Graph Template Utility'
+TREE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_tree.php'
+TREE_SHIM = 'cli/add_tree.php'
+TREE_UTILITY = 'Kadupul Add Tree Utility'
+# graph_tree.id is a smallint, so the seeded tree sits near the top of its range; the nodes reuse the removal ids.
+TREE_FIRST = 60001
 # Every id the removal cases print is fixed (below 16777215, the largest device template id), because the original and the shim each start from a fresh seed.
 REMOVE_FIRST = 9000001
 # BSD stty says "stdin isn't a terminal", GNU stty "'standard input': Inappropriate ioctl for device".
 STTY = re.compile(r'^stty: .*\n', re.MULTILINE)
+# A CI php.ini logs the original's PHP warnings (an undefined sort method) to stderr even with display_errors off.
+PHP_LOG = re.compile(r'^(?:PHP )?(?:Warning|Notice|Deprecated): .*\n', re.MULTILINE)
 # The original also raised PHP deprecations on a terminal-less run; both sides run with display_errors off.
 QUIET_PHP = '-d display_errors=0 '
 
@@ -645,19 +652,256 @@ def verify_add_template_differences(harness, check):
     remove_reset(harness)
 
 
+def tree_seed(harness):
+    """The removal seed, a site, and one tree: two headers at the root, a graph and a device under the first, a site under the second."""
+    remove_seed(harness)
+    tree_reset(harness)
+    a, t = REMOVE_FIRST, TREE_FIRST
+    harness.sql(
+        f"INSERT INTO sites (id, name) VALUES ({a}, '{PREFIX}tsite'), ({a + 1}, '{PREFIX}tsite-two'); "
+        f"INSERT INTO graph_tree (id, sort_type, name) VALUES ({t}, 2, '{PREFIX}tree-one'); "
+        f'INSERT INTO graph_tree_items (id, parent, position, graph_tree_id, local_graph_id, title, host_id, site_id, host_grouping_type, sort_children_type) VALUES '
+        f"({a}, 0, 1, {t}, 0, '{PREFIX}h1', 0, 0, 1, 2), ({a + 1}, 0, 2, {t}, 0, '{PREFIX}h2', 0, 0, 1, 1), "
+        f'({a + 2}, {a}, 1, {t}, {a}, NULL, 0, 0, 1, 0), ({a + 3}, {a}, 2, {t}, 0, NULL, {a}, 0, 2, 0), ({a + 4}, {a + 1}, 1, {t}, 0, NULL, 0, {a}, 1, 0); '
+        # The next ids are fixed too, so that the original and the shim print the same ones.
+        f'ALTER TABLE graph_tree AUTO_INCREMENT = {t + 10}; ALTER TABLE graph_tree_items AUTO_INCREMENT = {a + 10}')
+
+
+def tree_reset(harness):
+    harness.sql(f'DELETE FROM graph_tree_items WHERE graph_tree_id >= {TREE_FIRST} OR id >= {REMOVE_FIRST}; '
+                f'DELETE FROM graph_tree WHERE id >= {TREE_FIRST}; '
+                f'DELETE FROM sites WHERE id >= {REMOVE_FIRST}')
+
+
+def tree_rows(harness):
+    """Every tree and node the cases may add."""
+    return harness.sql(
+        "SELECT (SELECT GROUP_CONCAT(CONCAT_WS(',', id, name, sort_type) ORDER BY id SEPARATOR ';') FROM graph_tree WHERE id >= %d), "
+        "(SELECT GROUP_CONCAT(CONCAT_WS(',', id, parent, position, graph_tree_id, local_graph_id, IFNULL(title, '~'), host_id, site_id, host_grouping_type, sort_children_type) "
+        "ORDER BY id SEPARATOR ';') FROM graph_tree_items WHERE id >= %d)" % (TREE_FIRST, REMOVE_FIRST))
+
+
+def tree_cases():
+    a, b = REMOVE_FIRST, REMOVE_FIRST + 1
+    h1, h2, graph_node, host_node, site_node = a, a + 1, a + 2, a + 3, a + 4
+    t = TREE_FIRST
+    new = f'--name={PREFIX}new'
+    node = ['--type=node', f'--tree-id={t}']
+    return [
+        ('tree add', ['--type=tree', new]),
+        ('tree add manual', ['--type=tree', new, '--sort-method=manual']),
+        ('tree add natural', ['--type=tree', new, '--sort-method=natural']),
+        ('tree add numeric', ['--type=tree', new, '--sort-method=numeric']),
+        ('tree add alpha', ['--type=tree', new, '--sort-method=alpha']),
+        ('tree add padded name', ['--type=tree', f'--name= {PREFIX}new ']),
+        ('tree add name with a quote', ['--type=tree', f"--name={PREFIX}it's"]),
+        ('tree add that exists', ['--type=tree', f'--name={PREFIX}tree-one']),
+        ('tree add that exists in another case', ['--type=tree', f'--name={PREFIX.upper()}TREE-ONE']),
+        ('tree add without a name', ['--type=tree']),
+        ('tree add with a bare name', ['--type=tree', '--name']),
+        ('tree add with the name 0', ['--type=tree', '--name=0']),
+        ('tree add with a bad sort method', ['--type=tree', new, '--sort-method=random']),
+        ('tree add with a bare sort method', ['--type=tree', new, '--sort-method']),
+        ('tree add a name before a bad sort method', ['--type=tree', '--sort-method=random']),
+        ('tree add ignores node options', ['--type=tree', new, '--tree-id=x', '--node-type=nonsense']),
+        ('tree add last name wins', ['--type=tree', '--name=ignored', new]),
+        ('tree add quiet', ['--type=tree', new, '--quiet']),
+        ('node header at the root', [*node, '--node-type=header', f'--name={PREFIX}hx']),
+        ('node header under a header', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={h1}']),
+        ('node header manual', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=manual']),
+        ('node header numeric', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=numeric']),
+        ('node header natural', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=natural']),
+        ('node header sorts among siblings', [*node, '--node-type=header', f'--name={PREFIX}a-first', f'--parent-node={h1}']),
+        ('node header with a bad sort method', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=random']),
+        ('node header ignores other ids', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--graph-id={a}', f'--host-id={a}', f'--site-id={a}', '--host-group-style=2']),
+        ('node header without a name', [*node, '--node-type=header']),
+        ('node header with the name 0', [*node, '--node-type=header', '--name=0']),
+        ('node header twice with one name', [*node, '--node-type=header', f'--name={PREFIX}h1']),
+        ('node header under a graph node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={graph_node}']),
+        ('node header under a device node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={host_node}']),
+        ('node header under a site node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={site_node}']),
+        ('node header under an unknown node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={a + 800}']),
+        ('node header under a bad parent', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node=abc']),
+        ('node header under a negative parent', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node=-1']),
+        ('node header under a decimal parent', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={h1}.0']),
+        ('node header under a bare parent', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node']),
+        ('node header under parent 0', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node=0']),
+        ('node header under a zero-padded parent', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node=00{h2}']),
+        ('node graph under a header', [*node, '--node-type=graph', f'--graph-id={a + 1}', f'--parent-node={h2}']),
+        ('node graph at the root', [*node, '--node-type=graph', f'--graph-id={a + 1}']),
+        ('node graph already there', [*node, '--node-type=graph', f'--graph-id={a}', f'--parent-node={h1}']),
+        ('node graph with a name it ignores', [*node, '--node-type=graph', f'--graph-id={a + 1}', f'--parent-node={h2}', '--name=ignored']),
+        ('node graph unknown', [*node, '--node-type=graph', f'--graph-id={a + 800}']),
+        ('node graph bad id', [*node, '--node-type=graph', '--graph-id=abc']),
+        ('node graph without an id', [*node, '--node-type=graph']),
+        ('node graph with a bare id', [*node, '--node-type=graph', '--graph-id']),
+        ('node graph with a float-written id', [*node, '--node-type=graph', f'--graph-id={a + 1}.0', f'--parent-node={h2}']),
+        ('node device under a header', [*node, '--node-type=host', f'--host-id={b}', f'--parent-node={h2}']),
+        ('node device with data query grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=2', f'--parent-node={h2}']),
+        ('node device with graph template grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=1']),
+        ('node device with a float-written grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=2.0']),
+        ('node device with a bad grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=3']),
+        ('node device with a text grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=abc']),
+        ('node device with a bare grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style']),
+        ('node device already there', [*node, '--node-type=host', f'--host-id={a}', f'--parent-node={h1}']),
+        ('node device unknown', [*node, '--node-type=host', f'--host-id={a + 800}']),
+        ('node device zero-padded id', [*node, '--node-type=host', f'--host-id=0{b}']),
+        ('node device float-written id', [*node, '--node-type=host', f'--host-id={b}.0']),
+        ('node device bad id', [*node, '--node-type=host', '--host-id=abc']),
+        ('node device without an id', [*node, '--node-type=host']),
+        ('node device ignores other ids', [*node, '--node-type=host', f'--host-id={b}', f'--graph-id={a}', f'--site-id={a}', '--name=ignored']),
+        ('node site under a header', [*node, '--node-type=site', f'--site-id={b}', f'--parent-node={h2}']),
+        ('node site at the root', [*node, '--node-type=site', f'--site-id={a}']),
+        ('node site already there', [*node, '--node-type=site', f'--site-id={a}', f'--parent-node={h2}']),
+        ('node site unknown', [*node, '--node-type=site', f'--site-id={a + 800}']),
+        ('node site zero-padded id', [*node, '--node-type=site', f'--site-id=0{b}']),
+        ('node site bad id', [*node, '--node-type=site', '--site-id=abc']),
+        ('node site without an id', [*node, '--node-type=site']),
+        ('node site with a grouping it keeps', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=2']),
+        ('node site with a text grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=abc']),
+        ('node site with a zero grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=0']),
+        ('node site with a float-written grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=2.0']),
+        ('node site with an oversized grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=300']),
+        ('node site with a bare grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style']),
+        ('node without a node type', ['--type=node', f'--tree-id={t}']),
+        ('node with a bad node type', [*node, '--node-type=leaf']),
+        ('node with a padded node type', [*node, '--node-type= header ', f'--name={PREFIX}hx']),
+        ('node without a tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx']),
+        ('node with tree 0', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=0']),
+        ('node with a bad tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=abc']),
+        ('node with a negative tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=-1']),
+        ('node with an unknown tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', f'--tree-id={t + 5}']),
+        ('node with a zero-padded tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', f'--tree-id=00{t}']),
+        ('node with the default tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=1']),
+        ('node bad tree before bad parent', ['--type=node', '--node-type=header', '--tree-id=abc', '--parent-node=abc']),
+        ('node bad node type before bad tree', ['--type=node', '--node-type=leaf', '--tree-id=abc']),
+        ('no type', [new]),
+        ('unknown type', ['--type=forest']),
+        ('padded type', ['--type= tree ', new]),
+        ('bare type', ['--type']),
+        ('list sites', ['--list-sites']),
+        ('list sites quietly', ['--list-sites', '--quiet']),
+        ('list devices', ['--list-hosts']),
+        ('list devices quietly', ['--quiet', '--list-hosts']),
+        ('list trees', ['--list-trees']),
+        ('list trees quietly', ['--list-trees', '--quiet']),
+        ('list nodes', ['--list-nodes', f'--tree-id={t}']),
+        ('list nodes quietly', ['--list-nodes', f'--tree-id={t}', '--quiet']),
+        ('list nodes under a header', ['--list-nodes', f'--tree-id={t}', f'--parent-node={h1}']),
+        ('list nodes under a header quietly', ['--list-nodes', f'--tree-id={t}', f'--parent-node={h1}', '--quiet']),
+        ('list header nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=header']),
+        ('list graph nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=graph']),
+        ('list device nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=host']),
+        ('list site nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=site']),
+        ('list nodes of an unknown type', ['--list-nodes', f'--tree-id={t}', '--node-type=leaf']),
+        ('list nodes of a graph node', ['--list-nodes', f'--tree-id={t}', f'--parent-node={graph_node}']),
+        ('list nodes of the default tree', ['--list-nodes', '--tree-id=1']),
+        ('list nodes of an unknown tree', ['--list-nodes', f'--tree-id={t + 5}']),
+        ('list nodes without a tree', ['--list-nodes']),
+        ('list nodes of a bad tree', ['--list-nodes', '--tree-id=abc']),
+        ('list nodes under a bad parent', ['--list-nodes', f'--tree-id={t}', '--parent-node=abc']),
+        ('list nodes under a bare parent', ['--list-nodes', f'--tree-id={t}', '--parent-node']),
+        ('list nodes under a zero-written parent', ['--list-nodes', f'--tree-id={t}', '--parent-node=0.0']),
+        ('list nodes with a bare tree', ['--list-nodes', '--tree-id']),
+        ('list graphs', ['--list-graphs', f'--host-id={a}']),
+        ('list graphs quietly', ['--list-graphs', f'--host-id={a}', '--quiet']),
+        ('list graphs of a device without any', ['--list-graphs', f'--host-id={a + 800}']),
+        ('list graphs without a device', ['--list-graphs']),
+        ('list graphs of device 0', ['--list-graphs', '--host-id=0']),
+        ('list graphs of a decimal zero device', ['--list-graphs', '--host-id=0.0']),
+        ('list graphs of a bare device', ['--list-graphs', '--host-id']),
+        ('list graphs of a bad device', ['--list-graphs', '--host-id=abc']),
+        ('list sites beat devices', ['--list-hosts', '--list-sites']),
+        ('list devices beat trees', ['--list-trees', '--list-hosts']),
+        ('list trees beat nodes', ['--list-nodes', '--list-trees']),
+        ('list nodes beat graphs', ['--list-graphs', '--list-nodes', f'--tree-id={t}']),
+        ('list ignores the type', ['--type=tree', '--list-trees']),
+        ('list takes a value it ignores', ['--list-trees=yes']),
+        ('list stops at help', ['--list-trees', '--help']),
+        ('list after a bad argument', ['--bogus', '--list-trees']),
+        ('help', ['-h']),
+        ('upper help', ['-H']),
+        ('long help', ['--help']),
+        ('version', ['-v']),
+        ('upper version', ['-V']),
+        ('long version', ['--version']),
+        ('version takes a value it ignores', ['--version=3']),
+        ('help after valid options', ['--type=tree', new, '--help']),
+        ('unknown argument', ['--bogus']),
+        ('unknown argument with a value', ['--bogus=1', '--type=tree']),
+        ('unknown argument after a valid one', ['--type=tree', '--bogus']),
+        ('a leading = is no separator', ['=1']),
+        ('the debug flag is unknown here', ['-d', '--list-trees']),
+        ('no arguments', []),
+    ]
+
+
+def verify_tree_cases(harness, check):
+    for label, arguments in tree_cases():
+        tree_seed(harness)
+        original = run(harness, QUIET_PHP + TREE_ORIGINAL, arguments)
+        original_rows = tree_rows(harness)
+        tree_seed(harness)
+        native = run(harness, QUIET_PHP + TREE_SHIM, arguments)
+        native_rows = tree_rows(harness)
+        # Only an argument error loses the version line above the help; the rest must match byte for byte.
+        expected = without_utility(normalise(original['stdout']), TREE_UTILITY) if native['stdout'].startswith('ERROR: Invalid Argument') else normalise(original['stdout'])
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+        check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same trees and nodes')
+    tree_reset(harness)
+    remove_reset(harness)
+
+
+def verify_tree_differences(harness, check):
+    a, t = REMOVE_FIRST, TREE_FIRST
+    tree_seed(harness)
+    seeded = tree_rows(harness)
+    # The original concatenated --graph-id into SQL, so a clause after the number widened the lookup.
+    injected = run(harness, QUIET_PHP + TREE_ORIGINAL, ['--type=node', f'--tree-id={t}', '--node-type=graph', f'--graph-id={a} OR 1=1'])
+    check(injected['exit'] != 0 or 'Added Node' in injected['stdout'], 'the original read the graph id as SQL')
+    tree_seed(harness)
+    refused = run(harness, TREE_SHIM, ['--type=node', f'--tree-id={t}', '--node-type=graph', f'--graph-id={a + 1} OR 1=1'])
+    check(refused['exit'] == 1 and 'No such graph-id' in refused['stdout'], 'a graph id with SQL after the number is refused')
+    check(tree_rows(harness) == seeded, 'a refused graph id writes nothing')
+    # Tree management is realm 4 (tree.php); graphs and devices alone are not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 4')
+    try:
+        for arguments in (['--type=tree', f'--name={PREFIX}denied'], ['--type=node', f'--tree-id={t}', '--node-type=header', f'--name={PREFIX}denied'],
+                          ['--list-sites'], ['--list-hosts'], ['--list-trees'], ['--list-nodes', f'--tree-id={t}'], ['--list-graphs', f'--host-id={a}']):
+            denied = run(harness, TREE_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without tree management is refused")
+        check(tree_rows(harness) == seeded, 'a refused run writes nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 4)')
+    report = run(harness, 'bin/console', ['kadupul:tree:add', '--type=tree', f'--name={PREFIX}json', '--json'])
+    check(report['exit'] == 0 and '"status":"created"' in report['stdout'] and f'"tree_id":{t + 10}' in report['stdout'], 'bin/console creates a tree and prints json')
+    node = run(harness, 'bin/console', ['kadupul:tree:add', '--type=node', f'--tree-id={t}', '--node-type=host', f'--host-id={a + 1}', '--json'])
+    check(node['exit'] == 0 and '"status":"created"' in node['stdout'], 'bin/console adds a device node and prints json')
+    duplicate = run(harness, 'bin/console', ['kadupul:tree:add', '--type=node', f'--tree-id={t}', '--node-type=host', f'--host-id={a + 1}', '--json'])
+    check(duplicate['exit'] == 1 and '"status":"failed"' in duplicate['stdout'], 'bin/console reports a device that is already in the branch as a failure')
+    invalid = run(harness, 'bin/console', ['kadupul:tree:add', '--type=forest'])
+    check(invalid['exit'] == 2, 'bin/console treats an unknown type as invalid input')
+    tree_reset(harness)
+    remove_reset(harness)
+
+
 def verify_graph_parity(harness, check):
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, REPAIR_ORIGINAL)
     install_original(harness, BROKEN_ORIGINAL)
     install_original(harness, REMOVE_ORIGINAL)
     install_original(harness, ADD_TEMPLATE_ORIGINAL)
+    install_original(harness, TREE_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
     saved = harness.sql("SELECT value FROM settings WHERE name='admin_user'")
     try:
         # With no --as the shim acts as settings.admin_user, which needs
         # Console Access (8) and Graphs (5).
         harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}'); "
-                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},3)')
+                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},4),({admin},3)')
         verify_titles_cases(harness, check)
         verify_titles_differences(harness, check)
         verify_repair_cases(harness, check)
@@ -668,10 +912,13 @@ def verify_graph_parity(harness, check):
         verify_remove_differences(harness, check)
         verify_add_template_cases(harness, check)
         verify_add_template_differences(harness, check)
+        verify_tree_cases(harness, check)
+        verify_tree_differences(harness, check)
     finally:
         titles_reset(harness)
         repair_reset(harness)
         broken_reset(harness)
+        tree_reset(harness)
         remove_reset(harness)
         harness.sql("DELETE FROM settings WHERE name='admin_user'")
         for value in saved.splitlines():
