@@ -927,23 +927,12 @@ function aggregate_cdef_totalling($_new_graph_id, $_graph_item_sequence, $_total
 
     # take graph item data for the totalling items
     if (!empty($_new_graph_id)) {
-        // drift guard: AggregateCdefTotallingFilterTest 'excluded set'
-        $excluded_types = implode(',', [
-            GRAPH_ITEM_TYPE_GPRINT,
-            GRAPH_ITEM_TYPE_LEGEND,
-            GRAPH_ITEM_TYPE_GPRINT_LAST,
-            GRAPH_ITEM_TYPE_GPRINT_MAX,
-            GRAPH_ITEM_TYPE_GPRINT_MIN,
-            GRAPH_ITEM_TYPE_GPRINT_AVERAGE,
-            GRAPH_ITEM_TYPE_LEGEND_CAMM,
-        ]);
-
+        // Legends must use the same total CDEF as their corresponding lines.
         $graph_template_items = aggregate_graph_fetch_rows(
             "SELECT id, cdef_id
 			FROM graph_templates_item
 			WHERE local_graph_id = ?
 			AND sequence >= ?
-			AND graph_type_id NOT IN ($excluded_types)
 			ORDER BY sequence",
             [$_new_graph_id, $_graph_item_sequence]
         );
