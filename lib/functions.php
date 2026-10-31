@@ -5222,16 +5222,16 @@ function sanitize_search_string($string) {
 }
 
 /**
- * cleans up a URI, e.g. from REQUEST_URI and/or QUERY_STRING
- * in case of XSS attack, expect the result to be broken
- * we do NOT sanitize in a way, that attacks are converted to valid HTML
- * it is ok, when the result is broken but the application stays alive
+ * Clean a URI while retaining optional brackets and graph-navigation context.
+ * Hostile input may produce a broken URL.
  *
  * @param string $uri   - the uri to be sanitized
+ * @param bool $preserve_brackets - retain brackets used by legacy array query fields
+ * @param bool $preserve_graph_action - copy a missing graph action from the current request
  *
  * @return string    - the sanitized uri
  */
-function sanitize_uri($uri, $preserve_brackets = false) {
+function sanitize_uri($uri, $preserve_brackets = false, bool $preserve_graph_action = true) {
 	static $drop_char_match = array(
 		'^', '$',
 		'<', '>',
@@ -5260,7 +5260,7 @@ function sanitize_uri($uri, $preserve_brackets = false) {
 		$uri = urldecode($uri);
 	}
 
-	if (strpos($uri, 'graph_view.php') !== false) {
+	if ($preserve_graph_action && strpos($uri, 'graph_view.php') !== false) {
 		if (strpos($uri, 'action=') === false) {
 			$uri = $uri . (strpos($uri, '?') !== false ? '&':'?') . 'action=' . get_nfilter_request_var('action');
 		}
