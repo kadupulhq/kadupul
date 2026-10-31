@@ -708,12 +708,12 @@ class Net_Ping
             if (!$ping_result && $avail_method == AVAIL_SNMP_AND_PING) {
                 $snmp_result = $ping_result;
             } else {
-                /* Lets assume the host is up because if we are in OR mode then we have already
-                * pinged the host successfully, or some when silly people have not entered an
-                * snmp_community under v1/2, we assume that this was successfully anyway */
+                /* A successful OR ping needs no SNMP request. Preserve the legacy success
+                * assumption for v1/2 hosts without a configured community; otherwise a
+                * failed OR ping must be followed by the configured SNMP probe. */
                 $snmp_result = true;
                 $this->snmp_status = 0.000;
-                if ($avail_method != AVAIL_SNMP_OR_PING &&
+                if (($avail_method != AVAIL_SNMP_OR_PING || !$ping_result) &&
                    (strlen($this->host['snmp_community']) > 0 || $this->host['snmp_version'] >= 3)) {
                     $snmp_result = $this->ping_snmp();
                 }
