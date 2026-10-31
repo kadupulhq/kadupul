@@ -35,6 +35,8 @@ TREE_FIRST = 60001
 REMOVE_FIRST = 9000001
 # BSD stty says "stdin isn't a terminal", GNU stty "'standard input': Inappropriate ioctl for device".
 STTY = re.compile(r'^stty: .*\n', re.MULTILINE)
+# A CI php.ini logs the original's PHP warnings (an undefined sort method) to stderr even with display_errors off.
+PHP_LOG = re.compile(r'^(?:PHP )?(?:Warning|Notice|Deprecated): .*\n', re.MULTILINE)
 # The original also raised PHP deprecations on a terminal-less run; both sides run with display_errors off.
 QUIET_PHP = '-d display_errors=0 '
 
@@ -846,7 +848,7 @@ def verify_tree_cases(harness, check):
         expected = without_utility(normalise(original['stdout']), TREE_UTILITY) if native['stdout'].startswith('ERROR: Invalid Argument') else normalise(original['stdout'])
         check(original['exit'] == native['exit'], f'{label} keeps its exit code')
         check(expected == normalise(native['stdout']), f'{label} prints the same lines')
-        check(STTY.sub('', normalise(original['stderr'])) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
         check(original_rows == native_rows, f'{label} leaves the same trees and nodes')
     tree_reset(harness)
     remove_reset(harness)
