@@ -7,6 +7,8 @@
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
+      <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
+      <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
