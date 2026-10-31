@@ -128,10 +128,10 @@ if ($scenario['mismatched_log_principals'] ?? false) {
 }
 $db->exec("CREATE TABLE snmpagent_cache(oid TEXT, name TEXT, mib TEXT, `max-access` TEXT, kind TEXT, value TEXT, description TEXT);
 CREATE TABLE snmpagent_managers(id INTEGER, hostname TEXT);
-CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notification TEXT, severity INTEGER, time INTEGER, varbinds TEXT);
+CREATE TABLE snmpagent_notifications_log(id INTEGER, manager_id INTEGER, notification TEXT, mib TEXT, severity INTEGER, time INTEGER, varbinds TEXT);
 INSERT INTO snmpagent_cache VALUES('1.1','Name & <script>','MIB-A','read-only','Scalar','Value & <script>','Description & <script>'),('1.2','Other','MIB-A','read-write','Column Data','Second',''),('1.3','Foreign','MIB-B','not-accessible','Table','unused','');
 INSERT INTO snmpagent_managers VALUES(1,'Receiver & <script>'),(2,'Foreign receiver');
-INSERT INTO snmpagent_notifications_log VALUES(1,1,'Name & <script>',1,100,'Bind & <script>'),(2,1,'Other',3,200,'Second'),(3,2,'Foreign',4,300,'Foreign');");
+INSERT INTO snmpagent_notifications_log VALUES(1,1,'Name & <script>','MIB-A',1,100,'Bind & <script>'),(2,1,'Other','MIB-A',3,200,'Second'),(3,2,'Foreign','MIB-B',4,300,'Foreign');");
 if ($managerView) {
     $db->exec("INSERT INTO settings_user VALUES(99,'user_auto_logout_time','0');");
     $db->exec("ALTER TABLE snmpagent_managers ADD COLUMN description TEXT;

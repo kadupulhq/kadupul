@@ -2,10 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 """Negative coverage probes retain separate real database measurements."""
+import ast
 import copy
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -40,6 +42,69 @@ class UserCliProducerRegistrationTest(unittest.TestCase):
                                'tests/Fixtures/legacy-cli/add_perms.php'):
                     self.assertEqual(hashlib.sha256((ROOT / source).read_bytes()).hexdigest(),
                                      manifest['source_sha256'].get(source), source)
+class HttpProducerSourceRegistrationTest(unittest.TestCase):
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location('coverage_support', ROOT / 'tests/Symfony/coverage_support.py')
+        self.support = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.support)
+
+    def guard(self, operation, manifest=None):
+        return subprocess.run(
+            [os.environ.get('PHP', 'php'), '-d', 'display_errors=stderr',
+             str(ROOT / 'tests/Fixtures/http-coverage-source-guard.php'), operation],
+            input=json.dumps(manifest) if manifest is not None else '',
+            capture_output=True, text=True, timeout=30,
+        )
+
+    def test_actual_producer_and_merger_require_the_same_complete_source_inventory(self):
+        result = self.guard('paths')
+        self.assertEqual(0, result.returncode, result.stderr)
+        expected = json.loads(result.stdout)
+        self.assertGreater(len(expected), 50)
+        self.assertEqual(self.support.http_coverage_sources(ROOT), expected)
+        self.assertIn('tests/Symfony/http_coverage_sources.json', expected)
+        for database_sessions in (False, True):
+            with self.subTest(database_sessions=database_sessions), tempfile.TemporaryDirectory() as temporary:
+                output = Path(temporary)
+                (output / 'raw').mkdir()
+                (output / 'raw/coverage-probe.json').write_text('{}')
+                self.support.publish_coverage(output, database_sessions, ['retained check'])
+                manifest = json.loads((output / 'observations.json').read_text())
+                self.assertEqual('database' if database_sessions else 'files', manifest['session_handler'])
+                self.assertEqual(['retained check'], manifest['checks'])
+                self.assertEqual(set(expected), set(manifest['source_sha256']))
+                for source in expected:
+                    self.assertEqual(hashlib.sha256((ROOT / source).read_bytes()).hexdigest(), manifest['source_sha256'][source])
+                accepted = self.guard('verify', manifest)
+                self.assertEqual(0, accepted.returncode, accepted.stderr)
+                self.assertEqual('Verified HTTP source identities', accepted.stdout)
+                for source in expected:
+                    for mutation in ('missing', 'stale'):
+                        with self.subTest(source=source, mutation=mutation):
+                            changed = copy.deepcopy(manifest)
+                            if mutation == 'missing':
+                                del changed['source_sha256'][source]
+                            else:
+                                changed['source_sha256'][source] = '0' * 64
+                            refused = self.guard('verify', changed)
+                            self.assertNotEqual(0, refused.returncode)
+                            self.assertIn('Integration test source differs from checkout: ' + source, refused.stderr)
+
+    def test_imported_local_scenarios_and_their_frozen_cli_oracles_are_registered(self):
+        paths = set(self.support.http_coverage_sources(ROOT))
+        for path in sorted(paths):
+            if not path.startswith('tests/Symfony/') or not path.endswith('.py'):
+                continue
+            for node in ast.walk(ast.parse((ROOT / path).read_text())):
+                names = [node.module] if isinstance(node, ast.ImportFrom) and node.module else [item.name for item in node.names] if isinstance(node, ast.Import) else []
+                for name in names:
+                    dependency = 'tests/Symfony/' + name.split('.')[0] + '.py'
+                    if (ROOT / dependency).is_file():
+                        self.assertIn(dependency, paths, (path, dependency))
+                if isinstance(node, ast.Constant) and isinstance(node.value, str) and node.value.endswith('.php'):
+                    oracle = 'tests/Fixtures/legacy-cli/' + Path(node.value).name
+                    if (ROOT / oracle).is_file():
+                        self.assertIn(oracle, paths, (path, oracle))
 
 
 class DatabaseReportPreservationTest(unittest.TestCase):

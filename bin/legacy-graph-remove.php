@@ -27,8 +27,9 @@ try {
         throw new RuntimeException('Payload too large');
     }
     $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['database', 'graphs']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['database', 'graphs', 'keep_data_sources']) !== []
         || !in_array($command['database'] ?? null, ['local', 'main'], true)
+        || !is_bool($command['keep_data_sources'] ?? null)
         || !is_array($command['graphs'] ?? null) || !array_is_list($command['graphs']) || $command['graphs'] === []) {
         throw new RuntimeException('Invalid command');
     }
@@ -42,8 +43,8 @@ try {
         db_switch_remote_to_main();
     }
     $ids = array_combine($command['graphs'], $command['graphs']);
-    // Delete type 2 removes the data sources the graphs reference, as remove_broken_graphs.php did.
-    api_delete_graphs($ids, '2');
+    // Type 1 keeps the data sources; type 2 removes those the graphs reference, as remove_broken_graphs.php and remove_graphs.php did.
+    api_delete_graphs($ids, $command['keep_data_sources'] ? '1' : '2');
     $done = count($command['graphs']);
     $status = 'ok';
 } catch (Throwable $error) {

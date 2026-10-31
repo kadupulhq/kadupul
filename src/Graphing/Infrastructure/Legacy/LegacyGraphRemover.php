@@ -20,12 +20,13 @@ final readonly class LegacyGraphRemover implements GraphRemover
     public function __construct(private LegacyWorkerRunner $worker) {}
 
     #[\Override]
-    public function remove(OperatorDatabase $database, array $localGraphIds): int
+    public function remove(OperatorDatabase $database, array $localGraphIds, bool $keepDataSources = false): int
     {
         // No timeout: stopping a removal half way would leave a graph without its items.
         $run = $this->worker->run('legacy-graph-remove.php', self::MARKER, [
             'database' => $database === OperatorDatabase::Main ? 'main' : 'local',
             'graphs' => $localGraphIds,
+            'keep_data_sources' => $keepDataSources,
         ], null);
         if (!$run['ok'] || !is_int($run['result']['done'] ?? null)) {
             throw new \RuntimeException('Graph removal outcome is unknown.');

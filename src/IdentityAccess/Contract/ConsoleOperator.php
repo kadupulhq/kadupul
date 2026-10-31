@@ -46,4 +46,10 @@ interface ConsoleOperator
      * where the web edits, repairs and removes graphs and renames them from a template.
      */
     public function canManageGraphs(Actor $actor): bool;
+
+    /**
+     * Realm 3, Devices: host.php (include/global_arrays.php:1293), where the web
+     * associates graph templates and data queries with a device.
+     */
+    public function canManageDevices(Actor $actor): bool;
 }

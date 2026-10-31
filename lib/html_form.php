@@ -1438,11 +1438,11 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
     }
 
     if ($force_type != 'import' && $force_type != 'export' && $force_type != 'save' && $force_type != 'close' && $cancel_url != '') {
-        $cancel_action = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='" . html_escape(sanitize_uri($cancel_url)) . "' value='" . $calt . "'>";
+        $cancel_action = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='"
+            . html_escape(sanitize_uri($cancel_url, false)) . "' value='" . $calt . "'>";
     } else {
         $cancel_action = '';
     }
-
     ?>
 	<table style='width:100%;text-align:center;'>
 		<tr>

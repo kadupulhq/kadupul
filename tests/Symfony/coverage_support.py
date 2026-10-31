@@ -31,17 +31,23 @@ def configure_coverage(harness, output):
     harness.command = instrumented
 
 
+def http_coverage_sources(root: Path) -> list[str]:
+    registry = json.loads((root / 'tests/Symfony/http_coverage_sources.json').read_text())
+    paths = registry.get('source_paths')
+    if (registry.get('version') != 1 or registry.get('suite') != 'symfony-http'
+            or not isinstance(paths, list) or not paths
+            or any(not isinstance(path, str) or not path or path.startswith('/')
+                   or '\\' in path or '..' in path.split('/') for path in paths)
+            or len(paths) != len(set(paths))):
+        raise RuntimeError('Invalid HTTP coverage source registry')
+    return paths
+
+
 def publish_coverage(output, database_sessions, checks):
     if not list((output / 'raw').glob('coverage-*.json')):
         raise RuntimeError('No Symfony HTTP coverage recorded')
     root = Path(__file__).resolve().parents[2]
-    sources = ['session_bridge.py', 'data_input_scenarios.py', 'data_input_review_http.py', 'data_source_profile_scenarios.py', 'data_source_profile_heartbeat_scenarios.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'script_server_scenarios.py', 'cli_parity_scenarios.py', 'tree_automation_probe.php', 'cli_schema_scenarios.py', 'coverage_support.py', 'link_scenarios.py', 'about_scenarios.py', 'about_authentication_scenarios.py', 'palette_color_review_http.py', 'palette_color_scenarios.py', 'gprint_preset_scenarios.py', 'color_template_scenarios.py', 'cdef_scenarios.py', 'automation_template_scenarios.py', 'palette_sql_failure_probe.php', 'vdef_scenarios.py', 'vdef_transaction_probe.php', 'vdef_browser_probe.cjs', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'device_association_scenarios.py', 'device_legacy_scenarios.py', 'device_maintenance_scenarios.py', 'device_placement_scenarios.py', 'placement_lock_probe.php', 'cli_audit_scenarios.py', 'cli_user_scenarios.py']
-    sources += ['cdef_legacy_page_scenarios.py', 'console_home_http.py', 'console_browser_probe.cjs', 'permission_denied_scenarios.py', 'plugin_menu_scenarios.py']
-    source_paths = [f'tests/Symfony/{name}' for name in sources] + ['tests/e2e/browser-coverage.js', 'public/js/vdef-item.js', 'tests/Fixtures/plugins/compatibility_test/setup.php', 'tests/Fixtures/plugins/menu_parity/setup.php', 'tests/Fixtures/legacy-cli/analyze_database.php', 'tests/Fixtures/legacy-cli/convert_tables.php', 'tests/Fixtures/legacy-cli/fix_mediumint.php', 'tests/Fixtures/legacy-cli/audit_database.php', 'tests/Fixtures/native-cli/audit_database.php', 'tests/Fixtures/legacy-cli/copy_user.php', 'tests/Fixtures/legacy-cli/add_perms.php']
-    source_paths += ['src/Platform/Contract/ReferenceWriteTransactionRunner.php',
-                     'src/Platform/Infrastructure/Legacy/NativeReferenceWriteTransactionRunner.php',
-                     'src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php']
-    source_paths += ['include/js/console-home.js', *[f'templates/platform/{name}.html.twig' for name in ('console_home', 'console_home_body', 'console_home_fragment', 'console_home_shell', 'help')]]
+    source_paths = http_coverage_sources(root)
     evidence = {'suite': 'symfony-http',
                 'session_handler': 'database' if database_sessions else 'files',
                 'checks': checks,
