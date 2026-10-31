@@ -25,9 +25,11 @@ if (PHP_SAPI !== 'cli') {
 // realm, a realm the actor must also hold, or null; run, which returns the
 // result once the actor is confirmed; json, extra json_encode flags. An optional
 // final input_limit setting allows a bounded 1 MiB mutation payload; older
-// read workers retain their 64 KiB budget. An optional final realm_denial boolean
+// read workers retain their 64 KiB budget. An optional realm_denial boolean
 // requests a typed result from the native core realm-denial renderer. Reskin or
-// plugin-owned exits retain their native behavior. Neither option is command input.
+// plugin-owned exits retain their native behavior. A source-owned query Closure
+// may overlay validated native page context before bootstrap. These settings
+// are never command input.
 define('KADUPUL_BROWSER_COMPATIBILITY', true);
 define('KADUPUL_REDACT_DATABASE_LOGS', true);
 define('KADUPUL_THROW_DATABASE_ERRORS', true);
@@ -44,7 +46,11 @@ try {
     if (array_key_exists('realm_denial', $consoleHandoff)) {
         $consoleHandoffKeys[] = 'realm_denial';
     }
+    if (array_key_exists('query', $consoleHandoff)) {
+        $consoleHandoffKeys[] = 'query';
+    }
     if (array_keys($consoleHandoff) !== $consoleHandoffKeys
+        || array_key_exists('query', $consoleHandoff) && !$consoleHandoff['query'] instanceof Closure
         || !is_bool($consoleHandoffRealmDenial)
         || !in_array($consoleHandoffInputLimit, [65536, 1048576], true)
         || !is_int($consoleHandoff['realm']) && $consoleHandoff['realm'] !== null) {
@@ -75,14 +81,32 @@ try {
     if (!is_string($queryString)) {
         throw new InvalidArgumentException('Invalid console query string.');
     }
+    if (isset($consoleHandoff['query'])) {
+        // The descriptor supplies only fixed page context. It cannot replay
+        // posted fields or uploaded files, and client query values lose ties.
+        $consoleHandoffQuery = $consoleHandoff['query']($command);
+        if (!is_array($consoleHandoffQuery) || count($consoleHandoffQuery) > 16) {
+            throw new LogicException('Invalid console query context.');
+        }
+        foreach ($consoleHandoffQuery as $consoleHandoffQueryKey => $consoleHandoffQueryValue) {
+            if (!is_string($consoleHandoffQueryKey) || !is_string($consoleHandoffQueryValue)
+                || strlen($consoleHandoffQueryKey) > 64 || strlen($consoleHandoffQueryValue) > 4096
+                || str_contains($consoleHandoffQueryKey . $consoleHandoffQueryValue, "\0")) {
+                throw new LogicException('Invalid console query context.');
+            }
+        }
+        $command['query'] = array_replace($command['query'], $consoleHandoffQuery);
+        $queryString = http_build_query($command['query'], '', '&', PHP_QUERY_RFC3986);
+        unset($consoleHandoffQuery, $consoleHandoffQueryKey, $consoleHandoffQueryValue);
+    }
     $_SERVER = array_replace($_SERVER, $command['server'], [
         'SCRIPT_FILENAME' => $root . '/' . $consoleHandoff['page'], 'SCRIPT_NAME' => $command[$pathKey],
-        'PHP_SELF' => $command[$pathKey],
+        'PHP_SELF' => $command[$pathKey], 'QUERY_STRING' => $queryString,
         'REQUEST_URI' => $command[$pathKey] . ($queryString === '' ? '' : '?' . $queryString), 'REQUEST_METHOD' => 'GET',
     ]);
     $_COOKIE = $command['cookies'];
     $_GET = $_REQUEST = $command['query'];
-    $_POST = [];
+    $_POST = $_FILES = [];
     chdir($root . '/include');
     session_save_path($command['session_path']);
     session_id($command['session_id']);
