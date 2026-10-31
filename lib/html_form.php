@@ -1678,8 +1678,8 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
 	$force_type_html = htmlspecialchars((string) $force_type, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$force_type_html = str_replace('`', '&#96;', $force_type_html);
 	if ($force_type != 'import' && $force_type != 'export' && $force_type != 'save' && $force_type != 'close' && $cancel_url != '') {
-		$cancel_url_html = htmlspecialchars(sanitize_uri($cancel_url, false, false),
-			$escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
+		$cancel_url_html = sanitize_uri($cancel_url, false, false);
+		$cancel_url_html = htmlspecialchars($cancel_url_html, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$cancel_url_html = str_replace('`', '&#96;', $cancel_url_html);
 		$calt_html = htmlspecialchars((string) $calt, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$calt_html = str_replace('`', '&#96;', $calt_html);
