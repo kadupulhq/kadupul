@@ -21,7 +21,7 @@ warning/deprecation fails the fixture. No production session or database is
 used; the schema and server are cleaned in `finally`.
 
 PHP 8.1.34 native execution and a PHP 8.4.25 child web server each pass one test
-with 27 assertions. The old registration fails the same PHP 8.4 test at the
+with 28 assertions. The old registration fails the same PHP 8.4 test at the
 registration call with E_DEPRECATED (8192). LTS's locked Pest runner uses PHP
 8.1; `KADUPUL_TEST_SESSION_PHP` selects the explicit child executable when
 checking PHP 8.4 without upgrading the runner dependencies.

@@ -30,11 +30,21 @@ test('shipped database session registration uses the native web session engine w
         $environment['KADUPUL_SESSION_FIXTURE_DSN'] = $dsn . ';dbname=' . $schema;
         $server = proc_open([getenv('KADUPUL_TEST_SESSION_PHP') ?: PHP_BINARY, '-d', 'error_reporting=32767', '-S', $address, $root . '/tests/fixtures/database-session-registration-web.php'], [0 => ['file', '/dev/null', 'r'], 1 => ['file', '/dev/null', 'a'], 2 => ['file', '/dev/null', 'a']], $pipes, $root, $environment);
         expect(is_resource($server))->toBeTrue();
-        for ($attempt = 0; $attempt < 100; $attempt++) {
-            $connection = @stream_socket_client('tcp://' . $address, timeout: 0.05);
-            if (is_resource($connection)) { fclose($connection); break; }
-            usleep(10000);
+        $ready = false;
+        $previous = set_error_handler(static function (int $severity, string $message, string $file, int $line) use (&$previous): bool {
+            if ($severity === E_WARNING && str_starts_with($message, 'stream_socket_client(): Unable to connect to tcp://127.0.0.1:') && str_contains($message, 'Connection refused')) return true;
+            return $previous !== null && $previous($severity, $message, $file, $line) !== false;
+        });
+        try {
+            for ($attempt = 0; $attempt < 100; $attempt++) {
+                $connection = stream_socket_client('tcp://' . $address, timeout: 0.05);
+                if (is_resource($connection)) { fclose($connection); $ready = true; break; }
+                usleep(10000);
+            }
+        } finally {
+            restore_error_handler();
         }
+        expect($ready)->toBeTrue();
         foreach (['write' => 42, 'read' => 42, 'gc' => 42, 'destroy' => 42, 'read-empty' => null] as $action => $actor) {
             if ($action === 'gc') $database->exec("INSERT INTO sessions (id, access) VALUES ('expired-owned', 0)");
             $body = file_get_contents('http://' . $address . '/?action=' . $action, false, stream_context_create(['http' => ['ignore_errors' => true, 'timeout' => 5]]));
