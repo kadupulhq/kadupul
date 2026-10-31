@@ -60,7 +60,7 @@ def verify_collector_about(harness, session, page, check):
     saved = False
     created = False
     try:
-        harness.sql('CREATE DATABASE about_collector CHARACTER SET utf8mb4; CREATE TABLE about_collector.version LIKE cacti.version; INSERT INTO about_collector.version SELECT * FROM cacti.version; CREATE TABLE about_collector.poller_output_boost LIKE cacti.poller_output_boost')
+        harness.sql('CREATE DATABASE about_collector CHARACTER SET utf8mb4; CREATE TABLE about_collector.version LIKE cacti.version; INSERT INTO about_collector.version SELECT * FROM cacti.version; CREATE TABLE about_collector.poller_output_boost LIKE cacti.poller_output_boost; CREATE TABLE about_collector.poller_output LIKE cacti.poller_output')
         created = True
         harness.command('cp', 'include/config.php', '/artifacts/about-primary-config.php', check=True)
         saved = True

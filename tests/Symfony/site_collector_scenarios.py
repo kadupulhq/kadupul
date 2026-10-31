@@ -7,7 +7,7 @@ def verify_collector_sites(harness, request, form, action, site_id, created, che
     database_created = False
     configuration_saved = False
     try:
-        harness.sql('CREATE DATABASE sites_collector CHARACTER SET utf8mb4; CREATE TABLE sites_collector.version LIKE cacti.version; INSERT INTO sites_collector.version SELECT * FROM cacti.version; CREATE TABLE sites_collector.poller_output_boost LIKE cacti.poller_output_boost')
+        harness.sql('CREATE DATABASE sites_collector CHARACTER SET utf8mb4; CREATE TABLE sites_collector.version LIKE cacti.version; INSERT INTO sites_collector.version SELECT * FROM cacti.version; CREATE TABLE sites_collector.poller_output_boost LIKE cacti.poller_output_boost; CREATE TABLE sites_collector.poller_output LIKE cacti.poller_output')
         database_created = True
         check(harness.command('cp', 'include/config.php', '/artifacts/site-primary-config.php')['exit'] == 0, 'collector fixture preserves installation configuration')
         configuration_saved = True
