@@ -1865,6 +1865,8 @@ final class UpgradeGetter {
         ('derived interface', 'extra', r'<?php namespace Kadupul\Fixture; interface OtherSignal extends \Kadupul\Platform\Contract\InstallationUpgradeRequired {}', False),
         ('unparseable source', 'extra', '<?php this is invalid PHP !!!', False),
         ('anonymous alternate implementation', 'extra', r'<?php namespace Kadupul\Fixture; function otherSignal() { return new class extends \RuntimeException implements \Kadupul\Platform\Contract\InstallationUpgradeRequired { public function location(): string { return "/"; } }; }', False),
+        ('case-variant alternate implementation', 'extra', r'<?php namespace Kadupul\Fixture; final class OtherSignal extends \RuntimeException implements \kadupul\platform\contract\installationupgraderequired { public function location(): string { return "/"; } }', False),
+        ('case-variant derived interface', 'extra', r'<?php namespace Kadupul\Fixture; interface OtherSignal extends \kadupul\platform\contract\installationupgraderequired {}', False),
     ]
     for label, target, mutation, admitted in upgrade_cases:
         count += 1
