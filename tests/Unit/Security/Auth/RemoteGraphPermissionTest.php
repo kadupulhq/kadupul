@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -22,7 +24,7 @@ namespace RemoteGraphPermissionTest;
  *
  * @return array{output: string, allowed_checks: list<array{0: int, 1: int}>, remote_urls: list<string>, local_users: list<int>}
  */
-function graph_image_run(int $poller_id, bool $allowed): array
+function graph_image_run(int $poller_id, bool $allowed, mixed $remote_response = "image = remote\nREMOTE_IMAGE"): array
 {
     $root = dirname(__DIR__, 4);
     $dir  = sys_get_temp_dir() . '/graph-image-' . bin2hex(random_bytes(8));
@@ -49,7 +51,7 @@ function is_graph_allowed($local_graph_id, $user) {
 }
 function call_remote_data_collector($poller_id, $url) {
     $GLOBALS['trace']['remote_urls'][] = $url;
-    return "image = remote\nREMOTE_IMAGE";
+    return $GLOBALS['remote_response'];
 }
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $pipe = '', &$meta = array(), $user = 0) {
     $GLOBALS['trace']['local_users'][] = (int) $user;
@@ -58,10 +60,11 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $pi
 function rrdtool_create_error_image(...$args) { return 'ERROR_IMAGE'; }
 $config = array('poller_id' => (int) $argv[2], 'url_path' => '/');
 $allowed = $argv[3] === '1';
+$remote_response = json_decode($argv[4], true, 512, JSON_THROW_ON_ERROR);
 $trace = array('allowed_checks' => array(), 'remote_urls' => array(), 'local_users' => array());
 $_SESSION = array('sess_user_id' => 42);
 $_REQUEST = array('local_graph_id' => '7', 'image_format' => 'png');
-register_shutdown_function(function () {
+register_shutdown_function(function (): void {
     $output = '';
     while (ob_get_level()) {
         $output = ob_get_clean() . $output;
@@ -75,7 +78,7 @@ PHP;
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-r', $program, $root, (string) $poller_id, $allowed ? '1' : '0'),
+            array(PHP_BINARY, '-r', $program, $root, (string) $poller_id, $allowed ? '1' : '0', json_encode($remote_response, JSON_THROW_ON_ERROR)),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -104,15 +107,16 @@ PHP;
     }
 }
 
-test('a remote collector refuses a graph the user may not view without asking the main poller', function () {
+test('a remote collector refuses a graph the user may not view without asking the main poller', function (): void {
     $run = graph_image_run(2, false);
 
     expect($run['allowed_checks'])->toBe(array(array(7, 42)))
         ->and($run['remote_urls'])->toBe(array())
-        ->and($run['output'])->toBe('GRAPH ACCESS DENIED');
+        ->and($run['output'])->toBe('GRAPH ACCESS DENIED')
+        ->and($run['local_users'])->toBe(array());
 });
 
-test('a remote collector forwards the session user with an allowed graph', function () {
+test('a remote collector forwards the session user with an allowed graph', function (): void {
     $run = graph_image_run(2, true);
 
     expect($run['allowed_checks'])->toBe(array(array(7, 42)))
@@ -122,7 +126,7 @@ test('a remote collector forwards the session user with an allowed graph', funct
         ->and($run['output'])->toBe('REMOTE_IMAGE');
 });
 
-test('the main poller still renders locally as the session user', function () {
+test('the main poller still renders locally as the session user', function (): void {
     $run = graph_image_run(1, true);
 
     expect($run['allowed_checks'])->toBe(array())
@@ -130,3 +134,36 @@ test('the main poller still renders locally as the session user', function () {
         ->and($run['local_users'])->toBe(array(42))
         ->and($run['output'])->toBe('LOCAL_IMAGE');
 });
+
+test('an invalid remote image response uses the existing error-image path', function (mixed $response): void {
+    $run = graph_image_run(2, true, $response);
+    expect($run['output'])->toBe('ERROR_IMAGE')
+        ->and($run['remote_urls'])->toHaveCount(1)
+        ->and($run['allowed_checks'])->toBe(array(array(7, 42)))
+        ->and($run['local_users'])->toBe(array(42));
+})->with(array(
+    'false' => array(false),
+    'null' => array(null),
+    'integer' => array(0),
+    'empty array' => array(array()),
+    'error envelope' => array(array('error' => 'offline')),
+    'null image' => array(array('image' => null)),
+    'array image' => array(array('image' => array())),
+    'false image' => array(array('image' => false)),
+    'missing marker' => array('ERROR: offline'),
+    'missing marker with newline' => array("ERROR: offline\nTAIL"),
+    'unterminated marker row' => array('image = incomplete'),
+    'empty image bytes' => array("image = 0\n"),
+));
+
+test('valid remote image bytes remain intact', function (mixed $response, string $expected): void {
+    $run = graph_image_run(2, true, $response);
+    expect($run['output'])->toBe($expected)
+        ->and($run['remote_urls'])->toHaveCount(1)
+        ->and($run['local_users'])->toBe(array());
+})->with(array(
+    'marker at zero' => array("image = 3\nPNG", 'PNG'),
+    'metadata prefix' => array("width = 10\nimage = 3\nPNG", 'PNG'),
+    'wrapped image' => array(array('image' => "image = 3\nPNG"), 'PNG'),
+    'CRLF marker and binary body' => array("image = 7\r\n\0PNG\r\n", "\0PNG\r\n"),
+));
