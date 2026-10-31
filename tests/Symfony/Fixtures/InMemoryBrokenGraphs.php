@@ -20,6 +20,9 @@ final class InMemoryBrokenGraphs implements BrokenGraphCatalog, GraphRemover
     /** @var list<list<int>> */
     public array $batches = [];
 
+    /** @var list<bool> */
+    public array $kept = [];
+
     public int $reads = 0;
 
     /** @param list<BrokenGraphGroup> $groups @param ?int $finishes graphs finished per call, null for all */
@@ -34,9 +37,10 @@ final class InMemoryBrokenGraphs implements BrokenGraphCatalog, GraphRemover
     }
 
     #[\Override]
-    public function remove(OperatorDatabase $database, array $localGraphIds): int
+    public function remove(OperatorDatabase $database, array $localGraphIds, bool $keepDataSources = false): int
     {
         $this->batches[] = $localGraphIds;
+        $this->kept[] = $keepDataSources;
         if ($this->fails) {
             throw new \RuntimeException('Graph removal outcome is unknown.');
         }

@@ -107,6 +107,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/repair_graphs.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/remove_graphs.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -1061,7 +1062,14 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Graphing/Infrastructure/Legacy/LegacyGraphRemover.php',
         'src/Graphing/Infrastructure/Persistence/DbalBrokenGraphCatalog.php',
         'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsCommand.php',
-        'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsLegacyArguments.php'];
+        'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsLegacyArguments.php',
+        'cli/remove_graphs.php',
+        'src/Graphing/Domain/GraphRemovalFilter.php',
+        'src/Graphing/Application/Command/RemoveGraphs.php',
+        'src/Graphing/Application/Command/ListRemovalChoices.php',
+        'src/Graphing/Infrastructure/Persistence/DbalGraphRemovalCatalog.php',
+        'src/Graphing/Infrastructure/Symfony/RemoveGraphsCommand.php',
+        'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php'];
     if ($handler === 'database') {
         $requiredPaths[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
         $requiredPaths[] = 'include/session.php';
