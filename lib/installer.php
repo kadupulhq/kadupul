@@ -3736,12 +3736,9 @@ class Installer implements JsonSerializable
 
                     $this->setProgress(Installer::PROGRESS_DEVICE_TREE);
                     log_install_always('', __('Adding Device to Default Tree'));
-                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-                        cacti_escapeshellarg($config['base_path'] . '/cli/add_tree.php') .
-                        ' --type=node' .
-                        ' --node-type=host' .
-                        ' --tree-id=1' .
-                        ' --host-id=' . $host_id);
+                    /* the same call cli/add_tree.php made: a device node at the root of tree 1, sorted alphabetically */
+                    include_once(dirname(__FILE__) . '/api_tree.php');
+                    api_tree_item_save(0, 1, TREE_ITEM_TYPE_HOST, 0, '', 0, $host_id, 0, HOST_GROUPING_GRAPH_TEMPLATE, TREE_ORDERING_ALPHABETIC, false);
                 } else {
                     log_install_always('', __('No templated graphs for Default Device were found'));
                 }
