@@ -26,10 +26,23 @@ REMOVE_SHIM = 'cli/remove_graphs.php'
 ADD_TEMPLATE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_graph_template.php'
 ADD_TEMPLATE_SHIM = 'cli/add_graph_template.php'
 ADD_TEMPLATE_UTILITY = 'Kadupul Add Graph Template Utility'
+TREE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_tree.php'
+TREE_SHIM = 'cli/add_tree.php'
+TREE_UTILITY = 'Kadupul Add Tree Utility'
+ADD_GRAPHS_ORIGINAL = 'tests/Fixtures/legacy-cli/add_graphs.php'
+ADD_GRAPHS_SHIM = 'cli/add_graphs.php'
+ADD_GRAPHS_UTILITY = 'Kadupul Add Graphs Utility'
+# Devices, graphs and data sources the creation cases make; the next ids are pinned so that the original and the shim print the same ones.
+ADD_GRAPHS_DEVICE = 9000101
+ADD_GRAPHS_NEXT = 9500001
+# graph_tree.id is a smallint, so the seeded tree sits near the top of its range; the nodes reuse the removal ids.
+TREE_FIRST = 60001
 # Every id the removal cases print is fixed (below 16777215, the largest device template id), because the original and the shim each start from a fresh seed.
 REMOVE_FIRST = 9000001
 # BSD stty says "stdin isn't a terminal", GNU stty "'standard input': Inappropriate ioctl for device".
 STTY = re.compile(r'^stty: .*\n', re.MULTILINE)
+# A CI php.ini logs the original's PHP warnings (an undefined sort method) to stderr even with display_errors off.
+PHP_LOG = re.compile(r'^(?:PHP )?(?:Warning|Notice|Deprecated): .*\n', re.MULTILINE)
 # The original also raised PHP deprecations on a terminal-less run; both sides run with display_errors off.
 QUIET_PHP = '-d display_errors=0 '
 
@@ -645,19 +658,507 @@ def verify_add_template_differences(harness, check):
     remove_reset(harness)
 
 
+def tree_seed(harness):
+    """The removal seed, a site, and one tree: two headers at the root, a graph and a device under the first, a site under the second."""
+    remove_seed(harness)
+    tree_reset(harness)
+    a, t = REMOVE_FIRST, TREE_FIRST
+    harness.sql(
+        f"INSERT INTO sites (id, name) VALUES ({a}, '{PREFIX}tsite'), ({a + 1}, '{PREFIX}tsite-two'); "
+        f"INSERT INTO graph_tree (id, sort_type, name) VALUES ({t}, 2, '{PREFIX}tree-one'); "
+        f'INSERT INTO graph_tree_items (id, parent, position, graph_tree_id, local_graph_id, title, host_id, site_id, host_grouping_type, sort_children_type) VALUES '
+        f"({a}, 0, 1, {t}, 0, '{PREFIX}h1', 0, 0, 1, 2), ({a + 1}, 0, 2, {t}, 0, '{PREFIX}h2', 0, 0, 1, 1), "
+        f'({a + 2}, {a}, 1, {t}, {a}, NULL, 0, 0, 1, 0), ({a + 3}, {a}, 2, {t}, 0, NULL, {a}, 0, 2, 0), ({a + 4}, {a + 1}, 1, {t}, 0, NULL, 0, {a}, 1, 0); '
+        # The next ids are fixed too, so that the original and the shim print the same ones.
+        f'ALTER TABLE graph_tree AUTO_INCREMENT = {t + 10}; ALTER TABLE graph_tree_items AUTO_INCREMENT = {a + 10}')
+
+
+def tree_reset(harness):
+    harness.sql(f'DELETE FROM graph_tree_items WHERE graph_tree_id >= {TREE_FIRST} OR id >= {REMOVE_FIRST}; '
+                f'DELETE FROM graph_tree WHERE id >= {TREE_FIRST}; '
+                f'DELETE FROM sites WHERE id >= {REMOVE_FIRST}')
+
+
+def tree_rows(harness):
+    """Every tree and node the cases may add."""
+    return harness.sql(
+        "SELECT (SELECT GROUP_CONCAT(CONCAT_WS(',', id, name, sort_type) ORDER BY id SEPARATOR ';') FROM graph_tree WHERE id >= %d), "
+        "(SELECT GROUP_CONCAT(CONCAT_WS(',', id, parent, position, graph_tree_id, local_graph_id, IFNULL(title, '~'), host_id, site_id, host_grouping_type, sort_children_type) "
+        "ORDER BY id SEPARATOR ';') FROM graph_tree_items WHERE id >= %d)" % (TREE_FIRST, REMOVE_FIRST))
+
+
+def tree_cases():
+    a, b = REMOVE_FIRST, REMOVE_FIRST + 1
+    h1, h2, graph_node, host_node, site_node = a, a + 1, a + 2, a + 3, a + 4
+    t = TREE_FIRST
+    new = f'--name={PREFIX}new'
+    node = ['--type=node', f'--tree-id={t}']
+    return [
+        ('tree add', ['--type=tree', new]),
+        ('tree add manual', ['--type=tree', new, '--sort-method=manual']),
+        ('tree add natural', ['--type=tree', new, '--sort-method=natural']),
+        ('tree add numeric', ['--type=tree', new, '--sort-method=numeric']),
+        ('tree add alpha', ['--type=tree', new, '--sort-method=alpha']),
+        ('tree add padded name', ['--type=tree', f'--name= {PREFIX}new ']),
+        ('tree add name with a quote', ['--type=tree', f"--name={PREFIX}it's"]),
+        ('tree add that exists', ['--type=tree', f'--name={PREFIX}tree-one']),
+        ('tree add that exists in another case', ['--type=tree', f'--name={PREFIX.upper()}TREE-ONE']),
+        ('tree add without a name', ['--type=tree']),
+        ('tree add with a bare name', ['--type=tree', '--name']),
+        ('tree add with the name 0', ['--type=tree', '--name=0']),
+        ('tree add with a bad sort method', ['--type=tree', new, '--sort-method=random']),
+        ('tree add with a bare sort method', ['--type=tree', new, '--sort-method']),
+        ('tree add a name before a bad sort method', ['--type=tree', '--sort-method=random']),
+        ('tree add ignores node options', ['--type=tree', new, '--tree-id=x', '--node-type=nonsense']),
+        ('tree add last name wins', ['--type=tree', '--name=ignored', new]),
+        ('tree add quiet', ['--type=tree', new, '--quiet']),
+        ('node header at the root', [*node, '--node-type=header', f'--name={PREFIX}hx']),
+        ('node header under a header', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={h1}']),
+        ('node header manual', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=manual']),
+        ('node header numeric', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=numeric']),
+        ('node header natural', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=natural']),
+        ('node header sorts among siblings', [*node, '--node-type=header', f'--name={PREFIX}a-first', f'--parent-node={h1}']),
+        ('node header with a bad sort method', [*node, '--node-type=header', f'--name={PREFIX}hx', '--sort-method=random']),
+        ('node header ignores other ids', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--graph-id={a}', f'--host-id={a}', f'--site-id={a}', '--host-group-style=2']),
+        ('node header without a name', [*node, '--node-type=header']),
+        ('node header with the name 0', [*node, '--node-type=header', '--name=0']),
+        ('node header twice with one name', [*node, '--node-type=header', f'--name={PREFIX}h1']),
+        ('node header under a graph node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={graph_node}']),
+        ('node header under a device node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={host_node}']),
+        ('node header under a site node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={site_node}']),
+        ('node header under an unknown node', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={a + 800}']),
+        ('node header under a bad parent', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node=abc']),
+        ('node header under a negative parent', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node=-1']),
+        ('node header under a decimal parent', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node={h1}.0']),
+        ('node header under a bare parent', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node']),
+        ('node header under parent 0', [*node, '--node-type=header', f'--name={PREFIX}hx', '--parent-node=0']),
+        ('node header under a zero-padded parent', [*node, '--node-type=header', f'--name={PREFIX}hx', f'--parent-node=00{h2}']),
+        ('node graph under a header', [*node, '--node-type=graph', f'--graph-id={a + 1}', f'--parent-node={h2}']),
+        ('node graph at the root', [*node, '--node-type=graph', f'--graph-id={a + 1}']),
+        ('node graph already there', [*node, '--node-type=graph', f'--graph-id={a}', f'--parent-node={h1}']),
+        ('node graph with a name it ignores', [*node, '--node-type=graph', f'--graph-id={a + 1}', f'--parent-node={h2}', '--name=ignored']),
+        ('node graph unknown', [*node, '--node-type=graph', f'--graph-id={a + 800}']),
+        ('node graph bad id', [*node, '--node-type=graph', '--graph-id=abc']),
+        ('node graph without an id', [*node, '--node-type=graph']),
+        ('node graph with a bare id', [*node, '--node-type=graph', '--graph-id']),
+        ('node graph with a float-written id', [*node, '--node-type=graph', f'--graph-id={a + 1}.0', f'--parent-node={h2}']),
+        ('node device under a header', [*node, '--node-type=host', f'--host-id={b}', f'--parent-node={h2}']),
+        ('node device with data query grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=2', f'--parent-node={h2}']),
+        ('node device with graph template grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=1']),
+        ('node device with a float-written grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=2.0']),
+        ('node device with a bad grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=3']),
+        ('node device with a text grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style=abc']),
+        ('node device with a bare grouping', [*node, '--node-type=host', f'--host-id={b}', '--host-group-style']),
+        ('node device already there', [*node, '--node-type=host', f'--host-id={a}', f'--parent-node={h1}']),
+        ('node device unknown', [*node, '--node-type=host', f'--host-id={a + 800}']),
+        ('node device zero-padded id', [*node, '--node-type=host', f'--host-id=0{b}']),
+        ('node device float-written id', [*node, '--node-type=host', f'--host-id={b}.0']),
+        ('node device bad id', [*node, '--node-type=host', '--host-id=abc']),
+        ('node device without an id', [*node, '--node-type=host']),
+        ('node device ignores other ids', [*node, '--node-type=host', f'--host-id={b}', f'--graph-id={a}', f'--site-id={a}', '--name=ignored']),
+        ('node site under a header', [*node, '--node-type=site', f'--site-id={b}', f'--parent-node={h2}']),
+        ('node site at the root', [*node, '--node-type=site', f'--site-id={a}']),
+        ('node site already there', [*node, '--node-type=site', f'--site-id={a}', f'--parent-node={h2}']),
+        ('node site unknown', [*node, '--node-type=site', f'--site-id={a + 800}']),
+        ('node site zero-padded id', [*node, '--node-type=site', f'--site-id=0{b}']),
+        ('node site bad id', [*node, '--node-type=site', '--site-id=abc']),
+        ('node site without an id', [*node, '--node-type=site']),
+        ('node site with a grouping it keeps', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=2']),
+        ('node site with a text grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=abc']),
+        ('node site with a zero grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=0']),
+        ('node site with a float-written grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=2.0']),
+        ('node site with an oversized grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style=300']),
+        ('node site with a bare grouping', [*node, '--node-type=site', f'--site-id={b}', '--host-group-style']),
+        ('node without a node type', ['--type=node', f'--tree-id={t}']),
+        ('node with a bad node type', [*node, '--node-type=leaf']),
+        ('node with a padded node type', [*node, '--node-type= header ', f'--name={PREFIX}hx']),
+        ('node without a tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx']),
+        ('node with tree 0', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=0']),
+        ('node with a bad tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=abc']),
+        ('node with a negative tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=-1']),
+        ('node with an unknown tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', f'--tree-id={t + 5}']),
+        ('node with a zero-padded tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', f'--tree-id=00{t}']),
+        ('node with the default tree', ['--type=node', '--node-type=header', f'--name={PREFIX}hx', '--tree-id=1']),
+        ('node bad tree before bad parent', ['--type=node', '--node-type=header', '--tree-id=abc', '--parent-node=abc']),
+        ('node bad node type before bad tree', ['--type=node', '--node-type=leaf', '--tree-id=abc']),
+        ('no type', [new]),
+        ('unknown type', ['--type=forest']),
+        ('padded type', ['--type= tree ', new]),
+        ('bare type', ['--type']),
+        ('list sites', ['--list-sites']),
+        ('list sites quietly', ['--list-sites', '--quiet']),
+        ('list devices', ['--list-hosts']),
+        ('list devices quietly', ['--quiet', '--list-hosts']),
+        ('list trees', ['--list-trees']),
+        ('list trees quietly', ['--list-trees', '--quiet']),
+        ('list nodes', ['--list-nodes', f'--tree-id={t}']),
+        ('list nodes quietly', ['--list-nodes', f'--tree-id={t}', '--quiet']),
+        ('list nodes under a header', ['--list-nodes', f'--tree-id={t}', f'--parent-node={h1}']),
+        ('list nodes under a header quietly', ['--list-nodes', f'--tree-id={t}', f'--parent-node={h1}', '--quiet']),
+        ('list header nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=header']),
+        ('list graph nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=graph']),
+        ('list device nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=host']),
+        ('list site nodes', ['--list-nodes', f'--tree-id={t}', '--node-type=site']),
+        ('list nodes of an unknown type', ['--list-nodes', f'--tree-id={t}', '--node-type=leaf']),
+        ('list nodes of a graph node', ['--list-nodes', f'--tree-id={t}', f'--parent-node={graph_node}']),
+        ('list nodes of the default tree', ['--list-nodes', '--tree-id=1']),
+        ('list nodes of an unknown tree', ['--list-nodes', f'--tree-id={t + 5}']),
+        ('list nodes without a tree', ['--list-nodes']),
+        ('list nodes of a bad tree', ['--list-nodes', '--tree-id=abc']),
+        ('list nodes under a bad parent', ['--list-nodes', f'--tree-id={t}', '--parent-node=abc']),
+        ('list nodes under a bare parent', ['--list-nodes', f'--tree-id={t}', '--parent-node']),
+        ('list nodes under a zero-written parent', ['--list-nodes', f'--tree-id={t}', '--parent-node=0.0']),
+        ('list nodes with a bare tree', ['--list-nodes', '--tree-id']),
+        ('list graphs', ['--list-graphs', f'--host-id={a}']),
+        ('list graphs quietly', ['--list-graphs', f'--host-id={a}', '--quiet']),
+        ('list graphs of a device without any', ['--list-graphs', f'--host-id={a + 800}']),
+        ('list graphs without a device', ['--list-graphs']),
+        ('list graphs of device 0', ['--list-graphs', '--host-id=0']),
+        ('list graphs of a decimal zero device', ['--list-graphs', '--host-id=0.0']),
+        ('list graphs of a bare device', ['--list-graphs', '--host-id']),
+        ('list graphs of a bad device', ['--list-graphs', '--host-id=abc']),
+        ('list sites beat devices', ['--list-hosts', '--list-sites']),
+        ('list devices beat trees', ['--list-trees', '--list-hosts']),
+        ('list trees beat nodes', ['--list-nodes', '--list-trees']),
+        ('list nodes beat graphs', ['--list-graphs', '--list-nodes', f'--tree-id={t}']),
+        ('list ignores the type', ['--type=tree', '--list-trees']),
+        ('list takes a value it ignores', ['--list-trees=yes']),
+        ('list stops at help', ['--list-trees', '--help']),
+        ('list after a bad argument', ['--bogus', '--list-trees']),
+        ('help', ['-h']),
+        ('upper help', ['-H']),
+        ('long help', ['--help']),
+        ('version', ['-v']),
+        ('upper version', ['-V']),
+        ('long version', ['--version']),
+        ('version takes a value it ignores', ['--version=3']),
+        ('help after valid options', ['--type=tree', new, '--help']),
+        ('unknown argument', ['--bogus']),
+        ('unknown argument with a value', ['--bogus=1', '--type=tree']),
+        ('unknown argument after a valid one', ['--type=tree', '--bogus']),
+        ('a leading = is no separator', ['=1']),
+        ('the debug flag is unknown here', ['-d', '--list-trees']),
+        ('no arguments', []),
+    ]
+
+
+def verify_tree_cases(harness, check):
+    for label, arguments in tree_cases():
+        tree_seed(harness)
+        original = run(harness, QUIET_PHP + TREE_ORIGINAL, arguments)
+        original_rows = tree_rows(harness)
+        tree_seed(harness)
+        native = run(harness, QUIET_PHP + TREE_SHIM, arguments)
+        native_rows = tree_rows(harness)
+        # Only an argument error loses the version line above the help; the rest must match byte for byte.
+        expected = without_utility(normalise(original['stdout']), TREE_UTILITY) if native['stdout'].startswith('ERROR: Invalid Argument') else normalise(original['stdout'])
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+        check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same trees and nodes')
+    tree_reset(harness)
+    remove_reset(harness)
+
+
+def verify_tree_differences(harness, check):
+    a, t = REMOVE_FIRST, TREE_FIRST
+    tree_seed(harness)
+    seeded = tree_rows(harness)
+    # The original concatenated --graph-id into SQL, so a clause after the number widened the lookup.
+    injected = run(harness, QUIET_PHP + TREE_ORIGINAL, ['--type=node', f'--tree-id={t}', '--node-type=graph', f'--graph-id={a} OR 1=1'])
+    check(injected['exit'] != 0 or 'Added Node' in injected['stdout'], 'the original read the graph id as SQL')
+    tree_seed(harness)
+    refused = run(harness, TREE_SHIM, ['--type=node', f'--tree-id={t}', '--node-type=graph', f'--graph-id={a + 1} OR 1=1'])
+    check(refused['exit'] == 1 and 'No such graph-id' in refused['stdout'], 'a graph id with SQL after the number is refused')
+    check(tree_rows(harness) == seeded, 'a refused graph id writes nothing')
+    # Tree management is realm 4 (tree.php); graphs and devices alone are not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 4')
+    try:
+        for arguments in (['--type=tree', f'--name={PREFIX}denied'], ['--type=node', f'--tree-id={t}', '--node-type=header', f'--name={PREFIX}denied'],
+                          ['--list-sites'], ['--list-hosts'], ['--list-trees'], ['--list-nodes', f'--tree-id={t}'], ['--list-graphs', f'--host-id={a}']):
+            denied = run(harness, TREE_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without tree management is refused")
+        check(tree_rows(harness) == seeded, 'a refused run writes nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 4)')
+    report = run(harness, 'bin/console', ['kadupul:tree:add', '--type=tree', f'--name={PREFIX}json', '--json'])
+    check(report['exit'] == 0 and '"status":"created"' in report['stdout'] and f'"tree_id":{t + 10}' in report['stdout'], 'bin/console creates a tree and prints json')
+    node = run(harness, 'bin/console', ['kadupul:tree:add', '--type=node', f'--tree-id={t}', '--node-type=host', f'--host-id={a + 1}', '--json'])
+    check(node['exit'] == 0 and '"status":"created"' in node['stdout'], 'bin/console adds a device node and prints json')
+    duplicate = run(harness, 'bin/console', ['kadupul:tree:add', '--type=node', f'--tree-id={t}', '--node-type=host', f'--host-id={a + 1}', '--json'])
+    check(duplicate['exit'] == 1 and '"status":"failed"' in duplicate['stdout'], 'bin/console reports a device that is already in the branch as a failure')
+    invalid = run(harness, 'bin/console', ['kadupul:tree:add', '--type=forest'])
+    check(invalid['exit'] == 2, 'bin/console treats an unknown type as invalid input')
+    tree_reset(harness)
+    remove_reset(harness)
+
+
+def add_graphs_seed(harness):
+    """The removal seed, two devices to add graphs to, and the interface data query cached on the first with three interfaces."""
+    remove_seed(harness)
+    add_graphs_reset(harness)
+    a, b = ADD_GRAPHS_DEVICE, ADD_GRAPHS_DEVICE + 1
+    harness.sql(
+        f"INSERT INTO host (id, description, hostname, host_template_id, snmp_version) VALUES ({a}, '{PREFIX}gcore', '{PREFIX}gcore.example', 0, 0), ({b}, '{PREFIX}gedge', '{PREFIX}gedge.example', 0, 0); "
+        f'INSERT INTO host_snmp_query (host_id, snmp_query_id, reindex_method) VALUES ({a}, 1, 1)')
+    cache = []
+    for index, (name, description, status) in enumerate((('eth0', 'Ethernet 0', 'Up'), ('eth1', 'Ethernet 1', 'Down'), ('lo', 'Loopback', 'Up')), start=1):
+        for field, value in (('ifIndex', str(index)), ('ifName', name), ('ifDescr', description), ('ifOperStatus', status), ('ifType', '6'), ('ifHighSpeed', '1000'), ('ifAlias', ''), ('ifHwAddress', f'00:00:00:00:00:0{index}')):
+            cache.append(f"({a}, 1, '{field}', '{value}', '{index}', '.1.{index}')")
+    harness.sql('INSERT INTO host_snmp_cache (host_id, snmp_query_id, field_name, field_value, snmp_index, oid) VALUES ' + ', '.join(cache))
+    harness.sql(' '.join(f'ALTER TABLE {table} AUTO_INCREMENT = {ADD_GRAPHS_NEXT};' for table in (
+        'graph_local', 'graph_templates_graph', 'graph_templates_item', 'data_local', 'data_template_data', 'data_template_rrd')))
+
+
+def add_graphs_reset(harness):
+    first = REMOVE_FIRST
+    harness.sql(
+        f'DELETE FROM data_input_data WHERE data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id >= {first}); '
+        f'DELETE FROM graph_templates_item WHERE local_graph_id >= {first}; DELETE FROM graph_templates_graph WHERE local_graph_id >= {first}; '
+        f'DELETE FROM graph_local WHERE id >= {first}; DELETE FROM data_template_rrd WHERE local_data_id >= {first}; '
+        f'DELETE FROM data_template_data WHERE local_data_id >= {first}; DELETE FROM data_local WHERE id >= {first}; '
+        f'DELETE FROM poller_item WHERE host_id >= {first}; DELETE FROM host_snmp_cache WHERE host_id >= {first}; '
+        f'DELETE FROM host_snmp_query WHERE host_id >= {first}; DELETE FROM host_graph WHERE host_id >= {first}')
+
+
+def add_graphs_rows(harness):
+    """The graphs, titles, data sources and associations the cases may leave behind."""
+    first = REMOVE_FIRST
+    return harness.sql(
+        f"SELECT (SELECT GROUP_CONCAT(CONCAT_WS(',', id, graph_template_id, host_id, snmp_query_id, snmp_index) ORDER BY id SEPARATOR ';') FROM graph_local WHERE id >= {ADD_GRAPHS_NEXT}), "
+        f"(SELECT GROUP_CONCAT(CONCAT_WS(',', local_graph_id, title, title_cache) ORDER BY local_graph_id SEPARATOR ';') FROM graph_templates_graph WHERE local_graph_id >= {first}), "
+        f"(SELECT GROUP_CONCAT(CONCAT_WS(',', id, host_id, data_template_id, snmp_query_id, snmp_index) ORDER BY id SEPARATOR ';') FROM data_local WHERE id >= {ADD_GRAPHS_NEXT}), "
+        f"(SELECT GROUP_CONCAT(CONCAT_WS(',', host_id, graph_template_id) ORDER BY host_id, graph_template_id SEPARATOR ';') FROM host_graph WHERE host_id >= {first}), "
+        f"(SELECT GROUP_CONCAT(CONCAT_WS(',', host_id, snmp_query_id, reindex_method) ORDER BY host_id, snmp_query_id SEPARATOR ';') FROM host_snmp_query WHERE host_id >= {first}), "
+        f"(SELECT COUNT(*) FROM poller_item WHERE host_id >= {first})")
+
+
+def add_graphs_cases():
+    a, b = ADD_GRAPHS_DEVICE, ADD_GRAPHS_DEVICE + 1
+    host, unattached = f'--host-id={a}', f'--host-id={b}'
+    cg = ['--graph-type=cg', '--graph-template-id=3']
+    query = ['--snmp-query-id=1', '--snmp-query-type-id=1']
+    ds = [host, '--graph-type=ds', '--graph-template-id=13', *query]
+    return [
+        # lists
+        ('graphs list templates', ['--list-graph-templates']),
+        ('graphs list templates quietly', ['--list-graph-templates', '--quiet']),
+        ('graphs list templates of a device template', ['--list-graph-templates', f'--host-template-id={REMOVE_FIRST}']),
+        ('graphs list templates of another device template', ['--list-graph-templates', f'--host-template-id={REMOVE_FIRST + 1}']),
+        ('graphs list templates of a device template written as a float', ['--list-graph-templates', f'--host-template-id={REMOVE_FIRST}.0']),
+        ('graphs list templates of an unknown device template', ['--list-graph-templates', '--host-template-id=999999']),
+        ('graphs list templates of a device template that is not a number', ['--list-graph-templates', '--host-template-id=abc']),
+        ('graphs list templates of device template zero', ['--list-graph-templates', '--host-template-id=0']),
+        ('graphs list templates of a bare device template', ['--list-graph-templates', '--host-template-id']),
+        ('graphs list input fields', ['--list-input-fields', '--graph-template-id=23']),
+        ('graphs list input fields quietly', ['--list-input-fields', '--graph-template-id=23', '--quiet']),
+        ('graphs list input fields of a template without any', ['--list-input-fields', '--graph-template-id=3']),
+        ('graphs list input fields of an unknown template', ['--list-input-fields', '--graph-template-id=999999']),
+        ('graphs list input fields without a template', ['--list-input-fields']),
+        ('graphs list input fields of template zero', ['--list-input-fields', '--graph-template-id=0']),
+        ('graphs list input fields of a template that is not a number', ['--list-input-fields', '--graph-template-id=abc']),
+        ('graphs list devices', ['--list-hosts']),
+        ('graphs list devices quietly', ['--list-hosts', '--quiet']),
+        ('graphs list queries', ['--list-snmp-queries']),
+        ('graphs list queries quietly', ['--list-snmp-queries', '--quiet']),
+        ('graphs list query types', ['--list-query-types', '--snmp-query-id=1']),
+        ('graphs list query types quietly', ['--list-query-types', '--snmp-query-id=1', '--quiet']),
+        ('graphs list query types of an unknown query', ['--list-query-types', '--snmp-query-id=999999']),
+        ('graphs list query types of a query written as a float', ['--list-query-types', '--snmp-query-id=1.0']),
+        ('graphs list query types without a query', ['--list-query-types']),
+        ('graphs list fields', ['--list-snmp-fields', host]),
+        ('graphs list fields of a query', ['--list-snmp-fields', host, '--snmp-query-id=1']),
+        ('graphs list fields of a device without a cache', ['--list-snmp-fields', unattached]),
+        ('graphs list fields quietly', ['--list-snmp-fields', host, '--quiet']),
+        ('graphs list fields of an unknown device', ['--list-snmp-fields', '--host-id=999999']),
+        ('graphs list fields without a device', ['--list-snmp-fields']),
+        ('graphs list fields does not associate a query', ['--list-snmp-fields', unattached, '--snmp-query-id=1']),
+        ('graphs list values', ['--list-snmp-values', host, '--snmp-field=ifName']),
+        ('graphs list values quietly', ['--list-snmp-values', host, '--snmp-field=ifName', '--quiet']),
+        ('graphs list values of two fields', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-field=ifOperStatus']),
+        ('graphs list values of a query', ['--list-snmp-values', host, '--snmp-query-id=1', '--snmp-field=ifOperStatus']),
+        ('graphs list values of an unknown field', ['--list-snmp-values', host, '--snmp-field=nothing']),
+        ('graphs list values of an empty field', ['--list-snmp-values', host, '--snmp-field=']),
+        ('graphs list values without a field', ['--list-snmp-values', host]),
+        ('graphs list values with a value that matches', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-value=eth0']),
+        ('graphs list values with a value that does not', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-value=nothing']),
+        ('graphs list values with an expression that matches', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-value-regex=^eth']),
+        ('graphs list values with an expression that does not', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-value-regex=^zz']),
+        ('graphs list values with a value and an expression', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-value=eth0', '--snmp-value-regex=^eth']),
+        ('graphs list values with one value for two fields', ['--list-snmp-values', host, '--snmp-field=ifName', '--snmp-field=ifOperStatus', '--snmp-value=eth0']),
+        ('graphs list values of a device without a cache', ['--list-snmp-values', unattached, '--snmp-field=ifName']),
+        ('graphs lists run in the script\'s order', ['--list-hosts', '--list-graph-templates']),
+        ('graphs lists run in the script\'s order, queries last', ['--list-snmp-queries', '--list-hosts']),
+        ('graphs list needs no device', ['--list-snmp-queries', '--host-id=abc']),
+        # errors before anything is made
+        ('graphs create without a device', ['--graph-type=cg', '--graph-template-id=3']),
+        ('graphs create for an unknown device', ['--host-id=999999', *cg]),
+        ('graphs create for device zero', ['--host-id=0', *cg]),
+        ('graphs create for a device written as a float', [f'--host-id={a}.0', *cg]),
+        ('graphs create for a padded device', [f'--host-id= {a}', *cg]),
+        ('graphs create without a template', [host, '--graph-type=cg']),
+        ('graphs create for an unknown template', [host, '--graph-type=cg', '--graph-template-id=999999']),
+        ('graphs create for template zero', [host, '--graph-type=cg', '--graph-template-id=0']),
+        ('graphs create for a template that is not a number', [host, '--graph-type=cg', '--graph-template-id=abc']),
+        ('graphs create without a type', [host, '--graph-template-id=3']),
+        ('graphs create of another type', [host, '--graph-type=dq', '--graph-template-id=3', '--snmp-field=ifName', '--snmp-value=eth0']),
+        ('graphs create of a bare type', [host, '--graph-type', '--graph-template-id=3']),
+        ('graphs create for an unknown query', [host, '--graph-type=ds', '--graph-template-id=13', '--snmp-query-id=999999']),
+        ('graphs create for an unknown query type', [host, '--graph-type=ds', '--graph-template-id=13', '--snmp-query-id=1', '--snmp-query-type-id=999999']),
+        ('graphs create a data query graph without options', [host, '--graph-type=ds', '--graph-template-id=13']),
+        ('graphs create a data query graph without a field', [host, '--graph-type=ds', '--graph-template-id=13', *query]),
+        ('graphs create a data query graph without a query type', [host, '--graph-type=ds', '--graph-template-id=13', '--snmp-query-id=1', '--snmp-field=ifName', '--snmp-value=eth0']),
+        ('graphs create a data query graph that matches nothing', [*ds, '--snmp-field=ifName', '--snmp-value=nothing']),
+        ('graphs create a data query graph with a field it lacks', [*ds, '--snmp-field=ifName']),
+        ('graphs create a data query graph that matches nothing by expression', [*ds, '--snmp-field=ifName', '--snmp-value-regex=^zz']),
+        ('graphs create with a bad reindex method', [*ds, '--snmp-field=ifName', '--snmp-value=eth0', '--reindex-method=sideways']),
+        ('graphs create with a reindex method out of range', [*ds, '--snmp-field=ifName', '--snmp-value=eth0', '--reindex-method=9']),
+        ('graphs create with a bare reindex method', [*ds, '--snmp-field=ifName', '--snmp-value=eth0', '--reindex-method']),
+        ('graphs create with an unknown input field', [host, *cg, '--input-fields=nothing=1']),
+        # option handling
+        ('graphs one value for a single option', [host, host, *cg]),
+        ('graphs one flag twice', [host, *cg, '--force', '--force']),
+        ('graphs one title twice', [host, *cg, '--graph-title=a', '--graph-title=b']),
+        ('graphs help', ['-h']),
+        ('graphs upper help', ['-H']),
+        ('graphs long help', ['--help']),
+        ('graphs version', ['-v']),
+        ('graphs upper version', ['-V']),
+        ('graphs long version', ['--version']),
+        ('graphs no arguments', []),
+        # creation
+        ('graphs create from a template', [host, *cg]),
+        ('graphs create from a template with a title', [unattached, *cg, '--graph-title=Titled']),
+        ('graphs create from a template with a title written with a quote', [unattached, '--graph-type=cg', '--graph-template-id=3', "--graph-title=It's", '--force']),
+        ('graphs create from a template on the other device quietly', [unattached, *cg, '--quiet', '--force']),
+        ('graphs create with input fields', [host, '--graph-type=cg', '--graph-template-id=23', '--input-fields=index_type=ifIndex index_value=ifName output_type=1']),
+        ('graphs create with a compound input field', [host, '--graph-type=cg', '--graph-template-id=23', '--input-fields=24:index_type=ifIndex']),
+        ('graphs create with an input field written in part', [host, '--graph-type=cg', '--graph-template-id=23', '--input-fields=index_t=ifIndex']),
+        ('graphs create with an input field without a value', [host, '--graph-type=cg', '--graph-template-id=23', '--input-fields=index_type']),
+        ('graphs create with an input field with an equals sign in the value', [host, '--graph-type=cg', '--graph-template-id=23', '--input-fields=index_type=a=b']),
+        ('graphs create with input fields on a template without any', [host, *cg, '--input-fields=index_type=1']),
+        ('graphs create with input fields that name nothing', [host, '--graph-type=cg', '--graph-template-id=23', '--input-fields=nothing=1']),
+        ('graphs create with an empty input fields option', [host, *cg, '--input-fields=']),
+        ('graphs create a data query graph', [*ds, '--snmp-field=ifName', '--snmp-value=eth0']),
+        ('graphs create a data query graph by expression', [*ds, '--snmp-field=ifName', '--snmp-value-regex=^eth']),
+        ('graphs create a data query graph by two fields', [*ds, '--snmp-field=ifName', '--snmp-field=ifOperStatus', '--snmp-value=lo', '--snmp-value=Up']),
+        ('graphs create a data query graph by a value and an expression', [*ds, '--snmp-field=ifName', '--snmp-field=ifOperStatus', '--snmp-value=lo', '--snmp-value-regex=Up']),
+        ('graphs create a data query graph with a title', [*ds, '--snmp-field=ifName', '--snmp-value=lo', '--graph-title=Loopback']),
+        ('graphs create a data query graph for every interface', [*ds, '--snmp-field=ifOperStatus', '--snmp-value=Up']),
+        ('graphs create a data query graph quietly', [*ds, '--snmp-field=ifName', '--snmp-value=eth1', '--quiet']),
+        ('graphs create a data query graph with a numeric value that matches loosely', [*ds, '--snmp-field=ifIndex', '--snmp-value=1.0']),
+        ('graphs create a data query graph on a device without the query', [unattached, '--graph-type=ds', '--graph-template-id=13', *query, '--snmp-field=ifName', '--snmp-value=eth0']),
+        ('graphs create a data query graph on a device without the query, reindexed by fields', [unattached, '--graph-type=ds', '--graph-template-id=13', *query, '--snmp-field=ifName', '--snmp-value=eth0', '--reindex-method=fields']),
+        ('graphs create a data query graph on a device without the query, reindexed by number', [unattached, '--graph-type=ds', '--graph-template-id=13', *query, '--snmp-field=ifName', '--snmp-value=eth0', '--reindex-method=2']),
+        ('graphs create a data query graph on a device without the query, reindexed by none', [unattached, '--graph-type=ds', '--graph-template-id=13', *query, '--snmp-field=ifName', '--snmp-value=eth0', '--reindex-method=NONE']),
+    ]
+
+
+def add_graphs_sequences():
+    """Commands that depend on those before them, run one after another from one seed."""
+    a = ADD_GRAPHS_DEVICE
+    host = f'--host-id={a}'
+    ds = [host, '--graph-type=ds', '--graph-template-id=13', '--snmp-query-id=1', '--snmp-query-type-id=1']
+    cg = [host, '--graph-type=cg', '--graph-template-id=3']
+    return [
+        ('graphs a template graph, again, then by force', [cg, cg, [*cg, '--force']]),
+        ('graphs a template graph with a title, again with another', [[*cg, '--graph-title=First'], [*cg, '--graph-title=Second'], [*cg, '--graph-title=Third', '--force']]),
+        ('graphs a data query graph, again, then retitled', [[*ds, '--snmp-field=ifName', '--snmp-value=eth0'], [*ds, '--snmp-field=ifName', '--snmp-value=eth0'],
+                                                         [*ds, '--snmp-field=ifName', '--snmp-value=eth0', '--graph-title=Retitled']]),
+        ('graphs data query graphs for some interfaces, then all', [[*ds, '--snmp-field=ifName', '--snmp-value=lo'], [*ds, '--snmp-field=ifOperStatus', '--snmp-value=Up'],
+                                                                [*ds, '--snmp-field=ifType', '--snmp-value=6']]),
+        ('graphs a data query graph on a device without the query, then again', [[f'--host-id={a + 1}', '--graph-type=ds', '--graph-template-id=13', '--snmp-query-id=1', '--snmp-query-type-id=1', '--snmp-field=ifName', '--snmp-value=eth0']] * 2),
+    ]
+
+
+def run_pair(harness, script, original_script, arguments):
+    return run(harness, QUIET_PHP + original_script, arguments), run(harness, QUIET_PHP + script, arguments)
+
+
+def same_add_graphs(check, label, original, native):
+    # Only an argument error loses the version line above the help; the rest must match byte for byte.
+    expected = without_utility(normalise(original['stdout']), ADD_GRAPHS_UTILITY) if native['stdout'].startswith('ERROR: Invalid Argument') else normalise(original['stdout'])
+    check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+    check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+    check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+
+
+def verify_add_graphs_cases(harness, check):
+    for label, arguments in add_graphs_cases():
+        add_graphs_seed(harness)
+        original = run(harness, QUIET_PHP + ADD_GRAPHS_ORIGINAL, arguments)
+        original_rows = add_graphs_rows(harness)
+        add_graphs_seed(harness)
+        native = run(harness, QUIET_PHP + ADD_GRAPHS_SHIM, arguments)
+        native_rows = add_graphs_rows(harness)
+        same_add_graphs(check, label, original, native)
+        check(original_rows == native_rows, f'{label} leaves the same graphs, data sources and associations')
+    for label, steps in add_graphs_sequences():
+        outcomes = []
+        for script in (ADD_GRAPHS_ORIGINAL, ADD_GRAPHS_SHIM):
+            add_graphs_seed(harness)
+            outcomes.append([(run(harness, QUIET_PHP + script, arguments), add_graphs_rows(harness)) for arguments in steps])
+        for number, ((original, original_rows), (native, native_rows)) in enumerate(zip(*outcomes), start=1):
+            same_add_graphs(check, f'{label}, step {number}', original, native)
+            check(original_rows == native_rows, f'{label}, step {number} leaves the same graphs, data sources and associations')
+    add_graphs_reset(harness)
+    remove_reset(harness)
+
+
+def verify_add_graphs_differences(harness, check):
+    a = ADD_GRAPHS_DEVICE
+    cg = [f'--host-id={a}', '--graph-type=cg', '--graph-template-id=3']
+    add_graphs_seed(harness)
+    seeded = add_graphs_rows(harness)
+    # getopt() skipped an option it did not know and the script went on to the next check.
+    original = run(harness, QUIET_PHP + ADD_GRAPHS_ORIGINAL, ['--bogus'])
+    check(original['exit'] == 1 and original['stdout'].startswith('ERROR: Unknown Host ID (0)'), 'the original ignored an unknown option')
+    refused = run(harness, ADD_GRAPHS_SHIM, ['--bogus'])
+    check(refused['exit'] == 1 and refused['stdout'].startswith('ERROR: Invalid Argument: (bogus)\n') and 'usage: add_graphs.php' in refused['stdout'], 'an unknown option prints the error and the help')
+    # The original associated and ran a data query before it looked for the device, so an unknown device got a row.
+    unknown = ['--host-id=999999', '--graph-type=ds', '--graph-template-id=13', '--snmp-query-id=1', '--snmp-query-type-id=1', '--snmp-field=ifName', '--snmp-value=eth0']
+    original = run(harness, QUIET_PHP + ADD_GRAPHS_ORIGINAL, unknown)
+    check(original['exit'] == 1 and harness.sql('SELECT COUNT(*) FROM host_snmp_query WHERE host_id = 999999').strip() == '1', 'the original associated a data query with an unknown device')
+    harness.sql('DELETE FROM host_snmp_query WHERE host_id = 999999')
+    refused = run(harness, ADD_GRAPHS_SHIM, unknown)
+    check(refused['exit'] == 1 and refused['stdout'].startswith('ERROR: Unknown Host ID (999999)'), 'an unknown device is refused')
+    check(harness.sql('SELECT COUNT(*) FROM host_snmp_query WHERE host_id = 999999').strip() == '0' and add_graphs_rows(harness) == seeded, 'an unknown device is refused before anything is written')
+    # Graph management is realm 5 (graphs_new.php); device and tree management alone are not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 5')
+    try:
+        for arguments in (cg, ['--list-hosts'], ['--list-graph-templates'], ['--list-snmp-queries'], ['--list-snmp-fields', f'--host-id={a}']):
+            denied = run(harness, ADD_GRAPHS_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without graph management is refused")
+        check(add_graphs_rows(harness) == seeded, 'a refused run writes nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 5)')
+    report = run(harness, 'bin/console', ['kadupul:graph:add', *cg, '--json'])
+    check(report['exit'] == 0 and '"status":"ok"' in report['stdout'] and '"result":"created"' in report['stdout'], 'bin/console creates a graph and prints json')
+    listing = run(harness, 'bin/console', ['kadupul:graph:add', '--list-graph-templates', '--json'])
+    check(listing['exit'] == 0 and '"graph_templates"' in listing['stdout'], 'bin/console lists the graph templates as json')
+    invalid = run(harness, 'bin/console', ['kadupul:graph:add', *cg[:1], '--graph-type=bogus', '--graph-template-id=3'])
+    check(invalid['exit'] == 2, 'bin/console treats an unknown graph type as invalid input')
+    add_graphs_reset(harness)
+    remove_reset(harness)
+
+
 def verify_graph_parity(harness, check):
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, REPAIR_ORIGINAL)
     install_original(harness, BROKEN_ORIGINAL)
     install_original(harness, REMOVE_ORIGINAL)
     install_original(harness, ADD_TEMPLATE_ORIGINAL)
+    install_original(harness, TREE_ORIGINAL)
+    install_original(harness, ADD_GRAPHS_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
     saved = harness.sql("SELECT value FROM settings WHERE name='admin_user'")
     try:
         # With no --as the shim acts as settings.admin_user, which needs
         # Console Access (8) and Graphs (5).
         harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}'); "
-                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},3)')
+                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},4),({admin},3)')
         verify_titles_cases(harness, check)
         verify_titles_differences(harness, check)
         verify_repair_cases(harness, check)
@@ -668,10 +1169,16 @@ def verify_graph_parity(harness, check):
         verify_remove_differences(harness, check)
         verify_add_template_cases(harness, check)
         verify_add_template_differences(harness, check)
+        verify_tree_cases(harness, check)
+        verify_tree_differences(harness, check)
+        verify_add_graphs_cases(harness, check)
+        verify_add_graphs_differences(harness, check)
     finally:
         titles_reset(harness)
         repair_reset(harness)
         broken_reset(harness)
+        tree_reset(harness)
+        add_graphs_reset(harness)
         remove_reset(harness)
         harness.sql("DELETE FROM settings WHERE name='admin_user'")
         for value in saved.splitlines():

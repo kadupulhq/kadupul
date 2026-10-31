@@ -26,7 +26,6 @@ cmd_exec	./lib/functions.php:8160	 * shell_exec() callers that already assemble 
 cmd_exec	./lib/functions.php:8202	    $process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:8271	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3703	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:3739	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:854	            $process = @proc_open(
 cmd_exec	./lib/ping.php:163	                $result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:165	                $result = shell_exec('ping -m ' . ceil($this->timeout / 1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -96,9 +95,20 @@ deserialize	./lib/functions.php:8783	    return @unserialize($strobj, array('all
 dynamic_include	./automation_tree_rules.php:539	    include_once($config['base_path'] . '/lib/html_tree.php');
 dynamic_include	./bin/legacy-audit-upgrade.php:129	                        include_once($plugin . '/setup.php');
 dynamic_include	./bin/legacy-audit-upgrade.php:131	                            include_once($plugin . '/includes/database.php');
+dynamic_include	./bin/legacy-graph-add.php:20	require_once $config['base_path'] . '/lib/api_automation.php';
+dynamic_include	./bin/legacy-graph-add.php:21	require_once $config['base_path'] . '/lib/api_data_source.php';
+dynamic_include	./bin/legacy-graph-add.php:22	require_once $config['base_path'] . '/lib/api_graph.php';
+dynamic_include	./bin/legacy-graph-add.php:23	require_once $config['base_path'] . '/lib/api_device.php';
+dynamic_include	./bin/legacy-graph-add.php:24	require_once $config['base_path'] . '/lib/data_query.php';
+dynamic_include	./bin/legacy-graph-add.php:25	require_once $config['base_path'] . '/lib/poller.php';
+dynamic_include	./bin/legacy-graph-add.php:26	require_once $config['base_path'] . '/lib/snmp.php';
+dynamic_include	./bin/legacy-graph-add.php:27	require_once $config['base_path'] . '/lib/template.php';
+dynamic_include	./bin/legacy-graph-add.php:28	require_once $config['base_path'] . '/lib/utility.php';
+dynamic_include	./bin/legacy-graph-add.php:29	require_once $config['base_path'] . '/lib/variables.php';
 dynamic_include	./bin/legacy-graph-remove.php:19	require_once $config['base_path'] . '/lib/api_data_source.php';
 dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
+dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
@@ -125,20 +135,6 @@ dynamic_include	./cli/add_device.php:17	require_once($config['base_path'] . '/li
 dynamic_include	./cli/add_device.php:18	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cli/add_device.php:19	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/add_device.php:20	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/add_graphs.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/add_graphs.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
-dynamic_include	./cli/add_graphs.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/add_graphs.php:13	require_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./cli/add_graphs.php:14	require_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./cli/add_graphs.php:15	require_once($config['base_path'] . '/lib/api_tree.php');
-dynamic_include	./cli/add_graphs.php:16	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/add_graphs.php:17	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/add_graphs.php:18	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./cli/add_graphs.php:19	require_once($config['base_path'] . '/lib/sort.php');
-dynamic_include	./cli/add_graphs.php:20	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./cli/add_graphs.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/add_tree.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/add_tree.php:12	require_once($config['base_path'] . '/lib/api_tree.php');
 dynamic_include	./cli/apply_automation_rules.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/apply_automation_rules.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/apply_automation_rules.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');

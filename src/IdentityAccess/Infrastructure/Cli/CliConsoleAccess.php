@@ -105,6 +105,12 @@ final class CliConsoleAccess implements ConsoleOperator
     }
 
     #[\Override]
+    public function canManageTrees(Actor $actor): bool
+    {
+        return $this->hasRealm($actor->id, 4);
+    }
+
+    #[\Override]
     public function canUpgradeInstallation(Actor $actor): bool
     {
         if ($this->hasRealm($actor->id, 26)) {

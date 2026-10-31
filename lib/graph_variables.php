@@ -377,9 +377,12 @@ function variable_nth_percentile(&$regexp_match_array, &$graph, &$graph_item, &$
 	}
 
 	if ($graph['base_value'] == 1024) {
-		$base = 10.24;
+		// Use 1024^(power/3) for binary units.
+		$base = 2;
+		$exp_scale = 10 / 3;
 	} else {
 		$base = 10;
+		$exp_scale = 1;
 	}
 
 	// Convert the regex matches to human readable
@@ -505,7 +508,7 @@ function variable_nth_percentile(&$regexp_match_array, &$graph, &$graph_item, &$
 			if (!empty($nth_cache[$graph_item['data_source_name']])) {
 				$nth = $nth_cache[$graph_item['data_source_name']];
 				$nth = ($bytebit == 'bits') ? $nth * 8 : $nth;
-				$nth /= pow($base, $power);
+				$nth /= pow($base, $power * $exp_scale);
 			}
 
 			break;
@@ -516,7 +519,7 @@ function variable_nth_percentile(&$regexp_match_array, &$graph, &$graph_item, &$
 			if (!empty($nth_cache['nth_percentile_sum'])) {
 				$nth = $nth_cache['nth_percentile_sum'];
 				$nth = ($bytebit == 'bits') ? $nth * 8 : $nth;
-				$nth /= pow($base, $power);
+				$nth /= pow($base, $power * $exp_scale);
 			}
 
 			break;
@@ -529,7 +532,7 @@ function variable_nth_percentile(&$regexp_match_array, &$graph, &$graph_item, &$
 			if (!empty($nth_cache['nth_percentile_maximum'])) {
 				$nth = $nth_cache['nth_percentile_maximum'];
 				$nth = ($bytebit == 'bits') ? $nth * 8 : $nth;
-				$nth /= pow($base, $power);
+				$nth /= pow($base, $power * $exp_scale);
 			}
 
 			break;
@@ -538,7 +541,7 @@ function variable_nth_percentile(&$regexp_match_array, &$graph, &$graph_item, &$
 			if (!empty($nth_cache['nth_percentile_aggregate_total'])) {
 				$nth = $nth_cache['nth_percentile_aggregate_total'];
 				$nth = ($bytebit == 'bits') ? $nth * 8 : $nth;
-				$nth /= pow($base, $power);
+				$nth /= pow($base, $power * $exp_scale);
 			}
 
 			break;
@@ -583,9 +586,12 @@ function variable_bandwidth_summation(&$regexp_match_array, &$graph, &$graph_ite
 	}
 
 	if ($graph['base_value'] == 1024) {
-		$base = 10.24;
+		// Use 1024^(power/3) for binary units.
+		$base = 2;
+		$exp_scale = 10 / 3;
 	} else {
 		$base = 10;
+		$exp_scale = 1;
 	}
 
 	if (is_numeric($regexp_match_array[4])) {
@@ -641,7 +647,7 @@ function variable_bandwidth_summation(&$regexp_match_array, &$graph, &$graph_ite
 	}
 
 	if (preg_match('/\d+/', $regexp_match_array[1])) {
-		$summation /= pow($base, $regexp_match_array[1]);
+		$summation /= pow($base, $regexp_match_array[1] * $exp_scale);
 	} elseif ($regexp_match_array[1] == 'auto') {
 		if ($graph['base_value'] == 1000) {
 			if ($summation < 1000) {

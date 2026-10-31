@@ -356,8 +356,8 @@ LASTING_STATE = {
     'schema_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},15),({user_id},26)',
     # The refused-copy case removes realm 1 and puts it back.
     'user_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},1),({user_id},8)',
-    # The refused cases remove realm 5 or 3 and put it back.
-    'graph_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3),({user_id},5),({user_id},8)',
+    # The refused cases remove realm 5, 4 or 3 and put it back.
+    'graph_parity': 'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3),({user_id},4),({user_id},5),({user_id},8)',
     # The policy checks end by writing both rows explicitly.
     'login_policy': "REPLACE INTO settings (name,value) VALUES ('force_https',''),('guest_user','0')",
     'data_inputs': "UPDATE settings SET value='1' WHERE name='auth_method'; "

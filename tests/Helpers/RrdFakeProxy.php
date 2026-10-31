@@ -44,10 +44,13 @@ function rrd_fake_proxy_start(string $directory, array $setup): array
 }
 
 /** Wait for the fake proxy to finish and return the commands it received. */
-function rrd_fake_proxy_finish(string $directory, $process, $stdout): array
+function rrd_fake_proxy_finish(string $directory, $process, $stdout, string $context = ''): array
 {
     fclose($stdout);
-    expect(proc_close($process))->toBe(0)->and(file_get_contents($directory . '/proxy.stderr'))->toBe('');
+    $status = proc_close($process);
+    $stderr = file_get_contents($directory . '/proxy.stderr');
+    $diagnostic = $context . "\nProxy stderr: " . $stderr;
+    expect($status)->toBe(0, $diagnostic)->and($stderr)->toBe('', $diagnostic);
 
     return json_decode(file_get_contents($directory . '/commands.json'), true, 512, JSON_THROW_ON_ERROR);
 }

@@ -7,6 +7,11 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Add ten Symfony/Twig views for graph and data-source relationships, report contents, tree placements, collector devices and network discovery results, with bounded reads and existing resource permissions.
+- Include client timing, dataset, connection outcome and server diagnostics in failed RRDtool proxy interoperability tests to investigate intermittent fixture failures (#1244).
+
+- Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
+- Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero in poller cache entries under strict SQL, preserving stored host settings and explicit overrides.
+
 - Bound Windows RRDtool one-shot commands by the command/poller deadline and prevent large input/output deadlocks using temporary file handles. Windows now requires writable temporary storage (#782).
 - Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.
 
@@ -19,15 +24,20 @@ follows [Semantic Versioning](VERSIONING.md).
 - Run `cli/poller_graphs_reapply_names.php` through the `kadupul:graph:reapply-titles` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, the filter is bound instead of concatenated into SQL, and the run is audited.
 - Run `cli/repair_graphs.php` and `cli/remove_broken_graphs.php` through the `kadupul:graph:repair-items` and `kadupul:graph:remove-broken` console commands. The scripts keep their arguments, output and exit codes. They now need the Console Access and Graphs realms, ids are bound instead of concatenated into SQL, and the broken-graph list is no longer cut off at `group_concat_max_len`.
 - Run `cli/add_graph_template.php` through the `kadupul:device:add-graph-template` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Devices realms, binds its ids, audits the change, and refuses an unknown device or graph template instead of writing an orphan `host_graph` row.
+- Run `cli/add_tree.php` through the `kadupul:tree:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Trees realms, binds its ids and names instead of concatenating them into SQL, audits what it adds, and refuses a graph id with SQL after the number.
+- Run `cli/add_graphs.php` through the `kadupul:graph:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, binds its ids, fields and values instead of concatenating them into SQL, audits what it creates, and refuses an unknown device before it associates a data query with it.
 - Run `cli/remove_graphs.php` through the `kadupul:graph:remove` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, ids and expressions are bound instead of concatenated into SQL, the removal is audited, and an expression over 50 bytes, with `;`, or empty is refused as `validate_is_regex()` intended.
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
+- Try configured SNMP after a failed Ping-or-SNMP ping, and carry SNMP settings into command-poller availability checks for devices without poller items (#1105).
 - Use the current response time when inconsistent device counters leave a zero average divisor (#1101).
+- Schedule system-MIB collection from its own per-poller timestamp after four hours, matching LTS and avoiding repeated or missed collection from timestamp modulo arithmetic (#1106).
 - Preserve refresh rendering when a SAPI omits REQUEST_URI, retaining the LTS empty-string fallback and existing logout policy (#1104).
 - Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values; test-data-source templates retain their empty-field omission (#1103).
 - Preserve destination graph-view actions and default-mode selection when validating redirects, fixing source-action leakage introduced by #1102 (#1241).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).
 - Convert non-finite numeric Boost samples to unknown before scheduled and on-demand RRD writes, preserving valid sibling fields and original queue acknowledgement values (#739).
+- Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110).
 - Add `html_require_legacy_js()` so plugins can declare their need for Chart.js, dygraphs, jquery.sparkline or the jQuery colorpicker. Release 1.3 still loads all four on every page and its page head is unchanged; release 1.4 will load only the requested ones. These libraries are deprecated and no core page uses them.
 - Update billboard.js from 3.18.0 to 4.1.3 and the billboard stylesheet in every theme. The library is now installed from npm and checked against a pinned checksum like D3 and jQuery. Plugin charts keep working because the browser bundle still includes every chart method; 4.x also stops `javascript:` links spelled with a numeric character reference that omits its closing semicolon from reaching the default tooltip, custom tooltip contents and legend templates, which 3.18.0 allowed. Git-based installs must run `npm ci && npm run build` after pulling, because `include/js/billboard.js` is no longer tracked and `git pull` deletes it, leaving charts broken until the rebuild; packaged and offline releases are unaffected.
 - Decide model-driven binding approval through a `metric_binding` state machine whose guard asks IdentityAccess for the signed-in actor and a binding-approval permission (Settings/Utilities realm), denies by default and audits every decision. Nothing calls approval yet and the RRD write gate stays closed.

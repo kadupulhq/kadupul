@@ -7,11 +7,14 @@
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
+      <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
+      <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
+      <file>Unit/Base1024GraphDivisorTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>
       <file>Unit/Security/HostReindexExecutionTest.php</file>
       <file>Unit/Security/RealtimePollerExecutionTest.php</file>
@@ -81,6 +84,7 @@
       <file>Unit/TemplatesImportResultMessageTest.php</file>
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
+      <file>Unit/Core/Poller/SystemMibIntervalTest.php</file>
       <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/ShutdownOrphanCleanupTest.php</file>
       <file>Unit/Core/Poller/ProcessKillGuardNativeTest.php</file>

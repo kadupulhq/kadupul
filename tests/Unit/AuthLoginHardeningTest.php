@@ -75,6 +75,7 @@ $mode = $argv[2];
 $input = json_decode($argv[3], true, 512, JSON_THROW_ON_ERROR);
 $config = array('url_path' => '/app/');
 $_SESSION = array('sess_user_id' => 42);
+$_REQUEST = array('action' => $input['action'] ?? '');
 $_SERVER = array('SERVER_NAME' => 'app.example', 'SERVER_PORT' => '443');
 $GLOBALS['logout_count'] = 0;
 function read_config_option($name) { return $name === 'auth_method' ? 2 : ($GLOBALS['input']['custom'] ?? ''); }
@@ -148,11 +149,21 @@ test('login referer and server redirect keep safe local destinations', function 
     array('REDIRECT_URL', '//elsewhere.example/app/graph_view.php', 'index.php'),
     array('HTTP_REFERER', 'https://elsewhere.example/app/graph_view.php', '/app/index.php'),
     array('REDIRECT_URL', 'https://elsewhere.example/app/graph_view.php', 'index.php'),
-    // The existing sanitizer retains the graph-view action context.
-    array('HTTP_REFERER', '/app/graph_view.php?id=2', '/app/graph_view.php?id=2&action='),
-    array('REDIRECT_URL', '/app/graph_view.php?id=2', '/app/graph_view.php?id=2&action='),
+    // Redirect destinations preserve their own query without inheriting a source action.
+    array('HTTP_REFERER', '/app/graph_view.php?id=2', '/app/graph_view.php?id=2'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2', '/app/graph_view.php?id=2'),
     array('HTTP_REFERER', '/app/host.php?id=2', '/app/host.php?id=2'),
     array('REDIRECT_URL', '/app/host.php?id=2', '/app/host.php?id=2'),
+));
+
+test('login redirects preserve destination graph actions despite a source action', function (string $source, string $url) {
+    $result = auth_hardening_contract_run('redirect', array('source' => $source, 'url' => $url, 'action' => 'zoom'));
+    expect($result['redirect'])->toBe('Location: ' . $url);
+})->with(array(
+    array('HTTP_REFERER', '/app/graph_view.php?id=2'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2'),
+    array('HTTP_REFERER', '/app/graph_view.php?id=2&action=tree'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2&action=tree'),
 ));
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {
