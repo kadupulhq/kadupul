@@ -6135,7 +6135,7 @@ function auth_logout_everywhere($user_id, $credential, $db = false)
  * Read the credential generation only when it belongs to this password representation.
  * A real password replacement naturally invalidates the mapping.
  */
-function auth_session_credential_generation($user_id, $password, $db = false)
+function auth_session_credential_generation($user_id, #[\SensitiveParameter] $password, $db = false)
 {
     if (!$db instanceof PDO) {
         global $database_sessions, $database_hostname, $database_port, $database_default;
