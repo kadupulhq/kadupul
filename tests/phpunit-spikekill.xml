@@ -12,6 +12,7 @@
       <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
+      <file>Unit/Base1024GraphDivisorTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>
       <file>Unit/Security/HostReindexExecutionTest.php</file>
       <file>Unit/Security/RealtimePollerExecutionTest.php</file>
