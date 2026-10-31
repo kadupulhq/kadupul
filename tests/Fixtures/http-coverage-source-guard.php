@@ -25,8 +25,10 @@ if (($argv[1] ?? '') === 'paths') {
     $manifest = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
     require_symfony_integration_sources($manifest, $paths, $root);
     print 'Verified HTTP source identities';
-} elseif (($argv[1] ?? '') === 'import-paths') {
+} elseif (in_array($argv[1] ?? '', ['import-paths', 'required-import-paths'], true)) {
     $input = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
+    $requiredPaths = ($argv[1] ?? '') === 'required-import-paths' ? $input['required'] : [];
+    $input = ($argv[1] ?? '') === 'required-import-paths' ? $input['paths'] : $input;
     $legacyCallerPaths = ['graphs.php'];
     $accepted = [];
     $guard = test_php_block_source($source, "if (!str_starts_with(\$relative, 'src/')");
