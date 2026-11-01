@@ -15,6 +15,7 @@
     "templates/platform/console_home_shell.html.twig",
     "templates/platform/help.html.twig",
     "tests/Fixtures/legacy-cli/add_data_query.php",
+    "tests/Fixtures/legacy-cli/add_datasource.php",
     "tests/Fixtures/legacy-cli/add_graph_template.php",
     "tests/Fixtures/legacy-cli/add_graphs.php",
     "tests/Fixtures/legacy-cli/add_tree.php",

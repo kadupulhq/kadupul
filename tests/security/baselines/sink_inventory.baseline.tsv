@@ -98,6 +98,7 @@ dynamic_include	./bin/legacy-audit-upgrade.php:131	                            i
 dynamic_include	./bin/legacy-data-query-associate.php:21	    require_once $config['base_path'] . '/lib/' . $library . '.php';
 dynamic_include	./bin/legacy-data-query-reorder.php:19	require_once $config['base_path'] . '/lib/snmp.php';
 dynamic_include	./bin/legacy-data-query-reorder.php:20	require_once $config['base_path'] . '/lib/data_query.php';
+dynamic_include	./bin/legacy-data-source-add.php:22	    require_once $config['base_path'] . '/lib/' . $library . '.php';
 dynamic_include	./bin/legacy-data-source-titles.php:19	require_once $config['base_path'] . '/lib/api_data_source.php';
 dynamic_include	./bin/legacy-data-source-titles.php:20	require_once $config['base_path'] . '/lib/utility.php';
 dynamic_include	./bin/legacy-graph-add.php:20	require_once $config['base_path'] . '/lib/api_automation.php';
@@ -115,10 +116,6 @@ dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
-dynamic_include	./cli/add_datasource.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/add_datasource.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/add_datasource.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/add_datasource.php:13	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/add_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./cli/add_device.php:13	require_once($config['base_path'] . '/lib/api_data_source.php');

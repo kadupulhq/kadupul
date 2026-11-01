@@ -67,6 +67,7 @@ return (new Configuration())
         'symfony/doctrine-messenger',
         'symfony/security-csrf',
         'symfony/translation',
+        'symfony/yaml',
     ], [ErrorType::PROD_DEPENDENCY_ONLY_IN_DEV])
 
     // Registered in config/bundles.php for dev/test only; the production

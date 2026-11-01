@@ -7,7 +7,8 @@ declare(strict_types=1);
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-// Router for `php -S` used by tests/Symfony/LocalLoginParityTest.php. It boots
+// Router for `php -S` used by tests/Symfony/LocalLoginParityTest.php and
+// tests/Symfony/BasicLoginParityTest.php. It boots
 // the legacy web stack the way include/global.php does for one request, against
 // the MariaDB schema named in the environment, then runs the real
 // auth_login.php or the real include/auth.php gate. Only presentation (theme
@@ -20,6 +21,24 @@ if ($path === '/__health') {
     print 'ready';
     return true;
 }
+
+// TEST-ONLY web server identity. `php -S` has no authentication module, so it
+// cannot set REMOTE_USER or REDIRECT_REMOTE_USER the way Apache or nginx do
+// after authenticating a user. When, and only when, the test process starts
+// this router with KADUPUL_PARITY_SERVER_IDENTITY=1, the base64 JSON object in
+// the X-Kadupul-Test-Server-Identity request header supplies those two server
+// variables. The header itself is removed before the legacy code runs, so the
+// legacy code sees a server variable, never a client header. Production code
+// has no equivalent; BasicLoginParityTest is the only user.
+if (getenv('KADUPUL_PARITY_SERVER_IDENTITY') === '1' && isset($_SERVER['HTTP_X_KADUPUL_TEST_SERVER_IDENTITY'])) {
+    $identity = json_decode((string) base64_decode((string) $_SERVER['HTTP_X_KADUPUL_TEST_SERVER_IDENTITY'], true), true, 4, JSON_THROW_ON_ERROR);
+    foreach (['REMOTE_USER', 'REDIRECT_REMOTE_USER'] as $variable) {
+        if (is_array($identity) && is_string($identity[$variable] ?? null)) {
+            $_SERVER[$variable] = $identity[$variable];
+        }
+    }
+}
+unset($_SERVER['HTTP_X_KADUPUL_TEST_SERVER_IDENTITY']);
 
 $stateDirectory = (string) getenv('KADUPUL_PARITY_STATE');
 $started = hrtime(true);

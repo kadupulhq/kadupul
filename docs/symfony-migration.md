@@ -1962,6 +1962,38 @@ Known differences from `cli/add_data_query.php`:
   defines `--quiet`. Under `bin/console` a bad value exits 2; the shim keeps the
   original's message and exits 1.
 
+`php bin/console kadupul:data-source:add --host-id=ID --data-template-id=ID`
+adds a data source from a data template, on a device, or on none with
+`--host-id=0`. A worker saves the `data_local` row, applies the template with
+`change_data_template()`, refreshes the title cache and pushes the device's
+fields out with `push_out_host()`, as the original did, so the plugin hooks and
+the poller cache rows are unchanged. It needs the Console Access and Devices
+realms (realm 3, the one `host.php` and `data_sources.php` need), and each data
+source is audited. `--json` prints `status`, `database`, `data_source_id`,
+`device` and `data_template`.
+
+Known differences from `cli/add_datasource.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it.
+- An unknown device or data template is refused with `ERROR: Unknown Host Id
+  (ID)` or `ERROR: Unknown Data Template Id (ID)` and exit 1, before anything is
+  written. The original checked neither: the database clamped or rounded the id
+  (device `-1` became no device, `99999999` became 16777215, `7.5` became 8), it
+  wrote a data source on that device or template, and an unknown device with an
+  SNMP template ended in a fatal error and exit 255 after the row was written.
+  A negative or fractional template is refused the same way.
+- Ids that name an existing record in another numeric spelling (`7e0`, `7.0`, a
+  padded ` 7`) are accepted as before. A device of zero in any spelling (`0.0`,
+  `-0`) is a data source on no device; as in the original, only the text `0`
+  skips the `push_out_host()` call.
+- A worker failure prints `ERROR: Failed to add the data source for host (ID)
+  data template (ID)` and exits 1. The original had no such message.
+- An argument error prints the error and help without the version line.
+- `-d`, `--quiet` and the other flags of the sibling scripts are unknown here,
+  as in the original. Under `bin/console` a bad value exits 2; the shim keeps
+  the original's message and exits 1.
+
 `php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
 creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
 adds a node to one, under `--parent-node=ID` or at the root. A worker saves the
