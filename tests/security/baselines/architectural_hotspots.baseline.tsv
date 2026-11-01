@@ -101,6 +101,7 @@ dynamic_include	./bin/legacy-audit-upgrade.php:131	                            i
 dynamic_include	./bin/legacy-data-query-associate.php:21	    require_once $config['base_path'] . '/lib/' . $library . '.php';
 dynamic_include	./bin/legacy-data-query-reorder.php:19	require_once $config['base_path'] . '/lib/snmp.php';
 dynamic_include	./bin/legacy-data-query-reorder.php:20	require_once $config['base_path'] . '/lib/data_query.php';
+dynamic_include	./bin/legacy-data-source-add.php:22	    require_once $config['base_path'] . '/lib/' . $library . '.php';
 dynamic_include	./bin/legacy-data-source-titles.php:19	require_once $config['base_path'] . '/lib/api_data_source.php';
 dynamic_include	./bin/legacy-data-source-titles.php:20	require_once $config['base_path'] . '/lib/utility.php';
 dynamic_include	./bin/legacy-graph-add.php:20	require_once $config['base_path'] . '/lib/api_automation.php';
@@ -118,10 +119,6 @@ dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
-dynamic_include	./cli/add_datasource.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/add_datasource.php:11	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/add_datasource.php:12	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/add_datasource.php:13	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/add_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./cli/add_device.php:13	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -416,7 +413,7 @@ dynamic_include	./lib/rrdcheck.php:796	        include_once($config['library_pat
 dynamic_include	./lib/snmp.php:33	    include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
 dynamic_include	./lib/snmp.php:35	    include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
 dynamic_include	./lib/snmpagent.php:316			include_once($config['base_path'] . '/plugins/maint/functions.php');
-dynamic_include	./lib/snmpagent.php:873				include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/snmpagent.php:876				include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/template.php:1646	    include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/timespan_settings.php:14	include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/utility.php:118	    include_once($config['library_path'] . '/api_data_source.php');

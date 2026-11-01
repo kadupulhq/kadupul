@@ -8,7 +8,11 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
 
+- Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
+
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
+
+- Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
@@ -25,6 +29,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 
 - Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
+- Exclude disabled SNMP notification receivers during discovery and final trap selection, preserving enabled receivers whose legacy disabled flag is NULL. This carries the existing LTS fix into main.
 - Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
@@ -37,6 +42,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Run `cli/add_graph_template.php` through the `kadupul:device:add-graph-template` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Devices realms, binds its ids, audits the change, and refuses an unknown device or graph template instead of writing an orphan `host_graph` row.
 - Run `cli/add_tree.php` through the `kadupul:tree:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Trees realms, binds its ids and names instead of concatenating them into SQL, audits what it adds, and refuses a graph id with SQL after the number.
 - Run `cli/add_graphs.php` through the `kadupul:graph:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, binds its ids, fields and values instead of concatenating them into SQL, audits what it creates, and refuses an unknown device before it associates a data query with it.
+- Run `cli/add_datasource.php` through the `kadupul:data-source:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Devices realms (the realm `host.php` and `data_sources.php` require), refuses an unknown device or data template instead of writing an orphan or clamped `data_local` row, and records the new data source in the audit trail.
 - Run `cli/add_data_query.php` through the `kadupul:device:add-data-query` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Devices realms (the realm `host.php` requires), binds its ids instead of concatenating them into SQL, refuses an unknown device or data query instead of writing an orphan `host_snmp_query` row, and records the association in the audit trail.
 - Run `cli/remove_graphs.php` through the `kadupul:graph:remove` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, ids and expressions are bound instead of concatenated into SQL, the removal is audited, and an expression over 50 bytes, with `;`, or empty is refused as `validate_is_regex()` intended.
 - Match observed-sample percentile ranks to RRDtool, including single samples, low percentiles and half-rank boundaries (#1092).

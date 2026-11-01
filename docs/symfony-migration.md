@@ -749,6 +749,41 @@ are follow-up slices. New catalogs reside under the already non-public `config/`
 directory and are included in offline bundles together with the locked translation
 component. LTS is unchanged.
 
+## Translation audit of migrated code
+
+An audit of `src/`, `templates/` and `config/` found no untranslated visible text in
+the migrated Twig templates, form types or HTTP adapters, and one catalog gap:
+`inventory.en.yaml` lacked "Invalid location search.", which the French catalog and
+the device list adapter already used. Legacy pages and plugins keep gettext
+(`include/global_languages.php`); that is out of scope here.
+
+| Module | Gettext calls in `src/` | Literal template text | Literal PHP text (Presentation/Infrastructure) | en/fr gaps | Catalog keys not referenced |
+| --- | --- | --- | --- | --- | --- |
+| IdentityAccess | 7 (`PermissionFilter`, rendered inside legacy `user_admin.php` and `user_group_admin.php`) | 0 | 0 | 0 | 0 |
+| Platform | 0 (one comment mentions `__()`) | 0 | 0 | 0 | 0 |
+| Inventory | 0 | 0 | 0 | 1 (en) | 10 |
+| DataInput | 0 | 0 | 0 | 0 | 8 |
+| Graphing (data source profile, gprint, palette) | 0 | 0 | 0 | 0 | 9 |
+| Administration, Navigation, GraphDefinition, Automation | 0 | 0 | 0 | 0 | 1 |
+
+Method: Twig text nodes and title, alt, placeholder, aria-label and button value
+attributes outside `trans` blocks (the product name is a brand); JavaScript strings in
+templates; form `label`, `help`, `placeholder` and `choices` literals, domain and
+application exception messages, and constant arrays checked against the catalogs;
+`bin/console translation:extract fr --dump-messages` for message IDs without a catalog;
+and en/fr key sets per domain. Unreferenced keys are a substring search of `templates/` and
+`src/` and are reported, not removed, because some IDs are built at run time.
+
+Remaining gaps, not changed here: the `console` domain (home page, permission denied
+page) has no catalog under `config/translations` and depends on the gettext catalogs
+being loaded by Symfony; JSON list errors and console output keep their data contracts;
+`PermissionFilter` needs the legacy page runtime and stays on gettext until the user and
+group permission screens migrate.
+
+`tests/Symfony/TranslationCatalogTest.php` keeps this state: every domain has identical
+en and fr keys, French placeholders are a subset of the ID's placeholders, `src/`
+gains no gettext calls, and no template emits literal visible text.
+
 
 ## First Symfony Mailer path
 
@@ -1926,6 +1961,38 @@ Known differences from `cli/add_data_query.php`:
 - `--quiet` reaches `bin/console` as `--no-headers`, because the console already
   defines `--quiet`. Under `bin/console` a bad value exits 2; the shim keeps the
   original's message and exits 1.
+
+`php bin/console kadupul:data-source:add --host-id=ID --data-template-id=ID`
+adds a data source from a data template, on a device, or on none with
+`--host-id=0`. A worker saves the `data_local` row, applies the template with
+`change_data_template()`, refreshes the title cache and pushes the device's
+fields out with `push_out_host()`, as the original did, so the plugin hooks and
+the poller cache rows are unchanged. It needs the Console Access and Devices
+realms (realm 3, the one `host.php` and `data_sources.php` need), and each data
+source is audited. `--json` prints `status`, `database`, `data_source_id`,
+`device` and `data_template`.
+
+Known differences from `cli/add_datasource.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it.
+- An unknown device or data template is refused with `ERROR: Unknown Host Id
+  (ID)` or `ERROR: Unknown Data Template Id (ID)` and exit 1, before anything is
+  written. The original checked neither: the database clamped or rounded the id
+  (device `-1` became no device, `99999999` became 16777215, `7.5` became 8), it
+  wrote a data source on that device or template, and an unknown device with an
+  SNMP template ended in a fatal error and exit 255 after the row was written.
+  A negative or fractional template is refused the same way.
+- Ids that name an existing record in another numeric spelling (`7e0`, `7.0`, a
+  padded ` 7`) are accepted as before. A device of zero in any spelling (`0.0`,
+  `-0`) is a data source on no device; as in the original, only the text `0`
+  skips the `push_out_host()` call.
+- A worker failure prints `ERROR: Failed to add the data source for host (ID)
+  data template (ID)` and exits 1. The original had no such message.
+- An argument error prints the error and help without the version line.
+- `-d`, `--quiet` and the other flags of the sibling scripts are unknown here,
+  as in the original. Under `bin/console` a bad value exits 2; the shim keeps
+  the original's message and exits 1.
 
 `php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
 creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`

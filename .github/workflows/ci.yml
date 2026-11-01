@@ -258,6 +258,7 @@ jobs:
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
         php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-database.xml --colors=never
         php Symfony/data_input_lock_probe.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php Symfony/DatabaseTargetNativeTest.php
         php Support/verify_row_cache.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/reference-transaction-phpunit" Symfony/LegacyReferenceWriteTransactionNativeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit.cache" Symfony/DeviceCollectorJournalNativeTest.php
@@ -412,7 +413,8 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
-          coverage: none
+          ini-values: opcache.jit=off, opcache.jit_buffer_size=0
+          coverage: pcov
           tools: composer
 
       # Fails loudly on a parse error in any tracked source file. This is the
@@ -441,6 +443,10 @@ jobs:
         if: hashFiles('composer.lock') != ''
         run: composer install --prefer-dist --no-progress --no-interaction
 
+      # Native composition tests execute both locked coverage libraries.
+      - name: Install isolated test dependencies
+        run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
+
       - name: Detect Composer test script
         id: composer-test
         if: hashFiles('composer.json') != ''
@@ -465,9 +471,6 @@ jobs:
       - name: Tests
         if: steps.composer-test.outputs.available == 'true'
         run: composer test
-
-      - name: Install isolated CSV test runner
-        run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
       - name: Verify Pest inventory evidence and omitted-suite rejection
         working-directory: tests
