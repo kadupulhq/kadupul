@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
+
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).

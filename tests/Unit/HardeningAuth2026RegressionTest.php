@@ -64,7 +64,6 @@ test('GHSA-9ffc-rr2g-c8hh: header reads only appear after the auth_method gate',
 
     // Use $_SERVER['...'] forms to skip the mention in the docblock comment.
     $remoteUserPos = strpos($body, "\$_SERVER['REMOTE_USER']");
-    $phpAuthPos    = strpos($body, "\$_SERVER['PHP_AUTH_USER']");
 
     // Guard must exist and must come before every actual server-variable access.
     expect($guardPos)->not->toBeFalse();
@@ -72,7 +71,8 @@ test('GHSA-9ffc-rr2g-c8hh: header reads only appear after the auth_method gate',
     expect($body)->not->toContain("\$_SERVER['HTTP_REMOTE_USER']");
     expect($body)->not->toContain("\$_SERVER['HTTP_PHP_AUTH_USER']");
     expect($body)->not->toContain("\$_SERVER['HTTP_REDIRECT_REMOTE_USER']");
-    expect($phpAuthPos)->toBeGreaterThan($guardPos);
+    // PHP fills PHP_AUTH_USER from the client's Authorization header (ADR 0010 section 8).
+    expect($body)->not->toContain("\$_SERVER['PHP_AUTH_USER']");
 });
 
 // --- GHSA-3jj2-v5ch-wmq5: LDAP realm boundary ---

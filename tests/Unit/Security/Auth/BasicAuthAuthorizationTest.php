@@ -75,7 +75,7 @@ test('Basic authentication cannot bypass first-request authorization or account 
     'missing configured guest rejected' => array('existing_guest_missing', 'middleware', array('CLEAR_COOKIES', 'DESTROY_SESSION'), null, 403),
     'disabled existing session' => array('existing_disabled', 'middleware', array('CLEAR_COOKIES', 'DESTROY_SESSION'), null, 403),
     'missing existing session' => array('existing_missing', 'middleware', array('CLEAR_COOKIES', 'DESTROY_SESSION'), null, 403),
-    'server PHP auth identity' => array('PHP_AUTH_USER', 'identity', array('IDENTITY'), null, 200),
+    'client Authorization header PHP auth user' => array('PHP_AUTH_USER', 'identity', array('REJECT'), null, 200),
     'server remote identity' => array('REMOTE_USER', 'identity', array('IDENTITY'), null, 200),
     'server redirect identity' => array('REDIRECT_REMOTE_USER', 'identity', array('IDENTITY'), null, 200),
     'spoofed PHP auth header' => array('HTTP_PHP_AUTH_USER', 'identity', array('REJECT'), null, 200),

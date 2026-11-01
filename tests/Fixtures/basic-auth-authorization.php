@@ -293,8 +293,8 @@ if (str_starts_with($mode, 'realtime')) {
     }, 'local_graph_id' => '7'];
     ob_start();
 }
-$_SERVER['PHP_AUTH_USER'] = 'fixture';
-if (strpos($scenario, 'guest') !== false) unset($_SERVER['PHP_AUTH_USER']);
+$_SERVER['REMOTE_USER'] = 'fixture';
+if (strpos($scenario, 'guest') !== false) unset($_SERVER['REMOTE_USER']);
 $_SESSION = array();
 if (str_starts_with($scenario, 'existing_')) {
     $_SESSION['sess_user_id'] = 42;
@@ -321,7 +321,7 @@ if (str_starts_with($mode, 'realtime')) {
 } elseif ($mode === 'transition') {
     $events[] = cacti_auth_transition(42, 'test') ? 'ACCEPT' : 'REJECT';
 } elseif ($mode === 'identity') {
-    unset($_SERVER['PHP_AUTH_USER']);
+    unset($_SERVER['REMOTE_USER']);
     $_SERVER[$scenario] = 'fixture';
     $events[] = get_basic_auth_username() === 'fixture' ? 'IDENTITY' : 'REJECT';
 } elseif (str_starts_with($mode, 'cookie')) {
