@@ -81,6 +81,29 @@ final class BrowserWorkerSessionTest extends TestCase
         }
     }
 
+    public function testInactiveSessionIsRefusedAndRestoresThePreviousErrorHandler(): void
+    {
+        self::assertSame(PHP_SESSION_NONE, session_status());
+        $handler = static fn(): bool => false;
+        set_error_handler($handler);
+        try {
+            $failure = null;
+            try {
+                BrowserWorkerSession::close();
+            } catch (\RuntimeException $error) {
+                $failure = $error;
+            }
+            self::assertNotNull($failure);
+            self::assertSame('Native session close could not be confirmed.', $failure->getMessage());
+            self::assertSame(PHP_SESSION_NONE, session_status());
+            $restored = set_error_handler(static fn(): bool => false);
+            restore_error_handler();
+            self::assertSame($handler, $restored);
+        } finally {
+            restore_error_handler();
+        }
+    }
+
     public function testHandlerWriteFailureDoesNotBecomeAConfirmedClose(): void
     {
         session_set_save_handler(new class extends \SessionHandler {

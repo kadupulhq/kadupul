@@ -24,12 +24,19 @@ final class BrowserWorkerSession
             return $previous !== null && $previous($severity, $message, $file, $line) !== false;
         });
         try {
-            if (!session_write_close()) {
+            // The native return only distinguishes an inactive session; a
+            // handler write failure can still return true. Check the actual
+            // lifecycle on both sides and retain the I/O warning guard above.
+            if (self::status() !== PHP_SESSION_ACTIVE) {
                 throw new \RuntimeException('Native session close could not be confirmed.');
+            }
+            session_write_close();
+            if (self::status() !== PHP_SESSION_NONE) {
+                throw new \RuntimeException('Native session handler remained active after close.');
             }
         } catch (\Throwable $error) {
             try {
-                if (session_status() === PHP_SESSION_ACTIVE) {
+                if (self::status() === PHP_SESSION_ACTIVE) {
                     session_abort();
                 }
             } finally {
@@ -40,4 +47,13 @@ final class BrowserWorkerSession
             restore_error_handler();
         }
     }
+
+    /** Native handler callbacks mutate this state outside PHPStan's function model.
+     * @phpstan-impure
+     */
+    private static function status(): int
+    {
+        return session_status();
+    }
+
 }
