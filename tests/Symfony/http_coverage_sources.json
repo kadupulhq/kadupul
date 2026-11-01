@@ -69,6 +69,7 @@
     "tests/Symfony/gprint_preset_scenarios.py",
     "tests/Symfony/http_coverage_sources.json",
     "tests/Symfony/inventory_scenarios.py",
+    "tests/Symfony/link_collector_scenarios.py",
     "tests/Symfony/link_scenarios.py",
     "tests/Symfony/palette_color_review_http.py",
     "tests/Symfony/palette_color_scenarios.py",
