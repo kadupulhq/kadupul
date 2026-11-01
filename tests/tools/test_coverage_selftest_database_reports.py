@@ -172,6 +172,60 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
         result = self.guard('import-paths', required)
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(required, json.loads(result.stdout))
+    def test_supplemental_inventory_respects_checked_out_source_presence(self):
+        present = 'bin/legacy-tree-save.php'
+        absent = 'cli/add_tree.php'
+        # Both are genuine maintained CLI inputs; the temporary older tree has only one.
+        self.assertTrue((ROOT / present).is_file())
+        self.assertTrue((ROOT / absent).is_file())
+        with tempfile.TemporaryDirectory() as temporary:
+            checkout = Path(temporary)
+            destination = checkout / present
+            destination.parent.mkdir(parents=True)
+            destination.write_bytes((ROOT / present).read_bytes())
+            self.assertEqual([present], SELFTEST.additional_required_native_sources(checkout))
+            self.assertFalse((checkout / absent).exists())
+
+    def test_negative_baseline_contains_every_production_required_source(self):
+        source = (ROOT / 'tests/Symfony/coverage_selftest.py').read_text()
+        main = next(node for node in ast.parse(source).body if isinstance(node, ast.FunctionDef) and node.name == 'main')
+        assignments = []
+        for node in main.body:
+            if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id in ('required', 'legacy_pages') for target in node.targets):
+                assignments.append(node)
+            elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id == 'required':
+                assignments.append(node)
+        # Execute actual baseline assignments, not a second inventory model.
+        namespace = dict(SELFTEST.__dict__, prefix='/var/www/html/')
+        exec(compile(ast.Module(body=assignments, type_ignores=[]), str(ROOT / 'tests/Symfony/coverage_selftest.py'), 'exec'), namespace)
+        baseline = set(namespace['required'])
+        # Database negatives retain their real separate reports later in main().
+        for handler in ('files',):
+            with self.subTest(handler=handler):
+                # These published heads keep the production inventory inline.
+                # Tokenize and execute its actual assignments; never include the CLI merger.
+                program = r"""
+$source = file_get_contents($argv[1]);
+if (!is_string($source)) { throw new RuntimeException('Missing merger source'); }
+$handler = 'files';
+foreach (['$legacyCallerPaths', '$requiredPaths'] as $name) {
+    $collect = false; $statement = '';
+    foreach (token_get_all($source) as $token) {
+        $text = is_array($token) ? $token[1] : $token;
+        if (!$collect && is_array($token) && $token[0] === T_VARIABLE && $text === $name) { $collect = true; }
+        if ($collect) { $statement .= $text; }
+        if ($collect && $text === ';') { break; }
+    }
+    if (!$collect || $statement === '') { throw new RuntimeException('Missing required assignment'); }
+    eval($statement);
+}
+echo json_encode(array_merge($requiredPaths, $legacyCallerPaths), JSON_THROW_ON_ERROR);
+"""
+                result = subprocess.run([os.environ.get('PHP', 'php'), '-d', 'display_errors=stderr', '-r', program, str(ROOT / 'tests/Symfony/merge_coverage.php')], capture_output=True, text=True, timeout=30)
+                self.assertEqual(0, result.returncode, result.stderr)
+                expected = {'/var/www/html/' + path for path in json.loads(result.stdout)}
+                self.assertFalse(expected - baseline, 'Negative baseline omits required source(s): ' + ', '.join(sorted(expected - baseline)))
+
 
     def test_actual_producer_and_merger_require_the_same_complete_source_inventory(self):
         result = self.guard('paths')
