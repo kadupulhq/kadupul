@@ -634,7 +634,13 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
                     throw new RuntimeException('Additional native source path is unavailable');
                 }
                 $mapping[$copyPath] = $sourcePath;
-                $childCoverage->getData(true)->renameFile($copyPath, $sourcePath);
+                // Optional copies remain in the canonical filter even when
+                // this request did not include them. renameFile() requires an
+                // existing raw entry and otherwise creates null coverage,
+                // potentially replacing measured data for the same source.
+                if (array_key_exists($copyPath, $childCoverage->getData(true)->lineCoverage())) {
+                    $childCoverage->getData(true)->renameFile($copyPath, $sourcePath);
+                }
             }
             // Both installed filter APIs preserve the complete filter. Only
             // hash-verified native copies change their canonical filenames.

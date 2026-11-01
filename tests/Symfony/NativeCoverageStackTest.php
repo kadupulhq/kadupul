@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Process\Process;
 
 require_once __DIR__ . '/NativeCoverageStack.php';
@@ -19,8 +20,9 @@ final class NativeCoverageStackTest extends TestCase
 {
     private const string PRODUCER = 'tests/Fixtures/native-coverage-stack-prepend.php';
     private const string TARGET = 'tests/Fixtures/native-coverage-stack-target.php';
+    private const string UNEXECUTED = 'src/Alerting/Domain/AdministratorRecipient.php';
     private const array SOURCES = ['composer.lock', 'tests/composer.lock', 'tests/Symfony/NativeCoverageStack.php', 'tests/Symfony/NativeCoverageStackTest.php',
-        'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php', self::TARGET];
+        'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php', self::TARGET, self::UNEXECUTED];
     private ?string $directory = null;
 
     protected function tearDown(): void
@@ -98,7 +100,14 @@ final class NativeCoverageStackTest extends TestCase
         }
     }
 
-    public function testActualCollectorSerializesAndMergesOnlyTheVersionBoundParentStack(): void
+    public static function copyModes(): iterable
+    {
+        yield 'executed primary copy' => [false];
+        yield 'executed primary and unexecuted additional alias' => [true];
+    }
+
+    #[DataProvider('copyModes')]
+    public function testActualCollectorSerializesAndMergesOnlyTheVersionBoundParentStack(bool $additionalCopy): void
     {
         if (!extension_loaded('pcov')) $this->markTestSkipped('The collector round-trip requires the coverage job\'s PCOV extension.');
         $root = dirname(__DIR__, 2);
@@ -106,7 +115,13 @@ final class NativeCoverageStackTest extends TestCase
         $directory = $this->directory();
         $copy = $directory . '/target.php';
         self::assertTrue(copy($root . '/' . self::TARGET, $copy));
-        $scenario = hash('sha256', json_encode($stack, JSON_THROW_ON_ERROR));
+        $unused = $directory . '/never-included.php';
+        $unexecuted = $directory . '/never-recipient.php';
+        if ($additionalCopy) {
+            self::assertTrue(copy($root . '/' . self::TARGET, $unused));
+            self::assertTrue(copy($root . '/' . self::UNEXECUTED, $unexecuted));
+        }
+        $scenario = hash('sha256', json_encode([$stack, $additionalCopy], JSON_THROW_ON_ERROR));
         $probe = new Process([PHP_BINARY, '-r', 'exit(extension_loaded("pcov") ? 0 : 1);']);
         $probe->run();
         self::assertContains($probe->getExitCode(), [0, 1]);
@@ -115,6 +130,8 @@ final class NativeCoverageStackTest extends TestCase
             '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'auto_prepend_file=' . $root . '/' . self::PRODUCER, $copy], null, [
                 'KADUPUL_NATIVE_COVERAGE_STACK' => json_encode($stack, JSON_THROW_ON_ERROR),
                 'KADUPUL_NATIVE_COVERAGE_DIRECTORY' => $directory, 'KADUPUL_NATIVE_COVERAGE_COPY' => $copy, 'KADUPUL_NATIVE_COVERAGE_SCENARIO' => $scenario,
+                'KADUPUL_NATIVE_UNUSED_COVERAGE_COPY' => $additionalCopy ? $unused : false,
+                'KADUPUL_NATIVE_UNUSED_PRODUCTION_COPY' => $additionalCopy ? $unexecuted : false,
             ], timeout: 20);
         $child->mustRun();
         self::assertSame('42', $child->getOutput());
@@ -133,6 +150,19 @@ final class NativeCoverageStackTest extends TestCase
             \NativeChildCoverageEvidence::verifyRejections($reports[0], $root, self::PRODUCER, $scenario, self::SOURCES, $markers, [self::TARGET], self::TARGET, $stack)
         );
         self::assertNotEmpty($coverage->getData(true)->lineCoverage()[realpath($root . '/' . self::TARGET)]);
+        self::assertCount($additionalCopy ? 2 : 1, $coverage->filter()->files());
+        self::assertContains(realpath($root . '/' . self::TARGET), $coverage->filter()->files());
+        if ($additionalCopy) {
+            self::assertArrayNotHasKey(realpath($unused), $coverage->getData(true)->lineCoverage());
+            self::assertArrayNotHasKey(realpath($unexecuted), $coverage->getData(true)->lineCoverage());
+            $canonicalUnexecuted = realpath($root . '/' . self::UNEXECUTED);
+            self::assertContains($canonicalUnexecuted, $coverage->filter()->files());
+            self::assertArrayNotHasKey($canonicalUnexecuted, $coverage->getData(true)->lineCoverage());
+            $final = $coverage->getData()->lineCoverage();
+            self::assertArrayHasKey($canonicalUnexecuted, $final);
+            self::assertNotEmpty($final[$canonicalUnexecuted]);
+            self::assertSame([], array_filter($final[$canonicalUnexecuted], static fn($hits): bool => is_array($hits) && $hits !== []));
+        }
         if (\PHPUnit\Runner\CodeCoverage::instance()->isActive()) \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage()->merge($coverage);
         $original = file_get_contents($reports[0] . '.json');
         self::assertIsString($original);
