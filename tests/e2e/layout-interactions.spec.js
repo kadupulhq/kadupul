@@ -21,6 +21,58 @@ async function loadLayout(page) {
   await page.evaluate(() => { $('#storage_location').selectmenu(); setupSelectmenuScrollClose(); });
 }
 
+for (const theme of ['classic', 'modern']) {
+  for (const visible of [true, false]) {
+    test(`resize layout ${theme} with chrome ${visible ? 'visible' : 'hidden'} preserves dimensions and local state`, async ({ page }) => {
+      await loadLayout(page);
+      await page.setContent('<style>body{margin:0} #content{position:absolute;top:0} #navigation{width:300px}</style>'
+        + '<div id="cactiPageHead" style="height:30px"></div><div id="breadCrumbBar" style="height:20px"></div>'
+        + '<div id="cactiPageBottom" style="height:10px"></div><div id="cactiContent"></div>'
+        + '<div id="navigation"><input id="searcher"></div><div id="navigation_right"></div><div id="content"></div>'
+        + '<div class="cactiGraphContentArea" style="display:none;height:10px"></div>'
+        + '<div id="tabs"><div class="maintabs"><nav><ul><li><a id="first" class="lefttab"></a></li>'
+        + '<li><a id="second" class="lefttab"></a></li><li><a id="third" class="lefttab"></a></li></ul></nav></div></div>'
+        + '<div class="dropdownMenu"><ul><li>Menu</li></ul></div><ul id="submenu-ellipsis"></ul><div class="ellipsis"></div>');
+      const result = await page.evaluate(async ({ theme, visible }) => {
+        window.theme = theme;
+        if (!visible) $('#cactiPageHead, #breadCrumbBar, #cactiPageBottom').hide();
+        const localNames = ['heightPage', 'heightPageHead', 'heightBreadCrumbBar', 'heightPageBottom',
+          'heightPageContent', 'mainTabHeight', 'userTabPos'];
+        for (const name of localNames) window[name] = `owned elsewhere: ${name}`;
+        const calls = { shown: [], hidden: [], responsive: 0, graphs: 0, foreign: 0 };
+        let wrappingChecks = 0;
+        let finishResize;
+        const completed = new Promise(resolve => { finishResize = resolve; });
+        window.showCurrentTab = id => calls.shown.push(id);
+        window.hideCurrentTab = (id, shrinking) => calls.hidden.push([id, shrinking]);
+        window.tabsWrapping = () => ++wrappingChecks === 1;
+        window.responsiveUI = () => { calls.responsive++; finishResize(); };
+        window.responsiveResizeGraphs = () => calls.graphs++;
+        $(window).on('resize.foreignPage', () => calls.foreign++);
+        window.resizeDelta = 1;
+        for (let index = 0; index < 3; index++) keepWindowSize();
+        await completed;
+        return { calls, wrappingChecks, locals: localNames.map(name => window[name]),
+          pageWidth, bodyWidth: $('body').width(), height: $('#content').height(),
+          expectedHeight: theme === 'classic' ? $(document).height() : $(window).height() - (visible ? 60 : 0) - 4,
+          searchWidth: $('#searcher').outerWidth(), graphVisible: $('.cactiGraphContentArea').is(':visible'),
+          menuVisible: $('.dropdownMenu > ul').is(':visible'), ellipsisVisible: $('.ellipsis').is(':visible') };
+      }, { theme, visible });
+      expect(result.height).toBe(result.expectedHeight);
+      expect(result.pageWidth).toBe(result.bodyWidth);
+      expect(result.searchWidth).toBe(230);
+      expect(result.graphVisible).toBe(true);
+      expect(result.menuVisible).toBe(false);
+      expect(result.ellipsisVisible).toBe(false);
+      expect(result.calls).toEqual({ shown: ['first', 'second', 'third'], hidden: [['third', true]],
+        responsive: 1, graphs: 1, foreign: 3 });
+      expect(result.wrappingChecks).toBe(2);
+      expect(result.locals).toEqual(['heightPage', 'heightPageHead', 'heightBreadCrumbBar', 'heightPageBottom',
+        'heightPageContent', 'mainTabHeight', 'userTabPos'].map(name => `owned elsewhere: ${name}`));
+    });
+  }
+}
+
 test('select menu remains usable after the browser scrolls its button into view', async ({ page }) => {
   await loadLayout(page);
   await page.locator('#storage_location-button').click();

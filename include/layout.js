@@ -3442,35 +3442,18 @@ function keepWindowSize() {
 		waitForFinalEvent(function() {
 			$('.cactiGraphContentArea').show();
 
-   			var resizeTime = new Date();
-			var myEvent = event;
+			const myEvent = event;
 			if (resizeTimeout === false) {
 				resizeTimeout = true;
 				setTimeout(function() {
 					responsiveUI(myEvent);
 				}, resizeDelta);
 			}
-			heightPage = $(window).height();
-
-			if ($('#cactiPageHead').is(':visible')) {
-				heightPageHead = $('#cactiPageHead').outerHeight();
-			} else {
-				heightPageHead = 0;
-			}
-
-			if ($('#breadCrumbBar').is(':visible')) {
-				heightBreadCrumbBar = $('#breadCrumbBar').outerHeight();
-			} else {
-				heightBreadCrumbBar = 0;
-			}
-
-			if ($('#cactiPageBottom').is(':visible')) {
-				heightPageBottom = $('#cactiPageBottom').outerHeight();
-			} else {
-				heightPageBottom = 0;
-			}
-
-			heightPageContent = heightPage - heightPageHead - heightPageBottom - heightBreadCrumbBar;
+			const heightPage = $(window).height();
+			const heightPageHead = $('#cactiPageHead').is(':visible') ? $('#cactiPageHead').outerHeight() : 0;
+			const heightBreadCrumbBar = $('#breadCrumbBar').is(':visible') ? $('#breadCrumbBar').outerHeight() : 0;
+			const heightPageBottom = $('#cactiPageBottom').is(':visible') ? $('#cactiPageBottom').outerHeight() : 0;
+			const heightPageContent = heightPage - heightPageHead - heightPageBottom - heightBreadCrumbBar;
 
 			if (theme != 'classic') {
 				$('body').css('height', heightPage);
@@ -3483,7 +3466,7 @@ function keepWindowSize() {
 				$('#content').css({'width':'100%', 'height':$(document).height()});
 			}
 
-			var navWidth = $('#navigation').width();
+			const navWidth = $('#navigation').width();
 			if (navWidth > 220) {
 				$('#searcher').css('width', navWidth-70);
 			} else {
@@ -3495,55 +3478,20 @@ function keepWindowSize() {
 			/* close open dropdown menus first off */
 			$('.dropdownMenu > ul').hide();
 
-			if ($('#gtabs > .tabs').is(':visible')) {
-				var graphTabWidth = $('#gtabs > .tabs').outerWidth();
-			} else {
-				var graphTabWidth = 0;
-			}
+			pageWidth = $('body').width();
 
-			if ($('.usertabs').length) {
-				var userTabs = $('.usertabs').outerWidth();
-			} else {
-				var userTabs = 0;
-			}
-
-			var bodyWidth     = $('body').width();
-			var otherWidth    = 0;
-			$('#tabs').find('div:not(.maintabs):visible').each(function() {
-				otherWidth += $(this).outerWidth();
-			});
-
-			var ellipsisWidth = $('.maintabs-submenu-ellipsis').outerWidth();
-			var tabHeight     = $('#tabs').outerHeight();
-			var mainTabPos    = false;
-
-			if ($('.maintabs').length) {
-				mainTabPos    = $('.maintabs:first').position();
-			}
-
-			if ($('.usertabs').length) {
-				mainTabHeight = tabHeight;
-				userTabPos = $('.usertabs').position();
-			} else if (mainTabPos != false) {
-				mainTabHeight = $('.maintabs:first nav').outerHeight();
-				userTabPos = mainTabPos;
-			}
-
-			pageWidth = bodyWidth;
-
-			var items = $($('.maintabs nav ul li a.lefttab').get());
-			var done = false;
+			const items = $($('.maintabs nav ul li a.lefttab').get());
 			items.each(function() {
-				var id = $(this).attr('id');
+				const id = $(this).attr('id');
 
 				showCurrentTab(id);
 			});
 
 			// Hide top menus if you have to
-			var items = $($('.maintabs nav ul li a.lefttab').get().reverse());
-			var done = false;
-			items.each(function() {
-				var id = $(this).attr('id');
+			const reverseItems = $($('.maintabs nav ul li a.lefttab').get().reverse());
+			let done = false;
+			reverseItems.each(function() {
+				const id = $(this).attr('id');
 
 				if (!done) {
 					if (tabsWrapping()) {

@@ -16,6 +16,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 
+- Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
+
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
 

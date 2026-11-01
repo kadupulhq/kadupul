@@ -79,6 +79,10 @@ const scenarios = {
     'unknown client: native client dialog displays parsed environment and glyphs',
   ],
   'layout-interactions.spec.js': [
+    'resize layout classic with chrome visible preserves dimensions and local state',
+    'resize layout classic with chrome hidden preserves dimensions and local state',
+    'resize layout modern with chrome visible preserves dimensions and local state',
+    'resize layout modern with chrome hidden preserves dimensions and local state',
     'select menu remains usable after the browser scrolls its button into view',
     'scrolling a panel after opening a select menu closes it',
     'a scroll queued before the menu opens does not immediately close it',
@@ -124,6 +128,8 @@ function nativeScenarioLines(scenario) {
       ? [['include/themes/dark/main.js', "graphMenuElement = currentElement.attr('id').replace('dd', '');"]]
     : scenario.startsWith('native own icon lookup ')
       ? [[layout, "typeof Object.hasOwn === 'function'"]]
+    : scenario.startsWith('resize layout ')
+      ? [[layout, 'const heightPageContent = heightPage - heightPageHead - heightPageBottom - heightBreadCrumbBar;']]
       : scenario === 'realtime graph activation preserves loading glyph response and original image'
     ? [[layout, "class='drillDown "], ['include/realtime.js', "realtimeRequest(urlPath+'graph_realtime.php?action=countdown"]]
     : scenario === 'responsive filters preserve control callbacks and visibility across clicks'
