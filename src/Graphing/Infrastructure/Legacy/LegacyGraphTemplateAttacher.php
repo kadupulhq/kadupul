@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\GraphTemplateAttacher;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the graph template association in the legacy worker, which owns the automation and plugin hooks. */
 final readonly class LegacyGraphTemplateAttacher implements GraphTemplateAttacher
 {
     public const string MARKER = 'KADUPUL_GRAPH_TEMPLATE_ATTACH_RESULT';

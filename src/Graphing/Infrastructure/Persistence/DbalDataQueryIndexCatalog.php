@@ -15,6 +15,7 @@ use Kadupul\Graphing\Application\Port\DataQueryIndexItem;
 use Kadupul\Graphing\Domain\DataQuerySelection;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of DataQueryIndexCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalDataQueryIndexCatalog implements DataQueryIndexCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

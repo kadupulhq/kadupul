@@ -24,6 +24,7 @@ interface GraphTemplateAssignmentCatalog
      */
     public function findGraphTemplate(OperatorDatabase $database, string $id): ?CatalogChoice;
 
+    /** Whether the device already has the graph template. */
     public function isAssociated(OperatorDatabase $database, int $deviceId, int $graphTemplateId): bool;
 
     /** @return list<CatalogDevice> every device, ordered by id */

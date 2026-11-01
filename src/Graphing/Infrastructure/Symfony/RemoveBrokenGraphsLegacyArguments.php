@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Infrastructure\Symfony;
 use Kadupul\Graphing\Application\Command\BrokenGraphReport;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
 
+/** Argument spelling and help text of remove_broken_graphs.php. */
 final class RemoveBrokenGraphsLegacyArguments extends LegacyArguments
 {
     private const string RULE = '-------------------------------------------------------------------------------------';

@@ -28,6 +28,7 @@ final readonly class GraphRepairEntry
         public string $sql,
     ) {}
 
+    /** A finding for a data source that has no RRD item to repoint graph items to. */
     public static function withoutRrd(int $dataSourceId): self
     {
         return new self(0, 0, $dataSourceId, null, [], [], '');
@@ -51,6 +52,7 @@ final readonly class GraphRepairEntry
         );
     }
 
+    /** Whether this finding is a data source without an RRD item rather than a repoint. */
     public function isMissingRrd(): bool
     {
         return $this->rrdId === null;

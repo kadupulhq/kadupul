@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Application\Port;
 
+/** The cache directory is not configured, is not a usable subdirectory of the installation, or its settings cannot be read. */
 final class BoostImageCacheUnavailable extends \RuntimeException {}

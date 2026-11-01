@@ -19,6 +19,7 @@ use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Graphing\Domain\GraphRemovalFilter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of GraphRemovalCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalGraphRemovalCatalog implements GraphRemovalCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

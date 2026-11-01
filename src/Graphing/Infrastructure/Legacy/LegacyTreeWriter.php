@@ -14,6 +14,7 @@ use Kadupul\Graphing\Application\Port\TreeWriter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the tree and tree node saves in the legacy worker; a worker that does not report a new id is a failure. */
 final readonly class LegacyTreeWriter implements TreeWriter
 {
     public const string MARKER = 'KADUPUL_TREE_SAVE_RESULT';

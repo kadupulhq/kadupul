@@ -16,6 +16,7 @@ use Kadupul\Graphing\Application\Port\BrokenGraphGroup;
 use Kadupul\Graphing\Application\Port\GraphTitle;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of BrokenGraphCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalBrokenGraphCatalog implements BrokenGraphCatalog
 {
     private const int TITLE_BATCH = 1000;

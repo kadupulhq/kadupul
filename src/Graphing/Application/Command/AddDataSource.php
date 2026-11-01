@@ -12,6 +12,10 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\DataSourceCreationCatalog;
 use Kadupul\Graphing\Application\Port\DataSourceCreator;
 
+/**
+ * Adds a data source from a data template, on a device or on none, as add_datasource.php did.
+ * Needs the device-management realm; the device and template are checked before anything is written.
+ */
 final readonly class AddDataSource
 {
     private const string ACTION = 'data-source.add';

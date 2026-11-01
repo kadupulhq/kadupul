@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\BrokenGraphCatalog;
 use Kadupul\Graphing\Application\Port\GraphRemover;
 use Kadupul\Graphing\Application\Port\GraphTitle;
 
+/** Reports, or with $remove removes, the graphs that have an item pointing at a missing data source, as remove_broken_graphs.php did. */
 final readonly class RemoveBrokenGraphs
 {
     private const string ACTION = 'graph.broken.remove';

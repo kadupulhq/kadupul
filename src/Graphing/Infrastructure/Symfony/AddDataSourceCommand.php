@@ -24,6 +24,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces add_datasource.php. The old argument spelling and output are kept through AddDataSourceLegacyArguments; the work is done by AddDataSource. */
 #[AsCommand(name: 'kadupul:data-source:add', description: 'Add a data source from a data template, on a device or on none.')]
 final readonly class AddDataSourceCommand
 {

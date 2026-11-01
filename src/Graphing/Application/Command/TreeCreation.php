@@ -11,6 +11,7 @@ namespace Kadupul\Graphing\Application\Command;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The outcome of creating a tree; $treeId is the new tree, or the existing one for EXISTS. */
 final readonly class TreeCreation
 {
     public const string CREATED = 'created';
@@ -19,6 +20,7 @@ final readonly class TreeCreation
 
     public function __construct(public OperatorDatabase $database, public string $status, public ?int $treeId = null) {}
 
+    /** Whether a tree was created; an existing tree of that name is not a success. */
     public function succeeded(): bool
     {
         return $this->status === self::CREATED;

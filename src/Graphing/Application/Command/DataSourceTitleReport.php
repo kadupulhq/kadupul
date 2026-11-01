@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\DataSourceTitle;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** What a data source title reapply run selected and, unless it was a dry run, what it renamed. */
 final readonly class DataSourceTitleReport
 {
     /**
@@ -25,6 +26,7 @@ final readonly class DataSourceTitleReport
         public bool $dryRun,
     ) {}
 
+    /** A dry run always succeeds; an applied run succeeds when every selected data source was renamed. */
     public function succeeded(): bool
     {
         return $this->dryRun || count($this->renamed) === count($this->dataSources);

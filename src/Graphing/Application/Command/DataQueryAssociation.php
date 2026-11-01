@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\CatalogChoice;
 use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The outcome of associating a data query with a device; $status is one of the constants. */
 final readonly class DataQueryAssociation
 {
     public const string ASSOCIATED = 'associated';
@@ -28,6 +29,7 @@ final readonly class DataQueryAssociation
         public ?CatalogChoice $dataQuery = null,
     ) {}
 
+    /** Whether the data query was associated. */
     public function succeeded(): bool
     {
         return $this->status === self::ASSOCIATED;

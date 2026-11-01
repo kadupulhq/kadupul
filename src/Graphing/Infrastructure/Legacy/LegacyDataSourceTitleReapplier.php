@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\DataSourceTitleReapplier;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the data source rename in the legacy worker. */
 final readonly class LegacyDataSourceTitleReapplier implements DataSourceTitleReapplier
 {
     public const string MARKER = 'KADUPUL_DATA_SOURCE_TITLES_RESULT';

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Application\Port;
 
+/** Flushes one partition of a Boost run; a timeout or worker failure is reported in the result, not thrown. */
 interface BoostPartitionWriter
 {
     /** @param float $timeout seconds the whole flush may take */

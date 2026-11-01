@@ -11,6 +11,7 @@ namespace Kadupul\Graphing\Application\Command;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The operator could not be selected, or lacks console access or the realm the action needs. The refusal is audited with the actor and database. */
 final class GraphManagementDenied extends \RuntimeException
 {
     /** Who was refused, when known, and on which database; the refusal is audited with both. */

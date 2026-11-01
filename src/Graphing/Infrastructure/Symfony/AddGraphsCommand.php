@@ -27,6 +27,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces add_graphs.php. The old argument spelling and output are kept through AddGraphsLegacyArguments; the work is done by AddGraphs. */
 #[AsCommand(name: 'kadupul:graph:add', description: 'Create graphs from a graph template or from the indexes of a data query.')]
 final readonly class AddGraphsCommand
 {

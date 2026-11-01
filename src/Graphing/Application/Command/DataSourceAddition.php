@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\CatalogChoice;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The outcome of adding a data source; $status is one of the constants and $id is 0 unless it was added. */
 final readonly class DataSourceAddition
 {
     public const string ADDED = 'added';
@@ -27,6 +28,7 @@ final readonly class DataSourceAddition
         public int $id = 0,
     ) {}
 
+    /** Whether the data source was added. */
     public function succeeded(): bool
     {
         return $this->status === self::ADDED;

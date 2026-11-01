@@ -26,6 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Terminal;
 
+/** Console command that replaces remove_broken_graphs.php. The old argument spelling and output are kept through RemoveBrokenGraphsLegacyArguments; the work is done by RemoveBrokenGraphs. */
 #[AsCommand(name: 'kadupul:graph:remove-broken', description: 'Report or remove the graphs that lack data sources.')]
 final readonly class RemoveBrokenGraphsCommand
 {

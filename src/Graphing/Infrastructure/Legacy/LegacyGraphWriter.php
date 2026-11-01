@@ -15,6 +15,7 @@ use Kadupul\Graphing\Application\Port\GraphWriter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the add_graphs.php writes in the legacy worker; each call is one worker run and a worker that does not report success is a failure. */
 final readonly class LegacyGraphWriter implements GraphWriter
 {
     public const string MARKER = 'KADUPUL_GRAPH_ADD_RESULT';

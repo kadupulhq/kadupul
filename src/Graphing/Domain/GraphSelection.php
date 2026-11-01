@@ -22,6 +22,10 @@ final readonly class GraphSelection
     /** @param ?list<int> $hostIds null selects every device */
     private function __construct(public ?array $hostIds, public string $filter) {}
 
+    /**
+     * @param string $hosts "all", "0" or comma-separated device ids
+     * @return ?self null when $hosts is none of those
+     */
     public static function parse(string $hosts, string $filter = ''): ?self
     {
         if (strtolower($hosts) === 'all') {

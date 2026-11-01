@@ -28,11 +28,13 @@ final class TreeLabels
         return self::SORT_LABELS[$sortType] ?? '';
     }
 
+    /** Label of a device grouping style; empty for a value the table does not define. */
     public static function grouping(int $groupingType): string
     {
         return self::GROUPING_LABELS[$groupingType] ?? '';
     }
 
+    /** Label of a node kind; any kind other than graph and host reads as Header. */
     public static function kind(string $kind): string
     {
         return match ($kind) {

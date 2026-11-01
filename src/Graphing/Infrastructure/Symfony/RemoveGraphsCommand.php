@@ -30,6 +30,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces remove_graphs.php. The old argument spelling and output are kept through RemoveGraphsLegacyArguments; the work is done by RemoveGraphs. */
 #[AsCommand(name: 'kadupul:graph:remove', description: 'Count, list or remove graphs by device, template or title.')]
 final readonly class RemoveGraphsCommand
 {

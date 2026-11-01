@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Application\Port;
 
+/** What reordering stopped with. */
 final readonly class DataQueryReorderResult
 {
     /**

@@ -11,6 +11,7 @@ namespace Kadupul\Graphing\Application\Port;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** Writes what add_graphs.php wrote, through the legacy code that owns the graph and data source APIs and their plugin hooks. */
 interface GraphWriter
 {
     /**

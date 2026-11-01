@@ -14,6 +14,7 @@ use Kadupul\Graphing\Application\Port\DataSourceTitleCatalog;
 use Kadupul\Graphing\Application\Port\DataSourceTitleReapplier;
 use Kadupul\Graphing\Domain\GraphSelection;
 
+/** Reapplies the naming rules to the selected data sources, as poller_data_sources_reapply_names.php did, in batches. */
 final readonly class ReapplyDataSourceTitles
 {
     private const string ACTION = 'data-source.title.reapply';

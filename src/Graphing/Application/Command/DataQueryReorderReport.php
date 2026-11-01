@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\DataQueryIndexItem;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** What a reorder_data_query.php run selected and, unless it was a dry run, what it indexed. */
 final readonly class DataQueryReorderReport
 {
     /**
@@ -27,6 +28,7 @@ final readonly class DataQueryReorderReport
         public bool $dryRun,
     ) {}
 
+    /** A dry run always succeeds; an applied run succeeds when every selected item was indexed. */
     public function succeeded(): bool
     {
         return $this->dryRun || (!$this->unresolved && count($this->indexOn) === count($this->items));

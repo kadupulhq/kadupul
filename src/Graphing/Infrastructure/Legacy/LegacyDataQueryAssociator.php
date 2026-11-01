@@ -14,6 +14,7 @@ use Kadupul\Graphing\Domain\ReindexMethod;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the data query association in the legacy worker, which owns run_data_query() and its plugin hooks. */
 final readonly class LegacyDataQueryAssociator implements DataQueryAssociator
 {
     public const string MARKER = 'KADUPUL_DATA_QUERY_ASSOCIATE_RESULT';

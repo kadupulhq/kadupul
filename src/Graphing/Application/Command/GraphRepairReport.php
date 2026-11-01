@@ -11,6 +11,7 @@ namespace Kadupul\Graphing\Application\Command;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** What a repair_graphs.php run found; $executed is false for a dry run. */
 final readonly class GraphRepairReport
 {
     /**
