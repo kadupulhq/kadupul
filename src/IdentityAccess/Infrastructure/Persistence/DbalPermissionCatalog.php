@@ -13,6 +13,9 @@ use Doctrine\DBAL\Connection;
 use Kadupul\IdentityAccess\Application\Port\PermissionCatalog;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/**
+ * Reads the permission listings with the queries add_perms.php used. Every cell is returned as text, with NULL as an empty string.
+ */
 final readonly class DbalPermissionCatalog implements PermissionCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}
@@ -75,6 +78,7 @@ final readonly class DbalPermissionCatalog implements PermissionCatalog
         return is_scalar($cell) ? (string) $cell : '';
     }
 
+    /** Picks the connection for the selected database. */
     private function connection(OperatorDatabase $database): Connection
     {
         return $database === OperatorDatabase::Main ? $this->mainConnection : $this->localConnection;

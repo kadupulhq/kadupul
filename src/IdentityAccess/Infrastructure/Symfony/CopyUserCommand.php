@@ -26,6 +26,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Console front end of CopyUser. In legacy output mode it reproduces the copy_user.php messages, which exited 0 on every failure.
+ */
 #[AsCommand(name: 'kadupul:user:copy', description: 'Copy a local account, with its permissions and settings, to a new account.')]
 final readonly class CopyUserCommand
 {
@@ -38,6 +41,9 @@ final readonly class CopyUserCommand
         private ResultRenderer $renderer,
     ) {}
 
+    /**
+     * @return int a Command::* exit code
+     */
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] CopyUserInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
@@ -62,6 +68,11 @@ final readonly class CopyUserCommand
         return $this->report($io, $output, $mode, $template, $new, $report, $legacy);
     }
 
+    /**
+     * Renders the copy outcome in the active output mode and returns the exit code.
+     *
+     * @return int a Command::* exit code
+     */
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $template, string $new, UserCopyReport $report, CopyUserLegacyArguments $legacy): int
     {
         if ($mode === OutputMode::Legacy) {

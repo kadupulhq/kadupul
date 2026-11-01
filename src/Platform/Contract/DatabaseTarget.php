@@ -12,5 +12,10 @@ namespace Kadupul\Platform\Contract;
 /** Server-selected database identity; never authority to select a client target. */
 interface DatabaseTarget
 {
+    /**
+     * Returns the identity fingerprint of the connection the server selected.
+     *
+     * @throws \RuntimeException when the target cannot be confirmed
+     */
     public function capture(): string;
 }

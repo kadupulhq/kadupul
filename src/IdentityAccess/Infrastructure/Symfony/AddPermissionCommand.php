@@ -28,6 +28,9 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Console front end of GrantItemPermission. In legacy output mode it reproduces the add_perms.php messages and exit codes, except that a failed write now exits non-zero.
+ */
 #[AsCommand(name: 'kadupul:permission:add', description: 'Give a user access to a graph, tree, device or graph template.')]
 final readonly class AddPermissionCommand
 {
@@ -40,6 +43,9 @@ final readonly class AddPermissionCommand
         private ResultRenderer $renderer,
     ) {}
 
+    /**
+     * @return int a Command::* exit code
+     */
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] AddPermissionInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
@@ -69,11 +75,17 @@ final readonly class AddPermissionCommand
         return $this->report($io, $output, $mode, $input, $type, $report, $legacy);
     }
 
+    /** Reports a usage error and returns Command::INVALID. */
     private function invalid(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $message): int
     {
         return $this->renderer->failure($io, $output, $mode, $message, new CommandResult(['status' => 'invalid', 'error' => $message], [], Command::INVALID));
     }
 
+    /**
+     * Renders the grant outcome in the active output mode and returns the exit code.
+     *
+     * @return int a Command::* exit code
+     */
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, AddPermissionInput $input, ?ItemType $type, GrantReport $report, AddPermsLegacyArguments $legacy): int
     {
         $refused = !$report->succeeded() && $report->outcome !== GrantOutcome::NotGranted;

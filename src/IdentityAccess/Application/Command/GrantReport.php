@@ -11,6 +11,7 @@ namespace Kadupul\IdentityAccess\Application\Command;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The outcome of a grant request, the database it ran against, and whether it was a dry run. */
 final readonly class GrantReport
 {
     public function __construct(public GrantOutcome $outcome, public OperatorDatabase $database, public bool $dryRun) {}

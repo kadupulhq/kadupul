@@ -74,6 +74,7 @@ final readonly class UserCommandAccess
         $this->record($correlation, $scope->actor->id, $action, $type, ($scope->database === OperatorDatabase::Main ? 'main' : 'local') . ':' . $id, AuditEvent::ALLOWED, $ok ? AuditEvent::SUCCEEDED : AuditEvent::FAILED);
     }
 
+    /** Writes one audit event. A failing audit sink is swallowed so it cannot replace the command result. */
     private function record(string $correlation, ?int $actorId, string $action, string $type, string $target, string $decision, string $outcome): void
     {
         // Built outside the try: an event this class cannot express is a bug.

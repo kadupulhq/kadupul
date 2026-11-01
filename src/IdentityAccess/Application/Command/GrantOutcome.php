@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\IdentityAccess\Application\Command;
 
+/** How a grant request ended, in the terms add_perms.php reported it. */
 enum GrantOutcome: string
 {
     case Granted = 'granted';

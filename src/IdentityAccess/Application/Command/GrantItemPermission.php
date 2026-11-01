@@ -12,6 +12,10 @@ namespace Kadupul\IdentityAccess\Application\Command;
 use Kadupul\IdentityAccess\Application\Port\ItemPermissions;
 use Kadupul\IdentityAccess\Domain\ItemPermissionRequest;
 
+/**
+ * Gives one user access to one graph, tree, device or graph template, as add_perms.php did.
+ * A dry run runs every check and grants nothing.
+ */
 final readonly class GrantItemPermission
 {
     private const string ACTION = 'permission.grant';

@@ -15,6 +15,9 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\IdentityAccess\Domain\ItemType;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/**
+ * Checks users and items with direct queries and makes the grant through the legacy worker script, so the web write path (cache and remembered-login invalidation) is reused.
+ */
 final readonly class LegacyItemPermissions implements ItemPermissions
 {
     public const string MARKER = 'KADUPUL_ITEM_PERMISSION_RESULT';
@@ -62,6 +65,7 @@ final readonly class LegacyItemPermissions implements ItemPermissions
         return ($run['result']['granted'] ?? false) === true;
     }
 
+    /** Picks the connection for the selected database. */
     private function connection(OperatorDatabase $database): Connection
     {
         return $database === OperatorDatabase::Main ? $this->mainConnection : $this->localConnection;

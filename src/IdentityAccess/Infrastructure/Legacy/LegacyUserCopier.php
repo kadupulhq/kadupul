@@ -14,6 +14,9 @@ use Kadupul\IdentityAccess\Application\Port\UserCopier;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/**
+ * Looks up local accounts with a direct query and runs the copy in the legacy worker script, which owns the copy logic.
+ */
 final readonly class LegacyUserCopier implements UserCopier
 {
     public const string MARKER = 'KADUPUL_USER_COPY_RESULT';

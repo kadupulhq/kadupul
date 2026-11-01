@@ -16,6 +16,9 @@ use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 #[AsAlias(DatabaseTargetSelection::class)]
 final class NativeDatabaseTarget implements DatabaseTargetSelection
 {
+    /**
+     * @param string $expected a 64-character lowercase hexadecimal fingerprint; anything else yields null
+     */
     public function select(string $expected): ?\PDO
     {
         if (preg_match('/\A[a-f0-9]{64}\z/D', $expected) !== 1) {

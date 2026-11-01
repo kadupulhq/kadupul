@@ -12,5 +12,9 @@ namespace Kadupul\Platform\Contract;
 /** Verify the current server-selected connection; never select from client input. */
 interface DatabaseTargetSelection
 {
+    /**
+     * @param string $expected a fingerprint produced by DatabaseTarget::capture()
+     * @return ?\PDO the native connection when its fingerprint matches, otherwise null
+     */
     public function select(string $expected): ?\PDO;
 }
