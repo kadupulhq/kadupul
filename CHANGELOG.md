@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
+
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).

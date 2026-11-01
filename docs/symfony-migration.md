@@ -749,6 +749,41 @@ are follow-up slices. New catalogs reside under the already non-public `config/`
 directory and are included in offline bundles together with the locked translation
 component. LTS is unchanged.
 
+## Translation audit of migrated code
+
+An audit of `src/`, `templates/` and `config/` found no untranslated visible text in
+the migrated Twig templates, form types or HTTP adapters, and one catalog gap:
+`inventory.en.yaml` lacked "Invalid location search.", which the French catalog and
+the device list adapter already used. Legacy pages and plugins keep gettext
+(`include/global_languages.php`); that is out of scope here.
+
+| Module | Gettext calls in `src/` | Literal template text | Literal PHP text (Presentation/Infrastructure) | en/fr gaps | Catalog keys not referenced |
+| --- | --- | --- | --- | --- | --- |
+| IdentityAccess | 7 (`PermissionFilter`, rendered inside legacy `user_admin.php` and `user_group_admin.php`) | 0 | 0 | 0 | 0 |
+| Platform | 0 (one comment mentions `__()`) | 0 | 0 | 0 | 0 |
+| Inventory | 0 | 0 | 0 | 1 (en) | 10 |
+| DataInput | 0 | 0 | 0 | 0 | 8 |
+| Graphing (data source profile, gprint, palette) | 0 | 0 | 0 | 0 | 9 |
+| Administration, Navigation, GraphDefinition, Automation | 0 | 0 | 0 | 0 | 1 |
+
+Method: Twig text nodes and title, alt, placeholder, aria-label and button value
+attributes outside `trans` blocks (the product name is a brand); JavaScript strings in
+templates; form `label`, `help`, `placeholder` and `choices` literals, domain and
+application exception messages, and constant arrays checked against the catalogs;
+`bin/console translation:extract fr --dump-messages` for message IDs without a catalog;
+and en/fr key sets per domain. Unreferenced keys are a substring search of `templates/` and
+`src/` and are reported, not removed, because some IDs are built at run time.
+
+Remaining gaps, not changed here: the `console` domain (home page, permission denied
+page) has no catalog under `config/translations` and depends on the gettext catalogs
+being loaded by Symfony; JSON list errors and console output keep their data contracts;
+`PermissionFilter` needs the legacy page runtime and stays on gettext until the user and
+group permission screens migrate.
+
+`tests/Symfony/TranslationCatalogTest.php` keeps this state: every domain has identical
+en and fr keys, French placeholders are a subset of the ID's placeholders, `src/`
+gains no gettext calls, and no template emits literal visible text.
+
 
 ## First Symfony Mailer path
 
