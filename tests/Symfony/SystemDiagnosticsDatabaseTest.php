@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
 
 final class SystemDiagnosticsDatabaseTest extends TestCase
 {
-    private const array TABLES = ['version', 'settings', 'host', 'graph_local', 'data_local', 'data_template_data', 'poller_item', 'host_snmp_cache', 'snmp_query', 'processes', 'poller_output_boost', 'poller_output_boost_local_data_ids', 'user_auth', 'user_auth_perms', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_perms', 'user_auth_group_realm'];
+    private const array TABLES = ['version', 'settings', 'host', 'graph_local', 'data_local', 'data_template_data', 'poller_item', 'host_snmp_cache', 'snmp_query', 'processes', 'poller_output', 'poller_output_boost', 'poller_output_boost_local_data_ids', 'user_auth', 'user_auth_perms', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_perms', 'user_auth_group_realm'];
     private ?\PDO $administrator = null;
     private string $schema = '';
     private Connection $database;
@@ -203,7 +203,7 @@ final class SystemDiagnosticsDatabaseTest extends TestCase
         mkdir($directory . '/include', 0700, true);
         $localSchema = 'diagnostic_local_' . bin2hex(random_bytes(8));
         $this->administrator->exec('CREATE DATABASE `' . $localSchema . '`');
-        foreach (['version', 'poller_output_boost'] as $table) {
+        foreach (['version', 'poller_output', 'poller_output_boost'] as $table) {
             $this->administrator->exec('CREATE TABLE `' . $localSchema . '`.`' . $table . '` LIKE `' . $this->schema . '`.`' . $table . '`');
         }
         $this->administrator->exec("INSERT INTO `$localSchema`.version (cacti) VALUES ('1.3.0')");
