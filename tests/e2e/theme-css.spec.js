@@ -47,6 +47,92 @@ test.describe('theme duplicate declarations preserve the shipped cascade', () =>
   }
 });
 
+test.describe('jsTree state backgrounds', () => {
+  for (const theme of allThemes) {
+    for (const width of [1280, 390]) {
+      test(`${theme} preserves selected disabled and RTL last nodes at ${width}px`, async ({ page }, testInfo) => {
+        test.setTimeout(120_000);
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`/tests/e2e/theme-smoke.html?theme=${theme}`);
+        await page.waitForFunction(() => window.__themeSmokeReady === true);
+        await page.addStyleTag({ url: `/include/themes/${theme}/default/style.css` });
+        await page.addStyleTag({ url: `/include/themes/${theme}/main.css` });
+        await page.addScriptTag({ url: '/include/js/jstree.js' });
+
+        const samples = [];
+        for (const size of ['normal', 'small', 'large']) {
+          for (const direction of ['ltr', 'rtl']) {
+            await page.evaluate(({ size, direction }) => new Promise((resolve) => {
+              const oldTree = document.getElementById('css-tree');
+              if (oldTree) {
+                window.jQuery(oldTree).jstree('destroy');
+                oldTree.remove();
+              }
+              const tree = document.createElement('div');
+              tree.id = 'css-tree';
+              tree.style.direction = direction;
+              document.getElementById('sandbox').replaceChildren(tree);
+              window.jQuery(tree).one('ready.jstree', () => resolve()).jstree({
+                core: {
+                  animation: 0,
+                  themes: { name: 'default', url: false, variant: size === 'normal' ? false : size, responsive: true },
+                  data: [{
+                    id: 'parent', text: 'Parent', state: { opened: true }, children: [
+                      { id: 'ordinary', text: 'Ordinary' },
+                      { id: 'disabled', text: 'Selected disabled', state: { selected: true, disabled: true } },
+                      { id: 'last', text: 'Last child' },
+                    ],
+                  }],
+                },
+              });
+            }), { size, direction });
+
+            const disabled = page.locator('#disabled_anchor');
+            await expect(disabled).toHaveClass(/jstree-disabled/);
+            await expect(disabled).toHaveClass(/jstree-clicked/);
+            await expect(disabled).toHaveCSS('background-color', 'rgb(239, 239, 239)');
+            await expect(page.locator('#last')).toHaveClass(/jstree-last/);
+            await expect(page.locator('#last')).toHaveCSS('background-image', 'none');
+            await expect(page.locator('#last')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+            const desktopHeight = { normal: theme === 'classic' ? 24 : 20, small: 18, large: 32 }[size];
+            await expect(disabled).toHaveCSS('height', `${width <= 768 ? 40 : desktopHeight}px`);
+            if (direction === 'rtl') await expect(page.locator('#css-tree')).toHaveClass(/jstree-rtl/);
+
+            for (const state of ['default', 'disabled-hovered', 'ordinary-hovered', 'ordinary-selected']) {
+              if (state === 'disabled-hovered') await disabled.hover();
+              if (state === 'ordinary-hovered') await page.locator('#ordinary_anchor').hover();
+              if (state === 'ordinary-selected') await page.locator('#ordinary_anchor').click();
+              if (state === 'disabled-hovered') {
+                await expect(disabled).toHaveClass(/jstree-hovered/);
+                await expect(disabled).toHaveCSS('background-color', 'rgb(239, 239, 239)');
+              }
+              if (state === 'ordinary-hovered') await expect(page.locator('#ordinary_anchor')).toHaveClass(/jstree-hovered/);
+              if (state === 'ordinary-selected') await expect(page.locator('#ordinary_anchor')).toHaveClass(/jstree-clicked/);
+
+              // Compare settled states rather than timing-dependent intermediate box shadows.
+              await page.evaluate(() => {
+                for (const animation of document.getElementById('css-tree').getAnimations({ subtree: true })) {
+                  if (animation instanceof CSSTransition) animation.finish();
+                }
+              });
+              const styles = await page.evaluate(() => {
+                const properties = ['background-color', 'background-image', 'background-position', 'background-size',
+                  'color', 'box-shadow', 'height', 'width', 'line-height', 'margin-left', 'margin-right', 'opacity'];
+                return Object.fromEntries(['ordinary', 'ordinary_anchor', 'disabled', 'disabled_anchor', 'last', 'last_anchor'].map((id) => {
+                  const style = getComputedStyle(document.getElementById(id));
+                  return [id, Object.fromEntries(properties.map((property) => [property, style.getPropertyValue(property)]))];
+                }));
+              });
+              samples.push({ size, direction, state, styles });
+            }
+          }
+        }
+        await testInfo.attach('jstree-computed-styles', { body: JSON.stringify(samples, null, 2), contentType: 'application/json' });
+      });
+    }
+  }
+});
+
 test.describe('theme jquery ui css alignment', () => {
   test('all themes serve 1.14.x jquery ui bundles', async ({ request }) => {
     for (const theme of allThemes) {
