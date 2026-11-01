@@ -23,6 +23,52 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 final class InstallerControllerTest extends TestCase
 {
+    public function testDiagnosticsAreAuthorizedReadOnlyAndExcludeDeploymentData(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->once())->method('authorize');
+        $backend->expects($this->once())->method('inspect')->willReturn([
+            'mode' => 'upgrade', 'schema' => '1.2.38', 'target' => '1.3.0',
+            'revision' => 'private-review', 'snmp' => ['private-credential'],
+            'checks' => [['name' => '/private/path', 'ok' => false, 'observed' => 'private-host', 'remedy' => 'private-diagnostic']],
+            'job' => ['state' => 'failed', 'progress' => 41, 'phase' => 'private-phase', 'attempt' => 3,
+                'pending_collectors' => 2, 'error' => 'private-error', 'actor' => 'private-user', 'token' => 'private-token'],
+        ]);
+        foreach (['configure', 'start', 'recover', 'status'] as $method) {
+            $backend->expects($this->never())->method($method);
+        }
+        $response = ($this->controller($backend))(Request::create('/installer?view=diagnostics'));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('attachment; filename="installer-diagnostics.json"', $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+        $this->assertStringNotContainsString('private-', $response->getContent());
+        $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertSame('1.2.38', $data['schema']);
+        $this->assertSame('Importing templates', $data['execution']['phase']);
+        $this->assertSame('installation_requires_attention', $data['execution']['error_code']);
+        $this->assertSame([['number' => 1, 'passed' => false]], $data['requirements']);
+    }
+
+    public function testDiagnosticsDenyBeforeInspection(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->once())->method('authorize')->willThrowException(
+            new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException()
+        );
+        $backend->expects($this->never())->method('inspect');
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException::class);
+        ($this->controller($backend))(Request::create('/installer?view=diagnostics'));
+    }
+
+    public function testDiagnosticsFailureDoesNotExposeExceptionText(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->method('inspect')->willThrowException(new \RuntimeException('private-database-error'));
+        $response = ($this->controller($backend))(Request::create('/installer?view=diagnostics'));
+        $this->assertSame(503, $response->getStatusCode());
+        $this->assertSame('{"error":"diagnostics_unavailable"}', $response->getContent());
+    }
+
     #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function testNativeViewReauthorizesBeforeReadingConfigurationOrLocale(): void

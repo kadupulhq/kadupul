@@ -53,13 +53,33 @@ const fs = require('node:fs');
         await page.goto(endpoint);
         await form.locator('[name="options[Profile]"]').selectOption('1');
         await form.locator('[name="options[Eula]"]').check();
-        await form.locator('summary').click();
+        const discovery = form.locator('#discovery-settings');
+        const optionalSecret = discovery.locator('input[type=password]').first();
+        await optionalSecret.evaluate(input => input.setCustomValidity('Fixture validation'));
+        const beforeInvalid = posts;
+        await form.locator('button[type=submit]').click();
+        verify(await discovery.evaluate(element => element.open) && posts === beforeInvalid,
+            'Native validation reveals a closed optional group before dispatch');
+        await optionalSecret.evaluate(input => input.setCustomValidity(''));
+        const advanced = form.locator('#advanced-settings');
+        const summary = advanced.locator('summary');
+        verify(!(await advanced.evaluate(element => element.open)), 'Advanced settings begin collapsed');
+        await summary.focus();
+        await summary.press('Enter');
+        verify(await advanced.evaluate(element => element.open), 'Enter opens native advanced disclosure');
+        verify(await summary.evaluate(element => document.activeElement === element
+            && getComputedStyle(element).outlineStyle !== 'none'), 'Keyboard disclosure keeps visible focus');
+        await summary.press('Space');
+        verify(!(await advanced.evaluate(element => element.open)), 'Space closes native advanced disclosure');
+        await summary.press('Enter');
         await form.locator('[name="options[Paths][path_php_binary]"]').fill(process.env.INSTALLER_TEST_PHP_BINARY || '/usr/local/bin/php');
         const beforeConfigure = posts;
         await form.locator('[name=__csrf_magic]').evaluate(input => { input.value = 'sid:forged,1'; });
         await Promise.all([page.waitForNavigation(), form.locator('button[type=submit]').click()]);
         verify(posts === beforeConfigure + 2, 'Shipped script refreshes rejected CSRF once before configuring');
         verify(await page.locator('#review').count() === 1, 'Saved configuration reaches executable review');
+        verify(await page.locator('.checklist li').count() === 3, 'Review includes the backup checklist');
+        verify(await page.locator('li[aria-current=step]').innerText() === 'Review', 'Current review stage is identified');
         const review = page.locator('form').filter({ has: page.locator('input[name=revision]') });
         const revision = await review.locator('[name=revision]').inputValue();
         verify(/^[a-f0-9]{64}$/.test(revision), 'Review includes authenticated fingerprint');
@@ -82,6 +102,20 @@ const fs = require('node:fs');
         await page.goto(endpoint + '?language=fr-FR');
         verify(await page.locator('h1').innerText() === 'Installation et mise à niveau', 'Native locale selection reaches Symfony French catalog');
         verify((await page.locator('main').innerText()).includes('Exécution terminée'), 'Completion phase is translated');
+        verify(await page.locator('li[aria-current=step]').innerText() === 'Vérifier', 'Completed workflow identifies verification in the selected locale');
+        const health = page.locator('section').filter({ has: page.locator('#health') });
+        verify(await health.locator('tbody tr').count() >= 3, 'Completed workflow shows operational evidence');
+        verify((await health.innerText()).includes('Non évalué'), 'Unassessed operational checks remain explicit in French');
+        const [download] = await Promise.all([
+            page.waitForEvent('download'), page.locator('a[download]').click(),
+        ]);
+        verify(download.suggestedFilename() === 'installer-diagnostics.json', 'Authenticated diagnostics use the JSON attachment contract');
+        const diagnosticText = fs.readFileSync(await download.path(), 'utf8');
+        const diagnostic = JSON.parse(diagnosticText);
+        verify(diagnostic.format_version === 1 && diagnostic.execution.state === 'succeeded'
+            && diagnostic.schema === state.schema, 'Downloaded diagnostics describe the completed installation');
+        verify(!diagnosticText.includes(password) && !diagnosticText.includes(revision)
+            && !diagnosticText.includes('__csrf_magic') && !diagnosticText.includes('password'), 'Diagnostics omit credentials and review/session tokens');
         const refresh = await page.request.post(endpoint, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             form: { __csrf_magic: 'sid:forged,1' },
@@ -94,6 +128,12 @@ const fs = require('node:fs');
         });
         verify(invalid.status() === 422 && (await invalid.json()).error === 'Acceptez la licence avant d’enregistrer le plan d’installation.', 'Native locale selection translates validation errors');
         await page.context().clearCookies();
+        const deniedDiagnostic = await page.request.get(endpoint + '?view=diagnostics', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        });
+        const deniedDiagnosticBody = await deniedDiagnostic.json();
+        verify(deniedDiagnosticBody.status === '500' && !Object.hasOwn(deniedDiagnosticBody, 'schema')
+            && !deniedDiagnostic.headers()['content-disposition'], 'Anonymous diagnostics disclose no protected evidence or attachment');
         const expiredSession = await page.request.get(endpoint + '?view=status');
         const expiredBody = await expiredSession.json();
         verify(expiredSession.headers()['content-type'].includes('application/json')

@@ -49,8 +49,34 @@ credentials. Prefer protected files over secret command-line arguments.
 Omitted SNMP fields retain their stored values. An explicitly empty secret in
 CLI configuration clears that value; blank browser password fields retain it
 because those fields never redisplay stored credentials.
+For environment-backed secret references, local `--validate` checks and stable
+automation exit codes, see [unattended configuration](installer-unattended.md).
+
+The common web form keeps optional discovery, collector information, paths and
+template selections in keyboard-operable disclosure groups. Existing selections
+are still submitted. The review lists the version change, collection profile,
+interval, selected templates, discovery scope and backup prerequisites.
+
+Preflight additionally checks the worker files and dependencies, temporary and
+import destinations, web background-launch functions and transaction ownership
+on the actual database connection. These are observations, not a test execution
+of the worker. Effective database privileges remain an explicit nonblocking DBA
+check: roles and object-level migration privileges cannot be proved by these
+read-only checks. A ready plan does not guarantee that every later DDL or plugin
+operation will succeed.
 
 ## Execution and recovery
+
+The installer offers an authenticated, read-only diagnostic download at
+`install/install.php?view=diagnostics`. It contains numeric version identifiers,
+the PHP runtime, execution state, attempt, derived phase and numbered requirement
+and health results. Numbers correspond to the respective displayed tables. It deliberately
+omits configuration, usernames, hostnames, paths, discovery ranges, review
+fingerprints, credentials, raw errors and log contents. A failed error becomes
+the stable `installation_requires_attention` identifier. Preserve the application
+revision alongside the download when requesting support. The response is marked
+private/no-store; operators must still handle the downloaded file according to
+their support policy.
 
 GET requests and status polling never start, retry or finalize installation.
 Configuration is saved in a transaction on the verified native mutation
@@ -101,6 +127,13 @@ restoration is required. A matching schema version alone does not prove poller
 scheduling, collector connectivity, RRD access or collection freshness; verify
 these operationally before enabling discovery.
 
+Post-install checks distinguish confirmed schema and receipt evidence from work
+still requiring operator verification. A recent saved local-poller start is
+assessed using the native scheduling tolerance and configured collector ID. It
+confirms only a recorded start. Missing timestamps remain unassessed; malformed,
+future or stale timestamps require attention. Graph updates, completed device
+collection and isolated backup restoration require separate operational checks.
+
 ## Verification scope
 
 Focused Symfony tests exercise request validation, CSRF refresh, explicit
@@ -117,3 +150,5 @@ integration result in CI. It requires the locked E2E runner and Chromium.
 These checks do not establish complete browser accessibility, remote collector
 recovery or production upgrade compatibility. Those remain release gates until
 exercised with representative environments.
+Use [the first-time usability protocol](installer-usability.md) to record human
+acceptance independently of automated checks.

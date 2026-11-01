@@ -3,6 +3,15 @@ SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 SPDX-License-Identifier: GPL-3.0-or-later
 #}
 {% trans_default_domain 'installer' %}
+{% set blocked = false %}
+{% for check in plan.checks %}{% if not check.ok %}{% set blocked = true %}{% endif %}{% endfor %}
+{% set recovery = plan.job.state in ['failed', 'partial'] %}
+{% set active = plan.job.state in ['waiting', 'running'] %}
+{% set currentStep = active ? 'Run' : (recovery ? 'Recover' : (plan.mode == 'complete' ? 'Verify' : (blocked ? 'Check requirements' : (plan.reviewed ? 'Review' : 'Configure')))) %}
+{% set selectedTemplates = [] %}
+{% for template in plan.templates %}{% if template.selected %}{% set selectedTemplates = selectedTemplates|merge([template.name]) %}{% endif %}{% endfor %}
+{% set profileName = plan.profile %}
+{% for profile in plan.profiles %}{% if plan.profile == profile.id %}{% set profileName = profile.name %}{% endif %}{% endfor %}
 <!doctype html>
 <html lang="{{ view.locale }}">
 <head>
@@ -20,31 +29,59 @@ SPDX-License-Identifier: GPL-3.0-or-later
       data-status-unavailable="{{ 'Status is unavailable. Saved work is retained. Refresh to reconnect; do not submit another installation.'|trans }}">
     <header><p>Kadupul {{ plan.target }}</p><h1>{{ 'Installation and upgrade'|trans }}</h1></header>
     <ol aria-label="{{ 'Installation steps'|trans }}" class="steps">
-        {% for step in ['Check requirements', 'Configure', 'Review', 'Run', 'Verify'] %}<li>{{ step|trans }}</li>{% endfor %}
+        {% for step in ['Check requirements', 'Configure', 'Review', 'Run', 'Recover', 'Verify'] %}{% if step != 'Recover' or recovery %}<li{% if currentStep == step %} aria-current="step"{% endif %}>{{ step|trans }}</li>{% endif %}{% endfor %}
     </ol>
     <p>{{ 'Database version'|trans }}: <strong>{{ plan.schema }}</strong> · {{ 'Collector'|trans }} {{ plan.collector }}</p>
     <p id="installer-error" role="alert">{{ error ? error|trans : '' }}</p>
+    <aside class="next-action" aria-labelledby="next-action">
+        <h2 id="next-action">{{ 'Next action'|trans }}</h2>
+        {% if active %}<p>{{ 'Follow the execution status. Do not start another attempt while a worker is active.'|trans }}</p>
+        {% elseif recovery %}<p><a href="#recovery">{{ 'Complete the recovery checklist before retrying.'|trans }}</a></p>
+        {% elseif plan.mode == 'complete' %}<p><a href="#verification">{{ 'Verify collection and graph operation before enabling discovery.'|trans }}</a></p>
+        {% elseif blocked %}<p><a href="#requirements">{{ 'Resolve the blocked requirements, then check again. Saved selections are retained.'|trans }}</a></p>
+        {% elseif plan.reviewed %}<p><a href="#review">{{ 'Review the planned changes and backup checklist before authorizing execution.'|trans }}</a></p>
+        {% else %}<p><a href="#configure">{{ 'Choose a collection profile and accept the license. Optional settings can be opened when needed.'|trans }}</a></p>{% endif %}
+    </aside>
+    <p><a href="/{{ view.action|trim('/') }}?view=diagnostics" download>{{ 'Download installation diagnostics'|trans }}</a></p>
     {% if plan.mode == 'complete' and plan.job.state not in ['waiting', 'running', 'failed'] %}
-        <h2>{{ 'Installed'|trans }}</h2>
+        <section aria-labelledby="verification"><h2 id="verification">{{ 'Installed'|trans }}</h2>
         <p>{{ 'The database version matches this application. Installation does not establish that polling is healthy.'|trans }}</p>
         <ul>
             <li>{{ 'Verify the poller schedule and service account.'|trans }}</li>
             <li>{{ 'Check collection freshness and collector connectivity before enabling discovery.'|trans }}</li>
+            <li>{{ 'Open a graph and confirm that its RRD data updates after a poller cycle.'|trans }}</li>
             <li>{{ 'Keep a backup of the database, RRD files, configuration and secret material.'|trans }}</li>
         </ul>
-        <a href="{{ view.root }}/index.php">{{ 'Open the console'|trans }}</a>
+        <a href="{{ view.root }}/index.php">{{ 'Open the console'|trans }}</a></section>
     {% else %}
         <section aria-labelledby="requirements">
             <h2 id="requirements">{{ 'Check requirements'|trans }}</h2>
             <p>{{ 'Checks inspect this process and filesystem permissions. They do not write test files or contact devices.'|trans }}</p>
+            <details{% if blocked %} open{% endif %}><summary>{{ 'Requirement details'|trans }}</summary>
             <table><thead><tr><th>{{ 'Check'|trans }}</th><th>{{ 'Observed'|trans }}</th><th>{{ 'Action'|trans }}</th></tr></thead><tbody>
             {% for check in plan.checks %}
-                <tr><th scope="row">{{ check.name|trans }}</th><td>{{ check.ok ? 'Pass'|trans : 'Blocked'|trans }}: {{ check.observed }}</td><td>{{ check.ok ? 'No action needed'|trans : check.remedy|trans }}</td></tr>
+                <tr><th scope="row">{{ check.name|trans }}</th><td>{{ check.ok ? 'Pass'|trans : 'Blocked'|trans }}: {{ check.observed|trans }}</td><td>{{ check.ok ? 'No action needed'|trans : check.remedy|trans }}</td></tr>
             {% endfor %}
-            </tbody></table>
+            </tbody></table></details>
             <a href="/{{ view.action|trim('/') }}">{{ 'Check again'|trans }}</a>
+            {% for advisory in plan.advisories|default([]) %}<aside class="next-action">
+                <h3>{{ advisory.name|trans }}: {{ advisory.status|trans }}</h3>
+                <p>{{ advisory.observed|trans }}</p><p>{{ advisory.remedy|trans }}</p>
+            </aside>{% endfor %}
         </section>
-        {% if plan.job.state in ['waiting', 'running'] %}
+        {% if recovery %}
+        <section class="recovery" aria-labelledby="recovery"><h2 id="recovery">{{ 'Recovery checklist'|trans }}</h2>
+            <ol>
+                <li>{{ 'Preserve log/cacti.log and record the failed attempt.'|trans }}</li>
+                <li>{{ 'Confirm that the previous worker and its child processes have stopped.'|trans }}</li>
+                <li>{{ 'Inspect committed changes, collector synchronization and plugin cleanup. Correct the cause before retrying.'|trans }}</li>
+                <li>{{ 'Review the saved plan again, then explicitly authorize a retry.'|trans }}</li>
+            </ol>
+        </section>
+        {% endif %}
+        {% if active %}
+        <details class="recovery"><summary>{{ 'Recover a stopped worker'|trans }}</summary>
+        <p>{{ 'Use recovery only after confirming that this attempt is no longer running. Recovery does not stop a process.'|trans }}</p>
         <form method="post" action="{{ view.action }}" data-installer-form>
             <input type="hidden" name="__csrf_magic" value="{{ view.csrf }}">
             <input type="hidden" name="action" value="recover">
@@ -52,7 +89,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <label><input type="checkbox" name="recovery_confirmed" value="1" required> {{ 'I checked the log and confirmed that the previous worker and its child processes have stopped'|trans }}</label>
             <button type="submit">{{ 'Recover stopped attempt'|trans }}</button>
             <p>{{ 'Recovery retains the saved selections and never terminates a live worker. Review the plan again before retrying.'|trans }}</p>
-        </form>
+        </form></details>
         {% endif %}
         {% if plan.job.state not in ['waiting', 'running', 'succeeded'] and plan.mode != 'finish' %}
         <section aria-labelledby="configure">
@@ -65,12 +102,15 @@ SPDX-License-Identifier: GPL-3.0-or-later
                     {% for profile in plan.profiles %}<option value="{{ profile.id }}"{% if plan.profile == profile.id %} selected{% endif %}>{{ profile.name }} (#{{ profile.id }})</option>{% endfor %}
                 </select>
                 <label><input type="checkbox" name="options[Eula]" value="1" required> {{ 'I accept the license terms'|trans }} (<a href="{{ view.root }}/LICENSE">{{ 'License'|trans }}</a>)</label>
+                <details id="collector-settings"{% if plan.mode == 'collector' %} open{% endif %}><summary>{{ 'Collector and installation mode'|trans }}</summary>
+                    <dl><dt>{{ 'Operation'|trans }}</dt><dd>{{ plan.mode|trans }}</dd><dt>{{ 'Collector'|trans }}</dt><dd>{{ plan.collector }}</dd></dl>
+                    <p>{{ 'The deployment configuration determines the collector role and database connections. Verify the primary server configuration before starting a collector.'|trans }}</p>
+                </details>
+                <details id="discovery-settings"{% if plan.discovery or plan.override %} open{% endif %}><summary>{{ 'Discovery and SNMP settings'|trans }}</summary>
+                <p>{{ 'Keep discovery disabled until collection and collector connectivity have been verified.'|trans }}</p>
                 <input type="hidden" name="options[AutomationMode]" value="0">
                 <label><input type="checkbox" name="options[AutomationMode]" value="1"{% if plan.discovery %} checked{% endif %}> {{ 'Enable discovery after installation'|trans }}</label>
                 <label for="range">{{ 'Discovery range'|trans }}</label><input id="range" name="options[AutomationRange]" value="{{ plan.range }}" maxlength="1024">
-                <details><summary>{{ 'Advanced options'|trans }}</summary>
-                    <label for="language">{{ 'Language'|trans }}</label><select id="language" name="options[Language]">{% for code, label in plan.languages %}<option value="{{ code }}"{% if plan.language == code %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
-                    <label for="theme">{{ 'Theme'|trans }}</label><select id="theme" name="options[Theme]">{% for theme in plan.themes %}<option value="{{ theme }}"{% if plan.theme == theme %} selected{% endif %}>{{ theme }}</option>{% endfor %}</select>
                     <input type="hidden" name="options[AutomationOverride]" value="0">
                     <label><input type="checkbox" name="options[AutomationOverride]" value="1"{% if plan.override %} checked{% endif %}> {{ 'Override discovery SNMP settings'|trans }}</label>
                     <fieldset><legend>{{ 'Discovery SNMP settings'|trans }}</legend>
@@ -81,6 +121,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
                         {% else %}<input id="snmp-{{ field.name }}" type="{{ field.secret ? 'password' : 'text' }}" autocomplete="{{ field.secret ? 'new-password' : 'off' }}" name="options[SnmpOptions][{{ field.name }}]" value="{{ field.value }}" maxlength="{{ field.limit }}">{% endif %}
                     {% endfor %}
                     </fieldset>
+                </details>
+                <details id="advanced-settings"><summary>{{ 'Advanced options'|trans }}</summary>
+                    <label for="language">{{ 'Language'|trans }}</label><select id="language" name="options[Language]">{% for code, label in plan.languages %}<option value="{{ code }}"{% if plan.language == code %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+                    <label for="theme">{{ 'Theme'|trans }}</label><select id="theme" name="options[Theme]">{% for theme in plan.themes %}<option value="{{ theme }}"{% if plan.theme == theme %} selected{% endif %}>{{ theme }}</option>{% endfor %}</select>
                     {% if plan.tables %}<fieldset><legend>{{ 'Table conversions'|trans }}</legend>
                     <p>{{ 'Large tables may require the dedicated CLI conversion tool before installation.'|trans }}</p>
                     <input type="hidden" name="options[Tables][all]" value="0">
@@ -90,6 +134,8 @@ SPDX-License-Identifier: GPL-3.0-or-later
                     <fieldset><legend>{{ 'Executable paths'|trans }}</legend>
                     {% for name, value in plan.paths %}<label for="{{ name }}">{{ name }}</label><input id="{{ name }}" name="options[Paths][{{ name }}]" value="{{ value }}" maxlength="4096">{% endfor %}
                     </fieldset>
+                </details>
+                <details id="template-settings"><summary>{{ 'Template selection'|trans }} ({{ selectedTemplates|length }})</summary>
                     <fieldset><legend>{{ 'Templates'|trans }}</legend>
                     <input type="hidden" name="options[Templates][all]" value="0">
                     {% for template in plan.templates %}
@@ -107,8 +153,20 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <section aria-labelledby="review"><h2 id="review">{{ 'Review installation plan'|trans }}</h2>
             <dl><dt>{{ 'Operation'|trans }}</dt><dd>{{ plan.mode|trans }}</dd>
                 <dt>{{ 'Version change'|trans }}</dt><dd>{{ plan.schema }} → {{ plan.target }}</dd>
+                <dt>{{ 'Collector'|trans }}</dt><dd>{{ plan.collector }}</dd>
+                {% if plan.mode != 'finish' %}<dt>{{ 'Collection profile'|trans }}</dt><dd>{{ profileName }} (#{{ plan.profile }})</dd>
+                <dt>{{ 'Poller interval in seconds'|trans }}</dt><dd>{{ plan.cron }}</dd>{% endif %}
                 {% if plan.mode == 'finish' %}<dt>{{ 'Scope'|trans }}</dt><dd>{{ 'Finishing tasks only. Schema migrations will not be replayed.'|trans }}</dd>{% else %}<dt>{{ 'Discovery'|trans }}</dt><dd>{{ plan.discovery ? plan.range : 'Disabled'|trans }}</dd>{% endif %}
             </dl>
+            {% if plan.mode != 'finish' %}<details><summary>{{ 'Templates selected for import'|trans }} ({{ selectedTemplates|length }})</summary>
+                {% if selectedTemplates %}<ul>{% for name in selectedTemplates %}<li>{{ name }}</li>{% endfor %}</ul>{% else %}<p>{{ 'No templates selected.'|trans }}</p>{% endif %}
+            </details>{% endif %}
+            <h3>{{ 'Backup checklist'|trans }}</h3>
+            <ul class="checklist">
+                <li>{{ 'Database backup and a tested restoration procedure.'|trans }}</li>
+                <li>{{ 'RRD files and the service account permissions needed to restore them.'|trans }}</li>
+                <li>{{ 'Configuration, keys and plugin data outside the database.'|trans }}</li>
+            </ul>
             <p>{{ 'Back up the database, RRD files, configuration and keys. Database upgrades may commit changes that application rollback cannot undo.'|trans }}</p>
             <form method="post" action="{{ view.action }}" data-installer-form>
                 <input type="hidden" name="__csrf_magic" value="{{ view.csrf }}">
@@ -125,11 +183,19 @@ SPDX-License-Identifier: GPL-3.0-or-later
     <section aria-labelledby="progress" data-installer-progress data-state="{{ plan.job.state }}">
         <h2 id="progress">{{ 'Execution status'|trans }}</h2>
         <p id="installer-state" role="status" aria-live="polite">{{ plan.job.state|trans }}: {{ plan.job.phase|trans }}</p>
-        <progress id="installer-progress" max="100" value="{{ plan.job.progress }}">{{ plan.job.progress }}%</progress>
+        <progress id="installer-progress" aria-labelledby="progress" max="100" value="{{ plan.job.progress }}">{{ plan.job.progress }}%</progress>
         <p>{{ 'Progress shows the last recorded phase. Refreshing this page never starts or retries a worker.'|trans }}</p>
         <p>{{ plan.job.error ? plan.job.error|trans : '' }}</p>
         <p>{{ 'If a worker stops unexpectedly, preserve log/cacti.log and confirm its process has ended before explicitly retrying. A waiting state does not confirm a successful launch.'|trans }}</p>
     </section>
+    {% if plan.mode == 'complete' or plan.job.health|default([]) %}
+    <section aria-labelledby="health"><h2 id="health">{{ 'Post-installation checks'|trans }}</h2>
+        <p>{{ 'Verified checks cover only the evidence shown. Unassessed checks still require operator verification.'|trans }}</p>
+        {% if plan.job.health|default([]) %}<table><thead><tr><th>{{ 'Check'|trans }}</th><th>{{ 'Status'|trans }}</th><th>{{ 'Observed'|trans }}</th><th>{{ 'Action'|trans }}</th></tr></thead><tbody>
+        {% for check in plan.job.health %}<tr><th scope="row">{{ check.name|trans }}</th><td>{{ check.status|trans }}</td><td>{{ check.observed|trans }}</td><td>{{ check.remedy|trans }}</td></tr>{% endfor %}
+        </tbody></table>{% else %}<p>{{ 'Operational checks still require operator verification.'|trans }}</p>{% endif %}
+    </section>
+    {% endif %}
 </main>
 </body>
 </html>

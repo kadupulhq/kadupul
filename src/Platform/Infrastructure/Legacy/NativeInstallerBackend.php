@@ -74,6 +74,15 @@ final class NativeInstallerBackend implements InstallerBackend
             $checks[] = ['name' => $name, 'ok' => $ok, 'observed' => $observed, 'remedy' => $remedy];
         };
         $check('PHP runtime', version_compare(PHP_VERSION, '8.4.0', '>='), PHP_VERSION, 'Configure PHP 8.4 or newer for both the web service and CLI.');
+        array_push($checks, ...InstallerRuntimeChecks::inspect($this->projectDir, PHP_SAPI !== 'cli'));
+        $autocommit = !$this->database()->inTransaction()
+            && $this->functions->text($this->query('SELECT @@session.autocommit')->fetchColumn()) === '1';
+        $check(
+            'Database transaction ownership',
+            $autocommit,
+            $autocommit ? 'autocommit enabled; no caller-owned transaction' : 'autocommit disabled or caller transaction active',
+            'Run installation outside a caller-owned transaction and enable autocommit on its mutation connection.'
+        );
         $manifest = $this->functions->map(json_decode((string) file_get_contents($this->projectDir . '/composer.json'), true, 512, JSON_THROW_ON_ERROR));
         foreach (array_keys($this->functions->map($manifest['require'] ?? null)) as $package) {
             if (str_starts_with($package, 'ext-')) {
@@ -107,6 +116,20 @@ final class NativeInstallerBackend implements InstallerBackend
             );
         }
         $paths = [];
+        if (!$recoveryOnly && $mode !== 'complete') {
+            // These destinations are required by the native permission/import
+            // step. Finishing an installed schema does not reimport resources.
+            foreach (['resource/snmp_queries', 'resource/script_server', 'resource/script_queries', 'scripts'] as $relative) {
+                $path = $this->projectDir . '/' . $relative;
+                $writable = is_dir($path) && is_writable($path);
+                $check(
+                    'Import destination: ' . $relative,
+                    $writable,
+                    $writable ? 'directory writable by this process' : 'missing or not writable',
+                    'Restore the release directory and grant the installation account write access for template resource imports. Do not make it world-writable.'
+                );
+            }
+        }
         foreach ($this->functions->map($this->functions->call('install_file_paths')) as $name => $definition) {
             $definition = $this->functions->map($definition);
             if (!str_starts_with($name, 'path_') && $name !== 'settings_sendmail_path') {
@@ -170,6 +193,7 @@ final class NativeInstallerBackend implements InstallerBackend
         return [
             'mode' => $mode, 'schema' => $schema, 'target' => $this->targetVersion(),
             'collector' => $this->integer($configuration['poller_id'] ?? 1), 'checks' => $checks,
+            'advisories' => [InstallerHealthAssessment::databasePrivileges()],
             'ready' => $mode !== 'complete' && !in_array(false, array_column($checks, 'ok'), true),
             'revision' => $revision, 'reviewed' => $revision !== '' && ($recoveryOnly || ($settings['installer_v13_review'] ?? '') === $revision),
             'discovery' => $discovery, 'range' => $settings['install_automation_range'] ?? '',
@@ -350,7 +374,30 @@ final class NativeInstallerBackend implements InstallerBackend
             'updated' => $settings['install_updated'] ?? null,
             'pending_collectors' => $job['pending_collectors'] ?? 0,
             'error' => ($job['state'] ?? '') === 'partial' ? 'The database is installed, but some collectors still need synchronization. Retry the finishing tasks after checking their status.' : (($job['state'] ?? '') === 'failed' ? 'Installation stopped. Preserve the installer log, correct the cause and explicitly confirm a retry. Some database changes may already be committed. Check plugin cleanup before authorizing a retry.' : null),
-            'schema' => $schema];
+            'schema' => $schema,
+            'health' => InstallerHealthAssessment::assess($schema, $this->targetVersion(), $job['state'] ?? 'not_started', $job['pending_collectors'] ?? 0, $this->pollerActivity($settings))];
+    }
+
+    /** @param array<string, string> $settings
+     *  @return array{name: string, status: string, observed: string, remedy: string}|null
+     */
+    private function pollerActivity(array $settings): ?array
+    {
+        try {
+            $configuration = $this->functions->configuration();
+        } catch (\RuntimeException) {
+            return null;
+        }
+        $id = filter_var($configuration['poller_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 65535]]);
+        if ($id === false) {
+            return null;
+        }
+        return InstallerHealthAssessment::pollerActivity(
+            $settings['poller_lastrun_' . $id] ?? null,
+            $settings['cron_interval'] ?? '300',
+            $settings['poller_interval'] ?? '300',
+            time()
+        );
     }
 
     public function execute(string $token): bool
