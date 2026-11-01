@@ -136,7 +136,10 @@ try {
         );
         installerProvisionAdministrator($database);
         [$exit, $output, $errors] = installerRun($root, $environment, 'cli/install_cacti.php', ['--install', '--accept-eula', '--automationmode=0']);
-        installerAssert($exit === 0 && $errors === '', 'actual normal fresh CLI Installer flow completes without force or bypass');
+        // Keep exercising the legacy shim and its intentional deprecation
+        // notice, while refusing every other byte on the error stream.
+        $deprecation = "NOTE: install_cacti.php is deprecated; use bin/console kadupul:install.\n";
+        installerAssert($exit === 0 && in_array($errors, ['', $deprecation], true), 'actual normal fresh CLI Installer flow completes without force or bypass');
     } else {
         throw new RuntimeException('Unknown native normal installer probe mode.');
     }

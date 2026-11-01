@@ -136,14 +136,31 @@ $throwing_installer = new class extends Installer {
 	}
 };
 
-Installer::beginInstall('-b', $throwing_installer);
+check_branding_migration($throwing_installer instanceof \Kadupul\Platform\Application\Installer\InstallerEngine, 'The native installer no longer implements the reviewed engine contract');
+$throwing_installer->executeReviewedInstallation();
 check_branding_migration($throwing_installer->getStep() === Installer::STEP_ERROR, 'CLI installer kept its pre-install step after an exception');
 check_branding_migration(cacti_sizeof($throwing_installer->getErrors()) > 0, 'CLI installer recorded no error, so install_cacti.php would exit 0');
 check_branding_migration((int) read_config_option('install_step', true) === Installer::STEP_ERROR, 'Web install state missed the error step after an exception');
 
 $root = dirname(__DIR__, 2);
-foreach (['cli/install_cacti.php', 'install/background.php'] as $entry) {
-	check_branding_migration(strpos(file_get_contents("$root/$entry"), 'Installer::beginInstall(') !== false, "$entry no longer uses the shared installer");
+// These supplemental wiring checks follow the migrated CLI adapter to the
+// shared engine exercised above; the legacy background path remains supported.
+$handoffs = [
+	'cli/install_cacti.php' => ['LegacyCli::run(', "'kadupul:install'", 'InstallerLegacyArguments::class'],
+	'src/Platform/Infrastructure/Symfony/Console/InstallerCommand.php' => ["AsCommand(name: 'kadupul:install'", '$this->worker->request('],
+	'src/Platform/Infrastructure/Legacy/LegacyInstallerClient.php' => ["\$this->worker->run('legacy-installer.php'"],
+	'bin/legacy-installer.php' => ['InstallerWorkflow::class', "'start' => \$workflow->run("],
+	'src/Platform/Application/Installer/InstallerWorkflow.php' => ['$this->start($plan[\'revision\']', '$this->backend->start('],
+	'config/services.yaml' => ['Kadupul\\Platform\\Application\\Installer\\InstallerBackend:', 'alias: Kadupul\\Platform\\Infrastructure\\Legacy\\NativeInstallerBackend'],
+	'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => ["'/install/background.php'", 'InstallerEngine::class', '$installer->executeReviewedInstallation();'],
+	'install/background.php' => ["get('installer.native')", '$installerBackend->execute(', 'Installer::beginInstall('],
+];
+foreach ($handoffs as $entry => $calls) {
+	$entrySource = file_get_contents("$root/$entry");
+	check_branding_migration($entrySource !== false, "$entry is unreadable");
+	foreach ($calls as $call) {
+		check_branding_migration(strpos($entrySource, $call) !== false, "$entry no longer hands off to the shared installer: $call");
+	}
 }
 $source = file_get_contents("$root/lib/installer.php");
 check_branding_migration(strpos($source, '$installer->install();') !== false, 'The shared entry point no longer runs installation');

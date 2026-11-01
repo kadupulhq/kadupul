@@ -60,7 +60,10 @@ workflow. It does not serialize arbitrary legacy tools or outside writers.
 
 The worker validates the reserved operator and reviewed configuration again
 before native execution. A waiting receipt means reservation, not confirmed
-process startup. A failed or partial result is not installation success.
+process startup. A failed or partial result is not installation success. An explicit
+forced CLI repeat returns without writes only when the current schema and a
+retained successful receipt both confirm completion. A current schema alone
+does not establish that finishing tasks succeeded.
 Collector synchronization failures remain visible after the primary schema is
 installed. A subsequent explicit finishing-task retry does not replay schema
 migrations. Successful finalization runs the existing integrated-plugin cleanup
