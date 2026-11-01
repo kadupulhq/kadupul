@@ -25,6 +25,7 @@ Cacti CHANGELOG
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
 -issue: Leave legacy system data input fields and mappings unchanged when a template or package import is only previewed; a real import still repairs them (#215)
 -issue: Report a failed read of the stored data query sort field instead of replacing it with the XML field and reordering the index (#744)
+-issue: Preserve native session bytes and activity updates while confirming storage outcomes and retaining caller-owned transaction work (#1302)
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
 -issue: Remove a deleted graph from the aggregates that list it by passing the aggregate's graph id and a member list to the disassociation, so the aggregate's copied items are rebuilt without it (#227)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)

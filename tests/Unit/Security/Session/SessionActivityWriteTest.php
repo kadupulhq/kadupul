@@ -20,10 +20,11 @@
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 function session_activity_merge(string $stored, string $data) : string {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/include/session.php');
-	$child  = "<?php\n" . cacti_test_function_source($source, 'cacti_db_session_monotonic_activity') . "\n"
+	$child  = "<?php\nrequire_once " . var_export(dirname(__DIR__, 4) . "/lib/session_data.php", true) . ";\n" . test_php_function_source($source, 'cacti_db_session_monotonic_activity') . "\n"
 		. "\$in = json_decode(stream_get_contents(STDIN), true);\n"
 		. "print json_encode(array('data' => cacti_db_session_monotonic_activity(\$in['stored'], \$in['data'])));\n";
 
