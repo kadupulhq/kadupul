@@ -219,6 +219,8 @@ $rawCoverageClass = class_exists(\SebastianBergmann\CodeCoverage\Data\RawCodeCov
     ? \SebastianBergmann\CodeCoverage\Data\RawCodeCoverageData::class
     : \SebastianBergmann\CodeCoverage\RawCodeCoverageData::class;
 $coverage->append($rawCoverageClass::fromXdebugWithoutPathCoverage($mapped), 'poller integration');
+require_once $root . '/tests/Symfony/NativeCoverageComposition.php';
+\Kadupul\Tests\NativeCoverageComposition::write($coverage, $root, 'legacy', $argv[3] . '.native.json');
 // Use PHPUnit's writer to recompute all metrics from measured line data.
 $temp = tempnam(dirname($argv[3]), 'poller-clover-');
 try {
