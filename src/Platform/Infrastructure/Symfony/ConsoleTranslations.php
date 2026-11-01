@@ -21,9 +21,10 @@ final class ConsoleTranslations
         $translator = $container->findDefinition('translator.default');
         $container->addResource(new FileResource($projectDir . '/locales/catalogs.json'));
         $locales = self::locales($projectDir);
-        // Added resources must not reuse a catalogue cached before this domain existed.
+        // Added resources must not reuse a catalogue cached before this domain
+        // or the module gettext fallback existed.
         $options = $translator->getArgument(4);
-        $options['cache_vary']['console_gettext'] = $locales;
+        $options['cache_vary']['console_gettext'] = ['locales' => $locales, 'module_fallback' => 1];
         $translator->replaceArgument(4, $options);
         foreach ($locales as $locale) {
             $file = $projectDir . '/locales/LC_MESSAGES/' . $locale . '.mo';
@@ -33,24 +34,56 @@ final class ConsoleTranslations
                 $translator->addMethodCall('addResource', ['mo', $file, 'fr', 'console']);
             }
         }
+        self::registerGettextFallback($container, $projectDir, $locales);
+    }
+
+    /**
+     * Module YAML domains fall back to the shipped .po catalog of the same
+     * language. Paths come from the shipped locale list only, never a request.
+     *
+     * @param list<string> $locales
+     */
+    private static function registerGettextFallback(ContainerBuilder $container, string $projectDir, array $locales): void
+    {
+        $translator = $container->findDefinition('translator.default');
+        $sources = glob($projectDir . '/config/translations/*.en.yaml');
+        if ($sources === false) {
+            throw new \RuntimeException('Translation domains are unavailable.');
+        }
+        foreach ($locales as $locale) {
+            $catalog = $projectDir . '/locales/po/' . $locale . '.po';
+            $container->addResource(new FileResource($catalog));
+            $symfonyLocale = $locale === 'fr-FR' ? 'fr' : str_replace('-', '_', $locale);
+            foreach ($sources as $source) {
+                $domain = basename($source, '.en.yaml');
+                $resource = ['source' => $source, 'catalog' => $catalog, 'domain' => dirname($source) . '/' . $domain . '.' . $symfonyLocale . '.yaml'];
+                $translator->addMethodCall('addResource', [GettextCatalogLoader::FORMAT, $resource, $symfonyLocale, $domain]);
+            }
+        }
     }
 
     public static function normalize(mixed $locale, string $projectDir): ?string
     {
-        if (!is_string($locale) || preg_match('/\A[a-z]{2}(?:[-_][a-z]{2})?\z/iD', $locale) !== 1) {
+        if (!is_string($locale) || preg_match('/\A([a-z]{2})(?:[-_]([a-z]{2}))?\z/iD', $locale, $match) !== 1) {
             return null;
         }
-        $candidate = strtolower(str_replace('_', '-', $locale));
-        if ($candidate === 'en' || str_starts_with($candidate, 'en-')) {
-            return 'en';
+        $language = strtolower($match[1]);
+        if ($language === 'en' || $language === 'fr') {
+            return $language;
         }
-        if ($candidate === 'fr' || str_starts_with($candidate, 'fr-')) {
-            return 'fr';
+        $region = isset($match[2]) ? strtoupper($match[2]) : '';
+        $shipped = array_values(array_filter(self::locales($projectDir), static fn(string $supported): bool => str_starts_with($supported, $language . '-')));
+        if ($region !== '' && in_array($language . '-' . $region, $shipped, true)) {
+            return $language . '_' . $region;
         }
-        foreach (self::locales($projectDir) as $supported) {
-            if (strtolower($supported) === $candidate || !str_contains($candidate, '-') && str_starts_with(strtolower($supported), $candidate . '-')) {
-                return str_replace('-', '_', $supported);
-            }
+        // Like legacy repair_locale(), a bare language or another region of a
+        // language with one catalog uses that catalog. A bare pt or zh picks
+        // pt-PT or zh-CN, as the legacy locale list does; other regions of
+        // those languages are unsupported rather than guessed.
+        if (count($shipped) === 1 || $region === '' && $shipped !== []) {
+            $chosen = in_array($language . '-' . strtoupper($language), $shipped, true) ? $language . '-' . strtoupper($language) : $shipped[0];
+
+            return str_replace('-', '_', $chosen);
         }
 
         return null;

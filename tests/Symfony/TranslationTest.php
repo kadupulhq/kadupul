@@ -70,8 +70,8 @@ final class TranslationTest extends TestCase
         yield 'browser weights' => [[], null, null, 'en;q=0.2,fr-FR;q=0.9', 'fr'];
         yield 'unsupported user falls through' => [[], null, '../../secrets', 'fr-CA', 'fr'];
         yield 'default without detection' => [['i18n_auto_detection' => '0', 'i18n_default_language' => 'fr-FR'], null, null, 'en', 'fr'];
-        yield 'unsupported browser uses default' => [['i18n_default_language' => 'fr'], null, null, 'ja', 'fr'];
-        yield 'English fallback and ignored query' => [[], null, null, 'ja', 'en'];
+        yield 'unsupported browser uses default' => [['i18n_default_language' => 'fr'], null, null, 'fi', 'fr'];
+        yield 'English fallback and ignored query' => [[], null, null, 'fi', 'en'];
     }
 
     public function testVdefRoutesUseConfiguredLocale(): void

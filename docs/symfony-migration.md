@@ -603,7 +603,7 @@ moved: the statements of the settings functions run through Platform ports and D
 | --- | --- | --- |
 | CSRF Magic | Symfony Security CSRF and Forms | Shared identity/session ownership and mutation tests |
 | PHPMailer | Symfony Mailer and Mime | SMTP, sendmail, attachments and failure behavior reproduced |
-| gettext helpers | Symfony Translation | Existing catalogs, plural forms and locale fallback verified |
+| gettext helpers | Symfony Translation | Existing catalogs, plural forms and locale fallback verified (shipped `.po` catalogs now back module domains; legacy helpers remain) |
 | HTML Purifier | Evaluate Symfony HTML Sanitizer | Existing accepted markup and security fixtures reproduced |
 | jQuery UI and tablesorter | Twig, Symfony UX, server-side filtering | Migrate each screen and its keyboard/accessibility behavior |
 | phpseclib | Retain maintained Composer package | SSH and existing key compatibility remain necessary |
@@ -735,19 +735,61 @@ For migrated Inventory HTML requests carrying cookies, precedence is:
 4. Weighted browser languages, unless `i18n_auto_detection` disables detection.
 5. Installation `i18n_default_language`, then English.
 
-Legacy `en-US`/`en_US` and `fr-FR`/`fr_FR` spellings (including supported-language
-regional variants) map to the English/French catalogs. Unsupported values fall
-through this precedence; arbitrary paths cannot select catalogs. Anonymous requests
+Every value goes through one allowlist: English, French and the 23 locales in
+`locales/catalogs.json`. `en-US`/`en_US`, `fr-FR`/`fr_FR` and other English or
+French regions map to `en`/`fr`; other locales use their gettext identity with
+an underscore (`pt-BR`, `pt_br` → `pt_BR`). As in legacy `repair_locale()`, a
+bare language or another region of a language with one catalog uses that
+catalog (`de-AT` → `de_DE`), and a bare `pt` or `zh` picks `pt_PT` or `zh_CN`.
+Other regions of Portuguese and Chinese (`pt-AO`, `zh-HK`) are unsupported rather
+than guessed; legacy shows `zh-HK` in English and `pt-AO` in `pt-PT`. Script or
+charset suffixes (`zh-Hant-TW`, `de_DE.UTF-8`) are unsupported. Unsupported values
+fall through this precedence; arbitrary paths cannot select catalogs. Anonymous requests
 without cookies default to English without opening installation/session storage.
 Query parameters such as `language` and `_locale` do not switch or persist a locale.
 Use the existing preference screen to change the saved language; an existing login
 may retain its session language until the next legacy locale refresh/login.
 
-The existing gettext catalogs and legacy pages are unchanged. Additional languages,
-locale-aware dates/numbers and migration of the preference editor
-are follow-up slices. New catalogs reside under the already non-public `config/`
-directory and are included in offline bundles together with the locked translation
-component. LTS is unchanged.
+### Gettext catalog fallback
+
+Module domains under `config/translations` exist in English and French only. For
+every shipped locale, each key of a module's English YAML domain that the locale's
+own YAML domain does not translate is looked up in `locales/po/<locale>.po`, read
+with Symfony's `PoFileLoader`. The keys are the English source text, so they are
+the gettext msgids once each `%name%` placeholder is written as `%s` or `%d`. The
+translation's `%s`/`%d`/`%n$s` conversions become the key's placeholders again and
+`%%` becomes `%`, as legacy `__()` prints it. A key stays English when the msgid is
+absent, untranslated or fuzzy, also occurs with a `msgctxt`, contains `|`, or its
+translation uses any other conversion (for example he-IL's `% d`). French YAML
+keeps precedence over `fr-FR.po`. For plain messages the result equals the
+compiled `.mo` that legacy pages read; a test checks this for all 23 locales.
+
+Plural entries are bridged only where the separate singular/plural keys of
+migrated pages, chosen with the English rule (n == 1), select the same form:
+catalogs whose `Plural-Forms` is `n != 1` (bg, de, el, es, it, nl, pt-PT, sv, tr)
+take form 0 or 1, and single-form catalogs (ja, ko, vi, zh-CN, zh-TW) take form 0.
+Other rules (ar, he, hi, lv, pl, ru, uk, and the `n > 1` of fr and pt-BR) keep
+English for those keys. No migrated key uses Symfony's `|` plural selection yet.
+For reference, Symfony's built-in selection with `%count%` picks the same form
+index as the shipped headers for n = 0..1000 in every locale except he-IL (four
+gettext forms, two in Symfony), hi-IN (its header puts the plural in form 0),
+lv-LV (0, 10 and 11-19 differ) and tr-TR (one Symfony form, two gettext forms).
+No shipped Arabic plural entry has all six forms, and most Russian ones leave the
+third form empty.
+
+Coverage follows the catalogs: of 1,545 distinct module keys, about 500 resolve in
+most locales; zh-TW is mostly fuzzy and uk-UA mostly untranslated, so few resolve
+there, as in legacy pages. The `.po` files are the existing shipped catalogs, are
+not regenerated, and ship in offline bundles from the Git index as before; the
+bridge adds no new files or web paths. Arabic and Hebrew pages do not yet set
+`dir="rtl"`.
+
+The existing gettext catalogs, legacy `__()` helpers, plugin gettext domains and
+legacy pages are unchanged. Translating the remaining keys, right-to-left page
+direction, locale-aware dates/numbers and migration of the preference editor
+are follow-up slices. Module YAML catalogs reside under `config/` and are included
+in offline bundles together with the locked translation component. LTS is
+unchanged.
 
 ## Translation audit of migrated code
 

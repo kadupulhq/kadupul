@@ -40,9 +40,8 @@ final readonly class InventoryLocaleSubscriber implements EventSubscriberInterfa
             return;
         }
         $config = $this->configuration->values();
-        $normalize = in_array($request->attributes->get('_route'), ['platform_console', 'platform_permission_denied'], true)
-            ? fn(mixed $value): ?string => ConsoleTranslations::normalize($value, $this->projectDir)
-            : self::normalize(...);
+        // Only shipped catalogs are accepted, so no request value names a file.
+        $normalize = fn(mixed $value): ?string => ConsoleTranslations::normalize($value, $this->projectDir);
         $locale = $normalize($config['forced_locale'] ?? null) ?? $normalize($this->preference->preferredLocale());
         if ($locale === null && in_array($settings['i18n_auto_detection'] ?? '', ['', '1'], true)) {
             foreach ($request->getLanguages() as $language) {
@@ -52,10 +51,5 @@ final readonly class InventoryLocaleSubscriber implements EventSubscriberInterfa
             }
         }
         $request->attributes->set('_locale', $locale ?? $normalize($settings['i18n_default_language'] ?? null) ?? 'en');
-    }
-
-    private static function normalize(mixed $locale): ?string
-    {
-        return is_string($locale) && preg_match('/\A(en|fr)(?:[-_][a-z]{2})?\z/iD', $locale, $match) ? strtolower($match[1]) : null;
     }
 }
