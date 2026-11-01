@@ -15,7 +15,7 @@ $cliSource = file_get_contents(__DIR__ . '/cdef_reference_installer_failure_nati
 if (!is_string($webSource) || !is_string($cliSource)) {
     throw new RuntimeException('The actual native installer harness sources are required.');
 }
-foreach (['installerAssert', 'installerSeed', 'webRequest', 'webToken', 'webLifecycleDiagnostics'] as $function) {
+foreach (['installerAssert', 'installerSeed', 'webRequest', 'webToken', 'webLifecycleDiagnostics', 'webInstallerForm', 'webInstallerReview', 'webInstallerStart', 'webInstallerStatus'] as $function) {
     eval(test_php_function_source($webSource, $function));
 }
 eval(test_php_function_source($cliSource, 'installerRun'));
@@ -99,6 +99,7 @@ try {
     $database->exec("USE `$schema`");
     $environment = getenv();
     $environment['KADUPUL_REFERENCE_RUNTIME_SCHEMA'] = $schema;
+    $environment['APP_SECRET'] = bin2hex(random_bytes(32));
     $seedDatabase = $database;
     if ($lateDdl) {
         // The explicitly owned test backend may need its trigger-creation
@@ -239,46 +240,17 @@ try {
     installerAssert($status === 302, 'actual local authentication establishes installer session');
     [$status, $body] = webRequest($base . 'install.php', $cookies);
     installerAssert($status === 200 && !str_contains($body, 'login_username'), 'authenticated installer page uses genuine cookie session');
-    $token = webToken($body);
-    $step = 1;
+    $body = webInstallerReview($base, $cookies, $body);
+    webInstallerStart($base, $cookies, $body, false);
     $repaired = false;
-    $nextTemplates = null;
     $deadline = microtime(true) + 300;
     while (microtime(true) < $deadline) {
-        $stepFields = ['Step' => $step, 'Eula' => 1, 'AutomationMode' => 0];
-        if ($nextTemplates !== null) {
-            $stepFields['Templates'] = $nextTemplates;
-            $nextTemplates = null;
-        }
-        [$status, $body] = webRequest($base . 'step_json.php', $cookies, ['__csrf_magic' => $token,
-            'data' => $stepFields]);
-        $data = json_decode($body, true);
-        if ($status !== 200 || !is_array($data) || !isset($data['Step'], $data['Next'])) {
-            // Locate PHP output that corrupts the response without retaining
-            // form values, credentials, tokens or exception arguments.
-            $diagnostic = ['http_status' => $status, 'json_error' => json_last_error(), 'php_locations' => []];
-            $plain = strip_tags(substr($body, 0, 8192));
-            if (preg_match_all('/\bin ([^\r\n]+?\.php) on line ([0-9]+)/', $plain, $locations, PREG_SET_ORDER) !== false) {
-                foreach (array_slice($locations, 0, 10) as $location) {
-                    $file = realpath($location[1]);
-                    if ($file !== false && str_starts_with($file, realpath($root) . DIRECTORY_SEPARATOR)) {
-                        $diagnostic['php_locations'][] = ['file' => basename($file), 'line' => (int) $location[2]];
-                    }
-                }
-            }
-            echo 'WEB_RESPONSE_DIAGNOSTIC ' . json_encode($diagnostic, JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE) . "\n";
-            throw new RuntimeException('The actual web step did not return its JSON contract: HTTP ' . $status . '.');
-        }
-        echo 'WEB step=' . (int) $data['Step'] . ' next=' . (int) $data['Next']['Step'] . ' enabled=' . (int) $data['Next']['Enabled'] . "\n";
-        if ((int) $data['Step'] === 98) {
+        $data = webInstallerStatus($base, $cookies);
+        echo 'WEB state=' . $data['state'] . ' progress=' . $data['progress'] . "\n";
+        if ($data['state'] === 'succeeded') {
             break;
         }
-        if ((int) $data['Step'] === 97) {
-            $step = 97;
-            usleep(250000);
-            continue;
-        }
-        if ((int) $data['Step'] === 99 && $failureUpgrade && !$repaired) {
+        if ($data['state'] === 'failed' && $failureUpgrade && !$repaired) {
             installerAssert(
                 (string) $database->query("SELECT value FROM settings WHERE name='install_error'")->fetchColumn() !== '',
                 'actual web background upgrade reports schema repair failure'
@@ -299,36 +271,17 @@ try {
                 $status === 200 && !str_contains($body, 'login_username'),
                 'repaired actual web upgrade restarts through existing authenticated installer'
             );
-            $token = webToken($body);
-            $step = 1;
+            $body = webInstallerReview($base, $cookies, $body);
+            webInstallerStart($base, $cookies, $body, true);
             continue;
         }
-        if ((int) $data['Step'] === 99 || (!$data['Next']['Enabled'] && !in_array((int) $data['Step'], [6, 10], true))) {
-            echo 'WEB errors=' . json_encode($data['Errors']) . "\n";
-            throw new RuntimeException('The actual web installer refused progression at step ' . (int) $data['Step'] . '.');
+        if (in_array($data['state'], ['failed', 'partial'], true)) {
+            throw new RuntimeException('The actual web installer refused completion: ' . $data['state'] . '.');
         }
-        // Steps 6 and 10 render real confirmation checkboxes; the browser
-        // enables their existing Next button, without a new request field.
-        if (in_array((int) $data['Step'], [6, 10], true)) {
-            installerAssert(str_contains($data['Html'], 'id="confirm"'), 'actual web installer renders explicit acknowledgement at step ' . (int) $data['Step']);
-        }
-        if ((int) $data['Step'] === 8) {
-            // Exercise the actual template-selection handoff while keeping this
-            // forward schema repair probe independent of importing every vendor package.
-            $availableTemplates = $data['StepData']['Templates'] ?? null;
-            $selectedTemplate = 'chk_template_Local_Linux_Machine_xml_gz';
-            installerAssert(
-                is_array($availableTemplates) && array_key_exists($selectedTemplate, $availableTemplates)
-                && str_contains($data['Html'], $selectedTemplate),
-                'actual web installer renders the selected Local Linux template'
-            );
-            $nextTemplates = array_fill_keys(array_keys($availableTemplates), false);
-            $nextTemplates[$selectedTemplate] = true;
-        }
-        $step = (int) $data['Next']['Step'];
+        usleep(250000);
     }
     installerAssert(!$failureUpgrade || $repaired, 'upgrade failure fixture reaches real failure and repaired retry');
-    installerAssert(isset($data) && (int) $data['Step'] === 98, 'actual web background Installer reaches completion');
+    installerAssert(isset($data) && $data['state'] === 'succeeded' && $data['progress'] === 100, 'actual web background Installer reaches completion');
     installerAssert(
         $database->query('SELECT cacti FROM version')->fetchColumn() === trim(file_get_contents($root . '/include/cacti_version')),
         'actual web Installer records the current version'
