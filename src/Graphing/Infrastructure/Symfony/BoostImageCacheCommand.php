@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/** Purges expired Boost graph images by hand, whether or not the cache setting is on. */
 #[AsCommand(name: 'kadupul:boost:purge-image-cache', description: 'Remove expired Boost graph images from the image cache directory.')]
 final class BoostImageCacheCommand extends Command
 {

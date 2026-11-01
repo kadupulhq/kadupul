@@ -14,10 +14,13 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 /** What add_tree.php reads: the trees, nodes, devices, sites and graphs its options name. */
 interface TreeCatalog
 {
+    /** The id of the tree with exactly this name, if there is one. */
     public function treeIdByName(OperatorDatabase $database, string $name): ?int;
 
+    /** Whether a tree with this id exists. */
     public function treeExists(OperatorDatabase $database, int $treeId): bool;
 
+    /** The node with this id within this tree. */
     public function findItem(OperatorDatabase $database, int $treeId, int $itemId): ?TreeItem;
 
     /**

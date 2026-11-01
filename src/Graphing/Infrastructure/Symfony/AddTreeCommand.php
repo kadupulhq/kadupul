@@ -29,6 +29,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces add_tree.php. The old argument spelling and output are kept through AddTreeLegacyArguments; the work is done by AddTree and AddTreeNode. */
 #[AsCommand(name: 'kadupul:tree:add', description: 'Add a graph tree, or a header, graph, device or site node to one.')]
 final readonly class AddTreeCommand
 {

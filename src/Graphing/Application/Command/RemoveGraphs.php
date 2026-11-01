@@ -14,6 +14,10 @@ use Kadupul\Graphing\Application\Port\GraphRemover;
 use Kadupul\Graphing\Application\Port\GraphTitle;
 use Kadupul\Graphing\Domain\GraphRemovalFilter;
 
+/**
+ * Counts, lists or removes the graphs a filter selects, as remove_graphs.php did. Counting or removing
+ * needs --all or at least one selector; a refusal is reported, not thrown.
+ */
 final readonly class RemoveGraphs
 {
     private const string ACTION = 'graph.remove';

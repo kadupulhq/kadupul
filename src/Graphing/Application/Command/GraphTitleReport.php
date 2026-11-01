@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\GraphTitle;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** What a graph title reapply run selected and, unless it was a dry run, how many it finished. */
 final readonly class GraphTitleReport
 {
     /**
@@ -25,6 +26,7 @@ final readonly class GraphTitleReport
         public bool $dryRun,
     ) {}
 
+    /** A dry run always succeeds; an applied run succeeds when every selected graph was finished. */
     public function succeeded(): bool
     {
         return $this->dryRun || $this->reapplied === count($this->graphs);

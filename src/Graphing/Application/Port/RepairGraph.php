@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Application\Port;
 
+/** A graph of the template being repaired and the device it belongs to. */
 final readonly class RepairGraph
 {
     public function __construct(public int $id, public int $hostId) {}

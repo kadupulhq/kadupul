@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\CatalogChoice;
 use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The outcome of attaching a graph template to a device; $status is one of the constants. */
 final readonly class GraphTemplateAttachment
 {
     public const string ATTACHED = 'attached';
@@ -28,6 +29,7 @@ final readonly class GraphTemplateAttachment
         public ?CatalogChoice $template = null,
     ) {}
 
+    /** Whether the graph template was attached. */
     public function succeeded(): bool
     {
         return $this->status === self::ATTACHED;

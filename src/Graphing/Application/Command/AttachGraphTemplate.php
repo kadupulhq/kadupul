@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\GraphTemplateAssignmentCatalog;
 use Kadupul\Graphing\Application\Port\GraphTemplateAttacher;
 
+/** Associates a graph template with a device, as add_graph_template.php did; an existing association is reported, not rewritten. */
 final readonly class AttachGraphTemplate
 {
     private const string ACTION = 'device.graph-template.attach';

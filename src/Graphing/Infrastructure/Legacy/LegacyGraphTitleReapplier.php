@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\GraphTitleReapplier;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the graph title reapply in the legacy worker. */
 final readonly class LegacyGraphTitleReapplier implements GraphTitleReapplier
 {
     public const string MARKER = 'KADUPUL_GRAPH_TITLES_RESULT';

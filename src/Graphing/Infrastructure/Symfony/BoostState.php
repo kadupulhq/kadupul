@@ -15,10 +15,12 @@ use Symfony\Component\Lock\LockInterface;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Contracts\Cache\CacheInterface;
 
+/** The lock and the scheduler state cache for Boost, kept in one private directory so the scheduler and manual runs exclude each other. */
 final readonly class BoostState
 {
     public function __construct(private string $directory) {}
 
+    /** @throws \RuntimeException when the state directory cannot be created */
     public function lock(): LockInterface
     {
         $this->prepareDirectory();
@@ -26,6 +28,7 @@ final readonly class BoostState
         return (new LockFactory(new FlockStore($this->directory)))->createLock('boost');
     }
 
+    /** @throws \RuntimeException when the state directory cannot be created */
     public function cache(): CacheInterface
     {
         $this->prepareDirectory();

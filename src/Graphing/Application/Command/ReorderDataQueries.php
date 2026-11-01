@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\DataQueryIndexCatalog;
 use Kadupul\Graphing\Application\Port\DataQueryIndexReorderer;
 use Kadupul\Graphing\Domain\DataQuerySelection;
 
+/** Rewrites the stored index of data query data sources in bulk, as reorder_data_query.php did. Main collector only. */
 final readonly class ReorderDataQueries
 {
     private const string ACTION = 'data-query.reorder';

@@ -16,6 +16,10 @@ use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule;
 use Symfony\Component\Scheduler\ScheduleProviderInterface;
 
+/**
+ * Schedules a Boost master run every minute and a Boost image cache purge every hour, only when Boost scheduling
+ * is enabled. Missed runs collapse to one.
+ */
 #[AsSchedule('boost')]
 final class BoostSchedule implements ScheduleProviderInterface
 {

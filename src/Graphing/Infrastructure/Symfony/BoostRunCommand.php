@@ -17,6 +17,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Runs one Boost master cycle by hand. It takes the same lock as the scheduler, so it refuses with exit status
+ * BUSY while a scheduled or other manual run owns the cycle.
+ */
 #[AsCommand(name: 'kadupul:boost:run', description: 'Run one Boost cycle: rotate, flush and clean up archives.')]
 final class BoostRunCommand extends Command
 {

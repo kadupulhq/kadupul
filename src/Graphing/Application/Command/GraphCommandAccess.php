@@ -91,6 +91,7 @@ final readonly class GraphCommandAccess
         return $database === OperatorDatabase::Main ? 'main' : 'local';
     }
 
+    /** Writes one audit record. A sink failure is swallowed so it never replaces the command result. */
     private function record(string $correlation, ?int $actorId, string $action, string $type, string $target, string $decision, string $outcome): void
     {
         // Built outside the try: an event this class cannot express is a bug.

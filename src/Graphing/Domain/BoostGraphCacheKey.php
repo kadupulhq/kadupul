@@ -89,11 +89,16 @@ final readonly class BoostGraphCacheKey
         );
     }
 
+    /** Hex SHA-256 over the viewer and request inputs that change the image; it is the _rk_ part of the file name. */
     public function renderKey(): string
     {
         return $this->renderKey;
     }
 
+    /**
+     * @throws InvalidArgumentException when the directory is empty or contains a NUL byte, or the theme name is not
+     *     made of letters, digits, underscores and hyphens
+     */
     public function fileName(string $cacheDirectory): string
     {
         if ($cacheDirectory === '' || str_contains($cacheDirectory, "\0")) {

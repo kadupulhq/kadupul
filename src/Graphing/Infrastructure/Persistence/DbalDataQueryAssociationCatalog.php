@@ -16,6 +16,7 @@ use Kadupul\Graphing\Application\Port\DataQueryAssociationCatalog;
 use Kadupul\Graphing\Domain\ReindexMethod;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of DataQueryAssociationCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalDataQueryAssociationCatalog implements DataQueryAssociationCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

@@ -46,6 +46,7 @@ interface GraphCreationCatalog
     /** @return list<string> the distinct values of a field, ordered */
     public function snmpValues(OperatorDatabase $database, int $deviceId, string $field, ?int $queryId): array;
 
+    /** Whether the device already has the data query. */
     public function queryAssociated(OperatorDatabase $database, int $deviceId, int $queryId): bool;
 
     /**
@@ -53,6 +54,7 @@ interface GraphCreationCatalog
      */
     public function existingGraph(OperatorDatabase $database, int $templateId, int $deviceId, ?int $queryId, ?string $queryIndex): ?int;
 
+    /** The data source the graph's first item reads, if any. */
     public function firstDataSource(OperatorDatabase $database, int $graphId): ?int;
 
     /**

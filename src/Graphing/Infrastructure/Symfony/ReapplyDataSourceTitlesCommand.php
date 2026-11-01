@@ -26,6 +26,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces poller_data_sources_reapply_names.php. The old argument spelling and output are kept through ReapplyDataSourceTitlesLegacyArguments; the work is done by ReapplyDataSourceTitles. */
 #[AsCommand(name: 'kadupul:data-source:reapply-titles', description: 'Reapply the naming rules to existing data sources in bulk.')]
 final readonly class ReapplyDataSourceTitlesCommand
 {

@@ -14,6 +14,7 @@ use Kadupul\Graphing\Application\Port\CatalogChoice;
 use Kadupul\Graphing\Application\Port\DataSourceCreationCatalog;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of DataSourceCreationCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalDataSourceCreationCatalog implements DataSourceCreationCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

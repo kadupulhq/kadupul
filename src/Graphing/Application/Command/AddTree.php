@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\TreeCatalog;
 use Kadupul\Graphing\Application\Port\TreeWriter;
 
+/** The tree branch of add_tree.php: creates a tree unless one of that name already exists. */
 final readonly class AddTree
 {
     private const string ACTION = 'tree.create';

@@ -66,6 +66,7 @@ final readonly class InstallationBoostImageCache implements BoostImageCache
         return $removed;
     }
 
+    /** @throws BoostImageCacheUnavailable when the setting is empty, unreadable, or not a strict subdirectory of the installation */
     private function directory(): string
     {
         $configured = $this->setting('boost_png_cache_directory');
@@ -84,6 +85,7 @@ final readonly class InstallationBoostImageCache implements BoostImageCache
         return $directory;
     }
 
+    /** @throws BoostImageCacheUnavailable when the settings table cannot be read */
     private function setting(string $name): ?string
     {
         try {

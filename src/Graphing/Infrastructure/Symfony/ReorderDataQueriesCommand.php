@@ -27,6 +27,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces reorder_data_query.php. The old argument spelling and output are kept through ReorderDataQueriesLegacyArguments; the work is done by ReorderDataQueries. */
 #[AsCommand(name: 'kadupul:data-query:reorder', description: 'Reorder the stored index of data query data sources in bulk.')]
 final readonly class ReorderDataQueriesCommand
 {

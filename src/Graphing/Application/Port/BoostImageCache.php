@@ -11,6 +11,7 @@ namespace Kadupul\Graphing\Application\Port;
 
 interface BoostImageCache
 {
+    /** Whether the boost_png_cache_enable setting is on. */
     public function isEnabled(): bool;
 
     /**

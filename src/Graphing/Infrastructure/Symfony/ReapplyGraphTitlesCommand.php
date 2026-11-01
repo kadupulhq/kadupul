@@ -26,6 +26,7 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces poller_graphs_reapply_names.php. The old argument spelling and output are kept through ReapplyGraphTitlesLegacyArguments; the work is done by ReapplyGraphTitles. */
 #[AsCommand(name: 'kadupul:graph:reapply-titles', description: 'Reapply the graph naming rules to existing graphs in bulk.')]
 final readonly class ReapplyGraphTitlesCommand
 {

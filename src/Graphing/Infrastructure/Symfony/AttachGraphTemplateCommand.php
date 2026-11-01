@@ -27,6 +27,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces add_graph_template.php. The old argument spelling and output are kept through AttachGraphTemplateLegacyArguments; the work is done by AttachGraphTemplate. */
 #[AsCommand(name: 'kadupul:device:add-graph-template', description: 'Associate a graph template with a device.')]
 final readonly class AttachGraphTemplateCommand
 {

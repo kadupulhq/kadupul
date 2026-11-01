@@ -18,6 +18,7 @@ use Kadupul\Graphing\Application\Port\RepairRrdTarget;
 use Kadupul\Graphing\Application\Port\WrongItem;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of GraphItemRepairs, reading the local or the main database as the operator database selects. */
 final readonly class DbalGraphItemRepairs implements GraphItemRepairs
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

@@ -16,6 +16,7 @@ use Kadupul\Graphing\Application\Port\GraphTitleCatalog;
 use Kadupul\Graphing\Domain\GraphSelection;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of GraphTitleCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalGraphTitleCatalog implements GraphTitleCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

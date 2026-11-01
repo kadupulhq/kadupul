@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\DataQueryAssociationCatalog;
 use Kadupul\Graphing\Application\Port\DataQueryAssociator;
 use Kadupul\Graphing\Domain\ReindexMethod;
 
+/** Associates a data query with a device and runs it once, as add_data_query.php did; an existing identical association is reported, not rewritten. */
 final readonly class AssociateDataQuery
 {
     private const string ACTION = 'device.data-query.associate';

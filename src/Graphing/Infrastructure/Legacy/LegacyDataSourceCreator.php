@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\DataSourceCreator;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the data source creation in the legacy worker; a worker that does not report a new id counts as a failure. */
 final readonly class LegacyDataSourceCreator implements DataSourceCreator
 {
     public const string MARKER = 'KADUPUL_DATA_SOURCE_ADD_RESULT';

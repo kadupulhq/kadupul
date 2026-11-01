@@ -12,6 +12,10 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\GraphItemRepairs;
 use Kadupul\Graphing\Application\Port\RepairRrdTarget;
 
+/**
+ * Points graph items of one graph template back at their device's data source RRD item, as repair_graphs.php did.
+ * With $execute false it reports the same findings and writes nothing.
+ */
 final readonly class RepairGraphItems
 {
     private const string ACTION = 'graph.item.repair';

@@ -14,6 +14,7 @@ use Kadupul\Graphing\Application\Port\BoostPartitionWriter;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 
+/** Flushes one queued Boost partition. A malformed message or a failed flush is not retried, because the master counts a partition without an ok status as failed. */
 #[AsMessageHandler]
 final readonly class FlushBoostPartitionHandler
 {

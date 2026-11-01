@@ -15,6 +15,7 @@ use Kadupul\Graphing\Application\Port\BoostImageCacheUnavailable;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 
+/** Purges expired Boost images on the hourly message, only while boost_png_cache_enable is on. */
 #[AsMessageHandler]
 final readonly class PurgeBoostImageCacheHandler
 {

@@ -12,6 +12,7 @@ namespace Kadupul\Graphing\Application\Command;
 use Kadupul\Graphing\Application\Port\GraphTitle;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** What a remove_graphs.php run selected and, in Remove mode, how many graphs it removed; $refused is set when no selector and no --all was given. */
 final readonly class GraphRemovalReport
 {
     /** @param list<GraphTitle> $graphs */
@@ -24,6 +25,7 @@ final readonly class GraphRemovalReport
         public bool $refused = false,
     ) {}
 
+    /** Fails when refused, when nothing matched, or when a removal did not finish every selected graph. */
     public function succeeded(): bool
     {
         return !$this->refused && $this->graphs !== [] && ($this->mode !== GraphRemovalMode::Remove || $this->removed === count($this->graphs));

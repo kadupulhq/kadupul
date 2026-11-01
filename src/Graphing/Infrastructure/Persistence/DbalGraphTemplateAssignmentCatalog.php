@@ -15,6 +15,7 @@ use Kadupul\Graphing\Application\Port\CatalogDevice;
 use Kadupul\Graphing\Application\Port\GraphTemplateAssignmentCatalog;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of GraphTemplateAssignmentCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalGraphTemplateAssignmentCatalog implements GraphTemplateAssignmentCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

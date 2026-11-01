@@ -14,6 +14,7 @@ use Kadupul\Graphing\Application\Port\GraphTitleCatalog;
 use Kadupul\Graphing\Application\Port\GraphTitleReapplier;
 use Kadupul\Graphing\Domain\GraphSelection;
 
+/** Reapplies the suggested graph titles to the selected graphs, as poller_graphs_reapply_names.php did, in batches. */
 final readonly class ReapplyGraphTitles
 {
     private const string ACTION = 'graph.title.reapply';

@@ -11,6 +11,7 @@ namespace Kadupul\Graphing\Application\Command;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** The outcome of adding a tree node; every constant but CREATED names the check that refused it, in the order the script made them. */
 final readonly class TreeNodeCreation
 {
     public const string CREATED = 'created';
@@ -31,6 +32,7 @@ final readonly class TreeNodeCreation
      */
     public function __construct(public OperatorDatabase $database, public string $status, public ?int $treeId = null, public ?int $nodeId = null) {}
 
+    /** Whether the node was created. */
     public function succeeded(): bool
     {
         return $this->status === self::CREATED;

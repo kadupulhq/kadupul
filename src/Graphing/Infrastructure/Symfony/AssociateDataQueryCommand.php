@@ -28,6 +28,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces add_data_query.php. The old argument spelling and output are kept through AssociateDataQueryLegacyArguments; the work is done by AssociateDataQuery. */
 #[AsCommand(name: 'kadupul:device:add-data-query', description: 'Associate a data query with a device and run it once.')]
 final readonly class AssociateDataQueryCommand
 {

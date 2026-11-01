@@ -17,6 +17,7 @@ use Kadupul\Graphing\Application\Port\InputField;
 use Kadupul\Graphing\Application\Port\SnmpFilter;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of GraphCreationCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalGraphCreationCatalog implements GraphCreationCatalog
 {
     public function __construct(private Connection $localConnection, private Connection $mainConnection) {}

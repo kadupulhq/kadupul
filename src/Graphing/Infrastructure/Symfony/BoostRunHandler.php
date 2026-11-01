@@ -13,11 +13,16 @@ use Kadupul\Platform\Contract\LegacyWorkerRunner;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 
+/** Scheduler handler that runs the Boost master in the legacy worker when Boost scheduling is enabled. */
 #[AsMessageHandler]
 final readonly class BoostRunHandler
 {
     public function __construct(private LegacyWorkerRunner $worker, private ?string $enabled) {}
 
+    /**
+     * @throws \RuntimeException when Boost scheduling is disabled
+     * @throws UnrecoverableMessageHandlingException when the master run fails; it is not retried
+     */
     public function __invoke(BoostRun $message): void
     {
         if ($this->enabled !== '1') {

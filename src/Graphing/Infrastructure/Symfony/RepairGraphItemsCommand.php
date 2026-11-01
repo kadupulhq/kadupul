@@ -24,6 +24,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console command that replaces repair_graphs.php. The old argument spelling and output are kept through RepairGraphItemsLegacyArguments; the work is done by RepairGraphItems. */
 #[AsCommand(name: 'kadupul:graph:repair-items', description: 'Point graph items back at their device\'s data source RRD item.')]
 final readonly class RepairGraphItemsCommand
 {

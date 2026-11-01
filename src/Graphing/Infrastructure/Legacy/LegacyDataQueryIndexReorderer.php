@@ -15,6 +15,7 @@ use Kadupul\Graphing\Application\Port\DataQueryReorderResult;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs the reorder in the legacy worker, in batches that fit one worker payload. A batch that stops at an item without a sort field ends the run. */
 final readonly class LegacyDataQueryIndexReorderer implements DataQueryIndexReorderer
 {
     public const string MARKER = 'KADUPUL_DATA_QUERY_REORDER_RESULT';

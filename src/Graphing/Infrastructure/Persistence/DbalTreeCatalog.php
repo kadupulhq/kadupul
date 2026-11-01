@@ -19,6 +19,7 @@ use Kadupul\Graphing\Application\Port\TreeNodeRow;
 use Kadupul\Graphing\Application\Port\TreeSummary;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** DBAL implementation of TreeCatalog, reading the local or the main database as the operator database selects. */
 final readonly class DbalTreeCatalog implements TreeCatalog
 {
     /** What PHP accepts as an integer array key: the form (string) of that integer would take. */

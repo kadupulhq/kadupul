@@ -13,6 +13,7 @@ use Kadupul\Graphing\Application\Port\GraphRemover;
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 use Kadupul\Platform\Contract\LegacyWorkerRunner;
 
+/** Runs api_delete_graphs() in the legacy worker; a worker that does not report a count is an unknown outcome. */
 final readonly class LegacyGraphRemover implements GraphRemover
 {
     public const string MARKER = 'KADUPUL_GRAPH_REMOVE_RESULT';

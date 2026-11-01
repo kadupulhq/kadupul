@@ -23,6 +23,7 @@ final readonly class ReindexMethod
     /** @param int|string $value the method as stored: an int for a name or a plain digit, else the numeric text as typed */
     private function __construct(public int|string $value) {}
 
+    /** @return ?self null when $typed is neither a number from 0 to 3 nor a method name */
     public static function parse(string $typed): ?self
     {
         if (is_numeric($typed) && $typed >= 0 && $typed <= 3) {

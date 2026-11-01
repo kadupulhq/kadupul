@@ -15,6 +15,7 @@ use Kadupul\Platform\Contract\LegacyWorkerRunner;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 
 /** bin/legacy-boost-partition.php, which runs the poller_boost.php child for one partition. */
+/** Runs one partition flush in the legacy worker. A run the master no longer waits on is reported as stale and counts as ok. */
 final readonly class LegacyBoostPartitionWriter implements BoostPartitionWriter
 {
     public function __construct(private LegacyWorkerRunner $worker) {}
