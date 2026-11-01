@@ -115,6 +115,7 @@ dynamic_include	./bin/legacy-graph-remove.php:19	require_once $config['base_path
 dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
+dynamic_include	./bin/legacy-poller-output-empty.php:30	    require_once $config['base_path'] . '/lib/' . $library . '.php';
 dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
 dynamic_include	./cli/add_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
@@ -185,12 +186,6 @@ dynamic_include	./cli/install_cacti.php:151	include_once($config['base_path'] . 
 dynamic_include	./cli/install_cacti.php:152	include_once($config['base_path'] . '/lib/installer.php');
 dynamic_include	./cli/install_cacti.php:153	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/install_cacti.php:154	include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/poller_output_empty.php:10	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/poller_output_empty.php:11	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/poller_output_empty.php:12	require_once($config['base_path'] . '/lib/dsstats.php');
-dynamic_include	./cli/poller_output_empty.php:13	require_once($config['base_path'] . '/lib/dsdebug.php');
-dynamic_include	./cli/poller_output_empty.php:14	require_once($config['base_path'] . '/lib/boost.php');
-dynamic_include	./cli/poller_output_empty.php:15	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./cli/poller_reindex_hosts.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/poller_reindex_hosts.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/poller_reindex_hosts.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');

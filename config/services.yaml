@@ -413,6 +413,9 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalDataSourceCreationCatalog
     Kadupul\Graphing\Application\Port\DataSourceCreator:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDataSourceCreator
+    Kadupul\Graphing\Application\Command\EmptyPollerOutput: ~
+    Kadupul\Graphing\Application\Port\PollerOutputDrain:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPollerOutputDrain
     Kadupul\Graphing\Application\Command\AddTree: ~
     Kadupul\Graphing\Application\Command\AddTreeNode: ~
     Kadupul\Graphing\Application\Command\ListTreeChoices: ~
