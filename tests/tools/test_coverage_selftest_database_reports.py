@@ -195,10 +195,33 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
                 assignments.append(node)
             elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id == 'required':
                 assignments.append(node)
-        # Execute actual baseline assignments, not a second inventory model.
-        namespace = dict(SELFTEST.__dict__, prefix='/var/www/html/')
-        exec(compile(ast.Module(body=assignments, type_ignores=[]), str(ROOT / 'tests/Symfony/coverage_selftest.py'), 'exec'), namespace)
-        baseline = set(namespace['required'])
+        # Read literal paths from the actual assignments without executing source.
+        baseline = set()
+        legacy_pages = ()
+        expected = ast.parse('[prefix + path for path in sources]', mode='eval').body
+        for assignment in assignments:
+            if isinstance(assignment, ast.Assign) and assignment.targets[0].id == 'legacy_pages':
+                legacy_pages = ast.literal_eval(assignment.value)
+                continue
+            expression = assignment.value
+            self.assertIsInstance(expression, ast.ListComp)
+            self.assertEqual(ast.dump(expected.elt), ast.dump(expression.elt))
+            self.assertEqual(1, len(expression.generators))
+            generator = expression.generators[0]
+            self.assertEqual(ast.dump(expected.generators[0].target), ast.dump(generator.target))
+            self.assertEqual([], generator.ifs)
+            self.assertEqual(0, generator.is_async)
+            if isinstance(generator.iter, ast.Name):
+                self.assertEqual('legacy_pages', generator.iter.id)
+                paths = legacy_pages
+            elif isinstance(generator.iter, ast.Call):
+                allowed = ast.parse('additional_required_native_sources(ROOT)', mode='eval').body
+                self.assertEqual(ast.dump(allowed), ast.dump(generator.iter))
+                paths = SELFTEST.additional_required_native_sources(ROOT)
+            else:
+                paths = ast.literal_eval(generator.iter)
+            self.assertTrue(all(isinstance(path, str) for path in paths))
+            baseline.update('/var/www/html/' + path for path in paths)
         # Database negatives retain their real separate reports later in main().
         for handler in ('files',):
             with self.subTest(handler=handler):
