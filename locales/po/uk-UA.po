@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4787,11 +4787,11 @@ msgstr ""
 msgid "There is an Installation or Upgrade in progress."
 msgstr ""
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr ""
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr ""
 
@@ -12444,11 +12444,11 @@ msgstr ""
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr ""
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr ""
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr ""
 

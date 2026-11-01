@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4771,11 +4771,11 @@ msgstr "Alleen Kadupul Beheerders met het recht om te installeren/upgrade te upg
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Er is een installatie of upgrade in uitvoering."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "De laatste keer dat deze Dataverzamelaar volledig gesynchroniseerd werd met de hoofdsite van Kadupul."
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "De hoofdgegevensverzamelaar is naar een offline of herstellende status gegaan"
 
@@ -12451,11 +12451,11 @@ msgstr "U moet een XML-uitvoerkolom selecteren voor Data Source '%s' en het sele
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Uw Grafieksjabloon heeft geen datasjablonen in gebruik.  Gelieve uw Grafieksjabloon te corrigeren"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Mislukt om wachtwoord veldlengte te bepalen, kan niet verdergaan als kan corrupt wachtwoord corrupt wachtwoord"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Mislukt om wachtwoord veldlengte te wijzigen, kan niet verdergaan als kan corrupt wachtwoord corrupt wachtwoord"
 

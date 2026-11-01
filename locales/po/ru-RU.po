@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4789,11 +4789,11 @@ msgstr "Только администраторы Kadupul с привилеги�
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Выполняется установка или обновление."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Последний раз этот Сборщик данных был полностью синхронизирован с основным сайтом Kadupul."
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Главный сборщик данных перешел в состояние «Офлайн» или «Восстановление»"
 
@@ -12493,11 +12493,11 @@ msgstr "Вы должны выбрать колонку вывода XML для 
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ваш шаблон графика не использует шаблоны данных.  Пожалуйста, исправьте ваш шаблон графика."
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Не удалось определить длину поля пароля, не может продолжаться, как и может повредить пароль"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Не удалось изменить длину поля пароля, не может продолжаться, как и может повредить пароль"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4814,11 +4814,11 @@ msgstr "רק מנהלי מערכת של Kadupul בעלי הרשאת התקנה /
 msgid "There is an Installation or Upgrade in progress."
 msgstr "יש התקנה או שדרוג בתהליך."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "בפעם האחרונה זה נתונים אספן היה מלא synced עם האתר הראשי Kadupul."
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "מלקט הנתונים הראשי עבר למצב לא מקוון או משחזר"
 
@@ -12501,11 +12501,11 @@ msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנת
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "הגדרת אורך השדה של הסיסמה נכשלה, לא ניתן להמשיך כסיסמה פגומה"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "נכשל שינוי אורך השדה סיסמה, לא יכול להמשיך כמו סיסמה פגומה"
 
