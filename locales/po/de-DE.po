@@ -15167,93 +15167,93 @@ msgstr "Fehler beim Festlegen der PHP-Option%s,%s (sollte%s sein)"
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Datensammler nicht gefunden bei Synchronisationsversuch"
 
-#: lib/ldap.php:308
+#: lib/ldap.php:348
 msgid "Authentication Success"
 msgstr "Erfolgreiche Authentifizierung"
 
-#: lib/ldap.php:312
+#: lib/ldap.php:352
 msgid "Authentication Failure"
 msgstr "Die Authentifizierung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
 
-#: lib/ldap.php:316
+#: lib/ldap.php:356
 msgid "PHP LDAP not enabled"
 msgstr "PHP LDAP nicht aktiviert"
 
-#: lib/ldap.php:320
+#: lib/ldap.php:360
 msgid "No username defined"
 msgstr "Kein Benutzername definiert"
 
-#: lib/ldap.php:324
+#: lib/ldap.php:364
 #, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
 msgstr "Protokollfehler, Version (%s) auf Server (%s) kann nicht festgelegt werden"
 
-#: lib/ldap.php:328
+#: lib/ldap.php:368
 #, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
 msgstr "Protokollfehler, Verweisoption (%s) auf Server (%s) kann nicht festgelegt werden"
 
-#: lib/ldap.php:332
+#: lib/ldap.php:372
 #, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
 msgstr "Protokollfehler, TLS-Kommunikation (%s) auf Server (%s) kann nicht gestartet werden"
 
-#: lib/ldap.php:336
+#: lib/ldap.php:376
 #, php-format
 msgid "Protocol Error, General failure (%s)"
 msgstr "Protokollfehler, allgemeiner Fehler (%s)"
 
-#: lib/ldap.php:340
+#: lib/ldap.php:380
 #, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "Protokollfehler, Bindung nicht möglich, LDAP-Ergebnis: (%s) auf Server (%s)"
 
-#: lib/ldap.php:344
+#: lib/ldap.php:384
 #, fuzzy, php-format
 msgid "Unable to Connect to Server (%s)"
 msgstr "Serververbindung konnte nicht hergestellt werden"
 
-#: lib/ldap.php:348
+#: lib/ldap.php:388
 #, php-format
 msgid "Connection Timeout to Server (%s)"
 msgstr "Verbindungs-Timeout zum Server (%s)"
 
-#: lib/ldap.php:352
+#: lib/ldap.php:392
 #, php-format
 msgid "Insufficient Access to Server (%s)"
 msgstr "Unzureichender Zugriff auf den Server (%s)"
 
-#: lib/ldap.php:356
+#: lib/ldap.php:396
 #, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
 msgstr "Gruppen-DN konnte nicht zum Vergleich auf Server (%s) gefunden werden"
 
-#: lib/ldap.php:360
+#: lib/ldap.php:400
 msgid "More than one matching user found"
 msgstr "Mehr als ein passender Benutzer gefunden"
 
-#: lib/ldap.php:364
+#: lib/ldap.php:404
 msgid "Unable to find user from DN"
 msgstr "Benutzer kann nicht über DN gefunden werden."
 
-#: lib/ldap.php:368
+#: lib/ldap.php:408
 msgid "Unable to find users DN"
 msgstr "Benutzer können nicht gefunden werden DN"
 
-#: lib/ldap.php:372
+#: lib/ldap.php:412
 #, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
 msgstr "LDAP-Verbindungsobjekt zum Server kann nicht erstellt werden (%s)"
 
-#: lib/ldap.php:376
+#: lib/ldap.php:416
 msgid "Specific DN and Password required"
 msgstr "Spezifischer DN und Passwort erforderlich"
 
-#: lib/ldap.php:380
+#: lib/ldap.php:420
 msgid "Invalid Password provided.  Login failed."
 msgstr "Ungültiges Passwort angegeben. Login fehlgeschlagen."
 
-#: lib/ldap.php:384
+#: lib/ldap.php:424
 #, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "Unerwarteter Fehler %s (LDAP-Fehler: %s) auf Server (%s)"

@@ -15086,93 +15086,93 @@ msgstr "Không thể đặt tùy chọn PHP%s, là%s (nên là%s)"
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Không tìm thấy (các) Trình thu thập dữ liệu khi thử đồng bộ hóa"
 
-#: lib/ldap.php:308
+#: lib/ldap.php:348
 msgid "Authentication Success"
 msgstr "Xác thực thành công"
 
-#: lib/ldap.php:312
+#: lib/ldap.php:352
 msgid "Authentication Failure"
 msgstr "Lỗi xác thực"
 
-#: lib/ldap.php:316
+#: lib/ldap.php:356
 msgid "PHP LDAP not enabled"
 msgstr "LDAP PHP không được kích hoạt"
 
-#: lib/ldap.php:320
+#: lib/ldap.php:360
 msgid "No username defined"
 msgstr "Không có tên người dùng được xác định"
 
-#: lib/ldap.php:324
+#: lib/ldap.php:364
 #, fuzzy, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
 msgstr "Lỗi giao thức, không thể đặt phiên bản"
 
-#: lib/ldap.php:328
+#: lib/ldap.php:368
 #, fuzzy, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
 msgstr "Lỗi giao thức, không thể đặt tùy chọn giới thiệu"
 
-#: lib/ldap.php:332
+#: lib/ldap.php:372
 #, fuzzy, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
 msgstr "Lỗi giao thức, không thể bắt đầu liên lạc TLS"
 
-#: lib/ldap.php:336
+#: lib/ldap.php:376
 #, php-format
 msgid "Protocol Error, General failure (%s)"
 msgstr "Lỗi giao thức, lỗi chung ( %s)"
 
-#: lib/ldap.php:340
+#: lib/ldap.php:380
 #, fuzzy, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "Lỗi giao thức, không thể liên kết, kết quả LDAP: %s"
 
-#: lib/ldap.php:344
+#: lib/ldap.php:384
 #, fuzzy, php-format
 msgid "Unable to Connect to Server (%s)"
 msgstr "Không thể kết nối đến máy chủ"
 
-#: lib/ldap.php:348
+#: lib/ldap.php:388
 #, fuzzy, php-format
 msgid "Connection Timeout to Server (%s)"
 msgstr "Hết thời gian kết nối"
 
-#: lib/ldap.php:352
+#: lib/ldap.php:392
 #, fuzzy, php-format
 msgid "Insufficient Access to Server (%s)"
 msgstr "không đủ mọi quyền để truy cập"
 
-#: lib/ldap.php:356
+#: lib/ldap.php:396
 #, fuzzy, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
 msgstr "Không thể tìm thấy nhóm DN để so sánh"
 
-#: lib/ldap.php:360
+#: lib/ldap.php:400
 msgid "More than one matching user found"
 msgstr "Đã tìm thấy nhiều hơn một người dùng phù hợp"
 
-#: lib/ldap.php:364
+#: lib/ldap.php:404
 msgid "Unable to find user from DN"
 msgstr "Không thể tìm thấy người dùng từ DN"
 
-#: lib/ldap.php:368
+#: lib/ldap.php:408
 msgid "Unable to find users DN"
 msgstr "Không thể tìm thấy người dùng DN"
 
-#: lib/ldap.php:372
+#: lib/ldap.php:412
 #, fuzzy, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
 msgstr "Không thể tạo đối tượng kết nối LDAP"
 
-#: lib/ldap.php:376
+#: lib/ldap.php:416
 msgid "Specific DN and Password required"
 msgstr "Yêu cầu cụ thể về DN và mật khẩu"
 
-#: lib/ldap.php:380
+#: lib/ldap.php:420
 msgid "Invalid Password provided.  Login failed."
 msgstr "Mật khẩu được cung cấp không hợp lệ. Đăng nhập thất bại."
 
-#: lib/ldap.php:384
+#: lib/ldap.php:424
 #, fuzzy, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "Lỗi không mong muốn %s (Lỗi Ldap: %s)"

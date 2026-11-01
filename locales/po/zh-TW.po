@@ -17711,101 +17711,101 @@ msgstr "無法設置PHP選項%s，為%s（應為%s）"
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "嘗試同步時找不到數據收集器"
 
-#: lib/ldap.php:308
+#: lib/ldap.php:348
 #, fuzzy
 msgid "Authentication Success"
 msgstr "認證成功"
 
-#: lib/ldap.php:312
+#: lib/ldap.php:352
 #, fuzzy
 msgid "Authentication Failure"
 msgstr "驗證失敗"
 
-#: lib/ldap.php:316
+#: lib/ldap.php:356
 #, fuzzy
 msgid "PHP LDAP not enabled"
 msgstr "PHP LDAP未啟用"
 
-#: lib/ldap.php:320
+#: lib/ldap.php:360
 #, fuzzy
 msgid "No username defined"
 msgstr "沒有定義用戶名"
 
-#: lib/ldap.php:324
+#: lib/ldap.php:364
 #, fuzzy, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
 msgstr "協議錯誤，無法設置版本"
 
-#: lib/ldap.php:328
+#: lib/ldap.php:368
 #, fuzzy, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
 msgstr "協議錯誤，無法設置引薦選項"
 
-#: lib/ldap.php:332
+#: lib/ldap.php:372
 #, fuzzy, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
 msgstr "協議錯誤，無法啟動TLS通信"
 
-#: lib/ldap.php:336
+#: lib/ldap.php:376
 #, fuzzy, php-format
 msgid "Protocol Error, General failure (%s)"
 msgstr "協議錯誤，一般失敗（%s）"
 
-#: lib/ldap.php:340
+#: lib/ldap.php:380
 #, fuzzy, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "協議錯誤，無法綁定，LDAP結果：%s"
 
-#: lib/ldap.php:344
+#: lib/ldap.php:384
 #, fuzzy, php-format
 msgid "Unable to Connect to Server (%s)"
 msgstr "無法連接到服務器"
 
-#: lib/ldap.php:348
+#: lib/ldap.php:388
 #, fuzzy, php-format
 msgid "Connection Timeout to Server (%s)"
 msgstr "連接超時"
 
-#: lib/ldap.php:352
+#: lib/ldap.php:392
 #, fuzzy, php-format
 msgid "Insufficient Access to Server (%s)"
 msgstr "訪問不足"
 
-#: lib/ldap.php:356
+#: lib/ldap.php:396
 #, fuzzy, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
 msgstr "無法找到組DN進行比較"
 
-#: lib/ldap.php:360
+#: lib/ldap.php:400
 #, fuzzy
 msgid "More than one matching user found"
 msgstr "找到了多個匹配用戶"
 
-#: lib/ldap.php:364
+#: lib/ldap.php:404
 #, fuzzy
 msgid "Unable to find user from DN"
 msgstr "無法從DN中找到用戶"
 
-#: lib/ldap.php:368
+#: lib/ldap.php:408
 #, fuzzy
 msgid "Unable to find users DN"
 msgstr "無法找到用戶DN"
 
-#: lib/ldap.php:372
+#: lib/ldap.php:412
 #, fuzzy, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
 msgstr "無法創建LDAP連接對象"
 
-#: lib/ldap.php:376
+#: lib/ldap.php:416
 #, fuzzy
 msgid "Specific DN and Password required"
 msgstr "需要特定的DN和密碼"
 
-#: lib/ldap.php:380
+#: lib/ldap.php:420
 msgid "Invalid Password provided.  Login failed."
 msgstr "提供的密碼無效。登錄失敗。"
 
-#: lib/ldap.php:384
+#: lib/ldap.php:424
 #, fuzzy, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "意外錯誤%s（Ldap錯誤：%s）"
