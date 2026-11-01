@@ -10,6 +10,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
+- Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
+
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
 
