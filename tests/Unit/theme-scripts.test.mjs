@@ -79,6 +79,8 @@ function fakeJquery(nodes = {}) {
       },
       autocomplete(arg) { if (typeof arg === 'object') list.forEach(node => { node.autocomplete = arg; }); return proxy; },
       click(fn) { if (fn) list.forEach(node => bind(node, 'click', fn)); return proxy; },
+      change(fn) { calls.push({ selector, method: 'change', args: [fn] }); if (fn) list.forEach(node => bind(node, 'change', fn)); else self.trigger('change'); return proxy; },
+      hover(enter, leave) { calls.push({ selector, method: 'hover', args: [enter, leave] }); list.forEach(node => { bind(node, 'mouseenter', enter); bind(node, 'mouseleave', leave || enter); }); return proxy; },
       closest() { return wrap(list.map(node => node.closest || node), selector); },
       attr(name, value) { if (value === undefined) return list[0]?.attrs?.[name]; return proxy; },
       addClass(name) { list.forEach(node => { (node.classes ||= new Set()).add(name); }); return proxy; },
@@ -119,6 +121,7 @@ function loadTheme(theme, nodes = {}, extra = {}) {
     jQuery: jq.$,
     window,
     location: {},
+    document: { documentElement: { getAttribute: () => null, setAttribute() {} } },
     Storages: { localStorage: { isSet: () => false, get: () => null, set: () => {} } },
     basename: () => 'host.php',
     keepWindowSize: () => {},
@@ -351,4 +354,135 @@ test('dark shows the graph utility icons by class on hover and hides them on lea
 
   leave.call(second);
   assert.ok(!shown(second));
+});
+
+
+test('midwinter menu storage and highlighting stay local to their calls', () => {
+  const keyword = { value: 'router[1]' };
+  const { context, calls } = loadTheme('midwinter', { "input[name='keyword']": [keyword] }, {});
+  context.setMenuVisibility();
+  assert.equal(Object.hasOwn(context, 'storage'), false);
+  context.highlight();
+  assert.equal(Object.hasOwn(context, 'pattern'), false);
+  const unmark = calls.find(call => call.method === 'unmark');
+  unmark.args[0].done();
+  const mark = calls.find(call => call.method === 'markRegExp');
+  assert.equal(mark.args[0].test('router[1]'), true);
+  assert.equal(mark.args[0].test('router1'), false);
+});
+
+test('midwinter form callbacks keep temporary values out of the global object', () => {
+  const button = { value: 'fixture.xml' };
+  const select = { attrs: { id: 'fixture_select' }, props: { multiple: false } };
+  const host = {};
+  const { context, selectors } = loadTheme('midwinter', {
+    '#cactiConsoleBackdrop': [{}], '.import_button': [button],
+    select: [select], '#host': [host], '#call_back': [{ value: 'applyFilter' }],
+  }, {});
+  context.setupDefaultElements();
+  button.events.find(event => event.type === 'change').fn.call(button);
+  host.autocomplete.select.call(host, {}, { item: { id: 7 } });
+  for (const name of ['text', 'id', 'callBack']) assert.equal(Object.hasOwn(context, name), false, name);
+  assert.ok(selectors.includes('#fixture_select-menu'));
+  assert.equal(context.filtered, 1);
+});
+
+test('midwinter graph hover retains shared timer state without leaking its element', () => {
+  const graph = { attrs: { id: 'dd7' } };
+  const timers = [];
+  const { context } = loadTheme('midwinter', {
+    '#cactiConsoleBackdrop': [{}], '.graphDrillDown': [graph],
+  }, { graphMenuTimer: null, graphMenuElement: 0,
+       setTimeout(callback) { timers.push(callback); return timers.length; } });
+  // Browser globals are also window properties.
+  context.window = context;
+  context.setupDefaultElements();
+  graph.events.find(event => event.type === 'mouseenter').fn.call(graph);
+  assert.equal(Object.hasOwn(context, 'element'), false);
+  assert.equal(context.graphMenuTimer, 1);
+  graph.events.find(event => event.type === 'mouseleave').fn.call(graph);
+  assert.equal(Object.hasOwn(context, 'element'), false);
+  assert.equal(context.graphMenuTimer, 2);
+});
+
+
+test('midwinter navigation retains its first-match order and skips initialized menus', () => {
+  const patterns = [
+    '.cactiConsoleNavigationArea a[href$="/app/host.php?id=7"',
+    '.cactiConsoleNavigationArea a[href$="/app/host.php"',
+    '.cactiConsoleNavigationArea a[href$="/app/host.phpindex.php"',
+    '.cactiConsoleNavigationArea a[href^="/app/host.php?action=edit"',
+    '.cactiConsoleNavigationArea a[href^="/app/host.php"',
+  ];
+  for (let first = 0; first <= patterns.length; first++) {
+    const nodes = Object.fromEntries(patterns.slice(first).map((pattern, index) => [pattern, [{ attrs: { id: String(first + index) } }]]));
+    const { context, selectors } = loadTheme('midwinter', nodes, {
+      window: { location: { pathname: '/app/host.php', search: '?id=7' } }, cactiAction: 'edit',
+    });
+    const selected = [];
+    context.midWinterNavigation = element => selected.push(element.attr('id'));
+    context.updateNavigation();
+    assert.deepEqual(selected, first < patterns.length ? [String(first)] : []);
+    assert.deepEqual(selectors.filter(selector => selector.startsWith('.cactiConsoleNavigationArea')), patterns.slice(0, Math.min(first + 1, patterns.length)));
+    const count = selectors.length;
+    runInContext('themeInitialized = true;', context);
+    context.updateNavigation();
+    assert.equal(selectors.length, count);
+  }
+});
+
+
+test('midwinter theme color refresh preserves missing and existing attribute behavior', () => {
+  for (const [current, cookie, desired, refresh] of [
+    ['dark', 'dark', 'dark', false], ['light', 'dark', 'dark', true],
+    ['dark', 'light', 'dark', true], [undefined, 'dark', 'dark', true],
+    [undefined, null, null, false],
+  ]) {
+    const document = { documentElement: {
+      dataset: current === undefined ? {} : { themeColor: current },
+      getAttribute(name) { return name === 'data-theme-color' ? current ?? null : null; }, setAttribute() {},
+    } };
+    const { context } = loadTheme('midwinter', {}, { document });
+    const calls = [];
+    context.getCookieValue = () => cookie;
+    context.setCookieValue = (...args) => calls.push(['cookie', ...args]);
+    context.setDocumentAttribute = (...args) => calls.push(['attribute', ...args]);
+    context.initializeGraphs = force => calls.push(['graphs', force]);
+    context.checkThemeColorSetup(desired);
+    assert.deepEqual(calls, refresh ? [['attribute', 'theme-color', desired], ['cookie', 'CactiColorMode', desired], ['graphs', true]] : []);
+  }
+});
+
+test('midwinter fullscreen retains exit, document and selected-element behavior', () => {
+  for (const mode of ['exit', 'document', 'element']) {
+    const calls = [];
+    const document = {
+      fullscreenElement: mode === 'exit' ? {} : null,
+      documentElement: { getAttribute() { return null; }, setAttribute() {},
+        requestFullscreen() { calls.push('document'); return Promise.resolve(); } },
+      exitFullscreen() { calls.push('exit'); return Promise.resolve(); },
+      getElementById(id) { return { requestFullscreen() { calls.push(id); return Promise.resolve(); } }; },
+    };
+    const { context } = loadTheme('midwinter', {}, { document });
+    context.toggleFullscreen(mode === 'element' ? 'graph-slot' : false);
+    assert.deepEqual(calls, [mode === 'element' ? 'graph-slot' : mode]);
+  }
+});
+
+test('midwinter form and graph handlers bind once across repeated theme setup', () => {
+  const button = { value: 'fixture.xml' };
+  const graph = { attrs: { id: 'dd7' } };
+  const { context, $, calls } = loadTheme('midwinter', {
+    '#cactiConsoleBackdrop': [{}], '.import_button': [button], '.graphDrillDown': [graph],
+  });
+  $(button).on('change.plugin', () => {});
+  $(graph).on('mouseenter.plugin', () => {});
+  for (let count = 0; count < 3; count++) context.setupDefaultElements();
+  assert.equal(button.events.filter(event => event.type === 'change' && event.ns !== 'plugin').length, 1);
+  assert.equal(graph.events.filter(event => event.type === 'mouseenter' && event.ns !== 'plugin').length, 1);
+  assert.equal(graph.events.filter(event => event.type === 'mouseleave').length, 1);
+  assert.equal(button.events.filter(event => event.ns === 'plugin').length, 1);
+  assert.equal(graph.events.filter(event => event.ns === 'plugin').length, 1);
+  $(button).trigger('change');
+  assert.equal(calls.filter(call => call.method === 'text' && call.args[0] === 'fixture.xml').length, 1);
 });
