@@ -247,23 +247,21 @@ New, written first against the legacy path and then required to pass on both:
 
 These could not be resolved from the code, with the recommendation in each case.
 
-1. **Complete hook inventory.** Only the authentication files, `lib/auth.php` and
-   `include/global.php` were searched. Hooks fired from `lib/functions.php`,
-   `lib/plugins.php`, the installer or other includes during login or logout may
-   exist. Recommendation: grep the whole tree and extend the inventory before
-   stage (a); the hook-characterization test is the gate.
-2. **Full shape of the `login_before` and `login_realms` arguments,** and whether
-   a plugin may return extra keys the core reads. Recommendation: read the rest of
-   both call sites and pin them in a fixture plugin test.
+1. **Complete hook inventory.** Resolved. The whole tree was searched; three more
+   hooks (`get_template_account`, `nav_login_before`, `nav_login_after`) are in
+   the inventory and `AuthenticationHookInventoryTest` pins the list.
+2. **Full shape of the `login_before` and `login_realms` arguments.** Resolved in
+   the inventory. A fixture-plugin test that records call order is still the gate
+   for stage (a).
 3. **Meaning of realm 1** and the "off by one" LDAP dropdown. Recommendation:
    characterize realm handling for methods 3 and 4 before moving LDAP.
 4. **Where limiter state lives on a multi-node deployment.** A per-node filesystem
    pool weakens the limiter behind a load balancer. Recommendation: ship per-node
    first and document it; if multi-node is a supported target, add a table through
    the installer in its own change.
-5. **Session idle timeout.** The `action=timeout` logout message exists, but where
-   timeout is decided was not located. Recommendation: find it and keep it in the
-   authenticator.
+5. **Session idle timeout.** Resolved. There is no application timer; PHP's
+   `session.gc_maxlifetime` ends the session and `action=timeout` only picks the
+   message. The authenticator keeps that and adds no second timer.
 6. **Remote pollers and collectors.** Whether a non-primary `poller_id` serves
    login, and how the offline menu interacts with an unreachable main database.
    Recommendation: treat login on a collector as unsupported until traced, and
