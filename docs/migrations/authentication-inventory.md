@@ -48,6 +48,24 @@ dropdown is "off by one" for LDAP (`auth_login.php` compensates), and for
 methods 3 and 4 choosing "local" switches the method to 1. The meaning of realm
 1 beyond that dropdown was not established (see ADR open questions).
 
+**Basic (method 2) and the web server.** The username is read only from
+`REMOTE_USER`, then `REDIRECT_REMOTE_USER`, as the web server sets them after it
+has checked the password. It is never read from `PHP_AUTH_USER`, which PHP fills
+from the client's `Authorization` header. A setup that passes only
+`PHP_AUTH_USER` to PHP now answers "no username was passed" until the server
+also passes `REMOTE_USER`.
+
+- nginx: `auth_basic` sets `$remote_user` ("user name supplied with the Basic
+  authentication"). Pass it to PHP-FPM with `fastcgi_param REMOTE_USER
+  $remote_user;` in the `location` that handles PHP, because the stock
+  `fastcgi_params` file does not include it.
+- Apache: `REMOTE_USER` is a standard CGI meta-variable that Apache makes
+  available to CGI-style handlers. Check that it reaches PHP under your handler
+  (`mod_php`, `mod_proxy_fcgi`) by looking for `REMOTE_USER` in `phpinfo()` after
+  signing in; the Apache documentation does not state this per handler.
+- `lts/1.2` keeps reading `PHP_AUTH_USER` as a last resort, after the two
+  server variables, so 1.2 setups that pass only the header keep working.
+
 ## Credentials and sessions
 
 **Password hashes.** Verified through `compat_password_verify`; a hash that
