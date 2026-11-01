@@ -232,7 +232,7 @@ the old serialization and cannot repair previously stored values.
 ### Administrative database target handoff
 
 - Status: implemented.
-- Acceptance: a server-captured target binds collector identity, connection state, host, port and the actual selected SQL schema. A stale token cannot select another connection or admit a schema changed with `USE`.
+- Acceptance: a server-captured target binds collector identity, connection state, host, port and the actual selected SQL schema. A stale token cannot select another connection or admit a schema changed with `USE`. HTTP capture uses the same `doctrine.dbal.web_connection` native PDO as feature reads, preserving configured web credentials; it never opens the separate legacy credential connection.
 - API: `Platform\Contract\DatabaseTarget` captures a connection identity. The existing `Platform\Application\Port\DatabaseTarget` local/main enum remains unchanged and serves a different contract.
 - Scope: shared Platform capabilities only. Existing administrative routes are unchanged; each consumer must bind its displayed form target and pass the original server capture before this protects a workflow. These capabilities do not authenticate or authorize an actor.
 - Verification: actual two-schema selection regressions run on MariaDB 10.11 and MySQL 8.4 with direct PHP 8.4.25. Current-head CI and consumer integration remain merge and rollout gates. No schema, runtime or dependency changes; reverting removes the unused capability before consumers adopt it.

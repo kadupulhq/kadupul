@@ -51,8 +51,7 @@ final class DatabaseTargetNativeTest extends TestCase
             $values = ['collector_id' => 2, 'connection_status' => 'online', 'host' => $params['host'], 'port' => (int) $params['port']];
             $configuration = $this->createStub(LegacyConfiguration::class);
             $configuration->method('values')->willReturn($values);
-            $connection = $this->createStub(DatabaseConnection::class);
-            $connection->method('get')->willReturn($database);
+            $connection = \Kadupul\Platform\Infrastructure\Legacy\Dbal\LegacyDatabaseConnection::open($database);
             $target = (new ConfiguredDatabaseTarget($configuration, $connection))->capture();
             $this->assertMatchesRegularExpression('/\A[a-f0-9]{64}\z/D', $target);
             $this->assertSame(hash('sha256', json_encode([2, 'online', strtolower($params['host']), (int) $params['port'], $schemas[0]], JSON_THROW_ON_ERROR)), $target);
@@ -193,6 +192,81 @@ final class DatabaseTargetNativeTest extends TestCase
         } finally {
             if ($created) $database->exec('DROP DATABASE `' . $schema . '`');
         }
+    }
+
+
+    public function testConfiguredTargetUsesTheActualWebConnection(): void
+    {
+        $params = $this->realMariaDb()->getParams();
+        $user = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER');
+        $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+        if ($user !== false && $user !== '') $params['user'] = $user;
+        if ($password !== false) $params['password'] = $password;
+        $administrator = new \PDO('mysql:host=' . $params['host'] . ';port=' . $params['port'], $params['user'], $params['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        $schemas = ['web_target_' . bin2hex(random_bytes(8)), 'web_target_' . bin2hex(random_bytes(8))];
+        $created = [];
+        $directory = sys_get_temp_dir() . '/web-target-config-' . bin2hex(random_bytes(8));
+        $ownedDirectory = false;
+        $kernel = null;
+        try {
+            foreach ($schemas as $schema) {
+                $administrator->exec('CREATE DATABASE `' . $schema . '`');
+                $created[] = $schema;
+            }
+            $dsn = 'mysql:host=' . $params['host'] . ';port=' . $params['port'] . ';dbname=' . $schemas[0];
+            $native = new \PDO($dsn, $params['user'], $params['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+            $web = new \PDO($dsn, $params['user'], $params['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+            $writer = new class ($native) implements DatabaseConnection {
+                public int $calls = 0;
+                public function __construct(private readonly \PDO $native) {}
+                public function get(): \PDO
+                {
+                    ++$this->calls;
+                    return $this->native;
+                }
+            };
+            $this->assertTrue(mkdir($directory . '/include', 0700, true));
+            $ownedDirectory = true;
+            $configuration = "<?php\n";
+            foreach (['database_hostname' => $params['host'], 'database_port' => $params['port'], 'database_default' => $schemas[0], 'database_username' => $params['user'], 'database_password' => $params['password']] as $key => $value) {
+                $configuration .= '$' . $key . ' = ' . var_export($value, true) . ";\n";
+            }
+            $this->assertNotFalse(file_put_contents($directory . '/include/config.php', $configuration));
+            $kernel = new \Kadupul\Kernel('test', true);
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $container->set(\Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration::class, new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory));
+            $container->set(DatabaseConnection::class, $writer);
+            $container->set('doctrine.dbal.web_connection', \Kadupul\Platform\Infrastructure\Legacy\Dbal\LegacyDatabaseConnection::open($web));
+            $target = $container->get('test.platform.database_target');
+            $this->assertInstanceOf(\Kadupul\Platform\Contract\DatabaseTarget::class, $target);
+            $initial = $target->capture();
+            $web->exec('USE `' . $schemas[1] . '`');
+            $this->assertSame($schemas[1], $web->query('SELECT DATABASE()')->fetchColumn());
+            $this->assertSame($schemas[0], $native->query('SELECT DATABASE()')->fetchColumn());
+            $this->assertNotSame($initial, $target->capture(), 'Target capture ignored the schema used by actual feature reads.');
+            $this->assertSame(0, $writer->calls, 'Read target capture must not open the legacy credential connection.');
+        } finally {
+            $kernel?->shutdown();
+            foreach ($created as $schema) $administrator->exec('DROP DATABASE `' . $schema . '`');
+            if ($ownedDirectory) {
+                unlink($directory . '/include/config.php');
+                rmdir($directory . '/include');
+                rmdir($directory);
+            }
+        }
+    }
+
+
+    public function testUnsupportedNativeReadConnectionsAreRefused(): void
+    {
+        $configuration = $this->createStub(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['collector_id' => 1, 'host' => 'localhost', 'port' => 3306]);
+        $database = $this->createStub(\Doctrine\DBAL\Connection::class);
+        $database->method('getNativeConnection')->willReturn(new \stdClass());
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('The database target could not be confirmed.');
+        (new ConfiguredDatabaseTarget($configuration, $database))->capture();
     }
 
 }
