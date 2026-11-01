@@ -34,6 +34,9 @@ final readonly class ItemPermissionRequest
         public ?string $invalidItem,
     ) {}
 
+    /**
+     * Reads the raw command-line values without rejecting them; a value that cannot name a row is kept in the matching invalid* property.
+     */
     public static function parse(?string $user, ?ItemType $type, ?string $item): self
     {
         [$userId, $invalidUser] = self::user($user);

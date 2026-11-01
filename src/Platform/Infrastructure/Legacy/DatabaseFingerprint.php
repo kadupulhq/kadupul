@@ -39,6 +39,9 @@ final class DatabaseFingerprint
         return hash('sha256', json_encode([$collector, $state, strtolower($host), $port, $schema], JSON_THROW_ON_ERROR));
     }
 
+    /**
+     * @throws \RuntimeException when the statement reports an error
+     */
     private static function confirmRead(\PDOStatement $statement): void
     {
         if ($statement->errorCode() !== '00000') {
@@ -46,6 +49,7 @@ final class DatabaseFingerprint
         }
     }
 
+    /** Reads a non-negative decimal integer no larger than $maximum, ignoring leading zeros, or returns null. */
     private static function decimal(mixed $value, int $maximum): ?int
     {
         if ((!is_int($value) && !is_string($value)) || preg_match('/\A[0-9]+\z/D', (string) $value) !== 1) {

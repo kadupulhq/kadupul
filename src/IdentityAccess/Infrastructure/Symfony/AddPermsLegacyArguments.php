@@ -168,6 +168,7 @@ final class AddPermsLegacyArguments extends LegacyArguments
         return [$quiet ? $lines : [...$lines, ''], true];
     }
 
+    /** Keeps the earliest of two list targets in the order of LISTS, as the original option parser did. */
     private function firstList(?ListTarget $current, ListTarget $next): ListTarget
     {
         $order = array_values(self::LISTS);

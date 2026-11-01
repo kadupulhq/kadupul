@@ -15,11 +15,15 @@ use Kadupul\Platform\Contract\LegacyConfiguration;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/** Fingerprints the web DBAL connection together with the configured collector id, connection status, host and port. */
 #[AsAlias(DatabaseTarget::class)]
 final readonly class ConfiguredDatabaseTarget implements DatabaseTarget
 {
     public function __construct(private LegacyConfiguration $configuration, #[Autowire(service: 'doctrine.dbal.web_connection')] private Connection $database) {}
 
+    /**
+     * @throws \RuntimeException when the connection is not a PDO or its schema cannot be confirmed
+     */
     public function capture(): string
     {
         $values = $this->configuration->values();

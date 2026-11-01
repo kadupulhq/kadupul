@@ -16,5 +16,6 @@ namespace Kadupul\IdentityAccess\Contract;
  */
 interface BindingApprovalPermission
 {
+    /** Whether the actor may approve metric bindings. */
     public function mayApproveBindings(Actor $actor): bool;
 }

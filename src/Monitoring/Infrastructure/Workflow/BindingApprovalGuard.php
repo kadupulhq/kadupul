@@ -34,6 +34,7 @@ final readonly class BindingApprovalGuard
         private AuditTrail $audit,
     ) {}
 
+    /** Blocks the transition unless the signed-in actor may approve bindings and the decision was audited. */
     #[AsEventListener(event: 'workflow.metric_binding.guard.approve')]
     public function __invoke(GuardEvent $event): void
     {

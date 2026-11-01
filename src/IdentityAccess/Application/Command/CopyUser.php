@@ -11,6 +11,10 @@ namespace Kadupul\IdentityAccess\Application\Command;
 
 use Kadupul\IdentityAccess\Application\Port\UserCopier;
 
+/**
+ * Copies a local account, with its permissions and settings, to a new username, as copy_user.php did.
+ * Refuses a missing template and an existing new name; a dry run reads the same rows and writes nothing.
+ */
 final readonly class CopyUser
 {
     private const string ACTION = 'user.copy';

@@ -28,6 +28,9 @@ enum ItemType: int
         };
     }
 
+    /**
+     * @return ?self null when the name is not one of the option names
+     */
     public static function fromOption(string $name): ?self
     {
         return array_find(self::cases(), static fn(self $type): bool => $type->option() === $name);

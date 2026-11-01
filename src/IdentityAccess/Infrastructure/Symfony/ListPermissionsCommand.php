@@ -27,6 +27,7 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/** Console front end of ListPermissionTargets, replacing the --list-* options of add_perms.php. */
 #[AsCommand(name: 'kadupul:permission:list', description: 'List the users, trees, devices, graphs or graph templates a permission can name.')]
 final readonly class ListPermissionsCommand
 {
@@ -39,6 +40,9 @@ final readonly class ListPermissionsCommand
         private ResultRenderer $renderer,
     ) {}
 
+    /**
+     * @return int a Command::* exit code
+     */
     public function __invoke(SymfonyStyle $io, OutputInterface $output, #[MapInput] ListPermissionsInput $input): int
     {
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
@@ -64,6 +68,11 @@ final readonly class ListPermissionsCommand
         return $this->report($io, $output, $mode, $input, $listing, $legacy);
     }
 
+    /**
+     * Renders the listing in the active output mode and returns the exit code.
+     *
+     * @return int a Command::* exit code
+     */
     private function report(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, ListPermissionsInput $input, PermissionListing $listing, AddPermsLegacyArguments $legacy): int
     {
         if ($mode === OutputMode::Legacy) {

@@ -35,6 +35,7 @@ final readonly class ServerTiming
         private ?DebugDataHolder $queries = null,
     ) {}
 
+    /** Adds the Server-Timing header to the main request response. */
     #[AsEventListener(event: 'kernel.response')]
     public function onResponse(ResponseEvent $event): void
     {
@@ -52,6 +53,7 @@ final readonly class ServerTiming
         $event->getResponse()->headers->set('Server-Timing', implode(', ', $parts));
     }
 
+    /** Appends a profile record when the request carries a profile id header. */
     #[AsEventListener(event: 'kernel.terminate')]
     public function onTerminate(TerminateEvent $event): void
     {
@@ -90,6 +92,9 @@ final readonly class ServerTiming
         return $count;
     }
 
+    /**
+     * @param mixed $start REQUEST_TIME_FLOAT; a non-numeric value yields 0.000
+     */
     private function milliseconds(mixed $start): string
     {
         return sprintf('%.3f', is_numeric($start) ? (microtime(true) - (float) $start) * 1000 : 0.0);

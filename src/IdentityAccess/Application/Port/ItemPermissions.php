@@ -15,8 +15,10 @@ use Kadupul\IdentityAccess\Domain\ItemType;
 /** Checks the rows a permission names and records the grant. */
 interface ItemPermissions
 {
+    /** Whether a user account with this id exists in the given database. */
     public function userExists(OperatorDatabase $database, int $userId): bool;
 
+    /** Whether the graph, tree, device or graph template with this id exists in the given database. */
     public function itemExists(OperatorDatabase $database, ItemType $type, int $itemId): bool;
 
     /**

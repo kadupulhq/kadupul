@@ -11,6 +11,7 @@ namespace Kadupul\IdentityAccess\Application\Command;
 
 use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
+/** Thrown when the console operator may not manage users on the selected database. */
 final class UserManagementDenied extends \RuntimeException
 {
     /** Who was refused, when known, and on which database; the refusal is audited with both. */

@@ -12,5 +12,6 @@ namespace Kadupul\IdentityAccess\Contract;
 /** Whether this installation is a remote data collector, whose writes belong on the main database. */
 interface CollectorTopology
 {
+    /** Whether this process runs on a remote collector rather than the main server. */
     public function isRemoteCollector(): bool;
 }

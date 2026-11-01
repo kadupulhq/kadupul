@@ -17,6 +17,9 @@ use Kadupul\IdentityAccess\Domain\ItemType;
 use Kadupul\IdentityAccess\Domain\ListTarget;
 use Kadupul\IdentityAccess\Domain\TreeSortType;
 
+/**
+ * Lists the users, trees, devices, graphs or graph templates a permission can name, as the --list-* options of add_perms.php did.
+ */
 final readonly class ListPermissionTargets
 {
     private const string ACTION = 'permission.list';
@@ -55,6 +58,9 @@ final readonly class ListPermissionTargets
         };
     }
 
+    /**
+     * @param ?string $hostId the device id as given; anything that is not a whole id of an existing device yields HostInvalid
+     */
     private function graphs(ListTarget $target, OperatorDatabase $database, ?string $hostId): PermissionListing
     {
         $id = $hostId === null ? null : ItemPermissionRequest::wholeId($hostId);

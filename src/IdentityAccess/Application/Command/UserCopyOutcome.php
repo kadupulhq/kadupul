@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\IdentityAccess\Application\Command;
 
+/** How a user copy ended. */
 enum UserCopyOutcome: string
 {
     case Copied = 'copied';

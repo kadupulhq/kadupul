@@ -11,6 +11,7 @@ namespace Kadupul\Monitoring\Infrastructure\Workflow;
 
 use Kadupul\Monitoring\Domain\CapabilityStatus;
 
+/** A capability whose marking is its CapabilityStatus, advertised until moved. */
 final class CapabilitySubject implements StatusSubject
 {
     public function __construct(private CapabilityStatus $status = CapabilityStatus::Advertised) {}

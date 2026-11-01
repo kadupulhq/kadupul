@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\IdentityAccess\Application\Command;
 
+/** How a permission-target listing ended. */
 enum ListOutcome: string
 {
     case Listed = 'listed';

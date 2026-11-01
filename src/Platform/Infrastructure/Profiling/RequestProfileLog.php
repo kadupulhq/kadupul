@@ -22,6 +22,12 @@ final readonly class RequestProfileLog
         private string $path,
     ) {}
 
+    /**
+     * Appends one record; a malformed id, an unwritable directory or an unencodable record is dropped silently.
+     *
+     * @param float $ms elapsed milliseconds
+     * @param ?int $queries null when the query counter is unavailable
+     */
     public function append(string $id, string $path, float $ms, ?int $queries, int $peakBytes): void
     {
         // The id comes from a request header; anything outside this grammar

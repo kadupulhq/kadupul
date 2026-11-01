@@ -21,6 +21,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
+/**
+ * Collects the plugin console menu entries from the legacy config_arrays hooks through a worker, and caches them.
+ * The cache key includes a fingerprint of the hook, plugin and realm state for the signed-in user; a recent worker failure is remembered for FAILURE_SECONDS.
+ */
 #[AsAlias(PluginConsoleMenu::class)]
 final readonly class LegacyPluginConsoleMenu implements PluginConsoleMenu
 {
@@ -123,6 +127,7 @@ final readonly class LegacyPluginConsoleMenu implements PluginConsoleMenu
         return self::validated($entries);
     }
 
+    /** The first language in the request that matches a translation, or null. */
     private function acceptedLocale(): ?string
     {
         foreach ($this->requests->getCurrentRequest()?->getLanguages() ?? [] as $language) {
