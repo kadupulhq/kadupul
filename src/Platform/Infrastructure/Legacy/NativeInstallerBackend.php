@@ -89,16 +89,14 @@ final class NativeInstallerBackend implements InstallerBackend
         );
         $mode = $recoveryOnly ? 'finish' : ($schema === 'new_install' ? 'install' : ($schema === $this->targetVersion() ? 'complete' : 'upgrade'));
         if ($schema === 'new_install') {
-            global $rdatabase_default;
             // Match the native getMode() precedence without constructing it:
             // configured remote database first, then the saved review choice.
-            $nativeMode = $settings['install_mode'] ?? ((bool) $rdatabase_default ? '2' : '1');
+            $nativeMode = $settings['install_mode'] ?? ($this->functions->hasRemoteDatabase() ? '2' : '1');
             $mode = $nativeMode === '2' ? 'collector' : 'install';
         }
         $safeVersion = $schema === 'new_install' || $this->functions->call('cacti_version_compare', $schema, $this->targetVersion(), '<=') === true;
         $check('Schema version', $safeVersion, $schema, 'Restore matching application files. Automatic downgrades are not supported.');
-        global $config;
-        $configuration = $this->functions->map($config);
+        $configuration = $this->functions->configuration();
         foreach (['log', 'cache/boost', 'cache/mibcache', 'cache/realtime', 'cache/spikekill'] as $relative) {
             $path = $this->projectDir . '/' . $relative;
             $check(
@@ -137,8 +135,7 @@ final class NativeInstallerBackend implements InstallerBackend
             $templates[] = ['key' => $key, 'name' => $template['name'],
                 'selected' => !isset($settings['install_has_templates']) || ($settings['install_tp_' . str_replace('.', '_', $template['filename'])] ?? '') === $template['filename']];
         }
-        global $fields_snmp_item_with_retry;
-        $fields = $this->functions->map($fields_snmp_item_with_retry);
+        $fields = $this->functions->snmpFields();
         $snmp = [];
         foreach ($this->engineClass()::snmpOptionNames() as $name => $key) {
             $definition = $this->functions->map($fields[$key] ?? []);

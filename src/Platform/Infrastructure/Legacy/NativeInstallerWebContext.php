@@ -22,12 +22,11 @@ final class NativeInstallerWebContext implements InstallerWebContext
     /** @return array{action: string, root: string, csrf: string, locale: string} */
     public function view(): array
     {
-        global $config;
         if (!defined('KADUPUL_INSTALLER_WEB')) {
             throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException('Use the installation entry point.');
         }
         $this->backend->authorize();
-        $values = $this->functions->map($config);
+        $values = $this->functions->configuration();
         $root = $values['url_path'] ?? '/';
         if (!is_string($root) || !str_starts_with($root, '/') || str_starts_with($root, '//')
             || preg_match('/[\x00-\x20\\\\?#]/', $root) !== 0) {

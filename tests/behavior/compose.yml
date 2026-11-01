@@ -20,6 +20,7 @@ services:
     environment:
       DB_HOST: db
       TZ: UTC
+      APP_SECRET: ${BEHAVIOR_TEST_APP_SECRET:?Run through the behavioral harness to provision its disposable review key}
     depends_on:
       db:
         condition: service_healthy

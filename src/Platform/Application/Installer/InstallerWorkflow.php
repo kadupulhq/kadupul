@@ -49,6 +49,32 @@ final class InstallerWorkflow
         $this->backend->start($revision, $retry, $discoveryConfirmed);
     }
 
+    /** @param array<array-key, mixed> $input
+     *  @return array<string, mixed>
+     */
+    public function run(#[\SensitiveParameter] array $input, bool $retry, bool $discoveryConfirmed): array
+    {
+        $this->backend->authorize();
+        $options = $input !== [] || !$retry ? InstallerOptions::fromArray($input) : null;
+        $plan = $retry ? $this->backend->inspect() : null;
+        if ($retry && ($plan['mode'] ?? null) === 'complete') {
+            $status = $this->backend->status();
+            if (($status['state'] ?? null) === 'succeeded') {
+                return $status;
+            }
+        }
+        // Finishing a partial installation must retain its original plan and
+        // cleanup receipt instead of configuring or rerunning migrations.
+        if ($plan === null || ($options !== null && ($plan['mode'] ?? null) !== 'finish')) {
+            $plan = $this->backend->configure($options ?? InstallerOptions::fromArray($input));
+        }
+        if (!is_string($plan['revision'] ?? null)) {
+            throw new \RuntimeException('The installer did not return a reviewed plan.');
+        }
+        $this->start($plan['revision'], true, $discoveryConfirmed, $retry);
+        return $this->status();
+    }
+
     public function recover(int $attempt, bool $confirmed): void
     {
         $this->backend->authorize();

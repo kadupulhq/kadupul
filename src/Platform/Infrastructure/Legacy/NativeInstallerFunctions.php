@@ -25,6 +25,23 @@ final class NativeInstallerFunctions
         return $name(...$arguments);
     }
 
+    /** @return array<string, mixed> */
+    public function configuration(): array
+    {
+        return $this->map($GLOBALS['config'] ?? null);
+    }
+
+    public function hasRemoteDatabase(): bool
+    {
+        return (bool) ($GLOBALS['rdatabase_default'] ?? null);
+    }
+
+    /** @return array<string, mixed> */
+    public function snmpFields(): array
+    {
+        return $this->map($GLOBALS['fields_snmp_item_with_retry'] ?? null);
+    }
+
     public function text(mixed $value, string $default = ''): string
     {
         if ($value === null || $value === false) {

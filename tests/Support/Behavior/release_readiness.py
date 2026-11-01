@@ -292,7 +292,7 @@ def main():
             evidence['steps']['queue_migration'] = {'before_engine': old_engine, 'refused_volatile_queue': probe_before,
                                                    'commands': migrations, 'retained_samples_preserved': True}
             h.sql("DELETE FROM poller_output WHERE local_data_id=16000003 AND rrd_name='migration' AND time='2001-01-01' AND output='42'")
-            upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Upgrade')
+            upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Upgrade')
             actual_version = h.sql('SELECT cacti FROM version').strip()
             evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}
             require(actual_version == (ROOT / 'include/cacti_version').read_text().strip(), 'Upgrade version mismatch: ' + actual_version)
@@ -304,11 +304,11 @@ def main():
             authenticate(h)
             graph = assert_graph(h)
             plugin = assert_plugin(h)
-            repeat = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Repeated upgrade')
+            repeat = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Repeated upgrade')
             require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Repeated upgrade changed persisted data')
             # The completed web wizard removes these transient settings.
-            h.sql("DELETE FROM settings WHERE name LIKE 'install_%'")
-            after_cleanup = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Repeated upgrade after web completion cleanup')
+            h.sql("DELETE FROM settings WHERE name LIKE 'install!_%' ESCAPE '!'")
+            after_cleanup = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Repeated upgrade after web completion cleanup')
             require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Post-completion repeat changed persisted data')
             poll = assert_poll(h, 'Candidate poller')
             evidence['steps']['upgrade'] = {'command': upgrade, 'repeat': repeat, 'after_web_cleanup': after_cleanup, 'graph': graph, 'plugin': plugin,

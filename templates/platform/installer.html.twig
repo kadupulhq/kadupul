@@ -42,7 +42,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
                 <tr><th scope="row">{{ check.name|trans }}</th><td>{{ check.ok ? 'Pass'|trans : 'Blocked'|trans }}: {{ check.observed }}</td><td>{{ check.ok ? 'No action needed'|trans : check.remedy|trans }}</td></tr>
             {% endfor %}
             </tbody></table>
-            <a href="{{ view.action }}">{{ 'Check again'|trans }}</a>
+            <a href="/{{ view.action|trim('/') }}">{{ 'Check again'|trans }}</a>
         </section>
         {% if plan.job.state in ['waiting', 'running'] %}
         <form method="post" action="{{ view.action }}" data-installer-form>
@@ -62,22 +62,22 @@ SPDX-License-Identifier: GPL-3.0-or-later
                 <input type="hidden" name="action" value="configure">
                 <label for="profile">{{ 'Collection profile'|trans }}</label>
                 <select id="profile" name="options[Profile]" required>
-                    {% for profile in plan.profiles %}<option value="{{ profile.id }}"{{ plan.profile == profile.id ? ' selected' : '' }}>{{ profile.name }} (#{{ profile.id }})</option>{% endfor %}
+                    {% for profile in plan.profiles %}<option value="{{ profile.id }}"{% if plan.profile == profile.id %} selected{% endif %}>{{ profile.name }} (#{{ profile.id }})</option>{% endfor %}
                 </select>
                 <label><input type="checkbox" name="options[Eula]" value="1" required> {{ 'I accept the license terms'|trans }} (<a href="{{ view.root }}/LICENSE">{{ 'License'|trans }}</a>)</label>
                 <input type="hidden" name="options[AutomationMode]" value="0">
-                <label><input type="checkbox" name="options[AutomationMode]" value="1"{{ plan.discovery ? ' checked' : '' }}> {{ 'Enable discovery after installation'|trans }}</label>
+                <label><input type="checkbox" name="options[AutomationMode]" value="1"{% if plan.discovery %} checked{% endif %}> {{ 'Enable discovery after installation'|trans }}</label>
                 <label for="range">{{ 'Discovery range'|trans }}</label><input id="range" name="options[AutomationRange]" value="{{ plan.range }}" maxlength="1024">
                 <details><summary>{{ 'Advanced options'|trans }}</summary>
-                    <label for="language">{{ 'Language'|trans }}</label><select id="language" name="options[Language]">{% for code, label in plan.languages %}<option value="{{ code }}"{{ plan.language == code ? ' selected' : '' }}>{{ label }}</option>{% endfor %}</select>
-                    <label for="theme">{{ 'Theme'|trans }}</label><select id="theme" name="options[Theme]">{% for theme in plan.themes %}<option value="{{ theme }}"{{ plan.theme == theme ? ' selected' : '' }}>{{ theme }}</option>{% endfor %}</select>
+                    <label for="language">{{ 'Language'|trans }}</label><select id="language" name="options[Language]">{% for code, label in plan.languages %}<option value="{{ code }}"{% if plan.language == code %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
+                    <label for="theme">{{ 'Theme'|trans }}</label><select id="theme" name="options[Theme]">{% for theme in plan.themes %}<option value="{{ theme }}"{% if plan.theme == theme %} selected{% endif %}>{{ theme }}</option>{% endfor %}</select>
                     <input type="hidden" name="options[AutomationOverride]" value="0">
-                    <label><input type="checkbox" name="options[AutomationOverride]" value="1"{{ plan.override ? ' checked' : '' }}> {{ 'Override discovery SNMP settings'|trans }}</label>
+                    <label><input type="checkbox" name="options[AutomationOverride]" value="1"{% if plan.override %} checked{% endif %}> {{ 'Override discovery SNMP settings'|trans }}</label>
                     <fieldset><legend>{{ 'Discovery SNMP settings'|trans }}</legend>
                     <p>{{ 'Leave secret fields blank to retain stored credentials. Secrets are never redisplayed.'|trans }}</p>
                     {% for field in plan.snmp %}
                         <label for="snmp-{{ field.name }}">{{ field.label }}</label>
-                        {% if field.choices %}<select id="snmp-{{ field.name }}" name="options[SnmpOptions][{{ field.name }}]">{% for value, label in field.choices %}<option value="{{ value }}"{{ field.value == value ? ' selected' : '' }}>{{ label }}</option>{% endfor %}</select>
+                        {% if field.choices %}<select id="snmp-{{ field.name }}" name="options[SnmpOptions][{{ field.name }}]">{% for value, label in field.choices %}<option value="{{ value }}"{% if field.value == value %} selected{% endif %}>{{ label }}</option>{% endfor %}</select>
                         {% else %}<input id="snmp-{{ field.name }}" type="{{ field.secret ? 'password' : 'text' }}" autocomplete="{{ field.secret ? 'new-password' : 'off' }}" name="options[SnmpOptions][{{ field.name }}]" value="{{ field.value }}" maxlength="{{ field.limit }}">{% endif %}
                     {% endfor %}
                     </fieldset>
@@ -94,7 +94,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
                     <input type="hidden" name="options[Templates][all]" value="0">
                     {% for template in plan.templates %}
                         <input type="hidden" name="options[Templates][{{ template.key }}]" value="0">
-                        <label><input type="checkbox" name="options[Templates][{{ template.key }}]" value="1"{{ template.selected ? ' checked' : '' }}> {{ template.name }}</label>
+                        <label><input type="checkbox" name="options[Templates][{{ template.key }}]" value="1"{% if template.selected %} checked{% endif %}> {{ template.name }}</label>
                     {% endfor %}
                     </fieldset>
                 </details>

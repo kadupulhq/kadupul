@@ -50,7 +50,7 @@ if [[ "${CACTI_E2E_INSTALLER_BROWSER:-0}" == '1' ]]; then
     cleanup_installer_password
     trap - EXIT
 else
-    "${DC[@]}" exec -T cacti-master php /var/www/html/cli/install_cacti.php --accept-eula --install --mode=1
+    "${DC[@]}" exec -T cacti-master php /var/www/html/cli/install_cacti.php --accept-eula --install --mode=1 --automationmode=0
 fi
 
 # Confirm the installer populated the version row; abort early if it did not.

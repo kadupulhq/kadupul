@@ -152,4 +152,37 @@ final class InstallerControllerTest extends TestCase
         $this->assertSame(403, $response->getStatusCode());
         $kernel->shutdown();
     }
+
+    public function testRenderedInstallerPreservesLocalLinksAndSelectedControls(): void
+    {
+        $twig = new Environment(new FilesystemLoader(dirname(__DIR__, 2) . '/templates'), ['strict_variables' => true]);
+        $twig->addExtension(new TranslationExtension(new Translator('en')));
+        $plan = [
+            'mode' => 'install', 'target' => '1.2.38', 'schema' => 'new_install', 'collector' => 1,
+            'job' => ['state' => 'not_started', 'phase' => 'ready', 'progress' => 0, 'error' => ''],
+            'checks' => [], 'reviewed' => false, 'ready' => true,
+            'profiles' => [['id' => 1, 'name' => 'First'], ['id' => 2, 'name' => 'Second']], 'profile' => 2,
+            'discovery' => true, 'override' => true, 'range' => '127.0.0.1/32',
+            'languages' => ['en' => 'English', 'fr' => 'French'], 'language' => 'fr',
+            'themes' => ['classic', 'modern'], 'theme' => 'modern',
+            'snmp' => [['name' => 'version', 'label' => 'Version', 'choices' => [1 => '1', 2 => '2'], 'value' => 2]],
+            'tables' => [], 'cron' => 300, 'paths' => [],
+            'templates' => [['key' => 'first', 'name' => 'First', 'selected' => true],
+                ['key' => 'second', 'name' => 'Second', 'selected' => false]],
+        ];
+        foreach (['', '/monitor'] as $root) {
+            $html = $twig->render('platform/installer.html.twig', ['plan' => $plan, 'error' => '',
+                'view' => ['action' => $root . '/install/install.php', 'root' => $root, 'locale' => 'en', 'csrf' => 'fixture-token']]);
+            $document = new \DOMDocument();
+            $this->assertTrue($document->loadHTML($html, LIBXML_NOERROR | LIBXML_NOWARNING));
+            $xpath = new \DOMXPath($document);
+            $this->assertSame($root . '/install/install.php', $xpath->evaluate('string(//a[normalize-space(.)="Check again"]/@href)'));
+            foreach (['profile' => '2', 'language' => 'fr', 'theme' => 'modern', 'snmp-version' => '2'] as $id => $value) {
+                $this->assertSame($value, $xpath->evaluate('string(//select[@id="' . $id . '"]/option[@selected]/@value)'));
+                $this->assertSame(1, $xpath->query('//select[@id="' . $id . '"]/option[@selected]')->length);
+            }
+            $this->assertSame(3, $xpath->query('//input[@type="checkbox"][@checked]')->length);
+            $this->assertSame(0, $xpath->query('//input[@name="options[Templates][second]"][@checked]')->length);
+        }
+    }
 }

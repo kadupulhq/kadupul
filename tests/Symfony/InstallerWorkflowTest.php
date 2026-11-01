@@ -102,6 +102,73 @@ final class InstallerWorkflowTest extends TestCase
         $this->assertSame(['state' => 'failed', 'progress' => 41], (new InstallerWorkflow($backend))->status());
     }
 
+    public function testForcedCompletedRunReturnsTheVerifiedReceiptWithoutMutations(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->once())->method('authorize');
+        $backend->expects($this->once())->method('inspect')->willReturn(['mode' => 'complete']);
+        $backend->expects($this->once())->method('status')->willReturn(['state' => 'succeeded']);
+        $backend->expects($this->never())->method('configure');
+        $backend->expects($this->never())->method('start');
+        $this->assertSame(['state' => 'succeeded'], (new InstallerWorkflow($backend))->run(['Eula' => true], true, false));
+    }
+
+    public function testCompletedRunWithoutExplicitRetryKeepsTheNativeRefusal(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->never())->method('inspect');
+        $backend->expects($this->never())->method('status');
+        $backend->expects($this->once())->method('configure')->willThrowException(new \RuntimeException('already complete'));
+        $backend->expects($this->never())->method('start');
+        $this->expectException(\RuntimeException::class);
+        (new InstallerWorkflow($backend))->run(['Eula' => true], false, false);
+    }
+
+    #[DataProvider('invalidOptions')]
+    public function testCompletedRunStillValidatesSuppliedOptionsBeforeInspecting(array $options): void
+    {
+        if ($options === []) {
+            $options = ['Step' => 97];
+        }
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->once())->method('authorize');
+        $backend->expects($this->never())->method('inspect');
+        $backend->expects($this->never())->method('status');
+        $backend->expects($this->never())->method('configure');
+        $backend->expects($this->never())->method('start');
+        $this->expectException(\InvalidArgumentException::class);
+        (new InstallerWorkflow($backend))->run($options, true, false);
+    }
+
+    public static function unfinishedReceipts(): iterable
+    {
+        foreach (['failed', 'partial', 'running', 'not_started'] as $state) {
+            yield $state => [$state];
+        }
+    }
+
+    #[DataProvider('unfinishedReceipts')]
+    public function testCurrentSchemaWithoutSucceededReceiptCannotInventSuccess(string $state): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->method('inspect')->willReturn(['mode' => 'complete']);
+        $backend->method('status')->willReturn(['state' => $state]);
+        $backend->expects($this->once())->method('configure')->willThrowException(new \RuntimeException('already complete'));
+        $backend->expects($this->never())->method('start');
+        $this->expectException(\RuntimeException::class);
+        (new InstallerWorkflow($backend))->run(['Eula' => true], true, false);
+    }
+
+    public function testFinishingRetryRetainsItsPlanAndReturnsItsActualOutcome(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->method('inspect')->willReturn(['mode' => 'finish', 'revision' => str_repeat('a', 64), 'ready' => true]);
+        $backend->expects($this->never())->method('configure');
+        $backend->expects($this->once())->method('start')->with(str_repeat('a', 64), true, false);
+        $backend->expects($this->once())->method('status')->willReturn(['state' => 'partial']);
+        $this->assertSame(['state' => 'partial'], (new InstallerWorkflow($backend))->run(['Eula' => true], true, false));
+    }
+
     public function testRecoveryCannotProceedWithoutStoppedWorkerConfirmation(): void
     {
         $backend = $this->createMock(InstallerBackend::class);

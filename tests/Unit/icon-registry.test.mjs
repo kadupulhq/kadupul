@@ -88,7 +88,6 @@ const hardCoded = new Map([
   ['graphs_new.php', notMigrated],
   ['host_templates.php', notMigrated],
   ['install/install.js', notMigrated],
-  ['install/install.php', notMigrated],
   ['lib/api_automation.php', notMigrated],
   ['lib/html_form.php', notMigrated],
   ['lib/html_graph.php', notMigrated],

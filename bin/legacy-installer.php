@@ -41,13 +41,9 @@ try {
             $workflow->recover($command['attempt'], $command['retry']);
             return $workflow->status();
         })(),
-        'configure', 'start' => $command['action'] === 'start' && $command['retry'] && $command['options'] === []
-            ? $workflow->inspect() : $workflow->configure($command['options']),
+        'configure' => $workflow->configure($command['options']),
+        'start' => $workflow->run($command['options'], $command['retry'], $command['discovery_confirmed']),
     };
-    if ($command['action'] === 'start') {
-        $workflow->start($data['revision'], true, $command['discovery_confirmed'], $command['retry']);
-        $data = $workflow->status();
-    }
     // Successful recovery records a stopped attempt as failed; it does not
     // claim that installation succeeded or start another worker.
     $ok = in_array($command['action'], ['recover', 'check', 'configure'], true)
