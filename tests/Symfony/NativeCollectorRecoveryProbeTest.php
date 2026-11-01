@@ -27,8 +27,11 @@ final class NativeCollectorRecoveryProbeTest extends TestCase
     {
         $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
         if (!is_string($dsn) || $dsn === '') $this->markTestSkipped('A disposable database is required.');
+        $user = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER');
+        if ($user === false) $user = getenv('KADUPUL_TEST_MYSQL_USER');
         $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
-        $this->database = new \PDO($dsn, getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: 'root', $password === false ? '' : $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        if ($password === false) $password = getenv('KADUPUL_TEST_MYSQL_PASSWORD');
+        $this->database = new \PDO($dsn, $user === false ? 'root' : $user, $password === false ? '' : $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
         $schema = 'native_recovery_' . bin2hex(random_bytes(8));
         $this->database->exec('CREATE DATABASE `' . $schema . '`');
         $this->schema = $schema;
