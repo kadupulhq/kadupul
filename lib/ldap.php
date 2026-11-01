@@ -31,22 +31,22 @@ LDAP functions
 
 Error codes:
 
-#	Text
+#    Text
 ==============================================================
-0	Authentication Success
-1	Authentication Failure
-2	No username defined
-3	Protocol error, unable to set version
-4	Unable to set referrals option
-5	Protocol error, unable to start TLS communications
-6	Unable to create LDAP object
-7	Protocol error
-8	Insufficient access
-9	Unable to connect to server
-10	Timeout
-11	General bind error
-12	Group DN not found
-99	PHP LDAP not enabled
+0    Authentication Success
+1    Authentication Failure
+2    No username defined
+3    Protocol error, unable to set version
+4    Unable to set referrals option
+5    Protocol error, unable to start TLS communications
+6    Unable to create LDAP object
+7    Protocol error
+8    Insufficient access
+9    Unable to connect to server
+10    Timeout
+11    General bind error
+12    Group DN not found
+99    PHP LDAP not enabled
 
 */
 function cacti_ldap_auth(
@@ -67,19 +67,32 @@ function cacti_ldap_auth(
 
     $ldap = new Ldap;
 
-    if (!empty($username))          $ldap->username          = $username;
-    if (!empty($password))          $ldap->password          = $password;
-    if (!empty($dn))                $ldap->dn                = $dn;
-    if (!empty($host))              $ldap->host              = $host;
-    if (!empty($port))              $ldap->port              = $port;
-    if (!empty($port_ssl))          $ldap->port_ssl          = $port_ssl;
-    if (!empty($version))           $ldap->version           = $version;
-    if (!empty($encryption))        $ldap->encryption        = $encryption;
-    if (!empty($referrals))         $ldap->referrals         = $referrals;
-    if (!empty($group_require))     $ldap->group_require     = $group_require;
-    if (!empty($group_dn))          $ldap->group_dn          = $group_dn;
-    if (!empty($group_attrib))      $ldap->group_attrib      = $group_attrib;
-    if (!empty($group_member_type)) $ldap->group_member_type = $group_member_type;
+    if (!empty($username))
+        $ldap->username          = $username;
+    if (!empty($password))
+        $ldap->password          = $password;
+    if (!empty($dn))
+        $ldap->dn                = $dn;
+    if (!empty($host))
+        $ldap->host              = $host;
+    if (!empty($port))
+        $ldap->port              = $port;
+    if (!empty($port_ssl))
+        $ldap->port_ssl          = $port_ssl;
+    if (!empty($version))
+        $ldap->version           = $version;
+    if (!empty($encryption))
+        $ldap->encryption        = $encryption;
+    if (!empty($referrals))
+        $ldap->referrals         = $referrals;
+    if (!empty($group_require))
+        $ldap->group_require     = $group_require;
+    if (!empty($group_dn))
+        $ldap->group_dn          = $group_dn;
+    if (!empty($group_attrib))
+        $ldap->group_attrib      = $group_attrib;
+    if (!empty($group_member_type))
+        $ldap->group_member_type = $group_member_type;
 
     /* If the server list is a space delimited set of servers
      * process each server until you get a bind, or fail
@@ -121,25 +134,25 @@ function cacti_ldap_auth(
 
 Error codes:
 
-#	Text
+#    Text
 ==============================================================
-0	Authentication Success
-1	No username defined
-2	Unable to create LDAP connection object
-3	Unable to find users DN
-4	Protocol error, unable to set version
-5	Protocol error, unable to start TLS communications
-6	Protocol error
-7	Invalid credential
-8	Insufficient access
-9	Unable to connect to server
-10	Timeout
-11	General bind error
-12	Unable to set referrals option
-13	More than one matching user found
-14	Specific DN and Password required
-15	Unable to find user from DN
-99	PHP LDAP not enabled
+0    Authentication Success
+1    No username defined
+2    Unable to create LDAP connection object
+3    Unable to find users DN
+4    Protocol error, unable to set version
+5    Protocol error, unable to start TLS communications
+6    Protocol error
+7    Invalid credential
+8    Insufficient access
+9    Unable to connect to server
+10    Timeout
+11    General bind error
+12    Unable to set referrals option
+13    More than one matching user found
+14    Specific DN and Password required
+15    Unable to find user from DN
+99    PHP LDAP not enabled
 
 */
 function cacti_ldap_search_dn(
@@ -160,19 +173,32 @@ function cacti_ldap_search_dn(
 
     $ldap = new Ldap;
 
-    if (!empty($username))          $ldap->username          = $username;
-    if (!empty($dn))                $ldap->dn                = $dn;
-    if (!empty($host))              $ldap->host              = $host;
-    if (!empty($port))              $ldap->port              = $port;
-    if (!empty($port_ssl))          $ldap->port_ssl          = $port_ssl;
-    if (!empty($version))           $ldap->version           = $version;
-    if (!empty($encryption))        $ldap->encryption        = $encryption;
-    if (!empty($referrals))         $ldap->referrals         = $referrals;
-    if (!empty($mode))              $ldap->mode              = $mode;
-    if (!empty($search_base))       $ldap->search_base       = $search_base;
-    if (!empty($search_filter))     $ldap->search_filter     = $search_filter;
-    if (!empty($specific_dn))       $ldap->specific_dn       = $specific_dn;
-    if (!empty($specific_password)) $ldap->specific_password = $specific_password;
+    if (!empty($username))
+        $ldap->username          = $username;
+    if (!empty($dn))
+        $ldap->dn                = $dn;
+    if (!empty($host))
+        $ldap->host              = $host;
+    if (!empty($port))
+        $ldap->port              = $port;
+    if (!empty($port_ssl))
+        $ldap->port_ssl          = $port_ssl;
+    if (!empty($version))
+        $ldap->version           = $version;
+    if (!empty($encryption))
+        $ldap->encryption        = $encryption;
+    if (!empty($referrals))
+        $ldap->referrals         = $referrals;
+    if (!empty($mode))
+        $ldap->mode              = $mode;
+    if (!empty($search_base))
+        $ldap->search_base       = $search_base;
+    if (!empty($search_filter))
+        $ldap->search_filter     = $search_filter;
+    if (!empty($specific_dn))
+        $ldap->specific_dn       = $specific_dn;
+    if (!empty($specific_password))
+        $ldap->specific_password = $specific_password;
 
     /* If the server list is a space delimited set of servers
      * process each server until you get a bind, or fail
@@ -252,20 +278,34 @@ function cacti_ldap_search_cn(
 
     $ldap = new Ldap;
 
-    if (!empty($username))          $ldap->username          = $username;
-    if (!empty($cn))                $ldap->cn                = $cn;
-    if (!empty($dn))                $ldap->dn                = $dn;
-    if (!empty($host))              $ldap->host              = $host;
-    if (!empty($port))              $ldap->port              = $port;
-    if (!empty($port_ssl))          $ldap->port_ssl          = $port_ssl;
-    if (!empty($version))           $ldap->version           = $version;
-    if (!empty($encryption))        $ldap->encryption        = $encryption;
-    if (!empty($referrals))         $ldap->referrals         = $referrals;
-    if (!empty($mode))              $ldap->mode              = $mode;
-    if (!empty($search_base))       $ldap->search_base       = $search_base;
-    if (!empty($search_filter))     $ldap->search_filter     = $search_filter;
-    if (!empty($specific_dn))       $ldap->specific_dn       = $specific_dn;
-    if (!empty($specific_password)) $ldap->specific_password = $specific_password;
+    if (!empty($username))
+        $ldap->username          = $username;
+    if (!empty($cn))
+        $ldap->cn                = $cn;
+    if (!empty($dn))
+        $ldap->dn                = $dn;
+    if (!empty($host))
+        $ldap->host              = $host;
+    if (!empty($port))
+        $ldap->port              = $port;
+    if (!empty($port_ssl))
+        $ldap->port_ssl          = $port_ssl;
+    if (!empty($version))
+        $ldap->version           = $version;
+    if (!empty($encryption))
+        $ldap->encryption        = $encryption;
+    if (!empty($referrals))
+        $ldap->referrals         = $referrals;
+    if (!empty($mode))
+        $ldap->mode              = $mode;
+    if (!empty($search_base))
+        $ldap->search_base       = $search_base;
+    if (!empty($search_filter))
+        $ldap->search_filter     = $search_filter;
+    if (!empty($specific_dn))
+        $ldap->specific_dn       = $specific_dn;
+    if (!empty($specific_password))
+        $ldap->specific_password = $specific_password;
 
     return $ldap->Getcn();
 }
@@ -1089,7 +1129,7 @@ function cacti_ldap_tls_settle_requirement()
     // The update only fills an empty row, so a value saved meanwhile wins.
     db_execute_prepared(
         "INSERT INTO settings (name, value) VALUES (?, ?)
-		ON DUPLICATE KEY UPDATE value = IF(value = '', VALUES(value), value)",
+\t\tON DUPLICATE KEY UPDATE value = IF(value = '', VALUES(value), value)",
         array('ldap_tls_certificate', (string) $level)
     );
 

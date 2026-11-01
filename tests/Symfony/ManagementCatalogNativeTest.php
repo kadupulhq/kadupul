@@ -31,7 +31,7 @@ use Symfony\Component\Process\Process;
 
 final class ManagementCatalogNativeTest extends TestCase
 {
-    private const array TABLES = ['version', 'poller_output_boost', 'settings', 'user_auth', 'user_auth_perms', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_perms', 'user_auth_group_realm', 'host', 'host_template', 'host_template_graph', 'graph_local', 'graph_templates', 'graph_templates_graph', 'graph_templates_item', 'graph_template_input', 'graph_template_input_defs', 'data_local', 'data_template', 'data_template_data', 'data_template_rrd', 'data_source_profiles', 'aggregate_graphs', 'aggregate_graphs_items', 'aggregate_graph_templates', 'reports', 'plugin_config', 'snmp_query', 'snmp_query_graph', 'snmp_query_graph_rrd', 'cdef', 'vdef'];
+    private const array TABLES = ['version', 'poller_output_boost', 'poller_output', 'settings', 'user_auth', 'user_auth_perms', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_perms', 'user_auth_group_realm', 'host', 'host_template', 'host_template_graph', 'graph_local', 'graph_templates', 'graph_templates_graph', 'graph_templates_item', 'graph_template_input', 'graph_template_input_defs', 'data_local', 'data_template', 'data_template_data', 'data_template_rrd', 'data_source_profiles', 'aggregate_graphs', 'aggregate_graphs_items', 'aggregate_graph_templates', 'reports', 'plugin_config', 'snmp_query', 'snmp_query_graph', 'snmp_query_graph_rrd', 'cdef', 'vdef'];
     private ?\PDO $admin = null;
     private string $schema = '';
     private Connection $database;
@@ -270,7 +270,7 @@ final class ManagementCatalogNativeTest extends TestCase
         mkdir($directory . '/include', 0700, true);
         $localSchema = 'diagnostic_local_' . bin2hex(random_bytes(8));
         $this->admin->exec('CREATE DATABASE `' . $localSchema . '`');
-        foreach (['version', 'poller_output_boost'] as $table) {
+        foreach (['version', 'poller_output_boost', 'poller_output'] as $table) {
             $this->admin->exec('CREATE TABLE `' . $localSchema . '`.`' . $table . '` LIKE `' . $this->schema . '`.`' . $table . '`');
         }
         $this->admin->exec("INSERT INTO `$localSchema`.version (cacti) VALUES ('1.3.0')");
@@ -293,10 +293,19 @@ final class ManagementCatalogNativeTest extends TestCase
                 self::assertSame($this->schema, $configuration->values()['database']);
                 self::assertSame($parameters['host'], $configuration->values()['host']);
             }
-            $this->admin->exec("INSERT INTO `$localSchema`.poller_output_boost (local_data_id, rrd_name, time, output) VALUES (1, 'test', '2026-10-26 00:00:00', '1')");
-            $this->expectException(\RuntimeException::class);
-            $this->expectExceptionMessage('Sites administration requires an online collector with a reachable primary.');
-            (new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory, $requests))->values();
+            foreach (['poller_output', 'poller_output_boost'] as $queue) {
+                $this->admin->exec("INSERT INTO `$localSchema`.`$queue` (local_data_id, rrd_name, time, output) VALUES (1, 'test', '2026-10-26 00:00:00', '1')");
+                $failure = null;
+                try {
+                    (new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory, $requests))->values();
+                } catch (\RuntimeException $error) {
+                    $failure = $error;
+                }
+                self::assertInstanceOf(\RuntimeException::class, $failure, $queue);
+                self::assertSame('Sites administration requires an online collector with a reachable primary.', $failure->getMessage());
+                $this->admin->exec("TRUNCATE `$localSchema`.`$queue`");
+                self::assertSame($this->schema, (new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration($directory, $requests))->values()['database']);
+            }
         } finally {
             $this->admin->exec('DROP DATABASE IF EXISTS `' . $localSchema . '`');
             unlink($directory . '/include/config.php');
