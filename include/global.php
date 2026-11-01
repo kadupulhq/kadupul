@@ -312,17 +312,10 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
     if (!isset($rdatabase_ssl_cert)) $rdatabase_ssl_cert = false;
     if (!isset($rdatabase_ssl_ca))   $rdatabase_ssl_ca   = false;
 
-    // Check for recovery
-    if (is_object($local_db_cnn_id)) {
-        $boost_records = db_fetch_cell('SELECT COUNT(*)
-			FROM poller_output_boost', '', true, $local_db_cnn_id);
-
-        $output_records = db_fetch_cell('SELECT EXISTS(SELECT 1 FROM poller_output LIMIT 1)', '', true, $local_db_cnn_id);
-
-        // An unreadable queue is not evidence that recovery has finished.
-        if ($boost_records === false || $output_records === false || $boost_records > 0 || $output_records > 0) {
-            $config['connection'] = 'recovery';
-        }
+    // Unconfirmed read-only queue health retains local recovery. Do not use
+    // the worker's throwing mutation wrappers for this availability probe.
+    if (is_object($local_db_cnn_id) && db_collector_recovery_required($local_db_cnn_id)) {
+        $config['connection'] = 'recovery';
     }
 
     /* gather the existing cactidb version */
