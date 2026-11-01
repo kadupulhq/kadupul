@@ -228,3 +228,10 @@ the old serialization and cannot repair previously stored values.
 - Acceptance: all five request-URI refresh paths render without warnings when the SAPI omits the URI, retaining existing refresh and logout decisions.
 - Verification: PHP 8.4.25 runs 16 native include/render cases with 80 assertions for missing and supplied URIs and existing login/session cases; five fail against the original source. Session helpers are recording boundaries; no browser execution is claimed.
 - Scope: main compatibility fragment; LTS already uses the same empty fallback. No deployment or data migration.
+
+### Administrative database target handoff
+
+- Status: implemented.
+- Acceptance: a server-captured target binds collector identity, connection state, host, port and the actual selected SQL schema. A stale token cannot select another connection or admit a schema changed with `USE`.
+- Scope: shared Platform capabilities only. Existing administrative routes are unchanged; each consumer must bind its displayed form target and pass the original server capture before this protects a workflow. These capabilities do not authenticate or authorize an actor.
+- Verification: actual two-schema selection regressions run on MariaDB 10.11 and MySQL 8.4 with direct PHP 8.4.25. Current-head CI and consumer integration remain merge and rollout gates. No schema, runtime or dependency changes; reverting removes the unused capability before consumers adopt it.

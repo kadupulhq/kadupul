@@ -258,6 +258,7 @@ jobs:
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
         php -d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite --configuration=phpunit-database.xml --colors=never
         php Symfony/data_input_lock_probe.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --fail-on-skipped --bootstrap ../include/vendor/autoload.php Symfony/DatabaseTargetNativeTest.php
         php Support/verify_row_cache.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/reference-transaction-phpunit" Symfony/LegacyReferenceWriteTransactionNativeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --cache-directory="$RUNNER_TEMP/collector-cleanup-phpunit.cache" Symfony/DeviceCollectorJournalNativeTest.php
