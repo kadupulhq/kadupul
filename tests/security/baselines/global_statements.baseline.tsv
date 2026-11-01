@@ -22,7 +22,6 @@ cli/md5sum.php	3	5
 cli/poller_reindex_hosts.php	1	1
 cli/rebuild_poller_cache.php	5	9
 cli/remove_device.php	1	1
-cli/reorder_data_query.php	1	1
 cli/repair_database.php	8	35
 cli/splice_rrd.php	8	13
 cli/sqltable_to_php.php	1	2

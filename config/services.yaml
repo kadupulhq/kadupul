@@ -381,6 +381,11 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalDataSourceTitleCatalog
     Kadupul\Graphing\Application\Port\DataSourceTitleReapplier:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDataSourceTitleReapplier
+    Kadupul\Graphing\Application\Command\ReorderDataQueries: ~
+    Kadupul\Graphing\Application\Port\DataQueryIndexCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalDataQueryIndexCatalog
+    Kadupul\Graphing\Application\Port\DataQueryIndexReorderer:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDataQueryIndexReorderer
     Kadupul\Graphing\Application\Command\RepairGraphItems: ~
     Kadupul\Graphing\Application\Command\RemoveBrokenGraphs: ~
     Kadupul\Graphing\Application\Port\BrokenGraphCatalog:

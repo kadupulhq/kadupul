@@ -20,6 +20,10 @@ STALE = 'stale title'
 SOURCES_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_data_sources_reapply_names.php'
 SOURCES_SHIM = 'cli/poller_data_sources_reapply_names.php'
 SOURCES_PREFIX = 'kadupul_parity_source_'
+REORDER_UTILITY = 'Kadupul Reorder Data Query Utility'
+REORDER_ORIGINAL = 'tests/Fixtures/legacy-cli/reorder_data_query.php'
+REORDER_SHIM = 'cli/reorder_data_query.php'
+REORDER_PREFIX = 'kadupul_parity_reorder_'
 REPAIR_ORIGINAL = 'tests/Fixtures/legacy-cli/repair_graphs.php'
 REPAIR_SHIM = 'cli/repair_graphs.php'
 BROKEN_ORIGINAL = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php'
@@ -310,6 +314,155 @@ def verify_sources_differences(harness, check):
     finally:
         harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
     sources_reset(harness)
+
+def reorder_seed(harness):
+    """Three devices and two data queries. core and edge have the first query with a stored sort field; core also has the second with none stored, whose data source stops a run; far has no data query. Every stored index is stale."""
+    reorder_reset(harness)
+    harness.sql(
+        f"INSERT INTO host (description, hostname) VALUES ('{REORDER_PREFIX}core', '{REORDER_PREFIX}core.example'), ('{REORDER_PREFIX}edge', '{REORDER_PREFIX}edge.example'), ('{REORDER_PREFIX}far', '{REORDER_PREFIX}far.example'); "
+        f"INSERT INTO data_input (hash, name) VALUES ('{'0' * 31}7', '{REORDER_PREFIX}input'); "
+        f"INSERT INTO data_template (hash, name) VALUES ('{'0' * 31}8', '{REORDER_PREFIX}Traffic');")
+    ids = {name: int(harness.sql(f"SELECT id FROM host WHERE description = '{REORDER_PREFIX}{name}'").strip()) for name in ('core', 'edge', 'far')}
+    ids['input'] = int(harness.sql(f"SELECT id FROM data_input WHERE name = '{REORDER_PREFIX}input'").strip())
+    ids['template'] = int(harness.sql(f"SELECT id FROM data_template WHERE name = '{REORDER_PREFIX}Traffic'").strip())
+    for position, code in enumerate(('index_type', 'index_value', 'output_type'), start=1):
+        harness.sql(f"INSERT INTO data_input_fields (hash, data_input_id, name, data_name, input_output, type_code) VALUES ('{'0' * 30}{position}9', {ids['input']}, '{REORDER_PREFIX}{code}', '{code}', 'in', '{code}')")
+        ids[code] = int(harness.sql(f"SELECT id FROM data_input_fields WHERE data_input_id = {ids['input']} AND type_code = '{code}'").strip())
+    for number in ('one', 'two'):
+        harness.sql(f"INSERT INTO snmp_query (hash, xml_path, name, data_input_id) VALUES ('{'0' * 28}{number[:3]}0', '', '{REORDER_PREFIX}{number}', {ids['input']})")
+        ids[number] = int(harness.sql(f"SELECT id FROM snmp_query WHERE name = '{REORDER_PREFIX}{number}'").strip())
+    harness.sql(
+        f"INSERT INTO host_snmp_query (host_id, snmp_query_id, sort_field, title_format) VALUES ({ids['core']}, {ids['one']}, 'ifName', ''), ({ids['edge']}, {ids['one']}, 'ifDescr', ''), ({ids['core']}, {ids['two']}, '', ''); "
+        f"INSERT INTO host_snmp_cache (host_id, snmp_query_id, field_name, field_value, snmp_index, oid) VALUES "
+        f"({ids['core']}, {ids['one']}, 'ifName', 'eth1', '1', ''), ({ids['core']}, {ids['one']}, 'ifName', 'eth2', '2', ''), ({ids['edge']}, {ids['one']}, 'ifDescr', 'port 1', '1', '')")
+    # (host, query, snmp_index, output type): the second core row has no cached value, so its index is left alone; far has no data query row at all.
+    for host, query, index, label, output in ((ids['core'], ids['one'], '1', 'core-1', '77'), (ids['core'], ids['one'], '2', 'core-2', '78'), (ids['core'], ids['one'], '9', 'core-9', '79'),
+                                              (ids['core'], ids['two'], '1', 'core-q2', '80'), (ids['edge'], ids['one'], '1', 'edge-1', '81'), (ids['far'], ids['one'], '1', 'far-1', '82')):
+        harness.sql(f'INSERT INTO data_local (data_template_id, host_id, snmp_query_id, snmp_index) VALUES ({ids["template"]}, {host}, {query}, \'{index}\')')
+        local = int(harness.sql('SELECT MAX(id) FROM data_local').strip())
+        harness.sql(f"INSERT INTO data_template_data (local_data_id, data_template_id, data_input_id, name, name_cache) VALUES ({local}, {ids['template']}, {ids['input']}, '{REORDER_PREFIX}{label}', '{REORDER_PREFIX}{label}')")
+        template_data = int(harness.sql('SELECT MAX(id) FROM data_template_data').strip())
+        harness.sql(f"INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) VALUES ({ids['output_type']}, {template_data}, '', '{output}')")
+    return ids
+
+
+def reorder_reset(harness):
+    harness.sql(
+        f"DELETE FROM data_input_data WHERE data_template_data_id IN (SELECT id FROM data_template_data WHERE name LIKE '{REORDER_PREFIX}%'); "
+        f"DELETE FROM data_template_data WHERE name LIKE '{REORDER_PREFIX}%'; "
+        f"DELETE FROM data_local WHERE data_template_id IN (SELECT id FROM data_template WHERE name LIKE '{REORDER_PREFIX}%'); "
+        f"DELETE FROM host_snmp_cache WHERE host_id IN (SELECT id FROM host WHERE description LIKE '{REORDER_PREFIX}%'); "
+        f"DELETE FROM host_snmp_query WHERE host_id IN (SELECT id FROM host WHERE description LIKE '{REORDER_PREFIX}%'); "
+        f"DELETE FROM snmp_query WHERE name LIKE '{REORDER_PREFIX}%'; "
+        f"DELETE FROM data_input_fields WHERE name LIKE '{REORDER_PREFIX}%'; "
+        f"DELETE FROM data_input WHERE name LIKE '{REORDER_PREFIX}%'; "
+        f"DELETE FROM host WHERE description LIKE '{REORDER_PREFIX}%'; "
+        f"DELETE FROM data_template WHERE name LIKE '{REORDER_PREFIX}%'")
+
+
+def reorder_rows(harness):
+    """What a run can change: the stored index of each data source and the sort field of each device's data query."""
+    return (harness.sql(f"SELECT dtd.name, did.data_input_field_id, did.value FROM data_input_data did JOIN data_template_data dtd ON dtd.id = did.data_template_data_id WHERE dtd.name LIKE '{REORDER_PREFIX}%' ORDER BY dtd.name, did.data_input_field_id")
+            + harness.sql(f"SELECT h.description, hsq.snmp_query_id, hsq.sort_field, hsq.title_format FROM host_snmp_query hsq JOIN host h ON h.id = hsq.host_id WHERE h.description LIKE '{REORDER_PREFIX}%' ORDER BY h.description, hsq.snmp_query_id"))
+
+
+def reorder_stale(harness, ids):
+    """Every run starts from stale stored indexes and the seeded sort fields."""
+    harness.sql(
+        f"DELETE FROM data_input_data WHERE data_input_field_id IN ({ids['index_type']}, {ids['index_value']}) AND data_template_data_id IN (SELECT id FROM data_template_data WHERE name LIKE '{REORDER_PREFIX}%'); "
+        f"INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) SELECT {ids['index_type']}, id, '', 'stale' FROM data_template_data WHERE name LIKE '{REORDER_PREFIX}%'; "
+        f"INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) SELECT {ids['index_value']}, id, '', 'stale' FROM data_template_data WHERE name LIKE '{REORDER_PREFIX}%'; "
+        f"UPDATE host_snmp_query SET sort_field = CASE WHEN snmp_query_id = {ids['two']} THEN '' WHEN host_id = {ids['edge']} THEN 'ifDescr' ELSE 'ifName' END, title_format = '' WHERE host_id IN ({ids['core']}, {ids['edge']})")
+
+
+def reorder_cases(ids):
+    core, edge, far, one, two = (str(ids[name]) for name in ('core', 'edge', 'far', 'one', 'two'))
+    return [
+        ('reorder one device and query', [f'--host-id={core}', f'--qid={one}']),
+        ('reorder with the short flags', [f'-id={edge}', f'-qid={one}']),
+        ('reorder with the id flag', [f'--id={edge}', f'--qid={one}']),
+        ('reorder every device of a query', ['--host-id=all', f'--qid={one}']),
+        ('reorder every device in capitals', ['--host-id=ALL', f'--qid={one}']),
+        ('reorder a query only', [f'--qid={one}']),
+        ('reorder with leading zeros', [f'--host-id=00{edge}', f'--qid=0{one}']),
+        ('reorder a device with no data query row', [f'--host-id={far}', f'--qid={one}']),
+        ('reorder a device that has no data sources', ['--host-id=999999', f'--qid={one}']),
+        ('reorder a query that has no data sources', [f'--host-id={core}', '--qid=999999']),
+        ('reorder a query whose sort field is not stored', [f'--host-id={core}', f'--qid={two}']),
+        ('reorder with a debug flag', [f'--host-id={core}', f'--qid={one}', '--debug']),
+        ('reorder with the short debug flag', [f'--host-id={edge}', f'--qid={one}', '-d']),
+        ('reorder debug with nothing selected', ['--host-id=999999', f'--qid={one}', '-d']),
+        ('reorder debug stopping at a data query', [f'--host-id={core}', f'--qid={two}', '--debug']),
+        ('reorder a bare device flag', ['--host-id', f'--qid={one}']),
+        ('reorder an empty device', ['--host-id=', f'--qid={one}']),
+        ('reorder device zero', ['--host-id=0', f'--qid={one}']),
+        ('reorder a negative device', ['--host-id=-1', f'--qid={one}']),
+        ('reorder a device list', [f'--host-id={core},{edge}', f'--qid={one}']),
+        ('reorder a device that is not a number', ['--host-id=abc', f'--qid={one}']),
+        ('reorder a missing query', [f'--host-id={core}']),
+        ('reorder a bare query flag', [f'--host-id={core}', '--qid']),
+        ('reorder an empty query', [f'--host-id={core}', '--qid=']),
+        ('reorder query zero', [f'--host-id={core}', '--qid=0']),
+        ('reorder a query that is not a number', [f'--host-id={core}', '--qid=invalid']),
+        ('reorder the host is judged before the query', ['--host-id=0']),
+        ('reorder with only a debug flag', ['--debug']),
+        ('reorder usage', []),
+        ('reorder help', ['-h']),
+        ('reorder long help', ['--help']),
+        ('reorder short help', ['-H']),
+        ('reorder version', ['-V']),
+        ('reorder lower version', ['-v']),
+        ('reorder long version', ['--version']),
+        ('reorder unknown flag', ['--bogus']),
+        ('reorder unknown flag after a valid one', [f'--host-id={core}', '--bogus=1']),
+        ('reorder help stops before a later error', ['-h', '--bogus']),
+    ]
+
+
+def verify_reorder_cases(harness, check):
+    ids = reorder_seed(harness)
+    for label, arguments in reorder_cases(ids):
+        reorder_stale(harness, ids)
+        original = run(harness, REORDER_ORIGINAL, arguments)
+        original_rows = reorder_rows(harness)
+        reorder_stale(harness, ids)
+        native = run(harness, REORDER_SHIM, arguments)
+        native_rows = reorder_rows(harness)
+        # Only an argument error loses the version line; the rest must match byte for byte.
+        expected = without_version(normalise(original['stdout']), REORDER_UTILITY) if label in ('reorder unknown flag', 'reorder unknown flag after a valid one') else normalise(original['stdout'])
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+        check(normalise(original['stderr']) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same indexes')
+    reorder_reset(harness)
+
+
+def verify_reorder_differences(harness, check):
+    ids = reorder_seed(harness)
+    reorder_stale(harness, ids)
+    stale = reorder_rows(harness)
+    reordered = run(harness, REORDER_SHIM, [f"--host-id={ids['core']}", f"--qid={ids['one']}"])
+    rows = reorder_rows(harness)
+    check(reordered['exit'] == 0 and rows != stale and 'ifName' in rows, 'a reorder stores the index field and value for a cached index')
+
+    dry = run(harness, 'bin/console', ['kadupul:data-query:reorder', '--host-id=all', f"--qid={ids['one']}", '--dry-run', '--json'])
+    reorder_stale(harness, ids)
+    check(dry['exit'] == 0 and '"dry_run":true' in dry['stdout'] and reorder_rows(harness) == stale, 'a reorder dry run lists the items and reorders none')
+
+    stopped = run(harness, 'bin/console', ['kadupul:data-query:reorder', f"--host-id={ids['core']}", f"--qid={ids['two']}", '--json'])
+    check(stopped['exit'] == 1 and f'"host_id":{ids["core"]}' in stopped['stdout'] and '"status":"partial"' in stopped['stdout'], 'a reorder that cannot find a sort field names the device and query it stopped at')
+
+    # The original needed no operator; the shim acts as admin_user and needs realm 3.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    try:
+        denied = run(harness, REORDER_SHIM, ['--host-id=all', f"--qid={ids['one']}"])
+        check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', 'a reorder without device management is refused')
+        check(reorder_rows(harness) == stale, 'a refused reorder changes no index')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    reorder_reset(harness)
+
 
 
 def repair_seed(harness):
@@ -1281,6 +1434,7 @@ def verify_add_graphs_differences(harness, check):
 def verify_graph_parity(harness, check):
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, SOURCES_ORIGINAL)
+    install_original(harness, REORDER_ORIGINAL)
     install_original(harness, REPAIR_ORIGINAL)
     install_original(harness, BROKEN_ORIGINAL)
     install_original(harness, REMOVE_ORIGINAL)
@@ -1298,6 +1452,8 @@ def verify_graph_parity(harness, check):
         verify_titles_differences(harness, check)
         verify_sources_cases(harness, check)
         verify_sources_differences(harness, check)
+        verify_reorder_cases(harness, check)
+        verify_reorder_differences(harness, check)
         verify_repair_cases(harness, check)
         verify_repair_differences(harness, check)
         verify_broken_cases(harness, check)
@@ -1313,6 +1469,7 @@ def verify_graph_parity(harness, check):
     finally:
         titles_reset(harness)
         sources_reset(harness)
+        reorder_reset(harness)
         repair_reset(harness)
         broken_reset(harness)
         tree_reset(harness)

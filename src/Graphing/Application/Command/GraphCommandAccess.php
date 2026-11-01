@@ -29,6 +29,12 @@ final readonly class GraphCommandAccess
         private AuditTrail $trail,
     ) {}
 
+    /** A tool that ran on the main data collector only asks this before it reads anything. */
+    public function isRemoteCollector(): bool
+    {
+        return $this->topology->isRemoteCollector();
+    }
+
     /** One identifier ties together the records of a single run. */
     public function correlation(): string
     {

@@ -7,165 +7,18 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-require(__DIR__ . '/../include/cli_check.php');
-require_once($config['base_path'] . '/lib/snmp.php');
-require_once($config['base_path'] . '/lib/data_query.php');
-
-ini_set('max_execution_time', '0');
-
-if ($config['poller_id'] > 1) {
-    print "FATAL: This utility is designed for the main Data Collector only" . PHP_EOL;
-    exit(1);
-}
-
-/* process calling arguments */
-$parms = $_SERVER['argv'];
-array_shift($parms);
-
-$debug		= false;
-$host_id	= 'all';
-$query_id	= false;
-$host_descr	= '';
-
-if (cacti_sizeof($parms)) {
-    foreach ($parms as $parameter) {
-        if (strpos($parameter, '=')) {
-            list($arg, $value) = explode('=', $parameter, 2);
-        } else {
-            $arg = $parameter;
-            $value = '';
-        }
-
-        switch ($arg) {
-            case '-id':
-            case '--id':
-            case '--host-id':
-                $host_id = $value;
-                break;
-            case '-qid':
-            case '--qid':
-                $query_id = $value;
-                break;
-            case '-d':
-            case '--debug':
-                $debug = true;
-                break;
-            case '--version':
-            case '-V':
-            case '-v':
-                display_version();
-                exit(0);
-            case '--help':
-            case '-H':
-            case '-h':
-                display_help();
-                exit(0);
-            default:
-                print 'ERROR: Invalid Parameter ' . $parameter . "\n\n";
-                display_help();
-                exit(1);
-        }
+// Forwarding shim: arguments, output and exit codes match the original script.
+// The behavior now lives in bin/console kadupul:data-query:reorder; the frozen
+// original, kept for parity, is tests/Fixtures/legacy-cli/reorder_data_query.php.
+if (PHP_SAPI !== 'cli') {
+    if (!headers_sent()) {
+        http_response_code(404);
     }
-} else {
-    print "ERROR: You must supply input parameters\n\n";
-    display_help();
-    exit(1);
+    exit;
 }
-
-
-$sql_where = "WHERE data_input_fields.type_code='output_type'";
-
-/* determine the hosts to reindex */
-if (strtolower($host_id) == 'all') {
-    /* NOP */
-} else {
-    if (!ctype_digit((string) $host_id) || (int) $host_id < 1) {
-        fwrite(STDERR, "ERROR: --host-id must be a positive integer or 'all'.\n");
-        exit(1);
-    }
-
-    $sql_where .= ' AND data_local.host_id = ' . (int) $host_id;
-}
-
-/* determine data queries to rerun */
-if ($query_id === false || (strtolower((string) $query_id) !== 'all' && (!ctype_digit((string) $query_id) || (int) $query_id < 1))) {
-    fwrite(STDERR, "ERROR: --qid must be a positive query ID or 'all'.\n");
-    exit(1);
-}
-
-if (strtolower((string) $query_id) !== 'all') {
-    $sql_where .= ' AND data_local.snmp_query_id = ' . (int) $query_id;
-}
-
-/* get all object that have to be scanned */
-$data_queries = db_fetch_assoc("SELECT data_local.host_id, data_local.snmp_query_id,
-	data_local.snmp_index, data_template_data.local_data_id, data_template_data.data_input_id,
-	data_input_data.data_template_data_id, data_input_data.data_input_field_id, data_input_data.value
-	FROM data_local
-	LEFT JOIN data_template_data
-	ON data_local.id=data_template_data.local_data_id
-	LEFT JOIN data_input_fields
-	ON data_template_data.data_input_id = data_input_fields.data_input_id
-	LEFT JOIN data_input_data
-	ON data_template_data.id = data_input_data.data_template_data_id
-	AND data_input_fields.id = data_input_data.data_input_field_id
-	$sql_where");
-
-/* issue warnings and start message if applicable */
-print "WARNING: Do not interrupt this script.  Reordering can take quite some time\n";
-debug("There are '" . cacti_sizeof($data_queries) . "' data query index items to run");
-
-$i = 1;
-if (cacti_sizeof($data_queries)) {
-    foreach ($data_queries as $data_query) {
-        if (!$debug) print '.';
-        /* fetch current index_order from data_query XML definition and put it into host_snmp_query */
-        update_data_query_sort_cache($data_query['host_id'], $data_query['snmp_query_id']);
-        /* build array required for function call */
-        $data_query['snmp_index_on'] = get_best_data_query_index_type($data_query['host_id'], $data_query['snmp_query_id']);
-        if ($data_query['snmp_index_on'] === false || $data_query['snmp_index_on'] === '') {
-            fwrite(STDERR, 'ERROR: Unable to determine sort field for Device[' . $data_query['host_id'] . '] and DQ[' . $data_query['snmp_query_id'] . '].' . PHP_EOL);
-            exit(1);
-        }
-        /* as we request the output_type, 'value' gives the snmp_query_graph_id */
-        $data_query['snmp_query_graph_id'] = $data_query['value'];
-        debug(
-            "Data Query #'" . $i . "' host: '" . $data_query['host_id'] .
-            "' SNMP Query Id: '" . $data_query['snmp_query_id'] .
-            "' Index: " . $data_query['snmp_index'] .
-            "' Index On: " . $data_query['snmp_index_on']
-        );
-        update_snmp_index_order($data_query);
-        $i++;
-    }
-}
-
-/*  display_version - displays version information */
-function display_version()
-{
-    $version = get_cacti_cli_version();
-    print "Kadupul Reorder Data Query Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
-}
-
-/*	display_help - displays the usage of the function */
-function display_help()
-{
-    display_version();
-
-    print "\nusage: reorder_data_query.php --host-id=[id|all] --qid=[query_id|all] [--debug|-d]\n\n";
-    print "A utility to Re-order Kadupul Data Queries for a Device or system in batch mode.\n\n";
-    print "Required:\n";
-    print "    --host-id=N|all - The Device id to be reindexed, or 'all' for every Device.\n";
-    print "    --qid=query_id|all - The query id to reindex, or 'all' for every query.\n\n";
-    print "Optional:\n";
-    print "    --debug | -d   - Display verbose output during execution\n\n";
-}
-
-function debug($message)
-{
-    global $debug;
-
-    if ($debug) {
-        print "DEBUG: " . trim($message) . "\n";
-    }
-}
+require dirname(__DIR__) . '/include/vendor/autoload.php';
+exit(\Kadupul\Platform\Infrastructure\Symfony\Console\LegacyCli::run(
+    'kadupul:data-query:reorder',
+    \Kadupul\Graphing\Infrastructure\Symfony\ReorderDataQueriesLegacyArguments::class,
+    $_SERVER['argv'],
+));
