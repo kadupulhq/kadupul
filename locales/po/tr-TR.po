@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4777,11 +4777,11 @@ msgstr "Şu anda yalnızca Yükleme / Yükseltme ayrıcalıklarına sahip Kadupu
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Devam eden bir Kurulum veya Yükseltme var."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Bu Veri Toplayıcı&#39;nın en son ana Kadupul sitesiyle tam olarak eşitlendiği."
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Ana Veri Toplayıcı Çevrimdışı veya Kurtarma Durumuna geçti"
 
@@ -12470,11 +12470,11 @@ msgstr "' %s' Veri Kaynağı için bir XML çıktı sütunu seçmeli ve onay kut
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Grafik Şablonunuz kullanımda Veri Şablonları içermiyor. Lütfen Grafik Şablonunuzu düzeltin"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Şifre alanı uzunluğu belirlenemedi, şifreyi bozabileceğinden devam edemiyor"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Şifre alanı uzunluğu değiştirilemedi, şifreyi bozabileceğinden devam edemiyor"
 

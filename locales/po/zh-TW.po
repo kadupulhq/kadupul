@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -5481,11 +5481,11 @@ msgstr "此時只有具有安裝/升級權限的Kadupul管理員才能登錄"
 msgid "There is an Installation or Upgrade in progress."
 msgstr "正在進行安裝或升級。"
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "此數據收集器最後一次與主Kadupul站點完全同步。"
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr ""
 
@@ -14591,12 +14591,12 @@ msgstr "您必須為數據源'%s'選擇XML輸出列，並將復選框切換到�
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的圖表模板尚未使用數據模板。請更正您的圖表模板"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 #, fuzzy
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "無法確定密碼字段長度，無法繼續，因為可能會損壞密碼"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 #, fuzzy
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "無法更改密碼字段長度，無法繼續，因為可能會損壞密碼"

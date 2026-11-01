@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4770,11 +4770,11 @@ msgstr "Μόνο οι διαχειριστές Kadupul με δικαιώματα
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Υπάρχει μια εγκατάσταση ή αναβάθμιση σε εξέλιξη."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Την τελευταία φορά που αυτός ο Συλλέκτης Δεδομένων συντάχθηκε πλήρως με τον κύριο ιστότοπο του Kadupul."
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Ο κύριος συλλέκτης δεδομένων έχει μεταβεί σε κατάσταση εκτός σύνδεσης ή ανάκτησης"
 
@@ -12439,11 +12439,11 @@ msgstr "Πρέπει να επιλέξετε μια στήλη εξόδου XML 
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Το πρότυπο γραφήματος δεν χρησιμοποιεί πρότυπα δεδομένων. Διορθώστε το πρότυπο γραφήματος"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "Αποτυχία προσδιορισμού του μήκους πεδίου κωδικού πρόσβασης, δεν μπορεί να συνεχιστεί καθώς μπορεί να καταστραφεί ο κωδικός πρόσβασης"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "Αποτυχία αλλαγής του μήκους πεδίου κωδικού πρόσβασης, δεν μπορεί να συνεχιστεί καθώς μπορεί να καταστραφεί ο κωδικός πρόσβασης"
 

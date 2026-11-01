@@ -181,8 +181,11 @@ function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'onli
         $assignments .= '$' . $name . ' = ' . var_export($value, true) . ';';
     }
 
-    $code = '$calls = array();'
-        . 'function db_connect_real() { $GLOBALS["calls"][] = func_get_args(); return new \stdClass(); }'
+    $databaseSource = file_get_contents(dirname(__DIR__, 4) . '/lib/database.php');
+    expect($databaseSource)->not->toBeFalse();
+    $probe = \test_php_function_source($databaseSource, 'db_collector_recovery_required');
+    $code = $probe . '$calls = array();'
+        . 'function db_connect_real() { $GLOBALS["calls"][] = func_get_args(); $pdo = new \PDO("sqlite::memory:"); $pdo->exec("CREATE TABLE poller_output_boost(output TEXT)"); $pdo->exec("CREATE TABLE poller_output(output TEXT)"); return $pdo; }'
         . 'function db_fetch_cell($sql, $a = "", $b = true, $c = false) { return strpos($sql, "version") !== false ? "1.2.31" : 0; }'
         . '$config = array("poller_id" => ' . (int) $poller_id . ', "connection" => "online", "is_web" => false);'
         . '$conn_mode = ' . var_export($conn_mode, true) . ';'

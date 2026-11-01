@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4866,11 +4866,11 @@ msgstr "يمكن لمسؤولي Kadupul فقط مع امتياز تثبيت / ت
 msgid "There is an Installation or Upgrade in progress."
 msgstr "يوجد تثبيت أو ترقية قيد التقدم."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "عاد جامع البيانات الرئيسي إلى حالة اتصال"
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "انتقل جامع البيانات الرئيسي إلى حالة غير متصل أو استرداد"
 
@@ -12561,11 +12561,11 @@ msgstr "يجب عليك تحديد عمود إخراج XML لمصدر البيا
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "لا يحتوي قالب الرسم البياني على قوالب بيانات قيد الاستخدام. يرجى تصحيح قالب الرسم البياني الخاص بك"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "فشل في تحديد طول حقل كلمة المرور ، لا يمكن الاستمرار كما قد تلف كلمة المرور"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "فشل في تعديل طول حقل كلمة المرور ، لا يمكن الاستمرار كما قد تلف كلمة المرور"
 
