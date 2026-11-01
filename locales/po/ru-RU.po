@@ -685,7 +685,7 @@ msgstr "Шаблон"
 #: host.php:1827 host.php:1896 lib/api_automation.php:203
 #: lib/api_automation.php:221 lib/api_automation.php:512
 #: lib/api_automation.php:529 lib/api_automation.php:1242
-#: lib/api_automation.php:1260 lib/auth.php:3299 lib/auth.php:3347
+#: lib/api_automation.php:1260 lib/auth.php:3302 lib/auth.php:3350
 #: lib/html.php:2466 lib/html.php:2489 lib/html.php:2527 lib/html.php:2557
 #: lib/html_reports.php:994 lib/html_reports.php:998 lib/html_reports.php:1113
 #: lib/html_reports.php:1123 lib/html_reports.php:2043 managers.php:503
@@ -717,8 +717,8 @@ msgstr "Любой"
 #: include/global_settings.php:1329 include/global_settings.php:1992
 #: lib/api_automation.php:204 lib/api_automation.php:513
 #: lib/api_automation.php:530 lib/api_automation.php:685
-#: lib/api_automation.php:1243 lib/auth.php:3302 lib/auth.php:3350
-#: lib/auth.php:3395 lib/html.php:257 lib/html.php:2467 lib/html.php:2487
+#: lib/api_automation.php:1243 lib/auth.php:3305 lib/auth.php:3353
+#: lib/auth.php:3398 lib/html.php:257 lib/html.php:2467 lib/html.php:2487
 #: lib/html.php:2528 lib/html.php:2558 lib/html_form.php:432
 #: lib/html_reports.php:1005 lib/html_reports.php:1009
 #: lib/html_reports.php:1039 lib/html_reports.php:1113
@@ -978,13 +978,13 @@ msgstr "Введите имя пользователя и пароль ниже"
 msgid "Password"
 msgstr "Пароль"
 
-#: auth_login.php:361 include/global_settings.php:2315 lib/auth.php:592
-#: lib/auth.php:614 lib/auth.php:624 lib/auth.php:629 user_admin.php:2276
+#: auth_login.php:361 include/global_settings.php:2315 lib/auth.php:595
+#: lib/auth.php:617 lib/auth.php:627 lib/auth.php:632 user_admin.php:2276
 msgid "Local"
 msgstr "Локальный"
 
-#: auth_login.php:365 include/global_arrays.php:891 lib/auth.php:625
-#: lib/auth.php:630
+#: auth_login.php:365 include/global_arrays.php:891 lib/auth.php:628
+#: lib/auth.php:633
 msgid "LDAP"
 msgstr "LDAP"
 
@@ -3566,7 +3566,7 @@ msgid "The method used to gather information for this Data Input Method."
 msgstr "Метод, используемый для сбора информации для данного Метода ввода данных."
 
 #: data_input.php:1191 host.php:1903 lib/api_automation.php:228
-#: lib/api_automation.php:1267 lib/auth.php:2498 lib/clog_webapi.php:926
+#: lib/api_automation.php:1267 lib/auth.php:2501 lib/clog_webapi.php:926
 #: lib/html_utility.php:1470 lib/import.php:424 lib/plugins.php:1243
 #: lib/plugins.php:1244 lib/rrd.php:4095 lib/rrd.php:4107 lib/spikekill.php:302
 #: package_import.php:561 package_import.php:639 utilities.php:246
@@ -6003,11 +6003,11 @@ msgstr "Неназначенный"
 msgid "No Device Templates Found"
 msgstr "Шаблоны устройств не найдены"
 
-#: include/auth.php:122 lib/auth.php:3689 lib/auth.php:3695 lib/auth.php:3815
-#: lib/auth.php:3840 lib/auth.php:3861 lib/auth.php:3900 lib/auth.php:3909
-#: lib/auth.php:3931 lib/auth.php:3984 lib/auth.php:4018 lib/auth.php:4065
-#: lib/auth.php:4083 lib/auth.php:4127 lib/auth.php:4138
-#: lib/auth.php:4183 lib/auth.php:4280 lib/auth.php:4299 lib/auth.php:4602 lib/auth.php:4641 lib/auth.php:4667 lib/auth.php:4680 lib/auth.php:4704
+#: include/auth.php:122 lib/auth.php:3692 lib/auth.php:3698 lib/auth.php:3818
+#: lib/auth.php:3843 lib/auth.php:3864 lib/auth.php:3903 lib/auth.php:3912
+#: lib/auth.php:3934 lib/auth.php:3987 lib/auth.php:4021 lib/auth.php:4068
+#: lib/auth.php:4086 lib/auth.php:4130 lib/auth.php:4141
+#: lib/auth.php:4186 lib/auth.php:4283 lib/auth.php:4302 lib/auth.php:4605 lib/auth.php:4644 lib/auth.php:4670 lib/auth.php:4683 lib/auth.php:4707
 msgid "Access Denied!  Login Failed."
 msgstr "Доступ запрещен, учетная запись пользователя отключена."
 
@@ -6023,7 +6023,7 @@ msgstr "Вы должны войти в систему, чтобы получи�
 msgid "FATAL: You must be logged in to access this area of Cacti."
 msgstr "Вы должны войти в систему, чтобы получить доступ к этой области кактусов."
 
-#: include/auth.php:307 include/auth.php:309 lib/auth.php:5189
+#: include/auth.php:307 include/auth.php:309 lib/auth.php:5192
 #: permission_denied.php:31 permission_denied.php:33
 msgid "Login Again"
 msgstr "Войти снова"
@@ -12863,119 +12863,119 @@ msgstr "Нет Ping или SNMP Проверка доступности Испо
 msgid "New Branch"
 msgstr "Новый филиал"
 
-#: lib/auth.php:631
+#: lib/auth.php:634
 msgid "Web Basic"
 msgstr "Web Basic"
 
-#: lib/auth.php:2327
+#: lib/auth.php:2330
 msgid "Device:(Hide Disabled)"
 msgstr "Устройство отключено"
 
-#: lib/auth.php:2345 lib/auth.php:2347 lib/auth.php:2353 lib/auth.php:2355
+#: lib/auth.php:2348 lib/auth.php:2350 lib/auth.php:2356 lib/auth.php:2358
 #, fuzzy, php-format
 msgid "Graph:(%s%s)"
 msgstr "График:(%s%с)"
 
-#: lib/auth.php:2368 lib/auth.php:2374 lib/auth.php:2441 lib/auth.php:2443
-#: lib/auth.php:2447 lib/auth.php:2449
+#: lib/auth.php:2371 lib/auth.php:2377 lib/auth.php:2444 lib/auth.php:2446
+#: lib/auth.php:2450 lib/auth.php:2452
 #, fuzzy, php-format
 msgid "Device:(%s%s)"
 msgstr "Устройство:(%s%с)"
 
-#: lib/auth.php:2382 lib/auth.php:2388 lib/auth.php:2457 lib/auth.php:2459
-#: lib/auth.php:2463 lib/auth.php:2465
+#: lib/auth.php:2385 lib/auth.php:2391 lib/auth.php:2460 lib/auth.php:2462
+#: lib/auth.php:2466 lib/auth.php:2468
 #, fuzzy, php-format
 msgid "Template:(%s%s)"
 msgstr "Шаблон:(%s%с)"
 
-#: lib/auth.php:2395
+#: lib/auth.php:2398
 #, fuzzy, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr "График+устройство+шаблон:(%s%с)"
 
-#: lib/auth.php:2432 lib/auth.php:2434
+#: lib/auth.php:2435 lib/auth.php:2437
 #, fuzzy, php-format
 msgid "Device+Template:(%s%s)"
 msgstr "Устройство+шаблон:(%s%с)"
 
-#: lib/auth.php:2478 lib/auth.php:2485 lib/auth.php:2494
+#: lib/auth.php:2481 lib/auth.php:2488 lib/auth.php:2497
 msgid "Restricted By: "
 msgstr "Ограничен: "
 
-#: lib/auth.php:2482
+#: lib/auth.php:2485
 msgid "Granted By: "
 msgstr "Разрешено: "
 
-#: lib/auth.php:2489
+#: lib/auth.php:2492
 msgid "Granted"
 msgstr "Награжденые"
 
-#: lib/auth.php:2491 lib/auth.php:2496
+#: lib/auth.php:2494 lib/auth.php:2499
 msgid "Restricted"
 msgstr "Ограниченный"
 
-#: lib/auth.php:2726 lib/auth.php:2761
+#: lib/auth.php:2729 lib/auth.php:2764
 msgid "Branch:"
 msgstr "Отделение:"
 
-#: lib/auth.php:2735 lib/auth.php:2769 lib/html_tree.php:966
+#: lib/auth.php:2738 lib/auth.php:2772 lib/html_tree.php:966
 #: lib/reports.php:1059
 msgid "Device:"
 msgstr "Устройство:"
 
-#: lib/auth.php:3604 lib/auth.php:3684
+#: lib/auth.php:3607 lib/auth.php:3687
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Доступ запрещен, пожалуйста, свяжитесь с администратором кактусов."
 
-#: lib/auth.php:3649
+#: lib/auth.php:3652
 msgid "Access Denied!  Login Disabled."
 msgstr "Доступ запрещен, учетная запись пользователя отключена."
 
-#: lib/auth.php:3717
+#: lib/auth.php:3720
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Настроена базовая аутентификация Web Basic, но с веб-сервера не было передано ни одного имени пользователя. Убедитесь, что на веб-сервере включена аутентификация."
 
-#: lib/auth.php:3731
+#: lib/auth.php:3734
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti."
 msgstr "%s аутентифицированы веб сервером, но и шаблоны, и гостевые пользователи не определены в Cacti."
 
-#: lib/auth.php:3873 lib/auth.php:4095 lib/auth.php:4292
-#: lib/auth.php:4651
+#: lib/auth.php:3876 lib/auth.php:4098 lib/auth.php:4295
+#: lib/auth.php:4654
 msgid "Access Denied!  No password provided by user."
 msgstr "Доступ запрещен! Пользователь не предоставил пароль."
 
-#: lib/auth.php:4273 lib/auth.php:5387
+#: lib/auth.php:4276 lib/auth.php:5390
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Доступ запрещен! Идентификатор пользователя шаблона %s не существует.  Обратитесь к администратору."
 
-#: lib/auth.php:4720
+#: lib/auth.php:4723
 msgid "Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "Ваш администратор Cacti ввел сложные пароли для входа в систему, и ваш текущий пароль Cacti не соответствует новым требованиям. Поэтому вы должны изменить свой пароль сейчас."
 
-#: lib/auth.php:4751
+#: lib/auth.php:4754
 #, php-format
 msgid "Password must be at least %d characters!"
 msgstr "Пароль должен содержать не менее %d символов!"
 
-#: lib/auth.php:4757
+#: lib/auth.php:4760
 msgid "Your password must contain at least 1 numerical character!"
 msgstr "Ваш пароль должен содержать не менее 1 цифрового символа!"
 
-#: lib/auth.php:4761
+#: lib/auth.php:4764
 msgid "Your password must contain a mix of lower case and upper case characters!"
 msgstr "Ваш пароль должен содержать символы нижнего регистра и верхнего регистра!"
 
-#: lib/auth.php:4767
+#: lib/auth.php:4770
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ваш пароль должен содержать не менее 1 специального символа!"
 
-#: lib/auth.php:5182
+#: lib/auth.php:5185
 msgid "Cacti Login Failure"
 msgstr "Журнал кактусов очищен."
 
-#: lib/auth.php:5469
+#: lib/auth.php:5472
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Аутентификация ранее не устанавливалась. Попытка установить локальную аутентификацию, но учетная запись администратора не найдена."
 

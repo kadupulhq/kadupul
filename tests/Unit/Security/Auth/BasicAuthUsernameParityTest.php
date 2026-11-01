@@ -14,8 +14,10 @@
 
 /*
  * get_basic_auth_username() returns the same user as 1.2.31 for every server
- * variable a web server sets. The HTTP_* request header copies that 1.2.31
- * also read are still ignored.
+ * variable a web server sets, with one intended difference: when REMOTE_USER or
+ * REDIRECT_REMOTE_USER is present it wins over PHP_AUTH_USER, which PHP takes
+ * from the client's Authorization header. The HTTP_* request header copies
+ * that 1.2.31 also read are still ignored.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
@@ -78,7 +80,6 @@ function basic_username_server_variables() : array {
 		'PHP_AUTH_USER only'                 => array('PHP_AUTH_USER' => 'alice'),
 		'REMOTE_USER only'                   => array('REMOTE_USER' => 'alice'),
 		'REDIRECT_REMOTE_USER only'          => array('REDIRECT_REMOTE_USER' => 'alice'),
-		'PHP_AUTH_USER and REMOTE_USER'      => array('PHP_AUTH_USER' => 'alice', 'REMOTE_USER' => 'bob'),
 		'REMOTE_USER and REDIRECT'           => array('REMOTE_USER' => 'alice', 'REDIRECT_REMOTE_USER' => 'bob'),
 		'Kerberos principal'                 => array('PHP_AUTH_USER' => 'alice@EXAMPLE.COM'),
 		'Windows domain user'                => array('PHP_AUTH_USER' => 'CORP\\alice'),
@@ -88,8 +89,13 @@ function basic_username_server_variables() : array {
 }
 
 test('PHP_AUTH_USER is the Web Basic user when the server passes only that', function () {
-	expect(basic_username_run(array('PHP_AUTH_USER' => 'alice')))->toBe('alice')
-		->and(basic_username_run(array('PHP_AUTH_USER' => 'alice', 'REMOTE_USER' => 'bob')))->toBe('alice');
+	expect(basic_username_run(array('PHP_AUTH_USER' => 'alice')))->toBe('alice');
+});
+
+test('a server-set user wins over PHP_AUTH_USER, unlike 1.2.31', function () {
+	expect(basic_username_run(array('PHP_AUTH_USER' => 'alice', 'REMOTE_USER' => 'bob')))->toBe('bob')
+		->and(basic_username_run(array('PHP_AUTH_USER' => 'alice', 'REDIRECT_REMOTE_USER' => 'bob')))->toBe('bob')
+		->and(basic_username_run(array('PHP_AUTH_USER' => 'alice', 'REMOTE_USER' => '')))->toBe('');
 });
 
 test('server variables give the same Web Basic user as 1.2.31', function () {
