@@ -4,7 +4,7 @@
 """Concrete route samples must preserve parent-child bindings and fail closed."""
 import unittest
 from unittest.mock import patch
-from entry_point_authorization import authentication_only, BASELINE, Client, entries, sample, route_fixtures, has_feature_realm
+from entry_point_authorization import authentication_only, BASELINE, Client, entries, sample, route_fixtures, has_feature_realm, probe_guarded_fragment
 
 
 class RouteSamples(unittest.TestCase):
@@ -217,6 +217,32 @@ class RouteSamples(unittest.TestCase):
         route_fixtures(Rig(), [('app.php/inventory/devices/{id}', 'symfony:device', '')], ids)
         self.assertEqual('app.php/inventory/devices/7', sample('app.php/inventory/devices/{id}', '', ids))
         self.assertEqual('app.php/inventory/sites/9', sample('app.php/inventory/sites/{id}', '', ids))
+
+
+class GuardedFragments(unittest.TestCase):
+    def test_every_actor_and_method_reaches_the_direct_guard(self):
+        clients = [(name, unittest.mock.Mock()) for name in ('anonymous', 'norealm', 'console', 'guest')]
+        for _, client in clients:
+            client.request.return_value = {'status': 404, 'body': '', 'admin_layout': False}
+        failures, observed = [], {}
+        self.assertEqual(8, probe_guarded_fragment('install/installer-bootstrap.php', clients, failures, observed))
+        self.assertEqual([], failures)
+        self.assertEqual(8, len(observed))
+        for _, client in clients:
+            self.assertEqual([unittest.mock.call('install/installer-bootstrap.php', None),
+                              unittest.mock.call('install/installer-bootstrap.php', {})], client.request.call_args_list)
+
+    def test_status_content_and_rendering_must_all_match_the_guard(self):
+        for response in ({'status': 200, 'body': '', 'admin_layout': False},
+                         {'status': 403, 'body': '', 'admin_layout': False},
+                         {'status': 404, 'body': 'bootstrap output', 'admin_layout': False},
+                         {'status': 404, 'body': '', 'admin_layout': True}):
+            with self.subTest(response=response):
+                client = unittest.mock.Mock()
+                client.request.return_value = response
+                failures = []
+                probe_guarded_fragment('install/installer-bootstrap.php', [('anonymous', client)], failures, {})
+                self.assertEqual(2, len(failures))
 
 
 class LiveLoginSetup(unittest.TestCase):
