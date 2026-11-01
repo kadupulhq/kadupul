@@ -23,7 +23,9 @@ final class ConsoleInstallationTest extends TestCase
         $user = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: 'root';
         $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: '';
         $database = new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-        $database->exec("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_ENGINE_SUBSTITUTION'");
+        // The shipped legacy DDL contains zero-date defaults. Match its native
+        // import session before creating only these disposable fixture tables.
+        $database->exec("SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES'");
         preg_match_all('/(\w+)=([^;]*)/', substr($dsn, 6), $pairs, PREG_SET_ORDER);
         $options = array_column($pairs, 2, 1);
         $schemas = [];
