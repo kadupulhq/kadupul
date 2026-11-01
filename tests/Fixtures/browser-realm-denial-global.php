@@ -34,9 +34,13 @@ require_once $sourceRoot . '/lib/variables.php';
 
 $database_hostname = 'utility-worker';
 $database_port = '1';
-$database_default = 'owned';
+$workerDsn = getenv('KADUPUL_BROWSER_DENIAL_WORKER_DSN');
+if (!is_string($workerDsn) || preg_match('/(?:^|;)dbname=([^;]+)/', $workerDsn, $workerSchema) !== 1) {
+    throw new RuntimeException('Missing isolated browser-denial schema.');
+}
+$database_default = $workerSchema[1];
 $database_total_queries = 0;
-$database_sessions = ['utility-worker:1:owned' => new PDO(getenv('KADUPUL_BROWSER_DENIAL_WORKER_DSN'), getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION])];
+$database_sessions = [$database_hostname . ':' . $database_port . ':' . $database_default => new PDO($workerDsn, getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION])];
 $version = trim((string) file_get_contents($sourceRoot . '/include/cacti_version'));
 if (!defined('CACTI_VERSION')) {
     define('CACTI_VERSION', $version);
