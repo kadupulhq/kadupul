@@ -34,6 +34,9 @@ REMOVE_SHIM = 'cli/remove_graphs.php'
 ADD_TEMPLATE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_graph_template.php'
 ADD_TEMPLATE_SHIM = 'cli/add_graph_template.php'
 ADD_TEMPLATE_UTILITY = 'Kadupul Add Graph Template Utility'
+ADD_QUERY_ORIGINAL = 'tests/Fixtures/legacy-cli/add_data_query.php'
+ADD_QUERY_SHIM = 'cli/add_data_query.php'
+ADD_QUERY_UTILITY = 'Kadupul Add Data Query Utility'
 TREE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_tree.php'
 TREE_SHIM = 'cli/add_tree.php'
 TREE_UTILITY = 'Kadupul Add Tree Utility'
@@ -945,6 +948,144 @@ def verify_add_template_differences(harness, check):
     remove_reset(harness)
 
 
+def add_query_seed(harness):
+    """The removal seed plus two data queries and one association, device 1 with query 1 and the uptime method.
+
+    Devices 1 and 2 are disabled and device 3 is down, so run_data_query() returns at once for them; device 4 is up
+    without SNMP, so it runs the query to its end.
+    """
+    add_query_reset(harness)
+    remove_seed(harness)
+    a, b, c, d = REMOVE_FIRST, REMOVE_FIRST + 1, REMOVE_FIRST + 2, REMOVE_FIRST + 3
+    harness.sql(f"UPDATE host SET disabled = 'on' WHERE id IN ({a}, {b}); UPDATE host SET status = 1 WHERE id = {c}; "
+                f"INSERT INTO host (id, description, hostname, host_template_id, status, snmp_version) VALUES ({d}, '{PREFIX}dqup', '{PREFIX}dqup.example', {a}, 3, 0); "
+                f"INSERT INTO snmp_query (id, hash, name) VALUES ({a}, '{'0' * 30}71', '{PREFIX}Interfaces'), ({b}, '{'0' * 30}72', '{PREFIX}Disks'); "
+                f'INSERT INTO host_snmp_query (host_id, snmp_query_id, reindex_method) VALUES ({a}, {a}, 1)')
+
+
+def add_query_reset(harness):
+    harness.sql(f'DELETE FROM host_snmp_cache WHERE host_id >= {REMOVE_FIRST}; DELETE FROM host_snmp_query WHERE host_id >= {REMOVE_FIRST}; '
+                f'DELETE FROM snmp_query WHERE id >= {REMOVE_FIRST}')
+    remove_reset(harness)
+
+
+def add_query_rows(harness):
+    """The associations of the seeded devices, with their stored method, and how many cache rows the query run left."""
+    return harness.sql(f"SELECT (SELECT GROUP_CONCAT(CONCAT(host_id, '-', snmp_query_id, '-', reindex_method, '-', sort_field, '-', title_format) ORDER BY host_id, snmp_query_id) FROM host_snmp_query WHERE host_id >= {REMOVE_FIRST}), "
+                       f'(SELECT COUNT(*) FROM host_snmp_cache WHERE host_id >= {REMOVE_FIRST})')
+
+
+def add_query_cases():
+    a, b, c, d = REMOVE_FIRST, REMOVE_FIRST + 1, REMOVE_FIRST + 2, REMOVE_FIRST + 3
+    cases = [
+        ('add query to a device', [f'--host-id={b}', f'--data-query-id={a}', '--reindex-method=0']),
+        ('add query to a down device', [f'--host-id={c}', f'--data-query-id={b}', '--reindex-method=3']),
+        ('add query to a device that is up', [f'--host-id={d}', f'--data-query-id={a}', '--reindex-method=2']),
+        ('add query twice is refused', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=1']),
+        ('add query again with another method replaces it', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=2']),
+        ('add query with the debug flag', ['-d', f'--host-id={b}', f'--data-query-id={b}', '--reindex-method=1']),
+        ('add query with float-written ids', [f'--host-id={b}e0', f'--data-query-id={b}.0', '--reindex-method=1']),
+        ('add query with a padded query id', [f'--host-id={b}', f'--data-query-id= {b}', '--reindex-method=1']),
+        ('add query with a padded device id', [f'--host-id= {b} ', f'--data-query-id={b}', '--reindex-method=1']),
+        ('add query last id wins', ['--host-id=x', f'--host-id={b}', f'--data-query-id={a}', '--reindex-method=1']),
+        ('add query quiet changes nothing for an add', [f'--host-id={b}', f'--data-query-id={a}', '--reindex-method=1', '--quiet']),
+        ('add query takes the last of two methods', [f'--host-id={b}', f'--data-query-id={a}', '--reindex-method=0', '--reindex-method=3']),
+        ('add query a bad device id', ['--host-id=abc', f'--data-query-id={a}', '--reindex-method=1']),
+        ('add query a bare device id', ['--host-id', f'--data-query-id={a}', '--reindex-method=1']),
+        ('add query an empty device id', ['--host-id=', f'--data-query-id={a}', '--reindex-method=1']),
+        ('add query a bad query id', [f'--host-id={a}', '--data-query-id=abc', '--reindex-method=1']),
+        ('add query a bare query id', [f'--host-id={a}', '--data-query-id', '--reindex-method=1']),
+        ('add query a bad method', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=bogus']),
+        ('add query a bare method', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method']),
+        ('add query an empty method', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=']),
+        ('add query a method above the range', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=4']),
+        ('add query a method below the range', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=-1']),
+        ('add query a fractional method above the range', [f'--host-id={a}', f'--data-query-id={a}', '--reindex-method=3.5']),
+        ('add query the first bad value stops the run', ['--reindex-method=bogus', '--host-id=abc', '--bogus']),
+        ('add query a bad value stops before help', ['--data-query-id=abc', '--help']),
+        ('add query help stops before a bad value', ['--help', '--host-id=abc']),
+        ('add query missing device id', [f'--data-query-id={a}', '--reindex-method=1']),
+        ('add query missing query id', [f'--host-id={a}', '--reindex-method=1']),
+        ('add query missing method', [f'--host-id={a}', f'--data-query-id={a}']),
+        ('add query only quiet', ['--quiet']),
+        ('add query unknown argument', ['--bogus']),
+        ('add query unknown argument with a value', ['--bogus=1', f'--host-id={a}']),
+        ('add query a leading = is no separator', ['=1']),
+        ('add query list devices', ['--list-hosts']),
+        ('add query list devices quietly', ['--list-hosts', '--quiet']),
+        ('add query list data queries', ['--list-data-queries']),
+        ('add query list data queries quietly', ['--quiet', '--list-data-queries']),
+        ('add query list devices win', ['--list-data-queries', '--list-hosts']),
+        ('add query list ignores a missing id', ['--list-hosts', f'--host-id={a}']),
+        ('add query list takes a value it ignores', ['--list-hosts=yes']),
+        ('add query list with a bad id', ['--list-hosts', '--host-id=abc']),
+        ('add query list with a bad method', ['--list-data-queries', '--reindex-method=bogus']),
+        ('add query help', ['-h']),
+        ('add query upper help', ['-H']),
+        ('add query long help', ['--help']),
+        ('add query version', ['-v']),
+        ('add query upper version', ['-V']),
+        ('add query long version', ['--version']),
+        ('add query version takes a value it ignores', ['--version=3']),
+        ('add query no arguments', []),
+    ]
+    # The method is read as PHP reads a number, then used as typed.
+    for name in ('none', 'Uptime', 'INDEX', 'fields', 'UpTime'):
+        cases.append((f'add query method named {name}', [f'--host-id={b}', f'--data-query-id={b}', f'--reindex-method={name}']))
+    for spelling in ('1.5', '01', '2.0', ' 1', '1 ', '1e0', '-0', '0.5', '.5', '3.0', '+2', '0x1'):
+        cases.append((f'add query method written {spelling!r}', [f'--host-id={b}', f'--data-query-id={b}', f'--reindex-method={spelling}']))
+    return cases
+
+
+def verify_add_query_cases(harness, check):
+    for label, arguments in add_query_cases():
+        add_query_seed(harness)
+        original = run(harness, QUIET_PHP + ADD_QUERY_ORIGINAL, arguments)
+        original_rows = add_query_rows(harness)
+        add_query_seed(harness)
+        native = run(harness, QUIET_PHP + ADD_QUERY_SHIM, arguments)
+        native_rows = add_query_rows(harness)
+        # Only an argument error loses the version line above the help; the rest must match byte for byte.
+        expected = without_utility(normalise(original['stdout']), ADD_QUERY_UTILITY) if native['stdout'].startswith('ERROR: Invalid Argument') else normalise(original['stdout'])
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+        check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same associations and cache')
+    add_query_reset(harness)
+
+
+def verify_add_query_differences(harness, check):
+    a, b = REMOVE_FIRST, REMOVE_FIRST + 1
+    unknown = REMOVE_FIRST + 900
+    add_query_seed(harness)
+    # db_fetch_cell() returns false for no row and the script tested isset(), so an unknown id passed and the script wrote an orphan row.
+    original = run(harness, QUIET_PHP + ADD_QUERY_ORIGINAL, [f'--host-id={unknown}', f'--data-query-id={a}', '--reindex-method=1'])
+    check(original['exit'] == 0 and original['stdout'].startswith('Success - Host'), 'the original accepted an unknown device')
+    check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id = {unknown}').strip() == '1', 'the original wrote a row for an unknown device')
+    harness.sql(f'DELETE FROM host_snmp_query WHERE host_id = {unknown}')
+    for label, arguments, expected in (('an unknown device', [f'--host-id={unknown}', f'--data-query-id={a}', '--reindex-method=1'], f'ERROR: Unknown Host Id ({unknown})\n'),
+                                       ('an unknown data query', [f'--host-id={a}', f'--data-query-id={unknown}', '--reindex-method=1'], f'ERROR: Unknown Data Query Id ({unknown})\n')):
+        refused = run(harness, ADD_QUERY_SHIM, arguments)
+        check(refused['exit'] == 1 and refused['stdout'] == expected, f'{label} is refused')
+    check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id = {unknown} OR snmp_query_id = {unknown}').strip() == '0', 'a refused association writes nothing')
+    # The web page for this is host.php, realm 3; graph management alone is not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    try:
+        for arguments in ([f'--host-id={b}', f'--data-query-id={b}', '--reindex-method=1'], ['--list-hosts'], ['--list-data-queries']):
+            denied = run(harness, ADD_QUERY_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without device management is refused")
+        check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id = {b}').strip() == '0', 'a refused association writes nothing for the device')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    report = run(harness, 'bin/console', ['kadupul:device:add-data-query', f'--host-id={b}', f'--data-query-id={b}', '--reindex-method=uptime', '--json'])
+    check(report['exit'] == 0 and '"status":"associated"' in report['stdout'] and '"reindex_method":"1"' in report['stdout'], 'bin/console associates and prints json')
+    check(harness.sql(f'SELECT reindex_method FROM host_snmp_query WHERE host_id = {b} AND snmp_query_id = {b}').strip() == '1', 'bin/console stores the method')
+    invalid = run(harness, 'bin/console', ['kadupul:device:add-data-query', '--host-id=abc'])
+    check(invalid['exit'] == 2, 'bin/console treats a bad id as invalid input')
+    add_query_reset(harness)
+
+
 def tree_seed(harness):
     """The removal seed, a site, and one tree: two headers at the root, a graph and a device under the first, a site under the second."""
     remove_seed(harness)
@@ -1439,6 +1580,7 @@ def verify_graph_parity(harness, check):
     install_original(harness, BROKEN_ORIGINAL)
     install_original(harness, REMOVE_ORIGINAL)
     install_original(harness, ADD_TEMPLATE_ORIGINAL)
+    install_original(harness, ADD_QUERY_ORIGINAL)
     install_original(harness, TREE_ORIGINAL)
     install_original(harness, ADD_GRAPHS_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
@@ -1462,6 +1604,8 @@ def verify_graph_parity(harness, check):
         verify_remove_differences(harness, check)
         verify_add_template_cases(harness, check)
         verify_add_template_differences(harness, check)
+        verify_add_query_cases(harness, check)
+        verify_add_query_differences(harness, check)
         verify_tree_cases(harness, check)
         verify_tree_differences(harness, check)
         verify_add_graphs_cases(harness, check)
@@ -1474,6 +1618,7 @@ def verify_graph_parity(harness, check):
         broken_reset(harness)
         tree_reset(harness)
         add_graphs_reset(harness)
+        add_query_reset(harness)
         remove_reset(harness)
         harness.sql("DELETE FROM settings WHERE name='admin_user'")
         for value in saved.splitlines():

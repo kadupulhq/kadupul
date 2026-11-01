@@ -45,6 +45,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             'cli/repair_graphs.php', 'cli/remove_broken_graphs.php',
             'bin/legacy-graph-remove.php', 'cli/remove_graphs.php',
             'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php',
+            'cli/add_data_query.php', 'bin/legacy-data-query-associate.php',
             'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
             'graphs.php',
         ]

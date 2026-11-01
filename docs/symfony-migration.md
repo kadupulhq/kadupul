@@ -1894,6 +1894,39 @@ Known differences from `cli/add_graph_template.php`:
   defines `--quiet`. Under `bin/console` a bad id exits 2; the shim keeps the
   original's message and exits 1.
 
+`php bin/console kadupul:device:add-data-query --host-id=ID --data-query-id=ID --reindex-method=METHOD`
+associates a data query with a device and runs it once to fill the cache. A
+worker replaces the `host_snmp_query` row and calls `run_data_query()`, as the
+original did, so the plugin hooks and the data query run are unchanged. The
+method is `0|none`, `1|uptime`, `2|index` or `3|fields`; the names are not case
+sensitive. Adding a query that is already associated with the same method is
+refused, and with another method it replaces the row and reindexes.
+`--list-hosts` and `--list-data-queries` print the ids. It needs the Console
+Access and Devices realms (realm 3, the one `host.php` needs), and an
+association is audited. `--json` prints `status`, `database`, `device`,
+`data_query` and `reindex_method`.
+
+Known differences from `cli/add_data_query.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it.
+- An unknown device or data query is refused with the original's
+  `Unknown Host Id` or `Unknown Data Query Id` line. The original tested the
+  result of `db_fetch_cell()`, which is `false` for no row, with `isset()`, so it
+  accepted any id, wrote an orphan `host_snmp_query` row and printed `Success`.
+- Ids are bound instead of concatenated into SQL. A numeric id written as `7e0`
+  still finds device 7, and `1.5` still finds none.
+- A numeric method such as `1.5` or `01` is still accepted, stored as the
+  database converts it and printed as typed with an empty name, as the original
+  did. The original also raised a PHP warning for that name lookup; the command
+  does not.
+- The method names (`None`, `Uptime`, `Index Count`, `Verify All`) are printed in
+  English. The original translated them with the installation's language.
+- An argument error prints the error and help without the version line.
+- `--quiet` reaches `bin/console` as `--no-headers`, because the console already
+  defines `--quiet`. Under `bin/console` a bad value exits 2; the shim keeps the
+  original's message and exits 1.
+
 `php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
 creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
 adds a node to one, under `--parent-node=ID` or at the root. A worker saves the
