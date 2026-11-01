@@ -129,6 +129,36 @@ final class NativeCoverageCompositionTest extends TestCase
             self::assertFalse($process->isSuccessful());
             self::assertStringContainsString('sidecar is missing', $process->getOutput() . $process->getErrorOutput());
             self::assertSame($original, file_get_contents($directory . '/coverage.xml'));
+            self::assertNotFalse(file_put_contents($directory . '/application.json', json_encode(self::parts()['application'], JSON_THROW_ON_ERROR | JSON_PRESERVE_ZERO_FRACTION)));
+            foreach (['missing', 'not-directory'] as $destination) {
+                if ($destination === 'not-directory') self::assertSame(5, file_put_contents($directory . '/' . $destination, 'owned'));
+                $command[4] = $directory . '/' . $destination . '/coverage.xml';
+                $refused = new Process($command);
+                $refused->run();
+                self::assertFalse($refused->isSuccessful());
+                self::assertStringContainsString('destination directory is unavailable', $refused->getOutput() . $refused->getErrorOutput());
+                self::assertSame($original, file_get_contents($directory . '/coverage.xml'));
+                self::assertSame([], glob($directory . '/native-composed-*'));
+            }
+            self::assertDirectoryDoesNotExist($directory . '/missing');
+            self::assertSame('owned', file_get_contents($directory . '/not-directory'));
+            self::assertTrue(chmod($directory, 0500));
+            try {
+                // Root may retain write permission despite mode0500. Assert
+                // denial only when the real filesystem reports it unwritable.
+                clearstatcache(true, $directory);
+                if (!is_writable($directory)) {
+                    $command[4] = $directory . '/coverage.xml';
+                    $refused = new Process($command);
+                    $refused->run();
+                    self::assertFalse($refused->isSuccessful());
+                    self::assertStringContainsString('destination directory is unavailable', $refused->getOutput() . $refused->getErrorOutput());
+                    self::assertSame($original, file_get_contents($directory . '/coverage.xml'));
+                    self::assertSame([], glob($directory . '/native-composed-*'));
+                }
+            } finally {
+                self::assertTrue(chmod($directory, 0700));
+            }
         } finally {
             foreach (glob($directory . '/*') ?: [] as $owned) unlink($owned);
             rmdir($directory);

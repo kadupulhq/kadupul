@@ -24,9 +24,13 @@ foreach (['legacy' => $argv[1], 'application' => $argv[2]] as $part => $path) {
     $parts[$part] = $raw;
 }
 $coverage = NativeCoverageComposition::compose($root, $parts);
-$temporary = tempnam(dirname($argv[3]), 'native-composed-');
+$directory = realpath(dirname($argv[3]));
+if ($directory === false || !is_dir($directory) || !is_writable($directory)) throw new RuntimeException('The composed coverage destination directory is unavailable.');
+$temporary = tempnam($directory, 'native-composed-');
 if ($temporary === false) throw new RuntimeException('Cannot create composed native coverage report.');
 try {
+    $actualTemporary = realpath($temporary);
+    if ($actualTemporary !== $temporary || dirname($temporary) !== $directory) throw new RuntimeException('The composed coverage temporary file escaped its destination directory.');
     (new Clover())->process($coverage, $temporary);
     if (!rename($temporary, $argv[3])) throw new RuntimeException('Cannot publish composed native coverage report.');
 } finally {
