@@ -39,7 +39,8 @@ class CoverageArtifactTest(unittest.TestCase):
             for name in names:
                 path = self.producer / name
                 path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(lcov if name.endswith(".lcov") else python if name == "var/offline-coverage.xml" else self.php)
+                sidecar = json.dumps({"version": 1, "part": part, "source": [self.sha, self.git("rev-parse", "HEAD^{tree}")]})
+                path.write_text(sidecar if name.endswith(".native.json") else lcov if name.endswith(".lcov") else python if name == "var/offline-coverage.xml" else self.php)
             coverage.seal(self.producer, part, self.bundles / part, self.sha)
 
     def git(self, *args):
@@ -62,7 +63,8 @@ class CoverageArtifactTest(unittest.TestCase):
             for name in names:
                 text = (self.root / name).read_text()
                 self.assertNotIn(str(self.producer), text)
-                self.assertIn(str(self.root), text)
+                if not name.endswith(".native.json"):
+                    self.assertIn(str(self.root), text)
         self.assertIn("DA:1,2", (self.root / "var/browser-coverage.lcov").read_text())
         self.assertIn('count="1"', (self.root / "tests/coverage.xml").read_text())
 
@@ -74,6 +76,24 @@ class CoverageArtifactTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "source and phase"):
             self.consume()
         self.assertFalse((self.root / "tests/coverage.xml").exists())
+
+    def test_missing_native_sidecar_is_rejected_before_any_report_is_published(self):
+        (self.bundles / "application/var/symfony-coverage.xml.native.json").unlink()
+        with self.assertRaisesRegex(ValueError, "unexpected files"):
+            self.consume()
+        self.assertFalse((self.root / "tests/coverage.xml").exists())
+
+    def test_stale_native_sidecar_is_rejected_even_with_a_new_receipt_checksum(self):
+        for part, name in (("legacy", "tests/coverage.xml.native.json"), ("application", "var/symfony-coverage.xml.native.json")):
+            original = (self.bundles / part / name).read_bytes()
+            raw = json.loads(original)
+            for field, value in (("source", ["f" * 40, "f" * 40]), ("part", "foreign"), ("version", True)):
+                with self.subTest(part=part, field=field):
+                    self.replace_report(part, name, json.dumps({**raw, field: value}).encode())
+                    with self.assertRaisesRegex(ValueError, "sidecar"):
+                        self.consume()
+                    self.assertFalse((self.root / "tests/coverage.xml").exists())
+            self.replace_report(part, name, original)
 
     def test_wrong_source_tree_is_rejected(self):
         receipt = self.bundles / "legacy/receipt.json"

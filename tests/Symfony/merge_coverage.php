@@ -1134,6 +1134,8 @@ foreach (array_keys($mapped) as $path) {
     $coverage->filter()->includeFile($path);
 }
 $coverage->append(RawCodeCoverageData::fromXdebugWithoutPathCoverage($mapped), 'Symfony HTTP and worker integration');
+require_once $root . '/tests/Symfony/NativeCoverageComposition.php';
+\Kadupul\Tests\NativeCoverageComposition::write($coverage, $root, 'application', $argv[5] . '.native.json');
 $temp = tempnam(dirname($argv[5]), 'symfony-clover-');
 try {
     (new Clover())->process($coverage, $temp);

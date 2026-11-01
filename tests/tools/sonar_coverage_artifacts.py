@@ -19,9 +19,9 @@ import defusedxml.ElementTree as ET
 from defusedxml.common import DefusedXmlException
 
 REPORTS = {
-    "legacy": ("tests/coverage.xml",),
+    "legacy": ("tests/coverage.xml", "tests/coverage.xml.native.json"),
     "application": (
-        "var/symfony-coverage.xml", "var/offline-coverage.xml",
+        "var/symfony-coverage.xml", "var/symfony-coverage.xml.native.json", "var/offline-coverage.xml",
         "tests/vendor-sync.lcov", "var/browser-coverage.lcov",
     ),
 }
@@ -139,6 +139,15 @@ def normalize_lcov(data: bytes, producer: str, root: Path) -> bytes:
     return ("\n".join(lines) + "\n").encode()
 
 
+def native_sidecar(data: bytes, part: str, sha: str, tree: str) -> bytes:
+    """Paths are checkout-relative; the native consumer verifies every source byte."""
+    raw = json.loads(data)
+    if (not isinstance(raw, dict) or type(raw.get("version")) is not int
+            or (raw.get("version"), raw.get("part"), raw.get("source")) != (1, part, [sha, tree])):
+        raise ValueError("Native coverage sidecar does not match its source and phase")
+    return data
+
+
 def consume(root: Path, bundles: Path, expected: str) -> None:
     sha, tree = identity(root, expected)
     outputs: dict[str, bytes] = {}
@@ -168,7 +177,10 @@ def consume(root: Path, bundles: Path, expected: str) -> None:
             if digest(path) != hashes[name]:
                 raise ValueError("Coverage report checksum does not match its receipt")
             data = path.read_bytes()
-            outputs[name] = normalize_lcov(data, producer, root) if name.endswith(".lcov") else normalize_xml(data, producer, root, name == "var/offline-coverage.xml")
+            if name.endswith(".native.json"):
+                outputs[name] = native_sidecar(data, part, sha, tree)
+            else:
+                outputs[name] = normalize_lcov(data, producer, root) if name.endswith(".lcov") else normalize_xml(data, producer, root, name == "var/offline-coverage.xml")
     if any(not (root / name).resolve().is_relative_to(root.resolve()) for name in outputs):
         raise ValueError("Coverage destination escapes its checkout")
     for name, data in outputs.items():
