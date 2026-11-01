@@ -123,7 +123,7 @@ final class BrowserWorkerSessionTest extends TestCase
             self::assertTrue(mkdir($this->directory . '/coverage', 0700));
             $environment['KADUPUL_SESSION_CLOSE_COVERAGE_STACK'] = json_encode($stack, JSON_THROW_ON_ERROR);
         }
-        $child = new \Symfony\Component\Process\Process([PHP_BINARY,'-d','auto_prepend_file=','-d','disable_functions=' . trim((string) ini_get('disable_functions') . ',session_write_close', ','),$root . '/tests/Fixtures/browser-session-close-unavailable.php'], null, $environment, json_encode(['directory' => $this->directory,'id' => $identity], JSON_THROW_ON_ERROR));
+        $child = new \Symfony\Component\Process\Process([PHP_BINARY,'-d','auto_prepend_file=','-d','pcov.directory=' . $root,'-d','disable_functions=' . trim((string) ini_get('disable_functions') . ',session_write_close', ','),$root . '/tests/Fixtures/browser-session-close-unavailable.php'], null, $environment, json_encode(['directory' => $this->directory,'id' => $identity], JSON_THROW_ON_ERROR));
         $child->mustRun();
         self::assertSame('', $child->getErrorOutput());
         self::assertSame(['available' => false,'failure' => \Error::class,'status' => PHP_SESSION_NONE,'unchanged' => true], json_decode($child->getOutput(), true, 8, JSON_THROW_ON_ERROR));
