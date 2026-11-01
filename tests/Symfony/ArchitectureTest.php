@@ -234,6 +234,7 @@ final class ArchitectureTest extends TestCase
                 'src/Graphing/Infrastructure/Legacy/LegacyGraphRemover.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyGraphWriter.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
+                'src/Graphing/Infrastructure/Legacy/LegacyDataQueryAssociator.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyGraphTitleReapplier.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyTreeWriter.php',
                 'src/Graphing/Infrastructure/Symfony/BoostRunHandler.php',

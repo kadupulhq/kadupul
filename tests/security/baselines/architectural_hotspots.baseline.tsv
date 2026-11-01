@@ -98,6 +98,7 @@ dynamic_include	./automation_snmp.php:415	    #include_once($config['base_path']
 dynamic_include	./automation_tree_rules.php:539	    include_once($config['base_path'] . '/lib/html_tree.php');
 dynamic_include	./bin/legacy-audit-upgrade.php:129	                        include_once($plugin . '/setup.php');
 dynamic_include	./bin/legacy-audit-upgrade.php:131	                            include_once($plugin . '/includes/database.php');
+dynamic_include	./bin/legacy-data-query-associate.php:21	    require_once $config['base_path'] . '/lib/' . $library . '.php';
 dynamic_include	./bin/legacy-data-source-titles.php:19	require_once $config['base_path'] . '/lib/api_data_source.php';
 dynamic_include	./bin/legacy-data-source-titles.php:20	require_once $config['base_path'] . '/lib/utility.php';
 dynamic_include	./bin/legacy-graph-add.php:20	require_once $config['base_path'] . '/lib/api_automation.php';
@@ -115,17 +116,6 @@ dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
-dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
-dynamic_include	./cli/add_data_query.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/add_data_query.php:13	require_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./cli/add_data_query.php:14	require_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./cli/add_data_query.php:15	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/add_data_query.php:16	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/add_data_query.php:17	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./cli/add_data_query.php:18	require_once($config['base_path'] . '/lib/sort.php');
-dynamic_include	./cli/add_data_query.php:19	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./cli/add_data_query.php:20	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/add_datasource.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./cli/add_datasource.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/add_datasource.php:12	require_once($config['base_path'] . '/lib/utility.php');

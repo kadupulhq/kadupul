@@ -397,6 +397,12 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalGraphTemplateAssignmentCatalog
     Kadupul\Graphing\Application\Port\GraphTemplateAttacher:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyGraphTemplateAttacher
+    Kadupul\Graphing\Application\Command\AssociateDataQuery: ~
+    Kadupul\Graphing\Application\Command\ListDataQueryChoices: ~
+    Kadupul\Graphing\Application\Port\DataQueryAssociationCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalDataQueryAssociationCatalog
+    Kadupul\Graphing\Application\Port\DataQueryAssociator:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDataQueryAssociator
     Kadupul\Graphing\Application\Command\AddTree: ~
     Kadupul\Graphing\Application\Command\AddTreeNode: ~
     Kadupul\Graphing\Application\Command\ListTreeChoices: ~
