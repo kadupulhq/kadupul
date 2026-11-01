@@ -12728,19 +12728,19 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Отсутствует файл включения ключевых Kadupul %s.  Найдите и замените этот файл"
 
-#: lib/graph_data_removal.php:443
+#: lib/graph_data_removal.php:475
 msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
 msgstr ""
 
-#: lib/graph_data_removal.php:445
+#: lib/graph_data_removal.php:477
 msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:447
+#: lib/graph_data_removal.php:479
 msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:448
+#: lib/graph_data_removal.php:480
 msgid "The removal could not be completed. Reload and review the selection before retrying."
 msgstr ""
 
