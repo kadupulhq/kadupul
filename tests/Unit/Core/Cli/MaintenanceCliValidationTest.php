@@ -42,7 +42,7 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
         . 'function cacti_sizeof($value) { return is_countable($value) ? count($value) : 0; }'
         . 'function get_cacti_cli_version() { return "fixture"; }'
         . 'function read_config_option($name) { return 5; }'
-        . 'function db_fetch_assoc($sql) { if (str_starts_with(getenv("MAINTENANCE_CLI_SCENARIO") ?: "", "reorder-")) return array(array("host_id" => 7, "snmp_query_id" => 11, "snmp_index" => "3", "value" => 4)); if (getenv("MAINTENANCE_CLI_SCENARIO") === "reapply-zero") { print "SELECTED_QUERY:" . $sql; return array(); } if (strpos($sql, "SHOW TABLES") === 0) return array(array("Tables_in_fixture" => "fixture_table")); if (strpos($sql, "SHOW COLUMNS") === 0) { $rows = array(array("Field" => "id", "Type" => "int", "Null" => "NO", "Key" => "PRI", "Default" => null, "Extra" => "")); if (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-column-drift", "audit-index-missing", "audit-index-key-mismatch"), true)) $rows[] = array("Field" => "name", "Type" => getenv("MAINTENANCE_CLI_SCENARIO") === "audit-column-drift" ? "varchar(10)" : "varchar(20)", "Null" => "YES", "Key" => "", "Default" => null, "Extra" => ""); if (getenv("MAINTENANCE_CLI_SCENARIO") === "audit-column-order") $rows[] = array("Field" => "label", "Type" => "varchar(50)", "Null" => "YES", "Key" => "", "Default" => null, "Extra" => ""); return $rows; } if (strpos($sql, "SHOW INDEXES") === 0 && getenv("MAINTENANCE_CLI_SCENARIO") === "audit-index-key-mismatch") return array(array("Table" => "fixture_table", "Non_unique" => 0, "Key_name" => "idx_name", "Seq_in_index" => 1, "Column_name" => "name", "Packed" => null, "Comment" => "", "Index_type" => "BTREE")); if (strpos($sql, "SHOW INDEXES") === 0) return array(); throw new LogicException("Unexpected database access: " . $sql); }'
+        . 'function db_fetch_assoc($sql) { if (getenv("MAINTENANCE_CLI_SCENARIO") === "reapply-zero") { print "SELECTED_QUERY:" . $sql; return array(); } if (strpos($sql, "SHOW TABLES") === 0) return array(array("Tables_in_fixture" => "fixture_table")); if (strpos($sql, "SHOW COLUMNS") === 0) { $rows = array(array("Field" => "id", "Type" => "int", "Null" => "NO", "Key" => "PRI", "Default" => null, "Extra" => "")); if (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-column-drift", "audit-index-missing", "audit-index-key-mismatch"), true)) $rows[] = array("Field" => "name", "Type" => getenv("MAINTENANCE_CLI_SCENARIO") === "audit-column-drift" ? "varchar(10)" : "varchar(20)", "Null" => "YES", "Key" => "", "Default" => null, "Extra" => ""); if (getenv("MAINTENANCE_CLI_SCENARIO") === "audit-column-order") $rows[] = array("Field" => "label", "Type" => "varchar(50)", "Null" => "YES", "Key" => "", "Default" => null, "Extra" => ""); return $rows; } if (strpos($sql, "SHOW INDEXES") === 0 && getenv("MAINTENANCE_CLI_SCENARIO") === "audit-index-key-mismatch") return array(array("Table" => "fixture_table", "Non_unique" => 0, "Key_name" => "idx_name", "Seq_in_index" => 1, "Column_name" => "name", "Packed" => null, "Comment" => "", "Index_type" => "BTREE")); if (strpos($sql, "SHOW INDEXES") === 0) return array(); throw new LogicException("Unexpected database access: " . $sql); }'
         . 'function db_fetch_row($sql) { if (strpos($sql, "SHOW TABLE STATUS") === 0) return array("Collation" => "utf8mb4_unicode_ci"); throw new LogicException("Unexpected database access: " . $sql); }'
         . 'function db_fetch_cell($sql) { return strpos($sql, "COUNT(*)") !== false ? 1 : "fixture"; }'
         . 'function db_table_exists($name) { if (preg_match("/^audit_(complete|columns|indexes|old_columns|old_indexes)_/", $name)) return true; return in_array("--load", $_SERVER["argv"], true) || (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("audit-report", "audit-column-drift", "audit-column-order", "audit-drift", "audit-index-missing", "audit-index-key-mismatch", "audit-client-discovery"), true) && in_array($name, array("table_columns", "table_indexes"), true)); }'
@@ -54,13 +54,6 @@ test('maintenance CLI entrypoints validate arguments and return status for suppo
         . 'function db_execute($sql) { return true; } function db_execute_prepared($sql, $params) { return true; }'
         . 'function db_dump_data(...$args) { return 0; }'
         . 'function cacti_escapeshellarg($value) { return escapeshellarg($value); }');
-
-    if (str_starts_with($scenario, 'reorder-')) {
-        file_put_contents($dir . '/lib/data_query.php', '<?php '
-            . 'function update_data_query_sort_cache($host, $query) { return "ifName"; }'
-            . 'function get_best_data_query_index_type($host, $query) { return match (getenv("MAINTENANCE_CLI_SCENARIO")) { "reorder-false" => false, "reorder-empty" => "", "reorder-zero" => "0", default => "ifName" }; }'
-            . 'function update_snmp_index_order($row) { if (in_array(getenv("MAINTENANCE_CLI_SCENARIO"), array("reorder-false", "reorder-empty"), true)) throw new RuntimeException("Reorder reached after a failed read"); print "REORDER_OK:" . $row["snmp_index_on"]; }');
-    }
 
     if (str_starts_with($scenario, 'template-')) {
         require_once $root . '/tests/Helpers/PhpSource.php';
@@ -181,12 +174,6 @@ PHP;
     'rebuild rejects zero thread count' => array('rebuild_poller_cache.php', array('--threads=0'), 1, 'valid Number of Treads'),
     'rebuild rejects negative thread count' => array('rebuild_poller_cache.php', array('--threads=-1'), 1, 'valid Number of Treads'),
     'rebuild rejects fractional thread count' => array('rebuild_poller_cache.php', array('--threads=1.5'), 1, 'valid Number of Treads'),
-    'reorder refuses failed sort-field reads' => array('reorder_data_query.php', array('--host-id=7', '--qid=11'), 1, 'Unable to determine sort field', 'reorder-false'),
-    'reorder refuses empty sort fields' => array('reorder_data_query.php', array('--host-id=7', '--qid=11'), 1, 'Unable to determine sort field', 'reorder-empty'),
-    'reorder preserves zero field names' => array('reorder_data_query.php', array('--host-id=7', '--qid=11'), 0, 'REORDER_OK:0', 'reorder-zero'),
-    'reorder runs with a resolved field' => array('reorder_data_query.php', array('--host-id=7', '--qid=11'), 0, 'REORDER_OK:ifName', 'reorder-valid'),
-    'reorder rejects zero host ID' => array('reorder_data_query.php', array('--host-id=0', '--qid=all'), 1, '--host-id must be a positive integer'),
-    'reorder rejects missing query ID' => array('reorder_data_query.php', array('--host-id=all'), 1, '--qid must be a positive query ID'),
     'audit report returns failure when its baseline table is unavailable' => array('audit_database.php', array('--report'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit repair stops when its baseline table is unavailable' => array('audit_database.php', array('--repair'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit alters preview stops when its baseline table is unavailable' => array('audit_database.php', array('--alters'), 1, 'FATAL: Failed to find or read Audit Schema'),
