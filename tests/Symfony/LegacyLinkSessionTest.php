@@ -46,8 +46,10 @@ final class LegacyLinkSessionTest extends TestCase
         if ($storage === 'database' && $this->database === null) {
             $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
             if ($dsn === false) self::markTestSkipped('Set KADUPUL_TEST_MYSQL_DSN for native database sessions.');
-            $user = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root');
-            $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '');
+            $adminUser = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER');
+            $user = $adminUser !== false ? $adminUser : (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root');
+            $adminPassword = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+            $password = $adminPassword !== false ? $adminPassword : (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '');
             $this->database = new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
             $this->schema = 'link_session_' . bin2hex(random_bytes(8));
             $this->database->exec('CREATE DATABASE `' . $this->schema . '` CHARACTER SET utf8mb4');
