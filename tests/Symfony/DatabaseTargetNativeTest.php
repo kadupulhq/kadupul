@@ -15,8 +15,10 @@ use Kadupul\Platform\Infrastructure\Legacy\NativeDatabaseTarget;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 require_once __DIR__ . '/Fixtures/RealMariaDb.php';
+require_once __DIR__ . '/Fixtures/DatabaseTargetFaultPdo.php';
 
 final class DatabaseTargetNativeTest extends TestCase
 {
@@ -137,4 +139,60 @@ final class DatabaseTargetNativeTest extends TestCase
             $administrator->close();
         }
     }
+
+    /** @return iterable<string,array{string,list<string>}> */
+    public static function schemaReadStages(): iterable
+    {
+        foreach (['none', 'prepare-false', 'prepare-throw', 'execute-false', 'execute-throw', 'execute-state', 'execute-null-state', 'state-throw', 'fetch-state', 'fetch-null-state', 'fetch-throw', 'fetch-false', 'fetch-empty', 'fetch-integer'] as $stage) {
+            $events = ['prepare'];
+            if (!str_starts_with($stage, 'prepare-')) $events[] = 'execute';
+            if (!str_starts_with($stage, 'prepare-') && !in_array($stage, ['execute-false', 'execute-throw'], true)) $events[] = 'errorCode';
+            if ($stage === 'none' || str_starts_with($stage, 'fetch-')) {
+                $events[] = 'fetchColumn';
+                if ($stage !== 'fetch-throw') $events[] = 'errorCode';
+            }
+            yield $stage => [$stage, $events];
+        }
+    }
+
+    /** @param list<string> $events */
+    #[DataProvider('schemaReadStages')]
+    public function testSchemaReadFailuresCannotProduceAnAdmittedTarget(string $stage, array $events): void
+    {
+        $parameters = $this->realMariaDb()->getParams();
+        $adminUser = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER');
+        $adminPassword = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+        if ($adminUser !== false && $adminUser !== '') $parameters['user'] = $adminUser;
+        if ($adminPassword !== false) $parameters['password'] = $adminPassword;
+        $database = new \PDO('mysql:host=' . $parameters['host'] . ';port=' . $parameters['port'], $parameters['user'], $parameters['password'], [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        $schema = 'database_target_fault_' . bin2hex(random_bytes(8));
+        $created = false;
+        try {
+            $database->exec('CREATE DATABASE `' . $schema . '`');
+            $created = true;
+            $database->exec('USE `' . $schema . '`');
+            $this->assertSame($schema, $database->query('SELECT DATABASE()')->fetchColumn());
+            $values = ['collector_id' => 2, 'connection_status' => 'online', 'host' => $parameters['host'], 'port' => $parameters['port']];
+            $expected = DatabaseFingerprint::capture($database, $values);
+            $fault = new Fixtures\DatabaseTargetFaultPdo($database, $stage);
+            $target = null;
+            $failure = null;
+            try {
+                $target = DatabaseFingerprint::capture($fault, $values);
+            } catch (\RuntimeException $error) {
+                $failure = $error;
+            }
+            if ($stage === 'none') {
+                $this->assertNull($failure);
+                $this->assertSame($expected, $target);
+            } else {
+                $this->assertInstanceOf(\RuntimeException::class, $failure, 'A failed schema read produced a usable fingerprint.');
+                $this->assertNull($target);
+            }
+            $this->assertSame($events, $fault->events, 'The intended driver failure stage must be reached.');
+        } finally {
+            if ($created) $database->exec('DROP DATABASE `' . $schema . '`');
+        }
+    }
+
 }
