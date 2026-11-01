@@ -408,6 +408,11 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalDataQueryAssociationCatalog
     Kadupul\Graphing\Application\Port\DataQueryAssociator:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDataQueryAssociator
+    Kadupul\Graphing\Application\Command\AddDataSource: ~
+    Kadupul\Graphing\Application\Port\DataSourceCreationCatalog:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalDataSourceCreationCatalog
+    Kadupul\Graphing\Application\Port\DataSourceCreator:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDataSourceCreator
     Kadupul\Graphing\Application\Command\AddTree: ~
     Kadupul\Graphing\Application\Command\AddTreeNode: ~
     Kadupul\Graphing\Application\Command\ListTreeChoices: ~

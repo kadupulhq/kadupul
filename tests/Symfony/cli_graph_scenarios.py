@@ -37,6 +37,12 @@ ADD_TEMPLATE_UTILITY = 'Kadupul Add Graph Template Utility'
 ADD_QUERY_ORIGINAL = 'tests/Fixtures/legacy-cli/add_data_query.php'
 ADD_QUERY_SHIM = 'cli/add_data_query.php'
 ADD_QUERY_UTILITY = 'Kadupul Add Data Query Utility'
+ADD_DS_ORIGINAL = 'tests/Fixtures/legacy-cli/add_datasource.php'
+ADD_DS_SHIM = 'cli/add_datasource.php'
+ADD_DS_UTILITY = 'Kadupul Add Data Source'
+# Devices, data templates and the first new data source of the add_datasource.php cases.
+ADD_DS_FIRST = 9100001
+ADD_DS_NEXT = 9100010
 TREE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_tree.php'
 TREE_SHIM = 'cli/add_tree.php'
 TREE_UTILITY = 'Kadupul Add Tree Utility'
@@ -1086,6 +1092,180 @@ def verify_add_query_differences(harness, check):
     add_query_reset(harness)
 
 
+def add_ds_seed(harness):
+    """Two devices (one polled over SNMP, one not) and three data templates: an SNMP one, a plain one, and one on a template-less input.
+
+    The next data source id is fixed, so that the original and the shim print the same one.
+    """
+    add_ds_reset(harness)
+    a, b = ADD_DS_FIRST, ADD_DS_FIRST + 1
+    harness.sql(
+        f"INSERT INTO data_template (id, hash, name) VALUES ({a}, '{'0' * 30}a1', '{PREFIX}ds_Traffic'), ({b}, '{'0' * 30}a2', '{PREFIX}ds_Plain'); "
+        f"INSERT INTO host (id, description, hostname, host_template_id, snmp_version, snmp_community, status) VALUES "
+        f"({a}, '{PREFIX}ds_core', '{PREFIX}ds_core.example', 0, 2, 'public', 3), ({b}, '{PREFIX}ds_quiet', '{PREFIX}ds_quiet.example', 0, 0, '', 3); "
+        f"INSERT INTO data_template_data (local_data_id, data_template_id, data_input_id, name, name_cache, active, rrd_step, data_source_profile_id) VALUES "
+        f"(0, {a}, 1, '|host_description| - Traffic', '', 'on', 300, 1), (0, {b}, 0, 'Plain DS', '', 'on', 60, 1); "
+        f"INSERT INTO data_template_rrd (local_data_id, data_template_id, data_source_name, rrd_heartbeat, rrd_maximum, data_source_type_id) VALUES "
+        f"(0, {a}, 'traffic_in', 600, '0', 2), (0, {a}, 'traffic_out', 600, '0', 2), (0, {b}, 'plain', 120, '100', 1); "
+        f"INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) "
+        f"SELECT 6, id, '', '.1.3.6.1.2.1.2.2.1.10.1' FROM data_template_data WHERE data_template_id = {a} AND local_data_id = 0; "
+        f'INSERT INTO data_local (id, data_template_id, host_id) VALUES ({ADD_DS_FIRST - 1}, 0, 0); '
+        f'ALTER TABLE data_local AUTO_INCREMENT = {ADD_DS_NEXT}')
+
+
+def add_ds_reset(harness):
+    created = f'SELECT id FROM data_local WHERE id >= {ADD_DS_FIRST - 1}'
+    harness.sql(
+        f'DELETE FROM poller_item WHERE local_data_id IN ({created}); '
+        f'DELETE FROM data_input_data WHERE data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN ({created}) OR data_template_id >= {ADD_DS_FIRST}); '
+        f'DELETE FROM data_template_rrd WHERE local_data_id IN ({created}) OR data_template_id >= {ADD_DS_FIRST}; '
+        f'DELETE FROM data_template_data WHERE local_data_id IN ({created}) OR data_template_id >= {ADD_DS_FIRST}; '
+        f'DELETE FROM data_local WHERE id >= {ADD_DS_FIRST - 1}; '
+        f'DELETE FROM host WHERE id >= {ADD_DS_FIRST}; '
+        f'DELETE FROM data_template WHERE id >= {ADD_DS_FIRST}')
+
+
+def add_ds_rows(harness):
+    """Every data source the cases may add: its row, its data, its RRD items, its input data and its poller items."""
+    created = f'(SELECT id FROM data_local WHERE id >= {ADD_DS_NEXT})'
+    return harness.sql(
+        f"SELECT 'local', id, host_id, data_template_id, snmp_query_id, snmp_index, orphan FROM data_local WHERE id >= {ADD_DS_NEXT} ORDER BY id; "
+        f"SELECT 'data', local_data_id, data_template_id, data_input_id, name, name_cache, active, rrd_step, data_source_path, data_source_profile_id, local_data_template_data_id > 0 "
+        f'FROM data_template_data WHERE local_data_id IN {created} ORDER BY local_data_id; '
+        f"SELECT 'rrd', local_data_id, data_source_name, rrd_heartbeat, rrd_maximum, data_source_type_id, data_template_id FROM data_template_rrd WHERE local_data_id IN {created} ORDER BY local_data_id, data_source_name; "
+        f"SELECT 'input', d.local_data_id, i.data_input_field_id, i.t_value, i.value FROM data_input_data i JOIN data_template_data d ON d.id = i.data_template_data_id "
+        f'WHERE d.local_data_id IN {created} ORDER BY d.local_data_id, i.data_input_field_id; '
+        f"SELECT 'poller', local_data_id, host_id, action, hostname, rrd_name, rrd_path, arg1, rrd_num FROM poller_item WHERE local_data_id IN {created} ORDER BY local_data_id, rrd_name")
+
+
+def add_ds_cases():
+    a, b = ADD_DS_FIRST, ADD_DS_FIRST + 1
+    ids = [f'--host-id={a}', f'--data-template-id={a}']
+    cases = [
+        ('add ds on a polled device', [ids]),
+        ('add ds on a device that is not polled', [[f'--host-id={b}', f'--data-template-id={a}']]),
+        ('add ds from a plain template', [[f'--host-id={a}', f'--data-template-id={b}']]),
+        ('add ds from a plain template on a quiet device', [[f'--host-id={b}', f'--data-template-id={b}']]),
+        ('add ds on no device', [['--host-id=0', f'--data-template-id={b}']]),
+        ('add ds on no device from an SNMP template', [['--host-id=0', f'--data-template-id={a}']]),
+        ('add ds with no template', [[f'--host-id={a}', '--data-template-id=0']]),
+        ('add ds on no device with no template', [['--host-id=0', '--data-template-id=0']]),
+        ('add ds twice', [ids, ids]),
+        ('add ds for two templates', [ids, [f'--host-id={a}', f'--data-template-id={b}']]),
+        ('add ds arguments the other way round', [[f'--data-template-id={a}', f'--host-id={a}']]),
+        ('add ds last device id wins', [['--host-id=x', f'--host-id={a}', f'--data-template-id={a}']]),
+        ('add ds last of two numeric device ids wins', [[f'--host-id={b}', f'--host-id={a}', f'--data-template-id={a}']]),
+        ('add ds last template id wins', [[f'--host-id={a}', f'--data-template-id={b}', f'--data-template-id={a}']]),
+        ('add ds values given to flags that take none', [['--help=no']]),
+        ('add ds float-written device id', [[f'--host-id={a}e0', f'--data-template-id={a}']]),
+        ('add ds float-written template id', [[f'--host-id={a}', f'--data-template-id={a}.0']]),
+        ('add ds float-written zero device id', [['--host-id=0.0', f'--data-template-id={b}']]),
+        ('add ds negative zero device id', [['--host-id=-0', f'--data-template-id={b}']]),
+        ('add ds float-written zero template id', [[f'--host-id={a}', '--data-template-id=0.0']]),
+        ('add ds exponent-written zero template id', [[f'--host-id={a}', '--data-template-id=0e5']]),
+        ('add ds padded device id', [[f'--host-id= {a} ', f'--data-template-id={a}']]),
+        ('add ds padded template id', [[f'--host-id={a}', f'--data-template-id= {a}']]),
+        ('add ds trailing-padded template id', [[f'--host-id={a}', f'--data-template-id={a} ']]),
+        ('add ds padded zero device id', [['--host-id= 0 ', f'--data-template-id={b}']]),
+        ('add ds a bad device id', [['--host-id=abc', f'--data-template-id={a}']]),
+        ('add ds a bare device id', [['--host-id', f'--data-template-id={a}']]),
+        ('add ds an empty device id', [['--host-id=', f'--data-template-id={a}']]),
+        ('add ds a hex device id', [['--host-id=0x1', f'--data-template-id={a}']]),
+        ('add ds a bad template id', [[f'--host-id={a}', '--data-template-id=abc']]),
+        ('add ds a bare template id', [[f'--host-id={a}', '--data-template-id']]),
+        ('add ds an empty template id', [[f'--host-id={a}', '--data-template-id=']]),
+        ('add ds the first bad value stops the run', [['--data-template-id=abc', '--host-id=abc', '--bogus']]),
+        ('add ds a bad value stops before help', [['--host-id=abc', '--help']]),
+        ('add ds help stops before a bad value', [['--help', '--host-id=abc']]),
+        ('add ds help stops before an unknown argument', [['--help', '--bogus']]),
+        ('add ds an unknown argument stops before help', [['--bogus', '--help']]),
+        ('add ds missing device id', [[f'--data-template-id={a}']]),
+        ('add ds missing template id', [[f'--host-id={a}']]),
+        ('add ds a bad device id wins over a missing template id', [['--host-id=abc']]),
+        ('add ds only the debug flag', [['-d']]),
+        ('add ds the quiet flag', [[*ids, '--quiet']]),
+        ('add ds an unknown argument', [['--bogus']]),
+        ('add ds an unknown argument with a value', [['--bogus=1', *ids]]),
+        ('add ds an unknown argument after the ids', [[*ids, '--bogus']]),
+        ('add ds a leading = is no separator', [['=1']]),
+        ('add ds a list flag of another script', [['--list-hosts']]),
+        ('add ds help', [['-h']]),
+        ('add ds upper help', [['-H']]),
+        ('add ds long help', [['--help']]),
+        ('add ds version', [['-v']]),
+        ('add ds upper version', [['-V']]),
+        ('add ds long version', [['--version']]),
+        ('add ds version takes a value it ignores', [['--version=3']]),
+        ('add ds version after the ids', [[*ids, '--version']]),
+        ('add ds no arguments', [[]]),
+    ]
+    return cases
+
+
+def same_add_ds(check, label, original, native):
+    # Only an argument error loses the version line above the help; the rest must match byte for byte.
+    expected = without_utility(normalise(original['stdout']), ADD_DS_UTILITY) if native['stdout'].startswith('ERROR: Invalid Parameter') else normalise(original['stdout'])
+    check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+    check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+    check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+
+
+def verify_add_ds_cases(harness, check):
+    for label, steps in add_ds_cases():
+        outcomes = []
+        for script in (ADD_DS_ORIGINAL, ADD_DS_SHIM):
+            add_ds_seed(harness)
+            outcomes.append([(run(harness, QUIET_PHP + script, arguments), add_ds_rows(harness)) for arguments in steps])
+        for number, ((original, original_rows), (native, native_rows)) in enumerate(zip(*outcomes), start=1):
+            same_add_ds(check, f'{label}, step {number}', original, native)
+            check(original_rows == native_rows, f'{label}, step {number} leaves the same data sources, data and poller items')
+    add_ds_reset(harness)
+
+
+def verify_add_ds_differences(harness, check):
+    a, b = ADD_DS_FIRST, ADD_DS_FIRST + 1
+    unknown = ADD_DS_FIRST + 900
+    add_ds_seed(harness)
+    seeded = add_ds_rows(harness)
+    # The original wrote a data source for any id, and the database clamped or rounded it: an unknown device or template left a junk row.
+    # An unknown device made push_out_host() fail with a fatal error after the row was written, so that case printed nothing and exited 255.
+    for label, arguments, exit_code in (('an unknown device', [f'--host-id={unknown}', f'--data-template-id={a}'], 255), ('an unknown template', [f'--host-id={a}', f'--data-template-id={unknown}'], 0),
+                                        ('a negative template', [f'--host-id={a}', '--data-template-id=-3'], 0), ('a fractional device', [f'--host-id={a}.5', f'--data-template-id={a}'], 0)):
+        add_ds_seed(harness)
+        original = run(harness, QUIET_PHP + ADD_DS_ORIGINAL, arguments)
+        check(original['exit'] == exit_code and original['stdout'].startswith('DS Added - DS[') == (exit_code == 0), f'the original went on with {label}')
+        check(add_ds_rows(harness) != seeded, f'the original wrote a data source for {label}')
+        add_ds_seed(harness)
+        refused = run(harness, ADD_DS_SHIM, arguments)
+        check(refused['exit'] == 1 and refused['stdout'].startswith('ERROR: Unknown '), f'{label} is refused')
+        check(add_ds_rows(harness) == seeded, f'{label} is refused before anything is written')
+    for arguments, expected in (([f'--host-id={unknown}', f'--data-template-id={a}'], f'ERROR: Unknown Host Id ({unknown})\n'),
+                                ([f'--host-id={a}', f'--data-template-id={unknown}'], f'ERROR: Unknown Data Template Id ({unknown})\n'),
+                                (['--host-id=-1', f'--data-template-id={a}'], 'ERROR: Unknown Host Id (-1)\n')):
+        refused = run(harness, ADD_DS_SHIM, arguments)
+        check(refused['exit'] == 1 and refused['stdout'] == expected, f'{expected.strip()} is the refusal line')
+    # The id the command prints is the id of the row it wrote.
+    add_ds_seed(harness)
+    added = run(harness, ADD_DS_SHIM, [f'--host-id={a}', f'--data-template-id={a}'])
+    check(added['stdout'] == f'DS Added - DS[{ADD_DS_NEXT}]\n' and harness.sql(f'SELECT COUNT(*) FROM data_local WHERE id = {ADD_DS_NEXT} AND host_id = {a}').strip() == '1', 'the printed id is the new data source')
+    # The web pages for this are data_sources.php and host.php, realm 3; graph management alone is not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    add_ds_seed(harness)
+    try:
+        for arguments in ([f'--host-id={b}', f'--data-template-id={b}'], ['--host-id=0', '--data-template-id=0']):
+            denied = run(harness, ADD_DS_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without device management is refused")
+        check(add_ds_rows(harness) == seeded, 'a refused run writes nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    report = run(harness, 'bin/console', ['kadupul:data-source:add', f'--host-id={a}', f'--data-template-id={b}', '--json'])
+    check(report['exit'] == 0 and '"status":"added"' in report['stdout'] and f'"data_source_id":{ADD_DS_NEXT}' in report['stdout'], 'bin/console adds a data source and prints json')
+    invalid = run(harness, 'bin/console', ['kadupul:data-source:add', '--host-id=abc'])
+    check(invalid['exit'] == 2, 'bin/console treats a bad id as invalid input')
+    add_ds_reset(harness)
+
+
 def tree_seed(harness):
     """The removal seed, a site, and one tree: two headers at the root, a graph and a device under the first, a site under the second."""
     remove_seed(harness)
@@ -1581,6 +1761,7 @@ def verify_graph_parity(harness, check):
     install_original(harness, REMOVE_ORIGINAL)
     install_original(harness, ADD_TEMPLATE_ORIGINAL)
     install_original(harness, ADD_QUERY_ORIGINAL)
+    install_original(harness, ADD_DS_ORIGINAL)
     install_original(harness, TREE_ORIGINAL)
     install_original(harness, ADD_GRAPHS_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
@@ -1606,6 +1787,8 @@ def verify_graph_parity(harness, check):
         verify_add_template_differences(harness, check)
         verify_add_query_cases(harness, check)
         verify_add_query_differences(harness, check)
+        verify_add_ds_cases(harness, check)
+        verify_add_ds_differences(harness, check)
         verify_tree_cases(harness, check)
         verify_tree_differences(harness, check)
         verify_add_graphs_cases(harness, check)
@@ -1617,6 +1800,7 @@ def verify_graph_parity(harness, check):
         repair_reset(harness)
         broken_reset(harness)
         tree_reset(harness)
+        add_ds_reset(harness)
         add_graphs_reset(harness)
         add_query_reset(harness)
         remove_reset(harness)
