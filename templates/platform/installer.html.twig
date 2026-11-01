@@ -1,0 +1,135 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% trans_default_domain 'installer' %}
+<!doctype html>
+<html lang="{{ view.locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>{{ 'Install Kadupul'|trans }}</title>
+    <link rel="stylesheet" href="{{ view.root }}/install/installer.css">
+    <script src="{{ view.root }}/install/installer.js" defer></script>
+</head>
+<body>
+<main id="installer" data-status-url="{{ view.action }}?view=status"
+      data-request-rejected="{{ 'Installation request was rejected.'|trans }}"
+      data-unknown-outcome="{{ 'The request outcome is unknown. Check execution status before retrying.'|trans }}"
+      data-status-unavailable="{{ 'Status is unavailable. Saved work is retained. Refresh to reconnect; do not submit another installation.'|trans }}">
+    <header><p>Kadupul {{ plan.target }}</p><h1>{{ 'Installation and upgrade'|trans }}</h1></header>
+    <ol aria-label="{{ 'Installation steps'|trans }}" class="steps">
+        {% for step in ['Check requirements', 'Configure', 'Review', 'Run', 'Verify'] %}<li>{{ step|trans }}</li>{% endfor %}
+    </ol>
+    <p>{{ 'Database version'|trans }}: <strong>{{ plan.schema }}</strong> · {{ 'Collector'|trans }} {{ plan.collector }}</p>
+    <p id="installer-error" role="alert">{{ error ? error|trans : '' }}</p>
+    {% if plan.mode == 'complete' and plan.job.state not in ['waiting', 'running', 'failed'] %}
+        <h2>{{ 'Installed'|trans }}</h2>
+        <p>{{ 'The database version matches this application. Installation does not establish that polling is healthy.'|trans }}</p>
+        <ul>
+            <li>{{ 'Verify the poller schedule and service account.'|trans }}</li>
+            <li>{{ 'Check collection freshness and collector connectivity before enabling discovery.'|trans }}</li>
+            <li>{{ 'Keep a backup of the database, RRD files, configuration and secret material.'|trans }}</li>
+        </ul>
+        <a href="{{ view.root }}/index.php">{{ 'Open the console'|trans }}</a>
+    {% else %}
+        <section aria-labelledby="requirements">
+            <h2 id="requirements">{{ 'Check requirements'|trans }}</h2>
+            <p>{{ 'Checks inspect this process and filesystem permissions. They do not write test files or contact devices.'|trans }}</p>
+            <table><thead><tr><th>{{ 'Check'|trans }}</th><th>{{ 'Observed'|trans }}</th><th>{{ 'Action'|trans }}</th></tr></thead><tbody>
+            {% for check in plan.checks %}
+                <tr><th scope="row">{{ check.name|trans }}</th><td>{{ check.ok ? 'Pass'|trans : 'Blocked'|trans }}: {{ check.observed }}</td><td>{{ check.ok ? 'No action needed'|trans : check.remedy|trans }}</td></tr>
+            {% endfor %}
+            </tbody></table>
+            <a href="{{ view.action }}">{{ 'Check again'|trans }}</a>
+        </section>
+        {% if plan.job.state in ['waiting', 'running'] %}
+        <form method="post" action="{{ view.action }}" data-installer-form>
+            <input type="hidden" name="__csrf_magic" value="{{ view.csrf }}">
+            <input type="hidden" name="action" value="recover">
+            <input type="hidden" name="attempt" value="{{ plan.job.attempt }}">
+            <label><input type="checkbox" name="recovery_confirmed" value="1" required> {{ 'I checked the log and confirmed that the previous worker and its child processes have stopped'|trans }}</label>
+            <button type="submit">{{ 'Recover stopped attempt'|trans }}</button>
+            <p>{{ 'Recovery retains the saved selections and never terminates a live worker. Review the plan again before retrying.'|trans }}</p>
+        </form>
+        {% endif %}
+        {% if plan.job.state not in ['waiting', 'running', 'succeeded'] and plan.mode != 'finish' %}
+        <section aria-labelledby="configure">
+            <h2 id="configure">{{ 'Configure'|trans }}</h2>
+            <form method="post" action="{{ view.action }}" data-installer-form>
+                <input type="hidden" name="__csrf_magic" value="{{ view.csrf }}">
+                <input type="hidden" name="action" value="configure">
+                <label for="profile">{{ 'Collection profile'|trans }}</label>
+                <select id="profile" name="options[Profile]" required>
+                    {% for profile in plan.profiles %}<option value="{{ profile.id }}"{{ plan.profile == profile.id ? ' selected' : '' }}>{{ profile.name }} (#{{ profile.id }})</option>{% endfor %}
+                </select>
+                <label><input type="checkbox" name="options[Eula]" value="1" required> {{ 'I accept the license terms'|trans }} (<a href="{{ view.root }}/LICENSE">{{ 'License'|trans }}</a>)</label>
+                <input type="hidden" name="options[AutomationMode]" value="0">
+                <label><input type="checkbox" name="options[AutomationMode]" value="1"{{ plan.discovery ? ' checked' : '' }}> {{ 'Enable discovery after installation'|trans }}</label>
+                <label for="range">{{ 'Discovery range'|trans }}</label><input id="range" name="options[AutomationRange]" value="{{ plan.range }}" maxlength="1024">
+                <details><summary>{{ 'Advanced options'|trans }}</summary>
+                    <label for="language">{{ 'Language'|trans }}</label><select id="language" name="options[Language]">{% for code, label in plan.languages %}<option value="{{ code }}"{{ plan.language == code ? ' selected' : '' }}>{{ label }}</option>{% endfor %}</select>
+                    <label for="theme">{{ 'Theme'|trans }}</label><select id="theme" name="options[Theme]">{% for theme in plan.themes %}<option value="{{ theme }}"{{ plan.theme == theme ? ' selected' : '' }}>{{ theme }}</option>{% endfor %}</select>
+                    <input type="hidden" name="options[AutomationOverride]" value="0">
+                    <label><input type="checkbox" name="options[AutomationOverride]" value="1"{{ plan.override ? ' checked' : '' }}> {{ 'Override discovery SNMP settings'|trans }}</label>
+                    <fieldset><legend>{{ 'Discovery SNMP settings'|trans }}</legend>
+                    <p>{{ 'Leave secret fields blank to retain stored credentials. Secrets are never redisplayed.'|trans }}</p>
+                    {% for field in plan.snmp %}
+                        <label for="snmp-{{ field.name }}">{{ field.label }}</label>
+                        {% if field.choices %}<select id="snmp-{{ field.name }}" name="options[SnmpOptions][{{ field.name }}]">{% for value, label in field.choices %}<option value="{{ value }}"{{ field.value == value ? ' selected' : '' }}>{{ label }}</option>{% endfor %}</select>
+                        {% else %}<input id="snmp-{{ field.name }}" type="{{ field.secret ? 'password' : 'text' }}" autocomplete="{{ field.secret ? 'new-password' : 'off' }}" name="options[SnmpOptions][{{ field.name }}]" value="{{ field.value }}" maxlength="{{ field.limit }}">{% endif %}
+                    {% endfor %}
+                    </fieldset>
+                    {% if plan.tables %}<fieldset><legend>{{ 'Table conversions'|trans }}</legend>
+                    <p>{{ 'Large tables may require the dedicated CLI conversion tool before installation.'|trans }}</p>
+                    <input type="hidden" name="options[Tables][all]" value="0">
+                    {% for table in plan.tables %}<label><input type="checkbox" name="options[Tables][{{ table.Name }}]" value="1"> {{ table.Name }} ({{ table.Engine }}, {{ table.Row_format }})</label>{% endfor %}
+                    </fieldset>{% endif %}
+                    <label for="interval">{{ 'Poller interval in seconds'|trans }}</label><input id="interval" name="options[CronInterval]" value="{{ plan.cron }}" inputmode="numeric">
+                    <fieldset><legend>{{ 'Executable paths'|trans }}</legend>
+                    {% for name, value in plan.paths %}<label for="{{ name }}">{{ name }}</label><input id="{{ name }}" name="options[Paths][{{ name }}]" value="{{ value }}" maxlength="4096">{% endfor %}
+                    </fieldset>
+                    <fieldset><legend>{{ 'Templates'|trans }}</legend>
+                    <input type="hidden" name="options[Templates][all]" value="0">
+                    {% for template in plan.templates %}
+                        <input type="hidden" name="options[Templates][{{ template.key }}]" value="0">
+                        <label><input type="checkbox" name="options[Templates][{{ template.key }}]" value="1"{{ template.selected ? ' checked' : '' }}> {{ template.name }}</label>
+                    {% endfor %}
+                    </fieldset>
+                </details>
+                <input type="hidden" name="form_complete" value="1">
+                <button type="submit">{{ 'Save and review'|trans }}</button>
+            </form>
+        </section>
+        {% endif %}
+        {% if plan.reviewed and plan.ready and plan.job.state not in ['waiting', 'running', 'succeeded'] %}
+        <section aria-labelledby="review"><h2 id="review">{{ 'Review installation plan'|trans }}</h2>
+            <dl><dt>{{ 'Operation'|trans }}</dt><dd>{{ plan.mode|trans }}</dd>
+                <dt>{{ 'Version change'|trans }}</dt><dd>{{ plan.schema }} → {{ plan.target }}</dd>
+                {% if plan.mode == 'finish' %}<dt>{{ 'Scope'|trans }}</dt><dd>{{ 'Finishing tasks only. Schema migrations will not be replayed.'|trans }}</dd>{% else %}<dt>{{ 'Discovery'|trans }}</dt><dd>{{ plan.discovery ? plan.range : 'Disabled'|trans }}</dd>{% endif %}
+            </dl>
+            <p>{{ 'Back up the database, RRD files, configuration and keys. Database upgrades may commit changes that application rollback cannot undo.'|trans }}</p>
+            <form method="post" action="{{ view.action }}" data-installer-form>
+                <input type="hidden" name="__csrf_magic" value="{{ view.csrf }}">
+                <input type="hidden" name="revision" value="{{ plan.revision }}">
+                <input type="hidden" name="action" value="{{ plan.job.state == 'not_started' ? 'start' : 'retry' }}">
+                <label><input type="checkbox" name="confirmed" value="1" required> {{ 'I reviewed this plan and have the required backups'|trans }}</label>
+                {% if plan.discovery %}<label><input type="checkbox" name="discovery_confirmed" value="1" required> {{ 'I authorize discovery of the displayed range'|trans }}</label>{% endif %}
+                {% if plan.job.state != 'not_started' %}<label><input type="checkbox" name="retry_confirmed" value="1" required> {{ 'I checked the previous attempt and accept that some changes may already be committed'|trans }}</label>{% endif %}
+                <button type="submit">{{ 'Run reviewed plan'|trans }}</button>
+            </form>
+        </section>
+        {% endif %}
+    {% endif %}
+    <section aria-labelledby="progress" data-installer-progress data-state="{{ plan.job.state }}">
+        <h2 id="progress">{{ 'Execution status'|trans }}</h2>
+        <p id="installer-state" role="status" aria-live="polite">{{ plan.job.state|trans }}: {{ plan.job.phase|trans }}</p>
+        <progress id="installer-progress" max="100" value="{{ plan.job.progress }}">{{ plan.job.progress }}%</progress>
+        <p>{{ 'Progress shows the last recorded phase. Refreshing this page never starts or retries a worker.'|trans }}</p>
+        <p>{{ plan.job.error ? plan.job.error|trans : '' }}</p>
+        <p>{{ 'If a worker stops unexpectedly, preserve log/cacti.log and confirm its process has ended before explicitly retrying. A waiting state does not confirm a successful launch.'|trans }}</p>
+    </section>
+</main>
+</body>
+</html>

@@ -8,8 +8,12 @@
 
 include_once(dirname(__FILE__) . '/../lib/poller.php');
 
-class Installer implements JsonSerializable
+// Direct legacy fixtures and pre-Composer callers also load this boundary.
+require_once dirname(__DIR__) . '/src/Platform/Application/Installer/InstallerEngine.php';
+
+class Installer implements JsonSerializable, \Kadupul\Platform\Application\Installer\InstallerEngine
 {
+    private int $collectorSyncPending = 0;
     const EXIT_DB_EMPTY = 1;
     const EXIT_DB_OLD = 2;
 
@@ -124,9 +128,42 @@ class Installer implements JsonSerializable
      *
      * @arg installData - array of fields to update
      */
-    public function __construct($install_params = array())
+    public static function reviewed(#[\SensitiveParameter] array $options): \Kadupul\Platform\Application\Installer\InstallerEngine
     {
-        log_install_high('step', 'Install Parameters: ' . clean_up_lines(var_export($install_params, true)));
+        return new self($options + array('Runtime' => 'Cli', 'Step' => self::STEP_INSTALL_CONFIRM), true);
+    }
+
+    public function installationResult(): array
+    {
+        return array('ready' => $this->getErrors() === array() && (int) $this->getStep() === self::STEP_INSTALL_CONFIRM,
+            'complete' => $this->getErrors() === array() && (int) $this->getStep() === self::STEP_COMPLETE,
+            'mode' => (int) $this->getMode(), 'pending_collectors' => $this->collectorSyncPending);
+    }
+
+    public static function synchronizeCollectors(): int
+    {
+        $status = self::fullSyncDataCollectors();
+        return count(array_unique(array_merge($status['timeout'], $status['skipped'], $status['failed']), SORT_REGULAR));
+    }
+
+    public static function finishReviewedInstallation(): void
+    {
+        // These effects belonged to the completion GET. The Symfony workflow
+        // executes them in its authorized worker and retains diagnostic files.
+        api_plugin_uninstall_integrated();
+        if (!db_execute("DELETE FROM settings WHERE name LIKE 'install!_%' ESCAPE '!'")) {
+            throw new RuntimeException('Installer settings cleanup failed.');
+        }
+    }
+
+    public function executeReviewedInstallation(): void
+    {
+        self::beginInstall('-b', $this);
+    }
+
+    public function __construct(#[\SensitiveParameter] $install_params = array(), bool $preserveConfiguration = false)
+    {
+        log_install_high('step', 'Install Parameters: ' . clean_up_lines(var_export(array_keys($install_params), true)));
 
         $this->old_cacti_version = get_cacti_version();
         $this->setRuntime(isset($install_params['Runtime']) ? $install_params['Runtime'] : 'unknown');
@@ -139,6 +176,12 @@ class Installer implements JsonSerializable
             $step = $this->getStepDefault();
         }
         $this->stepError = false;
+
+        // Explicit configuration/retry in the Symfony workflow retains the
+        // operator's selections. Browser status never constructs an Installer.
+        if ($preserveConfiguration && $step >= Installer::STEP_COMPLETE) {
+            $step = Installer::STEP_WELCOME;
+        }
 
         if ($step == Installer::STEP_INSTALL) {
             $install_version = read_config_option('install_version', true);
@@ -175,7 +218,7 @@ class Installer implements JsonSerializable
                 log_install_debug('step', 'Does not match: ' . clean_up_lines(var_export(CACTI_VERSION, true)));
                 // A new version starts a new wizard; it is not a failed validation.
                 $step = Installer::STEP_WELCOME;
-                db_execute('DELETE FROM settings WHERE name LIKE \'install_%\'');
+                db_execute('DELETE FROM settings WHERE name LIKE \'install!_%\' ESCAPE \'!\'');
             } else {
                 $install_params = array();
             }
@@ -399,7 +442,7 @@ class Installer implements JsonSerializable
         $this->snmpOptions = $this->getSnmpOptions();
         $this->setMode($this->getMode());
 
-        log_install_high('', 'Installer::processParameters(' . clean_up_lines(json_encode($install_params)) . ')');
+        log_install_high('', 'Installer::processParameters(' . clean_up_lines(json_encode(array_keys($install_params))) . ')');
         if (!empty($install_params)) {
             $this->processParameters($install_params);
         }
@@ -1058,7 +1101,7 @@ class Installer implements JsonSerializable
      *         invalid value is passed */
     private function setAutomationOverride($param_override = null)
     {
-        if ($param_override != null) {
+        if ($param_override !== null) {
             if (!$this->setTrueFalse($param_override, $this->automationOverride, 'automation_override')) {
                 $this->addError(Installer::STEP_PROFILE_AND_AUTOMATION, 'Automation', 'Override', __('Failed to apply specified automation override: %s', $param_override));
             }
@@ -1154,7 +1197,7 @@ class Installer implements JsonSerializable
             $options[$key] = $row['value'];
         }
 
-        log_install_debug('snmp_options', 'Option array: ' . clean_up_lines(var_export($options, true)));
+        log_install_debug('snmp_options', 'Option array: ' . clean_up_lines(var_export(array_keys($options), true)));
         return $options;
     }
 
@@ -1163,6 +1206,27 @@ class Installer implements JsonSerializable
      *
      * Errors: will add an error to STEP_PROFILE_AND_AUTOMATION if an
      *         invalid value is passed */
+    /** Field names accepted by the native installer and its Symfony form. */
+    public static function snmpOptionNames(): array
+    {
+        return array(
+            'SnmpVersion'         => 'snmp_version'         ,
+            'SnmpCommunity'       => 'snmp_community'       ,
+            'SnmpSecurityLevel'   => 'snmp_security_level'  ,
+            'SnmpUsername'        => 'snmp_username'        ,
+            'SnmpAuthProtocol'    => 'snmp_auth_protocol'   ,
+            'SnmpPassword'        => 'snmp_password'        ,
+            'SnmpPrivProtocol'    => 'snmp_priv_protocol'   ,
+            'SnmpPrivPassphrase'  => 'snmp_priv_passphrase' ,
+            'SnmpContext'         => 'snmp_context'         ,
+            'SnmpEngineId'        => 'snmp_engine_id'       ,
+            'SnmpPort'            => 'snmp_port'            ,
+            'SnmpTimeout'         => 'snmp_timeout'         ,
+            'SnmpMaxOids'         => 'max_oids'             ,
+            'SnmpRetries'         => 'snmp_retries'         ,
+        );
+    }
+
     private function setSnmpOptions($param_snmp_options = array())
     {
         global $fields_snmp_item_with_retry;
@@ -1171,23 +1235,8 @@ class Installer implements JsonSerializable
         if (is_array($param_snmp_options)) {
             db_execute('DELETE FROM settings WHERE name like \'install_snmp_option_%\'');
             log_install_medium('snmp_options', "Updating snmp_options");
-            log_install_debug('snmp_options', "Parameter data:" . clean_up_lines(var_export($param_snmp_options, true)));
-            $known_map = array(
-                'SnmpVersion'         => 'snmp_version'         ,
-                'SnmpCommunity'       => 'snmp_community'       ,
-                'SnmpSecurityLevel'   => 'snmp_security_level'  ,
-                'SnmpUsername'        => 'snmp_username'        ,
-                'SnmpAuthProtocol'    => 'snmp_auth_protocol'   ,
-                'SnmpPassword'        => 'snmp_password'        ,
-                'SnmpPrivProtocol'    => 'snmp_priv_protocol'   ,
-                'SnmpPrivPassphrase'  => 'snmp_priv_passphrase' ,
-                'SnmpContext'         => 'snmp_context'         ,
-                'SnmpEngineId'        => 'snmp_engine_id'       ,
-                'SnmpPort'            => 'snmp_port'            ,
-                'SnmpTimeout'         => 'snmp_timeout'         ,
-                'SnmpMaxOids'         => 'max_oids'             ,
-                'SnmpRetries'         => 'snmp_retries'         ,
-            );
+            log_install_debug('snmp_options', "Parameter data:" . clean_up_lines(var_export(array_keys($param_snmp_options), true)));
+            $known_map = self::snmpOptionNames();
 
             foreach ($param_snmp_options as $option_name => $option_value) {
                 log_install_high('snmp_options', "snmp_option: " . clean_up_lines(var_export($option_name, true)));
@@ -1198,8 +1247,8 @@ class Installer implements JsonSerializable
 
                     if (array_key_exists($key, $known_snmp_options)) {
                         $bad_option = false;
-                        log_install_high('snmp_options', "snmp_option set:" . clean_up_lines(var_export($option_value, true)));
-                        log_install_debug('snmp_options', "Set snmp_option: install_snmp_option_$key = $option_value");
+                        log_install_high('snmp_options', 'Updating option ' . $key);
+                        log_install_debug('snmp_options', 'Updating install_snmp_option_' . $key);
                         set_install_config_option("install_snmp_option_$key", $option_value);
                     }
                 }
@@ -3045,7 +3094,7 @@ class Installer implements JsonSerializable
         if ($this->stepCurrent == Installer::STEP_COMPLETE) {
             $output = Installer::sectionTitle(__('Complete'));
             $output .= Installer::sectionNormal(__('Your Kadupul Server v%s has been installed/updated.  You may now start using the software.', CACTI_VERSION));
-            db_execute('DELETE FROM settings WHERE name LIKE "install_%"');
+            db_execute("DELETE FROM settings WHERE name LIKE 'install!_%' ESCAPE '!'");
         } elseif ($this->stepCurrent == Installer::STEP_ERROR) {
             $output = Installer::sectionTitleError();
             $output .= Installer::sectionNormal(__('Your Kadupul Server v%s has been installed/updated with errors', CACTI_VERSION));
@@ -3309,7 +3358,7 @@ class Installer implements JsonSerializable
             // Sync the remote data collectors
             if ($this->mode != Installer::MODE_POLLER) {
                 $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_START);
-                Installer::fullSyncDataCollectors();
+                $this->collectorSyncPending = self::synchronizeCollectors();
                 $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_END);
             }
 
@@ -4079,7 +4128,7 @@ class Installer implements JsonSerializable
             }
         }
     }
-    private static function fullSyncDataCollectors()
+    private static function fullSyncDataCollectors(): array
     {
         // Perform full sync to complete upgrade
         $status = install_full_sync();
@@ -4092,6 +4141,7 @@ class Installer implements JsonSerializable
             Installer::fullSyncDataCollectorLog($status['failed'], "Remote Data Collector with name '%s' and id %d failed Full Sync.  Please manually Sync when once online to complete upgrade.");
             Installer::fullSyncDataCollectorLog($status['success'], "Remote Data Collector with name '%s' and id %d completed Full Sync.");
         }
+        return $status;
     }
 
     private static function disableInvalidPlugins()

@@ -255,6 +255,16 @@ function csrf_error_callback(): never
 {
     //Resolve session fixation for PHP 5.4
     session_regenerate_id();
+    if (defined('KADUPUL_INSTALLER_WEB') && ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        http_response_code(403);
+        header('Content-Type: application/json');
+        header('Cache-Control: private, no-store');
+        print json_encode(['error' => 'csrf_expired', 'token' => csrf_get_tokens()], JSON_THROW_ON_ERROR);
+        exit;
+    }
     raise_message('csrf_timeout');
     ob_end_clean();
     header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));

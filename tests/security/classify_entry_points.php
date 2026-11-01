@@ -109,6 +109,42 @@ const REVIEWED_ROUTES = [
     'session' => 'answers 401 with no identity when the actor is null',
 ];
 
+// Native installer authentication crosses the pre-install bootstrap rather
+// than the normal Symfony identity adapter. Pin the complete reviewed handoff;
+// an edit to any enforcing source must become unknown until reviewed again.
+const INSTALLER_AUTHENTICATION_SOURCES = [
+    'install/install.php' => '1df3a504b3dbca8b1c894412621d5e3fcc842414ce92dbfa231f4d1102d633b9',
+    'install/background.php' => 'e5f6566d90a88eae13d0fa05c7d818a876f968bb75a37083f570d86642bbf237',
+    'install/installer-bootstrap.php' => '1dc2ba4f219239ebf06e6f1da1d0423ef1203314244cec3a27b21a013b596793',
+    'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
+    'lib/auth.php' => '816375f3318417cda3d954967198f9ec5a117e9e7a3bdf86c0e51b26d3d4d125',
+    'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
+    'config/services.yaml' => 'd6dccad6f94a51833b1ccda5daef6d07036055e8e6e63e01ba36c2cdba1a5f8c',
+    'bin/legacy-installer.php' => 'f4d7a5eb4de9d3ea20ecaa9f7b4ae66208d6119a54ae7095203e299a5425e735',
+    'src/Platform/Application/Installer/InstallerWorkflow.php' => '0ee18fbe3536afb3c49a9c4cb899d1eaf30e1dbad17ababb315fe6827c9cd154',
+    'src/Platform/Application/Installer/InstallerBackend.php' => '36d4c19c0d0823fe58f5e18047d23329353e6bc6dc0b0ecabcac78d964cfdba3',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => '2d7e8c22812043cc6cf7aa697aa428ad0bea1adcb551e368bd652aece8cf3194',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php' => '68973dd2ca4005eeb5c6eee6161548191e9833e954301ef99aaa93a935a10c48',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerWebContext.php' => '11f11fa72e0655a14d33892a3ce4c55f758d99f4809fc59bcee4576bce193701',
+    'src/Platform/Infrastructure/Legacy/InstallerReviewSigner.php' => '8b65ff4392619b813b3cd43b8f2c8028e13ed38697ec858254f9c901cc759124',
+    'src/Platform/Infrastructure/Symfony/InstallerWebContext.php' => 'f41b35432ad9702c688b86283a474cd3bc11a39a6f68cae7f5169b5db539a725',
+    'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php' => '64e5595745ca31a073a3bec0ef8ee5b113d8cc6d18b63be416154a45341910b5',
+];
+
+function installer_authentication_review(string $root): ?string
+{
+    if (INSTALLER_AUTHENTICATION_SOURCES === []) {
+        return null;
+    }
+    foreach (INSTALLER_AUTHENTICATION_SOURCES as $relative => $expected) {
+        $path = $root . '/' . $relative;
+        if (!is_file($path) || hash_file('sha256', $path) !== $expected) {
+            return null;
+        }
+    }
+    return hash('sha256', json_encode(INSTALLER_AUTHENTICATION_SOURCES, JSON_THROW_ON_ERROR));
+}
+
 // Additional manually audited feature gates. Both the action and adapter
 // bodies are pinned in inventory output, so a changed call or refusal causes
 // baseline drift and requires review rather than inheriting this annotation.
@@ -227,7 +263,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'b39ba96e269ffb22772ed66b08745011d96e8b3cb5c5e688eb50fbc5623d574d',
+    'config/services.yaml' => 'd6dccad6f94a51833b1ccda5daef6d07036055e8e6e63e01ba36c2cdba1a5f8c',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -1119,6 +1155,18 @@ function classify(string $root, string $path, array $realms, array $early, array
     $stmts = program($root, $path);
     if ($stmts === null) {
         return ['unknown', 'file does not parse'];
+    }
+    $installer = [
+        'install/install.php' => ['realm:26', 'native login/account policy and uncached realm 26 before workflow; CSRF before mutations'],
+        'install/background.php' => ['cli-only', 'native CLI guard; reserved installer token and current actor eligibility before execution'],
+        'install/installer-bootstrap.php' => ['guarded-fragment', 'direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability'],
+    ];
+    if (isset($installer[$path])) {
+        $review = installer_authentication_review($root);
+        if ($review === null || ($realms['install.php'] ?? 0) !== 26) {
+            return ['unknown', 'native installer authentication handoff changed or is incomplete'];
+        }
+        return [$installer[$path][0], $installer[$path][1] . '; reviewed at ' . $review];
     }
     if (array_key_exists($path, UNGATED)) {
         return ['ungated', UNGATED[$path]];
@@ -3047,6 +3095,16 @@ function symfony_routes(string $root, array $files): array
                         }
                         $seen = [];
                         $name = $class->namespacedName?->toString() ?? '';
+                        if ($route['name'] === 'platform_installer') {
+                            $review = installer_authentication_review($root);
+                            $valid = $review !== null && $path === 'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php'
+                                && $name === 'Kadupul\\Platform\\Infrastructure\\Symfony\\Controller\\InstallerController'
+                                && $route['path'] === '/installer' && $method->name->toString() === '__invoke';
+                            $rows[] = ['app.php' . $route['path'], $valid ? 'symfony:platform_installer' : 'unknown',
+                                $valid ? $route['detail'] . '; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at ' . $review
+                                    : 'native installer authentication handoff changed or is incomplete'];
+                            continue;
+                        }
                         $checks = method_checks($root, $name, $method, 0, $seen);
                         $detail = $route['detail'];
                         $reviewed = '';

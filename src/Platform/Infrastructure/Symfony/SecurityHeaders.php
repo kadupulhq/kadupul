@@ -24,7 +24,9 @@ final class SecurityHeaders implements EventSubscriberInterface
         $headers->set('X-Content-Type-Options', 'nosniff');
         $headers->set('X-Frame-Options', 'DENY');
         $headers->set('Referrer-Policy', 'same-origin');
-        $headers->set('Content-Security-Policy', "default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+        if ($event->getRequest()->attributes->get('_route') !== 'platform_installer' || !$headers->has('Content-Security-Policy')) {
+            $headers->set('Content-Security-Policy', "default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'");
+        }
         if ($event->getResponse() instanceof ConsoleHomeResponse && $event->getResponse()->compatibilityPolicies !== []) {
             // The native extension adapter provides the same operator-selected
             // policy as the old console. Other Symfony pages remain strict.

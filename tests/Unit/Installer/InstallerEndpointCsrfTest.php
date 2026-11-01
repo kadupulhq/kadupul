@@ -76,7 +76,7 @@ PHP;
     array('POST', 'array', 'STATUS:403'),
     array('POST', 'nested', 'STATUS:403'),
     array('POST', 'query', 'STATUS:403'),
-    array('POST', 'valid', 'DISPATCHSTATUS:200'),
+    array('POST', 'valid', '{"status":"409","statusText":"Installer moved","responseText":"Reload install.php to review and run the current installation plan."}STATUS:409'),
 ));
 
 test('application CSRF bootstrap rejects malformed token shapes', function ($token) {

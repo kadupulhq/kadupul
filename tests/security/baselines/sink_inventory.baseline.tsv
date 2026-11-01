@@ -10,7 +10,6 @@ cmd_exec	./cli/push_out_hosts.php:50		passthru($command, $exit_code);
 cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:265				$result = exec($command, $output, $return_code);
 cmd_exec	./install/functions.php:594	            $myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
-cmd_exec	./install/install.php:108			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
 cmd_exec	./lib/database.php:2658	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1103	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/functions.php:2599	                $output = shell_exec($script_path);
@@ -25,8 +24,8 @@ cmd_exec	./lib/functions.php:7818	            exec(sprintf('grep :%s: /etc/passw
 cmd_exec	./lib/functions.php:8160	 * shell_exec() callers that already assemble the command string.
 cmd_exec	./lib/functions.php:8202	    $process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:8271	 * shell_exec() and expect a string return value.
-cmd_exec	./lib/installer.php:3703	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:854	            $process = @proc_open(
+cmd_exec	./lib/installer.php:3752	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:897	            $process = @proc_open(
 cmd_exec	./lib/ping.php:163	                $result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:165	                $result = shell_exec('ping -m ' . ceil($this->timeout / 1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:167	                $result = shell_exec('ping -t ' . ceil($this->timeout / 1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -176,16 +175,12 @@ dynamic_include	./cli/import_template.php:12	require_once($config['base_path'] .
 dynamic_include	./cli/input_whitelist.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/input_whitelist.php:13	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/input_whitelist.php:14	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./cli/install_cacti.php:10	require_once($config['base_path'] . '/install/functions.php');
-dynamic_include	./cli/install_cacti.php:146	include_once($config['base_path'] . '/lib/api_automation.php');
-dynamic_include	./cli/install_cacti.php:147	include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./cli/install_cacti.php:148	include_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/install_cacti.php:149	include_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./cli/install_cacti.php:150	include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/install_cacti.php:151	include_once($config['base_path'] . '/lib/import.php');
-dynamic_include	./cli/install_cacti.php:152	include_once($config['base_path'] . '/lib/installer.php');
-dynamic_include	./cli/install_cacti.php:153	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/install_cacti.php:154	include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./cli/poller_output_empty.php:10	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/poller_output_empty.php:11	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./cli/poller_output_empty.php:12	require_once($config['base_path'] . '/lib/dsstats.php');
+dynamic_include	./cli/poller_output_empty.php:13	require_once($config['base_path'] . '/lib/dsdebug.php');
+dynamic_include	./cli/poller_output_empty.php:14	require_once($config['base_path'] . '/lib/boost.php');
+dynamic_include	./cli/poller_output_empty.php:15	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./cli/poller_reindex_hosts.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/poller_reindex_hosts.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/poller_reindex_hosts.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -238,7 +233,7 @@ dynamic_include	./cmd_realtime.php:9	require_once($config['base_path'] . '/lib/s
 dynamic_include	./graph_realtime.php:495	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:135	                require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:202	            require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/csrf.php:404	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+dynamic_include	./include/csrf.php:414	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/global.php:275	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:276	include_once($config['library_path'] . '/functions.php');
@@ -266,31 +261,18 @@ dynamic_include	./include/global.php:569	include_once($config['include_path'] . 
 dynamic_include	./include/global.php:570	include_once($config['include_path'] . '/vendor/autoload.php');
 dynamic_include	./include/global.php:571	include_once($config['include_path'] . '/request_profile.php');
 dynamic_include	./include/global_languages.php:156				require_once($providerFull);
-dynamic_include	./install/background.php:11	include_once($config['base_path'] . '/install/functions.php');
-dynamic_include	./install/background.php:12	include_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./install/background.php:13	include_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./install/background.php:14	include_once($config['base_path'] . '/lib/api_automation.php');
-dynamic_include	./install/background.php:15	include_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./install/background.php:16	include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./install/background.php:17	include_once($config['base_path'] . '/lib/import.php');
-dynamic_include	./install/background.php:18	include_once($config['base_path'] . '/lib/installer.php');
-dynamic_include	./install/background.php:19	include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./install/background.php:20	include_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./install/background.php:21	include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./install/background.php:16	include_once($config['base_path'] . '/install/functions.php');
+dynamic_include	./install/background.php:17	include_once($config['base_path'] . '/lib/api_data_source.php');
+dynamic_include	./install/background.php:18	include_once($config['base_path'] . '/lib/api_device.php');
+dynamic_include	./install/background.php:19	include_once($config['base_path'] . '/lib/api_automation.php');
+dynamic_include	./install/background.php:20	include_once($config['base_path'] . '/lib/api_automation_tools.php');
+dynamic_include	./install/background.php:21	include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./install/background.php:22	include_once($config['base_path'] . '/lib/import.php');
+dynamic_include	./install/background.php:23	include_once($config['base_path'] . '/lib/installer.php');
+dynamic_include	./install/background.php:24	include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./install/background.php:25	include_once($config['base_path'] . '/lib/snmp.php');
+dynamic_include	./install/background.php:26	include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./install/functions.php:1192	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./install/install.php:12	require_once($config['base_path'] . '/lib/api_automation_tools.php');
-dynamic_include	./install/install.php:13	require_once($config['base_path'] . '/lib/api_automation.php');
-dynamic_include	./install/install.php:14	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./install/install.php:15	require_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./install/install.php:16	require_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./install/install.php:17	require_once($config['base_path'] . '/lib/api_tree.php');
-dynamic_include	./install/install.php:18	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./install/install.php:19	require_once($config['base_path'] . '/lib/import.php');
-dynamic_include	./install/install.php:20	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./install/install.php:21	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./install/install.php:22	require_once($config['base_path'] . '/lib/sort.php');
-dynamic_include	./install/install.php:23	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./install/install.php:24	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./install/upgrades/0_8_3.php:7	include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./install/upgrades/0_8_3.php:8	include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./install/upgrades/0_8_6.php:10	include_once($config["base_path"] . "/lib/poller.php");
@@ -348,7 +330,7 @@ dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . 
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/import.php:2321	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/installer.php:3849	                include_once($upgrade_file);
+dynamic_include	./lib/installer.php:3898	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);
 dynamic_include	./lib/plugins.php:469	    include_once($config['library_path'] . '/database.php');
@@ -544,7 +526,7 @@ fs_write	./lib/import.php:721	                        $file = fopen($filename, '
 fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
-fs_write	./lib/installer.php:3073	            $file = fopen($cacheFile, "r");
+fs_write	./lib/installer.php:3122	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1771	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1799	                                            file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1828	                            file_put_contents($mypath, $contents);
@@ -769,7 +751,7 @@ header_redirect	./include/auth.php:34	    header('Location: ' . $config['url_pat
 header_redirect	./include/auth.php:65	            header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/auth.php:89	                        header('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
-header_redirect	./include/csrf.php:260	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
+header_redirect	./include/csrf.php:270	    header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/global.php:437	            header('Location: ' . $https_redirect);
 header_redirect	./include/index.php:7	header("Location:../index.php");
 header_redirect	./include/js/LC_MESSAGES/index.php:7	header("Location:../index.php");

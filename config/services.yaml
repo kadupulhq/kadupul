@@ -35,6 +35,16 @@ services:
         bind:
             string $projectDir: '%kernel.project_dir%'
 
+    Kadupul\Platform\Application\Installer\InstallerWorkflow:
+        public: true
+    Kadupul\Platform\Application\Installer\InstallerBackend:
+        alias: Kadupul\Platform\Infrastructure\Legacy\NativeInstallerBackend
+    Kadupul\Platform\Infrastructure\Symfony\InstallerWebContext:
+        alias: Kadupul\Platform\Infrastructure\Legacy\NativeInstallerWebContext
+    installer.native:
+        alias: Kadupul\Platform\Infrastructure\Legacy\NativeInstallerBackend
+        public: true
+
     Kadupul\Platform\Infrastructure\:
         resource: '../src/Platform/Infrastructure/'
         # Built by InstallationConnectionMiddleware around each DBAL driver; a

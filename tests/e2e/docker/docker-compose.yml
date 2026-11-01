@@ -31,6 +31,7 @@ services:
     container_name: cacti-e2e-master
     environment:
       ROLE: master
+      APP_SECRET: ${INSTALLER_TEST_APP_SECRET:-}
       DB_HOST: cacti-db
       DB_NAME: cacti
       DB_USER: cactiuser
@@ -64,6 +65,7 @@ services:
     container_name: cacti-e2e-poller
     environment:
       ROLE: poller
+      APP_SECRET: ${INSTALLER_TEST_APP_SECRET:-}
       DB_HOST: cacti-db
       DB_NAME: cacti
       DB_USER: cactiuser

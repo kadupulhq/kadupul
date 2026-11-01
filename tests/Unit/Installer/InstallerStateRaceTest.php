@@ -40,8 +40,8 @@ it('preserves installer hydration and normalization contracts', function (string
         expect($state['navigation']['Prev']['Step'])->toBe($expected >= 98 || $expected === 1 ? 0 : 96);
         expect($state['navigation']['Next']['Step'])->toBe($expected >= 98 ? 0 : ($expected === 1 ? 2 : 98));
         if (in_array($scenario, ['new-version', 'retry-reset'], true)) {
-            expect($state['deletes'][0])->toBe("DELETE FROM settings WHERE name LIKE 'install_%'");
-            expect(count(array_filter($state['deletes'], static fn(string $sql): bool => $sql === "DELETE FROM settings WHERE name LIKE 'install_%'")))->toBe(1);
+            expect($state['deletes'][0])->toBe("DELETE FROM settings WHERE name LIKE 'install!_%' ESCAPE '!'");
+            expect(count(array_filter($state['deletes'], static fn(string $sql): bool => $sql === "DELETE FROM settings WHERE name LIKE 'install!_%' ESCAPE '!'")))->toBe(1);
             foreach (['install_error', 'install_complete', 'install_version', 'install_snmp_option_test'] as $name) {
                 expect($state['persisted'])->not->toHaveKey($name);
             }

@@ -7,6 +7,12 @@ IFS=$'\n\t'
 : "${CACTI_E2E_PORT:=8088}"
 export CACTI_E2E_PORT
 
+# Ephemeral shared review key for the disposable web and CLI processes.
+if [[ -z "${INSTALLER_TEST_APP_SECRET:-}" ]]; then
+    INSTALLER_TEST_APP_SECRET=$(openssl rand -hex 32)
+fi
+export INSTALLER_TEST_APP_SECRET
+
 cd "$(dirname "$0")"
 
 shopt -s nullglob || true
