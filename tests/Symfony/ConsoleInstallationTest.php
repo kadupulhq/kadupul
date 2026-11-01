@@ -11,6 +11,9 @@ namespace Kadupul\Tests;
 
 use Kadupul\Platform\Infrastructure\Legacy\ConsoleInstallation;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+require_once __DIR__ . '/Fixtures/ConsoleSelectionFaultPdo.php';
 
 final class ConsoleInstallationTest extends TestCase
 {
@@ -74,4 +77,49 @@ final class ConsoleInstallationTest extends TestCase
             }
         }
     }
+
+    /** @return iterable<string,array{string,list<string>}> */
+    public static function readFailures(): iterable
+    {
+        yield 'admitted empty actual queue' => ['none', ['query', 'fetchColumn', 'closeCursor']];
+        yield 'query returned false' => ['query-false', ['query']];
+        yield 'cursor close returned false' => ['close-false', ['query', 'fetchColumn', 'closeCursor']];
+    }
+
+    /** @param list<string> $events */
+    #[DataProvider('readFailures')]
+    public function testDriverFailuresRemainUnconfirmedInsteadOfEmptyQueues(string $stage, array $events): void
+    {
+        $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
+        if (!is_string($dsn) || $dsn === '') $this->markTestSkipped('A disposable MySQL-compatible fixture is required.');
+        $user = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: 'root';
+        $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+        $database = new \PDO($dsn, $user, $password === false ? '' : $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+        $schema = 'console_value_' . bin2hex(random_bytes(8));
+        $created = false;
+        try {
+            $database->exec('CREATE DATABASE `' . $schema . '`');
+            $created = true;
+            $database->exec('USE `' . $schema . '`');
+            $database->exec("SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION,ALLOW_INVALID_DATES'");
+            $source = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+            $this->assertIsString($source);
+            $this->assertSame(1, preg_match('/CREATE TABLE `?poller_output`? \(.*?\n\) ENGINE=[^;]*;/s', $source, $match));
+            $database->exec($match[0]);
+            $sql = 'SELECT EXISTS(SELECT 1 FROM poller_output LIMIT 1)';
+            $statement = $database->query($sql);
+            $this->assertInstanceOf(\PDOStatement::class, $statement);
+            $expected = $statement->fetchColumn();
+            $this->assertContains($expected, [0, '0']);
+            $this->assertTrue($statement->closeCursor());
+            $fault = new Fixtures\ConsoleSelectionFaultPdo($database, $stage);
+            $read = new \ReflectionMethod(ConsoleInstallation::class, 'value');
+            $actual = $read->invoke(null, $fault, $sql);
+            $this->assertSame($stage === 'none' ? $expected : false, $actual);
+            $this->assertSame($events, $fault->events, 'The intended production PDO guard must be reached.');
+        } finally {
+            if ($created) $database->exec('DROP DATABASE `' . $schema . '`');
+        }
+    }
+
 }
