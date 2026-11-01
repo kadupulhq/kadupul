@@ -12732,19 +12732,19 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "चेतावनी:  कुंजी Kadupul फ़ाइल %s लापता शामिल करें।  कृपया इस फ़ाइल का पता लगाएँ और उसे बदलें"
 
-#: lib/graph_data_removal.php:443
+#: lib/graph_data_removal.php:475
 msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
 msgstr ""
 
-#: lib/graph_data_removal.php:445
+#: lib/graph_data_removal.php:477
 msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:447
+#: lib/graph_data_removal.php:479
 msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:448
+#: lib/graph_data_removal.php:480
 msgid "The removal could not be completed. Reload and review the selection before retrying."
 msgstr ""
 
@@ -15192,93 +15192,93 @@ msgstr "PHP विकल्प%s सेट करने में विफल,%
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "सिंक्रनाइज़ेशन का प्रयास करते समय डेटा कलेक्टर (ओं) को नहीं मिला"
 
-#: lib/ldap.php:308
+#: lib/ldap.php:348
 msgid "Authentication Success"
 msgstr "प्रमाणीकरण सफलता"
 
-#: lib/ldap.php:312
+#: lib/ldap.php:352
 msgid "Authentication Failure"
 msgstr "प्रमाणीकरण विफलता"
 
-#: lib/ldap.php:316
+#: lib/ldap.php:356
 msgid "PHP LDAP not enabled"
 msgstr "PHP LDAP सक्षम नहीं है"
 
-#: lib/ldap.php:320
+#: lib/ldap.php:360
 msgid "No username defined"
 msgstr "कोई उपयोगकर्ता नाम निर्धारित नहीं है"
 
-#: lib/ldap.php:324
+#: lib/ldap.php:364
 #, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
 msgstr "प्रोटोकॉल त्रुटि, सर्वर (%s) पर संस्करण (%s) सेट करने में असमर्थ"
 
-#: lib/ldap.php:328
+#: lib/ldap.php:368
 #, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
 msgstr "प्रोटोकॉल त्रुटि, सर्वर पर रेफ़रल विकल्प (%s) सेट करने में असमर्थ (%s)"
 
-#: lib/ldap.php:332
+#: lib/ldap.php:372
 #, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
 msgstr "प्रोटोकॉल त्रुटि, सर्वर (%s) पर TLS संचार (%s) शुरू करने में असमर्थ"
 
-#: lib/ldap.php:336
+#: lib/ldap.php:376
 #, php-format
 msgid "Protocol Error, General failure (%s)"
 msgstr "प्रोटोकॉल त्रुटि, सामान्य विफलता ( %s)"
 
-#: lib/ldap.php:340
+#: lib/ldap.php:380
 #, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "प्रोटोकॉल त्रुटि, बाइंड करने में असमर्थ, LDAP परिणाम: (%s) सर्वर पर (%s)"
 
-#: lib/ldap.php:344
+#: lib/ldap.php:384
 #, fuzzy, php-format
 msgid "Unable to Connect to Server (%s)"
 msgstr "\" LDAP कन्नै कनैक्ट करने च असमर्थ\""
 
-#: lib/ldap.php:348
+#: lib/ldap.php:388
 #, php-format
 msgid "Connection Timeout to Server (%s)"
 msgstr "सर्वर से कनेक्शन टाइमआउट (%s)"
 
-#: lib/ldap.php:352
+#: lib/ldap.php:392
 #, php-format
 msgid "Insufficient Access to Server (%s)"
 msgstr "सर्वर तक अपर्याप्त पहुंच (%s)"
 
-#: lib/ldap.php:356
+#: lib/ldap.php:396
 #, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
 msgstr "समूह DN की तुलना सर्वर (%s) पर नहीं की जा सकी"
 
-#: lib/ldap.php:360
+#: lib/ldap.php:400
 msgid "More than one matching user found"
 msgstr "एक से अधिक मेल खाने वाले उपयोगकर्ता मिले"
 
-#: lib/ldap.php:364
+#: lib/ldap.php:404
 msgid "Unable to find user from DN"
 msgstr "DN से उपयोगकर्ता को खोजने में असमर्थ"
 
-#: lib/ldap.php:368
+#: lib/ldap.php:408
 msgid "Unable to find users DN"
 msgstr "उपयोगकर्ता DN खोजने में असमर्थ"
 
-#: lib/ldap.php:372
+#: lib/ldap.php:412
 #, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
 msgstr "सर्वर (%s) पर LDAP कनेक्शन ऑब्जेक्ट बनाने में असमर्थ"
 
-#: lib/ldap.php:376
+#: lib/ldap.php:416
 msgid "Specific DN and Password required"
 msgstr "विशिष्ट डीएन और पासवर्ड की आवश्यकता है"
 
-#: lib/ldap.php:380
+#: lib/ldap.php:420
 msgid "Invalid Password provided.  Login failed."
 msgstr "अमान्य पासवर्ड प्रदान किया गया। लॉगिन विफल।"
 
-#: lib/ldap.php:384
+#: lib/ldap.php:424
 #, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "सर्वर पर अप्रत्याशित त्रुटि %s (Ldap त्रुटि: %s) (%s)"

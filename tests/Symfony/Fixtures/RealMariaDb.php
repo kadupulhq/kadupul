@@ -17,7 +17,7 @@ use Doctrine\DBAL\DriverManager;
  */
 trait RealMariaDb
 {
-    private function realMariaDb(): Connection
+    private function realMariaDb(bool $administrative = false): Connection
     {
         $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
         if ($dsn === false || $dsn === '') {
@@ -26,6 +26,13 @@ trait RealMariaDb
         // The variable holds a PDO DSN, shared with tests/security; its keys
         // happen to match DBAL's parameter names.
         $params = ['driver' => 'pdo_mysql', 'user' => getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', 'password' => getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''];
+        if ($administrative) {
+            $params['user'] = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: $params['user'];
+            $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD');
+            if ($password !== false) {
+                $params['password'] = $password;
+            }
+        }
         foreach (explode(';', (string) preg_replace('/^mysql:/', '', $dsn)) as $pair) {
             [$key, $value] = explode('=', $pair, 2) + [1 => ''];
             if (in_array($key, ['host', 'port', 'dbname', 'unix_socket', 'charset'], true)) {
