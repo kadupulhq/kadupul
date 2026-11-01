@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 class SessionCoverageTest(unittest.TestCase):
-    def run_producers(self, failed):
+    def run_producers(self, failed, offline=False):
         with tempfile.TemporaryDirectory() as directory:
             scratch = Path(directory)
             launcher = scratch / 'mise'
@@ -24,8 +24,16 @@ from pathlib import Path
 import sys
 import time
 
-mode = 'database' if '--database-sessions' in sys.argv else 'files'
 scratch = Path(os.environ['RUNNER_TEMP'])
+if 'tests/Symfony/offline_coverage.py' in sys.argv:
+    producer = json.loads((scratch / 'files.started').read_text())
+    expected = producer[producer.index('--project') + 1] + '-web:latest'
+    if '--image' not in sys.argv or sys.argv[sys.argv.index('--image') + 1] != expected:
+        raise SystemExit('Offline coverage did not select the successful producer image')
+    (scratch / 'offline.finished').touch()
+    raise SystemExit(0)
+
+mode = 'database' if '--database-sessions' in sys.argv else 'files'
 (scratch / (mode + '.started')).write_text(json.dumps(sys.argv[1:]))
 deadline = time.monotonic() + 5
 while not all((scratch / (name + '.started')).exists() for name in ('files', 'database')):
@@ -53,6 +61,14 @@ raise SystemExit(7 if mode in os.environ['FAILED_MODES'].split(',') else 0)
                     expected.append('--database-sessions')
                 expected.extend(['--coverage-output', str(scratch / ('symfony-' + mode))])
                 self.assertEqual(expected, arguments)
+            if offline:
+                commands = [line.strip() for line in (ROOT / '.github/workflows/sonarcloud.yml').read_text().splitlines()
+                            if 'python tests/Symfony/offline_coverage.py ' in line]
+                self.assertEqual(1, len(commands), 'Locate the actual offline coverage workflow command')
+                consumer = subprocess.run(['bash', '-euo', 'pipefail', '-c', commands[0]],
+                                          cwd=ROOT, env=environment, capture_output=True, text=True, timeout=10)
+                self.assertEqual(0, consumer.returncode, consumer.stderr)
+                self.assertTrue((scratch / 'offline.finished').exists())
 
     def test_both_complete_runs_overlap_and_succeed(self):
         self.run_producers(())
@@ -65,6 +81,9 @@ raise SystemExit(7 if mode in os.environ['FAILED_MODES'].split(',') else 0)
 
     def test_both_failures_fail_the_job(self):
         self.run_producers(('files', 'database'))
+
+    def test_offline_coverage_uses_the_successful_files_project_image(self):
+        self.run_producers((), offline=True)
 
 
 if __name__ == '__main__':
