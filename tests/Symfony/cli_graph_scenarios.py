@@ -15,7 +15,11 @@ PREFIX = 'kadupul_parity_graph_'
 TITLES_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php'
 TITLES_SHIM = 'cli/poller_graphs_reapply_names.php'
 TITLES_UTILITY = 'Kadupul Reapply graph Names Utility'
+SOURCES_UTILITY = 'Kadupul Reapply Data Source Names Utility'
 STALE = 'stale title'
+SOURCES_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_data_sources_reapply_names.php'
+SOURCES_SHIM = 'cli/poller_data_sources_reapply_names.php'
+SOURCES_PREFIX = 'kadupul_parity_source_'
 REPAIR_ORIGINAL = 'tests/Fixtures/legacy-cli/repair_graphs.php'
 REPAIR_SHIM = 'cli/repair_graphs.php'
 BROKEN_ORIGINAL = 'tests/Fixtures/legacy-cli/remove_broken_graphs.php'
@@ -81,9 +85,9 @@ def titles_rows(harness):
     return harness.sql(f"SELECT title_cache FROM graph_templates_graph WHERE title LIKE '%{PREFIX}%' ORDER BY local_graph_id")
 
 
-def without_version(text):
+def without_version(text, utility=TITLES_UTILITY):
     """The original's help began with its version line even after an argument error; the shim reports the error before it can read one."""
-    return ''.join(line for line in text.splitlines(keepends=True) if not line.startswith(TITLES_UTILITY))
+    return ''.join(line for line in text.splitlines(keepends=True) if not line.startswith(utility))
 
 
 def titles_cases(ids):
@@ -176,6 +180,136 @@ def verify_titles_differences(harness, check):
     finally:
         harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 5)')
     titles_reset(harness)
+
+
+def sources_seed(harness):
+    """Two devices with two data sources each, one on no device, and templates to filter on. Every cached name is stale."""
+    sources_reset(harness)
+    harness.sql(
+        f"INSERT INTO host (description, hostname) VALUES ('{SOURCES_PREFIX}core', '{SOURCES_PREFIX}core.example'), ('{SOURCES_PREFIX}edge', '{SOURCES_PREFIX}edge.example'); "
+        f"INSERT INTO data_template (hash, name) VALUES ('{'0' * 31}5', '{SOURCES_PREFIX}Traffic'), ('{'0' * 31}6', '{SOURCES_PREFIX}Load');")
+    ids = {
+        'core': int(harness.sql(f"SELECT id FROM host WHERE description = '{SOURCES_PREFIX}core'").strip()),
+        'edge': int(harness.sql(f"SELECT id FROM host WHERE description = '{SOURCES_PREFIX}edge'").strip()),
+        'traffic': int(harness.sql(f"SELECT id FROM data_template WHERE name = '{SOURCES_PREFIX}Traffic'").strip()),
+        'load': int(harness.sql(f"SELECT id FROM data_template WHERE name = '{SOURCES_PREFIX}Load'").strip()),
+    }
+    for host, template, label in ((ids['core'], ids['traffic'], 'core-traffic'), (ids['core'], ids['load'], 'core-load'),
+                                  (ids['edge'], ids['traffic'], 'edge-traffic'), (ids['edge'], ids['load'], 'edge-load'),
+                                  (0, ids['load'], 'floating')):
+        harness.sql(f'INSERT INTO data_local (data_template_id, host_id) VALUES ({template}, {host})')
+        local = int(harness.sql('SELECT MAX(id) FROM data_local').strip())
+        harness.sql('INSERT INTO data_template_data (local_data_id, data_template_id, name, name_cache) '
+                    f"VALUES ({local}, {template}, '|host_description| {SOURCES_PREFIX}{label}', '{STALE} {SOURCES_PREFIX}{label}')")
+    return ids
+
+
+def sources_reset(harness):
+    harness.sql(
+        f"DELETE FROM data_template_data WHERE name LIKE '%{SOURCES_PREFIX}%'; "
+        f"DELETE FROM data_local WHERE data_template_id IN (SELECT id FROM data_template WHERE name LIKE '{SOURCES_PREFIX}%'); "
+        f"DELETE FROM host WHERE description LIKE '{SOURCES_PREFIX}%'; "
+        f"DELETE FROM data_template WHERE name LIKE '{SOURCES_PREFIX}%'")
+
+
+def sources_rows(harness):
+    return harness.sql(f"SELECT name_cache FROM data_template_data WHERE name LIKE '%{SOURCES_PREFIX}%' ORDER BY local_data_id")
+
+
+def sources_stale(harness):
+    """Every run starts from stale cached names; the seeded data sources themselves stay."""
+    harness.sql(f"UPDATE data_template_data SET name_cache = CONCAT('{STALE} ', SUBSTRING_INDEX(name, ' ', -1)) WHERE name LIKE '%{SOURCES_PREFIX}%'")
+
+
+def sources_cases(ids):
+    core, edge = str(ids['core']), str(ids['edge'])
+    # The prefix filter keeps `all` to the seeded data sources, so other steps' data sources are not renamed.
+    only = f'--filter={SOURCES_PREFIX}'
+    return [
+        ('sources rename one device', [f'--host-id={core}', only]),
+        ('sources rename with the short flags', [f'-id={core}', f'-s={SOURCES_PREFIX}']),
+        ('sources rename with the id flag', [f'--id={core}', only]),
+        ('sources rename a list of devices', [f'--host-id={core},{edge}', only]),
+        ('sources rename every device', ['--host-id=all', only]),
+        ('sources rename every device in capitals', ['--host-id=ALL', only]),
+        ('sources rename on no device', ['--host-id=0', only]),
+        ('sources rename filtered by a name', [f'--host-id={core}', f'--filter={SOURCES_PREFIX}core-load']),
+        ('sources rename filtered by a data template', ['--host-id=all', f'--filter={SOURCES_PREFIX}Traffic']),
+        ('sources rename with a filter that matches nothing', ['--host-id=all', f'--filter={SOURCES_PREFIX}nothing']),
+        ('sources rename a device with none', ['--host-id=999999', only]),
+        ('sources rename with a debug flag', [f'--host-id={core}', only, '--debug']),
+        ('sources rename with the short debug flag', [f'--host-id={core}', only, '-d']),
+        ('sources rename with an empty filter', [f'--host-id={core}', '--filter=']),
+        ('sources rename with a filter containing an equals sign', [f'--host-id={core}', f'--filter={SOURCES_PREFIX}a=b']),
+        ('sources rename a bare device flag', ['--host-id', only]),
+        ('sources rename an empty device', ['--host-id=', only]),
+        ('sources rename a device list with zero', ['--host-id=0,1', only]),
+        ('sources rename a device list with a trailing comma', [f'--host-id={core},', only]),
+        ('sources rename a negative device', ['--host-id=-1', only]),
+        ('sources rename a device that is not a number', ['--host-id=abc', only]),
+        ('sources rename with only a debug flag', ['--debug']),
+        ('sources rename with only a filter', [only]),
+        ('sources rename usage', []),
+        ('sources rename help', ['-h']),
+        ('sources rename long help', ['--help']),
+        ('sources rename version', ['-V']),
+        ('sources rename lower version', ['-v']),
+        ('sources rename long version', ['--version']),
+        ('sources rename unknown flag', ['--bogus']),
+        ('sources rename unknown flag after a valid one', [f'--host-id={core}', '--bogus=1']),
+        ('sources rename help stops before a later error', ['-h', '--bogus']),
+    ]
+
+
+def verify_sources_cases(harness, check):
+    ids = sources_seed(harness)
+    for label, arguments in sources_cases(ids):
+        sources_stale(harness)
+        original = run(harness, SOURCES_ORIGINAL, arguments)
+        original_rows = sources_rows(harness)
+        sources_stale(harness)
+        native = run(harness, SOURCES_SHIM, arguments)
+        native_rows = sources_rows(harness)
+        # Only an argument error loses the version line; the rest must match byte for byte.
+        expected = without_version(normalise(original['stdout']), SOURCES_UTILITY) if label in ('sources rename unknown flag', 'sources rename unknown flag after a valid one') else normalise(original['stdout'])
+        check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+        check(expected == normalise(native['stdout']), f'{label} prints the same lines')
+        check(normalise(original['stderr']) == normalise(native['stderr']), f'{label} prints the same errors')
+        check(original_rows == native_rows, f'{label} leaves the same names')
+    sources_reset(harness)
+
+
+def verify_sources_differences(harness, check):
+    ids = sources_seed(harness)
+    renamed = run(harness, SOURCES_SHIM, [f"--host-id={ids['core']}", f'--filter={SOURCES_PREFIX}'])
+    rows = sources_rows(harness).splitlines()
+    check(renamed['exit'] == 0 and rows[0] == f'{SOURCES_PREFIX}core {SOURCES_PREFIX}core-traffic', 'a data source rename expands the device name into the cached name')
+    check(rows[2].startswith(STALE), 'a data source rename leaves the other device untouched')
+
+    # The original put the filter inside the SQL text, so a quote ended the string.
+    sources_stale(harness)
+    quoted = run(harness, SOURCES_SHIM, ['--host-id=all', "--filter=x') OR 1=1 -- "])
+    check(quoted['exit'] == 0 and quoted['stdout'].endswith('selected criteria.') and all(row.startswith(STALE) for row in sources_rows(harness).splitlines()),
+          'a quote in the data source filter is text and selects nothing')
+
+    # With --debug and nothing selected the original also printed its selection SQL.
+    debug = run(harness, SOURCES_SHIM, ['--host-id=999999', '--debug'])
+    check(debug['exit'] == 0 and debug['stdout'].endswith('selected criteria.') and 'SELECT' not in debug['stdout'], 'debug with nothing selected prints no SQL')
+
+    dry = run(harness, 'bin/console', ['kadupul:data-source:reapply-titles', '--host-id=all', f'--filter={SOURCES_PREFIX}', '--dry-run', '--json'])
+    check(dry['exit'] == 0 and '"dry_run":true' in dry['stdout'] and all(row.startswith(STALE) for row in sources_rows(harness).splitlines()),
+          'a data source dry run lists the data sources and renames none')
+
+    # The original needed no operator; the shim acts as admin_user and needs realm 3.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    try:
+        denied = run(harness, SOURCES_SHIM, ['--host-id=all', f'--filter={SOURCES_PREFIX}'])
+        check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', 'a data source rename without data source management is refused')
+        check(all(row.startswith(STALE) for row in sources_rows(harness).splitlines()), 'a refused data source rename changes no name')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    sources_reset(harness)
 
 
 def repair_seed(harness):
@@ -1146,6 +1280,7 @@ def verify_add_graphs_differences(harness, check):
 
 def verify_graph_parity(harness, check):
     install_original(harness, TITLES_ORIGINAL)
+    install_original(harness, SOURCES_ORIGINAL)
     install_original(harness, REPAIR_ORIGINAL)
     install_original(harness, BROKEN_ORIGINAL)
     install_original(harness, REMOVE_ORIGINAL)
@@ -1161,6 +1296,8 @@ def verify_graph_parity(harness, check):
                     f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},4),({admin},3)')
         verify_titles_cases(harness, check)
         verify_titles_differences(harness, check)
+        verify_sources_cases(harness, check)
+        verify_sources_differences(harness, check)
         verify_repair_cases(harness, check)
         verify_repair_differences(harness, check)
         verify_broken_cases(harness, check)
@@ -1175,6 +1312,7 @@ def verify_graph_parity(harness, check):
         verify_add_graphs_differences(harness, check)
     finally:
         titles_reset(harness)
+        sources_reset(harness)
         repair_reset(harness)
         broken_reset(harness)
         tree_reset(harness)

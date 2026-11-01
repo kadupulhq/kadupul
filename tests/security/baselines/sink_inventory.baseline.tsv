@@ -95,6 +95,8 @@ deserialize	./lib/functions.php:8783	    return @unserialize($strobj, array('all
 dynamic_include	./automation_tree_rules.php:539	    include_once($config['base_path'] . '/lib/html_tree.php');
 dynamic_include	./bin/legacy-audit-upgrade.php:129	                        include_once($plugin . '/setup.php');
 dynamic_include	./bin/legacy-audit-upgrade.php:131	                            include_once($plugin . '/includes/database.php');
+dynamic_include	./bin/legacy-data-source-titles.php:19	require_once $config['base_path'] . '/lib/api_data_source.php';
+dynamic_include	./bin/legacy-data-source-titles.php:20	require_once $config['base_path'] . '/lib/utility.php';
 dynamic_include	./bin/legacy-graph-add.php:20	require_once $config['base_path'] . '/lib/api_automation.php';
 dynamic_include	./bin/legacy-graph-add.php:21	require_once $config['base_path'] . '/lib/api_data_source.php';
 dynamic_include	./bin/legacy-graph-add.php:22	require_once $config['base_path'] . '/lib/api_graph.php';
@@ -194,9 +196,6 @@ dynamic_include	./cli/install_cacti.php:151	include_once($config['base_path'] . 
 dynamic_include	./cli/install_cacti.php:152	include_once($config['base_path'] . '/lib/installer.php');
 dynamic_include	./cli/install_cacti.php:153	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/install_cacti.php:154	include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/poller_data_sources_reapply_names.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
-dynamic_include	./cli/poller_data_sources_reapply_names.php:13	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/poller_data_sources_reapply_names.php:14	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/poller_output_empty.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/poller_output_empty.php:11	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./cli/poller_output_empty.php:12	require_once($config['base_path'] . '/lib/dsstats.php');
@@ -826,7 +825,7 @@ header_redirect	./lib/auth.php:5972	        header('Location: ' . $config['url_p
 header_redirect	./lib/clog_webapi.php:88	        header('Location: ' . get_current_page());
 header_redirect	./lib/functions.php:8897	    header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8921	    header('Location: ' . $safe_url, true, $status);
-header_redirect	./lib/graph_data_removal.php:449	    header('Location: ' . ($resource === 'graph' ? 'graphs.php' : 'data_sources.php') . '?header=false');
+header_redirect	./lib/graph_data_removal.php:481	    header('Location: ' . ($resource === 'graph' ? 'graphs.php' : 'data_sources.php') . '?header=false');
 header_redirect	./lib/graph_item_editor.php:40	    header('Location: graphs.php?header=false');
 header_redirect	./lib/html_graph.php:496	        header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
 header_redirect	./lib/html_reports.php:1631	            header('Location: reports.php');

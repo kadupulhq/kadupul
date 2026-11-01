@@ -12664,19 +12664,19 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
 
-#: lib/graph_data_removal.php:443
+#: lib/graph_data_removal.php:475
 msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
 msgstr ""
 
-#: lib/graph_data_removal.php:445
+#: lib/graph_data_removal.php:477
 msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:447
+#: lib/graph_data_removal.php:479
 msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:448
+#: lib/graph_data_removal.php:480
 msgid "The removal could not be completed. Reload and review the selection before retrying."
 msgstr ""
 
@@ -15098,93 +15098,93 @@ msgstr "PHP 옵션 %s을 (를) 설정하지 못했습니다. %s (%s 여야 함)"
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "동기화를 시도 할 때 데이터 수집기를 찾을 수 없습니다."
 
-#: lib/ldap.php:308
+#: lib/ldap.php:348
 msgid "Authentication Success"
 msgstr "인증 성공"
 
-#: lib/ldap.php:312
+#: lib/ldap.php:352
 msgid "Authentication Failure"
 msgstr "인증 실패"
 
-#: lib/ldap.php:316
+#: lib/ldap.php:356
 msgid "PHP LDAP not enabled"
 msgstr "PHP LDAP를 사용할 수 없음"
 
-#: lib/ldap.php:320
+#: lib/ldap.php:360
 msgid "No username defined"
 msgstr "사용자 이름이 정의되지 않았습니다."
 
-#: lib/ldap.php:324
+#: lib/ldap.php:364
 #, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
 msgstr "프로토콜 오류, 서버 (%s) 에 버전 (%s) 을 설정할 수 없음"
 
-#: lib/ldap.php:328
+#: lib/ldap.php:368
 #, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
 msgstr "프로토콜 오류, 서버 (%s) 에서 추천 옵션 (%s) 을 설정할 수 없음"
 
-#: lib/ldap.php:332
+#: lib/ldap.php:372
 #, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
 msgstr "프로토콜 오류, 서버 (%s) 에서 TLS 통신 (%s) 을 시작할 수 없음"
 
-#: lib/ldap.php:336
+#: lib/ldap.php:376
 #, php-format
 msgid "Protocol Error, General failure (%s)"
 msgstr "프로토콜 오류, 일반 오류 ( %s)"
 
-#: lib/ldap.php:340
+#: lib/ldap.php:380
 #, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "프로토콜 오류, 바인딩할 수 없음, 서버 (%s) 에서 LDAP 결과: (%s)"
 
-#: lib/ldap.php:344
+#: lib/ldap.php:384
 #, fuzzy, php-format
 msgid "Unable to Connect to Server (%s)"
 msgstr "서버에 연결할 수 없습니다"
 
-#: lib/ldap.php:348
+#: lib/ldap.php:388
 #, php-format
 msgid "Connection Timeout to Server (%s)"
 msgstr "서버에 연결 시간 초과 (%s)"
 
-#: lib/ldap.php:352
+#: lib/ldap.php:392
 #, php-format
 msgid "Insufficient Access to Server (%s)"
 msgstr "서버에 대한 액세스 권한 부족 (%s)"
 
-#: lib/ldap.php:356
+#: lib/ldap.php:396
 #, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
 msgstr "서버 (%s) 에서 그룹 DN을 비교할 수 없습니다"
 
-#: lib/ldap.php:360
+#: lib/ldap.php:400
 msgid "More than one matching user found"
 msgstr "일치하는 사용자가 두 명 이상 있습니다."
 
-#: lib/ldap.php:364
+#: lib/ldap.php:404
 msgid "Unable to find user from DN"
 msgstr "DN에서 사용자를 찾을 수 없습니다."
 
-#: lib/ldap.php:368
+#: lib/ldap.php:408
 msgid "Unable to find users DN"
 msgstr "사용자 DN을 찾을 수 없습니다."
 
-#: lib/ldap.php:372
+#: lib/ldap.php:412
 #, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
 msgstr "서버 (%s) 에 대한 LDAP 연결 객체를 생성할 수 없습니다"
 
-#: lib/ldap.php:376
+#: lib/ldap.php:416
 msgid "Specific DN and Password required"
 msgstr "특정 DN 및 비밀번호 필요"
 
-#: lib/ldap.php:380
+#: lib/ldap.php:420
 msgid "Invalid Password provided.  Login failed."
 msgstr "잘못된 비밀번호가 제공되었습니다. 로그인 실패."
 
-#: lib/ldap.php:384
+#: lib/ldap.php:424
 #, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "서버 (%s) 에서 예기치 않은 오류 %s (Ldap 오류: %s)"

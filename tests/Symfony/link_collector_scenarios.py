@@ -22,7 +22,7 @@ def verify_collector_links(harness, session, user_id, check):
         with result:
             return result.status, result.read().decode()
     try:
-        harness.sql('CREATE DATABASE links_collector CHARACTER SET utf8mb4; CREATE TABLE links_collector.version LIKE cacti.version; INSERT INTO links_collector.version SELECT * FROM cacti.version; CREATE TABLE links_collector.poller_output_boost LIKE cacti.poller_output_boost')
+        harness.sql('CREATE DATABASE links_collector CHARACTER SET utf8mb4; CREATE TABLE links_collector.version LIKE cacti.version; INSERT INTO links_collector.version SELECT * FROM cacti.version; CREATE TABLE links_collector.poller_output_boost LIKE cacti.poller_output_boost; CREATE TABLE links_collector.poller_output LIKE cacti.poller_output')
         database_created = True
         check(harness.command('cp', 'include/config.php', '/artifacts/link-primary-config.php')['exit'] == 0, 'links collector fixture preserves installation configuration')
         configuration_saved = True
@@ -58,6 +58,12 @@ $poller_id = 2;
         harness.sql("INSERT INTO links_collector.poller_output_boost (local_data_id,rrd_name,time,output) VALUES (1,'fixture',NOW(),'1')")
         check(request('/app.php/links')[0] >= 500, 'collector recovery blocks Navigation primary access')
         harness.sql('DELETE FROM links_collector.poller_output_boost')
+        harness.sql("INSERT INTO links_collector.poller_output (local_data_id,rrd_name,time,output) VALUES (1,'fixture',NOW(),'1')")
+        check(request('/app.php/links')[0] >= 500, 'ordinary collector recovery blocks Navigation primary access')
+        harness.sql('DELETE FROM links_collector.poller_output')
+        harness.sql('DROP TABLE links_collector.poller_output')
+        check(request('/app.php/links')[0] >= 500, 'unreadable ordinary collector queue blocks Navigation primary access')
+        harness.sql('CREATE TABLE links_collector.poller_output LIKE cacti.poller_output')
         offline = base64.b64encode(b"\n$conn_mode = 'offline';\n").decode()
         harness.php('-r', 'file_put_contents("include/config.php", base64_decode("' + offline + '"), FILE_APPEND);')
         time.sleep(3)

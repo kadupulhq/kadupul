@@ -12671,19 +12671,19 @@ msgstr "%s %s"
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "AVISO:  Key Kadupul Include File %s ausente.  Por favor, localize e substitua este arquivo"
 
-#: lib/graph_data_removal.php:443
+#: lib/graph_data_removal.php:475
 msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
 msgstr ""
 
-#: lib/graph_data_removal.php:445
+#: lib/graph_data_removal.php:477
 msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:447
+#: lib/graph_data_removal.php:479
 msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
 msgstr ""
 
-#: lib/graph_data_removal.php:448
+#: lib/graph_data_removal.php:480
 msgid "The removal could not be completed. Reload and review the selection before retrying."
 msgstr ""
 
@@ -15101,93 +15101,93 @@ msgstr "Falha ao definir a opção do PHP%s, é%s (deve ser%s)"
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Coletor(es) de dados não encontrado(s) na tentativa de sincronização"
 
-#: lib/ldap.php:308
+#: lib/ldap.php:348
 msgid "Authentication Success"
 msgstr "Sucesso de Autenticação"
 
-#: lib/ldap.php:312
+#: lib/ldap.php:352
 msgid "Authentication Failure"
 msgstr "Falha de Autenticação"
 
-#: lib/ldap.php:316
+#: lib/ldap.php:356
 msgid "PHP LDAP not enabled"
 msgstr "PHP LDAP não habilitado"
 
-#: lib/ldap.php:320
+#: lib/ldap.php:360
 msgid "No username defined"
 msgstr "Sem nome de usuário definido"
 
-#: lib/ldap.php:324
+#: lib/ldap.php:364
 #, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
 msgstr "Erro de protocolo, não é possível definir a versão (%s) no servidor (%s)"
 
-#: lib/ldap.php:328
+#: lib/ldap.php:368
 #, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
 msgstr "Erro de protocolo, não é possível definir a opção de referências (%s) no servidor (%s)"
 
-#: lib/ldap.php:332
+#: lib/ldap.php:372
 #, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
 msgstr "Erro de protocolo, não é possível iniciar as comunicações TLS (%s) no servidor (%s)"
 
-#: lib/ldap.php:336
+#: lib/ldap.php:376
 #, php-format
 msgid "Protocol Error, General failure (%s)"
 msgstr "Erro de Protocolo, Falha geral (%s)"
 
-#: lib/ldap.php:340
+#: lib/ldap.php:380
 #, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "Erro de protocolo, não é possível vincular, resultado LDAP: (%s) no servidor (%s)"
 
-#: lib/ldap.php:344
+#: lib/ldap.php:384
 #, fuzzy, php-format
 msgid "Unable to Connect to Server (%s)"
 msgstr "Impossível conectar-se ao servidor"
 
-#: lib/ldap.php:348
+#: lib/ldap.php:388
 #, php-format
 msgid "Connection Timeout to Server (%s)"
 msgstr "Tempo limite de conexão com o servidor (%s)"
 
-#: lib/ldap.php:352
+#: lib/ldap.php:392
 #, php-format
 msgid "Insufficient Access to Server (%s)"
 msgstr "Acesso insuficiente ao servidor (%s)"
 
-#: lib/ldap.php:356
+#: lib/ldap.php:396
 #, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
 msgstr "Não foi possível encontrar o DN do grupo para comparar no servidor (%s)"
 
-#: lib/ldap.php:360
+#: lib/ldap.php:400
 msgid "More than one matching user found"
 msgstr "Mais de um usuário correspondente encontrado"
 
-#: lib/ldap.php:364
+#: lib/ldap.php:404
 msgid "Unable to find user from DN"
 msgstr "Incapaz de encontrar usuários a partir de DN"
 
-#: lib/ldap.php:368
+#: lib/ldap.php:408
 msgid "Unable to find users DN"
 msgstr "Incapaz de encontrar usuários DN"
 
-#: lib/ldap.php:372
+#: lib/ldap.php:412
 #, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
 msgstr "Não foi possível criar o objeto de conexão LDAP para o Servidor (%s)"
 
-#: lib/ldap.php:376
+#: lib/ldap.php:416
 msgid "Specific DN and Password required"
 msgstr "DN específico e senha necessária"
 
-#: lib/ldap.php:380
+#: lib/ldap.php:420
 msgid "Invalid Password provided.  Login failed."
 msgstr "Senha inválida fornecida. Falha na autenticação."
 
-#: lib/ldap.php:384
+#: lib/ldap.php:424
 #, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
 msgstr "Erro inesperado %s (Erro LDAP: %s) no servidor (%s)"

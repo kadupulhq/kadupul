@@ -79,7 +79,8 @@ final class GraphDataRemovalScope
         $ids = array();
         $selected = array_fill_keys($this->selected, true);
         foreach ($this->relations as $key => $row) {
-            if (str_starts_with($key, 'item:') && isset($selected[(int) $row['local_data_id']])) $ids[(int) $row['local_graph_id']] = (int) $row['local_graph_id'];
+            if (str_starts_with($key, 'item:') && isset($selected[(int) $row['local_data_id']]))
+                $ids[(int) $row['local_graph_id']] = (int) $row['local_graph_id'];
         }
         return array_values($ids);
     }
@@ -93,21 +94,24 @@ final class GraphDataRemovalScope
         foreach (array_chunk($items, 1000) as $chunk) {
             $sql = 'DELETE FROM graph_templates_item WHERE task_item_id IN (' . implode(',', $chunk) . ') AND local_graph_id > 0';
             self::execute($sql);
-            foreach ($pollers as $poller) self::execute($sql, true, self::remote($poller, true));
+            foreach ($pollers as $poller)
+                self::execute($sql, true, self::remote($poller, true));
         }
     }
 
     /** Authorize identifiers/owners before dependent names, hooks or mutation. */
     private function authorize(string $resource, array $ids, bool $allow_removed): array
     {
-        if (!$ids) return array();
+        if (!$ids)
+            return array();
         $actor = auth_resource_id($_SESSION['sess_user_id'] ?? 0);
         if (read_config_option('auth_method') != 0 && ($actor === null || $actor <= 0 || !is_realm_allowed($resource === 'graph' ? 5 : 3, $actor))) {
             throw new GraphDataRemovalAccessDenied('Removal access denied.');
         }
         if (read_config_option('auth_method') != 0) {
             $account = self::rows('SELECT enabled, locked FROM user_auth WHERE id = ' . $actor);
-            if (count($account) !== 1 || $account[0]['enabled'] !== 'on' || $account[0]['locked'] === 'on') throw new GraphDataRemovalAccessDenied('Removal access denied.');
+            if (count($account) !== 1 || $account[0]['enabled'] !== 'on' || $account[0]['locked'] === 'on')
+                throw new GraphDataRemovalAccessDenied('Removal access denied.');
         }
         // A plugin can invalidate policy during this same request, after bootstrap.
         if (isset($_SESSION['sess_simple_perms']) && is_array($_SESSION['sess_simple_perms'])) {
@@ -125,7 +129,8 @@ final class GraphDataRemovalScope
             if (count($rows) !== count($allowed) || (!$allow_removed && count($rows) !== count($chunk))) {
                 throw new GraphDataRemovalAccessDenied('Removal access denied.');
             }
-            foreach ($rows as $row) $owners[$resource . ':' . $row['id']] = (int) $row['host_id'];
+            foreach ($rows as $row)
+                $owners[$resource . ':' . $row['id']] = (int) $row['host_id'];
         }
         return $owners;
     }
@@ -145,7 +150,8 @@ final class GraphDataRemovalScope
                 foreach ($rows as $row) {
                     $relations['item:' . $row['id']] = array_map('intval', $row);
                     self::boundRelations($relations);
-                    if ($this->resource === 'graph') $data[] = (int) $row['local_data_id'];
+                    if ($this->resource === 'graph')
+                        $data[] = (int) $row['local_data_id'];
                     else $graphs[] = (int) $row['local_graph_id'];
                 }
                 $graphs = self::boundedIds($graphs);
@@ -215,20 +221,23 @@ final class GraphDataRemovalScope
     private static function dependentRows(string $sql, bool $lock): array
     {
         $rows = self::rows($sql . ' LIMIT ' . (self::MAX_SCOPE + 1) . ($lock ? ' FOR UPDATE' : ''));
-        if (count($rows) > self::MAX_SCOPE) throw new GraphDataRemovalBatchTooLarge('Removal dependency scope exceeds the supported batch.');
+        if (count($rows) > self::MAX_SCOPE)
+            throw new GraphDataRemovalBatchTooLarge('Removal dependency scope exceeds the supported batch.');
         return $rows;
     }
 
     private static function boundedIds(array $ids): array
     {
         $ids = array_values(array_unique($ids));
-        if (count($ids) > self::MAX_SCOPE) throw new GraphDataRemovalBatchTooLarge('Removal dependency scope exceeds the supported batch.');
+        if (count($ids) > self::MAX_SCOPE)
+            throw new GraphDataRemovalBatchTooLarge('Removal dependency scope exceeds the supported batch.');
         return $ids;
     }
 
     private static function boundRelations(array $relations): void
     {
-        if (count($relations) > self::MAX_SCOPE) throw new GraphDataRemovalBatchTooLarge('Removal dependency scope exceeds the supported batch.');
+        if (count($relations) > self::MAX_SCOPE)
+            throw new GraphDataRemovalBatchTooLarge('Removal dependency scope exceeds the supported batch.');
     }
 
     private function capture(bool $lock): void
@@ -271,23 +280,28 @@ final class GraphDataRemovalScope
             $rows = self::rows('SELECT ag.local_graph_id AS parent_id, agi.local_graph_id AS child_id
                 FROM aggregate_graphs_items AS agi INNER JOIN aggregate_graphs AS ag ON ag.id=agi.aggregate_graph_id
                 WHERE agi.local_graph_id IN (' . implode(',', $chunk) . ')');
-            foreach ($rows as $row) $parents[(int) $row['parent_id']][] = (int) $row['child_id'];
+            foreach ($rows as $row)
+                $parents[(int) $row['parent_id']][] = (int) $row['child_id'];
         }
-        if (!$parents) return;
+        if (!$parents)
+            return;
         require_once __DIR__ . '/api_aggregate.php';
         if (!aggregate_graph_mutation(static function () use ($parents): bool {
             foreach ($parents as $parent => $children) {
-                if (api_aggregate_disassociate($parent, $children) !== true) return false;
+                if (api_aggregate_disassociate($parent, $children) !== true)
+                    return false;
             }
             return true;
-        })) throw new RuntimeException('Aggregate graph regeneration failed before graph removal.');
+        }))
+            throw new RuntimeException('Aggregate graph regeneration failed before graph removal.');
     }
 
     public function run(Closure $operation): void
     {
         global $database_sessions, $database_hostname, $database_port, $database_default;
         $database = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
-        if (!$database instanceof PDO) throw new RuntimeException('Removal connection unavailable.');
+        if (!$database instanceof PDO)
+            throw new RuntimeException('Removal connection unavailable.');
         $this->database = $database;
         $this->assertConnection();
         $previous = self::$active;
@@ -324,7 +338,8 @@ final class GraphDataRemovalScope
     private function participants(): array
     {
         $tables = array('settings');
-        if ($this->resource === 'graph' || $this->mode > 1) $tables[] = 'graph_templates_item';
+        if ($this->resource === 'graph' || $this->mode > 1)
+            $tables[] = 'graph_templates_item';
         if ($this->resource === 'graph' || $this->mode === 3) {
             $tables = array_merge($tables, array('graph_local', 'graph_templates_graph', 'graph_tree_items', 'reports_items',
                 'aggregate_graphs', 'aggregate_graphs_items', 'aggregate_graphs_graph_item', 'cdef', 'cdef_items'));
@@ -343,41 +358,52 @@ final class GraphDataRemovalScope
             throw new RuntimeException('Invalid volatile cache participant.');
         }
         $selected = self::ids(array_map('trim', explode(',', $ids)));
-        if (array_diff($selected, $this->data)) throw new RuntimeException('Volatile cache removal scope changed.');
+        if (array_diff($selected, $this->data))
+            throw new RuntimeException('Volatile cache removal scope changed.');
         $create = $this->database->query('SHOW CREATE TABLE `' . $table . '`');
         $row = $create === false ? false : $create->fetch(PDO::FETCH_ASSOC);
         if (!is_array($row) || !is_string($row['Create Table'] ?? null) || preg_match('/\ACREATE TABLE\s/i', $row['Create Table']) !== 1
-            || $create->errorCode() !== '00000' || !$create->closeCursor()) throw new RuntimeException('Volatile cache metadata unavailable.');
+            || $create->errorCode() !== '00000' || !$create->closeCursor())
+                throw new RuntimeException('Volatile cache metadata unavailable.');
         $status = $this->database->query("SHOW TABLE STATUS WHERE Name = '$table'");
         $row = $status === false ? false : $status->fetch(PDO::FETCH_ASSOC);
         if (!is_array($row) || ($row['Name'] ?? null) !== $table || !in_array($row['Engine'] ?? null, array('MEMORY', 'InnoDB'), true)
             || $status->fetch(PDO::FETCH_ASSOC) !== false || $status->errorCode() !== '00000' || !$status->closeCursor()) {
             throw new RuntimeException('Unsupported volatile cache storage.');
         }
-        foreach (array_chunk($selected, 1000) as $chunk) $this->volatileDeletes[] = 'DELETE FROM ' . $table . ' WHERE local_data_id IN (' . implode(',', $chunk) . ')';
+        foreach (array_chunk($selected, 1000) as $chunk)
+            $this->volatileDeletes[] = 'DELETE FROM ' . $table . ' WHERE local_data_id IN (' . implode(',', $chunk) . ')';
     }
 
     private function assertConnection(): void
     {
-        if ($this->database === null) return;
+        if ($this->database === null)
+            return;
         global $database_sessions, $database_hostname, $database_port, $database_default;
-        if (!is_string($database_default) || $database_default === '') throw new RuntimeException('Removal schema unavailable.');
-        if (($database_sessions["$database_hostname:$database_port:$database_default"] ?? null) !== $this->database) throw new RuntimeException('Removal connection changed.');
+        if (!is_string($database_default) || $database_default === '')
+            throw new RuntimeException('Removal schema unavailable.');
+        if (($database_sessions["$database_hostname:$database_port:$database_default"] ?? null) !== $this->database)
+            throw new RuntimeException('Removal connection changed.');
         $statement = $this->database->query('SELECT DATABASE()');
-        if ($statement === false || $this->database->errorCode() !== '00000') throw new RuntimeException('Removal schema unavailable.');
+        if ($statement === false || $this->database->errorCode() !== '00000')
+            throw new RuntimeException('Removal schema unavailable.');
         $schema = $statement->fetchColumn();
         $state = $statement->errorCode();
         if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000' || !is_string($schema) || $schema === '') {
             throw new RuntimeException('Removal schema unavailable.');
         }
-        if ($schema === $database_default) return;
+        if ($schema === $database_default)
+            return;
         // Match the established aggregate schema contract on case-folding engines.
         $statement = $this->database->prepare('SELECT @@lower_case_table_names');
-        if ($statement === false || !$statement->execute() || $statement->errorCode() !== '00000') throw new RuntimeException('Removal schema metadata unavailable.');
+        if ($statement === false || !$statement->execute() || $statement->errorCode() !== '00000')
+            throw new RuntimeException('Removal schema metadata unavailable.');
         $mode = $statement->fetchColumn();
         $state = $statement->errorCode();
-        if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000') throw new RuntimeException('Removal schema metadata unavailable.');
-        if (!in_array($mode, array(1,2,'1','2'), true) || strtolower($schema) !== strtolower($database_default)) throw new RuntimeException('Removal schema changed.');
+        if (!$statement->closeCursor() || $statement->errorCode() !== '00000' || $state !== '00000')
+            throw new RuntimeException('Removal schema metadata unavailable.');
+        if (!in_array($mode, array(1,2,'1','2'), true) || strtolower($schema) !== strtolower($database_default))
+            throw new RuntimeException('Removal schema changed.');
     }
 
     public static function checked(Closure $operation): mixed
@@ -387,7 +413,8 @@ final class GraphDataRemovalScope
         $database_last_error = null;
         try {
             $result = $operation();
-            if ($result === false || !empty($database_last_error)) throw new RuntimeException('Removal database operation failed.');
+            if ($result === false || !empty($database_last_error))
+                throw new RuntimeException('Removal database operation failed.');
             return $result;
         } finally {
             $database_last_error = $previous;
@@ -413,20 +440,25 @@ final class GraphDataRemovalScope
 
     public static function execute(string $sql, bool $log = true, mixed $connection = false): mixed
     {
-        if (self::$active === null) return db_execute($sql, $log, $connection);
+        if (self::$active === null)
+            return db_execute($sql, $log, $connection);
         self::$active->assertConnection();
-        if ($connection !== false) self::$active->attemptedCollectors[spl_object_id($connection)] = true;
+        if ($connection !== false)
+            self::$active->attemptedCollectors[spl_object_id($connection)] = true;
         return self::checked(static fn() => db_execute($sql, $log, $connection));
     }
 
     public static function remote(mixed $poller_id, bool $is_poller = true): mixed
     {
-        if (self::$active === null) return poller_push_to_remote_db_connect($poller_id, $is_poller);
+        if (self::$active === null)
+            return poller_push_to_remote_db_connect($poller_id, $is_poller);
         $poller_id = (int) $poller_id;
-        if ($poller_id <= 1) return false;
+        if ($poller_id <= 1)
+            return false;
         if (!isset(self::$active->remoteConnections[$poller_id])) {
             $connection = poller_push_to_remote_db_connect($poller_id, $is_poller);
-            if ($connection === false) throw new RuntimeException('Removal collector connection failed.');
+            if ($connection === false)
+                throw new RuntimeException('Removal collector connection failed.');
             self::$active->remoteConnections[$poller_id] = $connection;
         }
         return self::$active->remoteConnections[$poller_id];
