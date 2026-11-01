@@ -37,6 +37,66 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             capture_output=True, text=True, timeout=30,
         )
 
+    def test_supplemental_inventory_respects_checked_out_source_presence(self):
+        present = 'bin/legacy-tree-save.php'
+        absent = 'cli/add_tree.php'
+        # Both are genuine maintained CLI inputs; the temporary older tree has only one.
+        self.assertTrue((ROOT / present).is_file())
+        self.assertTrue((ROOT / absent).is_file())
+        with tempfile.TemporaryDirectory() as temporary:
+            checkout = Path(temporary)
+            destination = checkout / present
+            destination.parent.mkdir(parents=True)
+            destination.write_bytes((ROOT / present).read_bytes())
+            self.assertEqual([present], SELFTEST.additional_required_native_sources(checkout))
+            self.assertFalse((checkout / absent).exists())
+
+
+    def test_negative_baseline_contains_every_production_required_source(self):
+        source = (ROOT / 'tests/Symfony/coverage_selftest.py').read_text()
+        main = next(node for node in ast.parse(source).body if isinstance(node, ast.FunctionDef) and node.name == 'main')
+        assignments = []
+        for node in main.body:
+            if isinstance(node, ast.Assign) and any(isinstance(target, ast.Name) and target.id in ('required', 'legacy_pages') for target in node.targets):
+                assignments.append(node)
+            elif isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id == 'required':
+                assignments.append(node)
+        # Read literal paths from the actual assignments without executing source.
+        baseline = set()
+        legacy_pages = ()
+        expected = ast.parse('[prefix + path for path in sources]', mode='eval').body
+        for assignment in assignments:
+            if isinstance(assignment, ast.Assign) and assignment.targets[0].id == 'legacy_pages':
+                legacy_pages = ast.literal_eval(assignment.value)
+                continue
+            expression = assignment.value
+            self.assertIsInstance(expression, ast.ListComp)
+            self.assertEqual(ast.dump(expected.elt), ast.dump(expression.elt))
+            self.assertEqual(1, len(expression.generators))
+            generator = expression.generators[0]
+            self.assertEqual(ast.dump(expected.generators[0].target), ast.dump(generator.target))
+            self.assertEqual([], generator.ifs)
+            self.assertEqual(0, generator.is_async)
+            if isinstance(generator.iter, ast.Name):
+                self.assertEqual('legacy_pages', generator.iter.id)
+                paths = legacy_pages
+            elif isinstance(generator.iter, ast.Call):
+                allowed = ast.parse('additional_required_native_sources(ROOT)', mode='eval').body
+                self.assertEqual(ast.dump(allowed), ast.dump(generator.iter))
+                paths = SELFTEST.additional_required_native_sources(ROOT)
+            else:
+                paths = ast.literal_eval(generator.iter)
+            self.assertTrue(all(isinstance(path, str) for path in paths))
+            baseline.update('/var/www/html/' + path for path in paths)
+        # Database negatives retain their real separate reports later in main().
+        for handler in ('files',):
+            with self.subTest(handler=handler):
+                result = subprocess.run([os.environ.get('PHP', 'php'), '-d', 'display_errors=stderr', str(ROOT / 'tests/Fixtures/http-coverage-source-guard.php'), 'required', handler], capture_output=True, text=True, timeout=30)
+                self.assertEqual(0, result.returncode, result.stderr)
+                expected = {'/var/www/html/' + path for path in json.loads(result.stdout)}
+                self.assertFalse(expected - baseline, 'Negative baseline omits required source(s): ' + ', '.join(sorted(expected - baseline)))
+
+
     def test_measured_graph_cli_sources_survive_the_production_import_guard(self):
         admitted = [
             'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php',
