@@ -9,6 +9,44 @@ const allThemes = fs.readdirSync(themeRoot, { withFileTypes: true })
   .sort();
 if (allThemes.length === 0) throw new Error('No shipped themes found');
 
+test.describe('theme duplicate declarations preserve the shipped cascade', () => {
+  for (const theme of ['classic', 'modern', 'paw', 'midwinter']) {
+    test(`graph grouping and alignment retain their styles for ${theme}`, async ({ page }, info) => {
+      await page.setContent('<!doctype html><html><body></body></html>');
+      await page.addStyleTag({ url: new URL(`/include/themes/${theme}/main.css`, info.project.use.baseURL).href });
+      const colors = await page.evaluate(() => {
+        const classes = ['graphItemGr1Cust', 'graphItemGr1Cust graphItemGr1Alt1',
+          'graphItemGr1Cust graphItemGr2Alt2', 'graphItemGr1Alt1', 'graphItemGr2Alt2'];
+        return classes.map(className => {
+          const element = document.createElement('div');
+          element.className = className;
+          document.body.appendChild(element);
+          return getComputedStyle(element).backgroundColor;
+        });
+      });
+      // Characterized from the original styles, including overlapping classes.
+      expect(colors).toEqual(['rgb(210, 214, 231)', 'rgb(210, 214, 231)',
+        'rgb(210, 214, 231)', 'rgb(238, 238, 238)', 'rgb(231, 233, 242)']);
+      if (theme !== 'midwinter') {
+        const alignment = await page.evaluate(() => {
+          const element = document.createElement('div');
+          element.className = 'right';
+          element.style.textAlign = 'center';
+          document.body.appendChild(element);
+          const normal = getComputedStyle(element).textAlign;
+          element.style.setProperty('text-align', 'center', 'important');
+          return [normal, getComputedStyle(element).textAlign];
+        });
+        expect(alignment).toEqual(['right', 'center']);
+      }
+      const source = fs.readFileSync(path.join(themeRoot, theme,
+        theme === 'midwinter' ? 'css/media/core.css' : 'main.css'), 'utf8');
+      expect(source.match(/^\.graphItemGr1Cust\s*\{/gm)).toHaveLength(1);
+      if (theme !== 'midwinter') expect(source.match(/^\.right\s*\{/gm)).toHaveLength(1);
+    });
+  }
+});
+
 test.describe('theme jquery ui css alignment', () => {
   test('all themes serve 1.14.x jquery ui bundles', async ({ request }) => {
     for (const theme of allThemes) {
