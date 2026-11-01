@@ -3,7 +3,9 @@
 Measured on `origin/main` at `6bd6a540ba` by reading the files named below. It
 supports [ADR 0010](../adr/0010-symfony-security-authentication.md). Nothing here
 was executed; every statement is from source. The hook list covers the
-authentication files and `lib/auth.php` only (see "Not covered").
+authentication files, `lib/auth.php`, `lib/ldap.php`, `include/session.php` and
+the helpers in `lib/functions.php` that the login flow calls (see "Not covered").
+`AuthenticationHookInventoryTest` pins the list.
 
 ## Entry points
 
@@ -151,6 +153,9 @@ returned to core); "action" is `api_plugin_hook` (no return value used).
 | `auth_profile_reset_value` | fn | `auth_profile.php:180` | the setting name |
 | `auth_profile_save` | action | `auth_profile.php:255` | none |
 | `copy_user` | fn | `lib/auth.php:600` | the copy hook data, after a successful copy |
+| `get_template_account` | fn | `lib/functions.php:3447` | the username being created from a template; returning a different value replaces the template account |
+| `nav_login_before` | action | `lib/functions.php:4265` | none; runs before the guest user menu is printed |
+| `nav_login_after` | action | `lib/functions.php:4274` | none; runs after the guest user menu is printed |
 | `user_remove` | fn | `lib/auth.php:714` | the user id |
 
 These are part of the public plugin API under [VERSIONING.md](../../VERSIONING.md):
@@ -178,11 +183,29 @@ and the permission tests beside them.
 Other: `tests/security/entry_point_authorization.py`, and the behavioral
 characterization suite (`make test-auth`).
 
+## Resolved by reading the source
+
+- **Hook coverage.** A search of the whole tree for hook names beginning
+  `login`, `logout`, `auth`, `custom_`, `change_password` or `user_` found no call
+  site outside the files above. The `user_admin_*` and `user_group_admin_*` hooks
+  belong to user administration, not to authentication. `lib/plugins.php`,
+  `lib/html.php` and `include/global.php` fire none of the authentication hooks.
+  The three helper hooks in the table were found by this search.
+- **`login_before` argument.** An array of exactly `error`, `error_msg`,
+  `username`, `user_enabled` and `action`; the return value is not used, only the
+  output the plugin prints inside the form.
+- **`login_realms` argument.** Realm `1` is Local (not selected) and realm `2` is
+  LDAP (selected). Choosing 1 or 0 under methods 3 and 4 switches the method to
+  local; choosing 2 is compensated to realm 3. Only method 3 calls the hook;
+  method 4 uses `get_auth_realms(true)`.
+- **Session idle timeout.** There is no application timer. A session ends when PHP
+  garbage-collects it after `session.gc_maxlifetime` (the database handler checks
+  the same value). `logout.php?action=timeout` only selects the message, and the
+  gate redirects there when the session has gone. The authenticator must therefore
+  keep the session lifetime as it is and not add a second timer.
+
 ## Not covered
 
-- Hooks fired outside the files above (for example from `lib/functions.php`,
-  `lib/plugins.php` or the installer) were not searched.
-- Only the beginning of `login_before`'s argument array was read.
 - `install/` authentication, remote-poller (`poller_id` other than 1) behavior,
-  and session idle-timeout enforcement were not traced.
+  and the storage of the `user_domains_ldap` bind password were not traced.
 - Plugin code was not inspected.
