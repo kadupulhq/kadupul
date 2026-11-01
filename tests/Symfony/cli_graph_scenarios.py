@@ -53,8 +53,8 @@ REBUILD_FIRST = 9200001
 REBUILD_CLOCK = re.compile(r'^\S+ \d{2}:\d{2}:\d{2} - ', re.MULTILINE)
 # In debug, the spawn line carries the elapsed time, and how often the master polls depends on how fast its children run.
 REBUILD_TIMING = re.compile(r'Total\[[0-9.]+\] |^PUSHOUT: \d+ Processes Running, keeping for 2 seconds\.\n', re.MULTILINE)
-# The worker runs under the installation's php.ini, not the harness's -d display_errors=0, so it shows the warnings the original hid.
-REBUILD_DISPLAYED = re.compile(r'^\n?(?:PHP )?(?:Warning|Notice|Deprecated): .* on line \d+\n', re.MULTILINE)
+# The script's body moved to the worker, so a PHP warning it raises names that file and line; the message itself must match.
+REBUILD_PHP_SITE = re.compile(r'^((?:PHP )?(?:Warning|Notice|Deprecated|Fatal error): .*) in \S+ on line \d+$', re.MULTILINE)
 TREE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_tree.php'
 TREE_SHIM = 'cli/add_tree.php'
 TREE_UTILITY = 'Kadupul Add Tree Utility'
@@ -1435,7 +1435,7 @@ def rebuild_cases():
 
 
 def rebuild_text(text):
-    return REBUILD_TIMING.sub('', REBUILD_CLOCK.sub('HH:MM:SS - ', REBUILD_DISPLAYED.sub('', normalise(text))))
+    return REBUILD_TIMING.sub('', REBUILD_CLOCK.sub('HH:MM:SS - ', REBUILD_PHP_SITE.sub(r'\1 in SCRIPT', normalise(text))))
 
 
 def same_rebuild(check, label, original, native):
@@ -1445,7 +1445,8 @@ def same_rebuild(check, label, original, native):
         expected = without_utility(expected, REBUILD_UTILITY)
     check(original['exit'] == native['exit'], f'{label} keeps its exit code')
     check(expected == rebuild_text(native['stdout']), f'{label} prints the same lines')
-    check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+    # Both sides log the same PHP warnings under a php.ini with log_errors, so they are compared, not dropped.
+    check(rebuild_text(STTY.sub('', original['stderr'])) == rebuild_text(native['stderr']), f'{label} prints the same errors')
 
 
 def verify_rebuild_cases(harness, check):

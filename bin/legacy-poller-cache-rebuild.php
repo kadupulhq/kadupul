@@ -24,9 +24,28 @@ if (PHP_SAPI !== 'cli') {
 
 const KADUPUL_POLLER_CACHE_PID = 'KADUPUL_POLLER_CACHE_WORKER=';
 const KADUPUL_POLLER_CACHE_RESULT = 'KADUPUL_POLLER_CACHE_RESULT=';
+// The caller's settings that decide where the script's PHP warnings went.
+const KADUPUL_POLLER_CACHE_INI = ['display_errors', 'log_errors', 'error_reporting'];
 
 if (function_exists('pcntl_async_signals')) {
     pcntl_async_signals(true);
+}
+
+// The command is read before the bootstrap so that its error settings, the
+// ones the shim or bin/console ran under, apply to everything the script did.
+$input = stream_get_contents(STDIN, 20001);
+try {
+    $command = is_string($input) && strlen($input) <= 20000 ? json_decode($input, true, 4, JSON_THROW_ON_ERROR) : null;
+} catch (JsonException) {
+    $command = null;
+}
+if (is_array($command) && is_array($command['ini'] ?? null)) {
+    foreach (KADUPUL_POLLER_CACHE_INI as $name) {
+        $value = $command['ini'][$name] ?? null;
+        if (is_string($value) && preg_match('/^[A-Za-z0-9_ -]{0,32}$/D', $value) === 1) {
+            ini_set($name, $value);
+        }
+    }
 }
 
 // Isolate procedural globals, plugin hooks and session messages from Symfony.
@@ -65,12 +84,11 @@ function kadupul_poller_cache_finish(array $result, int $exit): never
 }
 
 try {
-    $input = stream_get_contents(STDIN, 20001);
     if (!is_string($input) || strlen($input) > 20000) {
         throw new RuntimeException('Payload too large');
     }
     $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
-    $keys = ['database', 'host_id', 'host_template_id', 'data_template_id', 'threads', 'type', 'child', 'force', 'debug'];
+    $keys = ['database', 'host_id', 'host_template_id', 'data_template_id', 'threads', 'type', 'child', 'force', 'debug', 'ini'];
     // The ids reach the child command line that exec_background() builds, so
     // they are checked again here: digits, or a number with no spaces.
     $numeric = static fn(mixed $value): bool => $value === null || (is_string($value) && is_numeric($value) && trim($value) === $value);
@@ -80,7 +98,8 @@ try {
         || !$numeric($command['host_template_id']) || !$numeric($command['data_template_id'])
         || !($command['threads'] === null || (is_int($command['threads']) && $command['threads'] >= 1))
         || !is_string($command['type']) || !($command['child'] === null || is_string($command['child']))
-        || !is_bool($command['force']) || !is_bool($command['debug'])) {
+        || !is_bool($command['force']) || !is_bool($command['debug'])
+        || !is_array($command['ini']) || array_keys($command['ini']) !== KADUPUL_POLLER_CACHE_INI) {
         throw new RuntimeException('Invalid command');
     }
 } catch (Throwable $error) {

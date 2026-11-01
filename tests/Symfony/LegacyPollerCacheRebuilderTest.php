@@ -84,7 +84,8 @@ final class LegacyPollerCacheRebuilderTest extends TestCase
         self::assertSame([['out', "WARNING\n"], ['err', 'warning on stderr'], ['out', "There are 2 hosts\n"]], $this->seen);
         // No timeout: the original warned never to interrupt a rebuild.
         self::assertSame(['script' => 'legacy-poller-cache-rebuild.php', 'marker' => 'KADUPUL_POLLER_CACHE_RESULT', 'timeout' => null, 'database' => 'main', 'host_id' => '7',
-            'host_template_id' => '3', 'data_template_id' => '1e0', 'threads' => 2, 'type' => 'child', 'child' => '1', 'force' => true, 'debug' => true], $this->commands[0]);
+            'host_template_id' => '3', 'data_template_id' => '1e0', 'threads' => 2, 'type' => 'child', 'child' => '1', 'force' => true, 'debug' => true,
+            'ini' => ['display_errors' => (string) ini_get('display_errors'), 'log_errors' => (string) ini_get('log_errors'), 'error_reporting' => (string) ini_get('error_reporting')]], $this->commands[0]);
     }
 
     public function testTheNewlineTheWorkerAddedBeforeItsResultIsTakenOff(): void

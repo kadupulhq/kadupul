@@ -80,6 +80,7 @@ final class LegacyPollerCacheRebuilder implements PollerCacheRebuilder
                 'child' => $request->child,
                 'force' => $request->force,
                 'debug' => $request->debug,
+                'ini' => self::errorSettings(),
             ], null, $relay);
         } finally {
             $this->running = false;
@@ -119,6 +120,22 @@ final class LegacyPollerCacheRebuilder implements PollerCacheRebuilder
         }
 
         return true;
+    }
+
+    /**
+     * The settings that decided where the script's PHP warnings went, as this
+     * process runs under them: a shim started with -d display_errors=0 hid
+     * them, so the worker must too.
+     *
+     * @return array{display_errors: string, log_errors: string, error_reporting: string}
+     */
+    private static function errorSettings(): array
+    {
+        return [
+            'display_errors' => (string) ini_get('display_errors'),
+            'log_errors' => (string) ini_get('log_errors'),
+            'error_reporting' => (string) ini_get('error_reporting'),
+        ];
     }
 
     /** posix_kill() to the announced worker; without ext-posix the signal cannot be passed on. */
