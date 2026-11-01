@@ -283,16 +283,19 @@ function get_basic_auth_username() {
 		return false;
 	}
 
-	/* 1.2.31 order. FPM and CGI setups often pass only PHP_AUTH_USER, which PHP
-	 * takes from the Authorization header, so it is only as trustworthy as the
-	 * web server's Basic authentication in front of Cacti. HTTP_* entries are
-	 * request headers any client can send, and are never read. */
-	if (isset($_SERVER['PHP_AUTH_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['PHP_AUTH_USER']);
-	} elseif (isset($_SERVER['REMOTE_USER'])) {
+	/* REMOTE_USER and REDIRECT_REMOTE_USER are set by the web server after it
+	 * authenticates the request, so when either is present it wins over
+	 * PHP_AUTH_USER, which PHP takes from the client's Authorization header.
+	 * FPM and CGI setups often pass only PHP_AUTH_USER; that case keeps the
+	 * 1.2.31 behavior and is only as trustworthy as the web server's Basic
+	 * authentication in front of Cacti. HTTP_* entries are request headers any
+	 * client can send, and are never read. */
+	if (isset($_SERVER['REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REMOTE_USER']);
 	} elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REDIRECT_REMOTE_USER']);
+	} elseif (isset($_SERVER['PHP_AUTH_USER'])) {
+		$username = str_replace("\\", "\\\\", $_SERVER['PHP_AUTH_USER']);
 	} else {
 		$username = false;
 	}
