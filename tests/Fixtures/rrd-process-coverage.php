@@ -220,7 +220,7 @@ if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
 }
 if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
-    foreach (['lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php', 'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php'] as $coverageFile) {
+    foreach (['lib/session_metadata.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php', 'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php'] as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
     }
 }
@@ -547,6 +547,12 @@ if (defined('RRD_OBSERVED_WINDOW_TEST_COVERAGE')) {
     foreach (RrdObservedWindowCoverageRegistration::HITS as $file) {
         $coverageFilter->includeFile($coverageRoot . '/' . $file);
     }
+}
+if (defined('NATIVE_SESSION_PERSISTENCE_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Symfony/NativeSessionCoverageRegistration.php';
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    foreach (Kadupul\Tests\NativeSessionCoverageRegistration::MEASURED as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    $coverageFilter->includeFile($coverageRoot . '/' . NATIVE_SESSION_PERSISTENCE_TEST_COVERAGE);
 }
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),

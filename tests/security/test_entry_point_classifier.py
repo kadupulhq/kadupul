@@ -1078,6 +1078,9 @@ def main():
     with tempfile.TemporaryDirectory(prefix='session-object-inventory-') as directory:
         root = tree(directory)
         (root / 'session_host.php').write_text("<?php require './include/session.php';\n")
+        for relative in ['lib/session_store.php', 'lib/session_data.php', 'lib/session_metadata.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php']:
+            (root / relative).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source_root / relative, root / relative)
         original = (source_root / 'include/session.php').read_text()
         admitted = gate(root, 'include/session.php', original)
         count += 1
@@ -1100,6 +1103,11 @@ def main():
             'changed gc argument': ('return cacti_db_session_clean($max_lifetime);', 'return cacti_db_session_clean(0);'),
             'different registered object': ('new CactiDatabaseSessionHandler()', 'new OtherSessionHandler()'),
             'duplicate shutdown registration': ('new CactiDatabaseSessionHandler(), false', 'new CactiDatabaseSessionHandler(), true'),
+            'constructor argument side effect': ('new CactiDatabaseSessionHandler()', "new CactiDatabaseSessionHandler(unlink('/tmp/x'))"),
+            'deferred callback source drift': ('return $backend === false || $backend->close();', "unlink('/tmp/x'); return $backend === false || $backend->close();"),
+            'unreviewed callback factory': ('$backend = new CactiSessionStore(', '$backend = new UnreviewedSessionStore('),
+            'native registry source drift': ('LegacyConnectionRegistry::defaultTarget()', 'LegacyConnectionRegistry::handles()'),
+            'captured context performs eager I/O': ('    static $selection = null;', "    file_put_contents('/tmp/x', 'unexpected'); static $selection = null;"),
         }
         for name, (before, after) in mutations.items():
             if before not in original:
@@ -1444,7 +1452,7 @@ final class NullableQuery {
                          'AuthenticationFileSessionHandler',
                          'AuthenticationDatabaseSessionHandler', 'SharedSession',
                          'ReadOnlyDatabaseSessionHandler')
-        ] + ['config/services.yaml', 'lib/auth.php']
+        ] + ['config/services.yaml', 'lib/auth.php', 'lib/session_metadata.php']
         originals = {}
         for relative in about_bundle:
             target = root / relative

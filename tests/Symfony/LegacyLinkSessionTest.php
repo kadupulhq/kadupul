@@ -7,6 +7,7 @@ namespace Kadupul\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\Process;
 
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
@@ -14,6 +15,10 @@ require_once dirname(__DIR__) . '/Helpers/NativeChildCoverageEvidence.php';
 final class LegacyLinkSessionTest extends TestCase
 {
     private string $directory;
+    private ?\PDO $database = null;
+    private ?string $schema = null;
+    /** @var array<string, string> */
+    private array $environment = [];
     private bool $fullPageEvidenceChecked = false;
     protected function setUp(): void
     {
@@ -22,6 +27,9 @@ final class LegacyLinkSessionTest extends TestCase
     }
     protected function tearDown(): void
     {
+        if ($this->database !== null && $this->schema !== null) {
+            $this->database->exec('DROP DATABASE `' . $this->schema . '`');
+        }
         foreach (glob($this->directory . '/include/*') ?: [] as $file) {
             unlink($file);
         }
@@ -35,8 +43,21 @@ final class LegacyLinkSessionTest extends TestCase
     }
     private function request(string $scenario, string $storage, string $stage): array
     {
+        if ($storage === 'database' && $this->database === null) {
+            $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
+            if ($dsn === false) self::markTestSkipped('Set KADUPUL_TEST_MYSQL_DSN for native database sessions.');
+            $user = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root');
+            $password = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '');
+            $this->database = new \PDO($dsn, $user, $password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+            $this->schema = 'link_session_' . bin2hex(random_bytes(8));
+            $this->database->exec('CREATE DATABASE `' . $this->schema . '` CHARACTER SET utf8mb4');
+            $childDsn = preg_replace('/;dbname=[^;]*/', '', $dsn) . ';dbname=' . $this->schema;
+            $this->environment = ['KADUPUL_LINK_TEST_DSN' => $childDsn, 'KADUPUL_LINK_TEST_USER' => $user, 'KADUPUL_LINK_TEST_PASSWORD' => $password];
+        }
         $coverage = $stage !== 'init' && \PHPUnit\Runner\CodeCoverage::instance()->isActive() ? \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage() : null;
-        $result = \test_php_run([PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . dirname(__DIR__, 2), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', dirname(__DIR__) . '/Fixtures/legacy-link-session-native.php', $scenario, $this->directory, $storage, $stage, $coverage !== null ? 'coverage' : '']);
+        $process = new Process([PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'pcov.directory=' . dirname(__DIR__, 2), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', dirname(__DIR__) . '/Fixtures/legacy-link-session-native.php', $scenario, $this->directory, $storage, $stage, $coverage !== null ? 'coverage' : ''], env: $this->environment, timeout: 60);
+        $process->run();
+        $result = ['status' => $process->getExitCode(), 'out' => $process->getOutput(), 'err' => $process->getErrorOutput()];
         self::assertSame(0, $result['status'], $result['err'] . $result['out']);
         self::assertSame('', $result['err']);
         $state = json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR);
@@ -45,10 +66,17 @@ final class LegacyLinkSessionTest extends TestCase
             if ($stage === 'save') {
                 $hits[] = 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php';
             }
+            if ($storage === 'database') {
+                if ($stage === 'save') {
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php';
+                } else {
+                    array_push($hits, 'include/session.php', 'lib/session_store.php', 'lib/session_data.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php');
+                }
+            }
             $report = $this->directory . '/' . $stage . '.coverage';
             $child = \NativeChildCoverageEvidence::load($report, dirname(__DIR__, 2), 'tests/Fixtures/legacy-link-session-native.php', "$scenario:$storage:$stage", self::sources(), ['persisted-link-state-observed'], $hits);
-            if (($scenario === 'current' || ($scenario === 'grant-full-edit' && $stage === 'viewer-after' && !$this->fullPageEvidenceChecked)) && $storage === 'file') {
-                self::assertSame(24, \NativeChildCoverageEvidence::verifyRejections($report, dirname(__DIR__, 2), 'tests/Fixtures/legacy-link-session-native.php', "$scenario:$storage:$stage", self::sources(), ['persisted-link-state-observed'], $hits, 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php'));
+            if ($scenario === 'current' || ($scenario === 'grant-full-edit' && $stage === 'viewer-after' && !$this->fullPageEvidenceChecked)) {
+                self::assertSame(29, \NativeChildCoverageEvidence::verifyRejections($report, dirname(__DIR__, 2), 'tests/Fixtures/legacy-link-session-native.php', "$scenario:$storage:$stage", self::sources(), ['persisted-link-state-observed'], $hits, $storage === 'database' ? 'lib/session_store.php' : 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php'));
                 $this->fullPageEvidenceChecked = true;
             }
             $coverage->merge($child);
@@ -57,7 +85,7 @@ final class LegacyLinkSessionTest extends TestCase
     }
     private static function sources(): array
     {
-        return ['composer.lock', 'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'include/session.php', 'lib/functions.php', 'lib/auth.php', 'link.php', 'src/Navigation/Domain/ExternalLink.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php'];
+        return ['composer.lock', 'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'include/session.php', 'cacti.sql', 'lib/session_data.php', 'lib/session_metadata.php', 'lib/session_store.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php', 'lib/functions.php', 'lib/auth.php', 'link.php', 'src/Navigation/Domain/ExternalLink.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php'];
     }
     #[DataProvider('viewerCases')]
     public function testHeaderSuppressedViewerRechecksCredentialsBeforeLookup(string $scenario, string $storage): void

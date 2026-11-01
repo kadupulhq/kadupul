@@ -187,6 +187,10 @@ const REVIEWED_FRAGMENT_CALLS = [
     'include/session.php' => [
         ["session_set_save_handler(new CactiDatabaseSessionHandler(), false)", 'registers the native object callbacks; they run only once a session starts'],
         ["new CactiDatabaseSessionHandler()", 'the constructor admission check below proves instantiation runs no user code'],
+        ['\\Kadupul\\Platform\\Infrastructure\\Legacy\\LegacyConnectionRegistry::defaultTarget()', 'deferred native registry lookup bound to the complete facade and helper source'],
+        ['\\Kadupul\\Platform\\Infrastructure\\Legacy\\LegacyConnectionRegistry::hasSession($key)', 'deferred native registry lookup bound to the complete facade and helper source'],
+        ['\\Kadupul\\Platform\\Infrastructure\\Legacy\\LegacyConnectionRegistry::session($key)', 'deferred native registry lookup bound to the complete facade and helper source'],
+        ['is_int($port)', 'deferred native port shape check bound to the complete facade'],
         ["register_shutdown_function('session_write_close')", 'writes an open session back at shutdown; a fragment requested alone has none'],
     ],
 ];
@@ -213,13 +217,14 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // Complete reviewed native-identity and persistence handoff, plus its scoped
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
+    'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '54b0ce28240fac51fb0faa0df442b85610fdfbe87fb4dbc84fc484d09370eade',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
-    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'c07761a00231ff569cbff177dc4b401f631cc34239e90e83d62f8a0cec0b69ce',
+    'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
     'config/services.yaml' => 'b39ba96e269ffb22772ed66b08745011d96e8b3cb5c5e688eb50fbc5623d574d',
@@ -396,7 +401,7 @@ function same_node(mixed $a, mixed $b): bool
  *
  * @param list<Stmt> $stmts
  */
-function digest(array $stmts): string
+function digest(array $stmts, bool $full = false): string
 {
     $strip = new class extends NodeVisitorAbstract {
         public function enterNode(Node $node)
@@ -407,7 +412,8 @@ function digest(array $stmts): string
     };
     $copy = (new NodeTraverser(new CloningVisitor(), $strip))->traverse($stmts);
 
-    return substr(hash('sha256', (new Standard())->prettyPrint($copy)), 0, 12);
+    $hash = hash('sha256', (new Standard())->prettyPrint($copy));
+    return $full ? $hash : substr($hash, 0, 12);
 }
 
 function call_name(Node $node): ?string
@@ -1291,11 +1297,31 @@ function reviewed_output(string $path, Expr $expr): bool
     return false;
 }
 
+function reviewed_native_session_facade(string $root): bool
+{
+    $source = parse_file($root, 'include/session.php');
+    $registry = $root . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
+    return $source !== null && digest($source, true) === '0a600b73fb2fcc958b3c2dbcf1d7be0b3b9df2f139377b4eba4da211fbe49f5d'
+        && is_file($registry) && hash_file('sha256', $registry) === 'd27dc70a6b2b9d8edad121613abd1b4a34586afabf8a50d94b90ca4e7f12ef38';
+}
+
 function reviewed_call(string $root, string $path, Node $node): bool
 {
+    // The exact initializer only captures configuration; it performs no I/O.
+    if ($path === 'include/session.php' && $node instanceof Expr\FuncCall
+        && call_name($node) === 'cacti_db_session_context') {
+        $arguments = plain_args($node);
+        return reviewed_native_session_facade($root)
+            && $arguments !== null && count($arguments) === 1 && $arguments[0] instanceof Expr\Closure;
+    }
+
     foreach (REVIEWED_FRAGMENT_CALLS[$path] ?? [] as [$snippet]) {
         $parsed = (new ParserFactory())->createForNewestSupportedVersion()->parse('<?php ' . $snippet . ';');
         if (same_node($node, $parsed[0]->expr)) {
+            // Bind registration and every deferred callback to the reviewed facade.
+            if ($path === 'include/session.php') {
+                if (!reviewed_native_session_facade($root)) return false;
+            }
             if ($node instanceof Expr\New_) {
                 // Named declarations are outside the fragment's active digest.
                 // Never bless a future constructor/destructor, inherited code,

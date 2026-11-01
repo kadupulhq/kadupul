@@ -11,6 +11,8 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+require_once dirname(__DIR__, 4) . '/lib/session_metadata.php';
+
 /** A verified authentication transition creates one fresh credential payload. */
 final class AuthenticationDatabaseSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface
 {
@@ -41,8 +43,10 @@ final class AuthenticationDatabaseSessionHandler implements \SessionHandlerInter
         if (!is_int($user) || $user <= 0 || strlen($id) > 32) {
             throw new \RuntimeException('Invalid established authentication session.');
         }
+        $display = \CactiSessionMetadata::forStorage($this->ip, $this->agent);
+        if ($display === false) throw new \RuntimeException('Invalid authentication session display metadata.');
         // Only the newly generated ID is written: never upsert another payload.
-        $statement = BrowserAuthenticationSql::execute($this->database->get(), 'INSERT INTO sessions (id, remote_addr, access, data, user_id, user_agent) VALUES (?, ?, ?, ?, ?, ?)', [$id, substr($this->ip, 0, 25), time(), $data, $user, substr($this->agent, 0, 128)]);
+        $statement = BrowserAuthenticationSql::execute($this->database->get(), 'INSERT INTO sessions (id, remote_addr, access, data, user_id, user_agent) VALUES (?, ?, ?, ?, ?, ?)', [$id, $display['address'], time(), $data, $user, $display['agent']]);
         if ($statement->rowCount() !== 1) {
             throw new \RuntimeException('Authentication session insertion was not confirmed.');
         }

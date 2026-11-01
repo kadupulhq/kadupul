@@ -8,6 +8,9 @@
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
+// These native-session classes intentionally load before Composer in production.
+require_once dirname(__DIR__) . '/lib/session_store.php';
+
 // The legacy application is most of the code and the only user of several
 // runtime packages, so scanning src/ alone would report them as unused.
 return (new Configuration())

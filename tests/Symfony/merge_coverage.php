@@ -80,6 +80,8 @@ $coverage = require $argv[1];
 if (!$coverage instanceof CodeCoverage) {
     throw new RuntimeException('Invalid Symfony unit coverage');
 }
+require_once __DIR__ . '/NativeSessionCoverageRegistration.php';
+\Kadupul\Tests\NativeSessionCoverageRegistration::requireMeasured($coverage->getData()->lineCoverage(), $root);
 $mapped = [];
 // Require the physical guarded caller, separately from any utility/helper hit.
 $wrapperStatement = '$changed = (new \Kadupul\Inventory\Infrastructure\Legacy\PollerCacheBufferWrite($transactions))->write(';

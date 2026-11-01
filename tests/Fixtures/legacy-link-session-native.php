@@ -13,13 +13,13 @@ $root = dirname(__DIR__, 2);
 [$script, $scenario, $directory, $storage, $stage] = $argv;
 require $root . '/include/vendor/autoload.php';
 require $root . '/tests/Helpers/PhpSource.php';
-$coverageSources = ['composer.lock', 'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'include/session.php', 'lib/functions.php', 'lib/auth.php', 'link.php', 'src/Navigation/Domain/ExternalLink.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php'];
+$coverageSources = ['composer.lock', 'tests/Helpers/PhpSource.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'include/session.php', 'cacti.sql', 'lib/session_data.php', 'lib/session_metadata.php', 'lib/session_store.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php', 'lib/functions.php', 'lib/auth.php', 'link.php', 'src/Navigation/Domain/ExternalLink.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkStore.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php'];
 if (($argv[5] ?? '') === 'coverage') {
     require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $snapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/legacy-link-session-native.php', "$scenario:$storage:$stage", $coverageSources);
     $filter = new SebastianBergmann\CodeCoverage\Filter();
     foreach ($coverageSources as $source) {
-        if (str_starts_with($source, 'src/') || in_array($source, ['lib/auth.php', 'link.php'], true)) {
+        if (str_starts_with($source, 'src/') || in_array($source, ['lib/auth.php', 'link.php', 'include/session.php', 'lib/session_data.php', 'lib/session_metadata.php', 'lib/session_store.php'], true)) {
             $filter->includeFile($root . '/' . $source);
         }
     }
@@ -162,40 +162,12 @@ $configuration = new class ($root, $storage) implements Kadupul\Platform\Contrac
 session_name('Cacti');
 session_save_path($directory);
 if ($storage === 'database') {
-    $sessionSource = file_get_contents($root . '/include/session.php');
-    if ($sessionSource === false) {
-        throw new RuntimeException('Missing native database session source.');
-    }
-    foreach (['cacti_db_session_check', 'cacti_db_session_open', 'cacti_db_session_close', 'cacti_db_session_read', 'cacti_db_session_write', 'cacti_db_session_destroy', 'cacti_db_session_clean'] as $name) {
-        eval(test_php_function_source($sessionSource, $name));
-    }
-    session_set_save_handler(new class implements SessionHandlerInterface {
-        public function open(string $path, string $name): bool
-        {
-            return cacti_db_session_open($path, $name);
-        }
-        public function close(): bool
-        {
-            return cacti_db_session_close();
-        }
-        public function read(string $id): string|false
-        {
-            return cacti_db_session_read($id);
-        }
-        public function write(string $id, string $data): bool
-        {
-            return cacti_db_session_write($id, $data);
-        }
-        public function destroy(string $id): bool
-        {
-            return cacti_db_session_destroy($id);
-        }
-        public function gc(int $lifetime): int|false
-        {
-            cacti_db_session_clean($lifetime);
-            return 0;
-        }
-    }, true);
+    $database_hostname = '127.0.0.1';
+    $database_port = 'fixture';
+    $database_default = (string) $db->query('SELECT DATABASE()')->fetchColumn();
+    $database_sessions = ["$database_hostname:$database_port:$database_default" => $db];
+    define('KADUPUL_BROWSER_COMPATIBILITY', true);
+    require $root . '/include/session.php';
 }
 $cookie = '9,0,' . str_repeat('a', 64);
 if ($stage === 'init') {
@@ -211,6 +183,16 @@ if ($stage === 'init') {
         CREATE TABLE user_auth_cache(user_id INTEGER,hostname TEXT,last_update TEXT,token TEXT);";
     if ($db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
         $schema = str_replace(['INTEGER PRIMARY KEY AUTOINCREMENT', 'name TEXT', 'id TEXT PRIMARY KEY', 'reset_perms INTEGER NOT NULL'], ['INTEGER PRIMARY KEY AUTO_INCREMENT', 'name VARCHAR(255)', 'id VARCHAR(256) PRIMARY KEY', 'reset_perms INTEGER UNSIGNED NOT NULL'], $schema);
+    }
+    if ($storage === 'database') {
+        // Keep the deliberate remember-token collision fixture, while session
+        // storage uses the persistent production table and complete callbacks.
+        $ddl = file_get_contents($root . '/cacti.sql');
+        if ($ddl === false || preg_match('/CREATE TABLE `sessions`\s*\([^;]*;/s', $ddl, $match) !== 1) {
+            throw new RuntimeException('Missing shipped sessions table.');
+        }
+        $schema = preg_replace('/CREATE TABLE sessions\([^;]+;/', $match[0], $schema);
+        if (!is_string($schema)) throw new RuntimeException('Invalid fixture schema.');
     }
     $db->exec($schema);
     foreach ([[9,hash('sha512', str_repeat('a', 64))], [9,hash('sha512', 'other-client')], [10,hash('sha512', str_repeat('a', 64))]] as [$user,$token]) {
