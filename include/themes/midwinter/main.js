@@ -82,20 +82,20 @@ function updateNavigation() {
 	if (themeInitialized === false) {
 		// Search using different patterns until we have a valid location to populate the navigation
 		// Use the easy matches first.
-		var menu_element = $('.cactiConsoleNavigationArea a[href$="'+window.location.pathname+window.location.search+'"').first();
-		if (menu_element.length !== 0) return midWinterNavigation(menu_element);
-		var menu_element = $('.cactiConsoleNavigationArea a[href$="'+window.location.pathname+'"').first();
-		if (menu_element.length !== 0) return midWinterNavigation(menu_element);
-		var menu_element = $('.cactiConsoleNavigationArea a[href$="'+window.location.pathname+'index.php"').first();
-		if (menu_element.length !== 0) return midWinterNavigation(menu_element);
+		let menuElement = $('.cactiConsoleNavigationArea a[href$="'+window.location.pathname+window.location.search+'"').first();
+		if (menuElement.length !== 0) return midWinterNavigation(menuElement);
+		menuElement = $('.cactiConsoleNavigationArea a[href$="'+window.location.pathname+'"').first();
+		if (menuElement.length !== 0) return midWinterNavigation(menuElement);
+		menuElement = $('.cactiConsoleNavigationArea a[href$="'+window.location.pathname+'index.php"').first();
+		if (menuElement.length !== 0) return midWinterNavigation(menuElement);
 
 		// Append an action if the user did not provide one based upon the cactiAction variable
-		var menu_element = $('.cactiConsoleNavigationArea a[href^="'+window.location.pathname+'?action='+cactiAction+'"').first();
-		if (menu_element.length !== 0) return midWinterNavigation(menu_element);
+		menuElement = $('.cactiConsoleNavigationArea a[href^="'+window.location.pathname+'?action='+cactiAction+'"').first();
+		if (menuElement.length !== 0) return midWinterNavigation(menuElement);
 
 		// Choose what fits best in situations where users have cleared their settings
-		var menu_element = $('.cactiConsoleNavigationArea a[href^="'+window.location.pathname+'"').first();
-		if (menu_element.length !== 0) return midWinterNavigation(menu_element);
+		menuElement = $('.cactiConsoleNavigationArea a[href^="'+window.location.pathname+'"').first();
+		if (menuElement.length !== 0) return midWinterNavigation(menuElement);
 	}
 }
 
@@ -451,10 +451,10 @@ function toggleCactiNavigationBox(event) {
 }
 
 function setupDefaultElements() {
-	var pageName = basename($(location).attr('pathname'));
-	var hostTimer = false;
-	var clickTimeout = false;
-	var hostOpen = false;
+	const pageName = basename($(location).attr('pathname'));
+	let hostTimer = false;
+	let clickTimeout = false;
+	let hostOpen = false;
 
 	// duplicate cactiConsolePageHeadBackdrop for compact mode
 	if ($('#cactiConsoleBackdrop').length === 0 ) {
@@ -536,9 +536,8 @@ function setupDefaultElements() {
 
 	// Turn file buttons into jQueryUI buttons
 	$('.import_label').button();
-	$('.import_button').change(function() {
-		text=this.value;
-		setImportFile(text);
+	$('.import_button').off('change.midwinterImport').on('change.midwinterImport', function() {
+		setImportFile(this.value);
 	});
 
 	setImportFile(noFileSelected);
@@ -550,13 +549,13 @@ function setupDefaultElements() {
 	$('select.colordropdown').dropcolor();
 
 	$('select').not('.colordropdown').each(function() {
-		if ($(this).prop('multiple') != true) {
+		if (!$(this).prop('multiple')) {
 			$(this).each(function() {
-				id = $(this).attr('id');
+				const id = $(this).attr('id');
 
 				$(this).selectmenu({
 					open: function(event, ui) {
-						var instance = $(this).selectmenu('instance');
+						const instance = $(this).selectmenu('instance');
 						instance.menuInstance.focus(null, instance._getSelectedItem());
 					},
 					change: function(event, ui) {
@@ -583,11 +582,11 @@ function setupDefaultElements() {
 		minLength: 0,
 		select: function(event,ui) {
 			$('#host_id').val(ui.item.id);
-			callBack = $('#call_back').val();
-			if (callBack != 'undefined') {
-				if (callBack.indexOf('applyFilter') >= 0) {
+			const callback = $('#call_back').val();
+			if (callback != 'undefined') {
+				if (callback.includes('applyFilter')) {
 					applyFilter();
-				} else if (callBack.indexOf('applyGraphFilter') >= 0) {
+				} else if (callback.includes('applyGraphFilter')) {
 					applyGraphFilter();
 				}
 			} else if (typeof applyGraphFilter === 'function') {
@@ -627,7 +626,7 @@ function setupDefaultElements() {
 		hostOpen = false;
 	});
 
-	var hostPrefix = '';
+	let hostPrefix = '';
 	$('#host').autocomplete('widget').each(function() {
 		hostPrefix=$(this).attr('id');
 
@@ -643,29 +642,26 @@ function setupDefaultElements() {
 	});
 
 	// Hide the graph icons until you hover
-	$('.graphDrillDown').hover(
-		function() {
-			element = $(this);
+	$('.graphDrillDown').off('.midwinterGraph').on('mouseenter.midwinterGraph', function() {
+		const element = $(this);
 
-			// hide the previously shown element
-			if (element.attr('id').replace('dd', '') != graphMenuElement && graphMenuElement > 0) {
-				$('#dd'+graphMenuElement).find('.iconWrapper:first').hide(300);
-			}
-
-			clearTimeout(graphMenuTimer);
-			graphMenuTimer = setTimeout(function() { showGraphMenu(element); }, 400);
-		},
-		function() {
-			element = $(this);
-			clearTimeout(graphMenuTimer);
-			graphMenuTimer = setTimeout(function() { hideGraphMenu(element); }, 400);
+		// hide the previously shown element
+		if (element.attr('id').replace('dd', '') != window.graphMenuElement && window.graphMenuElement > 0) {
+			$('#dd'+window.graphMenuElement).find('.iconWrapper:first').hide(300);
 		}
-	);
+
+		clearTimeout(window.graphMenuTimer);
+		window.graphMenuTimer = setTimeout(function() { showGraphMenu(element); }, 400);
+	}).on('mouseleave.midwinterGraph', function() {
+		const element = $(this);
+		clearTimeout(window.graphMenuTimer);
+		window.graphMenuTimer = setTimeout(function() { hideGraphMenu(element); }, 400);
+	});
 
 	function showGraphMenu(element) {
 		element.find('.spikekillMenu').menu('disable');
 		element.find('.iconWrapper').show(300, function() {
-			graphMenuElement = element.attr('id').replace('dd', '');
+			window.graphMenuElement = element.attr('id').replace('dd', '');
 			$(this).find('.spikekillMenu').menu('enable');
 		});
 	}
@@ -744,7 +740,6 @@ function toggleColorMode() {
 
 function toggleColorModeAuto() {
 	let storage = Storages.localStorage;
-	let midWinter_Color_Mode = storage.get('midWinter_Color_Mode');
 	let midWinter_Color_Mode_Auto = storage.get('midWinter_Color_Mode_Auto');
 
 	midWinter_Color_Mode_Auto = (midWinter_Color_Mode_Auto === 'on') ? 'off' : 'on';
@@ -792,11 +787,11 @@ function detectSystemColorSetup() {
 
 		try {
 			systemColorMode.addEventListener('change', followSystemColorMode);
-		} catch (e1) {
+		} catch {
 			try {
 				systemColorMode.addListener(followSystemColorMode);
-			} catch (e2) {
-				console.error(e2);
+			} catch (error_) {
+				console.error(error_);
 			}
 		}
 	}
@@ -812,7 +807,7 @@ function followSystemColorMode(e) {
 }
 
 function checkThemeColorSetup(color_mode) {
-	let document_color_mode = document.documentElement.getAttribute('data-theme-color');
+	let document_color_mode = document.documentElement.dataset.themeColor ?? null;
 	let cookie_color_mode = getCookieValue('CactiColorMode');
 
 	if (document_color_mode !== color_mode || cookie_color_mode !== color_mode) {
@@ -823,20 +818,15 @@ function checkThemeColorSetup(color_mode) {
 }
 
 function setMenuVisibility() {
-	storage=Storages.localStorage;
+	const storage = Storages.localStorage;
 
 	// Initialize the navigation settings
 	// This will setup the initial visibility of the menu
 	$('li.menuitem').each(function() {
-		var id = $(this).attr('id');
+		const id = $(this).attr('id');
+		const active = storage.isSet(id) ? storage.get(id) : null;
 
-		if (storage.isSet(id)) {
-			var active = storage.get(id);
-		} else {
-			var active = null;
-		}
-
-		if (active != null && active === 'active') {
+		if (active === 'active') {
 			$(this).find('ul').attr('aria-hidden', 'false').attr('aria-expanded', 'true').show();
 			$(this).next('a').show();
 		} else {
@@ -877,8 +867,6 @@ function setMenuVisibility() {
 		}
 
 		$('li.menuitem').not('#'+id).each(function() {
-			let text = $(this).attr('id');
-			let id   = $(this).attr('id');
 
 			$(this).find('ul').attr('aria-hidden', 'true').attr('aria-expanded', 'false');
 			$(this).find('ul').slideUp( { duration: 200, easing: 'swing' } );
@@ -907,7 +895,7 @@ function bindKeywordHighlight() {
 function highlight() {
 	// Read the keyword
 	let keyword = $("input[name='keyword']").val();
-	pattern = '.*' + keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '.*';
+	const pattern = '.*' + keyword.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`) + '.*';
 	let re = new RegExp(pattern,'gmiu');
 
 	$("ul[role='menu'] a[role='menuitem']").unmark({
@@ -1009,12 +997,10 @@ function getFullscreenElement() {
 function toggleFullscreen(element = false){
 	if(getFullscreenElement()){
 		document.exitFullscreen().catch(console.log);
+	}else if(element === false) {
+		document.documentElement.requestFullscreen().catch(console.log);
 	}else {
-		if(element === false) {
-			document.documentElement.requestFullscreen().catch(console.log);
-		}else {
-			document.getElementById(element).requestFullscreen().catch(console.log);
-		}
+		document.getElementById(element).requestFullscreen().catch(console.log);
 	}
 }
 
