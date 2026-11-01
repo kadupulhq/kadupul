@@ -21,6 +21,42 @@ final class NativeCoverageCompositionTest extends TestCase
     /** @var array<string,string> */
     private static array $originalClovers = [];
 
+    public function testOverlappingNativeMergesRetainEveryTestIdentityAsAList(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $parts = [];
+        foreach (['legacy' => 'tests', 'application' => 'application'] as $part => $stack) {
+            $output = tempnam(sys_get_temp_dir(), 'native-composition-overlap-');
+            self::assertIsString($output);
+            try {
+                $process = new Process([PHP_BINARY, '-d', 'pcov.directory=' . $root . '/tests/Fixtures', '-d', 'pcov.exclude=~/(include/vendor|tests/vendor)/~',
+                    $root . '/tests/Fixtures/native-coverage-composition-producer.php', $stack, $part, $output, 'overlap']);
+                $process->mustRun();
+                $source = file_get_contents($output);
+                self::assertIsString($source);
+                $raw = json_decode($source, true, 512, JSON_THROW_ON_ERROR);
+                $ids = ['native composition ' . $stack, 'native overlap B ' . $stack, 'native overlap C ' . $stack];
+                self::assertSame($ids, array_keys($raw['tests']));
+                $shared = false;
+                foreach ($raw['lines'] as $measured) {
+                    foreach ($measured as $hits) {
+                        if ($hits === null) continue;
+                        self::assertIsArray($hits);
+                        self::assertTrue(array_is_list($hits), 'Merged native hit indexes must serialize as a JSON list.');
+                        if ($hits === $ids) $shared = true;
+                    }
+                }
+                self::assertTrue($shared, 'All three actually executed native tests must retain their shared statements.');
+                $parts[$part] = $raw;
+            } finally {
+                unlink($output);
+                if (is_file($output . '.xml')) unlink($output . '.xml');
+            }
+        }
+        $composed = self::composeInTestsStack($parts);
+        self::assertSame($parts['legacy']['tests'] + $parts['application']['tests'], $composed['tests']);
+    }
+
     public function testRealLockedLibrariesExportAndComposeTheirOriginalTestIdentities(): void
     {
         $parts = self::parts();
@@ -62,6 +98,9 @@ final class NativeCoverageCompositionTest extends TestCase
         $bad = $parts;
         $bad['application']['lines'][$file][0] = [];
         $cases['invalid line'] = $bad;
+        $bad = $parts;
+        $bad['application']['lines'][$file][1] = [2 => 'native composition application'];
+        $cases['non-list hit map'] = $bad;
         $bad = $parts;
         foreach ($bad['application']['lines'] as &$measured) {
             foreach ($measured as &$hits) $hits = [];

@@ -15,7 +15,8 @@ use SebastianBergmann\CodeCoverage\Filter;
 
 $root = dirname(__DIR__, 2);
 require $root . '/tests/Symfony/NativeCoverageStack.php';
-if ($argc !== 4 || !in_array($argv[1], ['application', 'tests'], true)) throw new RuntimeException('Invalid composition fixture arguments.');
+if (!in_array($argc, [4, 5], true) || !in_array($argv[1], ['application', 'tests'], true)
+    || $argc === 5 && $argv[4] !== 'overlap') throw new RuntimeException('Invalid composition fixture arguments.');
 NativeCoverageStack::bootstrap($root, NativeCoverageStack::installed($root, $argv[1]));
 require $root . '/tests/Symfony/NativeCoverageComposition.php';
 $filter = new Filter();
@@ -32,5 +33,19 @@ if ($argv[1] === 'application') {
     if (native_composition_application_only(1) !== 11 || native_composition_application_only(2) !== 22) throw new RuntimeException('The application-only fixture was not executed.');
 }
 $coverage->stop();
+if ($argc === 5) {
+    $value = $argv[1] === 'tests' ? 1 : 2;
+    $coverage->start('native overlap B ' . $argv[1]);
+    native_composition_target($value);
+    $coverage->stop();
+    $overlap = new CodeCoverage((new Selector())->forLineCoverage($filter), $filter);
+    $overlap->start('native composition ' . $argv[1]);
+    native_composition_target($value);
+    $overlap->stop();
+    $overlap->start('native overlap C ' . $argv[1]);
+    native_composition_target($value);
+    $overlap->stop();
+    $coverage->merge($overlap);
+}
 NativeCoverageComposition::write($coverage, $root, $argv[2], $argv[3]);
 (new \SebastianBergmann\CodeCoverage\Report\Clover())->process($coverage, $argv[3] . '.xml');
