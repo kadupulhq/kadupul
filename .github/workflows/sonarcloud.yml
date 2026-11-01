@@ -639,10 +639,33 @@ jobs:
             --bundle .sonar-coverage --expected-source "$GITHUB_SHA"
           rm -rf .sonar-coverage
 
+      # Both producers retain their original Clover artifacts for diagnosis.
+      # Compose measured data before one locked library expands uncovered files;
+      # otherwise coverage10/12 static parsers disagree on structural lines.
+      - name: Set up native coverage compositor
+        uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
+        with:
+          php-version: '8.4'
+          extensions: snmp, pcntl, sockets, gd, gmp, intl, ldap, mbstring, pdo_mysql, posix, xml
+          coverage: pcov
+          tools: composer
+      - name: Cache compositor dependencies
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
+      - name: Install locked compositor dependencies
+        run: |
+          composer validate --no-check-publish --check-lock
+          composer install --no-progress --no-interaction
+          composer --working-dir=tests validate --no-check-publish --check-lock
+          composer --working-dir=tests install --no-progress --no-interaction
+      - name: Compose source-bound native line coverage
+        run: |
+          php -d memory_limit=1G tests/Symfony/compose_native_coverage.php \
+            tests/coverage.xml.native.json var/symfony-coverage.xml.native.json var/native-composed-coverage.xml
+
       - name: Scan
         uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
         with:
-          args: -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=600
+          args: -Dsonar.qualitygate.wait=true -Dsonar.qualitygate.timeout=600 -Dsonar.php.coverage.reportPaths=var/native-composed-coverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -659,7 +682,7 @@ jobs:
           BASE: ${{ github.event_name == 'merge_group' && github.event.merge_group.base_sha || 'HEAD^1' }}
         run: |
           "$RUNNER_TEMP/sonar-artifact-tools/bin/python" tests/tools/patch_coverage.py \
-            --base "$BASE" --clover tests/coverage.xml --clover var/symfony-coverage.xml \
+            --base "$BASE" --clover var/native-composed-coverage.xml \
             --require 100 --paths 'src/**/*.php' 'config/**/*.php' 'lib/**/*.php' 'include/**/*.php' 'bin/**/*.php' \
               'cli/**/*.php' 'scripts/**/*.php' 'install/**/*.php' 'tools/**/*.php' '*.php' \
             --exclude 'include/vendor/**'

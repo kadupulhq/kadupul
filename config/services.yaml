@@ -655,6 +655,9 @@ services:
 
 when@test:
     services:
+        test.platform.database_target:
+            alias: Kadupul\Platform\Contract\DatabaseTarget
+            public: true
         _defaults:
             autowire: true
             autoconfigure: true

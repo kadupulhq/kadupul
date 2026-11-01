@@ -53,6 +53,14 @@ final class NativeCoverageStack
         if (self::capture($root) !== $expected) throw new \RuntimeException('The coverage stack does not match its parent.');
     }
 
+    /** Inspect an installed stack without loading it alongside the active one.
+     * @return array{stack:string,version:string,class_sha256:string}
+     */
+    public static function installed(string $root, string $stack): array
+    {
+        return self::describe($root, $stack);
+    }
+
     /** @return array{stack:string,version:string,class_sha256:string} */
     private static function describe(string $root, string $stack): array
     {

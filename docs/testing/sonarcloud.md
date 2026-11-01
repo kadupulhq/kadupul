@@ -17,6 +17,27 @@ classifying a security finding; a passing style gate is insufficient evidence.
 
 Credentials come from runtime secrets or Keychain, never this repository.
 
+## Native coverage composition
+
+The legacy and application jobs use their existing locked coverage libraries
+(12 and 10 respectively). Each merger exports measured line data and original
+test identities to a mandatory `.native.json` sidecar before writing Clover.
+The sidecars retain every filtered source, including unexecuted files. Artifact
+receipts seal them alongside the original reports at the same source SHA/tree.
+
+After receipt verification, the analysis job installs the existing locked
+dependencies and uses the tests library's native `ProcessedCodeCoverageData`
+merge API to compose both producers. Source hashes, dependency locks, producer
+library fingerprints and tooling hashes must match the checkout. Missing or
+stale sidecars, unsupported branch coverage, unbound hits and conflicting test
+identities fail the job. No foreign PHP serialization crosses library versions.
+
+Only then does Clover expand uncovered files once. Sonar and the unchanged 100%
+changed-line gate consume `var/native-composed-coverage.xml`. This avoids treating
+different static parsers' structural-line classifications as independent
+unexecuted statements. The original Clover artifacts remain available; they
+are not edited or used to fabricate execution data.
+
 ## Analysis scheduling
 
 Sonar is selective during modernization. With `ENABLE_SONAR=true`, full analysis
