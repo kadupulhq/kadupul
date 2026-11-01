@@ -12,6 +12,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
+- Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
