@@ -407,7 +407,7 @@ msgstr "Graphiques correspondants"
 #: settings.php:622 settings.php:681
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:959 tree.php:994 tree.php:1029 tree.php:2238 user_admin.php:2074
-#: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
+#: user_domains.php:642 user_group_admin.php:1997 utilities.php:1094
 #: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
 #: utilities.php:3387
 msgid "Search"
@@ -422,7 +422,7 @@ msgstr "Rechercher"
 #: lib/html_graph.php:197 lib/html_tree.php:1022 lib/html_tree.php:1378
 #: tree.php:938 tree.php:2387 user_admin.php:801 user_admin.php:1073
 #: user_admin.php:2347 user_group_admin.php:940 user_group_admin.php:1095
-#: user_group_admin.php:2148 utilities.php:320
+#: user_group_admin.php:2152 utilities.php:320
 msgid "Graphs"
 msgstr "Graphiques"
 
@@ -439,7 +439,7 @@ msgstr "Graphiques"
 #: pollers.php:879 rrdcleaner.php:545
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
 #: tree.php:2248 user_admin.php:2135 user_domains.php:18 user_domains.php:652
-#: user_domains.php:738 user_group_admin.php:2003 utilities.php:1076
+#: user_domains.php:738 user_group_admin.php:2007 utilities.php:1076
 #: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
 msgid "Default"
 msgstr "Défaut"
@@ -474,7 +474,7 @@ msgstr "Go"
 #: pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
 #: tree.php:2263 user_admin.php:2150 user_domains.php:664
-#: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
+#: user_group_admin.php:2022 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
 msgid "Set/Refresh Filters"
 msgstr "Définir/Rafraîchir les filtres"
@@ -505,7 +505,7 @@ msgstr "Effacer"
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
 #: tree.php:2264 user_admin.php:2151 user_domains.php:665
-#: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
+#: user_group_admin.php:2023 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
 msgid "Clear Filters"
 msgstr "Supprimer les filtres"
@@ -542,7 +542,7 @@ msgstr "Taille"
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1439 tree.php:2420
 #: tree.php:2421 user_admin.php:2269 user_domains.php:757
-#: user_group_admin.php:2086
+#: user_group_admin.php:2090
 msgid "No"
 msgstr "Non"
 
@@ -554,7 +554,7 @@ msgstr "Non"
 #: include/global_settings.php:1942 lib/api_automation.php:1439
 #: lib/installer.php:2134 lib/installer.php:2162 lib/installer.php:4027
 #: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
-#: user_domains.php:757 user_group_admin.php:2084
+#: user_domains.php:757 user_group_admin.php:2088
 msgid "Yes"
 msgstr "Oui"
 
@@ -690,7 +690,7 @@ msgstr "Modèles d'agrégats"
 
 #: aggregate_templates.php:612 include/global_arrays.php:1009
 #: include/global_arrays.php:1073 lib/installer.php:2748 user_admin.php:2365
-#: user_group_admin.php:2160
+#: user_group_admin.php:2164
 msgid "Templates"
 msgstr "Modèles"
 
@@ -914,7 +914,7 @@ msgstr "S'authentifier"
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
 #: lib/html.php:2901 managers.php:24 user_admin.php:1741
-#: user_group_admin.php:1763
+#: user_group_admin.php:1767
 msgid "General"
 msgstr "Général"
 
@@ -988,7 +988,7 @@ msgstr "Déconnexion partout"
 msgid "Clear all your Login Session Tokens."
 msgstr "Effacez tous vos jetons de session de connexion."
 
-#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1770
+#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1774
 msgid "User Settings"
 msgstr "Paramètres de l'utilisateur"
 
@@ -1086,7 +1086,7 @@ msgstr "Supprimer le(s) appareil(s)"
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:937 tree.php:2381 user_admin.php:1065 user_admin.php:2359
-#: user_group_admin.php:1087 user_group_admin.php:2154 utilities.php:315
+#: user_group_admin.php:1087 user_group_admin.php:2158 utilities.php:315
 msgid "Devices"
 msgstr "Équipements"
 
@@ -1116,7 +1116,7 @@ msgstr "Contact"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2054 lib/installer.php:2749
 #: managers.php:214 user_admin.php:924 user_admin.php:1073
-#: user_group_admin.php:1095 user_group_admin.php:2072
+#: user_group_admin.php:1095 user_group_admin.php:2076
 msgid "Description"
 msgstr "Description"
 
@@ -1335,7 +1335,7 @@ msgstr "Interrogation avancée"
 #: lib/html_reports.php:2188 managers.php:241 managers.php:611
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:334 user_domains.php:742 user_group_admin.php:76
-#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
+#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2080
 #: utilities.php:2146 utilities.php:3008
 msgid "Enabled"
 msgstr "Activé"
@@ -2782,7 +2782,7 @@ msgstr "Ré-exécution de l'analyse"
 msgid "Check"
 msgstr "Vérifier"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4476
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4495
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Valeur"
@@ -3776,7 +3776,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Syntaxe des graphiques RRDtool"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2843
+#: lib/rrd.php:2857
 msgid "The Kadupul Poller has not run yet."
 msgstr "Le Kadupul Poller n'a pas encore couru."
 
@@ -4478,7 +4478,7 @@ msgid "Save Filters"
 msgstr "Sauvegarder les filtres"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4518
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4537
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Lignes"
@@ -5614,7 +5614,7 @@ msgstr "Tri naturel"
 msgid "Numeric Ordering"
 msgstr "Tri numérique"
 
-#: include/global_arrays.php:959 lib/rrd.php:4442
+#: include/global_arrays.php:959 lib/rrd.php:4461
 msgid "Header"
 msgstr "En-tête"
 
@@ -5708,7 +5708,7 @@ msgstr "Sites"
 
 #: include/global_arrays.php:999 include/global_arrays.php:1237 tree.php:2229
 #: tree.php:2244 tree.php:2311 user_admin.php:1343 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
+#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2170
 msgid "Trees"
 msgstr "Arbres"
 
@@ -5805,7 +5805,7 @@ msgstr "Paramètres"
 
 #: include/global_arrays.php:1038 include/global_arrays.php:2588
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
-#: user_group_admin.php:2172
+#: user_group_admin.php:2176
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -7252,7 +7252,7 @@ msgstr "Battement de cœur"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Combien de temps les données peuvent être manquantes avant que RRDtool n'enregistre des données inconnues.  Augmentez cette valeur si votre source de données est instable et que vous souhaitez reporter d'anciennes données plutôt que d'afficher des lacunes dans vos graphiques.  Cette valeur est multipliée par le facteur X-Files pour déterminer le temps réel."
 
-#: include/global_form.php:226 lib/rrd.php:4521
+#: include/global_form.php:226 lib/rrd.php:4540
 msgid "X-Files Factor"
 msgstr "Facteur X-Files"
 
@@ -7822,7 +7822,7 @@ msgstr "Canal Opacité/Alpha"
 msgid "The opacity/alpha channel of the color."
 msgstr "Le canal opacité/alpha de la couleur."
 
-#: include/global_form.php:989 lib/rrd.php:4517
+#: include/global_form.php:989 lib/rrd.php:4536
 msgid "Consolidation Function"
 msgstr "Fonction de consolidation"
 
@@ -11506,7 +11506,7 @@ msgstr "En cours de récupération"
 
 #: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4494 lib/rrd.php:4506 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11514,7 +11514,7 @@ msgstr "Inconnu"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4471
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4490
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Type"
@@ -15370,198 +15370,198 @@ msgstr "Échec de l'ajout d'un élément du graphique du rapport'<i>%s</i>' Exis
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Élément du graphique du rapport sauté'<i>%s</i>' Existe déjà"
 
-#: lib/rrd.php:2454
+#: lib/rrd.php:2463
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2457
+#: lib/rrd.php:2466
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2824 lib/rrd.php:2827 lib/rrd.php:4728
+#: lib/rrd.php:2838 lib/rrd.php:2841 lib/rrd.php:4747
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2840
+#: lib/rrd.php:2854
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERREUR : le fichier RRD %s n'est pas inscriptible"
 
-#: lib/rrd.php:4259
+#: lib/rrd.php:4278
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "La taille d'étape RRDfile requise est '%s' mais l'étape observée est '%s'"
 
-#: lib/rrd.php:4295
+#: lib/rrd.php:4314
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Le type de la source de données '%s' doit être '%s'"
 
-#: lib/rrd.php:4301
+#: lib/rrd.php:4320
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Pouls pour la source de données'%s' devrait être'%s'."
 
-#: lib/rrd.php:4313
+#: lib/rrd.php:4332
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD minimum pour la source de données'%s' devrait être'%s'."
 
-#: lib/rrd.php:4322
+#: lib/rrd.php:4341
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS'%s' manquants dans la définition de Kadupul"
 
-#: lib/rrd.php:4336 lib/rrd.php:4337
+#: lib/rrd.php:4355 lib/rrd.php:4356
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA'%s' a les mêmes CF/staps (%s, %s) que'%s'."
 
-#: lib/rrd.php:4350 lib/rrd.php:4351
+#: lib/rrd.php:4369 lib/rrd.php:4370
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Le fichier RRA'%s' a les mêmes CF/steps (%s, %s) que'%s'."
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4402
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "Le pdp_per_row de '%s' n'est pas valide pour RRA '%s' doit être '%s'.  Envisagez de supprimer et de permettre à Kadupul de recréer le fichier RRD."
 
-#: lib/rrd.php:4387
+#: lib/rrd.php:4406
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF pour Kadupul RRA id'%s' devrait être'%s'."
 
-#: lib/rrd.php:4391
+#: lib/rrd.php:4410
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Le nombre de lignes pour l'ID Kadupul RRA '%s' est incorrect.  Le nombre de lignes est '%s' mais devrait être '%s'"
 
-#: lib/rrd.php:4408
+#: lib/rrd.php:4427
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "Le RRA '%s' manquant dans le fichier RRD Kadupul existant"
 
-#: lib/rrd.php:4416
+#: lib/rrd.php:4435
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA'%s' manquants dans la définition de Kadupul"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4457
 msgid "RRD File Information"
 msgstr "Informations sur le fichier RRD"
 
-#: lib/rrd.php:4470
+#: lib/rrd.php:4489
 msgid "Data Source Items"
 msgstr "Éléments de source de données"
 
-#: lib/rrd.php:4472
+#: lib/rrd.php:4491
 msgid "Minimal Heartbeat"
 msgstr "Battement de cœur minimal"
 
-#: lib/rrd.php:4473
+#: lib/rrd.php:4492
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:4474
+#: lib/rrd.php:4493
 msgid "Max"
 msgstr "Max"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4494
 msgid "Last DS"
 msgstr "Dernier DS"
 
-#: lib/rrd.php:4477
+#: lib/rrd.php:4496
 msgid "Unknown Sec"
 msgstr "Nombre de sec. DS est Inconnu"
 
-#: lib/rrd.php:4516
+#: lib/rrd.php:4535
 msgid "Round Robin Archive"
 msgstr "Archives Round Robin"
 
-#: lib/rrd.php:4519
+#: lib/rrd.php:4538
 msgid "Cur Row"
 msgstr "Ligne en cours"
 
-#: lib/rrd.php:4520
+#: lib/rrd.php:4539
 msgid "PDP per Row"
 msgstr "PDP par ligne"
 
-#: lib/rrd.php:4522
+#: lib/rrd.php:4541
 msgid "CDP Prep Value (0)"
 msgstr "Valeur de préparation CDP (0)"
 
-#: lib/rrd.php:4523
+#: lib/rrd.php:4542
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Inconnu Points de données (0)"
 
-#: lib/rrd.php:4608
+#: lib/rrd.php:4627
 msgid "Errors Found"
 msgstr "Pas de %s trouvé(e)(s)"
 
-#: lib/rrd.php:4620
+#: lib/rrd.php:4639
 msgid "Optional Tuning Recommendations"
 msgstr "Champs de la source de données"
 
-#: lib/rrd.php:4647 lib/rrd.php:4650
+#: lib/rrd.php:4666 lib/rrd.php:4669
 #, php-format
 msgid "rename %s to %s"
 msgstr "renommer %s en %s"
 
-#: lib/rrd.php:4748
+#: lib/rrd.php:4767
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ERREUR lors de l'écriture d'un fichier XML : %s"
 
-#: lib/rrd.php:4754
+#: lib/rrd.php:4773
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4760
+#: lib/rrd.php:4779
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ERREUR : le fichier RRD %s n'est pas inscriptible"
 
-#: lib/rrd.php:4781
+#: lib/rrd.php:4800
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Erreur lors de l'analyse du XML de rrdtool dump"
 
-#: lib/rrd.php:4817 lib/rrd.php:4836
+#: lib/rrd.php:4836 lib/rrd.php:4855
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Erreur lors de l'analyse du XML de RRDtool dump"
 
-#: lib/rrd.php:5054
+#: lib/rrd.php:5073
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) retiré du fichier RRD"
 
-#: lib/rrd.php:5092
+#: lib/rrd.php:5111
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) ajoutant au fichier RRD"
 
-#: lib/rrd.php:5123 lib/rrd.php:5139
+#: lib/rrd.php:5142 lib/rrd.php:5158
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Le site Web n'a pas accès en écriture à %s, peut ne pas être en mesure de créer/mettre à jour les RRD."
 
-#: lib/rrd.php:5135
+#: lib/rrd.php:5154
 msgid "(Custom)"
 msgstr "(Personnalisé)"
 
-#: lib/rrd.php:5141
+#: lib/rrd.php:5160
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "N'a pas réussi à ouvrir le fichier de données, il se peut que le poller n'ait pas encore été lancé."
 
-#: lib/rrd.php:5144
+#: lib/rrd.php:5163
 msgid "RRA Folder"
 msgstr "Dossier RRA"
 
-#: lib/rrd.php:5144
+#: lib/rrd.php:5163
 msgid "Root"
 msgstr "Racine"
 
-#: lib/rrd.php:5224
+#: lib/rrd.php:5243
 msgid "Unknown RRDtool Error"
 msgstr "Inconnu Erreur RRDtool"
 
@@ -17200,17 +17200,17 @@ msgstr "Temps écoulé depuis la mise à jour"
 msgid "RRDfiles"
 msgstr "Fichiers RRD"
 
-#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2018
-#: user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
-#: user_group_admin.php:2172
+#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2022
+#: user_group_admin.php:2152 user_group_admin.php:2158
+#: user_group_admin.php:2164 user_group_admin.php:2170
+#: user_group_admin.php:2176
 msgctxt "filter: use"
 msgid "Go"
 msgstr "Aller"
 
-#: rrdcleaner.php:561 user_group_admin.php:2019 user_group_admin.php:2148
-#: user_group_admin.php:2154 user_group_admin.php:2160
-#: user_group_admin.php:2166
+#: rrdcleaner.php:561 user_group_admin.php:2023 user_group_admin.php:2152
+#: user_group_admin.php:2158 user_group_admin.php:2164
+#: user_group_admin.php:2170
 msgctxt "filter: reset"
 msgid "Clear"
 msgstr "Effacer"
@@ -18101,8 +18101,8 @@ msgstr "Révoquer l'accès"
 msgid "Grant Access"
 msgstr "Accorder l'accès"
 
-#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1999
-#: user_group_admin.php:2061
+#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:2003
+#: user_group_admin.php:2065
 msgid "Groups"
 msgstr "Groupes"
 
@@ -18119,14 +18119,14 @@ msgid "Non Member"
 msgstr "Non-membre"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
-#: user_group_admin.php:2095
+#: user_admin.php:2293 user_group_admin.php:2097 user_group_admin.php:2098
+#: user_group_admin.php:2099
 msgid "ALLOW"
 msgstr "AUTORISER"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
-#: user_group_admin.php:2095
+#: user_admin.php:2293 user_group_admin.php:2097 user_group_admin.php:2098
+#: user_group_admin.php:2099
 msgid "DENY"
 msgstr "REFUSER"
 
@@ -18226,12 +18226,12 @@ msgstr "Autorisations de plugin"
 msgid "Legacy Permissions"
 msgstr "Permissions du graphique"
 
-#: user_admin.php:1626 user_group_admin.php:1648
+#: user_admin.php:1626 user_group_admin.php:1650
 #, php-format
 msgid "User Settings %s"
 msgstr "Réglages utilisateur %s"
 
-#: user_admin.php:1742 user_group_admin.php:1765
+#: user_admin.php:1742 user_group_admin.php:1769
 msgid "Permissions"
 msgstr "Permissions"
 
@@ -18239,19 +18239,19 @@ msgstr "Permissions"
 msgid "Group Membership"
 msgstr "Adhésion au groupe"
 
-#: user_admin.php:1744 user_group_admin.php:1766
+#: user_admin.php:1744 user_group_admin.php:1770
 msgid "Graph Perms"
 msgstr "Permanence des graphiques"
 
-#: user_admin.php:1745 user_group_admin.php:1767
+#: user_admin.php:1745 user_group_admin.php:1771
 msgid "Device Perms"
 msgstr "Périodes d'utilisation de l'appareil"
 
-#: user_admin.php:1746 user_group_admin.php:1768
+#: user_admin.php:1746 user_group_admin.php:1772
 msgid "Template Perms"
 msgstr "Template Perms"
 
-#: user_admin.php:1747 user_group_admin.php:1769
+#: user_admin.php:1747 user_group_admin.php:1773
 msgid "Tree Perms"
 msgstr "Pérme d'arbre"
 
@@ -18317,15 +18317,15 @@ msgstr "Domaine"
 msgid "User ID"
 msgstr "ID de l’utilisateur"
 
-#: user_admin.php:2250 user_group_admin.php:2073
+#: user_admin.php:2250 user_group_admin.php:2077
 msgid "Graph Policy"
 msgstr "Politique en matière de graphiques"
 
-#: user_admin.php:2251 user_group_admin.php:2074
+#: user_admin.php:2251 user_group_admin.php:2078
 msgid "Device Policy"
 msgstr "Politique sur les périphériques"
 
-#: user_admin.php:2252 user_group_admin.php:2075
+#: user_admin.php:2252 user_group_admin.php:2079
 msgid "Template Policy"
 msgstr "Modèle de politique"
 
@@ -18337,7 +18337,7 @@ msgstr "Indisponible"
 msgid "No Users Found"
 msgstr "Aucun utilisateur trouvé"
 
-#: user_admin.php:2347 user_group_admin.php:2148
+#: user_admin.php:2347 user_group_admin.php:2152
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "Graphique Autorisations %s"
@@ -18347,23 +18347,23 @@ msgstr "Graphique Autorisations %s"
 msgid "Group Membership %s"
 msgstr "Membres du groupe %s"
 
-#: user_admin.php:2359 user_group_admin.php:2154
+#: user_admin.php:2359 user_group_admin.php:2158
 #, php-format
 msgid "Devices Permission %s"
 msgstr "Appareils Permission %s"
 
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
+#: user_admin.php:2377 user_group_admin.php:2152 user_group_admin.php:2158
+#: user_group_admin.php:2164 user_group_admin.php:2170
 msgid "Only Show Exceptions"
 msgstr "Afficher uniquement les exceptions"
 
-#: user_admin.php:2365 user_group_admin.php:2160
+#: user_admin.php:2365 user_group_admin.php:2164
 #, php-format
 msgid "Template Permission %s"
 msgstr "Template Permission %s"
 
-#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2166
+#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2170
 #, php-format
 msgid "Tree Permission %s"
 msgstr "Permission d'arbre %s"
@@ -18531,7 +18531,7 @@ msgstr "Montrer l'écran des graphiques par défaut."
 msgid "Restrict Access"
 msgstr "Restreindre l'accés"
 
-#: user_group_admin.php:62 user_group_admin.php:2070
+#: user_group_admin.php:62 user_group_admin.php:2074
 msgid "Group Name"
 msgstr "Nom du groupe"
 
@@ -18687,33 +18687,33 @@ msgstr "Politique par défaut des modèles de graphiques pour ce groupe d'utilis
 msgid "Default Tree Policy for this User Group"
 msgstr "Politique d'arborescence par défaut pour ce groupe d'utilisateurs"
 
-#: user_group_admin.php:1764 user_group_admin.php:2071
+#: user_group_admin.php:1768 user_group_admin.php:2075
 msgid "Members"
 msgstr "Membres"
 
-#: user_group_admin.php:1783
+#: user_group_admin.php:1787
 #, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "Gestion des groupes d'utilisateurs[éditer : %s]"
 
-#: user_group_admin.php:1785
+#: user_group_admin.php:1789
 msgid "User Group Management [new]"
 msgstr "Gestion des groupes d'utilisateurs[nouveau]"
 
-#: user_group_admin.php:1978
+#: user_group_admin.php:1982
 msgid "User Group Management"
 msgstr "Gestion des groupes d'utilisateurs"
 
-#: user_group_admin.php:2101
+#: user_group_admin.php:2105
 msgid "No User Groups Found"
 msgstr "Aucun groupe d'utilisateurs trouvé"
 
-#: user_group_admin.php:2172
+#: user_group_admin.php:2176
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "Effacer"
 
-#: user_group_admin.php:2172
+#: user_group_admin.php:2176
 msgid "Show Members"
 msgstr "Afficher les membres"
 

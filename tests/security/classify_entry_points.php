@@ -185,7 +185,8 @@ const REVIEWED_FRAGMENT_CALLS = [
         ['$dir->close()', 'closes that directory handle'],
     ],
     'include/session.php' => [
-        ["session_set_save_handler('cacti_db_session_open', 'cacti_db_session_close', 'cacti_db_session_read', 'cacti_db_session_write', 'cacti_db_session_destroy', 'cacti_db_session_clean')", 'names the database session handlers declared in the same file; they run only once a session starts'],
+        ["session_set_save_handler(new CactiDatabaseSessionHandler(), false)", 'registers the native object callbacks; they run only once a session starts'],
+        ["new CactiDatabaseSessionHandler()", 'the constructor admission check below proves instantiation runs no user code'],
         ["register_shutdown_function('session_write_close')", 'writes an open session back at shutdown; a fragment requested alone has none'],
     ],
 ];
@@ -1290,11 +1291,28 @@ function reviewed_output(string $path, Expr $expr): bool
     return false;
 }
 
-function reviewed_call(string $path, Node $node): bool
+function reviewed_call(string $root, string $path, Node $node): bool
 {
     foreach (REVIEWED_FRAGMENT_CALLS[$path] ?? [] as [$snippet]) {
         $parsed = (new ParserFactory())->createForNewestSupportedVersion()->parse('<?php ' . $snippet . ';');
         if (same_node($node, $parsed[0]->expr)) {
+            if ($node instanceof Expr\New_) {
+                // Named declarations are outside the fragment's active digest.
+                // Never bless a future constructor/destructor, inherited code,
+                // trait or aliased interface behind this reviewed expression.
+                $stmts = parse_file($root, $path);
+                if ($path !== 'include/session.php' || $stmts === null) return false;
+                foreach ($stmts as $stmt) {
+                    if ($stmt instanceof Stmt\Use_ || $stmt instanceof Stmt\GroupUse) return false;
+                }
+                foreach ($stmts as $stmt) {
+                    if (!$stmt instanceof Stmt\Class_ || $stmt->name?->toString() !== 'CactiDatabaseSessionHandler') continue;
+                    // Reviewed native delegate signatures and bodies, including
+                    // open/read before authentication, are part of admission.
+                    return digest([$stmt]) === 'abf2cc497ef1';
+                }
+                return false;
+            }
             return true;
         }
     }
@@ -1406,7 +1424,7 @@ function fragment(string $root, string $path, array $active, array $by, array $f
             $object = $node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall
                 || $node instanceof Expr\StaticCall || $node instanceof Expr\New_;
             $callback = in_array(call_name($node), CALLBACK_CALLS, true);
-            if (($object || $callback) && !reviewed_call($path, $node)) {
+            if (($object || $callback) && !reviewed_call($root, $path, $node)) {
                 return ['unknown', 'fragment makes an unreviewed ' . ($object ? 'object' : 'callback') . ' call on line ' . $node->getStartLine()];
             }
             $name = call_name($node);
@@ -1419,7 +1437,7 @@ function fragment(string $root, string $path, array $active, array $by, array $f
                 || array_filter(SIDE_EFFECT_PREFIXES, fn(string $p) => str_starts_with($name, $p)) !== []) {
                 return ['unknown', 'fragment has a top-level side effect: ' . $name . '()'];
             }
-            if (in_array($name, PURE_CALLS, true) || $console || reviewed_call($path, $node)) {
+            if (in_array($name, PURE_CALLS, true) || $console || reviewed_call($root, $path, $node)) {
                 continue;
             }
             if (function_exists($name) || !$stops($name)) {

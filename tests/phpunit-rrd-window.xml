@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./bootstrap-unit.php" colors="true">
+  <testsuites>
+    <testsuite name="Observed RRD windows">
+      <file>Unit/Core/Rrd/RrdObservedWindowTest.php</file>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <file>../lib/rrd.php</file>
+    </include>
+  </source>
+</phpunit>

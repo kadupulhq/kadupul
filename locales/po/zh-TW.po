@@ -450,7 +450,7 @@ msgstr "匹配圖"
 #: settings.php:622 settings.php:681
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:60
 #: tree.php:959 tree.php:994 tree.php:1029 tree.php:2238 user_admin.php:2074
-#: user_domains.php:642 user_group_admin.php:1993 utilities.php:1094
+#: user_domains.php:642 user_group_admin.php:1997 utilities.php:1094
 #: utilities.php:1521 utilities.php:1832 utilities.php:2135 utilities.php:3125
 #: utilities.php:3387
 #, fuzzy
@@ -466,7 +466,7 @@ msgstr "搜尋"
 #: lib/html_graph.php:197 lib/html_tree.php:1022 lib/html_tree.php:1378
 #: tree.php:938 tree.php:2387 user_admin.php:801 user_admin.php:1073
 #: user_admin.php:2347 user_group_admin.php:940 user_group_admin.php:1095
-#: user_group_admin.php:2148 utilities.php:320
+#: user_group_admin.php:2152 utilities.php:320
 #, fuzzy
 msgid "Graphs"
 msgstr "圖表"
@@ -484,7 +484,7 @@ msgstr "圖表"
 #: pollers.php:879 rrdcleaner.php:545
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:85
 #: tree.php:2248 user_admin.php:2135 user_domains.php:18 user_domains.php:652
-#: user_domains.php:738 user_group_admin.php:2003 utilities.php:1076
+#: user_domains.php:738 user_group_admin.php:2007 utilities.php:1076
 #: utilities.php:1842 utilities.php:2166 utilities.php:3153 utilities.php:3429
 #, fuzzy
 msgid "Default"
@@ -522,7 +522,7 @@ msgstr "送出"
 #: pollers.php:914
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:99
 #: tree.php:2263 user_admin.php:2150 user_domains.php:664
-#: user_group_admin.php:2018 utilities.php:1084 utilities.php:1470
+#: user_group_admin.php:2022 utilities.php:1084 utilities.php:1470
 #: utilities.php:1823 utilities.php:2126 utilities.php:3161 utilities.php:3437
 #, fuzzy
 msgid "Set/Refresh Filters"
@@ -555,7 +555,7 @@ msgstr "清除"
 #: managers.php:529 managers.php:794 plugins.php:531 pollers.php:915
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:100
 #: tree.php:2264 user_admin.php:2151 user_domains.php:665
-#: user_group_admin.php:2019 utilities.php:1085 utilities.php:1471
+#: user_group_admin.php:2023 utilities.php:1085 utilities.php:1471
 #: utilities.php:1824 utilities.php:2127 utilities.php:3162 utilities.php:3438
 #, fuzzy
 msgid "Clear Filters"
@@ -597,7 +597,7 @@ msgstr "尺寸"
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1439 tree.php:2420
 #: tree.php:2421 user_admin.php:2269 user_domains.php:757
-#: user_group_admin.php:2086
+#: user_group_admin.php:2090
 #, fuzzy
 msgid "No"
 msgstr "否"
@@ -610,7 +610,7 @@ msgstr "否"
 #: include/global_settings.php:1942 lib/api_automation.php:1439
 #: lib/installer.php:2134 lib/installer.php:2162 lib/installer.php:4027
 #: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
-#: user_domains.php:757 user_group_admin.php:2084
+#: user_domains.php:757 user_group_admin.php:2088
 #, fuzzy
 msgid "Yes"
 msgstr "是"
@@ -760,7 +760,7 @@ msgstr "聚合模板"
 
 #: aggregate_templates.php:612 include/global_arrays.php:1009
 #: include/global_arrays.php:1073 lib/installer.php:2748 user_admin.php:2365
-#: user_group_admin.php:2160
+#: user_group_admin.php:2164
 #, fuzzy
 msgid "Templates"
 msgstr "模板"
@@ -1019,7 +1019,7 @@ msgstr "登入"
 #: auth_profile.php:61 include/global_settings.php:106
 #: include/global_settings.php:1216 include/global_settings.php:1533
 #: lib/html.php:2901 managers.php:24 user_admin.php:1741
-#: user_group_admin.php:1763
+#: user_group_admin.php:1767
 #, fuzzy
 msgid "General"
 msgstr "一般"
@@ -1110,7 +1110,7 @@ msgstr "註銷無處不在"
 msgid "Clear all your Login Session Tokens."
 msgstr "清除所有登錄會話令牌。"
 
-#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1770
+#: auth_profile.php:398 user_admin.php:1748 user_group_admin.php:1774
 #, fuzzy
 msgid "User Settings"
 msgstr "使用者設定"
@@ -1221,7 +1221,7 @@ msgstr "刪除設備"
 #: lib/api_automation.php:271 lib/api_automation.php:486
 #: lib/api_automation.php:563 lib/api_automation.php:1189 pollers.php:1031
 #: tree.php:937 tree.php:2381 user_admin.php:1065 user_admin.php:2359
-#: user_group_admin.php:1087 user_group_admin.php:2154 utilities.php:315
+#: user_group_admin.php:1087 user_group_admin.php:2158 utilities.php:315
 #, fuzzy
 msgid "Devices"
 msgstr "設備"
@@ -1257,7 +1257,7 @@ msgstr "聯絡"
 #: include/global_form.php:1739 lib/api_automation.php:278
 #: lib/api_automation.php:1196 lib/installer.php:2054 lib/installer.php:2749
 #: managers.php:214 user_admin.php:924 user_admin.php:1073
-#: user_group_admin.php:1095 user_group_admin.php:2072
+#: user_group_admin.php:1095 user_group_admin.php:2076
 #, fuzzy
 msgid "Description"
 msgstr "描述"
@@ -1502,7 +1502,7 @@ msgstr "數據查詢"
 #: lib/html_reports.php:2188 managers.php:241 managers.php:611
 #: user_admin.php:924 user_admin.php:936 user_admin.php:2248
 #: user_domains.php:334 user_domains.php:742 user_group_admin.php:76
-#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2076
+#: user_group_admin.php:741 user_group_admin.php:756 user_group_admin.php:2080
 #: utilities.php:2146 utilities.php:3008
 #, fuzzy
 msgid "Enabled"
@@ -3216,7 +3216,7 @@ msgstr "重新運行分析"
 msgid "Check"
 msgstr "檢查"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4476
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4495
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 #, fuzzy
 msgid "Value"
@@ -4345,7 +4345,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2843
+#: lib/rrd.php:2857
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
@@ -5149,7 +5149,7 @@ msgid "Save Filters"
 msgstr "儲存過濾條件"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4518
+#: lib/html_filter.php:55 lib/installer.php:2837 lib/rrd.php:4537
 #: utilities.php:866 utilities.php:1838
 #, fuzzy
 msgid "Rows"
@@ -6494,7 +6494,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "數字訂購"
 
-#: include/global_arrays.php:959 lib/rrd.php:4442
+#: include/global_arrays.php:959 lib/rrd.php:4461
 #, fuzzy
 msgid "Header"
 msgstr "頁首"
@@ -6610,7 +6610,7 @@ msgstr "網站"
 
 #: include/global_arrays.php:999 include/global_arrays.php:1237 tree.php:2229
 #: tree.php:2244 tree.php:2311 user_admin.php:1343 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2166
+#: user_admin.php:2377 user_group_admin.php:1355 user_group_admin.php:2170
 #, fuzzy
 msgid "Trees"
 msgstr "樹木"
@@ -6727,7 +6727,7 @@ msgstr "設定"
 
 #: include/global_arrays.php:1038 include/global_arrays.php:2588
 #: user_admin.php:2131 user_admin.php:2236 user_group_admin.php:733
-#: user_group_admin.php:2172
+#: user_group_admin.php:2176
 #, fuzzy
 msgid "Users"
 msgstr "使用者"
@@ -8454,7 +8454,7 @@ msgstr "心跳"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool記錄未知數據之前，數據可以丟失多長時間。如果您的數據源不穩定並且您希望繼承舊數據而不是在圖表中顯示間隙，請增加此值。此值乘以X-Files因子以確定實際的時間量。"
 
-#: include/global_form.php:226 lib/rrd.php:4521
+#: include/global_form.php:226 lib/rrd.php:4540
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
@@ -9156,7 +9156,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "顏色的不透明度/ alpha通道。"
 
-#: include/global_form.php:989 lib/rrd.php:4517
+#: include/global_form.php:989 lib/rrd.php:4536
 #, fuzzy
 msgid "Consolidation Function"
 msgstr "合併功能"
@@ -13558,7 +13558,7 @@ msgstr "正在復原"
 
 #: lib/api_automation.php:33 lib/auth.php:3096 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4494 lib/rrd.php:4506 lib/spikekill.php:301
+#: lib/plugins.php:1394 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 #, fuzzy
@@ -13567,7 +13567,7 @@ msgstr "未知"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4471
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4490
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 #, fuzzy
 msgid "Type"
@@ -18015,216 +18015,216 @@ msgstr "添加報表圖項&#39; <i>%s</i> &#39;失敗已經存在"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
 
-#: lib/rrd.php:2454
+#: lib/rrd.php:2463
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2457
+#: lib/rrd.php:2466
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2824 lib/rrd.php:2827 lib/rrd.php:4728
+#: lib/rrd.php:2838 lib/rrd.php:2841 lib/rrd.php:4747
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2840
+#: lib/rrd.php:2854
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4259
+#: lib/rrd.php:4278
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必需的RRD步長為&#39;%s&#39;"
 
-#: lib/rrd.php:4295
+#: lib/rrd.php:4314
 #, fuzzy, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的類型應為&#39;%s&#39;"
 
-#: lib/rrd.php:4301
+#: lib/rrd.php:4320
 #, fuzzy, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的心跳應為&#39;%s&#39;"
 
-#: lib/rrd.php:4313
+#: lib/rrd.php:4332
 #, fuzzy, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的RRD最小值應為&#39;%s&#39;"
 
-#: lib/rrd.php:4322
+#: lib/rrd.php:4341
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少DS&#39;%s&#39;"
 
-#: lib/rrd.php:4336 lib/rrd.php:4337
+#: lib/rrd.php:4355 lib/rrd.php:4356
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4350 lib/rrd.php:4351
+#: lib/rrd.php:4369 lib/rrd.php:4370
 #, fuzzy, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4383
+#: lib/rrd.php:4402
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:4387
+#: lib/rrd.php:4406
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "KadupulRRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
-#: lib/rrd.php:4391
+#: lib/rrd.php:4410
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id&#39;%s&#39;的行數應為&#39;%s&#39;"
 
-#: lib/rrd.php:4408
+#: lib/rrd.php:4427
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRD文件中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4416
+#: lib/rrd.php:4435
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4438
+#: lib/rrd.php:4457
 #, fuzzy
 msgid "RRD File Information"
 msgstr "RRD文件信息"
 
-#: lib/rrd.php:4470
+#: lib/rrd.php:4489
 #, fuzzy
 msgid "Data Source Items"
 msgstr "數據源項目"
 
-#: lib/rrd.php:4472
+#: lib/rrd.php:4491
 #, fuzzy
 msgid "Minimal Heartbeat"
 msgstr "最小的心跳"
 
-#: lib/rrd.php:4473
+#: lib/rrd.php:4492
 #, fuzzy
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4474
+#: lib/rrd.php:4493
 #, fuzzy
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4494
 #, fuzzy
 msgid "Last DS"
 msgstr "最後一個DS"
 
-#: lib/rrd.php:4477
+#: lib/rrd.php:4496
 #, fuzzy
 msgid "Unknown Sec"
 msgstr "未知的秒"
 
-#: lib/rrd.php:4516
+#: lib/rrd.php:4535
 #, fuzzy
 msgid "Round Robin Archive"
 msgstr "Round Robin Archive"
 
-#: lib/rrd.php:4519
+#: lib/rrd.php:4538
 #, fuzzy
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4520
+#: lib/rrd.php:4539
 #, fuzzy
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:4522
+#: lib/rrd.php:4541
 #, fuzzy
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備值（0）"
 
-#: lib/rrd.php:4523
+#: lib/rrd.php:4542
 #, fuzzy
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP未知數據點（0）"
 
-#: lib/rrd.php:4608
+#: lib/rrd.php:4627
 msgid "Errors Found"
 msgstr "沒有 %s 找到"
 
-#: lib/rrd.php:4620
+#: lib/rrd.php:4639
 msgid "Optional Tuning Recommendations"
 msgstr "數據源字段"
 
-#: lib/rrd.php:4647 lib/rrd.php:4650
+#: lib/rrd.php:4666 lib/rrd.php:4669
 #, fuzzy, php-format
 msgid "rename %s to %s"
 msgstr "將%s重命名為%s"
 
-#: lib/rrd.php:4748
+#: lib/rrd.php:4767
 #, fuzzy, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "編寫XML文件時出錯：%s"
 
-#: lib/rrd.php:4754
+#: lib/rrd.php:4773
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4760
+#: lib/rrd.php:4779
 #, fuzzy, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4781
+#: lib/rrd.php:4800
 #, fuzzy
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4817 lib/rrd.php:4836
+#: lib/rrd.php:4836 lib/rrd.php:4855
 #, fuzzy
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:5054
+#: lib/rrd.php:5073
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "從RRD文件中刪除RRA（CF=%s，ROWS=%d，PDP_PER_ROW =%d，XFF =%1.2f）"
 
-#: lib/rrd.php:5092
+#: lib/rrd.php:5111
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA（CF =%s，ROWS =%d，PDP_PER_ROW =%d，XFF =%1.2f）添加到RRD文件"
 
-#: lib/rrd.php:5123 lib/rrd.php:5139
+#: lib/rrd.php:5142 lib/rrd.php:5158
 #, fuzzy, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "網站沒有%s的寫入權限，可能無法創建/更新RRD"
 
-#: lib/rrd.php:5135
+#: lib/rrd.php:5154
 #, fuzzy
 msgid "(Custom)"
 msgstr "自訂"
 
-#: lib/rrd.php:5141
+#: lib/rrd.php:5160
 #, fuzzy
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "無法打開數據文件，輪詢器可能尚未運行"
 
-#: lib/rrd.php:5144
+#: lib/rrd.php:5163
 #, fuzzy
 msgid "RRA Folder"
 msgstr "RRA文件夾"
 
-#: lib/rrd.php:5144
+#: lib/rrd.php:5163
 #, fuzzy
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:5224
+#: lib/rrd.php:5243
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"
@@ -20043,18 +20043,18 @@ msgstr "更新後的時間"
 msgid "RRDfiles"
 msgstr "RRDfiles"
 
-#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2018
-#: user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
-#: user_group_admin.php:2172
+#: rrdcleaner.php:560 user_domains.php:664 user_group_admin.php:2022
+#: user_group_admin.php:2152 user_group_admin.php:2158
+#: user_group_admin.php:2164 user_group_admin.php:2170
+#: user_group_admin.php:2176
 #, fuzzy
 msgctxt "filter: use"
 msgid "Go"
 msgstr "送出"
 
-#: rrdcleaner.php:561 user_group_admin.php:2019 user_group_admin.php:2148
-#: user_group_admin.php:2154 user_group_admin.php:2160
-#: user_group_admin.php:2166
+#: rrdcleaner.php:561 user_group_admin.php:2023 user_group_admin.php:2152
+#: user_group_admin.php:2158 user_group_admin.php:2164
+#: user_group_admin.php:2170
 #, fuzzy
 msgctxt "filter: reset"
 msgid "Clear"
@@ -21078,8 +21078,8 @@ msgstr "撤銷使用權限"
 msgid "Grant Access"
 msgstr "授與權限"
 
-#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:1999
-#: user_group_admin.php:2061
+#: user_admin.php:916 user_admin.php:2353 user_group_admin.php:2003
+#: user_group_admin.php:2065
 #, fuzzy
 msgid "Groups"
 msgstr "群組"
@@ -21100,15 +21100,15 @@ msgid "Non Member"
 msgstr "非會員"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
-#: user_group_admin.php:2095
+#: user_admin.php:2293 user_group_admin.php:2097 user_group_admin.php:2098
+#: user_group_admin.php:2099
 #, fuzzy
 msgid "ALLOW"
 msgstr "允許"
 
 #: user_admin.php:935 user_admin.php:2291 user_admin.php:2292
-#: user_admin.php:2293 user_group_admin.php:2093 user_group_admin.php:2094
-#: user_group_admin.php:2095
+#: user_admin.php:2293 user_group_admin.php:2097 user_group_admin.php:2098
+#: user_group_admin.php:2099
 #, fuzzy
 msgid "DENY"
 msgstr "拒絕"
@@ -21231,12 +21231,12 @@ msgstr "插件權限"
 msgid "Legacy Permissions"
 msgstr "使用者權限"
 
-#: user_admin.php:1626 user_group_admin.php:1648
+#: user_admin.php:1626 user_group_admin.php:1650
 #, fuzzy, php-format
 msgid "User Settings %s"
 msgstr "用戶設置%s"
 
-#: user_admin.php:1742 user_group_admin.php:1765
+#: user_admin.php:1742 user_group_admin.php:1769
 #, fuzzy
 msgid "Permissions"
 msgstr "權限"
@@ -21246,22 +21246,22 @@ msgstr "權限"
 msgid "Group Membership"
 msgstr "集團成員"
 
-#: user_admin.php:1744 user_group_admin.php:1766
+#: user_admin.php:1744 user_group_admin.php:1770
 #, fuzzy
 msgid "Graph Perms"
 msgstr "圖形燙髮"
 
-#: user_admin.php:1745 user_group_admin.php:1767
+#: user_admin.php:1745 user_group_admin.php:1771
 #, fuzzy
 msgid "Device Perms"
 msgstr "設備燙髮"
 
-#: user_admin.php:1746 user_group_admin.php:1768
+#: user_admin.php:1746 user_group_admin.php:1772
 #, fuzzy
 msgid "Template Perms"
 msgstr "模板燙髮"
 
-#: user_admin.php:1747 user_group_admin.php:1769
+#: user_admin.php:1747 user_group_admin.php:1773
 #, fuzzy
 msgid "Tree Perms"
 msgstr "樹燙"
@@ -21333,17 +21333,17 @@ msgstr "網域"
 msgid "User ID"
 msgstr "使用者 ID"
 
-#: user_admin.php:2250 user_group_admin.php:2073
+#: user_admin.php:2250 user_group_admin.php:2077
 #, fuzzy
 msgid "Graph Policy"
 msgstr "圖政策"
 
-#: user_admin.php:2251 user_group_admin.php:2074
+#: user_admin.php:2251 user_group_admin.php:2078
 #, fuzzy
 msgid "Device Policy"
 msgstr "設備政策"
 
-#: user_admin.php:2252 user_group_admin.php:2075
+#: user_admin.php:2252 user_group_admin.php:2079
 #, fuzzy
 msgid "Template Policy"
 msgstr "模板政策"
@@ -21358,7 +21358,7 @@ msgstr "無法預約(已額滿)"
 msgid "No Users Found"
 msgstr "找不到使用者"
 
-#: user_admin.php:2347 user_group_admin.php:2148
+#: user_admin.php:2347 user_group_admin.php:2152
 #, fuzzy, php-format
 msgid "Graph Permissions %s"
 msgstr "圖表權限%s"
@@ -21368,24 +21368,24 @@ msgstr "圖表權限%s"
 msgid "Group Membership %s"
 msgstr "集團成員%s"
 
-#: user_admin.php:2359 user_group_admin.php:2154
+#: user_admin.php:2359 user_group_admin.php:2158
 #, fuzzy, php-format
 msgid "Devices Permission %s"
 msgstr "設備權限%s"
 
 #: user_admin.php:2359 user_admin.php:2365 user_admin.php:2371
-#: user_admin.php:2377 user_group_admin.php:2148 user_group_admin.php:2154
-#: user_group_admin.php:2160 user_group_admin.php:2166
+#: user_admin.php:2377 user_group_admin.php:2152 user_group_admin.php:2158
+#: user_group_admin.php:2164 user_group_admin.php:2170
 #, fuzzy
 msgid "Only Show Exceptions"
 msgstr "顯示例外"
 
-#: user_admin.php:2365 user_group_admin.php:2160
+#: user_admin.php:2365 user_group_admin.php:2164
 #, fuzzy, php-format
 msgid "Template Permission %s"
 msgstr "模板權限%s"
 
-#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2166
+#: user_admin.php:2371 user_admin.php:2377 user_group_admin.php:2170
 #, fuzzy, php-format
 msgid "Tree Permission %s"
 msgstr "樹權限%s"
@@ -21579,7 +21579,7 @@ msgstr "顯示默認的圖形屏幕"
 msgid "Restrict Access"
 msgstr "限制訪問"
 
-#: user_group_admin.php:62 user_group_admin.php:2070
+#: user_group_admin.php:62 user_group_admin.php:2074
 #, fuzzy
 msgid "Group Name"
 msgstr "群組名稱"
@@ -21751,38 +21751,38 @@ msgstr "此用戶組的默認圖表模板策略"
 msgid "Default Tree Policy for this User Group"
 msgstr "此用戶組的默認樹策略"
 
-#: user_group_admin.php:1764 user_group_admin.php:2071
+#: user_group_admin.php:1768 user_group_admin.php:2075
 #, fuzzy
 msgid "Members"
 msgstr "會員"
 
-#: user_group_admin.php:1783
+#: user_group_admin.php:1787
 #, fuzzy, php-format
 msgid "User Group Management [edit: %s]"
 msgstr "用戶組管理[編輯：%s]"
 
-#: user_group_admin.php:1785
+#: user_group_admin.php:1789
 #, fuzzy
 msgid "User Group Management [new]"
 msgstr "用戶組管理[新]"
 
-#: user_group_admin.php:1978
+#: user_group_admin.php:1982
 #, fuzzy
 msgid "User Group Management"
 msgstr "用戶組管理"
 
-#: user_group_admin.php:2101
+#: user_group_admin.php:2105
 #, fuzzy
 msgid "No User Groups Found"
 msgstr "找不到用戶組"
 
-#: user_group_admin.php:2172
+#: user_group_admin.php:2176
 #, fuzzy
 msgctxt "filter reset"
 msgid "Clear"
 msgstr "清除"
 
-#: user_group_admin.php:2172
+#: user_group_admin.php:2176
 #, fuzzy
 msgid "Show Members"
 msgstr "顯示會員"

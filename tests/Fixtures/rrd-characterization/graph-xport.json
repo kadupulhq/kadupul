@@ -57,12 +57,12 @@
                 "-"
             ],
             "stdin": [
-                "xport --start='1699999999'",
+                "xport --start='1700000000'",
                 "--end='1700003600'",
                 "--maxrows=10000",
-                "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE",
-                "DEF:b='rra/router_traffic_11.rrd':'traffic_out':AVERAGE",
-                "DEF:c='rra/router_errors_12.rrd':'errors':AVERAGE",
+                "DEF:a='rra/router_traffic_11.rrd':'traffic_in':AVERAGE:step=300",
+                "DEF:b='rra/router_traffic_11.rrd':'traffic_out':AVERAGE:step=300",
+                "DEF:c='rra/router_errors_12.rrd':'errors':AVERAGE:step=300",
                 "CDEF:cdefb='b,8,*'",
                 "XPORT:'a':'Inbound 50%'",
                 "XPORT:'cdefb':'col2-cdefb'",

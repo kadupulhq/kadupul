@@ -6,7 +6,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
+
+- Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
+
 - Include client timing, dataset, connection outcome and server diagnostics in failed RRDtool proxy interoperability tests to investigate intermittent fixture failures (#1244).
+- Register native database sessions through `SessionHandlerInterface` to avoid PHP 8.4 callback-registration deprecations, retaining the existing callbacks and shutdown behavior.
+- Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings.
 
 - Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
 - Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero in poller cache entries under strict SQL, preserving stored host settings and explicit overrides.
@@ -15,6 +21,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.
 
 
+- Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
 - Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 - Retain queued Boost samples when the fallback RRD path read fails, and reach the poller path lookup for data sources without a graph item (#738).
@@ -27,12 +34,14 @@ follows [Semantic Versioning](VERSIONING.md).
 - Run `cli/add_tree.php` through the `kadupul:tree:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Trees realms, binds its ids and names instead of concatenating them into SQL, audits what it adds, and refuses a graph id with SQL after the number.
 - Run `cli/add_graphs.php` through the `kadupul:graph:add` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, binds its ids, fields and values instead of concatenating them into SQL, audits what it creates, and refuses an unknown device before it associates a data query with it.
 - Run `cli/remove_graphs.php` through the `kadupul:graph:remove` console command. The script keeps its arguments, output and exit codes. It now needs the Console Access and Graphs realms, ids and expressions are bound instead of concatenated into SQL, the removal is audited, and an expression over 50 bytes, with `;`, or empty is refused as `validate_is_regex()` intended.
+- Match observed-sample percentile ranks to RRDtool, including single samples, low percentiles and half-rank boundaries (#1092).
 - Preserve session and missing-message fallbacks when the legacy message catalog is unavailable (#1107).
 - Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102).
 - Try configured SNMP after a failed Ping-or-SNMP ping, and carry SNMP settings into command-poller availability checks for devices without poller items (#1105).
 - Use the current response time when inconsistent device counters leave a zero average divisor (#1101).
 - Schedule system-MIB collection from its own per-poller timestamp after four hours, matching LTS and avoiding repeated or missed collection from timestamp modulo arithmetic (#1106).
 - Preserve refresh rendering when a SAPI omits REQUEST_URI, retaining the LTS empty-string fallback and existing logout policy (#1104).
+- Keep numeric fetches and CSV exports within the requested end time, preserve the export start boundary and retain the selected resolution for exports over 10,000 rows (#1092).
 - Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values; test-data-source templates retain their empty-field omission (#1103).
 - Preserve destination graph-view actions and default-mode selection when validating redirects, fixing source-action leakage introduced by #1102 (#1241).
 - Iterate gettext catalogs without parsing `ls`, skipping an unmatched glob and preserving filenames containing whitespace (#1117).

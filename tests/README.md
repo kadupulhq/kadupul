@@ -9,6 +9,13 @@ default configurations have different bootstrap and database requirements.
 Use `memory_limit=2G` in the local PHP coverage configuration for the whole-tree
 report; completing selected tests alone does not establish that the report was written.
 
+Opted-in native coverage producers use `NativeCoverageStack::capture()` to bind
+their child to the parent's installed application or tests library, including
+its version and class digest. Define `RRD_TEST_PARENT_COVERAGE_STACK` before
+loading the shared collector and pass the descriptor to native evidence
+snapshot/import checks. An autoload path is never part of the handoff. Producers
+without an explicit descriptor retain their existing stack selection.
+
 `make test` retains its existing behavioral characterization meaning. There
 is no aggregate command that establishes that all CI checks passed.
 

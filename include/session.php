@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -12,74 +13,84 @@
 
 // Don't run from the database if using the command line
 if (php_sapi_name() == 'cli' && !defined('KADUPUL_BROWSER_COMPATIBILITY')) {
-	return;
+    return;
 }
 
-function cacti_db_session_check() {
-	if (!db_column_exists('sessions', 'user_id')) {
-		db_execute('ALTER TABLE sessions
+function cacti_db_session_check()
+{
+    if (!db_column_exists('sessions', 'user_id')) {
+        db_execute('ALTER TABLE sessions
 			ADD COLUMN user_id int unsigned NOT NULL default "0",
 			ADD COLUMN start_time timestamp NOT NULL default current_timestamp,
 			ADD COLUMN transactions int unsigned NOT NULL default "1"');
-	}
+    }
 
-	if (!db_column_exists('sessions', 'user_agent')) {
-		db_execute('ALTER TABLE sessions
+    if (!db_column_exists('sessions', 'user_agent')) {
+        db_execute('ALTER TABLE sessions
 			ADD COLUMN user_agent VARCHAR(128) NOT NULL default "" AFTER user_id');
-	}
+    }
 }
 
-function cacti_db_session_open($savePath = '', $sessionName = '') {
-	// Kadupul database is already active
-	cacti_db_session_check();
+function cacti_db_session_open($savePath = '', $sessionName = '')
+{
+    // Kadupul database is already active
+    cacti_db_session_check();
 
-	return true;
+    return true;
 }
 
-function cacti_db_session_close() {
-	// Kadupul database is not closed by sessions
-	return true;
+function cacti_db_session_close()
+{
+    // Kadupul database is not closed by sessions
+    return true;
 }
 
-function cacti_db_session_read($id) {
-	db_execute_prepared('UPDATE IGNORE sessions
+function cacti_db_session_read($id)
+{
+    db_execute_prepared(
+        'UPDATE IGNORE sessions
 		SET access = ?
 		WHERE id = ?',
-		array(time(), $id));
+        array(time(), $id)
+    );
 
-	$session = db_fetch_cell_prepared('SELECT data
+    $session = db_fetch_cell_prepared(
+        'SELECT data
 		FROM sessions
 		WHERE id = ?',
-		array($id));
+        array($id)
+    );
 
-	// work with PHP 7.1
-	if (empty($session)) {
-		$session = '';
-	}
+    // work with PHP 7.1
+    if (empty($session)) {
+        $session = '';
+    }
 
-	return $session;
+    return $session;
 }
 
-function cacti_db_session_write($id, $data) {
-	$access = time();
+function cacti_db_session_write($id, $data)
+{
+    $access = time();
 
-	cacti_db_session_check();
+    cacti_db_session_check();
 
-	if (!isset($_SESSION['sess_user_id'])) {
-		session_decode($data);
-	}
+    if (!isset($_SESSION['sess_user_id'])) {
+        session_decode($data);
+    }
 
-	if (isset($_SESSION['sess_user_id'])) {
-		$user_id = $_SESSION['sess_user_id'];
-	} else {
-		$user_id = 0;
-	}
+    if (isset($_SESSION['sess_user_id'])) {
+        $user_id = $_SESSION['sess_user_id'];
+    } else {
+        $user_id = 0;
+    }
 
-	$client_addr = get_client_addr();
-	$user_agent  = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT']:'Unknown';
+    $client_addr = get_client_addr();
+    $user_agent  = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'Unknown';
 
-	if ($user_id > 0) {
-		db_execute_prepared('INSERT INTO sessions
+    if ($user_id > 0) {
+        db_execute_prepared(
+            'INSERT INTO sessions
 			(id, remote_addr, access, data, user_id, user_agent)
 			VALUES (?, ?, ?, ?, ?, ?)
 			ON DUPLICATE KEY UPDATE
@@ -87,9 +98,11 @@ function cacti_db_session_write($id, $data) {
 				access = VALUES(access),
 				user_agent = VALUES(user_agent),
 				transactions = transactions + 1',
-			array($id, $client_addr, $access, $data, $user_id, $user_agent));
-	} elseif (strpos($data, 'ses_user_id') !== false) {
-		db_execute_prepared('INSERT INTO sessions
+            array($id, $client_addr, $access, $data, $user_id, $user_agent)
+        );
+    } elseif (strpos($data, 'ses_user_id') !== false) {
+        db_execute_prepared(
+            'INSERT INTO sessions
 			(id, remote_addr, access, data, user_agent)
 			VALUES (?, ?, ?, ?, ?)
 			ON DUPLICATE KEY UPDATE
@@ -97,39 +110,74 @@ function cacti_db_session_write($id, $data) {
 				access = VALUES(access),
 				user_agent = VALUES(user_agent),
 				transactions = transactions + 1',
-			array($id, $client_addr, $access, $data, $user_agent));
-	}
+            array($id, $client_addr, $access, $data, $user_agent)
+        );
+    }
 
-	return true;
+    return true;
 }
 
-function cacti_db_session_destroy($id) {
-	db_execute_prepared('DELETE FROM sessions
+function cacti_db_session_destroy($id)
+{
+    db_execute_prepared(
+        'DELETE FROM sessions
 		WHERE id = ?',
-		array($id));
+        array($id)
+    );
 
-	return true;
+    return true;
 }
 
-function cacti_db_session_clean($max) {
-	$old = time() - $max;
+function cacti_db_session_clean($max)
+{
+    $old = time() - $max;
 
-	db_execute_prepared('DELETE FROM sessions
+    db_execute_prepared(
+        'DELETE FROM sessions
 		WHERE access < ?',
-		array($old));
+        array($old)
+    );
 
-	return true;
+    return true;
 }
 
-// register database session handling
-session_set_save_handler(
-	'cacti_db_session_open',
-	'cacti_db_session_close',
-	'cacti_db_session_read',
-	'cacti_db_session_write',
-	'cacti_db_session_destroy',
-	'cacti_db_session_clean'
-);
+// Object registration preserves the native callbacks without PHP 8.4's
+// deprecated individual-callback registration API.
+final class CactiDatabaseSessionHandler implements SessionHandlerInterface
+{
+    public function open(string $path, string $name): bool
+    {
+        return cacti_db_session_open($path, $name);
+    }
+
+    public function close(): bool
+    {
+        return cacti_db_session_close();
+    }
+
+    public function read(string $id): string|false
+    {
+        return cacti_db_session_read($id);
+    }
+
+    public function write(string $id, string $data): bool
+    {
+        return cacti_db_session_write($id, $data);
+    }
+
+    public function destroy(string $id): bool
+    {
+        return cacti_db_session_destroy($id);
+    }
+
+    public function gc(int $max_lifetime): int|false
+    {
+        // The historical callback acknowledges cleanup with true, which the
+        // callback API converted to integer 1. Retain that acknowledgement.
+        return cacti_db_session_clean($max_lifetime);
+    }
+}
+
+session_set_save_handler(new CactiDatabaseSessionHandler(), false);
 
 register_shutdown_function('session_write_close');
-

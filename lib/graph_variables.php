@@ -158,6 +158,10 @@ function nth_percentile_fetch_statistics($percentile, &$local_data_ids, &$fetch_
 			foreach ($fetch_array[$ldi]['data_source_names'] as $index => $ds_name) {
 				if (isset($fetch_array[$ldi]['values'][$index]) && cacti_sizeof($fetch_array[$ldi]['values'][$index])) {
 					foreach ($fetch_array[$ldi]['values'][$index] as $timestamp => $data) {
+						if (!is_numeric($data) || !is_finite((float) $data)) {
+							continue;
+						}
+
 						if (isset($asum_array[$ds_name]) && isset($asum_array[$ds_name][$timestamp])) {
 							$asum_array[$ds_name][$timestamp] += $data;
 						} else {
@@ -235,6 +239,19 @@ function nth_percentile_fetch_statistics($percentile, &$local_data_ids, &$fetch_
 	return($stats);
 }
 
+/** Return the zero-based descending rank for an observed-sample percentile. */
+function cacti_percentile_index(int $elements, float $percentile): int {
+	if ($elements <= 0 || $percentile <= 0 || $percentile >= 100) {
+		return 0;
+	}
+
+	// RRDtool selects round(percentile * (N - 1) / 100) from ascending
+	// samples. Translate that zero-based rank to our descending array.
+	$index = $elements - 1 - (int) round(($elements - 1) * $percentile / 100);
+
+	return max(0, min($elements - 1, $index));
+}
+
 function cacti_stats_calc($array, $ptile = 95) {
 	rsort($array, SORT_NUMERIC);
 
@@ -272,12 +289,12 @@ function cacti_stats_calc($array, $ptile = 95) {
 		$variance += pow(abs($number - $average), 2);
 	}
 
-	$ptile_index = ceil($elements * (1 - ($ptile/100)));
-	$p95n_index  = ceil($elements * 0.05);
-	$p90n_index  = ceil($elements * 0.1);
-	$p75n_index  = ceil($elements * 0.25);
-	$p50n_index  = ceil($elements * 0.50);
-	$p25n_index  = ceil($elements * 0.75);
+	$ptile_index = cacti_percentile_index($elements, $ptile);
+	$p95n_index  = cacti_percentile_index($elements, 95);
+	$p90n_index  = cacti_percentile_index($elements, 90);
+	$p75n_index  = cacti_percentile_index($elements, 75);
+	$p50n_index  = cacti_percentile_index($elements, 50);
+	$p25n_index  = cacti_percentile_index($elements, 25);
 
 	$results = array(
 		'p95n'     => (isset($array[$p95n_index]) ? $array[$p95n_index] : 0),
