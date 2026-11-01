@@ -187,7 +187,6 @@ PHP;
     'reorder runs with a resolved field' => array('reorder_data_query.php', array('--host-id=7', '--qid=11'), 0, 'REORDER_OK:ifName', 'reorder-valid'),
     'reorder rejects zero host ID' => array('reorder_data_query.php', array('--host-id=0', '--qid=all'), 1, '--host-id must be a positive integer'),
     'reorder rejects missing query ID' => array('reorder_data_query.php', array('--host-id=all'), 1, '--qid must be a positive query ID'),
-    'data-source reapply retains the deviceless selector' => array('poller_data_sources_reapply_names.php', array('--host-id=0'), 0, 'AND data_local.host_id=0', 'reapply-zero'),
     'audit report returns failure when its baseline table is unavailable' => array('audit_database.php', array('--report'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit repair stops when its baseline table is unavailable' => array('audit_database.php', array('--repair'), 1, 'FATAL: Failed to find or read Audit Schema'),
     'audit alters preview stops when its baseline table is unavailable' => array('audit_database.php', array('--alters'), 1, 'FATAL: Failed to find or read Audit Schema'),

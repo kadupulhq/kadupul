@@ -15,7 +15,7 @@ enum ManagedArea
     /** Realm 5: graphs.php and graphs_new.php. */
     case Graphs;
 
-    /** Realm 3: host.php. */
+    /** Realm 3: host.php and data_sources.php. */
     case Devices;
 
     /** Realm 4: tree.php. */
