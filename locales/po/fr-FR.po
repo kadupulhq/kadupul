@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 10:54-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -4764,11 +4764,11 @@ msgstr "Seuls les administrateurs Kadupul disposant des droits d'installation et
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Une installation ou une mise à niveau est en cours."
 
-#: include/global.php:585
+#: include/global.php:578
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "La dernière fois que ce collecteur a été entièrement synchronisé avec le site principal de Kadupul."
 
-#: include/global.php:589
+#: include/global.php:582
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Le Collecteur de données principal est passé à un statut Hors Ligne ou En cours de récupération"
 
@@ -12431,11 +12431,11 @@ msgstr "Vous devez sélectionner une colonne de sortie XML pour Data Source'%s' 
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Votre modèle graphique n'a pas de modèles de données en cours d'utilisation.  Veuillez corriger votre modèle de graphique"
 
-#: lib/database.php:2442
+#: lib/database.php:2473
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr "N'a pas réussi à déterminer la longueur du champ du mot de passe, ne peut pas continuer comme peut corrompre le mot de passe"
 
-#: lib/database.php:2449
+#: lib/database.php:2480
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr "N'a pas réussi à modifier la longueur du champ du mot de passe, ne peut pas continuer comme peut corrompre le mot de passe"
 
