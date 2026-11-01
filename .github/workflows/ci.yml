@@ -820,7 +820,9 @@ jobs:
         run: bash tests/tools/test_ci_change_scope.sh
 
       - name: Check the shared authentication shards
-        run: python3 -I tests/tools/test_session_bridge_shards.py
+        run: |
+          python3 -I tests/tools/test_session_bridge_shards.py
+          python3 -I tests/tools/test_session_coverage.py
 
       - name: Check the hook installer
         run: bash tests/tools/test_githooks_install.sh

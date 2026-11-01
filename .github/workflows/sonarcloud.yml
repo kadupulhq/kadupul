@@ -510,7 +510,9 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/Symfony/about_review_http.py
 
       - name: Coverage self-test report preservation
-        run: mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
+        run: |
+          mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
+          mise exec python@3.12.12 -- python tests/tools/test_session_coverage.py
 
       - name: Palette HTTP and MariaDB data handoff
         run: mise exec python@3.12.12 -- python tests/Symfony/palette_color_review_http.py
@@ -524,9 +526,7 @@ jobs:
           KADUPUL_BROWSER_COVERAGE: ${{ runner.temp }}/browser-layout-coverage
           PHP_VERSION: '8.4'
         run: |
-          set -euo pipefail
-          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --coverage-output "$RUNNER_TEMP/symfony-files"
-          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --coverage-output "$RUNNER_TEMP/symfony-database"
+          bash tests/Symfony/session_coverage.sh
 
       - name: Data input HTTP and MariaDB contract
         run: mise exec python@3.12.12 -- python tests/Symfony/data_input_review_http.py
