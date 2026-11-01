@@ -172,6 +172,17 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
         result = self.guard('import-paths', required)
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(required, json.loads(result.stdout))
+
+    def test_supplemental_native_cli_sources_survive_the_actual_import_guard(self):
+        # This independent maintained baseline already seeds refusal fixtures.
+        # Passing it through the real predicate catches a producer/merger split
+        # before a later negative probe fails at an unrelated execution guard.
+        required = SELFTEST.additional_required_native_sources(ROOT)
+        self.assertGreater(len(required), 0)
+        result = self.guard('import-paths', required)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(required, json.loads(result.stdout))
+
     def test_supplemental_inventory_respects_checked_out_source_presence(self):
         present = 'bin/legacy-tree-save.php'
         absent = 'cli/add_tree.php'
