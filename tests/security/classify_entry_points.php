@@ -263,7 +263,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'd6dccad6f94a51833b1ccda5daef6d07036055e8e6e63e01ba36c2cdba1a5f8c',
+    'config/services.yaml' => '34fc2b24242b6124c4c77171b38db9f24d048258120f268094db96e6ac7bede7',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter

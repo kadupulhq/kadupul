@@ -8,8 +8,9 @@ that cannot match, because the original misbehaved, is checked on its own in
 the differences.
 """
 import re
+import time
 
-from cli_parity_scenarios import ROOT, install_original, normalise, run
+from cli_parity_scenarios import QUIET, ROOT, install_original, normalise, run
 
 PREFIX = 'kadupul_parity_graph_'
 TITLES_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php'
@@ -43,6 +44,17 @@ ADD_DS_UTILITY = 'Kadupul Add Data Source'
 # Devices, data templates and the first new data source of the add_datasource.php cases.
 ADD_DS_FIRST = 9100001
 ADD_DS_NEXT = 9100010
+REBUILD_ORIGINAL = 'tests/Fixtures/legacy-cli/rebuild_poller_cache.php'
+REBUILD_SHIM = 'cli/rebuild_poller_cache.php'
+REBUILD_UTILITY = 'Kadupul Rebuild poller cache Tool'
+# Devices 1-4 (a polled one with a data source, a quiet one without, a disabled one, a second polled one), two device templates and a data template.
+REBUILD_FIRST = 9200001
+# The child's "Child Started" line begins with the time of day, which only the wall clock decides.
+REBUILD_CLOCK = re.compile(r'^\S+ \d{2}:\d{2}:\d{2} - ', re.MULTILINE)
+# In debug, the spawn line carries the elapsed time, and how often the master polls depends on how fast its children run.
+REBUILD_TIMING = re.compile(r'Total\[[0-9.]+\] |^PUSHOUT: \d+ Processes Running, keeping for 2 seconds\.\n', re.MULTILINE)
+# The worker runs under the installation's php.ini, not the harness's -d display_errors=0, so it shows the warnings the original hid.
+REBUILD_DISPLAYED = re.compile(r'^\n?(?:PHP )?(?:Warning|Notice|Deprecated): .* on line \d+\n', re.MULTILINE)
 TREE_ORIGINAL = 'tests/Fixtures/legacy-cli/add_tree.php'
 TREE_SHIM = 'cli/add_tree.php'
 TREE_UTILITY = 'Kadupul Add Tree Utility'
@@ -1266,6 +1278,240 @@ def verify_add_ds_differences(harness, check):
     add_ds_reset(harness)
 
 
+def rebuild_ids():
+    a = REBUILD_FIRST
+    return {'polled': a, 'quiet': a + 1, 'disabled': a + 2, 'second': a + 3, 'template': a, 'other_template': a + 1, 'data_template': a}
+
+
+def rebuild_setup(harness):
+    """Four devices on two device templates, and an SNMP data source on three of them, made through add_datasource.php so the poller cache rows are the real ones.
+
+    Returns the settings the cases change, to put back afterwards.
+    """
+    rebuild_teardown(harness)
+    ids = rebuild_ids()
+    a, t1, t2 = ids['polled'], ids['template'], ids['other_template']
+    harness.sql(
+        f"INSERT INTO data_template (id, hash, name) VALUES ({ids['data_template']}, '{'0' * 30}b1', '{PREFIX}rebuild_Traffic'); "
+        f"INSERT INTO host (id, description, hostname, host_template_id, snmp_version, snmp_community, status, disabled) VALUES "
+        f"({a}, '{PREFIX}rebuild_core', '{PREFIX}rebuild_core.example', {t1}, 2, 'public', 3, ''), "
+        f"({a + 1}, '{PREFIX}rebuild_quiet', '{PREFIX}rebuild_quiet.example', {t2}, 0, '', 3, ''), "
+        f"({a + 2}, '{PREFIX}rebuild_off', '{PREFIX}rebuild_off.example', {t1}, 2, 'public', 3, 'on'), "
+        f"({a + 3}, '{PREFIX}rebuild_edge', '{PREFIX}rebuild_edge.example', {t1}, 2, 'private', 3, ''); "
+        f"INSERT INTO data_template_data (local_data_id, data_template_id, data_input_id, name, name_cache, active, rrd_step, data_source_profile_id) VALUES "
+        f"(0, {ids['data_template']}, 1, '|host_description| - Traffic', '', 'on', 300, 1); "
+        f"INSERT INTO data_template_rrd (local_data_id, data_template_id, data_source_name, rrd_heartbeat, rrd_maximum, data_source_type_id) VALUES "
+        f"(0, {ids['data_template']}, 'traffic_in', 600, '0', 2); "
+        f"INSERT INTO data_input_data (data_input_field_id, data_template_data_id, t_value, value) "
+        f"SELECT 6, id, '', '.1.3.6.1.2.1.2.2.1.10.1' FROM data_template_data WHERE data_template_id = {ids['data_template']} AND local_data_id = 0")
+    for device in (ids['polled'], ids['disabled'], ids['second']):
+        added = run(harness, ADD_DS_SHIM, [f'--host-id={device}', f"--data-template-id={ids['data_template']}"])
+        if added['exit'] != 0:
+            raise RuntimeError('rebuild_poller_cache seed failed: ' + added['stdout'] + added['stderr'])
+    saved = harness.sql("SELECT name, value FROM settings WHERE name IN ('path_php_binary', 'commands_processes')")
+    php = harness.command('sh', '-c', 'command -v php')['stdout'].strip()
+    # The master starts its children through this binary; the setting is put back afterwards.
+    harness.sql(f"REPLACE INTO settings (name, value) VALUES ('path_php_binary', '{php}'); DELETE FROM settings WHERE name = 'commands_processes'")
+    return saved
+
+
+def rebuild_teardown(harness, saved=None):
+    """Removes the seed; with the settings rebuild_setup() saved, also puts them back."""
+    ids = rebuild_ids()
+    first, last = ids['polled'], ids['second']
+    created = f'SELECT id FROM data_local WHERE host_id BETWEEN {first} AND {last}'
+    harness.sql(
+        "DELETE FROM processes WHERE tasktype = 'pushout'; "
+        f'DELETE FROM poller_item WHERE host_id BETWEEN {first} AND {last} OR local_data_id IN ({created}); '
+        f"DELETE FROM data_input_data WHERE data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN ({created}) OR data_template_id = {ids['data_template']}); "
+        f"DELETE FROM data_template_rrd WHERE local_data_id IN ({created}) OR data_template_id = {ids['data_template']}; "
+        f"DELETE FROM data_template_data WHERE local_data_id IN ({created}) OR data_template_id = {ids['data_template']}; "
+        f'DELETE FROM data_local WHERE host_id BETWEEN {first} AND {last}; '
+        f'DELETE FROM host WHERE id BETWEEN {first} AND {last}; '
+        f"DELETE FROM data_template WHERE id = {ids['data_template']}")
+    if saved is not None:
+        harness.sql("DELETE FROM settings WHERE name IN ('path_php_binary', 'commands_processes')")
+        for line in saved.splitlines():
+            name, _, value = line.partition('\t')
+            harness.sql(f"INSERT INTO settings (name, value) VALUES ('{name}', CONVERT(UNHEX('{value.encode().hex()}') USING utf8mb4))")
+
+
+def rebuild_stale(harness):
+    """The cache as a case finds it: no rows for the polled devices, a stray row for the device without data sources, a stale one for the disabled device."""
+    ids = rebuild_ids()
+    first, last = ids['polled'], ids['second']
+    disabled = harness.sql(f"SELECT id FROM data_local WHERE host_id = {ids['disabled']}").strip()
+    harness.sql(
+        "DELETE FROM processes WHERE tasktype = 'pushout'; "
+        f'DELETE FROM poller_item WHERE host_id BETWEEN {first} AND {last}; '
+        f"INSERT INTO poller_item (local_data_id, host_id, action, hostname, rrd_name, arg1) VALUES "
+        f"({REBUILD_FIRST + 900}, {ids['quiet']}, 1, 'stray', 'stray', 'echo stray'), ({disabled}, {ids['disabled']}, 0, 'stale', 'traffic_in', 'stale')")
+
+
+def rebuild_settle(harness):
+    """Waits for background children, which may outlive their master, before rows are compared."""
+    for _ in range(60):
+        if harness.sql("SELECT COUNT(*) FROM processes WHERE tasktype = 'pushout'").strip() == '0':
+            return
+        time.sleep(0.5)
+
+
+def rebuild_rows(harness):
+    ids = rebuild_ids()
+    return harness.sql(
+        'SELECT local_data_id, host_id, action, present, hostname, snmp_community, snmp_version, snmp_port, rrd_name, rrd_path, rrd_num, rrd_step, arg1 '
+        f"FROM poller_item WHERE host_id BETWEEN {ids['polled']} AND {ids['second']} ORDER BY local_data_id, rrd_name; "
+        "SELECT taskname, taskid FROM processes WHERE tasktype = 'pushout' ORDER BY taskname, taskid")
+
+
+def rebuild_cases():
+    ids = rebuild_ids()
+    a, q, off, t1, dt = ids['polled'], ids['quiet'], ids['disabled'], ids['template'], ids['data_template']
+    child = ['--type=child', '--child=1', '--threads=1']
+    # (label, arguments, whether the run starts children in the background)
+    return [
+        ('rebuild a child for one device', [*child, f'--host-id={a}'], False),
+        ('rebuild a child for a device template', [*child, f'--host-template-id={t1}'], False),
+        ('rebuild the first of two child slices', ['--type=child', '--child=1', '--threads=2', f'--host-template-id={t1}'], False),
+        ('rebuild the second of two child slices', ['--type=child', '--child=2', '--threads=2', f'--host-template-id={t1}'], False),
+        ('rebuild a child in debug', [*child, f'--host-template-id={t1}', '--debug'], False),
+        ('rebuild a child with the short debug flag', [*child, f'--host-id={a}', '-d'], False),
+        ('rebuild a child for a data template', [*child, f'--host-template-id={t1}', f'--data-template-id={dt}'], False),
+        ('rebuild a child for an unused data template', [*child, f'--host-id={a}', f'--data-template-id={dt + 5}'], False),
+        ('rebuild a child for a device without data sources', [*child, f'--host-id={q}'], False),
+        ('rebuild a child for a disabled device', [*child, f'--host-id={off}'], False),
+        ('rebuild a forced child', [*child, f'--host-id={a}', '--force'], False),
+        ('rebuild a child on the default thread count', ['--type=child', '--child=1', f'--host-id={a}'], False),
+        ('rebuild a child with no thread number', ['--type=child', '--threads=1', f'--host-id={a}'], False),
+        ('rebuild a child with a padded device id', [*child, f'--host-id= {a} '], False),
+        ('rebuild a child with a zero-padded device id', [*child, f'--host-id=0{a}'], False),
+        ('rebuild a child with a float-written template id', [*child, f'--host-template-id={t1}.0'], False),
+        ('rebuild a child last device id wins', [*child, f'--host-id={q}', f'--host-id={a}'], False),
+        ('rebuild an unknown type', ['--type=other', f'--host-id={a}'], False),
+        ('rebuild an empty type', ['--type', f'--host-id={a}'], False),
+        ('rebuild an unknown device', [f'--host-id={REBUILD_FIRST + 900}'], False),
+        ('rebuild only a disabled device', [f'--host-id={off}'], False),
+        ('rebuild an unknown device in debug', [f'--host-id={REBUILD_FIRST + 900}', '--debug'], False),
+        ('rebuild one device', [f'--host-id={a}'], True),
+        ('rebuild a device template on two threads', [f'--host-template-id={t1}', '--threads=2'], True),
+        ('rebuild a device template forced in debug', [f'--host-template-id={t1}', '--force', '--debug'], True),
+        ('rebuild a zero device template', ['--host-template-id=0', f'--host-id={a}'], True),
+        ('rebuild values given to flags that take none', [f'--host-id={a}', '--type=child', '--child=1', '--threads=1', '--force=no', '--debug=no'], False),
+        ('rebuild a zero device id', ['--host-id=0'], False),
+        ('rebuild a negative device id', ['--host-id=-1'], False),
+        ('rebuild a fractional device id', ['--host-id=1.5'], False),
+        ('rebuild a bad device id', ['--host-id=abc'], False),
+        ('rebuild a bare device id', ['--host-id'], False),
+        ('rebuild a bad device template id', ['--host-template-id=abc'], False),
+        ('rebuild an empty device template id', ['--host-template-id='], False),
+        ('rebuild a bad data template id', ['--data-template-id=x1'], False),
+        ('rebuild a bare data template id', ['--data-template-id'], False),
+        ('rebuild zero threads', ['--threads=0'], False),
+        ('rebuild negative threads', ['--threads=-1'], False),
+        ('rebuild fractional threads', ['--threads=1.5'], False),
+        ('rebuild bare threads', ['--threads'], False),
+        ('rebuild bad threads after good ones', ['--threads=3', '--threads=x'], False),
+        ('rebuild bad threads before good ones', ['--threads=x', '--threads=3'], False),
+        ('rebuild bad threads quote the setting', ['--threads=x', f'--host-id={a}'], False),
+        ('rebuild the first bad value stops the run', ['--host-id=abc', '--threads=x', '--bogus'], False),
+        ('rebuild a bad value stops before help', ['--host-id=abc', '--help'], False),
+        ('rebuild help stops before a bad value', ['--help', '--host-id=abc'], False),
+        ('rebuild an unknown argument stops before help', ['--bogus', '--help'], False),
+        ('rebuild an unknown argument', ['--bogus'], False),
+        ('rebuild an unknown argument with a value', ['--bogus=1'], False),
+        ('rebuild an unknown argument after an id', [f'--host-id={a}', '--bogus'], False),
+        ('rebuild a leading = is no separator', ['=1'], False),
+        ('rebuild the quiet flag of other scripts', ['--quiet'], False),
+        ('rebuild a list flag of another script', ['--list-hosts'], False),
+        ('rebuild help', ['-h'], False),
+        ('rebuild upper help', ['-H'], False),
+        ('rebuild long help', ['--help'], False),
+        ('rebuild help with a value', ['--help=no'], False),
+        ('rebuild version', ['-v'], False),
+        ('rebuild upper version', ['-V'], False),
+        ('rebuild long version', ['--version'], False),
+        ('rebuild version after an id', [f'--host-id={a}', '--version'], False),
+    ]
+
+
+def rebuild_text(text):
+    return REBUILD_TIMING.sub('', REBUILD_CLOCK.sub('HH:MM:SS - ', REBUILD_DISPLAYED.sub('', normalise(text))))
+
+
+def same_rebuild(check, label, original, native):
+    # Only an argument error loses the version line above the help; the rest must match byte for byte.
+    expected = rebuild_text(original['stdout'])
+    if native['stdout'].startswith('ERROR: Invalid Parameter'):
+        expected = without_utility(expected, REBUILD_UTILITY)
+    check(original['exit'] == native['exit'], f'{label} keeps its exit code')
+    check(expected == rebuild_text(native['stdout']), f'{label} prints the same lines')
+    check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label} prints the same errors')
+
+
+def verify_rebuild_cases(harness, check):
+    for label, arguments, background in rebuild_cases():
+        outcomes = []
+        for script in (REBUILD_ORIGINAL, REBUILD_SHIM):
+            rebuild_stale(harness)
+            outcome = run(harness, QUIET_PHP + script, arguments)
+            if background:
+                rebuild_settle(harness)
+            outcomes.append((outcome, rebuild_rows(harness)))
+        (original, original_rows), (native, native_rows) = outcomes
+        same_rebuild(check, label, original, native)
+        check(original_rows == native_rows, f'{label} leaves the same poller items and processes')
+
+
+def verify_rebuild_differences(harness, check):
+    ids = rebuild_ids()
+    a = ids['polled']
+    rebuild_stale(harness)
+    stale = rebuild_rows(harness)
+    # Another master is registered and alive: both end silently after the warning, and --force runs anyway.
+    holder = harness.command('sh', '-c', "php -r 'sleep(30);' >/dev/null 2>&1 & echo $!")['stdout'].strip()
+    try:
+        for script in (REBUILD_ORIGINAL, REBUILD_SHIM):
+            rebuild_stale(harness)
+            harness.sql(f"INSERT INTO processes (pid, tasktype, taskname, taskid, timeout, started) VALUES ({holder}, 'pushout', 'child', 1, 86400, NOW())")
+            busy = run(harness, QUIET_PHP + script, ['--type=child', '--child=1', '--threads=1', f'--host-id={a}'])
+            check(busy['exit'] == 0 and busy['stdout'] == 'WARNING: Do not interrupt this script.  Rebuilding Poller Cache can take quite some time\n', f'{script} ends silently while a child is registered')
+            check(rebuild_rows(harness).replace(f'child\t1\n', '', 1) == stale, f'{script} writes nothing while a child is registered')
+            forced = run(harness, QUIET_PHP + script, ['--type=child', '--child=1', '--threads=1', f'--host-id={a}', '--force'])
+            check(forced['exit'] == 0 and 'Child Started Process 1 with 1 hosts' in forced['stdout'], f'{script} --force runs while a child is registered')
+    finally:
+        harness.command('kill', holder)
+    # SIGTERM to the master: the script's handler unregisters it and exits 1, after the lines it printed.
+    for script in (REBUILD_ORIGINAL, REBUILD_SHIM):
+        rebuild_stale(harness)
+        stopped = harness.command('sh', '-c', f"cd {ROOT}; {QUIET} php {QUIET_PHP}{script} --host-template-id={ids['template']} --threads=2 & p=$!; sleep 3; kill -TERM $p; wait $p; echo \"exit=$?\"")
+        check(stopped['stdout'].endswith('There are 2 hosts, 2 threads and 1 hosts to process per thread\nexit=1\n'), f'{script} stops on SIGTERM with exit 1')
+        rebuild_settle(harness)
+        check(harness.sql("SELECT COUNT(*) FROM processes WHERE tasktype = 'pushout' AND taskname = 'rmaster'").strip() == '0', f'{script} unregisters the master on SIGTERM')
+    # A thread number that is not a number made the original fail with a PHP fatal error (exit 255); the shim reports the failure and exits 1.
+    rebuild_stale(harness)
+    original = run(harness, QUIET_PHP + REBUILD_ORIGINAL, ['--type=child', '--child=abc', '--threads=1', f'--host-id={a}'])
+    check(original['exit'] == 255, 'the original died on a thread number that is not a number')
+    rebuild_stale(harness)
+    failed = run(harness, REBUILD_SHIM, ['--type=child', '--child=abc', '--threads=1', f'--host-id={a}'])
+    check(failed['exit'] == 1 and failed['stdout'].endswith('ERROR: Rebuilding the poller cache failed\n'), 'the shim reports a failed run')
+    # The web page for this is utilities.php, realm 15; device management alone is not enough.
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 15')
+    rebuild_stale(harness)
+    try:
+        for arguments in ([f'--host-id={a}'], ['--type=child', '--child=1', '--threads=1', f'--host-id={a}'], ['--threads=x']):
+            denied = run(harness, REBUILD_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without the Utilities realm is refused")
+        check(rebuild_rows(harness) == stale, 'a refused run writes and registers nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 15)')
+    rebuild_stale(harness)
+    report = run(harness, 'bin/console', ['kadupul:poller-cache:rebuild', '--type=child', '--child=1', '--threads=1', f'--host-id={a}', '--json'])
+    check(report['exit'] == 0 and report['stdout'] == '{"status":"rebuilt","database":"local","type":"child","hosts":1}\n', 'bin/console rebuilds and prints json')
+    invalid = run(harness, 'bin/console', ['kadupul:poller-cache:rebuild', '--threads=x'])
+    check(invalid['exit'] == 2, 'bin/console treats a bad thread count as invalid input')
+
+
 def tree_seed(harness):
     """The removal seed, a site, and one tree: two headers at the root, a graph and a device under the first, a site under the second."""
     remove_seed(harness)
@@ -1915,15 +2161,17 @@ def verify_graph_parity(harness, check):
     install_original(harness, ADD_TEMPLATE_ORIGINAL)
     install_original(harness, ADD_QUERY_ORIGINAL)
     install_original(harness, ADD_DS_ORIGINAL)
+    install_original(harness, REBUILD_ORIGINAL)
     install_original(harness, TREE_ORIGINAL)
     install_original(harness, ADD_GRAPHS_ORIGINAL)
     admin = harness.sql("SELECT id FROM user_auth WHERE username='admin'").strip()
     saved = harness.sql("SELECT value FROM settings WHERE name='admin_user'")
+    rebuild_saved = None
     try:
         # With no --as the shim acts as settings.admin_user, which needs
         # Console Access (8) and Graphs (5).
         harness.sql(f"REPLACE INTO settings (name,value) VALUES ('admin_user','{admin}'); "
-                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},4),({admin},3)')
+                    f'INSERT IGNORE INTO user_auth_realm (user_id,realm_id) VALUES ({admin},8),({admin},5),({admin},4),({admin},3),({admin},15)')
         verify_titles_cases(harness, check)
         verify_titles_differences(harness, check)
         verify_sources_cases(harness, check)
@@ -1942,6 +2190,12 @@ def verify_graph_parity(harness, check):
         verify_add_query_differences(harness, check)
         verify_add_ds_cases(harness, check)
         verify_add_ds_differences(harness, check)
+        rebuild_saved = rebuild_setup(harness)
+        verify_rebuild_cases(harness, check)
+        verify_rebuild_differences(harness, check)
+        # The seed goes before the next tools run, so they never see its devices.
+        rebuild_teardown(harness, rebuild_saved)
+        rebuild_saved = None
         verify_tree_cases(harness, check)
         verify_tree_differences(harness, check)
         verify_add_graphs_cases(harness, check)
@@ -1957,6 +2211,7 @@ def verify_graph_parity(harness, check):
         broken_reset(harness)
         tree_reset(harness)
         add_ds_reset(harness)
+        rebuild_teardown(harness, rebuild_saved)
         add_graphs_reset(harness)
         add_query_reset(harness)
         remove_reset(harness)

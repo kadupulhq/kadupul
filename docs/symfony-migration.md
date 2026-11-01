@@ -2066,6 +2066,47 @@ Known differences from `cli/poller_output_empty.php`:
 - Under `bin/console` and with `--json` the lines the libraries print are not
   shown; only the shim passes them through.
 
+`php bin/console kadupul:poller-cache:rebuild [--host-id=ID] [--host-template-id=ID] [--data-template-id=ID] [--threads=N]`
+rebuilds the poller cache as `cli/rebuild_poller_cache.php` did. A worker runs
+the script's body: it registers the master in `processes`, counts the enabled
+devices, starts one child per slice through `cli/push_out_hosts.php` (which
+comes back through the shim with `--type=child`), and waits until no child is
+registered; each child calls `push_out_host()` for its devices, or deletes the
+poller items of a device without data sources. The output is streamed as the
+script printed it. A SIGTERM or SIGINT the command receives is passed to the
+worker, whose handler is the script's: it stops the children, unregisters the
+master and exits 1. It needs the Console Access and Utilities realms (realm 15,
+the one `utilities.php` needs; its Rebuild Poller Cache action names this
+script), and each run, master or child, is audited with the device id or
+`all`. `--json` prints `status` (`rebuilt`, `no_hosts`, `already_running`,
+`skipped`, `interrupted` or `failed`), `database`, `type` and `hosts`, without
+the progress lines.
+
+The command has no `--as` and no `--local`: the master's children are started
+through `cli/push_out_hosts.php`, which passes on neither, so every process of
+a rebuild acts as the `admin_user` operator and, on a remote collector, on the
+main database, as the script did.
+
+Known differences from `cli/rebuild_poller_cache.php`:
+
+- It needs an operator with the Console Access and Utilities realms. The
+  original ran for anyone who could run it. A `--threads` value it refuses is
+  reported with the Poller Command Concurrent Processes setting, as before,
+  but the setting is read only for an authorized operator.
+- A run that fails in the worker, for example a `--child` that is not a number
+  (a PHP fatal error and exit 255 in the original), prints `ERROR: Rebuilding
+  the poller cache failed` and exits 1. Database errors are logged without the
+  statement text, as in the other workers.
+- The worker reads its arguments as JSON of at most 20000 bytes, so a `--type`
+  or `--child` longer than that, or one that is not UTF-8, fails the same way
+  instead of being registered.
+- A signal that arrives before the worker has started ends the command with
+  exit 1 without the `terminated by user` log line.
+- An argument error prints the error and help without the version line.
+- `--quiet`, `--as`, `--local` and the other flags of the sibling scripts are
+  unknown here, as in the original. Under `bin/console` a bad value exits 2;
+  the shim keeps the original's message and exits 1.
+
 `php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
 creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
 adds a node to one, under `--parent-node=ID` or at the root. A worker saves the

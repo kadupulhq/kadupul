@@ -426,6 +426,11 @@ services:
     Kadupul\Graphing\Application\Command\EmptyPollerOutput: ~
     Kadupul\Graphing\Application\Port\PollerOutputDrain:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPollerOutputDrain
+    Kadupul\Graphing\Application\Command\RebuildPollerCache: ~
+    Kadupul\Graphing\Application\Port\PollerCacheSettings:
+        alias: Kadupul\Graphing\Infrastructure\Persistence\DbalPollerCacheSettings
+    Kadupul\Graphing\Application\Port\PollerCacheRebuilder:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPollerCacheRebuilder
     Kadupul\Graphing\Application\Command\AddTree: ~
     Kadupul\Graphing\Application\Command\AddTreeNode: ~
     Kadupul\Graphing\Application\Command\ListTreeChoices: ~
