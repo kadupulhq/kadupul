@@ -41,6 +41,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
         admitted = [
             'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php',
             'cli/poller_data_sources_reapply_names.php', 'bin/legacy-data-source-titles.php',
+            'cli/reorder_data_query.php', 'bin/legacy-data-query-reorder.php',
             'cli/repair_graphs.php', 'cli/remove_broken_graphs.php',
             'bin/legacy-graph-remove.php', 'cli/remove_graphs.php',
             'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php',

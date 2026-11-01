@@ -1759,6 +1759,35 @@ Known differences from `cli/poller_data_sources_reapply_names.php`:
 - The selector error `Specify --host-id=all ...` still goes to standard error
   and exits 1. Under `bin/console` an invalid `--host-id` exits 2.
 
+`php bin/console kadupul:data-query:reorder --host-id=<id|all> --qid=<id|all>`
+rewrites the stored index of the data sources of a data query: for each one it
+refreshes the device's sort field from the data query definition, picks the
+best index type, and stores the index field and its cached value. It runs the
+same `update_data_query_sort_cache()`, `get_best_data_query_index_type()` and
+`update_snmp_index_order()` the web uses, in a worker, so plugin hooks are
+unchanged. `--host-id` defaults to `all`; `--qid` is required. A data source
+whose device has no usable sort field stops the run, as the script did, and the
+items before it stay reordered. It runs on the main data collector only, needs
+the Console Access and Devices realms (the realm `host.php` requires), and an
+applied run is audited. `--dry-run` lists the items and reorders none. `--json`
+prints `status`, `database`, `dry_run`, `selected`, `reordered` and, when a run
+stopped, `stopped_at` with the device and data query.
+
+Known differences from `cli/reorder_data_query.php`:
+
+- It needs an operator with the Console Access and Devices realms, checked on
+  the database it works on, and the run is audited. The original ran for anyone
+  who could run it.
+- The device and query ids are bound as parameters. The original cast them,
+  which gave the same values.
+- Items are taken in local data id order. The original had no ordering.
+- A run that stops at an item with no sort field still prints that item's dot
+  and the error on standard error and exits 1, but the lines for a debug run
+  print after the worker has finished.
+- An invalid flag prints the error and help without the version line.
+- The selector errors still go to standard error and exit 1. Under
+  `bin/console` an invalid `--host-id` or `--qid` exits 2.
+
 `php bin/console kadupul:graph:repair-items --graph-template-id=<id> --data-template-id=<id>`
 points graph items back at the RRD item of their device's data source: for
 each graph of the template, the items that follow the data template but name
