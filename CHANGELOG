@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
+-issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
