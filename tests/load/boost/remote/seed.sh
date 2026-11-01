@@ -20,16 +20,41 @@ workers="$3"
 mode="${4:-snapshot}"
 snap="$STATE/snap/$count"
 
+# The reviewed installer plan and its worker share a key without persisting it
+# in benchmark snapshots. Retain a deployment-supplied key when one exists.
+if [ -z "${APP_SECRET:-}" ]; then
+    APP_SECRET="$("$PHP" -r 'echo bin2hex(random_bytes(32));')"
+fi
+export APP_SECRET
+
 # A cell may have left the baseline tree in place; seed from the tree under test.
 use_tree feat
 log "seed $count: fresh schema"
 db -e "DROP DATABASE IF EXISTS \`$DB_NAME\`; CREATE DATABASE \`$DB_NAME\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 db "$DB_NAME" < "$APP/cacti.sql"
+# This exclusively owned benchmark schema needs an eligible local operator.
+# Generate its inaccessible password and send only the hash over SQL stdin.
+"$PHP" <<'PHP' | db "$DB_NAME"
+<?php
+$hash = password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT);
+printf("UPDATE user_auth SET password='%s', must_change_password='', password_change='', enabled='on', locked='' WHERE id=1 AND username='admin' AND realm=0;\n", $hash);
+PHP
 find "$APP/rra" -mindepth 1 -delete
 reset_app_file "$APP/log/cacti.log"
-(cd "$APP" && as_poller "$PHP" cli/install_cacti.php --accept-eula --install --mode=1 \
+(cd "$APP" && as_poller "$PHP" cli/install_cacti.php --accept-eula --install --mode=1 --automationmode=0 \
     --template=Local_Linux_Machine.xml.gz:1 --template=NetSNMP_Device.xml.gz:1 > "$STATE/install-$count.log" 2>&1)
-grep -q 'Installation has now completed' "$STATE/install-$count.log"
+# shellcheck disable=SC2016 # PHP variables must remain literal shell text.
+(cd "$APP" && as_poller "$PHP" bin/console kadupul:install --action=status --output=json | "$PHP" -r '
+    $state = json_decode(stream_get_contents(STDIN), true, 32, JSON_THROW_ON_ERROR);
+    $version = trim(file_get_contents("include/cacti_version"));
+    if (!is_array($state) || ($state["state"] ?? null) !== "succeeded"
+        || ($state["schema"] ?? null) !== $version || ($state["progress"] ?? null) !== 100
+        || ($state["pending_collectors"] ?? null) !== 0
+        || !array_key_exists("error", $state) || $state["error"] !== null) {
+        fwrite(STDERR, "Installer did not confirm complete benchmark initialization.\n");
+        exit(1);
+    }
+')
 
 log "seed $count: base interface source through cli/add_device.php and cli/add_graphs.php"
 (
