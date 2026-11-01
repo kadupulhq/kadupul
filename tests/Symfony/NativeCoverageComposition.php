@@ -35,6 +35,10 @@ final class NativeCoverageComposition
         }
         foreach ($data->lineCoverage() as $file => $measured) {
             $relative = self::relative($root, $file);
+            // Native merges preserve sparse indexes after deduplicating test IDs.
+            foreach ($measured as $line => $hits) {
+                if (is_array($hits)) $measured[$line] = array_values($hits);
+            }
             $lines[$relative] = $measured;
             $sources[$relative] = self::digest($file);
         }
