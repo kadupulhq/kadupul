@@ -79,10 +79,10 @@ test('basic auth maps normalized domain usernames and quoted CSV fields through 
         fputcsv($handle, ['CORP\\\\jdoe', 'correct "user",name'], ',', '"', '\\');
         fputcsv($handle, ['alice', 'short-alice'], ',', '"', '\\');
         fclose($handle);
-        $input = ['auth_method' => 2, 'path_basic_mapfile' => $map, 'server' => ['PHP_AUTH_USER' => 'CORP\jdoe']];
+        $input = ['auth_method' => 2, 'path_basic_mapfile' => $map, 'server' => ['REMOTE_USER' => 'CORP\jdoe']];
         $result = json_decode(csvRunProduction(csvBasicAuthProgram(), $input), true, 512, JSON_THROW_ON_ERROR);
         expect($result)->toBe(['username' => 'correct "user",name', 'logs' => []]);
-        $input['server'] = ['PHP_AUTH_USER' => 'alice@example.invalid', 'REMOTE_USER' => 'ignored'];
+        $input['server'] = ['REMOTE_USER' => 'alice@example.invalid', 'PHP_AUTH_USER' => 'ignored'];
         expect(json_decode(csvRunProduction(csvBasicAuthProgram(), $input), true, 512, JSON_THROW_ON_ERROR))
             ->toBe(['username' => 'short-alice', 'logs' => []]);
     } finally {
