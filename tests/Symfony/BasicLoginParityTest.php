@@ -194,28 +194,33 @@ final class BasicLoginParityTest extends TestCase
     }
 
     /**
-     * ADR 0010 section 8: an Authorization header alone must never authenticate.
+     * ADR 0010 section 8: an Authorization header alone never authenticates.
      * PHP turns a client's Authorization: Basic header into PHP_AUTH_USER (here
      * the built-in server; other SAPIs do the same whenever the header reaches
-     * PHP), and get_basic_auth_username() reads PHP_AUTH_USER before REMOTE_USER.
-     * The password in the header is never checked.
+     * PHP) without checking the password, so get_basic_auth_username() never
+     * reads it. With no server identity the request gets the misconfiguration
+     * page, exactly as if no header had been sent.
      */
-    public function testClientAuthorizationHeaderWithoutRemoteUserSignsInContraryToAdr8(): void
+    public function testClientAuthorizationHeaderWithoutRemoteUserIsRefusedAsNoIdentity(): void
     {
         $response = $this->basic('/gated.php', [], [], ['Authorization: Basic ' . base64_encode(self::USER . ':not-checked-fixture')]);
+
+        self::assertSame(200, $response['status']);
+        self::assertSame('Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server.', $this->failurePage($response['body']));
+        $this->assertCookiesCleared($response);
+        self::assertSame([], $this->userLog());
+        self::assertSame(['ERROR: No username passed with Web Basic Authentication enabled.'], $this->authLog());
+        self::assertSame(['failed_attempts' => 0, 'locked' => '', 'enabled' => 'on'], $this->account());
+    }
+
+    /** Behind a server that sets REMOTE_USER itself (SSO, Kerberos), a client header cannot replace it. */
+    public function testServerRemoteUserWinsOverAClientAuthorizationHeader(): void
+    {
+        $response = $this->basic('/gated.php', ['REMOTE_USER' => self::USER], [], ['Authorization: Basic ' . base64_encode(self::OTHER . ':not-checked-fixture')]);
 
         $this->assertSignedIn($response);
         self::assertSame([['username' => self::USER, 'user_id' => self::USER_ID, 'result' => 1, 'ip' => '127.0.0.1']], $this->userLog());
         self::assertSame([$this->basicLine(self::USER)], $this->authLog());
-    }
-
-    /** Behind a server that sets REMOTE_USER itself (SSO, Kerberos), a client header still wins. */
-    public function testClientAuthorizationHeaderOverridesTheServerRemoteUserContraryToAdr8(): void
-    {
-        $response = $this->basic('/gated.php', ['REMOTE_USER' => self::USER], [], ['Authorization: Basic ' . base64_encode(self::OTHER . ':not-checked-fixture')]);
-
-        $this->assertSignedIn($response, self::OTHER_ID);
-        self::assertSame([$this->basicLine(self::OTHER)], $this->authLog());
     }
 
     public function testClientRemoteUserHeaderIsIgnored(): void

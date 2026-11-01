@@ -353,22 +353,24 @@ function is_template_account($user_id)
  */
 function get_basic_auth_username()
 {
-    /* Only trust Remote-User / PHP_AUTH_USER headers when Basic Auth is the
-     * configured auth method (auth_method == 2).  Accepting these headers
-     * unconditionally allows any proxy or client to spoof arbitrary usernames.
+    /* Only trust the web server's identity when Basic Auth is the configured
+     * auth method (auth_method == 2).  Accepting it unconditionally allows any
+     * proxy or client to spoof arbitrary usernames.
      * GHSA-9ffc-rr2g-c8hh */
     if (read_config_option('auth_method') != 2) {
         return false;
     }
 
-    if (isset($_SERVER['PHP_AUTH_USER'])) {
-        $username = str_replace("\\", "\\\\", $_SERVER['PHP_AUTH_USER']);
-    } elseif (isset($_SERVER['REMOTE_USER'])) {
+    /* ADR 0010 section 8: only REMOTE_USER or REDIRECT_REMOTE_USER, which the
+     * web server sets after authenticating the request, names the user.
+     * PHP_AUTH_USER is never read: PHP fills it from the client's
+     * Authorization header whether or not the server checked the password.
+     * HTTP_* values are client headers and are never read either. */
+    if (isset($_SERVER['REMOTE_USER'])) {
         $username = str_replace("\\", "\\\\", $_SERVER['REMOTE_USER']);
     } elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
         $username = str_replace("\\", "\\\\", $_SERVER['REDIRECT_REMOTE_USER']);
     } else {
-        /* HTTP_* values are client headers, not server-authenticated identities. */
         $username = false;
     }
 
