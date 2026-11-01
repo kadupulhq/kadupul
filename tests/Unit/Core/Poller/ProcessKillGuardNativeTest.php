@@ -179,7 +179,7 @@ test('worker cleanup signals only the live child', function (string $file, strin
         ->and($result['signals'])->toContain(array((string) LIVE_PID, SIGTERM));
 })->with(array(
     'float' => array('cli/float_rrdfiles.php', 'float_kill_running_processes', 'rfloat'),
-    'pushout' => array('cli/rebuild_poller_cache.php', 'pushout_kill_running_processes', 'pushout'),
+    'pushout' => array('bin/legacy-poller-cache-rebuild.php', 'pushout_kill_running_processes', 'pushout'),
     'dsstats' => array('lib/dsstats.php', 'dsstats_kill_running_processes', 'dsstats'),
     'rrdcheck' => array('lib/rrdcheck.php', 'rrdcheck_kill_running_processes', 'rrdcheck'),
     'boost' => array('poller_boost.php', 'boost_kill_running_processes', 'boost'),
