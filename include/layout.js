@@ -3539,47 +3539,25 @@ function showCurrentTab(id) {
 }
 
 function tabsWrapping() {
-	var mainTabPos    = $('.maintabs:first').position();
-	var tabHeight     = $('#tabs').height();
+	const mainTabPos = $('.maintabs:first').position();
+	const tabHeight = $('#tabs').height();
+	const hasUserTabs = $('.usertabs').length > 0;
+	const mainTabHeight = hasUserTabs ? tabHeight : $('.maintabs:first nav').height();
+	const userTabPos = hasUserTabs ? $('.usertabs').position() : mainTabPos;
 
-	if ($('.usertabs').length) {
-		var mainTabHeight = tabHeight;
-		var userTabPos    = $('.usertabs').position();
-	} else {
-		var mainTabHeight = $('.maintabs:first nav').height();
-		var userTabPos    = mainTabPos;
-	}
-
-	var bodyWidth     = $('body').width();
-	var otherWidth    = 0;
+	const bodyWidth = $('body').width();
+	let otherWidth = 0;
 	$('#tabs').find('div:not(.maintabs):visible').each(function() {
 		otherWidth += $(this).outerWidth();
 	});
 
-	var ellipsisWidth = $('.maintabs-submenu-ellipsis').outerWidth();
-	var mtabsWidth  = $('.maintabs:not(.usertabs)').outerWidth();
+	const ellipsisWidth = $('.maintabs-submenu-ellipsis').outerWidth();
+	const mtabsWidth = $('.maintabs:not(.usertabs)').outerWidth();
+	const gtabsWidth = $('#gtabs>.tabs').length ? $('#gtabs>.tabs').outerWidth() : 0;
+	const utabsWidth = $('.usertabs').length ? $('.usertabs').outerWidth() : 0;
 
-	if ($('#gtabs>.tabs').length) {
-		var gtabsWidth = $('#gtabs>.tabs').outerWidth();
-	} else {
-		var gtabsWidth = 0;
-	}
-
-	if ($('.usertabs').length) {
-		var utabsWidth  = $('.usertabs').outerWidth();
-	} else {
-		var utabsWidth  = 0;
-	}
-
-	if (gtabsWidth + mtabsWidth + utabsWidth + otherWidth + ellipsisWidth > bodyWidth - 20) {
-		return true;
-	}
-
-	if (mainTabPos.top != userTabPos.top || mainTabHeight > tabHeight) {
-		return true;
-	} else {
-		return false;
-	}
+	return gtabsWidth + mtabsWidth + utabsWidth + otherWidth + ellipsisWidth > bodyWidth - 20
+		|| mainTabPos.top != userTabPos.top || mainTabHeight > tabHeight;
 }
 
 /* Graph related javascript functions */

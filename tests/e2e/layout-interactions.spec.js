@@ -73,6 +73,31 @@ for (const theme of ['classic', 'modern']) {
   }
 }
 
+test('native tab wrapping preserves width boundaries and row and height overflow', async ({ page }) => {
+  await loadLayout(page);
+  const cases = [
+    { name: 'no optional tabs at width limit', main: 900, expected: false },
+    { name: 'one pixel over width limit', main: 901, expected: true },
+    { name: 'graph tabs at width limit', main: 800, graph: 100, expected: false },
+    { name: 'graph tabs push width over limit', main: 800, graph: 101, expected: true },
+    { name: 'user and graph tabs at width limit', main: 700, graph: 100, user: 100, expected: false },
+    { name: 'user tabs move to another row', main: 700, graph: 100, user: 100, top: 1, expected: true },
+    { name: 'main navigation exceeds available height', main: 900, navHeight: 31, expected: true },
+    { name: 'user tabs use the tab bar height', main: 700, graph: 100, user: 100, navHeight: 31, expected: false },
+    { name: 'hidden auxiliary controls do not consume width', main: 930, hidden: true, expected: false },
+  ];
+  for (const scenario of cases) {
+    await page.setContent('<style>body{margin:0;width:1000px} #tabs{position:relative;height:30px}'
+      + '.maintabs{position:absolute;left:0;top:0}.maintabs-submenu-ellipsis{width:30px;height:10px;padding:0;border:0}</style>'
+      + `<div id="tabs"><div class="maintabs" style="width:${scenario.main}px"><nav style="height:${scenario.navHeight || 30}px"></nav></div>`
+      + (scenario.user ? `<div class="maintabs usertabs" style="width:${scenario.user}px;height:10px;top:${scenario.top || 0}px"></div>` : '')
+      + `<div style="width:50px;height:10px;${scenario.hidden ? 'display:none' : ''}"></div>`
+      + '<button class="maintabs-submenu-ellipsis"></button></div>'
+      + (scenario.graph ? `<div id="gtabs"><div class="tabs" style="width:${scenario.graph}px;height:10px"></div></div>` : ''));
+    expect(await page.evaluate(() => tabsWrapping()), scenario.name).toBe(scenario.expected);
+  }
+});
+
 test('select menu remains usable after the browser scrolls its button into view', async ({ page }) => {
   await loadLayout(page);
   await page.locator('#storage_location-button').click();
