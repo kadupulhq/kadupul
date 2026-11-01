@@ -104,7 +104,8 @@ final class InstallerRuntimeComparison
         }
     }
 
-    /** @param RuntimeSnapshot $web
+    /** @param array<string, mixed> $web
+     *  @phpstan-param RuntimeSnapshot $web
      *  @param array<array-key, mixed> $worker
      *  @return list<array{name: string, ok: bool, status: string, observed: string, remedy: string, value: string}>
      */
