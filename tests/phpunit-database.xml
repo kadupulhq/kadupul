@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Poller database contracts">
       <file>integration/SqlSaveNullableNumericDatabaseTest.php</file>
+      <file>Unit/SnmpagentDisabledReceiverTest.php</file>
       <file>integration/PollerAcknowledgementDatabaseTest.php</file>
       <file>integration/PollerRejectedSamplesDatabaseTest.php</file>
       <file>integration/PollerStaleItemsDatabaseTest.php</file>
