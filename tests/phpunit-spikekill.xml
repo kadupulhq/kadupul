@@ -9,6 +9,7 @@
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
+      <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>

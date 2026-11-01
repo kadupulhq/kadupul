@@ -966,7 +966,7 @@ class Installer implements JsonSerializable {
 	 * Errors: will add an error to STEP_PROFILE_AND_AUTOMATION if an
 	 *         invalid value is passed */
 	private function setAutomationOverride($param_override = null) {
-		if ($param_override != null) {
+		if ($param_override !== null) {
 			if (!$this->setTrueFalse($param_override, $this->automationOverride, 'automation_override')) {
 				$this->addError(Installer::STEP_PROFILE_AND_AUTOMATION, 'Automation','Override', __('Failed to apply specified automation override: %s', $param_override));
 			}
