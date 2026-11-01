@@ -8,24 +8,24 @@
 
 class Net_Ping
 {
-    var $socket;
-    var $host;
-    var $port;
-    var $ping_status;
-    var $ping_response;
-    var $snmp_status;
-    var $snmp_response;
-    var $request;
-    var $request_len;
-    var $reply;
-    var $timeout;
-    var $retries;
-    var $precision;
-    var $time;
-    var $timer_start_time;
-    var $sqn;
-    var $avail_method;
-    var $ping_type;
+    public $socket;
+    public $host;
+    public $port;
+    public $ping_status;
+    public $ping_response;
+    public $snmp_status;
+    public $snmp_response;
+    public $request;
+    public $request_len;
+    public $reply;
+    public $timeout;
+    public $retries;
+    public $precision;
+    public $time;
+    public $timer_start_time;
+    public $sqn;
+    public $avail_method;
+    public $ping_type;
 
     public function __construct()
     {
