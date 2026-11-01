@@ -9,7 +9,7 @@ the differences.
 """
 import re
 
-from cli_parity_scenarios import ROOT, install_original, normalise, run
+from cli_parity_scenarios import ROOT, clock_free, install_original, normalise, run
 
 PREFIX = 'kadupul_parity_graph_'
 TITLES_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php'
@@ -1902,10 +1902,174 @@ def verify_poe_differences(harness, check):
     report = run(harness, 'bin/console', ['kadupul:poller-output:empty', '--json'])
     check(report['exit'] == 1 and report['stdout'] == '{"status":"no_progress","database":"local","updates":null}\n', 'bin/console reports a pass without progress as json')
     poe_reset(harness)
+RS_ORIGINAL = 'tests/Fixtures/legacy-cli/replay_rejected_samples.php'
+RS_SHIM = 'cli/replay_rejected_samples.php'
+RS_UTILITY = 'Kadupul Rejected Sample Replay Utility'
+# Data sources of the replay_rejected_samples.php cases; each has rejected samples and, when a case asks, a live sample with the same key.
+RS_FIRST = 9600001
+RS_START = 1700000000
+RS_STEP = 300
+# A phrase only the NOTE the replay writes to cacti.log contains.
+RS_NOTE = 'rejected samples for'
+
+
+def rs_reset(harness):
+    harness.sql('ALTER TABLE poller_output ENGINE=InnoDB; '
+                f'DELETE FROM poller_output WHERE local_data_id >= {RS_FIRST}; DELETE FROM poller_output_rejected WHERE local_data_id >= {RS_FIRST}')
+
+
+def rs_seed(harness, rejected=(3,), live=(), engine='InnoDB'):
+    """`rejected` is the count of rejected samples for each data source; `live` the data sources whose first sample is also queued live, with another value."""
+    rs_reset(harness)
+    for number, count in enumerate(rejected, start=1):
+        local_data_id = RS_FIRST + number - 1
+        values = ', '.join(f"({local_data_id}, 'traffic_in', FROM_UNIXTIME({RS_START + sample * RS_STEP}), '{sample * 10}', '/rra/x.rrd', 'rejected by rrdtool')" for sample in range(1, count + 1))
+        if values:
+            harness.sql(f'INSERT INTO poller_output_rejected (local_data_id, rrd_name, time, output, rrd_path, reason) VALUES {values}')
+    for number in live:
+        harness.sql(f"INSERT INTO poller_output (local_data_id, rrd_name, time, output) VALUES ({RS_FIRST + number - 1}, 'traffic_in', FROM_UNIXTIME({RS_START + RS_STEP}), 'live')")
+    if engine != 'InnoDB':
+        harness.sql(f'ALTER TABLE poller_output ENGINE={engine}')
+
+
+def rs_rows(harness):
+    """What a run may change: the queue, the dead-letter table and the NOTE the replay logs."""
+    return harness.sql(f"SELECT 'output', local_data_id, rrd_name, UNIX_TIMESTAMP(time), output FROM poller_output WHERE local_data_id >= {RS_FIRST} ORDER BY local_data_id, time, rrd_name; "
+                       f"SELECT 'rejected', local_data_id, rrd_name, UNIX_TIMESTAMP(time), output FROM poller_output_rejected WHERE local_data_id >= {RS_FIRST} ORDER BY local_data_id, time, rrd_name")
+
+
+def rs_notes(harness):
+    # A fresh installation has no log yet.
+    lines = harness.command('sh', '-c', f'cat {ROOT}/log/cacti.log 2>/dev/null || true', check=True)['stdout'].splitlines()
+
+    return [re.sub(r'PID\[\d+\]', 'PID[0]', line) for line in clock_free([line for line in lines if RS_NOTE in line and 'into poller_output' in line], RS_NOTE)]
+
+
+def rs_cases():
+    first, second = RS_FIRST, RS_FIRST + 1
+    # (label, seed arguments, argument sets run one after another)
+    return [
+        ('rs replay all', {'rejected': (3, 2)}, [['--all']]),
+        ('rs replay all on a dry run', {'rejected': (3, 2)}, [['--all', '--dry-run']]),
+        ('rs replay one data source', {'rejected': (3, 2)}, [[f'--local-data-id={first}']]),
+        ('rs replay one data source on a dry run', {'rejected': (3, 2)}, [[f'--local-data-id={second}', '--dry-run']]),
+        ('rs replay a data source with nothing rejected', {'rejected': (3,)}, [[f'--local-data-id={second}']]),
+        ('rs replay with nothing rejected', {'rejected': ()}, [['--all']]),
+        ('rs replay twice', {'rejected': (3,)}, [['--all'], ['--all']]),
+        ('rs dry run then replay', {'rejected': (3,)}, [['--all', '--dry-run'], ['--all']]),
+        ('rs a live sample with the same key is kept', {'rejected': (3, 2), 'live': (1,)}, [['--all']]),
+        ('rs a live sample is kept for one data source', {'rejected': (3, 2), 'live': (1,)}, [[f'--local-data-id={first}']]),
+        ('rs more samples than one chunk', {'rejected': (501,)}, [['--all']]),
+        ('rs exactly one chunk', {'rejected': (500,)}, [['--all']]),
+        ('rs a volatile queue is refused', {'rejected': (3,), 'engine': 'MEMORY'}, [['--all']]),
+        ('rs a volatile queue still counts on a dry run', {'rejected': (3,), 'engine': 'MEMORY'}, [['--all', '--dry-run']]),
+        ('rs the dead-letter table is missing', {'rejected': (3,)}, [['--all']]),
+        ('rs --dry-run takes a value it ignores', {'rejected': (3,)}, [['--all', '--dry-run=0']]),
+        ('rs --all takes a value it ignores', {'rejected': (3,)}, [['--all=no']]),
+        ('rs the last id wins', {'rejected': (3, 2)}, [[f'--local-data-id={first}', f'--local-data-id={second}']]),
+        ('rs a bad id after a good one is an error', {'rejected': (3, 2)}, [[f'--local-data-id={first}', '--local-data-id=x']]),
+        ('rs an id and --all', {'rejected': (3,)}, [[f'--local-data-id={first}', '--all']]),
+        ('rs --all and an id', {'rejected': (3,)}, [['--all', f'--local-data-id={first}']]),
+        ('rs --all twice', {'rejected': (3,)}, [['--all', '--all']]),
+        ('rs no scope', {'rejected': (3,)}, [[]]),
+        ('rs only the dry-run flag', {'rejected': (3,)}, [['--dry-run']]),
+        ('rs a zero id', {'rejected': (3,)}, [['--local-data-id=0']]),
+        ('rs a padded zero id', {'rejected': (3,)}, [['--local-data-id=000']]),
+        ('rs a negative id', {'rejected': (3,)}, [['--local-data-id=-1']]),
+        ('rs a fractional id', {'rejected': (3,)}, [['--local-data-id=1.5']]),
+        ('rs an exponent id', {'rejected': (3,)}, [['--local-data-id=1e3']]),
+        ('rs a text id', {'rejected': (3,)}, [['--local-data-id=abc']]),
+        ('rs an empty id', {'rejected': (3,)}, [['--local-data-id=']]),
+        ('rs a bare id flag', {'rejected': (3,)}, [['--local-data-id']]),
+        ('rs a padded id', {'rejected': (3,)}, [['--local-data-id= 5']]),
+        ('rs a trailing-padded id', {'rejected': (3,)}, [[f'--local-data-id={first} ']]),
+        ('rs a newline-ended id', {'rejected': (3,)}, [[f'--local-data-id={first}\n']]),
+        ('rs a zero-padded id', {'rejected': (3,)}, [[f'--local-data-id=00{first}']]),
+        ('rs an id past the integer range', {'rejected': (3,)}, [['--local-data-id=99999999999999999999']]),
+        ('rs a bad id stops before help', {'rejected': (3,)}, [['--local-data-id=x', '--help']]),
+        ('rs help stops before a bad id', {'rejected': (3,)}, [['--help', '--local-data-id=x']]),
+        ('rs a bad id stops before an unknown argument', {'rejected': (3,)}, [['--local-data-id=x', '--bogus']]),
+        ('rs an unknown argument stops before a bad id', {'rejected': (3,)}, [['--bogus', '--local-data-id=x']]),
+        ('rs help stops before an unknown argument', {'rejected': (3,)}, [['--help', '--bogus']]),
+        ('rs an unknown argument stops before help', {'rejected': (3,)}, [['--bogus', '--help']]),
+        ('rs version stops before the run', {'rejected': (3,)}, [['--all', '-v']]),
+        ('rs help', {'rejected': (3,)}, [['-h']]),
+        ('rs upper help', {'rejected': (3,)}, [['-H']]),
+        ('rs long help', {'rejected': (3,)}, [['--help']]),
+        ('rs help takes a value it ignores', {'rejected': (3,)}, [['--help=yes']]),
+        ('rs version', {'rejected': (3,)}, [['-v']]),
+        ('rs upper version', {'rejected': (3,)}, [['-V']]),
+        ('rs long version', {'rejected': (3,)}, [['--version']]),
+        ('rs version takes a value it ignores', {'rejected': (3,)}, [['--version=3']]),
+        ('rs unknown argument', {'rejected': (3,)}, [['--bogus']]),
+        ('rs unknown argument with a value', {'rejected': (3,)}, [['--bogus=1']]),
+        ('rs a leading = is no separator', {'rejected': (3,)}, [['=1']]),
+        ('rs an empty argument', {'rejected': (3,)}, [['']]),
+        ('rs the quiet flag of other scripts', {'rejected': (3,)}, [['--all', '--quiet']]),
+        ('rs the debug flag of other scripts', {'rejected': (3,)}, [['-d']]),
+        ('rs a positional argument', {'rejected': (3,)}, [['1']]),
+    ]
+
+
+def verify_rs_cases(harness, check):
+    for label, seed, steps in rs_cases():
+        outcomes = []
+        for script in (RS_ORIGINAL, RS_SHIM):
+            rs_seed(harness, **seed)
+            table = label == 'rs the dead-letter table is missing'
+            if table:
+                harness.sql('RENAME TABLE poller_output_rejected TO kadupul_parity_rs_hidden')
+            try:
+                logged = len(rs_notes(harness))
+                outcomes.append([(run(harness, QUIET_PHP + script, arguments), rs_rows(harness) if not table else '', rs_notes(harness)[logged:]) for arguments in steps])
+            finally:
+                if table:
+                    harness.sql('RENAME TABLE kadupul_parity_rs_hidden TO poller_output_rejected')
+        for number, ((original, original_rows, original_notes), (native, native_rows, native_notes)) in enumerate(zip(*outcomes), start=1):
+            # Only an argument error loses the version line above the help.
+            expected = without_utility(normalise(original['stdout']), RS_UTILITY) if native['stdout'].startswith(('ERROR: Invalid Parameter', 'ERROR: --local-data-id requires')) else normalise(original['stdout'])
+            check(original['exit'] == native['exit'], f'{label}, step {number} keeps its exit code')
+            check(expected == normalise(native['stdout']), f'{label}, step {number} prints the same lines')
+            check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label}, step {number} prints the same errors')
+            check(original_rows == native_rows, f'{label}, step {number} leaves the same queue and dead letters')
+            check(original_notes == native_notes, f'{label}, step {number} logs the same notes')
+    rs_reset(harness)
+
+
+def verify_rs_differences(harness, check):
+    first = RS_FIRST
+    # The web has no page for this; data_sources.php, realm 3, is the nearest, and graph management alone is not enough.
+    rs_seed(harness, rejected=(3, 2))
+    seeded = rs_rows(harness)
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    try:
+        for arguments in (['--all'], ['--all', '--dry-run'], [f'--local-data-id={first}']):
+            denied = run(harness, RS_SHIM, arguments)
+            check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', f"{' '.join(arguments)} without device management is refused")
+        check(rs_rows(harness) == seeded, 'a refused run moves nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    # An argument error is reported before the operator is looked up, as in the original, so it needs no realm.
+    report = run(harness, 'bin/console', ['kadupul:rejected-samples:replay', '--all', '--dry-run', '--json'])
+    check(report['exit'] == 0 and report['stdout'] == '{"status":"ok","database":"local","dry_run":true,"local_data_id":null,"samples":5}\n', 'bin/console counts on a dry run and prints json')
+    check(rs_rows(harness) == seeded, 'a dry run moves nothing')
+    report = run(harness, 'bin/console', ['kadupul:rejected-samples:replay', f'--local-data-id={first}', '--json'])
+    check(report['exit'] == 0 and report['stdout'] == f'{{"status":"ok","database":"local","dry_run":false,"local_data_id":{first},"samples":3}}\n', 'bin/console replays one data source and prints json')
+    check(harness.sql(f'SELECT COUNT(*) FROM poller_output WHERE local_data_id = {first}').strip() == '3', 'bin/console moved the samples to the queue')
+    for arguments in (['--all', f'--local-data-id={first}'], [], ['--local-data-id=0'], ['--local-data-id=x']):
+        invalid = run(harness, 'bin/console', ['kadupul:rejected-samples:replay', *arguments])
+        check(invalid['exit'] == 2, f"bin/console treats {' '.join(arguments) or 'no scope'} as invalid input")
+    # A volatile queue is refused on stderr and moves nothing; bin/console reports it as json too.
+    rs_seed(harness, rejected=(3,), engine='MEMORY')
+    refused = run(harness, 'bin/console', ['kadupul:rejected-samples:replay', '--all', '--json'])
+    check(refused['exit'] == 1 and '"status":"unsafe_queue"' in refused['stdout'] and '"samples":null' in refused['stdout'], 'bin/console reports a volatile queue as json')
+    rs_reset(harness)
 
 
 def verify_graph_parity(harness, check):
     install_original(harness, POE_ORIGINAL)
+    install_original(harness, RS_ORIGINAL)
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, SOURCES_ORIGINAL)
     install_original(harness, REORDER_ORIGINAL)
@@ -1948,8 +2112,11 @@ def verify_graph_parity(harness, check):
         verify_add_graphs_differences(harness, check)
         verify_poe_cases(harness, check)
         verify_poe_differences(harness, check)
+        verify_rs_cases(harness, check)
+        verify_rs_differences(harness, check)
     finally:
         poe_reset(harness)
+        rs_reset(harness)
         titles_reset(harness)
         sources_reset(harness)
         reorder_reset(harness)

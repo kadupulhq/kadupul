@@ -2066,6 +2066,40 @@ Known differences from `cli/poller_output_empty.php`:
 - Under `bin/console` and with `--json` the lines the libraries print are not
   shown; only the shim passes them through.
 
+`php bin/console kadupul:rejected-samples:replay --local-data-id=ID|--all [--dry-run]`
+returns the samples RRDtool kept refusing from `poller_output_rejected` to
+`poller_output` for the next drain. A worker keeps the original's checks in their
+order (an online remote collector is refused, then, unless `--dry-run`, a queue
+that is not InnoDB) and calls `poller_replay_rejected()`, so the one transaction
+that moves the samples, the `INSERT IGNORE` that keeps a live sample with the same
+key and the `POLLER` note in `cacti.log` are unchanged. It needs the Console
+Access and Devices realms (realm 3, the one `data_sources.php` needs; no web page
+replays these), also for `--dry-run`, and each replay is audited as
+`rejected-samples.replay`; a dry run records nothing, and a refused dry run is
+recorded as `rejected-samples.replay.dry-run`. `--json` prints `status`,
+`database`, `dry_run`, `local_data_id` and `samples`.
+
+Known differences from `cli/replay_rejected_samples.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it. The operator is read from this installation's
+  own database, also on a remote collector: the original never left its local
+  database, so the command has no `--local` option and never switches to the main
+  database. The operator is looked up after the arguments are read, so an
+  argument error needs no realm, as it did not before.
+- A run whose worker cannot report an outcome (it crashed, or its answer cannot
+  be read) prints `ERROR: Unable to replay rejected samples; nothing was moved.`
+  on stderr and exits 1. The original ended in a PHP fatal error and exit 255.
+  Every other ending keeps the original's output, stderr line and exit code.
+- The online remote collector and queue checks run in the worker, after the
+  operator has been authorized, so a refusal on such a collector comes after the
+  operator lookup, which reads the collector's own replicated accounts.
+- An argument error (an unknown argument, or a bad `--local-data-id`) prints the
+  error and help without the version line. The missing-scope error keeps it.
+- Under `bin/console` and with `--json` the lines the libraries print are not
+  shown, and a bad or missing scope exits 2; the shim keeps the original's
+  message and exits 1.
+
 `php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
 creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
 adds a node to one, under `--parent-node=ID` or at the root. A worker saves the
