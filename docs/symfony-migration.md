@@ -2036,6 +2036,36 @@ Known differences from `cli/add_datasource.php`:
   as in the original. Under `bin/console` a bad value exits 2; the shim keeps
   the original's message and exits 1.
 
+`php bin/console kadupul:poller-output:empty` writes every queued
+`poller_output` sample to its RRD file and exits when the queue is empty. A
+worker runs the loop of the original: it opens the RRDtool pipe, calls
+`process_poller_output()` until the queue is empty and closes the pipe, so the
+poller hooks, boost, dsstats and the dead-lettering of refused samples are
+unchanged, and what the libraries print (RRDtool's `OK` lines) still reaches the
+shim's stdout as it is printed. It needs the Console Access and Devices realms
+(realm 3, the one `data_sources.php` needs; no web page empties this queue), and
+each pass is audited as `poller-output.empty`. `--json` prints `status`,
+`database` and `updates`.
+
+Known differences from `cli/poller_output_empty.php`:
+
+- It needs an operator with the Console Access and Devices realms. The original
+  ran for anyone who could run it. The operator is read from this installation's
+  own database, also on a remote collector: the original never left its local
+  database, so the command has no `--local` option and never switches to the main
+  database.
+- A pass whose worker cannot report an outcome (it crashed, or its answer cannot
+  be read) prints `ERROR: Poller output could not be processed; unprocessed
+  samples remain queued.` on stderr and exits 1. The original ended in a PHP
+  fatal error and exit 255, as it also did when `path_rrdtool` is empty. The
+  other three endings (RRDtool cannot start, the queue cannot be counted, a pass
+  makes no progress) keep the original's stderr line and exit 1.
+- An argument error prints the error and help without the version line.
+- The command has no `--dry-run`: the pass cannot be previewed without writing,
+  and the original had none.
+- Under `bin/console` and with `--json` the lines the libraries print are not
+  shown; only the shim passes them through.
+
 `php bin/console kadupul:tree:add --type=tree --name=NAME [--sort-method=METHOD]`
 creates a graph tree and `--type=node --node-type=header|graph|host|site --tree-id=ID`
 adds a node to one, under `--parent-node=ID` or at the root. A worker saves the

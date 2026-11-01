@@ -47,6 +47,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             'cli/add_graph_template.php', 'bin/legacy-graph-template-attach.php',
             'cli/add_data_query.php', 'bin/legacy-data-query-associate.php',
             'cli/add_datasource.php', 'bin/legacy-data-source-add.php',
+            'cli/poller_output_empty.php', 'bin/legacy-poller-output-empty.php',
             'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
             'graphs.php',
         ]

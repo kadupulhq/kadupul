@@ -9,7 +9,7 @@ the differences.
 """
 import re
 
-from cli_parity_scenarios import install_original, normalise, run
+from cli_parity_scenarios import ROOT, install_original, normalise, run
 
 PREFIX = 'kadupul_parity_graph_'
 TITLES_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_graphs_reapply_names.php'
@@ -1752,7 +1752,160 @@ def verify_add_graphs_differences(harness, check):
     remove_reset(harness)
 
 
+POE_ORIGINAL = 'tests/Fixtures/legacy-cli/poller_output_empty.php'
+POE_SHIM = 'cli/poller_output_empty.php'
+POE_UTILITY = 'Kadupul Process Poller Output Utility'
+# Data sources of the poller_output_empty.php cases: each has a poller item, an RRD file and, when a case asks, queued samples.
+POE_FIRST = 9400001
+POE_START = 1700000000
+# rrdtool prints its own timings after each acknowledged update.
+PHP_WARNING = re.compile(r'^\nWarning: .*\n', re.MULTILINE)
+RRD_TIMES = re.compile(r'u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+')
+POE_STEP = 300
+
+
+def poe_path(number):
+    return f'{ROOT}/rra/kadupul_parity_poe_{number}.rrd'
+
+
+def poe_rrdtool(harness):
+    """The rrdtool the installation uses; the cases that need a working one point path_rrdtool at it."""
+    return harness.command('sh', '-c', 'command -v rrdtool', check=True)['stdout'].strip()
+
+
+def poe_reset(harness):
+    harness.sql(f'DELETE FROM poller_output WHERE local_data_id >= {POE_FIRST}; DELETE FROM poller_output_rejected WHERE local_data_id >= {POE_FIRST}; '
+                f'DELETE FROM poller_item WHERE local_data_id >= {POE_FIRST}; DELETE FROM data_local WHERE id >= {POE_FIRST}')
+    for number in (1, 2, 3):
+        harness.command('rm', '-f', poe_path(number), check=True)
+
+
+def poe_seed(harness, sources=1, queued=(1,), orphan=False):
+    """`sources` data sources with an RRD file each; `queued` is the sample counts queued for each. An orphan sample has no poller item."""
+    poe_reset(harness)
+    rrdtool = poe_rrdtool(harness)
+    harness.sql(f"REPLACE INTO settings (name, value) VALUES ('path_rrdtool', '{rrdtool}')")
+    for number in range(1, sources + 1):
+        local_data_id = POE_FIRST + number - 1
+        path = poe_path(number)
+        harness.command(rrdtool, 'create', path, '--step', str(POE_STEP), '--start', str(POE_START), 'DS:traffic_in:GAUGE:600:U:U', 'RRA:AVERAGE:0.5:1:100', check=True)
+        harness.sql(f"INSERT INTO data_local (id, data_template_id, host_id) VALUES ({local_data_id}, 0, 0); "
+                    f"INSERT INTO poller_item (local_data_id, host_id, action, rrd_name, rrd_path, rrd_num, rrd_step) VALUES ({local_data_id}, 0, 1, 'traffic_in', '{path}', 1, {POE_STEP})")
+        for sample in range(1, (queued[number - 1] if number <= len(queued) else 0) + 1):
+            harness.sql(f"INSERT INTO poller_output (local_data_id, rrd_name, time, output) VALUES ({local_data_id}, 'traffic_in', FROM_UNIXTIME({POE_START + sample * POE_STEP}), '{sample * 10}')")
+    if orphan:
+        harness.sql(f"INSERT INTO poller_output (local_data_id, rrd_name, time, output) VALUES ({POE_FIRST + 50}, 'traffic_in', FROM_UNIXTIME({POE_START + POE_STEP}), '7')")
+
+
+def poe_rows(harness, sources=3):
+    """What a run may change: the queue, the dead-letter table and every RRD file's last update."""
+    rows = harness.sql(f"SELECT 'output', local_data_id, rrd_name, UNIX_TIMESTAMP(time), output FROM poller_output WHERE local_data_id >= {POE_FIRST} ORDER BY local_data_id, time, rrd_name; "
+                       f"SELECT 'rejected', local_data_id, rrd_name, UNIX_TIMESTAMP(time), output, reason FROM poller_output_rejected WHERE local_data_id >= {POE_FIRST} ORDER BY local_data_id, time, rrd_name")
+    last = [harness.command('rrdtool', 'lastupdate', poe_path(number))['stdout'] for number in range(1, sources + 1)]
+
+    return rows, last
+
+
+def poe_cases():
+    # (label, seed arguments, argument sets run one after another)
+    return [
+        ('poe empty queue', {'queued': ()}, [[]]),
+        ('poe one sample', {}, [[]]),
+        ('poe samples for one data source', {'queued': (4,)}, [[]]),
+        ('poe samples for three data sources', {'sources': 3, 'queued': (2, 3, 1)}, [[]]),
+        ('poe a second pass finds nothing', {'queued': (2,)}, [[], []]),
+        ('poe an orphan sample is never written', {'queued': ()}, [[]]),
+        ('poe an orphan sample among others', {'sources': 2, 'queued': (2, 2)}, [[]]),
+        ('poe version', {}, [['-v']]),
+        ('poe upper version', {}, [['-V']]),
+        ('poe long version', {}, [['--version']]),
+        ('poe version takes a value it ignores', {}, [['--version=3']]),
+        ('poe help', {}, [['-h']]),
+        ('poe upper help', {}, [['-H']]),
+        ('poe long help', {}, [['--help']]),
+        ('poe help takes a value it ignores', {}, [['--help=yes']]),
+        ('poe help stops before an unknown argument', {}, [['--help', '--bogus']]),
+        ('poe an unknown argument stops before help', {}, [['--bogus', '--help']]),
+        ('poe version stops before the run', {}, [['-v']]),
+        ('poe unknown argument', {}, [['--bogus']]),
+        ('poe unknown argument with a value', {}, [['--bogus=1']]),
+        ('poe a leading = is no separator', {}, [['=1']]),
+        ('poe an empty argument', {}, [['']]),
+        ('poe the debug flag of other scripts', {}, [['-d']]),
+        ('poe the quiet flag of other scripts', {}, [['--quiet']]),
+        ('poe a positional argument', {}, [['1']]),
+        ('poe a host id of other scripts', {}, [['--host-id=1']]),
+    ]
+
+
+def verify_poe_cases(harness, check):
+    for label, seed, steps in poe_cases():
+        outcomes = []
+        for script in (POE_ORIGINAL, POE_SHIM):
+            poe_seed(harness, orphan=label.startswith('poe an orphan'), **seed)
+            outcomes.append([(run(harness, QUIET_PHP + script, arguments), poe_rows(harness)) for arguments in steps])
+        for number, ((original, original_rows), (native, native_rows)) in enumerate(zip(*outcomes), start=1):
+            # Only an argument error loses the version line above the help.
+            expected = without_utility(normalise(original['stdout']), POE_UTILITY) if native['stdout'].startswith('ERROR: Invalid Parameter') else normalise(original['stdout'])
+            check(original['exit'] == native['exit'], f'{label}, step {number} keeps its exit code')
+            check(RRD_TIMES.sub('', expected) == RRD_TIMES.sub('', normalise(native['stdout'])), f'{label}, step {number} prints the same lines')
+            check(PHP_LOG.sub('', STTY.sub('', normalise(original['stderr']))) == normalise(native['stderr']), f'{label}, step {number} prints the same errors')
+            check(original_rows == native_rows, f'{label}, step {number} leaves the same queue, dead letters and RRD updates')
+    poe_reset(harness)
+
+
+def verify_poe_differences(harness, check):
+    rrdtool = poe_rrdtool(harness)
+    saved = harness.sql("SELECT value FROM settings WHERE name = 'path_rrdtool'")
+    try:
+        # Without an rrdtool path the original died with an uncaught ValueError (exit 255) and printed nothing useful; the worker reports it.
+        harness.sql("REPLACE INTO settings (name, value) VALUES ('path_rrdtool', '')")
+        poe_seed(harness)
+        harness.sql("REPLACE INTO settings (name, value) VALUES ('path_rrdtool', '')")
+        original = run(harness, QUIET_PHP + POE_ORIGINAL, [])
+        original_rows = poe_rows(harness)
+        poe_seed(harness)
+        harness.sql("REPLACE INTO settings (name, value) VALUES ('path_rrdtool', '')")
+        refused = run(harness, QUIET_PHP + POE_SHIM, [])
+        check(original['exit'] == 255, 'the original died on an empty rrdtool path')
+        check(refused['exit'] == 1 and refused['stdout'] == '' and refused['stderr'] == 'ERROR: Poller output could not be processed; unprocessed samples remain queued.\n', 'an empty rrdtool path is reported on stderr')
+        check(poe_rows(harness) == original_rows, 'a refused pass leaves the queue and the RRD files as the original did')
+        # An rrdtool that cannot start is the original's own refusal, on both sides.
+        poe_seed(harness)
+        harness.sql("REPLACE INTO settings (name, value) VALUES ('path_rrdtool', '/nonexistent/rrdtool')")
+        original = run(harness, QUIET_PHP + POE_ORIGINAL, [])
+        native = run(harness, QUIET_PHP + POE_SHIM, [])
+        # The worker does not inherit this run's display_errors=0, so PHP's own warning about the missing binary reaches stdout, as it does for the original on a default ini.
+        check(original['exit'] == native['exit'] == 1 and original['stderr'] == native['stderr'] and PHP_WARNING.sub('', native['stdout']) == original['stdout'], 'an rrdtool that cannot start fails the same way')
+    finally:
+        harness.sql("DELETE FROM settings WHERE name = 'path_rrdtool'")
+        for value in saved.splitlines():
+            harness.sql(f"INSERT INTO settings (name, value) VALUES ('path_rrdtool', CONVERT(UNHEX('{value.encode().hex()}') USING utf8mb4))")
+    # The web has no page for this; data_sources.php, realm 3, is the nearest, and graph management alone is not enough.
+    poe_seed(harness, queued=(2,), orphan=True)
+    seeded = poe_rows(harness)
+    admin = harness.sql("SELECT id FROM user_auth WHERE username = 'admin'").strip()
+    harness.sql(f'DELETE FROM user_auth_realm WHERE user_id = {admin} AND realm_id = 3')
+    try:
+        denied = run(harness, POE_SHIM, [])
+        check(denied['exit'] == 1 and denied['stdout'] == 'ERROR: Unknown or unauthorized operator\n', 'without device management the run is refused')
+        check(poe_rows(harness) == seeded, 'a refused run writes nothing')
+    finally:
+        harness.sql(f'INSERT IGNORE INTO user_auth_realm (user_id, realm_id) VALUES ({admin}, 3)')
+    # A failed pass writes to stderr only, so a script that parses stdout sees nothing; the new refusal is audited like the others.
+    failed = run(harness, POE_SHIM, [])
+    check(failed['exit'] == 1 and failed['stderr'] == 'ERROR: Poller output made no progress; remaining samples retained for retry.\n' and 'There were' not in failed['stdout'], 'an orphan sample ends the pass on stderr')
+    poe_seed(harness, queued=(2,))
+    report = run(harness, 'bin/console', ['kadupul:poller-output:empty', '--json'])
+    check(report['exit'] == 0 and report['stdout'] == '{"status":"ok","database":"local","updates":2}\n', 'bin/console empties the queue and prints json')
+    poe_seed(harness, queued=(1,), orphan=True)
+    report = run(harness, 'bin/console', ['kadupul:poller-output:empty', '--json'])
+    check(report['exit'] == 1 and report['stdout'] == '{"status":"no_progress","database":"local","updates":null}\n', 'bin/console reports a pass without progress as json')
+    poe_reset(harness)
+
+
 def verify_graph_parity(harness, check):
+    install_original(harness, POE_ORIGINAL)
     install_original(harness, TITLES_ORIGINAL)
     install_original(harness, SOURCES_ORIGINAL)
     install_original(harness, REORDER_ORIGINAL)
@@ -1793,7 +1946,10 @@ def verify_graph_parity(harness, check):
         verify_tree_differences(harness, check)
         verify_add_graphs_cases(harness, check)
         verify_add_graphs_differences(harness, check)
+        verify_poe_cases(harness, check)
+        verify_poe_differences(harness, check)
     finally:
+        poe_reset(harness)
         titles_reset(harness)
         sources_reset(harness)
         reorder_reset(harness)
