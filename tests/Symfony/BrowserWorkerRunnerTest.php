@@ -159,9 +159,26 @@ WORKER);
         $this->runner('POST', binary: $this->directory . '/missing-php')->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
     }
 
-    private function runner(string $method, string $schema = '1.3.0', string $binary = PHP_BINARY): LegacyBrowserWorkerRunner
+    public function testAFalseConfigurationQueryStopsBeforeStartingAnyWorker(): void
     {
-        $pdo = new \PDO('sqlite::memory:');
+        $pdo = new \PDO('sqlite::memory:', null, null, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_SILENT]);
+        $runner = $this->runner('GET', pdo: $pdo);
+        self::assertNotFalse($pdo->exec('DROP TABLE settings'));
+        file_put_contents($this->directory . '/bin/legacy-probe.php', '<?php file_put_contents(__DIR__."/started", "unexpected");');
+        $failure = null;
+        try {
+            $runner->run('legacy-probe.php', [], 7);
+        } catch (\RuntimeException $error) {
+            $failure = $error;
+        }
+        self::assertNotNull($failure);
+        self::assertSame('The installation configuration is unavailable.', $failure->getMessage());
+        self::assertFileDoesNotExist($this->directory . '/bin/started');
+    }
+
+    private function runner(string $method, string $schema = '1.3.0', string $binary = PHP_BINARY, ?\PDO $pdo = null): LegacyBrowserWorkerRunner
+    {
+        $pdo ??= new \PDO('sqlite::memory:');
         $pdo->exec("CREATE TABLE version (cacti TEXT); INSERT INTO version VALUES ('1.3.0'); CREATE TABLE settings (name TEXT, value TEXT)");
         $pdo->prepare('UPDATE version SET cacti = ?')->execute([$schema]);
         $statement = $pdo->prepare('INSERT INTO settings VALUES (?, ?)');
