@@ -20,7 +20,7 @@ under the normal recovery procedure. Do not guess missing query identifiers.
 The focused native regression imports the shipped table definitions and rule seed
 into a disposable database, then exercises selected-template boundaries, later
 retry, idempotence, an empty inventory, genuine database read errors, a rejected
-write and a previously handled database error. It is registered in the existing
+write enforced by an owned table constraint and a previously handled database error. It is registered in the existing
 Boost database integration matrix. Local verification covered PHP 8.1.34 and
 8.4.25 against MariaDB 10.11.19; the locked Pest 1 runner executes on PHP 8.1.
 Its PHP 8.4 bootstrap currently stops on dependency deprecations, so PHP 8.4

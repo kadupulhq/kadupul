@@ -128,7 +128,7 @@ try {
 		} else {
 			$pdo->exec("INSERT INTO snmp_query (id, hash, name) VALUES (57, 'd75e406fdeca4fcef45b8be3a9a63cbc', 'Owned traffic query')");
 			$pdo->exec("INSERT INTO snmp_query_graph (id, hash, snmp_query_id, name) VALUES (59, 'ab93b588c29731ab15db601ca0bc9dec', 57, 'Owned traffic graph')");
-			$pdo->exec("CREATE TRIGGER automation_repair_fixture_refusal BEFORE UPDATE ON automation_graph_rules FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Owned fixture write refusal'");
+			automation_repair_check($pdo->exec('ALTER TABLE automation_graph_rules ADD CONSTRAINT automation_repair_fixture_refusal CHECK (snmp_query_id NOT IN (37, 57))') !== false, 'The fixture must install its write refusal before invoking repair.');
 		}
 		$failed = false;
 		try {

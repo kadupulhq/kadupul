@@ -16,7 +16,7 @@ test('native automation repair preserves selected-template boundaries and databa
 	fclose($pipes[2]);
 	$status = proc_close($process);
 	expect($error)->toBe('');
-	expect($status)->toBe(0, $output);
+	$this->assertSame(0, $status, $output);
 	$report = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 	expect($report['passed'])->toBeTrue();
 	expect($report['checks'])->toBeGreaterThan(0);
