@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # Independent baseline for native CLI sources already required by the PHP merger.
 ADDITIONAL_REQUIRED_NATIVE_SOURCES = (
+    'bin/worker-io.php',
     'cli/replay_rejected_samples.php',
     'bin/legacy-rejected-samples-replay.php',
     'src/Graphing/Application/Command/RejectedSampleReplay.php',
