@@ -28,7 +28,7 @@ final readonly class CatalogFilters
         $filter = $query['filter'] ?? '';
         $rows = $query['rows'] ?? '25';
         $page = $query['page'] ?? '1';
-        $column = $query['sort_column'] ?? ($screen === CatalogScreen::GraphItems ? 'sequence' : 'name');
+        $column = $query['sort_column'] ?? $screen->defaultSort();
         $direction = $query['sort_direction'] ?? 'ASC';
         if (!mb_check_encoding($filter, 'UTF-8') || mb_strlen($filter) > 255 || preg_match('/[\x00-\x1f\x7f]/', $filter)
             || !in_array($rows, ['10', '25', '50', '100'], true)
@@ -37,6 +37,16 @@ final readonly class CatalogFilters
             throw new \InvalidArgumentException('Invalid list filters.');
         }
         return new self($filter, (int) $rows, (int) $page, $column, $direction);
+    }
+
+    public function fetchLimit(): int
+    {
+        return $this->rows + 1;
+    }
+
+    public function offset(): int
+    {
+        return ($this->page - 1) * $this->rows;
     }
 
     /** @return array<string, string> */

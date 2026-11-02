@@ -12,14 +12,29 @@ ROOT = Path(__file__).resolve().parents[2]
 # Independent baseline for native CLI sources already required by the PHP merger.
 ADDITIONAL_REQUIRED_NATIVE_SOURCES = (
     'bin/worker-io.php',
+    'cli/replay_rejected_samples.php',
+    'bin/legacy-rejected-samples-replay.php',
+    'src/Graphing/Application/Command/RejectedSampleReplay.php',
+    'src/Graphing/Application/Command/ReplayRejectedSamples.php',
+    'src/Graphing/Application/Port/RejectedSampleReplayResult.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyRejectedSampleReplayer.php',
+    'src/Graphing/Infrastructure/Symfony/ReplayRejectedSamplesCommand.php',
+    'src/Graphing/Infrastructure/Symfony/ReplayRejectedSamplesLegacyArguments.php',
+    'cli/rebuild_poller_cache.php',
+    'bin/legacy-poller-cache-rebuild.php',
+    'src/Graphing/Application/Command/RebuildPollerCache.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyPollerCacheRebuilder.php',
+    'src/Graphing/Infrastructure/Persistence/DbalPollerCacheSettings.php',
+    'src/Graphing/Infrastructure/Symfony/RebuildPollerCacheCommand.php',
+    'src/Graphing/Infrastructure/Symfony/RebuildPollerCacheLegacyArguments.php',
     'cli/poller_output_empty.php',
     'bin/legacy-poller-output-empty.php',
-    'src/Graphing/Application/Command/EmptyPollerOutput.php',
     'src/Graphing/Application/Command/PollerOutputEmptying.php',
-    'src/Graphing/Application/Port/PollerOutputDrainResult.php',
     'src/Graphing/Infrastructure/Legacy/LegacyPollerOutputDrain.php',
-    'src/Graphing/Infrastructure/Symfony/EmptyPollerOutputCommand.php',
     'src/Graphing/Infrastructure/Symfony/EmptyPollerOutputLegacyArguments.php',
+    'src/Graphing/Application/Command/EmptyPollerOutput.php',
+    'src/Graphing/Application/Port/PollerOutputDrainResult.php',
+    'src/Graphing/Infrastructure/Symfony/EmptyPollerOutputCommand.php',
     'bin/legacy-data-query-associate.php',
     'bin/legacy-data-query-reorder.php',
     'bin/legacy-data-source-add.php',
@@ -120,21 +135,6 @@ ADDITIONAL_REQUIRED_NATIVE_SOURCES = (
     'src/IdentityAccess/Infrastructure/Symfony/CopyUserCommand.php',
     'src/IdentityAccess/Infrastructure/Symfony/CopyUserLegacyArguments.php',
     'src/IdentityAccess/Infrastructure/Symfony/ListPermissionsCommand.php',
-    'bin/legacy-poller-cache-rebuild.php',
-    'bin/legacy-rejected-samples-replay.php',
-    'cli/rebuild_poller_cache.php',
-    'cli/replay_rejected_samples.php',
-    'src/Graphing/Application/Command/RebuildPollerCache.php',
-    'src/Graphing/Application/Command/RejectedSampleReplay.php',
-    'src/Graphing/Application/Command/ReplayRejectedSamples.php',
-    'src/Graphing/Application/Port/RejectedSampleReplayResult.php',
-    'src/Graphing/Infrastructure/Legacy/LegacyPollerCacheRebuilder.php',
-    'src/Graphing/Infrastructure/Legacy/LegacyRejectedSampleReplayer.php',
-    'src/Graphing/Infrastructure/Persistence/DbalPollerCacheSettings.php',
-    'src/Graphing/Infrastructure/Symfony/RebuildPollerCacheCommand.php',
-    'src/Graphing/Infrastructure/Symfony/RebuildPollerCacheLegacyArguments.php',
-    'src/Graphing/Infrastructure/Symfony/ReplayRejectedSamplesCommand.php',
-    'src/Graphing/Infrastructure/Symfony/ReplayRejectedSamplesLegacyArguments.php',
 )
 
 
@@ -205,7 +205,6 @@ def prepare_wrapper_line_failure_reports(directory, scratch, anchor):
 def additional_required_native_sources(root):
     """Keep the independent inventory compatible with older feature heads."""
     return [path for path in ADDITIONAL_REQUIRED_NATIVE_SOURCES if (root / path).is_file()]
-
 
 
 def main():
@@ -751,6 +750,11 @@ def main():
         failures['missing-palette-selection-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
+    for source in ('tests/Symfony/cli_user_scenarios.py',
+                   'tests/Fixtures/legacy-cli/copy_user.php',
+                   'tests/Fixtures/legacy-cli/add_perms.php'):
+        failures['missing-runner-registration-' + source] = 'Integration test source differs'
+        failures['stale-runner-registration-' + source] = 'Integration test source differs'
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
         scratch = Path(directory)
         (scratch / 'raw').mkdir()

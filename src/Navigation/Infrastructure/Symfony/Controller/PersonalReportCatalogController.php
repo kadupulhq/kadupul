@@ -27,6 +27,7 @@ final readonly class PersonalReportCatalogController
     private const array HEADERS = ['Cache-Control' => 'private, no-store'];
 
     #[Route('/management/my-reports', name: 'management_my_reports', defaults: ['screen' => 'my-reports', 'id' => '0'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/my-report-items/{id}', name: 'management_my_report_items', defaults: ['screen' => 'my-report-items'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     public function __invoke(CatalogScreen $screen, string $id, Request $request, AuthenticatedAccess $identity, ManagementCatalogAccess $access, ViewManagementCatalog $view, Environment $twig, TranslatorInterface $translator): Response
     {
         $actor = $identity->authenticatedActor();

@@ -160,6 +160,60 @@ class RouteSamples(unittest.TestCase):
             route_fixtures(Empty(), [(entry, '', '')], ids)
             self.assertEqual(entry.replace('{id}', '61'), sample(entry, '', ids))
 
+    def test_every_scoped_management_route_has_a_concrete_sample(self):
+        class Rig:
+            def sql(self, statement): return '37'
+        rows = [row for row in entries() if row[0].startswith('app.php/management/') and '{' in row[0]]
+        self.assertGreaterEqual(len(rows), 23)
+        ids = {'devices': 7, 'sites': 9}
+        route_fixtures(Rig(), rows, ids)
+        for entry, _, detail in rows:
+            with self.subTest(entry=entry):
+                self.assertNotIn('{', sample(entry, detail, ids))
+
+    def test_instance_routes_create_missing_parents_and_reuse_shared_ids(self):
+        kinds = {
+            'graph-items': 'graph_local', 'graph-data-sources': 'graph_local',
+            'aggregate-members': 'aggregate_graphs', 'data-source-definitions': 'data_local',
+            'data-source-graphs': 'data_local', 'report-items': 'reports',
+            'my-report-items': 'reports', 'tree-items': 'graph_tree',
+            'network-devices': 'automation_networks',
+        }
+        for route, table in kinds.items():
+            class Rig:
+                statements = None
+                def sql(self, statement):
+                    if statement.startswith('SELECT MIN'):
+                        return 'NULL'
+                    self.statements = statement
+                    return '61'
+            rig = Rig()
+            entry = 'app.php/management/' + route + '/{id}'
+            ids = {'devices': 7, 'sites': 9}
+            route_fixtures(rig, [(entry, '', '')], ids)
+            self.assertIn('INSERT INTO ' + table + ' ', rig.statements)
+            self.assertEqual(entry.replace('{id}', '61'), sample(entry, '', ids))
+        class Existing:
+            statements = []
+            def sql(self, statement):
+                self.statements.append(statement)
+                return '43'
+        rig = Existing()
+        rows = [('app.php/management/' + name + '/{id}', '', '') for name in kinds]
+        ids = {'devices': 7, 'sites': 9}
+        route_fixtures(rig, rows, ids)
+        self.assertEqual(6, len(rig.statements))
+        for entry, _, _ in rows:
+            self.assertEqual(entry.replace('{id}', '43'), sample(entry, '', ids))
+
+    def test_missing_instance_parent_fails_before_http_probes(self):
+        class Missing:
+            def sql(self, statement): return 'NULL'
+        for route in ('collector-devices', 'graph-items', 'my-report-items'):
+            with self.subTest(route=route), self.assertRaisesRegex(RuntimeError, 'Missing concrete instance parent'):
+                route_fixtures(Missing(), [('app.php/management/' + route + '/{id}', '', '')],
+                               {'devices': 7, 'sites': 9})
+
     def test_parent_child_and_enum_parameters(self):
         fixtures = {'graphing/color-templates': {'id': 12, 'itemId': 31},
                     'graph-definitions/vdefs': {'vdefId': 4, 'itemId': 5},
