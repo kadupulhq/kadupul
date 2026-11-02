@@ -22,12 +22,9 @@ require __DIR__ . '/../include/cli_check.php';
 
 $status = 'failed';
 $granted = false;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 1001);
-    if (strlen($input) > 1000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 1000, 4);
     if (!is_array($command) || array_diff(array_keys($command), ['database', 'user', 'type', 'item']) !== []
         || !in_array($command['database'] ?? null, ['local', 'main'], true)
         || !is_int($command['user'] ?? null) || $command['user'] <= 0

@@ -21,12 +21,9 @@ require_once $config['base_path'] . '/lib/api_tree.php';
 
 $status = 'failed';
 $id = 0;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 4097);
-    if (strlen($input) > 4096) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 4096, 4);
     $count = static fn(mixed $value, int $minimum): bool => is_int($value) && $value >= $minimum;
     $valid = is_array($command) && in_array($command['database'] ?? null, ['local', 'main'], true);
     if ($valid && ($command['kind'] ?? null) === 'tree') {

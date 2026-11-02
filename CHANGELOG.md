@@ -6,8 +6,10 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
 - Give each native child coverage invocation a distinct test identity and report stem so reused process IDs cannot conflate execution or overwrite reports and evidence sidecars.
+- Preserve checkout sources and originating unit coverage when coverage-merger scratch cleanup runs with the checkout beneath the temporary directory.
 
 - Serve migrated Symfony pages in all 23 shipped gettext languages: module domain keys without a YAML translation fall back to the matching `locales/po` entry, and the locale subscriber accepts every shipped locale with legacy spellings such as `pt_BR`, `zh-CN` and `de-AT`. Plural keys are bridged only where gettext and the English singular/plural choice agree; legacy `__()` and plugin catalogs are unchanged.
 
@@ -16,6 +18,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
+- Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 
 - Add opt-in installer runtime comparison and bounded local operational evidence, standalone/collector presets, and a validator for declared human usability observations. Extend release rehearsals with real interrupted finishing tasks, database outages and repaired collector synchronization; retained evidence distinguishes scoped cached-runtime probes from the full pinned release gate (#1293).
 - Guide installer setup with grouped optional settings, explicit backup and recovery checklists, actionable runtime checks and read-only post-installation evidence. Add local unattended configuration validation, environment-backed SNMP secret references and authenticated redacted diagnostic downloads. Include English/French guidance and keyboard/browser regression coverage (#1313).

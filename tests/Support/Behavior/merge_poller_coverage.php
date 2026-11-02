@@ -99,6 +99,7 @@ foreach (glob($temporaryRoot . 'kadupul-coverage-source-map-*.json') ?: array() 
         || !is_string($sourceMap['source'] ?? null)
         || !is_string($sourceMap['sha256'] ?? null)
         || !str_starts_with($sourceMap['copy'], $temporaryRoot)
+        || str_starts_with($sourceMap['copy'], $root . DIRECTORY_SEPARATOR)
         || !str_starts_with($sourceMap['source'], $root . DIRECTORY_SEPARATOR)
         || realpath($sourceMap['source']) !== $sourceMap['source']
         || !is_file($sourceMap['source'])) {
@@ -151,7 +152,10 @@ foreach ($temporaryCoverageSources as $path => $source) {
 }
 
 foreach ($coverage->filter()->files() as $path) {
-    if (!str_starts_with($path, $temporaryRoot) || isset($temporaryCoverageSources[$path])) {
+    // A checkout can itself live beneath TMPDIR. Its sources are never scratch
+    // copies, even when their suffix also matches their own canonical path.
+    if (str_starts_with($path, $root . DIRECTORY_SEPARATOR)
+        || !str_starts_with($path, $temporaryRoot) || isset($temporaryCoverageSources[$path])) {
         continue;
     }
 

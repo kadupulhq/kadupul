@@ -29,6 +29,7 @@
             <file>lib/api_device.php</file>
             <file>bin/legacy-device-remove.php</file>
             <file>bin/legacy-assignment-bootstrap.php</file>
+            <file>bin/worker-io.php</file>
             <file>include/admin_notifications.php</file>
             <file>sites.php</file>
             <file>data_input.php</file>

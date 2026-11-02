@@ -43,12 +43,9 @@ $transactionStarted = false;
 $snmpTransactions = [];
 $associationsCommitted = false;
 $pendingQueries = [];
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 16001);
-    if (strlen($input) > 16000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 16000, 8);
     $clearStatistics = is_array($command) && ($command['operation'] ?? null) === 'clear-statistics';
     $syncTemplates = is_array($command) && ($command['operation'] ?? null) === 'sync-template';
     $changeOptions = is_array($command) && ($command['operation'] ?? null) === 'options';
