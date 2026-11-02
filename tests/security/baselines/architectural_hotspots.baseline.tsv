@@ -292,7 +292,7 @@ dynamic_include	./install/upgrades/0_8_6.php:8	include_once($config['base_path']
 dynamic_include	./install/upgrades/0_8_6.php:9	include_once($config["base_path"] . "/lib/import.php");
 dynamic_include	./install/upgrades/0_8_7h.php:10		require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./install/upgrades/1_2_20.php:11		include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./lib/aggregate.php:1129	    include_once($config['base_path'] . '/lib/api_graph.php');
+dynamic_include	./lib/aggregate.php:1118	    include_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./lib/aggregate.php:828	    include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/aggregate.php:924	    include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/api_aggregate.php:1141	        include_once($config['base_path'] . '/lib/api_aggregate.php');
