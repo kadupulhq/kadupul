@@ -67,6 +67,60 @@ operation will succeed.
 
 ## Execution and recovery
 
+### Compare the web and installer runtimes
+
+Use the explicit runtime comparison form after signing in and acknowledging the
+read-only check. It starts a short-lived probe with the configured PHP executable,
+without loading the native installer, opening a database or reserving an attempt.
+GET requests and ordinary requirement checks never start this probe.
+
+The report compares PHP support, required extensions, effective process identity
+and directory observations. Supported patch-version or intentional account
+differences are advisory. Missing required read/traversal access or extensions
+requires attention. Equal permission observations alone do not establish that
+either process can complete future writes.
+
+A private, random challenge checks that the spawned process inherits the same
+strong application secret. The web secret is not copied into the child to make
+the check pass. Snapshots, challenges, proofs, account IDs and directory paths
+are not rendered or included in the diagnostic download. This compares the
+installer process spawned by the web service, not independently managed cron,
+poller or collector services. Check those service accounts separately.
+The probe disables PHP auto-prepend/append hooks and does not bootstrap the
+application. Its observations do not establish the effects of those hooks or
+plugin code during a normal worker startup.
+
+### Opt in to operational evidence
+
+```sh
+php bin/console kadupul:install:verify --acknowledge-read-only --output=json
+```
+
+The eligible installation operator authorizes this bounded assessment explicitly.
+It reports the configured local poller's saved start, completed-cycle bookkeeping
+and native status. Optional repeated `--graph-id` arguments select up to twenty
+existing graphs and additionally require graph management and native per-graph
+permission. Only existing stored paths are read; missing paths are never repaired.
+At most twenty distinct contained local RRD files are inspected within a shared
+time budget. The command does not start collection, contact devices, flush a
+daemon or render graphs. Remote storage remains unassessed.
+The assessment uses the local collector connection even when its normal mode is
+online; the configured primary is not contacted. `sampled_at` records the start
+of the assessment. Individual observations occur during the bounded interval and
+do not constitute an atomic database/filesystem snapshot.
+
+Local on-disk RRD timestamps can lag buffered daemon updates. A stale timestamp
+requires investigation, not a conclusion that a device failed. Inspect the reason
+codes and normal collector/daemon operation before taking corrective action.
+Rendering and end-to-end device success remain operational followups, regardless
+of a recent timestamp. The JSON result always keeps
+`operational_health_confirmed: false` to make that limit explicit.
+
+Exit `0` means the assessment ran without observed attention conditions; missing
+consent or invalid arguments return `2`. Denial, unavailable evidence, failed or
+stale observed checks return `1`. Unassessed followups still require attention
+from an operator and must not be interpreted as verified health.
+
 The installer offers an authenticated, read-only diagnostic download at
 `install/install.php?view=diagnostics`. It contains numeric version identifiers,
 the PHP runtime, execution state, attempt, derived phase and numbered requirement

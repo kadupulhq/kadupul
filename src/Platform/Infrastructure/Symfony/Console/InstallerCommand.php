@@ -12,6 +12,7 @@ namespace Kadupul\Platform\Infrastructure\Symfony\Console;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyInstallerClient;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
 use Kadupul\Platform\Domain\Installer\InstallerOptions;
+use Kadupul\Platform\Domain\Installer\InstallerPreset;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -38,6 +39,7 @@ final class InstallerCommand extends Command
             ->addOption('mode', null, InputOption::VALUE_REQUIRED, 'Expected native installation mode')
             ->addOption('configuration', null, InputOption::VALUE_REQUIRED, 'JSON file containing native installer option names')
             ->addOption('validate', null, InputOption::VALUE_NONE, 'Validate configuration syntax and options locally without saving or starting a worker')
+            ->addOption('preset', null, InputOption::VALUE_REQUIRED, 'Defaults for standalone or collector installation; requires explicit license acceptance')
             ->addOption('as', null, InputOption::VALUE_REQUIRED, 'Installation/Upgrades operator; defaults to admin_user')
             ->addOption('install', null, InputOption::VALUE_NONE, 'Save, review and run the supplied plan')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Explicitly retry a stopped attempt after reviewing its log')
@@ -113,6 +115,11 @@ final class InstallerCommand extends Command
         $validate = $input->getOption('validate') === true;
         if ($validate && ($input->getOption('install') === true || !in_array($action, ['check', 'configure'], true))) {
             return $this->invalid($input, $output, 'Configuration validation cannot be combined with execution, status or recovery.', 'invalid_arguments');
+        }
+        $preset = $input->getOption('preset');
+        if ($preset !== null && (!is_string($preset) || $input->getOption('force') === true
+            || !$validate && !in_array($action, ['configure', 'start'], true))) {
+            return $this->invalid($input, $output, 'Use a preset only with validation or a new configuration and without --force.', 'invalid_arguments');
         }
         $options = [];
         $attempt = $input->getOption('attempt');
@@ -196,6 +203,9 @@ final class InstallerCommand extends Command
             $options['Eula'] = true;
         }
         try {
+            if (is_string($preset)) {
+                $options = InstallerPreset::apply($preset, $options);
+            }
             if ($input->getOption('configuration') !== null && $input->getOption('ini') === null) {
                 $options = $this->resolveSecretReferences($options);
             }

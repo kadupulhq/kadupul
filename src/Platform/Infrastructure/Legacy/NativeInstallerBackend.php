@@ -22,13 +22,17 @@ final class NativeInstallerBackend implements InstallerBackend
 {
     private const JOB = 'installer_v13_job';
 
-    /** @param ?\Closure(): InstallerReviewSigner $signer */
+    /** @param ?\Closure(): InstallerReviewSigner $signer
+     *  @param ?\Closure(): InstallerRuntimeComparison $runtimeComparison
+     */
     public function __construct(
         private readonly string $projectDir,
         private readonly ConsoleOperator $operator,
         private readonly NativeInstallerFunctions $functions,
         #[AutowireServiceClosure(InstallerReviewSigner::class)]
         private readonly ?\Closure $signer = null,
+        #[AutowireServiceClosure(InstallerRuntimeComparison::class)]
+        private readonly ?\Closure $runtimeComparison = null,
     ) {}
 
     public function authorize(): void
@@ -205,6 +209,17 @@ final class NativeInstallerBackend implements InstallerBackend
             'tables' => $this->nativeList('install_setup_get_tables'),
             'job' => $existingStatus,
         ];
+    }
+
+    /** @return list<array<string, mixed>> */
+    public function compareRuntime(): array
+    {
+        $this->authorize();
+        if ($this->runtimeComparison === null) {
+            throw new \RuntimeException('The worker runtime comparison is unavailable.');
+        }
+        $php = $this->functions->text($this->functions->call('read_config_option', 'path_php_binary', true));
+        return ($this->runtimeComparison)()->compare($php);
     }
 
     public function configure(InstallerOptions $options): array
