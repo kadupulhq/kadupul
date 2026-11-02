@@ -29,8 +29,15 @@ if ($index > $total) {
     exit(2);
 }
 
+// Mixed PHPUnit/Pest listings can color only the DSL lines even when native
+// class lines are plain. Presentation must not remove those classes from CI.
+$listing = preg_replace('/\x1B\[[0-9;]*m/', '', (string) stream_get_contents(STDIN));
+if ($listing === null) {
+    fwrite(STDERR, "Unable to parse the test class listing.\n");
+    exit(1);
+}
 $classes = [];
-foreach (preg_split('/\R/', (string) stream_get_contents(STDIN)) as $line) {
+foreach (preg_split('/\R/', $listing) as $line) {
     if (preg_match('/^ - ([A-Za-z_\x80-\xff\\\\][A-Za-z0-9_\x80-\xff\\\\]*)::/', $line, $match) === 1) {
         $classes[preg_replace('/^P\\\\/', '', $match[1])] = true;
     }
