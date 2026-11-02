@@ -21,6 +21,51 @@ final class NativeCoverageCompositionTest extends TestCase
     /** @var array<string,string> */
     private static array $originalClovers = [];
 
+    public function testRepeatedPidsKeepEveryActualCollectorInvocationDistinct(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $directory = (string) realpath(sys_get_temp_dir()) . '/native-composition-pid-' . bin2hex(random_bytes(8));
+        self::assertTrue(mkdir($directory, 0700));
+        $parts = [];
+        try {
+            foreach (['legacy' => 'tests', 'application' => 'application'] as $part => $stack) {
+                $output = $directory . '/' . $part . '.native.json';
+                $process = new Process([PHP_BINARY, '-d', 'pcov.directory=' . $root . '/tests/Fixtures', '-d', 'pcov.exclude=~/(include/vendor|tests/vendor)/~',
+                    $root . '/tests/Fixtures/native-coverage-composition-producer.php', $stack, $part, $output, 'reused-pid']);
+                $process->mustRun();
+                $source = file_get_contents($output);
+                self::assertIsString($source);
+                $parts[$part] = json_decode($source, true, 512, JSON_THROW_ON_ERROR);
+                self::assertCount(2, $parts[$part]['tests'], 'Separate invocations with the same PID must survive the native library merge.');
+                foreach (array_keys($parts[$part]['tests']) as $id) {
+                    self::assertSame(1, preg_match('/\Anative RRD child 42-[a-f0-9]{32}\z/D', $id));
+                }
+                $receipts = json_decode(file_get_contents($output . '.invocations.json'), true, 512, JSON_THROW_ON_ERROR);
+                self::assertCount(2, $receipts);
+                self::assertNotSame($receipts[0]['report'], $receipts[1]['report']);
+                foreach ($receipts as $receipt) {
+                    self::assertSame(1, preg_match('~\A' . preg_quote($directory, '~') . '/child-42-[a-f0-9]{32}\.coverage\z~D', $receipt['report']));
+                    self::assertSame($receipt['sha256'], hash_file('sha256', $receipt['report']), 'A later invocation must preserve the earlier serialized report.');
+                    self::assertSame($receipt['sidecar_sha256'], hash_file('sha256', $receipt['report'] . '.json'), 'A later invocation must preserve the earlier evidence sidecar.');
+                }
+            }
+            self::assertCount(4, glob($directory . '/child-*.coverage'));
+            self::assertCount(4, glob($directory . '/child-*.coverage.json'));
+            $expected = $parts['legacy']['tests'] + $parts['application']['tests'];
+            self::assertCount(4, $expected, 'Independent producer bundles must not share an invocation identity.');
+            $composed = self::composeInTestsStack($parts);
+            self::assertSame($expected, $composed['tests']);
+            $shared = false;
+            foreach ($composed['lines'][$root . '/tests/Fixtures/native-coverage-composition-target.php'] as $hits) {
+                if (is_array($hits) && count($hits) === 4 && array_diff(array_keys($expected), $hits) === []) $shared = true;
+            }
+            self::assertTrue($shared, 'Composition must retain all four actual invocations on their shared measured statements.');
+        } finally {
+            foreach (glob($directory . '/*') as $file) unlink($file);
+            rmdir($directory);
+        }
+    }
+
     public function testOverlappingNativeMergesRetainEveryTestIdentityAsAList(): void
     {
         $root = dirname(__DIR__, 2);
@@ -92,6 +137,12 @@ final class NativeCoverageCompositionTest extends TestCase
         $bad = $parts;
         $bad['application']['tests']['native composition tests'] = ['size' => 'unknown', 'status' => 'conflict', 'time' => 0];
         $cases['conflicting original test identity'] = $bad;
+        foreach (['missing', 'stale'] as $mutation) {
+            $bad = $parts;
+            if ($mutation === 'missing') unset($bad['application']['tools']['tests/Fixtures/rrd-process-coverage.php']);
+            else $bad['application']['tools']['tests/Fixtures/rrd-process-coverage.php'] = str_repeat('0', 64);
+            $cases[$mutation . ' collector identity source'] = $bad;
+        }
         $bad = $parts;
         $bad['application']['lines'][$file][1] = ['unrecorded test'];
         $cases['unbound hit'] = $bad;
