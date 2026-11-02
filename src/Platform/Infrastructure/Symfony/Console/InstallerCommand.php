@@ -37,6 +37,7 @@ final class InstallerCommand extends Command
             ->addOption('ini', null, InputOption::VALUE_REQUIRED, 'Legacy INI configuration file')
             ->addOption('mode', null, InputOption::VALUE_REQUIRED, 'Expected native installation mode')
             ->addOption('configuration', null, InputOption::VALUE_REQUIRED, 'JSON file containing native installer option names')
+            ->addOption('validate', null, InputOption::VALUE_NONE, 'Validate configuration syntax and options locally without saving or starting a worker')
             ->addOption('as', null, InputOption::VALUE_REQUIRED, 'Installation/Upgrades operator; defaults to admin_user')
             ->addOption('install', null, InputOption::VALUE_NONE, 'Save, review and run the supplied plan')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Explicitly retry a stopped attempt after reviewing its log')
@@ -61,6 +62,40 @@ final class InstallerCommand extends Command
         return (string) $value;
     }
 
+    private function invalid(InputInterface $input, OutputInterface $output, string $message, string $code = 'invalid_configuration'): int
+    {
+        $output->writeln($input->getOption('output') === 'json'
+            ? json_encode(['ok' => false, 'error' => ['code' => $code, 'message' => $message]], JSON_THROW_ON_ERROR)
+            : $message, OutputInterface::OUTPUT_RAW);
+        return Command::INVALID;
+    }
+
+    /** @param array<array-key, mixed> $options
+     *  @return array<array-key, mixed>
+     */
+    private function resolveSecretReferences(#[\SensitiveParameter] array $options): array
+    {
+        if (!is_array($options['SnmpOptions'] ?? null)) {
+            return $options;
+        }
+        foreach ($options['SnmpOptions'] as $name => $reference) {
+            if (!is_array($reference)) {
+                continue;
+            }
+            if (!in_array($name, InstallerOptions::SNMP_SECRETS, true) || array_keys($reference) !== ['env']
+                || !is_string($reference['env']) || strlen($reference['env']) > 255
+                || preg_match('/\A[A-Za-z_][A-Za-z0-9_]*\z/D', $reference['env']) !== 1) {
+                throw new \InvalidArgumentException('Invalid installer secret reference.');
+            }
+            $secret = getenv($reference['env']);
+            if ($secret === false) {
+                throw new \InvalidArgumentException('An installer secret environment variable is unavailable.');
+            }
+            $options['SnmpOptions'][$name] = $secret;
+        }
+        return $options;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->presentation->legacy !== LegacyRequest::Run) {
@@ -73,21 +108,22 @@ final class InstallerCommand extends Command
         $action = $input->getOption('install') === true ? 'start' : $input->getOption('action');
         if (!is_string($action) || !in_array($action, ['check', 'status', 'configure', 'start', 'recover'], true)
             || !in_array($input->getOption('output'), ['text', 'json'], true)) {
-            $output->writeln('Invalid action or output mode.');
-            return Command::INVALID;
+            return $this->invalid($input, $output, 'Invalid action or output mode.', 'invalid_arguments');
+        }
+        $validate = $input->getOption('validate') === true;
+        if ($validate && ($input->getOption('install') === true || !in_array($action, ['check', 'configure'], true))) {
+            return $this->invalid($input, $output, 'Configuration validation cannot be combined with execution, status or recovery.', 'invalid_arguments');
         }
         $options = [];
         $attempt = $input->getOption('attempt');
         if ($action === 'recover' && ($input->getOption('force') !== true || !is_string($attempt)
             || preg_match('/\A[1-9][0-9]{0,14}\z/D', $attempt) !== 1)) {
-            $output->writeln('Recovery requires --attempt with the current attempt number and --force after confirming that its worker and children have stopped.');
-            return Command::INVALID;
+            return $this->invalid($input, $output, 'Recovery requires --attempt with the current attempt number and --force after confirming that its worker and children have stopped.', 'invalid_arguments');
         }
         $file = $input->getOption('configuration') ?? $input->getOption('ini');
         if ($file !== null) {
             if (!is_string($file) || !is_file($file) || !is_readable($file) || filesize($file) > 65536) {
-                $output->writeln('Configuration must be a readable JSON file of at most 64 KiB.');
-                return Command::INVALID;
+                return $this->invalid($input, $output, 'Configuration must be a readable JSON file of at most 64 KiB.');
             }
             try {
                 $contents = file_get_contents($file, false, null, 0, 65537);
@@ -96,6 +132,11 @@ final class InstallerCommand extends Command
                 }
                 if ($input->getOption('ini') === null) {
                     $options = json_decode($contents, true, 16, JSON_THROW_ON_ERROR);
+                    // Associative decoding maps both {} and [] to an empty
+                    // array; the configuration root must still be an object.
+                    if (!str_starts_with(ltrim($contents), '{')) {
+                        throw new \InvalidArgumentException('Configuration must be a JSON object.');
+                    }
                 } else {
                     // Scope warning conversion to this parser alone: its
                     // diagnostics can include credential-bearing source lines.
@@ -116,8 +157,7 @@ final class InstallerCommand extends Command
                 $options = null;
             }
             if (!is_array($options) || array_is_list($options) && $options !== []) {
-                $output->writeln('Configuration must be a JSON object.');
-                return Command::INVALID;
+                return $this->invalid($input, $output, 'Configuration must be a JSON object.');
             }
         }
         foreach (['automationmode' => 'AutomationMode', 'automationrange' => 'AutomationRange', 'cron' => 'CronInterval',
@@ -130,17 +170,15 @@ final class InstallerCommand extends Command
             'table' => ['Tables', ''], 'template' => ['Templates', 'chk_template_']] as $flag => [$key, $prefix]) {
             $entries = $input->getOption($flag);
             if (!is_array($entries)) {
-                return Command::INVALID;
+                return $this->invalid($input, $output, 'Invalid named installer option.');
             }
             $nested = $options[$key] ?? [];
             if (!is_array($nested)) {
-                $output->writeln('Invalid named installer option map.');
-                return Command::INVALID;
+                return $this->invalid($input, $output, 'Invalid named installer option map.');
             }
             foreach ($entries as $entry) {
                 if (!is_string($entry) || !str_contains($entry, ':')) {
-                    $output->writeln('Invalid named installer option.');
-                    return Command::INVALID;
+                    return $this->invalid($input, $output, 'Invalid named installer option.');
                 }
                 [$name, $value] = explode(':', $entry, 2);
                 $name = trim($name);
@@ -157,13 +195,25 @@ final class InstallerCommand extends Command
         if ($input->getOption('accept-eula') === true) {
             $options['Eula'] = true;
         }
-        if (in_array($action, ['configure', 'start'], true) && !($action === 'start' && $input->getOption('force') === true && $options === [])) {
+        try {
+            if ($input->getOption('configuration') !== null && $input->getOption('ini') === null) {
+                $options = $this->resolveSecretReferences($options);
+            }
+        } catch (\InvalidArgumentException $error) {
+            return $this->invalid($input, $output, $error->getMessage());
+        }
+        if ($validate || in_array($action, ['configure', 'start'], true) && !($action === 'start' && $input->getOption('force') === true && $options === [])) {
             try {
                 InstallerOptions::fromArray($options);
             } catch (\InvalidArgumentException $error) {
-                $output->writeln($error->getMessage(), OutputInterface::OUTPUT_RAW);
-                return Command::INVALID;
+                return $this->invalid($input, $output, $error->getMessage());
             }
+        }
+        if ($validate) {
+            $output->writeln($input->getOption('output') === 'json'
+                ? json_encode(['ok' => true, 'valid' => true], JSON_THROW_ON_ERROR)
+                : 'Configuration syntax and options are valid. Installation prerequisites have not been checked.', OutputInterface::OUTPUT_RAW);
+            return Command::SUCCESS;
         }
         $result = $this->worker->request(
             ['action' => $action, 'options' => $options, 'operator' => $input->getOption('as'),

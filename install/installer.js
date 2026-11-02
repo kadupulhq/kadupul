@@ -17,6 +17,15 @@ if (installer) {
         return url;
     };
     document.querySelectorAll('[data-installer-form]').forEach((form) => {
+        // Reveal optional controls before native validation moves focus.
+        form.addEventListener('invalid', (event) => {
+            if (!(event.target instanceof HTMLElement)) return;
+            let group = event.target.closest('details');
+            while (group) {
+                group.open = true;
+                group = group.parentElement?.closest('details');
+            }
+        }, true);
         form.addEventListener('input', () => { dirty = true; });
         form.addEventListener('submit', async (event) => {
             event.preventDefault();

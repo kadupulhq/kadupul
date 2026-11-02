@@ -22,6 +22,13 @@ final class InstallerWorkflow
         return $this->backend->inspect();
     }
 
+    /** @return array<string, mixed> */
+    public function diagnostics(): array
+    {
+        $this->backend->authorize();
+        return InstallerDiagnostics::export($this->backend->inspect());
+    }
+
     /** @param array<array-key, mixed> $input
      *  @return array<string, mixed>
      */

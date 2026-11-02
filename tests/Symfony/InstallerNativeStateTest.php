@@ -94,6 +94,34 @@ final class InstallerNativeStateTest extends TestCase
         $this->assertSame($before, $this->database->query('SELECT name, value FROM settings ORDER BY name')->fetchAll());
     }
 
+    public function testHealthUsesTheConfiguredPollerAndStoredCompletionWithoutWrites(): void
+    {
+        $GLOBALS['config'] = ['poller_id' => 2];
+        $this->database->prepare('UPDATE version SET cacti = ?')->execute([CACTI_VERSION]);
+        $this->store('poller_lastrun_1', (string) time());
+        $this->store('poller_lastrun_2', (string) (time() - 1000));
+        $this->store('cron_interval', '300');
+        $this->store('poller_interval', '300');
+        foreach (['succeeded', 'partial'] as $state) {
+            $job = json_decode($this->job($state), true, 32, JSON_THROW_ON_ERROR);
+            $job['pending_collectors'] = $state === 'partial' ? 2 : 0;
+            $this->store('installer_v13_job', json_encode($job, JSON_THROW_ON_ERROR));
+            $before = $this->database->query('SELECT name, value FROM settings ORDER BY name')->fetchAll();
+            $status = $this->backend->status();
+            $this->assertSame($state, $status['state']);
+            $this->assertSame(
+                $state === 'succeeded' ? ['verified', 'verified', 'verified'] : ['verified', 'action_required', 'action_required'],
+                array_slice(array_column($status['health'], 'status'), 0, 3)
+            );
+            $this->assertSame('action_required', $status['health'][3]['status'], 'Primary-poller activity must not mask stale local-collector activity.');
+            $this->assertSame('not_assessed', $status['health'][4]['status']);
+            $this->assertSame('not_assessed', $status['health'][5]['status']);
+            $this->assertSame($before, $this->database->query('SELECT name, value FROM settings ORDER BY name')->fetchAll());
+        }
+        $this->store('poller_lastrun_2', (string) time());
+        $this->assertSame('verified', $this->backend->status()['health'][3]['status']);
+    }
+
     public function testTheActualLockExcludesAnotherSessionAndReleasesAfterNestedUse(): void
     {
         $lock = new \ReflectionMethod(NativeInstallerBackend::class, 'locked');

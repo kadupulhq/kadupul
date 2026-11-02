@@ -121,14 +121,14 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
     'config/services.yaml' => 'd6dccad6f94a51833b1ccda5daef6d07036055e8e6e63e01ba36c2cdba1a5f8c',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
-    'src/Platform/Application/Installer/InstallerWorkflow.php' => '79dfc5f105719a2a249492ee3ab402b4c1d81b4dc8587f36e1aaf5f4797b437d',
+    'src/Platform/Application/Installer/InstallerWorkflow.php' => '7dd220ec8c6ba30820cdafdfc98c6ef06f3fc9a7f64889bffb6f2f85012ca20b',
     'src/Platform/Application/Installer/InstallerBackend.php' => '36d4c19c0d0823fe58f5e18047d23329353e6bc6dc0b0ecabcac78d964cfdba3',
-    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => 'c5d1f46fe35c6457de6f68b623fbfffbae1a785e9fb8242c3ec983418fb745c0',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => '35bcbb1e74ee18dd527999e67212bc52001375248f2739c16e31a3be534bb356',
     'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php' => 'cb02b285d332a1a28d5aab1e5b9363e0c99425f51472e55c9e951a6748cf0676',
     'src/Platform/Infrastructure/Legacy/NativeInstallerWebContext.php' => '3c2760cf1232ff99fd67e96dd28e855de28061a5fe174f7fedbfcb1116e1e9c5',
     'src/Platform/Infrastructure/Legacy/InstallerReviewSigner.php' => '8b65ff4392619b813b3cd43b8f2c8028e13ed38697ec858254f9c901cc759124',
     'src/Platform/Infrastructure/Symfony/InstallerWebContext.php' => 'f41b35432ad9702c688b86283a474cd3bc11a39a6f68cae7f5169b5db539a725',
-    'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php' => '64e5595745ca31a073a3bec0ef8ee5b113d8cc6d18b63be416154a45341910b5',
+    'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php' => 'f2aa66c989eacf0e9d6a811009bde62598e5ec26785897ab50a5a47d7994c309',
 ];
 
 function installer_authentication_review(string $root): ?string

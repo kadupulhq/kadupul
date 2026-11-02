@@ -38,6 +38,17 @@ final class InstallerController
         // requests have no native capability and cannot reach protected reads.
         $view = $this->context->view();
         $request->setLocale($view['locale']);
+        if ($request->query->all() === ['view' => 'diagnostics'] && !$request->isMethod('POST')) {
+            try {
+                return new JsonResponse($this->workflow->diagnostics(), 200, $headers + [
+                    'Content-Disposition' => 'attachment; filename="installer-diagnostics.json"',
+                ]);
+            } catch (HttpExceptionInterface $exception) {
+                throw $exception;
+            } catch (\RuntimeException|\JsonException) {
+                return new JsonResponse(['error' => 'diagnostics_unavailable'], 503, $headers);
+            }
+        }
         if ($request->query->all() === ['view' => 'status'] && !$request->isMethod('POST')) {
             try {
                 $state = $this->workflow->status();
