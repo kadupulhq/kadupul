@@ -332,7 +332,7 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
      * If we have not been forced offline by the $conn_mode global and since we are
      * a remote poller, let's attempt to get back online.
      */
-    if ($conn_mode != 'offline') {
+    if ($conn_mode != 'offline' && !(PHP_SAPI === 'cli' && defined('KADUPUL_OPERATIONAL_LOCAL_ONLY') && constant('KADUPUL_OPERATIONAL_LOCAL_ONLY') === true)) {
         $remote_db_cnn_id = db_connect_real($rdatabase_hostname, $rdatabase_username, $rdatabase_password, $rdatabase_default, $rdatabase_type, $rdatabase_port, $rdatabase_retries, $rdatabase_ssl, $rdatabase_ssl_key, $rdatabase_ssl_cert, $rdatabase_ssl_ca);
     }
 

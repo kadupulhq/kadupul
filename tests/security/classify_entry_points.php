@@ -119,16 +119,20 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
-    'config/services.yaml' => 'd6dccad6f94a51833b1ccda5daef6d07036055e8e6e63e01ba36c2cdba1a5f8c',
+    'config/services.yaml' => '6624c34d07c49a48ee92536f730ef0c313b4af0d3f0099ab6abcc902f939f265',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
-    'src/Platform/Application/Installer/InstallerWorkflow.php' => '7dd220ec8c6ba30820cdafdfc98c6ef06f3fc9a7f64889bffb6f2f85012ca20b',
-    'src/Platform/Application/Installer/InstallerBackend.php' => '36d4c19c0d0823fe58f5e18047d23329353e6bc6dc0b0ecabcac78d964cfdba3',
-    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => '35bcbb1e74ee18dd527999e67212bc52001375248f2739c16e31a3be534bb356',
+    'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
+    'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => '8e301a9d56710459f02930e57aa90ca19eeabbd9595bdd29dbe903d5fcd0d43c',
     'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php' => 'cb02b285d332a1a28d5aab1e5b9363e0c99425f51472e55c9e951a6748cf0676',
     'src/Platform/Infrastructure/Legacy/NativeInstallerWebContext.php' => '3c2760cf1232ff99fd67e96dd28e855de28061a5fe174f7fedbfcb1116e1e9c5',
     'src/Platform/Infrastructure/Legacy/InstallerReviewSigner.php' => '8b65ff4392619b813b3cd43b8f2c8028e13ed38697ec858254f9c901cc759124',
     'src/Platform/Infrastructure/Symfony/InstallerWebContext.php' => 'f41b35432ad9702c688b86283a474cd3bc11a39a6f68cae7f5169b5db539a725',
-    'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php' => 'f2aa66c989eacf0e9d6a811009bde62598e5ec26785897ab50a5a47d7994c309',
+    'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php' => 'ceb30d4a494fa90f949aef9ae67aaee3502ef2e4c4f2fec0be41ba5c5c9ccbf7',
+    'include/global.php' => '741065b0c634751a3a52b56e79abbb971903b538ae22d9a12460c3f8e14471e8',
+    'bin/legacy-installer-verification.php' => '590649346f748a87b593da5eaa8aed20eacdb3b67c7aa890ff6222c120dc4fbd',
+    'src/Platform/Application/Installer/VerifyInstallationOperation.php' => '61a12e8468fa852d35686b98c02a64efb5a3ecd2530abb75dd717faf02fc1510',
+    'src/Platform/Infrastructure/Legacy/NativeOperationalEvidence.php' => '8f213f004b5ae9df6ed20d3436502918c5b9b6dcfc5c198beff5aa885e217a4e',
 ];
 
 function installer_authentication_review(string $root): ?string
@@ -263,7 +267,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'd6dccad6f94a51833b1ccda5daef6d07036055e8e6e63e01ba36c2cdba1a5f8c',
+    'config/services.yaml' => '6624c34d07c49a48ee92536f730ef0c313b4af0d3f0099ab6abcc902f939f265',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter

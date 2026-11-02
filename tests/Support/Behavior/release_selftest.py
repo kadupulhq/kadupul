@@ -4,10 +4,11 @@
 import json
 import os
 import hashlib
+import io
 import subprocess
 from pathlib import Path
 import tempfile
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import release_readiness as release
 
 
@@ -265,7 +266,87 @@ def runtime_provenance_consistency():
     print('PHP runtime provenance rejects FROM-only and LABEL-only updates and accepts matched updates')
 
 
+def recovery_evidence_contract():
+    assert release.RECOVERY_CASES == ('partial_collector_sync', 'worker_crash', 'database_outage')
+    valid = {name: {'observed': True, 'preserved': True} for name in release.RECOVERY_CASES}
+    valid['partial_collector_sync']['repaired_sync'] = True
+    valid['partial_collector_sync'].update(remote_before=['old template', '0'], remote_after=['new template', '1'])
+    for name in ('worker_crash', 'database_outage'):
+        valid[name]['native_and_outer_stopped'] = True
+    release.require_recovery_evidence(valid)
+    for name in release.RECOVERY_CASES:
+        for missing in ('case', 'observed', 'preserved'):
+            changed = json.loads(json.dumps(valid))
+            if missing == 'case':
+                del changed[name]
+            else:
+                changed[name][missing] = False
+            try:
+                release.require_recovery_evidence(changed)
+            except RuntimeError as error:
+                assert name in str(error)
+            else:
+                raise AssertionError('Missing actual interruption evidence was accepted: ' + name)
+    valid['partial_collector_sync']['repaired_sync'] = False
+    try:
+        release.require_recovery_evidence(valid)
+    except RuntimeError as error:
+        assert 'real synchronization' in str(error)
+    else:
+        raise AssertionError('Unrepaired collector was accepted as successful recovery')
+    valid['partial_collector_sync']['repaired_sync'] = True
+    for name in ('worker_crash', 'database_outage'):
+        changed = json.loads(json.dumps(valid))
+        changed[name]['native_and_outer_stopped'] = False
+        try:
+            release.require_recovery_evidence(changed)
+        except RuntimeError as error:
+            assert name in str(error)
+        else:
+            raise AssertionError('An unconfirmed native descendant was accepted as stopped')
+    valid['partial_collector_sync']['remote_after'] = valid['partial_collector_sync']['remote_before']
+    try:
+        release.require_recovery_evidence(valid)
+    except RuntimeError as error:
+        assert 'previously stale' in str(error)
+    else:
+        raise AssertionError('Cloned, unchanged collector values passed as transferred data')
+    print('All three native recovery cases and repaired collector evidence are required')
+
+
+def failed_fault_cleanup_stops_owned_web():
+    for stop_fails in (False, True):
+        lock = Mock()
+        lock.stdin = io.StringIO()
+        lock.stdout = io.StringIO('wrong owned row\n')
+        lock.poll.return_value = None
+        lock.communicate.return_value = ('', '')
+        runtime = Mock()
+        runtime.dc = ['docker', 'compose', '-p', 'owned-selftest-only']
+        runtime.compose.return_value = {'exit': 0, 'stdout': '', 'stderr': ''}
+        if stop_fails:
+            runtime.compose.side_effect = RuntimeError('cleanup stop failure')
+        runtime.command.return_value = {'exit': 0, 'stdout': '', 'stderr': ''}
+        with patch.object(release.subprocess, 'Popen', return_value=lock), \
+                patch.object(release.select, 'select', return_value=([lock.stdout], [], [])):
+            try:
+                release.locked_finishing_attempt(runtime, 'worker_crash')
+            except RuntimeError as error:
+                assert str(error) == 'Owned collector row lock was not acquired'
+                assert getattr(error, 'rehearsal_cleanup_errors', []) == (['stop_web:RuntimeError'] if stop_fails else [])
+            else:
+                raise AssertionError('Invalid lock acquisition unexpectedly admitted a worker')
+        runtime.compose.assert_called_once_with('stop', 'web', timeout=60)
+        assert lock.stdin.getvalue().endswith('ROLLBACK;\nquit\n')
+        lock.communicate.assert_called_once_with(timeout=10)
+        args = runtime.command.call_args.args
+        assert args[:2] == ('rm', '-f') and args[2].startswith('/tmp/installer-rehearsal-')
+    print('Fault cleanup preserves original assertions and releases owned locks/PID files even when web stop fails')
+
+
 def main():
+    recovery_evidence_contract()
+    failed_fault_cleanup_stops_owned_web()
     runtime_provenance_consistency()
     legacy_build_input_integrity()
     baseline_ignore_contract()
@@ -297,6 +378,7 @@ def main():
                 assert any(evidence['project'] in arg for arg in call), call
     assert len(set(projects)) == 2
     print('Invalid revisions and unavailable Docker preserve incomplete evidence; cleanup is scoped to unique projects')
+    print('PASS 10 release rehearsal self-test groups')
 
 
 if __name__ == '__main__':

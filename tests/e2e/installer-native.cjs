@@ -83,6 +83,43 @@ const fs = require('node:fs');
         const review = page.locator('form').filter({ has: page.locator('input[name=revision]') });
         const revision = await review.locator('[name=revision]').inputValue();
         verify(/^[a-f0-9]{64}$/.test(revision), 'Review includes authenticated fingerprint');
+        const runtimeForm = page.locator('form').filter({ has: page.locator('input[name=action][value=compare_runtime]') });
+        verify(await runtimeForm.count() === 1 && await runtimeForm.getAttribute('data-installer-form') === null,
+            'Runtime comparison has a separate native opt-in form');
+        const runtimeToken = await runtimeForm.locator('[name=__csrf_magic]').inputValue();
+        const noRuntimeConsent = await page.request.post(endpoint, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            form: { action: 'compare_runtime', __csrf_magic: runtimeToken },
+        });
+        verify(noRuntimeConsent.status() === 422, 'Runtime comparison requires explicit consent');
+        const noRuntimeCsrf = await page.request.post(endpoint, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            form: { action: 'compare_runtime', runtime_confirmed: '1', __csrf_magic: 'sid:forged,1' },
+        });
+        const runtimeRefresh = await noRuntimeCsrf.json();
+        verify(noRuntimeCsrf.status() === 403 && runtimeRefresh.error === 'csrf_expired', 'Runtime comparison enforces native CSRF before dispatch');
+        const runtimeResult = await page.request.post(endpoint, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            form: { action: 'compare_runtime', runtime_confirmed: '1', __csrf_magic: runtimeRefresh.token },
+        });
+        const runtimeText = await runtimeResult.text();
+        const runtimeReport = JSON.parse(runtimeText);
+        verify(runtimeResult.status() === 200 && runtimeReport.status === 'compared' && runtimeReport.checks.length >= 5,
+            'Actual web process compares its configured PHP child');
+        verify(runtimeReport.checks.some(check => check.name === 'Shared application secret' && check.status === 'verified'),
+            'Actual worker privately confirms the inherited application secret');
+        verify(!runtimeText.includes(password) && !runtimeText.includes(revision) && !runtimeText.includes('/var/www')
+            && !/[a-f0-9]{64}/.test(runtimeText) && !/"(?:proof|snapshot|uid|gid|directories)"/.test(runtimeText),
+            'Runtime comparison exports no private proof, process identifiers or directory snapshots');
+        verify((await status()).state === 'not_started' && (await status()).attempt === 0,
+            'Comparison and rejected requests never reserve an installer');
+        await runtimeForm.locator('xpath=..').locator('summary').click();
+        await runtimeForm.locator('[name=runtime_confirmed]').check();
+        await runtimeForm.locator('[name=__csrf_magic]').evaluate((input, token) => { input.value = token; }, runtimeRefresh.token);
+        await Promise.all([page.waitForNavigation(), runtimeForm.locator('button[type=submit]').click()]);
+        verify(await page.locator('#runtime-comparison').count() === 1, 'Native comparison form renders its safe results without JavaScript');
+        verify(await review.locator('[name=revision]').inputValue() === revision && (await status()).state === 'not_started',
+            'Comparison preserves the saved review and installation state');
         const denied = await page.request.post(endpoint, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
             form: { action: 'start', revision, __csrf_magic: await review.locator('[name=__csrf_magic]').inputValue() },
@@ -101,6 +138,8 @@ const fs = require('node:fs');
         verify(state.state === 'succeeded' && state.progress === 100 && state.pending_collectors === 0, 'Native browser worker completes the installed fixture');
         await page.goto(endpoint + '?language=fr-FR');
         verify(await page.locator('h1').innerText() === 'Installation et mise à niveau', 'Native locale selection reaches Symfony French catalog');
+        verify((await page.locator('main').innerText()).includes('Comparer les environnements web et de travail'),
+            'Runtime comparison controls follow actual native locale selection');
         verify((await page.locator('main').innerText()).includes('Exécution terminée'), 'Completion phase is translated');
         verify(await page.locator('li[aria-current=step]').innerText() === 'Vérifier', 'Completed workflow identifies verification in the selected locale');
         const health = page.locator('section').filter({ has: page.locator('#health') });

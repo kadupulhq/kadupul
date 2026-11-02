@@ -66,6 +66,7 @@ final class InstallerController
         }
         $error = null;
         $status = 200;
+        $runtimeComparison = null;
         if ($request->isMethod('POST')) {
             if (!$this->context->validPost()) {
                 return new JsonResponse(['error' => 'csrf_expired', 'token' => $view['csrf']], 403, $headers);
@@ -73,7 +74,9 @@ final class InstallerController
             try {
                 $post = $request->request->all();
                 $action = $post['action'] ?? null;
-                if ($action === 'recover' && is_string($post['attempt'] ?? null) && preg_match('/\\A[0-9]{1,15}\\z/D', $post['attempt']) === 1) {
+                if ($action === 'compare_runtime') {
+                    $runtimeComparison = $this->workflow->compareRuntime(($post['runtime_confirmed'] ?? null) === '1');
+                } elseif ($action === 'recover' && is_string($post['attempt'] ?? null) && preg_match('/\\A[0-9]{1,15}\\z/D', $post['attempt']) === 1) {
                     $this->workflow->recover((int) $post['attempt'], ($post['recovery_confirmed'] ?? null) === '1');
                 } elseif ($action === 'configure' && ($post['form_complete'] ?? null) === '1' && is_array($post['options'] ?? null)) {
                     $this->workflow->configure($post['options'], true);
@@ -91,9 +94,12 @@ final class InstallerController
                     throw new \InvalidArgumentException('Invalid installation form.');
                 }
                 if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse(['status' => 'saved'], 200, $headers);
+                    return new JsonResponse($runtimeComparison === null ? ['status' => 'saved']
+                        : ['status' => 'compared', 'checks' => $runtimeComparison], 200, $headers);
                 }
-                return new RedirectResponse($view['action'], 303, $headers);
+                if ($runtimeComparison === null) {
+                    return new RedirectResponse($view['action'], 303, $headers);
+                }
             } catch (HttpExceptionInterface $exception) {
                 return new JsonResponse(['error' => $this->translator->trans('Access denied.', [], 'installer')], $exception->getStatusCode(), $headers);
             } catch (\InvalidArgumentException $exception) {
@@ -104,7 +110,7 @@ final class InstallerController
                 $status = 409;
             }
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse(['error' => $this->translator->trans($error, [], 'installer')], $status, $headers);
+                return new JsonResponse(['error' => $this->translator->trans($error ?? 'The runtime comparison is unavailable.', [], 'installer')], $status, $headers);
             }
         }
         try {
@@ -120,7 +126,7 @@ final class InstallerController
         }
         return new Response($request->isMethod('HEAD') ? '' : $this->twig->render(
             'platform/installer.html.twig',
-            ['plan' => $plan, 'view' => $view, 'error' => $error]
+            ['plan' => $plan, 'view' => $view, 'error' => $error, 'runtimeComparison' => $runtimeComparison]
         ), $status, $headers);
     }
 }
