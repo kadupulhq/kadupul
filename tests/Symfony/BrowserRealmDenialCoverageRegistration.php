@@ -19,6 +19,7 @@ final class BrowserRealmDenialCoverageRegistration
         'tests/Fixtures/browser-realm-denial-global.php','tests/Fixtures/browser-realm-denial-session.php',
         'tests/Fixtures/legacy-browser-realm-denial.php','tests/Fixtures/rrd-process-coverage.php',
         'tests/Helpers/NativeChildCoverageEvidence.php','include/auth.php','include/session.php',
+        'lib/session_data.php','lib/session_store.php','lib/session_metadata.php',
         'bin/legacy-console-handoff.php','lib/auth.php','lib/database.php','lib/functions.php','lib/plugins.php',
         'include/global_constants.php','include/global_arrays.php','include/global_languages.php','include/global_settings.php',
         'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php',
