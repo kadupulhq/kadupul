@@ -205,6 +205,8 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
         self::assertFalse($device['result']);
         self::assertCount(4, $device['items']);
         self::assertContains('reports_no_add_device_100', $device['messages']);
+        self::assertContains('Device &#039;Router &lt;one&gt;&#039; successfully added to Report.', array_column($device['message_details'], 0));
+        self::assertContains('Device &#039;Router &lt;one&gt;&#039; not added to Report as it already exists on report.', array_column($device['message_details'], 0));
         $graph = $this->runReport(array('operation' => 'duplicate-graph'));
         self::assertTrue($graph['result']);
         self::assertCount(4, $graph['items']);
@@ -286,7 +288,7 @@ final class ReportPersistenceNativeCoverageTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 $sources = array('tests/Unit/Security/Auth/ReportPersistenceNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/report-persistence-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
-                    'lib/auth.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
+                    'lib/auth.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'include/global_languages.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
                     'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
                 $arguments = array($reports[0], $root, 'tests/Fixtures/report-persistence-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $sources, array('report-persisted-state-readback'), array('lib/reports.php'));
                 $measured = NativeChildCoverageEvidence::load(...$arguments);
