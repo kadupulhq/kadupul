@@ -12,6 +12,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
+- Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
 
 - Guide installer setup with grouped optional settings, explicit backup and recovery checklists, actionable runtime checks and read-only post-installation evidence. Add local unattended configuration validation, environment-backed SNMP secret references and authenticated redacted diagnostic downloads. Include English/French guidance and keyboard/browser regression coverage (#1313).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
