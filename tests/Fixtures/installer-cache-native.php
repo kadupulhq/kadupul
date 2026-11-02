@@ -111,6 +111,7 @@ try {
     } else {
         $filesystem->copy($root . '/cli/upgrade_database.php', $directory . '/cli/upgrade_database.php');
         $filesystem->copy($root . '/lib/installer.php', $directory . '/lib/installer.php');
+        $filesystem->copy($root . '/src/Platform/Application/Installer/InstallerEngine.php', $directory . '/src/Platform/Application/Installer/InstallerEngine.php');
         foreach (['poller', 'rrd_maintenance'] as $library) {
             $filesystem->dumpFile($directory . '/lib/' . $library . '.php', '<?php require ' . var_export($root . '/lib/' . $library . '.php', true) . ';');
         }

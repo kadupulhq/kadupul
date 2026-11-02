@@ -346,6 +346,20 @@ def entries():
     return [(entry, gate, detail) for entry, gate, detail in rows]
 
 
+def probe_guarded_fragment(url, clients, failures, observed):
+    """A bootstrap capability guard must stop every direct request before I/O."""
+    count = 0
+    for name, client in clients:
+        for method, fields in (('GET', None), ('POST', {})):
+            response = client.request(url, fields)
+            count += 1
+            if response['status'] != 404 or response['body'].strip() or response['admin_layout']:
+                failures.append('%s %s %s: guarded fragment answered HTTP %d with %d bytes'
+                                % (name, method, url, response['status'], len(response['body'])))
+            observed.setdefault('guarded-fragment %s %s status:%d' % (name, method, response['status']), []).append(url)
+    return count
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--project', default='kadupul-entry-auth')
@@ -495,6 +509,9 @@ def main():
                         expect(name + ' POST ' + url, client.request(url, {}))
                     if post:
                         expect(name + ' POST ' + url, client.request(url, {}))
+            elif gate == 'guarded-fragment':
+                counted += probe_guarded_fragment(url, (('anonymous', anonymous), ('norealm', norealm),
+                                                       ('console', console)), failures, observed)
             elif gate == 'cli-only':
                 counted += 1
                 response = anonymous.request(url)
@@ -571,6 +588,9 @@ def main():
         for entry, gate, detail in rows:
             if gate == 'symfony:forward':
                 gate, detail = routes['app.php' + detail.rsplit('app.php', 1)[1]]
+            if gate == 'guarded-fragment':
+                counted += probe_guarded_fragment(entry, (('guest', Client(base)),), failures, observed)
+                continue
             guest_page = gate.startswith('guest-or-')
             gated = guest_page or gate.startswith('realm:') or gate == 'authenticated' \
                 or (gate.startswith('symfony:') and any(contract in detail for contract in ('ConsoleAccess', 'AuthenticatedAccess')))

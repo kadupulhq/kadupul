@@ -24,6 +24,7 @@ $database = new PDO($dsn, getenv('KADUPUL_REFERENCE_TEST_USER') ?: '', getenv('K
 $schema = 'kadupul_cdef_install_' . bin2hex(random_bytes(8));
 $environment = getenv();
 $environment['KADUPUL_REFERENCE_RUNTIME_SCHEMA'] = $schema;
+$environment['APP_SECRET'] = bin2hex(random_bytes(32));
 $created = false;
 
 function installerAssert(bool $condition, string $message): void
@@ -98,6 +99,9 @@ try {
     $created = true;
     $database->exec("USE `$schema`");
     installerSeed($database, $root);
+    $administrator = $database->prepare("UPDATE user_auth SET password=?, must_change_password='', password_change='', enabled='on', locked='' WHERE id=1 AND username='admin' AND realm=0");
+    $administrator->execute([password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT)]);
+    installerAssert($administrator->rowCount() === 1, 'the exclusively owned fixture provisions an eligible installation administrator');
     $database->exec("INSERT INTO cdef_items (id,hash,cdef_id,sequence,type,value) VALUES(1000000,'" . str_repeat('f', 32) . "',16777215,1,1,'1')");
     [$exit, $output, $errors] = installerRun($root, $environment, 'cli/install_cacti.php', ['--install', '--accept-eula', '--automationmode=0']);
     installerAssert(
@@ -105,8 +109,18 @@ try {
         'failed actual shared Installer leaves final version unrecorded'
     );
     installerAssert(
-        str_contains($output, 'primary CDEF reference contract could not be installed'),
+        $database->query("SELECT value FROM settings WHERE name='install_error'")->fetchColumn()
+            === 'The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.',
         'actual shared Installer surfaces contract failure'
+    );
+    // The command deliberately redacts native diagnostics. Prove that its
+    // worker reached the contract failure through the persisted native outcome.
+    $receipt = json_decode((string) $database->query("SELECT value FROM settings WHERE name='installer_v13_job'")->fetchColumn(), true, 32, JSON_THROW_ON_ERROR);
+    installerAssert(
+        is_array($receipt) && ($receipt['state'] ?? null) === 'failed'
+        && ($receipt['target'] ?? null) === trim(file_get_contents($root . '/include/cacti_version'))
+        && ($receipt['actor_id'] ?? null) === 1 && is_int($receipt['finished'] ?? null),
+        'actual fresh CLI retains the attributed failed worker receipt'
     );
     installerAssert($exit !== 0, 'actual fresh CLI reports contract failure with nonzero exit');
 } finally {

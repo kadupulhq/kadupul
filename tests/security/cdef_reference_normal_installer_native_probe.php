@@ -24,6 +24,7 @@ $database = new PDO($dsn, getenv('KADUPUL_REFERENCE_TEST_USER') ?: '', getenv('K
 $schema = 'kadupul_cdef_install_' . bin2hex(random_bytes(8));
 $environment = getenv();
 $environment['KADUPUL_REFERENCE_RUNTIME_SCHEMA'] = $schema;
+$environment['APP_SECRET'] = bin2hex(random_bytes(32));
 $created = false;
 
 function installerAssert(bool $condition, string $message): void
@@ -65,6 +66,15 @@ function installerSeed(PDO $database, string $root, ?string $schemaFile = null):
     }
     if (trim($buffer) !== '') {
         throw new RuntimeException('Incomplete source schema statement after seed.');
+    }
+}
+
+function installerProvisionAdministrator(PDO $database): void
+{
+    $statement = $database->prepare("UPDATE user_auth SET password=?, must_change_password='', password_change='', enabled='on', locked='' WHERE id=1 AND username='admin' AND realm=0");
+    $statement->execute([password_hash(bin2hex(random_bytes(32)), PASSWORD_BCRYPT)]);
+    if ($statement->rowCount() !== 1) {
+        throw new RuntimeException('The disposable installer administrator could not be provisioned.');
     }
 }
 
@@ -111,6 +121,7 @@ try {
             throw new RuntimeException('The pinned real 1.2.33 schema fixture is required for normal upgrade proof.');
         }
         installerSeed($database, $root, $previousSchema);
+        installerProvisionAdministrator($database);
         $database->exec("UPDATE version SET cacti='1.2.33'");
         [$exit, $output, $errors] = installerRun($root, $environment, 'cli/upgrade_database.php', []);
         installerAssert(
@@ -123,8 +134,12 @@ try {
             $database->query('SELECT cacti FROM version')->fetchColumn() === 'new_install',
             'actual source schema begins a genuine fresh installer flow'
         );
+        installerProvisionAdministrator($database);
         [$exit, $output, $errors] = installerRun($root, $environment, 'cli/install_cacti.php', ['--install', '--accept-eula', '--automationmode=0']);
-        installerAssert($exit === 0 && $errors === '', 'actual normal fresh CLI Installer flow completes without force or bypass');
+        // Keep exercising the legacy shim and its intentional deprecation
+        // notice, while refusing every other byte on the error stream.
+        $deprecation = "NOTE: install_cacti.php is deprecated; use bin/console kadupul:install.\n";
+        installerAssert($exit === 0 && in_array($errors, ['', $deprecation], true), 'actual normal fresh CLI Installer flow completes without force or bypass');
     } else {
         throw new RuntimeException('Unknown native normal installer probe mode.');
     }

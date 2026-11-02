@@ -33,7 +33,25 @@ echo "[setup] importing baseline cacti.sql"
 # Run Kadupul's own CLI installer to populate the version rows, run upgrade
 # scripts, and flip install_complete.
 echo "[setup] running cli/install_cacti.php"
-"${DC[@]}" exec -T cacti-master php /var/www/html/cli/install_cacti.php --accept-eula --install --mode=1
+# The installer now applies the existing operator eligibility rules. This
+# disposable fixture explicitly prepares its administrator before execution.
+"${DC[@]}" exec -T cacti-db mariadb -ucactiuser -pcactiuser cacti -e "UPDATE user_auth SET must_change_password='' WHERE id=1 AND username='admin';"
+if [[ "${CACTI_E2E_INSTALLER_BROWSER:-0}" == '1' ]]; then
+    installer_password_file=$(php -r '$p=tempnam(sys_get_temp_dir(), "installer-browser-"); chmod($p,0600); file_put_contents($p,bin2hex(random_bytes(24))); echo $p;')
+    cleanup_installer_password() {
+        php -r 'if (is_file($argv[1])) { unlink($argv[1]); }' "$installer_password_file"
+    }
+    trap cleanup_installer_password EXIT
+    installer_password_hash=$("${DC[@]}" exec -T cacti-master php -r 'echo password_hash(stream_get_contents(STDIN), PASSWORD_BCRYPT);' < "$installer_password_file")
+    "${DC[@]}" exec -T cacti-db mariadb -ucactiuser -pcactiuser cacti -e "UPDATE user_auth SET password='${installer_password_hash}' WHERE id=1 AND username='admin';"
+    INSTALLER_TEST_URL="http://127.0.0.1:${CACTI_E2E_PORT:-8088}/" \
+        INSTALLER_TEST_PASSWORD_FILE="$installer_password_file" \
+        node ../installer-native.cjs
+    cleanup_installer_password
+    trap - EXIT
+else
+    "${DC[@]}" exec -T cacti-master php /var/www/html/cli/install_cacti.php --accept-eula --install --mode=1 --automationmode=0
+fi
 
 # Confirm the installer populated the version row; abort early if it did not.
 # Kadupul tracks the installed db version in a dedicated `version` table (see

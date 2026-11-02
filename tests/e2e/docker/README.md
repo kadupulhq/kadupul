@@ -32,6 +32,16 @@ The script brings the stack up, seeds the database, runs every test in
 `tests/` in lexical order, and tears the stack down on exit. The final exit
 code is the worst test exit code.
 
+To install through the actual browser workflow before running the same checks,
+set `CACTI_E2E_INSTALLER_BROWSER=1`. This requires the locked `tests/e2e` npm
+dependencies and its Playwright Chromium runtime. `run.sh` creates an ephemeral
+review key shared by the fixture's web and CLI runtimes. Browser setup creates
+a private temporary administrator credential, authenticates through the native
+login, and removes that credential file on exit. The browser harness checks
+configuration, one CSRF refresh, required execution consent, the native worker,
+CSP and French locale selection. Both CLI and browser installation jobs gate
+the CLI Docker integration result in CI.
+
 By default the master Kadupul UI binds to `127.0.0.1:8088`. To use a different port, set `CACTI_E2E_PORT` before running: `CACTI_E2E_PORT=8090 ./run.sh`.
 
 ## Tests

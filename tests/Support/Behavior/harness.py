@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import secrets
 import subprocess
 import sys
 import tempfile
@@ -307,6 +308,10 @@ class Session:
 class Harness:
     def __init__(self, args):
         self.args = args
+        # Share one disposable review key across container replacements and
+        # their CLI/background workers; never include it in captured evidence.
+        if not os.environ.get('BEHAVIOR_TEST_APP_SECRET'):
+            os.environ['BEHAVIOR_TEST_APP_SECRET'] = secrets.token_hex(32)
         # One stable project name. Keying it to the pid built a fresh image set on
         # every run, which accumulated to tens of gigabytes locally and would do
         # the same on CI.
@@ -474,16 +479,18 @@ class Harness:
         self.capture('database/fresh-schema', {'version': self.sql('SELECT * FROM version'),
                      'tables': self.sql('SHOW TABLES'), 'devices': self.devices(),
                      'columns': self.sql('SHOW COLUMNS FROM host')})
-        install = self.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=1')
+        # Provision this disposable administrator after fresh-schema evidence,
+        # before CLI authorization enforces its password-change policy.
+        password = self.php('-r', 'echo password_hash("behavior-admin", PASSWORD_BCRYPT);')['stdout'].strip()
+        self.sql("UPDATE user_auth SET password='" + password + "', must_change_password='', password_change='', enabled='on', locked='' WHERE id=1 AND username='admin' AND realm=0;")
+        install = self.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=1', '--automationmode=0')
         self.capture('upgrade/install', install)
         if install['exit']:
             raise RuntimeError('Installer failed; see captured result')
         version = self.sql('SELECT cacti FROM version').strip()
         if version in ('', 'new_install'):
             raise RuntimeError('Installer did not finalize schema')
-        # Fixture changes after installer evidence. Never connect to a developer DB.
-        password = self.php('-r', 'echo password_hash("behavior-admin", PASSWORD_BCRYPT);')['stdout'].strip()
-        self.sql("UPDATE user_auth SET password='" + password + "', must_change_password='', password_change='', enabled='on' WHERE username='admin';")
+        # Remaining fixture changes follow installer evidence.
         self.sql("REPLACE INTO settings(name,value) VALUES ('path_php_binary','/usr/local/bin/php'),('path_rrdtool','/usr/bin/rrdtool'),('path_snmpget','/usr/bin/snmpget'),('path_snmpwalk','/usr/bin/snmpwalk'); UPDATE host SET disabled='on'; UPDATE automation_networks SET enabled='';")
         port = self.compose('port', 'web', '80')['stdout'].strip()
         self.base = 'http://' + port

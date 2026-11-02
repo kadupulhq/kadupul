@@ -79,6 +79,7 @@
         "shipmonk/composer-dependency-analyser": "^1.8",
         "symfony/error-handler": "7.4.*",
         "symfony/stopwatch": "7.4.*",
+        "symfony/twig-bridge": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*"
     },
     "minimum-stability": "stable",

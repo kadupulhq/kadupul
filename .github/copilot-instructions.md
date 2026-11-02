@@ -31,7 +31,7 @@ findings, request re-review, and verify latest-head CI before an authorized merg
 - i18n: wrap UI strings with `__('...')`.
 
 ## CLI and daemon workflows
-- Install/upgrade: `php -q cli/install_cacti.php --accept-eula --install --force`; DB upgrade when needed: `php -q cli/upgrade_database.php --forcever=$(cat include/cacti_version)`.
+- Installer: provide the shared `APP_SECRET` and an eligible operator as described in `docs/installer-1.3.md`, then use `php bin/console kadupul:install --accept-eula --install --automationmode=0`. The legacy `cli/install_cacti.php` entry translates flags to this workflow. DB upgrade utility when needed: `php -q cli/upgrade_database.php --forcever=$(cat include/cacti_version)`.
 - Polling:
   - One-shot: `php poller.php --poller=1 --force --debug`.
   - Daemon loop: `./cactid.php --foreground --debug` or systemd via `tests/tools/cactid.service` and `service/README.md`.
@@ -71,7 +71,7 @@ findings, request re-review, and verify latest-head CI before an authorized merg
 ## Useful references
 - Bootstrap/config: `include/global.php`, `include/config.php.dist`.
 - Core libs: `lib/database.php`, `lib/functions.php`, `lib/poller.php`, `lib/template.php`, `lib/plugins.php`.
-- Exemplars: `host_templates.php` (full CRUD page with AJAX, CSRF and validation), `cactid.php` (daemon loop), `cli/install_cacti.php` (installer flow).
+- Exemplars: `host_templates.php` (full CRUD page with AJAX, CSRF and validation), `cactid.php` (daemon loop), `src/Platform/Application/Installer/InstallerWorkflow.php` (shared installer use cases), with `cli/install_cacti.php` as a compatibility shim.
 
 ## Main migration review
 

@@ -2,7 +2,7 @@ name: CLI maintenance Docker integration
 
 on:
   pull_request:
-    branches: [main, lts/1.2]
+    branches: [main, lts/1.2, fix/main-installer-automation-mode]
   merge_group:
   push:
     branches: [main, lts/1.2]
@@ -10,6 +10,11 @@ on:
       - 'cli/**'
       - 'include/**'
       - 'lib/**'
+      - 'install/**'
+      - 'bin/legacy-installer.php'
+      - 'src/Platform/**'
+      - 'templates/platform/installer.html.twig'
+      - 'config/**'
       - 'cacti.sql'
       - 'lib/api_tree.php'
       - 'lib/data_query.php'
@@ -21,6 +26,8 @@ on:
       - 'composer.json'
       - 'composer.lock'
       - 'tests/e2e/docker/**'
+      - 'tests/e2e/installer-native.cjs'
+      - 'tests/e2e/package*.json'
       - 'tests/tools/check_cli_version.sh'
       - '.github/workflows/cli-docker-integration.yml'
   workflow_dispatch:
@@ -59,12 +66,19 @@ jobs:
             cli/*
             include/*
             lib/*
+            install/*
+            bin/legacy-installer.php
+            src/Platform/*
+            templates/platform/installer.html.twig
+            config/*
             cacti.sql
             docs/audit_schema.sql
             .dockerignore
             composer.json
             composer.lock
             tests/e2e/docker/*
+            tests/e2e/installer-native.cjs
+            tests/e2e/package*.json
             tests/tools/check_cli_version.sh
             .github/workflows/cli-docker-integration.yml
         run: bash tests/tools/ci_change_scope.sh
@@ -94,6 +108,43 @@ jobs:
           CACTI_E2E_TEST_GLOB: tests/09-cli-maintenance-integration.sh
         run: tests/e2e/docker/run.sh
 
+  installer-browser:
+    needs: changes
+    if: ${{ needs.changes.outputs.relevant == 'true' }}
+    permissions:
+      contents: read
+      packages: read
+    name: Native installer browser integration
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/ghcr-login # zizmor: ignore[self-repository]
+        with:
+          token: ${{ github.token }}
+          username: ${{ github.actor }}
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
+        with:
+          php-version: '8.4'
+          coverage: none
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: tests/e2e/package-lock.json
+      - name: Install locked browser runner
+        working-directory: tests/e2e
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          node node_modules/playwright/cli.js install --with-deps chromium
+      - name: Exercise fresh installation through native authentication
+        env:
+          CACTI_E2E_INSTALLER_BROWSER: '1'
+          CACTI_E2E_TEST_GLOB: tests/09-cli-maintenance-integration.sh
+        run: tests/e2e/docker/run.sh
+
   cli-docker-integration-result:
     name: CLI Docker integration result
     # Always reports: a required check reads a skipped job as passing.
@@ -102,6 +153,7 @@ jobs:
     needs:
       - changes
       - cli-database
+      - installer-browser
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -115,5 +167,5 @@ jobs:
       - name: Require every gating job to pass
         env:
           NEEDS_JSON: ${{ toJSON(needs) }}
-          ALLOWED_SKIPS: ${{ needs.changes.result == 'success' && needs.changes.outputs.relevant == 'false' && 'cli-database' || '' }}
+          ALLOWED_SKIPS: ${{ needs.changes.result == 'success' && needs.changes.outputs.relevant == 'false' && 'cli-database installer-browser' || '' }}
         run: bash tests/tools/require_job_results.sh

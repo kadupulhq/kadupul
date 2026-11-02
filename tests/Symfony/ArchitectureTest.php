@@ -229,6 +229,7 @@ final class ArchitectureTest extends TestCase
             'LegacyWorkerRunner' => [
                 'src/Platform/Contract/LegacyWorkerRunner.php',
                 'src/Platform/Infrastructure/Legacy/LegacyWorkerProcess.php',
+                'src/Platform/Infrastructure/Legacy/LegacyInstallerClient.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyBoostPartitionWriter.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyDataSourceTitleReapplier.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyDataQueryIndexReorderer.php',

@@ -22,7 +22,7 @@ direct web access to the command directory.
 | Templates, import and automation | `import_template.php`, `import_package.php`, `repair_templates.php`, `input_whitelist.php`, `apply_automation_rules.php` | Planned |
 | RRD tools | `splice_rrd.php`, `float_rrdfiles.php`, `batchgapfix.php`, `removespikes.php`, `structure_rra_paths.php`, `update_heartbeat.php` | Planned |
 | Miscellaneous | `plugin_manage.php`, `md5sum.php`, `refresh_csrf.php`, `sqltable_to_php.php` | Planned |
-| Install and upgrade | `install_cacti.php`, `upgrade_database.php` | Planned, last: the parity harness installs through them |
+| Install and upgrade | `install_cacti.php`, `upgrade_database.php` | Installer workflow implemented in #1304 with `kadupul:install` and a legacy argument shim; the standalone upgrade utility remains native. The parity harness exercises genuine fresh installation, upgrade, failure and retry paths. |
 | Devices | `add_device.php`, `change_device.php`, `remove_device.php`, `host_update_template.php`, `poller_reindex_hosts.php`, `push_out_hosts.php` | After the open Inventory stack (#288 to #316) merges |
 
 ## Audit and repair decisions

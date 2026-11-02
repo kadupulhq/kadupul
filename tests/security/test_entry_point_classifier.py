@@ -13,6 +13,7 @@ import subprocess
 import sys
 import tempfile
 import shutil
+import re
 from pathlib import Path
 from unittest.mock import patch
 
@@ -1068,9 +1069,53 @@ def verify_inventory_pipeline():
     return []
 
 
+def verify_installer_authentication_pins():
+    project = Path(__file__).resolve().parents[2]
+    classifier = inventory.CLASSIFIER.read_text()
+    block = re.search(r'const INSTALLER_AUTHENTICATION_SOURCES = \[(.*?)\n\];', classifier, re.S)
+    if block is None:
+        return ['installer authentication source pins are missing'], 1
+    paths = re.findall(r"'([^']+)' => '[a-f0-9]{64}'", block[1])
+    if len(paths) < 10:
+        return ['installer authentication handoff is incomplete'], 1
+    failures = []
+    count = 0
+    with tempfile.TemporaryDirectory(prefix='installer-authentication-pins-') as directory:
+        root = tree(directory)
+        (root / 'include/global_arrays.php').write_text(REALMS.replace("'page.php' => 3,", "'page.php' => 3, 'install.php' => 26,"))
+        for path in paths:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(project / path, root / path)
+        entries = {'install/install.php': 'realm:26', 'install/background.php': 'cli-only',
+                   'install/installer-bootstrap.php': 'guarded-fragment',
+                   'app.php/installer': 'symfony:platform_installer'}
+        rows = run(root, list(entries)[:-1])
+        count += 1
+        if any(rows.get(path, ('missing', ''))[0] != expected for path, expected in entries.items()):
+            failures.append('reviewed native installer handoff was not admitted: ' + repr(rows))
+        for path in paths:
+            original = (root / path).read_bytes()
+            (root / path).write_bytes(original + b'\n// unreviewed installer authentication change\n')
+            rows = run(root, list(entries)[:-1])
+            count += 1
+            if any(rows.get(entry, ('missing', ''))[0] != 'unknown' for entry in entries):
+                failures.append('changed installer authentication source retained admission: ' + path)
+            (root / path).write_bytes(original)
+        shutil.copyfile(root / 'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php',
+                        root / 'src/ZInstallerController.php')
+        rows = run(root, [])
+        count += 1
+        if rows.get('app.php/installer', ('missing', ''))[0] != 'unknown':
+            failures.append('counterfeit installer controller inherited the reviewed route admission')
+    return failures, count
+
+
 def main():
     failures = verify_inventory_pipeline()
     count = 4
+    installer_failures, installer_count = verify_installer_authentication_pins()
+    failures.extend(installer_failures)
+    count += installer_count
     # Real reviewed Data Input routes must pin private/application callees too.
     # Mutate owned copies of the actual source; unchanged action/adapter bytes
     # must not leave the realm annotation identical after removing enforcement.

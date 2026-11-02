@@ -1,132 +1,66 @@
 <?php
+
+declare(strict_types=1);
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
-error_reporting(E_ALL);
-
-define('IN_CACTI_INSTALL', 1);
-
-include_once('../include/auth.php');
-require_once($config['base_path'] . '/lib/api_automation_tools.php');
-require_once($config['base_path'] . '/lib/api_automation.php');
-require_once($config['base_path'] . '/lib/api_data_source.php');
-require_once($config['base_path'] . '/lib/api_graph.php');
-require_once($config['base_path'] . '/lib/api_device.php');
-require_once($config['base_path'] . '/lib/api_tree.php');
-require_once($config['base_path'] . '/lib/data_query.php');
-require_once($config['base_path'] . '/lib/import.php');
-require_once($config['base_path'] . '/lib/poller.php');
-require_once($config['base_path'] . '/lib/snmp.php');
-require_once($config['base_path'] . '/lib/sort.php');
-require_once($config['base_path'] . '/lib/template.php');
-require_once($config['base_path'] . '/lib/utility.php');
-include_once('./functions.php');
-
-set_default_action();
-
-prime_default_settings();
-
-/***** SAFETY CHECKS FOR OLDER OR SECURED SYSTEMS ****/
-$hasShellExec  = is_function_enabled('shell_exec');
-$hasExec       = is_function_enabled('exec');
-$hasJson       = interface_exists('JsonSerializable');
-$hasEverything = $hasJson && $hasShellExec && $hasExec;
-
-if ($hasEverything) {
-	include_once('../lib/installer.php');
+// Preserve the native login, account policy, realm 26 and collector bootstrap.
+// Symfony owns the workflow only after that boundary admits this request.
+if (!in_array($_SERVER['REQUEST_METHOD'] ?? '', ['GET', 'HEAD', 'POST'], true)) {
+    header('Allow: GET, HEAD, POST');
+    http_response_code(405);
+    exit;
 }
-
-$help = '';
-
-if ($config['cacti_server_os'] == 'unix') {
-	if ($config['cacti_db_version'] == 'new_install') {
-		if (isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Apache') !== false) {
-			$help = 'Install-Under-CentOS_LAMP.html';
-		} elseif (file_exists('/etc/redhat-release')) {
-			$help = 'Install-Under-CentOS_LAMP.html';
-		} elseif (file_exists('/etc/os-release')) {
-			$contents = file_get_contents('/etc/os-release');
-			if (stripos($contents, 'debian') !== false || stripos($contents, 'ubuntu')) {
-				$help = 'Installing-Under-Ubuntu-Debian.html';
-			}
-		}
-	} else {
-		if (isset($_SERVER['SERVER_SOFTWARE'])) {
-			$help = 'Upgrading-Cacti.html';
-		} else {
-			$help = 'Upgrading-Cacti.html';
-		}
-	}
-} else {
-	if ($config['cacti_db_version'] == 'new_install') {
-		$help = 'Installing-Under-Windows.html';
-	} else {
-		$help = 'Upgrading-Cacti-Under-Windows.html';
-	}
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && !is_string($_POST['__csrf_magic'] ?? null)) {
+    http_response_code(403);
+    exit;
 }
-
-$help_anchor = '';
-if ($help != '') {
-	$help_anchor = '<a style="padding:2px" href="#" data-page="' . $help . '" title="' . __esc('Kadupul Install Help') . '" class="helpPage menu_parent"><i class="far fa-question-circle"></i></a>';
+define('IN_CACTI_INSTALL', true);
+define('KADUPUL_INSTALLER_WEB', true);
+define('KADUPUL_REDACT_DATABASE_LOGS', true);
+define('KADUPUL_THROW_DATABASE_ERRORS', true);
+$installerBufferLevel = ob_get_level();
+chdir(dirname(__DIR__));
+$auth_json = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? null) === 'XMLHttpRequest' || ($_GET['view'] ?? null) === 'status';
+if ($auth_json) {
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Cache-Control: private, no-store');
+    header('X-Content-Type-Options: nosniff');
 }
-
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<?php
-print html_common_header(__('Kadupul Server v%s - Maintenance', CACTI_VERSION));
-if ($hasEverything) {
-	print get_md5_include_js('install/install.js');
+require __DIR__ . '/../include/auth.php';
+require __DIR__ . '/installer-bootstrap.php';
+// The Twig page supplies its own token fields and external CSP-safe script.
+while (ob_get_level() > $installerBufferLevel) {
+    ob_end_clean();
 }
-print get_md5_include_css('install/install.css');
-?>
-</head>
-<body>
-	<div class='cactiInstallTable'>
-		<div class='cactiTableTitleRow cactiBorderWall'>
-			<div class='textHeaderDark'><?php print __esc('Kadupul Server v%s - Installation Wizard', CACTI_VERSION); ?><span style="float:right"><?php print $help_anchor;?><a class="menu_parent" id="installRefresh" href="#" title="<?php print __esc('Refresh current page');?>" style="padding:2px"><i class="fa fa-redo"></i></a></span></div>
-		</div>
-		<div class='cactiInstallArea cactiBorderWall'>
-			<div class='cactiInstallAreaContent' id='installContent'>
-<?php
-if ($hasEverything) {
-	print Installer::sectionTitle(__('Initializing'));
-	print Installer::sectionNormal(__('Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work.', CACTI_VERSION));
-} else {
-	print '<div class="installErrorImage"><img src=\'../images/kadupul-logo.png\'></div>';
-	print '<div class="installErrorText">';
-	print '<p>' . __('Error') . '</p>';
-	print '<ul>';
-	if (!$hasJson) {
-		print '<li>' . __('The php-json module must also be installed.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/book.json.php">JavaScript Object Notation</a>.') . '</li>';
-		print '<br>';
-	}
-	if (!($hasExec && $hasShellExec)) {
-		print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
-	}
-	print '</ul></div>';
+$kernel = require __DIR__ . '/../config/bootstrap.php';
+$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$root = rtrim($config['url_path'] ?? '/', '/');
+if (!str_starts_with($root, '/') && $root !== '' || str_starts_with($root, '//') || preg_match('/[\\x00-\\x20\\\\?#]/', $root)) {
+    http_response_code(500);
+    exit;
 }
-?>
-			</div>
-			<div class='cactiInstallLoader' id='installLoader'>
-				<div class='cactiInstallLoaderLogo'><img src='../images/kadupul-logo.png' /></div>
-				<div class='cactiInstallLoaderSpinnerTheme cactiInstallLoaderSpinner'></div>
-			</div>
-		</div>
-		<div class='cactiInstallButtonArea saveRow'>
-			<input class='installButton' id='buttonPrevious' type='button' value='Previous' style='display: none'>
-			<input class='installButton' id='buttonNext' type='button' value='Next' style='display: none'>
-			<input class='installButton' id='buttonTest' type='button' value='Test' style='display:none'>
-			<input id='installData' type='hidden'>
-		</div>
-		<div id='installDebug'></div>
-		<div class='cactiInstallCopyrightArea textHeaderDark'><?php print COPYRIGHT_YEARS;?></div>
-	</div>
-<?php
-include_once(dirname(__FILE__) . '/../include/global_session.php');
-?>
-</body>
-</html>
+$request = $request->duplicate(server: array_replace($request->server->all(), [
+    'SCRIPT_FILENAME' => dirname(__DIR__) . '/app.php',
+    'SCRIPT_NAME' => $root . '/app.php',
+    'PHP_SELF' => $root . '/app.php/installer',
+    'REQUEST_URI' => $root . '/app.php/installer',
+]));
+$locale = $_SESSION['sess_user_language'] ?? null;
+if (!is_string($locale) || $locale === '') {
+    $locale = read_config_option('install_language', true) ?: read_config_option('i18n_default_language', true);
+}
+if (is_string($locale) && preg_match('/\\A[a-z]{2}(?:[-_][a-zA-Z]{2})?\\z/D', $locale)) {
+    $request->attributes->set('_locale', str_replace('_', '-', $locale));
+}
+$response = $kernel->handle($request);
+// global_session.php renders legacy inline JavaScript; it is not the session
+// persistence boundary. Native PHP session shutdown persists this request.
+// Native authentication supplied the login page's policy before Symfony ran.
+// This standalone page has its own stricter policy and no legacy inline code.
+header_remove('Content-Security-Policy');
+header_remove('Content-Security-Policy-Report-Only');
+$response->send();
+$kernel->terminate($request, $response);
