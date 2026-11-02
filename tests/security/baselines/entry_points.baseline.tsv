@@ -250,7 +250,7 @@ include/js/index.php	anonymous-allowed	redirect-only
 include/plugins.php	web-server-denied	nginx; apache .htaccess
 include/request_profile.php	anonymous-allowed	inert: declarations and literal assignments only
 include/runtime.php	anonymous-allowed	fragment without bootstrap, reviewed at 338bc1c9ed7b; included by config/bootstrap.php, include/global.php
-include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 6a12c7b7cb41; included by include/global.php
+include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 5ca27d90f616; included by include/global.php
 include/themes/classic/default/index.php	anonymous-allowed	redirect-only
 include/themes/classic/images/index.php	anonymous-allowed	redirect-only
 include/themes/classic/index.php	anonymous-allowed	redirect-only

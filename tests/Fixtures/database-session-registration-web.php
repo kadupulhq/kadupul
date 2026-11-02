@@ -11,6 +11,12 @@ set_error_handler(static function (int $severity): bool {
     throw new RuntimeException('Native session registration warning: ' . $severity);
 });
 $database = new PDO(getenv('KADUPUL_SESSION_FIXTURE_DSN'), getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+preg_match_all('/(\w+)=([^;]*)/', substr(getenv('KADUPUL_SESSION_FIXTURE_DSN'), 6), $pairs, PREG_SET_ORDER);
+$options = array_column($pairs, 2, 1);
+$database_hostname = $options['host'];
+$database_port = (int) $options['port'];
+$database_default = $database->query('SELECT DATABASE()')->fetchColumn();
+$database_sessions = ["$database_hostname:$database_port:$database_default" => $database];
 function db_column_exists(string $table, string $column): bool {
     $statement = $GLOBALS['database']->prepare('SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?');
     $statement->execute([$table, $column]);

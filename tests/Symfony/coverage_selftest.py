@@ -84,6 +84,26 @@ def main():
     parser.add_argument('--database', type=Path, required=True)
     parser.add_argument('--offline', type=Path, required=True)
     args = parser.parse_args()
+    for source in ('lib/session_data.php', 'lib/session_store.php', 'lib/session_metadata.php', 'include/session.php'):
+        for mutation in ('omitted', 'unexecuted'):
+            with tempfile.TemporaryDirectory(prefix='native-session-unit-negative-') as temporary:
+                scratch = Path(temporary)
+                unit = scratch / 'unit.php'
+                subprocess.run([args.php, str(ROOT / 'tests/Symfony/native_session_coverage_mutate.php'),
+                                str(args.unit.resolve()), str(unit), source, mutation], check=True,
+                               capture_output=True, text=True, timeout=60)
+                output = scratch / 'result.xml'
+                output.write_text('previous report')
+                result = subprocess.run([args.php, str(ROOT / 'tests/Symfony/merge_coverage.php'),
+                                         str(unit), str(args.files.resolve()), str(args.database.resolve()),
+                                         str(args.offline.resolve()), str(output)],
+                                        capture_output=True, text=True, timeout=60)
+                expected = 'Missing measured native session execution: ' + source
+                if result.returncode == 0 or expected not in result.stdout + result.stderr:
+                    raise RuntimeError(f'Native session {source}/{mutation}: unexpected merger result: {result.stdout} {result.stderr}')
+                if output.read_text() != 'previous report':
+                    raise RuntimeError('Missing native session execution replaced the previous report')
+                print('PASS native-session-' + mutation + '-' + source, flush=True)
     manifest = json.loads((args.files / 'observations.json').read_text())
     measured = {'php': '8.2', 'files': {}}
     prefix = '/var/www/html/'

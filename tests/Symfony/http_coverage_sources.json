@@ -99,6 +99,9 @@
     "tests/Symfony/vdef_browser_probe.cjs",
     "tests/Symfony/vdef_scenarios.py",
     "tests/Symfony/vdef_transaction_probe.php",
-    "tests/e2e/browser-coverage.js"
+    "tests/e2e/browser-coverage.js",
+    "lib/session_data.php",
+    "lib/session_store.php",
+    "lib/session_metadata.php"
   ]
 }

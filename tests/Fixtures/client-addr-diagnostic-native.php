@@ -13,7 +13,7 @@ $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (isset($argv[3])) {
-    $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'tests/Unit/Security/ClientAddrDiagnosticNativeTest.php', 'include/global_constants.php', 'include/session.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'cacti.sql', 'remote_agent.php', 'lib/remote_agent_auth.php', 'lib/functions.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    $sources = array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'tests/Unit/Security/ClientAddrDiagnosticNativeTest.php', 'include/global_constants.php', 'include/session.php', 'lib/session_data.php', 'lib/session_store.php', 'lib/session_metadata.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'cacti.sql', 'remote_agent.php', 'lib/remote_agent_auth.php', 'lib/functions.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
     $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/client-addr-diagnostic-native.php', $argv[1], $sources);
     define('CLIENT_ADDR_TEST_COVERAGE', true);
     if ($scenario['audit'] ?? false) define('AUTH_POLICY_TEST_COVERAGE', true);
@@ -24,6 +24,7 @@ require $root . '/include/global_constants.php';
 require $root . '/lib/functions.php';
 require $root . '/lib/remote_agent_auth.php';
 require $root . '/tests/Helpers/PhpSource.php';
+require $root . '/lib/session_metadata.php';
 
 $config = array('is_web' => false, 'base_path' => $root,
     'proxy_headers' => $scenario['headers'], 'proxy_trusted_addresses' => $scenario['trusted'],
@@ -38,6 +39,25 @@ $database->exec('CREATE TABLE poller(id INTEGER, hostname TEXT, disabled TEXT)')
 $database->exec("INSERT INTO poller VALUES(1,'192.0.2.254',''),(2,'203.0.113.5','')");
 $database->exec('CREATE TABLE sessions(id TEXT PRIMARY KEY, remote_addr TEXT, access INTEGER, data TEXT, user_id INTEGER, user_agent TEXT, start_time TEXT, transactions INTEGER)');
 $sessionWrites = 0;
+// This fixture checks the address-producing facade at its persistence boundary.
+// Real native framing, transaction and storage behavior have their own actual
+// MySQL/MariaDB callback suites; this SQLite row records exact supplied bytes.
+final class ProxyDiagnosticSessionBoundary
+{
+    public function write(string $id, #[SensitiveParameter] string $data, string $address, string $agent): bool
+    {
+        if ($id !== 'owned-session' || $data !== 'fixture-session') throw new RuntimeException('Unexpected diagnostic session input.');
+        $metadata = CactiSessionMetadata::forStorage($address, $agent);
+        if ($metadata === false) return false;
+        ++$GLOBALS['sessionWrites'];
+        return $GLOBALS['database']->prepare('INSERT INTO sessions (id,remote_addr,access,data,user_id,user_agent) VALUES (?,?,?,?,?,?)')->execute([$id,$metadata['address'],time(),$data,$GLOBALS['_SESSION']['sess_user_id'],$metadata['agent']]);
+    }
+}
+function cacti_db_session_backend(): ProxyDiagnosticSessionBoundary
+{
+    return new ProxyDiagnosticSessionBoundary();
+}
+
 $auditParameters = [];
 function db_fetch_assoc($sql, $cache = true, $connection = false)
 {
@@ -96,7 +116,7 @@ function remote_agent_auth_cache_set($key, $value, $ttl = 30)
 // Including these entire entry points would start a web session or dispatch a
 // remote action. Extract their unchanged functions with the shared tokenizer.
 foreach (array('remote_agent.php' => array('remote_client_authorized'),
-    'include/session.php' => array('cacti_db_session_check', 'cacti_db_session_write')) as $file => $functions) {
+    'include/session.php' => array('cacti_db_session_write')) as $file => $functions) {
     $source = file_get_contents($root . '/' . $file);
     if (!is_string($source)) {
         throw new RuntimeException('Unable to read caller source');
