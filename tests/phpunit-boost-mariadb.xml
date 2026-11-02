@@ -13,6 +13,7 @@
 			<file>./integration/DurablePollerQueueMariaDbTest.php</file>
 			<file>integration/ImportParentRollbackMariaDbTest.php</file>
 			<file>integration/UserGroupCopyZeroRowMariaDbTest.php</file>
+			<file>integration/InstallerAutomationRepairMariaDbTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

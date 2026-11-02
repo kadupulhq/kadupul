@@ -1070,6 +1070,10 @@ function log_install_to_file($section, $data, $flags = FILE_APPEND, $level = POL
  *  Cacti 1.2.4.
  **/
 function repair_automation() {
+	global $database_last_error;
+
+	// A new installer operation must not reuse an earlier handled database error.
+	$database_last_error = false;
 	log_install_always('', 'Repairing Automation Rules');
 
 	$hash_array = array(
@@ -1110,18 +1114,35 @@ function repair_automation() {
 			)
 		);
 
+		if ($exists === false || db_error()) {
+			throw new RuntimeException('Unable to read automation graph rules.');
+		}
+
 		if (cacti_sizeof($exists)) {
 			$exists_snmp_query_id = db_fetch_cell_prepared('SELECT id
 				FROM snmp_query
 				WHERE hash = ?',
 				array($item['snmp_query_hash']));
 
+			if (db_error()) {
+				throw new RuntimeException('Unable to read automation template references.');
+			}
+
 			$exists_snmp_query_graph_id = db_fetch_cell_prepared('SELECT id
 				FROM snmp_query_graph
 				WHERE hash = ?',
 				array($item['snmp_query_graph_hash']));
 
-			db_execute_prepared('UPDATE automation_graph_rules
+			if (db_error()) {
+				throw new RuntimeException('Unable to read automation template references.');
+			}
+
+			// Unselected packages have no references to publish; retain their rules.
+			if (empty($exists_snmp_query_id) || empty($exists_snmp_query_graph_id)) {
+				continue;
+			}
+
+			if (db_execute_prepared('UPDATE automation_graph_rules
 				SET snmp_query_id = ?, graph_type_id = ?
 				WHERE id = ?',
 				array(
@@ -1129,7 +1150,9 @@ function repair_automation() {
 					$exists_snmp_query_graph_id,
 					$item['automation_id']
 				)
-			);
+			) === false) {
+				throw new RuntimeException('Unable to repair automation graph rules.');
+			}
 		}
 	}
 }
