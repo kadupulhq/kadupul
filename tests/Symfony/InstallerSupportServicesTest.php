@@ -491,6 +491,13 @@ final class InstallerSupportServicesTest extends TestCase
         $writes = array_values(array_filter(self::$calls, static fn(array $call): bool => $call[0] === 'db_execute_prepared'));
         $this->assertCount(1, $writes);
         $this->assertSame(['8', '18', 1], $writes[0][1][1]);
+        self::$calls = [];
+        self::$handlers['db_fetch_row_prepared'] = static fn(string $sql, array $args): array => ['id' => $args[0]];
+        self::$handlers['db_fetch_cell_prepared'] = static fn(string $sql, array $args): int|false => in_array($args[0], ['9343eab1f4d88b0e61ffc9d020f35414', '46c4ee688932cf6370459527eceb8ef3'], true) ? 8 : false;
+        $repair->repair();
+        $writes = array_values(array_filter(self::$calls, static fn(array $call): bool => $call[0] === 'db_execute_prepared'));
+        $this->assertCount(1, $writes);
+        $this->assertSame([8, 8, 3], $writes[0][1][1]);
     }
 
     /** Remote registration selects its explicit connection and preserves adjacent configuration text. */
@@ -584,12 +591,33 @@ final class InstallerSupportServicesTest extends TestCase
         }
         unset(self::$handlers['db_error']);
         self::$handlers['db_fetch_row_prepared'] = static fn(): array => ['id' => 1];
+        self::$handlers['db_fetch_cell_prepared'] = static function (): bool {
+            $GLOBALS['database_last_error'] = 'failed';
+            return false;
+        };
         try {
             $repair->repair();
-            $this->fail('Missing template references accepted.');
+            $this->fail('Failed template lookup accepted.');
         } catch (\RuntimeException $error) {
             $this->assertStringContainsString('references', $error->getMessage());
         }
+        $GLOBALS['database_last_error'] = false;
+        $reads = 0;
+        self::$handlers['db_fetch_cell_prepared'] = static function () use (&$reads): int {
+            if (++$reads === 2) {
+                $GLOBALS['database_last_error'] = 'failed';
+            }
+            return 8;
+        };
+        try {
+            $repair->repair();
+            $this->fail('Failed graph-template lookup accepted.');
+        } catch (\RuntimeException $error) {
+            $this->assertStringContainsString('references', $error->getMessage());
+        }
+        $this->assertSame(2, $reads);
+        $this->assertCount(0, array_filter(self::$calls, static fn(array $call): bool => $call[0] === 'db_execute_prepared'));
+        $GLOBALS['database_last_error'] = false;
         self::$handlers['db_fetch_cell_prepared'] = static fn(): int => 8;
         self::$handlers['db_execute_prepared'] = static fn(): bool => false;
         $this->expectException(\RuntimeException::class);

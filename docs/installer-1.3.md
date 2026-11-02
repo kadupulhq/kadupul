@@ -241,8 +241,9 @@ exclusive external-secret initialization and failure propagation before a
 successful completion report. Migration progress retains native status values,
 version keys and SQL structure while withholding bound values and raw database
 error values. Unconfirmed replication acknowledgement remains a failed outcome;
-it does not undo data already copied to a collector. Missing automation
-references stop repair rather than replacing them with zero IDs.
+it does not undo data already copied to a collector. Automation rules for
+unselected templates remain unchanged until both references exist; failed
+database lookups still stop repair, and no missing reference is written as zero.
 
 Table discovery allows tables introduced by later upgrade scripts to be absent
 before migration. A confirmed zero-row metadata result is omitted from the

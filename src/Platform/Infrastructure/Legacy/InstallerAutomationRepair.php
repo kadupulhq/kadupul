@@ -72,6 +72,9 @@ final readonly class InstallerAutomationRepair
 				WHERE hash = ?',
                     array($item['snmp_query_hash'])
                 );
+                if ((bool) $this->native->call('db_error')) {
+                    throw new \RuntimeException('The installation automation template references are unavailable.');
+                }
 
                 $exists_snmp_query_graph_id = $this->native->call(
                     'db_fetch_cell_prepared',
@@ -81,8 +84,13 @@ final readonly class InstallerAutomationRepair
                     array($item['snmp_query_graph_hash'])
                 );
 
-                if (!(bool) $exists_snmp_query_id || !(bool) $exists_snmp_query_graph_id || (bool) $this->native->call('db_error')) {
+                if ((bool) $this->native->call('db_error')) {
                     throw new \RuntimeException('The installation automation template references are unavailable.');
+                }
+                // Fresh installations can select only some bundled templates.
+                // Leave unrelated rules untouched until both referenced templates exist.
+                if (!(bool) $exists_snmp_query_id || !(bool) $exists_snmp_query_graph_id) {
+                    continue;
                 }
                 $updated = $this->native->call(
                     'db_execute_prepared',

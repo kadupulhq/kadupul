@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use Kadupul\Platform\Infrastructure\Legacy\InstallerCollectorConfiguration;
+use Kadupul\Platform\Infrastructure\Legacy\InstallerAutomationRepair;
 use Kadupul\Platform\Infrastructure\Legacy\InstallerColorImport;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry;
 use Kadupul\Platform\Infrastructure\Legacy\NativeInstallerFunctions;
@@ -156,6 +157,23 @@ final class InstallerMigrationIntegrationTest extends TestCase
         } finally {
             ob_end_clean();
         }
+    }
+
+    /** Shipped rules may refer to bundled templates that the operator did not select. */
+    public function testAutomationRepairPreservesRulesForUnselectedTemplates(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+        $this->assertIsString($source);
+        foreach (['automation_graph_rules', 'snmp_query', 'snmp_query_graph'] as $table) {
+            $this->assertSame(1, preg_match('~CREATE TABLE [`]?' . $table . '[`]?\s*\(.*?;~s', $source, $match));
+            $this->importTable($this->local, $match[0]);
+        }
+        $this->assertSame(1, preg_match('~INSERT INTO `automation_graph_rules` VALUES .*?;~s', $source, $seed));
+        $this->local->exec($seed[0]);
+        $before = $this->local->query('SELECT * FROM automation_graph_rules ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC);
+        $this->assertNotEmpty($before);
+        (new InstallerAutomationRepair(new NativeInstallerFunctions()))->repair();
+        $this->assertSame($before, $this->local->query('SELECT * FROM automation_graph_rules ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC));
     }
 
     /** Release color imports are idempotent and execute native bound writes on the actual schema. */
