@@ -435,6 +435,9 @@ services:
         alias: Kadupul\Graphing\Infrastructure\Persistence\DbalPollerCacheSettings
     Kadupul\Graphing\Application\Port\PollerCacheRebuilder:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPollerCacheRebuilder
+    Kadupul\Graphing\Application\Command\ReplayRejectedSamples: ~
+    Kadupul\Graphing\Application\Port\RejectedSampleReplayer:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyRejectedSampleReplayer
     Kadupul\Graphing\Application\Command\AddTree: ~
     Kadupul\Graphing\Application\Command\AddTreeNode: ~
     Kadupul\Graphing\Application\Command\ListTreeChoices: ~
