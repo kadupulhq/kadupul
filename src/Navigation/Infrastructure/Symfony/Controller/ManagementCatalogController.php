@@ -43,6 +43,15 @@ final readonly class ManagementCatalogController
     #[Route('/management/mib-objects/{id}', name: 'management_mib_objects', defaults: ['screen' => 'mib-objects'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     #[Route('/management/mib-conventions/{id}', name: 'management_mib_conventions', defaults: ['screen' => 'mib-conventions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     #[Route('/management/mib-notification-attributes/{id}', name: 'management_mib_notification_attributes', defaults: ['screen' => 'mib-notification-attributes'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/graph-items/{id}', name: 'management_graph_items', defaults: ['screen' => 'graph-items'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/graph-data-sources/{id}', name: 'management_graph_data_sources', defaults: ['screen' => 'graph-data-sources'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/aggregate-members/{id}', name: 'management_aggregate_members', defaults: ['screen' => 'aggregate-members'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/data-source-definitions/{id}', name: 'management_data_source_definitions', defaults: ['screen' => 'data-source-definitions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/data-source-graphs/{id}', name: 'management_data_source_graphs', defaults: ['screen' => 'data-source-graphs'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/report-items/{id}', name: 'management_report_items', defaults: ['screen' => 'report-items'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/tree-items/{id}', name: 'management_tree_items', defaults: ['screen' => 'tree-items'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/collector-devices/{id}', name: 'management_collector_devices', defaults: ['screen' => 'collector-devices'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
+    #[Route('/management/network-devices/{id}', name: 'management_network_devices', defaults: ['screen' => 'network-devices'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     public function __invoke(CatalogScreen $screen, string $id, Request $request, ConsoleAccess $console, ManagementCatalogAccess $access, ViewManagementCatalog $view, Environment $twig, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
