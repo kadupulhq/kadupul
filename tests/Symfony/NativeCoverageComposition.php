@@ -147,7 +147,8 @@ final class NativeCoverageComposition
     {
         $hashes = [];
         foreach (['tests/Symfony/NativeCoverageComposition.php', 'tests/Symfony/NativeCoverageStack.php',
-            'tests/Symfony/compose_native_coverage.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/tools/sonar_coverage_artifacts.py',
+            'tests/Symfony/compose_native_coverage.php', 'tests/Fixtures/rrd-process-coverage.php',
+            'tests/Fixtures/worker-io-coverage.php', 'tests/Symfony/WorkerIoCoverage.php', 'tests/tools/sonar_coverage_artifacts.py',
             'tests/Symfony/merge_coverage.php', 'tests/Support/Behavior/merge_poller_coverage.php'] as $path) $hashes[$path] = self::digest($root . '/' . $path);
         return $hashes;
     }
