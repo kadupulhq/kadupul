@@ -263,9 +263,10 @@ Local verification also passes maximum-level PHPStan, Deptrac with zero
 uncovered dependencies, Symfony container lint, the global-state inventory and
 23 gettext PO/MO pairs. Entry-point inventory admits all 421 entries with
 no unknown gates; 27 installer source-pin regression checks pass. All 13 architecture tests now pass after registering the two existing installer
-operational-verification adapters in the explicit worker allowlist. The hotspot
-gate retains unrelated `lib/ping.php` drift.
-These checks remain open and their baselines were not relaxed.
+operational-verification adapters in the explicit worker allowlist. After
+reconciling current main, sink and architectural-hotspot checks pass with
+`LC_ALL=C`; only affected source entries were regenerated. GitHub checks on
+the published revision remain required before merge.
 
 
 ### Installer application execution
