@@ -74,6 +74,8 @@ jobs:
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
       - name: Verify test runner dispatch and missing-suite failures
         run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
+      - name: Verify installer usability evidence remains separate from release acceptance
+        run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
       - name: Install interface catalog build dependencies
@@ -378,7 +380,7 @@ jobs:
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
-            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerNativeStateTest|InstallerFailedPollTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|DbalMonitoringStoreDatabaseTest' \
+            -c phpunit-symfony.xml --filter 'CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerNativeStateTest|InstallerFailedPollTest|InstallerOperationalNativeEvidenceTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|DbalMonitoringStoreDatabaseTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \

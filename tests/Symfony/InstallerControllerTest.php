@@ -23,6 +23,41 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 
 final class InstallerControllerTest extends TestCase
 {
+    public function testRuntimeComparisonRequiresCsrfAndExplicitConsentBeforeDispatch(): void
+    {
+        foreach ([false, true] as $csrf) {
+            $backend = $this->createMock(InstallerBackend::class);
+            $backend->expects($this->never())->method('compareRuntime');
+            $request = Request::create('/installer', 'POST', ['action' => 'compare_runtime'], server: ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+            $response = ($this->controller($backend, $csrf))($request);
+            $this->assertSame($csrf ? 422 : 403, $response->getStatusCode());
+        }
+    }
+
+    public function testRuntimeComparisonAuthorizesBeforeReadingOrLaunching(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->once())->method('authorize')->willThrowException(new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException());
+        $backend->expects($this->never())->method('compareRuntime');
+        $request = Request::create('/installer', 'POST', ['action' => 'compare_runtime', 'runtime_confirmed' => '1'], server: ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $this->assertSame(403, ($this->controller($backend))($request)->getStatusCode());
+    }
+
+    public function testExplicitRuntimeComparisonHasNoInstallerMutationOrReservation(): void
+    {
+        $backend = $this->createMock(InstallerBackend::class);
+        $backend->expects($this->once())->method('authorize');
+        $checks = [['name' => 'Shared application secret', 'ok' => true, 'status' => 'verified', 'observed' => 'Matched', 'remedy' => '', 'value' => '']];
+        $backend->expects($this->once())->method('compareRuntime')->willReturn($checks);
+        foreach (['inspect', 'configure', 'start', 'status', 'recover'] as $method) {
+            $backend->expects($this->never())->method($method);
+        }
+        $request = Request::create('/installer', 'POST', ['action' => 'compare_runtime', 'runtime_confirmed' => '1'], server: ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $response = ($this->controller($backend))($request);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(['status' => 'compared', 'checks' => $checks], json_decode($response->getContent(), true));
+    }
+
     public function testDiagnosticsAreAuthorizedReadOnlyAndExcludeDeploymentData(): void
     {
         $backend = $this->createMock(InstallerBackend::class);
@@ -106,6 +141,7 @@ final class InstallerControllerTest extends TestCase
         $backend->expects($this->never())->method('configure');
         $backend->expects($this->never())->method('start');
         $backend->expects($this->never())->method('inspect');
+        $backend->expects($this->never())->method('compareRuntime');
         $response = ($this->controller($backend))(Request::create('/installer?view=status'));
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(['state' => 'failed', 'progress' => 41], json_decode($response->getContent(), true));

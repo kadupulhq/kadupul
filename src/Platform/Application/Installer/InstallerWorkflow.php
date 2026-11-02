@@ -29,6 +29,16 @@ final class InstallerWorkflow
         return InstallerDiagnostics::export($this->backend->inspect());
     }
 
+    /** @return list<array<string, mixed>> */
+    public function compareRuntime(bool $confirmed): array
+    {
+        $this->backend->authorize();
+        if (!$confirmed) {
+            throw new \InvalidArgumentException('Confirm the read-only worker runtime comparison.');
+        }
+        return $this->backend->compareRuntime();
+    }
+
     /** @param array<array-key, mixed> $input
      *  @return array<string, mixed>
      */

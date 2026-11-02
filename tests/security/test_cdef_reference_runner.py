@@ -14,9 +14,9 @@ spec.loader.exec_module(runner)
 
 
 class CdefReferenceRunnerTest(unittest.TestCase):
-    def test_all_twenty_three_required_probes_exist_and_names_are_unique(self):
-        self.assertEqual(23, len(runner.CASES))
-        self.assertEqual(23, len({name for name, *_ in runner.CASES}))
+    def test_all_twenty_four_required_probes_exist_and_names_are_unique(self):
+        self.assertEqual(24, len(runner.CASES))
+        self.assertEqual(24, len({name for name, *_ in runner.CASES}))
         for _, probe, _, _ in runner.CASES:
             self.assertTrue((runner.ROOT / runner.probe_path(probe)).is_file())
 
@@ -27,7 +27,9 @@ class CdefReferenceRunnerTest(unittest.TestCase):
                     'cli_collector_online','cli_collector_local','cli_collector_offline',
                     'cli_marker_refusal','cli_marker_coercion','cli_marker_success'}
         names = {name for name, *_ in runner.CASES}
-        self.assertEqual(original | {'aggregate_regeneration','aggregate_outer_callers','aggregate_generation_branches'}, names)
+        self.assertEqual(original | {'aggregate_regeneration','aggregate_outer_callers','aggregate_generation_branches','operational_verification'}, names)
+        self.assertEqual(Path('tests/security/installer_operational_native_probe.php'), runner.probe_path('operational_verification'))
+        self.assertIn(('operational_verification', 'operational_verification', (), True), runner.CASES)
         self.assertEqual(Path('tests/security/aggregate_generation_native_probe.php'), runner.probe_path('aggregate_generation'))
         self.assertEqual(Path('tests/security/aggregate_generation_branches_native_probe.php'), runner.probe_path('aggregate_generation_branches'))
         self.assertEqual(Path('tests/security/aggregate_outer_caller_native_probe.php'), runner.probe_path('aggregate_outer_callers'))

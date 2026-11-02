@@ -55,7 +55,9 @@ final class InstallerPresentationTest extends TestCase
         }
         self::assertSame(1, $xpath->query('//details[@id="discovery-settings"]//input[@name="options[SnmpOptions][password]"][@value=""]')->length);
         self::assertSame(1, $xpath->query('//details[@id="template-settings"]//input[@name="options[Templates][local]"][@checked]')->length);
-        self::assertSame('form_complete', $xpath->evaluate('string(//form/input[last()]/@name)'));
+        self::assertSame('form_complete', $xpath->evaluate('string(//form[input[@name="action"][@value="configure"]]/input[last()]/@name)'));
+        self::assertSame(1, $xpath->query('//form[not(@data-installer-form)][input[@name="action"][@value="compare_runtime"]]//input[@name="runtime_confirmed"][@required]')->length);
+        self::assertSame('fixture-token', $xpath->evaluate('string(//form[input[@name="action"][@value="compare_runtime"]]/input[@name="__csrf_magic"]/@value)'));
         self::assertSame('/monitor/install/install.php?view=diagnostics', $xpath->evaluate('string(//a[@download]/@href)'));
     }
 

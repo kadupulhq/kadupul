@@ -22,6 +22,54 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class InstallerConfigurationTest extends TestCase
 {
+    public function testPresetsNeverAcceptTheLicenseOrStartAWorkerDuringValidation(): void
+    {
+        $worker = $this->createMock(LegacyWorkerRunner::class);
+        $worker->expects($this->never())->method('run');
+        foreach (['standalone', 'collector'] as $preset) {
+            $command = $this->command($worker);
+            $this->assertSame(2, $command->execute(['--validate' => true, '--preset' => $preset, '--output' => 'json']));
+            $this->assertStringContainsString('Accept the license', $command->getDisplay());
+            $command = $this->command($worker);
+            $this->assertSame(0, $command->execute(['--validate' => true, '--preset' => $preset, '--accept-eula' => true, '--output' => 'json']));
+            $this->assertSame(['ok' => true, 'valid' => true], json_decode($command->getDisplay(), true, 8, JSON_THROW_ON_ERROR));
+        }
+    }
+
+    public function testCollectorPresetPreservesExplicitSettingsAndUsesAnExpectedNativeRole(): void
+    {
+        $worker = $this->createMock(LegacyWorkerRunner::class);
+        $worker->expects($this->once())->method('run')->with(
+            'legacy-installer.php',
+            'KADUPUL_INSTALLER_RESULT',
+            $this->callback(static fn(array $request): bool => $request['action'] === 'configure'
+                && $request['options'] === ['Mode' => '2', 'AutomationMode' => '1', 'Profile' => '007',
+                    'Templates' => ['all' => '0'], 'Eula' => true]),
+            null
+        )->willReturn(['ok' => false, 'output' => '', 'errors' => '', 'result' => ['data' => ['error' => 'Fixture refused persistence.']]]);
+        $this->configuration('{"Profile":"007","Templates":{"all":"0"}}', function (string $file) use ($worker): void {
+            $command = $this->command($worker);
+            $this->assertSame(1, $command->execute(['--action' => 'configure', '--preset' => 'collector',
+                '--configuration' => $file, '--automationmode' => '1', '--accept-eula' => true]));
+        });
+    }
+
+    public function testPresetConflictsAndObservationOrRetryCombinationsNeverReachWorker(): void
+    {
+        $worker = $this->createMock(LegacyWorkerRunner::class);
+        $worker->expects($this->never())->method('run');
+        foreach ([['--preset' => 'standalone'], ['--preset' => 'collector', '--action' => 'status'],
+            ['--preset' => 'standalone', '--install' => true, '--force' => true],
+            ['--preset' => 'unknown', '--validate' => true],
+            ['--preset' => 'standalone', '--validate' => true, '--mode' => '2']] as $arguments) {
+            $command = $this->command($worker);
+            $this->assertSame(2, $command->execute($arguments + ['--accept-eula' => true, '--output' => 'json']));
+            $data = json_decode($command->getDisplay(), true, 8, JSON_THROW_ON_ERROR);
+            $this->assertFalse($data['ok']);
+            $this->assertArrayHasKey('code', $data['error']);
+        }
+    }
+
     private function command(LegacyWorkerRunner $worker): CommandTester
     {
         $version = new InstallationVersion(

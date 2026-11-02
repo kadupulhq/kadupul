@@ -23,23 +23,23 @@ class spikekill
     private $user_info = array();
 
     // Required variables
-    var $rrdfile   = '';
+    public $rrdfile   = '';
 
-    var $method    = '';
-    var $avgnan    = '';
-    var $stddev    = '';
+    public $method    = '';
+    public $avgnan    = '';
+    public $stddev    = '';
 
-    var $out_start = 0;
-    var $out_end   = 0;
-    var $outliers  = '';
-    var $percent   = '';
-    var $numspike  = '';
+    public $out_start = 0;
+    public $out_end   = 0;
+    public $outliers  = '';
+    public $percent   = '';
+    public $numspike  = '';
 
     // Overridable
-    var $html      = true;
-    var $backup    = false;
-    var $debug     = false;
-    var $dryrun    = false;
+    public $html      = true;
+    public $backup    = false;
+    public $debug     = false;
+    public $dryrun    = false;
 
     // Defaults from cacti settings
     private $dmethod   = 1;

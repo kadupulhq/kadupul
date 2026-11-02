@@ -5,6 +5,33 @@ installation operator, and provide the shared application secret as described in
 [the installer workflow](installer-1.3.md). Configuration validation does not
 provision an administrator or replace installation readiness checks.
 
+## Deployment presets
+
+`--preset=standalone` and `--preset=collector` supply defaults for the two
+existing fresh-install roles. They set an expected native mode and disable
+discovery. The backend checks that expected role against the deployed database
+and collector configuration before committing settings. A collector preset does
+not provision a primary connection or change credentials.
+
+Presets do not accept the license, choose a profile ID, change template choices
+or authorize execution. The native default profile and existing template
+selection remain in effect unless explicitly supplied. Configuration and flags
+override discovery defaults; an explicit conflicting mode is rejected.
+
+```sh
+php bin/console kadupul:install --validate --preset=standalone --accept-eula --output=json
+php bin/console kadupul:install --action=configure --preset=collector --accept-eula --output=json
+```
+
+The first command performs only local validation. The second saves and reviews
+configuration using the eligible operator and configured collector role. Review
+runtime prerequisites and backups before explicitly using `--install`. Presets
+are not supported for observation or forced recovery: retry the retained plan
+using the documented recovery procedure. They reflect supported native roles,
+not a claim that operator usability or workload tuning has been established.
+
+## Configuration and secrets
+
 Store a JSON object in a protected configuration file outside the document root:
 
 ```json

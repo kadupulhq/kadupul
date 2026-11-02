@@ -37,6 +37,10 @@ services:
 
     Kadupul\Platform\Application\Installer\InstallerWorkflow:
         public: true
+    Kadupul\Platform\Application\Installer\VerifyInstallationOperation:
+        public: true
+    Kadupul\Platform\Application\Installer\OperationalEvidence:
+        alias: Kadupul\Platform\Infrastructure\Legacy\NativeOperationalEvidence
     Kadupul\Platform\Application\Installer\InstallerBackend:
         alias: Kadupul\Platform\Infrastructure\Legacy\NativeInstallerBackend
     Kadupul\Platform\Infrastructure\Symfony\InstallerWebContext:

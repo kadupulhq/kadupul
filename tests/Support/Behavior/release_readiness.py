@@ -7,14 +7,20 @@ import json
 import os
 from pathlib import Path
 import shutil
+import select
+import subprocess
 import sys
 import tempfile
+import time
 import uuid
 from types import SimpleNamespace
 
 import harness
 
 ROOT = harness.ROOT
+RECOVERY_CASES = ('partial_collector_sync', 'worker_crash', 'database_outage')
+COLLECTOR_ID = 60000
+COLLECTOR_SCHEMA = 'rehearsal_remote'
 
 
 def require(condition, message):
@@ -46,15 +52,251 @@ ksort($r); echo json_encode($r);'''
 
 
 def domain_state(h):
-    return {table: h.sql('SELECT * FROM ' + table + ' ORDER BY ' + key)
+    state = {table: h.sql('SELECT * FROM ' + table + ' ORDER BY ' + key)
             for table, key in [('host', 'id'), ('data_local', 'id'), ('graph_local', 'id'),
                                ('aggregate_graphs', 'id'), ('plugin_config', 'id'), ('plugin_hooks', 'id')]}
+    state['custom_template'] = h.sql("SELECT id,hash,name FROM host_template WHERE hash='dddddddddddddddddddddddddddddddd'")
+    state['custom_template_graphs'] = h.sql("SELECT htg.* FROM host_template_graph htg INNER JOIN host_template ht ON ht.id=htg.host_template_id WHERE ht.hash='dddddddddddddddddddddddddddddddd' ORDER BY htg.graph_template_id")
+    return state
+
+
+def installer_receipt(h):
+    receipt = json.loads(h.sql("SELECT value FROM settings WHERE name='installer_v13_job'"))
+    require(isinstance(receipt, dict) and isinstance(receipt.get('attempt'), int), 'Missing real installer receipt')
+    # Keep tokens, actor names and review fingerprints out of retained evidence.
+    return {key: receipt.get(key) for key in ('state', 'attempt', 'operation', 'cleanup_done', 'pending_collectors', 'target')}
+
+
+def require_recovery_evidence(evidence):
+    for name in RECOVERY_CASES:
+        case = evidence.get(name)
+        require(isinstance(case, dict) and case.get('observed') is True and case.get('preserved') is True,
+                'Missing native recovery evidence: ' + name)
+    require(evidence['partial_collector_sync'].get('repaired_sync') is True, 'Collector repair did not perform real synchronization')
+    for name in ('worker_crash', 'database_outage'):
+        require(evidence[name].get('native_and_outer_stopped') is True, 'Native and outer processes were not confirmed stopped: ' + name)
+    before = evidence['partial_collector_sync'].get('remote_before')
+    after = evidence['partial_collector_sync'].get('remote_after')
+    require(isinstance(before, list) and isinstance(after, list) and len(before) == len(after) == 2
+            and all(a != b for a, b in zip(before, after)), 'Collector evidence does not establish transfer of previously stale values')
+
+
+def prepare_offline_collector(h):
+    require(h.sql('SELECT COUNT(*) FROM poller WHERE id=' + str(COLLECTOR_ID)).strip() == '0', 'Collector fixture ID already exists')
+    require(h.sql("SELECT COUNT(*) FROM information_schema.SCHEMATA WHERE SCHEMA_NAME='" + COLLECTOR_SCHEMA + "'").strip() == '0', 'Collector fixture schema already exists')
+    constants = json.loads(checked(h.php('-r', 'require "include/global_constants.php"; echo json_encode([POLLER_STATUS_DOWN,POLLER_STATUS_IDLE]);'), 'Native collector status constants')['stdout'])
+    require(len(constants) == 2 and all(isinstance(value, int) for value in constants), 'Invalid native collector status constants')
+    h.sql("INSERT INTO poller(id,name,status,last_update,hostname,dbhost,dbdefault,dbuser,dbpass) VALUES ("
+          + str(COLLECTOR_ID) + ",'rehearsal-owned-collector'," + str(constants[0])
+          + ",NOW(),'rehearsal-owned-collector','db','" + COLLECTOR_SCHEMA + "','cactiuser','cactiuser')")
+    return constants[1]
+
+
+def await_condition(test, message, seconds=40):
+    deadline = time.monotonic() + seconds
+    while time.monotonic() < deadline:
+        if test():
+            return
+        time.sleep(.15)
+    raise RuntimeError(message)
+
+
+def owned_installer_process(h, outer, identity=None):
+    """Discover or kill only the native descendant, rechecking identity at mutation."""
+    code = '''$outer=(int)$argv[1]; $kill=isset($argv[2]); $found=[];
+foreach (glob("/proc/[0-9]*/status") as $path) {
+ $pid=(int)basename(dirname($path)); $status=@file_get_contents($path); $cmd=@file_get_contents("/proc/$pid/cmdline");
+ if (!is_string($status) || !is_string($cmd) || !preg_match('/^Uid:\\s+(\\d+)/m',$status,$uid) || (int)$uid[1]!==posix_geteuid()) {continue;}
+ $args=explode("\\0",rtrim($cmd,"\\0"));
+ if (!in_array("/var/www/html/bin/legacy-installer.php",$args,true) || @readlink("/proc/$pid/cwd")!==realpath("/var/www/html")) {continue;}
+ $parent=$pid; $owned=false;
+ for ($depth=0;$depth<32 && $parent>1;$depth++) {
+  $s=@file_get_contents("/proc/$parent/status"); if (!is_string($s) || !preg_match('/^PPid:\\s+(\\d+)/m',$s,$m)) {break;}
+  $parent=(int)$m[1]; if ($parent===$outer) {$owned=true;break;}
+ }
+ if (!$owned) {continue;}
+ $stat=@file_get_contents("/proc/$pid/stat"); if (!is_string($stat)) {continue;}
+ $fields=explode(' ',substr($stat,strrpos($stat,')')+2)); $start=$fields[19]??null;
+ if (!is_string($start) || !ctype_digit($start)) {exit(1);}
+ $found[]=['pid'=>$pid,'start'=>$start];
+}
+if (count($found)!==1) {exit(1);}
+if ($kill && ((string)$found[0]['pid']!==$argv[2] || $found[0]['start']!==$argv[3] || !posix_kill($found[0]['pid'],9))) {exit(1);}
+echo json_encode($found[0]);'''
+    args = [outer] + ([str(identity['pid']), identity['start']] if identity else [])
+    result = checked(h.command('php', '-d', 'auto_prepend_file=', '-r', code, *args), 'Verify the owned native installer descendant')
+    return json.loads(result['stdout'])
+
+
+def locked_finishing_attempt(h, fault):
+    """Block the real replication UPDATE, then interrupt only our owned worker/backend."""
+    require(fault in ('worker_crash', 'database_outage'), 'Unknown real fault scenario')
+    lock = subprocess.Popen(h.dc + ['exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root',
+                            '-N', '-B', '--unbuffered', 'cacti'], stdin=subprocess.PIPE,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    worker = None
+    pidfile = '/tmp/installer-rehearsal-' + uuid.uuid4().hex
+    database_stopped = False
+    try:
+        lock.stdin.write('START TRANSACTION; SELECT id FROM poller WHERE id=' + str(COLLECTOR_ID) + ' FOR UPDATE;\n')
+        lock.stdin.flush()
+        require(bool(select.select([lock.stdout], [], [], 20)[0]) and lock.stdout.readline().strip() == str(COLLECTOR_ID), 'Owned collector row lock was not acquired')
+        launch = '''$pid=(string)getmypid(); $f=fopen($argv[1],"x"); if (!$f || fwrite($f,$pid)!==strlen($pid) || !fclose($f)) {exit(1);}
+pcntl_exec(PHP_BINARY,["-d","auto_prepend_file=/harness/errors.php","bin/console","kadupul:install","--install","--force","--output=json"]); exit(1);'''
+        worker = subprocess.Popen(h.dc + ['exec', '-T', '-u', 'www-data', 'web', 'php', '-d',
+                                  'auto_prepend_file=', '-r', launch, pidfile],
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        await_condition(lambda: installer_receipt(h)['state'] == 'running', 'Native finishing worker never acknowledged its receipt')
+        waiter_count = lambda: int(h.sql("SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE DB='cacti' AND INFO LIKE 'UPDATE poller SET requires_sync%'"))
+        await_condition(lambda: waiter_count() > 0,
+                        'Native collector replication never reached the blocked UPDATE')
+        before = installer_receipt(h)
+        require(before['operation'] == 'finish', 'Recovery unexpectedly replayed installation')
+        pid = checked(h.command('cat', pidfile), 'Read owned native worker PID')['stdout'].strip()
+        require(pid.isdigit() and int(pid) > 1, 'Invalid native worker PID')
+        native = owned_installer_process(h, pid)
+        if fault == 'worker_crash':
+            # Kill the native worker, not the outer Symfony process. The outer
+            # process must observe the failed child and exit naturally.
+            owned_installer_process(h, pid, native)
+        else:
+            h.compose('stop', 'db', timeout=60)
+            database_stopped = True
+        stdout, stderr = worker.communicate(timeout=40)
+        require(worker.returncode != 0, 'Interrupted native worker reported success')
+        gone = 'exit(is_dir("/proc/".$argv[1]) ? 1 : 0);'
+        checked(h.command('php', '-d', 'auto_prepend_file=', '-r', gone, pid), 'Confirm outer installer process ended')
+        checked(h.command('php', '-d', 'auto_prepend_file=', '-r', gone, str(native['pid'])), 'Confirm native installer descendant ended')
+        if database_stopped:
+            h.compose('start', 'db', timeout=60)
+            await_condition(lambda: h.compose('exec', '-T', 'db', 'mariadb-admin', '-uroot', '-pbehavior-root', 'ping', check=False)['exit'] == 0,
+                            'Owned database did not recover after the outage', seconds=60)
+            database_stopped = False
+        else:
+            lock.stdin.write('ROLLBACK;\nquit\n')
+            lock.stdin.flush()
+        await_condition(lambda: waiter_count() == 0, 'Interrupted native database statement remains active after process shutdown')
+        after = installer_receipt(h)
+        require(after['attempt'] == before['attempt'] and after['state'] in ('waiting', 'running', 'failed'), 'Interrupted worker published a completed outcome')
+        if after['state'] in ('waiting', 'running'):
+            wrong = h.php('bin/console', 'kadupul:install', '--action=recover', '--attempt=' + str(after['attempt'] + 1), '--force')
+            require(wrong['exit'] != 0 and installer_receipt(h) == after, 'Stale recovery changed another attempt')
+            checked(h.php('bin/console', 'kadupul:install', '--action=recover', '--attempt=' + str(after['attempt']), '--force'), 'Explicitly recover the stopped attempt')
+        recovered = installer_receipt(h)
+        require(recovered['state'] == 'failed' and recovered['attempt'] == before['attempt'], 'Recovery started a worker or changed attempt ownership')
+        return {'observed': True, 'before': before, 'after': after, 'recovered': recovered,
+                'worker_exit': worker.returncode, 'native_and_outer_stopped': True,
+                'worker_output_bytes': len(stdout) + len(stderr)}
+    finally:
+        primary_error = sys.exc_info()[1]
+        cleanup_errors = []
+
+        def cleanup(label, operation):
+            try:
+                operation()
+            except Exception as error:
+                # Preserve the original fault without echoing private process
+                # arguments, SQL or output from cleanup exceptions.
+                cleanup_errors.append(label + ':' + type(error).__name__)
+
+        cleanup('remove_pidfile', lambda: checked(h.command('rm', '-f', pidfile), 'Remove owned PID file'))
+        if primary_error is not None:
+            # Stop every process in this invocation's web container before
+            # releasing its lock, even when its docker-exec client has exited.
+            cleanup('stop_web', lambda: h.compose('stop', 'web', timeout=60))
+        if database_stopped:
+            def restore_database():
+                h.compose('start', 'db', timeout=60)
+                await_condition(lambda: h.compose('exec', '-T', 'db', 'mariadb-admin', '-uroot', '-pbehavior-root', 'ping', check=False)['exit'] == 0,
+                                'Owned database did not recover during fault cleanup', seconds=60)
+            cleanup('restore_database', restore_database)
+        if worker is not None:
+            def close_worker():
+                if worker.poll() is None:
+                    worker.terminate()
+                worker.communicate(timeout=10)
+            cleanup('close_worker', close_worker)
+
+        def close_lock():
+            if lock.poll() is None:
+                try:
+                    lock.stdin.write('ROLLBACK;\nquit\n')
+                    lock.stdin.flush()
+                    lock.communicate(timeout=10)
+                except (BrokenPipeError, OSError, ValueError, subprocess.TimeoutExpired):
+                    lock.terminate()
+                    lock.communicate(timeout=10)
+            else:
+                lock.communicate(timeout=10)
+        cleanup('close_lock', close_lock)
+        if cleanup_errors:
+            if primary_error is not None:
+                primary_error.rehearsal_cleanup_errors = cleanup_errors
+            else:
+                raise RuntimeError('Owned fault cleanup failed: ' + ', '.join(cleanup_errors))
+
+
+def rehearse_installer_recovery(h, before_rrd, before_domain, idle_status, evidence):
+    partial = installer_receipt(h)
+    require(partial['state'] == 'partial' and partial['pending_collectors'] == 1 and partial['cleanup_done'] is True,
+            'Offline collector did not retain a genuine partial installation receipt')
+    repeat = h.php('bin/console', 'kadupul:install', '--install', '--force', '--output=json')
+    again = installer_receipt(h)
+    require(repeat['exit'] != 0 and again['state'] == 'partial' and again['pending_collectors'] == 1
+            and again['operation'] == 'finish' and again['attempt'] == partial['attempt'] + 1,
+            'Offline finishing retry did not retain pending collector work')
+    evidence['partial_collector_sync'] = {'observed': True, 'initial': partial, 'offline_retry': again}
+    # Clone the genuinely upgraded schema, including its installed reference
+    # guards, into another database on this invocation's isolated DB service.
+    dump = h.compose('exec', '-T', 'db', 'mariadb-dump', '-uroot', '-pbehavior-root', '--skip-comments', '--skip-dump-date', 'cacti')['stdout']
+    h.sql('CREATE DATABASE ' + COLLECTOR_SCHEMA + ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
+          " GRANT ALL ON " + COLLECTOR_SCHEMA + ".* TO 'cactiuser'@'%';")
+    h.compose('exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root', COLLECTOR_SCHEMA, data=dump)
+    expected_remote = [h.sql("SELECT name FROM host_template WHERE hash='dddddddddddddddddddddddddddddddd'").strip(),
+                       h.sql("SELECT version FROM plugin_config WHERE directory='compatibility_test'").strip()]
+    require(all(expected_remote) and expected_remote != ['stale collector template', '0.0.0'], 'Missing representative replication source values')
+    h.compose('exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root', COLLECTOR_SCHEMA,
+              data="UPDATE host_template SET name='stale collector template' WHERE hash='dddddddddddddddddddddddddddddddd'; UPDATE plugin_config SET version='0.0.0' WHERE directory='compatibility_test';")
+    remote_before = h.compose('exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root', '-N', '-B', COLLECTOR_SCHEMA,
+                              data="SELECT name FROM host_template WHERE hash='dddddddddddddddddddddddddddddddd'; SELECT version FROM plugin_config WHERE directory='compatibility_test';")['stdout'].splitlines()
+    require(remote_before == ['stale collector template', '0.0.0'] and all(a != b for a, b in zip(remote_before, expected_remote)), 'Remote replication fixture does not differ from the primary')
+    h.sql('UPDATE poller SET status=' + str(idle_status) + ',last_update=NOW() WHERE id=' + str(COLLECTOR_ID))
+    # Any replay of the primary schema marker during a finishing retry is a
+    # real database failure, not a second hand-written implementation oracle.
+    h.sql("CREATE TRIGGER rehearsal_no_schema_replay BEFORE UPDATE ON version FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='Finishing retry replayed schema upgrade'")
+    try:
+        for fault in ('worker_crash', 'database_outage'):
+            evidence[fault] = locked_finishing_attempt(h, fault)
+            require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, fault + ' changed representative RRD or application data')
+            require(h.sql('SELECT cacti FROM version').strip() == (ROOT / 'include/cacti_version').read_text().strip(), fault + ' changed the confirmed target schema')
+            evidence[fault]['preserved'] = True
+        repaired = checked(h.php('bin/console', 'kadupul:install', '--install', '--force', '--output=json'), 'Explicit repaired collector finishing retry')
+        final = installer_receipt(h)
+        require(final['state'] == 'succeeded' and final['pending_collectors'] == 0 and final['operation'] == 'finish', 'Repaired collector finishing retry did not succeed')
+        require(h.sql('SELECT requires_sync FROM poller WHERE id=' + str(COLLECTOR_ID)).strip() == '', 'Real collector replication retained its pending marker')
+        require(h.sql('SELECT UNIX_TIMESTAMP(last_sync)>0 FROM poller WHERE id=' + str(COLLECTOR_ID)).strip() == '1', 'Real collector replication did not acknowledge last_sync')
+        remote = h.compose('exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root', '-N', '-B', COLLECTOR_SCHEMA,
+                           data="SELECT name FROM host_template WHERE hash='dddddddddddddddddddddddddddddddd'; SELECT version FROM plugin_config WHERE directory='compatibility_test';")['stdout'].splitlines()
+        require(remote == expected_remote, 'Repaired collector did not replace stale template/plugin data with primary values')
+        require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Finishing retry changed representative data or RRD bytes')
+        evidence['partial_collector_sync'].update(preserved=True, repaired_sync=True, final=final, command=repaired,
+                                                   remote_before=remote_before, remote_after=remote,
+                                                   collector_schema_snapshot_sha256=hashlib.sha256(dump.encode()).hexdigest())
+        require_recovery_evidence(evidence)
+    finally:
+        h.sql('DROP TRIGGER IF EXISTS rehearsal_no_schema_replay')
 
 
 def authenticate(h):
     h.base = 'http://' + h.compose('port', 'web', '80')['stdout'].strip()
     session = harness.Session(h.base)
-    result = session.login('behavior-admin')
+    try:
+        result = session.login('behavior-admin')
+    except RuntimeError:
+        failed = session.request('/index.php')
+        h.capture('release/authentication-failure', {key: failed.get(key) for key in
+                  ('status', 'url', 'title', 'login_form', 'admin_layout')})
+        raise
     require(result['admin_layout'] and not result['login_form'], 'Admin login failed')
     return session
 
@@ -119,6 +361,24 @@ def assert_failed_writer_retains_queue(h):
         checked(h.php('-r', 'if (!chmod("rra",0755)) {exit(1);}'), 'Restore storage permissions')
         h.sql("DELETE FROM poller_output WHERE local_data_id IN (" + fixture_ids + ")")
         h.sql("DELETE FROM data_local WHERE id IN (" + fixture_ids + ")")
+
+
+def prepare_representative_snapshot(h):
+    authenticate(h)
+    h.poller_scenarios()
+    checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--install'), 'Plugin install')
+    checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--enable'), 'Plugin enable')
+    require(h.sql("SELECT COUNT(*) FROM host_template WHERE hash='dddddddddddddddddddddddddddddddd'").strip() == '0', 'Custom template fixture already exists')
+    h.sql("INSERT INTO host_template(hash,name) VALUES ('dddddddddddddddddddddddddddddddd','Rehearsal custom template'); INSERT INTO host_template_graph(host_template_id,graph_template_id) SELECT ht.id,gl.graph_template_id FROM host_template ht CROSS JOIN graph_local gl WHERE ht.hash='dddddddddddddddddddddddddddddddd' ORDER BY gl.id LIMIT 1")
+    require(h.sql("SELECT COUNT(*) FROM host_template_graph htg INNER JOIN host_template ht ON ht.id=htg.host_template_id WHERE ht.hash='dddddddddddddddddddddddddddddddd'").strip() == '1', 'Representative custom template has no graph association')
+    h.sql("REPLACE INTO settings(name,value) VALUES ('graph_watermark','Operations custom watermark');")
+    # Include a real nested RRD so the rehearsal exercises structured paths.
+    checked(h.php('-r', '$files=glob("rra/*.rrd"); if (!$files || !mkdir("rra/structured") || !copy($files[0], "rra/structured/fixture.rrd")) {exit(1);}'), 'Structured RRD fixture')
+    h.sql("INSERT INTO aggregate_graphs(aggregate_template_id,template_propogation,local_graph_id,title_format,graph_template_id,gprint_prefix,gprint_format,graph_type,total,total_type,total_prefix,order_type,created,user_id) VALUES (1,'',1,'migration-fixture',1,'','',0,0,0,'',0,'2001-01-01 00:00:00',1)")
+    before_rrd = rrd_manifest(h)
+    require(len(before_rrd) == 6 and 'structured/fixture.rrd' in before_rrd, 'Expected six RRD snapshot members including the structured fixture')
+    before_domain = domain_state(h)
+    return before_rrd, before_domain
 
 
 def prepare_baseline(baseline_revision, baseline):
@@ -251,17 +511,8 @@ def main():
                 h.dc = h.dc[:6] + ['-f', str(override)]
             phase(baseline, project + '-baseline:local')
             h.setup()
-            authenticate(h)
-            h.poller_scenarios()
-            checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--install'), 'Plugin install')
-            checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--enable'), 'Plugin enable')
-            h.sql("REPLACE INTO settings(name,value) VALUES ('graph_watermark','Operations custom watermark');")
-            # Include a real nested RRD so the rehearsal exercises structured paths.
-            checked(h.php('-r', '$files=glob("rra/*.rrd"); if (!$files || !mkdir("rra/structured") || !copy($files[0], "rra/structured/fixture.rrd")) {exit(1);}'), 'Structured RRD fixture')
-            h.sql("INSERT INTO aggregate_graphs(aggregate_template_id,template_propogation,local_graph_id,title_format,graph_template_id,gprint_prefix,gprint_format,graph_type,total,total_type,total_prefix,order_type,created,user_id) VALUES (1,'',1,'migration-fixture',1,'','',0,0,0,'',0,'2001-01-01 00:00:00',1)")
-            before_rrd = rrd_manifest(h)
-            require(len(before_rrd) == 6 and 'structured/fixture.rrd' in before_rrd, 'Expected six RRD snapshot members including the structured fixture')
-            before_domain = domain_state(h)
+            evidence['database_runtime'] = h.sql('SELECT VERSION()').strip()
+            before_rrd, before_domain = prepare_representative_snapshot(h)
             evidence['steps']['baseline'] = {'version': h.sql('SELECT cacti FROM version').strip(),
                                             'rrd': before_rrd, 'graph': assert_graph(h),
                                             'runtime': h.base_image_digest()}
@@ -292,10 +543,14 @@ def main():
             evidence['steps']['queue_migration'] = {'before_engine': old_engine, 'refused_volatile_queue': probe_before,
                                                    'commands': migrations, 'retained_samples_preserved': True}
             h.sql("DELETE FROM poller_output WHERE local_data_id=16000003 AND rrd_name='migration' AND time='2001-01-01' AND output='42'")
-            upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Upgrade')
+            idle_status = prepare_offline_collector(h)
+            upgrade = h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0')
+            require(upgrade['exit'] != 0, 'Upgrade with an unavailable collector incorrectly reported complete success')
             actual_version = h.sql('SELECT cacti FROM version').strip()
             evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}
             require(actual_version == (ROOT / 'include/cacti_version').read_text().strip(), 'Upgrade version mismatch: ' + actual_version)
+            evidence['steps']['installer_recovery'] = {}
+            rehearse_installer_recovery(h, before_rrd, before_domain, idle_status, evidence['steps']['installer_recovery'])
             from audit_schema_scenarios import assert_clean_schema_audit
             evidence['steps']['upgrade_schema_audit'] = assert_clean_schema_audit(h, 'Upgraded database')
             require(rrd_manifest(h) == before_rrd, 'Upgrade modified RRD bytes')
@@ -306,13 +561,15 @@ def main():
             plugin = assert_plugin(h)
             repeat = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Repeated upgrade')
             require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Repeated upgrade changed persisted data')
-            # The completed web wizard removes these transient settings.
+            # Exercise compatibility with historical completion cleanup too;
+            # current finalization runs in the authorized installation worker.
             h.sql("DELETE FROM settings WHERE name LIKE 'install!_%' ESCAPE '!'")
-            after_cleanup = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Repeated upgrade after web completion cleanup')
+            after_cleanup = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force', '--automationmode=0'), 'Repeated upgrade after historical transient cleanup')
             require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Post-completion repeat changed persisted data')
             poll = assert_poll(h, 'Candidate poller')
             evidence['steps']['upgrade'] = {'command': upgrade, 'repeat': repeat, 'after_web_cleanup': after_cleanup, 'graph': graph, 'plugin': plugin,
-                                            'poller': poll, 'rrd_preserved_before_poll': True}
+                                            'poller': poll, 'rrd_preserved_before_poll': True,
+                                            'cleanup_scope': 'Historical transient flags removed directly; current finalization already ran in the worker.'}
             evidence['steps']['unavailable_writer'] = assert_failed_writer_retains_queue(h)
             # Restore the old code AND its matching DB/RRD snapshot. A code-only
             # downgrade is not an acceptable rollback of a schema upgrade.
@@ -330,9 +587,12 @@ def main():
             evidence['steps']['rollback'] = {'graph': assert_graph(h), 'plugin': assert_plugin(h),
                                              'poller': assert_poll(h, 'Rollback poller'),
                                              'snapshot_restored': True}
+            require_recovery_evidence(evidence['steps'].get('installer_recovery', {}))
             evidence['complete'] = True
     except Exception as error:
         evidence['error'] = str(error)
+        if getattr(error, 'rehearsal_cleanup_errors', None):
+            evidence['fault_cleanup_errors'] = error.rehearsal_cleanup_errors
         print(error, file=sys.stderr)
     finally:
         # The temporary compose tree can be gone after an exception. Project

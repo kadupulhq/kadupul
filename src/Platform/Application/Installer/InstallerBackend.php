@@ -19,6 +19,9 @@ interface InstallerBackend
     /** @return array<string, mixed> Read-only observations, excluding credentials. */
     public function inspect(): array;
 
+    /** @return list<array<string, mixed>> Explicit bounded read-only worker comparison. */
+    public function compareRuntime(): array;
+
     /** @return array<string, mixed> Validates and saves through the native installer. */
     public function configure(InstallerOptions $options): array;
 
