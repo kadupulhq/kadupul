@@ -16,14 +16,8 @@ if (PHP_SAPI !== 'cli') {
 // Isolate procedural globals and plugin hooks from Symfony. What the libraries print is the original script's own
 // output (rrdtool's "OK" lines), so it passes through; the callback only notes whether the marker needs a new line.
 define('KADUPUL_REDACT_DATABASE_LOGS', true);
-$endsWithNewline = true;
-ob_start(static function (string $chunk) use (&$endsWithNewline): string {
-    if ($chunk !== '') {
-        $endsWithNewline = str_ends_with($chunk, "\n");
-    }
-
-    return $chunk;
-}, 1);
+require_once __DIR__ . '/worker-io.php';
+$finishOutput = \Kadupul\LegacyWorker\pass_through_output();
 require __DIR__ . '/../include/cli_check.php';
 // The libraries cli/poller_output_empty.php loaded, because process_poller_output() reaches into them.
 foreach (['poller', 'data_query', 'dsstats', 'dsdebug', 'boost', 'rrd'] as $library) {
@@ -34,11 +28,7 @@ $status = 'failed';
 $updates = 0;
 $pipe = false;
 try {
-    $input = stream_get_contents(STDIN, 20001);
-    if (strlen($input) > 20000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 20000, 4);
     if ($command !== []) {
         throw new RuntimeException('Invalid command');
     }
@@ -76,9 +66,5 @@ try {
         rrd_close($pipe);
     }
 }
-ob_end_flush();
-if (!$endsWithNewline) {
-    echo PHP_EOL;
-}
-echo 'KADUPUL_POLLER_OUTPUT_EMPTY_RESULT=' . json_encode(['status' => $status, 'updates' => $status === 'ok' ? $updates : 0], JSON_THROW_ON_ERROR) . PHP_EOL;
+$finishOutput('KADUPUL_POLLER_OUTPUT_EMPTY_RESULT', ['status' => $status, 'updates' => $status === 'ok' ? $updates : 0], JSON_THROW_ON_ERROR);
 exit($status === 'ok' ? 0 : 1);

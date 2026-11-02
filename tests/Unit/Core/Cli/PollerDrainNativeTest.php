@@ -14,6 +14,7 @@ test('production drain worker fails closed on unavailable writers counts and pro
         file_put_contents($dir . '/lib/' . $lib . '.php', '<?php');
     }
     copy($root . '/bin/legacy-poller-output-empty.php', $dir . '/bin/legacy-poller-output-empty.php');
+    copy($root . '/bin/worker-io.php', $dir . '/bin/worker-io.php');
     $parent = $this->getTestResultObject()->getCodeCoverage();
     $bootstrap = '<?php ';
     if ($parent !== null) {

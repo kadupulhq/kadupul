@@ -15,14 +15,8 @@ if (PHP_SAPI !== 'cli') {
 // Isolate procedural globals and plugin hooks from Symfony. What the libraries print is the original script's own
 // output, so it passes through; the callback only notes whether the marker needs a new line.
 define('KADUPUL_REDACT_DATABASE_LOGS', true);
-$endsWithNewline = true;
-ob_start(static function (string $chunk) use (&$endsWithNewline): string {
-    if ($chunk !== '') {
-        $endsWithNewline = str_ends_with($chunk, "\n");
-    }
-
-    return $chunk;
-}, 1);
+require_once __DIR__ . '/worker-io.php';
+$finishOutput = \Kadupul\LegacyWorker\pass_through_output();
 require __DIR__ . '/../include/cli_check.php';
 // The libraries cli/replay_rejected_samples.php loaded.
 require_once $config['base_path'] . '/lib/poller.php';
@@ -32,11 +26,7 @@ $status = 'failed';
 $samples = 0;
 $reason = '';
 try {
-    $input = stream_get_contents(STDIN, 20001);
-    if (strlen($input) > 20000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 20000, 4);
     if (!is_array($command) || array_diff(array_keys($command), ['local_data_id', 'dry_run']) !== []
         || !array_key_exists('local_data_id', $command) || !($command['local_data_id'] === null || (is_int($command['local_data_id']) && $command['local_data_id'] > 0))
         || !is_bool($command['dry_run'] ?? null)) {
@@ -68,9 +58,5 @@ try {
     $status = 'failed';
     cacti_log('ERROR: Rejected sample replay worker failed: ' . get_class($error), false, 'WEBLOG');
 }
-ob_end_flush();
-if (!$endsWithNewline) {
-    echo PHP_EOL;
-}
-echo 'KADUPUL_REJECTED_SAMPLES_REPLAY_RESULT=' . json_encode(['status' => $status, 'samples' => $status === 'ok' ? $samples : 0, 'reason' => $reason], JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE) . PHP_EOL;
+$finishOutput('KADUPUL_REJECTED_SAMPLES_REPLAY_RESULT', ['status' => $status, 'samples' => $status === 'ok' ? $samples : 0, 'reason' => $reason], JSON_THROW_ON_ERROR | JSON_INVALID_UTF8_SUBSTITUTE);
 exit($status === 'ok' ? 0 : 1);
