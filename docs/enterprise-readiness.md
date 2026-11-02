@@ -250,3 +250,57 @@ the old serialization and cannot repair previously stored values.
 - API: `Platform\Contract\DatabaseTarget` captures a connection identity. The existing `Platform\Application\Port\DatabaseTarget` local/main enum remains unchanged and serves a different contract.
 - Scope: shared Platform capabilities only. Existing administrative routes are unchanged; each consumer must bind its displayed form target and pass the original server capture before this protects a workflow. These capabilities do not authenticate or authorize an actor.
 - Verification: actual two-schema selection regressions run on MariaDB 10.11 and MySQL 8.4 with direct PHP 8.4.25. Current-head CI and consumer integration remain merge and rollout gates. No schema, runtime or dependency changes; reverting removes the unused capability before consumers adopt it.
+
+
+### Installer support-service extraction
+
+| Requirement | Subsystem | Status | Verification and remaining gate |
+| --- | --- | --- | --- |
+| Historical helper entry points delegate to shared typed implementations | Platform installer | verified | All 42 original names remain compatibility adapters; 14 services hold the implementations. Root Symfony and native/Pest suites exercise paths, packages, defaults, schema operations, progress, file failures and collector outcomes. Local PHP 8.4 Docker evidence covers 309 Symfony installer tests (1,841 assertions) and 42 native installer compatibility tests (510 assertions). The 14 extracted services have complete statement coverage; this does not cover every historical upgrade. Current version-persistence evidence is in `var/installer-version`; earlier execution evidence is in `var/installer-execution` and helper evidence is in `var/installer-services`. |
+| Native database identity and caller-owned work remain explicit | Platform installer persistence | verified | Real shipped DDL, bound native queries, exact table identity, distinct local/remote collector IDs and caller-owned rollback are exercised on isolated database engines. This does not promise atomic DDL or distributed collector rollback. |
+| Safe mixed-version deployment and full legacy retirement | Platform installer operations | planned | Stop/drain workers and deploy the whole slice before cache rebuild. Native engine retirement, full production upgrade/restoration rehearsals, Windows and collector recovery remain release gates. No deployment or release is claimed. |
+
+This is main/1.3 architectural work. LTS is unchanged and requires separate
+maintenance verification for shared native reliability corrections; the new
+Symfony architecture is not a backport.
+
+Local verification also passes maximum-level PHPStan, Deptrac with zero
+uncovered dependencies, Symfony container lint, the global-state inventory and
+23 gettext PO/MO pairs. Entry-point inventory admits all 421 entries with
+no unknown gates; 27 installer source-pin regression checks pass. All 13 architecture tests now pass after registering the two existing installer
+operational-verification adapters in the explicit worker allowlist. After
+reconciling current main, sink and architectural-hotspot checks pass with
+`LC_ALL=C`; only affected source entries were regenerated. GitHub checks on
+the published revision remain required before merge.
+
+
+### Installer application execution
+
+| Requirement | Subsystem | Status | Evidence and remaining gate |
+| --- | --- | --- | --- |
+| Preserve native phase ordering and failure boundaries in an application service | Platform installer execution | verified | `InstallationExecution` uses the explicit `InstallationActions` boundary. Mode constants, fresh/upgrade/collector/downgrade/none paths, primary role timing, returned failures and interruptions are exercised through the service and actual native handoff. New service/enum statement coverage is complete. |
+| Retire native phase implementations | Platform installer operations | planned | Native database conversion, package import, primary setup and versioned upgrade internals remain. Full fresh-install/upgrade, production recovery and Windows rehearsals remain release gates. |
+
+The extraction does not change native worker authorization or exclusion, add a
+second write path, or imply atomic rollback of schema and external side effects.
+No LTS changes or deployment were performed.
+
+
+### Installer version confirmation
+
+| Requirement | Subsystem | Status | Evidence and remaining gate |
+| --- | --- | --- | --- |
+| Preserve confirmed migration markers and caller transaction ownership | Platform installer persistence | verified | Extracted `InstallerVersionWriter`, retaining the native PDO selection and transaction protocol. Tests cover actual shipped DDL on MariaDB/MySQL, real SQLite write/readback/commit failures, native CLI retry boundaries and injected driver/cleanup failures. New service has 55/55 statements covered. |
+| Validate complete production upgrade and restoration | Platform installer operations | planned | Full historical upgrade chains, production-sized concurrent workloads and restoration remain release gates. No deployment, full-install certification or distributed rollback is claimed. |
+
+Original extraction verification used non-root Docker PHP 8.4.27 with PCOV 1.0.12
+and unchanged locked Composer dependencies: 309 tests / 1,841 assertions with
+no skips. The upgrade-discovery correction passes all 309 installer tests with
+1,840 assertions and no skips on PHP 8.4.25 / MariaDB 10.11.19. Current-head
+coverage and release rehearsals remain GitHub CI gates. The focused version suite passes 59 tests / 315
+assertions on MariaDB; the additional MySQL run passes 36 tests / 171 assertions.
+The native CLI upgrade/retry regression passes with 146 assertions, and native
+state/automation/secret checks pass 42 tests / 510 assertions. Historical profile
+upgrade/refusal/retry integration passes 9 tests / 107 assertions, including
+missing-source, marker and execution-evidence rejection controls. This architectural
+slice does not change LTS or introduce a second version write path.

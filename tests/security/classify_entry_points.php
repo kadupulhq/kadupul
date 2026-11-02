@@ -123,8 +123,8 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
-    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => '8e301a9d56710459f02930e57aa90ca19eeabbd9595bdd29dbe903d5fcd0d43c',
-    'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php' => 'cb02b285d332a1a28d5aab1e5b9363e0c99425f51472e55c9e951a6748cf0676',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerBackend.php' => '6b11ad7d441289c208055c5f0ebc8ddf339b03c56d169d5c406a5f5b5755c584',
+    'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php' => '4ba6e7b49584b6c36df9198e2d84ddfb6f73a905746763de4e72bd7d3d35c067',
     'src/Platform/Infrastructure/Legacy/NativeInstallerWebContext.php' => '3c2760cf1232ff99fd67e96dd28e855de28061a5fe174f7fedbfcb1116e1e9c5',
     'src/Platform/Infrastructure/Legacy/InstallerReviewSigner.php' => '8b65ff4392619b813b3cd43b8f2c8028e13ed38697ec858254f9c901cc759124',
     'src/Platform/Infrastructure/Symfony/InstallerWebContext.php' => 'f41b35432ad9702c688b86283a474cd3bc11a39a6f68cae7f5169b5db539a725',
@@ -133,6 +133,11 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'bin/legacy-installer-verification.php' => '590649346f748a87b593da5eaa8aed20eacdb3b67c7aa890ff6222c120dc4fbd',
     'src/Platform/Application/Installer/VerifyInstallationOperation.php' => '61a12e8468fa852d35686b98c02a64efb5a3ecd2530abb75dd717faf02fc1510',
     'src/Platform/Infrastructure/Legacy/NativeOperationalEvidence.php' => '8f213f004b5ae9df6ed20d3436502918c5b9b6dcfc5c198beff5aa885e217a4e',
+    'lib/installer.php' => '31a8490e6edf911f5da4ee61c9cc548ef3dcf7683713b52b961c0b87cac40fb2',
+    'src/Platform/Application/Installer/InstallationActions.php' => '9b588cab6c2b1a94683dc99c92ad6d82941ade2e832ef923caa1e21809802472',
+    'src/Platform/Application/Installer/InstallationExecution.php' => 'f9db102b39cff8bcca6d2bb9fb6100aa51fd78c211ec08081db6ab466ff7602f',
+    'src/Platform/Domain/Installer/InstallationMode.php' => '71e56d248203b9c4f5b832795dc07c929cbdd7a74260602fb912ce198da4956c',
+    'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php' => '36cd2dfb4f20fba829a26b274b107e77ee21c8313cf8a4e5602f77c6b54daf40',
 ];
 
 function installer_authentication_review(string $root): ?string

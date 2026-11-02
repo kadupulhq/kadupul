@@ -98,8 +98,12 @@ final class CdefNativeProbeCoverageTest extends TestCase
                     count(\CdefNativeCoverageRegistration::sources()) + count($markers) + 10,
                     \NativeChildCoverageEvidence::verifyRejections(...[...$arguments,'lib/boost.php'])
                 );
-                if (in_array($case, ['branches', 'regeneration'], true)) {
-                    $requiredSources = $case === 'branches' ? ['lib/api_graph.php'] : ['src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/variables.php'];
+                if (in_array($case, ['branches', 'regeneration', 'version'], true)) {
+                    $requiredSources = match ($case) {
+                        'branches' => ['lib/api_graph.php'],
+                        'version' => ['src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php'],
+                        default => ['src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/variables.php'],
+                    };
                     $report = $directory . '/native.coverage';
                     $originalReport = file_get_contents($report);
                     $originalEvidence = file_get_contents($report . '.json');

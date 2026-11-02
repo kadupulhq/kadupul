@@ -73,6 +73,9 @@ $directory = $argv[2];
 $scenario = json_decode($argv[1], true, flags: JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     define('RRD_TEST_COVERAGE_DIRECTORY', $argv[3]);
+    if (!empty($scenario['upgrade_entry'])) {
+        define('INSTALLER_VERSION_TEST_COVERAGE', true);
+    }
     require __DIR__ . '/rrd-process-coverage.php';
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     require_once $root . '/tests/Helpers/ProfileDeletionContract.php';
@@ -616,6 +619,9 @@ try {
     $callerAfter = $source->query('SELECT step FROM `' . $maps['source']['data_source_profiles'] . '` WHERE id=1')->fetchColumn();
     file_put_contents($directory . '/result.json', json_encode(['retry_initial' => $retry_initial, 'upgrade_target' => !empty($scenario['upgrade_entry']) ? CACTI_VERSION : null, 'migration_version' => $migration_version, 'version_confirmation' => $version_confirmation, 'upgrade_error' => $upgrade_error, 'remote_version' => $remote->query('SELECT cacti FROM `' . $maps['remote']['version'] . '`')->fetchColumn(), 'caller_before' => $callerBefore, 'caller_after' => $callerAfter, 'source_active' => $sourceActive, 'snapshot_blocked' => $snapshot_blocked ?? false, 'remote_step' => $remote->query('SELECT step FROM `' . $maps['remote']['data_source_profiles'] . '` WHERE id=77')->fetchColumn(), 'sync' => $source->query('SELECT requires_sync FROM `' . $maps['source']['poller'] . '` ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'rras' => $rras, 'result' => $result ?? null, 'hooks' => $hooks, 'messages' => $messages, 'rows' => $rows, 'parent' => $parent, 'log' => $log, 'calls' => $calls], JSON_THROW_ON_ERROR));
     $GLOBALS['nativeChildCoverageMarkers'] = ['collector-result-persisted'];
+    if (!empty($scenario['upgrade_entry']) && $version_confirmation !== null) {
+        $GLOBALS['nativeChildCoverageMarkers'][] = 'installer-version-confirmation-observed';
+    }
 } finally {
     if ($upgradeSchema !== null) {
         $installer->exec("DROP DATABASE `$upgradeSchema`");

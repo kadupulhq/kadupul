@@ -19,7 +19,7 @@ function ldap_tls_child(string $program, array $scenario): array
     $hit = str_contains($program, 'upgrade_ldap_tls_requirement') ? 'install/upgrades/1_2_31.php' : (str_contains($program, 'prime') ? 'install/functions.php' : 'lib/ldap.php');
     $pipes = array();
     $process = proc_open(
-        child_coverage_command(array(PHP_BINARY, '-d', 'disable_functions=ldap_set_option,ldap_connect,ldap_error', '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario)), $coverage_dir, child_coverage_registration(__FILE__, 'ldap-policy', $scenario, array('ldap-policy-completed'), array($hit), array('lib/ldap.php', 'install/functions.php', 'install/upgrades/1_2_31.php'))),
+        child_coverage_command(array(PHP_BINARY, '-d', 'disable_functions=ldap_set_option,ldap_connect,ldap_error', '-d', 'display_errors=stderr', '-r', $program, json_encode($scenario)), $coverage_dir, child_coverage_registration(__FILE__, 'ldap-policy', $scenario, array('ldap-policy-completed'), array($hit), array('lib/ldap.php', 'install/functions.php', 'install/upgrades/1_2_31.php', 'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php', 'src/Platform/Infrastructure/Legacy/InstallerDefaultSettings.php'))),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );

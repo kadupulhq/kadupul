@@ -14,7 +14,7 @@ final class CdefNativeCoverageRegistration
             'branches' => ['aggregate_generation_branches_native_probe.php', 'PASS native aggregate admitted branch matrix complete', ['lib/api_aggregate.php', 'lib/aggregate.php', 'lib/api_graph.php']],
             'outer' => ['aggregate_outer_caller_native_probe.php', 'PASS native aggregate outer callers and cleanup complete', ['lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php']],
             'contract' => ['cdef_reference_contract_native_probe.php', 'PASS native contract and cleanup complete', ['src/Platform/Infrastructure/Legacy/CdefReferenceContract.php']],
-            'version' => ['cdef_reference_version_native_probe.php', 'PASS native version confirmation and cleanup complete', ['lib/installer.php']],
+            'version' => ['cdef_reference_version_native_probe.php', 'PASS native version confirmation and cleanup complete', ['lib/installer.php', 'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php']],
             'delete' => ['cdef_reference_legacy_delete_native_probe.php', 'PASS native legacy deletion and cleanup complete', ['src/GraphDefinition/Infrastructure/Legacy/LegacyCdefDeletion.php']],
             'copy' => ['cdef_reference_copy_native_probe.php', 'PASS native production copy and cleanup complete', ['lib/cdef.php']],
             'import' => ['cdef_reference_callers_native_probe.php', 'PASS native import callers and cleanup complete', ['lib/import.php']],
@@ -25,6 +25,7 @@ final class CdefNativeCoverageRegistration
     {
         return ['lib/variables.php', 'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php', 'lib/cdef.php', 'lib/import.php', 'lib/api_aggregate.php','lib/aggregate.php','lib/api_graph.php','lib/reference_write.php',
             'lib/installer.php','lib/cdef_reference.php','lib/functions.php',
+            'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceContract.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceReadiness.php',
             'src/Platform/Infrastructure/Legacy/CdefReferenceTriggers.php',
@@ -36,6 +37,9 @@ final class CdefNativeCoverageRegistration
     public static function sources(): array
     {
         return array_merge(self::measured(), ['composer.lock','cacti.sql','include/cacti_version',
+            'src/Platform/Application/Installer/InstallationActions.php',
+            'src/Platform/Application/Installer/InstallationExecution.php',
+            'src/Platform/Domain/Installer/InstallationMode.php',
             'tests/Helpers/CdefNativeCoverageRegistration.php','tests/Helpers/NativeChildCoverageEvidence.php',
             'tests/Helpers/CdefCliCoverageRegistration.php',
             'tests/Fixtures/cdef-native-coverage.php','tests/Symfony/CdefNativeProbeCoverageTest.php',

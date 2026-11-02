@@ -316,7 +316,7 @@
           {
             "count": 2,
             "file": "include/vendor/symfony/deprecation-contracts/function.php",
-            "message": "Since symfony/framework-bundle 7.3: Not setting the \"property_info.with_constructor_extractor\" option explicitly is deprecated because its default value will change in version 8.0.",
+            "message": "Since symfony/framework-bundle 7.3: Not setting the \"framework.property_info.with_constructor_extractor\" option explicitly is deprecated because its default value will change in version 8.0.",
             "severity": "E_USER_DEPRECATED",
             "suppressed": true
           }

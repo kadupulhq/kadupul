@@ -5,18 +5,19 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-function installer_csrf_probe(string $path): array
+function installer_csrf_probe(string $path, bool $initialize = true): array
 {
     $root = dirname(__DIR__, 4);
     $source = file_get_contents($root . '/lib/installer.php');
     $program = '$config = ' . var_export(array('base_path' => $root, 'path_csrf_web_root' => $root, 'path_csrf_secret' => $path), true) . ';';
+    $program .= '$initialize = ' . var_export($initialize, true) . ';';
     $program .= <<<'CODE'
 $GLOBALS['writes'] = array();
 function log_install_debug(...$args) {}
 function log_install_medium(...$args) {}
 function log_install_high(...$args) {}
 function is_resource_writable($path) { return true; }
-function install_create_csrf_secret($path) { $GLOBALS['writes'][] = $path; }
+function install_create_csrf_secret($path) { $GLOBALS['writes'][] = $path; return $GLOBALS['initialize']; }
 CODE;
     $csrf = file_get_contents($root . '/include/csrf.php');
     foreach (array('cacti_csrf_external_secret_path', 'cacti_csrf_external_path_is_safe') as $function) {
@@ -24,7 +25,7 @@ CODE;
     }
     $program .= 'class Installer { const PROGRESS_CSRF_BEGIN = 1; const PROGRESS_CSRF_END = 2; function setProgress($value) {} ';
     $program .= test_php_function_source($source, 'setCSRFSecret');
-    $program .= 'function run() { $this->setCSRFSecret(); } } (new Installer())->run(); print json_encode($GLOBALS["writes"]);';
+    $program .= 'function run() { $this->setCSRFSecret(); } } try { (new Installer())->run(); print json_encode($GLOBALS["writes"]); } catch (RuntimeException $error) { print json_encode(array("error" => $error->getMessage())); }';
     $process = proc_open(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $out = stream_get_contents($pipes[1]);
     $err = stream_get_contents($pipes[2]);
@@ -76,4 +77,15 @@ CODE;
     expect($err)->toBe('');
     $result = json_decode($out, true);
     expect($result['always'])->not->toHaveKey($root . '/include/vendor/csrf/csrf-secret.php');
+});
+
+
+test('installer stops when an external secret initializer refuses completion', function () {
+    $directory = sys_get_temp_dir() . '/installer-csrf-failure-' . bin2hex(random_bytes(8));
+    mkdir($directory, 0700);
+    try {
+        expect(installer_csrf_probe($directory, false))->toBe(['error' => 'The external CSRF secret could not be initialized.']);
+    } finally {
+        rmdir($directory);
+    }
 });

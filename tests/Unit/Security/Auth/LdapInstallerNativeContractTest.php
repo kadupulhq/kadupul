@@ -193,7 +193,7 @@ final class LdapInstallerNativeContractTest extends TestCase
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
                 // Parent registration is independent of the child registration.
-                $sources = ['lib/auth.php', 'lib/ldap.php', 'install/functions.php', 'cacti.sql', 'composer.lock', 'tests/composer.lock', 'tests/Helpers/NativeChildCoverageEvidence.php', 'include/global_constants.php', 'tests/Unit/Security/Auth/LdapInstallerNativeContractTest.php'];
+                $sources = ['src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php', 'src/Platform/Infrastructure/Legacy/InstallerToolPaths.php', 'src/Platform/Infrastructure/Legacy/InstallerLogger.php', 'lib/auth.php', 'lib/ldap.php', 'install/functions.php', 'cacti.sql', 'composer.lock', 'tests/composer.lock', 'tests/Helpers/NativeChildCoverageEvidence.php', 'include/global_constants.php', 'tests/Unit/Security/Auth/LdapInstallerNativeContractTest.php'];
                 $markers = [match ($scenario['mode']) {
                     'domain' => 'domain-production-returned',
                     'installer' => 'installer-production-returned',
@@ -206,7 +206,7 @@ final class LdapInstallerNativeContractTest extends TestCase
                 }];
                 $native = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/ldap-installer-native.php', $json, $sources, $markers, $hits);
                 if ($scenario['mode'] === 'legacy') {
-                    self::assertSame(21, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/ldap-installer-native.php', $json, $sources, $markers, $hits, 'tests/Helpers/NativeChildCoverageEvidence.php'));
+                    self::assertSame(24, NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/ldap-installer-native.php', $json, $sources, $markers, $hits, 'tests/Helpers/NativeChildCoverageEvidence.php'));
                     $originalReport = file_get_contents($reports[0]);
                     file_put_contents($reports[0], '');
                     try {

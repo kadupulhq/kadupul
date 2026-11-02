@@ -76,6 +76,8 @@ $source = '';
 foreach (['cacti_sizeof', 'read_default_config_option', 'read_config_option'] as $name) {
     $source .= test_php_function_source($functions, $name);
 }
+require_once $root . '/src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php';
+require_once $root . '/src/Platform/Infrastructure/Legacy/InstallerConfigurationWriter.php';
 $source .= test_php_function_source($installFunctions, 'set_install_config_option');
 eval('declare(strict_types=0); use Kadupul\Platform\Infrastructure\Legacy\LegacySettingsStorage;' . $source);
 require $root . '/lib/installer.php';
