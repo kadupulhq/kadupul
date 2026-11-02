@@ -14,7 +14,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__, 3) . '/Helpers/ChildProcessCoverage.php';
 
-function data_input_substitution_run(string $kind, string $program, array $arguments = array()): mixed
+function data_input_substitution_run(string $kind, string $program, array $arguments = array(), bool $verifyEvidence = false): mixed
 {
     $root = dirname(__DIR__, 4);
     $prelude = '$config = ["is_web" => false, "cacti_server_os" => "unix", "base_path" => $argv[2],'
@@ -33,9 +33,11 @@ function data_input_substitution_run(string $kind, string $program, array $argum
         array('lib/functions.php', 'src/DataInput/Domain/InputStringSubstitution.php'),
         array(
             'include/global_constants.php', 'lib/path_helpers.php', 'lib/graph_fonts.php',
+            'src/DataInput/Domain/InputStringSubstitution.php',
             'tests/Fixtures/data-input-substitution-native.php', 'tests/Fixtures/script-substitution-matrix.php',
         )
     );
+    $registration['collectorPrelude'] = 'define("DATA_INPUT_SUBSTITUTION_TEST_COVERAGE", true);';
     $base = $arguments['base'] ?? '/opt/kadupul';
     $command = child_coverage_command(
         array(PHP_BINARY, '-r', $program, $root, $base, json_encode($arguments, JSON_THROW_ON_ERROR)),
@@ -45,10 +47,65 @@ function data_input_substitution_run(string $kind, string $program, array $argum
     $result = test_php_run($command);
     expect($result['err'])->toBe('');
     expect($result['status'])->toBe(0);
+    if ($verifyEvidence) {
+        data_input_substitution_verify_evidence($directory);
+    }
     child_coverage_collect($directory);
 
     return json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR);
 }
+
+function data_input_substitution_verify_evidence(string $directory): void
+{
+    $root = dirname(__DIR__, 4);
+    $source = 'src/DataInput/Domain/InputStringSubstitution.php';
+    $reports = glob($directory . '/*.coverage');
+    expect($reports)->toBeArray()->toHaveCount(1);
+    $report = $reports[0];
+    $registration = $GLOBALS['child_coverage_registrations'][$directory];
+    $arguments = array($report, $root, $registration['producer'], $registration['scenario'],
+        $registration['sources'], $registration['markers'], $registration['hits']);
+    $measured = NativeChildCoverageEvidence::load(...$arguments);
+    expect($measured->getData(true)->lineCoverage())->toHaveKey(realpath($root . '/' . $source));
+    $originalReport = file_get_contents($report);
+    $originalEvidence = file_get_contents($report . '.json');
+    expect($originalReport)->toBeString()->and($originalEvidence)->toBeString();
+    try {
+        foreach (array('missing', 'stale', 'unmeasured') as $fault) {
+            $evidence = json_decode($originalEvidence, true, 512, JSON_THROW_ON_ERROR);
+            if ($fault === 'missing') {
+                unset($evidence['sources'][$source]);
+            } elseif ($fault === 'stale') {
+                $evidence['sources'][$source] = str_repeat('0', 64);
+            } else {
+                $coverage = unserialize($originalReport);
+                $data = $coverage->getData(true);
+                $lines = $data->lineCoverage();
+                unset($lines[realpath($root . '/' . $source)]);
+                $data->setLineCoverage($lines);
+                $coverage->setData($data);
+                expect(file_put_contents($report, serialize($coverage)))->not->toBeFalse();
+                $evidence['report'] = hash_file('sha256', $report);
+            }
+            expect(file_put_contents($report . '.json', json_encode($evidence, JSON_THROW_ON_ERROR)))->not->toBeFalse();
+            $message = $fault === 'unmeasured' ? 'Required native source was not executed: ' : 'Native coverage source is missing or stale: ';
+            expect(static fn() => NativeChildCoverageEvidence::load(...$arguments))->toThrow(RuntimeException::class, $message . $source);
+        }
+    } finally {
+        file_put_contents($report, $originalReport);
+        file_put_contents($report . '.json', $originalEvidence);
+    }
+}
+
+test('native substitution coverage binds its delegated class and refuses missing stale or unmeasured evidence', function () {
+    if (\Pest\TestSuite::getInstance()->test->getTestResultObject()->getCodeCoverage() === null) {
+        $this->markTestSkipped('Requires active native coverage collection.');
+    }
+    $result = data_input_substitution_run('provenance', <<<'PHP'
+echo json_encode(data_input_command('poller', 'printf %s <arg1>', array('arg1' => 'value')));
+PHP, array(), true);
+    expect($result)->toBe("printf %s 'value'");
+});
 
 test('bundled data input methods keep their command lines', function () {
     $sql = file_get_contents(dirname(__DIR__, 4) . '/cacti.sql');
