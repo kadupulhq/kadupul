@@ -6,6 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
+
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
 
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
