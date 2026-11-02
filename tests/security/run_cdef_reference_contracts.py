@@ -33,6 +33,7 @@ CASES = (
     ('web', 'web_installer', (), True),
     ('failure_upgrade_web', 'web_installer', ('failure-upgrade',), True),
     ('failure_cli', 'installer_failure', (), True),
+    ('operational_verification', 'operational_verification', (), True),
     ('cli_collector_online', 'cli_confirmation', ('collector-online',), True),
     ('cli_collector_local', 'cli_confirmation', ('collector-local',), True),
     ('cli_collector_offline', 'cli_confirmation', ('collector-offline',), True),
@@ -43,6 +44,8 @@ CASES = (
 
 
 def probe_path(probe):
+    if probe == 'operational_verification':
+        return Path('tests/security/installer_operational_native_probe.php')
     if probe == 'aggregate_generation':
         return Path('tests/security/aggregate_generation_native_probe.php')
     if probe == 'aggregate_generation_branches':

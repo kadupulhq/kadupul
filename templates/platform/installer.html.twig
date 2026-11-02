@@ -43,6 +43,25 @@ SPDX-License-Identifier: GPL-3.0-or-later
         {% else %}<p><a href="#configure">{{ 'Choose a collection profile and accept the license. Optional settings can be opened when needed.'|trans }}</a></p>{% endif %}
     </aside>
     <p><a href="/{{ view.action|trim('/') }}?view=diagnostics" download>{{ 'Download installation diagnostics'|trans }}</a></p>
+    <details><summary>{{ 'Compare web and worker runtimes'|trans }}</summary>
+        <p>{{ 'This explicitly starts a short read-only PHP probe. It does not reserve an installer, write files or contact devices.'|trans }}</p>
+        <p>{{ 'The probe inherits this web process and uses the configured installer PHP interpreter. It does not inspect a separate scheduler or service.'|trans }}</p>
+        <form method="post" action="{{ view.action }}">
+            <input type="hidden" name="__csrf_magic" value="{{ view.csrf }}">
+            <input type="hidden" name="action" value="compare_runtime">
+            <label><input type="checkbox" name="runtime_confirmed" value="1" required> {{ 'I authorize the read-only worker runtime comparison.'|trans }}</label>
+            <button type="submit">{{ 'Compare runtimes'|trans }}</button>
+        </form>
+    </details>
+    {% if runtimeComparison|default(null) is not null %}
+    <section aria-labelledby="runtime-comparison"><h2 id="runtime-comparison">{{ 'Runtime comparison results'|trans }}</h2>
+        <p>{{ 'Permission and identity differences may be intentional. Read-only observations do not prove that writes or installation will succeed.'|trans }}</p>
+        <table><thead><tr><th>{{ 'Check'|trans }}</th><th>{{ 'Observed'|trans }}</th><th>{{ 'Action'|trans }}</th></tr></thead><tbody>
+        {% for check in runtimeComparison %}<tr><th scope="row">{{ check.name|trans }}: {{ check.status|trans }}</th>
+            <td>{{ check.observed|trans }}{% if check.value %} <code>{{ check.value }}</code>{% endif %}</td><td>{{ check.remedy|trans }}</td></tr>{% endfor %}
+        </tbody></table>
+    </section>
+    {% endif %}
     {% if plan.mode == 'complete' and plan.job.state not in ['waiting', 'running', 'failed'] %}
         <section aria-labelledby="verification"><h2 id="verification">{{ 'Installed'|trans }}</h2>
         <p>{{ 'The database version matches this application. Installation does not establish that polling is healthy.'|trans }}</p>
