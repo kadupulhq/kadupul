@@ -455,6 +455,7 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116).
+- Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114).
 - Return a nonzero status for refused upgrade start versions, missing required migration scripts, migration errors, or failed version-marker writes. Fixes #240.
 - Check linked data-source and poller device owners before graph device reassignment and before graph form writes; denied, missing, or malformed child owners leave the graph and its children unchanged. Template-only references remain non-device records.
 - Validate installed font families after recognized Pango suffixes, reject names when fontconfig reports no installed fonts, and preserve complete multiword default descriptions through RRDProxy session setup.
