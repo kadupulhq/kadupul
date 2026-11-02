@@ -34,7 +34,9 @@ if (($argv[1] ?? '') === 'required') {
     $requiredPaths = ($argv[1] ?? '') === 'required-import-paths' ? $input['required'] : [];
     $input = ($argv[1] ?? '') === 'required-import-paths' ? $input['paths'] : $input;
     $legacyCallerPaths = ['graphs.php'];
-    $requiredPaths = symfony_integration_required_paths('files', $legacyCallerPaths);
+    if (($argv[1] ?? '') === 'import-paths') {
+        $requiredPaths = symfony_integration_required_paths('files', $legacyCallerPaths);
+    }
     $accepted = [];
     $guard = test_php_block_source($source, "if (!str_starts_with(\$relative, 'src/')");
     // Execute the merger's actual continue guard, not a second allowlist.
