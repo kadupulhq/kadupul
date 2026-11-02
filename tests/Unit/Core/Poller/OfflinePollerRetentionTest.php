@@ -55,20 +55,25 @@ PHP;
 test('bootstrap enters recovery for either retained local queue and failed reads', function (int $boost, int $output, string $failedQueue) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
     expect($source)->not->toBeFalse();
-    $block = test_php_block_source($source, 'if (is_object($local_db_cnn_id))');
+    $block = test_php_block_source($source, 'if (is_object($local_db_cnn_id) && db_collector_recovery_required($local_db_cnn_id))');
+    $databaseSource = file_get_contents(dirname(__DIR__, 4) . '/lib/database.php');
+    expect($databaseSource)->not->toBeFalse();
+    $probe = test_php_function_source($databaseSource, 'db_collector_recovery_required');
     $program = <<<'PHP'
 namespace OfflineBootstrapProbe;
+use PDO;
+use PDOException;
 $local_db_cnn_id = new \PDO('sqlite::memory:');
 foreach (['poller_output_boost', 'poller_output'] as $table) {
     $local_db_cnn_id->exec("CREATE TABLE $table (output TEXT)");
 }
-function db_fetch_cell($sql, $column = '', $log = true, $connection = false) {
-    if ($GLOBALS['failedQueue'] !== '' && str_contains($sql, $GLOBALS['failedQueue'])) { return false; }
-    return $connection->query($sql)->fetchColumn();
-}
 $config = ['connection' => 'online'];
 PHP;
-    $program .= '$failedQueue=' . var_export($failedQueue, true) . ';';
+    $program .= $probe;
+    if ($failedQueue !== '') {
+        $table = str_contains($failedQueue, 'poller_output_boost') ? 'poller_output_boost' : 'poller_output';
+        $program .= '$local_db_cnn_id->exec(' . var_export('DROP TABLE ' . $table, true) . ');';
+    }
     foreach (['poller_output_boost' => $boost, 'poller_output' => $output] as $table => $count) {
         if ($count > 0) {
             $program .= '$local_db_cnn_id->exec("INSERT INTO ' . $table . ' VALUES (\'retained\')");';

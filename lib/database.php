@@ -10,6 +10,37 @@
 require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
 
 /**
+ * Queue health is a read-only bootstrap decision, not a worker mutation.
+ * An unavailable read retains recovery without relaxing the exception policy
+ * used by authentication and writes through the legacy database wrappers.
+ */
+function db_collector_recovery_required(PDO $database): bool
+{
+    foreach (['SELECT COUNT(*) FROM poller_output_boost', 'SELECT EXISTS(SELECT 1 FROM poller_output LIMIT 1)'] as $sql) {
+        try {
+            $statement = $database->query($sql);
+            if ($statement === false) {
+                return true;
+            }
+            if ($statement->errorCode() !== '00000') {
+                $statement->closeCursor();
+                return true;
+            }
+            $pending = $statement->fetchColumn();
+            $confirmed = $statement->errorCode() === '00000';
+            $closed = $statement->closeCursor();
+            if (!$confirmed || !$closed || $statement->errorCode() !== '00000' || !in_array($pending, [0, '0'], true)) {
+                return true;
+            }
+        } catch (PDOException) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * db_connect_real - makes a connection to the database server
  *
  * @param  (string) The hostname of the database server, 'localhost'
