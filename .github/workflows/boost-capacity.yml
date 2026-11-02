@@ -5,6 +5,7 @@ on:
       - '.github/workflows/boost-capacity.yml'
       - 'cli/poller_output_empty.php'
       - 'install/upgrades/1_2_32.php'
+      - 'install/functions.php'
       - 'lib/boost.php'
       - 'lib/poller.php'
       - 'lib/rrd.php'
@@ -22,6 +23,8 @@ on:
       - 'tests/HandOff/BoostDataHandOffTest.php'
       - 'tests/integration/BoostProcessTableMariaDbTest.php'
       - 'tests/integration/BoostRecoveryRetryMariaDbTest.php'
+      - 'tests/integration/InstallerAutomationRepairMariaDbTest.php'
+      - 'tests/fixtures/installer-automation-repair-native.php'
       - 'tests/integration/DurablePollerQueueMariaDbTest.php'
       - 'tests/Unit/Core/Boost/**'
   workflow_dispatch:
