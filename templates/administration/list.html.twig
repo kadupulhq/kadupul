@@ -82,6 +82,11 @@ SPDX-License-Identifier: GPL-2.0-or-later
                     <a href="{{ path('management_data_query_graphs', {id: record.id}) }}">{{ 'Graph Mappings'|trans({}, 'management') }}</a>
                 {% endif %}
                 {% set metadataRoutes = {'graph-templates': 'management_graph_device_templates', 'data-queries': 'management_query_device_templates'} %}
+                {% set instanceRoutes = {'trees': {'management_tree_items': 'Tree Items'}, 'collectors': {'management_collector_devices': 'Collector Devices'}, 'networks': {'management_network_devices': 'Discovery Results'}} %}
+                {% for destination, label in instanceRoutes[screen.value] ?? {} %}
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed native route with the record primary key. #}
+                    <a href="{{ path(destination, {id: record.id}) }}">{{ label|trans({}, 'management') }}</a>
+                {% endfor %}
                 {% if metadataRoutes[screen.value] is defined %}
                     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed route and the template/query numeric primary key. #}
                     <a href="{{ path(metadataRoutes[screen.value], {id: record.id}) }}">{{ 'Device Templates'|trans({}, 'management') }}</a>

@@ -12,6 +12,17 @@ namespace Kadupul\Navigation\Contract\Management;
 
 enum CatalogScreen: string
 {
+    case LocalGraphItems = 'graph-items';
+    case GraphSources = 'graph-data-sources';
+    case AggregateMembers = 'aggregate-members';
+    case SourceDefinitions = 'data-source-definitions';
+    case SourceGraphs = 'data-source-graphs';
+    case ReportItems = 'report-items';
+    case MyReportItems = 'my-report-items';
+    case TreeItems = 'tree-items';
+    case CollectorDevices = 'collector-devices';
+    case NetworkDevices = 'network-devices';
+
     case Graphs = 'graphs';
     case DataSources = 'data-sources';
     case Aggregates = 'aggregate-graphs';
@@ -37,6 +48,11 @@ enum CatalogScreen: string
     public function title(): string
     {
         return match ($this) {
+            self::LocalGraphItems => 'Graph Items', self::GraphSources => 'Graph Data Sources',
+            self::AggregateMembers => 'Aggregate Member Graphs', self::SourceDefinitions => 'Data Source Definitions',
+            self::SourceGraphs => 'Data Source Graphs', self::ReportItems => 'Report Contents',
+            self::MyReportItems => 'My Report Contents', self::TreeItems => 'Tree Items',
+            self::CollectorDevices => 'Collector Devices', self::NetworkDevices => 'Network Discovery Results',
             self::InputItems => 'Graph Input Associations',
             self::QuerySources => 'Query Data Source Mappings',
             self::QueryGraphSuggestions => 'Query Graph Suggested Values',
@@ -58,6 +74,9 @@ enum CatalogScreen: string
     public function realm(): int
     {
         return match ($this) {
+            self::LocalGraphItems, self::GraphSources, self::AggregateMembers => 5,
+            self::SourceDefinitions, self::SourceGraphs, self::CollectorDevices => 3,
+            self::ReportItems => 21, self::MyReportItems => 22, self::TreeItems => 4, self::NetworkDevices => 23,
             self::InputItems => 10,
             self::QuerySources => 13,
             self::QueryGraphSuggestions => 13,
@@ -78,12 +97,30 @@ enum CatalogScreen: string
     /** @return list<int> Grants required to display related resource names. */
     public function relatedRealms(): array
     {
+        if ($this === self::GraphSources) {
+            return [3];
+        }
+        if ($this === self::SourceGraphs) {
+            return [5];
+        }
         return in_array($this, [self::QueryDeviceTemplates, self::GraphDeviceTemplates], true) ? [12] : [];
     }
 
     public function scoped(): bool
     {
+        if ($this->instanceView()) {
+            return true;
+        }
         return in_array($this, [self::InputItems, self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates, self::GraphDeviceTemplates, self::MibObjects, self::MibConventions, self::MibAttributes, self::GraphItems, self::GraphInputs, self::DeviceGraphs, self::QueryGraphs], true);
+    }
+
+    public function defaultSort(): string
+    {
+        return match ($this) {
+            self::GraphItems, self::LocalGraphItems, self::AggregateMembers, self::ReportItems, self::MyReportItems => 'sequence',
+            self::TreeItems => 'position',
+            default => 'name',
+        };
     }
 
     public function route(): string
@@ -99,6 +136,11 @@ enum CatalogScreen: string
     public function legacyScript(): string
     {
         return match ($this) {
+            self::LocalGraphItems, self::GraphSources => 'graphs.php',
+            self::AggregateMembers => 'aggregate_graphs.php',
+            self::SourceDefinitions, self::SourceGraphs => 'data_sources.php',
+            self::ReportItems => 'reports_admin.php', self::MyReportItems => 'reports_user.php',
+            self::TreeItems => 'tree.php', self::CollectorDevices => 'pollers.php', self::NetworkDevices => 'automation_devices.php',
             self::InputItems => 'graph_templates_inputs.php',
             self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates => 'data_queries.php',
             self::GraphDeviceTemplates => 'graph_templates.php',
@@ -119,6 +161,15 @@ enum CatalogScreen: string
             return ['name' => 'Notification', 'attribute' => 'Attribute', 'sequence' => 'Sequence'];
         }
         return ['name' => 'Name', 'id' => 'ID'] + match ($this) {
+            self::LocalGraphItems => ['sequence' => 'Sequence', 'type' => 'Graph Type ID', 'source_id' => 'Data Source ID', 'value' => 'Value'],
+            self::GraphSources => ['device' => 'Device', 'active' => 'Status', 'rrd_step' => 'RRD Step'],
+            self::AggregateMembers => ['sequence' => 'Sequence', 'device' => 'Device'],
+            self::SourceDefinitions => ['source_type' => 'Data Source Type', 'heartbeat' => 'Heartbeat', 'minimum' => 'Minimum', 'maximum' => 'Maximum'],
+            self::SourceGraphs => ['device' => 'Device', 'template' => 'Graph Template'],
+            self::ReportItems, self::MyReportItems => ['sequence' => 'Sequence', 'type' => 'Item Type', 'graph_id' => 'Local Graph ID', 'device_id' => 'Device ID', 'tree_id' => 'Tree ID', 'timespan' => 'Timespan', 'alignment' => 'Alignment'],
+            self::TreeItems => ['parent' => 'Parent Item ID', 'position' => 'Position', 'graph_id' => 'Local Graph ID', 'device_id' => 'Device ID', 'site_id' => 'Site ID'],
+            self::CollectorDevices => ['hostname' => 'Hostname', 'disabled' => 'Disabled', 'status' => 'Recorded Status'],
+            self::NetworkDevices => ['hostname' => 'Hostname', 'ip' => 'IP Address', 'os' => 'Operating System', 'known' => 'Known Device', 'up' => 'Device Up'],
             self::InputItems => ['sequence' => 'Sequence', 'type' => 'Graph Type ID', 'consolidation' => 'Consolidation ID', 'resolved' => 'Template Item Found'],
             self::QuerySources => ['data_template_id' => 'Data Template ID', 'template' => 'Data Template', 'data_source' => 'Data Source', 'resolved' => 'Template Source Found'],
             self::QueryGraphSuggestions => ['sequence' => 'Sequence', 'value' => 'Suggested Value'],
@@ -140,6 +191,15 @@ enum CatalogScreen: string
     /** Fixed legacy destination and encoded data; never operator-supplied URLs. */
     public function legacyQuery(int $parentId = 0, ?int $recordId = null): array
     {
+        if ($this->instanceView()) {
+            return match ($this) {
+                self::LocalGraphItems, self::GraphSources => ['action' => 'graph_edit', 'id' => $parentId],
+                self::SourceDefinitions, self::SourceGraphs => ['action' => 'ds_edit', 'id' => $parentId],
+                self::ReportItems, self::MyReportItems => ['action' => 'edit', 'tab' => 'items', 'id' => $parentId],
+                self::NetworkDevices => ['network' => $parentId],
+                default => ['action' => 'edit', 'id' => $parentId],
+            };
+        }
         if ($this->metadataView()) {
             return match ($this) {
                 self::InputItems => ['action' => 'input_edit', 'id' => $parentId],
@@ -162,6 +222,7 @@ enum CatalogScreen: string
             self::DeviceGraphs => ['action' => 'template_edit', 'id' => $recordId],
             self::QueryGraphs => ['action' => 'item_edit', 'id' => $recordId, 'snmp_query_id' => $parentId],
             self::Plugins => [],
+            default => throw new \LogicException('This view has no editable record.'),
         };
     }
 
@@ -172,11 +233,29 @@ enum CatalogScreen: string
 
     public function editableRecord(): bool
     {
-        return !$this->metadataView() && $this !== self::Plugins;
+        return !$this->metadataView() && !$this->instanceView() && $this !== self::Plugins;
+    }
+
+    public function instanceView(): bool
+    {
+        return in_array($this, [self::LocalGraphItems, self::GraphSources, self::AggregateMembers, self::SourceDefinitions,
+            self::SourceGraphs, self::ReportItems, self::MyReportItems, self::TreeItems, self::CollectorDevices, self::NetworkDevices], true);
+    }
+
+    public function personalReport(): bool
+    {
+        return in_array($this, [self::MyReports, self::MyReportItems], true);
     }
 
     public function maximumParentId(): int
     {
+        if ($this->instanceView()) {
+            return match ($this) {
+                self::TreeItems, self::CollectorDevices => 65535,
+                self::ReportItems, self::MyReportItems => 16777215,
+                default => 4294967295,
+            };
+        }
         return in_array($this, [self::MibObjects, self::MibConventions, self::MibAttributes], true) ? 4294967295 : 16777215;
     }
 
