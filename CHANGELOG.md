@@ -13,6 +13,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Update development coverage reporting to coverage.py 7.17.0 and the hash-locked Semgrep scanner to 1.182.1, retaining the existing Python 3.12 runtime and coverage/security gates.
 
 - Serve migrated Symfony pages in all 23 shipped gettext languages: module domain keys without a YAML translation fall back to the matching `locales/po` entry, and the locale subscriber accepts every shipped locale with legacy spellings such as `pt_BR`, `zh-CN` and `de-AT`. Plural keys are bridged only where gettext and the English singular/plural choice agree; legacy `__()` and plugin catalogs are unchanged.
+- Update locked Doctrine, Symfony 7.4 and Twig 3 dependencies while retaining the PHP 8.4 platform and Symfony 7.4 component stack. Record Symfony's corrected deprecation option name in the exact error-handler characterization.
 
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
 
