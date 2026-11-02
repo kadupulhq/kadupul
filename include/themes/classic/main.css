@@ -685,10 +685,6 @@ label {
 	background-color: #EEEEEE;
 }
 
-.graphItemGr1Cust {
-	background-color: #D5D5D5;
-}
-
 .graphItemGr2Alt1 {
 	background-color: #E7E9F2;
 }
@@ -2185,10 +2181,6 @@ tr#realtime td:first-child {
 
 .checkboxLabelWanted {
 	display: inline-block;
-}
-
-.right {
-	text-align: right;
 }
 
 td.center > table {
