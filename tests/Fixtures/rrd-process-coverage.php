@@ -340,6 +340,9 @@ if (defined('BASIC_AUTH_TEST_COVERAGE')) {
 if (defined('CLIENT_ADDR_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
+if (defined('DATA_INPUT_SUBSTITUTION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/DataInput/Domain/InputStringSubstitution.php');
+}
 if (defined('PAGE_FLAG_TEST_COVERAGE_SOURCE')) {
     $coverageFilter->includeFile(PAGE_FLAG_TEST_COVERAGE_SOURCE);
 }
