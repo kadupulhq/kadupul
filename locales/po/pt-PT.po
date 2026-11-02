@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-10-30 01:34-0700\n"
+"POT-Creation-Date: 2026-11-01 12:31-0800\n"
 "PO-Revision-Date: 2024-04-20 19:18-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -181,7 +181,7 @@ msgstr "Para migrar os Gráficos Agregados abaixo para um Agregado baseado em Te
 #: aggregate_graphs.php:409 aggregate_graphs.php:459 aggregate_graphs.php:507
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1195 graphs.php:1245 graphs.php:1248
-#: graphs.php:1292 graphs.php:1884 include/auth.php:309
+#: graphs.php:1292 graphs.php:1884 include/auth.php:315
 #: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1137
 #: templates/platform/permission_denied.html.twig
@@ -2174,7 +2174,7 @@ msgstr "Opções de SNMP de Automação"
 msgid "Item"
 msgstr "Item"
 
-#: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
+#: automation_snmp.php:541 include/auth.php:347 include/global_settings.php:772
 #: package_import.php:549 plugins.php:642
 #: templates/platform/permission_denied.html.twig
 msgid "Version"
@@ -3784,7 +3784,7 @@ msgstr "Sintaxe do Gráfico RRDtool"
 msgid "The Kadupul Poller has not run yet."
 msgstr "O Kadupul Poller ainda não fugiu."
 
-#: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
+#: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:322
 #: lib/functions.php:8316 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Permissão negada"
@@ -4741,30 +4741,30 @@ msgstr "Você deve estar logado para acessar esta área de Kadupul."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "Você deve estar logado para acessar esta área de Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5659
+#: include/auth.php:315 include/auth.php:317 lib/auth.php:5659
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Entrar novamente"
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:323 lib/functions.php:8317
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Se acha que isto é um erro. Por favor contacte o seu Administrador Kadupul."
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:323 lib/functions.php:8317
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Não está autorizado a aceder a esta secção de Kadupul."
 
-#: include/auth.php:320
+#: include/auth.php:326
 msgid "Installation In Progress"
 msgstr "Instalação em andamento"
 
-#: include/auth.php:321
+#: include/auth.php:327
 msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
 msgstr "Apenas Administradores Kadupul com privilégio de Instalar/Atualizar podem fazer login neste momento"
 
-#: include/auth.php:321
+#: include/auth.php:327
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Há uma Instalação ou Atualização em andamento."
 

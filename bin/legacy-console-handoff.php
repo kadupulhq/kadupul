@@ -23,7 +23,13 @@ if (PHP_SAPI !== 'cli') {
 // path, the command key carrying its URL path; suffix, the required path
 // ending; keys and valid, the worker's extra command keys and their check;
 // realm, a realm the actor must also hold, or null; run, which returns the
-// result once the actor is confirmed; json, extra json_encode flags.
+// result once the actor is confirmed; json, extra json_encode flags. An optional
+// final input_limit setting allows a bounded 1 MiB mutation payload; older
+// read workers retain their 64 KiB budget. An optional realm_denial boolean
+// requests a typed result from the native core realm-denial renderer. Reskin or
+// plugin-owned exits retain their native behavior. A source-owned query Closure
+// may overlay validated native page context before bootstrap. These settings
+// are never command input.
 define('KADUPUL_BROWSER_COMPATIBILITY', true);
 define('KADUPUL_REDACT_DATABASE_LOGS', true);
 define('KADUPUL_THROW_DATABASE_ERRORS', true);
@@ -31,14 +37,29 @@ $phase = 'handoff';
 ob_start();
 try {
     // A worker that omits a setting must fail closed, not skip its check.
-    if (array_keys($consoleHandoff) !== ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json']
+    $consoleHandoffInputLimit = array_key_exists('input_limit', $consoleHandoff) ? $consoleHandoff['input_limit'] : 65536;
+    $consoleHandoffRealmDenial = array_key_exists('realm_denial', $consoleHandoff) ? $consoleHandoff['realm_denial'] : false;
+    $consoleHandoffKeys = ['page', 'path', 'suffix', 'keys', 'valid', 'realm', 'run', 'json'];
+    if (array_key_exists('input_limit', $consoleHandoff)) {
+        $consoleHandoffKeys[] = 'input_limit';
+    }
+    if (array_key_exists('realm_denial', $consoleHandoff)) {
+        $consoleHandoffKeys[] = 'realm_denial';
+    }
+    if (array_key_exists('query', $consoleHandoff)) {
+        $consoleHandoffKeys[] = 'query';
+    }
+    if (array_keys($consoleHandoff) !== $consoleHandoffKeys
+        || array_key_exists('query', $consoleHandoff) && !$consoleHandoff['query'] instanceof Closure
+        || !is_bool($consoleHandoffRealmDenial)
+        || !in_array($consoleHandoffInputLimit, [65536, 1048576], true)
         || !is_int($consoleHandoff['realm']) && $consoleHandoff['realm'] !== null) {
         throw new LogicException('Invalid console handoff configuration.');
     }
-    $raw = stream_get_contents(STDIN, 65538);
+    $raw = stream_get_contents(STDIN, $consoleHandoffInputLimit + 2);
     $command = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
     $pathKey = $consoleHandoff['path'];
-    if (strlen($raw) > 65536 || !is_array($command)
+    if (strlen($raw) > $consoleHandoffInputLimit || !is_array($command)
         || array_diff(array_keys($command), ['actor', 'credential', 'session_id', 'session_path', $pathKey, ...$consoleHandoff['keys'], 'server', 'cookies', 'query']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_string($command['credential'] ?? null) || preg_match('/\A[a-f0-9]{64}\z/D', $command['credential']) !== 1
@@ -51,19 +72,41 @@ try {
         || !is_array($command['server'] ?? null) || !is_array($command['cookies'] ?? null) || !is_array($command['query'] ?? null)) {
         throw new InvalidArgumentException('Invalid console handoff.');
     }
+    if ($consoleHandoffRealmDenial) {
+        define('KADUPUL_BROWSER_WORKER_REALM_DENIAL', true);
+    }
+    unset($consoleHandoffKeys, $consoleHandoffInputLimit, $consoleHandoffRealmDenial);
     $root = dirname(__DIR__);
     $queryString = $command['server']['QUERY_STRING'] ?? '';
     if (!is_string($queryString)) {
         throw new InvalidArgumentException('Invalid console query string.');
     }
+    if (isset($consoleHandoff['query'])) {
+        // The descriptor supplies only fixed page context. It cannot replay
+        // posted fields or uploaded files, and client query values lose ties.
+        $consoleHandoffQuery = $consoleHandoff['query']($command);
+        if (!is_array($consoleHandoffQuery) || count($consoleHandoffQuery) > 16) {
+            throw new LogicException('Invalid console query context.');
+        }
+        foreach ($consoleHandoffQuery as $consoleHandoffQueryKey => $consoleHandoffQueryValue) {
+            if (!is_string($consoleHandoffQueryKey) || !is_string($consoleHandoffQueryValue)
+                || strlen($consoleHandoffQueryKey) > 64 || strlen($consoleHandoffQueryValue) > 4096
+                || str_contains($consoleHandoffQueryKey . $consoleHandoffQueryValue, "\0")) {
+                throw new LogicException('Invalid console query context.');
+            }
+        }
+        $command['query'] = array_replace($command['query'], $consoleHandoffQuery);
+        $queryString = http_build_query($command['query'], '', '&', PHP_QUERY_RFC3986);
+        unset($consoleHandoffQuery, $consoleHandoffQueryKey, $consoleHandoffQueryValue);
+    }
     $_SERVER = array_replace($_SERVER, $command['server'], [
         'SCRIPT_FILENAME' => $root . '/' . $consoleHandoff['page'], 'SCRIPT_NAME' => $command[$pathKey],
-        'PHP_SELF' => $command[$pathKey],
+        'PHP_SELF' => $command[$pathKey], 'QUERY_STRING' => $queryString,
         'REQUEST_URI' => $command[$pathKey] . ($queryString === '' ? '' : '?' . $queryString), 'REQUEST_METHOD' => 'GET',
     ]);
     $_COOKIE = $command['cookies'];
     $_GET = $_REQUEST = $command['query'];
-    $_POST = [];
+    $_POST = $_FILES = [];
     chdir($root . '/include');
     session_save_path($command['session_path']);
     session_id($command['session_id']);
@@ -82,14 +125,36 @@ try {
     // Persist compatibility extension session changes under the original native
     // handler and lock, instead of copying a stale parent snapshot back later.
     $phase = 'session';
-    if (!session_write_close()) {
-        throw new RuntimeException('Console session changes could not be persisted.');
-    }
+    \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerSession::close();
     while (ob_get_level() > 0) {
         ob_end_clean();
     }
     echo json_encode(['status' => 'ok', 'actor' => $command['actor']] + $result, JSON_THROW_ON_ERROR | $consoleHandoff['json']);
 } catch (Throwable $error) {
+    if ($error instanceof \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerRealmDenied && $phase === 'bootstrap'
+        && ($consoleHandoff['realm_denial'] ?? false) === true
+        && defined('KADUPUL_BROWSER_WORKER_REALM_DENIAL') && KADUPUL_BROWSER_WORKER_REALM_DENIAL === true) {
+        try {
+            $phase = 'denial-identity';
+            // The usual post-bootstrap check was not reached. Bind this denial
+            // to the still-active real native session, never a client actor ID.
+            if (session_status() !== PHP_SESSION_ACTIVE
+                || !in_array($_SESSION['sess_user_id'] ?? null, [$command['actor'], (string) $command['actor']], true)
+                || !is_string($_SESSION['sess_user_credential'] ?? null)
+                || !hash_equals($command['credential'], $_SESSION['sess_user_credential'])) {
+                throw new RuntimeException('Console denial identity could not be confirmed.');
+            }
+            $phase = 'denial-session';
+            \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerSession::close();
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
+            echo json_encode(['status' => 'ok', 'actor' => $command['actor'], 'outcome' => 'denied'], JSON_THROW_ON_ERROR);
+            return;
+        } catch (Throwable $denialError) {
+            $error = $denialError;
+        }
+    }
     while (ob_get_level() > 0) {
         ob_end_clean();
     }

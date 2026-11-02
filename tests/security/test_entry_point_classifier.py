@@ -1823,6 +1823,81 @@ final class DefinitionActions {
             except SystemExit:
                 pass
 
+    # A public installation signal getter is admitted only for the exact
+    # reviewed contract/final implementation and an unrebound catch variable.
+    upgrade_paths = [
+        'src/Platform/Contract/InstallationUpgradeRequired.php',
+        'src/Platform/Infrastructure/Legacy/ConsoleUpgradeRequired.php',
+        'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php',
+    ]
+    upgrade_controller = r"""<?php
+namespace Kadupul\Fixture;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Application\Port\RrdCheckAccess;
+use Kadupul\Platform\Contract\InstallationUpgradeRequired;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Attribute\Route;
+final class UpgradeGetter {
+    #[Route('/utilities/rrd-check', name: 'upgrade_getter')]
+    public function __invoke(ConsoleAccess $console, RrdCheckAccess $access, $writer): Response {
+        $actor = $console->consoleActor();
+        if ($actor === null) { return new Response('', 401); }
+        try { $access->authorize(); }
+        catch (InstallationUpgradeRequired $upgrade) {
+            return new RedirectResponse($upgrade->location(), 302);
+        }
+        return new Response();
+    }
+}
+"""
+    upgrade_cases = [
+        ('reviewed getter', None, None, True),
+        ('rebound catch', 'controller', ("return new RedirectResponse", "$upgrade = $writer; return new RedirectResponse"), False),
+        ('unbound receiver', 'controller', ('$upgrade->location()', '$writer->location()'), False),
+        ('getter argument', 'controller', ('$upgrade->location()', "$upgrade->location('extra')"), False),
+        ('catch side effect', 'controller', ('return new RedirectResponse', "unlink('/tmp/forbidden'); return new RedirectResponse"), False),
+        ('changed getter body', upgrade_paths[1], ('return $this->location;', "unlink('/tmp/forbidden'); return $this->location;"), False),
+        ('changed getter signature', upgrade_paths[1], ('location(): string', 'location(string $input): string'), False),
+        ('changed signal contract', upgrade_paths[0], ('location(): string', 'location(): mixed'), False),
+        ('missing signal contract', upgrade_paths[0], None, False),
+        ('alternate implementation', 'extra', r'<?php namespace Kadupul\Fixture; final class OtherSignal extends \RuntimeException implements \Kadupul\Platform\Contract\InstallationUpgradeRequired { public function location(): string { return "/"; } }', False),
+        ('derived interface', 'extra', r'<?php namespace Kadupul\Fixture; interface OtherSignal extends \Kadupul\Platform\Contract\InstallationUpgradeRequired {}', False),
+        ('unparseable source', 'extra', '<?php this is invalid PHP !!!', False),
+        ('anonymous alternate implementation', 'extra', r'<?php namespace Kadupul\Fixture; function otherSignal() { return new class extends \RuntimeException implements \Kadupul\Platform\Contract\InstallationUpgradeRequired { public function location(): string { return "/"; } }; }', False),
+        ('case-variant alternate implementation', 'extra', r'<?php namespace Kadupul\Fixture; final class OtherSignal extends \RuntimeException implements \kadupul\platform\contract\installationupgraderequired { public function location(): string { return "/"; } }', False),
+        ('case-variant derived interface', 'extra', r'<?php namespace Kadupul\Fixture; interface OtherSignal extends \kadupul\platform\contract\installationupgraderequired {}', False),
+    ]
+    for label, target, mutation, admitted in upgrade_cases:
+        count += 1
+        with tempfile.TemporaryDirectory(prefix='entry-upgrade-getter-') as directory:
+            root = tree(directory)
+            adapter = root / 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php'
+            adapter.parent.mkdir(parents=True, exist_ok=True)
+            adapter.write_text(SESSION)
+            for relative in upgrade_paths:
+                output = root / relative
+                output.parent.mkdir(parents=True, exist_ok=True)
+                output.write_text((project / relative).read_text())
+            controller = root / 'src/Fixture/UpgradeGetter.php'
+            controller.parent.mkdir(parents=True, exist_ok=True)
+            controller.write_text(upgrade_controller)
+            if target == 'extra':
+                (controller.parent / 'OtherSignal.php').write_text(mutation)
+            elif target is not None:
+                output = controller if target == 'controller' else root / target
+                if mutation is None:
+                    output.unlink()
+                else:
+                    before, after = mutation
+                    if before not in output.read_text():
+                        failures.append('Upgrade getter mutation missed target: ' + label)
+                        continue
+                    output.write_text(output.read_text().replace(before, after, 1))
+            row = run(root, []).get('app.php/utilities/rrd-check', ('missing', ''))
+            if (row[0] == 'symfony:upgrade_getter') != admitted:
+                failures.append('Upgrade getter %s: expected admitted=%s, got %s' % (label, admitted, row))
+
     for failure in failures:
         print('FAIL: ' + failure)
     if failures:
