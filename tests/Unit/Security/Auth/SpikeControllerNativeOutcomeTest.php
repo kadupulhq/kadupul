@@ -66,6 +66,8 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
                 $coverage->merge($child);
             }
             $state = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+            self::assertSame(realpath($root . '/lib/rrd.php'), $state['rrd_guard_source']);
+            self::assertTrue($state['fixture_files_unchanged']);
             self::assertSame([['user_id' => 42, 'type' => 1, 'item_id' => 101], ['user_id' => 42, 'type' => 3, 'item_id' => 111], ['user_id' => 42, 'type' => 4, 'item_id' => 121]], $state['policy_rows']);
             return $state;
         } finally {
@@ -120,7 +122,24 @@ final class SpikeControllerNativeOutcomeTest extends TestCase
         self::assertSame(['local_graph_id' => 100, 'results' => $results], $state['response']);
         self::assertSame([[100]], $state['lookup_parameters']);
         self::assertSame([[300, true]], $state['path_calls']);
-        self::assertSame([['arguments' => array_merge(['/owned/spike-source.rrd'], $arguments), 'dryrun' => $dryrun, 'html' => 1]], $state['processor_calls']);
+        self::assertSame([['arguments' => array_merge(['rra/spike-source.rrd'], $arguments), 'dryrun' => $dryrun, 'html' => 1]], $state['processor_calls']);
+    }
+
+    #[DataProvider('outsideRootCases')]
+    public function testRealRrdGuardRefusesAnOwnedOutsideRootFileBeforeProcessorHandoff(bool $dryrun): void
+    {
+        $state = $this->runController(['outside_rra' => true] + ($dryrun ? ['dryrun' => true] : []));
+        self::assertSame(200, $state['status']);
+        self::assertSame(['local_graph_id' => 100, 'results' => ''], $state['response']);
+        self::assertSame([[100]], $state['lookup_parameters']);
+        self::assertSame([[300, true]], $state['path_calls']);
+        self::assertSame([], $state['processor_calls']);
+    }
+
+    public static function outsideRootCases(): iterable
+    {
+        yield 'normal' => [false];
+        yield 'dry run' => [true];
     }
 
     public static function admittedCases(): iterable
