@@ -80,7 +80,7 @@ app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET
 app.php/graphing/trees	symfony:admin_trees	methods=GET|HEAD; ConsoleAccess realm 8 + realm 4
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/help	symfony:platform_help	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
-app.php/installer	symfony:platform_installer	methods=GET|HEAD|POST; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at 87fa30e105e07e504e4fa642f1c68c9e7026e640881448a9b531e0d4ede1d364
+app.php/installer	symfony:platform_installer	methods=GET|HEAD|POST; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at b4e171db724687fef1852a055aea5b60e652b383741eff5ecaf248eca67c6224
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -296,13 +296,13 @@ include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, revie
 include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 060d320b61c0; included by lib/functions.php
 include/vendor/	web-server-denied	nginx; apache .htaccess
 index.php	symfony:forward	forwards to app.php/console
-install/background.php	cli-only	native CLI guard; reserved installer token and current actor eligibility before execution; reviewed at 87fa30e105e07e504e4fa642f1c68c9e7026e640881448a9b531e0d4ede1d364
+install/background.php	cli-only	native CLI guard; reserved installer token and current actor eligibility before execution; reviewed at b4e171db724687fef1852a055aea5b60e652b383741eff5ecaf248eca67c6224
 install/cli_check.php	cli-only	guard: include/cli_check.php
 install/cli_test.php	cli-only	guard: php_sapi_name() check
 install/functions.php	anonymous-allowed	inert: declarations and literal assignments only
 install/index.php	anonymous-allowed	redirect-only
-install/install.php	realm:26	native login/account policy and uncached realm 26 before workflow; CSRF before mutations; reviewed at 87fa30e105e07e504e4fa642f1c68c9e7026e640881448a9b531e0d4ede1d364
-install/installer-bootstrap.php	guarded-fragment	direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability; reviewed at 87fa30e105e07e504e4fa642f1c68c9e7026e640881448a9b531e0d4ede1d364
+install/install.php	realm:26	native login/account policy and uncached realm 26 before workflow; CSRF before mutations; reviewed at b4e171db724687fef1852a055aea5b60e652b383741eff5ecaf248eca67c6224
+install/installer-bootstrap.php	guarded-fragment	direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability; reviewed at b4e171db724687fef1852a055aea5b60e652b383741eff5ecaf248eca67c6224
 install/step_json.php	realm:26	include/auth.php; auth_json
 install/upgrades/0_8_1.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/0_8_2.php	anonymous-allowed	inert: declarations and literal assignments only
