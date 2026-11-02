@@ -18,6 +18,18 @@ def main():
     parser.add_argument('--unit', type=Path, required=True)
     parser.add_argument('--integration', type=Path, required=True)
     args = parser.parse_args()
+    canonical_helper = ROOT / 'lib/functions.php'
+    canonical_bytes = canonical_helper.read_bytes()
+
+    def require_canonical_helper(report: Path) -> None:
+        if not canonical_helper.is_file() or canonical_helper.read_bytes() != canonical_bytes:
+            raise RuntimeError('canonical-source-preservation: checkout helper was changed or removed')
+        sidecar = json.loads(Path(str(report) + '.native.json').read_text())
+        measured = sidecar['lines'].get('lib/functions.php', {})
+        if not any(test != 'poller integration' for hits in measured.values()
+                   if isinstance(hits, list) for test in hits):
+            raise RuntimeError('canonical-source-preservation: originating unit measurements were lost')
+
     manifest = json.loads((args.integration / 'observations.json').read_text())
     poller = '/var/www/html/poller.php'
     measured = None
@@ -69,6 +81,25 @@ def main():
                 raise RuntimeError(f'{case}: failed for an unexpected reason: {result.stderr}')
             print(f'PASS {case}', flush=True)
 
+        canonical_coverage = root / 'canonical-source-control.php'
+        # Exercise the nested checkout layout even when CI checks out elsewhere.
+        canonical_php = [args.php, '-d', 'sys_temp_dir=' + str(ROOT.parent)]
+        canonical_fixture = subprocess.run(
+            canonical_php + [str(ROOT / 'tests/Support/Behavior/coverage_source_map_fixture.php'),
+             str(args.unit.resolve()), str(canonical_coverage)],
+            capture_output=True, text=True, check=True, timeout=60)
+        canonical_mapping = json.loads(canonical_fixture.stdout)
+        canonical_output = root / 'canonical-source.xml'
+        canonical_result = subprocess.run(
+            canonical_php + [str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
+             str(canonical_coverage), str(args.integration.resolve()), str(canonical_output)],
+            capture_output=True, text=True, timeout=60)
+        if canonical_result.returncode != 0 or Path(canonical_mapping['copy']).exists() \
+                or Path(canonical_mapping['manifest']).exists():
+            raise RuntimeError('canonical-source-preservation: admitted scratch-source merge failed')
+        require_canonical_helper(canonical_output)
+        print('PASS canonical-source-preservation', flush=True)
+
         fixture_coverage = root / 'unit-with-temporary-source.php'
         fixture = subprocess.run(
             [args.php, str(ROOT / 'tests/Support/Behavior/coverage_source_map_fixture.php'),
@@ -92,22 +123,24 @@ def main():
                 or Path(temporary['copy']).exists() or not temporary_manifest.exists():
             raise RuntimeError('temporary-source-invalid-manifest: invalid mapping was consumed or published')
         print('PASS temporary-source-invalid-manifest', flush=True)
-        for case in ('outside-copy', 'traversal-copy', 'outside-source'):
+        for case in ('outside-copy', 'traversal-copy', 'outside-source', 'checkout-copy'):
             invalid_mapping = json.loads(valid_mapping)
             if case == 'outside-copy':
                 invalid_mapping['copy'] = '/coverage-map-outside/' + Path(temporary['copy']).name
             elif case == 'traversal-copy':
                 copy_path = Path(temporary['copy'])
                 invalid_mapping['copy'] = str(copy_path.parent / '..' / copy_path.parent.name / copy_path.name)
-            else:
+            elif case == 'outside-source':
                 invalid_mapping['source'] = str(root / 'observations.json')
+            else:
+                invalid_mapping['copy'] = str(canonical_helper)
             temporary_manifest.write_text(json.dumps(invalid_mapping))
             output.write_text('original unit coverage')
             rejected = subprocess.run(
                 [args.php, str(ROOT / 'tests/Support/Behavior/merge_poller_coverage.php'),
                  str(fixture_coverage), str(args.integration.resolve()), str(output)],
                 capture_output=True, text=True, timeout=60)
-            error = 'Invalid associated coverage source mapping' if case == 'outside-source' \
+            error = 'Invalid associated coverage source mapping' if case in ('outside-source', 'checkout-copy') \
                 else 'Unmapped temporary coverage source'
             if rejected.returncode == 0 or output.read_text() != 'original unit coverage' \
                     or error not in rejected.stdout + rejected.stderr \
@@ -144,6 +177,8 @@ def main():
                 raise RuntimeError('temporary-source-unrelated: another artifact lost its retained source or manifest')
             if result.returncode != 0 or Path(paired['copy']).exists() or Path(paired['manifest']).exists():
                 raise RuntimeError('temporary-source-unrelated: associated mapping was not consumed successfully')
+            require_canonical_helper(output)
+            print('PASS canonical-source-preservation', flush=True)
             print('PASS temporary-source-unrelated', flush=True)
             handoff_output = root / 'handoff.xml'
             handoff = subprocess.run(
@@ -152,6 +187,7 @@ def main():
                 capture_output=True, text=True, timeout=60)
             if handoff.returncode != 0 or unrelated_manifest.exists() or unrelated_copy.exists():
                 raise RuntimeError('temporary-source-handoff: the preserved artifact cannot complete its own merge')
+            require_canonical_helper(handoff_output)
             print('PASS temporary-source-handoff', flush=True)
         finally:
             unrelated_copy.unlink(missing_ok=True)
@@ -169,6 +205,7 @@ def main():
             capture_output=True, text=True, timeout=60)
         if result.returncode != 0:
             raise RuntimeError(f'temporary-source-restore: {result.stderr}')
+        require_canonical_helper(output)
         if not output.is_file() or output.read_text() == 'original unit coverage':
             raise RuntimeError('temporary-source-restore: combined report was not published')
         if Path(temporary['copy']).exists() or Path(temporary['manifest']).exists():
