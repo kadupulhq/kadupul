@@ -46,6 +46,11 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(required, json.loads(result.stdout))
 
+    def test_native_graph_query_pages_survive_the_production_import_guard(self):
+        result = self.guard('import-paths', ['graph_image.php', 'graph_json.php', 'bin/unregistered-worker.php'])
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual(['graph_image.php', 'graph_json.php'], json.loads(result.stdout))
+
     def test_measured_graph_cli_sources_survive_the_production_import_guard(self):
         admitted = [
             'cli/poller_graphs_reapply_names.php', 'bin/legacy-graph-titles.php',
