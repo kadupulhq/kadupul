@@ -319,11 +319,18 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
                 needle = '!in_array($relative, $requiredPaths, true) && '
                 self.assertIn(needle, original)
                 broken = root / 'previous-import-predicate.php'
-                broken.write_text(original.replace(needle, '', 1))
+                predicate = next(line for line in original.splitlines(keepends=True)
+                                 if '!str_starts_with($relative,' in line and needle in line)
+                # Main now also names this writer explicitly. Reproduce the
+                # historical omission in that redundant literal allowlist too,
+                # while keeping the required-source inventory intact.
+                self.assertIn("'bin/legacy-tree-save.php', ", predicate)
+                incomplete = predicate.replace(needle, '', 1).replace("'bin/legacy-tree-save.php', ", '', 1)
+                broken.write_text(original.replace(predicate, incomplete, 1))
                 refused = invoke('import', str(ROOT), payload, broken)
                 self.assertNotEqual(0, refused.returncode)
-                # Current main already admits the graph CLI names explicitly; the tree
-                # writer is the first required source missed by that old predicate.
+                # The deliberately omitted tree writer must fail at its real
+                # measured-execution guard, before unrelated negative probes.
                 self.assertIn('Missing measured execution: bin/legacy-tree-save.php', refused.stderr)
 
     def test_imported_local_scenarios_and_their_frozen_cli_oracles_are_registered(self):
