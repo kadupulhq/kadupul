@@ -175,12 +175,6 @@ dynamic_include	./cli/import_template.php:12	require_once($config['base_path'] .
 dynamic_include	./cli/input_whitelist.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/input_whitelist.php:13	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/input_whitelist.php:14	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./cli/poller_output_empty.php:10	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/poller_output_empty.php:11	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./cli/poller_output_empty.php:12	require_once($config['base_path'] . '/lib/dsstats.php');
-dynamic_include	./cli/poller_output_empty.php:13	require_once($config['base_path'] . '/lib/dsdebug.php');
-dynamic_include	./cli/poller_output_empty.php:14	require_once($config['base_path'] . '/lib/boost.php');
-dynamic_include	./cli/poller_output_empty.php:15	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./cli/poller_reindex_hosts.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/poller_reindex_hosts.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/poller_reindex_hosts.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
