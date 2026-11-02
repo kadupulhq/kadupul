@@ -1142,7 +1142,8 @@ function repair_automation() {
 				continue;
 			}
 
-			if (db_execute_prepared('UPDATE automation_graph_rules
+			if (db_execute_prepared(
+				'UPDATE automation_graph_rules
 				SET snmp_query_id = ?, graph_type_id = ?
 				WHERE id = ?',
 				array(
