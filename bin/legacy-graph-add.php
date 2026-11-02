@@ -30,12 +30,9 @@ require_once $config['base_path'] . '/lib/variables.php';
 
 $status = 'failed';
 $result = [];
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 65537);
-    if (strlen($input) > 65536) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 6, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 65536, 6);
     $count = static fn(mixed $value, int $minimum): bool => is_int($value) && $value >= $minimum;
     $valid = is_array($command) && in_array($command['database'] ?? null, ['local', 'main'], true);
     $kind = $valid ? ($command['kind'] ?? null) : null;

@@ -12,6 +12,7 @@ test('replay worker refuses an online remote collector and a volatile queue, and
         mkdir($dir . $suffix, 0700);
     }
     copy($root . '/bin/legacy-rejected-samples-replay.php', $dir . '/bin/legacy-rejected-samples-replay.php');
+    copy($root . '/bin/worker-io.php', $dir . '/bin/worker-io.php');
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $prelude = '';
     if ($coverage !== null) {

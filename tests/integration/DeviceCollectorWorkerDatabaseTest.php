@@ -126,6 +126,7 @@ final class DeviceCollectorWorkerDatabaseTest extends TestCase
         $sourceDirectory = getenv('KADUPUL_TEST_WORKER_SOURCE_DIR') ?: $root . '/bin';
         $worker = '/legacy-device-' . $kind . '.php';
         copy($sourceDirectory . $worker, $directory . '/bin' . $worker);
+        copy($sourceDirectory . '/worker-io.php', $directory . '/bin/worker-io.php');
         file_put_contents($directory . '/bin/legacy-assignment-bootstrap.php', '<?php require ' . var_export($root . '/tests/Fixtures/device-worker-probe-bootstrap.php', true) . ';');
         file_put_contents($directory . '/lib/api_automation.php', '<?php');
         file_put_contents($directory . '/lib/sort.php', '<?php');
@@ -173,7 +174,7 @@ final class DeviceCollectorWorkerDatabaseTest extends TestCase
             if ($process->isRunning()) {
                 $process->wait();
             }
-            foreach (['ready', 'release', 'bin' . $worker, 'bin/legacy-assignment-bootstrap.php', 'lib/api_automation.php', 'lib/sort.php'] as $file) {
+            foreach (['ready', 'release', 'bin' . $worker, 'bin/worker-io.php', 'bin/legacy-assignment-bootstrap.php', 'lib/api_automation.php', 'lib/sort.php'] as $file) {
                 if (is_file($directory . '/' . $file)) {
                     unlink($directory . '/' . $file);
                 }

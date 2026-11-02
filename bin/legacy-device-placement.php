@@ -18,12 +18,9 @@ require_once __DIR__ . '/../lib/sort.php';
 
 $status = 'failed';
 $connection = null;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 32769);
-    if (strlen($input) > 32768) {
-        throw new InvalidArgumentException('Invalid command');
-    }
-    $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 32768, 8, InvalidArgumentException::class, 'Invalid command');
     if (!is_array($command) || array_diff(array_keys($command), ['actor', 'selection', 'kind', 'destination', 'timespan', 'alignment']) !== [] || !is_int($command['actor'] ?? null) || $command['actor'] < 1 || !is_array($command['selection'] ?? null) || !is_string($command['kind'] ?? null) || !is_string($command['destination'] ?? null) || !is_int($command['timespan'] ?? null) || !is_int($command['alignment'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }

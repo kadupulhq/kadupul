@@ -38,12 +38,9 @@ require_once __DIR__ . '/../lib/utility.php';
 $status = 'failed';
 $transactionStarted = false;
 $audit = new LegacyWorkerAudit(new LegacyAuditTrail(dirname(__DIR__)), 'inventory.device.edit', 'device', 'unknown');
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 500001);
-    if (strlen($input) > 500000) {
-        throw new InvalidArgumentException('Payload too large');
-    }
-    $command = json_decode($input, true, 16, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 500000, 16, InvalidArgumentException::class, 'Payload too large');
     if (!is_array($command) || array_diff(array_keys($command), ['correlation_id', 'actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled', 'location', 'external_id', 'site_id', 'polling', 'snmp']) !== []
         || !is_array($command['polling'] ?? null) || !is_array($command['snmp'] ?? null)
         || !is_int($command['site_id'] ?? null) || $command['site_id'] < 0 || $command['site_id'] > 4294967295

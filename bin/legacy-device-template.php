@@ -17,12 +17,9 @@ $status = 'failed';
 $transactionStarted = false;
 $writeStarted = false;
 $audit = new LegacyWorkerAudit(new LegacyAuditTrail(dirname(__DIR__)), 'inventory.device.assign-template', 'device', 'unknown');
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 4097);
-    if (strlen($input) > 4096) {
-        throw new InvalidArgumentException('Payload too large');
-    }
-    $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 4096, 8, InvalidArgumentException::class, 'Payload too large');
     if (!is_array($command) || array_diff(array_keys($command), ['correlation_id', 'actor', 'id', 'template_id', 'revision']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
         || !is_int($command['id'] ?? null) || $command['id'] <= 0

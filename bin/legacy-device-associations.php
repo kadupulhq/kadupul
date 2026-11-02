@@ -19,12 +19,9 @@ $status = 'failed';
 $connection = null;
 $remote = null;
 $writing = false;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 4097);
-    if (strlen($input) > 4096) {
-        throw new InvalidArgumentException('Invalid command');
-    }
-    $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 4096, 8, InvalidArgumentException::class, 'Invalid command');
     if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'kind', 'operation', 'target', 'revision', 'reindex']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_int($command['id'] ?? null) || $command['id'] < 1 || $command['id'] > 16777215

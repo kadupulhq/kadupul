@@ -59,7 +59,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             'cli/poller_output_empty.php', 'bin/legacy-poller-output-empty.php',
             'cli/rebuild_poller_cache.php', 'bin/legacy-poller-cache-rebuild.php',
             'cli/replay_rejected_samples.php', 'bin/legacy-rejected-samples-replay.php',
-            'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
+            'bin/worker-io.php', 'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
             'graphs.php',
         ]
         excluded = [
@@ -89,6 +89,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             'bin/legacy-item-permission.php',
             'bin/legacy-tree-save.php',
             'bin/legacy-user-copy.php',
+            'bin/worker-io.php',
             'cli/add_data_query.php',
             'cli/add_datasource.php',
             'cli/add_graph_template.php',
@@ -179,7 +180,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             'src/IdentityAccess/Infrastructure/Symfony/CopyUserLegacyArguments.php',
             'src/IdentityAccess/Infrastructure/Symfony/ListPermissionsCommand.php',
         ) if (ROOT / path).is_file()]
-        self.assertEqual(102, len(required))
+        self.assertEqual(103, len(required))
         result = self.guard('import-paths', required)
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(required, json.loads(result.stdout))

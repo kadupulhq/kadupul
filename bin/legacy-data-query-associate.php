@@ -22,12 +22,9 @@ foreach (['api_automation_tools', 'api_automation', 'api_data_source', 'api_grap
 }
 
 $status = 'failed';
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 2001);
-    if (strlen($input) > 2000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 2000, 4);
     if (!is_array($command) || array_diff(array_keys($command), ['database', 'host_id', 'data_query_id', 'reindex_method']) !== []
         || !in_array($command['database'] ?? null, ['local', 'main'], true)
         || !is_int($command['host_id'] ?? null) || $command['host_id'] < 1

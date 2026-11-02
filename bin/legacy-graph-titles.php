@@ -20,12 +20,9 @@ require_once $config['base_path'] . '/lib/api_graph.php';
 
 $status = 'failed';
 $done = 0;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 20001);
-    if (strlen($input) > 20000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 20000, 4);
     if (!is_array($command) || array_diff(array_keys($command), ['database', 'graphs']) !== []
         || !in_array($command['database'] ?? null, ['local', 'main'], true)
         || !is_array($command['graphs'] ?? null) || !array_is_list($command['graphs'])) {

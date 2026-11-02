@@ -19,12 +19,9 @@ require __DIR__ . '/../include/cli_check.php';
 
 $status = 'failed';
 $copied = false;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 4001);
-    if (strlen($input) > 4000) {
-        throw new RuntimeException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 4000, 4);
     if (!is_array($command) || array_diff(array_keys($command), ['database', 'template', 'new']) !== []
         || !in_array($command['database'] ?? null, ['local', 'main'], true)
         || !is_string($command['template'] ?? null) || !is_string($command['new'] ?? null)) {

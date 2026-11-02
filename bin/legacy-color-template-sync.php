@@ -27,12 +27,9 @@ require_once __DIR__ . '/../lib/api_aggregate.php';
 $status = 'failed';
 $summary = null;
 $db = null;
+require_once __DIR__ . '/worker-io.php';
 try {
-    $input = stream_get_contents(STDIN, 4097);
-    if (strlen($input) > 4096) {
-        throw new InvalidArgumentException('Payload too large');
-    }
-    $command = json_decode($input, true, 4, JSON_THROW_ON_ERROR);
+    $command = \Kadupul\LegacyWorker\read_json_command(STDIN, 4096, 4, InvalidArgumentException::class, 'Payload too large');
     if (!is_array($command) || array_diff(array_keys($command), ['actor', 'template_id', 'revision']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_int($command['template_id'] ?? null) || $command['template_id'] < 1 || $command['template_id'] > 16777215
