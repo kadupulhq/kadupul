@@ -244,6 +244,10 @@ error values. Unconfirmed replication acknowledgement remains a failed outcome;
 it does not undo data already copied to a collector. Missing automation
 references stop repair rather than replacing them with zero IDs.
 
+Table discovery allows tables introduced by later upgrade scripts to be absent
+before migration. A confirmed zero-row metadata result is omitted from the
+conversion list; a failed metadata query still stops installation.
+
 Deploy the compatibility file, native engine change, service classes, backend,
 and regenerated catalogs together. Stop and drain installer workers before
 cutover or rollback, keep the shared application secret unchanged and rebuild

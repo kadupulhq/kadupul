@@ -33,7 +33,12 @@ final readonly class InstallerTableCatalog
             }
             // SHOW ... LIKE treats underscores as wildcards. Equality keeps the exact base-table identity.
             $row = $this->native->call('db_fetch_row_prepared', 'SHOW TABLE STATUS WHERE Name = ?', [$table]);
-            if (!is_array($row) || $row === []) {
+            // The current release schema includes tables created by later upgrade steps.
+            // Native row reads distinguish confirmed absence ([]) from query failure (false).
+            if ($row === []) {
+                continue;
+            }
+            if (!is_array($row)) {
                 throw new \RuntimeException('Installation table metadata could not be read.');
             }
             $collation = $row['Collation'] ?? '';

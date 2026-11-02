@@ -5,6 +5,8 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+namespace Kadupul\Tests\Fixtures;
+
 /** A PHP stream that admits metadata while refusing open or ending a read without EOF. */
 final class InstallerReadFailureStream
 {

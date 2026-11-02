@@ -52,7 +52,9 @@ function db_fetch_row_prepared(string $sql, array $parameters): array|false
     }
     $query = \Kadupul\Tests\InstallerCatalogServicesTest::$database->prepare($sql);
     $query->execute($parameters);
-    return $query->fetch(\PDO::FETCH_ASSOC);
+    // Native db_fetch_row_return() uses an empty array for a successful zero-row read.
+    $row = $query->fetch(\PDO::FETCH_ASSOC);
+    return $row === false ? [] : $row;
 }
 
 /** Native count semantics for the frozen procedural oracle. */

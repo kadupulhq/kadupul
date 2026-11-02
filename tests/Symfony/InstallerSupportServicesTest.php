@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Tests;
 
+use Kadupul\Tests\Fixtures\InstallerReadFailureStream;
 use Kadupul\Platform\Domain\Installer\MigrationStatus;
 use Kadupul\Platform\Infrastructure\Legacy\InstallerAutomationRepair;
 use Kadupul\Platform\Infrastructure\Legacy\InstallerCollectorConfiguration;
@@ -672,11 +673,10 @@ final class InstallerSupportServicesTest extends TestCase
     /** PHP stream errors must not turn an unread or prematurely stopped CSV into an empty successful import. */
     public function testColorImportRejectsOpenAndLateReadFailures(): void
     {
-        require dirname(__DIR__) . '/Fixtures/installer-read-failure-stream.php';
-        stream_wrapper_register('installerfail', \InstallerReadFailureStream::class);
+        stream_wrapper_register('installerfail', InstallerReadFailureStream::class);
         try {
             foreach ([false, true] as $open) {
-                \InstallerReadFailureStream::$open = $open;
+                InstallerReadFailureStream::$open = $open;
                 clearstatcache();
                 try {
                     (new InstallerColorImport('installerfail://release', $this->native))->import();

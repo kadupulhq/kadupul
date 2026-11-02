@@ -184,7 +184,7 @@ final class InstallerCatalogServicesTest extends TestCase
         }
 
         self::$tables = ['host'];
-        foreach ([false, []] as $row) {
+        foreach ([false] as $row) {
             self::$tableRow = $row;
             try {
                 $catalog->tables();
@@ -220,7 +220,7 @@ final class InstallerCatalogServicesTest extends TestCase
             $database->exec('CREATE TABLE exact_name (id INT) ENGINE=InnoDB ROW_FORMAT=DYNAMIC COLLATE=utf8mb4_unicode_ci');
             $database->exec('CREATE TABLE exactXname (id INT) ENGINE=MyISAM COLLATE=latin1_swedish_ci');
             self::$database = $database;
-            self::$tables = ['exact_name', 'exactXname'];
+            self::$tables = ['exact_name', 'exactXname', 'created_by_later_upgrade'];
             $rows = (new InstallerTableCatalog(new NativeInstallerFunctions()))->tables();
             $this->assertSame(['exactXname'], array_keys($rows));
             $this->assertSame('MyISAM', $rows['exactXname']['Engine']);

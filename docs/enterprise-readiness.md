@@ -288,9 +288,11 @@ No LTS changes or deployment were performed.
 | Preserve confirmed migration markers and caller transaction ownership | Platform installer persistence | verified | Extracted `InstallerVersionWriter`, retaining the native PDO selection and transaction protocol. Tests cover actual shipped DDL on MariaDB/MySQL, real SQLite write/readback/commit failures, native CLI retry boundaries and injected driver/cleanup failures. New service has 55/55 statements covered. |
 | Validate complete production upgrade and restoration | Platform installer operations | planned | Full historical upgrade chains, production-sized concurrent workloads and restoration remain release gates. No deployment, full-install certification or distributed rollback is claimed. |
 
-Verification uses non-root Docker PHP 8.4.27 with PCOV 1.0.12 and unchanged locked
-Composer dependencies. Current full installer results are 309 tests / 1,841
-assertions with no skips. The focused version suite passes 59 tests / 315
+Original extraction verification used non-root Docker PHP 8.4.27 with PCOV 1.0.12
+and unchanged locked Composer dependencies: 309 tests / 1,841 assertions with
+no skips. The upgrade-discovery correction passes all 309 installer tests with
+1,840 assertions and no skips on PHP 8.4.25 / MariaDB 10.11.19. Current-head
+coverage and release rehearsals remain GitHub CI gates. The focused version suite passes 59 tests / 315
 assertions on MariaDB; the additional MySQL run passes 36 tests / 171 assertions.
 The native CLI upgrade/retry regression passes with 146 assertions, and native
 state/automation/secret checks pass 42 tests / 510 assertions. Historical profile

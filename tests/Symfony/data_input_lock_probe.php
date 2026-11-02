@@ -23,6 +23,7 @@ $installer_connection = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER')
     : $connect();
 $writer->exec('SET SESSION innodb_lock_wait_timeout=1');
 $root = dirname(__DIR__, 2);
+require_once $root . '/include/vendor/autoload.php';
 define('CACTI_VERSION', trim(file_get_contents($root . '/include/cacti_version')));
 $source = file_get_contents($root . '/cacti.sql');
 $created = [];
@@ -131,7 +132,7 @@ $config = ['base_path' => $root, 'poller_id' => 1, 'connection' => 'local', 'is_
 require $root . '/include/global_constants.php';
 require $root . '/include/global_arrays.php';
 require $root . '/tests/Helpers/PhpSource.php';
-foreach (['db_install_add_cache' => 'install/functions.php', 'db_install_fetch_function' => 'install/functions.php', 'db_install_fetch_cell' => 'install/functions.php', 'clean_up_lines' => 'lib/functions.php'] as $function => $path) {
+foreach (['db_install_reset_error' => 'install/functions.php', 'db_install_add_cache' => 'install/functions.php', 'db_install_fetch_function' => 'install/functions.php', 'db_install_fetch_cell' => 'install/functions.php', 'db_error' => 'lib/database.php', 'clean_up_lines' => 'lib/functions.php'] as $function => $path) {
     $functionSource = file_get_contents($root . '/' . $path);
     if ($functionSource === false) {
         throw new RuntimeException('Installer dependency source unavailable: ' . $path);
