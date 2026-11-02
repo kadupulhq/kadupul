@@ -33,6 +33,8 @@ final class NativeInstallerBackend implements InstallerBackend
         private readonly ?\Closure $signer = null,
         #[AutowireServiceClosure(InstallerRuntimeComparison::class)]
         private readonly ?\Closure $runtimeComparison = null,
+        private readonly ?InstallerTemplateCatalog $templateCatalog = null,
+        private readonly ?InstallerTableCatalog $tableCatalog = null,
     ) {}
 
     public function authorize(): void
@@ -617,7 +619,14 @@ final class NativeInstallerBackend implements InstallerBackend
     /** @return list<mixed> */
     private function nativeList(string $name): array
     {
-        $value = $this->functions->call($name);
+        $value = match (true) {
+            $name === 'install_setup_get_templates' && $this->templateCatalog !== null => $this->templateCatalog->templates(
+                extension_loaded('simplexml') && extension_loaded('zlib') ? null : $this->functions->text($this->functions->call('read_config_option', 'path_php_binary')),
+                (bool) ($this->functions->configuration()['is_web'] ?? false),
+            ),
+            $name === 'install_setup_get_tables' && $this->tableCatalog !== null => $this->tableCatalog->tables(),
+            default => $this->functions->call($name),
+        };
         if (!is_array($value)) {
             throw new \RuntimeException('Installer catalog is unavailable.');
         }

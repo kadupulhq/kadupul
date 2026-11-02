@@ -206,3 +206,101 @@ recovery or production upgrade compatibility. Those remain release gates until
 exercised with representative environments.
 Use [the first-time usability protocol](installer-usability.md) to record human
 acceptance independently of automated checks.
+
+## Typed support services
+
+The 42 original functions in `install/functions.php` retain their names, argument
+order and default arguments for historical upgrade scripts and native callers.
+Their implementation now lives in 14 typed services under
+`src/Platform/Infrastructure/Legacy/Installer*.php`. The compatibility functions
+perform late class loading, native global/session binding and delegation. A
+small diagnostic-reset binding clears the native last-error flag before each
+migration read, including reads initiated inside another service method.
+
+| Responsibility | Shared implementation |
+| --- | --- |
+| Executable defaults, package metadata and conversion catalog | `InstallerToolPaths`, `InstallerTemplateCatalog`, `InstallerTableCatalog` |
+| Default values and local configuration writes | `InstallerDefaultSettings`, `InstallerConfigurationWriter` |
+| Migration statements, status values and progress | `InstallerMigrationDatabase`, `InstallerMigrationProgress`, domain `MigrationStatus` |
+| Native diagnostics and installation logs | `InstallerDatabaseDiagnostics`, `InstallerLogger` |
+| Secret initialization, colors and automation repair | `InstallerCsrfSecret`, `InstallerColorImport`, `InstallerAutomationRepair` |
+| Collector registration and synchronization | `InstallerCollectorConfiguration`, `InstallerCollectorSynchronization` |
+
+Symfony discovers the services through the existing infrastructure resource.
+The native backend receives the package/table providers through constructor
+injection. Native callers use the same implementations without booting another
+kernel. The native engine and versioned historical upgrade scripts remain in
+use; this slice does not retire them or certify every legacy helper contract.
+PHP 8.4 and the locked Symfony 7.4 requirements are unchanged. New code uses
+strict types, readonly services, promoted dependencies, a backed status enum,
+explicit return types and PHPDoc collection contracts.
+
+Intentional corrections include exact table-name metadata lookup, explicit
+remote-connection selection for collector identity, checked file writes,
+exclusive external-secret initialization and failure propagation before a
+successful completion report. Migration progress retains native status values,
+version keys and SQL structure while withholding bound values and raw database
+error values. Unconfirmed replication acknowledgement remains a failed outcome;
+it does not undo data already copied to a collector. Missing automation
+references stop repair rather than replacing them with zero IDs.
+
+Deploy the compatibility file, native engine change, service classes, backend,
+and regenerated catalogs together. Stop and drain installer workers before
+cutover or rollback, keep the shared application secret unchanged and rebuild
+the application caches in the normal deployment environment. No schema or
+configuration migration accompanies this extraction. Code rollback does not
+undo completed upgrade statements, collector registrations or initialized files;
+keep the existing database/configuration/key backup and recovery prerequisites.
+The scope-specific tests run through the existing Symfony and native/Pest
+runners with explicitly configured disposable databases. Source-bound local
+results and review notes are retained under `var/installer-services`.
+
+
+## Application execution sequence
+
+`Platform\Application\Installer\InstallationExecution` now coordinates the
+admitted worker through `InstallationActions`. The native `Installer` implements
+that capability boundary and retains its database, filesystem, progress and
+historical upgrade operations. Persisted mode numbers are represented by the
+`InstallationMode` backed enum; native mode constants remain compatible.
+
+The sequence preserves storage checks before cache/schema work, secret
+initialization, table conversion, mode-specific operations, plugin cleanup,
+default migration, primary-only reference setup and confirmed version
+publication. Collector identity is read after preceding operations. Returned
+failures skip later mutation phases and select the native error step. Exceptions
+propagate without publishing a successful completion. Collector synchronization
+retains pending-work accounting and its original position after version
+confirmation. This is not a transaction over the entire installation.
+
+The existing native worker still owns admission, exclusion and process lifetime;
+the application sequence is not an independently authorized HTTP or CLI entry
+point. There is one active execution path, and the phase implementations and
+historical scripts remain native. No dependency, runtime or schema changes are
+required. Deploy the enum, capability interface, application service and native
+engine together, following the worker-drain and rollback prerequisites above.
+Current scoped evidence is retained in `var/installer-execution`.
+
+
+## Confirmed version persistence
+
+`Platform\Infrastructure\Persistence\InstallerVersionWriter` now owns the
+existing migration-marker transaction. `Installer::recordUpgradeVersion()` still
+selects the exact native PDO session, then delegates to the typed service;
+`recordInstalledVersion()` and the native CLI retain their existing contracts.
+
+The writer refuses caller-owned transactions, unsupported drivers, temporary
+version-table shadows and non-InnoDB MySQL tables. It reads the previous marker,
+binds the update/insert, confirms exact readback and confirms commit before
+returning success. Cleanup applies only to its own active transaction. An
+uncertain commit or cleanup returns failure without claiming that already
+committed work was undone. Intermediate migration markers remain available for
+normal retry from the last confirmed version.
+
+The extraction preserves the native transaction body, selected connection,
+boolean results and error-handling contract. PDO status is explicitly reread
+after each operation; static analysis must not cache an earlier successful
+status. No schema, supported-runtime or dependency changes accompany this phase.
+Deploy the service and compatibility method together under the existing
+worker-drain procedure. Code rollback does not undo committed migration markers
+or schema changes. Evidence is retained in `var/installer-version`.

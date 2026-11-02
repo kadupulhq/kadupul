@@ -10,8 +10,11 @@ include_once(dirname(__FILE__) . '/../lib/poller.php');
 
 // Direct legacy fixtures and pre-Composer callers also load this boundary.
 require_once dirname(__DIR__) . '/src/Platform/Application/Installer/InstallerEngine.php';
+require_once dirname(__DIR__) . '/src/Platform/Application/Installer/InstallationActions.php';
+require_once dirname(__DIR__) . '/src/Platform/Application/Installer/InstallationExecution.php';
+require_once dirname(__DIR__) . '/src/Platform/Domain/Installer/InstallationMode.php';
 
-class Installer implements JsonSerializable, \Kadupul\Platform\Application\Installer\InstallerEngine
+class Installer implements JsonSerializable, \Kadupul\Platform\Application\Installer\InstallerEngine, \Kadupul\Platform\Application\Installer\InstallationActions
 {
     private int $collectorSyncPending = 0;
     const EXIT_DB_EMPTY = 1;
@@ -755,8 +758,10 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
 
             if (empty($secret)) {
                 if (is_resource_writable($path_csrf_secret)) {
+                    if (!install_create_csrf_secret($path_csrf_secret)) {
+                        throw new \RuntimeException('The external CSRF secret could not be initialized.');
+                    }
                     log_install_medium('csrf', 'setCSRFSecret(): Updated CSRF secret - "' . $path_csrf_secret . '"');
-                    install_create_csrf_secret($path_csrf_secret);
                 } else {
                     log_install_high('csrf', 'setCSRFSecret(): Unable to create file - "' . $path_csrf_secret . '"');
                 }
@@ -3269,7 +3274,16 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         return rrd_maintenance_queue_configuration_error($remote ? $remote_db_cnn_id : false);
     }
 
-    private function install()
+    /** Bind native state once and delegate the admitted worker's execution sequence. */
+    private function install(): void
+    {
+        $mode = \Kadupul\Platform\Domain\Installer\InstallationMode::tryFrom((int) $this->mode)
+            ?? \Kadupul\Platform\Domain\Installer\InstallationMode::None;
+        (new \Kadupul\Platform\Application\Installer\InstallationExecution())->run($this, $mode);
+    }
+
+    /** Reject storage failures before refreshing caches or changing schema. */
+    public function checkInstallationStorage(): void
     {
         global $config;
         require_once __DIR__ . '/rrd_maintenance.php';
@@ -3283,92 +3297,128 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         if ($storage_error !== '') {
             throw new RuntimeException($storage_error);
         }
+    }
+
+    /** Use the admitted worker's validated interpreter and existing cache contract. */
+    public function refreshInstallationCache(): void
+    {
         self::refreshSymfonyCache();
-        $failure = '';
+    }
 
-        switch ($this->mode) {
-            case Installer::MODE_UPGRADE:
-                $which = 'UPGRADE';
-                break;
-            case Installer::MODE_DOWNGRADE:
-                $which = 'DOWNGRADE';
-                break;
-            default:
-                $which = 'INSTALL';
-                break;
-        }
-
-        log_install_always('', __('Starting %s Process for v%s', $which, CACTI_VERSION));
-
+    /** Native log messages and progress numbers remain unchanged. */
+    public function beginInstallation(string $process): void
+    {
+        log_install_always('', __('Starting %s Process for v%s', $process, CACTI_VERSION));
         $this->setProgress(Installer::PROGRESS_START);
+    }
 
+    /** Preserve the native secret progress and failure contract. */
+    public function initializeInstallationSecret(): void
+    {
         $this->setCSRFSecret();
+    }
 
+    /** Retain table conversion side effects behind the compatibility boundary. */
+    public function convertInstallationTables(): void
+    {
         $this->convertDatabase();
+    }
 
-        if ($this->mode == Installer::MODE_POLLER) {
-            $failure = $this->installPoller();
-        } else {
-            if ($this->mode == Installer::MODE_INSTALL) {
-                $failure = $this->installTemplate();
-                if (empty($failure)) {
-                    $failure = $this->installServer();
-                }
-            } elseif ($this->mode == Installer::MODE_UPGRADE) {
-                $failure = $this->upgradeDatabase();
-                if (empty($failure)) {
-                    $failure = $this->installTemplate();
-                }
-            }
-            Installer::disableInvalidPlugins();
+    /** Normalize historical empty/false outcomes at the native boundary. */
+    public function installRemoteCollector(): string
+    {
+        return (string) ($this->installPoller() ?: '');
+    }
+
+    /** Preserve native package diagnostics and empty-success values. */
+    public function installSelectedTemplates(): string
+    {
+        return (string) ($this->installTemplate() ?: '');
+    }
+
+    /** Preserve primary initialization and its explicit failure result. */
+    public function installPrimaryServer(): string
+    {
+        return (string) ($this->installServer() ?: '');
+    }
+
+    /** The historical upgrade runner returns false for successful completion. */
+    public function upgradeInstallationDatabase(): string
+    {
+        return (string) ($this->upgradeDatabase() ?: '');
+    }
+
+    /** Preserve plugin cleanup even after a returned mode-specific failure. */
+    public function disableIncompatiblePlugins(): void
+    {
+        self::disableInvalidPlugins();
+    }
+
+    /** Translate a failed defaults migration using the existing catalog identity. */
+    public function migrateInstallationDefaults(): string
+    {
+        return self::migrateProductDefaults() ? '' : __('Unable to update application defaults.');
+    }
+
+    /** Observe the current native identity after preceding installation operations. */
+    public function isPrimaryInstallation(): bool
+    {
+        require_once dirname(__DIR__) . '/src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php';
+        $configuration = (new \Kadupul\Platform\Infrastructure\Legacy\NativeInstallerFunctions())->configuration();
+        return (int) ($configuration['poller_id'] ?? 0) <= 1;
+    }
+
+    /** Preserve the primary-only reference contract diagnostic and native error entry. */
+    public function installPrimaryReferenceContract(): string
+    {
+        require_once __DIR__ . '/cdef_reference.php';
+        try {
+            cdef_reference_install();
+            return '';
+        } catch (Throwable $error) {
+            $failure = __('The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.');
+            $this->addError(Installer::STEP_ERROR, 'CDEF reference contract', $failure);
+            return $failure;
         }
+    }
 
-        if (empty($failure) && !self::migrateProductDefaults()) {
-            $failure = __('Unable to update application defaults.');
+    /** Confirm readback before publishing the version marker and progress. */
+    public function confirmInstallationVersion(): string
+    {
+        $this->setProgress(Installer::PROGRESS_VERSION_BEGIN);
+        if (!$this->recordInstalledVersion()) {
+            $failure = __('The installed database version could not be confirmed. Review the installer errors before retrying.');
+            $this->addError(Installer::STEP_ERROR, 'Database version', $failure);
+            return $failure;
         }
+        set_install_config_option('install_version', CACTI_VERSION);
+        $this->setProgress(Installer::PROGRESS_VERSION_END);
+        return '';
+    }
 
-        if (empty($failure) && $this->mode != Installer::MODE_POLLER && (int) ($config['poller_id'] ?? 0) <= 1) {
-            require_once __DIR__ . '/cdef_reference.php';
-            try {
-                cdef_reference_install();
-            } catch (Throwable $error) {
-                $failure = __('The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying.');
-                $this->addError(Installer::STEP_ERROR, 'CDEF reference contract', $failure);
-            }
-        }
-
-        if (empty($failure)) {
-            $this->setProgress(Installer::PROGRESS_VERSION_BEGIN);
-            // The owned transaction confirms readback before publishing the marker.
-            // A failed write retains the previous version for a normal retry.
-            if (!$this->recordInstalledVersion()) {
-                $failure = __('The installed database version could not be confirmed. Review the installer errors before retrying.');
-                $this->addError(Installer::STEP_ERROR, 'Database version', $failure);
-            } else {
-                set_install_config_option('install_version', CACTI_VERSION);
-                $this->setProgress(Installer::PROGRESS_VERSION_END);
-            }
-        }
-
-        log_install_always('', __('Finished %s Process for v%s', $which, CACTI_VERSION));
-
+    /** Preserve native finish logging before collector synchronization. */
+    public function finishInstallation(string $process, string $failure): void
+    {
+        log_install_always('', __('Finished %s Process for v%s', $process, CACTI_VERSION));
         set_install_config_option('install_error', $failure);
+    }
 
-        if (empty($failure)) {
-            // Sync the remote data collectors
-            if ($this->mode != Installer::MODE_POLLER) {
-                $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_START);
-                $this->collectorSyncPending = self::synchronizeCollectors();
-                $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_END);
-            }
+    /** Collector failures remain pending work under the existing synchronization contract. */
+    public function synchronizeInstallationCollectors(): void
+    {
+        $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_START);
+        $this->collectorSyncPending = self::synchronizeCollectors();
+        $this->setProgress(Installer::PROGRESS_COLLECTOR_SYNC_END);
+    }
 
-            $this->setProgress(Installer::PROGRESS_COMPLETE);
-            $this->setStep(Installer::STEP_COMPLETE);
-        } else {
+    /** Complete exactly once; a failed run retains the native error step. */
+    public function completeInstallation(string $failure): void
+    {
+        if ($failure !== '') {
             log_install_always('', $failure);
-            $this->setProgress(Installer::PROGRESS_COMPLETE);
-            $this->setStep(Installer::STEP_ERROR);
         }
+        $this->setProgress(Installer::PROGRESS_COMPLETE);
+        $this->setStep($failure === '' ? Installer::STEP_COMPLETE : Installer::STEP_ERROR);
     }
 
     /** Refresh derived production state before any install/upgrade schema work. */
@@ -3435,80 +3485,8 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         if (!$db instanceof PDO) {
             return false;
         }
-        $started = false;
-        try {
-            if ($db->inTransaction()) {
-                return false;
-            }
-            $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
-            if ($driver === 'mysql') {
-                $metadata = $db->query('SHOW CREATE TABLE `version`');
-                if ($metadata === false) {
-                    return false;
-                }
-                $table = $metadata->fetch(PDO::FETCH_ASSOC);
-                if ($metadata->errorCode() !== '00000' || $db->errorCode() !== '00000'
-                    || !is_array($table) || !is_string($table['Create Table'] ?? null)
-                    || preg_match('/\ACREATE TABLE\s/i', $table['Create Table']) !== 1
-                    || !$metadata->closeCursor() || $metadata->errorCode() !== '00000') {
-                    return false;
-                }
-                $status = $db->query("SHOW TABLE STATUS WHERE Name = 'version'");
-                if ($status === false || $db->errorCode() !== '00000') {
-                    return false;
-                }
-                $engine = $status->fetch(PDO::FETCH_ASSOC);
-                $additional = $status->fetch(PDO::FETCH_ASSOC);
-                if ($status->errorCode() !== '00000' || $db->errorCode() !== '00000'
-                    || !is_array($engine) || ($engine['Name'] ?? null) !== 'version'
-                    || ($engine['Engine'] ?? null) !== 'InnoDB' || $additional !== false
-                    || !$status->closeCursor() || $status->errorCode() !== '00000') {
-                    return false;
-                }
-            } elseif ($driver !== 'sqlite') {
-                return false;
-            }
-            if (!$db->beginTransaction()) {
-                return false;
-            }
-            $started = true;
-            if ($db->errorCode() !== '00000') {
-                throw new RuntimeException('Database version transaction could not be confirmed.');
-            }
-            $previous = $db->query('SELECT cacti FROM version' . ($driver === 'mysql' ? ' FOR UPDATE' : ''));
-            if ($previous === false) {
-                throw new RuntimeException('Database version snapshot is unavailable.');
-            }
-            $rows = $previous->fetchAll(PDO::FETCH_COLUMN);
-            if ($previous->errorCode() !== '00000' || $db->errorCode() !== '00000' || count($rows) > 1) {
-                throw new RuntimeException('Database version snapshot could not be confirmed.');
-            }
-            $sql = $rows === [] ? 'INSERT INTO version (cacti) VALUES (?)' : 'UPDATE version SET cacti = ?';
-            if (($write = $db->prepare($sql)) === false || !$write->execute(array($version))
-                || $write->errorCode() !== '00000' || $db->errorCode() !== '00000') {
-                throw new RuntimeException('Database version write could not be confirmed.');
-            }
-            $confirmed = $db->query('SELECT cacti FROM version');
-            if ($confirmed === false || $confirmed->fetchAll(PDO::FETCH_COLUMN) !== array($version)
-                || $confirmed->errorCode() !== '00000' || $db->errorCode() !== '00000') {
-                throw new RuntimeException('Database version readback could not be confirmed.');
-            }
-            if (!$db->commit() || $db->errorCode() !== '00000') {
-                throw new RuntimeException('Database version commit could not be confirmed.');
-            }
-            return true;
-        } catch (Throwable $error) {
-            try {
-                if ($started && $db->inTransaction()) {
-                    if (!$db->rollBack() || $db->errorCode() !== '00000') {
-                        throw new RuntimeException('Database version rollback could not be confirmed.');
-                    }
-                }
-            } catch (Throwable $cleanup) {
-                // Never publish a successful outcome after uncertain cleanup.
-            }
-            return false;
-        }
+        require_once dirname(__DIR__) . '/src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php';
+        return (new \Kadupul\Platform\Infrastructure\Persistence\InstallerVersionWriter())->record($db, $version);
     }
 
     private function installTemplate()

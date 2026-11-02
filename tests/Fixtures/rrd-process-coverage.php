@@ -46,8 +46,9 @@ if (defined('PERMISSION_CLI_NATIVE_TEST_COVERAGE')) {
 if (defined('SNMP_QUERY_NATIVE_TEST_COVERAGE')) {
     foreach (array('lib/data_query.php', 'lib/xml.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
 }
-if (defined('UPGRADE_BOUNDARY_TEST_COVERAGE')) {
+if (defined('UPGRADE_BOUNDARY_TEST_COVERAGE') || defined('INSTALLER_VERSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php');
 }
 if (defined('DATA_SOURCE_CONTROLLER_TEST_COVERAGE')) {
     foreach (array('lib/auth.php', 'lib/html_utility.php', 'data_sources.php', 'graphs.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);

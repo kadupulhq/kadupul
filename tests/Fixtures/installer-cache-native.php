@@ -112,6 +112,9 @@ try {
         $filesystem->copy($root . '/cli/upgrade_database.php', $directory . '/cli/upgrade_database.php');
         $filesystem->copy($root . '/lib/installer.php', $directory . '/lib/installer.php');
         $filesystem->copy($root . '/src/Platform/Application/Installer/InstallerEngine.php', $directory . '/src/Platform/Application/Installer/InstallerEngine.php');
+        foreach (['src/Platform/Application/Installer/InstallationActions.php', 'src/Platform/Application/Installer/InstallationExecution.php', 'src/Platform/Domain/Installer/InstallationMode.php', 'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php'] as $dependency) {
+            $filesystem->copy($root . '/' . $dependency, $directory . '/' . $dependency);
+        }
         foreach (['poller', 'rrd_maintenance'] as $library) {
             $filesystem->dumpFile($directory . '/lib/' . $library . '.php', '<?php require ' . var_export($root . '/lib/' . $library . '.php', true) . ';');
         }
