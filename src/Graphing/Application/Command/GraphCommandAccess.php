@@ -17,8 +17,8 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 
 /**
  * Target database, operator and audit for the command-line graph tools. The
- * web pages for the same actions need realm 5 (graphs.php and graphs_new.php) or
- * realm 3 (host.php), see ManagedArea; the operator additionally needs console
+ * web pages for the same actions need realm 5 (graphs.php and graphs_new.php),
+ * realm 3 (host.php), realm 4 (tree.php) or realm 15 (utilities.php), see ManagedArea; the operator additionally needs console
  * access (realm 8), which actor() checks.
  */
 final readonly class GraphCommandAccess
@@ -65,6 +65,7 @@ final readonly class GraphCommandAccess
                 ManagedArea::Devices => $this->operator->canManageDevices($actor),
                 ManagedArea::Trees => $this->operator->canManageTrees($actor),
                 ManagedArea::Graphs => $this->operator->canManageGraphs($actor),
+                ManagedArea::Utilities => $this->operator->canAdministerInstallation($actor),
             }) {
                 throw new GraphManagementDenied($actor?->id, $database);
             }

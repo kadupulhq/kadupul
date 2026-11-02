@@ -9,6 +9,7 @@ automation_networks.php	5	5
 automation_snmp.php	5	6
 automation_tree_rules.php	5	9
 bin/legacy-audit-upgrade.php	2	2
+bin/legacy-poller-cache-rebuild.php	5	9
 cactid.php	5	9
 cli/apply_automation_rules.php	1	1
 cli/audit_database.php	6	17
@@ -19,7 +20,6 @@ cli/import_package.php	1	1
 cli/import_template.php	1	1
 cli/md5sum.php	3	5
 cli/poller_reindex_hosts.php	1	1
-cli/rebuild_poller_cache.php	5	9
 cli/remove_device.php	1	1
 cli/repair_database.php	8	35
 cli/splice_rrd.php	8	13

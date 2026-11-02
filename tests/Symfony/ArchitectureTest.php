@@ -241,6 +241,7 @@ final class ArchitectureTest extends TestCase
                 'src/Graphing/Infrastructure/Legacy/LegacyDataQueryAssociator.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyDataSourceCreator.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyPollerOutputDrain.php',
+                'src/Graphing/Infrastructure/Legacy/LegacyPollerCacheRebuilder.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyRejectedSampleReplayer.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyGraphTitleReapplier.php',
                 'src/Graphing/Infrastructure/Legacy/LegacyTreeWriter.php',
