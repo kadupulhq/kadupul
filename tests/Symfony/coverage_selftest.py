@@ -9,6 +9,120 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 
+# Independent baseline for native CLI sources already required by the PHP merger.
+ADDITIONAL_REQUIRED_NATIVE_SOURCES = (
+    'cli/poller_output_empty.php',
+    'bin/legacy-poller-output-empty.php',
+    'src/Graphing/Application/Command/EmptyPollerOutput.php',
+    'src/Graphing/Application/Command/PollerOutputEmptying.php',
+    'src/Graphing/Application/Port/PollerOutputDrainResult.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyPollerOutputDrain.php',
+    'src/Graphing/Infrastructure/Symfony/EmptyPollerOutputCommand.php',
+    'src/Graphing/Infrastructure/Symfony/EmptyPollerOutputLegacyArguments.php',
+
+    'bin/legacy-data-query-associate.php',
+    'bin/legacy-data-query-reorder.php',
+    'bin/legacy-data-source-add.php',
+    'bin/legacy-data-source-titles.php',
+    'bin/legacy-graph-add.php',
+    'bin/legacy-graph-remove.php',
+    'bin/legacy-graph-template-attach.php',
+    'bin/legacy-graph-titles.php',
+    'bin/legacy-item-permission.php',
+    'bin/legacy-tree-save.php',
+    'bin/legacy-user-copy.php',
+    'cli/add_data_query.php',
+    'cli/add_datasource.php',
+    'cli/add_graph_template.php',
+    'cli/add_graphs.php',
+    'cli/add_perms.php',
+    'cli/add_tree.php',
+    'cli/copy_user.php',
+    'cli/poller_data_sources_reapply_names.php',
+    'cli/poller_graphs_reapply_names.php',
+    'cli/remove_broken_graphs.php',
+    'cli/remove_graphs.php',
+    'cli/reorder_data_query.php',
+    'cli/repair_graphs.php',
+    'src/Graphing/Application/Command/AddDataSource.php',
+    'src/Graphing/Application/Command/AddGraphs.php',
+    'src/Graphing/Application/Command/AddTree.php',
+    'src/Graphing/Application/Command/AddTreeNode.php',
+    'src/Graphing/Application/Command/AssociateDataQuery.php',
+    'src/Graphing/Application/Command/AttachGraphTemplate.php',
+    'src/Graphing/Application/Command/GraphCommandAccess.php',
+    'src/Graphing/Application/Command/ListAttachmentChoices.php',
+    'src/Graphing/Application/Command/ListDataQueryChoices.php',
+    'src/Graphing/Application/Command/ListRemovalChoices.php',
+    'src/Graphing/Application/Command/ListTreeChoices.php',
+    'src/Graphing/Application/Command/ReapplyDataSourceTitles.php',
+    'src/Graphing/Application/Command/ReapplyGraphTitles.php',
+    'src/Graphing/Application/Command/RemoveBrokenGraphs.php',
+    'src/Graphing/Application/Command/RemoveGraphs.php',
+    'src/Graphing/Application/Command/ReorderDataQueries.php',
+    'src/Graphing/Application/Command/RepairGraphItems.php',
+    'src/Graphing/Domain/DataQuerySelection.php',
+    'src/Graphing/Domain/GraphRemovalFilter.php',
+    'src/Graphing/Domain/GraphSelection.php',
+    'src/Graphing/Domain/ReindexMethod.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyDataQueryAssociator.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyDataQueryIndexReorderer.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyDataSourceCreator.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyDataSourceTitleReapplier.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyGraphRemover.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyGraphTemplateAttacher.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyGraphTitleReapplier.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyGraphWriter.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyTreeWriter.php',
+    'src/Graphing/Infrastructure/Persistence/DbalBrokenGraphCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalDataQueryAssociationCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalDataQueryIndexCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalDataSourceCreationCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalDataSourceTitleCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalGraphCreationCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalGraphItemRepairs.php',
+    'src/Graphing/Infrastructure/Persistence/DbalGraphRemovalCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateAssignmentCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalGraphTitleCatalog.php',
+    'src/Graphing/Infrastructure/Persistence/DbalTreeCatalog.php',
+    'src/Graphing/Infrastructure/Symfony/AddDataSourceCommand.php',
+    'src/Graphing/Infrastructure/Symfony/AddDataSourceLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/AddGraphsCommand.php',
+    'src/Graphing/Infrastructure/Symfony/AddGraphsLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/AddTreeCommand.php',
+    'src/Graphing/Infrastructure/Symfony/AddTreeLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/AssociateDataQueryCommand.php',
+    'src/Graphing/Infrastructure/Symfony/AssociateDataQueryLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateCommand.php',
+    'src/Graphing/Infrastructure/Symfony/AttachGraphTemplateLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/ReapplyDataSourceTitlesCommand.php',
+    'src/Graphing/Infrastructure/Symfony/ReapplyDataSourceTitlesLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/ReapplyGraphTitlesCommand.php',
+    'src/Graphing/Infrastructure/Symfony/ReapplyGraphTitlesLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsCommand.php',
+    'src/Graphing/Infrastructure/Symfony/RemoveBrokenGraphsLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/RemoveGraphsCommand.php',
+    'src/Graphing/Infrastructure/Symfony/RemoveGraphsLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/ReorderDataQueriesCommand.php',
+    'src/Graphing/Infrastructure/Symfony/ReorderDataQueriesLegacyArguments.php',
+    'src/Graphing/Infrastructure/Symfony/RepairGraphItemsCommand.php',
+    'src/Graphing/Infrastructure/Symfony/RepairGraphItemsLegacyArguments.php',
+    'src/IdentityAccess/Application/Command/CopyUser.php',
+    'src/IdentityAccess/Application/Command/GrantItemPermission.php',
+    'src/IdentityAccess/Application/Command/ListPermissionTargets.php',
+    'src/IdentityAccess/Application/Command/UserCommandAccess.php',
+    'src/IdentityAccess/Domain/ItemPermissionRequest.php',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyItemPermissions.php',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyUserCopier.php',
+    'src/IdentityAccess/Infrastructure/Persistence/DbalPermissionCatalog.php',
+    'src/IdentityAccess/Infrastructure/Symfony/AddPermissionCommand.php',
+    'src/IdentityAccess/Infrastructure/Symfony/AddPermsLegacyArguments.php',
+    'src/IdentityAccess/Infrastructure/Symfony/CopyUserCommand.php',
+    'src/IdentityAccess/Infrastructure/Symfony/CopyUserLegacyArguments.php',
+    'src/IdentityAccess/Infrastructure/Symfony/ListPermissionsCommand.php',
+)
+
+
 
 def prepare_database_failure_reports(directory, scratch, source, mutation):
     """Retain separate real reports and corrupt only the selected observation."""
@@ -71,6 +185,11 @@ def prepare_wrapper_line_failure_reports(directory, scratch, anchor):
         destination.write_text(json.dumps(report))
     if not actual_anchor or not other_utility or not actual_helper:
         raise RuntimeError('Self-test requires real caller, other utility and helper hits')
+
+
+def additional_required_native_sources(root):
+    """Keep the independent inventory compatible with older feature heads."""
+    return [path for path in ADDITIONAL_REQUIRED_NATIVE_SOURCES if (root / path).is_file()]
 
 
 def main():
@@ -396,6 +515,7 @@ def main():
     legacy_pages = ('graphs.php', 'cdef.php', 'aggregate_templates.php', 'color_templates.php', 'aggregate_graphs.php', 'lib/utility.php', 'lib/api_automation.php')
     wrapper_line = buffered_wrapper_line()
     required += [prefix + path for path in legacy_pages]
+    required += [prefix + path for path in additional_required_native_sources(ROOT)]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:

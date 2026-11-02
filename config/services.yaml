@@ -114,6 +114,8 @@ services:
 
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
+        # Native workers construct this policy with their exact mutation PDO.
+        exclude: '../src/IdentityAccess/Infrastructure/Legacy/NativeAdministrativeActorPolicy.php'
 
     # One shared instance, so the operator AnalyzeDatabase selects is the one it
     # then checks. Command-line only: ConsoleAccess stays on the session adapter,

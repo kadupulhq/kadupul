@@ -13,6 +13,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 
+- Add an explicit-connection administrative actor policy for native mutation workers, with transactional credential, account and realm revalidation; existing entry points remain unchanged.
+
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.

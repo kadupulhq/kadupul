@@ -8,6 +8,8 @@ includes:
 
 parameters:
     level: max
+    scanFiles:
+        - tools/phpstan/legacy-auth-symbols.stub
     paths:
         - src
     checkUninitializedProperties: true

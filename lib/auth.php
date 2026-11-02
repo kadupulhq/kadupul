@@ -769,10 +769,13 @@ function user_group_execute_child($group_id, $sql, $params)
 }
 
 /** Begin an isolated membership unit without taking ownership of a caller transaction. */
-function auth_membership_begin($tables = array())
+function auth_membership_begin($tables = array(), ?PDO $connection = null)
 {
-    global $database_sessions, $database_hostname, $database_port, $database_default;
-    $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    $db = $connection;
+    if ($db === null) {
+        global $database_sessions, $database_hostname, $database_port, $database_default;
+        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+    }
     if (!$db instanceof PDO) {
         throw new RuntimeException('Membership changes require a database connection');
     }
@@ -6134,13 +6137,15 @@ function auth_logout_everywhere($user_id, $credential, $db = false)
  * Read the credential generation only when it belongs to this password representation.
  * A real password replacement naturally invalidates the mapping.
  */
-function auth_session_credential_generation($user_id, $password, $db = false)
+function auth_session_credential_generation($user_id, #[\SensitiveParameter] $password, $db = false)
 {
-    global $database_sessions, $database_hostname, $database_port, $database_default;
-    if (!$db instanceof PDO && isset($database_hostname, $database_port, $database_default)) {
-        $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
-        if (!$db instanceof PDO) {
-            throw new RuntimeException('Credential generation read could not be confirmed.');
+    if (!$db instanceof PDO) {
+        global $database_sessions, $database_hostname, $database_port, $database_default;
+        if (isset($database_hostname, $database_port, $database_default)) {
+            $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+            if (!$db instanceof PDO) {
+                throw new RuntimeException('Credential generation read could not be confirmed.');
+            }
         }
     }
     $fingerprint = auth_session_credential_key($password);
