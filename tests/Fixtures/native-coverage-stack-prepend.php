@@ -17,6 +17,13 @@ define('RRD_TEST_PARENT_COVERAGE_STACK', $stackProbeDescription);
 define('RRD_TEST_COVERAGE_DIRECTORY', (string) getenv('KADUPUL_NATIVE_COVERAGE_DIRECTORY'));
 define('RRD_TEST_CLI_COVERAGE_COPY', (string) getenv('KADUPUL_NATIVE_COVERAGE_COPY'));
 define('RRD_TEST_CLI_COVERAGE_SOURCE', $stackProbeRoot . '/tests/Fixtures/native-coverage-stack-target.php');
+$stackProbeUnusedCopy = getenv('KADUPUL_NATIVE_UNUSED_COVERAGE_COPY');
+if ($stackProbeUnusedCopy !== false) {
+    define('RRD_TEST_ADDITIONAL_COVERAGE_COPIES', [
+        $stackProbeUnusedCopy => $stackProbeRoot . '/tests/Fixtures/native-coverage-stack-target.php',
+        (string) getenv('KADUPUL_NATIVE_UNUSED_PRODUCTION_COPY') => $stackProbeRoot . '/src/Alerting/Domain/AdministratorRecipient.php',
+    ]);
+}
 // This old flag defaults to the application vendor. The explicit stack must
 // take precedence when a no-dev installation has only tests/' coverage library.
 define('CONSOLE_HANDOFF_TEST_COVERAGE', 'tests/Fixtures/native-coverage-stack-target.php');
@@ -26,8 +33,9 @@ $GLOBALS['nativeChildCoverageSnapshot'] = NativeChildCoverageEvidence::snapshot(
     'tests/Fixtures/native-coverage-stack-prepend.php', (string) getenv('KADUPUL_NATIVE_COVERAGE_SCENARIO'), [
         'composer.lock', 'tests/composer.lock', 'tests/Symfony/NativeCoverageStack.php', 'tests/Symfony/NativeCoverageStackTest.php',
         'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Fixtures/native-coverage-stack-target.php',
+        'src/Alerting/Domain/AdministratorRecipient.php',
     ], NativeCoverageStack::capture($stackProbeRoot));
 register_shutdown_function(static function (): void {
     $GLOBALS['nativeChildCoverageMarkers'] = defined('NATIVE_COVERAGE_STACK_TARGET_DONE') ? ['native-parent-stack-probe-terminated'] : [];
 });
-unset($stackProbeRoot, $stackProbeDescription);
+unset($stackProbeRoot, $stackProbeDescription, $stackProbeUnusedCopy);

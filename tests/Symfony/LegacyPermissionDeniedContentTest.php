@@ -14,6 +14,7 @@ use Kadupul\IdentityAccess\Contract\BrowserSession;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorker;
+use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorkerRunner;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyPermissionDeniedContent;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -71,7 +72,7 @@ final class LegacyPermissionDeniedContentTest extends TestCase
             'HTTP_REFERER' => 'https://example.test/kadupul/host.php', 'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
         ]));
 
-        return new LegacyPermissionDeniedContent(new LegacyBrowserWorker($this->root, $requests, $session, $database, new InstallationConfiguration($this->root), new NullLogger()));
+        return new LegacyPermissionDeniedContent(new LegacyBrowserWorker(new LegacyBrowserWorkerRunner($this->root, $requests, $session, $database, new InstallationConfiguration($this->root), new NullLogger()), $requests, new InstallationConfiguration($this->root)));
     }
 
     /** @return array<string, mixed> */

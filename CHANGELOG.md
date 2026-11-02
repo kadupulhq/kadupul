@@ -52,6 +52,9 @@ follows [Semantic Versioning](VERSIONING.md).
 - Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
 - Exclude disabled SNMP notification receivers during discovery and final trap selection, preserving enabled receivers whose legacy disabled flag is NULL. This carries the existing LTS fix into main.
 - Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200).
+
+- Share the authenticated native browser-worker transport across Symfony adapters, retaining read-only console admission and adding POST-only mutation admission with a bounded private command pipe.
+
 - Preserve a child process exit code first observed after the polling window, with the close result as fallback, instead of returning `false` (#1075).
 
 - Add ten Symfony/Twig views for graph and data-source relationships, report contents, tree placements, collector devices and network discovery results, with bounded reads and existing resource permissions.
