@@ -8,7 +8,7 @@ declare(strict_types=1);
 final class SpikeControllerCoverageRegistration
 {
     public const SOURCES = ['lib/auth.php', 'lib/graph_item_choices.php', 'tests/Helpers/PhpSource.php',
-        'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php',
+        'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'lib/graph_fonts.php',
         'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php',
         'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
         'spikekill.php', 'lib/html_utility.php', 'lib/html_validate.php', 'lib/html.php', 'include/vendor/csrf/csrf-magic.php',

@@ -103,7 +103,7 @@ function spike_controller_fixture_run(): never
         CREATE TABLE spike_processor_calls(arguments TEXT,dryrun INTEGER,html INTEGER);
         INSERT INTO data_template_rrd VALUES(200,300),(201,0);
         INSERT INTO graph_templates_item VALUES(400,100,200),(401,100,200),(402,102,201),(403,101,200);
-        INSERT INTO spike_source_paths VALUES(300,'/owned/spike-source.rrd');");
+        INSERT INTO spike_source_paths VALUES(300,'rra/spike-source.rrd');");
     session_id('owned-spike-controller-test');
     $_SERVER['REQUEST_METHOD'] = 'POST';
     $_REQUEST = ['local_graph_id' => $scenario['graph_id'] ?? '100'];
@@ -116,7 +116,7 @@ function spike_controller_fixture_run(): never
     $GLOBALS['spikePathCalls'] = [];
     $GLOBALS['spikeLookupParameters'] = [];
     $directory = sys_get_temp_dir() . '/spike-controller-cwd-' . bin2hex(random_bytes(8));
-    foreach (['','/include','/lib'] as $suffix) {
+    foreach (['','/include','/lib','/rra'] as $suffix) {
         if (!mkdir($directory . $suffix, 0700)) throw new RuntimeException('Cannot create owned controller fixture.');
     }
     foreach (['include/auth.php','lib/spikekill.php'] as $path) {
@@ -124,11 +124,26 @@ function spike_controller_fixture_run(): never
             throw new RuntimeException('Cannot create controller dependency port.');
         }
     }
+    // Keep the owned installation skeleton while executing the real canonical path guard.
+    $rrdLoader = '<?php require_once ' . var_export($root . '/lib/rrd.php', true) . ';';
+    if (file_put_contents($directory . '/lib/rrd.php', $rrdLoader) !== strlen($rrdLoader)) {
+        throw new RuntimeException('Cannot load the native RRD dependency.');
+    }
+    $fixtureBytes = "owned controller path fixture\n";
+    foreach (['rra/spike-source.rrd', 'outside-spike-source.rrd'] as $path) {
+        if (file_put_contents($directory . '/' . $path, $fixtureBytes) !== strlen($fixtureBytes)) {
+            throw new RuntimeException('Cannot create owned controller path evidence.');
+        }
+    }
+    if ($scenario['outside_rra'] ?? false) {
+        $db->prepare('UPDATE spike_source_paths SET path=? WHERE local_data_id=300')->execute(['outside-spike-source.rrd']);
+    }
     $previous = getcwd();
     if (!chdir($directory)) throw new RuntimeException('Cannot enter owned controller fixture.');
     $config['base_path'] = $directory;
+    $config['rra_path'] = $directory . '/rra';
     ob_start();
-    register_shutdown_function(static function () use ($directory, $previous, $db): void {
+    register_shutdown_function(static function () use ($directory, $previous, $db, $fixtureBytes): void {
         $response = ob_get_clean();
         $calls = $db->query('SELECT arguments,dryrun,html FROM spike_processor_calls')->fetchAll(PDO::FETCH_ASSOC);
         foreach ($calls as &$call) {
@@ -138,13 +153,16 @@ function spike_controller_fixture_run(): never
         $state = ['status' => http_response_code() ?: 200, 'response' => $GLOBALS['spikeValidationDiagnostics'] === [] ? json_decode($response, true, 512, JSON_THROW_ON_ERROR) : null, 'raw_response' => $response,
             'validation_diagnostics' => $GLOBALS['spikeValidationDiagnostics'], 'validation_footer' => $GLOBALS['spikeValidationFooter'],
             'lookup_parameters' => $GLOBALS['spikeLookupParameters'], 'path_calls' => $GLOBALS['spikePathCalls'], 'processor_calls' => $calls,
+            'rrd_guard_source' => (new ReflectionFunction('rrd_check_path'))->getFileName(),
+            'fixture_files_unchanged' => file_get_contents($directory . '/rra/spike-source.rrd') === $fixtureBytes && file_get_contents($directory . '/outside-spike-source.rrd') === $fixtureBytes,
             'policy_rows' => $db->query('SELECT user_id,type,item_id FROM user_auth_perms')->fetchAll(PDO::FETCH_ASSOC)];
         $GLOBALS['nativeChildCoverageMarkers'] = SpikeControllerCoverageRegistration::MARKERS;
         if ($GLOBALS['spikeValidationDiagnostics'] !== []) $GLOBALS['nativeChildCoverageMarkers'][] = 'actual-spike-validation-rendered';
         if (!chdir($previous)) throw new RuntimeException('Cannot restore controller fixture directory.');
-        foreach (['include/auth.php','lib/spikekill.php'] as $path) unlink($directory . '/' . $path);
+        foreach (['include/auth.php','lib/spikekill.php','lib/rrd.php','rra/spike-source.rrd','outside-spike-source.rrd'] as $path) unlink($directory . '/' . $path);
         rmdir($directory . '/include');
         rmdir($directory . '/lib');
+        rmdir($directory . '/rra');
         rmdir($directory);
         print json_encode($state, JSON_THROW_ON_ERROR);
     });
