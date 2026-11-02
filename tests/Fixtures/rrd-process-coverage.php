@@ -558,8 +558,17 @@ $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
 );
-$childCoverage->start('native RRD child ' . getmypid());
-$childCoverageFile = RRD_TEST_COVERAGE_DIRECTORY . '/child-' . getmypid() . '.coverage';
+// PIDs repeat across independent runners and later invocations in one bundle.
+// Preserve the PID for diagnosis while identifying this collection invocation.
+/** @return array{id: string, report: string} */
+function rrd_test_coverage_invocation(string $directory, int $pid): array
+{
+    $invocation = $pid . '-' . bin2hex(random_bytes(16));
+    return ['id' => 'native RRD child ' . $invocation, 'report' => $directory . '/child-' . $invocation . '.coverage'];
+}
+$childInvocation = rrd_test_coverage_invocation(RRD_TEST_COVERAGE_DIRECTORY, getmypid());
+$childCoverage->start($childInvocation['id']);
+$childCoverageFile = $childInvocation['report'];
 register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
     // Append collection after application shutdown handlers so implicit pipe
     // close/drain is measured too, not just the main body of the child script.

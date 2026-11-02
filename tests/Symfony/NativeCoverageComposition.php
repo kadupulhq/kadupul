@@ -35,6 +35,10 @@ final class NativeCoverageComposition
         }
         foreach ($data->lineCoverage() as $file => $measured) {
             $relative = self::relative($root, $file);
+            // Native merges preserve sparse indexes after deduplicating test IDs.
+            foreach ($measured as $line => $hits) {
+                if (is_array($hits)) $measured[$line] = array_values($hits);
+            }
             $lines[$relative] = $measured;
             $sources[$relative] = self::digest($file);
         }
@@ -143,7 +147,7 @@ final class NativeCoverageComposition
     {
         $hashes = [];
         foreach (['tests/Symfony/NativeCoverageComposition.php', 'tests/Symfony/NativeCoverageStack.php',
-            'tests/Symfony/compose_native_coverage.php', 'tests/tools/sonar_coverage_artifacts.py',
+            'tests/Symfony/compose_native_coverage.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/tools/sonar_coverage_artifacts.py',
             'tests/Symfony/merge_coverage.php', 'tests/Support/Behavior/merge_poller_coverage.php'] as $path) $hashes[$path] = self::digest($root . '/' . $path);
         return $hashes;
     }

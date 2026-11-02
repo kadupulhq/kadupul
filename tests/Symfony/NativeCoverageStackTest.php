@@ -132,6 +132,11 @@ final class NativeCoverageStackTest extends TestCase
             count(self::SOURCES) + count($markers) + 15,
             \NativeChildCoverageEvidence::verifyRejections($reports[0], $root, self::PRODUCER, $scenario, self::SOURCES, $markers, [self::TARGET], self::TARGET, $stack)
         );
+        self::assertCount(1, $coverage->getTests());
+        self::assertSame('native RRD child ' . substr(basename($reports[0], '.coverage'), strlen('child-')), array_key_first($coverage->getTests()));
+        foreach (array_keys($coverage->getTests()) as $id) {
+            self::assertSame(1, preg_match('/\Anative RRD child [1-9][0-9]*-[a-f0-9]{32}\z/D', $id));
+        }
         self::assertNotEmpty($coverage->getData(true)->lineCoverage()[realpath($root . '/' . self::TARGET)]);
         if (\PHPUnit\Runner\CodeCoverage::instance()->isActive()) \PHPUnit\Runner\CodeCoverage::instance()->codeCoverage()->merge($coverage);
         $original = file_get_contents($reports[0] . '.json');
