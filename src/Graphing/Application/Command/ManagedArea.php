@@ -20,4 +20,7 @@ enum ManagedArea
 
     /** Realm 4: tree.php. */
     case Trees;
+
+    /** Realm 15: utilities.php, whose Rebuild Poller Cache action names cli/rebuild_poller_cache.php as its equivalent. */
+    case Utilities;
 }
