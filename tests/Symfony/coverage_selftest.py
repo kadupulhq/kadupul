@@ -11,6 +11,13 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # Independent baseline for native CLI sources already required by the PHP merger.
 ADDITIONAL_REQUIRED_NATIVE_SOURCES = (
+    'cli/rebuild_poller_cache.php',
+    'bin/legacy-poller-cache-rebuild.php',
+    'src/Graphing/Application/Command/RebuildPollerCache.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyPollerCacheRebuilder.php',
+    'src/Graphing/Infrastructure/Persistence/DbalPollerCacheSettings.php',
+    'src/Graphing/Infrastructure/Symfony/RebuildPollerCacheCommand.php',
+    'src/Graphing/Infrastructure/Symfony/RebuildPollerCacheLegacyArguments.php',
     'cli/poller_output_empty.php',
     'bin/legacy-poller-output-empty.php',
     'src/Graphing/Application/Command/PollerOutputEmptying.php',
