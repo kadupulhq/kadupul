@@ -510,7 +510,9 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/Symfony/about_review_http.py
 
       - name: Coverage self-test report preservation
-        run: mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
+        run: |
+          mise exec python@3.12.12 -- python tests/tools/test_coverage_selftest_database_reports.py
+          mise exec python@3.12.12 -- python tests/tools/test_session_coverage.py
 
       - name: Palette HTTP and MariaDB data handoff
         run: mise exec python@3.12.12 -- python tests/Symfony/palette_color_review_http.py
@@ -524,9 +526,7 @@ jobs:
           KADUPUL_BROWSER_COVERAGE: ${{ runner.temp }}/browser-layout-coverage
           PHP_VERSION: '8.4'
         run: |
-          set -euo pipefail
-          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --coverage-output "$RUNNER_TEMP/symfony-files"
-          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --coverage-output "$RUNNER_TEMP/symfony-database"
+          bash tests/Symfony/session_coverage.sh
 
       - name: Data input HTTP and MariaDB contract
         run: mise exec python@3.12.12 -- python tests/Symfony/data_input_review_http.py
@@ -540,7 +540,7 @@ jobs:
           "$RUNNER_TEMP/coverage-python/bin/python" -m coverage run --data-file=var/offline.coverage --include='tools/build-offline.py' tools/build-offline.py
           "$RUNNER_TEMP/coverage-python/bin/python" -m coverage run --append --data-file=var/offline.coverage --include='.github/scripts/catalog/interface_catalog.py' -m unittest discover -s tests/tools -p 'test_interface_catalog.py' -v
           "$RUNNER_TEMP/coverage-python/bin/python" -m coverage xml --data-file=var/offline.coverage -o var/offline-coverage.xml
-          mise exec python@3.12.12 -- python tests/Symfony/offline_coverage.py --archive dist/kadupul-offline.tar.gz --output "$RUNNER_TEMP/offline-tools"
+          mise exec python@3.12.12 -- python tests/Symfony/offline_coverage.py --archive dist/kadupul-offline.tar.gz --output "$RUNNER_TEMP/offline-tools" --image "kadupul-sonar-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-files-web:latest"
           mise exec python@3.12.12 -- python tests/Symfony/coverage_selftest.py --unit var/symfony-coverage.php --files "$RUNNER_TEMP/symfony-files" --database "$RUNNER_TEMP/symfony-database" --offline "$RUNNER_TEMP/offline-tools"
           php tests/Symfony/merge_coverage.php var/symfony-coverage.php "$RUNNER_TEMP/symfony-files" "$RUNNER_TEMP/symfony-database" "$RUNNER_TEMP/offline-tools" var/symfony-coverage.xml
           test -s var/symfony-coverage.xml
