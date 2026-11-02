@@ -32,6 +32,7 @@
     "tests/Fixtures/legacy-cli/remove_graphs.php",
     "tests/Fixtures/legacy-cli/reorder_data_query.php",
     "tests/Fixtures/legacy-cli/repair_graphs.php",
+    "tests/Fixtures/legacy-cli/replay_rejected_samples.php",
     "tests/Fixtures/native-cli/audit_database.php",
     "tests/Fixtures/plugins/compatibility_test/setup.php",
     "tests/Fixtures/plugins/menu_parity/setup.php",

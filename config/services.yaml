@@ -426,6 +426,9 @@ services:
     Kadupul\Graphing\Application\Command\EmptyPollerOutput: ~
     Kadupul\Graphing\Application\Port\PollerOutputDrain:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyPollerOutputDrain
+    Kadupul\Graphing\Application\Command\ReplayRejectedSamples: ~
+    Kadupul\Graphing\Application\Port\RejectedSampleReplayer:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyRejectedSampleReplayer
     Kadupul\Graphing\Application\Command\AddTree: ~
     Kadupul\Graphing\Application\Command\AddTreeNode: ~
     Kadupul\Graphing\Application\Command\ListTreeChoices: ~

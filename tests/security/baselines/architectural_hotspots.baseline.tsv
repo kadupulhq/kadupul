@@ -118,6 +118,8 @@ dynamic_include	./bin/legacy-graph-remove.php:20	require_once $config['base_path
 dynamic_include	./bin/legacy-graph-template-attach.php:19	require_once $config['base_path'] . '/lib/api_automation.php';
 dynamic_include	./bin/legacy-graph-titles.php:19	require_once $config['base_path'] . '/lib/api_graph.php';
 dynamic_include	./bin/legacy-poller-output-empty.php:30	    require_once $config['base_path'] . '/lib/' . $library . '.php';
+dynamic_include	./bin/legacy-rejected-samples-replay.php:28	require_once $config['base_path'] . '/lib/poller.php';
+dynamic_include	./bin/legacy-rejected-samples-replay.php:29	require_once $config['base_path'] . '/lib/rrd_maintenance.php';
 dynamic_include	./bin/legacy-tree-save.php:20	require_once $config['base_path'] . '/lib/api_tree.php';
 dynamic_include	./cli/add_device.php:11	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_device.php:12	require_once($config['base_path'] . '/lib/api_device.php');
@@ -224,7 +226,6 @@ dynamic_include	./cli/removespikes.php:14	require_once($config['base_path'] . '/
 dynamic_include	./cli/repair_templates.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/repair_templates.php:11	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/repair_templates.php:12	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./cli/replay_rejected_samples.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/sqltable_to_php.php:70		include_once($config['library_path'] . '/database.php');
 dynamic_include	./cli/structure_rra_paths.php:10	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./cli/update_heartbeat.php:10	require_once($config['base_path'] . '/lib/rrd.php');
