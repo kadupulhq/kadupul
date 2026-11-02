@@ -154,7 +154,7 @@ test('the installer already passed the remote retry count', function () use ($va
  *
  * @return array<int, array> One entry per db_connect_real() call, in order.
  */
-function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'online')
+function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'online', $local_only = null)
 {
     $source = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
     expect($source)->not->toBeFalse();
@@ -167,8 +167,8 @@ function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'onli
     $start = strrpos(substr($source, 0, $local), 'if ($config[\'poller_id\']');
     expect($start)->not->toBeFalse();
 
-    // Stop after the $conn_mode block, which holds the remote call.
-    $guard = 'if ($conn_mode != \'offline\')';
+    // Extract the complete mode guard even when additional native eligibility clauses follow.
+    $guard = 'if ($conn_mode != \'offline\'';
     $guard_block = \test_php_block_source($source, $guard, '$local_db_cnn_id = db_connect_real(');
     $guard_start = strpos($source, $guard, $local);
     expect($guard_start)->not->toBeFalse();
@@ -181,7 +181,8 @@ function bootstrap_connect_calls(array $vars, $poller_id = 2, $conn_mode = 'onli
         $assignments .= '$' . $name . ' = ' . var_export($value, true) . ';';
     }
 
-    $code = '$calls = array();'
+    $code = ($local_only === null ? '' : 'define("KADUPUL_OPERATIONAL_LOCAL_ONLY", ' . var_export($local_only, true) . ');')
+        . '$calls = array();'
         . 'function db_connect_real() { $GLOBALS["calls"][] = func_get_args(); return new \stdClass(); }'
         . 'function db_fetch_cell($sql, $a = "", $b = true, $c = false) { return strpos($sql, "version") !== false ? "1.2.31" : 0; }'
         . '$config = array("poller_id" => ' . (int) $poller_id . ', "connection" => "online", "is_web" => false);'
@@ -240,3 +241,20 @@ test('the branch is skipped entirely on the main server', function () use ($vars
 
     expect(bootstrap_connect_calls($without, 1))->toBe(array());
 });
+
+
+test('the trusted local-only verifier makes only its local connection', function () use ($vars) {
+    $calls = bootstrap_connect_calls($vars, 2, 'online', true);
+
+    expect(count($calls))->toBe(1)
+        ->and($calls[0][0])->toBe('local.invalid')
+        ->and($calls[0][RETRIES])->toBe(5);
+});
+
+test('a non-true local-only constant preserves ordinary remote retries', function ($local_only) use ($vars) {
+    $calls = bootstrap_connect_calls($vars, 2, 'online', $local_only);
+
+    expect(count($calls))->toBe(2)
+        ->and($calls[1][0])->toBe('main.invalid')
+        ->and($calls[1][RETRIES])->toBe(1);
+})->with([false, 1, 'true']);
