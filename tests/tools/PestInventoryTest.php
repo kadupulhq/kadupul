@@ -213,6 +213,42 @@ final class PestInventoryTest extends TestCase
         }
     }
 
+    public function testShardDiscoveryPreservesColoredDslAndPlainNativeClassesExactlyOnce(): void
+    {
+        $classes = ['NativeOneTest', 'NativeTwoTest', 'NativeThreeTest',
+            'Unit\\ColoredOneTest', 'Unit\\Security\\Auth\\RemoteGraphQueryComponentsTest', 'Unit\\ColoredThreeTest'];
+        $listing = "Available tests:\n";
+        foreach ($classes as $index => $class) {
+            $colored = $index >= 3;
+            foreach (['first case', 'second case'] as $case) {
+                $listing .= ($colored ? "\033[32m" : '') . ' - ' . ($colored ? 'P\\' : '') . $class
+                    . '::testCase"' . $case . '"' . ($colored ? "\033[39m" : '') . "\r\n";
+            }
+        }
+        $filters = [];
+        foreach ([1, 2, 3] as $shard) {
+            $process = new Process([PHP_BINARY, dirname(__DIR__) . '/tools/pest_shard_filter.php', (string) $shard, '3']);
+            $process->setInput($listing);
+            $process->mustRun();
+            self::assertStringContainsString('2 of 6 test classes', $process->getErrorOutput());
+            $filters[] = trim($process->getOutput());
+        }
+        foreach ($classes as $class) {
+            $matches = 0;
+            foreach ($filters as $filter) {
+                $match = preg_match($filter, $class . '::testCase');
+                self::assertNotFalse($match);
+                $matches += $match;
+            }
+            self::assertSame(1, $matches, $class . ' must be selected by exactly one shard.');
+        }
+        $invalid = new Process([PHP_BINARY, dirname(__DIR__) . '/tools/pest_shard_filter.php', '1', '1']);
+        $invalid->setInput("\033[32mMalformed::testCase\033[39m\n");
+        $invalid->run();
+        self::assertSame(1, $invalid->getExitCode());
+        self::assertStringContainsString('Only 0 test classes were listed', $invalid->getErrorOutput());
+    }
+
     /** @return iterable<string, array{bool}> */
     public static function selections(): iterable
     {
