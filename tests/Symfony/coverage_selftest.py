@@ -11,6 +11,14 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # Independent baseline for native CLI sources already required by the PHP merger.
 ADDITIONAL_REQUIRED_NATIVE_SOURCES = (
+    'cli/replay_rejected_samples.php',
+    'bin/legacy-rejected-samples-replay.php',
+    'src/Graphing/Application/Command/RejectedSampleReplay.php',
+    'src/Graphing/Application/Command/ReplayRejectedSamples.php',
+    'src/Graphing/Application/Port/RejectedSampleReplayResult.php',
+    'src/Graphing/Infrastructure/Legacy/LegacyRejectedSampleReplayer.php',
+    'src/Graphing/Infrastructure/Symfony/ReplayRejectedSamplesCommand.php',
+    'src/Graphing/Infrastructure/Symfony/ReplayRejectedSamplesLegacyArguments.php',
     'cli/rebuild_poller_cache.php',
     'bin/legacy-poller-cache-rebuild.php',
     'src/Graphing/Application/Command/RebuildPollerCache.php',
