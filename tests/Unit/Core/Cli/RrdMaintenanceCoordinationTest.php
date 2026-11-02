@@ -706,7 +706,7 @@ test('database upgrade reports rejected versions and completed migrations accura
             $registration = $boundary ? [
                 'producer' => 'tests/Unit/Core/Cli/RrdMaintenanceCoordinationTest.php',
                 'scenario' => 'cli-upgrade-' . $migrationOutcome . ':' . hash('sha256', serialize([$version, $targetVersion, $forcedStart, $expectedStatus])),
-                'sources' => ['composer.lock', 'tests/composer.lock', 'tests/Unit/Core/Cli/RrdMaintenanceCoordinationTest.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'cli/upgrade_database.php', 'lib/installer.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/cdef_reference.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'],
+                'sources' => ['composer.lock', 'tests/composer.lock', 'tests/Unit/Core/Cli/RrdMaintenanceCoordinationTest.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'cli/upgrade_database.php', 'lib/installer.php', 'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/cdef_reference.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'],
                 'markers' => ['upgrade-current-step-observed', 'upgrade-later-step-absent'],
                 'stored' => $expectSchemaWrite ? $targetVersion : $version,
             ] : null;

@@ -20,12 +20,12 @@ if (($argv[3] ?? '') === 'coverage') {
     require $root . '/tests/vendor/autoload.php';
     require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
     $snapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/ldap-installer-native.php', $scenarioJson, [
-        'lib/auth.php', 'lib/ldap.php', 'install/functions.php', 'cacti.sql', 'composer.lock',
+        'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php', 'src/Platform/Infrastructure/Legacy/InstallerToolPaths.php', 'src/Platform/Infrastructure/Legacy/InstallerLogger.php', 'lib/auth.php', 'lib/ldap.php', 'install/functions.php', 'cacti.sql', 'composer.lock',
         'tests/composer.lock', 'tests/Helpers/NativeChildCoverageEvidence.php',
         'include/global_constants.php', 'tests/Unit/Security/Auth/LdapInstallerNativeContractTest.php',
     ]);
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (['lib/auth.php', 'lib/ldap.php', 'install/functions.php'] as $source) {
+    foreach (['src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php', 'src/Platform/Infrastructure/Legacy/InstallerToolPaths.php', 'src/Platform/Infrastructure/Legacy/InstallerLogger.php', 'lib/auth.php', 'lib/ldap.php', 'install/functions.php'] as $source) {
         $filter->includeFile($root . '/' . $source);
     }
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage(

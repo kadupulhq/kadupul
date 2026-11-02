@@ -79,11 +79,15 @@ abstract class ProfileDeletionContract extends TestCase
         self::assertSame('MUL', $baseline->query("SELECT table_key FROM table_columns WHERE table_name = 'data_template_data' AND table_field = 'data_source_profile_id'")->fetchColumn());
     }
 
+    /** @return list<string> */
     public static function collectorCoverageSources(): array
     {
-        return array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/ProfileDeletionContract.php', 'tests/Unit/ProfileDeletionNativeTest.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'lib/reference_write.php', 'lib/data_source_profile_integrity.php');
+        return array('composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/ProfileDeletionContract.php', 'tests/Unit/ProfileDeletionNativeTest.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'lib/reference_write.php', 'lib/data_source_profile_integrity.php', 'lib/installer.php', 'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php', 'src/Platform/Application/Installer/InstallationActions.php', 'src/Platform/Application/Installer/InstallationExecution.php', 'src/Platform/Domain/Installer/InstallationMode.php');
     }
 
+    /** @param array<string, mixed> $scenario
+     * @return array<string, mixed>
+     */
     protected function runNative(array $scenario): array
     {
         $root = dirname(__DIR__, 2);
@@ -113,7 +117,18 @@ abstract class ProfileDeletionContract extends TestCase
                 self::assertCount(1, $reports);
                 if ($fixture === 'profile-collector-replication-native.php') {
                     require_once __DIR__ . '/NativeChildCoverageEvidence.php';
-                    $coverage->merge(NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), self::collectorCoverageSources(), ['collector-result-persisted'], ['lib/poller.php']));
+                    $markers = ['collector-result-persisted'];
+                    $hits = ['lib/poller.php'];
+                    if (!empty($scenario['upgrade_entry']) && $state['version_confirmation'] !== null) {
+                        $markers[] = 'installer-version-confirmation-observed';
+                        $hits[] = 'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php';
+                    }
+                    $arguments = [$reports[0], $root, 'tests/Fixtures/' . $fixture, json_encode($scenario, JSON_THROW_ON_ERROR), self::collectorCoverageSources(), $markers, $hits];
+                    $child = NativeChildCoverageEvidence::load(...$arguments);
+                    if (count($hits) > 1) {
+                        self::assertSame(count(self::collectorCoverageSources()) + count($markers) + 10, NativeChildCoverageEvidence::verifyRejections(...[...$arguments, 'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php']));
+                    }
+                    $coverage->merge($child);
                 } else {
                     $coverage->merge(unserialize(file_get_contents($reports[0])));
                 }

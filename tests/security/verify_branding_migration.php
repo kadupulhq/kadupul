@@ -164,6 +164,7 @@ foreach ($handoffs as $entry => $calls) {
 }
 $source = file_get_contents("$root/lib/installer.php");
 check_branding_migration(strpos($source, '$installer->install();') !== false, 'The shared entry point no longer runs installation');
-check_branding_migration(strpos($source, 'if (empty($failure) && !self::migrateProductDefaults())') !== false, 'The shared installer no longer gates completion on the migration');
+check_branding_migration(strpos($source, 'InstallationExecution())->run($this, $mode)') !== false, 'The shared installer no longer delegates the installation sequence');
+check_branding_migration($throwing_installer->migrateInstallationDefaults() !== '', 'The installer adapter no longer propagates the failed migration');
 
 print "PASS: 12 database cases across utf8mb4 and latin1; idempotence, cache invalidation, failure propagation, and CLI/web wiring.\n";
