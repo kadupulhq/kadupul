@@ -27,37 +27,20 @@ final readonly class DbalAutomationTemplatePreferences implements AutomationTemp
 
     public function load(): ?array
     {
-        $filters = $this->preferences->load($this->access->authorize()->id, self::NAME);
-        if ($filters === null || !self::valid($filters)) {
-            return null;
-        }
-        try {
-            // A stored value that is no longer in range must not lock the list.
-            AutomationTemplateFilters::fromQuery($filters, 1);
-        } catch (\InvalidArgumentException) {
-            return null;
-        }
-        return $filters;
+        return $this->preferences->load(
+            $this->access->authorize()->id,
+            self::NAME,
+            AutomationTemplateFilters::KEYS,
+            static fn(array $filters) => AutomationTemplateFilters::fromQuery($filters, 1),
+        );
     }
 
     public function save(array $filters): void
     {
-        if (!self::valid($filters)) {
-            throw new \InvalidArgumentException('Invalid automation template filters.');
-        }
-        $this->preferences->save(self::NAME, $filters, function (): int {
+        $this->preferences->save(self::NAME, $filters, AutomationTemplateFilters::KEYS, 'Invalid automation template filters.', function (): int {
             $actor = $this->access->authorize();
             $this->access->assertCurrent($actor->id);
             return $actor->id;
         });
-    }
-
-    /** @param array<array-key, mixed> $filters
-     * @phpstan-assert-if-true =array<string, string> $filters
-     */
-    private static function valid(array $filters): bool
-    {
-        return array_diff(array_keys($filters), AutomationTemplateFilters::KEYS) === []
-            && array_filter($filters, static fn(mixed $value): bool => !is_string($value)) === [];
     }
 }

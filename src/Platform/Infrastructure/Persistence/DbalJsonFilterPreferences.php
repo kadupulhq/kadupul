@@ -25,7 +25,7 @@ final readonly class DbalJsonFilterPreferences implements JsonFilterPreferences
         private LegacyConfiguration $configuration,
     ) {}
 
-    public function load(int $actorId, string $name): ?array
+    public function load(int $actorId, string $name, array $keys, Closure $validateStored): ?array
     {
         $json = $this->database->fetchOne('SELECT value FROM settings_user WHERE user_id = ? AND name = ?', [$actorId, $name]);
         if (!is_string($json) || $json === '') {
@@ -36,11 +36,22 @@ final readonly class DbalJsonFilterPreferences implements JsonFilterPreferences
         } catch (\JsonException) {
             return null;
         }
-        return is_array($filters) ? $filters : null;
+        if (!is_array($filters) || !self::valid($filters, $keys)) {
+            return null;
+        }
+        try {
+            $validateStored($filters);
+        } catch (\InvalidArgumentException) {
+            return null;
+        }
+        return $filters;
     }
 
-    public function save(string $name, array $filters, Closure $authorize): void
+    public function save(string $name, array $filters, array $keys, string $invalidShape, Closure $authorize): void
     {
+        if (!self::valid($filters, $keys)) {
+            throw new \InvalidArgumentException($invalidShape);
+        }
         if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
             throw new \RuntimeException('Filter preferences require the primary collector.');
         }
@@ -58,5 +69,16 @@ final readonly class DbalJsonFilterPreferences implements JsonFilterPreferences
             }
             throw $error;
         }
+    }
+
+    /**
+     * @param array<array-key, mixed> $filters
+     * @param list<string> $keys
+     * @phpstan-assert-if-true =array<string, string> $filters
+     */
+    private static function valid(array $filters, array $keys): bool
+    {
+        return array_diff(array_keys($filters), $keys) === []
+            && array_filter($filters, static fn(mixed $value): bool => !is_string($value)) === [];
     }
 }

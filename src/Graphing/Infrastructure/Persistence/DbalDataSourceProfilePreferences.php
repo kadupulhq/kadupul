@@ -27,37 +27,20 @@ final readonly class DbalDataSourceProfilePreferences implements DataSourceProfi
 
     public function load(): ?array
     {
-        $filters = $this->preferences->load($this->access->authorize()->id, self::NAME);
-        if ($filters === null || !self::valid($filters)) {
-            return null;
-        }
-        try {
-            // A stored value that is no longer in range must not lock the list.
-            DataSourceProfileFilters::fromQuery($filters, 1);
-        } catch (\InvalidArgumentException) {
-            return null;
-        }
-        return $filters;
+        return $this->preferences->load(
+            $this->access->authorize()->id,
+            self::NAME,
+            DataSourceProfileFilters::KEYS,
+            static fn(array $filters) => DataSourceProfileFilters::fromQuery($filters, 1),
+        );
     }
 
     public function save(array $filters): void
     {
-        if (!self::valid($filters)) {
-            throw new \InvalidArgumentException('Invalid profile filters.');
-        }
-        $this->preferences->save(self::NAME, $filters, function (): int {
+        $this->preferences->save(self::NAME, $filters, DataSourceProfileFilters::KEYS, 'Invalid profile filters.', function (): int {
             $actor = $this->access->authorize();
             $this->access->assertCurrent($actor->id);
             return $actor->id;
         });
-    }
-
-    /** @param array<array-key, mixed> $filters
-     * @phpstan-assert-if-true =array<string, string> $filters
-     */
-    private static function valid(array $filters): bool
-    {
-        return array_diff(array_keys($filters), DataSourceProfileFilters::KEYS) === []
-            && array_filter($filters, static fn(mixed $value): bool => !is_string($value)) === [];
     }
 }

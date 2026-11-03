@@ -74,6 +74,55 @@ final class FilterPreferencesPersistenceTest extends TestCase
     }
 
     #[DataProvider('features')]
+    public function testEmptyPreferencesRemainRawInsteadOfReceivingDomainDefaults(int $feature, string $name): void
+    {
+        $preferences = $this->preferences($feature);
+        $preferences->save([]);
+        self::assertSame('[]', $this->stored($name));
+        self::assertSame([], $preferences->load());
+        self::assertSame(['authorize:transaction', 'current:7:transaction', 'authorize:outside'], $this->events);
+    }
+
+    public function testStoredValidationReturnsRawValuesAndOnlyTreatsDomainRejectionAsStale(): void
+    {
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->expects(self::never())->method('values');
+        $preferences = new DbalJsonFilterPreferences($this->database, $configuration);
+        $this->database->insert('settings_user', ['user_id' => 7, 'name' => 'protocol', 'value' => '{"filter":"0"}']);
+        $received = [];
+        $raw = $preferences->load(7, 'protocol', ['filter'], static function (array $filters) use (&$received): array {
+            $received = $filters;
+            return ['filter' => 'normalized', 'rows' => '1'];
+        });
+        self::assertSame(['filter' => '0'], $received);
+        self::assertSame($received, $raw);
+        self::assertNull($preferences->load(7, 'protocol', ['filter'], static function (array $filters): never {
+            throw new \InvalidArgumentException('stored domain value is stale');
+        }));
+        try {
+            $preferences->load(7, 'protocol', ['filter'], static function (array $filters): never {
+                throw new \RuntimeException('domain dependency unavailable');
+            });
+            self::fail('Unexpected validator failure was hidden as an empty preference.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('domain dependency unavailable', $error->getMessage());
+        }
+        $called = false;
+        try {
+            $preferences->save('protocol', ['filter' => []], ['filter'], 'feature shape rejected', static function () use (&$called): int {
+                $called = true;
+                return 7;
+            });
+            self::fail('Malformed map was admitted.');
+        } catch (\InvalidArgumentException $error) {
+            self::assertSame('feature shape rejected', $error->getMessage());
+            self::assertFalse($called);
+            self::assertFalse($this->database->isTransactionActive());
+            self::assertSame('{"filter":"0"}', $this->stored('protocol'));
+        }
+    }
+
+    #[DataProvider('features')]
     public function testReadAuthorizationPrecedesProtectedLookup(int $feature, string $name): void
     {
         $preferences = $this->preferences($feature);
