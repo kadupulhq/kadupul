@@ -14,14 +14,14 @@ test('replay worker refuses an online remote collector and a volatile queue, and
     copy($root . '/bin/legacy-rejected-samples-replay.php', $dir . '/bin/legacy-rejected-samples-replay.php');
     copy($root . '/bin/worker-io.php', $dir . '/bin/worker-io.php');
     $coverage = $this->getTestResultObject()->getCodeCoverage();
-    $prelude = '';
+    $coverageOptions = array();
+    $coverageEnvironment = array();
+    $scenario = hash('sha256', serialize(array($command, $engine, $collector)));
     if ($coverage !== null) {
-        $prelude = 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');'
-            . 'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/bin/legacy-rejected-samples-replay.php', true) . ');'
-            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/bin/legacy-rejected-samples-replay.php', true) . ');'
-            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+        require_once $root . '/tests/Symfony/WorkerIoCoverage.php';
+        list($coverageOptions, $coverageEnvironment) = Kadupul\Tests\WorkerIoCoverage::configuration($root, $dir, 'bin/legacy-rejected-samples-replay.php', $scenario);
     }
-    file_put_contents($dir . '/include/cli_check.php', '<?php ' . $prelude . '$config = array("base_path" => dirname(__DIR__), "poller_id" => ' . (int) $collector[0] . ', "connection" => ' . var_export($collector[1], true) . '); define("COPYRIGHT_YEARS", "2026");'
+    file_put_contents($dir . '/include/cli_check.php', '<?php $config = array("base_path" => dirname(__DIR__), "poller_id" => ' . (int) $collector[0] . ', "connection" => ' . var_export($collector[1], true) . '); define("COPYRIGHT_YEARS", "2026");'
         . 'function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . "/log", $message); }');
     // The move itself is covered by the database contract; this boundary records the request.
     file_put_contents($dir . '/lib/poller.php', '<?php function poller_replay_rejected($id = null, $dry = false) {'
@@ -31,7 +31,7 @@ test('replay worker refuses an online remote collector and a volatile queue, and
         . 'if ($connection !== false) { throw new LogicException("replay checked another queue"); }'
         . 'return ' . var_export($engine, true) . ' === "InnoDB" ? "" : "The poller_output queue must use InnoDB before collection."; }');
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/bin/legacy-rejected-samples-replay.php'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~'), $coverageOptions, array($dir . '/bin/legacy-rejected-samples-replay.php')), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), $coverageEnvironment));
         fwrite($pipes[0], is_string($command) ? $command : json_encode($command));
         fclose($pipes[0]);
         $output = stream_get_contents($pipes[1]);
@@ -50,7 +50,7 @@ test('replay worker refuses an online remote collector and a volatile queue, and
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $coverage->merge(unserialize(file_get_contents($reports[0])));
+            $coverage->merge(Kadupul\Tests\WorkerIoCoverage::load($reports[0], $root, 'bin/legacy-rejected-samples-replay.php', $scenario));
         }
     } finally {
         foreach (array('/bin', '/include', '/lib', '') as $suffix) {
