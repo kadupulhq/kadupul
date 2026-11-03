@@ -9,6 +9,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
 
+- Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Measure and bind the shared JSON/output helper when copied poller-drain and rejected-sample workers produce native child coverage, refusing missing or changed helper copies before accepting their reports.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.

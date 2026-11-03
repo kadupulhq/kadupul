@@ -161,8 +161,8 @@ if ($config['poller_id'] == 1 || read_config_option('storage_location')) {
 	}
 
 	$url  = $config['url_path'] . 'remote_agent.php?action=graph_json';
-	$url .= '&local_graph_id=' . get_request_var('local_graph_id');
-	$url .= '&rra_id=' . $rra_id;
+	$url .= '&local_graph_id=' . rawurlencode((string)get_request_var('local_graph_id'));
+	$url .= '&rra_id=' . rawurlencode((string)$rra_id);
 
 	foreach($graph_data_array as $variable => $value) {
 		$url .= '&' . rawurlencode((string)$variable) . '=' . rawurlencode((string)$value);
