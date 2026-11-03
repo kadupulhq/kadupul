@@ -211,7 +211,7 @@ jobs:
           set -euo pipefail
           test -x "$RRDTOOL_TEST_BINARY"
           php -d error_reporting=24575 vendor/bin/pest --test-directory=. --configuration phpunit-coverage.xml \
-            --list-tests > "$RUNNER_TEMP/pest-tests.txt"
+            --colors=never --list-tests > "$RUNNER_TEMP/pest-tests.txt"
           filter=$(php tools/pest_shard_filter.php "$SHARD" "$SHARDS" < "$RUNNER_TEMP/pest-tests.txt")
           php -d error_reporting=24575 -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' \
