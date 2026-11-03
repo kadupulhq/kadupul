@@ -32,6 +32,25 @@ $db->exec("CREATE TABLE graph_templates(id INTEGER, name TEXT);
     INSERT INTO graph_templates VALUES(3, 'Z & graph'), (8, 'Unused'), (9, 'A graph');
     INSERT INTO graph_local VALUES(3),(3),(9);
     INSERT INTO host_template VALUES(4,'Z & host'),(5,'A host');");
+// Project cacti.sql's remembered-login columns into SQLite. Permission writes
+// expire every token for affected user identities, not selected item identities.
+$db->exec("CREATE TABLE user_auth_cache (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL DEFAULT 0,
+    hostname VARCHAR(100) NOT NULL DEFAULT '',
+    last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    token VARCHAR(191) NOT NULL DEFAULT '' UNIQUE
+)");
+foreach (array(7, 41, 42, 43, 77) as $cacheUser) {
+    foreach (array('first', 'second') as $cacheSlot) {
+        $cache = $db->prepare('INSERT INTO user_auth_cache (user_id, hostname, last_update, token) VALUES (?, ?, ?, ?)');
+        $cache->execute(array($cacheUser, 'fixture-' . $cacheSlot, '2026-01-01 00:00:00', hash('sha256', 'fixture-' . $cacheUser . '-' . $cacheSlot)));
+    }
+}
+$cacheBefore = permission_filter_fixture_caches($db);
+if (!empty($scenario['fail_cache_expiry'])) {
+    $db->exec("CREATE TRIGGER reject_cache_expiry BEFORE DELETE ON user_auth_cache BEGIN SELECT RAISE(ABORT, 'fixture cache expiry failure'); END");
+}
 if (!empty($scenario['empty'])) {
     $db->exec('DELETE FROM graph_templates; DELETE FROM graph_local; DELETE FROM host_template');
     $item_rows = false;
@@ -56,6 +75,9 @@ if (isset($scenario['association'])) {
     $subjectColumn = $group ? 'group_id' : 'user_id';
     $table = $scenario['type'] === 0 ? 'user_auth_group_members' : ($group ? 'user_auth_group_perms' : 'user_auth_perms');
     $itemColumn = $scenario['type'] === 0 ? ($group ? 'user_id' : 'group_id') : 'item_id';
+    if ($group && $scenario['type'] !== 0) {
+        $db->exec('INSERT INTO user_auth_group_members (group_id, user_id) VALUES (7,41),(7,42),(77,43)');
+    }
     $columns = $subjectColumn . ',' . $itemColumn . ($scenario['type'] === 0 ? '' : ',type');
     foreach (array(array(7, 41), array(7, 42), array(77, 41)) as $row) {
         if ($scenario['type'] !== 0) {
@@ -64,6 +86,16 @@ if (isset($scenario['association'])) {
         $statement = $db->prepare('INSERT INTO ' . $table . ' (' . $columns . ') VALUES (' . implode(',', array_fill(0, count($row), '?')) . ')');
         $statement->execute($row);
     }
+}
+/** @return array<int, list<string>> */
+function permission_filter_fixture_caches(PDO $database): array
+{
+    $caches = array();
+    foreach ($database->query('SELECT id, user_id, hostname, last_update, token FROM user_auth_cache ORDER BY user_id, id')->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        // Preserve complete row identity without printing even synthetic tokens.
+        $caches[(int) $row['user_id']][] = hash('sha256', json_encode($row, JSON_THROW_ON_ERROR));
+    }
+    return $caches;
 }
 function db_execute_prepared($sql, $parameters, $log = true, $connection = false)
 {
@@ -197,12 +229,12 @@ if (!empty($scenario['no_association'])) {
     $tab = \Kadupul\IdentityAccess\Infrastructure\Legacy\PermissionAssociations::apply($scenario['page'] === 'user_group_admin.php', array_keys($_POST));
     $nativeChildCoverageMarkers = array('association-contract-returned');
     // nosemgrep: php.lang.security.injection.printed-request.printed-request -- CLI JSON protocol; the PHP_SAPI guard rejects HTTP before reading input.
-    print json_encode(array('tab' => $tab, 'queries' => $queries), JSON_THROW_ON_ERROR);
+    print json_encode(array('tab' => $tab, 'queries' => $queries, 'cache_before' => $cacheBefore, 'cache_after' => permission_filter_fixture_caches($db)), JSON_THROW_ON_ERROR);
     exit;
 }
 if (isset($scenario['association'])) {
-    register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn) {
-        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries'], 'delete_counts' => $GLOBALS['deleteCounts'], 'epochs' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR));
+    register_shutdown_function(static function () use ($db, $table, $subjectColumn, $itemColumn, $cacheBefore) {
+        $state = array('rows' => $db->query('SELECT ' . $subjectColumn . ' AS subject, ' . $itemColumn . ' AS item FROM ' . $table . ' ORDER BY subject, item')->fetchAll(PDO::FETCH_ASSOC), 'queries' => $GLOBALS['queries'], 'delete_counts' => $GLOBALS['deleteCounts'], 'epochs' => $db->query('SELECT id, reset_perms FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR), 'cache_before' => $cacheBefore, 'cache_after' => permission_filter_fixture_caches($db));
         $GLOBALS['nativeChildCoverageMarkers'] = array('association-state-readback');
         print json_encode($state, JSON_THROW_ON_ERROR);
     });
