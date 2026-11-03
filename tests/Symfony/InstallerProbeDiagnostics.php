@@ -41,7 +41,7 @@ final class InstallerProbeDiagnostics
             'response_sha256' => $request['response_sha256']];
     }
 
-    /** @return array{kind:string,exception_classes:list<string>,frames:list<array{file:string,line:int}>,unresolved_frames:list<array{path_sha256:string,line:int}>,log_sha256:string,truncated:bool} */
+    /** @return array{kind:string,exception_classes:list<string>,frames:list<array{file:string,line:int}>,unresolved_frames:list<array{path_sha256:string,line:int}>,logged_locations:list<array{basename_sha256:string,line:int}>,log_sha256:string,truncated:bool} */
     public static function server(string $log, string $projectRoot): array
     {
         $truncated = strlen($log) > self::MAX_LOG_BYTES;
@@ -89,8 +89,21 @@ final class InstallerProbeDiagnostics
                 break;
             }
         }
+        $loggedLocations = [];
+        // The locked Symfony ErrorListener deliberately logs only basename(),
+        // and its default logger drops the Throwable context. Preserve that
+        // observation as a fingerprint, never infer a canonical stack frame.
+        preg_match_all('~\\bUncaught PHP Exception ([A-Za-z_\\\\\\\\][A-Za-z0-9_\\\\\\\\]{0,179}): [^\\r\\n]* at ([A-Za-z0-9_.-]{1,128}\\.php) line ([0-9]{1,8})\\r?$~m', $log, $locations, PREG_SET_ORDER);
+        foreach ($locations as $location) {
+            if (!isset($classes[$location[1]]) || (int) $location[3] < 1) continue;
+            $digest = hash('sha256', $location[2]);
+            $line = (int) $location[3];
+            $loggedLocations[$digest . ':' . $line] = ['basename_sha256' => $digest, 'line' => $line];
+            if (count($loggedLocations) === 32) break;
+        }
         return ['kind' => $classes === [] && $frames === [] ? 'unclassified' : 'exception_trace',
             'exception_classes' => array_slice(array_values($classes), 0, 8), 'frames' => array_values($frames), 'unresolved_frames' => array_values($unresolved),
+            'logged_locations' => array_values($loggedLocations),
             'log_sha256' => hash('sha256', $log), 'truncated' => $truncated];
     }
 }

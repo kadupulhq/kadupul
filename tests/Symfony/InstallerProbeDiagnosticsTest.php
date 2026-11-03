@@ -10,12 +10,61 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\EventListener\ErrorListener;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\Log\Logger;
 use Symfony\Component\Process\Process;
 
 require_once __DIR__ . '/InstallerProbeDiagnostics.php';
 
 final class InstallerProbeDiagnosticsTest extends TestCase
 {
+    public function testLockedSymfonyBasenameOnlyLogRetainsAnExplicitFingerprint(): void
+    {
+        $stream = fopen('php://temp', 'w+');
+        self::assertIsResource($stream);
+        try {
+            $kernel = new class implements HttpKernelInterface {
+                public function handle(Request $request, int $type = self::MAIN_REQUEST, bool $catch = true): Response
+                {
+                    throw new \LogicException('This diagnostic does not execute a request.');
+                }
+            };
+            $secret = 'probe-password-keep-private';
+            $error = new \Error('SELECT credential; password=' . $secret);
+            $listener = new ErrorListener(null, new Logger(output: $stream));
+            $listener->logKernelException(new ExceptionEvent($kernel, Request::create('/?APP_SECRET=' . $secret), HttpKernelInterface::MAIN_REQUEST, $error));
+            rewind($stream);
+            $log = stream_get_contents($stream);
+            self::assertIsString($log);
+            self::assertStringContainsString(' at ' . basename(__FILE__) . ' line ' . $error->getLine(), $log);
+            self::assertStringNotContainsString(__FILE__, $log);
+            $data = InstallerProbeDiagnostics::server($log, dirname(__DIR__, 2));
+            self::assertSame(['Error'], $data['exception_classes']);
+            self::assertSame([], $data['frames']);
+            self::assertSame([], $data['unresolved_frames']);
+            self::assertSame([['basename_sha256' => hash('sha256', basename(__FILE__)), 'line' => $error->getLine()]], $data['logged_locations']);
+            foreach ([$secret, 'SELECT', 'credential', 'APP_SECRET', basename(__FILE__)] as $forbidden) {
+                self::assertStringNotContainsString($forbidden, json_encode($data, JSON_THROW_ON_ERROR));
+            }
+            // An arbitrary path-shaped message cannot publish its text, even
+            // when it resembles Symfony's otherwise valid location suffix.
+            $untrusted = 'Uncaught PHP Exception Error: "private" at ' . $secret . '.php line 77';
+            $data = InstallerProbeDiagnostics::server(str_repeat($untrusted . "\n", 80), dirname(__DIR__, 2));
+            self::assertCount(1, $data['logged_locations']);
+            self::assertSame(hash('sha256', $secret . '.php'), $data['logged_locations'][0]['basename_sha256']);
+            self::assertStringNotContainsString($secret, json_encode($data, JSON_THROW_ON_ERROR));
+            $many = '';
+            for ($line = 1; $line <= 80; ++$line) $many .= 'Uncaught PHP Exception Error: "private" at example.php line ' . $line . "\n";
+            self::assertCount(32, InstallerProbeDiagnostics::server($many, dirname(__DIR__, 2))['logged_locations']);
+        } finally {
+            fclose($stream);
+        }
+    }
+
     public function testOnlyRealExceptionClassesAndContainedCodeFramesSurvive(): void
     {
         $root = sys_get_temp_dir() . '/installer-diagnostic-frames-' . bin2hex(random_bytes(8));
