@@ -121,6 +121,8 @@ final class PermissionFilterRendererTest extends TestCase
         $writes = array_values(array_filter($result['queries'], static fn(array $query): bool => str_starts_with($query[0], 'REPLACE INTO') || str_starts_with($query[0], 'DELETE FROM')));
         self::assertCount(2, $writes);
         self::assertSame($add ? array() : array(1, 0), $result['delete_counts']);
+        self::assertCacheExpiration($result, $page === 'user_admin.php' ? array(7)
+            : ($type === 0 ? ($add ? array(41, 43) : array(41)) : array(41, 42)));
         if ($page === 'user_group_admin.php' && $type === 0 && !$add) {
             self::assertGreaterThan(0, (int) $result['epochs'][41]);
             foreach (array(7, 42, 43, 77) as $unaffected) {
@@ -179,6 +181,8 @@ final class PermissionFilterRendererTest extends TestCase
                         self::assertSame($expected, $result['rows']);
                         $writes = array_values(array_filter($result['queries'], static fn(array $query): bool => str_starts_with($query[0], 'REPLACE INTO') || str_starts_with($query[0], 'DELETE FROM')));
                         self::assertCount($fields === array() ? 0 : 1, $writes);
+                        self::assertCacheExpiration($result, $fields === array() ? array()
+                            : ($page === 'user_admin.php' ? array(7) : ($type === 0 ? array(42) : array(41, 42))));
                         if ($fields !== array()) {
                             self::assertSame(array(7, 42, ...($type === 0 ? array() : array($type))), $writes[0][1]);
                         }
@@ -194,15 +198,41 @@ final class PermissionFilterRendererTest extends TestCase
             $result = $this->render(array('page' => $page, 'no_association' => true, 'unrelated_association' => '1'));
             self::assertNull($result['tab']);
             self::assertSame(array(), $result['queries']);
+            self::assertCacheExpiration($result, array());
         }
     }
 
-    private function render(array $scenario): array
+    public function testRejectedCacheExpiryPreservesPermissionsEpochsAndAllRememberedLogins(): void
+    {
+        foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+            $scenario = array('page' => $page, 'association' => 'associate_host', 'type' => 3, 'add' => true);
+            $admitted = $this->render($scenario);
+            self::assertCacheExpiration($admitted, $page === 'user_admin.php' ? array(7) : array(41, 42));
+            $failed = $this->render($scenario + array('fail_cache_expiry' => true), true);
+            self::assertSame(array(array('subject' => 7, 'item' => 41), array('subject' => 7, 'item' => 42), array('subject' => 77, 'item' => 41)), $failed['rows']);
+            self::assertSame(array(0, 0, 0, 0, 0), array_map('intval', array_values($failed['epochs'])));
+            self::assertCacheExpiration($failed, array());
+        }
+    }
+
+    /** @param list<int> $expired */
+    private static function assertCacheExpiration(array $result, array $expired): void
+    {
+        self::assertSame(array(7, 41, 42, 43, 77), array_map('intval', array_keys($result['cache_before'])));
+        self::assertSame(array(2, 2, 2, 2, 2), array_map('count', array_values($result['cache_before'])));
+        $expected = $result['cache_before'];
+        foreach ($expired as $user) {
+            unset($expected[$user]);
+        }
+        self::assertSame($expected, $result['cache_after']);
+    }
+
+    private function render(array $scenario, bool $failureExpected = false): array
     {
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/permission-filter-' . bin2hex(random_bytes(8));
         $coverage = $this->getTestResultObject()->getCodeCoverage();
-        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/permission-filter-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
+        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'log_errors=0', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/permission-filter-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
         if ($coverage !== null) {
             $command[] = 'coverage';
         }
@@ -213,8 +243,14 @@ final class PermissionFilterRendererTest extends TestCase
             $error = stream_get_contents($pipes[2]);
             fclose($pipes[1]);
             fclose($pipes[2]);
-            self::assertSame(0, proc_close($process), $error . $output);
-            self::assertSame('', $error);
+            $exit = proc_close($process);
+            if ($failureExpected) {
+                self::assertNotSame(0, $exit);
+                self::assertStringContainsString('Native association unexpectedly failed.', $error);
+            } else {
+                self::assertSame(0, $exit, $error . $output);
+                self::assertSame('', $error);
+            }
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
