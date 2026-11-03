@@ -139,9 +139,12 @@ final class NativeCoverageCompositionTest extends TestCase
         $cases['conflicting original test identity'] = $bad;
         foreach (['missing', 'stale'] as $mutation) {
             $bad = $parts;
-            if ($mutation === 'missing') unset($bad['application']['tools']['tests/Fixtures/rrd-process-coverage.php']);
-            else $bad['application']['tools']['tests/Fixtures/rrd-process-coverage.php'] = str_repeat('0', 64);
-            $cases[$mutation . ' collector identity source'] = $bad;
+            foreach (['tests/Fixtures/rrd-process-coverage.php', 'tests/Fixtures/functions-inventory-coverage.php', 'tests/Symfony/FunctionsInventoryCoverage.php'] as $tool) {
+                $bad = $parts;
+                if ($mutation === 'missing') unset($bad['application']['tools'][$tool]);
+                else $bad['application']['tools'][$tool] = str_repeat('0', 64);
+                $cases[$mutation . ' tool identity source ' . $tool] = $bad;
+            }
         }
         $bad = $parts;
         $bad['application']['lines'][$file][1] = ['unrecorded test'];
