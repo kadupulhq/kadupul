@@ -117,9 +117,9 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'install/background.php' => 'e5f6566d90a88eae13d0fa05c7d818a876f968bb75a37083f570d86642bbf237',
     'install/installer-bootstrap.php' => '1dc2ba4f219239ebf06e6f1da1d0423ef1203314244cec3a27b21a013b596793',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
-    'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
+    'lib/auth.php' => 'b433c35e4fa373396566d01e9549fc3ddac2369c1617bde596dc45af4b993d89',
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
-    'config/services.yaml' => '9e028407920a0d217f68ddc144d169ffe589e17acdd0c1e1c8be17fc21d229c3',
+    'config/services.yaml' => 'bbaaacee047353ea171b6631bfaa8a08e84a0c0754aead5beaab690b3849e02b',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -263,7 +263,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
-    'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
+    'lib/auth.php' => 'b433c35e4fa373396566d01e9549fc3ddac2369c1617bde596dc45af4b993d89',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '54b0ce28240fac51fb0faa0df442b85610fdfbe87fb4dbc84fc484d09370eade',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
@@ -272,7 +272,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '9e028407920a0d217f68ddc144d169ffe589e17acdd0c1e1c8be17fc21d229c3',
+    'config/services.yaml' => 'bbaaacee047353ea171b6631bfaa8a08e84a0c0754aead5beaab690b3849e02b',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
