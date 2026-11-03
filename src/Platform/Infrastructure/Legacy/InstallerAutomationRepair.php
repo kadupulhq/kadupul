@@ -19,6 +19,8 @@ final readonly class InstallerAutomationRepair
     /** User-renamed or missing rules are deliberately left untouched. */
     public function repair(): void
     {
+        // Native query errors survive successful reads; start this operation independently.
+        $this->native->call('db_install_reset_error');
         $this->native->call('log_install_always', '', 'Repairing Automation Rules');
 
         $hash_array = array(
