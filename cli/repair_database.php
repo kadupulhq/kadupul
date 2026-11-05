@@ -10,6 +10,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -105,10 +106,13 @@ if (cacti_sizeof($parms)) {
 $base_tables = get_cacti_base_tables();
 
 table_structural_repair();
-simple_checks();
-detailed_checks();
-snmp_repairs();
-snmp_index_repairs();
+
+/* simple_checks() returns false when it reports that it is stopping the repair */
+if (simple_checks() !== false) {
+	detailed_checks();
+	snmp_repairs();
+	snmp_index_repairs();
+}
 
 if (cacti_sizeof($repaired_hosts) && $total_repairs > 0) {
 	print_separator(true);
@@ -303,6 +307,12 @@ function simple_checks() {
 		AND type_code in ('host_id', 'hostname')
 		AND value = ''");
 
+	if ($entries === false) {
+		fwrite(STDERR, "ERROR: Unable to read Data Input Data hostname or host_id entries.\n");
+		$total_failures++;
+		$entries = array();
+	}
+
 	$fixes = 0;
 
 	if (cacti_sizeof($entries)) {
@@ -325,6 +335,13 @@ function simple_checks() {
 								FROM host
 								WHERE id = ?',
 								array($local_data['host_id']));
+
+							/* a failed lookup or a missing device is not a repair */
+							if (!is_string($hostname) || $hostname === '') {
+								$total_failures++;
+
+								break;
+							}
 
 							if (db_execute_prepared('UPDATE data_input_data
 								SET value = ?
@@ -375,7 +392,7 @@ function simple_checks() {
 		fwrite(STDERR, "ERROR: Unable to count incomplete data sources; stopping database repair.\n");
 		$total_failures++;
 
-		return;
+		return false;
 	}
 
 	if ($force) {
@@ -413,7 +430,7 @@ function simple_checks() {
 		fwrite(STDERR, "ERROR: Unable to count orphaned poller items; stopping database repair.\n");
 		$total_failures++;
 
-		return;
+		return false;
 	}
 
 	if ($force) {
@@ -824,7 +841,10 @@ function snmp_index_repairs() {
 		AND type_code in ('host_id', 'hostname')
 		AND value = ''");
 
-	if (cacti_sizeof($entries)) {
+	if ($entries === false) {
+		fwrite(STDERR, "ERROR: Unable to read Data Sources with missing host information.\n");
+		$total_failures++;
+	} elseif (cacti_sizeof($entries)) {
 		printf('NOTE: Found %s Data Sources with missing host information.' . PHP_EOL, cacti_sizeof($entries));
 
 		$fixes = 0;
@@ -848,6 +868,13 @@ function snmp_index_repairs() {
 								FROM host
 								WHERE id = ?',
 								array($local_data['host_id']));
+
+							/* a failed lookup or a missing device is not a repair */
+							if (!is_string($hostname) || $hostname === '') {
+								$total_failures++;
+
+								break;
+							}
 
 							if ($force) {
 								if (db_execute_prepared('UPDATE data_input_data
