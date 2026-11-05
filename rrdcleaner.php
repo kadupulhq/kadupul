@@ -95,12 +95,35 @@ function rrdclean_fill_table() {
  	/* install the rrdclean error handler */
  	set_error_handler('rrdclean_error_handler');
 
-	/* delete old file names table */
-	rrdclean_truncate_tables();
+	/**
+	 * The rescan empties the queued delete and archive actions before it
+	 * reads the RRA directory. Hold the storage lease across both, and leave
+	 * the queue as it is when the directory cannot be validated.
+	 */
+	$lock = true;
+	$busy = false;
 
-	get_files();
+	if (!read_config_option('storage_location') || (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true)) {
+		$lock = rrd_maintenance_acquire(false, false, null, $busy);
+	}
 
-	clearstatcache();
+	if ($lock === false) {
+		cacti_log('ERROR: RRD Cleaner rescan skipped; ' . ($busy ? 'RRD storage is busy' : 'the RRA directory could not be validated') . '. Queued actions were kept.', false, 'MAINT');
+		raise_message('rrd_cleanup_storage', $busy
+			? __('The RRDfile list was not rebuilt because RRD storage is busy. Queued actions were kept; retry the rescan.')
+			: __('The RRDfile list was not rebuilt because the RRA directory could not be validated. Queued actions were kept.'), MESSAGE_LEVEL_ERROR);
+	} else {
+		try {
+			/* delete old file names table */
+			rrdclean_truncate_tables();
+
+			get_files();
+
+			clearstatcache();
+		} finally {
+			rrd_maintenance_release($lock);
+		}
+	}
 
 	/* restore original error handler */
 	restore_error_handler();
@@ -228,7 +251,7 @@ function get_files() {
 			$files = explode("\r\n", $scan);
 			foreach($files as $file) {
 				list($pathname, $size, $mtime) = explode(',', $file);
-				$sql[] = "('" . str_replace($rra_path, '', $pathname) . "', " . $size . ", '" . date('Y-m-d H:i:s', $mtime) . "',0)";
+				$sql[] = "(" . db_qstr(str_replace($rra_path, '', $pathname)) . ", " . (int) $size . ", " . db_qstr(date('Y-m-d H:i:s', (int) $mtime)) . ",0)";
 				$size++;
 
 				if ($size == 400) {
@@ -250,7 +273,7 @@ function get_files() {
 
 		foreach ($iterator as $file) {
 			if (substr($file->getPathname(), -3) == 'rrd' && !($archive && strstr($file->getPathname(), $arcbase . '/') !== false)) {
-				$sql[] = "('" . str_replace($rra_path, '', $file->getPathname()) . "', " . $file->getSize() . ", '" . date('Y-m-d H:i:s', $file->getMTime()) . "',0)";
+				$sql[] = "(" . db_qstr(str_replace($rra_path, '', $file->getPathname())) . ", " . (int) $file->getSize() . ", " . db_qstr(date('Y-m-d H:i:s', $file->getMTime())) . ",0)";
 				$size++;
 
 				if ($size == 400) {
@@ -377,7 +400,7 @@ function list_rrd() {
 		$sql_order
 		$sql_limit");
 
-	$nav = html_nav_bar($config['url_path'] . 'rrdcleaner.php?filter'. get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('RRD Files'), 'page', 'main');
+	$nav = html_nav_bar($config['url_path'] . 'rrdcleaner.php?filter=' . rawurlencode(get_request_var('filter')), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('RRD Files'), 'page', 'main');
 
 	form_start('rrdcleaner.php');
 
