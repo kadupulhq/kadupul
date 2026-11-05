@@ -119,6 +119,19 @@ Before handing off or merging a GitHub change, verify its title, description,
 labels, issue links, head commit, checks, review state, and thread-resolution
 state using GitHub's records.
 
+### Choosing commits for a retrospective review
+
+`python3 tools/review_risk.py origin/main~100..origin/main` ranks a range of
+commits by signals that predicted defects in published studies:
+- relative churn and spread (Nagappan & Ball, ICSE 2005);
+- earlier fixes to the same files (Kim et al., ICSE 2007);
+- the author's ownership of those files and their minor contributors (Bird et al., FSE 2011);
+- production changes with no test change, and changes to trust-boundary code.
+
+Review the top of the list first, then a sample of the rest: a small change to
+an ordering or validation rule can score low and still be wrong. `--json` prints
+every signal.
+
 ## Documentation and security
 
 Verify documentation against the implementation and use material whose license
