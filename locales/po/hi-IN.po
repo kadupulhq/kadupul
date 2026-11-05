@@ -3429,7 +3429,7 @@ msgstr "रंगों को नियत करें"
 msgid "Data Source Item %s"
 msgstr "डेटा स्रोत आइटम %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:2964
 #: package_import.php:643
 msgid "New"
 msgstr "नया"
@@ -13633,7 +13633,7 @@ msgstr "घटनाक्रम"
 msgid "Send Report"
 msgstr "रिपोर्ट भेजो"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3049 user_admin.php:1776
 msgid "[new]"
 msgstr "[नया]"
 
@@ -13904,91 +13904,91 @@ msgstr "मौजूद नहीं"
 msgid "not writable"
 msgstr "लिखने योग्य"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2062 lib/import.php:2083
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "ग्राफ [साँचा: %s]"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2097 lib/import.php:2109
 #, php-format
 msgid "New Data Query: %s"
 msgstr "डेटा क्वेरी [ %s]"
 
-#: lib/import.php:2731
+#: lib/import.php:2746
 msgid "Unknown Field"
 msgstr "अज्ञात क़िस्म"
 
-#: lib/import.php:2947
+#: lib/import.php:2962
 msgid "Updated"
 msgstr "अपडेट करें"
 
-#: lib/import.php:2951
+#: lib/import.php:2966
 msgid "Damaged"
 msgstr "डेटा स्रोत, ग्राफ़"
 
-#: lib/import.php:2953 package_import.php:637
+#: lib/import.php:2968 package_import.php:637
 msgid "Unchanged"
 msgstr "[अपरिवर्तित]"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Preview Results"
 msgstr "आयात पूर्वावलोकन परिणाम"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Results"
 msgstr "आयात परिणाम"
 
-#: lib/import.php:2993
+#: lib/import.php:3008
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "यदि पैकेज आयात किया गया था तो Kadupul निम्नलिखित परिवर्तन करेगा"
 
-#: lib/import.php:2995
+#: lib/import.php:3010
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul ने पैकेज के लिए निम्नलिखित वस्तुओं का आयात किया है:"
 
-#: lib/import.php:2998
+#: lib/import.php:3013
 msgid "Package Files"
 msgstr "पैकेज फ़ाइलें"
 
-#: lib/import.php:3002
+#: lib/import.php:3017
 msgid "[preview] "
 msgstr "पूर्वावलोकन"
 
-#: lib/import.php:3007
+#: lib/import.php:3022
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "यदि टेम्पलेट आयात किया गया था तो Kadupul निम्नलिखित परिवर्तन करेगा:"
 
-#: lib/import.php:3009
+#: lib/import.php:3024
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ने खाके के लिए निम्नलिखित वस्तुओं का आयात किया है:"
 
-#: lib/import.php:3024
+#: lib/import.php:3039
 msgid "[success]"
 msgstr "सफ़ल!"
 
-#: lib/import.php:3026
+#: lib/import.php:3041
 msgid "[fail]"
 msgstr "असफल"
 
-#: lib/import.php:3028
+#: lib/import.php:3043
 msgid "[preview]"
 msgstr "पूर्वावलोकन"
 
-#: lib/import.php:3032
+#: lib/import.php:3047
 msgid "[updated]"
 msgstr "अंतिम अपडेट"
 
-#: lib/import.php:3036
+#: lib/import.php:3051
 msgid "[unchanged]"
 msgstr "[अपरिवर्तित]"
 
-#: lib/import.php:3072
+#: lib/import.php:3087
 msgid "Found Dependency:"
 msgstr "मिली निर्भरता:"
 
-#: lib/import.php:3074
+#: lib/import.php:3089
 msgid "Unmet Dependency:"
 msgstr "असममित निर्भरता:"
 

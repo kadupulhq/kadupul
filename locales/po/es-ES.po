@@ -3413,7 +3413,7 @@ msgstr "Datos personalizados"
 msgid "Data Source Item %s"
 msgstr "Item de Data Source %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:2964
 #: package_import.php:643
 msgid "New"
 msgstr "Nuevo"
@@ -13561,7 +13561,7 @@ msgstr "Eventos"
 msgid "Send Report"
 msgstr "Enviar Reporte"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3049 user_admin.php:1776
 msgid "[new]"
 msgstr "[nuevo]"
 
@@ -13832,89 +13832,89 @@ msgstr "no existen"
 msgid "not writable"
 msgstr "no escribible"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2062 lib/import.php:2083
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Gráfico [Plantilla: %s]"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2097 lib/import.php:2109
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Consulta de datos [%s]"
 
-#: lib/import.php:2731
+#: lib/import.php:2746
 msgid "Unknown Field"
 msgstr "Campo desconocido"
 
-#: lib/import.php:2947
+#: lib/import.php:2962
 msgid "Updated"
 msgstr "Actualizar"
 
-#: lib/import.php:2951
+#: lib/import.php:2966
 msgid "Damaged"
 msgstr "%d Grafico"
 
-#: lib/import.php:2953 package_import.php:637
+#: lib/import.php:2968 package_import.php:637
 msgid "Unchanged"
 msgstr "[no cargado]"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Preview Results"
 msgstr "Importar resultados de vista previa"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Results"
 msgstr "Importar resultados"
 
-#: lib/import.php:2993
+#: lib/import.php:3008
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul haría los siguientes cambios si el paquete fue importado:"
 
-#: lib/import.php:2995
+#: lib/import.php:3010
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul ha importado los siguientes items del paquete:"
 
-#: lib/import.php:2998
+#: lib/import.php:3013
 msgid "Package Files"
 msgstr "Archivos del paquete"
 
-#: lib/import.php:3002
+#: lib/import.php:3017
 msgid "[preview] "
 msgstr "[vista previa] "
 
-#: lib/import.php:3007
+#: lib/import.php:3022
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul haría los siguientes cambios si la Plantilla fue importada:"
 
-#: lib/import.php:3009
+#: lib/import.php:3024
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ha importado los siguientes items para la Plantilla:"
 
-#: lib/import.php:3024
+#: lib/import.php:3039
 msgid "[success]"
 msgstr "[exitoso]"
 
-#: lib/import.php:3026
+#: lib/import.php:3041
 msgid "[fail]"
 msgstr "[fallo]"
 
-#: lib/import.php:3028
+#: lib/import.php:3043
 msgid "[preview]"
 msgstr "[previo]"
 
-#: lib/import.php:3032
+#: lib/import.php:3047
 msgid "[updated]"
 msgstr "[actualizado]"
 
-#: lib/import.php:3036
+#: lib/import.php:3051
 msgid "[unchanged]"
 msgstr "[no cargado]"
 
-#: lib/import.php:3072
+#: lib/import.php:3087
 msgid "Found Dependency:"
 msgstr "Dependencia encontrada:"
 
-#: lib/import.php:3074
+#: lib/import.php:3089
 msgid "Unmet Dependency:"
 msgstr "Dependencia no cumplida:"
 
