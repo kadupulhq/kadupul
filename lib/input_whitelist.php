@@ -71,6 +71,7 @@ function data_input_whitelist_update(string $configuredPath, callable $readRecor
             usleep(10000);
         }
         $remaining();
+        data_input_whitelist_remove_stale($directory, time() - 3600);
         // Query only after ownership: a waiting full update must not publish a
         // database snapshot older than another successful whitelist update.
         [$records, $idHash] = $readRecords();
@@ -174,4 +175,26 @@ function data_input_whitelist_update(string $configuredPath, callable $readRecor
         }
         // Keep the stable sidecar inode: unlinking it would split future waiters.
     }
+}
+
+/**
+ * Remove replacements that a killed update left beside the whitelist (#1357).
+ *
+ * A replacement exists only while its writer holds the whitelist lock, and an
+ * update is bounded by its deadline, so one older than the cutoff that is seen
+ * while holding the lock belongs to a run that died before its rename or cleanup.
+ * Only regular files with the exact replacement name are removed.
+ */
+function data_input_whitelist_remove_stale(string $directory, int $cutoff): int
+{
+    $removed = 0;
+    foreach (glob($directory . DIRECTORY_SEPARATOR . '.whitelist-*', GLOB_NOSORT) ?: [] as $candidate) {
+        $entry = @lstat($candidate);
+        if (preg_match('/^\.whitelist-[0-9a-f]{32}\z/', basename($candidate)) === 1 && $entry !== false
+            && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
+            $removed++;
+        }
+    }
+
+    return $removed;
 }
