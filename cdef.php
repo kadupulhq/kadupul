@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -228,8 +229,24 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM cdef WHERE ' . array_to_sql_or($selected_items, 'id'));
-				db_execute('DELETE FROM cdef_items WHERE ' . array_to_sql_or($selected_items, 'cdef_id'));
+				$selected_items = array_map('intval', $selected_items);
+				$in_use         = false;
+
+				foreach ($selected_items as $cdef_id) {
+					if (cdef_is_in_use($cdef_id, $selected_items)) {
+						$in_use = true;
+
+						break;
+					}
+				}
+
+				if ($in_use) {
+					raise_message('cdef_in_use', __('One or more CDEFs are in use and cannot be deleted.'), MESSAGE_LEVEL_ERROR);
+				} else {
+					$placeholders = implode(', ', array_fill(0, cacti_count($selected_items), '?'));
+					db_execute_prepared('DELETE FROM cdef WHERE id IN (' . $placeholders . ')', $selected_items);
+					db_execute_prepared('DELETE FROM cdef_items WHERE cdef_id IN (' . $placeholders . ')', $selected_items);
+				}
 			} elseif (get_nfilter_request_var('drp_action') == '2') { /* duplicate */
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
 					duplicate_cdef($selected_items[$i], get_nfilter_request_var('title_format'));
