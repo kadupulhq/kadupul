@@ -4586,7 +4586,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 				if (CACTI_CLI) {
 					print $line . PHP_EOL;
 				} else {
-					print '<tr><td>' . $line . '</td></tr>';
+					print '<tr><td>' . html_escape($line) . '</td></tr>';
 				}
 			} else {
 				if ($key === 'tune') {
@@ -4629,7 +4629,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 				if (CACTI_CLI) {
 					print $rrd_path . ' tune ' . $line . PHP_EOL;
 				} else {
-					print '<tr><td>' . $rrd_path . ' tune ' . $line . '</td></tr>';
+					print '<tr><td>' . html_escape($rrd_path . ' tune ' . $line) . '</td></tr>';
 				}
 			} else {
 				if (!cacti_has_control_chars($line)) {
@@ -4647,8 +4647,8 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 					print read_config_option('path_rrdtool') . ' resize ' . $line . PHP_EOL;
 					print __('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file) . PHP_EOL;
 				} else {
-					print '<tr><td>' . read_config_option('path_rrdtool') . ' resize ' . $line . '</td></tr>';
-					print '<tr><td>' . __('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file) . '</td></tr>';
+					print '<tr><td>' . html_escape(read_config_option('path_rrdtool') . ' resize ' . $line) . '</td></tr>';
+					print '<tr><td>' . html_escape(__('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file)) . '</td></tr>';
 				}
 			} else {
 				if (!cacti_has_control_chars($line)) {
