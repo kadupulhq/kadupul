@@ -22,6 +22,8 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
+      <file>./Unit/ImportDataSourceItemValidationTest.php</file>
+      <file>./Unit/ImportDataSourceItemOverrideTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
