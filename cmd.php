@@ -668,7 +668,8 @@ function open_snmp_session($host_id, &$item)
         }
     }
 
-    return $sessions[$host_id . '_' . $item['snmp_version'] . '_' . $item['snmp_port']];
+    /* a host already marked down has no session */
+    return $sessions[$host_id . '_' . $item['snmp_version'] . '_' . $item['snmp_port']] ?? false;
 }
 
 function snmp_mark_host_down($host_id, &$item)

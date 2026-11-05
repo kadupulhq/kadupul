@@ -3,8 +3,8 @@
     "name": "set_page_refresh",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5441,
-        "end_line": 5462,
+        "start_line": 5442,
+        "end_line": 5463,
         "line_count": 22,
         "signature": {
             "parameters": [
