@@ -423,6 +423,7 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
     if (file_exists($rrd_file) && $metadata === false) {
         return false;
     }
+    rrd_maintenance_remove_stale_restores($directory, time() - 86400);
     $temporary = @tempnam($directory, '.rrd-restore-');
     if ($temporary === false) {
         cacti_log('ERROR: RRD restore could not create a temporary file; recovery XML retained at ' . $xml_file, false, 'UTIL');
@@ -469,6 +470,33 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
     }
 }
 
+
+/**
+ * Remove restore candidates that a killed restore left in the storage directory (#1357).
+ *
+ * tempnam() names candidates .rrd-restore-XXXXXX in the RRD's directory, and the
+ * finally block that removes them does not run when the process is killed. Restores
+ * of other files in the same directory may be running, so only candidates older than
+ * the cutoff are removed, and only regular files with that name.
+ *
+ * @param string $directory Trusted storage directory the restore is about to use.
+ * @param int    $cutoff    Modification time before which a candidate is abandoned.
+ *
+ * @return int Number of candidates removed.
+ */
+function rrd_maintenance_remove_stale_restores($directory, $cutoff)
+{
+    $removed = 0;
+    foreach (glob($directory . '/.rrd-restore-*', GLOB_NOSORT) ?: array() as $candidate) {
+        $entry = @lstat($candidate);
+        if (preg_match('/^\.rrd-restore-[A-Za-z0-9]+\z/', basename($candidate)) === 1 && $entry !== false
+            && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
+            $removed++;
+        }
+    }
+
+    return $removed;
+}
 
 /** Run a bounded direct-argv command and stream or capture its output.
  *
