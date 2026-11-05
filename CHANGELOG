@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Generate the CSP nonce when the security headers are sent, before any page output; when no secure random source works the request ends with an error page and a log entry instead of a page that stops partway through (#342)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
