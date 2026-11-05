@@ -41,7 +41,7 @@ function db_fetch_assoc_prepared($sql, $parameters = array()) {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
         return array(array('keyname' => '1_in', 'data_source_name' => 'traffic_in'));
     }
-    if (strpos($sql, 'data_template_rrd') !== false) { return array(); }
+    if (strpos($sql, 'data_template_rrd') !== false) { return strpos($sql, 'dif.data_name') !== false ? $GLOBALS['unmapped_fields'] : array(); }
     $statement = $GLOBALS['unmapped_db']->prepare($sql);
     $statement->execute($parameters);
     return $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -78,6 +78,7 @@ beforeEach(function () {
     $db->exec('CREATE TABLE data_local(id INTEGER, data_template_id INTEGER)');
     $GLOBALS['unmapped_db'] = $db;
     $GLOBALS['unmapped_logs'] = array(); $GLOBALS['unmapped_written'] = array();
+    $GLOBALS['unmapped_fields'] = array();
 });
 
 afterEach(function () {
@@ -109,3 +110,20 @@ test('expiry does not count a stale field name toward a complete group', functio
     expect(poller_expire_incomplete_rows(86400, $failed))->toBe(2)->and($failed)->toBeFalse()
         ->and($db->query('SELECT output FROM poller_output ORDER BY output')->fetchAll(\PDO::FETCH_COLUMN))->toBe(array('3', '4'));
 });
+
+test('a malformed MULTI sample is retained until expiry instead of being written as all unknown', function ($output, $expired) {
+    $db = $GLOBALS['unmapped_db'];
+    // The data source has a mapped field, so the old fallback would have written traffic_in=U.
+    $GLOBALS['unmapped_fields'] = array(array('data_source_name' => 'traffic_in', 'data_name' => 'in'));
+    $db->exec("INSERT INTO data_local VALUES (1,1)");
+    $db->exec("INSERT INTO poller_item VALUES (1,'',1,'one.rrd')");
+    $bad = $expired ? '2001-01-02' : gmdate('Y-m-d H:i:s', time() - 60);
+    $db->exec("INSERT INTO poller_output VALUES (1,'','2001-01-01','in:5')");
+    $insert = $db->prepare("INSERT INTO poller_output VALUES (1,'',?,?)");
+    $insert->execute(array($bad, $output));
+    $pipe = true;
+    process_poller_output($pipe, 0, $deferred, $consumed);
+    expect($deferred)->toBeFalse()
+        ->and($GLOBALS['unmapped_written'])->toBe(array(array('one.rrd', '2001-01-01', array('traffic_in' => '5'))))
+        ->and($db->query('SELECT output FROM poller_output')->fetchAll(\PDO::FETCH_COLUMN))->toBe($expired ? array() : array($output));
+})->with(array('empty' => '', 'diagnostic' => 'failed', 'unknown scalar' => 'U'))->with(array('recent' => false, 'expired' => true));

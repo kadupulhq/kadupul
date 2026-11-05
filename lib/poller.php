@@ -589,12 +589,18 @@ function update_reindex_cache($host_id, $data_query_id) {
 }
 
 function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$recache_stack) {
+	$failed = false;
+
 	/* set all fields present value to 0, to mark the outliers when we are all done */
-	db_execute_prepared('UPDATE poller_reindex
+	if (db_execute_prepared('UPDATE poller_reindex
 		SET present = 0
 		WHERE host_id = ?
 		AND data_query_id = ?',
-		array($host_id, $data_query_id));
+		array($host_id, $data_query_id)) === false) {
+		cacti_log('ERROR: Unable to mark the poller reindex cache for replacement; the previous rows were kept.', false, 'POLLER');
+
+		return false;
+	}
 
 	/* setup the database call */
 	$sql_prefix   = 'INSERT INTO poller_reindex (host_id, data_query_id, action, op, assert_value, arg1, present) VALUES';
@@ -621,7 +627,11 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 		$buf_len += strlen($record);
 
 		if (($overhead + $buf_len) > ($max_packet - 1024)) {
-			db_execute($sql_prefix . $buffer . $sql_suffix);
+			if (db_execute($sql_prefix . $buffer . $sql_suffix) === false) {
+				$failed = true;
+
+				break;
+			}
 
 			$buffer    = '';
 			$buf_len   = 0;
@@ -631,8 +641,23 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 		}
 	}
 
-	if ($buf_count > 0) {
-		db_execute($sql_prefix . $buffer . $sql_suffix);
+	if ($buf_count > 0 && !$failed) {
+		if (db_execute($sql_prefix . $buffer . $sql_suffix) === false) {
+			$failed = true;
+		}
+	}
+
+	/* a failed replacement must leave the previous rows in place */
+	if ($failed) {
+		cacti_log('ERROR: Unable to store the replacement poller reindex rows; the previous rows were kept.', false, 'POLLER');
+
+		db_execute_prepared('UPDATE poller_reindex
+			SET present = 1
+			WHERE host_id = ?
+			AND data_query_id = ?
+			AND present = 0', array($host_id, $data_query_id));
+
+		return false;
 	}
 
 	/* remove stale records FROM the poller reindex */
@@ -642,6 +667,8 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 		AND present = 0', array($host_id, $data_query_id));
 
 	poller_push_reindex_only_data_to_main($host_id, $data_query_id);
+
+	return true;
 }
 
 /** Delete only the selected source samples, preserving concurrent arrivals. */
@@ -975,7 +1002,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 						}
 					}
 				}
-			} else {
+			} elseif ($rrd_name != '') {
 				if ($data_template_id > 0) {
 					$unused_data_source_names = array_rekey(
 						db_fetch_assoc_prepared('SELECT DISTINCT dtr.data_source_name, dtr.data_source_name
@@ -2058,11 +2085,12 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 				replicate_log('ERROR: Unable to update local poller item timestamps.');
 			}
 
-			if (replicate_out_execute("DELETE FROM poller_item
+			if (db_execute_prepared('DELETE FROM poller_item
 				WHERE last_updated < ?
-				AND last_updated > '0000-00-00'
-				AND last_updated NOT NULL",
-				false, $rcnn_id) === false) {
+				AND last_updated > 0
+				AND last_updated IS NOT NULL',
+				array(date('Y-m-d H:i:s', $time)), true, $rcnn_id) === false) {
+				$replicate_out_success = false;
 				replicate_log('ERROR: Unable to remove stale remote poller items.');
 			}
 		}
@@ -2157,7 +2185,13 @@ function replicate_out($remote_poller_id = 1, $class = 'all') {
 		}
 	}
 
-	if ($class != 'plugins' && $config['is_web']) {
+	if (!$replicate_out_success) {
+		replicate_log('ERROR: Synchronization of Poller ' . $remote_poller_id . ' failed.');
+
+		if ($class != 'plugins' && $config['is_web']) {
+			raise_message('poller_sync_failed', __('Synchronization failed. See the log for details.'), MESSAGE_LEVEL_ERROR);
+		}
+	} elseif ($class != 'plugins' && $config['is_web']) {
 		replicate_log('Synchronization of Poller ' . $remote_poller_id . ' completed', POLLER_VERBOSITY_LOW);
 		raise_message('poller_sync');
 	}

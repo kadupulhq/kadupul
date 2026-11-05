@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -104,4 +105,20 @@ test('recovery stops deleting immediately after a failed chunk', function () {
 
 	expect(boostRecoveryTestDelete(boostRecoveryTestRows(1200), 'local'))->toBeFalse()
 		->and($GLOBALS['boost_recovery_test_state']['calls'])->toHaveCount(2);
+});
+
+test('recovery acknowledges rows in the offline queue they were read from', function () {
+	expect(boostRecoveryTestDelete(boostRecoveryTestRows(1), 'local', 'poller_output'))->toBeTrue()
+		->and($GLOBALS['boost_recovery_test_state']['calls'])->toHaveCount(1)
+		->and($GLOBALS['boost_recovery_test_state']['calls'][0]['sql'])->toStartWith('DELETE FROM poller_output WHERE ');
+
+	boostRecoveryTestReset();
+
+	expect(boostRecoveryTestDelete(boostRecoveryTestRows(1), 'local'))->toBeTrue()
+		->and($GLOBALS['boost_recovery_test_state']['calls'][0]['sql'])->toStartWith('DELETE FROM poller_output_boost WHERE ');
+});
+
+test('recovery refuses to delete from a table other than the two local queues', function () {
+	expect(boostRecoveryTestDelete(boostRecoveryTestRows(1), 'local', 'settings'))->toBeFalse()
+		->and($GLOBALS['boost_recovery_test_state']['calls'])->toBe(array());
 });
