@@ -1,0 +1,128 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Run the legacy Pest suite several times on the same commit, in file order
+# and in seeded random order, and list tests whose result changes between
+# runs (Memon et al., "Taming Google-Scale Continuous Testing", ICSE-SEIP
+# 2017). Not a pull-request gate: a red run here means a flaky or broken test
+# to fix, not a blocked merge.
+name: Flaky tests
+
+on:
+  schedule:
+    - cron: '17 6 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flaky-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run:
+    name: Legacy suite (${{ matrix.label }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: file-order-1
+            seed: ''
+          - label: file-order-2
+            seed: ''
+          - label: random-1
+            seed: 1
+          - label: random-2
+            seed: 2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
+        with:
+          php-version: '8.4'
+          extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
+          ini-values: opcache.jit=off, opcache.jit_buffer_size=0
+          coverage: none
+          tools: composer
+
+      - name: Cache Composer downloads
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
+
+      - name: Install dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-interaction
+          composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
+
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
+        with:
+          node-version: '22.22.2'
+          cache: npm
+
+      - name: Build browser assets
+        run: npm ci --ignore-scripts && npm run build && php bin/console asset-map:compile
+
+      - name: Install RRDtool
+        run: sudo apt-get update && sudo apt-get install -y rrdtool
+
+      # Test failures are the data this workflow collects, so they do not stop
+      # the run; a missing report does, in the next step.
+      - name: Run the legacy suite
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          # The run number varies the random order between scheduled runs; the label keeps the seed visible.
+          ORDER_SEED: ${{ matrix.seed != '' && format('{0}{1}', github.run_number, matrix.seed) || '' }}
+        run: |
+          set -uo pipefail
+          arguments=(-d error_reporting=24575 vendor/bin/pest --test-directory=. --fail-on-empty-test-suite
+                     --configuration=phpunit-spikekill.xml --colors=never --log-junit="$RUNNER_TEMP/junit.xml")
+          if [ -n "$ORDER_SEED" ]; then
+            arguments+=(--order-by=random --random-order-seed="$ORDER_SEED")
+            echo "Random order seed: $ORDER_SEED"
+          fi
+          php "${arguments[@]}"
+          echo "Pest exited $?"
+
+      - name: Require the run's report
+        run: test -s "$RUNNER_TEMP/junit.xml"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: junit-${{ matrix.label }}
+          path: ${{ runner.temp }}/junit.xml
+          if-no-files-found: error
+
+  report:
+    name: Compare runs
+    needs: run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: tests/tools
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
+        with:
+          install_args: python@3.12.12
+      - name: Install report dependencies
+        run: mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: junit-*
+          path: ${{ runner.temp }}/reports
+      - name: List flaky and consistently failing tests
+        run: |
+          set -euo pipefail
+          labels=(file-order-1 file-order-2 random-1 random-2)
+          reports=()
+          for label in "${labels[@]}"; do reports+=("$RUNNER_TEMP/reports/junit-$label/junit.xml"); done
+          status=0
+          mise exec python@3.12.12 -- python tests/tools/flaky_report.py --labels "$(IFS=,; echo "${labels[*]}")" "${reports[@]}" \
+            | tee -a "$GITHUB_STEP_SUMMARY" || status=$?
+          exit "$status"

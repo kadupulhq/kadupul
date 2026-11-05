@@ -70,6 +70,20 @@ an unexpected series and verifies the selected interpreter through mise before
 publishing `KADUPUL_CI_PHP_VERSION` to later steps. These jobs pass that version
 to their consumers; the hook tests separately install and assert PHP 8.4.25.
 
+## Flaky tests and quick local selection
+
+`python3 tests/tools/select_tests.py origin/main` lists the registered legacy tests that
+name a file your branch changes, with a Pest command to run just those. It is a
+shortcut for local feedback; CI still runs every registered test.
+
+The weekly **Flaky tests** workflow (also runnable from the Actions tab) runs the legacy
+suite four times on one commit: twice in file order and twice in seeded random order.
+`tests/tools/flaky_report.py` compares the runs. A test that passes in one run and fails
+in another is flaky; a test that fails in every run is broken. Either makes the workflow
+red without blocking pull requests. The random seeds are printed in the run log, so
+`vendor/bin/pest ... --order-by=random --random-order-seed=<seed>` reproduces an
+order-dependent failure.
+
 ## Pest profiling and isolated parallel feedback
 
 Install the locked application and test dependencies before running these tools.
