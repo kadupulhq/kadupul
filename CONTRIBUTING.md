@@ -102,7 +102,8 @@ are not mutated: the Pest suite evaluates extracted source through
 `tests/Helpers/PhpSource.php`, so its coverage cannot be attributed to them.
 
 To run it locally, install both Composer projects and the built assets as for
-`composer test`, load the pcov or Xdebug coverage driver, then compare with the
+`composer test`, the Python XML parser from `tests/tools/requirements.txt` (see
+above), and load the pcov or Xdebug coverage driver. Then compare with the
 branch the change targets:
 
 ```sh

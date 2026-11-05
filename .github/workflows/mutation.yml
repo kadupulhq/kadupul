@@ -18,6 +18,7 @@ on:
       - 'composer.lock'
       - 'tests/tools/mutation_changed_lines.py'
       - 'tests/tools/test_mutation_changed_lines.py'
+      - 'tests/tools/requirements.txt'
       - '.github/workflows/mutation.yml'
   workflow_dispatch:
     inputs:
@@ -66,6 +67,8 @@ jobs:
       - name: Register and verify actual PHP patch version
         run: bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/mutation-php" 8.4
 
+      - name: Install the wrapper's hash-locked XML parser
+        run: mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
       - name: Verify the mutation wrapper's outcome classification
         run: mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
 

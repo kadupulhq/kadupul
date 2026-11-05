@@ -27,7 +27,9 @@ import re
 import shutil
 import subprocess
 import sys
-from xml.etree import ElementTree
+
+import defusedxml.ElementTree as ElementTree
+from defusedxml.common import DefusedXmlException
 
 CONFIG = "infection.json5"
 PHPUNIT_CONFIG = "phpunit-symfony.xml"
@@ -41,7 +43,6 @@ STAT_KEYS = (
     "skippedCount", "ignoredCount", "timeOutCount",
 )
 RESULT_KEYS = ("escaped", "uncovered", "timeouted", "errored", "syntaxErrors")
-ElementTree.register_namespace("xsi", "http://www.w3.org/2001/XMLSchema-instance")
 HUNK = re.compile(r"^@@ -\d+(?:,\d+)? \+\d+(?:,(\d+))? @@")
 
 
@@ -106,7 +107,7 @@ def write_phpunit_config(root, directory):
     source = root / PHPUNIT_CONFIG
     try:
         tree = ElementTree.parse(source)
-    except (OSError, ElementTree.ParseError) as error:
+    except (OSError, ElementTree.ParseError, DefusedXmlException) as error:
         raise ToolFailure(f"cannot read {PHPUNIT_CONFIG}: {error}") from error
     configuration = tree.getroot()
     if configuration.tag != "phpunit":
@@ -131,6 +132,8 @@ def write_phpunit_config(root, directory):
     # the write to its target.
     if target.is_symlink() or target.exists():
         target.unlink()
+    # ElementTree serializes the schema-instance namespace with its standard
+    # xsi prefix, which Infection reads to detect the PHPUnit schema version.
     with open(target, "xb") as handle:
         tree.write(handle, encoding="UTF-8", xml_declaration=True)
 
@@ -139,7 +142,7 @@ def executed_tests(path):
     """Count the tests the initial run executed, from its JUnit log."""
     try:
         suites = ElementTree.parse(path).getroot()
-    except (OSError, ElementTree.ParseError) as error:
+    except (OSError, ElementTree.ParseError, DefusedXmlException) as error:
         raise ToolFailure(f"the initial test run left no readable JUnit log at {path}: {error}") from error
     try:
         return sum(int(suite.get("tests", "0")) for suite in suites.findall("testsuite"))

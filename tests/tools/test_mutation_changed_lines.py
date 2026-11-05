@@ -15,7 +15,8 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from xml.etree import ElementTree
+
+import defusedxml.ElementTree as ElementTree
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 WRAPPER = REPOSITORY / "tests/tools/mutation_changed_lines.py"
@@ -196,6 +197,8 @@ class MutationChangedLinesTest(unittest.TestCase):
         self.assertEqual(str(self.root / "include/vendor/autoload.php"), configuration.get("bootstrap"))
         self.assertEqual("default", configuration.get("executionOrder"))
         self.assertEqual("true", configuration.get("failOnWarning"))
+        self.assertIn(b'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+                      (self.root / "var/infection/phpunit/phpunit.xml").read_bytes())
         self.assertIn(str(self.root / "tests/Symfony"),
                       [element.text for element in configuration.iter("directory")])
         for element in configuration.iter():

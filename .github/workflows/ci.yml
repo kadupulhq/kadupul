@@ -75,7 +75,9 @@ jobs:
       - name: Verify test runner dispatch and missing-suite failures
         run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
       - name: Verify mutation wrapper outcome classification
-        run: mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
+        run: |
+          mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
+          mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
       - name: Verify installer usability evidence remains separate from release acceptance
         run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
       - name: Verify catalog rejection and historical compatibility boundaries
