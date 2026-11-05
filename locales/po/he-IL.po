@@ -621,7 +621,7 @@ msgstr "הכל"
 #: lib/html_reports.php:1163 lib/html_reports.php:1167
 #: lib/html_reports.php:1175 lib/html_reports.php:1186
 #: lib/html_reports.php:1206 lib/html_reports.php:1462
-#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:744
+#: lib/html_reports.php:1467 lib/html_reports.php:1472 package_import.php:743
 #: settings.php:598 settings.php:620 settings.php:651
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php:66
 #: templates_import.php:299 templates_import.php:331 utilities.php:2099
@@ -1124,7 +1124,7 @@ msgstr "זמן פעילות השרת"
 msgid "SNMP"
 msgstr "Simple Network Management Protocol"
 
-#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:600 package_import.php:685 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
+#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:599 package_import.php:684 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
 msgid "Status"
 msgstr "סטטוס"
 
@@ -2141,7 +2141,7 @@ msgid "Item"
 msgstr "פריט"
 
 #: automation_snmp.php:541 include/auth.php:341 include/global_settings.php:772
-#: package_import.php:562 plugins.php:642
+#: package_import.php:561 plugins.php:642
 #: templates/platform/permission_denied.html.twig
 msgid "Version"
 msgstr "גרסה"
@@ -2580,7 +2580,7 @@ msgstr "מזהה פנימי של מקור הנתונים."
 msgid "The Status of the Data Source Debug Check."
 msgstr "מצב בדיקת מקור באגים מקור הנתונים."
 
-#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594 package_import.php:654
+#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594 package_import.php:653
 msgid "Writable"
 msgstr "ניתן לכתיבה"
 
@@ -3460,8 +3460,8 @@ msgstr "צבעים"
 msgid "Data Source Item %s"
 msgstr "פריט מקור נתונים %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
-#: package_import.php:656
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:3002
+#: package_import.php:655
 msgid "New"
 msgstr "חדש"
 
@@ -3541,7 +3541,7 @@ msgstr "אם מקור נתונים זה אינו נמצא בשימוש זמן ר
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "בין אם ייאספו נתונים עבור מקור נתונים זה. נשלטת ברמת רמת הנתונים."
 
-#: data_sources.php:2003 package_import.php:682 templates_import.php:243
+#: data_sources.php:2003 package_import.php:681 templates_import.php:243
 #: user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "שם התבנית"
@@ -6052,7 +6052,7 @@ msgid "Data Input Field"
 msgstr "שדה קלט נתונים"
 
 #: include/global_arrays.php:1369 include/global_form.php:579
-#: include/global_form.php:1679 package_import.php:922
+#: include/global_form.php:1679 package_import.php:921
 msgid "Data Source Profile"
 msgstr "פרופיל מקור נתונים"
 
@@ -7455,7 +7455,7 @@ msgid "The script/source used to gather data for this data source."
 msgstr "הסקריפט / המקור המשמש לאיסוף נתונים עבור מקור נתונים זה."
 
 #: include/global_form.php:581 include/global_form.php:1681
-#: package_import.php:924
+#: package_import.php:923
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "בחר את פרופיל מקור הנתונים. פרופיל Data Source קובע את משך הסקרים, את צבירת הנתונים ואת מדיניות השמירה עבור מקורות הנתונים שהתקבלו."
 
@@ -8202,27 +8202,27 @@ msgstr "ייבוא תבנית מקובץ מקומי"
 msgid "If the XML file containing template data is located on your local machine, select it here."
 msgstr "אם קובץ XML המכיל נתוני תבנית נמצא במחשב המקומי שלך, בחר אותו כאן."
 
-#: include/global_form.php:1674 package_import.php:917
+#: include/global_form.php:1674 package_import.php:916
 msgid "Data Source Overrides"
 msgstr "פרופילי מקור נתונים"
 
-#: include/global_form.php:1683 package_import.php:926
+#: include/global_form.php:1683 package_import.php:925
 msgid "Create New from Template"
 msgstr "צור תבנית חדשה מתבנית"
 
-#: include/global_form.php:1688 package_import.php:931
+#: include/global_form.php:1688 package_import.php:930
 msgid "Graph/Data Template Overrides"
 msgstr "אפשרויות תבנית גרף"
 
-#: include/global_form.php:1693 package_import.php:936
+#: include/global_form.php:1693 package_import.php:935
 msgid "Remove Orphaned Graph Items"
 msgstr "הסר פריטים בגרף יתום"
 
-#: include/global_form.php:1695 package_import.php:938
+#: include/global_form.php:1695 package_import.php:937
 msgid "If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template."
 msgstr "אם מסומנת, Kadupul תמחק את כל פריטי הגרפים הן מתבנית הגרף והן מהגרפים המשויכים שאינם נכללים בתבנית הגרף המיובאת."
 
-#: include/global_form.php:1700 package_import.php:943
+#: include/global_form.php:1700 package_import.php:942
 msgid "Replace Data Query Suggested Value Patterns"
 msgstr "החלף תבניות ערך מוצעות לשאילתת נתונים"
 
@@ -8231,29 +8231,29 @@ msgid "Replace Data Source and Graph Template Suggested Value Records for Data Q
 msgstr "החלף מקור נתונים ורשומות ערך מוצעות לתבנית גרף עבור שאילתות נתונים.  גרפים ומקורות נתונים יקבלו שמות חדשים לאחר אינדקס מחדש של שאילתת נתונים או על ידי שימוש בתהליך החלפה מאולצת של ערכים מוצעים."
 
 #: include/global_form.php:1707 include/global_settings.php:673
-#: package_import.php:950
+#: package_import.php:949
 msgid "Graph Template Image Format"
 msgstr "תבנית תבנית תבנית גרף"
 
-#: include/global_form.php:1708 package_import.php:951
+#: include/global_form.php:1708 package_import.php:950
 msgid "The Image Format to be used when importing or updating Graph Templates."
 msgstr "ברירת המחדל של תבנית תמונה שתשמש עבור כל תבניות הגרפים החדשות."
 
 #: include/global_form.php:1714 include/global_settings.php:680
-#: package_import.php:958
+#: package_import.php:957
 msgid "Graph Template Height"
 msgstr "גובה תבנית גרף"
 
-#: include/global_form.php:1715 package_import.php:959
+#: include/global_form.php:1715 package_import.php:958
 msgid "The Height to be used when importing or updating Graph Templates."
 msgstr "ברירת המחדל של רוחב התרשים לשימוש בכל תבניות הגרפים החדשות."
 
 #: include/global_form.php:1722 include/global_settings.php:688
-#: package_import.php:967
+#: package_import.php:966
 msgid "Graph Template Width"
 msgstr "רוחב תבנית גרף"
 
-#: include/global_form.php:1723 package_import.php:968
+#: include/global_form.php:1723 package_import.php:967
 msgid "The Width to be used when importing or updating Graph Templates."
 msgstr "ברירת המחדל של רוחב התרשים לשימוש בכל תבניות הגרפים החדשות."
 
@@ -10454,7 +10454,7 @@ msgstr "הגדרות LDAP CN"
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
 msgstr "שדה שיחליף את השם המלא בעת יצירת משתמש חדש, שנלקח מ- LDAP. (ב- windows: displayname)"
 
-#: include/global_settings.php:1893 package_import.php:556
+#: include/global_settings.php:1893 package_import.php:555
 msgid "Email"
 msgstr "אימייל"
 
@@ -11474,9 +11474,9 @@ msgid "Recovering"
 msgstr "שחזור"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
+#: lib/html_utility.php:1362 lib/import.php:463 lib/plugins.php:1393
 #: lib/plugins.php:1394 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
-#: package_import.php:580 package_import.php:658 utilities.php:211
+#: package_import.php:579 package_import.php:657 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
 msgstr "לא ידוע"
@@ -13633,7 +13633,7 @@ msgstr "אירועים"
 msgid "Send Report"
 msgstr "שלח דוח"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3087 user_admin.php:1776
 msgid "[new]"
 msgstr "[חדש]"
 
@@ -13880,113 +13880,113 @@ msgstr "שגיאת אימות"
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
 msgstr ""
 
-#: lib/import.php:713
+#: lib/import.php:766
 msgid "kept"
 msgstr ""
 
-#: lib/import.php:730 lib/import.php:749
+#: lib/import.php:783 lib/import.php:802
 msgid "written"
 msgstr "כתוב"
 
-#: lib/import.php:732
+#: lib/import.php:785
 msgid "not written"
 msgstr ""
 
-#: lib/import.php:735
+#: lib/import.php:788
 msgid "could not open"
 msgstr "לא יכול להיפתח"
 
-#: lib/import.php:741
+#: lib/import.php:794
 msgid "not exists"
 msgstr "לא קיים"
 
-#: lib/import.php:744
+#: lib/import.php:797
 msgid "not writable"
 msgstr "בלתי ניתן לכתיבה"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2100 lib/import.php:2121
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "גרף [תבנית: %s]"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2135 lib/import.php:2147
 #, php-format
 msgid "New Data Query: %s"
 msgstr "שאילתת נתונים [ %s]"
 
-#: lib/import.php:2731
+#: lib/import.php:2784
 msgid "Unknown Field"
 msgstr "שדה לא ידוע"
 
-#: lib/import.php:2947
+#: lib/import.php:3000
 msgid "Updated"
 msgstr "עדכון"
 
-#: lib/import.php:2951
+#: lib/import.php:3004
 msgid "Damaged"
 msgstr "מקור נתונים, גרף"
 
-#: lib/import.php:2953 package_import.php:650
+#: lib/import.php:3006 package_import.php:649
 msgid "Unchanged"
 msgstr "[ללא שינוי]"
 
-#: lib/import.php:2989
+#: lib/import.php:3042
 msgid "Import Preview Results"
 msgstr "תוצאות תצוגה מקדימה של ייבוא"
 
-#: lib/import.php:2989
+#: lib/import.php:3042
 msgid "Import Results"
 msgstr "תוצאות ייבוא"
 
-#: lib/import.php:2993
+#: lib/import.php:3046
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul תבצע את השינויים הבאים אם החבילה מיובאת:"
 
-#: lib/import.php:2995
+#: lib/import.php:3048
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul ייבאה את הפריטים הבאים עבור החבילה:"
 
-#: lib/import.php:2998
+#: lib/import.php:3051
 msgid "Package Files"
 msgstr "חבילת קבצים"
 
-#: lib/import.php:3002
+#: lib/import.php:3055
 msgid "[preview] "
 msgstr "תצוגה מקדימה"
 
-#: lib/import.php:3007
+#: lib/import.php:3060
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul תבצע את השינויים הבאים אם התבנית מיובאת:"
 
-#: lib/import.php:3009
+#: lib/import.php:3062
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul ייבאה את הפריטים הבאים עבור התבנית:"
 
-#: lib/import.php:3024
+#: lib/import.php:3077
 msgid "[success]"
 msgstr "הצלחה!"
 
-#: lib/import.php:3026
+#: lib/import.php:3079
 msgid "[fail]"
 msgstr "נכשל"
 
-#: lib/import.php:3028
+#: lib/import.php:3081
 msgid "[preview]"
 msgstr "תצוגה מקדימה"
 
-#: lib/import.php:3032
+#: lib/import.php:3085
 msgid "[updated]"
 msgstr "עודכן"
 
-#: lib/import.php:3036
+#: lib/import.php:3089
 msgid "[unchanged]"
 msgstr "[ללא שינוי]"
 
-#: lib/import.php:3072
+#: lib/import.php:3125
 msgid "Found Dependency:"
 msgstr "נמצאו תלות:"
 
-#: lib/import.php:3074
+#: lib/import.php:3127
 msgid "Unmet Dependency:"
 msgstr "תלות שלא סופקה:"
 
@@ -14481,7 +14481,7 @@ msgstr "עבור מאבטחים מרוחקים, חשוב ביותר שהנתיב
 msgid "Required Writable at Install Time Only"
 msgstr "חובה לכתוב בזמן התקנה בלבד"
 
-#: lib/installer.php:2566 lib/installer.php:2598 package_import.php:652
+#: lib/installer.php:2566 lib/installer.php:2598 package_import.php:651
 msgid "Not Writable"
 msgstr "בלתי ניתן לכתיבה"
 
@@ -14645,11 +14645,11 @@ msgstr "לא מומלץ לעדכן תבניות שכבר ביצעת שינויי
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "בחר את תבניות ההתקן שבהן ברצונך להשתמש לאחר ההתקנה. אם מערכת ההפעלה היא Windows, עליך לוודא שאתה בוחר את &#39;תבנית התקן Windows&#39;. אם מערכת ההפעלה שלך היא Linux / UNIX, הקפד לבחור את &#39;מכונת לינוקס מקומי&#39; תבנית המכשיר."
 
-#: lib/installer.php:2803 package_import.php:550 plugins.php:630
+#: lib/installer.php:2803 package_import.php:549 plugins.php:630
 msgid "Author"
 msgstr "מחבר"
 
-#: lib/installer.php:2803 package_import.php:553
+#: lib/installer.php:2803 package_import.php:552
 msgid "Homepage"
 msgstr "דף הבית"
 
@@ -16424,8 +16424,8 @@ msgstr "הייבוא של החבילה %s נכשל"
 msgid "Error: Invalid file path."
 msgstr "הזן נתיב קובץ חוקי"
 
-#: package_import.php:406 package_import.php:412 package_import.php:497
-#: package_import.php:500
+#: package_import.php:406 package_import.php:412 package_import.php:496
+#: package_import.php:499
 msgid "Error in Package"
 msgstr "שגיאה בשאילתת הנתונים"
 
@@ -16446,92 +16446,92 @@ msgstr "לקבלת מידע נוסף, ניתן לעיין באתר cacti.log. י
 msgid "The package download or validation failed"
 msgstr "הורדת החבילה או התיקוף נכשלו"
 
-#: package_import.php:497
+#: package_import.php:496
 msgid "Package XML File Damaged."
 msgstr "חבילת קבצים"
 
-#: package_import.php:497
+#: package_import.php:496
 msgid "The XML files appears to be invalid.  Please contact the package author"
 msgstr "נראה שקובצי ה - XML אינם חוקיים.  אנא צור קשר עם מחבר החבילה"
 
-#: package_import.php:500
+#: package_import.php:499
 msgid "Check the package repository file for files that should exist and find the one that is missing"
 msgstr "בדוק את קובץ מאגר החבילות עבור קבצים שאמורים להתקיים ומצא את הקובץ שחסר"
 
-#: package_import.php:500
+#: package_import.php:499
 msgid "The XML files for the package does not exist"
 msgstr "קובצי ה - XML עבור החבילה אינם קיימים"
 
-#: package_import.php:546
+#: package_import.php:545
 msgid "Packages Details"
 msgstr "חבילת קבצים"
 
-#: package_import.php:559
+#: package_import.php:558
 msgid "Device class"
 msgstr "כללי התקן"
 
-#: package_import.php:565
+#: package_import.php:564
 msgid "Copyright"
 msgstr "ימין"
 
-#: package_import.php:590
+#: package_import.php:589
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
 msgstr "ייבא שמות קבצים של חבילות [ אף אחד לא ייבא הכל, סמן כדי לייבא באופן סלקטיבי ]"
 
-#: package_import.php:594
+#: package_import.php:593
 msgid "Package"
 msgstr "חבילת קבצים"
 
-#: package_import.php:597
+#: package_import.php:596
 msgid "Filename"
 msgstr "שינוי שם"
 
-#: package_import.php:648 package_import.php:735 templates_import.php:322
+#: package_import.php:647 package_import.php:734 templates_import.php:322
 #, fuzzy
 msgid "Differences"
 msgstr "הבדלים:"
 
-#: package_import.php:675
+#: package_import.php:674
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
 msgstr "ייבא תבניות חבילה [ ללא ייבוא נבחר, סמן כדי לייבא באופן סלקטיבי ]"
 
-#: package_import.php:679 templates_import.php:240
+#: package_import.php:678 templates_import.php:240
 msgid "Template Type"
 msgstr "כותרת התבנית"
 
-#: package_import.php:688 templates_import.php:252
+#: package_import.php:687 templates_import.php:252
 msgid "Changes/Diffferences"
 msgstr "שינוי התקן"
 
-#: package_import.php:739 templates_import.php:326
+#: package_import.php:738 templates_import.php:326
 msgid "Orphans"
 msgstr "יתמות"
 
-#: package_import.php:792
+#: package_import.php:791
 msgid "File Differences for: "
 msgstr "הפרשי קבצים עבור:"
 
-#: package_import.php:901
+#: package_import.php:900
 msgid "Local Package Import File"
 msgstr "חבילת קבצים"
 
-#: package_import.php:902
+#: package_import.php:901
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
 msgstr "קובץ*.xml.gz הממוקם במחשב המקומי שלך כדי להעלות ולייבא."
 
-#: package_import.php:907
+#: package_import.php:906
 msgid "Automatically Trust Signer"
 msgstr "הוסף אוטומטית ל Kadupul"
 
-#: package_import.php:909
+#: package_import.php:908
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
 msgstr "אם מסומן, Kadupul תבטח באופן אוטומטי בחותם על כך ועל כל חבילות עתידיות על ידי אותו מחבר."
 
-#: package_import.php:945
+#: package_import.php:944
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
 msgstr "החלף מקורות נתונים ורשומות ערך מוצעות בתבנית גרף.  גרפים ומקורות נתונים יקבלו שמות חדשים לאחר אינדקס מחדש של שאילתת נתונים או על ידי שימוש בתהליך החלפה מאולצת של ערכים מוצעים."
 
-#: package_import.php:1018
+#: package_import.php:1017
 msgid "Package Import"
 msgstr "ייבוא"
 

@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Read Kadupul packages up to an expanded size of 32 MiB (`IMPORT_PACKAGE_MAX_EXPANDED_BYTES` in `include/config.php` changes it) before metadata, signature or XML processing, and refuse larger packages with an import log message (#110).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.

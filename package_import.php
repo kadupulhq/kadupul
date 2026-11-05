@@ -448,11 +448,10 @@ function import_validate_public_key($xmlfile, $accept = false)
         return false;
     }
 
-    $filename = "compress.zlib://$xmlfile";
+    /* bounded like the import itself (#110) */
+    $data = import_package_read($xmlfile);
 
-    $data = file_get_contents($filename);
-
-    if ($data != '') {
+    if ($data !== false && $data != '') {
         $name              = '';
         $author            = '';
         $homepage          = '';
