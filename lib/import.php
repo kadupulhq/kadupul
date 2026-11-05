@@ -1316,11 +1316,18 @@ function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, 
  *
  * @param  (string) $field_name - the $struct_data_source_item field being imported
  * @param  (string) $value      - the decoded value from the Template XML
+ * @param  (bool)   $overridden - the item's per-Data Source override is set
  *
  * @return (bool) true when the value is acceptable for the field
  */
-function import_validate_data_source_item($field_name, $value) {
+function import_validate_data_source_item($field_name, $value, $overridden = false) {
 	$value = (string) $value;
+
+	/* the Data Template form saves an empty value when the per-Data Source
+	 * override is set, and export writes it; each Data Source supplies its own */
+	if ($overridden && $value === '') {
+		return true;
+	}
 
 	switch ($field_name) {
 		case 'data_source_name':
@@ -1486,7 +1493,9 @@ function xml_to_data_template($hash, &$xml_array, &$hash_cache, $import_as_new, 
 					} else {
 						$save[$field_name] = xml_character_decode($item_array[$field_name]);
 
-						if (!import_validate_data_source_item($field_name, $save[$field_name])) {
+						$overridden = (isset($item_array['t_' . $field_name]) && $item_array['t_' . $field_name] === 'on');
+
+						if (!import_validate_data_source_item($field_name, $save[$field_name], $overridden)) {
 							/* the value comes from the XML, so it does not get to add lines to the log */
 							$logged = substr(clean_up_lines($save[$field_name]), 0, 100);
 
