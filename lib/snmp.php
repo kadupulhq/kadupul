@@ -514,17 +514,18 @@ function cacti_snmp_build_binary_command($binary, $output_options, array $auth_a
  * Run a binary SNMP command without passing user-controlled values through a shell.
  *
  * @param array<int, string> $arguments Command and arguments.
+ * @param int|null           $exit_code Set to the command's exit code, -1 if it did not start.
  *
  * @return array<int, string> Standard output lines.
  */
-function cacti_snmp_exec_argv(array $arguments)
+function cacti_snmp_exec_argv(array $arguments, &$exit_code = null)
 {
     if (!class_exists(\Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput::class)) {
         require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php';
         \Kadupul\Platform\Infrastructure\Legacy\LegacyComponentAutoloader::register(dirname(__DIR__));
     }
 
-    return (new \Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput())->linesFromArguments($arguments);
+    return (new \Kadupul\Platform\Infrastructure\Legacy\LegacyCommandOutput())->linesFromArguments($arguments, $exit_code);
 }
 
 /**
@@ -848,11 +849,21 @@ function cacti_snmp_walk(
             $snmp_auth = cacti_get_snmpv3_auth_arguments($auth_proto, $auth_user, $auth_pass, $priv_proto, $priv_pass, $context, $engineid);
         }
 
+        // An unknown version or v3 protocol leaves no credentials. Refuse the
+        // walk with a log line, as the binary get, get_raw and getnext do.
+        if (empty($snmp_auth)) {
+            cacti_log("WARNING: SNMP Error:'Missing credentials', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+
+            return array();
+        }
+
         if (read_config_option('oid_increasing_check_disable') == 'on') {
             $oidCheck = '-Cc';
         } else {
             $oidCheck = '';
         }
+
+        $exit_code = 0;
 
         if (file_exists($path_snmpbulkwalk) && ($version > 1) && ($bulk_walk_size > 1)) {
             $extra_arguments = array('-Cr' . $bulk_walk_size);
@@ -876,7 +887,7 @@ function cacti_snmp_walk(
                 debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
             }
 
-            $temp_array = cacti_snmp_exec_argv($command);
+            $temp_array = cacti_snmp_exec_argv($command, $exit_code);
         } else {
             $extra_arguments = array();
             if ($oidCheck != '') {
@@ -899,15 +910,17 @@ function cacti_snmp_walk(
                 debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_snmp_command_log_string($command)));
             }
 
-            $temp_array = cacti_snmp_exec_argv($command);
+            $temp_array = cacti_snmp_exec_argv($command, $exit_code);
         }
 
-        if (strpos(implode(' ', $temp_array), 'Timeout') !== false) {
-            cacti_log("WARNING: SNMP Error:'Timeout', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
-        }
+        // net-snmp reports a timeout or an oversized response on stderr, which
+        // is not part of the walk output, so matching 'Timeout' or '(tooBig)'
+        // there only ever matched device data. A failed walk, including one cut
+        // short after some rows, is known from its exit code (#1099).
+        if ($exit_code !== 0) {
+            cacti_log("WARNING: SNMP Error:'Exit Code $exit_code', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
 
-        if (strpos(implode(' ', $temp_array), '(tooBig)') !== false) {
-            cacti_log("WARNING: SNMP Error:'Error in packet.  Response message would have been too large.', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+            return array();
         }
 
         /* check for bad entries */
