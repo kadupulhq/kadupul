@@ -1753,60 +1753,76 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     // Correct any indexes
     $indexes = db_fetch_assoc("SHOW INDEX FROM `$table`", $log, $db_conn);
     $allindexes = array();
+    $uniqueindex = array();
+
+    if (!is_array($indexes)) {
+        return false;
+    }
 
     foreach ($indexes as $index) {
         $allindexes[$index['Key_name']][$index['Seq_in_index'] - 1] = $index['Column_name'];
+        // Non_unique is 0 for a UNIQUE index.
+        $uniqueindex[$index['Key_name']] = (isset($index['Non_unique']) && $index['Non_unique'] == 0);
     }
 
-    foreach ($allindexes as $n => $index) {
-        if ($n != 'PRIMARY' && isset($data['keys'])) {
-            $removeindex = true;
-            foreach ($data['keys'] as $k) {
-                if ($k['name'] == $n) {
-                    $removeindex = false;
-                    $add = array_diff($k['columns'], $index);
-                    $del = array_diff($index, $k['columns']);
-                    if (!empty($add) || !empty($del)) {
-                        $columns = db_format_index_create($k['columns']);
+    // Reconcile keys and unique_keys together, so a declared unique index is
+    // neither dropped as undeclared nor recreated without UNIQUE (#1065).
+    $declared_keys = array();
 
-                        if (!db_is_safe_identifier($n) || $columns === false) {
-                            return false;
-                        }
-
-                        if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn) ||
-                            !db_execute("ALTER TABLE `$table` ADD INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
-                            return false;
-                        }
-                    }
-                    break;
-                }
-            }
-
-            if ($removeindex) {
-                if (!db_is_safe_identifier($n)) {
-                    return false;
-                }
-
-                if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn)) {
-                    return false;
-                }
+    foreach (array('keys' => false, 'unique_keys' => true) as $key_type => $unique) {
+        if (isset($data[$key_type])) {
+            foreach ($data[$key_type] as $k) {
+                $k['unique'] = $unique;
+                $k['columns'] = db_index_columns_to_array($k['columns']);
+                $declared_keys[$k['name']] = $k;
             }
         }
     }
 
-    // Add any indexes
-    if (isset($data['keys'])) {
-        foreach ($data['keys'] as $k) {
-            if (!isset($allindexes[$k['name']])) {
+    foreach ($allindexes as $n => $index) {
+        if ($n == 'PRIMARY') {
+            continue;
+        }
+
+        if (isset($declared_keys[$n])) {
+            $k = $declared_keys[$n];
+            $add = array_diff($k['columns'], $index);
+            $del = array_diff($index, $k['columns']);
+            if (!empty($add) || !empty($del) || $uniqueindex[$n] !== $k['unique']) {
                 $columns = db_format_index_create($k['columns']);
 
-                if (!db_is_safe_identifier($k['name']) || $columns === false) {
+                if (!db_is_safe_identifier($n) || $columns === false) {
                     return false;
                 }
 
-                if (!db_execute("ALTER TABLE `$table` ADD INDEX `" . $k['name'] . '` (' . $columns . ')', $log, $db_conn)) {
+                if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn) ||
+                    !db_execute("ALTER TABLE `$table` ADD " . ($k['unique'] ? 'UNIQUE ' : '') . "INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
                     return false;
                 }
+            }
+        } elseif (isset($data['keys'])) {
+            // As before, undeclared indexes are removed only when keys are declared.
+            if (!db_is_safe_identifier($n)) {
+                return false;
+            }
+
+            if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn)) {
+                return false;
+            }
+        }
+    }
+
+    // Add any missing indexes, regular and unique
+    foreach ($declared_keys as $name => $k) {
+        if (!isset($allindexes[$name])) {
+            $columns = db_format_index_create($k['columns']);
+
+            if (!db_is_safe_identifier($name) || $columns === false) {
+                return false;
+            }
+
+            if (!db_execute("ALTER TABLE `$table` ADD " . ($k['unique'] ? 'UNIQUE ' : '') . "INDEX `$name` (" . $columns . ')', $log, $db_conn)) {
+                return false;
             }
         }
     }
@@ -1830,8 +1846,10 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
                 return false;
             }
         } else {
-            $add = array_diff($data['primary'], $allindexes['PRIMARY']);
-            $del = array_diff($allindexes['PRIMARY'], $data['primary']);
+            // A single-column primary key may be given as a string (#1060).
+            $primary_columns = db_index_columns_to_array($data['primary']);
+            $add = array_diff($primary_columns, $allindexes['PRIMARY']);
+            $del = array_diff($allindexes['PRIMARY'], $primary_columns);
             if (!empty($add) || !empty($del)) {
                 $primary = db_format_index_create($data['primary']);
 
@@ -1845,6 +1863,30 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     }
 
     return true;
+}
+
+/**
+ * db_index_columns_to_array - normalize an index column definition to a list of
+ *   column names.  Plugins give a compound key either as an array or as one
+ *   'col1`,`col2' string, and a single-column key as a plain string.
+ *
+ * @param  (array|string) The index columns
+ *
+ * @return (array) The column names without surrounding backticks or whitespace
+ */
+function db_index_columns_to_array($columns)
+{
+    if (!is_array($columns)) {
+        $columns = preg_split('/`\s*,\s*`/', trim((string) $columns));
+    }
+
+    $normalized = array();
+
+    foreach ($columns as $column) {
+        $normalized[] = trim((string) $column, " \t\n\r\0\x0B`");
+    }
+
+    return $normalized;
 }
 
 /**
