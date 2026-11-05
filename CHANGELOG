@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
 -issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
