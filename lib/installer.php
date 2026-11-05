@@ -3387,7 +3387,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
     {
         $this->setProgress(Installer::PROGRESS_VERSION_BEGIN);
         // An incomplete schema must not be recorded as installed (#1088).
-        $failure = $this->validateCoreSchema();
+        $failure = $this->validateCoreSchema(dirname(__DIR__) . '/cacti.sql');
         if ($failure !== '') {
             $this->addError(Installer::STEP_ERROR, 'Database schema', $failure);
             return $failure;
@@ -3406,13 +3406,12 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
      * Compare the tables of the selected database with the core tables that
      * cacti.sql creates.
      *
+     * @param string $path The cacti.sql that created the schema
+     *
      * @return string An empty string when every core table exists, otherwise the failure
      */
-    private function validateCoreSchema(): string
+    private function validateCoreSchema(string $path): string
     {
-        global $config;
-
-        $path = $config['base_path'] . '/cacti.sql';
         $schema = is_file($path) && is_readable($path) ? file_get_contents($path) : false;
         $expected = is_string($schema) ? self::coreSchemaTables($schema) : array();
         if ($expected === array()) {

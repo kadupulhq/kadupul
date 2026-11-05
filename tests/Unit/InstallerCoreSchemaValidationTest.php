@@ -25,6 +25,8 @@ foreach (['confirmInstallationVersion', 'validateCoreSchema', 'coreSchemaTables'
     }
 }
 $methods = preg_replace('/^public (function coreSchemaTables)/m', 'public static $1', $methods);
+// The production code finds cacti.sql next to lib/; keep that root for the extracted methods.
+$methods = str_replace('__DIR__', var_export($root . '/lib', true), $methods);
 // The production methods run inside a stand-in that records the native calls they make.
 eval('namespace ' . __NAMESPACE__ . '; class Installer {
     const STEP_ERROR = 98;
@@ -65,9 +67,8 @@ function core_tables(): array
     return array_values(array_unique($matches[1]));
 }
 
-function confirm(array|false $tables, string $base): array
+function confirm(array|false $tables): array
 {
-    $GLOBALS['config'] = ['base_path' => $base];
     $GLOBALS['installer_core_schema'] = ['tables' => $tables, 'queries' => [], 'options' => []];
     $installer = new Installer();
     $failure = $installer->confirmInstallationVersion();
@@ -81,7 +82,7 @@ test('cacti.sql declares the core tables the check expects', function () {
 });
 
 test('a complete schema publishes the version marker', function () {
-    [$failure, $calls, $options] = confirm(array_map(static fn(string $table): array => ['TABLE_NAME' => $table], [...core_tables(), 'plugin_extra']), dirname(__DIR__, 2));
+    [$failure, $calls, $options] = confirm(array_map(static fn(string $table): array => ['TABLE_NAME' => $table], [...core_tables(), 'plugin_extra']));
 
     expect($failure)->toBe('')
         ->and($calls)->toBe([['progress', 90], ['version'], ['progress', 95]])
@@ -90,21 +91,34 @@ test('a complete schema publishes the version marker', function () {
 
 test('a missing core table stops before the version marker', function () {
     $tables = array_values(array_diff(core_tables(), ['poller_item', 'settings']));
-    [$failure, $calls, $options] = confirm(array_map(static fn(string $table): array => ['TABLE_NAME' => $table], $tables), dirname(__DIR__, 2));
+    [$failure, $calls, $options] = confirm(array_map(static fn(string $table): array => ['TABLE_NAME' => $table], $tables));
 
     expect($failure)->toBe('Required core database tables are missing: poller_item, settings')
         ->and($calls)->toBe([['progress', 90], ['error', 'Database schema', $failure]])
         ->and($options)->toBe([]);
 });
 
-test('an unreadable table list or schema file fails closed', function (string $case) {
-    $base = dirname(__DIR__, 2);
-    if ($case === 'schema') {
-        $base = sys_get_temp_dir() . '/kadupul-missing-schema-' . bin2hex(random_bytes(8));
-    }
-    [$failure, $calls, $options] = confirm($case === 'tables' ? false : [], $base);
+test('an unreadable table list fails closed', function () {
+    [$failure, $calls, $options] = confirm(false);
 
-    expect($failure)->not->toBe('')
+    expect($failure)->toBe('The installed database could not be checked because its table list could not be read.')
         ->and($calls)->toBe([['progress', 90], ['error', 'Database schema', $failure]])
         ->and($options)->toBe([]);
-})->with(['tables', 'schema']);
+});
+
+test('a missing or empty cacti.sql fails closed', function (string $case) {
+    $path = sys_get_temp_dir() . '/kadupul-schema-' . bin2hex(random_bytes(8)) . '.sql';
+    if ($case === 'empty') {
+        file_put_contents($path, "-- no tables\n");
+    }
+    $GLOBALS['installer_core_schema'] = ['tables' => [], 'queries' => [], 'options' => []];
+
+    try {
+        expect((new Installer())->validateCoreSchema($path))->toBe('The installed database could not be checked because the core table list could not be read from cacti.sql.')
+            ->and($GLOBALS['installer_core_schema']['queries'])->toBe([]);
+    } finally {
+        if (is_file($path)) {
+            unlink($path);
+        }
+    }
+})->with(['missing', 'empty']);

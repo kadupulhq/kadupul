@@ -555,7 +555,7 @@ msgstr "לא"
 #: data_sources.php:2061 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1439
-#: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4104
+#: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4103
 #: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
 #: user_domains.php:757 user_group_admin.php:2088
 msgid "Yes"
@@ -2351,7 +2351,7 @@ msgstr "קריטריונים ליצירת עץ"
 msgid "Change Leaf Type"
 msgstr "שינוי סוג העלה"
 
-#: automation_tree_rules.php:738 lib/installer.php:4329 utilities.php:2752
+#: automation_tree_rules.php:738 lib/installer.php:4328 utilities.php:2752
 #: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "<strong>אזהרה:</strong>"
@@ -13906,7 +13906,7 @@ msgstr "שגיאת היסט לקויה של UTF-8!"
 msgid "Down (Thold)"
 msgstr "הורדה"
 
-#: lib/html_utility.php:1359 lib/installer.php:2149 lib/installer.php:4245
+#: lib/html_utility.php:1359 lib/installer.php:2149 lib/installer.php:4244
 msgid "Error"
 msgstr "שגיאה"
 
@@ -14237,7 +14237,7 @@ msgid "Location checks"
 msgstr "בדיקות מיקום"
 
 #: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247
-#: lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4349
+#: lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4348
 msgid "ERROR:"
 msgstr "שגיאה:"
 
@@ -14873,261 +14873,261 @@ msgstr ""
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
 msgstr ""
 
-#: lib/installer.php:3419
+#: lib/installer.php:3418
 msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
 msgstr ""
 
-#: lib/installer.php:3424
+#: lib/installer.php:3423
 msgid "The installed database could not be checked because its table list could not be read."
 msgstr ""
 
-#: lib/installer.php:3431
+#: lib/installer.php:3430
 #, php-format
 msgid "Required core database tables are missing: %s"
 msgstr ""
 
-#: lib/installer.php:3452
+#: lib/installer.php:3451
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "סיים תהליך%s עבור v%s"
 
-#: lib/installer.php:3483
+#: lib/installer.php:3482
 msgid "The installer CLI interpreter is unavailable for refreshing the Symfony production cache."
 msgstr ""
 
-#: lib/installer.php:3486
+#: lib/installer.php:3485
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
 msgstr ""
 
-#: lib/installer.php:3554
+#: lib/installer.php:3553
 #, php-format
 msgid "Found %s templates to install"
 msgstr "נמצאו תבניות%s להתקנה"
 
-#: lib/installer.php:3564
+#: lib/installer.php:3563
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "עומד לייבא את החבילה #%s '%s'."
 
-#: lib/installer.php:3573
+#: lib/installer.php:3572
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "ייבוא החבילה #%s '%s' תחת הפרופיל '%s' הצליח"
 
-#: lib/installer.php:3579
+#: lib/installer.php:3578
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "ייבוא החבילה #%s '%s' תחת הפרופיל '%s' נכשל"
 
-#: lib/installer.php:3596
+#: lib/installer.php:3595
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "מיפוי תבנית אוטומציה עבור תבנית המכשיר '{ 0 }'"
 
-#: lib/installer.php:3617
+#: lib/installer.php:3616
 msgid "No templates were selected for import"
 msgstr "לא נבחרו תבניות לייבוא"
 
-#: lib/installer.php:3627
+#: lib/installer.php:3626
 msgid "Updating remote configuration file"
 msgstr "ממתין לתצורה"
 
-#: lib/installer.php:3662
+#: lib/installer.php:3661
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "הגדרת פרופיל ברירת המחדל של מקור הנתונים ל -{ 0 }({ 1})"
 
-#: lib/installer.php:3690
+#: lib/installer.php:3689
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "איתור הפרופיל שנבחר (%s) נכשל, לא בוצעו שינויים"
 
-#: lib/installer.php:3699
+#: lib/installer.php:3698
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "מעדכן רשת אוטומציה (%s), מצב \"%s\" => \"%s\", רשת משנה \"%s\" =>%s \""
 
-#: lib/installer.php:3709
+#: lib/installer.php:3708
 msgid "Failed to find automation network, no changes were made"
 msgstr "כשל במציאת רשת אוטומציה, לא בוצעו שינויים"
 
-#: lib/installer.php:3713
+#: lib/installer.php:3712
 msgid "Adding extra snmp settings for automation"
 msgstr "הוספת הגדרות snmp נוספות לאוטומציה"
 
-#: lib/installer.php:3719
+#: lib/installer.php:3718
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "בחירת ערכת אפשרויות אוטומציה %s"
 
-#: lib/installer.php:3732
+#: lib/installer.php:3731
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "מעדכן ערכת אפשרויות אוטומציה %s"
 
-#: lib/installer.php:3735
+#: lib/installer.php:3734
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "מערך אפשרויות אוטומציה שעודכן בהצלחה%s"
 
-#: lib/installer.php:3737
+#: lib/installer.php:3736
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "ערכת אפשרויות לאוטומציה של Resequencing %s"
 
-#: lib/installer.php:3745
+#: lib/installer.php:3744
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "ערכת אפשרויות האוטומציה המעודכנת %s נכשלה"
 
-#: lib/installer.php:3748
+#: lib/installer.php:3747
 msgid "Failed to find any automation option set"
 msgstr "נכשל הניסיון למצוא נתונים להעתקה!"
 
-#: lib/installer.php:3778
+#: lib/installer.php:3777
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "תבניות מכשיר [עריכה: %s]"
 
-#: lib/installer.php:3808
+#: lib/installer.php:3807
 msgid "Creating Graphs for Default Device"
 msgstr "צור גרפים עבור התקן זה"
 
-#: lib/installer.php:3815
+#: lib/installer.php:3814
 msgid "Adding Device to Default Tree"
 msgstr "הגדרות ברירת מחדל של ההתקן"
 
-#: lib/installer.php:3823
+#: lib/installer.php:3822
 msgid "No templated graphs for Default Device were found"
 msgstr "לא נמצאו גרשי תבנית עבור התקן ברירת מחדל"
 
-#: lib/installer.php:3827
+#: lib/installer.php:3826
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "אזהרה: תבנית מכשיר עבור מערכת ההפעלה שלך לא נמצאה. יהיה עליכם לייבא תבניות מכשירים או חבילות Kadupul כדי לפקח על שרת Kadupul שלכם."
 
-#: lib/installer.php:3834
+#: lib/installer.php:3833
 msgid "Running first-time data query for local host"
 msgstr "הפעלת שאילתת נתונים ראשונה עבור המארח המקומי"
 
-#: lib/installer.php:3842
+#: lib/installer.php:3841
 msgid "Repopulating poller cache"
 msgstr "לבנות מחדש את המטמון מטמון"
 
-#: lib/installer.php:3847
+#: lib/installer.php:3846
 msgid "Repopulating SNMP Agent cache"
 msgstr "לבנות מחדש מטמון SNMPAgent"
 
-#: lib/installer.php:3852
+#: lib/installer.php:3851
 msgid "Generating RSA Key Pair"
 msgstr "יצירת זוג מפתח RSA"
 
-#: lib/installer.php:3863
+#: lib/installer.php:3862
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "נמצאו טבלאות%s להמרה"
 
-#: lib/installer.php:3870
+#: lib/installer.php:3869
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "המרת טבלה #%s '%s'"
 
-#: lib/installer.php:3878
+#: lib/installer.php:3877
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3886
+#: lib/installer.php:3885
 msgid "No tables where found or selected for conversion"
 msgstr "אין טבלאות שנמצאו או שנבחרו להמרה"
 
-#: lib/installer.php:3898
+#: lib/installer.php:3897
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "עבר מ-%s ל-%s"
 
-#: lib/installer.php:3902
+#: lib/installer.php:3901
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "הערה: שימוש בקובץ זמני עבור מטמון db:%s"
 
-#: lib/installer.php:3924
+#: lib/installer.php:3923
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "שדרוג מ- v%s (DB%s) ל- v%s"
 
-#: lib/installer.php:3932
+#: lib/installer.php:3931
 #, php-format
 msgid "ERROR: Failed to find upgrade function for v%s"
 msgstr ""
 
-#: lib/installer.php:3941
+#: lib/installer.php:3940
 #, php-format
 msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
 msgstr ""
 
-#: lib/installer.php:3950
+#: lib/installer.php:3949
 #, php-format
 msgid "ERROR: Required upgrade file for v%s was not found."
 msgstr ""
 
-#: lib/installer.php:4002
+#: lib/installer.php:4001
 msgid "Install aborted due to no EULA acceptance"
 msgstr "התקנה שבוטלה עקב שום אישור של ה- EULA"
 
-#: lib/installer.php:4026
+#: lib/installer.php:4025
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "הרקע כבר התחיל ב-%s, ניסיון זה ב-%s דילג"
 
-#: lib/installer.php:4050
+#: lib/installer.php:4049
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "החריגה אירעה במהלך ההתקנה: #{ 0} - %s"
 
-#: lib/installer.php:4069
+#: lib/installer.php:4068
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "ההתקנה החלה ב- %s, הושלמה ב- %s"
 
-#: lib/installer.php:4106
+#: lib/installer.php:4105
 msgid "Both"
 msgstr "שניהם"
 
-#: lib/installer.php:4106
+#: lib/installer.php:4105
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "עבר מ-%s ל-%s"
 
-#: lib/installer.php:4111
+#: lib/installer.php:4110
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "אין"
 
-#: lib/installer.php:4111 lib/installer.php:4113
+#: lib/installer.php:4110 lib/installer.php:4112
 msgid "Web"
 msgstr "אתר אינטרנט"
 
-#: lib/installer.php:4113 lib/installer.php:4116
+#: lib/installer.php:4112 lib/installer.php:4115
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "עבר מ-%s ל-%s"
 
-#: lib/installer.php:4116
+#: lib/installer.php:4115
 msgid "Cli"
 msgstr "קלאסי"
 
-#: lib/installer.php:4122
+#: lib/installer.php:4121
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "הגדרת אפשרות PHP%s =%s"
 
-#: lib/installer.php:4128
+#: lib/installer.php:4127
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "הגדרת אפשרות PHP%s נכשלה, היא%s (צריכה להיות%s)"
 
-#: lib/installer.php:4165
+#: lib/installer.php:4164
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "אוספי נתונים לא נמצאו בעת ניסיון לסנכרן"
 
