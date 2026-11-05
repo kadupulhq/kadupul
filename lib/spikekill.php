@@ -1595,13 +1595,26 @@ class spikekill {
 								$rra[$rra_num][$ds_num]['average'] = 0;
 							}
 
+							// Windowed deviation and its mean must use the same reference samples.
+							if ($this->method == SPIKE_METHOD_STDDEV && $this->out_start > 0) {
+								$reference = [];
+								foreach ($samples[$rra_num][$ds_num] as $timestamp => $value) {
+									if (($timestamp < $this->out_start || $timestamp > $this->out_end) && is_numeric($value)) {
+										$reference[] = $value;
+									}
+								}
+								if (count($reference) > 0) {
+									$rra[$rra_num][$ds_num]['average'] = array_sum($reference) / count($reference);
+								}
+							}
+
 							$rra[$rra_num][$ds_num]['min_cutoff'] = $rra[$rra_num][$ds_num]['average'] - ($this->stddev * $rra[$rra_num][$ds_num]['stddev']);
-							if ($rra[$rra_num][$ds_num]['min_cutoff'] < $this->ds_min[$ds_num]) {
+							if (is_numeric($this->ds_min[$ds_num]) && $rra[$rra_num][$ds_num]['min_cutoff'] < $this->ds_min[$ds_num]) {
 								$rra[$rra_num][$ds_num]['min_cutoff'] = $this->ds_min[$ds_num];
 							}
 
 							$rra[$rra_num][$ds_num]['max_cutoff'] = $rra[$rra_num][$ds_num]['average'] + ($this->stddev * $rra[$rra_num][$ds_num]['stddev']);
-							if ($rra[$rra_num][$ds_num]['max_cutoff'] > $this->ds_max[$ds_num]) {
+							if (is_numeric($this->ds_max[$ds_num]) && $rra[$rra_num][$ds_num]['max_cutoff'] > $this->ds_max[$ds_num]) {
 								$rra[$rra_num][$ds_num]['max_cutoff'] = $this->ds_max[$ds_num];
 							}
 
@@ -1649,7 +1662,7 @@ class spikekill {
 												$rra[$rra_num][$ds_num]['outwind_samples']++;
 											}
 
-											if (($sample > $rra[$rra_num][$ds_num]['max_cutoff']) || ($sample < $rra[$rra_num][$ds_num]['min_cutoff'])) {
+											if (is_numeric($sample) && (($sample > $rra[$rra_num][$ds_num]['max_cutoff']) || ($sample < $rra[$rra_num][$ds_num]['min_cutoff']))) {
 												$this->debug(sprintf("StdDev Found, Date:%s, Value:%.2e, StandardDev:%.2e, StdDevLimit:%.2e", date('Y-m-d H:i', $timestamp), $sample, $rra[$rra_num][$ds_num]['stddev'], ($rra[$rra_num][$ds_num]['max_cutoff'] * (1+$this->percent))));
 
 												$rra[$rra_num][$ds_num]['stddev_killed']++;
