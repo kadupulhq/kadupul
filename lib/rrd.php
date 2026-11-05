@@ -1821,7 +1821,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 
 	if (getenv('RRDCACHED_ADDRESS')) {
 		cacti_log('ERROR: Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.');
-		return;
+		return false;
 	}
 
 	include($config['include_path'] . '/global_arrays.php');
@@ -1864,23 +1864,99 @@ function rrdtool_function_tune($rrd_tune_array) {
 					return false;
 				}
 				try {
-					$fp = popen($rrdtool_cmd, 'r');
-					if (is_resource($fp)) {
-						while (!feof($fp)) {
-							fread($fp, 8192);
-						}
-						pclose($fp);
-					}
+					$tuned = rrdtool_tune_apply($data_source_path, $rrdtool_cmd);
 				} finally {
 					rrd_maintenance_release($lock);
 				}
 
 				cacti_log('CACTI2RRD: ' . $rrdtool_cmd, false, 'WEBLOG', POLLER_VERBOSITY_DEBUG);
+
+				return $tuned;
 			} else {
 				cacti_log("ERROR: RRDtool executable not found, not executable or error in path '" . read_config_option('path_rrdtool') . "'.  No output written to RRDfile.");
+
+				return false;
 			}
 		}
+
+		return false;
 	}
+
+	return true;
+}
+
+/**
+ * rrdtool_tune_apply - run an rrdtool tune command so that it changes all of
+ *   its options or none.  RRDtool applies each option as it reaches it, so a
+ *   rejected later option left the earlier ones stored (#777).  The file is
+ *   copied first and written back into the same file when the command fails.
+ *   The caller holds the RRD maintenance lease.
+ *
+ * @param  (string) $data_source_path - The RRDfile being tuned
+ * @param  (string) $rrdtool_cmd      - The complete, escaped tune command
+ *
+ * @return (bool) True when the command succeeded
+ */
+function rrdtool_tune_apply($data_source_path, $rrdtool_cmd) {
+	$backup = tempnam(sys_get_temp_dir(), 'kadupul-tune-');
+	$saved  = $backup !== false && @copy($data_source_path, $backup);
+
+	clearstatcache();
+
+	if (!$saved || hash_file('sha256', $backup) !== hash_file('sha256', $data_source_path)) {
+		if ($backup !== false) {
+			@unlink($backup);
+		}
+
+		cacti_log("ERROR: RRD tuning could not copy '$data_source_path' before tuning; no changes were made.");
+
+		return false;
+	}
+
+	$status = -1;
+	$fp     = popen($rrdtool_cmd, 'r');
+
+	if (is_resource($fp)) {
+		while (!feof($fp)) {
+			fread($fp, 8192);
+		}
+
+		$status = pclose($fp);
+	}
+
+	if ($status === 0) {
+		@unlink($backup);
+
+		return true;
+	}
+
+	/* write the copy back into the same file, so its owner and mode are kept */
+	$restored = false;
+	$source   = @fopen($backup, 'rb');
+	$target   = @fopen($data_source_path, 'r+b');
+
+	if ($source !== false && $target !== false && ftruncate($target, 0) && stream_copy_to_stream($source, $target) === filesize($backup) && fflush($target)) {
+		$restored = true;
+	}
+
+	if ($source !== false) {
+		fclose($source);
+	}
+
+	if ($target !== false) {
+		fclose($target);
+	}
+
+	clearstatcache();
+
+	if ($restored && hash_file('sha256', $backup) === hash_file('sha256', $data_source_path)) {
+		@unlink($backup);
+		cacti_log("ERROR: RRDtool tune failed for '$data_source_path'; the RRDfile was restored unchanged.");
+	} else {
+		cacti_log("ERROR: RRDtool tune failed for '$data_source_path' and the RRDfile could not be restored; its previous contents are in '$backup'.");
+	}
+
+	return false;
 }
 
 /* Convert RRDtool fetch output into Cacti's timestamp-indexed representation.
