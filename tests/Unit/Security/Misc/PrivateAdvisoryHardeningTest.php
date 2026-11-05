@@ -99,7 +99,7 @@ test('db_update_table batches schema changes into one alter statement', function
 		->and($body)->not->toContain("\$table_encoding !== '' ? ' ' : 'DEFAULT '")
 		->and($body)->toContain("'ADD ' . \$definition")
 		->and($body)->toContain("'DROP COLUMN `'")
-		->and($body)->toContain("'ADD INDEX `'")
+		->and($body)->toContain("'INDEX `' . \$name . '` ('")
 		->and($body)->not->toContain('db_add_column(')
 		->and($body)->not->toContain('db_remove_column(')
 		->and($body)->not->toContain('db_add_index(');
