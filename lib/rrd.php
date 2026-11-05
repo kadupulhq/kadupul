@@ -699,6 +699,108 @@ function rrdtool_quote_argument($string) {
 	return $quote . str_replace($quote, $quote . $other . $quote . $other . $quote, $string) . $quote;
 }
 
+/**
+ * rrdtool_command_path - write an RRD path as one argument of a create or
+ *   update command that rrdtool_execute() sends as a string.
+ *
+ *   The local pipe gets the path quoted, as fetch already does, so a space no
+ *   longer ends the file name. The RRDtool proxy keeps receiving the path
+ *   bare, as in 1.2.31; a path it cannot carry as one bare token is refused.
+ *
+ * @param  (string) $path - an RRD path that passed cacti_rrdtool_valid_path()
+ *
+ * @return (string|bool) the argument, or false when it cannot be sent
+ */
+function rrdtool_command_path($path) {
+	global $config;
+
+	$path = (string) $path;
+
+	if (!cacti_rrdtool_valid_path($path)) {
+		return false;
+	}
+
+	if ((!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true) && read_config_option('storage_location')) {
+		return preg_match('/[\s\'"]/', $path) ? false : $path;
+	}
+
+	return rrdtool_quote_argument($path);
+}
+
+/**
+ * rrdtool_create_file - run 'rrdtool create' for an RRD path.
+ *
+ *   For local storage the file is created under a random temporary name in
+ *   the destination directory and renamed into place. Some RRDtool releases
+ *   open the destination path itself, so a symbolic link placed there after
+ *   the caller's is_link() check was written through. rename() replaces a
+ *   link at the destination rather than following it. The temporary name ends
+ *   in .tmp, which the RRD cleaner does not list.
+ *
+ * @param  (string) $path          - the destination RRD path
+ * @param  (string) $definition    - the create arguments after the file name
+ * @param  (bool)   $log_to_stdout - passed to rrdtool_execute()
+ * @param  (mixed)  $rrdtool_pipe  - passed to rrdtool_execute()
+ * @param  (string) $logopt        - log facility
+ *
+ * @return (mixed) the rrdtool_execute() result, or false when no file was put in place
+ */
+function rrdtool_create_file($path, $definition, $log_to_stdout, $rrdtool_pipe, $logopt) {
+	global $config;
+
+	/* every caller has checked the path; the realtime path is checked here */
+	if (!cacti_rrdtool_valid_path($path) || !rrd_check_path($path)) {
+		cacti_log('ERROR: RRDfile not created; invalid path: ' . cacti_log_safe_value($path), false, $logopt);
+
+		return false;
+	}
+
+	if ((!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true) && read_config_option('storage_location')) {
+		$argument = rrdtool_command_path($path);
+
+		if ($argument === false) {
+			cacti_log('ERROR: RRDfile not created; its path cannot be sent to the RRDtool proxy: ' . cacti_log_safe_value($path), false, $logopt);
+
+			return false;
+		}
+
+		return rrdtool_execute("create $argument $definition", $log_to_stdout, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, $logopt);
+	}
+
+	$temporary = dirname($path) . DIRECTORY_SEPARATOR . '.' . basename($path) . '.' . bin2hex(random_bytes(8)) . '.tmp';
+	$argument  = rrdtool_command_path($temporary);
+
+	if ($argument === false) {
+		cacti_log('ERROR: RRDfile not created; invalid path: ' . cacti_log_safe_value($path), false, $logopt);
+
+		return false;
+	}
+
+	/* A write-only pipe has not run the create when the write returns, so the
+	 * file could not be renamed yet. Run the create on its own process. */
+	$owned =& rrd_acknowledged_pipes();
+
+	if (is_resource($rrdtool_pipe) && !isset($owned[(int) $rrdtool_pipe])) {
+		$rrdtool_pipe = false;
+	}
+
+	$success = rrdtool_execute("create $argument $definition", $log_to_stdout, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, $logopt);
+
+	clearstatcache(true, $temporary);
+
+	if ($success !== false && !is_link($temporary) && is_file($temporary) && @rename($temporary, $path)) {
+		return $success;
+	}
+
+	if (is_link($temporary) || file_exists($temporary)) {
+		@unlink($temporary);
+	}
+
+	cacti_log('ERROR: RRDfile was not created: ' . cacti_log_safe_value($path), false, $logopt);
+
+	return false;
+}
+
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
 	global $config;
 
@@ -1544,7 +1646,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	if ($show_source == true) {
 		return read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path . $definition;
 	} else {
-		$success = rrdtool_execute("create $data_source_path $definition", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+		$success = rrdtool_create_file($data_source_path, $definition, true, $rrdtool_pipe, 'POLLER');
 
 		/**
 		 * Local storage only. Under remote storage rrdtool_execute() sent
@@ -1635,6 +1737,20 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 			 */
 			if (!$remote_storage && is_link($rrd_path)) {
 				cacti_log("ERROR: Refusing to update an RRDfile through the symbolic link '$rrd_path'.", false, 'POLLER');
+
+				foreach ($rrd_fields['times'] as $update_time => $field_array) {
+					$completed[$rrd_path][$update_time] = false;
+				}
+
+				$failed = true;
+				continue;
+			}
+
+			/* samples for a path RRDtool cannot be given stay queued */
+			$command_path = rrdtool_command_path($rrd_path);
+
+			if ($command_path === false) {
+				cacti_log('ERROR: RRD pending samples retained; the path cannot be sent to RRDtool: ' . cacti_log_safe_value($rrd_path), false, 'POLLER');
 
 				foreach ($rrd_fields['times'] as $update_time => $field_array) {
 					$completed[$rrd_path][$update_time] = false;
@@ -1785,7 +1901,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 				// Never advance this RRD's timestamp after dropping a valid field.
 				// A schema mismatch must retain the full sample for replay after repair.
-				$updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+				$updated = rrdtool_execute("update $command_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 
 				if ($updated !== true) {
 					$rejection = rrdtool_last_rejection();
@@ -1856,11 +1972,15 @@ function rrdtool_function_tune($rrd_tune_array) {
 			if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
 				$rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
 				require_once __DIR__ . '/rrd_maintenance.php';
-				/* A web request must not wait indefinitely behind a polling cycle. */
-				$lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true, 5, $busy);
+				/* A web request must not wait indefinitely behind a polling cycle.
+				 * Tuning rewrites the file, so it needs the exclusive lease, which
+				 * Windows does not provide, as rrdtool_execute() refuses tune there. */
+				$lock = rrd_maintenance_acquire(true, true, 5, $busy);
 				if ($lock === false) {
 					cacti_log($busy ? 'ERROR: RRD storage is busy; retry RRD tuning after polling completes.' :
-						'ERROR: Unable to coordinate RRD tuning with maintenance.');
+						(($config['cacti_server_os'] ?? '') === 'win32'
+						? 'ERROR: Destructive local RRD maintenance is unsupported on Windows; no changes were made.'
+						: 'ERROR: Unable to coordinate RRD tuning with maintenance.'));
 					return false;
 				}
 				try {
@@ -5510,14 +5630,22 @@ function gradient($vname = false, $start_color = '#0000a0', $end_color = '#f0f0f
 	// We don't use alpha blending for the area right now
 	$alpha = 'ff';
 
+	/* Double quotes keep existing legends unchanged. rrdtool ends a quoted run
+	 * at the next " and a command at a line break, so a legend holding either,
+	 * or NUL, is written by rrdtool_quote_argument() as other legends are. */
+	$legend = '';
+	if ($label != false && strlen($label) > 2) {
+		$legend = strpbrk($label, "\"\0\r\n") === false ? '"' . $label . '"' : rrdtool_quote_argument($label);
+	}
+
 	for ($i = $steps; $i > 0; $i--) {
 		$factor = $i / $steps;
 		$r = round($r1 + $diff_r * $factor);
 		$g = round($g1 + $diff_g * $factor);
 		$b = round($b1 + $diff_b * $factor);
 
-		if ($i == $steps && $label != false && strlen($label) > 2) {
-			$spline .= sprintf('AREA:%s%d#%02X%02X%02X%s:"%s" ' . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha, $label);
+		if ($i == $steps && $legend !== '') {
+			$spline .= sprintf('AREA:%s%d#%02X%02X%02X%s:%s ' . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha, $legend);
 		} else {
 			$spline .= sprintf('AREA:%s%d#%02X%02X%02X%s ' . RRD_NL, $spline_vname, $i, $r, $g, $b, $alpha);
 		}

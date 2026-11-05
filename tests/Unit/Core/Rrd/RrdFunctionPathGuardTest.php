@@ -26,6 +26,19 @@ foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_BOOLEAN' => 3) as $
 	}
 }
 
+/* The path guards are under test here, not the quoting, so paths pass bare. */
+function rrdPathGuard_rrdtool_command_path($path) {
+	return $path;
+}
+
+function rrdPathGuard_cacti_log_safe_value($value) {
+	return json_encode((string) $value);
+}
+
+function rrdPathGuard_rrdtool_create_file($path, $definition, $log, $pipe, $logopt) {
+	return rrdPathGuard_rrdtool_execute("create $path $definition");
+}
+
 function rrdPathGuard_get_data_source_path($local_data_id, $expand_paths) {
 	return $GLOBALS['rrd_path_guard']['data_source_path'];
 }
@@ -97,7 +110,7 @@ function rrdPathGuardLoad($root) {
 		expect($start)->not->toBeFalse()
 			->and($end)->not->toBeFalse();
 
-		eval(preg_replace('/\b(rrdtool_function_create|rrdtool_function_update|get_data_source_path|cacti_rrdtool_valid_path|read_config_option|rrdtool_execute_path_command|rrdtool_execute|cacti_log|cacti_sizeof|cacti_rrdtool_valid_ds_name|cacti_rrdtool_valid_ds_template|cacti_has_control_chars|get_rrdtool_version|cacti_version_compare)\(/', 'rrdPathGuard_$1(', substr($source, $start, $end - $start)));
+		eval(preg_replace('/\b(rrdtool_command_path|cacti_log_safe_value|rrdtool_create_file|rrdtool_function_create|rrdtool_function_update|get_data_source_path|cacti_rrdtool_valid_path|read_config_option|rrdtool_execute_path_command|rrdtool_execute|cacti_log|cacti_sizeof|cacti_rrdtool_valid_ds_name|cacti_rrdtool_valid_ds_template|cacti_has_control_chars|get_rrdtool_version|cacti_version_compare)\(/', 'rrdPathGuard_$1(', substr($source, $start, $end - $start)));
 	}
 }
 

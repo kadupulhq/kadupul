@@ -1,6 +1,11 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Create a local RRDfile under a temporary name in its directory and rename it into place, so a symbolic link that appears at the path is replaced rather than written through; applies to the poller, Boost and realtime (#740)
+-security: Quote the RRDfile path in the RRDtool create and update commands, as fetch already does; with the RRDtool proxy a path that cannot be sent as one bare argument is refused and its samples stay queued (#768)
+-security: Keep a gradient AREA legend that holds a double quote or a line break inside its own RRDtool argument (#778)
+-security: Tuning an RRDfile requires the exclusive storage lease, so it is refused on Windows as resize and restore already are; an RRD Cleaner rescan takes the storage lease first and keeps queued delete and archive actions when the RRA directory cannot be validated (#218)
+-security: Quote the file names and dates the RRD Cleaner rescan writes to its file list with db_qstr(), and URL-encode the search filter in the RRD Cleaner page links
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
