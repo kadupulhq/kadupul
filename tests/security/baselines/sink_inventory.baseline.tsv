@@ -290,13 +290,13 @@ dynamic_include	./lib/boost.php:1766	        include_once($config['library_path'
 dynamic_include	./lib/boost.php:358	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:490	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:856	    include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/data_query.php:2150	    include_once($config['library_path'] . '/sort.php');
-dynamic_include	./lib/data_query.php:2600	    include_once($config['library_path'] . '/variables.php');
-dynamic_include	./lib/data_query.php:661	    include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/data_query.php:2175	    include_once($config['library_path'] . '/sort.php');
+dynamic_include	./lib/data_query.php:2625	    include_once($config['library_path'] . '/variables.php');
+dynamic_include	./lib/data_query.php:686	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/data_query.php:85	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/data_query.php:86	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/data_query.php:87	    include_once($config['library_path'] . '/utility.php');
-dynamic_include	./lib/data_query.php:918	    include_once($config['library_path'] . '/snmp.php');
+dynamic_include	./lib/data_query.php:943	    include_once($config['library_path'] . '/snmp.php');
 dynamic_include	./lib/database.php:289	        include($config['base_path'] . '/include/config.php');
 dynamic_include	./lib/dsstats.php:1006	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/dsstats.php:1050	        include_once($config['library_path'] . '/poller.php');
