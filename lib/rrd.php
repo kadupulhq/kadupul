@@ -2208,13 +2208,20 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
     return $failed ? false : $rrds_processed;
 }
 
+/**
+ * Tune a data source's RRDfile.
+ *
+ * @param array $rrd_tune_array Data source id, type and the options to change.
+ *
+ * @return bool True when every option was applied, or there was nothing to change.
+ */
 function rrdtool_function_tune($rrd_tune_array)
 {
     global $config, $data_source_types;
 
     if (getenv('RRDCACHED_ADDRESS')) {
         cacti_log('ERROR: Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.');
-        return;
+        return false;
     }
 
     include($config['include_path'] . '/global_arrays.php');
@@ -2277,17 +2284,89 @@ function rrdtool_function_tune($rrd_tune_array)
                     return false;
                 }
                 try {
-                    rrdtool_run_process($rrdtool_argv);
+                    $tuned = rrdtool_tune_apply($data_source_path, $rrdtool_argv);
                 } finally {
                     rrd_maintenance_release($lock);
                 }
 
                 cacti_log('CACTI2RRD: ' . $rrdtool_cmd, false, 'WEBLOG', POLLER_VERBOSITY_DEBUG);
+
+                return $tuned;
             } else {
                 cacti_log("ERROR: RRDtool executable not found, not executable or error in path '" . read_config_option('path_rrdtool') . "'.  No output written to RRDfile.");
+
+                return false;
             }
         }
+
+        return false;
     }
+
+    return true;
+}
+
+/**
+ * Run an `rrdtool tune` command so that it changes all of its options or none.
+ *
+ * RRDtool applies each option as it reaches it, so a rejected later option left
+ * the earlier ones stored (#777). The file is copied first and written back when
+ * the command fails. The caller holds the exclusive RRD maintenance lease.
+ *
+ * @param string             $data_source_path The RRDfile being tuned.
+ * @param array<int, string> $rrdtool_argv     The complete tune command.
+ *
+ * @return bool True when the command succeeded.
+ */
+function rrdtool_tune_apply($data_source_path, array $rrdtool_argv)
+{
+    $backup = tempnam(sys_get_temp_dir(), 'kadupul-tune-');
+    $saved  = $backup !== false && @copy($data_source_path, $backup);
+
+    clearstatcache();
+
+    if (!$saved || hash_file('sha256', $backup) !== hash_file('sha256', $data_source_path)) {
+        if ($backup !== false) {
+            @unlink($backup);
+        }
+
+        cacti_log("ERROR: RRD tuning could not copy '$data_source_path' before tuning; no changes were made.");
+
+        return false;
+    }
+
+    if (rrdtool_run_process($rrdtool_argv)) {
+        @unlink($backup);
+
+        return true;
+    }
+
+    // Write the copy back into the same file, so its owner and mode are kept.
+    $restored = false;
+    $source   = @fopen($backup, 'rb');
+    $target   = @fopen($data_source_path, 'r+b');
+
+    if ($source !== false && $target !== false && ftruncate($target, 0) && stream_copy_to_stream($source, $target) === filesize($backup) && fflush($target)) {
+        $restored = true;
+    }
+
+    if ($source !== false) {
+        fclose($source);
+    }
+
+    if ($target !== false) {
+        fclose($target);
+    }
+
+    clearstatcache();
+
+    if ($restored && hash_file('sha256', $backup) === hash_file('sha256', $data_source_path)) {
+        @unlink($backup);
+        cacti_log("ERROR: RRDtool tune failed for '$data_source_path'; the RRDfile was restored unchanged.");
+    } else {
+        cacti_log("ERROR: RRDtool tune failed for '$data_source_path' and the RRDfile could not be restored; its previous contents are in '$backup'.");
+    }
+
+    return false;
 }
 
 /** Fetch a data source's values, grouped by data source item and timestamp.
@@ -3632,6 +3711,8 @@ function rrdtool_pipe_quote($argument)
 /**
  * Run one RRDtool command to completion without a shell, discarding its
  * output. Its stderr is passed on to ours, where the shell pipe left it.
+ *
+ * @return bool True when the command started and exited with status 0.
  */
 function rrdtool_run_process(array $argv)
 {
@@ -3649,7 +3730,10 @@ function rrdtool_run_process(array $argv)
         });
     } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
         // Failing to start the shell pipe was silent as well.
+        return false;
     }
+
+    return $process->isSuccessful();
 }
 
 function rrdtool_pipe_encoder()
