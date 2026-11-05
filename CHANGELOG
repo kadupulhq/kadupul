@@ -467,6 +467,10 @@ Cacti CHANGELOG
 -feature#7364: Allow Users to Choose to Hide Graph Template on Site Trees
 -feature#7388: Allow admin to pass CSV file to change device script for bulk changes
 -issue: Update bundled jQuery UI to 1.14.2 and jQuery Tablesorter to 2.31.3
+-issue: Keep the stored data source heartbeat when the data source info view compares an RRD file, and report the difference instead of rewriting it (#774)
+-issue: Count an update RRDtool refuses as older than the last update as not stored, instead of reporting it written and deleting its queued sample (#775)
+-issue: Name the archive inside the RRD file, not the profile position, in resize recommendations (#780)
+-issue: Replace an RRD file with the resized copy only after RRDtool confirmed the resize (#773)
 
 1.2.31
 -security#GHSA-23g4-vf2j-94w4: CVE-2026-39894 RRDtool metric shift via LC_NUMERIC locale comma decimal formatting
