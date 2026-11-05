@@ -433,6 +433,62 @@ function get_public_key() {
     return $public_key;
 }
 
+/**
+ * import_package_read - read a package's expanded bytes, up to a limit
+ *
+ *   A small compressed file can expand without bound, and import_package()
+ *   lifts the memory limit, so the expanded size is checked while reading,
+ *   before any metadata, signature or XML processing (#110). The largest
+ *   shipped package expands to about 1.4 MB. Define
+ *   IMPORT_PACKAGE_MAX_EXPANDED_BYTES in include/config.php to change it.
+ *
+ * @param  (string) $xmlfile - the package file
+ *
+ * @return (string|bool) the expanded bytes, or false when unreadable, empty or too large
+ */
+function import_package_read($xmlfile) {
+	$limit  = defined('IMPORT_PACKAGE_MAX_EXPANDED_BYTES') ? (int) IMPORT_PACKAGE_MAX_EXPANDED_BYTES : 33554432;
+	$handle = @fopen('compress.zlib://' . $xmlfile, 'rb');
+
+	if (!is_resource($handle)) {
+		cacti_log('FATAL: Unable to open Cacti Package ' . $xmlfile, true, 'IMPORT', POLLER_VERBOSITY_LOW);
+
+		return false;
+	}
+
+	$data = '';
+
+	while (!feof($handle)) {
+		$chunk = fread($handle, 65536);
+
+		if ($chunk === false) {
+			fclose($handle);
+			cacti_log('FATAL: Unable to read Cacti Package ' . $xmlfile, true, 'IMPORT', POLLER_VERBOSITY_LOW);
+
+			return false;
+		}
+
+		$data .= $chunk;
+
+		if (strlen($data) > $limit) {
+			fclose($handle);
+			cacti_log('FATAL: Cacti Package ' . $xmlfile . ' expands beyond ' . $limit . ' bytes and was not read.', true, 'IMPORT', POLLER_VERBOSITY_LOW);
+
+			return false;
+		}
+	}
+
+	fclose($handle);
+
+	if ($data === '') {
+		cacti_log('FATAL: Unable to read Cacti Package ' . $xmlfile, true, 'IMPORT', POLLER_VERBOSITY_LOW);
+
+		return false;
+	}
+
+	return $data;
+}
+
 function import_package_get_public_key($xmlfile) {
 	$data = import_package_get_details($xmlfile);
 
@@ -454,10 +510,12 @@ function import_package_get_name($xmlfile) {
 }
 
 function import_package_get_details($xmlfile) {
-	$filename = "compress.zlib://$xmlfile";
-
 	$return = array();
-	$data = file_get_contents($filename, 'r');
+	$data = import_package_read($xmlfile);
+
+	if ($data === false) {
+		return array();
+	}
 
 	/* SECURITY: PHP requires libxml >= 2.9, which disables external entity
 	 * loading by default, so no entity loader toggle is
@@ -536,31 +594,24 @@ function import_read_package_data($xmlfile, &$public_key) {
 		return false;
 	}
 
-	$f   = fopen($filename, 'r');
+	$content = import_package_read($xmlfile);
+
+	if ($content === false) {
+		return false;
+	}
+
 	$xml = '';
+	$binary_signature = '';
 
-	if (is_resource($f)) {
-		while (!feof($f)) {
-			$x = fgets($f);
+	foreach (preg_split('/(?<=\n)/', $content, -1, PREG_SPLIT_NO_EMPTY) as $x) {
+		if (strpos($x, '<signature>') !== false) {
+			$binary_signature = base64_decode(trim(str_replace(array('<signature>', '</signature>'), array('', ''), $x)));
+			$x = "   <signature></signature>\n";
 
-			if (strlen($x) == 0) {
-				cacti_log('FATAL: Unable to read Cacti Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
-				fclose($f);
-				return false;
-			} elseif (strpos($x, '<signature>') !== FALSE) {
-				$binary_signature =  base64_decode(trim(str_replace(array('<signature>', '</signature>'), array('', ''), $x)));
-				$x = "   <signature></signature>\n";
-
-				cacti_log('NOTE: Got Package Signature', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
-			}
-
-			$xml .= "$x";
+			cacti_log('NOTE: Got Package Signature', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 		}
 
-		fclose($f);
-	} else {
-		cacti_log('FATAL: Unable to open file ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
-		return false;
+		$xml .= "$x";
 	}
 
 	// Verify Signature
