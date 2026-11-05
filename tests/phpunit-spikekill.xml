@@ -22,6 +22,9 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
+      <file>./Unit/Core/Rrd/RrdCompareReadOnlyTest.php</file>
+      <file>./Unit/Core/Rrd/RrdTuneResizeFailureTest.php</file>
+      <file>./Unit/Core/Rrd/RrdPastSampleNativeTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
