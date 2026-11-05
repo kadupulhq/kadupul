@@ -19,6 +19,10 @@
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
+      <file>./Unit/Core/Poller/ReplicateOutFailureTest.php</file>
+      <file>./Unit/Core/Poller/PollerCacheRebuildFailureTest.php</file>
+      <file>./Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
+      <file>./Unit/Core/Poller/PollerUnmappedMultiOutputTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>

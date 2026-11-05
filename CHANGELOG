@@ -1,6 +1,11 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Keep the previous poller cache and reindex rows when their replacement rows cannot be stored, and report the failed rebuild instead of deleting them (#758)
+-issue: Keep samples a remote collector stores in poller_output while offline until recovery has delivered them, and report a sample batch that cmd.php could not store (#759)
+-issue: Report a failed Data Collector synchronization instead of logging it as completed (#760)
+-issue: Retain malformed MULTI poller output until it expires instead of writing an all-unknown update for it (#763)
+-issue: Delete stale remote poller items with a bound cutoff and valid SQL so stale rows are removed on a strict MySQL/MariaDB remote (#741)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available

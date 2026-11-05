@@ -114,6 +114,6 @@ test('without Boost redirect the flush is the single poller_output insert of 1.2
 test('cmd.php writes every poller output flush through the one helper', function () use ($root) {
 	$source = file_get_contents($root . '/cmd.php');
 
-	expect(substr_count($source, 'cmd_write_poller_output($output_array, $poller_db_cnn_id);'))->toBe(3)
+	expect(substr_count($source, 'cmd_write_poller_output($output_array, $poller_db_cnn_id)'))->toBe(3)
 		->and(substr_count($source, 'INSERT IGNORE INTO poller_output_boost'))->toBe(1);
 });

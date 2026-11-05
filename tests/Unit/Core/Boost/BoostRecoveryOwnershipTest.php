@@ -46,7 +46,7 @@ function boostRecoveryOwnership_boost_flush_output_batch($value_tuples, $conn = 
 	return true;
 }
 
-function boostRecoveryOwnership_recovery_delete_acknowledged_rows($rows, $conn) {
+function boostRecoveryOwnership_recovery_delete_acknowledged_rows($rows, $conn, $source_table = 'poller_output_boost') {
 	$GLOBALS['boost_recovery_ownership']['deleted'] = array_merge($GLOBALS['boost_recovery_ownership']['deleted'], $rows);
 
 	return true;
@@ -104,6 +104,7 @@ function boostRecoveryOwnershipLoad($root) {
 	eval('function boostRecoveryOwnershipBatch($rows, $poller_id) {
 		$remote_db_cnn_id = "main";
 		$local_db_cnn_id  = "local";
+		$source_table     = "poller_output_boost";
 		$records_inserted = 0;
 		$transfer_failed  = false;
 
