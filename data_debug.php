@@ -58,6 +58,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'run_debug':
+		csrf_require_post();
+
 		$id = get_filter_request_var('id');
 
 		if ($id > 0) {
@@ -72,6 +74,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'run_repair':
+		csrf_require_post();
+
 		$id = get_filter_request_var('id');
 
 		if ($id > 0) {
@@ -832,7 +836,7 @@ function debug_view() {
 	} elseif ($debug_status == 'analysis') {
 		html_start_box(__('Data Source Troubleshooter [ Auto Refreshing till RRDfile Update ] %s', '<i class="reloadquery fa fa-sync" data-id="' . $id . '" title="' . __esc('Refresh Now') . '"></i>'), '100%', '', '3', 'center', '');
 	} else {
-		html_start_box(__('Data Source Troubleshooter [ Analysis Complete! %s ]', '<a href="#" class="rerun linkEditMain" data-id="' . $id . '" style="cursor:pointer;">' . __('Rerun Analysis') . '</a>'), '100%', '', '3', 'center', '');
+		html_start_box(__('Data Source Troubleshooter [ Analysis Complete! %s ]', '<a href="#" class="cactiPostAction linkEditMain" data-url="' . html_escape('data_debug.php?action=run_debug&id=' . $id) . '" style="cursor:pointer;">' . __('Rerun Analysis') . '</a>'), '100%', '', '3', 'center', '');
 	}
 
 	html_header(
@@ -917,7 +921,7 @@ function debug_view() {
 			$path = get_data_source_path($id, true);
 
 			if (is_writeable($path)) {
-				html_start_box(__('Repair Steps [ %s ]', '<a href="#" class="repairme linkEditMain" data-id="' . $id . '" style="cursor:pointer;">' . __('Apply Suggested Fixes') . '</a>'), '', '', '2', 'center', '');
+				html_start_box(__('Repair Steps [ %s ]', '<a href="#" class="cactiPostAction linkEditMain" data-url="' . html_escape('data_debug.php?action=run_repair&id=' . $id) . '" style="cursor:pointer;">' . __('Apply Suggested Fixes') . '</a>'), '', '', '2', 'center', '');
 			} else {
 				html_start_box(__('Repair Steps [ Run Fix from Command Line ]', $path), '', '', '2', 'center', '');
 			}
@@ -946,21 +950,9 @@ function debug_view() {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	$(function() {
-		$('.repairme').on('click', function(event) {
-			event.preventDefault();
-			id = $(this).attr('data-id');
-			loadPage('data_debug.php?action=run_repair&id=' + id);
-		});
-
 		$('.reloadquery').on('click', function() {
 			id = $(this).attr('data-id');
 			loadPage('data_debug.php?action=view&id=' + id);
-		});
-
-		$('.rerun').on('click', function(event) {
-			event.preventDefault();
-			id = $(this).attr('data-id');
-			loadPage('data_debug.php?action=run_debug&id=' + id);
 		});
 	});
 	</script>
