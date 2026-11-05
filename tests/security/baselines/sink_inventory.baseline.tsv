@@ -321,7 +321,7 @@ dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2321	    include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:2374	    include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3876	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);
@@ -508,8 +508,10 @@ fs_write	./lib/functions.php:7785	            file_put_contents($tmp_file, 'cact
 fs_write	./lib/functions.php:941	        file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace($config_name, false, false, 0, 1) . "\n", FILE_APPEND);
 fs_write	./lib/functions.php:953	            file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/functions.php:962	                file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
-fs_write	./lib/import.php:483	    $f   = fopen($filename, 'r');
-fs_write	./lib/import.php:721	                        $file = fopen($filename, 'wb');
+fs_write	./lib/import.php:404	    $handle = @fopen('compress.zlib://' . $xmlfile, 'rb');
+fs_write	./lib/import.php:774	                        $file = fopen($filename, 'wb');
+fs_write	./package_import.php:390	                file_put_contents($xmlfile, $data);
+fs_write	./package_import.php:81	    if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
 fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
@@ -530,8 +532,10 @@ fs_write	./lib/spikekill.php:1283	            $handle    = @fopen($candidate, 'x
 fs_write	./lib/spikekill.php:533	        $source_handle = @fopen($this->rrdfile, 'rb');
 fs_write	./lib/spikekill.php:954	        $original = @fopen($rrdfile, 'rb');
 fs_write	./lib/utility.php:760	            file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace('time_last_change_poller_item', false, false, 0, 1) . "\n", FILE_APPEND);
-fs_write	./package_import.php:382					file_put_contents($xmlfile, $data);
-fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
+header_redirect	./package_import.php:114	                header('Location: package_import.php');
+header_redirect	./package_import.php:120	            header('Location: package_import.php');
+header_redirect	./package_import.php:132	            header('Location: package_import?package_location=0');
+header_redirect	./package_import.php:220	            header('Location: package_import.php');
 fs_write	./script_server.php:38	    define('STDIN', fopen('php://stdin', 'r'));
 fs_write	./script_server.php:39	    define('STDOUT', fopen('php://stdout', 'w'));
 fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$tmpfile", $data);
@@ -806,10 +810,6 @@ header_redirect	./managers.php:912	            header('Location: managers.php?ac
 header_redirect	./managers.php:966	    header('Location: managers.php?action=edit&header=false&id=' . (empty($manager_id) ? get_nfilter_request_var('id') : $manager_id));
 header_redirect	./managers.php:994	            header('Location: managers.php');
 header_redirect	./mibs/index.php:7	header("Location:../index.php");
-header_redirect	./package_import.php:111					header('Location: package_import.php');
-header_redirect	./package_import.php:117				header('Location: package_import.php');
-header_redirect	./package_import.php:129				header('Location: package_import?package_location=0');
-header_redirect	./package_import.php:217				header('Location: package_import.php');
 header_redirect	./plugins.php:107	            header('Location: plugins.php' . ($option != '' ? '?' . $option : ''));
 header_redirect	./plugins.php:128	            header('Location: plugins.php' . ($option != '' ? '?' . $option : ''));
 header_redirect	./plugins.php:143	            header('Location: plugins.php' . ($option != '' ? '?' . $option : ''));
@@ -887,6 +887,6 @@ header_redirect	./utilities.php:33	        header('Location: utilities.php?actio
 header_redirect	./utilities.php:38	        header('Location: utilities.php?header=false');
 header_redirect	./utilities.php:87	        header('Location: utilities.php');
 header_redirect	./utilities.php:91	        header('Location: utilities.php?action=view_snmpagent_cache');
-xml_parse	./lib/import.php:423	    $xmlget = simplexml_load_string($data, null, LIBXML_NONET);
-xml_parse	./lib/import.php:550	    $xmlget = simplexml_load_string($xml, null, LIBXML_NONET);
+xml_parse	./lib/import.php:483	    $xmlget = simplexml_load_string($data, null, LIBXML_NONET);
+xml_parse	./lib/import.php:603	    $xmlget = simplexml_load_string($xml, null, LIBXML_NONET);
 xml_parse	./src/Platform/Infrastructure/Legacy/InstallerTemplateCatalog.php:94	            $xml = simplexml_load_string($bytes, options: LIBXML_NONET);
