@@ -228,10 +228,10 @@ $poller_mibsrun  = read_config_option('poller_mibsrun_' . $poller_id);
 
 // collect the system mibs every 4 hours
 if (empty($poller_mibsrun) || ($current_time - $poller_mibsrun > 14400)) {
-	set_config_option('poller_mibsrun_' . $poller_id, $current_time);
-
 	$mibs = true;
 }
+
+$mibs_recorded = false;
 
 // get the poller data
 $poller = db_fetch_row_prepared('SELECT *
@@ -764,6 +764,13 @@ while ($poller_runs_completed < $poller_runs) {
 				usleep(100000);
 
 				$started_processes++;
+			}
+
+			/* record the system MIB run once a collector has been started with --mibs,
+			 * so an exit before launch leaves the four-hour window open */
+			if ($mibs && $started_processes > 0 && !$mibs_recorded) {
+				set_config_option('poller_mibsrun_' . $poller_id, $current_time);
+				$mibs_recorded = true;
 			}
 
 			if ($poller_id == 1) {
