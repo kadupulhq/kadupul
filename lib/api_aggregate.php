@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1178,11 +1179,14 @@ function push_out_aggregates($aggregate_template_id, $local_graph_id = 0) {
 		foreach($aggregate_graphs as $ag) {
 			$member_graphs = array();
 
-			$graphs = db_fetch_assoc_prepared('SELECT DISTINCT agi.local_graph_id
+			/* keep the stored member order, which No Reordering relies on */
+			$graphs = db_fetch_assoc_prepared('SELECT agi.local_graph_id
 				FROM aggregate_graphs AS ag
 				INNER JOIN aggregate_graphs_items AS agi
 				ON ag.id=agi.aggregate_graph_id
-				WHERE ag.local_graph_id = ?',
+				WHERE ag.local_graph_id = ?
+				GROUP BY agi.local_graph_id
+				ORDER BY MIN(agi.sequence), agi.local_graph_id',
 				array($ag));
 
 			/* remove all old graph items first */
