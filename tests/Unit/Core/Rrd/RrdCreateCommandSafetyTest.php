@@ -205,6 +205,23 @@ test('a create that leaves no file reports failure and removes nothing else', fu
 	}
 });
 
+test('a create path with a parent directory segment is refused before rrdtool runs', function () {
+	$dir = rrdCreateSafetyDirectory();
+
+	try {
+		$rrdtool = rrdCreateSafetyFixtureRrdtool($dir);
+		$path    = $dir . '/rra/../outside.rrd';
+
+		$result = rrdCreateSafetyRun($dir, $rrdtool, $path, '$result = rrdtool_create_file($path, " --step 300", false, false, "POLLER");'
+			. 'echo json_encode(array($result, file_exists($path)));');
+
+		expect($result)->toBe(array(false, false))
+			->and(file_exists($dir . '/commands'))->toBeFalse();
+	} finally {
+		rrdCreateSafetyRemove($dir);
+	}
+});
+
 test('create and update give a path with a space to rrdtool as one argument', function ($piped) {
 	$binary = rrdCreateSafetyBinary();
 

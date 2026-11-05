@@ -748,6 +748,13 @@ function rrdtool_command_path($path) {
 function rrdtool_create_file($path, $definition, $log_to_stdout, $rrdtool_pipe, $logopt) {
 	global $config;
 
+	/* every caller has checked the path; the realtime path is checked here */
+	if (!cacti_rrdtool_valid_path($path) || !rrd_check_path($path)) {
+		cacti_log('ERROR: RRDfile not created; invalid path: ' . cacti_log_safe_value($path), false, $logopt);
+
+		return false;
+	}
+
 	if ((!isset($config['force_storage_location_local']) || $config['force_storage_location_local'] !== true) && read_config_option('storage_location')) {
 		$argument = rrdtool_command_path($path);
 
