@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Widen `user_log.user_id`, `user_auth_row_cache.user_id` and `settings_user_group.group_id` to the account and group ids they hold, in `cacti.sql`, the audit baseline and the 1.2.38 upgrade; a column holding a negative id stops the upgrade for review instead of being clamped to 0 (#927).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
