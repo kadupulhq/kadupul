@@ -379,7 +379,18 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	}
 
 	if ($repair) {
-		if ($data_input_allowed) {
+		if ($data_input_allowed && $preview_only) {
+			/* a preview must not rewrite data input fields or their mappings */
+			$repair_message = __('Legacy system input fields and mappings will be checked for repairs only when the template is imported.');
+
+			foreach (array('data_input_method', 'data_template') as $repair_type) {
+				if (isset($info_array[$repair_type])) {
+					foreach ($info_array[$repair_type] as $index => $repair_info) {
+						$info_array[$repair_type][$index]['differences'][] = $repair_message;
+					}
+				}
+			}
+		} elseif ($data_input_allowed) {
 			repair_system_data_input_methods();
 		} else {
 			/* the repair rewrites data input fields and their mappings, so it needs the same permission */
