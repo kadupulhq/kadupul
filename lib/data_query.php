@@ -2349,11 +2349,18 @@ function update_data_query_sort_cache_by_host($host_id) {
    @returns - a string containing best data query index type. this will be one of the
 	valid input field names as specified in the data query xml file */
 function get_best_data_query_index_type($host_id, $data_query_id) {
-	$index_type = db_fetch_cell_prepared('SELECT sort_field
+	$index_row = db_fetch_row_prepared('SELECT sort_field
 		FROM host_snmp_query
 		WHERE host_id = ?
 		AND snmp_query_id = ?',
 		array($host_id, $data_query_id));
+
+	/* a failed read is not an empty sort field; do not fall back to the XML and store it */
+	if ($index_row === false) {
+		return false;
+	}
+
+	$index_type = $index_row['sort_field'] ?? '';
 
 	if ($index_type == '') {
 		$raw_xml = get_data_query_array($data_query_id);
