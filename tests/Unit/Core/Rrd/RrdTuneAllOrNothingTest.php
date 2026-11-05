@@ -57,6 +57,8 @@ function rrd_tune_cleanup(string $dir): void
         if (is_file($file)) {
             chmod($file, 0600);
             unlink($file);
+        } elseif (is_dir($file) && !in_array(basename($file), array('.', '..'), true)) {
+            rmdir($file);
         }
     }
     rmdir($dir);
@@ -123,11 +125,11 @@ test('a tune that cannot run reports false without changing the RRDfile', functi
     try {
         file_put_contents($dir . '/rrdtool', "#!/bin/sh\nprintf ' tuned' >> \"\$2\"\n");
         chmod($dir . '/rrdtool', 0700);
-        if ($case !== 'missing RRDfile') {
+        // A directory in place of the RRDfile cannot be copied, even by root.
+        if ($case === 'uncopyable RRDfile') {
+            mkdir($dir . '/source.rrd');
+        } elseif ($case !== 'missing RRDfile') {
             file_put_contents($dir . '/source.rrd', 'original');
-        }
-        if ($case === 'unreadable RRDfile') {
-            chmod($dir . '/source.rrd', 0200);
         }
         $tune = array('data_source_id' => 1, 'data-source-type' => '', 'heartbeat' => 900, 'minimum' => '', 'maximum' => '', 'data-source-rename' => '');
         $rrdtool = $case === 'missing RRDtool' ? $dir . '/no-rrdtool' : $dir . '/rrdtool';
@@ -141,19 +143,20 @@ test('a tune that cannot run reports false without changing the RRDfile', functi
             ->and($run['log'])->toContain(match ($case) {
                 'external writer' => 'disable RRDCACHED_ADDRESS before tuning',
                 'missing RRDtool' => 'RRDtool executable not found',
-                'unreadable RRDfile' => "RRD tuning could not copy '$dir/source.rrd' before tuning; no changes were made.",
+                'uncopyable RRDfile' => "RRD tuning could not copy '$dir/source.rrd' before tuning; no changes were made.",
                 'missing RRDfile' => '',
             });
         if ($case === 'missing RRDfile') {
-            expect(is_file($dir . '/source.rrd'))->toBeFalse();
+            expect(file_exists($dir . '/source.rrd'))->toBeFalse();
+        } elseif ($case === 'uncopyable RRDfile') {
+            expect(is_dir($dir . '/source.rrd'))->toBeTrue();
         } else {
-            chmod($dir . '/source.rrd', 0600);
             expect(file_get_contents($dir . '/source.rrd'))->toBe('original');
         }
     } finally {
         rrd_tune_cleanup($dir);
     }
-})->with(array('external writer', 'missing RRDtool', 'missing RRDfile', 'unreadable RRDfile'));
+})->with(array('external writer', 'missing RRDtool', 'missing RRDfile', 'uncopyable RRDfile'));
 
 test('a tune with nothing to change succeeds without running RRDtool', function () {
     $dir = rrd_tune_fixture();
@@ -176,8 +179,9 @@ test('a tune whose restore fails keeps the copy and names it in the log', functi
     $dir = rrd_tune_fixture();
     try {
         file_put_contents($dir . '/source.rrd', 'original');
-        // The boundary changes the file and leaves it read-only, so it cannot be written back.
-        file_put_contents($dir . '/rrdtool', "#!/bin/sh\nprintf ' partly tuned' >> \"\$2\"\nchmod 0444 \"\$2\"\nexit 1\n");
+        // The boundary leaves a directory where the RRDfile was, so it cannot be
+        // written back, whatever the user's privileges.
+        file_put_contents($dir . '/rrdtool', "#!/bin/sh\nrm -f \"\$2\"\nmkdir \"\$2\"\nexit 1\n");
         chmod($dir . '/rrdtool', 0700);
 
         $run = rrd_tune_all_or_nothing($this, $dir, $dir . '/rrdtool', array('data_source_id' => 1, 'data-source-type' => '', 'heartbeat' => 900, 'minimum' => 'abc', 'maximum' => '', 'data-source-rename' => ''));
