@@ -2466,12 +2466,35 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
             }
         }
 
+        $replacing = false;
+
         if ($truncate) {
             $prefix = "REPLACE INTO $table (";
             $suffix = '';
 
-            if (!db_execute("TRUNCATE TABLE $table", true, $conn)) {
+            // TRUNCATE commits at once, so a failed insert after it left the
+            // collector table empty (#761). On a transactional table, delete and
+            // reload the rows in one transaction that is rolled back on failure.
+            $remote_create = db_fetch_row("SHOW CREATE TABLE `$table`", false, $conn);
+            if (!is_array($remote_create)) {
                 return false;
+            }
+
+            if ($conn instanceof \PDO && preg_match('/\bENGINE=InnoDB\b/i', (string) ($remote_create['Create Table'] ?? '')) === 1) {
+                if ($conn->inTransaction() || !$conn->beginTransaction()) {
+                    return false;
+                }
+                $replacing = true;
+
+                if (!db_execute("DELETE FROM `$table`", true, $conn)) {
+                    return replicate_out_rollback($conn, $table);
+                }
+            } else {
+                replicate_log('WARNING: Replicate Out Table ' . $table . ' on Remote Poller ' . $remote_poller_id . ' is not InnoDB. It is emptied before the replacement rows are written.', POLLER_VERBOSITY_LOW);
+
+                if (!db_execute("TRUNCATE TABLE $table", true, $conn)) {
+                    return false;
+                }
             }
         } else {
             $prefix = "INSERT INTO $table (";
@@ -2529,7 +2552,7 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 
             if ($rowcnt > 1000) {
                 if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
-                    return false;
+                    return $replacing ? replicate_out_rollback($conn, $table) : false;
                 }
                 $rows_affected = db_affected_rows($conn);
                 $rows_log      = ((($rows_done % 100000) + $rows_affected) > 100000);
@@ -2545,9 +2568,21 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 
         if ($rowcnt > 0) {
             if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
-                return false;
+                return $replacing ? replicate_out_rollback($conn, $table) : false;
             }
             $rows_done += db_affected_rows($conn);
+        }
+
+        if ($replacing) {
+            try {
+                $committed = $conn->commit();
+            } catch (\Throwable $e) {
+                $committed = false;
+            }
+
+            if (!$committed) {
+                return replicate_out_rollback($conn, $table);
+            }
         }
 
         replicate_log('INFO: Table ' . $table . ' Replicated to Remote Poller ' . $remote_poller_id . ' With ' . $rows_done . ' Rows Updated', $level);
@@ -2585,6 +2620,35 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
     }
 
     return true;
+}
+
+/**
+ * replicate_out_rollback - abandon a remote table replacement, keeping its previous rows
+ *
+ * @param  (object) $conn  - Connection to remote database
+ * @param  (string) $table - The remote table being replaced
+ *
+ * @return (bool) Always false, so callers can return it as the outcome
+ */
+function replicate_out_rollback($conn, $table)
+{
+    $kept = false;
+
+    try {
+        if ($conn->inTransaction()) {
+            $kept = $conn->rollBack();
+        }
+    } catch (\Throwable $e) {
+        $kept = false;
+    }
+
+    if ($kept) {
+        cacti_log('ERROR: Replicate Out failed for ' . $table . '. The remote rows were kept.', false, 'REPLICATE');
+    } else {
+        cacti_log('ERROR: Replicate Out failed for ' . $table . ' and the rollback of the remote rows was not confirmed.', false, 'REPLICATE');
+    }
+
+    return false;
 }
 
 function replicate_log($text, $level = POLLER_VERBOSITY_NONE)

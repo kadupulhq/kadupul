@@ -62,6 +62,7 @@
       <file>Unit/Core/Rrd/RrdTuneLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerReplicationOutcomeTest.php</file>
       <file>Unit/Core/Poller/PollerReplicationSequenceTest.php</file>
+      <file>Unit/Core/Poller/ReplicateOutTableReplacementTest.php</file>
       <file>Unit/Core/Poller/PollerWriterDeadlineNativeTest.php</file>
       <file>Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
