@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
