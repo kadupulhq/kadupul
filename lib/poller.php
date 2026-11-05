@@ -2240,11 +2240,27 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 			}
 		}
 
+		$replacing      = false;
+		$replace_failed = false;
+
 		if ($truncate) {
 			$prefix = "REPLACE INTO $table (";
 			$suffix = '';
 
-			replicate_out_execute("TRUNCATE TABLE $table", true, $conn);
+			/**
+			 * TRUNCATE commits at once, so a failed insert after it left the
+			 * remote table empty (#761).  On a transactional table, delete and
+			 * reload the rows in one transaction that is rolled back on failure.
+			 */
+			$remote_create = db_fetch_row("SHOW CREATE TABLE `$table`", false, $conn);
+
+			if (is_object($conn) && isset($remote_create['Create Table']) && preg_match('/\bENGINE=InnoDB\b/i', $remote_create['Create Table']) && !$conn->inTransaction() && $conn->beginTransaction()) {
+				$replacing = true;
+
+				replicate_out_replace_execute("DELETE FROM `$table`", $conn, $replace_failed);
+			} else {
+				replicate_out_execute("TRUNCATE TABLE $table", true, $conn);
+			}
 		} else {
 			$prefix = "INSERT INTO $table (";
 			$suffix = ' ON DUPLICATE KEY UPDATE ';
@@ -2298,7 +2314,11 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 			$rowcnt++;
 
 			if ($rowcnt > 1000) {
-				replicate_out_execute($prefix . $sql . $suffix, true, $conn);
+				if ($replacing) {
+					replicate_out_replace_execute($prefix . $sql . $suffix, $conn, $replace_failed);
+				} else {
+					replicate_out_execute($prefix . $sql . $suffix, true, $conn);
+				}
 				$rows_affected = db_affected_rows($conn);
 				$rows_log      = ((($rows_done % 100000) + $rows_affected) > 100000);
 				$rows_done    += $rows_affected;
@@ -2312,8 +2332,18 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 		}
 
 		if ($rowcnt > 0) {
-			replicate_out_execute($prefix . $sql . $suffix, true, $conn);
+			if ($replacing) {
+				replicate_out_replace_execute($prefix . $sql . $suffix, $conn, $replace_failed);
+			} else {
+				replicate_out_execute($prefix . $sql . $suffix, true, $conn);
+			}
 			$rows_done += db_affected_rows($conn);
+		}
+
+		if ($replacing && !replicate_out_replace_finish($conn, $table, $replace_failed)) {
+			$replicate_out_success = false;
+
+			return false;
 		}
 
 		replicate_log('INFO: Table ' . $table . ' Replicated to Remote Poller ' . $remote_poller_id . ' With ' . $rows_done . ' Rows Updated', $level);
@@ -2353,6 +2383,72 @@ function replicate_out_execute($sql, $silent = false, $conn = false) {
 	}
 
 	return $result;
+}
+
+/**
+ * replicate_out_replace_execute - run one statement of a transactional table
+ *   replacement.  After the first failure no further statement is sent, and
+ *   the database layer does not retry, so nothing can be written outside the
+ *   transaction after a deadlock or lost connection.
+ *
+ * @param  (string) $sql    - The statement to run
+ * @param  (object) $conn   - Connection to remote database
+ * @param  (bool)   $failed - Set to true once a statement fails
+ *
+ * @return (bool) True if the statement succeeded
+ */
+function replicate_out_replace_execute($sql, $conn, &$failed) {
+	if ($failed) {
+		return false;
+	}
+
+	if (db_execute($sql, false, $conn) === false) {
+		$failed = true;
+
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * replicate_out_replace_finish - commit a transactional table replacement, or
+ *   roll it back so the remote table keeps its previous rows.
+ *
+ * @param  (object) $conn   - Connection to remote database
+ * @param  (string) $table  - The remote table being replaced
+ * @param  (bool)   $failed - Whether a statement of the replacement failed
+ *
+ * @return (bool) True if the replacement was committed
+ */
+function replicate_out_replace_finish($conn, $table, $failed) {
+	if (!$failed) {
+		try {
+			if ($conn->commit()) {
+				return true;
+			}
+		} catch (\Exception $e) {
+			// Treated as a failed commit below.
+		}
+	}
+
+	$kept = false;
+
+	try {
+		if ($conn->inTransaction()) {
+			$kept = $conn->rollBack();
+		}
+	} catch (\Exception $e) {
+		$kept = false;
+	}
+
+	if ($kept) {
+		cacti_log('ERROR: Replicate Out failed for ' . $table . '. The remote rows were kept.', false, 'REPLICATE');
+	} else {
+		cacti_log('ERROR: Replicate Out failed for ' . $table . ' and the rollback of the remote rows was not confirmed.', false, 'REPLICATE');
+	}
+
+	return false;
 }
 
 function replicate_log($text, $level = POLLER_VERBOSITY_NONE) {
