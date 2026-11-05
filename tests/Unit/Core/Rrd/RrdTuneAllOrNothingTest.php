@@ -7,7 +7,7 @@
 // left the earlier ones stored while rrdtool_function_tune() reported nothing.
 
 /** Run the production rrdtool_function_tune() in its own process. */
-function rrd_tune_all_or_nothing(object $test, string $dir, string $rrdtool, array $tune): array
+function rrd_tune_all_or_nothing(object $test, string $dir, string $rrdtool, array $tune, array $extraEnvironment = array()): array
 {
     $root = dirname(__DIR__, 4);
     $config = array('cacti_server_os' => 'unix', 'rra_path' => $dir, 'include_path' => $dir, 'is_web' => true);
@@ -26,6 +26,7 @@ function rrd_tune_all_or_nothing(object $test, string $dir, string $rrdtool, arr
     // Backups go to the temporary directory; point it at the fixture to see leftovers.
     $environment = array_merge(getenv(), array('TMPDIR' => $dir));
     unset($environment['RRDCACHED_ADDRESS']);
+    $environment = array_merge($environment, $extraEnvironment);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/tune.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, $environment);
     $output = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
@@ -54,6 +55,7 @@ function rrd_tune_cleanup(string $dir): void
 {
     foreach (glob($dir . '/{,.}*', GLOB_BRACE) as $file) {
         if (is_file($file)) {
+            chmod($file, 0600);
             unlink($file);
         }
     }
@@ -111,6 +113,79 @@ test('a real RRDtool keeps the earlier heartbeat when a later minimum is rejecte
         expect($good['result'])->toBeTrue()
             ->and($info)->toContain('ds[value].minimal_heartbeat = 900')
             ->and($info)->toContain('ds[value].min = 0.0000000000e+00');
+    } finally {
+        rrd_tune_cleanup($dir);
+    }
+});
+
+test('a tune that cannot run reports false without changing the RRDfile', function (string $case) {
+    $dir = rrd_tune_fixture();
+    try {
+        file_put_contents($dir . '/rrdtool', "#!/bin/sh\nprintf ' tuned' >> \"\$2\"\n");
+        chmod($dir . '/rrdtool', 0700);
+        if ($case !== 'missing RRDfile') {
+            file_put_contents($dir . '/source.rrd', 'original');
+        }
+        if ($case === 'unreadable RRDfile') {
+            chmod($dir . '/source.rrd', 0200);
+        }
+        $tune = array('data_source_id' => 1, 'data-source-type' => '', 'heartbeat' => 900, 'minimum' => '', 'maximum' => '', 'data-source-rename' => '');
+        $rrdtool = $case === 'missing RRDtool' ? $dir . '/no-rrdtool' : $dir . '/rrdtool';
+        $environment = $case === 'external writer' ? array('RRDCACHED_ADDRESS' => 'unix:/nonexistent') : array();
+
+        $run = rrd_tune_all_or_nothing($this, $dir, $rrdtool, $tune, $environment);
+
+        clearstatcache();
+        expect($run['result'])->toBeFalse()
+            ->and($run['backups'])->toBe([])
+            ->and($run['log'])->toContain(match ($case) {
+                'external writer' => 'disable RRDCACHED_ADDRESS before tuning',
+                'missing RRDtool' => 'RRDtool executable not found',
+                'unreadable RRDfile' => "RRD tuning could not copy '$dir/source.rrd' before tuning; no changes were made.",
+                'missing RRDfile' => '',
+            });
+        if ($case === 'missing RRDfile') {
+            expect(is_file($dir . '/source.rrd'))->toBeFalse();
+        } else {
+            chmod($dir . '/source.rrd', 0600);
+            expect(file_get_contents($dir . '/source.rrd'))->toBe('original');
+        }
+    } finally {
+        rrd_tune_cleanup($dir);
+    }
+})->with(array('external writer', 'missing RRDtool', 'missing RRDfile', 'unreadable RRDfile'));
+
+test('a tune with nothing to change succeeds without running RRDtool', function () {
+    $dir = rrd_tune_fixture();
+    try {
+        file_put_contents($dir . '/source.rrd', 'original');
+        file_put_contents($dir . '/rrdtool', "#!/bin/sh\ntouch " . escapeshellarg($dir . '/ran') . "\n");
+        chmod($dir . '/rrdtool', 0700);
+
+        $run = rrd_tune_all_or_nothing($this, $dir, $dir . '/rrdtool', array('data_source_id' => 1, 'data-source-type' => '', 'heartbeat' => '', 'minimum' => '', 'maximum' => '', 'data-source-rename' => ''));
+
+        expect($run['result'])->toBeTrue()
+            ->and(is_file($dir . '/ran'))->toBeFalse()
+            ->and(file_get_contents($dir . '/source.rrd'))->toBe('original');
+    } finally {
+        rrd_tune_cleanup($dir);
+    }
+});
+
+test('a tune whose restore fails keeps the copy and names it in the log', function () {
+    $dir = rrd_tune_fixture();
+    try {
+        file_put_contents($dir . '/source.rrd', 'original');
+        // The boundary changes the file and leaves it read-only, so it cannot be written back.
+        file_put_contents($dir . '/rrdtool', "#!/bin/sh\nprintf ' partly tuned' >> \"\$2\"\nchmod 0444 \"\$2\"\nexit 1\n");
+        chmod($dir . '/rrdtool', 0700);
+
+        $run = rrd_tune_all_or_nothing($this, $dir, $dir . '/rrdtool', array('data_source_id' => 1, 'data-source-type' => '', 'heartbeat' => 900, 'minimum' => 'abc', 'maximum' => '', 'data-source-rename' => ''));
+
+        expect($run['result'])->toBeFalse()
+            ->and($run['backups'])->toHaveCount(1)
+            ->and(file_get_contents($run['backups'][0]))->toBe('original')
+            ->and($run['log'])->toContain("RRDtool tune failed for '$dir/source.rrd' and the RRDfile could not be restored; its previous contents are in '" . $run['backups'][0] . "'.");
     } finally {
         rrd_tune_cleanup($dir);
     }

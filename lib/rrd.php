@@ -3730,9 +3730,9 @@ function rrdtool_run_process(array $argv)
         });
     } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
         // Failing to start the shell pipe was silent as well.
-        return false;
     }
 
+    // A process that did not start has no exit code, so it is not successful.
     return $process->isSuccessful();
 }
 
