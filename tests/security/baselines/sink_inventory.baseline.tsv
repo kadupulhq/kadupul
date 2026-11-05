@@ -386,8 +386,8 @@ dynamic_include	./lib/html_tree.php:825		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:826		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:827		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/html_tree.php:95		include_once($config['library_path'] . '/data_query.php');
-dynamic_include	./lib/import.php:2329		include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/import.php:31		include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/import.php:2381		include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3605					include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:57			include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:154							include_once($plugin_include);
@@ -573,8 +573,8 @@ fs_write	./lib/functions.php:760					file_put_contents(sys_get_temp_dir() . '/ca
 fs_write	./lib/functions.php:7809			if (($f = @fopen($path, 'a'))) {
 fs_write	./lib/functions.php:7818		if (($f = @fopen($path, 'w'))) {
 fs_write	./lib/functions.php:7892				file_put_contents($tmp_file, 'cacti');
-fs_write	./lib/import.php:539		$f   = fopen($filename, 'r');
-fs_write	./lib/import.php:788							$file = fopen($filename, 'wb');
+fs_write	./lib/import.php:451		$handle = @fopen('compress.zlib://' . $xmlfile, 'rb');
+fs_write	./lib/import.php:839							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2996				$file = fopen($cacheFile, "r");
 fs_write	./lib/maintenance_cli.php:160		$handle = @fopen($path, 'x+b');
 fs_write	./lib/maintenance_cli.php:386		$handle = @fopen($path, 'ab');
@@ -592,8 +592,8 @@ fs_write	./lib/spikekill.php:1184			$source_handle = fopen($source, 'rb');
 fs_write	./lib/spikekill.php:1274				$handle    = @fopen($candidate, 'xb+');
 fs_write	./lib/spikekill.php:531			$source_handle = @fopen($this->rrdfile, 'rb');
 fs_write	./lib/spikekill.php:950			$original = @fopen($rrdfile, 'rb');
-fs_write	./package_import.php:373					file_put_contents($xmlfile, $data);
-fs_write	./package_import.php:96		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
+fs_write	./package_import.php:97		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
+fs_write	./package_import.php:374					file_put_contents($xmlfile, $data);
 fs_write	./script_server.php:56		define('STDIN', fopen('php://stdin', 'r'));
 fs_write	./script_server.php:57		define('STDOUT', fopen('php://stdout', 'w'));
 fs_write	./scripts/ss_net_snmp_disk_bytes.php:251			file_put_contents("$tmpdir/$tmpfile", $data);
@@ -922,10 +922,10 @@ header_redirect	./managers.php:1142					header('Location: managers.php?header=fa
 header_redirect	./managers.php:935				header('Location: managers.php?action=edit&tab=notifications&id=' . get_request_var('id'));
 header_redirect	./managers.php:984		header('Location: managers.php?action=edit&header=false&id=' . (empty($manager_id) ? get_nfilter_request_var('id') : $manager_id) );
 header_redirect	./mibs/index.php:25	header("Location:../index.php");
-header_redirect	./package_import.php:128					header('Location: package_import.php');
-header_redirect	./package_import.php:134				header('Location: package_import.php');
-header_redirect	./package_import.php:144				header('Location: package_import.php?package_location=0');
-header_redirect	./package_import.php:230				header('Location: package_import.php');
+header_redirect	./package_import.php:129					header('Location: package_import.php');
+header_redirect	./package_import.php:135				header('Location: package_import.php');
+header_redirect	./package_import.php:145				header('Location: package_import.php?package_location=0');
+header_redirect	./package_import.php:231				header('Location: package_import.php');
 header_redirect	./plugins.php:104				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:115				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:128				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
@@ -1035,5 +1035,5 @@ header_redirect	./vdef.php:559		header('Location: vdef.php?action=edit&header=fa
 header_redirect	./vdef.php:57			header('Location: vdef.php?header=false&action=edit&id=' . get_request_var('vdef_id'));
 header_redirect	./vdef.php:64			header('Location: vdef.php?header=false&action=edit&id=' . get_request_var('vdef_id'));
 xml_parse	./install/functions.php:518				$xmlget = simplexml_load_string($xml);
-xml_parse	./lib/import.php:467		$xmlget = simplexml_load_string($data);
-xml_parse	./lib/import.php:604		$xmlget = simplexml_load_string($xml);
+xml_parse	./lib/import.php:525		$xmlget = simplexml_load_string($data);
+xml_parse	./lib/import.php:655		$xmlget = simplexml_load_string($xml);
