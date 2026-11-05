@@ -119,6 +119,17 @@ Before handing off or merging a GitHub change, verify its title, description,
 labels, issue links, head commit, checks, review state, and thread-resolution
 state using GitHub's records.
 
+### Classifying bugs
+
+The bug report form asks for the defect type, qualifier, trigger and origin from
+IBM's Orthogonal Defect Classification (Chillarege et al., IEEE TSE 1992). Reporters
+may leave them empty. When a fix is known, fill them in, and add the same
+`### Defect type` / `### Defect qualifier` / `### Trigger` / `### Origin` sections to
+issues filed without the form. Count them with:
+
+    gh issue list --label bug --state all --limit 1000 --json number,title,state,body > bugs.json
+    python3 tools/odc_summary.py bugs.json
+
 ## Documentation and security
 
 Verify documentation against the implementation and use material whose license
