@@ -398,7 +398,7 @@ msgstr "匹配图形"
 #: aggregate_templates.php:606 automation_devices.php:485
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
-#: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
+#: automation_tree_rules.php:843 data_debug.php:1202 data_queries.php:1373
 #: data_sources.php:1789 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2139 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
@@ -432,7 +432,7 @@ msgstr "图形"
 #: aggregate_graphs.php:1295 aggregate_graphs.php:1594
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
-#: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
+#: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1212
 #: data_queries.php:1383 data_sources.php:1799 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2160
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
@@ -454,7 +454,7 @@ msgstr "部分聚合"
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
-#: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
+#: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1127
 #: data_queries.php:1398 data_sources.php:1739 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
@@ -469,7 +469,7 @@ msgid "Go"
 msgstr "Go"
 
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1599
-#: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
+#: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1127
 #: data_queries.php:1398 data_sources.php:1739 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
@@ -485,7 +485,7 @@ msgstr "设置/刷新过滤器"
 #: aggregate_graphs.php:1307 aggregate_graphs.php:1600
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
-#: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
+#: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1128
 #: data_queries.php:1399 data_sources.php:1740 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2131
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
@@ -501,7 +501,7 @@ msgid "Clear"
 msgstr "清除"
 
 #: aggregate_graphs.php:1307 aggregate_graphs.php:1600 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1740
+#: data_debug.php:1128 data_queries.php:1399 data_sources.php:1740
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2131 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -566,7 +566,7 @@ msgstr " [自定义图形列表应用 - 过滤器从列表]"
 msgid "Aggregate Graphs"
 msgstr "聚合图形"
 
-#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1708
+#: aggregate_graphs.php:1565 data_debug.php:1098 data_sources.php:1708
 #: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2902
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
@@ -579,7 +579,7 @@ msgstr "模板"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
-#: data_debug.php:1114 data_sources.php:1712 graph_templates_items.php:447
+#: data_debug.php:1102 data_sources.php:1712 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3993 lib/auth.php:4042
@@ -596,7 +596,7 @@ msgstr "任何"
 #: aggregate_graphs.php:1570 aggregate_graphs.php:1680
 #: automation_graph_rules.php:972 automation_graph_rules.php:973
 #: automation_networks.php:460 automation_tree_rules.php:981
-#: data_debug.php:1115 data_sources.php:621 data_sources.php:1098
+#: data_debug.php:1103 data_sources.php:621 data_sources.php:1098
 #: data_sources.php:1713 data_sources.php:2034 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:976 graphs.php:1621 graphs.php:1630
 #: graphs.php:2097 graphs_items.php:271 graphs_items.php:391
@@ -1121,7 +1121,7 @@ msgstr "运行时间"
 msgid "SNMP"
 msgstr "SNMP"
 
-#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:587 package_import.php:672 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
+#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1157 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:587 package_import.php:672 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
 msgid "Status"
 msgstr "状态"
 
@@ -1157,7 +1157,7 @@ msgstr "导出"
 msgid "Export to a file"
 msgstr "导出到文件"
 
-#: automation_devices.php:516 data_debug.php:1141 lib/clog_webapi.php:216
+#: automation_devices.php:516 data_debug.php:1129 lib/clog_webapi.php:216
 #: lib/clog_webapi.php:535 managers.php:795
 msgid "Purge"
 msgstr "清除"
@@ -1305,7 +1305,7 @@ msgstr "数据查询"
 #: automation_graph_rules.php:840 automation_graph_rules.php:965
 #: automation_graph_rules.php:981 automation_networks.php:535
 #: automation_tree_rules.php:854 automation_tree_rules.php:974
-#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1773
+#: automation_tree_rules.php:992 data_debug.php:1163 data_sources.php:1773
 #: include/global_arrays.php:924 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1320,7 +1320,7 @@ msgstr "已启用"
 
 #: automation_graph_rules.php:841 automation_graph_rules.php:981
 #: automation_networks.php:1090 automation_tree_rules.php:855
-#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1774
+#: automation_tree_rules.php:992 data_debug.php:1164 data_sources.php:1774
 #: data_templates.php:1325 include/global_arrays.php:923
 #: include/global_arrays.php:1583 include/global_arrays.php:1875
 #: include/global_settings.php:437 include/global_settings.php:453
@@ -1993,7 +1993,7 @@ msgstr "下次开始时间"
 msgid "Last Started"
 msgstr "上次开始时间"
 
-#: automation_networks.php:1110 data_debug.php:1040 data_debug.php:1065
+#: automation_networks.php:1110 data_debug.php:1028 data_debug.php:1053
 #: pollers.php:30 utilities.php:2690
 msgid "Running"
 msgstr "运行中"
@@ -2012,7 +2012,7 @@ msgstr "从不"
 msgid "No Networks Found"
 msgstr "未找到网络"
 
-#: automation_networks.php:1201 data_debug.php:1190 lib/clog_webapi.php:588
+#: automation_networks.php:1201 data_debug.php:1178 lib/clog_webapi.php:588
 #: lib/html_graph.php:304 lib/html_tree.php:1120 lib/html_tree.php:1141
 #: pollers.php:890 utilities.php:1502 utilities.php:2610
 msgid "Refresh"
@@ -2629,7 +2629,7 @@ msgstr "问题"
 msgid "Summary of issues found for the Data Source."
 msgstr "发现数据源的任何摘要问题."
 
-#: data_debug.php:646 data_debug.php:1220 data_sources.php:1795
+#: data_debug.php:646 data_debug.php:1208 data_sources.php:1795
 #: data_sources.php:1957 include/global_arrays.php:1001
 #: include/global_arrays.php:1047 include/global_arrays.php:2318
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
@@ -2637,7 +2637,7 @@ msgstr "发现数据源的任何摘要问题."
 msgid "Data Sources"
 msgstr "数据源"
 
-#: data_debug.php:701 data_debug.php:1186
+#: data_debug.php:701 data_debug.php:1174
 msgid "Not Debugging"
 msgstr "调试"
 
@@ -2792,54 +2792,54 @@ msgstr "命令"
 msgid "Waiting on Data Source Check to Complete"
 msgstr "等待数据源检查完成"
 
-#: data_debug.php:1044 data_debug.php:1069 lib/graphs.php:41
+#: data_debug.php:1032 data_debug.php:1057 lib/graphs.php:41
 msgid "Not Applicable"
 msgstr "不适用"
 
-#: data_debug.php:1050 data_debug.php:1058 data_debug.php:1077
-#: data_debug.php:1174 utilities.php:1068 utilities.php:1198
+#: data_debug.php:1038 data_debug.php:1046 data_debug.php:1065
+#: data_debug.php:1162 utilities.php:1068 utilities.php:1198
 msgid "Failed"
 msgstr "失败"
 
-#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073 lib/installer.php:2134
+#: data_debug.php:1042 data_debug.php:1044 data_debug.php:1061 lib/installer.php:2134
 msgid "Passed"
 msgstr "通过"
 
-#: data_debug.php:1080 lib/installer.php:2137
+#: data_debug.php:1068 lib/installer.php:2137
 msgid "Warning"
 msgstr "警告"
 
-#: data_debug.php:1099
+#: data_debug.php:1087
 msgid "All Devices"
 msgstr "所有设备"
 
-#: data_debug.php:1099
+#: data_debug.php:1087
 #, php-format
 msgid "Data Source Troubleshooter [ %s ]"
 msgstr "数据源排障工具 [%s]"
 
-#: data_debug.php:1099
+#: data_debug.php:1087
 msgid "No Device"
 msgstr "无设备"
 
-#: data_debug.php:1141
+#: data_debug.php:1129
 msgid "Delete All Checks"
 msgstr "删除检查"
 
-#: data_debug.php:1142
+#: data_debug.php:1130
 msgid "Run All"
 msgstr "全部运行"
 
-#: data_debug.php:1142
+#: data_debug.php:1130
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "对当前过滤的数据源运行检查并保留其他结果"
 
-#: data_debug.php:1150 data_sources.php:1748 data_templates.php:1107
+#: data_debug.php:1138 data_sources.php:1748 data_templates.php:1107
 #: lib/html.php:2914
 msgid "Profile"
 msgstr "配置文件"
 
-#: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
+#: data_debug.php:1142 data_debug.php:1161 data_debug.php:1172
 #: data_sources.php:1752 data_sources.php:1772 data_templates.php:1111
 #: graphs.php:2149 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
@@ -2850,7 +2850,7 @@ msgstr "配置文件"
 msgid "All"
 msgstr "所有"
 
-#: data_debug.php:1180 data_debug.php:1185
+#: data_debug.php:1168 data_debug.php:1173
 msgid "Debugging"
 msgstr "调试"
 
