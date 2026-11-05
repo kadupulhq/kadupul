@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Check at poller startup that the configured spine or PHP binary exists and is executable, and exit with status 1 before recording the run when it is not; a wrong `path_php_binary` no longer waits for collectors that never start.
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
