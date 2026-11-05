@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Reconcile `unique_keys` in `db_update_table()`, so a declared unique index is kept, created when missing and rebuilt as unique when its uniqueness drifted, and accept a primary key or index columns given as a string (#1065, #1060). Mirrors upstream Cacti #8115 and #8125.
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.

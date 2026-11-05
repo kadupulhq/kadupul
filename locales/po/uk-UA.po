@@ -12344,11 +12344,11 @@ msgstr ""
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr ""
 
-#: lib/database.php:2473
+#: lib/database.php:2515
 msgid "Failed to determine password field length, can not continue as may corrupt password"
 msgstr ""
 
-#: lib/database.php:2480
+#: lib/database.php:2522
 msgid "Failed to alter password field length, can not continue as may corrupt password"
 msgstr ""
 

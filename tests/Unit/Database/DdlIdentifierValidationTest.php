@@ -118,7 +118,7 @@ if ($database === false || $plugins === false) {
 foreach (array(
     'db_has_control_chars', 'db_is_safe_identifier', 'db_format_qualified_identifier', 'db_is_safe_column_type',
     'db_is_safe_table_option', 'db_is_safe_index_column', 'db_is_safe_column_definition',
-    'db_build_column_definition_sql', 'db_is_safe_table_definition',
+    'db_build_column_definition_sql', 'db_is_safe_table_definition', 'db_index_columns_to_array',
 ) as $helper) {
     // Loaded when present so a run against the unhardened library reaches the
     // assertions below instead of stopping here.
@@ -376,7 +376,7 @@ test('db_update_table rebuilds a changed index with valid SQL', function () {
         'table_exists' => true,
         'cell'         => '1',
         'row'          => array('ENGINE' => 'InnoDB', 'TABLE_COMMENT' => '', 'Type' => 'int', 'Null' => 'NO', 'Extra' => ''),
-        'indexes'      => array(array('Key_name' => 'idx', 'Seq_in_index' => 1, 'Column_name' => 'id')),
+        'indexes'      => array(array('Key_name' => 'idx', 'Seq_in_index' => 1, 'Column_name' => 'id', 'Non_unique' => 1)),
     ));
 
     expect(db_update_table('plugin_config', array(
@@ -390,6 +390,61 @@ test('db_update_table rebuilds a changed index with valid SQL', function () {
         'ALTER TABLE `plugin_config` ADD INDEX `idx` (`id`,`name`(10))',
     ));
 });
+
+test('db_update_table reconciles unique keys and accepts string key columns', function (array $indexes, array $definition, array $expected) {
+    ddl_reset(array(
+        'table_exists' => true,
+        'cell'         => '1',
+        'row'          => array('ENGINE' => 'InnoDB', 'TABLE_COMMENT' => '', 'Type' => 'int', 'Null' => 'NO', 'Extra' => ''),
+        'indexes'      => array_map(static fn(array $index): array => array('Key_name' => $index[0], 'Seq_in_index' => $index[1], 'Column_name' => $index[2], 'Non_unique' => $index[3]), $indexes),
+    ));
+
+    expect(db_update_table('plugin_config', array('type' => 'InnoDB', 'columns' => array(array('name' => 'id', 'type' => 'int', 'NULL' => false))) + $definition))->toBeTrue()
+        ->and(ddl_state()['executed'])->toBe($expected);
+})->with(array(
+    // #1065: a unique key declared next to regular keys was dropped as undeclared.
+    'declared unique key is kept' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('u_name', 1, 'name', 0)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('id'))), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    'missing unique key is added as unique' => array(
+        array(array('PRIMARY', 1, 'id', 0)),
+        array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name', 'id')))),
+        array('ALTER TABLE `plugin_config` ADD UNIQUE INDEX `u_name` (`name`,`id`)'),
+    ),
+    'unique key that lost its uniqueness is rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 1)),
+        array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `u_name`', 'ALTER TABLE `plugin_config` ADD UNIQUE INDEX `u_name` (`name`)'),
+    ),
+    'undeclared index is still removed when keys are declared' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('u_name', 1, 'name', 0), array('stale', 1, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('id'))), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `stale`'),
+    ),
+    'undeclared index is kept when only unique keys are declared' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 0), array('other', 1, 'name', 1)),
+        array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    'compound key given as one string matches' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('idx', 2, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => 'id`,`name'))),
+        array(),
+    ),
+    // #1060: a primary key given as a string raised a TypeError in array_diff().
+    'string primary key matches' => array(
+        array(array('PRIMARY', 1, 'id', 0)),
+        array('primary' => 'id'),
+        array(),
+    ),
+    'changed string primary key is rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0)),
+        array('primary' => 'id`,`name'),
+        array('ALTER TABLE `plugin_config` DROP PRIMARY KEY', 'ALTER TABLE `plugin_config` ADD PRIMARY KEY(`id`,`name`)'),
+    ),
+));
 
 test('plugin DDL wrappers refuse unsafe identifiers and record nothing', function () {
     ddl_reset();
