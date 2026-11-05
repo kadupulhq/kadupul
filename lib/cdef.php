@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -66,3 +67,40 @@ function get_cdef($cdef_id) {
 	return $cdef_string;
 }
 
+/**
+ * cdef_is_in_use - whether a CDEF is still referenced
+ *
+ *   Graph items, aggregate items and other CDEFs (item type 5) can reference a
+ *   CDEF. A reference from a CDEF that is being deleted in the same request does
+ *   not count. A failed lookup counts as in use, so nothing is deleted on doubt.
+ *
+ * @param  (int)   $cdef_id      - the CDEF to check
+ * @param  (array) $deleting_ids - every CDEF selected for deletion
+ *
+ * @return (bool) true when the CDEF is referenced or the check failed
+ */
+function cdef_is_in_use($cdef_id, $deleting_ids = array()) {
+	foreach (array('graph_templates_item', 'aggregate_graph_templates_item', 'aggregate_graphs_graph_item') as $table) {
+		$references = db_fetch_assoc_prepared("SELECT cdef_id FROM $table WHERE cdef_id = ? LIMIT 1", array($cdef_id));
+
+		if ($references === false || cacti_sizeof($references) > 0) {
+			return true;
+		}
+	}
+
+	$parents = db_fetch_assoc_prepared('SELECT DISTINCT cdef_id FROM cdef_items WHERE type = 5 AND value = ?', array($cdef_id));
+
+	if ($parents === false) {
+		return true;
+	}
+
+	$deleting = array_fill_keys(array_map('intval', $deleting_ids), true);
+
+	foreach ($parents as $parent) {
+		if (!isset($deleting[(int) $parent['cdef_id']])) {
+			return true;
+		}
+	}
+
+	return false;
+}
