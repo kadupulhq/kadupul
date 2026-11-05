@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.

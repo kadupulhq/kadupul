@@ -294,7 +294,7 @@ dynamic_include	./lib/aggregate.php:1118	    include_once($config['base_path'] .
 dynamic_include	./lib/aggregate.php:828	    include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/aggregate.php:924	    include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/api_aggregate.php:1141	        include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_aggregate.php:2292	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/api_aggregate.php:2295	    include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/api_aggregate.php:484	        include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_automation.php:2602	    include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2603	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
