@@ -55,7 +55,37 @@ const SETTINGS_USER_OLD_DDL = "CREATE TABLE settings_user (
   PRIMARY KEY (user_id, name)
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic";
 
-const SETTINGS_USER_TABLES = array('settings_user', 'settings_user_base', 'poller_output', 'poller_output_boost_processes', 'settings', 'user_auth_throttle', 'user_auth', 'user_auth_perms', 'user_auth_realm', 'settings_tree', 'user_auth_group_members');
+const SETTINGS_USER_TABLES = array('settings_user', 'settings_user_base', 'poller_output', 'poller_output_boost_processes', 'settings', 'user_auth_throttle', 'user_auth', 'user_auth_perms', 'user_auth_realm', 'settings_tree', 'user_auth_group_members', 'user_log', 'user_auth_row_cache', 'settings_user_group');
+
+/* #927: the account and group id columns as 1.2.31 created them */
+const ACCOUNT_ID_OLD_DDL = array(
+	'user_log' => "CREATE TABLE user_log (
+  `username` varchar(50) NOT NULL default '0',
+  `user_id` mediumint(8) NOT NULL default '0',
+  `time` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `result` tinyint(3) unsigned NOT NULL default '0',
+  `ip` varchar(40) NOT NULL default '',
+  PRIMARY KEY (`username`,`user_id`,`time`),
+  KEY user_id (`user_id`)
+) ENGINE=InnoDB ROW_FORMAT=Dynamic",
+	'user_auth_row_cache' => "CREATE TABLE user_auth_row_cache (
+  `user_id` mediumint(8) NOT NULL default '0',
+  `class` varchar(20) NOT NULL default '',
+  `hash` varchar(32) NOT NULL default '0',
+  `total_rows` int(10) unsigned NOT NULL default '0',
+  `time` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`,`class`,`hash`),
+  KEY `class_time` (`class`,`time`)
+) ENGINE=InnoDB ROW_FORMAT=Dynamic",
+	'settings_user_group' => "CREATE TABLE settings_user_group (
+  group_id smallint(8) unsigned NOT NULL DEFAULT '0',
+  name varchar(50) NOT NULL DEFAULT '',
+  value varchar(2048) NOT NULL DEFAULT '',
+  PRIMARY KEY (group_id, name)
+) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Stores the Default User Group Graph Settings'",
+);
+
+const ACCOUNT_ID_COLUMNS = array('user_log' => 'user_id', 'user_auth_row_cache' => 'user_id', 'settings_user_group' => 'group_id');
 
 function settings_user_width_cacti_sql_table($table) {
 	$sql = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
@@ -330,4 +360,100 @@ test('copying a template to a new account above 65535 writes that account settin
 		))
 		/* sql_save() logs each write at DEVEL level; nothing else is expected */
 		->and(preg_grep('/^DEVEL: SQL Save on table /', $GLOBALS['settings_user_width_log'], PREG_GREP_INVERT))->toBe(array());
+});
+
+function account_id_column($table) {
+	return db_fetch_row_prepared('SELECT DATA_TYPE, COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT, COLUMN_KEY
+		FROM information_schema.COLUMNS
+		WHERE TABLE_SCHEMA = SCHEMA()
+		AND TABLE_NAME = ?
+		AND COLUMN_NAME = ?', array($table, ACCOUNT_ID_COLUMNS[$table]));
+}
+
+function account_id_alters(array $recorded) {
+	return array_values(array_filter($recorded, function ($item) {
+		return preg_match('/ALTER TABLE `(user_log|user_auth_row_cache|settings_user_group)`/', $item['sql']) === 1;
+	}));
+}
+
+function account_id_old_tables() {
+	settings_user_width_upgrade_fixtures();
+	expect(db_execute(SETTINGS_USER_OLD_DDL))->toBeTrue();
+	foreach (ACCOUNT_ID_OLD_DDL as $ddl) {
+		expect(db_execute($ddl))->toBeTrue();
+	}
+	expect(db_execute("INSERT INTO user_log (username, user_id, time, result, ip) VALUES ('admin', 1, '2026-01-01 00:00:00', 1, '192.0.2.1'), ('unknown', 0, '2026-01-01 00:00:01', 0, '192.0.2.2'), ('big', 8388607, '2026-01-01 00:00:02', 1, '192.0.2.3')"))->toBeTrue();
+	expect(db_execute("INSERT INTO user_auth_row_cache (user_id, class, hash, total_rows) VALUES (1, 'graphs', 'a', 10), (8388607, 'graphs', 'b', 20)"))->toBeTrue();
+	expect(db_execute("INSERT INTO settings_user_group (group_id, name, value) VALUES (1, 'selected_theme', 'modern'), (65535, 'selected_theme', 'dark')"))->toBeTrue();
+}
+
+function account_id_rows() {
+	return array(
+		db_fetch_assoc('SELECT username, user_id, result FROM user_log ORDER BY username'),
+		db_fetch_assoc('SELECT user_id, class, hash, total_rows FROM user_auth_row_cache ORDER BY user_id, hash'),
+		db_fetch_assoc('SELECT group_id, name, value FROM settings_user_group ORDER BY group_id'),
+	);
+}
+
+test('the upgrade widens the 1.2.31 account and group id columns and keeps every row and key (#927)', function () {
+	account_id_old_tables();
+	$before = account_id_rows();
+
+	$first = settings_user_width_upgrade();
+
+	expect(settings_user_width_errors($first))->toBe(array())
+		->and(array_column(account_id_alters($first), 'status'))->toBe(array(DB_STATUS_SUCCESS, DB_STATUS_SUCCESS, DB_STATUS_SUCCESS))
+		->and(account_id_column('user_log')['COLUMN_TYPE'])->toMatch('/^mediumint(\(8\))? unsigned$/')
+		->and(account_id_column('user_log')['COLUMN_KEY'])->toBe('PRI')
+		->and(account_id_column('user_auth_row_cache')['COLUMN_TYPE'])->toMatch('/^mediumint(\(8\))? unsigned$/')
+		->and(account_id_column('user_auth_row_cache')['COLUMN_KEY'])->toBe('PRI')
+		->and(account_id_column('settings_user_group')['COLUMN_TYPE'])->toMatch('/^int(\(10\))? unsigned$/')
+		->and(account_id_column('settings_user_group')['COLUMN_KEY'])->toBe('PRI')
+		->and(trim((string) account_id_column('settings_user_group')['COLUMN_DEFAULT'], "'"))->toBe('0')
+		->and(account_id_rows())->toBe($before);
+
+	/* the widened columns hold ids the old ones clamped */
+	expect(db_execute("INSERT INTO user_log (username, user_id, time, result, ip) VALUES ('bigger', 9000000, '2026-01-01 00:00:03', 1, '192.0.2.4')"))->toBeTrue()
+		->and((int) db_fetch_cell("SELECT user_id FROM user_log WHERE username = 'bigger'"))->toBe(9000000)
+		->and(db_execute("INSERT INTO user_auth_row_cache (user_id, class, hash, total_rows) VALUES (9000000, 'graphs', 'c', 30)"))->toBeTrue()
+		->and((int) db_fetch_cell("SELECT COUNT(*) FROM user_auth_row_cache WHERE user_id = 9000000"))->toBe(1)
+		->and(db_execute("INSERT INTO settings_user_group (group_id, name, value) VALUES (70000, 'selected_theme', 'classic')"))->toBeTrue()
+		->and(db_fetch_assoc('SELECT group_id, value FROM settings_user_group WHERE group_id >= 65535 ORDER BY group_id'))->toBe(array(
+			array('group_id' => 65535, 'value' => 'dark'),
+			array('group_id' => 70000, 'value' => 'classic'),
+		));
+
+	$second = settings_user_width_upgrade();
+
+	expect(settings_user_width_errors($second))->toBe(array())
+		->and(account_id_alters($second))->toBe(array());
+});
+
+test('the upgrade leaves account and group id columns created from cacti.sql untouched (#927)', function () {
+	settings_user_width_upgrade_fixtures();
+	foreach (array_keys(ACCOUNT_ID_COLUMNS) as $table) {
+		expect(db_execute(settings_user_width_cacti_sql_table($table)))->toBeTrue();
+	}
+	$before = array_map(function ($table) { return db_fetch_cell('SHOW CREATE TABLE ' . $table, 'Create Table'); }, array_keys(ACCOUNT_ID_COLUMNS));
+
+	$recorded = settings_user_width_upgrade();
+
+	expect(settings_user_width_errors($recorded))->toBe(array())
+		->and(account_id_alters($recorded))->toBe(array())
+		->and(array_map(function ($table) { return db_fetch_cell('SHOW CREATE TABLE ' . $table, 'Create Table'); }, array_keys(ACCOUNT_ID_COLUMNS)))->toBe($before);
+});
+
+test('a negative account id stops its widening as an upgrade error instead of becoming 0 (#927)', function () {
+	account_id_old_tables();
+	expect(db_execute("INSERT INTO user_log (username, user_id, time, result, ip) VALUES ('odd', -5, '2026-01-01 00:00:04', 0, '192.0.2.5')"))->toBeTrue();
+
+	$failed = settings_user_width_upgrade();
+	$errors = settings_user_width_errors($failed);
+
+	expect($errors)->toHaveCount(1)
+		->and($errors[0]['sql'])->toContain('user_log.user_id holds negative ids')
+		->and(account_id_column('user_log')['COLUMN_TYPE'])->toMatch('/^mediumint(\(8\))?$/')
+		->and((int) db_fetch_cell("SELECT user_id FROM user_log WHERE username = 'odd'"))->toBe(-5)
+		/* the other two columns are still widened */
+		->and(account_id_column('settings_user_group')['COLUMN_TYPE'])->toMatch('/^int(\(10\))? unsigned$/');
 });
