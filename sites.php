@@ -273,10 +273,15 @@ function form_save() {
 }
 
 function duplicate_site($template_id, $name) {
+	if (!is_string($name)) {
+		raise_message(3);
+		return false;
+	}
 	if (!is_array($template_id)) {
 		$template_id = array($template_id);
 	}
 
+	$copies = array();
 	foreach($template_id as $id) {
 		$site = db_fetch_row_prepared('SELECT *
 			FROM sites
@@ -298,17 +303,23 @@ function duplicate_site($template_id, $name) {
 				}
 			}
 
-			$site_id = sql_save($save, 'sites');
-
-			if ($site_id > 0) {
-				raise_message(1);
-			} else {
-				raise_message(2);
+			if (!is_string($save['name']) || !mb_check_encoding($save['name'], 'UTF-8') || trim($save['name']) === '' || mb_strlen($save['name'], 'UTF-8') > 100) {
+				raise_message(3);
+				return false;
 			}
+			$copies[] = $save;
 		} else {
 			raise_message('site_error', __('Template Site was not found! Unable to duplicate.'), MESSAGE_LEVEL_ERROR);
+			return false;
 		}
 	}
+	foreach ($copies as $save) {
+		if (!sql_save($save, 'sites')) {
+			raise_message(2);
+			return false;
+		}
+	}
+	raise_message(1);
 
 	/**
  	 * Save the last time a device/site was created/updated
@@ -316,6 +327,19 @@ function duplicate_site($template_id, $name) {
 	 */
 	set_config_option('time_last_change_site', time());
 	set_config_option('time_last_change_site_device', time());
+	return true;
+}
+
+function sites_delete(array $ids): bool {
+	require_once __DIR__ . '/lib/database_atomic.php';
+	if (!$ids) {
+		return true;
+	}
+	$placeholders = implode(', ', array_fill(0, count($ids), '?'));
+	return db_atomic(array('sites', 'host'), static function (PDO $connection) use ($ids, $placeholders): bool {
+		return db_atomic_execute($connection, 'DELETE FROM sites WHERE id IN (' . $placeholders . ')', $ids)
+			&& db_atomic_execute($connection, 'UPDATE host SET site_id=0 WHERE deleted="" AND site_id IN (' . $placeholders . ')', $ids);
+	});
 }
 
 /* ------------------------
@@ -388,8 +412,11 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM sites WHERE ' . array_to_sql_or($selected_items, 'id'));
-				db_execute('UPDATE host SET site_id=0 WHERE deleted="" AND ' . array_to_sql_or($selected_items, 'site_id'));
+				if (!sites_delete($selected_items)) {
+					raise_message(2);
+					header('Location: sites.php?header=false');
+					exit;
+				}
 
 				/**
 			 	 * Save the last time a device/site was created/updated

@@ -51,7 +51,8 @@ function get_request_var($name) { return $GLOBALS['request'][$name]; }
 function isset_request_var($name) { return isset($GLOBALS['request'][$name]); }
 function cacti_count($value) { return is_array($value) ? count($value) : 0; }
 function cacti_sizeof($value) { return cacti_count($value); }
-function db_execute($sql) { echo 'SQL:' . $sql . "\n"; }
+// Persistence is covered separately by SubsystemFailureNativeTest.
+function sites_delete(array $ids): bool { echo 'DELETE:' . json_encode($ids) . "\n"; return true; }
 function db_fetch_assoc_prepared($sql, $params = array()) {
     echo 'LOOKUP:' . count($params) . "\n";
 
@@ -102,7 +103,7 @@ $expectRefused = function ($runAction, $drpAction, array $items, $log, $message)
     list($exit, $stdout, $stderr) = $runAction($drpAction, $items);
 
     expect($exit)->toBe(0, $stderr)
-        ->and($stdout)->not->toContain('SQL:')
+        ->and($stdout)->not->toContain('DELETE:')
         ->and($stdout)->not->toContain('COPY:')
         ->and($stdout)->toContain('LOG:WEBUI:WARNING: ' . $log)
         ->and($stdout)->toContain('for user 7')
@@ -132,8 +133,7 @@ test('existing sites are still deleted and duplicated, and a large delete is not
     list($exit, $stdout, $stderr) = $runAction('1', array('3', '5'));
 
     expect($exit)->toBe(0, $stderr)
-        ->and($stdout)->toContain("SQL:DELETE FROM sites WHERE (id IN('3','5'))")
-        ->and($stdout)->toContain("SQL:UPDATE host SET site_id=0 WHERE deleted=\"\" AND (site_id IN('3','5'))")
+        ->and($stdout)->toContain('DELETE:["3","5"]')
         ->and($stdout)->not->toContain('Refused');
 
     list($exit, $stdout, $stderr) = $runAction('2', array(4, '5'));
@@ -146,6 +146,6 @@ test('existing sites are still deleted and duplicated, and a large delete is not
     list($exit, $stdout, $stderr) = $runAction('1', array_merge(array_fill(0, 6000, '4'), array('3')));
 
     expect($exit)->toBe(0, $stderr)
-        ->and($stdout)->toContain('SQL:DELETE FROM sites WHERE')
+        ->and($stdout)->toContain('DELETE:')
         ->and($stdout)->not->toContain('Refused');
 });

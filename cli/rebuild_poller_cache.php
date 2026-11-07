@@ -288,7 +288,10 @@ switch ($type) {
 			}
 
 			if ($row['dl_count'] > 0) {
-				push_out_host($row['id'], 0, $data_template_id);
+				if (!push_out_host($row['id'], 0, $data_template_id)) {
+					fwrite(STDERR, "ERROR: Failed to replace poller items for host {$row['id']}.\n");
+					$exit_status = 1;
+				}
 			} elseif (db_execute_prepared('DELETE FROM poller_item WHERE host_id = ?', array($row['id'])) === false) {
 				fwrite(STDERR, "ERROR: Failed to clear stale poller items for host {$row['id']}.\n");
 				$exit_status = 1;

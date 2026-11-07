@@ -12,108 +12,51 @@
  +-------------------------------------------------------------------------+
 */
 
-/*
- * cmd.php writes each batch to poller_output and, with Boost redirect on, to
- * poller_output_boost in a second statement.  Boost finds the rows it lacks by
- * data source and time, so both copies must carry the same CURRENT_TIMESTAMP()
- * even when the second statement starts in a later second.
- */
-
-$root = dirname(__DIR__, 4);
+// Stable timestamps across delayed database writes are exercised by
+// SubsystemFailureNativeTest against the real collector tables.
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 function cmdOutputTime_read_config_option($name) {
-	$options = $GLOBALS['cmd_output_time']['options'];
-
-	return isset($options[$name]) ? $options[$name] : '';
+	return $GLOBALS['cmd_output_time']['options'][$name] ?? '';
 }
-
-/* each statement starts one second after the previous one; SET timestamp pins
- * CURRENT_TIMESTAMP() for the session as MySQL and MariaDB do */
-function cmdOutputTime_db_execute($sql, $log = true, $conn = false) {
-	$state =& $GLOBALS['cmd_output_time'];
-	$state['clock']++;
-	$state['statements'][] = preg_replace('/\s+/', ' ', $sql);
-
-	if ($sql === 'SET timestamp = UNIX_TIMESTAMP()') {
-		$state['pinned'] = $state['clock'];
-	} elseif ($sql === 'SET timestamp = DEFAULT') {
-		$state['pinned'] = false;
-	} elseif (preg_match('/^INSERT IGNORE INTO (poller_output(?:_boost)?)\s/', $sql, $table)) {
-		$now = $state['pinned'] !== false ? $state['pinned'] : $state['clock'];
-
-		preg_match_all("/\((\d+), '([^']*)', CURRENT_TIMESTAMP\(\), '([^']*)'\)/", $sql, $rows, PREG_SET_ORDER);
-
-		foreach ($rows as $row) {
-			$state['tables'][$table[1]][] = array((int) $row[1], $row[2], $now);
-		}
+function cmdOutputTime_cacti_log(...$args) {}
+function cmdOutputTime_poller_output_enqueue($spool, $rows, $redirect) {
+	$GLOBALS['cmd_output_time']['queued'] = [$spool, $rows, $redirect];
+	return $GLOBALS['cmd_output_time']['enqueue'];
+}
+function cmdOutputTime_poller_output_replay($spool, $connection) {
+	$GLOBALS['cmd_output_time']['replayed'] = [$spool, $connection];
+	return $GLOBALS['cmd_output_time']['replay'];
+}
+function cmdOutputTimeRun(bool $enqueue, bool $replay, bool $boost): bool {
+	if (!function_exists('cmdOutputTime_cmd_write_poller_output')) {
+		$source = test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/cmd.php'), 'cmd_write_poller_output');
+		eval(preg_replace('/\\b(cmd_write_poller_output|read_config_option|poller_output_enqueue|poller_output_replay|cacti_log)\\(/', 'cmdOutputTime_$1(', $source)); // nosemgrep: php.lang.security.eval-use.eval-use
 	}
-
-	return true;
+	$GLOBALS['output_spool'] = 'spool';
+	$GLOBALS['cmd_output_time'] = [
+		'options' => ['boost_redirect' => $boost ? 'on' : '', 'boost_rrd_update_enable' => 'on'],
+		'enqueue' => $enqueue, 'replay' => $replay,
+	];
+	return cmdOutputTime_cmd_write_poller_output([[7, 'traffic_in', '0']], 'poller');
 }
 
-function cmdOutputTimeLoad($root) {
-	if (function_exists('cmdOutputTime_cmd_write_poller_output')) {
-		return;
-	}
+test('every output handoff preserves values and configured destinations', function (bool $boost): void {
+	expect(cmdOutputTimeRun(true, true, $boost))->toBeTrue()
+		->and($GLOBALS['cmd_output_time']['queued'])->toBe(['spool', [[7, 'traffic_in', '0']], $boost])
+		->and($GLOBALS['cmd_output_time']['replayed'])->toBe(['spool', 'poller']);
+})->with([true, false]);
 
-	$source = file_get_contents($root . '/cmd.php');
-	$start  = strpos($source, 'function cmd_write_poller_output(');
-	$end    = strpos($source, "\nfunction ", $start + 1);
-
-	expect($start)->not->toBeFalse()
-		->and($end)->not->toBeFalse();
-
-	eval(preg_replace('/\b(cmd_write_poller_output|read_config_option|db_execute)\(/', 'cmdOutputTime_$1(', substr($source, $start, $end - $start)));
-}
-
-function cmdOutputTimeRun(array $options) {
-	$GLOBALS['cmd_output_time'] = array(
-		'options'    => $options,
-		'clock'      => 1789000000,
-		'pinned'     => false,
-		'statements' => array(),
-		'tables'     => array('poller_output' => array(), 'poller_output_boost' => array()),
-	);
-
-	cmdOutputTime_cmd_write_poller_output(array(
-		"(7, 'traffic_in', CURRENT_TIMESTAMP(), '10')",
-		"(8, 'traffic_in', CURRENT_TIMESTAMP(), '12')",
-	), 'poller');
-
-	return $GLOBALS['cmd_output_time'];
-}
-
-beforeEach(function () use ($root) {
-	cmdOutputTimeLoad($root);
+test('failed local retention prevents handoff and reports failure', function (): void {
+	expect(cmdOutputTimeRun(false, true, true))->toBeFalse()
+		->and($GLOBALS['cmd_output_time'])->not->toHaveKey('replayed');
 });
 
-test('a flush whose Boost insert starts a second later stores the same time in both tables', function () {
-	$state = cmdOutputTimeRun(array('boost_redirect' => 'on', 'boost_rrd_update_enable' => 'on'));
-
-	expect($state['tables']['poller_output'])->toHaveCount(2)
-		->and($state['tables']['poller_output_boost'])->toBe($state['tables']['poller_output'])
-		->and($state['clock'] - $state['tables']['poller_output'][0][2])->toBeGreaterThanOrEqual(2);
+test('failed database delivery never reports a successful flush', function (): void {
+	expect(cmdOutputTimeRun(true, false, true))->toBeFalse();
 });
 
-test('the session clock is released after the Boost insert', function () {
-	$state = cmdOutputTimeRun(array('boost_redirect' => 'on', 'boost_rrd_update_enable' => 'on'));
-
-	expect($state['pinned'])->toBeFalse()
-		->and(end($state['statements']))->toBe('SET timestamp = DEFAULT');
-});
-
-test('without Boost redirect the flush is the single poller_output insert of 1.2.31', function () {
-	$state = cmdOutputTimeRun(array('boost_redirect' => '', 'boost_rrd_update_enable' => 'on'));
-
-	expect($state['statements'])->toHaveCount(1)
-		->and($state['statements'][0])->toStartWith('INSERT IGNORE INTO poller_output (')
-		->and($state['tables']['poller_output'])->toHaveCount(2)
-		->and($state['tables']['poller_output_boost'])->toBe(array());
-});
-
-test('cmd.php writes every poller output flush through the one helper', function () use ($root) {
-	$source = file_get_contents($root . '/cmd.php');
-
-	expect(substr_count($source, 'cmd_write_poller_output($output_array, $poller_db_cnn_id);'))->toBe(3)
-		->and(substr_count($source, 'INSERT IGNORE INTO poller_output_boost'))->toBe(1);
+test('each flush checks the shared writer before clearing the batch', function (): void {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cmd.php');
+	expect(substr_count($source, 'if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {'))->toBe(3);
 });

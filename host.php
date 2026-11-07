@@ -187,8 +187,11 @@ switch (get_request_var('action')) {
 		csrf_require_post(true);
 
 		if (get_filter_request_var('host_id') > 0) {
-			push_out_host(get_request_var('host_id'));
-			raise_message('repopulate_message', __('Poller Cache for Device Refreshed.'), MESSAGE_LEVEL_INFO);
+			if (push_out_host(get_request_var('host_id'))) {
+				raise_message('repopulate_message', __('Poller Cache for Device Refreshed.'), MESSAGE_LEVEL_INFO);
+			} else {
+				raise_message(2);
+			}
 		} else {
 			raise_message('repopulate_error', __('ERROR: Invalid Device ID.'), MESSAGE_LEVEL_ERROR);
 		}
@@ -345,7 +348,7 @@ function form_save() {
 				get_nfilter_request_var('site_id'), get_nfilter_request_var('external_id'),
 				get_nfilter_request_var('location'), get_nfilter_request_var('bulk_walk_size'));
 
-			if ($host_id !== false) {
+			if ($host_id > 0) {
 				api_plugin_hook_function('host_save', array('host_id' => $host_id));
 			}
 		}

@@ -33,26 +33,29 @@
 function exec_poll($command) {
 	global $config;
 
-	if (function_exists('popen')) {
-		if ($config['cacti_server_os'] == 'unix') {
-			$fp = popen($command, 'r');
-		} else {
-			$fp = popen($command, 'rb');
-		}
-
-		/* return if the popen command was not successful */
-		if (!is_resource($fp)) {
-			cacti_log('WARNING; Problem with POPEN command.', false, 'POLLER');
-			return 'U';
-		}
-
-		$output = fgets($fp, 8192);
-
-		pclose($fp);
-	} else {
-		$output = shell_exec($command);
+	if (!function_exists('popen')) {
+		// shell_exec cannot report a child exit status.
+		cacti_log('ERROR: Script collection requires popen to verify process completion.', false, 'POLLER');
+		return 'U';
 	}
-
+	$fp = popen($command, $config['cacti_server_os'] == 'unix' ? 'r' : 'rb');
+	if (!is_resource($fp)) {
+		cacti_log('WARNING: Problem with POPEN command.', false, 'POLLER');
+		return 'U';
+	}
+	$output = fgets($fp, 8192);
+	// Drain remaining output so a verbose child can finish before pclose.
+	while (!feof($fp)) {
+		if (fread($fp, 8192) === false) {
+			$output = false;
+			break;
+		}
+	}
+	$status = pclose($fp);
+	if ($status !== 0 || $output === false) {
+		cacti_log('WARNING: Collection script failed or returned no output.', false, 'POLLER');
+		return 'U';
+	}
 	return $output;
 }
 

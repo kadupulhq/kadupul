@@ -650,48 +650,17 @@ function push_out_data_input_method($data_input_id) {
  * @param int $poller_id - the poller_id of the buffer
  */
 function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items, $poller_id = 1) {
-	global $config;
+	require_once __DIR__ . '/database_atomic.php';
 
-	$ids    = '';
-	$raised = false;
-
-	/* set all fields present value to 0, to mark the outliers when we are all done */
-	if (cacti_sizeof($local_data_ids)) {
-		/* SECURITY: Cast all elements to integers to prevent SQL Injection */
-		$safe_ids = array_map('intval', $local_data_ids);
-		$ids      = implode(', ', $safe_ids);
-
-		if ($ids != '') {
-			db_execute_prepared("UPDATE poller_item
-				SET present = 0
-				WHERE poller_id = ?
-				AND local_data_id IN ($ids)",
-				array($poller_id));
-
-			if ($poller_id > 1) {
-				if (remote_poller_up($poller_id)) {
-					if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-						db_execute_prepared("UPDATE poller_item
-							SET present = 0
-							WHERE poller_id = ?
-							AND local_data_id IN ($ids)",
-							array($poller_id), true, $rcnn_id);
-					} else {
-						raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-						$raised = true;
-					}
-				} else {
-					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-					$raised = true;
-				}
-			}
-		}
-	} else {
-		/* don't mark anything in case we have no $local_data_ids =>
-		 *this would flush the whole table at bottom of this function */
+	if (!is_array($local_data_ids) || !$local_data_ids) {
+		return !$poller_items;
 	}
-
-	/* setup the database call */
+	$safe_ids = array_values(array_unique(array_map('intval', $local_data_ids)));
+	sort($safe_ids, SORT_NUMERIC);
+	if (min($safe_ids) <= 0) {
+		return false;
+	}
+	$ids = implode(', ', $safe_ids);
 	$sql_prefix = 'INSERT INTO poller_item (local_data_id, poller_id, host_id, action, hostname, ' .
 		'snmp_community, snmp_version, snmp_timeout, snmp_username, snmp_password, ' .
 		'snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_engine_id, ' .
@@ -723,106 +692,54 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 		arg3 = VALUES(arg3),
 		present = 1';
 
-	/* use a reasonable insert buffer, the default is 1MByte */
-	$max_packet   = 256000;
-
-	/* setup some defaults */
-	$overhead     = strlen($sql_prefix) + strlen($sql_suffix);
-	$buf_len      = 0;
-	$buf_count    = 0;
-	$buffer       = '';
-
-	if (cacti_sizeof($poller_items)) {
-		foreach ($poller_items as $record) {
-			/* take care of invalid entries */
-			if ($record == '') {
-				continue;
-			}
-
-			if ($buf_count == 0) {
-				$delim = ' ';
-			} else {
-				$delim = ', ';
-			}
-
-			$buffer .= $delim . $record;
-
-			$buf_len += strlen($record);
-
-			if ($overhead + $buf_len > $max_packet - 1024) {
-				db_execute($sql_prefix . $buffer . $sql_suffix);
-
-				if ($poller_id > 1) {
-					if (remote_poller_up($poller_id)) {
-						if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-							db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id);
-						} elseif (!$raised) {
-							raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-							$raised = true;
-						}
-					} elseif (!$raised) {
-						raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-						$raised = true;
-					}
-				}
-
-				$buffer    = '';
-				$buf_len   = 0;
-				$buf_count = 0;
-			} else {
-				$buf_count++;
-			}
+	$statements = array();
+	$buffer = '';
+	foreach ($poller_items as $record) {
+		if ($record === '' || $record === null) {
+			continue;
 		}
+		if (!is_string($record)) {
+			return false;
+		}
+		if ($buffer !== '' && strlen($sql_prefix) + strlen($buffer) + strlen($record) + strlen($sql_suffix) > 250000) {
+			$statements[] = $sql_prefix . $buffer . $sql_suffix;
+			$buffer = '';
+		}
+		$buffer .= ($buffer === '' ? ' ' : ', ') . $record;
+	}
+	if ($buffer !== '') {
+		$statements[] = $sql_prefix . $buffer . $sql_suffix;
 	}
 
-	if ($buf_count > 0) {
-		db_execute($sql_prefix . $buffer . $sql_suffix);
-
-		if ($poller_id > 1) {
-			if (remote_poller_up($poller_id)) {
-				if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-					db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id);
-				} else {
-					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-					$raised = true;
-				}
-			} elseif (!$raised) {
-				raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-				$raised = true;
+	$replace = static function (PDO $connection) use ($ids, $poller_id, $statements): bool {
+		// Stable parent locks serialize rebuilds even when the cache starts empty.
+		if (!db_atomic_execute($connection, "SELECT id FROM data_local WHERE id IN ($ids) ORDER BY id FOR UPDATE") ||
+			!db_atomic_execute($connection, "UPDATE poller_item SET present=0 WHERE poller_id=? AND local_data_id IN ($ids)", array($poller_id))) {
+			return false;
+		}
+		foreach ($statements as $sql) {
+			if (!db_atomic_execute($connection, $sql)) {
+				return false;
 			}
 		}
+		return db_atomic_execute($connection, "DELETE FROM poller_item WHERE present=0 AND poller_id=? AND local_data_id IN ($ids)", array($poller_id));
+	};
+	if (!db_atomic(array('data_local', 'poller_item'), $replace)) {
+		cacti_log('ERROR: Poller cache replacement failed; previous cache retained.', false, 'PCACHE');
+		return false;
 	}
-
-	/* remove stale records FROM the poller cache */
-	if ($ids != '') {
-		db_execute_prepared("DELETE FROM poller_item
-			WHERE present = 0
-			AND poller_id = ?
-			AND local_data_id IN ($ids)",
-			array($poller_id));
-
-		if ($poller_id > 1) {
-			if (remote_poller_up($poller_id)) {
-				if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-					db_execute_prepared("DELETE FROM poller_item
-						WHERE present = 0
-						AND poller_id = ?
-						AND local_data_id IN ($ids)",
-						array($poller_id), true, $rcnn_id);
-				} elseif (!$raised) {
-					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-				}
-			} elseif (!$raised) {
-				raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
-			}
-		}
-	}
-
-	/**
-	 * Save the last time a device/site was created/updated
-	 * for Caching.
-	 */
 	set_config_option('time_last_change_poller_item', time());
+
+	// Remote persistence has its own commit boundary. Never report it as atomic
+	// with the primary; a failed remote replacement retains its previous cache.
+	if ($poller_id > 1) {
+		$remote = remote_poller_up($poller_id) ? poller_push_to_remote_db_connect($poller_id, true) : false;
+		if ($remote === false || !db_atomic(array('data_local', 'poller_item'), $replace, $remote)) {
+			raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
+			return false;
+		}
+	}
+	return true;
 }
 
 /** for a given data template, update all input data and the poller cache
@@ -854,6 +771,10 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 			FROM host WHERE id = ?',
 			array($host_id));
 
+		if ($hosts[$host_id] === false || !$hosts[$host_id]) {
+			return false;
+		}
+
 		$sql_where   .= ' AND dl.host_id=' . $host_id;
 		$sql_where_p .= ' dl.host_id=' . $host_id;
 	}
@@ -882,16 +803,19 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 		AND (dl.snmp_query_id = 0 OR (dl.snmp_query_id > 0 AND dl.snmp_index != ''))
 		$sql_where");
 
-	/**
-	 * Mark poller_item as not present to remove stray entries in the end
-	 */
-	db_execute_prepared("UPDATE poller_item AS pi
-		INNER JOIN data_local AS dl
-		ON pi.local_data_id = dl.id
-		INNER JOIN data_template_data AS dtd
-		ON dl.id = dtd.local_data_id
-		SET pi.present = 0
+	if ($data_sources === false || $sql_where_p === '') {
+		return false;
+	}
+	// Include inactive and unindexed sources in the replacement scope so a
+	// successful empty rebuild still removes obsolete entries.
+	$candidates = db_fetch_assoc("SELECT dl.id AS local_data_id
+		FROM data_local AS dl
+		INNER JOIN data_template_data AS dtd ON dl.id=dtd.local_data_id
 		WHERE $sql_where_p");
+	if ($candidates === false) {
+		return false;
+	}
+	$local_data_ids = array_column($candidates, 'local_data_id');
 
 	/* loop through each matching data source */
 	if (cacti_sizeof($data_sources)) {
@@ -904,6 +828,9 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 					array($data_source['host_id']));
 			}
 			$host = $hosts[$data_source['host_id']];
+			if ($host === false) {
+				return false;
+			}
 
 			/**
 			 * get field information FROM the data template
@@ -926,6 +853,9 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 			 * - the field is a valid "host field" and it's not set to be over-written
 			 * - in other words the t_value is not checked
 			 */
+			if ($template_fields[$data_source['local_data_template_data_id']] === false) {
+				return false;
+			}
 			if (cacti_sizeof($template_fields[$data_source['local_data_template_data_id']])) {
 				foreach ($template_fields[$data_source['local_data_template_data_id']] as $template_field) {
 					$update = false;
@@ -958,16 +888,21 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 								AND data_template_data_id = ?',
 								array($template_field['id'], $data_source['id']));
 
+							if ($old_data === false) {
+								return false;
+							}
 							if (isset($old_data['value']) && $old_data['value'] != $host[$field]) {
 								$old_log = cacti_redact_value($field, $old_data['value']);
 								$new_log = cacti_redact_value($field, $host[$field]);
 								cacti_log("WARNING: Poller Cache updated Device[{$host['id']}], Field[$field], Old[$old_log], New[$new_log]", false, 'PCACHE', POLLER_VERBOSITY_MEDIUM);
 							}
 
-							db_execute_prepared('REPLACE INTO data_input_data
+							if (!db_execute_prepared('REPLACE INTO data_input_data
 								(data_input_field_id, data_template_data_id, value)
 								VALUES (?, ?, ?)',
-								array($template_field['id'], $data_source['id'], $host[$field]));
+								array($template_field['id'], $data_source['id'], $host[$field]))) {
+								return false;
+							}
 						}
 					}
 				}
@@ -976,7 +911,6 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 			/**
 			 * flag an update to the poller cache as well
 			 */
-			$local_data_ids[] = $data_source['local_data_id'];
 
 			/* create a new compatible structure */
 			$data = $data_source;
@@ -1016,8 +950,13 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 			WHERE id = ?',
 			array($host_id));
 
+		if ($poller_id === false || (int) $poller_id < 1) {
+			return false;
+		}
 		if (cacti_sizeof($local_data_ids)) {
-			poller_update_poller_cache_from_buffer($local_data_ids, $poller_items, $poller_id);
+			if (!poller_update_poller_cache_from_buffer($local_data_ids, $poller_items, $poller_id)) {
+				return false;
+			}
 		}
 	} elseif (cacti_sizeof($local_data_ids)) {
 		/* Map each local_data_id to its host's poller. Data sources
@@ -1029,6 +968,9 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 			ON h.id = dl.host_id
 			WHERE dl.id IN (' . implode(',', $safe_ids) . ')');
 
+		if ($rows === false) {
+			return false;
+		}
 		$ids_by_poller = array();
 		foreach ($rows as $row) {
 			$ids_by_poller[$row['poller_id']][(int) $row['local_data_id']] = true;
@@ -1054,7 +996,9 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 		foreach ($ids_by_poller as $pid => $ldid_set) {
 			$pid_local_data_ids = array_keys($ldid_set);
 			$pid_items          = isset($items_by_poller[$pid]) ? $items_by_poller[$pid] : array();
-			poller_update_poller_cache_from_buffer($pid_local_data_ids, $pid_items, $pid);
+			if (!poller_update_poller_cache_from_buffer($pid_local_data_ids, $pid_items, $pid)) {
+				return false;
+			}
 		}
 
 		$poller_id = cacti_sizeof($ids_by_poller) === 1 ? array_key_first($ids_by_poller) : 1;
@@ -1062,20 +1006,8 @@ function push_out_host($host_id, $local_data_id = 0, $data_template_id = 0) {
 		$poller_id = 1;
 	}
 
-	/**
-	 * Remove orphaned entries now
-	 */
-	$sql_where_p .= ($sql_where_p != '' ? ' AND ':'') . ' present = 0';
-
-	db_execute_prepared("DELETE pi
-		FROM poller_item AS pi
-		INNER JOIN data_local AS dl
-		ON pi.local_data_id = dl.id
-		INNER JOIN data_template_data AS dtd
-		ON dl.id = dtd.local_data_id
-		WHERE $sql_where_p");
-
 	api_data_source_cache_crc_update($poller_id);
+	return true;
 }
 
 function data_input_whitelist_check($data_input_id) {
