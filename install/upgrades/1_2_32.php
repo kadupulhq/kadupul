@@ -77,4 +77,55 @@ function upgrade_to_1_2_32() {
 	if (strtolower((string) $user_id_type['data']) == 'smallint') {
 		db_install_execute("ALTER TABLE settings_user MODIFY user_id mediumint(8) unsigned NOT NULL default '0'");
 	}
+
+	/* The account and group id columns below must hold every id of the table they
+	 * refer to (#927).  user_log.user_id and user_auth_row_cache.user_id were signed
+	 * mediumint, so an account id above 8388607 was stored as 8388607, and
+	 * settings_user_group.group_id was smallint, so a group id above 65535 was
+	 * stored as 65535.  A column that is already as wide is left alone, so a rerun
+	 * changes nothing, and a missing table is skipped.  A failed read is recorded
+	 * as an error, so the version is not advanced and the next upgrade tries again. */
+	$ranks   = array('tinyint' => 1, 'smallint' => 2, 'mediumint' => 3, 'int' => 4, 'bigint' => 5);
+	$columns = array(
+		array('user_log',            'user_id',  'mediumint', "mediumint(8) unsigned NOT NULL default '0'"),
+		array('user_auth_row_cache', 'user_id',  'mediumint', "mediumint(8) unsigned NOT NULL default '0'"),
+		array('settings_user_group', 'group_id', 'int',       "int(10) unsigned NOT NULL default '0'"),
+	);
+
+	foreach ($columns as $column) {
+		list($table, $name, $type, $definition) = $column;
+
+		$current = db_install_fetch_row('SELECT DATA_TYPE, COLUMN_TYPE
+			FROM information_schema.COLUMNS
+			WHERE TABLE_SCHEMA = SCHEMA()
+			AND TABLE_NAME = ?
+			AND COLUMN_NAME = ?', array($table, $name), false);
+
+		if (!is_array($current['data']) || !isset($current['data']['DATA_TYPE'])) {
+			continue;
+		}
+
+		$rank     = $ranks[strtolower($current['data']['DATA_TYPE'])] ?? 0;
+		$unsigned = stripos($current['data']['COLUMN_TYPE'], 'unsigned') !== false;
+
+		if ($rank > $ranks[$type] || ($rank == $ranks[$type] && $unsigned)) {
+			continue;
+		}
+
+		/* the upgrade session clamps a value the new type cannot hold, so a
+		 * negative id must be reviewed rather than silently become 0 */
+		$negative = db_install_fetch_cell("SELECT COUNT(*) FROM `$table` WHERE `$name` < 0", array(), false);
+
+		if ($negative['status'] == DB_STATUS_ERROR) {
+			continue;
+		}
+
+		if ($negative['data'] > 0) {
+			db_install_add_cache(DB_STATUS_ERROR, "ALTER TABLE `$table` MODIFY `$name` $definition -- not run: $table.$name holds negative ids; review them and run the upgrade again");
+
+			continue;
+		}
+
+		db_install_execute("ALTER TABLE `$table` MODIFY `$name` $definition");
+	}
 }

@@ -12,6 +12,9 @@
       <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
+      <file>./Unit/Security/Xss/RrdTuneRecommendationEscapeTest.php</file>
+      <file>./Unit/Security/Xss/FormMetadataBatchTest.php</file>
+      <file>./Unit/Core/Log/CactiLogControlCharacterTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
@@ -22,9 +25,7 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
-      <file>./Unit/Security/Xss/RrdTuneRecommendationEscapeTest.php</file>
-      <file>./Unit/Security/Xss/FormMetadataBatchTest.php</file>
-      <file>./Unit/Core/Log/CactiLogControlCharacterTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
