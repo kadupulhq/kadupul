@@ -32,6 +32,7 @@
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
       <file>./Unit/AggregateMemberSequenceTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
+      <file>./Unit/CdefInUseDeleteTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/Cli/RepairDatabaseOutcomesTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>

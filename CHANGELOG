@@ -29,6 +29,7 @@ Cacti CHANGELOG
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)
 -issue: Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226)
 -issue: Store explicitly empty or null nullable numeric fields as SQL NULL in sql_save; preserve explicit zero, omitted fields and non-nullable defaults, leaving existing stored zeros unchanged (#1108)
+-issue: Refuse to delete CDEFs that graphs, aggregates or other CDEFs still use, as the CDEF list already indicates (#1078)
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
 -issue: Stop repair_database.php after it reports that it is stopping (#742), and count a failed or empty hostname lookup or row read as a failure instead of a repair (#743)
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
