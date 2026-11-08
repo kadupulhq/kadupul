@@ -38,7 +38,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
-- Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). Mirrors the installer part of upstream Cacti #7625.
+- Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). The 1.2.38 upgrade now creates `poller_output_boost_local_data_ids` when it is missing, since no earlier upgrade did. Mirrors the installer part of upstream Cacti #7625.
 
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
 
