@@ -26,6 +26,7 @@ function read_config_option($k) { return 300; }
 function register_process_start(...$a) { return true; }
 function unregister_process(...$a) {}
 function cacti_log(...$a) { global $logs; $logs[]=$a[0]; }
+function api_device_purge_from_remote($device, $poller): void { $GLOBALS['purged'][] = [$device, $poller]; }
 function run_data_query($h,$q,$automation=false,$force=false) {
     global $scenario,$calls,$pdo;
     $calls[]=$q;
@@ -65,6 +66,13 @@ try {
         eval('namespace CommandsReview; use Throwable; if(false){'.$block);
         if ((int) statement('SELECT COUNT(*) FROM poller_command')->fetchColumn() !== 0) { throw new \RuntimeException('Retry did not acknowledge retained work'); }
         $scenario = $saved;
+    }
+    if ($scenario === 'success') {
+        $purged = [];
+        $pdo->exec("INSERT INTO poller_command(poller_id,action,command,time,last_updated) VALUES(1,3,'1','2026-11-08 11:59:59','2026-11-08 11:59:59')");
+        eval('namespace CommandsReview; use Throwable; if(false){'.$block);
+        if ($purged !== [[1, 1]] && $purged !== [['1', 1]]) { throw new \RuntimeException('Legacy void purge was not invoked'); }
+        if ((int) statement('SELECT COUNT(*) FROM poller_command')->fetchColumn() !== 0) { throw new \RuntimeException('Successful legacy void purge was not acknowledged'); }
     }
     $results[]=['scenario'=>$scenario,'executed'=>$calls,'remaining'=>$left,'success_logs'=>$successLogs,'checks'=>5];
 

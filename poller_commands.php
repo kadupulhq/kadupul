@@ -245,7 +245,8 @@ if ($host_id === false) {
 				case POLLER_COMMAND_PURGE:
 					$device_id = $command['command'];
 
-					$completed = api_device_purge_from_remote($device_id, $poller_id) !== false;
+					api_device_purge_from_remote($device_id, $poller_id);
+					$completed = true;
 					cacti_log("Device[$device_id] PURGE: Purged successfully.", true, 'PCOMMAND', $verbosity);
 
 					break;

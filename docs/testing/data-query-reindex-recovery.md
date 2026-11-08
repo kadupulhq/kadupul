@@ -36,13 +36,16 @@ the parsed definition. Shared graphs retain the prior last-supplied-source rule.
 
 Local verification on 2026-11-08 used PHP 8.1.34, MySQL 8.4.13 and MariaDB
 10.11.19 in disposable databases. All 58 registered regression cases passed on
-each engine. They execute shipped DDL and production database code, with device
+each engine, using a schema-scoped account. CI enables trigger creation only in
+its disposable MySQL service so failure injections need no application SUPER
+privilege. They execute shipped DDL and production database code, with device
 acquisition, item construction and unrelated completion effects as explicit test
 boundaries. Cases cover failed first/late writes, mark/delete/preserve failures,
 silent PDO failures, begin/commit/savepoint refusal, caller rollback, absent
 hosts/connections, temporary tables, MyISAM refusal, lock contention/release,
 reversed source order, orphan/transient recovery, unchanged-index retry and queue
-arrivals/replacements/deadlines. The remote-envelope and publication tests add
+arrivals/replacements/deadlines. The successful command case also exercises the
+legacy void-returning purge contract. The remote-envelope and publication tests add
 14 and 17 cases respectively.
 
 Run from `tests/` with the branch's locked test dependencies and a disposable
