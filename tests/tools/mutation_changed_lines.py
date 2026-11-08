@@ -79,7 +79,10 @@ def changed_lines(root, base):
     Mirrors Infection's own diff (working tree against the base, filter AM).
     """
     diff = git(root, "--no-pager", "diff", base, "--no-ext-diff", "--no-color",
-               "--unified=0", "--diff-filter=AM", "--",
+               "--unified=0", "--diff-filter=AM",
+               # Fixed prefixes: diff.noprefix or diff.mnemonicPrefix would
+               # otherwise hide every file from the "+++ b/" match below.
+               "--src-prefix=a/", "--dst-prefix=b/", "--",
                # Git pathspec wildcards cross directory separators.
                f"{SOURCE_DIRECTORY}/*.php")
     counts = {}

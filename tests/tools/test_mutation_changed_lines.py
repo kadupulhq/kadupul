@@ -174,6 +174,17 @@ class MutationChangedLinesTest(unittest.TestCase):
         self.assertIn("- `src/Guard.php:5` Minus", summary)
         self.assertEqual(summary, (self.root / "var/infection/summary.md").read_text())
 
+    def test_diff_prefix_settings_do_not_hide_changed_lines(self):
+        self.git("config", "diff.noprefix", "true")
+        self.git("config", "diff.mnemonicPrefix", "true")
+        self.change_source()
+
+        result = self.run_wrapper()
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIsNotNone(self.receipt("infection"))
+        self.assertIn("1 added or modified lines in 1 file(s)", self.summary_text())
+
     def test_infection_mutates_changed_lines_with_the_initial_run_coverage(self):
         self.change_source()
 
