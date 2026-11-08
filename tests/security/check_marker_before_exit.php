@@ -21,8 +21,20 @@
  * An exit that is the last statement of a block holding the marker ends the
  * run the marker describes, so neither it nor anything after it counts; an
  * exit in a branch, a loop or an expression (or die) is an early exit and does.
+ * In a loop, the next iteration reaches every exit in the loop, so an exit
+ * earlier in the loop body, or in another branch of an if inside it, follows
+ * a marker recorded in the same loop.
  *
- * The check is a heuristic: it cannot tell whether the exit skips the work.
+ * A call to a function that never returns counts as an exit: one declared
+ * with a never return type, such as die_html_input_error(), or one whose body
+ * ends with an exit. Only functions declared in the checked files are known,
+ * so a full scan sees them all and a scan of named files sees only those.
+ *
+ * The check is a heuristic: it cannot tell whether the exit skips the work,
+ * and a clean result is not proof. It does not see an exit reached through a
+ * method call, a dynamic call or a function whose exit is not its last
+ * statement, an exception that ends the script, or a loop formed by goto or
+ * by a function calling itself.
  * Existing matches are listed in the baseline after review. A pull request
  * fails on a new match, and on a baseline row that no longer matches, so the
  * baseline only shrinks or grows by a reviewed edit.
@@ -53,9 +65,35 @@ use PhpParser\PrettyPrinter\Standard;
 const MARKER_KEY = '/run|last|stamp/i';
 const EXCLUDED = '#^(include/vendor|include/fa|include/js|node_modules|tests|plugins|cache|log|rra)/#';
 
+/**
+ * Collects the names of functions that never return: declared with a never
+ * return type, or ending their body with an exit statement.
+ */
+final class NeverReturningVisitor extends NodeVisitorAbstract
+{
+    /** @var array<string, true> lower-case function names */
+    public array $names = [];
+
+    public function enterNode(Node $node): ?int
+    {
+        if (!$node instanceof Stmt\Function_) {
+            return null;
+        }
+        $type = $node->returnType;
+        $statements = array_values(array_filter($node->stmts, static fn(Stmt $statement): bool => !$statement instanceof Stmt\Nop));
+        $last = $statements === [] ? null : $statements[count($statements) - 1];
+        if (($type instanceof Node\Identifier && $type->toLowerString() === 'never')
+            || ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Exit_)) {
+            $this->names[$node->name->toLowerString()] = true;
+        }
+
+        return null;
+    }
+}
+
 final class MarkerScopeVisitor extends NodeVisitorAbstract
 {
-    /** @var list<array{name: string, events: list<array{type: string, line: int, key: string, blocks: list<int>, branches: list<array{0: int, 1: int}>, block: int, last: bool}>}> */
+    /** @var list<array{name: string, loops: list<int>, events: list<array{type: string, line: int, key: string, blocks: list<int>, branches: list<array{0: int, 1: int}>, loops: list<int>, block: int, last: bool}>}> */
     private array $stack = [];
 
     /** @var list<array{scope: string, key: string, line: int, exit: int}> */
@@ -76,20 +114,24 @@ final class MarkerScopeVisitor extends NodeVisitorAbstract
 
     private int $nextIf = 0;
 
-    public function __construct()
+    private int $nextLoop = 0;
+
+    /** @param array<string, true> $neverReturning lower-case names of functions that never return */
+    public function __construct(private array $neverReturning = [])
     {
         $this->printer = new Standard();
     }
 
     public function beforeTraverse(array $nodes): ?array
     {
-        $this->stack = [['name' => '(file)', 'events' => []]];
+        $this->stack = [['name' => '(file)', 'loops' => [], 'events' => []]];
         $this->findings = [];
         $this->closures = [];
         $this->blocks = [];
         $this->nextBlock = 0;
         $this->branches = [];
         $this->nextIf = 0;
+        $this->nextLoop = 0;
         $this->markBlock($nodes);
 
         return null;
@@ -114,31 +156,53 @@ final class MarkerScopeVisitor extends NodeVisitorAbstract
         }
 
         if ($node instanceof Node\FunctionLike) {
-            $this->stack[] = ['name' => $this->scopeName($node), 'events' => []];
+            $this->stack[] = ['name' => $this->scopeName($node), 'loops' => [], 'events' => []];
 
             return null;
         }
 
         $scope = count($this->stack) - 1;
-        if ($node instanceof Expr\Exit_ && !$node->hasAttribute('markerStatement')) {
+        if (self::isLoop($node)) {
+            // The condition and the body both run again on the next iteration, so both are in the loop.
+            $this->stack[$scope]['loops'][] = $this->nextLoop++;
+        }
+        $loops = $this->stack[$scope]['loops'];
+        if ($this->isExit($node) && !$node->hasAttribute('markerStatement')) {
             $this->stack[$scope]['events'][] = ['type' => 'exit', 'line' => $node->getStartLine(), 'key' => '', 'blocks' => $this->blocks, 'branches' => $this->branches,
-                'block' => -1, 'last' => false];
-        } elseif ($node instanceof Stmt\Expression && $node->expr instanceof Expr\Exit_) {
-            // Recorded with its block here; the Exit_ node inside it is skipped above.
+                'loops' => $loops, 'block' => -1, 'last' => false];
+        } elseif ($node instanceof Stmt\Expression && $this->isExit($node->expr)) {
+            // Recorded with its block here; the exit node inside it is skipped above.
             $node->expr->setAttribute('markerStatement', true);
             $this->stack[$scope]['events'][] = ['type' => 'exit', 'line' => $node->getStartLine(), 'key' => '', 'blocks' => $this->blocks, 'branches' => $this->branches,
-                'block' => (int) $node->getAttribute('markerBlock'), 'last' => (bool) $node->getAttribute('markerLast')];
+                'loops' => $loops, 'block' => (int) $node->getAttribute('markerBlock'), 'last' => (bool) $node->getAttribute('markerLast')];
         } elseif ($node instanceof Expr\FuncCall && $node->name instanceof Node\Name
             && strtolower($node->name->getLast()) === 'set_config_option' && isset($node->args[0])
             && $node->args[0] instanceof Node\Arg) {
             $key = $this->printer->prettyPrintExpr($node->args[0]->value);
             if (preg_match(MARKER_KEY, $key) === 1) {
                 $this->stack[$scope]['events'][] = ['type' => 'marker', 'line' => $node->getStartLine(), 'key' => $key, 'blocks' => $this->blocks, 'branches' => $this->branches,
-                    'block' => -1, 'last' => false];
+                    'loops' => $loops, 'block' => -1, 'last' => false];
             }
         }
 
         return null;
+    }
+
+    /** Whether a node is a loop whose body and condition run again after a marker inside it. */
+    private static function isLoop(Node $node): bool
+    {
+        return $node instanceof Stmt\For_ || $node instanceof Stmt\Foreach_ || $node instanceof Stmt\While_ || $node instanceof Stmt\Do_;
+    }
+
+    /** Whether a node ends the script: exit, die, or a call to a function that never returns. */
+    private function isExit(Node $node): bool
+    {
+        if ($node instanceof Expr\Exit_) {
+            return true;
+        }
+
+        return $node instanceof Expr\FuncCall && $node->name instanceof Node\Name
+            && isset($this->neverReturning[strtolower($node->name->getLast())]);
     }
 
     public function leaveNode(Node $node): ?int
@@ -151,6 +215,8 @@ final class MarkerScopeVisitor extends NodeVisitorAbstract
         }
         if ($node instanceof Node\FunctionLike) {
             $this->close(array_pop($this->stack));
+        } elseif (self::isLoop($node)) {
+            array_pop($this->stack[count($this->stack) - 1]['loops']);
         }
 
         return null;
@@ -212,7 +278,7 @@ final class MarkerScopeVisitor extends NodeVisitorAbstract
         }
     }
 
-    /** @param array{name: string, events: list<array{type: string, line: int, key: string, blocks: list<int>, branches: list<array{0: int, 1: int}>, block: int, last: bool}>} $scope */
+    /** @param array{name: string, loops: list<int>, events: list<array{type: string, line: int, key: string, blocks: list<int>, branches: list<array{0: int, 1: int}>, loops: list<int>, block: int, last: bool}>} $scope */
     private function close(array $scope): void
     {
         $events = $scope['events'];
@@ -220,6 +286,7 @@ final class MarkerScopeVisitor extends NodeVisitorAbstract
             if ($marker['type'] !== 'marker') {
                 continue;
             }
+            $exit = null;
             foreach (array_slice($events, $index + 1) as $later) {
                 if ($later['type'] !== 'exit') {
                     continue;
@@ -231,8 +298,22 @@ final class MarkerScopeVisitor extends NodeVisitorAbstract
                 if (self::exclusive($marker['branches'], $later['branches'])) {
                     continue;
                 }
-                $this->findings[] = ['scope' => $scope['name'], 'key' => $marker['key'], 'line' => $marker['line'], 'exit' => $later['line']];
+                $exit = $later['line'];
                 break;
+            }
+            if ($exit === null && $marker['loops'] !== []) {
+                // The next iteration reaches any exit in a loop that holds the marker, before or after it
+                // and in any branch inside the loop, unless that exit ends the block holding the marker.
+                foreach ($events as $other) {
+                    if ($other['type'] === 'exit' && array_intersect($marker['loops'], $other['loops']) !== []
+                        && !($other['last'] && in_array($other['block'], $marker['blocks'], true))) {
+                        $exit = $other['line'];
+                        break;
+                    }
+                }
+            }
+            if ($exit !== null) {
+                $this->findings[] = ['scope' => $scope['name'], 'key' => $marker['key'], 'line' => $marker['line'], 'exit' => $exit];
             }
         }
     }
@@ -272,12 +353,7 @@ function tracked_php_files(string $root): array
 function scan(string $root, array $files, array &$messages): array
 {
     $parser = (new ParserFactory())->createForHostVersion();
-    $traverser = new NodeTraverser();
-    $visitor = new MarkerScopeVisitor();
-    $traverser->addVisitor($visitor);
-    $rows = [];
-
-    foreach ($files as $file) {
+    $parse = static function (string $file) use ($parser, $root): array {
         $code = file_get_contents($root . '/' . $file);
         if ($code === false) {
             throw new RuntimeException('Unable to read ' . $file);
@@ -290,7 +366,25 @@ function scan(string $root, array $files, array &$messages): array
         if ($ast === null) {
             throw new RuntimeException('Unable to parse ' . $file);
         }
-        $traverser->traverse($ast);
+
+        return $ast;
+    };
+
+    // A first pass finds the functions that never return, since a call can precede the declaration.
+    $collector = new NeverReturningVisitor();
+    $collecting = new NodeTraverser();
+    $collecting->addVisitor($collector);
+    foreach ($files as $file) {
+        $collecting->traverse($parse($file));
+    }
+
+    $traverser = new NodeTraverser();
+    $visitor = new MarkerScopeVisitor($collector->names);
+    $traverser->addVisitor($visitor);
+    $rows = [];
+
+    foreach ($files as $file) {
+        $traverser->traverse($parse($file));
         $seen = [];
         foreach ($visitor->findings as $finding) {
             $identity = $file . "\t" . $finding['scope'] . "\t" . str_replace(["\t", "\n"], ' ', $finding['key']);

@@ -88,3 +88,67 @@ if (empty($last) || (time() - $last > 14400)) {
 if (overlapping()) {
     exit;
 }
+
+function exit_earlier_in_the_loop($items)
+{
+    foreach ($items as $item) {
+        if (!$item) {
+            exit(1);
+        }
+        set_config_option('job_lastrun_' . $item, time());
+    }
+}
+
+function exit_in_the_other_branch_of_a_loop()
+{
+    while (next_item()) {
+        if (ready()) {
+            set_config_option('job_last_poll', time());
+        } else {
+            exit(1);
+        }
+    }
+}
+
+function exit_before_a_loop_that_holds_no_marker($items)
+{
+    foreach ($items as $item) {
+        if (!$item) {
+            exit(1);
+        }
+    }
+    set_config_option('job_lastrun', time());
+}
+
+function bail_out()
+{
+    cleanup();
+    exit(1);
+}
+
+function fail_validation(): never
+{
+    throw new RuntimeException('invalid');
+}
+
+function exit_through_a_helper()
+{
+    set_config_option('job_stamp', time());
+    if (bad()) {
+        bail_out();
+    }
+    run_job();
+}
+
+function exit_through_a_never_function()
+{
+    set_config_option('job_lastrun', time());
+    valid() || fail_validation();
+}
+
+function a_helper_that_ends_the_run()
+{
+    run_job();
+    set_config_option('job_lastrun', time());
+    bail_out();
+}

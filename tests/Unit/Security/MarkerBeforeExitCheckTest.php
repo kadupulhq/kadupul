@@ -30,18 +30,29 @@ const MARKER_CASES = [
     "cases.php\t(file)\t'poller_mibsrun_' . \$poller_id\t1",
     "cases.php\tdie_in_an_expression\t'job_stamp'\t1",
     "cases.php\tearly_exit_in_branch\t'job_lastrun'\t1",
+    "cases.php\texit_earlier_in_the_loop\t'job_lastrun_' . \$item\t1",
     "cases.php\texit_in_a_loop\t'job_last_run_time'\t1",
+    "cases.php\texit_in_the_other_branch_of_a_loop\t'job_last_poll'\t1",
+    "cases.php\texit_through_a_helper\t'job_stamp'\t1",
+    "cases.php\texit_through_a_never_function\t'job_lastrun'\t1",
 ];
 
 test('early exits after a run marker are reported and safe shapes are not', function () {
     $result = marker_check(['--baseline', '/dev/null', 'cases.php']);
 
     expect($result['status'])->toBe(1, $result['err'])
-        ->and($result['out'])->toContain('1 files, 4 matches, 4 new, 0 stale')
+        ->and($result['out'])->toContain('1 files, 8 matches, 8 new, 0 stale')
         ->and($result['out'])->toContain("cases.php:10: 'job_lastrun' is recorded before the exit at line 12 in early_exit_in_branch")
-        ->and($result['out'])->toContain("cases.php:85: 'poller_mibsrun_' . \$poller_id is recorded before the exit at line 89 in (file)");
-    foreach (['terminal_exit_ends_the_run', 'exit_in_the_other_branch', 'nothing_runs_after_a_terminal_exit', 'ordinary_setting_is_ignored', 'nested_scope_is_separate', 'exit_before_the_marker'] as $safe) {
-        expect($result['out'])->not->toContain(' in ' . $safe);
+        ->and($result['out'])->toContain("cases.php:85: 'poller_mibsrun_' . \$poller_id is recorded before the exit at line 89 in (file)")
+        // The next iteration reaches an exit earlier in the loop body, or in the if's other branch.
+        ->and($result['out'])->toContain("cases.php:98: 'job_lastrun_' . \$item is recorded before the exit at line 96 in exit_earlier_in_the_loop")
+        ->and($result['out'])->toContain("cases.php:106: 'job_last_poll' is recorded before the exit at line 108 in exit_in_the_other_branch_of_a_loop")
+        // A function that ends with exit, or is declared never, exits when called.
+        ->and($result['out'])->toContain("cases.php:136: 'job_stamp' is recorded before the exit at line 138 in exit_through_a_helper")
+        ->and($result['out'])->toContain("cases.php:145: 'job_lastrun' is recorded before the exit at line 146 in exit_through_a_never_function");
+    foreach (['terminal_exit_ends_the_run', 'exit_in_the_other_branch', 'nothing_runs_after_a_terminal_exit', 'ordinary_setting_is_ignored', 'nested_scope_is_separate', 'exit_before_the_marker',
+        'exit_before_a_loop_that_holds_no_marker', 'a_helper_that_ends_the_run', 'bail_out', 'fail_validation'] as $safe) {
+        expect($result['out'])->not->toContain(' in ' . $safe . "\n");
     }
 });
 
@@ -54,7 +65,7 @@ test('a matching baseline passes', function () {
     }
 
     expect($result['status'])->toBe(0, $result['out'] . $result['err'])
-        ->and($result['out'])->toContain('4 matches, 0 new, 0 stale');
+        ->and($result['out'])->toContain('8 matches, 0 new, 0 stale');
 });
 
 test('a new match and a stale baseline row both fail', function () {
