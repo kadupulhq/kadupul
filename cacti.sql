@@ -2725,7 +2725,7 @@ CREATE TABLE `user_auth_group_members` (
 --
 
 CREATE TABLE `user_auth_group_perms` (
-  `group_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `group_id` int(10) unsigned NOT NULL DEFAULT '0',
   `item_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`group_id`,`item_id`,`type`),

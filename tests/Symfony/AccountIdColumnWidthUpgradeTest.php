@@ -14,8 +14,8 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 /**
- * #927: user_log.user_id, user_auth_row_cache.user_id and
- * settings_user_group.group_id must hold every id of the table they refer to,
+ * #927: user_log.user_id, user_auth_row_cache.user_id,
+ * settings_user_group.group_id and user_auth_group_perms.group_id must hold every id of the table they refer to,
  * in a new install and after the 1.2.38 upgrade. The database tests need
  * KADUPUL_TEST_MYSQL_DSN.
  */
@@ -49,9 +49,16 @@ final class AccountIdColumnWidthUpgradeTest extends TestCase
   value varchar(2048) NOT NULL DEFAULT '',
   PRIMARY KEY (group_id, name)
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Stores the Default User Group Graph Settings'",
+        'user_auth_group_perms' => "CREATE TABLE `user_auth_group_perms` (
+  `group_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `item_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`group_id`,`item_id`,`type`),
+  KEY `group_id` (`group_id`,`type`)
+) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Table that Contains User Group Permissions'",
     ];
 
-    private const array COLUMNS = ['user_log' => 'user_id', 'user_auth_row_cache' => 'user_id', 'settings_user_group' => 'group_id'];
+    private const array COLUMNS = ['user_log' => 'user_id', 'user_auth_row_cache' => 'user_id', 'settings_user_group' => 'group_id', 'user_auth_group_perms' => 'group_id'];
 
     /** Tables upgrade_to_1_2_38() creates for Boost, removed after each run. */
     private const array BOOST = ['poller_output_boost_processes', 'kadupul_messenger_messages'];
@@ -94,11 +101,13 @@ final class AccountIdColumnWidthUpgradeTest extends TestCase
         self::assertSame($user, self::integerType(self::column($sql, 'user_log', 'user_id')));
         self::assertSame($user, self::integerType(self::column($sql, 'user_auth_row_cache', 'user_id')));
         self::assertSame($group, self::integerType(self::column($sql, 'settings_user_group', 'group_id')));
+        self::assertSame($group, self::integerType(self::column($sql, 'user_auth_group_perms', 'group_id')));
 
         $audit = (string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql');
         self::assertStringContainsString("('user_log',2,'user_id','mediumint(8) unsigned','NO','PRI','0','',NULL);", $audit);
         self::assertStringContainsString("('user_auth_row_cache',1,'user_id','mediumint(8) unsigned','NO','PRI','0','',NULL);", $audit);
         self::assertStringContainsString("('settings_user_group',1,'group_id','int(10) unsigned','NO','PRI','0','',NULL);", $audit);
+        self::assertStringContainsString("('user_auth_group_perms',1,'group_id','int(10) unsigned','NO','PRI','0','',NULL);", $audit);
     }
 
     public function testUpgradeWidensTheColumnsAndKeepsEveryRow(): void
@@ -113,6 +122,7 @@ final class AccountIdColumnWidthUpgradeTest extends TestCase
         self::assertMatchesRegularExpression('/^mediumint(\(8\))? unsigned$/', $this->type('user_log'));
         self::assertMatchesRegularExpression('/^mediumint(\(8\))? unsigned$/', $this->type('user_auth_row_cache'));
         self::assertMatchesRegularExpression('/^int(\(10\))? unsigned$/', $this->type('settings_user_group'));
+        self::assertMatchesRegularExpression('/^int(\(10\))? unsigned$/', $this->type('user_auth_group_perms'));
         self::assertSame($before, $this->rows());
         foreach (array_keys(self::COLUMNS) as $table) {
             self::assertStringContainsString('PRIMARY KEY', $this->create($table), $table);
@@ -124,6 +134,8 @@ final class AccountIdColumnWidthUpgradeTest extends TestCase
         self::assertNotFalse($db->exec("INSERT INTO settings_user_group (group_id, name, value) VALUES (70000, 'selected_theme', 'classic')"));
         self::assertSame('classic', $this->value('SELECT value FROM settings_user_group WHERE group_id = 70000'));
         self::assertSame('dark', $this->value('SELECT value FROM settings_user_group WHERE group_id = 65535'));
+        self::assertNotFalse($db->exec('INSERT INTO user_auth_group_perms (group_id, item_id, type) VALUES (16777216, 7, 1)'));
+        self::assertSame('16777216', $this->value('SELECT group_id FROM user_auth_group_perms WHERE item_id = 7'));
 
         $widened = array_map($this->create(...), array_keys(self::COLUMNS));
         $GLOBALS['forward_schema_status'] = [];
@@ -176,6 +188,7 @@ final class AccountIdColumnWidthUpgradeTest extends TestCase
         self::assertNotFalse($db->exec("INSERT INTO user_log (username, user_id, time, result, ip) VALUES ('admin', 1, '2026-01-01 00:00:00', 1, '192.0.2.1'), ('unknown', 0, '2026-01-01 00:00:01', 0, '192.0.2.2'), ('big', 8388607, '2026-01-01 00:00:02', 1, '192.0.2.3')"));
         self::assertNotFalse($db->exec("INSERT INTO user_auth_row_cache (user_id, class, hash, total_rows) VALUES (1, 'graphs', 'a', 10), (8388607, 'graphs', 'b', 20)"));
         self::assertNotFalse($db->exec("INSERT INTO settings_user_group (group_id, name, value) VALUES (1, 'selected_theme', 'modern'), (65535, 'selected_theme', 'dark')"));
+        self::assertNotFalse($db->exec('INSERT INTO user_auth_group_perms (group_id, item_id, type) VALUES (1, 4, 1), (16777215, 5, 2)'));
     }
 
     /** @return list<list<array<string, mixed>>> */
@@ -185,6 +198,7 @@ final class AccountIdColumnWidthUpgradeTest extends TestCase
             $this->database()->query('SELECT username, user_id, result FROM user_log ORDER BY username')->fetchAll(PDO::FETCH_ASSOC),
             $this->database()->query('SELECT user_id, class, hash, total_rows FROM user_auth_row_cache ORDER BY user_id, hash')->fetchAll(PDO::FETCH_ASSOC),
             $this->database()->query('SELECT group_id, name, value FROM settings_user_group ORDER BY group_id')->fetchAll(PDO::FETCH_ASSOC),
+            $this->database()->query('SELECT group_id, item_id, type FROM user_auth_group_perms ORDER BY group_id, item_id')->fetchAll(PDO::FETCH_ASSOC),
         ];
     }
 

@@ -1035,7 +1035,7 @@ INSERT INTO `table_columns` VALUES ('user_auth_group',12,'policy_graph_templates
 INSERT INTO `table_columns` VALUES ('user_auth_group',13,'enabled','char(2)','NO','','on','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_group_members',1,'group_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_members',2,'user_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
-INSERT INTO `table_columns` VALUES ('user_auth_group_perms',1,'group_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_group_perms',1,'group_id','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_perms',2,'item_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_perms',3,'type','tinyint(3) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_realm',1,'group_id','int(10) unsigned','NO','PRI',NULL,'',NULL);

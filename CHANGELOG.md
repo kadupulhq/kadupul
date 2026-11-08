@@ -40,7 +40,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
-- Widen `user_log.user_id`, `user_auth_row_cache.user_id` and `settings_user_group.group_id` to the account and group ids they hold, in `cacti.sql`, the audit baseline and the 1.2.38 upgrade; a column holding a negative id stops the upgrade for review instead of being clamped to 0 (#927).
+- Widen `user_log.user_id`, `user_auth_row_cache.user_id`, `settings_user_group.group_id` and `user_auth_group_perms.group_id` to the account and group ids they hold, in `cacti.sql`, the audit baseline and the 1.2.38 upgrade; a column holding a negative id stops the upgrade for review instead of being clamped to 0 (#927).
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).

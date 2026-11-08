@@ -155,8 +155,9 @@ function upgrade_boost_queue_tables(): array
  * Give the account and group id columns the type of the id they hold (#927).
  * user_log.user_id and user_auth_row_cache.user_id were signed mediumint, so
  * an account id above 8388607 was stored as 8388607, and
- * settings_user_group.group_id was smallint, so a group id above 65535 was
- * stored as 65535. A column that is already as wide is left alone, so a rerun
+ * settings_user_group.group_id was smallint and user_auth_group_perms.group_id
+ * was mediumint, so a group id above their range was stored as the largest
+ * value they hold. A column that is already as wide is left alone, so a rerun
  * changes nothing, and a missing table is skipped. A failed read or a negative
  * id, which the upgrade session would clamp to 0, stops the upgrade before the
  * version is recorded.
@@ -168,6 +169,7 @@ function upgrade_widen_account_id_columns(): void
         array('user_log', 'user_id', 'mediumint', "mediumint(8) unsigned NOT NULL default '0'"),
         array('user_auth_row_cache', 'user_id', 'mediumint', "mediumint(8) unsigned NOT NULL default '0'"),
         array('settings_user_group', 'group_id', 'int', "int(10) unsigned NOT NULL default '0'"),
+        array('user_auth_group_perms', 'group_id', 'int', "int(10) unsigned NOT NULL default '0'"),
     );
 
     foreach ($columns as list($table, $column, $type, $definition)) {
