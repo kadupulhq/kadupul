@@ -48,6 +48,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
+- Widen `user_log.user_id`, `user_auth_row_cache.user_id`, `settings_user_group.group_id` and `user_auth_group_perms.group_id` to the account and group ids they hold, in `cacti.sql`, the audit baseline and the 1.2.38 upgrade; a column holding a negative id stops the upgrade for review instead of being clamped to 0 (#927).
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
 - Update the locked Symfony Config, Filesystem, FrameworkBundle, HttpClient, HttpFoundation, HttpKernel, Routing and Yaml packages to 7.4.23 and Mime to 7.4.22 to take upstream security fixes, retaining the Symfony 7.4 constraints and other locked versions.
