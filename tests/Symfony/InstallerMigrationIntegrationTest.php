@@ -176,6 +176,35 @@ final class InstallerMigrationIntegrationTest extends TestCase
         $this->assertSame($before, $this->local->query('SELECT * FROM automation_graph_rules ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC));
     }
 
+    /** A handled earlier native query error must not poison a new repair or hide its own failures. */
+    public function testAutomationRepairResetsPriorErrorsButStillRejectsCurrentReadFailures(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+        $this->assertIsString($source);
+        foreach (['automation_graph_rules', 'snmp_query', 'snmp_query_graph'] as $table) {
+            $this->assertSame(1, preg_match('~CREATE TABLE [`]?' . $table . '[`]?\s*\(.*?;~s', $source, $match));
+            $this->importTable($this->local, $match[0]);
+        }
+        $this->assertSame(1, preg_match('~INSERT INTO `automation_graph_rules` VALUES .*?;~s', $source, $seed));
+        $this->local->exec($seed[0]);
+        $before = $this->local->query('SELECT * FROM automation_graph_rules ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC);
+        $this->assertFalse(\db_fetch_cell_prepared('SELECT unavailable_fixture_column FROM snmp_query'));
+        $this->assertNotEmpty(\db_error());
+        $repair = new InstallerAutomationRepair(new NativeInstallerFunctions());
+        $repair->repair();
+        $this->assertFalse(\db_error());
+        $this->assertSame($before, $this->local->query('SELECT * FROM automation_graph_rules ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC));
+        $this->local->exec('DROP TABLE snmp_query');
+        try {
+            $repair->repair();
+            $this->fail('A new native template read failure was accepted.');
+        } catch (\RuntimeException $error) {
+            $this->assertStringContainsString('template references', $error->getMessage());
+            $this->assertNotEmpty(\db_error());
+            $this->assertSame($before, $this->local->query('SELECT * FROM automation_graph_rules ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC));
+        }
+    }
+
     /** Release color imports are idempotent and execute native bound writes on the actual schema. */
     public function testNativeColorImportIsIdempotentWithoutChangingCustomColors(): void
     {
