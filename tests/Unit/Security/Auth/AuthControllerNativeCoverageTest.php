@@ -229,9 +229,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('logoutRequests')]
-    public function testLogoutRequestBoundary(string $method, string $token, mixed $action, int $status, bool $form): void
+    public function testLogoutRequestBoundary(string $method, string $token, mixed $action, int $status, bool $form, string $host = 'localhost'): void
     {
-        $state = $this->runController(['mode' => 'logout', 'method' => $method, 'csrf' => $token, 'request' => ['action' => $action]]);
+        $state = $this->runController(['mode' => 'logout', 'host' => $host, 'method' => $method, 'csrf' => $token, 'request' => ['action' => $action]]);
         self::assertSame($status, $state['status']);
         self::assertSame([], $state['events']);
         self::assertSame(42, $state['session']['sess_user_id']);
@@ -242,7 +242,6 @@ final class AuthControllerNativeCoverageTest extends TestCase
             @$document->loadHTML($state['html']);
             $xpath = new \DOMXPath($document);
             self::assertSame('post', $xpath->evaluate('string(//form/@method)'));
-            // The target comes from the configured path, never from the Host header.
             self::assertSame('/monitoring/logout.php', $xpath->evaluate('string(//form/@action)'));
             self::assertSame($action, $xpath->evaluate('string(//input[@name="action"]/@value)'));
             self::assertStringStartsWith('sid:', $xpath->evaluate('string(//input[@name="__csrf_magic"]/@value)'));
@@ -257,6 +256,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
         foreach (['', 'timeout', 'disabled', 'remote'] as $action) {
             yield 'confirm ' . $action => ['GET', 'missing', $action, 200, true];
         }
+        yield 'Host header is not reflected into the CSRF form target' => ['GET', 'missing', '', 200, true, 'attacker.example'];
         yield 'HEAD is safe' => ['HEAD', 'missing', 'timeout', 200, false];
         foreach (['missing', 'invalid', 'expired'] as $token) {
             yield $token => ['POST', $token, 'timeout', 403, false];
