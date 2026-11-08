@@ -87,11 +87,11 @@ test('the removal works when the aggregate row id equals the id of another graph
 	expect(am_members(6))->toBe(array(6));
 });
 
-test('a comma separated id list and several members are all removed', function () {
+test('the comma separated id list api_graph_remove_multi() builds removes every member', function () {
 	$GLOBALS['am_db']->exec('INSERT INTO aggregate_graphs VALUES (1, 7, 0)');
 	$GLOBALS['am_db']->exec('INSERT INTO aggregate_graphs_items VALUES (1, 5, 1), (1, 6, 2), (1, 9, 3)');
 
-	api_graph_remove_aggregate_items('5,6');
+	api_graph_remove_aggregate_items('5, 6');
 
 	expect(am_members(1))->toBe(array(9));
 });
