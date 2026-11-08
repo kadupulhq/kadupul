@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -335,6 +336,8 @@ function sites_delete(array $ids): bool {
 	if (!$ids) {
 		return true;
 	}
+	/* positional placeholders need a list, whatever keys the selection had */
+	$ids = array_values($ids);
 	$placeholders = implode(', ', array_fill(0, count($ids), '?'));
 	return db_atomic(array('sites', 'host'), static function (PDO $connection) use ($ids, $placeholders): bool {
 		return db_atomic_execute($connection, 'DELETE FROM sites WHERE id IN (' . $placeholders . ')', $ids)

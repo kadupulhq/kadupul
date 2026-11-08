@@ -1,8 +1,16 @@
 <?php
-declare(strict_types=1);
+/*
+ +-------------------------------------------------------------------------+
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
+ |                                                                         |
+ | This program is free software; you can redistribute it and/or           |
+ | modify it under the terms of the GNU General Public License             |
+ | as published by the Free Software Foundation; either version 2          |
+ | of the License, or (at your option) any later version.                  |
+ +-------------------------------------------------------------------------+
+*/
 
-// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
-// SPDX-License-Identifier: GPL-2.0-or-later
+declare(strict_types=1);
 
 if (PHP_SAPI !== 'cli' || !getenv('KADUPUL_TEST_MYSQL_DSN')) exit(64);
 $support = dirname(__DIR__, 2);
