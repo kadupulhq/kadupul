@@ -1791,8 +1791,8 @@ lowercase hex digits, the only stored form that the MD5 fallback in
 `compat_password_verify()` can match. LDAP, Web Basic and domain accounts are
 not listed, because local login never checks their stored value. Disabled,
 template and guest accounts are listed with their enabled state. Each row gives
-the id, username, enabled state and the latest successful login in `user_log`
-(password, token or password change), or none when the log holds none. The
+the id, username, enabled state and the latest successful password or token
+login in `user_log`, or none when the log holds none. The
 stored value and any part of it are never printed. The command changes nothing:
 such a password keeps working and is rehashed on its next successful login.
 It needs the Console Access and User Management realms, like the other user

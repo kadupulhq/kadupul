@@ -30,9 +30,11 @@ final readonly class DbalLegacyPasswordAccounts implements LegacyPasswordAccount
     {
         $connection = $database === OperatorDatabase::Main ? $this->mainConnection : $this->localConnection;
         $rows = $connection->iterateAssociative(
-            // user_log results 1-3 are the successful logins: password, token and password change.
+            // user_log results 1 and 2 are the successful password and token logins.
+            // auth_changepassword.php writes result 3 without a user_id, so it
+            // cannot be matched to an account by id.
             'SELECT ua.id, ua.username, ua.enabled, ua.password,
-                (SELECT MAX(ul.time) FROM user_log AS ul WHERE ul.user_id = ua.id AND ul.result IN (1, 2, 3)) AS last_login
+                (SELECT MAX(ul.time) FROM user_log AS ul WHERE ul.user_id = ua.id AND ul.result IN (1, 2)) AS last_login
             FROM user_auth AS ua
             WHERE ua.realm = 0 AND LENGTH(ua.password) = ?
             ORDER BY ua.id',

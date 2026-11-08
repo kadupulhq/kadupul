@@ -66,6 +66,8 @@ final class LegacyPasswordAccountsTest extends TestCase
         $this->db->insert('user_log', ['username' => 'ops', 'user_id' => 2, 'time' => '2026-10-01 08:00:00', 'result' => 1, 'ip' => '192.0.2.1']);
         $this->db->insert('user_log', ['username' => 'ops', 'user_id' => 2, 'time' => '2026-10-03 08:00:00', 'result' => 2, 'ip' => '192.0.2.1']);
         $this->db->insert('user_log', ['username' => 'ops', 'user_id' => 2, 'time' => '2026-10-05 08:00:00', 'result' => 0, 'ip' => '192.0.2.1']);
+        // auth_changepassword.php logs a password change as result 3 with no user_id.
+        $this->db->insert('user_log', ['username' => 'ops', 'user_id' => 0, 'time' => '2026-10-06 08:00:00', 'result' => 3, 'ip' => '192.0.2.1']);
         $this->db->insert('user_log', ['username' => 'modern', 'user_id' => 4, 'time' => '2026-10-07 08:00:00', 'result' => 1, 'ip' => '192.0.2.1']);
         $this->db->insert('user_log', ['username' => 'dormant', 'user_id' => 3, 'time' => '2026-10-07 08:00:00', 'result' => 0, 'ip' => '192.0.2.1']);
     }
