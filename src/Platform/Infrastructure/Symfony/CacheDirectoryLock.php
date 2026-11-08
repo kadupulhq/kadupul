@@ -31,7 +31,8 @@ final class CacheDirectoryLock
     public const EXCLUSIVE_TIMEOUT_SECONDS = 30.0;
     private const PAUSE_MICROSECONDS = 20000;
     private const DIRECTORY_MODE = 0o750;
-    private const FILE_MODE = 0o640;
+    /** Applied to fopen's default 0666, lock files are created 0640 or stricter. */
+    private const UMASK = 0o027;
 
     /** @var list<resource> */
     private array $handles;
@@ -112,7 +113,11 @@ final class CacheDirectoryLock
             }
         }
 
-        throw new \RuntimeException('Cannot lock the Symfony cache for refreshing; web requests may still be using it, or its lock files are not private to the application. Retry when they finish.');
+        if ($gate === null || $lock === null) {
+            throw new \RuntimeException('Cannot create private Symfony cache lock files. The directory containing the cache must be owned by the application user and not writable by other users, and existing lock files must be private regular files.');
+        }
+
+        throw new \RuntimeException('Cannot lock the Symfony cache for refreshing; web requests are still using it. Retry when they finish.');
     }
 
     /** Releases the main lock before the gate, so no reader passes the gate early. */
@@ -134,24 +139,33 @@ final class CacheDirectoryLock
     private static function open(string $path)
     {
         $directory = dirname($path);
-        if (!is_dir($directory)) {
-            @mkdir($directory, self::DIRECTORY_MODE, true);
-        }
-        // "e" sets close-on-exec. The web installer starts its worker through
-        // a shell, and an inherited descriptor would keep this request's
-        // shared lock for the worker's lifetime and block its own refresh.
-        // flock() does not need write access, so an existing file opens read-only.
-        $handle = @fopen($path, 'xe');
-        if ($handle !== false && PHP_OS_FAMILY !== 'Windows') {
-            chmod($path, self::FILE_MODE & ~umask());
-        }
-        if ($handle === false) {
-            $handle = @fopen($path, 're');
+        // Create both restrictive from the start rather than chmod() later,
+        // so no other user can open a fresh lock file. umask() is
+        // process-wide; it is restored before any other work.
+        $mask = umask(umask() | self::UMASK);
+        try {
+            if (!is_dir($directory)) {
+                @mkdir($directory, self::DIRECTORY_MODE, true);
+            }
+            if (!self::privateDirectory($directory)) {
+                return null;
+            }
+            // "e" sets close-on-exec. The web installer starts its worker
+            // through a shell, and an inherited descriptor would keep this
+            // request's shared lock for the worker's lifetime and block its
+            // own refresh. flock() does not need write access, so an
+            // existing file opens read-only.
+            $handle = @fopen($path, 'xe');
+            if ($handle === false) {
+                $handle = @fopen($path, 're');
+            }
+        } finally {
+            umask($mask);
         }
         if ($handle === false) {
             return null;
         }
-        if (!self::trusted($path, $handle)) {
+        if (!self::privateFile($path, $handle)) {
             fclose($handle);
 
             return null;
@@ -161,13 +175,43 @@ final class CacheDirectoryLock
     }
 
     /**
-     * Another local user who could open the file could hold the lock. Accept
-     * only a regular file, not a symlink, with no access for other users,
-     * owned by this process or by the owner of its directory.
+     * Only the owner may create lock files beside the cache: owned by this
+     * process or root, and writable by no one else. A group-writable
+     * directory is accepted only for the owner's private group, the default
+     * for users created with their own group.
+     */
+    private static function privateDirectory(string $directory): bool
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            return true;
+        }
+        clearstatcache(true, $directory);
+        $stat = @stat($directory);
+        if ($stat === false || ($stat['mode'] & 0o002) !== 0) {
+            return false;
+        }
+        if (!function_exists('posix_geteuid')) {
+            return ($stat['mode'] & 0o020) === 0;
+        }
+        if ($stat['uid'] !== posix_geteuid() && $stat['uid'] !== 0) {
+            return false;
+        }
+        if (($stat['mode'] & 0o020) === 0) {
+            return true;
+        }
+        $owner = posix_getpwuid($stat['uid']);
+        $group = posix_getgrgid($stat['gid']);
+
+        return is_array($owner) && is_array($group) && $group['name'] === $owner['name'] && $group['members'] === [];
+    }
+
+    /**
+     * Accept only a regular file, not a symlink, with no access for other
+     * users, owned by this process or root.
      *
      * @param resource $handle
      */
-    private static function trusted(string $path, $handle): bool
+    private static function privateFile(string $path, $handle): bool
     {
         if (PHP_OS_FAMILY === 'Windows') {
             return true;
@@ -176,12 +220,8 @@ final class CacheDirectoryLock
         if (is_link($path) || $stat === false || ($stat['mode'] & 0o170000) !== 0o100000 || ($stat['mode'] & 0o007) !== 0) {
             return false;
         }
-        if (!function_exists('posix_geteuid')) {
-            return true;
-        }
-        $owner = $stat['uid'];
 
-        return $owner === posix_geteuid() || $owner === @fileowner(dirname($path));
+        return !function_exists('posix_geteuid') || $stat['uid'] === posix_geteuid() || $stat['uid'] === 0;
     }
 
     /**

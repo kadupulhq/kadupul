@@ -212,13 +212,40 @@ final class CacheClearConcurrencyTest extends TestCase
             CacheDirectoryLock::exclusive($parent . '/prod', 0.2);
             self::fail('a refresh locked a lock file readable by other users');
         } catch (\RuntimeException $error) {
-            self::assertStringContainsString('not private to the application', $error->getMessage());
+            self::assertStringContainsString('Cannot create private Symfony cache lock files', $error->getMessage());
         }
 
         $target = $this->directory . '/elsewhere';
         self::assertTrue(touch($target) && chmod($target, 0o600));
         self::assertTrue(symlink($target, CacheDirectoryLock::gatePath($parent . '/other')));
         self::assertNull(CacheDirectoryLock::shared($parent . '/other', 1));
+    }
+
+    public function testOverPermissiveDirectoryIsRefused(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            self::markTestSkipped('POSIX modes do not apply on Windows.');
+        }
+        foreach ([0o777, 0o757] as $mode) {
+            $parent = $this->directory . '/shared-' . decoct($mode);
+            self::assertTrue(mkdir($parent, 0o700) && chmod($parent, $mode));
+            self::assertNull(CacheDirectoryLock::shared($parent . '/prod', 1), decoct($mode));
+            try {
+                CacheDirectoryLock::exclusive($parent . '/prod', 0.2);
+                self::fail('a refresh used lock files in a directory other users can write: ' . decoct($mode));
+            } catch (\RuntimeException $error) {
+                self::assertStringContainsString('must be owned by the application user and not writable by other users', $error->getMessage());
+            }
+            self::assertFileDoesNotExist(CacheDirectoryLock::path($parent . '/prod'));
+            self::assertFileDoesNotExist(CacheDirectoryLock::gatePath($parent . '/prod'));
+        }
+    }
+
+    public function testCreationRestoresTheProcessUmask(): void
+    {
+        $mask = umask();
+        CacheDirectoryLock::shared($this->directory . '/mask/prod', 1)?->release();
+        self::assertSame($mask, umask());
     }
 
     private function console(string $command): Process
