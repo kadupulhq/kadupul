@@ -79,6 +79,11 @@ class OdcSummaryTest(unittest.TestCase):
         type_table = report.split('### Defect type\n')[1].split('###')[0]
         self.assertTrue(type_table.strip().endswith('| unclassified | 2 | 40.0% |'))
 
+    def test_a_hand_written_value_cannot_split_a_table_cell(self):
+        fields = odc_summary.classify('### Defect type\r\n\r\nChecking | other\r\n')
+        self.assertEqual(fields['type'], 'Checking \\| other')
+        self.assertIn('| Checking \\| other | 1 | 100.0% |', odc_summary.summarize([{'number': 1, 'body': '### Defect type\n\nChecking | other'}]))
+
     def test_a_bad_export_is_an_error(self):
         with tempfile.TemporaryDirectory() as directory:
             for content, message in (('[]', 'no issues'), ('{"number": 1}', 'JSON list'), ('[{"title": "x"}]', 'needs a number'),

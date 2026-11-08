@@ -47,7 +47,8 @@ def classify(body: str) -> dict[str, str]:
         if value in ('', '_No response_', 'None'):
             result[key] = UNCLASSIFIED
         else:
-            result[key] = re.sub(r'\s*\(.*\)$', '', value)
+            # A hand-written value may contain "|", which would split the Markdown table cell.
+            result[key] = re.sub(r'\s*\(.*\)$', '', value).replace('|', '\\|')
     return result
 
 
