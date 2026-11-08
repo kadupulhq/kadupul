@@ -147,6 +147,12 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 
 	$old_sort_field = get_best_data_query_index_type($host_id, $snmp_query_id);
 
+	/* without the stored sort field, every Data Source would look re-mapped */
+	if ($old_sort_field === false) {
+		cacti_log('ERROR: Re-Indexing failed because the current sort field for Device[' . $host_id . '] and DQ[' . $snmp_query_id . '] could not be read.  Can not continue with Re-Index.', false, 'REINDEX');
+		return false;
+	}
+
 	/* update the sort cache if there is a sort field */
 	if ($index_is_source == false) {
 		$new_sort_field = update_data_query_sort_cache($host_id, $snmp_query_id);
