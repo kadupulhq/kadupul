@@ -33,6 +33,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Compute the SpikeKill standard-deviation mean from the same samples around the replacement window as the deviation, so both cutoffs come from one reference set (#1034).
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
+- Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226).
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 - Ignore an unknown (NaN) data source minimum or maximum when SpikeKill builds its standard-deviation cutoffs (#1095).
 

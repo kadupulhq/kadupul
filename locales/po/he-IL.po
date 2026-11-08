@@ -182,7 +182,7 @@ msgstr "כדי להעביר את הגרפים המצטברים להלן לצבי
 #: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1195 graphs.php:1245 graphs.php:1248
 #: graphs.php:1292 graphs.php:1884 include/auth.php:309
-#: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
+#: lib/api_aggregate.php:2253 lib/api_aggregate.php:2268 lib/html_form.php:1423
 #: lib/html_reports.php:632 managers.php:1137
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
@@ -368,7 +368,7 @@ msgid "You may use these replacement values for the Prefix in the Aggregate Grap
 msgstr "תוכל להשתמש בערכי החלפה אלה עבור הקידומת בגרף המצרף"
 
 #: aggregate_graphs.php:991 aggregate_templates.php:536 graphs.php:1142
-#: lib/api_aggregate.php:2384
+#: lib/api_aggregate.php:2388
 msgid "Total"
 msgstr "סה\"כ"
 
@@ -376,7 +376,7 @@ msgstr "סה\"כ"
 msgid "All Items"
 msgstr "כל הפריטים"
 
-#: aggregate_graphs.php:1013 graphs.php:1732 lib/api_aggregate.php:2544
+#: aggregate_graphs.php:1013 graphs.php:1732 lib/api_aggregate.php:2548
 msgid "Graph Configuration"
 msgstr "תצורת גרף"
 
@@ -2587,7 +2587,7 @@ msgstr ""
 #: data_debug.php:501 data_debug.php:959 data_queries.php:769
 #: data_sources.php:1161 data_templates.php:719 graphs_items.php:387
 #: include/global_arrays.php:1012 include/global_form.php:960
-#: lib/api_aggregate.php:2378 lib/html.php:1363
+#: lib/api_aggregate.php:2382 lib/html.php:1363
 msgid "Data Source"
 msgstr "מקור"
 
@@ -4027,7 +4027,7 @@ msgstr "פריטים גרפיים משויכים"
 msgid "Item #%s"
 msgstr "פריט # %s"
 
-#: graph_templates_inputs.php:243 lib/api_aggregate.php:2526 lib/html.php:1515
+#: graph_templates_inputs.php:243 lib/api_aggregate.php:2530 lib/html.php:1515
 msgid "No Items"
 msgstr "אין פריטים"
 
@@ -6917,7 +6917,7 @@ msgstr "(עריכה)"
 msgid "Actions"
 msgstr "פעולות"
 
-#: include/global_arrays.php:2108 lib/api_aggregate.php:2373
+#: include/global_arrays.php:2108 lib/api_aggregate.php:2377
 msgid "Graph Items"
 msgstr "גרף פריטים"
 
@@ -6953,7 +6953,7 @@ msgstr "לצפות ביומן"
 msgid "Graph Trees"
 msgstr "גרף עצים"
 
-#: include/global_arrays.php:2264 lib/api_aggregate.php:2373
+#: include/global_arrays.php:2264 lib/api_aggregate.php:2377
 msgid "Graph Template Items"
 msgstr "פריטים תבנית גרף"
 
@@ -7851,7 +7851,7 @@ msgstr "מקרא כיוון (- ליגת כיוון = &lt;כיוון&gt;)"
 msgid "Place the legend items in the given vertical order."
 msgstr "הצב את פריטי האגדה בסדר האנכי הנתון."
 
-#: include/global_form.php:953 lib/api_aggregate.php:2379 lib/html.php:1364
+#: include/global_form.php:953 lib/api_aggregate.php:2383 lib/html.php:1364
 msgid "Graph Item Type"
 msgstr "סוג פריט גרף"
 
@@ -11456,54 +11456,54 @@ msgstr "למשתמשים עם גישה למסוף בלבד, כמה זמן משת
 msgid "Display Graphs from this Aggregate"
 msgstr "הצג גרפים מתוך זה מצטבר"
 
-#: lib/api_aggregate.php:2237
+#: lib/api_aggregate.php:2241
 msgid "The Graphs chosen for the Aggregate Graph below represent Graphs from multiple Graph Templates.  Aggregate does not support creating Aggregate Graphs from multiple Graph Templates."
 msgstr "הגרפים שנבחרו עבור הגרף המצטבר מייצגים גרפים מתבניות גרפיות מרובות. צבירה אינה תומכת ביצירת גרפים מצטברים מתבניות גרפיות מרובות."
 
-#: lib/api_aggregate.php:2238 lib/api_aggregate.php:2257
+#: lib/api_aggregate.php:2242 lib/api_aggregate.php:2261
 msgid "Press 'Return' to return and select different Graphs"
 msgstr "לחץ על &#39;Return&#39; כדי לחזור ולבחור גרפים שונים"
 
-#: lib/api_aggregate.php:2256
+#: lib/api_aggregate.php:2260
 msgid "The Graphs chosen for the Aggregate Graph do not use Graph Templates.  Aggregate does not support creating Aggregate Graphs from non-templated graphs."
 msgstr "הגרפים שנבחרו עבור הגרף המצטבר אינם משתמשים בתבניות גרף. צבירה אינה תומכת ביצירת גרפים מצטברים מתרשימים שאינם בתבנית."
 
-#: lib/api_aggregate.php:2377 lib/html.php:1361
+#: lib/api_aggregate.php:2381 lib/html.php:1361
 msgid "Graph Item"
 msgstr "גרף פריט"
 
-#: lib/api_aggregate.php:2380 lib/html.php:1365
+#: lib/api_aggregate.php:2384 lib/html.php:1365
 msgid "CF Type"
 msgstr "סוג CF"
 
-#: lib/api_aggregate.php:2381 lib/html.php:1370
+#: lib/api_aggregate.php:2385 lib/html.php:1370
 msgid "Item Color"
 msgstr "צבע פריט"
 
-#: lib/api_aggregate.php:2382
+#: lib/api_aggregate.php:2386
 msgid "Color Template"
 msgstr "תבנית צבע"
 
-#: lib/api_aggregate.php:2383
+#: lib/api_aggregate.php:2387
 msgid "Skip"
 msgstr "דלג"
 
-#: lib/api_aggregate.php:2464
+#: lib/api_aggregate.php:2468
 msgid "Aggregate Items are not modifiable"
 msgstr "פריטים מצטברים אינם ניתנים לשינוי"
 
-#: lib/api_aggregate.php:2467 lib/api_aggregate.php:2470
-#: lib/api_aggregate.php:2474 lib/html.php:1418 lib/html.php:1420
+#: lib/api_aggregate.php:2471 lib/api_aggregate.php:2474
+#: lib/api_aggregate.php:2478 lib/html.php:1418 lib/html.php:1420
 #: lib/html_reports.php:1921
 #, php-format
 msgid "Item # %d"
 msgstr "פריט #% d"
 
-#: lib/api_aggregate.php:2474
+#: lib/api_aggregate.php:2478
 msgid "Aggregate Items are not editable"
 msgstr "הפריטים המצטברים אינם ניתנים לעריכה"
 
-#: lib/api_aggregate.php:2580
+#: lib/api_aggregate.php:2584
 msgid "Override this Value"
 msgstr "עקוף את הערך הזה"
 
