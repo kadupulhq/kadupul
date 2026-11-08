@@ -50,10 +50,21 @@ or right after the upgrade:
    web interface. Remote data collectors read their own `config.php` and need
    the same entry if they update these files locally.
 
-2. **Move the files into the RRA directory.** Stop the poller, move the files
-   under `<path_cacti>/rra`, and then either clear each Data Source Path so
-   the poller generates it, or run `cli/structure_rra_paths.php` to place them
-   in the structured layout.
+2. **Move the files into the RRA directory.** Let
+   `cli/structure_rra_paths.php` move them, so each Data Source Path is
+   updated together with its file:
+
+   1. Stop the poller.
+   2. List the directory that holds the files in `rrd_additional_paths`, as in
+      the first remedy. The script refuses to move a file from a directory
+      that is not allowed.
+   3. Run `php cli/structure_rra_paths.php --proceed`. It turns on structured
+      RRD paths and moves every RRDfile into the RRA directory in that layout.
+   4. Remove the directory from `rrd_additional_paths` and start the poller.
+
+   Do not move the files by hand and clear the Data Source Path instead. The
+   poller then generates a new file name, creates an empty RRDfile under it
+   and leaves the history in the moved file unused.
 
 Once the upgrade finishes, `grep "outside the RRA directory" log/cacti.log`
 lists any Data Source that is still refused.

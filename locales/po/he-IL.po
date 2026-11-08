@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 01:36-0800\n"
+"POT-Creation-Date: 2026-11-08 02:12-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -399,7 +399,7 @@ msgstr "גרפים תואמים"
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
-#: data_sources.php:1790 data_templates.php:1101 graph_templates.php:726
+#: data_sources.php:1792 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2139 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
@@ -417,7 +417,7 @@ msgid "Search"
 msgstr "חיפוש"
 
 #: aggregate_graphs.php:1291 aggregate_graphs.php:1327
-#: aggregate_graphs.php:1590 data_sources.php:1980 data_sources.php:2119
+#: aggregate_graphs.php:1590 data_sources.php:1982 data_sources.php:2121
 #: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2156
 #: graphs.php:2348 include/global_arrays.php:1000
 #: include/global_arrays.php:1236 include/global_arrays.php:2022
@@ -433,7 +433,7 @@ msgstr "גרפים"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1383 data_sources.php:1800 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1802 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2160
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -455,7 +455,7 @@ msgstr "חלק מצטבר"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1740 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1742 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -470,7 +470,7 @@ msgstr "עבור"
 
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1740 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1742 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -486,7 +486,7 @@ msgstr "הגדר / רענן מסננים"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1399 data_sources.php:1741 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1743 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2131
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -501,7 +501,7 @@ msgid "Clear"
 msgstr "נקה"
 
 #: aggregate_graphs.php:1307 aggregate_graphs.php:1600 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1741
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1743
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2131 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -520,7 +520,7 @@ msgstr "כותרת גרף"
 
 #: aggregate_graphs.php:1333 aggregate_graphs.php:1666
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1484 data_sources.php:1974
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1976
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2364
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2327 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -540,8 +540,8 @@ msgid "Size"
 msgstr "גודל"
 
 #: aggregate_graphs.php:1351 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2061
-#: data_sources.php:2062 data_templates.php:1321 graph_templates.php:920
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2063
+#: data_sources.php:2064 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1439 tree.php:2420
 #: tree.php:2421 user_admin.php:2269 user_domains.php:757
@@ -551,8 +551,8 @@ msgstr "לא"
 
 #: aggregate_graphs.php:1351 aggregate_templates.php:724
 #: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
-#: data_debug.php:791 data_queries.php:1536 data_sources.php:2061
-#: data_sources.php:2062 data_templates.php:1321 graph_templates.php:920
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2063
+#: data_sources.php:2064 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:968
 #: include/global_settings.php:1942 lib/api_automation.php:1439
 #: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4105
@@ -574,7 +574,7 @@ msgstr "[רשימת גרפים מותאמים אישית - מסנן מתוך ר�
 msgid "Aggregate Graphs"
 msgstr "גרפים מצטברים"
 
-#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1709
+#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1711
 #: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2902
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
@@ -587,7 +587,7 @@ msgstr "תבנית"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
-#: data_debug.php:1114 data_sources.php:1713 graph_templates_items.php:447
+#: data_debug.php:1114 data_sources.php:1715 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3993 lib/auth.php:4042
@@ -605,7 +605,7 @@ msgstr "הכל"
 #: automation_graph_rules.php:972 automation_graph_rules.php:973
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:621 data_sources.php:1098
-#: data_sources.php:1714 data_sources.php:2035 data_templates.php:1323
+#: data_sources.php:1716 data_sources.php:2037 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:976 graphs.php:1621 graphs.php:1630
 #: graphs.php:2097 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:530 include/global_arrays.php:588
@@ -709,7 +709,7 @@ msgstr "כותרת התבנית"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "לא ניתן למחוק תבניות מצטברות שנמצאות בשימוש. בשימוש מוגדר כמפנה על ידי צבירה."
 
-#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1992
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1994
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 msgid "Deletable"
 msgstr "ניתן למחוק"
@@ -1142,7 +1142,7 @@ msgstr "Simple Network Management Protocol"
 #: automation_devices.php:280 automation_devices.php:524
 #: automation_graph_rules.php:835 automation_networks.php:1075
 #: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
-#: data_sources.php:1769 data_templates.php:1289 lib/api_automation.php:52
+#: data_sources.php:1771 data_templates.php:1289 lib/api_automation.php:52
 #: lib/api_automation.php:53 lib/api_automation.php:280
 #: lib/api_automation.php:573 lib/api_automation.php:1199
 #: lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216
@@ -1333,7 +1333,7 @@ msgstr "שאילתת נתונים"
 #: automation_graph_rules.php:840 automation_graph_rules.php:965
 #: automation_graph_rules.php:981 automation_networks.php:535
 #: automation_tree_rules.php:854 automation_tree_rules.php:974
-#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1774
+#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1776
 #: include/global_arrays.php:924 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1348,7 +1348,7 @@ msgstr "מאופשר"
 
 #: automation_graph_rules.php:841 automation_graph_rules.php:981
 #: automation_networks.php:1090 automation_tree_rules.php:855
-#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1775
+#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1777
 #: data_templates.php:1325 include/global_arrays.php:923
 #: include/global_arrays.php:1583 include/global_arrays.php:1875
 #: include/global_settings.php:437 include/global_settings.php:453
@@ -1616,7 +1616,7 @@ msgstr "‫%d דקה"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1533 include/global_arrays.php:718
+#: data_sources.php:1535 include/global_arrays.php:718
 #: include/global_arrays.php:719 include/global_arrays.php:720
 #: include/global_arrays.php:721 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:761
@@ -2062,7 +2062,7 @@ msgstr "רענן"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1529 include/global_arrays.php:716
+#: data_sources.php:1531 include/global_arrays.php:716
 #: include/global_arrays.php:752 include/global_arrays.php:753
 #: include/global_arrays.php:754 include/global_arrays.php:755
 #: include/global_arrays.php:756 include/global_arrays.php:757
@@ -2636,7 +2636,7 @@ msgstr "שגיאה: השדה כבר קיים עבור רשימה זו"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "קובע אם מקור הנתונים נמצא במטמון Poller."
 
-#: data_debug.php:541 data_sources.php:1998 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:2000 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "פעיל"
@@ -2677,8 +2677,8 @@ msgstr "נושאים ידועים לבחירה"
 msgid "Summary of issues found for the Data Source."
 msgstr "כל סוגיות סיכום עבור מקור הנתונים."
 
-#: data_debug.php:646 data_debug.php:1220 data_sources.php:1796
-#: data_sources.php:1958 include/global_arrays.php:1001
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1798
+#: data_sources.php:1960 include/global_arrays.php:1001
 #: include/global_arrays.php:1047 include/global_arrays.php:2318
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
@@ -2883,13 +2883,13 @@ msgstr "הפעל הכל"
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "הרץ בדיקות על מקורות הנתונים המסוננים כעת ושמור על תוצאות אחרות"
 
-#: data_debug.php:1150 data_sources.php:1749 data_templates.php:1107
+#: data_debug.php:1150 data_sources.php:1751 data_templates.php:1107
 #: lib/html.php:2914
 msgid "Profile"
 msgstr "פרופיל"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
-#: data_sources.php:1753 data_sources.php:1773 data_templates.php:1111
+#: data_sources.php:1755 data_sources.php:1775 data_templates.php:1111
 #: graphs.php:2149 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
@@ -3514,100 +3514,100 @@ msgstr "ניפוי באגים של מקור הנתונים"
 msgid "RRDtool Tune Info"
 msgstr "פרטי RRDtool Tune"
 
-#: data_sources.php:1527 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1529 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "חיצוני"
 
-#: data_sources.php:1531 include/global_arrays.php:717
+#: data_sources.php:1533 include/global_arrays.php:717
 #: include/global_arrays.php:1214 include/global_arrays.php:1589
 #: include/global_arrays.php:1625 include/global_arrays.php:1643
 #: include/global_settings.php:1713 include/global_settings.php:2688
 msgid "1 Minute"
 msgstr "1 דקה"
 
-#: data_sources.php:1690
+#: data_sources.php:1692
 msgid "Data Sources [ All Devices ]"
 msgstr "מקורות נתונים [ללא מכשיר]"
 
-#: data_sources.php:1692
+#: data_sources.php:1694
 msgid "Data Sources [ Non Device Based ]"
 msgstr "מקורות נתונים [ללא מכשיר]"
 
-#: data_sources.php:1695
+#: data_sources.php:1697
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "מקורות נתונים [ %s]"
 
-#: data_sources.php:1776
+#: data_sources.php:1778
 msgid "Bad Indexes"
 msgstr "אינדקס"
 
-#: data_sources.php:1782 graphs.php:2125
+#: data_sources.php:1784 graphs.php:2125
 msgid "Note that this query may take some time to run."
 msgstr "שים לב שאילתה זו עשויה להימשך זמן מה עד להופעה."
 
-#: data_sources.php:1782 graphs.php:2125
+#: data_sources.php:1784 graphs.php:2125
 msgid "Orphaned"
 msgstr "יתמות"
 
-#: data_sources.php:1968 utilities.php:2282
+#: data_sources.php:1970 utilities.php:2282
 msgid "Data Source Name"
 msgstr "שם מקור הנתונים"
 
-#: data_sources.php:1971
+#: data_sources.php:1973
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "השם של מקור נתונים זה. בדרך כלל נוצר באופן פרוגרטי מהגדרת תבנית הנתונים."
 
-#: data_sources.php:1977
+#: data_sources.php:1979
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "מזהה מסד הנתונים הפנימי עבור מקור נתונים זה. שימושי בעת ביצוע אוטומציה או איתור באגים."
 
-#: data_sources.php:1983
+#: data_sources.php:1985
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "מספר תבניות הגרפים באמצעות שאילתת הנתונים."
 
-#: data_sources.php:1986 include/global_settings.php:1248
+#: data_sources.php:1988 include/global_settings.php:1248
 msgid "Poller Interval"
 msgstr "מרווח פולר"
 
-#: data_sources.php:1989
+#: data_sources.php:1991
 msgid "The frequency that data is collected for this Data Source."
 msgstr "תדירות איסוף הנתונים עבור מקור נתונים זה."
 
-#: data_sources.php:1995
+#: data_sources.php:1997
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "אם מקור נתונים זה אינו נמצא בשימוש זמן רב על ידי גרפים, הוא יכול להימחק."
 
-#: data_sources.php:2001
+#: data_sources.php:2003
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "בין אם ייאספו נתונים עבור מקור נתונים זה. נשלטת ברמת רמת הנתונים."
 
-#: data_sources.php:2004 package_import.php:669 templates_import.php:243
+#: data_sources.php:2006 package_import.php:669 templates_import.php:243
 #: user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "שם התבנית"
 
-#: data_sources.php:2007
+#: data_sources.php:2009
 msgid "The Data Template that this Data Source was based upon."
 msgstr "תבנית הנתונים שמבוססת על מקור נתונים זה."
 
-#: data_sources.php:2048
+#: data_sources.php:2050
 msgid "Damaged Data Source Name"
 msgstr "שם מקור הנתונים"
 
-#: data_sources.php:2068
+#: data_sources.php:2070
 msgid "No Data Sources Found"
 msgstr "לא נמצאו מקורות נתונים"
 
-#: data_sources.php:2121
+#: data_sources.php:2123
 msgid "No Graphs"
 msgstr "גרפים"
 
-#: data_sources.php:2125 include/global_arrays.php:1002
+#: data_sources.php:2127 include/global_arrays.php:1002
 msgid "Aggregates"
 msgstr "אגרגטים"
 
-#: data_sources.php:2127
+#: data_sources.php:2129
 msgid "No Aggregates"
 msgstr "אגרגטים"
 
@@ -14589,7 +14589,7 @@ msgid "List the directory that holds them in $config['rrd_additional_paths'] in 
 msgstr ""
 
 #: lib/installer.php:2685
-msgid "Or move the RRDfiles into the RRA directory and clear the Data Source Path so the poller generates it, or run structure_rra_paths.php."
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
 msgstr ""
 
 #: lib/installer.php:2695

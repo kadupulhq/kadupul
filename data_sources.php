@@ -1501,8 +1501,10 @@ function data_source_path_is_allowed($path)
     } elseif (str_starts_with($path, rtrim($config['rra_path'], '/') . '/')) {
         $candidate = $base . '/' . substr($path, strlen(rtrim($config['rra_path'], '/')) + 1);
     } else {
-        // An absolute path elsewhere is allowed only below a directory config.php lists.
-        return str_starts_with($path, '/') && !rrdtool_uses_proxy() && rrd_path_in_additional_root($path);
+        // An absolute path elsewhere is allowed only below a directory config.php
+        // lists. rrd_additional_roots() accepts a drive-letter root, so accept a
+        // drive-letter path here too, or the poller would honour a root the form refuses.
+        return (str_starts_with($path, '/') || preg_match('~^[A-Za-z]:/~', $path) === 1) && !rrdtool_uses_proxy() && rrd_path_in_additional_root($path);
     }
 
     // The poller, graphing and maintenance paths apply the same rule.

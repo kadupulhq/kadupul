@@ -673,7 +673,7 @@ header_redirect	./data_queries.php:55	        header('Location: data_queries.php
 header_redirect	./data_queries.php:60	        header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 header_redirect	./data_queries.php:69	        header('Location: data_queries.php?header=false&action=edit&id=' . get_filter_request_var('snmp_query_id'));
 header_redirect	./data_queries.php:81	        header('Location: data_queries.php');
-header_redirect	./data_sources.php:1520	    header('Location: data_sources.php');
+header_redirect	./data_sources.php:1522	    header('Location: data_sources.php');
 header_redirect	./data_sources.php:327	                                header('Location: data_sources.php?header=false&action=ds_edit&id=' . (empty($local_data_id) ? get_filter_request_var('local_data_id') : $local_data_id) . '&host_id=' . get_request_var('host_id') . '&view_rrd=' . (isset_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : '0'));
 header_redirect	./data_sources.php:384	        header('Location: data_sources.php?header=false&action=ds_edit&host_id=' . get_request_var('host_id') . '&new=1');
 header_redirect	./data_sources.php:386	        header('Location: data_sources.php?header=false&action=ds_edit&id=' . (empty($local_data_id) ? get_filter_request_var('local_data_id') : $local_data_id) . '&host_id=' . get_request_var('host_id') . '&view_rrd=' . (isset_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : '0'));

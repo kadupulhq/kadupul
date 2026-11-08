@@ -190,7 +190,9 @@ test('the upgrade section warns, escapes each listed path and names the remedies
     expect($sections)->toBe(array('rrd_locations' => DB_STATUS_WARNING))
         ->and($html)->toContain('3 Data Sources have an RRDfile path outside the RRA directory')
         ->and($html)->toContain("rrd_additional_paths")
-        ->and($html)->toContain('structure_rra_paths.php')
+        ->and($html)->toContain('structure_rra_paths.php --proceed')
+        // clearing the path names a new file, so that would orphan the moved history
+        ->and($html)->not->toContain('clear the Data Source Path so the poller generates it')
         ->and($html)->toContain('7: /var/lib/legacy/&lt;script&gt;.rrd')
         ->and($html)->not->toContain('<script>')
         ->and($html)->toContain('docs/rrd-path-containment.md');

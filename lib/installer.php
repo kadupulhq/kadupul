@@ -2682,7 +2682,7 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
             $output .= Installer::sectionNormal(
                 '<ul>' .
                 '<li>' . __('List the directory that holds them in $config[\'rrd_additional_paths\'] in include/config.php, for example $config[\'rrd_additional_paths\'] = array(\'/data/rrd\');') . '</li>' .
-                '<li>' . __('Or move the RRDfiles into the RRA directory and clear the Data Source Path so the poller generates it, or run structure_rra_paths.php.') . '</li>' .
+                '<li>' . __('Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config[\'rrd_additional_paths\'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile.') . '</li>' .
                 '</ul>'
             );
 
