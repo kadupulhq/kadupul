@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -45,76 +46,20 @@ require_once($config['base_path'] . '/lib/snmp.php');
 require_once($config['base_path'] . '/lib/sort.php');
 require_once($config['base_path'] . '/lib/template.php');
 require_once($config['base_path'] . '/lib/utility.php');
+require_once(__DIR__ . '/lib/api_automation.php');
 
 if ($config['poller_id'] > 1) {
-	if ($config['connection'] == 'online') {
-		db_force_remote_cnn();
-	} elseif (debounce_run_notification('db_offline')) {
-		cacti_log(sprintf('WARNING: Main Cacti database %s offline or in recovery.  Can not run automation', $rdatabase_hostname), false, 'AUTOM8');
-		admin_email(__('Cacti System Warning'), __("WARNING: Main Cacti database %s offline or in recovery", $rdatabase_hostname));
+	if ($config['connection'] !== 'online') {
+		cacti_log('WARNING: Automation requires an online primary database.', false, 'AUTOM8');
 		exit(1);
 	}
+	db_force_remote_cnn();
 }
 
-/** sig_handler - provides a generic means to catch exceptions to the Cacti log.
- * @arg $signo  - (int) the signal that was thrown by the interface.
- * @return      - null */
 function sig_handler($signo) {
-	global $network_id, $thread, $master, $poller_id;
-
-    switch ($signo) {
-        case SIGTERM:
-        case SIGINT:
-			if ($thread > 0) {
-				clearTask($network_id, getmypid());
-				exit(0);
-			} elseif($thread == 0 && !$master) {
-				$pids = array_rekey(db_fetch_assoc_prepared("SELECT pid
-					FROM automation_processes
-					WHERE network_id = ?
-					AND task!='tmaster'",
-					array($network_id)), 'pid', 'pid');
-
-				if (cacti_sizeof($pids)) {
-					foreach($pids as $pid) {
-						if (cacti_process_still_running($pid)) {
-							cacti_process_kill($pid, SIGTERM, 'AUTOM8');
-						}
-					}
-				}
-
-				clearTask($network_id, getmypid());
-
-				sleep(5);
-
-				db_execute_prepared('DELETE
-					FROM automation_ips
-					WHERE network_id = ?',
-					array($network_id));
-			} else {
-				$pids = array_rekey(db_fetch_assoc_prepared("SELECT pid
-					FROM automation_processes
-					WHERE poller_id = ?
-					AND task='tmaster'",
-					array($poller_id)), 'pid', 'pid');
-
-				if (cacti_sizeof($pids)) {
-					foreach($pids as $pid) {
-						if (cacti_process_still_running($pid)) {
-							cacti_process_kill($pid, SIGTERM, 'AUTOM8');
-						}
-					}
-				}
-
-				clearTask($network_id, getmypid());
-			}
-
-            exit(0);
-
-            break;
-        default:
-            /* ignore all other signals */
-    }
+	if ($signo === SIGTERM || $signo === SIGINT) {
+		throw new RuntimeException('Discovery termination requested.');
+	}
 }
 
 /* take time and log performance data */
@@ -139,13 +84,15 @@ $network_id = 0;
 $poller_id  = $config['poller_id'];
 $thread     = 0;
 $master     = false;
+$scheduled  = false;
+$run_id     = '';
 
 global $debug, $poller_id, $network_id, $thread, $master;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
 		if (strpos($parameter, '=')) {
-			list($arg, $value) = explode('=', $parameter);
+			list($arg, $value) = explode('=', $parameter, 2);
 		} else {
 			$arg = $parameter;
 			$value = '';
@@ -162,6 +109,12 @@ if (cacti_sizeof($parms)) {
 				break;
 			case '--poller':
 				$poller_id = $value;
+				break;
+			case '--scheduled':
+				$scheduled = true;
+				break;
+			case '--run':
+				$run_id = $value;
 				break;
 			case '-f':
 			case '--force':
@@ -201,224 +154,79 @@ if (!$master && !$network_id) {
 	exit(1);
 }
 
-// Simple check for a disabled network
-if (!$master && $thread == 0) {
-	$status = db_fetch_cell_prepared('SELECT enabled
-		FROM automation_networks
-		WHERE id = ?
-		AND poller_id = ?',
-		array($network_id, $poller_id));
-
-	if ($status != 'on' && !$force) {
-		cacti_log(automation_get_pid() . " WARNING: The Network ID: $network_id is disabled.  You must use the 'force' option to force it's execution.", true, 'AUTOM8');
+// All nested legacy helpers must fail instead of reconnecting past an owned lock.
+$database_fail_fast = true;
+foreach (array($network_id, $poller_id, $thread) as $id) {
+	if (!preg_match('/^[0-9]+$/D', (string)$id) || strlen((string)$id) > 10 || (int)$id > 4294967295) {
 		exit(1);
 	}
 }
+$network_id = (int)$network_id;
+$poller_id = (int)$poller_id;
+$thread = (int)$thread;
+$connection = automation_default_connection();
 
 if ($master) {
-	if (!db_table_exists('automation_networks')) {
-		exit(0);
-	}
-
-	$networks = db_fetch_assoc_prepared('SELECT *
-		FROM automation_networks
-		WHERE poller_id = ?',
-		array($poller_id));
-
-	$launched = 0;
-	if (cacti_sizeof($networks)) {
-		foreach($networks as $network) {
-			if ($network['snmp_id'] == 0) {
-				cacti_log("ERROR: Automation can not run for Network '" . $network['name'] . "' since the SNMP ID is not set.", false, 'AUTOM8');
-				continue;
-			}
-
-			if (api_automation_is_time_to_start($network['id']) || $force) {
-				automation_debug("Launching Network Master for '" . $network['name'] . "'\n");
-				$argv = array('-q', read_config_option('path_webroot') . '/poller_automation.php', '--poller=' . (int)$poller_id, '--network=' . (int)$network['id']);
-				if ($force) {
-					$argv[] = '--force';
-				}
+	$success = true;
+	try {
+		$networks = automation_query($connection, "SELECT * FROM automation_networks WHERE poller_id = ?", array($poller_id))->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($networks as $network) {
+			if ($force || api_automation_is_time_to_start($network['id'])) {
+				$args = array('-q', __FILE__, '--poller=' . $poller_id, '--network=' . (int)$network['id'], $force ? '--force' : '--scheduled');
 				if ($debug) {
-					$argv[] = '--debug';
+					$args[] = '--debug';
 				}
-				exec_background(read_config_option('path_php_binary'), $argv);
-				$launched++;
-			} else {
-				automation_debug("Not time to Run Discovery for '" . $network['name'] . "'\n");
+				// The occurrence remains due until the network master acknowledges completion.
+				$success = exec_background_process(read_config_option('path_php_binary'), $args) && $success;
 			}
 		}
+	} catch (Throwable $error) {
+		$success = false;
 	}
-
-	exit(0);
+	exit($success ? 0 : 1);
 }
 
-// Check for Network Master
-if (!$master && $thread == 0) {
-	automation_debug("Thread master about to launch collector threads\n");
+if ($thread === 0) {
+	exit(automation_run_network($connection, $network_id, $poller_id, $scheduled, $force, $debug) ? 0 : 1);
+}
 
-	// Remove any stale entries
-	$pids = array_rekey(
-		db_fetch_assoc_prepared('SELECT pid
-			FROM automation_processes
-			WHERE network_id = ?',
-			array($network_id)),
-		'pid', 'pid'
-	);
-
-	automation_debug("Killing any prior running threads\n");
-	if (cacti_sizeof($pids)) {
-		foreach($pids as $pid) {
-			if (isProcessRunning($pid)) {
-				if (!killProcess($pid) && cacti_process_kill_denied($pid)) {
-					cacti_log("WARNING: Automation Process $pid is owned by another user and was not killed, not starting another discovery for Network ID: $network_id", true, 'AUTOM8');
-
-					exit(0);
-				}
-
-				cacti_log("WARNING: Automation Process $pid is still running for Network ID: $network_id", true, 'AUTOM8');
-			} else {
-				cacti_log("WARNING: Process $pid claims to be running but not found for Network ID: $network_id", true, 'AUTOM8');
-			}
-		}
+if ($thread > 50 || !preg_match('/^[a-f0-9]{32}$/D', $run_id)) {
+	exit(1);
+}
+$child_lock = automation_lock_name($connection, $network_id, $thread);
+if (!automation_lock($connection, $child_lock)) {
+	exit(1);
+}
+$success = false;
+try {
+	if (!automation_run_active($connection, $network_id, $run_id)) {
+		throw new RuntimeException('Discovery owner is no longer active.');
 	}
-
-	automation_debug("Removing any orphan entries\n");
-
-	db_execute_prepared('DELETE FROM automation_ips
-		WHERE network_id = ?',
-		array($network_id));
-
-	db_execute_prepared('DELETE FROM automation_processes
-		WHERE network_id = ?',
-		array($network_id));
-
-	registerTask($network_id, getmypid(), $poller_id, 'tmaster');
-
-	cacti_log(automation_get_pid() . " Network Discover is now running for Subnet Range '$network_id'", true, 'AUTOM8');
-
-	$preexisting_devices = getNetworkDevices($network_id);
-
-	automation_primeIPAddressTable($network_id);
-
-	$threads = db_fetch_cell_prepared('SELECT threads
-		FROM automation_networks
-		WHERE id = ?',
-		array($network_id));
-
-	if ($threads <= 0) {
-		$threads = 1;
-	}
-
-	automation_debug("Automation will use $threads Threads\n");
-
-	db_execute_prepared('UPDATE automation_networks
-		SET last_started = ?
-		WHERE id = ?',
-		array(date('Y-m-d H:i:s', $startTime), $network_id));
-
-	$curthread = 1;
-	while($curthread <= $threads) {
-		automation_debug("Launching Thread $curthread\n");
-		$argv = array('-q', read_config_option('path_webroot') . '/poller_automation.php', '--poller=' . (int)$poller_id, '--thread=' . (int)$curthread, '--network=' . (int)$network_id);
-		if ($force) {
-			$argv[] = '--force';
-		}
-		if ($debug) {
-			$argv[] = '--debug';
-		}
-		exec_background(read_config_option('path_php_binary'), $argv);
-		$curthread++;
-	}
-
-	sleep(5);
-	automation_debug("Checking for Running Threads\n");
-
-	$failcount = 0;
-	while (true) {
-		$command = db_fetch_cell_prepared('SELECT command
-			FROM automation_processes
-			WHERE network_id = ?
-			AND task="tmaster"',
-			array($network_id));
-
-		$running = db_fetch_cell_prepared('SELECT count(*)
-			FROM automation_processes
-			WHERE network_id = ?
-			AND task!="tmaster"
-			AND status="running"',
-			array($network_id));
-
-		automation_debug("Found $running Threads\n");
-
-		// Are there no more running tasks? Wait up to 15 seconds to
-		// allow processes to start before checking for failures
-		if (($running == 0 && $failcount > 3) || $command == 'cancel') {
-			$undead_pids = array();
-
-			if ($command == 'cancel') {
-				$pids = array_rekey(db_fetch_assoc_prepared("SELECT pid
-					FROM automation_processes
-					WHERE network_id = ?
-					AND task!='tmaster'",
-					array($network_id)), 'pid', 'pid');
-
-				if (cacti_sizeof($pids)) {
-					foreach($pids as $pid) {
-						if (cacti_process_still_running($pid)) {
-							if (!cacti_process_kill($pid, SIGTERM, 'AUTOM8') && cacti_process_kill_denied($pid)) {
-								cacti_log("WARNING: Automation Process $pid is owned by another user and was not killed on cancel, retaining its row for Network ID: $network_id", true, 'AUTOM8');
-
-								$undead_pids[] = $pid;
-							}
-						}
-					}
-
-					sleep(5);
-				}
-			}
-
-			db_execute_prepared('DELETE FROM automation_ips
-				WHERE network_id = ?',
-				array($network_id));
-
-			$totals = db_fetch_row_prepared('SELECT SUM(up_hosts) AS up, SUM(snmp_hosts) AS snmp
-				FROM automation_processes
-				WHERE network_id = ?',
-				array($network_id));
-
-			if (!cacti_sizeof($totals)) {
-				$totals = array('up' => 0, 'snmp' => 0);
-			}
-
-			/* take time and log performance data */
-			$end = microtime(true);
-
-			db_execute_prepared('UPDATE automation_networks
-				SET up_hosts = ?, snmp_hosts = ?,
-					last_started = ?, last_runtime = ?
-				WHERE id = ?',
-				array($totals['up'], $totals['snmp'], date('Y-m-d H:i:s', $startTime), ($end - $start), $network_id));
-
-			clearAllTasks($network_id, $undead_pids);
-			reportNetworkStatus($network_id, $preexisting_devices);
-
-			exit(0);
-		} else {
-			$failcount++;
-		}
-
-		sleep(5);
-	}
-} else {
 	registerTask($network_id, getmypid(), $poller_id);
-	discoverDevices($network_id, $thread);
+	$success = discoverDevices($network_id, $thread) === true;
+	if (!$success) {
+		throw new RuntimeException('Discovery worker did not finish.');
+	}
 	endTask($network_id, getmypid());
+} catch (Throwable $error) {
+	$success = false;
+	try {
+		clearTask($network_id, getmypid());
+	} catch (Throwable $ignored) {
+		// The master will retain the failed run for retry.
+	}
+	cacti_log('ERROR: Discovery worker failed for network ' . $network_id . '.', false, 'AUTOM8');
+} finally {
+	try {
+		automation_unlock($connection, $child_lock);
+	} catch (Throwable $ignored) {
+	}
 }
-
-exit(0);
+exit($success ? 0 : 1);
 
 function discoverDevices($network_id, $thread) {
+	global $run_id;
+	$connection = automation_default_connection();
 	$network = db_fetch_row_prepared('SELECT *
 		FROM automation_networks
 		WHERE id = ?',
@@ -428,11 +236,6 @@ function discoverDevices($network_id, $thread) {
 		cacti_log('ERROR: Network ID ' . $network_id . ' not found in automation_networks', false, 'AUTOM8');
 		return;
 	}
-
-	$temp = db_fetch_assoc('SELECT automation_templates.*, host_template.name
-		FROM automation_templates
-		LEFT JOIN host_template
-		ON (automation_templates.host_template=host_template.id)');
 
 	$dns = trim($network['dns_servers']);
 
@@ -446,34 +249,7 @@ function discoverDevices($network_id, $thread) {
 	$count            = 0;
 
 	while(true) {
-		// Check for cancel
-		$command = db_fetch_cell_prepared('SELECT command
-			FROM automation_processes
-			WHERE network_id = ?
-			AND task = "tmaster"',
-			array($network_id));
-
-		if ($command == 'cancel' || empty($command)) {
-			removeMyProcess(getmypid(), $network_id);
-			killProcess(getmypid());
-			exit(0);
-		}
-
-		// set and ip to be scanned
-		db_execute_prepared('UPDATE automation_ips
-			SET pid = ?, thread = ?
-			WHERE network_id = ?
-			AND status = 0
-			AND pid = 0
-			LIMIT 1',
-			array(getmypid(), $thread, $network_id));
-
-		$device = db_fetch_row_prepared('SELECT *
-			FROM automation_ips
-			WHERE pid = ?
-			AND thread = ?
-			AND status=0',
-			array(getmypid(), $thread));
+		$device = automation_claim_address($connection, (int)$network_id, $run_id, getmypid(), (int)$thread);
 
 		if (cacti_sizeof($device) && isset($device['ip_address'])) {
 			$count++;
@@ -496,8 +272,8 @@ function discoverDevices($network_id, $thread) {
 
 					db_execute_prepared('UPDATE automation_ips
 						SET hostname = ?
-						WHERE ip_address = ?',
-						array($dnsname, $device['ip_address']));
+						WHERE ip_address = ? AND network_id = ? AND run_id = ?',
+						array($dnsname, $device['ip_address'], $network_id, $run_id));
 
 					$device['hostname']      = $dnsname;
 					$device['dnsname']       = $dnsname;
@@ -517,8 +293,8 @@ function discoverDevices($network_id, $thread) {
 
 						db_execute_prepared('UPDATE automation_ips
 							SET hostname = ?
-							WHERE ip_address = ?',
-							array($device['hostname'], $device['ip_address']));
+							WHERE ip_address = ? AND network_id = ? AND run_id = ?',
+							array($device['hostname'], $device['ip_address'], $network_id, $run_id));
 
 						$device['dnsname']       = $netbios;
 						$device['dnsname_short'] = $netbios;
@@ -539,8 +315,8 @@ function discoverDevices($network_id, $thread) {
 
 					db_execute_prepared('UPDATE automation_ips
 						SET hostname = ?
-						WHERE ip_address = ?',
-						array($dnsname, $device['ip_address']));
+						WHERE ip_address = ? AND network_id = ? AND run_id = ?',
+						array($dnsname, $device['ip_address'], $network_id, $run_id));
 
 					$device['dnsname']       = $dnsname;
 					$device['dnsname_short'] = preg_split('/[\.]+/', strtolower($dnsname), -1, PREG_SPLIT_NO_EMPTY);
@@ -558,8 +334,8 @@ function discoverDevices($network_id, $thread) {
 
 						db_execute_prepared('UPDATE automation_ips
 							SET hostname = ?
-							WHERE ip_address = ?',
-							array($device['hostname'], $device['ip_address']));
+							WHERE ip_address = ? AND network_id = ? AND run_id = ?',
+							array($device['hostname'], $device['ip_address'], $network_id, $run_id));
 
 						$device['dnsname']       = $netbios;
 						$device['dnsname_short'] = $netbios;
@@ -581,7 +357,7 @@ function discoverDevices($network_id, $thread) {
 			if (!cacti_sizeof($exists)) {
 				automation_debug(", Status: Not in Cacti");
 
-				if (substr($device['ip_address'], -3) < 255) {
+				if (filter_var($device['ip_address'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false) {
 					automation_debug(', Ping: ');
 
 					// Set status to running
@@ -862,7 +638,7 @@ function discoverDevices($network_id, $thread) {
 
 					automation_debug("\n");
 				} else {
-					automation_debug(", Status: Ignoring Address (PHP Bug does not allow us to ping .255 as it thinks its a broadcast IP)!\n");
+					automation_debug(", Status: Ignoring invalid IPv4 address\n");
 					markIPDone($device['ip_address'], $network_id);
 				}
 			} else {
@@ -923,26 +699,6 @@ function display_help () {
 	print "    --debug       - Display verbose output during execution\n\n";
 }
 
-function isProcessRunning($pid) {
-    return cacti_process_still_running($pid);
-}
-
-function killProcess($pid) {
-	return cacti_process_kill($pid, SIGTERM, 'AUTOM8');
-}
-
-function removeMyProcess($pid, $network_id) {
-	db_execute_prepared('DELETE FROM automation_processes
-		WHERE pid = ?
-		AND network_id = ?',
-		array($pid, $network_id));
-
-	db_execute_prepared('DELETE FROM automation_ips
-		WHERE pid = ?
-		AND network_id = ?',
-		array($pid, $network_id));
-}
-
 function rerunDataQueries($host_id, &$network) {
 	if ($network['rerun_data_queries'] == 'on') {
 		$snmp_queries = db_fetch_assoc_prepared('SELECT snmp_query_id
@@ -959,34 +715,28 @@ function rerunDataQueries($host_id, &$network) {
 }
 
 function registerTask($network_id, $pid, $poller_id, $task = 'collector') {
-	db_execute_prepared("REPLACE INTO automation_processes
-		(pid, poller_id, network_id, task, status, heartbeat, command)
-		VALUES (?, ?, ?, ?, 'running', NOW(), 'start')",
-		array($pid, $poller_id, $network_id, $task));
+	global $run_id;
+	automation_query(automation_default_connection(), "INSERT INTO automation_processes
+		(pid, poller_id, network_id, run_id, connection_id, task, status, heartbeat, command)
+		VALUES (?, ?, ?, ?, CONNECTION_ID(), ?, 'running', NOW(), 'start')", array($pid, $poller_id, $network_id, $run_id, $task));
 }
 
 function endTask($network_id, $pid) {
-	db_execute_prepared("UPDATE automation_processes
-		SET status='done', heartbeat=NOW()
-		WHERE pid = ?
-		AND network_id = ?",
-		array($pid, $network_id));
+	global $run_id;
+	automation_query(automation_default_connection(), "UPDATE automation_processes SET status = 'done', heartbeat = NOW()
+		WHERE pid = ? AND network_id = ? AND run_id = ?", array($pid, $network_id, $run_id));
 }
 
 function addUpDevice($network_id, $pid) {
-	db_execute_prepared('UPDATE automation_processes
-		SET up_hosts=up_hosts+1, heartbeat=NOW()
-		WHERE pid = ?
-		AND network_id = ?',
-		array($pid, $network_id));
+	global $run_id;
+	automation_query(automation_default_connection(), 'UPDATE automation_processes SET up_hosts = up_hosts + 1, heartbeat = NOW()
+		WHERE pid = ? AND network_id = ? AND run_id = ?', array($pid, $network_id, $run_id));
 }
 
 function addSNMPDevice($network_id, $pid) {
-	db_execute_prepared('UPDATE automation_processes
-		SET snmp_hosts=snmp_hosts+1, heartbeat=NOW()
-		WHERE pid = ?
-		AND network_id = ?',
-		array($pid, $network_id));
+	global $run_id;
+	automation_query(automation_default_connection(), 'UPDATE automation_processes SET snmp_hosts = snmp_hosts + 1, heartbeat = NOW()
+		WHERE pid = ? AND network_id = ? AND run_id = ?', array($pid, $network_id, $run_id));
 }
 
 function reportNetworkStatus($network_id, $old_devices) {
@@ -1185,47 +935,20 @@ function populateDeviceIndex(&$ids, $is_new, $devices) {
 }
 
 function clearTask($network_id, $pid) {
-	db_execute_prepared('DELETE
-		FROM automation_processes
-		WHERE pid = ?
-		AND network_id = ?',
-		array($pid, $network_id));
-
-	db_execute_prepared('DELETE
-		FROM automation_ips
-		WHERE network_id = ?',
-		array($network_id));
-}
-
-function clearAllTasks($network_id, $keep_pids = array()) {
-	if (cacti_sizeof($keep_pids)) {
-		$placeholders = implode(',', array_fill(0, cacti_sizeof($keep_pids), '?'));
-
-		db_execute_prepared("DELETE FROM automation_processes
-			WHERE network_id = ?
-			AND pid NOT IN ($placeholders)",
-			array_merge(array($network_id), array_values($keep_pids)));
-	} else {
-		db_execute_prepared('DELETE FROM automation_processes
-			WHERE network_id = ?',
-			array($network_id));
-	}
+	global $run_id;
+	automation_release_worker(automation_default_connection(), (int)$network_id, $run_id, (int)$pid);
 }
 
 function markIPRunning($ip_address, $network_id) {
-	db_execute_prepared('UPDATE automation_ips
-		SET status=1
-		WHERE ip_address = ?
-		AND network_id = ?',
-		array($ip_address, $network_id));
+	global $run_id;
+	automation_query(automation_default_connection(), 'UPDATE automation_ips SET status = 1
+		WHERE ip_address = ? AND network_id = ? AND run_id = ? AND pid = ?', array($ip_address, $network_id, $run_id, getmypid()));
 }
 
 function markIPDone($ip_address, $network_id) {
-	db_execute_prepared('UPDATE automation_ips
-		SET status=2
-		WHERE ip_address = ?
-		AND network_id = ?',
-		array($ip_address, $network_id));
+	global $run_id;
+	automation_query(automation_default_connection(), 'UPDATE automation_ips SET status = 2
+		WHERE ip_address = ? AND network_id = ? AND run_id = ? AND pid = ?', array($ip_address, $network_id, $run_id, getmypid()));
 }
 
 function getNetworkDevices($network_id) {

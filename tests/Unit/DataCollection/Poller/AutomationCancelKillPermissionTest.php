@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -13,104 +14,34 @@
  +-------------------------------------------------------------------------+
 */
 
-/*
- * A running network master handling command == 'cancel' used to signal every
- * worker and then delete every row for the network regardless of whether the
- * signal was delivered. A worker owned by another user answers EPERM, stays
- * running, and lost its row anyway, so the next discovery could start a
- * duplicate worker beside it.
- *
- * The cancel block and clearAllTasks() are pulled directly out of
- * poller_automation.php and evaluated in a child PHP with posix_kill() and
- * posix_get_last_error() disabled and redefined, following the pattern in
- * ProcessKillPermissionTest. The registered pid is the child's own, so the
- * /proc identity check in cacti_process_still_running() matches and only the
- * kill result differs.
- */
-
-const AUTOMATION_CANCEL_EPERM = 1;
-
-/**
- * Run the cancel-handling block against one worker pid whose kill fails with
- * the given errno, then run the real clearAllTasks() with whatever pids the
- * block decided to keep.
- *
- * @param int $errno Errno every signal to the worker pid reports, 0 for a
- *                    signal that is delivered.
- *
- * @return array{log: array<int, string>, deletes: array<int, array{sql: string, params: array}>}
- */
-function automation_cancel_scenario($errno) {
-	$base = dirname(__DIR__, 4);
-
-	$source = file_get_contents($base . '/poller_automation.php');
-	expect($source)->not->toBeFalse('poller_automation.php must be readable');
-
-	expect(preg_match(
-		'/\$undead_pids = array\(\);\n\n\t{3}if \(\$command == \x27cancel\x27\) \{\n.*?\n\t{3}\}\n/ms',
-		$source,
-		$cancel_block
-	))->toBe(1, 'the cancel-handling block is no longer where this test expects it');
-
-	expect(preg_match('/^function clearAllTasks\(.*?^}\n/ms', $source, $clear_all_tasks))
-		->toBe(1, 'clearAllTasks() is no longer where this test expects it');
-
-	$code = 'define("POLLER_VERBOSITY_MEDIUM", 2);'
-		. '$target = getmypid(); $network_id = 1; $command = "cancel";'
-		. '$stub_errno = 0; $log = array(); $deletes = array();'
-		. 'function posix_kill($pid, $signal) { global $target, $stub_errno; if ((int) $pid === (int) $target) { $stub_errno = ' . (int) $errno . '; return $stub_errno === 0; } $stub_errno = 0; return true; }'
-		. 'function posix_get_last_error() { global $stub_errno; return $stub_errno; }'
-		. 'function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }'
-		. 'function array_rekey($array, $key, $key_value) { $out = array(); foreach ($array as $item) { $out[$item[$key]] = $item[$key_value]; } return $out; }'
-		. 'function cacti_log($message, $output = false, $environ = "CMDPHP", $level = 0) { global $log; $log[] = $message; return true; }'
-		. 'function db_fetch_assoc_prepared($sql, $params = array()) { global $target; return array(array("pid" => $target)); }'
-		. 'function db_execute_prepared($sql, $params = array()) { global $deletes; $deletes[] = array("sql" => trim($sql), "params" => $params); return true; }'
-		. 'require ' . var_export($base . '/lib/poller.php', true) . ';'
-		. 'eval(' . var_export($cancel_block[0], true) . ');'
-		. 'eval(' . var_export($clear_all_tasks[0], true) . ');'
-		. 'clearAllTasks($network_id, $undead_pids);'
-		. 'echo json_encode(array("log" => $log, "deletes" => $deletes, "target" => $target));';
-
-	$pipes   = array();
-	$process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=posix_kill,posix_get_last_error', '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
-
-	expect($process)->not->toBeFalse();
-
-	$stdout = stream_get_contents($pipes[1]);
-	$error  = stream_get_contents($pipes[2]);
-
-	fclose($pipes[1]);
-	fclose($pipes[2]);
-
-	expect(proc_close($process))->toBe(0, $error);
-
-	$out = json_decode($stdout, true);
-
-	expect($out)->toBeArray($stdout . $error);
-
-	return $out;
+namespace AutomationCancelKillPermissionTest;
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+$source = file_get_contents(dirname(__DIR__, 4) . '/lib/automation_runtime.php');
+eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($source, 'automation_stop_children'));
+function microtime($float = false) { return $GLOBALS['automation_cancel_clock']; }
+function usleep($microseconds) { $GLOBALS['automation_cancel_clock'] += $microseconds / 1000000; }
+function proc_get_status($process) { return array('running' => $GLOBALS['automation_cancel_running']); }
+function proc_terminate($process, $signal = 15) {
+	$GLOBALS['automation_cancel_signals'][] = array($process, $signal);
+	if (!$GLOBALS['automation_cancel_denied']) { $GLOBALS['automation_cancel_running'] = false; }
+	return !$GLOBALS['automation_cancel_denied'];
 }
+function proc_close($process) { $GLOBALS['automation_cancel_closed'][] = $process; return 0; }
 
-test('a cancel keeps the row of a worker it may not signal', function () {
-	$out = automation_cancel_scenario(AUTOMATION_CANCEL_EPERM);
-
-	expect(implode("\n", $out['log']))->toContain('another user')
-		->and($out['deletes'])->toHaveCount(1);
-
-	$delete = $out['deletes'][0];
-
-	expect($delete['sql'])->toContain('NOT IN')
-		->and($delete['params'])->toBe(array(1, $out['target']));
-});
-
-test('a cancel this user started still kills and clears the worker row', function () {
-	$out = automation_cancel_scenario(0);
-
-	expect(implode("\n", $out['log']))->not->toContain('another user')
-		->and($out['deletes'])->toHaveCount(1);
-
-	$delete = $out['deletes'][0];
-
-	expect($delete['sql'])->not->toContain('NOT IN')
-		->and($delete['params'])->toBe(array(1));
-});
+test('cancellation retains ownership when termination is denied and closes stopped owned children', function ($denied) {
+	$GLOBALS['automation_cancel_clock'] = 0.0;
+	$GLOBALS['automation_cancel_running'] = true;
+	$GLOBALS['automation_cancel_denied'] = $denied;
+	$GLOBALS['automation_cancel_signals'] = $GLOBALS['automation_cancel_closed'] = array();
+	$handle = fopen('php://memory', 'r+');
+	try {
+		automation_stop_children(array($handle));
+		expect($GLOBALS['automation_cancel_signals'][0])->toBe(array($handle, 15));
+		if ($denied) {
+			expect($GLOBALS['automation_cancel_closed'])->toBe(array());
+			expect($GLOBALS['automation_cancel_signals'][1])->toBe(array($handle, 9));
+		} else {
+			expect($GLOBALS['automation_cancel_closed'])->toBe(array($handle));
+		}
+	} finally { fclose($handle); }
+})->with(array(true, false));

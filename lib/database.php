@@ -474,6 +474,7 @@ function db_execute($sql, $log = true, $db_conn = false) {
  */
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) {
 	global $database_sessions, $error_logged, $database_default, $config, $database_hostname, $database_port, $database_total_queries, $database_last_error, $database_log, $affected_rows, $database_details;
+	global $database_fail_fast;
 
 	$database_total_queries++;
 
@@ -498,6 +499,9 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 			}
 
 			$database_last_error = 'DB ' . $execute_name . ' -- No connection found';
+			if (!empty($database_fail_fast)) {
+				throw new RuntimeException('The database connection is unavailable.');
+			}
 
 			return false;
 		}
@@ -605,6 +609,11 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 				$query->closeCursor();
 			}
 			unset($query);
+
+			// Connection-owned CLI work must stop rather than reconnect past its lock.
+			if (!empty($database_fail_fast)) {
+				throw new RuntimeException('The database operation failed.');
+			}
 
 			if ($log) {
 				if ($en == 1213 || $en == 1205 || $en == 1020) {

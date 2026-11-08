@@ -278,13 +278,15 @@ INSERT INTO `automation_graph_rules` VALUES (1,'Traffic 64 bit Server',1,12,'on'
 CREATE TABLE `automation_ips` (
   `ip_address` varchar(20) NOT NULL DEFAULT '',
   `hostname` varchar(100) DEFAULT NULL,
-  `network_id` int(10) unsigned DEFAULT NULL,
+  `network_id` int(10) unsigned NOT NULL DEFAULT '0',
   `pid` int(10) unsigned DEFAULT NULL,
   `status` int(10) unsigned DEFAULT NULL,
   `thread` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`ip_address`),
-  KEY `pid` (`pid`)
-) ENGINE=MEMORY COMMENT='List of discoverable ip addresses used for scanning';
+  `run_id` char(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`network_id`,`ip_address`),
+  KEY `pid` (`pid`),
+  KEY `claim` (`network_id`,`run_id`,`status`,`pid`)
+) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='List of discoverable ip addresses used for scanning';
 
 --
 -- Table structure for table `automation_match_rule_items`
@@ -374,8 +376,10 @@ CREATE TABLE `automation_processes` (
   `up_hosts` int(10) unsigned DEFAULT '0',
   `snmp_hosts` int(10) unsigned DEFAULT '0',
   `heartbeat` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `run_id` char(32) NOT NULL DEFAULT '',
+  `connection_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`pid`,`network_id`)
-) ENGINE=MEMORY COMMENT='Table tracking active poller processes';
+) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Table tracking active poller processes';
 
 --
 -- Table structure for table `automation_snmp`

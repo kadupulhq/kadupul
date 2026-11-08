@@ -14,7 +14,7 @@
  * Timeout and cleanup paths signal a live registered task and then retire its
  * row. When the task was started by another user, the signal fails with EPERM.
  * Retiring the row anyway left the task running unregistered, and the timeout
- * branch of register_process_start() or the automation network master then
+ * branch of register_process_start() then
  * started a second copy beside it.
  *
  * Each scenario runs in a child PHP with posix_kill() and
@@ -24,8 +24,7 @@
  * the /proc identity check matches and only the signal result differs.
  *
  * Library routines are required. The routines in cli/float_rrdfiles.php,
- * cli/rebuild_poller_cache.php, cli/batchgapfix.php, poller_commands.php and
- * poller_automation.php live in scripts that parse arguments, connect to the
+ * cli/rebuild_poller_cache.php, cli/batchgapfix.php and poller_commands.php live in scripts that parse arguments, connect to the
  * database and exit when included, so the function or block under test is
  * extracted from the file and evaluated in the child instead. The evaluated
  * code is this repository's own source, never external input.
@@ -78,11 +77,7 @@ function process_kill_permission_invoke($action) {
 			return 'eval(' . var_export(process_kill_permission_extract('poller_commands.php', '/^function commands_kill_running_processes\(.*?^}\n/ms'), true) . '); $result = commands_kill_running_processes();';
 		case 'batchgapfix':
 			return '$force = true; eval(' . var_export(process_kill_permission_extract('cli/batchgapfix.php', '/^\tif \(\$force\) \{\n.*?^\t\}\n/ms'), true) . ');';
-		case 'automation':
-			return '$network_id = 1; $poller_id = 1;'
-				. 'eval(' . var_export(process_kill_permission_extract('poller_automation.php', '/^function isProcessRunning\(.*?^}\n/ms'), true) . ');'
-				. 'eval(' . var_export(process_kill_permission_extract('poller_automation.php', '/^function killProcess\(.*?^}\n/ms'), true) . ');'
-				. 'eval(' . var_export(process_kill_permission_extract('poller_automation.php', '/^\t\/\/ Remove any stale entries\n.*?^\tregisterTask\(\$network_id, getmypid\(\), \$poller_id, \'tmaster\'\);\n/ms'), true) . ');';
+
 	}
 
 	throw new InvalidArgumentException('unknown action ' . $action);
@@ -117,7 +112,7 @@ function process_kill_permission_scenario($action, $errno, $pid = 'self', $expir
 		. 'function db_fetch_row_prepared($sql, $params = array()) { global $row; return $row; }'
 		. 'function db_fetch_assoc_prepared($sql, $params = array()) { global $row; return array($row); }'
 		. 'require ' . var_export(dirname(__DIR__, 4) . '/lib/poller.php', true) . ';'
-		/* The automation block exits when it declines to start, so report from shutdown. */
+		/* Some cleanup paths exit, so report their side effects from shutdown. */
 		. 'ob_start();'
 		. 'register_shutdown_function(function () { global $result, $log, $writes; $output = ob_get_level() ? ob_get_clean() : ""; echo json_encode(array("result" => $result, "log" => $log, "writes" => $writes, "output" => $output)); });'
 		. process_kill_permission_invoke($action);
@@ -262,17 +257,5 @@ test('cleanup signals owned children but retains a repair worker that stays aliv
 		->and(implode("\n", $out['log']) . $out['output'])->not->toContain('another user');
 })->with('cleanup routines');
 
-test('automation does not start a second network master beside one it may not signal', function () {
-	$out = process_kill_permission_scenario('automation', PROCESS_KILL_PERMISSION_EPERM);
-
-	expect($out['writes'])->toBe(array())
-		->and(implode("\n", $out['log']))->toContain('another user');
-});
-
-test('automation still replaces a network master this user started', function () {
-	$out = process_kill_permission_scenario('automation', 0);
-
-	expect($out['writes'])->toBe(array('DELETE', 'DELETE', 'REGISTER'))
-		->and(implode("\n", $out['log']))->toContain('is still running for Network ID: 1')
-		->and(implode("\n", $out['log']))->not->toContain('another user');
-});
+// Discovery ownership and denied termination are exercised by
+// AutomationRecoveryMariaDbTest and AutomationCancelKillPermissionTest.
