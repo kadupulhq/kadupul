@@ -46,6 +46,7 @@ test('a Hex-STRING value is read through the hex-string prefix', function ($valu
 	'lower case'                   => array('hex-string: de ad', true, 'de ad'),
 	'Hex- after String: stripping' => array('Hex- 0A 0B', true, '0A 0B'),
 	'not hex'                      => array('Hex-STRING: zz yy', false, 'Hex-STRING: zz yy'),
+	'single byte'                  => array('Hex-STRING: 0A', false, 'Hex-STRING: 0A'),
 	'plain string'                 => array('STRING: 00 1A', false, 'STRING: 00 1A'),
 ));
 

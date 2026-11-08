@@ -10,7 +10,7 @@ Cacti CHANGELOG
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
--issue: Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID (#1031), and return no session for a host already marked down (#1056)
+-issue: Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056)
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
 -issue: Keep CSV export bounds on one clock snapshot and trim samples beyond an unaligned requested end, retaining complete rows and empty-window metadata (#1092)
