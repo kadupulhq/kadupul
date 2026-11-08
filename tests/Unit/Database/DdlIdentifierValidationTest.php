@@ -386,8 +386,7 @@ test('db_update_table rebuilds a changed index with valid SQL', function () {
     )))->toBeTrue();
 
     expect(ddl_state()['executed'])->toBe(array(
-        'ALTER TABLE `plugin_config` DROP INDEX `idx`',
-        'ALTER TABLE `plugin_config` ADD INDEX `idx` (`id`,`name`(10))',
+        'ALTER TABLE `plugin_config` DROP INDEX `idx`, ADD INDEX `idx` (`id`,`name`(10))',
     ));
 });
 
@@ -416,7 +415,7 @@ test('db_update_table reconciles unique keys and accepts string key columns', fu
     'unique key that lost its uniqueness is rebuilt' => array(
         array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 1)),
         array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
-        array('ALTER TABLE `plugin_config` DROP INDEX `u_name`', 'ALTER TABLE `plugin_config` ADD UNIQUE INDEX `u_name` (`name`)'),
+        array('ALTER TABLE `plugin_config` DROP INDEX `u_name`, ADD UNIQUE INDEX `u_name` (`name`)'),
     ),
     'undeclared index is still removed when keys are declared' => array(
         array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('u_name', 1, 'name', 0), array('stale', 1, 'name', 1)),
@@ -427,6 +426,17 @@ test('db_update_table reconciles unique keys and accepts string key columns', fu
         array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 0), array('other', 1, 'name', 1)),
         array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
         array(),
+    ),
+    // cli/sqltable_to_php.php lists every secondary index under keys, unique or not.
+    'unique index declared under keys keeps its uniqueness' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 0)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    'empty keys still removes undeclared indexes' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('stale', 1, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array()),
+        array('ALTER TABLE `plugin_config` DROP INDEX `stale`'),
     ),
     'compound key given as one string matches' => array(
         array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('idx', 2, 'name', 1)),

@@ -9,7 +9,7 @@ cmd_exec	./cli/float_rrdfiles.php:667		return proc_open($args, array(0 => STDIN,
 cmd_exec	./cli/push_out_hosts.php:50		passthru($command, $exit_code);
 cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:265				$result = exec($command, $output, $return_code);
-cmd_exec	./lib/database.php:2731	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
+cmd_exec	./lib/database.php:2735	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1103	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/functions.php:2599	                $output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:2617	                    $output = shell_exec($php . ' -q ' . $script);
@@ -497,8 +497,8 @@ fs_write	./lib/csp_report_endpoint.php:177	    $fh = @fopen($bucket, 'c+'); // n
 fs_write	./lib/csp_report_endpoint.php:252	$input = @fopen('php://input', 'rb');
 fs_write	./lib/database.php:106	                file_put_contents(
 fs_write	./lib/database.php:240	                file_put_contents(
-fs_write	./lib/database.php:2542	    file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
-fs_write	./lib/database.php:2790	    if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
+fs_write	./lib/database.php:2546	    file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
+fs_write	./lib/database.php:2794	    if (!chmod($path, 0600) || file_put_contents($path, $contents) !== strlen($contents)) {
 fs_write	./lib/functions.php:1660	        $fp = @fopen($logfile, 'a');
 fs_write	./lib/functions.php:1738	    $fp = fopen($file_name, 'r');
 fs_write	./lib/functions.php:728	        file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() . cacti_debug_backtrace($config_name, false, false, 0, 1) . "\n", FILE_APPEND);

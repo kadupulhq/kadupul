@@ -1788,15 +1788,19 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
             $k = $declared_keys[$n];
             $add = array_diff($k['columns'], $index);
             $del = array_diff($index, $k['columns']);
-            if (!empty($add) || !empty($del) || $uniqueindex[$n] !== $k['unique']) {
+            // Only a unique_keys entry forces UNIQUE.  A live unique index listed
+            // under keys (as cli/sqltable_to_php.php writes every index) keeps
+            // its uniqueness.
+            if (!empty($add) || !empty($del) || ($k['unique'] && !$uniqueindex[$n])) {
                 $columns = db_format_index_create($k['columns']);
 
                 if (!db_is_safe_identifier($n) || $columns === false) {
                     return false;
                 }
 
-                if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`", $log, $db_conn) ||
-                    !db_execute("ALTER TABLE `$table` ADD " . ($k['unique'] ? 'UNIQUE ' : '') . "INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
+                // One statement, so a rebuild the server rejects (such as a
+                // UNIQUE index over duplicate rows) leaves the old index in place.
+                if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`, ADD " . ($k['unique'] ? 'UNIQUE ' : '') . "INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
                     return false;
                 }
             }
