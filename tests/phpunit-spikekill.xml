@@ -4,6 +4,8 @@
     <testsuite name="Spikekill">
       <file>Unit/Core/Rrd/RrdOutputTrailerTest.php</file>
       <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
+      <file>./Unit/ImportDataSourceItemValidationTest.php</file>
+      <file>./Unit/ImportDataSourceItemOverrideTest.php</file>
       <file>Unit/Core/Rrd/RrdCommandFailuresNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyWriteRegressionTest.php</file>
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
@@ -22,8 +24,7 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
-      <file>./Unit/ImportDataSourceItemValidationTest.php</file>
-      <file>./Unit/ImportDataSourceItemOverrideTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
