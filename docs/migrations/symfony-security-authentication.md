@@ -286,8 +286,13 @@ native callback redirects to that URL by GET; with no authenticated session left
 because there is nothing to end. The Midwinter logout icon submits the same POST.
 
 Server-side logouts end the session in the code path that decided to log out,
-which already holds the authenticated session: `clog.php` and `clog_user.php` on a
-remote collector, and a completed password change. `auth_end_session()` in
+which already holds the authenticated session: a completed password change (a
+CSRF-validated POST), and `clog.php` and `clog_user.php` on a remote collector.
+The collector pages end the session only for a POST or for a GET that
+`csrf_request_is_same_origin()` shows came from this site (`Sec-Fetch-Site:
+same-origin`, or a matching Origin/Referer when that header is absent); a
+cross-site GET, or one without that evidence, is redirected to the confirmation
+page and the session survives. `auth_end_session()` in
 `lib/auth.php` runs the logout hooks, remembered-token revocation and
 cookie/session teardown for these paths and for a confirmed `logout.php` POST, in
 the same order. A known reason is stored in a new session and shown once by the

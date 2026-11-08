@@ -225,8 +225,8 @@ dynamic_include	./cmd_realtime.php:9	require_once($config['base_path'] . '/lib/s
 dynamic_include	./graph_realtime.php:495	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:135	                require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:202	            require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/csrf.php:414	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
+dynamic_include	./include/csrf.php:442	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/global.php:275	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:276	include_once($config['library_path'] . '/functions.php');
 dynamic_include	./include/global.php:277	include_once($config['library_path'] . '/headers_secure.php');
@@ -641,10 +641,12 @@ header_redirect	./cache/mibcache/index.php:7	header("Location:../../index.php");
 header_redirect	./cache/realtime/index.php:7	header("Location:../index.php");
 header_redirect	./cache/spikekill/index.php:7	header("Location:../index.php");
 header_redirect	./cli/index.php:7	header("Location:../index.php");
-header_redirect	./clog.php:26			header('Location: logout.php', true, 303);
-header_redirect	./clog.php:28			header('Location: permission_denied.php');
-header_redirect	./clog_user.php:25			header('Location: logout.php', true, 303);
-header_redirect	./clog_user.php:27			header('Location: permission_denied.php');
+header_redirect	./clog.php:28				header('Location: logout.php', true, 303);
+header_redirect	./clog.php:31				header('Location: logout.php?action=remote');
+header_redirect	./clog.php:34			header('Location: permission_denied.php');
+header_redirect	./clog_user.php:27				header('Location: logout.php', true, 303);
+header_redirect	./clog_user.php:30				header('Location: logout.php?action=remote');
+header_redirect	./clog_user.php:33			header('Location: permission_denied.php');
 header_redirect	./contrib/index.php:7	header("Location:../index.php");
 header_redirect	./data_debug.php:165	    header('Location: data_debug.php?header=false');
 header_redirect	./data_debug.php:265	            header('Location: data_debug.php?header=false');

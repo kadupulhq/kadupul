@@ -370,6 +370,34 @@ function csrf_request_is_cross_site()
 }
 
 /**
+ * Whether the browser shows that this request came from this site.
+ *
+ * Stricter than csrf_request_is_cross_site(): a request without evidence,
+ * such as one with no Sec-Fetch-Site, Origin or Referer, or a navigation the
+ * browser reports as 'none', is not treated as same-site. Use it before a GET
+ * side effect that a cross-site request must never trigger, such as ending
+ * the session; refuse or ask for confirmation otherwise.
+ */
+function csrf_request_is_same_origin()
+{
+    if (isset($_SERVER['HTTP_SEC_FETCH_SITE'])) {
+        return strtolower(trim($_SERVER['HTTP_SEC_FETCH_SITE'])) === 'same-origin';
+    }
+
+    $evidence = false;
+    foreach (array('HTTP_ORIGIN', 'HTTP_REFERER') as $header) {
+        if (isset($_SERVER[$header]) && $_SERVER[$header] !== '') {
+            if (!csrf_request_host_matches($_SERVER[$header])) {
+                return false;
+            }
+            $evidence = true;
+        }
+    }
+
+    return $evidence;
+}
+
+/**
  * Whether a URL names this server.
  *
  * The host is compared with the server-configured name, as

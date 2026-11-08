@@ -21,9 +21,15 @@ if (!clog_admin()) {
 			print '<div style="display:none">cactiPermissionDenied</div>';
 		}
 	} elseif ($config['poller_id'] > 1) {
-		// The session is held here, so end it rather than ask for confirmation.
-		auth_end_session('remote');
-		header('Location: logout.php', true, 303);
+		if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' || csrf_request_is_same_origin()) {
+			// A POST passed CSRF and a same-site GET came from this application,
+			// so end the session here rather than ask for confirmation.
+			auth_end_session('remote');
+			header('Location: logout.php', true, 303);
+		} else {
+			// Another site may have sent this GET: only offer the CSRF-bound logout.
+			header('Location: logout.php?action=remote');
+		}
 	} else {
 		header('Location: permission_denied.php');
 	}
