@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use Kadupul\Platform\Infrastructure\Symfony\CacheDirectoryLock;
+use Kadupul\Platform\Infrastructure\Symfony\CacheRefreshInProgress;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
@@ -128,6 +129,98 @@ final class CacheClearConcurrencyTest extends TestCase
         CacheDirectoryLock::exclusive($buildDir, 1)->release();
     }
 
+    public function testWebRequestAnswers503WhenRefreshOutlastsReaderBound(): void
+    {
+        $address = $this->startServer();
+        $lock = CacheDirectoryLock::exclusive($this->cacheRoot . '/prod', 1);
+        try {
+            $started = microtime(true);
+            $response = $this->receive($this->send($address, '/'), 40);
+            $waited = microtime(true) - $started;
+        } finally {
+            $lock->release();
+        }
+        self::assertStringContainsString(' 503 ', strtok($response, "\r\n"), $response);
+        self::assertMatchesRegularExpression('/^Retry-After: 5\r$/mi', $response);
+        self::assertGreaterThanOrEqual(CacheDirectoryLock::SHARED_TIMEOUT_SECONDS - 0.5, $waited);
+        self::assertLessThan(CacheDirectoryLock::SHARED_TIMEOUT_SECONDS + 10, $waited);
+        self::assertStringContainsString(' 200 ', strtok($this->receive($this->send($address, '/'), 20), "\r\n"));
+    }
+
+    public function testRefreshIsNotStarvedByOverlappingReaders(): void
+    {
+        $buildDir = $this->directory . '/busy/prod';
+        $autoload = dirname(__DIR__, 2) . '/include/vendor/autoload.php';
+        $readers = [];
+        // Two readers whose shared locks always overlap: before writer
+        // priority, flock() never granted the exclusive lock between them.
+        foreach ([0, 1] as $reader) {
+            $script = 'require ' . var_export($autoload, true) . ';'
+                . 'usleep(' . (75000 * $reader) . '); $marker = ' . var_export($this->directory . '/reader' . $reader, true) . ';'
+                . 'while (!is_file(' . var_export($this->directory . '/stop', true) . ')) {'
+                . ' try { $lock = \\Kadupul\\Platform\\Infrastructure\\Symfony\\CacheDirectoryLock::shared(' . var_export($buildDir, true) . ', 0.2); } catch (\RuntimeException) { continue; }'
+                . ' touch($marker); usleep(150000); $lock->release(); }';
+            $process = new Process([PHP_BINARY, '-r', $script]);
+            $process->start();
+            $readers[] = $process;
+        }
+        try {
+            $this->waitFor(fn(): bool => is_file($this->directory . '/reader0') && is_file($this->directory . '/reader1'), 'readers hold the lock');
+            $started = microtime(true);
+            $lock = CacheDirectoryLock::exclusive($buildDir, 5);
+            $waited = microtime(true) - $started;
+            try {
+                try {
+                    CacheDirectoryLock::shared($buildDir, 0.3);
+                    self::fail('a reader passed the gate during the refresh');
+                } catch (CacheRefreshInProgress) {
+                }
+            } finally {
+                $lock->release();
+            }
+            self::assertLessThan(2, $waited, 'the refresh waited for more than the running readers');
+            $shared = CacheDirectoryLock::shared($buildDir, 2);
+            self::assertInstanceOf(CacheDirectoryLock::class, $shared);
+            $shared->release();
+        } finally {
+            touch($this->directory . '/stop');
+            foreach ($readers as $process) {
+                $process->wait();
+                self::assertSame(0, $process->getExitCode(), $process->getErrorOutput());
+            }
+        }
+    }
+
+    public function testLockFilesArePrivateToTheApplication(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            self::markTestSkipped('POSIX modes do not apply on Windows.');
+        }
+        $parent = $this->directory . '/fresh/cache';
+        CacheDirectoryLock::shared($parent . '/prod', 1)?->release();
+        $mask = umask();
+        self::assertSame(0o750 & ~$mask, fileperms($this->directory . '/fresh/cache') & 0o777);
+        self::assertSame(0o750 & ~$mask, fileperms($this->directory . '/fresh') & 0o777);
+        foreach ([CacheDirectoryLock::path($parent . '/prod'), CacheDirectoryLock::gatePath($parent . '/prod')] as $file) {
+            self::assertSame(0o640 & ~$mask, fileperms($file) & 0o777, $file);
+        }
+
+        // Files another local user could open are refused by both sides.
+        chmod(CacheDirectoryLock::path($parent . '/prod'), 0o644);
+        self::assertNull(CacheDirectoryLock::shared($parent . '/prod', 1));
+        try {
+            CacheDirectoryLock::exclusive($parent . '/prod', 0.2);
+            self::fail('a refresh locked a lock file readable by other users');
+        } catch (\RuntimeException $error) {
+            self::assertStringContainsString('not private to the application', $error->getMessage());
+        }
+
+        $target = $this->directory . '/elsewhere';
+        self::assertTrue(touch($target) && chmod($target, 0o600));
+        self::assertTrue(symlink($target, CacheDirectoryLock::gatePath($parent . '/other')));
+        self::assertNull(CacheDirectoryLock::shared($parent . '/other', 1));
+    }
+
     private function console(string $command): Process
     {
         $root = dirname(__DIR__, 2);
@@ -145,13 +238,13 @@ final class CacheClearConcurrencyTest extends TestCase
     {
         $root = dirname(__DIR__, 2);
         $router = $this->directory . '/front.php';
-        // A minimal production front controller: boot, optionally pause while
-        // the test refreshes the cache, then serve a route through lazily
-        // loaded container services.
+        // A minimal production front controller like install.php: handle a
+        // route through lazily loaded container services, optionally booting
+        // first and pausing while the test refreshes the cache.
         $source = '<?php $_SERVER["APP_CACHE_DIR"] = ' . var_export($this->cacheRoot, true) . ';'
             . 'require ' . var_export($root . '/include/vendor/autoload.php', true) . ';'
-            . '$kernel = new \Kadupul\Kernel("prod", false); $kernel->boot();'
-            . 'if (isset($_GET["pause"])) { touch(' . var_export($this->directory . '/booted', true) . ');'
+            . '$kernel = new \Kadupul\Kernel("prod", false);'
+            . 'if (isset($_GET["pause"])) { $kernel->boot(); touch(' . var_export($this->directory . '/booted', true) . ');'
             . '$deadline = microtime(true) + 30; while (!is_file(' . var_export($this->directory . '/release', true) . ') && microtime(true) < $deadline) { usleep(10000); } }'
             . '$request = \Symfony\Component\HttpFoundation\Request::create("/healthz");'
             . '$response = $kernel->handle($request); $response->send(); $kernel->terminate($request, $response);';
