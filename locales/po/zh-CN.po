@@ -11937,11 +11937,11 @@ msgstr "密码不匹配"
 msgid "System Device"
 msgstr "同步设备"
 
-#: lib/data_query.php:73 lib/data_query.php:475
+#: lib/data_query.php:73 lib/data_query.php:446
 msgid "Automation Execution for Data Query complete"
 msgstr "数据查询的自动化已执行完毕"
 
-#: lib/data_query.php:76 lib/data_query.php:478
+#: lib/data_query.php:76 lib/data_query.php:449
 msgid "Plugin Hooks complete"
 msgstr "插件钩子完成"
 
@@ -12027,340 +12027,340 @@ msgstr "更新poller 缓存以查询完毕"
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "未检测到索引更改,跳过重新索引和poller 缓存重新填充"
 
-#: lib/data_query.php:467
+#: lib/data_query.php:438
 msgid "Automation Executing for Data Query complete"
 msgstr "自动化执行数据查询已完毕"
 
-#: lib/data_query.php:470
+#: lib/data_query.php:441
 msgid "Plugin hooks complete"
 msgstr "插件钩子完成"
 
-#: lib/data_query.php:529
+#: lib/data_query.php:554
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "检查排序字段更改.未检测到任何更改."
 
-#: lib/data_query.php:534
+#: lib/data_query.php:559
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "检测到新的排序字段:'%s' 旧排序字段 '%s'"
 
-#: lib/data_query.php:555
+#: lib/data_query.php:580
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "ERROR: 新的排序字段不适合.排序字段不会更改."
 
-#: lib/data_query.php:569
+#: lib/data_query.php:594
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "新的排序字段已验证.排序字段将更新."
 
-#: lib/data_query.php:682
+#: lib/data_query.php:707
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "未找到数据查询XML 文件'%s'"
 
-#: lib/data_query.php:686
+#: lib/data_query.php:711
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "找到数据查询XML 文件 '%s'"
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
+#: lib/data_query.php:735 lib/data_query.php:968 lib/data_query.php:2668
 msgid "Error parsing XML file into an array."
 msgstr "将XML 文件解析为数组时出错."
 
-#: lib/data_query.php:714 lib/data_query.php:947
+#: lib/data_query.php:739 lib/data_query.php:972
 msgid "XML file parsed ok."
 msgstr "XML 文件解析成功."
 
-#: lib/data_query.php:722 lib/data_query.php:950
+#: lib/data_query.php:747 lib/data_query.php:975
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "无效字段 &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:723 lib/data_query.php:951
+#: lib/data_query.php:748 lib/data_query.php:976
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "必须包含 &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt;字段"
 
-#: lib/data_query.php:740
+#: lib/data_query.php:765
 msgid "Data Query returned no indexes."
 msgstr "ERROR: 数据查询未返回任何索引."
 
-#: lib/data_query.php:741
+#: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; 在XML 文件中丢失, 不支持 '索引计数'"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:769
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "为索引 '%s' 执行脚本"
 
-#: lib/data_query.php:747
+#: lib/data_query.php:772
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "发现索引数量: %s"
 
-#: lib/data_query.php:751
+#: lib/data_query.php:776
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; 在XML 文件中丢失, 不支持 '索引计数'"
 
-#: lib/data_query.php:753
+#: lib/data_query.php:778
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; 在XML 文件中缺少通过对 arg_index 条目进行计数仿真的索引计数已更改"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:789
 msgid "ERROR: Data Query returned no indexes."
 msgstr "ERROR: 数据查询未返回任何索引."
 
-#: lib/data_query.php:768
+#: lib/data_query.php:793
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "为索引 '%s' 列表执行脚本,索引计数: %s"
 
-#: lib/data_query.php:770
+#: lib/data_query.php:795
 msgid "Click to show Data Query output for 'index'"
 msgstr "点击以显示'索引'的数据查询输出"
 
-#: lib/data_query.php:773
+#: lib/data_query.php:798
 #, php-format
 msgid "Found index: %s"
 msgstr "找到索引: %s"
 
-#: lib/data_query.php:788 lib/data_query.php:1358
+#: lib/data_query.php:813 lib/data_query.php:1383
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "点击以显示字段'%s'的数据查询输出"
 
-#: lib/data_query.php:794
+#: lib/data_query.php:819
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "排序字段未返回字段名%s数据, 跳过中"
 
-#: lib/data_query.php:796
+#: lib/data_query.php:821
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "执行脚本查询 '%s'"
 
-#: lib/data_query.php:807 lib/data_query.php:814
+#: lib/data_query.php:832 lib/data_query.php:839
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "找到项目 [%s='%s'] 索引: %s"
 
-#: lib/data_query.php:854 lib/data_query.php:870
+#: lib/data_query.php:879 lib/data_query.php:895
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "总计: %f, 增量: %f, %s"
 
-#: lib/data_query.php:937
+#: lib/data_query.php:962
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "无效的 host_id: %s"
 
-#: lib/data_query.php:961
+#: lib/data_query.php:986
 msgid "Auto Bulk Walk Size Selected."
 msgstr "选择了自动批量步行大小。"
 
-#: lib/data_query.php:983 lib/data_query.php:1042
+#: lib/data_query.php:1008 lib/data_query.php:1067
 msgid "Failed to load SNMP session."
 msgstr "无法加载SNMP 会话."
 
-#: lib/data_query.php:993
+#: lib/data_query.php:1018
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "测试批量步行大小 %d，响应为 %2.4f。"
 
-#: lib/data_query.php:1004
+#: lib/data_query.php:1029
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "选择的批量步行大小为 %d。"
 
-#: lib/data_query.php:1007
+#: lib/data_query.php:1032
 msgid "Saving Bulk Walk Size to Device."
 msgstr "将批量步行大小保存到设备。"
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:1046
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "批量步行大小固定为 %d。"
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1080
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "执行SNMP 获取索引数量 @ '%s' 索引计数: %s"
 
-#: lib/data_query.php:1057
+#: lib/data_query.php:1082
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; 在XML 文件中缺少'通过计数oid_index条目来模拟'索引计数已更改'"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1085
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "对索引列表执行SNMP 遍历 @ '%s' 索引计数: %s"
 
-#: lib/data_query.php:1064
+#: lib/data_query.php:1089
 msgid "No SNMP data returned"
 msgstr "没有返回SNMP 数据"
 
-#: lib/data_query.php:1069
+#: lib/data_query.php:1094
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "在OID 中找到的索引: '%s' 值: '%s'"
 
-#: lib/data_query.php:1100
+#: lib/data_query.php:1125
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "过滤索引列表@ '%s'索引计数:%s"
 
-#: lib/data_query.php:1104
+#: lib/data_query.php:1129
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "在OID处找到的过滤索引:'%s'值:'%s'"
 
-#: lib/data_query.php:1120
+#: lib/data_query.php:1145
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "过滤索引列表@ '%s'索引计数:%s"
 
-#: lib/data_query.php:1124
+#: lib/data_query.php:1149
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "在OID处找到的过滤索引:'%s'值:'%s'"
 
-#: lib/data_query.php:1144
+#: lib/data_query.php:1169
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "为了 '%s' 而修复错误的 '方法' 字段, 因为定义了 'rewrite_index' 或 'oid_suffix'"
 
-#: lib/data_query.php:1151
+#: lib/data_query.php:1176
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "插入字段 '%s' 的索引数据 [value='%s']"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1181
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "位于输入字段 '%s' [get]"
 
-#: lib/data_query.php:1165
+#: lib/data_query.php:1190
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "找到OID 重写规则: 's/%s/%s/'"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1201
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_重写 at OID: '%s' 新 OID: '%s'"
 
-#: lib/data_query.php:1181
+#: lib/data_query.php:1206
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "为数据@ '%s' [value='%s'] 执行SNMP get"
 
-#: lib/data_query.php:1192
+#: lib/data_query.php:1217
 #, php-format
 msgid "Field '%s' %s"
 msgstr "字段 '%s' %s"
 
-#: lib/data_query.php:1253
+#: lib/data_query.php:1278
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "为%s oid (%s)执行SNMP get"
 
-#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
+#: lib/data_query.php:1316 lib/data_query.php:1423 lib/data_query.php:1431
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "排序字段未返回OID[%s]数据,跳过中。"
 
-#: lib/data_query.php:1297
+#: lib/data_query.php:1322
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "：数据@ '%s' [value='%s']的查找结果"
 
-#: lib/data_query.php:1310
+#: lib/data_query.php:1335
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "数据@ '%s'的设置结果[key='%s'， value='%s']"
 
-#: lib/data_query.php:1320
+#: lib/data_query.php:1345
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "跳过数据@ '%s'的结果[key='%s'， value='%s']"
 
-#: lib/data_query.php:1338
+#: lib/data_query.php:1363
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "获得数据 @'%s'的SNMP 获取结果 [value='%s'] (index: %s)"
 
-#: lib/data_query.php:1352
+#: lib/data_query.php:1377
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "为数据@ '%s' [value='$value'] 执行SNMP 抓取"
 
-#: lib/data_query.php:1360
+#: lib/data_query.php:1385
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "位于输入栏'%s' [walk]"
 
-#: lib/data_query.php:1411
+#: lib/data_query.php:1436
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "为数据@'%s'执行SNMP walk"
 
-#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
-#: lib/data_query.php:1588
+#: lib/data_query.php:1455 lib/data_query.php:1513 lib/data_query.php:1562
+#: lib/data_query.php:1613
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "value_index_parse中没有索引[%s]，跳过。"
 
-#: lib/data_query.php:1471
+#: lib/data_query.php:1496
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "找到的项目 [%s='%s'] 索引: %s [来自 %s]"
 
-#: lib/data_query.php:1513
+#: lib/data_query.php:1538
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "找到 OCTET STRING '%s' 解码值: '%s'"
 
-#: lib/data_query.php:1519 lib/data_query.php:1568
+#: lib/data_query.php:1544 lib/data_query.php:1593
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "找到项目 [%s='%s'] 索引: %s [来自 regexp oid parse]"
 
-#: lib/data_query.php:1596
+#: lib/data_query.php:1621
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "找到项目 [%s='%s'] 索引: %s [来自正则 oid 值分析]"
 
-#: lib/data_query.php:1831
+#: lib/data_query.php:1856
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "找到虚假rewrite_value项目，index='%s'"
 
-#: lib/data_query.php:1844
+#: lib/data_query.php:1869
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "无法解析翻译映射 （rewrite_value）"
 
-#: lib/data_query.php:1868
+#: lib/data_query.php:1893
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite at OID: '%s' new OID: '%s'"
 
-#: lib/data_query.php:1982
+#: lib/data_query.php:2007
 msgid "Update graph data query cache complete"
 msgstr "更新数据查询排序缓存完毕"
 
-#: lib/data_query.php:2001
+#: lib/data_query.php:2026
 msgid "Re-Indexing Data Query complete"
 msgstr "重新索引数据查询完成"
 
-#: lib/data_query.php:2153
+#: lib/data_query.php:2178
 msgid "Unknown Index"
 msgstr "未知索引"
 
-#: lib/data_query.php:2767
+#: lib/data_query.php:2792
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "您必须为数据源'%s'选择XML输出列，并将复选框切换到右侧"
 
-#: lib/data_query.php:2773
+#: lib/data_query.php:2798
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的图表模板尚未使用数据模板。请更正您的图表模板"
 
