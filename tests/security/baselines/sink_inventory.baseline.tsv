@@ -275,9 +275,9 @@ dynamic_include	./install/upgrades/1_2_20.php:11		include_once($config['base_pat
 dynamic_include	./lib/aggregate.php:1118	    include_once($config['base_path'] . '/lib/api_graph.php');
 dynamic_include	./lib/aggregate.php:828	    include_once($config['base_path'] . '/lib/cdef.php');
 dynamic_include	./lib/aggregate.php:924	    include_once($config['base_path'] . '/lib/cdef.php');
-dynamic_include	./lib/api_aggregate.php:1141	        include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_aggregate.php:2295	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/api_aggregate.php:484	        include_once($config['base_path'] . '/lib/api_aggregate.php');
+dynamic_include	./lib/api_aggregate.php:1142	        include_once($config['base_path'] . '/lib/api_aggregate.php');
+dynamic_include	./lib/api_aggregate.php:2296	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/api_aggregate.php:485	        include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_automation.php:2602	    include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2603	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./lib/api_automation.php:2604	    include_once($config['base_path'] . '/lib/utility.php');
