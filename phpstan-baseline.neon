@@ -241,24 +241,6 @@ parameters:
 			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php
 
 		-
-			message: '#^Method Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplatePreferences\:\:load\(\) should return array\<string, string\>\|null but returns array\<mixed, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplatePreferences.php
-
-		-
-			message: '#^Method Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplatePreferences\:\:valid\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplatePreferences.php
-
-		-
-			message: '#^Parameter \#1 \$query of static method Kadupul\\Automation\\Domain\\AutomationTemplateFilters\:\:fromQuery\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplatePreferences.php
-
-		-
 			message: '#^Call to function array_is_list\(\) with non\-empty\-list\<int\> will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -1031,24 +1013,6 @@ parameters:
 			identifier: cast.int
 			count: 2
 			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php
-
-		-
-			message: '#^Method Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefPreferences\:\:load\(\) should return array\<string, string\>\|null but returns array\<mixed, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefPreferences.php
-
-		-
-			message: '#^Method Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefPreferences\:\:valid\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefPreferences.php
-
-		-
-			message: '#^Parameter \#1 \$query of static method Kadupul\\GraphDefinition\\Domain\\CdefFilters\:\:fromQuery\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefPreferences.php
 
 		-
 			message: '#^Call to function array_is_list\(\) with non\-empty\-list\<int\> will always evaluate to true\.$#'
@@ -2477,24 +2441,6 @@ parameters:
 			identifier: cast.int
 			count: 2
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php
-
-		-
-			message: '#^Method Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfilePreferences\:\:load\(\) should return array\<string, string\>\|null but returns array\<mixed, mixed\>\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfilePreferences.php
-
-		-
-			message: '#^Method Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfilePreferences\:\:valid\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfilePreferences.php
-
-		-
-			message: '#^Parameter \#1 \$query of static method Kadupul\\Graphing\\Domain\\DataSourceProfileFilters\:\:fromQuery\(\) expects array\<string, mixed\>, array\<mixed, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfilePreferences.php
 
 		-
 			message: '#^Call to function array_is_list\(\) with non\-empty\-list\<int\> will always evaluate to true\.$#'
