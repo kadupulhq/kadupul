@@ -21,6 +21,7 @@ use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\CdefReferenceReadiness;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Infrastructure\Persistence\DbalJsonFilterPreferences;
 use PHPUnit\Framework\TestCase;
 
 final class CdefStoreTest extends TestCase
@@ -319,7 +320,7 @@ final class CdefStoreTest extends TestCase
         $this->database->executeStatement('CREATE TABLE settings_user (user_id INT, name TEXT, value TEXT, PRIMARY KEY (user_id, name))');
         $access = $this->createMock(CdefAccess::class);
         $access->method('authorize')->willReturn(new \Kadupul\IdentityAccess\Contract\Actor(7, 'operator'));
-        $preferences = new DbalCdefPreferences($access, $this->database, $this->createMock(LegacyConfiguration::class));
+        $preferences = new DbalCdefPreferences($access, new DbalJsonFilterPreferences($this->database, $this->createMock(LegacyConfiguration::class)));
         foreach ([
             ['rows' => '0'], ['rows' => '9000'], ['page' => '0'], ['sort_column' => 'c.id'], ['has_graphs' => 'yes'], ['filter' => str_repeat('x', 201)],
         ] as $stored) {
