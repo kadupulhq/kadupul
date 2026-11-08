@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-01 10:54-0800\n"
+"POT-Creation-Date: 2026-11-08 11:55-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -781,7 +781,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Şifre Değiştirme sayfasında sorunlar var. Hemen Kadupul yöneticinizle iletişime geçin."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4291 lib/html.php:2888
+#: include/global_form.php:1552 lib/functions.php:4292 lib/html.php:2888
 msgid "Change Password"
 msgstr "Şifre Değiştir"
 
@@ -796,7 +796,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kadupul şifre."
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6241
+#: include/global_settings.php:1851 lib/functions.php:6242
 msgid "Username"
 msgstr "Kullanıcı Adı"
 
@@ -889,7 +889,7 @@ msgstr "Kullanıcı Girişi"
 msgid "Enter your Username and Password below"
 msgstr "Kullanıcı adınızı ve şifrenizi aşağıya girin"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6242
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6243
 msgid "Password"
 msgstr "Şifre"
 
@@ -1196,7 +1196,7 @@ msgstr "Keşfedilen Cihazları Temizle"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6600 lib/functions.php:6605
+#: data_debug.php:698 lib/functions.php:6601 lib/functions.php:6606
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2188,7 +2188,7 @@ msgstr "Versiyon"
 msgid "Community"
 msgstr "Topluluk"
 
-#: automation_snmp.php:543 lib/functions.php:6237
+#: automation_snmp.php:543 lib/functions.php:6238
 msgid "Port"
 msgstr "Port"
 
@@ -2398,8 +2398,8 @@ msgstr "KÖK"
 msgid "No Tree Rules Found"
 msgstr "Ağaç Kuralı Bulunamadı"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6745 lib/functions.php:6820
-#: lib/functions.php:6923 lib/functions.php:7613 poller.php:229 poller.php:232
+#: cactid.php:27 help.php:54 lib/functions.php:6746 lib/functions.php:6821
+#: lib/functions.php:6924 lib/functions.php:7614 poller.php:229 poller.php:232
 #: poller.php:433 poller.php:600 poller.php:682 poller.php:735 poller.php:890
 #: poller.php:1011 poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3431,7 +3431,7 @@ msgstr "Bu veri şablonuna verilen isim. Lütfen Grafik Şablonlarını yalnızc
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6236 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6237 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Cihaz"
@@ -3461,7 +3461,7 @@ msgstr "Özel Veriler"
 msgid "Data Source Item %s"
 msgstr "Veri Kaynağı Öğesi %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:2964
 #: package_import.php:643
 msgid "New"
 msgstr "Yeni"
@@ -3790,7 +3790,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller henüz çalışmadı."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8316 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8317 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Izin reddedildi"
 
@@ -4754,12 +4754,12 @@ msgstr "FATAL: Bu Kadupul alanına erişmek için giriş yapmalısınız."
 msgid "Login Again"
 msgstr "Tekrar giriş yap"
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:317 lib/functions.php:8318
 #: templates/platform/permission_denied.html.twig
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Bunun bir hata olduğunu düşünüyorsanız. Lütfen Kadupul Yöneticinizle görüşün."
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:317 lib/functions.php:8318
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -6847,7 +6847,7 @@ msgid "List Mode"
 msgstr "Liste Modu"
 
 #: include/global_arrays.php:2072 include/global_arrays.php:2078
-#: lib/functions.php:4513 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
+#: lib/functions.php:4514 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsol"
@@ -8648,8 +8648,8 @@ msgstr "Veri"
 msgid "Visual"
 msgstr "Görsel"
 
-#: include/global_settings.php:112 lib/functions.php:6240
-#: lib/functions.php:6245
+#: include/global_settings.php:112 lib/functions.php:6241
+#: lib/functions.php:6246
 msgid "Authentication"
 msgstr "Doğrulama"
 
@@ -8685,11 +8685,11 @@ msgstr "Grafik Yazı Tipleri"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail () İşlevi"
 
-#: include/global_settings.php:153 lib/functions.php:6221
+#: include/global_settings.php:153 lib/functions.php:6222
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6227
+#: include/global_settings.php:154 lib/functions.php:6228
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10550,7 +10550,7 @@ msgstr "E-postadaki bir satır otomatik olarak sözcük sarılmadan önce kaç k
 msgid "Sendmail Options"
 msgstr "Sendmail Seçenekleri"
 
-#: include/global_settings.php:1972 lib/functions.php:6221
+#: include/global_settings.php:1972 lib/functions.php:6222
 msgid "Sendmail Path"
 msgstr "Sendmail Yolu"
 
@@ -11713,8 +11713,8 @@ msgstr "Konum:"
 msgid "Contact:"
 msgstr "İletişim:"
 
-#: lib/api_device.php:2104 lib/functions.php:6254 lib/functions.php:6256
-#: lib/functions.php:6260
+#: lib/api_device.php:2104 lib/functions.php:6255 lib/functions.php:6257
+#: lib/functions.php:6261
 msgid "Ping Results"
 msgstr "Ping Sonuçları"
 
@@ -11986,11 +11986,11 @@ msgstr "Parolalar uyuşmuyor"
 msgid "System Device"
 msgstr "Cihazları Eşitle"
 
-#: lib/data_query.php:73 lib/data_query.php:475
+#: lib/data_query.php:73 lib/data_query.php:446
 msgid "Automation Execution for Data Query complete"
 msgstr "Veri Sorgulama için Otomasyon Yürütme tamamlandı"
 
-#: lib/data_query.php:76 lib/data_query.php:478
+#: lib/data_query.php:76 lib/data_query.php:449
 msgid "Plugin Hooks complete"
 msgstr "Eklenti Kancaları tamamlandı"
 
@@ -12076,340 +12076,340 @@ msgstr "Sorgu için Güncelleme Poller Önbelleği tamamlandı"
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "Hiçbir Endeks Değişikliği Tespit Edilmedi, Yeniden Dizine Atlanma ve Poller Cache Re-popülasyonu"
 
-#: lib/data_query.php:467
+#: lib/data_query.php:438
 msgid "Automation Executing for Data Query complete"
 msgstr "Veri Sorgulama için Otomasyon Yürütme tamamlandı"
 
-#: lib/data_query.php:470
+#: lib/data_query.php:441
 msgid "Plugin hooks complete"
 msgstr "Eklenti kancaları tamamlandı"
 
-#: lib/data_query.php:529
+#: lib/data_query.php:554
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Sıralama Alanını Değiştirme Kontrolü. Hiçbir değişiklik tespit edilmedi."
 
-#: lib/data_query.php:534
+#: lib/data_query.php:559
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Yeni Sıralama Alanı Algılandı: &#39; %s&#39; Eski Sıralama Alanı &#39; %s&#39;"
 
-#: lib/data_query.php:555
+#: lib/data_query.php:580
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "HATA: Yeni Sıralama Alanı uygun değil. Sıralama Alanı değişmeyecek."
 
-#: lib/data_query.php:569
+#: lib/data_query.php:594
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Yeni Sıralama Alanı doğrulandı. Sıralama Alanı güncellenebilir."
 
-#: lib/data_query.php:682
+#: lib/data_query.php:707
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Veri sorgusu XML dosyası &#39; %s&#39; konumunda bulunamadı"
 
-#: lib/data_query.php:686
+#: lib/data_query.php:711
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39; konumunda veri sorgusu XML dosyası bulundu"
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
+#: lib/data_query.php:735 lib/data_query.php:968 lib/data_query.php:2668
 msgid "Error parsing XML file into an array."
 msgstr "XML dosyasını bir diziye ayrıştırma hatası."
 
-#: lib/data_query.php:714 lib/data_query.php:947
+#: lib/data_query.php:739 lib/data_query.php:972
 msgid "XML file parsed ok."
 msgstr "XML dosyası tamam."
 
-#: lib/data_query.php:722 lib/data_query.php:950
+#: lib/data_query.php:747 lib/data_query.php:975
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Geçersiz alan &lt;index_order&gt; %s &lt;/index_order&gt;"
 
-#: lib/data_query.php:723 lib/data_query.php:951
+#: lib/data_query.php:748 lib/data_query.php:976
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Yalnızca &lt;direction&gt; input &lt;/direction&gt; veya &lt;direction&gt; input-output &lt;/direction&gt; alanlarını içermelidir"
 
-#: lib/data_query.php:740
+#: lib/data_query.php:765
 msgid "Data Query returned no indexes."
 msgstr "HATA: Veri Sorgu hiçbir dizin döndürmedi."
 
-#: lib/data_query.php:741
+#: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "XML dosyasında &lt;arg_num_indexes&gt; eksik, &#39;Dizin Sayısı Değiştirildi&#39; desteklenmiyor"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:769
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "&#39; %s&#39; dizini için komut dosyası çalıştırma"
 
-#: lib/data_query.php:747
+#: lib/data_query.php:772
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Bulunan endeks sayısı: %s"
 
-#: lib/data_query.php:751
+#: lib/data_query.php:776
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "XML dosyasında &lt;arg_num_indexes&gt; eksik, &#39;Dizin Sayısı Değiştirildi&#39; desteklenmiyor"
 
-#: lib/data_query.php:753
+#: lib/data_query.php:778
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; XML dosyasında eksik, arg_index girişleri sayılarak taklit edilen &#39;Dizin Sayısı Değiştirildi&#39;"
 
-#: lib/data_query.php:764
+#: lib/data_query.php:789
 msgid "ERROR: Data Query returned no indexes."
 msgstr "HATA: Veri Sorgu hiçbir dizin döndürmedi."
 
-#: lib/data_query.php:768
+#: lib/data_query.php:793
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "&#39; %s&#39; dizinleri listesi için komut dosyası çalıştırma, Dizin Sayısı: %s"
 
-#: lib/data_query.php:770
+#: lib/data_query.php:795
 msgid "Click to show Data Query output for 'index'"
 msgstr "&#39;İndex&#39; için Data Query çıktısını göstermek için tıklayın."
 
-#: lib/data_query.php:773
+#: lib/data_query.php:798
 #, php-format
 msgid "Found index: %s"
 msgstr "Bulunan endeks: %s"
 
-#: lib/data_query.php:788 lib/data_query.php:1358
+#: lib/data_query.php:813 lib/data_query.php:1383
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "&#39; %s&#39; alanı için Veri Sorgusu çıktısını göstermek için tıklayın."
 
-#: lib/data_query.php:794
+#: lib/data_query.php:819
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Sıralama alanı %s alan adı için veri döndürmedi, atlanıyor"
 
-#: lib/data_query.php:796
+#: lib/data_query.php:821
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "&#39; %s&#39; komut dosyası sorgusunu çalıştırma"
 
-#: lib/data_query.php:807 lib/data_query.php:814
+#: lib/data_query.php:832 lib/data_query.php:839
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Bulunan madde [ %s = &#39; %s&#39;] index: %s"
 
-#: lib/data_query.php:854 lib/data_query.php:870
+#: lib/data_query.php:879 lib/data_query.php:895
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Toplam:% f, Delta:% f, %s"
 
-#: lib/data_query.php:937
+#: lib/data_query.php:962
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Geçersiz host_id: %s"
 
-#: lib/data_query.php:961
+#: lib/data_query.php:986
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Otomatik Toplu Yürüyüş Boyutu Seçildi."
 
-#: lib/data_query.php:983 lib/data_query.php:1042
+#: lib/data_query.php:1008 lib/data_query.php:1067
 msgid "Failed to load SNMP session."
 msgstr "SNMP oturumu yüklenemedi."
 
-#: lib/data_query.php:993
+#: lib/data_query.php:1018
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "%d Toplu Yürüme Boyu, %2.4f yanıtıyla test edildi."
 
-#: lib/data_query.php:1004
+#: lib/data_query.php:1029
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Seçilen Toplu Yürüyüş Boyutu: %d."
 
-#: lib/data_query.php:1007
+#: lib/data_query.php:1032
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Toplu Yürüyüş Boyutunu Cihaza Kaydetme."
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:1046
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Toplu Yürüyüş Boyutu, %d olarak sabitlenmiştir."
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1080
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "SNMP&#39;nin çalıştırılması indeks sayısı için @ &#39; %s&#39; İndeks Sayısı: %s"
 
-#: lib/data_query.php:1057
+#: lib/data_query.php:1082
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; XML dosyasında eksik, oid_index girişleri sayılarak taklit edilen &#39;Dizin Sayısı Değiştirildi&#39;"
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1085
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "@ &#39; %s&#39; dizinleri için SNMP yürüyüşünü yürütme İndeks Sayısı: %s"
 
-#: lib/data_query.php:1064
+#: lib/data_query.php:1089
 msgid "No SNMP data returned"
 msgstr "SNMP verisi döndürülmedi"
 
-#: lib/data_query.php:1069
+#: lib/data_query.php:1094
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "OID konumunda bulunan dizin: &#39; %s&#39; değeri: &#39; %s&#39;"
 
-#: lib/data_query.php:1100
+#: lib/data_query.php:1125
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "@ &#39; %s&#39; dizinlerinin filtreleme listesi Dizin Sayısı: %s"
 
-#: lib/data_query.php:1104
+#: lib/data_query.php:1129
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "OID konumunda bulunan Filtrelenmiş Dizin: &#39; %s&#39; değeri: &#39; %s&#39;"
 
-#: lib/data_query.php:1120
+#: lib/data_query.php:1145
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "@ &#39; %s&#39; dizinlerinin filtreleme listesi Dizin Sayısı: %s"
 
-#: lib/data_query.php:1124
+#: lib/data_query.php:1149
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "OID konumunda bulunan Filtrelenmiş Dizin: &#39; %s&#39; değeri: &#39; %s&#39;"
 
-#: lib/data_query.php:1144
+#: lib/data_query.php:1169
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "&#39;Rewrite_index&#39; veya &#39;oid_suffix&#39; tanımlandığından yanlış &#39;yöntem&#39; alanını &#39; %s&#39; için düzeltmek"
 
-#: lib/data_query.php:1151
+#: lib/data_query.php:1176
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "&#39; %s&#39; alanı için dizin verisi ekleme [değer = &#39; %s&#39;]"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1181
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Bulunan giriş alanı &#39; %s&#39; [get]"
 
-#: lib/data_query.php:1165
+#: lib/data_query.php:1190
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "OID yeniden yazma kuralı bulundu: &#39;s / %s / %s /&#39;"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1201
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "OID&#39;de oid_rewrite: &#39; %s&#39; yeni OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1181
+#: lib/data_query.php:1206
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "SNMP&#39;nin çalıştırılması veri için @ &#39; %s&#39; [değer = &#39; %s&#39;]"
 
-#: lib/data_query.php:1192
+#: lib/data_query.php:1217
 #, php-format
 msgid "Field '%s' %s"
 msgstr "&#39; %s&#39; %s alanı"
 
-#: lib/data_query.php:1253
+#: lib/data_query.php:1278
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "SNMP&#39;nin çalıştırılması %s oids için ( %s) olsun"
 
-#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
+#: lib/data_query.php:1316 lib/data_query.php:1423 lib/data_query.php:1431
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Sıralama alanı veri döndürmedi. OID için Yeniden Dizine Devam Edilemiyor [ %s]"
 
-#: lib/data_query.php:1297
+#: lib/data_query.php:1322
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "@ &#39; %s&#39; verileri için sonuç bulundu [değer = &#39; %s&#39;]"
 
-#: lib/data_query.php:1310
+#: lib/data_query.php:1335
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "@ &#39; %s&#39; verileri için sonuç ayarlama [anahtar = &#39; %s&#39;, değer = &#39; %s&#39;]"
 
-#: lib/data_query.php:1320
+#: lib/data_query.php:1345
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "@ &#39; %s&#39; verileri için atlanan sonuç [anahtar = &#39; %s&#39;, değer = &#39; %s&#39;]"
 
-#: lib/data_query.php:1338
+#: lib/data_query.php:1363
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "@ &#39; %s&#39; [değer = &#39; %s&#39;] verisi için SNMP sonucu alındı (index: %s)"
 
-#: lib/data_query.php:1352
+#: lib/data_query.php:1377
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "SNMP çalıştırma @ &#39; %s&#39; veri için [değer = &#39;$ değer&#39;]"
 
-#: lib/data_query.php:1360
+#: lib/data_query.php:1385
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Bulunan giriş alanı &#39; %s&#39; [walk]"
 
-#: lib/data_query.php:1411
+#: lib/data_query.php:1436
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "@ &#39; %s&#39; verileri için SNMP yürüyüşünü yürütme"
 
-#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
-#: lib/data_query.php:1588
+#: lib/data_query.php:1455 lib/data_query.php:1513 lib/data_query.php:1562
+#: lib/data_query.php:1613
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "VALUE_INDEX_PARSE içinde [%s] dizini yok, atlanıyor."
 
-#: lib/data_query.php:1471
+#: lib/data_query.php:1496
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Bulunan madde [ %s = &#39; %s&#39;] index: %s [ %s]"
 
-#: lib/data_query.php:1513
+#: lib/data_query.php:1538
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "OCTET STRING &#39; %s&#39; deşifre edilmiş değer bulundu: &#39; %s&#39;"
 
-#: lib/data_query.php:1519 lib/data_query.php:1568
+#: lib/data_query.php:1544 lib/data_query.php:1593
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Bulunan madde [ %s = &#39; %s&#39;] index: %s [regexp oid ayrıştırmasından]"
 
-#: lib/data_query.php:1596
+#: lib/data_query.php:1621
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Bulunan madde [ %s = &#39; %s&#39;] index: %s [regexp oid value ayrıştırmasından]"
 
-#: lib/data_query.php:1831
+#: lib/data_query.php:1856
 #, fuzzy, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Bogus rewrite_value öğesi bulundu, index='{ 0 }'"
 
-#: lib/data_query.php:1844
+#: lib/data_query.php:1869
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Çeviri haritası ayrıştırılamadı (REWRITE_VALUE)"
 
-#: lib/data_query.php:1868
+#: lib/data_query.php:1893
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "OID&#39;de oid_rewrite: &#39; %s&#39; yeni OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1982
+#: lib/data_query.php:2007
 msgid "Update graph data query cache complete"
 msgstr "Veri Sorgusu Sıralama Önbelleğini Güncelle tamamlandı"
 
-#: lib/data_query.php:2001
+#: lib/data_query.php:2026
 msgid "Re-Indexing Data Query complete"
 msgstr "Yeniden Dizin Verileri Sorgulama tamamlandı"
 
-#: lib/data_query.php:2153
+#: lib/data_query.php:2178
 msgid "Unknown Index"
 msgstr "Bilinmeyen Dizin"
 
-#: lib/data_query.php:2767
+#: lib/data_query.php:2792
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "' %s' Veri Kaynağı için bir XML çıktı sütunu seçmeli ve onay kutusunu sağa kaydırmalısınız"
 
-#: lib/data_query.php:2773
+#: lib/data_query.php:2798
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Grafik Şablonunuz kullanımda Veri Şablonları içermiyor. Lütfen Grafik Şablonunuzu düzeltin"
 
@@ -12481,168 +12481,168 @@ msgstr "Mesaj bulunamadı."
 msgid "Error %s is not readable"
 msgstr "%s hatası okunamıyor"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "Logged in a Guest"
 msgstr "olarak giriş yaptı"
 
-#: lib/functions.php:4267 lib/functions.php:4285
+#: lib/functions.php:4268 lib/functions.php:4286
 msgid "Logged in as"
 msgstr "olarak giriş yaptı"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "Login as Regular User"
 msgstr "Düzenli Kullanıcı Olarak Giriş Yapın"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "guest"
 msgstr "misafir"
 
-#: lib/functions.php:4270 lib/functions.php:4295 lib/html.php:2904
+#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2904
 msgid "User Community"
 msgstr "Kullanıcı Topluluğu"
 
-#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2906
+#: lib/functions.php:4272 lib/functions.php:4297 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Belgeler"
 
-#: lib/functions.php:4288
+#: lib/functions.php:4289
 #, php-format
 msgid "Logged in as %s"
 msgstr "%s olarak giriş yaptınız"
 
-#: lib/functions.php:4290 lib/html.php:2885
+#: lib/functions.php:4291 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Profili Düzenle"
 
-#: lib/functions.php:4300 lib/html.php:2889
+#: lib/functions.php:4301 lib/html.php:2889
 msgid "Logout"
 msgstr "Çıkış"
 
-#: lib/functions.php:4454
+#: lib/functions.php:4455
 msgid "Leaf"
 msgstr "Yaprak"
 
-#: lib/functions.php:4478 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4479 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Sorgu Tabanlı Olmayan"
 
-#: lib/functions.php:4516
+#: lib/functions.php:4517
 #, php-format
 msgid "Link %s"
 msgstr "Bağlantı %s"
 
-#: lib/functions.php:4978 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4979 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopya"
 
-#: lib/functions.php:5795
+#: lib/functions.php:5796
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Hata: set adrese <b>İÇİN</b> !! <br> <i>Posta Testi</i> bağlantısını kullanıyorsanız, lütfen <b>Uyarı e-posta</b> ayarını ayarlayın."
 
-#: lib/functions.php:6192
+#: lib/functions.php:6193
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO başarısız oldu: %s"
 
-#: lib/functions.php:6195
+#: lib/functions.php:6196
 msgid "SMTP error: "
 msgstr "SMTP hatası:"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6209
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Bu Kadupul&#39;den üretilen bir test mesajıdır. Bu mesaj, Posta Ayarlarınızın yapılandırmasını test etmek için gönderildi."
 
-#: lib/functions.php:6209
+#: lib/functions.php:6210
 msgid "Your email settings are currently set as follows"
 msgstr "E-posta ayarlarınız şu anda aşağıdaki gibi ayarlanmış"
 
-#: lib/functions.php:6210
+#: lib/functions.php:6211
 msgid "Method"
 msgstr "Yöntem"
 
-#: lib/functions.php:6212
+#: lib/functions.php:6213
 msgid "Checking Configuration...<br>"
 msgstr "Yapılandırma Denetleniyor ... <br>"
 
-#: lib/functions.php:6219
+#: lib/functions.php:6220
 msgid "PHP's Mailer Class"
 msgstr "PHP&#39;nin Mailer Sınıfı"
 
-#: lib/functions.php:6225
+#: lib/functions.php:6226
 msgid "Method: SMTP"
 msgstr "Yöntem: SMTP"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6243
 msgid "Not Shown for Security Reasons"
 msgstr "Güvenlik Sebepleri Gösterilmemiştir"
 
-#: lib/functions.php:6243
+#: lib/functions.php:6244
 msgid "Security"
 msgstr "Güvenlik"
 
-#: lib/functions.php:6251
+#: lib/functions.php:6252
 msgid "Ping Results:"
 msgstr "Ping Sonuçları:"
 
-#: lib/functions.php:6251 lib/functions.php:6256
+#: lib/functions.php:6252 lib/functions.php:6257
 msgid "Success"
 msgstr "Başarılı"
 
-#: lib/functions.php:6260
+#: lib/functions.php:6261
 msgid "Bypassed"
 msgstr "baypas"
 
-#: lib/functions.php:6269
+#: lib/functions.php:6270
 msgid "Creating Message Text..."
 msgstr "Mesaj Metni Oluşturuluyor ..."
 
-#: lib/functions.php:6272
+#: lib/functions.php:6273
 msgid "Sending Message..."
 msgstr "Mesaj Gönderiliyor..."
 
-#: lib/functions.php:6276
+#: lib/functions.php:6277
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul Test Mesajı"
 
-#: lib/functions.php:6278
+#: lib/functions.php:6279
 msgid "Success!"
 msgstr "Başarılı!"
 
-#: lib/functions.php:6281
+#: lib/functions.php:6282
 msgid "Message Not Sent due to ping failure."
 msgstr "Ping hatası nedeniyle gönderilemedi."
 
-#: lib/functions.php:6745 lib/functions.php:6820
+#: lib/functions.php:6746 lib/functions.php:6821
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul, şu hata nedeniyle %s eklentisini devre dışı bıraktı: %s! Daha fazla ayrıntı için Kadupul günlük dosyasına bakın."
 
-#: lib/functions.php:6923
+#: lib/functions.php:6924
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "UYARI: PollerID:%s geçersiz bir ana bilgisayar adına sahip:%s. DNS üzerinden erişilemiyor mu!"
 
-#: lib/functions.php:7376 lib/functions.php:7378
+#: lib/functions.php:7377 lib/functions.php:7379
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7376 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7377 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Sürüm %s %s"
 
-#: lib/functions.php:7378
+#: lib/functions.php:7379
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7613
+#: lib/functions.php:7614
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "UYARI:  Anahtar Kadupul %s Dosyasını İçeriyor eksik.  Lütfen bu dosyayı bulun ve değiştirin"
@@ -13647,7 +13647,7 @@ msgstr "Olaylar"
 msgid "Send Report"
 msgstr "Rapor gönder"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3049 user_admin.php:1776
 msgid "[new]"
 msgstr "[yeni]"
 
@@ -13918,91 +13918,91 @@ msgstr "yok"
 msgid "not writable"
 msgstr "Yazılabilir değil"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2062 lib/import.php:2083
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Grafik [Şablon: %s]"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2097 lib/import.php:2109
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Veri Sorgu [ %s]"
 
-#: lib/import.php:2731
+#: lib/import.php:2746
 msgid "Unknown Field"
 msgstr "Bilinmeyen alan"
 
-#: lib/import.php:2947
+#: lib/import.php:2962
 msgid "Updated"
 msgstr "Güncelle"
 
-#: lib/import.php:2951
+#: lib/import.php:2966
 msgid "Damaged"
 msgstr "Veri Kaynağı, Grafik"
 
-#: lib/import.php:2953 package_import.php:637
+#: lib/import.php:2968 package_import.php:637
 msgid "Unchanged"
 msgstr "Değişemedi"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Preview Results"
 msgstr "Önizleme Sonuçlarını İçe Aktar"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Results"
 msgstr "İçeri Aktarma Sonuçları"
 
-#: lib/import.php:2993
+#: lib/import.php:3008
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Paket ithal edildiyse, Kadupul aşağıdaki değişiklikleri yapar:"
 
-#: lib/import.php:2995
+#: lib/import.php:3010
 #, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul, Paket için aşağıdaki öğeleri içe aktardı:"
 
-#: lib/import.php:2998
+#: lib/import.php:3013
 msgid "Package Files"
 msgstr "Paket Dosyaları"
 
-#: lib/import.php:3002
+#: lib/import.php:3017
 msgid "[preview] "
 msgstr "Önizleme"
 
-#: lib/import.php:3007
+#: lib/import.php:3022
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Şablon içe aktarılırsa, Kadupul aşağıdaki değişiklikleri yapar:"
 
-#: lib/import.php:3009
+#: lib/import.php:3024
 #, fuzzy
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul, Şablon için aşağıdaki öğeleri içe aktardı:"
 
-#: lib/import.php:3024
+#: lib/import.php:3039
 msgid "[success]"
 msgstr "Başarılı!"
 
-#: lib/import.php:3026
+#: lib/import.php:3041
 msgid "[fail]"
 msgstr "Başarısız"
 
-#: lib/import.php:3028
+#: lib/import.php:3043
 msgid "[preview]"
 msgstr "Önizleme"
 
-#: lib/import.php:3032
+#: lib/import.php:3047
 msgid "[updated]"
 msgstr "Güncellendi"
 
-#: lib/import.php:3036
+#: lib/import.php:3051
 msgid "[unchanged]"
 msgstr "Değişemedi"
 
-#: lib/import.php:3072
+#: lib/import.php:3087
 msgid "Found Dependency:"
 msgstr "Bulunan Bağımlılık:"
 
-#: lib/import.php:3074
+#: lib/import.php:3089
 msgid "Unmet Dependency:"
 msgstr "Karşılanmayan Bağımlılık:"
 
@@ -15277,7 +15277,7 @@ msgstr "'{ 0 }' dizinindeki Eklenti, '{ 1 }()' sürüm işlevini içermiyor. Yü
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr ""
 
-#: lib/plugins.php:1328
+#: lib/plugins.php:1310
 msgid "Legacy Plugin"
 msgstr "Eski Eklenti"
 
@@ -15302,7 +15302,7 @@ msgstr "Belirtilmeyen"
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2282
+#: lib/poller.php:2050 lib/poller.php:2275
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -15593,7 +15593,7 @@ msgstr ""
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/snmp.php:387 lib/snmp.php:876 lib/snmp.php:899
+#: lib/snmp.php:387 lib/snmp.php:885 lib/snmp.php:908
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP Seçenekleri [değiştir: %s]"
