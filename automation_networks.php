@@ -113,10 +113,13 @@ function api_networks_discover($network_id, $discover_debug) {
 		WHERE id = ?',
 		array($network_id));
 
-	$running = db_fetch_cell_prepared('SELECT count(*)
-		FROM automation_processes
-		WHERE network_id = ?',
-		array($network_id));
+	try {
+		$connection = automation_default_connection();
+		$running = automation_query($connection, 'SELECT IS_USED_LOCK(?)', array(automation_lock_name($connection, (int)$network_id)))->fetchColumn() !== null;
+	} catch (Throwable $error) {
+		raise_message(2);
+		return;
+	}
 
 	$name = db_fetch_cell_prepared('SELECT name
 		FROM automation_networks
@@ -240,7 +243,7 @@ function api_networks_save($post) {
 		if (cacti_sizeof($networks)) {
 			foreach($networks as $net) {
 				$ips = automation_calculate_total_ips($net);
-				if ($ips !== false) {
+				if ($ips !== false && $total_ips + $ips <= 1048576) {
 					$total_ips += $ips;
 				} else {
 					$continue = false;
@@ -248,6 +251,20 @@ function api_networks_save($post) {
 					raise_message('automation_message');
 					break;
 				}
+			}
+		}
+
+		if ($save['threads'] < 1 || $save['threads'] > 50) {
+			$continue = false;
+			raise_message(2);
+		}
+
+		if ($continue && (int)$save['sched_type'] !== 1) {
+			try {
+				automation_next_schedule($save, time());
+			} catch (Throwable $error) {
+				$continue = false;
+				raise_message(2);
 			}
 		}
 
@@ -1116,11 +1133,12 @@ function networks() {
 				$status   = array();
 				$updown['up'] = $updown['snmp'] = '0';
 			} else {
-				$running = db_fetch_cell_prepared('SELECT COUNT(*)
-					FROM automation_processes
-					WHERE network_id = ?
-					AND status != "done"',
-					array($network['id']));
+				try {
+					$connection = automation_default_connection();
+					$running = automation_query($connection, 'SELECT IS_USED_LOCK(?)', array(automation_lock_name($connection, (int)$network['id'])))->fetchColumn() !== null;
+				} catch (Throwable $error) {
+					$running = false;
+				}
 
 				if ($running > 0) {
 					$status = db_fetch_row_prepared('SELECT
@@ -1148,14 +1166,10 @@ function networks() {
 						$updown['snmp'] = 0;
 					}
 				} else {
-					db_execute_prepared('DELETE FROM automation_processes
-						WHERE network_id = ?',
-						array($network['id']));
-
 					$updown['up']   = $network['up_hosts'];
 					$updown['snmp'] = $network['snmp_hosts'];
 
-					$mystat   = "<span class='idle'>" . __('Idle') . "</span>";
+					$mystat   = "<span class='idle'>" . ((str_starts_with($network['last_status'], 'failed') || $network['last_status'] === 'running') ? __('Failed') : __('Idle')) . "</span>";
 					$progress = "0/0/0";
 				}
 			}

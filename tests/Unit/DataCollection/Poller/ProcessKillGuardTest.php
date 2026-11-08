@@ -68,7 +68,6 @@ function process_kill_guard_sites() {
 		'lib/dsstats.php',
 		'lib/rrdcheck.php',
 		'poller.php',
-		'poller_automation.php',
 		'poller_boost.php',
 		'poller_commands.php',
 	);
@@ -407,19 +406,8 @@ test('batchgapfix sanitizes stored pids before terminal output', function () {
 		->and($src)->toContain("db_fetch_assoc_prepared('SELECT *");
 });
 
-test('automation cancel reaches full network cleanup before exit', function () {
-	$src    = file_get_contents(dirname(__DIR__, 4) . '/poller_automation.php');
-	$cancel = strpos($src, "|| \$command == 'cancel'");
-
-	expect($src)->not->toBeFalse()
-		->and($cancel)->not->toBeFalse()
-		->and(substr($src, 0, $cancel))->not->toContain("if (\$command == 'cancel')")
-		->and(substr($src, $cancel))->toContain('cacti_process_kill($pid, SIGTERM')
-		->and(strpos($src, 'cacti_process_kill($pid, SIGTERM', $cancel))->toBeLessThan(strpos($src, 'DELETE FROM automation_ips', $cancel))
-		->and(substr($src, $cancel))->toContain('DELETE FROM automation_ips')
-		->and(substr($src, $cancel))->toContain('clearAllTasks($network_id, $undead_pids)')
-		->and(substr($src, $cancel))->toContain('reportNetworkStatus($network_id, $preexisting_devices)');
-});
+// Cancellation must preserve unfinished discovery work. Native cancellation
+// and retry coverage lives in AutomationRecoveryMariaDbTest.
 
 test('a pid that exists but cannot be signalled remains live', function () {
 	$eperm = defined('SOCKET_EPERM') ? SOCKET_EPERM : 1;
