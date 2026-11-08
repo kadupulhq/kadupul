@@ -584,8 +584,9 @@ function update_reindex_cache($host_id, $data_query_id) {
 	}
 
 	if (cacti_sizeof($recache_stack)) {
-		poller_update_poller_reindex_from_buffer($host_id, $data_query_id, $recache_stack);
+		return poller_update_poller_reindex_from_buffer($host_id, $data_query_id, $recache_stack);
 	}
+	return true;
 }
 
 function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$recache_stack) {
@@ -661,14 +662,14 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 	}
 
 	/* remove stale records FROM the poller reindex */
-	db_execute_prepared('DELETE FROM poller_reindex
+	if (db_execute_prepared('DELETE FROM poller_reindex
 		WHERE host_id = ?
 		AND data_query_id = ?
-		AND present = 0', array($host_id, $data_query_id));
+		AND present = 0', array($host_id, $data_query_id)) === false) {
+		return false;
+	}
 
-	poller_push_reindex_only_data_to_main($host_id, $data_query_id);
-
-	return true;
+	return poller_push_reindex_only_data_to_main($host_id, $data_query_id);
 }
 
 /** Delete only the selected source samples, preserving concurrent arrivals. */
@@ -2546,6 +2547,9 @@ function poller_push_reindex_only_data_to_main($device_id, $data_query_id) {
 		WHERE id = ?',
 		array($device_id));
 
+	if ($poller_id === false) {
+		return false;
+	}
 	if ($poller_id > 1) {
 		$sql_where  = 'WHERE host_id = ' . $device_id . ' AND data_query_id = ' . $data_query_id;
 
@@ -2553,8 +2557,9 @@ function poller_push_reindex_only_data_to_main($device_id, $data_query_id) {
 			FROM poller_reindex
 			$sql_where");
 
-		replicate_table_to_poller($remote_db_cnn_id, $poller_reindex, 'poller_reindex');
+		return replicate_table_to_poller($remote_db_cnn_id, $poller_reindex, 'poller_reindex');
 	}
+	return true;
 }
 
 function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, $force = false, $db_cnn_id = false) {
@@ -2569,6 +2574,7 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 		$db_cnn_id = $remote_db_cnn_id;
 	}
 
+	$success = true;
 	$sql_params  = array();
 	$sql_params1 = array();
 	$sql_where   = '';
@@ -2597,27 +2603,30 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 		$sql_where",
 		$sql_params);
 
+	if ($min_reindex_cache === false) {
+		return false;
+	}
+
 	if (!$force) {
 		$sql_where2    = $sql_where1 . ($sql_where1 != '' ? ' AND':'WHERE') . ' UNIX_TIMESTAMP(last_updated) > ?';
 		$sql_params2   = $sql_params1;
 		$sql_params2[] = $min_reindex_cache;
 
-		$recache_hosts = array_rekey(
-			db_fetch_assoc_prepared("SELECT DISTINCT host_id
+		$recache_rows = db_fetch_assoc_prepared("SELECT DISTINCT host_id
 				FROM host_snmp_cache
 				$sql_where2",
-				$sql_params2),
-			'host_id', 'host_id'
-		);
+				$sql_params2);
 	} else {
-		$recache_hosts = array_rekey(
-			db_fetch_assoc_prepared("SELECT DISTINCT host_id
+		$recache_rows = db_fetch_assoc_prepared("SELECT DISTINCT host_id
 				FROM host_snmp_cache
 				$sql_where1",
-				$sql_params1),
-			'host_id', 'host_id'
-		);
+				$sql_params1);
 	}
+
+	if ($recache_rows === false) {
+		return false;
+	}
+	$recache_hosts = array_rekey($recache_rows, 'host_id', 'host_id');
 
 	if (cacti_sizeof($recache_hosts)) {
 		$sql_where1 .= ($sql_where1 != '' ? ' AND':'WHERE') . ' host_id IN (' . implode(', ', $recache_hosts) . ')';
@@ -2627,21 +2636,21 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 			$sql_where1",
 			$sql_params1);
 
-		replicate_table_to_poller($db_cnn_id, $local_data_ids, 'data_local');
+		$success = replicate_table_to_poller($db_cnn_id, $local_data_ids, 'data_local') && $success;
 
 		$local_graph_ids = db_fetch_assoc_prepared("SELECT *
 			FROM graph_local
 			$sql_where1",
 			$sql_params1);
 
-		replicate_table_to_poller($db_cnn_id, $local_graph_ids, 'graph_local');
+		$success = replicate_table_to_poller($db_cnn_id, $local_graph_ids, 'graph_local') && $success;
 
 		$host_snmp_cache = db_fetch_assoc_prepared("SELECT *
 			FROM host_snmp_cache
 			$sql_where1",
 			$sql_params1);
 
-		replicate_table_to_poller($db_cnn_id, $host_snmp_cache, 'host_snmp_cache');
+		$success = replicate_table_to_poller($db_cnn_id, $host_snmp_cache, 'host_snmp_cache') && $success;
 
 		// TODO: Make schema's equivalent renamed snmp_query_id to data_query_id everywhere
 		$sql_where1 = str_replace('snmp_query_id', 'data_query_id', $sql_where1);
@@ -2651,8 +2660,9 @@ function poller_push_reindex_data_to_poller($device_id = 0, $data_query_id = 0, 
 			$sql_where1",
 			$sql_params1);
 
-		replicate_table_to_poller($db_cnn_id, $poller_reindex, 'poller_reindex', array('assert_value'));
+		$success = replicate_table_to_poller($db_cnn_id, $poller_reindex, 'poller_reindex', array('assert_value')) && $success;
 	}
+	return $success;
 }
 
 function replicate_table_to_poller($conn, &$data, $table, $exclude = false) {
