@@ -35,6 +35,7 @@
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
+      <file>./Unit/DataQueryOrphanStateTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/SnmpWalkExitCodeTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>

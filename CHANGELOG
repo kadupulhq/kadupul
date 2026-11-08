@@ -33,6 +33,7 @@ Cacti CHANGELOG
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
+-issue: Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed (#198)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
 -issue: Treat a binary SNMP walk that exits non-zero as failed and return no rows, instead of matching "Timeout" or "(tooBig)" in device values (#1099)
 -issue: Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200)
