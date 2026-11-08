@@ -15,7 +15,6 @@ use Kadupul\Graphing\Application\Port\HostGraphRow;
 use Kadupul\Graphing\Application\Port\TreeNodeRow;
 use Kadupul\Graphing\Application\Port\TreeSummary;
 use Kadupul\Graphing\Application\Command\TreeLabels;
-use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 
@@ -43,21 +42,8 @@ final class AddTreeLegacyArguments extends LegacyArguments
         if ($argv === []) {
             return [[], LegacyRequest::Help];
         }
-        $flags = $this->flags();
-        $input = [];
-        foreach ($argv as $argument) {
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            [$option, $takesValue] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
-            $input['--' . $option] = $takesValue ? $value : true;
-        }
 
-        return [$input, null];
+        return $this->translateUnchecked($argv);
     }
 
     #[\Override]

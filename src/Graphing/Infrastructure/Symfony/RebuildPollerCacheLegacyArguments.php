@@ -29,6 +29,9 @@ final class RebuildPollerCacheLegacyArguments extends LegacyArguments
      */
     private ?array $refusedThreads = null;
 
+    /** The value the last accepted --threads of the current translate() set. */
+    private ?int $threads = null;
+
     /**
      * Every argument the script's switch knew.
      *
@@ -59,39 +62,37 @@ final class RebuildPollerCacheLegacyArguments extends LegacyArguments
     #[\Override]
     public function translate(array $argv): array
     {
-        $flags = $this->flags();
-        $input = [];
-        $threads = null;
-        foreach ($argv as $argument) {
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            [$option, $takesValue] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
-            if (!$takesValue) {
-                $input['--' . $option] = true;
+        $this->threads = null;
 
-                continue;
-            }
-            if ($flag === '--threads' && $threads !== null && self::threads($value) === null) {
-                // The script quoted the value an earlier --threads had set, which only this map still knows.
-                $this->refusedThreads = [$argument, $threads];
+        return $this->translateUnchecked(
+            $argv,
+            function (string $flag, bool $takesValue, string $value, string $argument): string|true {
+                if (!$takesValue) {
+                    return true;
+                }
+                if ($flag === '--threads' && $this->threads !== null && self::threads($value) === null) {
+                    // The script quoted the value an earlier --threads had set, which only this map still knows.
+                    $this->refusedThreads = [$argument, $this->threads];
 
-                throw new InvalidLegacyArgument($argument);
-            }
-            $input['--' . $option] = $value;
-            if (!self::accepted($flag, $value)) {
-                break;
-            }
-            if ($flag === '--threads') {
-                $threads = self::threads($value);
-            }
-        }
+                    throw new InvalidLegacyArgument($argument);
+                }
 
-        return [$input, null];
+                return $value;
+            },
+            function (string $flag, bool $takesValue, string $value): bool {
+                if (!$takesValue) {
+                    return false;
+                }
+                if (!self::accepted($flag, $value)) {
+                    return true;
+                }
+                if ($flag === '--threads') {
+                    $this->threads = self::threads($value);
+                }
+
+                return false;
+            },
+        );
     }
 
     /**

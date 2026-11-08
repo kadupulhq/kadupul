@@ -3,8 +3,8 @@
     "name": "get_client_addr",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7872,
-        "end_line": 7938,
+        "start_line": 7873,
+        "end_line": 7939,
         "line_count": 67,
         "signature": {"parameters": [], "return_type": null, "returns_reference": false},
         "docblock": false,

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-07 22:29-0800\n"
+"POT-Creation-Date: 2026-11-08 01:36-0800\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -790,7 +790,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Es gibt Probleme mit der Seite Kennwort ändern.  Wenden Sie sich sofort an Ihren Kadupul-Administrator."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4291 lib/html.php:2888
+#: include/global_form.php:1552 lib/functions.php:4292 lib/html.php:2888
 msgid "Change Password"
 msgstr "Kennwort ändern"
 
@@ -803,7 +803,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Bitte Benutzernamen und Kennwort eingeben:"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6241
+#: include/global_settings.php:1851 lib/functions.php:6242
 msgid "Username"
 msgstr "Benutzername"
 
@@ -897,7 +897,7 @@ msgstr "Benutzer anmelden"
 msgid "Enter your Username and Password below"
 msgstr "Geben Sie Ihren Benutzernamen und Kennwort ein"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6242
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6243
 msgid "Password"
 msgstr "Kennwort"
 
@@ -1206,7 +1206,7 @@ msgstr "Entdeckte Geräte bereinigen"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6600 lib/functions.php:6605
+#: data_debug.php:698 lib/functions.php:6601 lib/functions.php:6606
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -2198,7 +2198,7 @@ msgstr "Version"
 msgid "Community"
 msgstr "Gemeinschaft"
 
-#: automation_snmp.php:543 lib/functions.php:6237
+#: automation_snmp.php:543 lib/functions.php:6238
 msgid "Port"
 msgstr "Port"
 
@@ -2408,8 +2408,8 @@ msgstr "Stammverzeichnis"
 msgid "No Tree Rules Found"
 msgstr "Keine Baumregeln gefunden"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6745 lib/functions.php:6820
-#: lib/functions.php:6923 lib/functions.php:7613 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6746 lib/functions.php:6821
+#: lib/functions.php:6924 lib/functions.php:7614 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -3443,7 +3443,7 @@ msgstr "Der Name, der dieser Datenvorlage gegeben wurde.  Bitte beachten Sie, da
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6236 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6237 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Zielsysteme"
@@ -3473,7 +3473,7 @@ msgstr "Zusätzliche Daten"
 msgid "Data Source Item %s"
 msgstr "Datenquellenelement %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:2964
 #: package_import.php:643
 msgid "New"
 msgstr "Neu"
@@ -3804,7 +3804,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Der Kadupul ist noch nicht gelaufen."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8316 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8317 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Erlaubnis verweigert"
 
@@ -4767,13 +4767,13 @@ msgstr "FATAL: Du musst eingeloggt sein, um Zugang zu diesem Bereich von Kadupul
 msgid "Login Again"
 msgstr "Neu Anmelden"
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:317 lib/functions.php:8318
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Wenn du denkst, dass dies ein Fehler ist. Bitte wenden Sie sich an Ihren Kadupul-Administrator."
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:317 lib/functions.php:8318
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -6860,7 +6860,7 @@ msgid "List Mode"
 msgstr "Listen Ansicht"
 
 #: include/global_arrays.php:2072 include/global_arrays.php:2078
-#: lib/functions.php:4513 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
+#: lib/functions.php:4514 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsole"
@@ -8663,8 +8663,8 @@ msgstr "Daten"
 msgid "Visual"
 msgstr "Visuell"
 
-#: include/global_settings.php:112 lib/functions.php:6240
-#: lib/functions.php:6245
+#: include/global_settings.php:112 lib/functions.php:6241
+#: lib/functions.php:6246
 msgid "Authentication"
 msgstr "LDAP Authentifizierung"
 
@@ -8700,11 +8700,11 @@ msgstr "Schriftart für Diagramme"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() Funktion"
 
-#: include/global_settings.php:153 lib/functions.php:6221
+#: include/global_settings.php:153 lib/functions.php:6222
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6227
+#: include/global_settings.php:154 lib/functions.php:6228
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10569,7 +10569,7 @@ msgstr "So viele Zeichen sind erlaubt, bevor eine Zeile in der E-Mail automatisc
 msgid "Sendmail Options"
 msgstr "Sendmail-Optionen"
 
-#: include/global_settings.php:1972 lib/functions.php:6221
+#: include/global_settings.php:1972 lib/functions.php:6222
 msgid "Sendmail Path"
 msgstr "Pfad zu Sendmail"
 
@@ -11736,8 +11736,8 @@ msgstr "Umgebung:"
 msgid "Contact:"
 msgstr "Kontakt:"
 
-#: lib/api_device.php:2104 lib/functions.php:6254 lib/functions.php:6256
-#: lib/functions.php:6260
+#: lib/api_device.php:2104 lib/functions.php:6255 lib/functions.php:6257
+#: lib/functions.php:6261
 msgid "Ping Results"
 msgstr "Ping Ergebnisse"
 
@@ -12504,168 +12504,168 @@ msgstr "Nachricht nicht gefunden."
 msgid "Error %s is not readable"
 msgstr "Fehler %s ist nicht lesbar."
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "Logged in a Guest"
 msgstr "Angemeldet als"
 
-#: lib/functions.php:4267 lib/functions.php:4285
+#: lib/functions.php:4268 lib/functions.php:4286
 msgid "Logged in as"
 msgstr "Angemeldet als"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "Login as Regular User"
 msgstr "Als normaler Benutzer anmelden"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "guest"
 msgstr "Gast"
 
-#: lib/functions.php:4270 lib/functions.php:4295 lib/html.php:2904
+#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2904
 msgid "User Community"
 msgstr "Benutzer-Community"
 
-#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2906
+#: lib/functions.php:4272 lib/functions.php:4297 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lib/functions.php:4288
+#: lib/functions.php:4289
 #, php-format
 msgid "Logged in as %s"
 msgstr "Angemeldet als %s"
 
-#: lib/functions.php:4290 lib/html.php:2885
+#: lib/functions.php:4291 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
 
-#: lib/functions.php:4300 lib/html.php:2889
+#: lib/functions.php:4301 lib/html.php:2889
 msgid "Logout"
 msgstr "Abmelden"
 
-#: lib/functions.php:4454
+#: lib/functions.php:4455
 msgid "Leaf"
 msgstr "Blatt"
 
-#: lib/functions.php:4478 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4479 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Nicht abfragebasiert"
 
-#: lib/functions.php:4516
+#: lib/functions.php:4517
 #, php-format
 msgid "Link %s"
 msgstr "%s verbinden"
 
-#: lib/functions.php:4978 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4979 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopieren"
 
-#: lib/functions.php:5795
+#: lib/functions.php:5796
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer-Fehler: Nein <b>TO</b>Adresse gesetzt!<br>Wenn Sie den Link <i>Test Mail</i> verwenden, setzen Sie bitte die Einstellung <b>Alarmmail</b>."
 
-#: lib/functions.php:6192
+#: lib/functions.php:6193
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO fehlgeschlagen: %s"
 
-#: lib/functions.php:6195
+#: lib/functions.php:6196
 msgid "SMTP error: "
 msgstr "SMTP-Fehler:"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6209
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Dies ist eine von Kadupul generierte Testnachricht.  Diese Nachricht wurde gesendet, um die Konfiguration Ihrer Mail-Einstellungen zu testen."
 
-#: lib/functions.php:6209
+#: lib/functions.php:6210
 msgid "Your email settings are currently set as follows"
 msgstr "Ihre e-Mail-Einstellungen sind derzeit wie folgt festgelegt"
 
-#: lib/functions.php:6210
+#: lib/functions.php:6211
 msgid "Method"
 msgstr "Methode"
 
-#: lib/functions.php:6212
+#: lib/functions.php:6213
 msgid "Checking Configuration...<br>"
 msgstr "Konfiguration prüfen....<br><br>"
 
-#: lib/functions.php:6219
+#: lib/functions.php:6220
 msgid "PHP's Mailer Class"
 msgstr "PHP's Mailer-Klasse"
 
-#: lib/functions.php:6225
+#: lib/functions.php:6226
 msgid "Method: SMTP"
 msgstr "Methode: SMTP"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6243
 msgid "Not Shown for Security Reasons"
 msgstr "Aus Sicherheitsgründen nicht angezeigt"
 
-#: lib/functions.php:6243
+#: lib/functions.php:6244
 msgid "Security"
 msgstr "Sicherheit"
 
-#: lib/functions.php:6251
+#: lib/functions.php:6252
 msgid "Ping Results:"
 msgstr "Ping Ergebnisse"
 
-#: lib/functions.php:6251 lib/functions.php:6256
+#: lib/functions.php:6252 lib/functions.php:6257
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: lib/functions.php:6260
+#: lib/functions.php:6261
 msgid "Bypassed"
 msgstr "Bypass"
 
-#: lib/functions.php:6269
+#: lib/functions.php:6270
 msgid "Creating Message Text..."
 msgstr "Nachrichtentext erstellen....."
 
-#: lib/functions.php:6272
+#: lib/functions.php:6273
 msgid "Sending Message..."
 msgstr "Nachricht wird gesendet…"
 
-#: lib/functions.php:6276
+#: lib/functions.php:6277
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul-Testmeldung"
 
-#: lib/functions.php:6278
+#: lib/functions.php:6279
 msgid "Success!"
 msgstr "Erfolgreich!"
 
-#: lib/functions.php:6281
+#: lib/functions.php:6282
 msgid "Message Not Sent due to ping failure."
 msgstr "Nachricht nicht gesendet aufgrund eines Ping-Fehlers."
 
-#: lib/functions.php:6745 lib/functions.php:6820
+#: lib/functions.php:6746 lib/functions.php:6821
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul hat das Plugin %s aufgrund des folgenden Fehlers deaktiviert: %s!  Weitere Informationen finden Sie in der Kadupul-Logdatei."
 
-#: lib/functions.php:6923
+#: lib/functions.php:6924
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "WARNUNG: PollerID:%s hat einen ungültigen Hostnamen:%s.  Ist es nicht über DNS erreichbar!"
 
-#: lib/functions.php:7376 lib/functions.php:7378
+#: lib/functions.php:7377 lib/functions.php:7379
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7376 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7377 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Version %s %s"
 
-#: lib/functions.php:7378
+#: lib/functions.php:7379
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7613
+#: lib/functions.php:7614
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "WARNUNG:  Key Kadupul Include Datei %s fehlt.  Bitte suchen und ersetzen Sie diese Datei"
@@ -13671,7 +13671,7 @@ msgstr "Ereignisse"
 msgid "Send Report"
 msgstr "Bericht senden"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3049 user_admin.php:1776
 msgid "[new]"
 msgstr "[Neu]"
 
@@ -13941,90 +13941,90 @@ msgstr "%s \"%s\" existiert bereits."
 msgid "not writable"
 msgstr "Schreibbar"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2062 lib/import.php:2083
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Diagramm [Vorlage: %s]"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2097 lib/import.php:2109
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Datenabfrage[%s]"
 
-#: lib/import.php:2731
+#: lib/import.php:2746
 msgid "Unknown Field"
 msgstr "Unbekanntes Feld"
 
-#: lib/import.php:2947
+#: lib/import.php:2962
 msgid "Updated"
 msgstr "Aktualisieren"
 
-#: lib/import.php:2951
+#: lib/import.php:2966
 msgid "Damaged"
 msgstr "Datenquelle, Grafik"
 
-#: lib/import.php:2953 package_import.php:637
+#: lib/import.php:2968 package_import.php:637
 msgid "Unchanged"
 msgstr "[Unverändert]"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Preview Results"
 msgstr "Vorschau-Ergebnisse importieren"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Results"
 msgstr "Ergebnisse importieren"
 
-#: lib/import.php:2993
+#: lib/import.php:3008
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul würde die folgenden Änderungen vornehmen, wenn das Paket importiert würde:"
 
-#: lib/import.php:2995
+#: lib/import.php:3010
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul hat die folgenden Elemente für das Paket importiert:"
 
-#: lib/import.php:2998
+#: lib/import.php:3013
 msgid "Package Files"
 msgstr "Paketdateien"
 
-#: lib/import.php:3002
+#: lib/import.php:3017
 msgid "[preview] "
 msgstr "Vorschau"
 
-#: lib/import.php:3007
+#: lib/import.php:3022
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul würde die folgenden Änderungen vornehmen, wenn die Vorlage importiert würde:"
 
-#: lib/import.php:3009
+#: lib/import.php:3024
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul hat die folgenden Elemente für die Vorlage importiert:"
 
-#: lib/import.php:3024
+#: lib/import.php:3039
 msgid "[success]"
 msgstr "Erfolgreich!"
 
-#: lib/import.php:3026
+#: lib/import.php:3041
 msgid "[fail]"
 msgstr "[Fehlgeschlagen]"
 
-#: lib/import.php:3028
+#: lib/import.php:3043
 msgid "[preview]"
 msgstr "Vorschau"
 
-#: lib/import.php:3032
+#: lib/import.php:3047
 msgid "[updated]"
 msgstr "[Aktualisiert]"
 
-#: lib/import.php:3036
+#: lib/import.php:3051
 msgid "[unchanged]"
 msgstr "[Unverändert]"
 
-#: lib/import.php:3072
+#: lib/import.php:3087
 msgid "Found Dependency:"
 msgstr "Abhängigkeit gefunden:"
 
-#: lib/import.php:3074
+#: lib/import.php:3089
 msgid "Unmet Dependency:"
 msgstr "Ungelöste Abhängigkeit gefunden:"
 
@@ -15360,7 +15360,7 @@ msgstr "Keine Angabe"
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2282
+#: lib/poller.php:2050 lib/poller.php:2275
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -15651,7 +15651,7 @@ msgstr ""
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/snmp.php:387 lib/snmp.php:876 lib/snmp.php:899
+#: lib/snmp.php:387 lib/snmp.php:885 lib/snmp.php:908
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP-Optionen[Bearbeiten: %s]"
