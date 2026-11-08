@@ -2024,8 +2024,8 @@ class spikekill {
 								break;
 							case SPIKE_METHOD_STDDEV:
 								if ($this->out_start == 0 || ($timestamp >= $this->out_start && $timestamp <= $this->out_end)) {
-									if (($dsvalue > $rra[$rra_num][$ds_num]['max_cutoff']) ||
-										($dsvalue < $rra[$rra_num][$ds_num]['min_cutoff'])) {
+									if (is_numeric($dsvalue) && (($dsvalue > $rra[$rra_num][$ds_num]['max_cutoff']) ||
+										($dsvalue < $rra[$rra_num][$ds_num]['min_cutoff']))) {
 										if ($kills < $this->numspike) {
 											$rra[$rra_num][$ds_num]['outwind_killed']++;
 
