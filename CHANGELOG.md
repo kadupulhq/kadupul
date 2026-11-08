@@ -37,7 +37,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
-- Add an opt-in network-equipment asset register (schema 1.2.40) with browser and CLI worker commands, explicit monitoring reconciliation, dependency checks and recorded reviews; it is disabled by default in both web and workers.
+- Add an opt-in network-equipment asset register (schema 1.2.39) with browser and CLI worker commands, explicit monitoring reconciliation, dependency checks and recorded reviews; it is disabled by default in both web and workers.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 

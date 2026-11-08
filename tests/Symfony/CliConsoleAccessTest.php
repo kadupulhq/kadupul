@@ -394,4 +394,62 @@ final class CliConsoleAccessTest extends TestCase
         $this->db->executeStatement('INSERT INTO user_auth_realm VALUES (2, 4)');
         self::assertTrue($access->canManageTrees($actor), 'a direct grant does');
     }
+
+    /** A web session's account, with the columns and credential mapping the session check reads. */
+    private function sessionDatabase(): Connection
+    {
+        $db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        foreach ([
+            'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)',
+            'CREATE TABLE settings_user (user_id INTEGER, name TEXT, value TEXT)',
+            'CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT COLLATE NOCASE, password TEXT, realm INTEGER,
+                    enabled TEXT, locked TEXT, must_change_password TEXT, password_change TEXT)',
+            'CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)',
+            "INSERT INTO user_auth VALUES (8, 'dup', 'local-hash', 0, 'on', '', '', 'on'), (9, 'dup', 'ldap-hash', 3, 'on', '', '', 'on')",
+            'INSERT INTO user_auth_realm VALUES (8, 8), (8, 15), (9, 8)',
+        ] as $statement) {
+            $db->executeStatement($statement);
+        }
+
+        return $db;
+    }
+
+    private function sessionActor(Connection $db, int $id, string $credential): ?int
+    {
+        $access = new CliConsoleAccess($db, $db);
+        $access->selectSession($id, $credential, OperatorDatabase::Local);
+
+        return $access->actor()?->id;
+    }
+
+    public function testASessionSelectsItsAccountByIdWhenTheUsernameRepeatsAcrossRealms(): void
+    {
+        $db = $this->sessionDatabase();
+        self::assertSame(8, $this->sessionActor($db, 8, hash('sha256', 'local-hash')));
+        self::assertSame(9, $this->sessionActor($db, 9, hash('sha256', 'ldap-hash')));
+        $byName = new CliConsoleAccess($db, $db);
+        $byName->select('dup', OperatorDatabase::Local);
+        self::assertNull($byName->actor(), 'a name alone still names no one');
+    }
+
+    public function testASessionMustMatchItsCredential(): void
+    {
+        $db = $this->sessionDatabase();
+        self::assertNull($this->sessionActor($db, 8, hash('sha256', 'ldap-hash')));
+        self::assertNull($this->sessionActor($db, 8, 'not-a-credential'));
+        $db->executeStatement("UPDATE user_auth SET password = 'changed' WHERE id = 8");
+        self::assertNull($this->sessionActor($db, 8, hash('sha256', 'local-hash')), 'a password change revokes the session');
+    }
+
+    public function testASessionIsRefusedOnlyForAPasswordChangeThatLoginForces(): void
+    {
+        $db = $this->sessionDatabase();
+        $credential = hash('sha256', 'local-hash');
+        $db->executeStatement("UPDATE user_auth SET must_change_password = 'on', password_change = '' WHERE id = 8");
+        self::assertSame(8, $this->sessionActor($db, 8, $credential), 'login does not force a change the account may not make');
+        $db->executeStatement("UPDATE user_auth SET password_change = 'on' WHERE id = 8");
+        self::assertNull($this->sessionActor($db, 8, $credential));
+        $db->executeStatement("UPDATE user_auth SET must_change_password = 'on' WHERE id = 9");
+        self::assertSame(9, $this->sessionActor($db, 9, hash('sha256', 'ldap-hash')), 'login never forces it on a directory account');
+    }
 }

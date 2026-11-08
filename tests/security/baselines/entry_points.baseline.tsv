@@ -9,7 +9,7 @@ app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; Authen
 app.php/administration/domains	symfony:admin_user_domains	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/administration/user-groups	symfony:admin_user_groups	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/administration/users	symfony:admin_users	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
-app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at bac04dec0f15b0b98ae1544021bdf0bc0250220fca80be94209625f115c12a05
+app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at 1ea74a073db200414168ece77121ac3619e3d849cbbf5d59506b9e9e7f3a5359
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
@@ -366,7 +366,7 @@ install/upgrades/1_2_35.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_36.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_37.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_38.php	anonymous-allowed	inert: declarations and literal assignments only
-install/upgrades/1_2_40.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_39.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only

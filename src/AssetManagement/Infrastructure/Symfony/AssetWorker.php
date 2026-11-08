@@ -11,18 +11,35 @@ use Kadupul\AssetManagement\Domain\AssetData;
 use Doctrine\DBAL\Connection;
 use Kadupul\AssetManagement\Application\Port\AssetWriter;
 use Kadupul\AssetManagement\Domain\AssetError;
+use Kadupul\IdentityAccess\Contract\BrowserSession;
 use Symfony\Component\Process\Process;
 
 final readonly class AssetWorker implements AssetWriter
 {
-    public function __construct(private WebAssetAccess $access, private Connection $database, private string $projectDir) {}
+    /** Worker stdout and stderr together; a larger reply is not a receipt. */
+    private const int OUTPUT_LIMIT = 8388608;
+
+    public function __construct(private WebAssetAccess $access, private BrowserSession $session, private Connection $database, private string $projectDir) {}
 
     public function apply(array $command): array
     {
         $actor = $this->access->requireActor();
+        // The worker rechecks this account by id and session credential, so a
+        // password change or logout elsewhere refuses a mutation already sent.
+        $snapshot = $this->session->read();
+        $sessionActor = $snapshot['sess_user_id'] ?? null;
+        $credential = $snapshot['sess_user_credential'] ?? null;
+        if (($sessionActor !== $actor->id && $sessionActor !== (string) $actor->id)
+            || !is_string($credential) || preg_match('/\A[a-f0-9]{64}\z/D', $credential) !== 1) {
+            throw new AssetError('unauthenticated');
+        }
         $configured = $this->database->fetchOne("SELECT value FROM settings WHERE name = 'path_php_binary'");
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
-        $payload = json_encode(['actor_id' => $actor->id, 'actor_username' => $actor->username, 'command' => $command], JSON_THROW_ON_ERROR);
+        $binary = realpath($binary);
+        if ($binary === false || !is_file($binary) || !is_executable($binary)) {
+            throw new AssetError('unavailable');
+        }
+        $payload = json_encode(['actor_id' => $actor->id, 'credential' => $credential, 'command' => $command], JSON_THROW_ON_ERROR);
         if (strlen($payload) > 524288) {
             throw new AssetError('invalid_command');
         }
@@ -31,11 +48,21 @@ final readonly class AssetWorker implements AssetWriter
         // environment (feature flag, APP_SECRET). Pass that environment so the
         // worker evaluates its own gate exactly as any other command would.
         $process = new Process([$binary, $this->projectDir . '/bin/console', 'assets:register', '--worker', '--no-interaction', '--no-ansi'], $this->projectDir, getenv(null, true), $payload, 60);
+        $bytes = 0;
         try {
-            $process->run();
+            $process->run(static function (string $type, string $chunk) use (&$bytes): void {
+                $bytes += strlen($chunk);
+                if ($bytes > self::OUTPUT_LIMIT) {
+                    throw new \RuntimeException('Asset worker output exceeds its limit.');
+                }
+            });
             $result = json_decode(trim($process->getOutput()), true, 20, JSON_THROW_ON_ERROR);
         } catch (\Throwable) {
             throw new AssetError('uncertain');
+        } finally {
+            if ($process->isRunning()) {
+                $process->stop(0);
+            }
         }
         if (!is_array($result)) {
             throw new AssetError('uncertain');

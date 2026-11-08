@@ -40,6 +40,7 @@ final class AssetCommand extends Command
         try {
             $username = $input->getOption('operator');
             $command = null;
+            $session = null;
             $this->access->expectedActor = null;
             if ($input->getOption('apply') === true || $input->getOption('worker') === true) {
                 $stream = fopen('php://stdin', 'rb');
@@ -59,18 +60,24 @@ final class AssetCommand extends Command
                     throw new AssetError('invalid_command');
                 }
                 if ($input->getOption('worker') === true) {
-                    if (array_keys($command) !== ['actor_id', 'actor_username', 'command']) {
+                    if (array_keys($command) !== ['actor_id', 'credential', 'command'] || !is_string($command['credential'])) {
                         throw new AssetError('invalid_command');
                     }
-                    $this->access->expectedActor = AssetFields::integer($command['actor_id'], 2147483647);
-                    $username = AssetFields::text($command['actor_username'], 255, true);
+                    // Select the web session's account by id and credential:
+                    // the same username may exist in several auth realms.
+                    $session = [AssetFields::integer($command['actor_id'], 2147483647), $command['credential']];
+                    $this->access->expectedActor = $session[0];
                     $command = $command['command'];
                     if (!is_array($command)) {
                         throw new AssetError('invalid_command');
                     }
                 }
             }
-            $this->operator->select(is_string($username) ? $username : null, OperatorDatabase::Local);
+            if ($session !== null) {
+                $this->operator->selectSession($session[0], $session[1], OperatorDatabase::Local);
+            } else {
+                $this->operator->select(is_string($username) ? $username : null, OperatorDatabase::Local);
+            }
             $result = $command === null ? ($this->view)() : $this->registry->apply(AssetData::object($command));
             $output->writeln(json_encode(['status' => 'ok', 'result' => $result], JSON_THROW_ON_ERROR), OutputInterface::OUTPUT_RAW);
             return Command::SUCCESS;

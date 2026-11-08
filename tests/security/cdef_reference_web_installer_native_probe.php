@@ -302,7 +302,7 @@ try {
                 'actual web background upgrade reports native contract failure'
             );
             // The actual 1.2.38 migration is confirmed before the final CDEF
-            // contract refuses 1.2.40; preserve that last successful marker.
+            // contract refuses 1.2.39; preserve that last successful marker.
             $failedVersion = $database->query('SELECT cacti FROM version')->fetchColumn();
             $observedVersion = is_string($failedVersion) && strlen($failedVersion) <= 32
                 && preg_match('/\A[0-9]+(?:\.[0-9]+){2}\z/', $failedVersion) === 1 ? $failedVersion : 'unexpected';

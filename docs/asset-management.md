@@ -11,10 +11,9 @@ the LTS maintenance line is unchanged.
 1. Back up the application database, configuration and keys using the existing
    installation procedure. Rehearse the upgrade and restoration on a copy.
 2. Deploy the complete change with locked dependencies. Run the normal installer
-   or `cli/upgrade_database.php` workflow to schema **1.2.40**. Fresh installations
+   or `cli/upgrade_database.php` workflow to schema **1.2.39**. Fresh installations
    include the same four tables. The step is additive and retryable; it refuses
-   incompatible existing definitions. Schema 1.2.39 is not introduced by this
-   change and no unpublished discovery implementation is required.
+   incompatible existing definitions.
 3. Set `KADUPUL_ASSETS_ENABLED=1` for both PHP-FPM and command workers. Rebuild the
    Symfony cache and restart workers. The default is disabled.
 4. An eligible console account with Settings/Utilities permission (realm 15)
@@ -26,8 +25,13 @@ the LTS maintenance line is unchanged.
    service-level objective. Valid limits are five minutes to thirty days.
 
 The web adapter sends mutations to `assets:register --worker`. It supplies the
-authenticated identity; browser fields cannot choose the operator. The worker
-rechecks the account and realm on the primary installation. Web asset reads use
+authenticated account id and session credential over the worker's stdin;
+browser fields cannot choose the operator. The worker selects that account by
+id, because a username can repeat across auth realms, and rechecks the
+credential, account state and realms on the primary installation. As on the
+web, a pending password change refuses it only when login forces the change.
+The adapter refuses a PHP interpreter that is not an executable file and an
+answer larger than 8 MiB. Web asset reads use
 the configured `web` DBAL connection, including existing read credentials.
 The worker uses the existing local CLI connection. This is a process boundary,
 not an operating-system sandbox or a new credential-isolation guarantee.
@@ -249,8 +253,8 @@ with the working tree and found identical bytes.
 
 | Check | Local evidence |
 | --- | --- |
-| Asset workflows, real MariaDB persistence/worker, SQLite and kernel HTTP | 64 tests, 338 assertions, passing |
-| Asset workflows, real MySQL 8.4.13 persistence/worker, SQLite and kernel HTTP | 64 tests, 338 assertions, passing on the same source fingerprint |
+| Asset workflows, real MariaDB persistence/worker, SQLite and kernel HTTP | 64 tests, 356 assertions, passing |
+| Asset workflows, real MySQL 8.4.13 persistence/worker, SQLite and kernel HTTP | 64 tests, 356 assertions, passing on the same source fingerprint |
 | Complete Symfony suite | 5,988 cases reported, 342,030 assertions, zero failures/errors; 516 skipped. The native asset suites were run separately against MariaDB as recorded above. |
 | Asset static analysis | PHPStan: zero errors; no new suppressions |
 | Architecture, service wiring and templates | Deptrac: zero violations; container, Twig and translation YAML lint pass |
@@ -259,7 +263,7 @@ with the working tree and found identical bytes.
 | Authorization and sink inventories | 433 classified entry points, none unknown; sink inventory matches; no new architectural hotspots under `LC_ALL=C` |
 | Classifier rejection checks | 13 asset handoff checks and 27 existing installer handoff checks pass |
 | Disposable backup restoration | `mariadb-dump --single-transaction` of all four tables restored into a separate database; every row and the application snapshot matched at revision 4, including one asset, one identity, four journal entries and one observation |
-| Supplementary installed browser/worker rehearsal | 80 checks pass under `/cacti/` with Apache 2.4.68, PHP-FPM/CLI 8.4.27, MariaDB 10.11.19, Playwright 1.64.1 and Chrome 157.0.8103.39. Real installer finalized schema 1.2.40. Production CLI and SQL confirm revision 21, two assets, two retained identities, 21 receipts and two observations; the original asset is disposed and its removed dependency is absent. Monitoring device 1 remains disabled. |
+| Supplementary installed browser/worker rehearsal | 80 checks pass under `/cacti/` with Apache 2.4.68, PHP-FPM/CLI 8.4.27, MariaDB 10.11.19, Playwright 1.64.1 and Chrome 157.0.8103.39. Real installer finalized the asset schema step, then numbered 1.2.40 and since renumbered 1.2.39. Production CLI and SQL confirm revision 21, two assets, two retained identities, 21 receipts and two observations; the original asset is disposed and its removed dependency is absent. Monitoring device 1 remains disabled. |
 
 The PHP coverage subprocess checks need PCOV and `display_errors=stderr` in the
 child runtime as well as the parent. These were enabled in a task-local INI

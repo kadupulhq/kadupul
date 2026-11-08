@@ -16,16 +16,20 @@ final class AssetRegistryDatabaseTest extends AssetRegistryTest
     {
         $root = dirname(__DIR__, 3);
         $sql = file_get_contents($root . '/cacti.sql');
-        foreach (['settings', 'user_auth', 'user_auth_realm'] as $table) {
+        foreach (['settings', 'settings_user', 'user_auth', 'user_auth_realm'] as $table) {
             $this->db->executeStatement('DROP TABLE IF EXISTS ' . $table);
             $this->assertSame(1, preg_match('/^CREATE TABLE ' . $table . ' \(.*?^\) [^;\n]*;/ms', $sql, $match));
             $this->db->executeStatement($match[0]);
         }
         $this->db->insert('settings', ['name' => 'path_php_binary', 'value' => PHP_BINARY]);
-        $this->db->insert('user_auth', ['id' => 1, 'username' => 'operator', 'enabled' => 'on', 'must_change_password' => '']);
+        $this->db->insert('user_auth', ['id' => 1, 'username' => 'operator', 'password' => 'local-hash', 'enabled' => 'on', 'must_change_password' => '']);
+        // The same username from a directory realm must not hide the session's account.
+        $this->db->insert('user_auth', ['id' => 2, 'username' => 'operator', 'password' => 'ldap-hash', 'realm' => 3, 'enabled' => 'on', 'must_change_password' => '']);
         foreach ([8, 15] as $realm) {
             $this->db->insert('user_auth_realm', ['user_id' => 1, 'realm_id' => $realm]);
         }
+        $credential = hash('sha256', 'local-hash');
+        $session = ['sess_user_id' => 1, 'sess_user_credential' => $credential];
         $directory = sys_get_temp_dir() . '/assets-worker-' . bin2hex(random_bytes(8));
         $files = new \Symfony\Component\Filesystem\Filesystem();
         $files->mkdir([$directory . '/bin', $directory . '/include', $directory . '/log'], 0700);
@@ -42,10 +46,14 @@ final class AssetRegistryDatabaseTest extends AssetRegistryTest
             $permission->method('mayManageAssets')->willReturn(true);
             $topology = $this->createMock(\Kadupul\IdentityAccess\Contract\CollectorTopology::class);
             $access = new \Kadupul\AssetManagement\Infrastructure\Symfony\WebAssetAccess(true, $console, $permission, $topology);
-            $worker = new \Kadupul\AssetManagement\Infrastructure\Symfony\AssetWorker($access, $this->db, $directory);
+            $browser = $this->createMock(\Kadupul\IdentityAccess\Contract\BrowserSession::class);
+            $browser->method('read')->willReturnCallback(static function () use (&$session): array {
+                return $session;
+            });
+            $worker = new \Kadupul\AssetManagement\Infrastructure\Symfony\AssetWorker($access, $browser, $this->db, $directory);
             $probe = new \Symfony\Component\Process\Process([PHP_BINARY, $directory . '/bin/console', 'assets:register', '--operator', 'operator'], $directory);
             $probe->run();
-            $this->assertSame(0, $probe->getExitCode(), $probe->getOutput() . $probe->getErrorOutput());
+            $this->assertSame(1, $probe->getExitCode(), 'a name shared by two realms names no one');
             $command = ['action' => 'create', 'request_id' => str_repeat('e', 32), 'revision' => 1, 'fields' => ['name' => 'Worker-created switch']];
             $result = $worker->apply($command);
             $this->assertSame(2, $result['revision']);
@@ -56,6 +64,24 @@ final class AssetRegistryDatabaseTest extends AssetRegistryTest
             $this->db->update('user_auth', ['locked' => 'on'], ['id' => 1]);
             $this->rejected('denied', fn() => $worker->apply($command));
             $this->db->update('user_auth', ['locked' => ''], ['id' => 1]);
+            // The web session admits a pending change that login does not force.
+            $this->db->update('user_auth', ['must_change_password' => 'on', 'password_change' => ''], ['id' => 1]);
+            $this->assertSame($result, $worker->apply($command));
+            $this->db->update('user_auth', ['password_change' => 'on'], ['id' => 1]);
+            $this->rejected('denied', fn() => $worker->apply($command));
+            $this->db->update('user_auth', ['must_change_password' => ''], ['id' => 1]);
+            $this->db->update('user_auth', ['password' => 'changed-elsewhere'], ['id' => 1]);
+            $this->rejected('denied', fn() => $worker->apply($command));
+            $this->db->update('user_auth', ['password' => 'local-hash'], ['id' => 1]);
+            $session['sess_user_credential'] = str_repeat('0', 64);
+            $this->rejected('denied', fn() => $worker->apply($command));
+            $session = ['sess_user_id' => 2, 'sess_user_credential' => $credential];
+            $this->rejected('unauthenticated', fn() => $worker->apply($command));
+            $session = ['sess_user_id' => 1, 'sess_user_credential' => $credential];
+            $this->db->update('settings', ['value' => $directory . '/missing-php'], ['name' => 'path_php_binary']);
+            $this->rejected('unavailable', fn() => $worker->apply($command));
+            $this->db->update('settings', ['value' => PHP_BINARY], ['name' => 'path_php_binary']);
+            $this->assertSame($result, $worker->apply($command));
             $files->dumpFile($directory . '/include/config.php', '<?php $poller_id = 2;');
             $this->rejected('denied', fn() => $worker->apply($command));
         } finally {
@@ -66,7 +92,7 @@ final class AssetRegistryDatabaseTest extends AssetRegistryTest
                 $_ENV['KADUPUL_ASSET_PROJECT'] = $oldProjectEnv;
             }
             $files->remove($directory);
-            foreach (['settings', 'user_auth', 'user_auth_realm'] as $table) {
+            foreach (['settings', 'settings_user', 'user_auth', 'user_auth_realm'] as $table) {
                 $this->db->executeStatement('DROP TABLE ' . $table);
             }
         }

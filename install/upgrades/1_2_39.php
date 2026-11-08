@@ -5,7 +5,7 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-function upgrade_to_1_2_40(): void
+function upgrade_to_1_2_39(): void
 {
     $sql = file_get_contents(dirname(__DIR__) . '/asset-management.sql');
     if ($sql === false) {

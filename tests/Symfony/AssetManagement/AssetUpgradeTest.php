@@ -41,7 +41,7 @@ final class AssetUpgradeTest extends TestCase
         }
         require dirname(__DIR__, 3) . '/include/global_constants.php';
         require dirname(__DIR__) . '/Fixtures/forward_schema_repair_bridge.php';
-        require dirname(__DIR__, 3) . '/install/upgrades/1_2_40.php';
+        require dirname(__DIR__, 3) . '/install/upgrades/1_2_39.php';
         $GLOBALS['forward_schema_pdo'] = $this->db;
         $GLOBALS['forward_schema_status'] = [];
     }
@@ -57,12 +57,12 @@ final class AssetUpgradeTest extends TestCase
             $fresh[$table] = $this->db->query('SHOW CREATE TABLE ' . $table)->fetch(\PDO::FETCH_NUM)[1];
             $this->db->exec('DROP TABLE ' . $table);
         }
-        \upgrade_to_1_2_40();
+        \upgrade_to_1_2_39();
         foreach ($fresh as $table => $definition) {
             $this->assertSame($definition, $this->db->query('SHOW CREATE TABLE ' . $table)->fetch(\PDO::FETCH_NUM)[1]);
         }
         $this->db->exec("UPDATE asset_registry SET revision=7,policy='{\"scope\":\"retained\"}' WHERE id=1");
-        \upgrade_to_1_2_40();
+        \upgrade_to_1_2_39();
         $this->assertSame(7, (int) $this->db->query('SELECT revision FROM asset_registry WHERE id=1')->fetchColumn());
         $this->assertStringContainsString('retained', $this->db->query('SELECT policy FROM asset_registry WHERE id=1')->fetchColumn());
         $baseline = AuditSchemaDump::parse(file_get_contents(dirname(__DIR__, 3) . '/docs/audit_schema.sql'));
@@ -72,8 +72,8 @@ final class AssetUpgradeTest extends TestCase
             $this->assertSame([[], 0, 0, []], [$audit->findings, $audit->errors, $audit->warnings, $audit->clauses], $table);
         }
         $root = dirname(__DIR__, 3);
-        $this->assertSame('1.2.40', trim(file_get_contents($root . '/include/cacti_version')));
-        $this->assertMatchesRegularExpression("/^\\s*'1\\.2\\.40'\\s*=>\\s*'0103',\\n\\);/m", file_get_contents($root . '/include/global_arrays.php'));
+        $this->assertSame('1.2.39', trim(file_get_contents($root . '/include/cacti_version')));
+        $this->assertMatchesRegularExpression("/^\\s*'1\\.2\\.39'\\s*=>\\s*'0103',\\n\\);/m", file_get_contents($root . '/include/global_arrays.php'));
         $this->assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
     }
 
@@ -81,14 +81,14 @@ final class AssetUpgradeTest extends TestCase
     {
         $this->db->exec('CREATE TABLE asset_registry (id INT UNSIGNED PRIMARY KEY, revision INT UNSIGNED NOT NULL, policy LONGTEXT NOT NULL, sources LONGTEXT NOT NULL) ENGINE=MyISAM');
         try {
-            \upgrade_to_1_2_40();
+            \upgrade_to_1_2_39();
             $this->fail('Nontransactional storage must be refused.');
         } catch (\RuntimeException $error) {
             $this->assertStringContainsString('storage differs', $error->getMessage());
         }
         $this->assertSame(0, (int) $this->db->query('SELECT COUNT(*) FROM asset_registry')->fetchColumn());
         $this->db->exec('ALTER TABLE asset_registry ENGINE=InnoDB, CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_bin');
-        \upgrade_to_1_2_40();
+        \upgrade_to_1_2_39();
         $this->assertSame(1, (int) $this->db->query('SELECT COUNT(*) FROM asset_registry')->fetchColumn());
     }
 
