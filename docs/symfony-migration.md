@@ -383,9 +383,11 @@ The lock files are created with mode 0640 and missing parent directories with
 mode 0750 or stricter: the process umask is tightened while they are created.
 The directory that holds `var/cache/prod` must be owned by the application user
 (or root) and must not be writable by other users; a group-writable directory
-is accepted only for the owner's private group. An existing lock file must be
-a regular file, not a symlink, with no access for other users, owned by the
-running user or root. Otherwise web requests run without the lock and a refresh
+is accepted only for the owner's private group. Root may refresh the cache in a
+directory owned by the application user; lock files it creates are given to
+that directory's owner and group. An existing lock file must be a regular file,
+not a symlink, with no access for other users, owned by the running user, root
+or the directory owner. Otherwise web requests run without the lock and a refresh
 fails with an error naming these requirements. Users who can write
 `var/cache/` can already change the compiled PHP it holds, so keep that
 directory private to the application.

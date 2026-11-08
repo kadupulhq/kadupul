@@ -156,6 +156,15 @@ final class CacheDirectoryLock
             // own refresh. flock() does not need write access, so an
             // existing file opens read-only.
             $handle = @fopen($path, 'xe');
+            if ($handle !== false && function_exists('posix_geteuid') && posix_geteuid() === 0) {
+                // A root-run upgrade leaves the file usable by the application
+                // user who owns the directory.
+                $directoryStat = stat($directory);
+                if ($directoryStat !== false) {
+                    @chown($path, $directoryStat['uid']);
+                    @chgrp($path, $directoryStat['gid']);
+                }
+            }
             if ($handle === false) {
                 $handle = @fopen($path, 're');
             }
@@ -176,7 +185,8 @@ final class CacheDirectoryLock
 
     /**
      * Only the owner may create lock files beside the cache: owned by this
-     * process or root, and writable by no one else. A group-writable
+     * process or root (or any owner when root runs), and writable by no one
+     * else. A group-writable
      * directory is accepted only for the owner's private group, the default
      * for users created with their own group.
      */
@@ -193,7 +203,9 @@ final class CacheDirectoryLock
         if (!function_exists('posix_geteuid')) {
             return ($stat['mode'] & 0o020) === 0;
         }
-        if ($stat['uid'] !== posix_geteuid() && $stat['uid'] !== 0) {
+        // Root may run upgrades in the application user's directory.
+        $euid = posix_geteuid();
+        if ($stat['uid'] !== $euid && $stat['uid'] !== 0 && $euid !== 0) {
             return false;
         }
         if (($stat['mode'] & 0o020) === 0) {
@@ -207,7 +219,7 @@ final class CacheDirectoryLock
 
     /**
      * Accept only a regular file, not a symlink, with no access for other
-     * users, owned by this process or root.
+     * users, owned by this process, root or the directory owner.
      *
      * @param resource $handle
      */
@@ -221,7 +233,7 @@ final class CacheDirectoryLock
             return false;
         }
 
-        return !function_exists('posix_geteuid') || $stat['uid'] === posix_geteuid() || $stat['uid'] === 0;
+        return !function_exists('posix_geteuid') || in_array($stat['uid'], [posix_geteuid(), 0, @fileowner(dirname($path))], true);
     }
 
     /**
