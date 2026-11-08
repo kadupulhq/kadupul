@@ -65,15 +65,17 @@ networks have queued the same address.
 
 ## Verification and review boundaries
 
-PHP 8.1.34 and disposable MariaDB 10.11.19 were used locally. No real device or
-production database was contacted.
+PHP 8.1.34 and disposable MariaDB 10.11.19 were used for initial local verification.
+The follow-up fixture correction also passes all 20 native cases (134 assertions)
+on MySQL 8.4.13 with a database-scoped account, binary logging enabled and
+`log_bin_trust_function_creators=0`. No real device or production database was contacted.
 
 - 173 focused cases pass in 18 isolated test files: address sets and scanner
   handoff, calendar boundaries, existing automation rules, process ownership,
   CLI listing failures and adjacent database contracts. Restoring only the old
   `.255` guard produces three failures and two passing controls.
 - 20 native integration cases pass. Real PDO connections, shipped table DDL,
-  advisory locks, transactions, triggers and child PHP processes exercise competing
+  advisory locks, transactions, constraints and child PHP processes exercise competing
   owners, old-child exclusion, overlapping queues, cancellation, deadlines, failed
   launch, failed reads, failed completion/schedule writes, a rejected second insert
   batch, caller-owned transactions, manual/forced runs and concurrent schedule edits.
@@ -82,6 +84,9 @@ production database was contacted.
   configuration modes, successful upgrades and injected DDL failures. Failed
   upgrades preserve 1.2.32, retries reach 1.2.33, and repeated upgrades retain rows.
   Upgraded columns and indexes are compared with newly imported shipped DDL.
+- Initial hosted MySQL jobs rejected the fixture's three CREATE TRIGGER statements
+  for lack of SUPER privileges. CHECK constraints now inject the same server-side
+  write failures without elevating the CI account or changing server policy.
 - PHP 8.1 syntax, whitespace, actionlint and the reviewed sink/hotspot inventories
   pass. The one new process sink uses an absolute configured executable, argument
   arrays, a fixed worker script, validated numeric identifiers and a generated run

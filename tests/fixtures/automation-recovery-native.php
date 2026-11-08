@@ -138,13 +138,13 @@ try {
 		automation_primeIPAddressTable(1,$oldRun,$connection,microtime(true)+10);
 		$connection->commit();
 		$connection->exec("UPDATE automation_networks SET subnet_range='192.0.0.0/21' WHERE id=1");
-		$connection->exec("CREATE TRIGGER reject_later_batch BEFORE INSERT ON automation_ips FOR EACH ROW BEGIN IF NEW.ip_address='192.0.4.1' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='fixture'; END IF; END");
+		$connection->exec("ALTER TABLE automation_ips ADD CONSTRAINT reject_later_batch CHECK (ip_address <> '192.0.4.1')");
 		check(!automation_run_network($connection,1,1,true,false,false),'second priming batch failure is returned');
 		check((int)$connection->query('SELECT COUNT(*) FROM automation_ips')->fetchColumn()===6,'earlier insert batch and deletion rolled back');
 		check($connection->query('SELECT DISTINCT run_id FROM automation_ips')->fetchColumn()===$oldRun,'previous queue identity retained');
 		check($connection->query('SELECT next_start FROM automation_networks WHERE id=1')->fetchColumn()===$network['next_start'],'due time retained');
 		check($GLOBALS['reports']===0,'failed preparation does not report');
-		$connection->exec('DROP TRIGGER reject_later_batch');
+		$connection->exec('ALTER TABLE automation_ips DROP CONSTRAINT reject_later_batch');
 		$GLOBALS['scenario']='success';
 		check(automation_run_network($connection,1,1,true,false,false),'full queue publishes on retry');
 	} elseif ($scenario==='schema') {
@@ -160,11 +160,12 @@ try {
 	} else {
 		if ($scenario==='disabled-force') { $connection->exec("UPDATE automation_networks SET enabled='' WHERE id=1"); }
 		if ($scenario==='deadline') { $connection->exec('UPDATE automation_networks SET run_limit=1 WHERE id=1'); }
+		// CHECK constraints inject real server failures without binary-log trigger privileges.
 		if ($scenario==='completion-write') {
-			$connection->exec("CREATE TRIGGER reject_completion BEFORE UPDATE ON automation_networks FOR EACH ROW BEGIN IF NEW.last_status='completed' THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='fixture'; END IF; END");
+			$connection->exec("ALTER TABLE automation_networks ADD CONSTRAINT reject_completion CHECK (last_status <> 'completed')");
 		}
 		if ($scenario==='schedule-write') {
-			$connection->exec("CREATE TRIGGER reject_schedule BEFORE UPDATE ON automation_networks FOR EACH ROW BEGIN IF NEW.next_start<>OLD.next_start THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='fixture'; END IF; END");
+			$connection->exec("ALTER TABLE automation_networks ADD CONSTRAINT reject_schedule CHECK (next_start = '2020-01-01 09:00:00')");
 		}
 		$started=microtime(true);
 		// The installed connection uses silent errors and matched-row counts.
@@ -188,8 +189,8 @@ try {
 			check((int)automation_query($connection,'SELECT COUNT(*) FROM automation_ips')->fetchColumn()===6,'failed run retains queued work');
 			check($GLOBALS['reports']===0,'failed run does not report success');
 			if ($scenario==='deadline') { check(microtime(true)-$started<8,'parent enforces a real child deadline'); }
-			if ($scenario==='completion-write') { $connection->exec('DROP TRIGGER reject_completion'); }
-			if ($scenario==='schedule-write') { $connection->exec('DROP TRIGGER reject_schedule'); }
+			if ($scenario==='completion-write') { $connection->exec('ALTER TABLE automation_networks DROP CONSTRAINT reject_completion'); }
+			if ($scenario==='schedule-write') { $connection->exec('ALTER TABLE automation_networks DROP CONSTRAINT reject_schedule'); }
 			if ($scenario==='read-failure') { $connection->exec('ALTER TABLE automation_processes RENAME COLUMN unavailable_command TO command'); }
 			$GLOBALS['scenario']='success';
 			check(automation_run_network($connection,1,1,true,false,false),'retained work succeeds on retry');
