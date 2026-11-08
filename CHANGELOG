@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
+-issue: Record the system MIB collection time only after a collector has been started with --mibs, so a poller run that exits early no longer postpones collection for four hours; the bad SNMP index warning accompanies that run instead of repeating every poll while polling is disabled (#1348)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
 -issue: Accept an empty Data Source item name, minimum or maximum in an imported template when its per-Data Source override is set, as the Data Template form and export allow (#1349)
 -issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
