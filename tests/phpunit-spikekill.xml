@@ -4,6 +4,7 @@
     <testsuite name="Spikekill">
       <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
       <file>Unit/MailPreflightTest.php</file>
+      <file>Unit/Security/CrashConsistencyTest.php</file>
       <file>Unit/SnmpagentDisabledReceiverTest.php</file>
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
@@ -89,7 +90,7 @@
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>Unit/Core/Poller/SystemMibIntervalTest.php</file>
-      <file>Unit/Security/CrashConsistencyTest.php</file>
+      <file>Unit/Database/PluginTableRefreshTest.php</file>
       <file>Unit/Ui/Aggregate/AggregateTotalLegendNativeTest.php</file>
       <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/RealtimeScriptServerBatchTest.php</file>
