@@ -38,6 +38,7 @@
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
       <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
+      <file>./Unit/Database/DbUpdateTableKeysTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
