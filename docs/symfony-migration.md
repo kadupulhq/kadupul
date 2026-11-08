@@ -102,8 +102,9 @@ Legacy remembered login rotation binds the token to its admitted generation with
 a message authentication code (MAC). The generation stays on the server. Both
 adapters reject tokens bound to an older generation, even if an in-flight request
 stores a replacement after revocation. The legacy transition keeps the generation
-that admitted the original token. Existing unversioned cookies remain compatible
-and are converted when restored. Passwords and unrelated preferences are unchanged.
+that admitted the original token. A password login binds its new token to the
+generation of the session it creates. Existing unversioned cookies remain
+compatible and are converted when restored. Passwords and unrelated preferences are unchanged.
 
 Deploy these authentication changes to all application instances together. Older
 versions do not validate the marker in rotated remembered tokens, so mixed-version

@@ -236,7 +236,10 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
                 /* Publish remembered credentials only after the session transition succeeds. */
                 if ($auth_method != 2 && $user['id'] !== get_guest_account()
                     && isset_request_var('remember_me') && read_config_option('auth_cache_enabled') == 'on') {
-                    set_auth_cookie($user);
+                    // Bind the token to the generation this session was bound to,
+                    // so a Logout Everywhere committed meanwhile also revokes it.
+                    // A missing binding is refused by set_auth_cookie(), not left unversioned.
+                    set_auth_cookie($user, $_SESSION['sess_user_credential'] ?? '');
                 }
             }
 
