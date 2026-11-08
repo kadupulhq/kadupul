@@ -96,6 +96,9 @@ tests do not notice: add an assertion that fails for it, or explain in the
 review why the behavior does not matter. Survivors never fail the job; it fails
 only when the tool breaks, for example when the initial test run fails or runs
 no tests, or Infection writes no report. The check is not required.
+Infection mutates only added and modified files, so a file moved and edited
+under `src/` is not mutated; the summary lists such files under "Renamed files
+not mutated" so that a refactor's clean result is not read as coverage.
 
 Coverage comes from the PHPUnit suite in `phpunit-symfony.xml`. Legacy files
 are not mutated: the Pest suite evaluates extracted source through

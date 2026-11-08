@@ -15,6 +15,11 @@ the two results a reviewer needs to tell apart:
      tests or wrote no coverage, Infection exited nonzero, or its JSON
      report is missing or malformed.
 
+Infection reads its diff with --diff-filter=AM, and Git's rename detection
+reports a file moved and edited under src/ as renamed, so Infection mutates
+none of its lines. The summary lists those files so that a clean result for a
+refactor is not read as coverage of them.
+
 Coverage comes from the PHPUnit suite in phpunit-symfony.xml. The legacy Pest
 suite evaluates extracted source (tests/Helpers/PhpSource.php), so its coverage
 cannot be attributed to files and legacy code is not mutated.
@@ -97,6 +102,37 @@ def changed_lines(root, base):
                 if added:
                     counts[current] = counts.get(current, 0) + added
     return counts
+
+
+def renamed_and_edited(root, base):
+    """List (old, new) PHP files under src/ that Git sees as renamed with edits.
+
+    Infection's AM filter skips them, so their changed lines are never
+    mutated. A pure rename changes no line and is not listed.
+    """
+    # No --find-renames: like Infection's own diff, this follows diff.renames,
+    # so a checkout that turns rename detection off lists nothing here and
+    # Infection mutates the moved file as added.
+    output = git(root, "--no-pager", "diff", base, "--no-ext-diff", "--name-status", "-z",
+                 "--diff-filter=R", "--", f"{SOURCE_DIRECTORY}/*.php")
+    fields = output.split("\0")
+    renamed = []
+    # -z output is status, old path, new path for each rename.
+    for index in range(0, len(fields) - 2, 3):
+        status, old, new = fields[index:index + 3]
+        if status.startswith("R") and status != "R100":
+            renamed.append((old, new))
+    return sorted(renamed)
+
+
+def renamed_note(renamed):
+    """Markdown naming the renamed and edited files Infection did not mutate, or ''."""
+    if not renamed:
+        return ""
+    files = "\n".join(f"- `{old}` -> `{new}`" for old, new in renamed)
+    return ("\n\n### Renamed files not mutated\n\nInfection mutates only added and modified "
+            "files, so the edits in these renamed files were not mutated. Review their tests "
+            f"by hand:\n\n{files}")
 
 
 def write_phpunit_config(root, directory):
@@ -311,10 +347,11 @@ def main(argv=None):
     try:
         merge_base = git(root, "merge-base", arguments.base, "HEAD").strip()
         lines = changed_lines(root, merge_base)
+        renamed = renamed_note(renamed_and_edited(root, merge_base))
         if not lines:
             write_summary("## Mutation testing on changed lines (advisory)\n\n"
                           f"No PHP line under `src/` was added or modified against `{merge_base}`; "
-                          "nothing to mutate.", summaries)
+                          "nothing to mutate." + renamed, summaries)
             print("No added or modified PHP lines under src/; nothing to mutate.")
             return 0
         write_phpunit_config(root, config_directory)
@@ -337,12 +374,12 @@ def main(argv=None):
             files = "\n".join(f"- `{path}`: {count} line(s)" for path, count in sorted(lines.items()))
             write_summary("## Mutation testing on changed lines (advisory)\n\n"
                           f"None of the {tests} tests executed any changed line, so no mutant "
-                          f"was generated. Changed lines against `{merge_base}`:\n\n{files}",
+                          f"was generated. Changed lines against `{merge_base}`:\n\n{files}" + renamed,
                           summaries)
             print(f"{tests} tests ran; none executed a changed line.")
             return 0
         report = load_report(report_path)
-        write_summary(render(root, merge_base, lines, report), summaries)
+        write_summary(render(root, merge_base, lines, report) + renamed, summaries)
     except ToolFailure as error:
         return fail(error, summaries)
     stats = report["stats"]

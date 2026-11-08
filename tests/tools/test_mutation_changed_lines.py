@@ -150,6 +150,48 @@ class MutationChangedLinesTest(unittest.TestCase):
         self.assertIsNone(self.receipt("infection"))
         self.assertIn("nothing to mutate", self.summary_text())
 
+    def test_a_renamed_and_edited_file_is_named_as_not_mutated(self):
+        body = "".join(f"    $value{n} = {n};\n" for n in range(20))
+        self.write("src/Old.php", f"<?php\nfunction old(): void\n{{\n{body}}}\n")
+        self.write("src/Kept.php", "<?php\nfunction kept(): int\n{\n    return 1;\n}\n")
+        self.git("add", "src/Old.php", "src/Kept.php")
+        self.commit("add sources")
+        base = self.git("rev-parse", "HEAD").strip()
+        (self.root / "src/Moved").mkdir()
+        self.git("mv", "src/Old.php", "src/Moved/New.php")
+        self.git("mv", "src/Kept.php", "src/Moved/Kept.php")
+        self.write("src/Moved/New.php", f"<?php\nfunction old(): void\n{{\n{body}    $value20 = 20;\n}}\n")
+        self.git("add", "src/Moved/New.php")
+        self.commit("move and edit")
+
+        result = self.run_wrapper(infection="broken", phpunit="fail", base=base)
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIsNone(self.receipt("infection"))
+        summary = self.summary_text()
+        self.assertIn("nothing to mutate.", summary)
+        self.assertIn("### Renamed files not mutated", summary)
+        self.assertIn("- `src/Old.php` -> `src/Moved/New.php`", summary)
+        self.assertNotIn("Kept.php", summary)                 # a pure rename changes no line
+
+    def test_renamed_files_are_named_beside_a_mutation_report(self):
+        self.write("src/Old.php", "<?php\n" + "".join(f"// line {n}\n" for n in range(20)))
+        self.git("add", "src/Old.php")
+        self.commit("add a source")
+        base = self.git("rev-parse", "HEAD").strip()
+        self.git("mv", "src/Old.php", "src/New.php")
+        self.write("src/New.php", "<?php\n" + "".join(f"// line {n}\n" for n in range(20)) + "// added\n")
+        self.write("src/Guard.php", "<?php\nfunction guard(): int\n{\n    return 2 - 1;\n}\n")
+        self.git("add", "src/New.php", "src/Guard.php")
+        self.commit("move, edit and change")
+
+        result = self.run_wrapper(base=base)
+
+        self.assertEqual(0, result.returncode, result.stderr)
+        summary = self.summary_text()
+        self.assertIn("| Escaped | 1 |", summary)
+        self.assertIn("- `src/Old.php` -> `src/New.php`", summary)
+
     def test_deleted_lines_alone_are_nothing_to_mutate(self):
         self.write("src/Guard.php", "<?php\nfunction guard(): int\n{\n}\n")
         self.git("add", "src/Guard.php")
