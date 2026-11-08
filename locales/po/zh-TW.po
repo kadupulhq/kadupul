@@ -13679,7 +13679,7 @@ msgstr ""
 #: lib/api_device.php:1495 lib/api_device.php:1682 lib/api_device.php:1686
 #: lib/api_device.php:1722 lib/api_device.php:1726 lib/api_device.php:1771
 #: lib/api_device.php:1775 lib/api_device.php:1836 lib/api_device.php:1840
-#: lib/utility.php:744
+#: lib/utility.php:757
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr ""
@@ -14069,459 +14069,448 @@ msgstr "密碼不匹配"
 msgid "System Device"
 msgstr "同步設備"
 
-#: lib/data_query.php:73 lib/data_query.php:446
+#: lib/data_query.php:81 lib/data_query.php:235
 #, fuzzy
 msgid "Automation Execution for Data Query complete"
 msgstr "完成數據查詢的自動化執行"
 
-#: lib/data_query.php:76 lib/data_query.php:449
+#: lib/data_query.php:84 lib/data_query.php:238
 #, fuzzy
 msgid "Plugin Hooks complete"
 msgstr "插件掛鉤完成"
 
-#: lib/data_query.php:94
+#: lib/data_query.php:102
 #, fuzzy, php-format
 msgid "Running Data Query [%s]."
 msgstr "運行數據查詢[%s]。"
 
-#: lib/data_query.php:106
+#: lib/data_query.php:114
 #, fuzzy, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "找到Type =&#39;%s&#39;[%s]。"
 
-#: lib/data_query.php:128
+#: lib/data_query.php:136
 #, fuzzy, php-format
 msgid "Unknown Type = '%s'."
 msgstr "未知類型=&#39;%s&#39;。"
 
-#: lib/data_query.php:163
-#, fuzzy
-msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
-msgstr "警告：排序字段關聯已更改。可能會出現重新映射問題！"
-
-#: lib/data_query.php:175
-#, fuzzy
-msgid "Update Data Query Sort Cache complete"
-msgstr "更新數據查詢排序緩存完成"
-
-#: lib/data_query.php:202
-#, fuzzy, php-format
-msgid "Found %s Local Data ID's to Verify"
-msgstr "找到要轉換的%s表"
-
-#: lib/data_query.php:308
-#, fuzzy, php-format
-msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
-msgstr "檢測到索引更改！ CurrentIndex：%s，PreviousIndex：%s"
-
-#: lib/data_query.php:332
-#, fuzzy, php-format
-msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
-msgstr "檢測到索引刪除！ PreviousIndex：%s"
-
-#: lib/data_query.php:335
-#, fuzzy, php-format
-msgid "Index Removal Detected! PreviousIndex: %s"
-msgstr "檢測到索引刪除！ PreviousIndex：%s"
-
-#: lib/data_query.php:375
+#: lib/data_query.php:158
 #, fuzzy, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "與本地數據的索引關聯完成"
 
-#: lib/data_query.php:378
-#, fuzzy, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "找到已更改的%s和%s孤立的本地數據ID以重新映射。"
-
-#: lib/data_query.php:381
-#, fuzzy
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "將圖表重新映射到新索引"
-
-#: lib/data_query.php:387 lib/data_query.php:394
+#: lib/data_query.php:163 lib/data_query.php:170
 #, fuzzy
 msgid "Done updating Data Source Title Cache"
 msgstr "重複的數據源配置文件"
 
-#: lib/data_query.php:390 lib/data_query.php:397
+#: lib/data_query.php:166 lib/data_query.php:173
 #, fuzzy
 msgid "Done updating Graph Title Cache"
 msgstr "完成更新圖標題緩存"
 
-#: lib/data_query.php:401
+#: lib/data_query.php:177
 #, fuzzy
 msgid "Index Association with Local Data complete"
 msgstr "與本地數據的索引關聯完成"
 
-#: lib/data_query.php:407
+#: lib/data_query.php:189
 #, fuzzy, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "更新重新索引緩存完成。曾經有"
 
-#: lib/data_query.php:411
+#: lib/data_query.php:192
 #, fuzzy
 msgid "Update Poller Cache for Query complete"
 msgstr "更新輪詢器緩存以查詢完成"
 
-#: lib/data_query.php:413
-#, fuzzy
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "未檢測到索引更改，跳過重新索引和輪詢器緩存重新填充"
+#: lib/data_query.php:194
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
-#: lib/data_query.php:438
+#: lib/data_query.php:225
 #, fuzzy
 msgid "Automation Executing for Data Query complete"
 msgstr "自動化執行數據查詢完成"
 
-#: lib/data_query.php:441
+#: lib/data_query.php:228
 #, fuzzy
 msgid "Plugin hooks complete"
 msgstr "插件掛鉤完成"
 
-#: lib/data_query.php:554
+#: lib/data_query.php:293
+#, fuzzy
+msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
+msgstr "警告：排序字段關聯已更改。可能會出現重新映射問題！"
+
+#: lib/data_query.php:305
+#, fuzzy
+msgid "Update Data Query Sort Cache complete"
+msgstr "更新數據查詢排序緩存完成"
+
+#: lib/data_query.php:346
+#, fuzzy, php-format
+msgid "Found %s Local Data ID's to Verify"
+msgstr "找到要轉換的%s表"
+
+#: lib/data_query.php:428
+#, fuzzy, php-format
+msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
+msgstr "檢測到索引更改！ CurrentIndex：%s，PreviousIndex：%s"
+
+#: lib/data_query.php:456
+#, fuzzy, php-format
+msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
+msgstr "檢測到索引刪除！ PreviousIndex：%s"
+
+#: lib/data_query.php:459
+#, fuzzy, php-format
+msgid "Index Removal Detected! PreviousIndex: %s"
+msgstr "檢測到索引刪除！ PreviousIndex：%s"
+
+#: lib/data_query.php:591
 #, fuzzy
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "檢查排序字段更改。未檢測到任何更改"
 
-#: lib/data_query.php:559
+#: lib/data_query.php:596
 #, fuzzy, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "檢測到新的排序字段：&#39;%s&#39;舊排序字段&#39;%s&#39;"
 
-#: lib/data_query.php:580
+#: lib/data_query.php:617
 #, fuzzy
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "錯誤：新的排序字段不適合。排序字段不會更改。"
 
-#: lib/data_query.php:594
+#: lib/data_query.php:631
 #, fuzzy
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "新的排序字段已驗證。排序字段將更新。"
 
-#: lib/data_query.php:707
+#: lib/data_query.php:748
 #, fuzzy, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "無法在&#39;%s&#39;找到數據查詢XML文件"
 
-#: lib/data_query.php:711
+#: lib/data_query.php:752
 #, fuzzy, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "在&#39;%s&#39;找到數據查詢XML文件"
 
-#: lib/data_query.php:735 lib/data_query.php:968 lib/data_query.php:2668
+#: lib/data_query.php:776 lib/data_query.php:1009 lib/data_query.php:2720
 #, fuzzy
 msgid "Error parsing XML file into an array."
 msgstr "將XML文件解析為數組時出錯。"
 
-#: lib/data_query.php:739 lib/data_query.php:972
+#: lib/data_query.php:780 lib/data_query.php:1013
 #, fuzzy
 msgid "XML file parsed ok."
 msgstr "XML文件解析好了。"
 
-#: lib/data_query.php:747 lib/data_query.php:975
+#: lib/data_query.php:788 lib/data_query.php:1016
 #, fuzzy, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "字段&lt;index_order&gt;%s &lt;/ index_order&gt;無效"
 
-#: lib/data_query.php:748 lib/data_query.php:976
+#: lib/data_query.php:789 lib/data_query.php:1017
 #, fuzzy
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "必須僅包含&lt;direction&gt;輸入&lt;/ direction&gt;或&lt;direction&gt;輸入輸出&lt;/ direction&gt;字段"
 
-#: lib/data_query.php:765
+#: lib/data_query.php:806
 #, fuzzy
 msgid "Data Query returned no indexes."
 msgstr "錯誤：數據查詢未返回任何索引。"
 
-#: lib/data_query.php:766
+#: lib/data_query.php:807
 #, fuzzy
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "XML文件中缺少&lt;arg_num_indexes&gt;，不支持“索引計數已更改”"
 
-#: lib/data_query.php:769
+#: lib/data_query.php:810
 #, fuzzy, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "執行num&#39;索引&#39;%s&#39;的腳本"
 
-#: lib/data_query.php:772
+#: lib/data_query.php:813
 #, fuzzy, php-format
 msgid "Found number of indexes: %s"
 msgstr "找到索引數：%s"
 
-#: lib/data_query.php:776
+#: lib/data_query.php:817
 #, fuzzy
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "XML文件中缺少&lt;arg_num_indexes&gt;，不支持“索引計數已更改”"
 
-#: lib/data_query.php:778
+#: lib/data_query.php:819
 #, fuzzy
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "XML文件中缺少&lt;arg_num_indexes&gt;，通過計算arg_index條目模擬“索引計數已更改”"
 
-#: lib/data_query.php:789
+#: lib/data_query.php:830
 #, fuzzy
 msgid "ERROR: Data Query returned no indexes."
 msgstr "錯誤：數據查詢未返回任何索引。"
 
-#: lib/data_query.php:793
+#: lib/data_query.php:834
 #, fuzzy, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "執行索引列表&#39;%s&#39;的腳本，索引計數：%s"
 
-#: lib/data_query.php:795
+#: lib/data_query.php:836
 #, fuzzy
 msgid "Click to show Data Query output for 'index'"
 msgstr "單擊以顯示“索引”的數據查詢輸出"
 
-#: lib/data_query.php:798
+#: lib/data_query.php:839
 #, fuzzy, php-format
 msgid "Found index: %s"
 msgstr "找到索引：%s"
 
-#: lib/data_query.php:813 lib/data_query.php:1383
+#: lib/data_query.php:854 lib/data_query.php:1424
 #, fuzzy, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "單擊以顯示字段&#39;%s&#39;的數據查詢輸出"
 
-#: lib/data_query.php:819
+#: lib/data_query.php:860
 #, fuzzy, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "排序字段未返回任何數據。無法繼續重新索引。"
 
-#: lib/data_query.php:821
+#: lib/data_query.php:862
 #, fuzzy, php-format
 msgid "Executing script query '%s'"
 msgstr "執行腳本查詢&#39;%s&#39;"
 
-#: lib/data_query.php:832 lib/data_query.php:839
+#: lib/data_query.php:873 lib/data_query.php:880
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s"
 
-#: lib/data_query.php:879 lib/data_query.php:895
+#: lib/data_query.php:920 lib/data_query.php:936
 #, fuzzy, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "總計： %f，Delta： %f，%s"
 
-#: lib/data_query.php:962
+#: lib/data_query.php:1003
 #, fuzzy, php-format
 msgid "Invalid host_id: %s"
 msgstr "無效的host_id：%s"
 
-#: lib/data_query.php:986
+#: lib/data_query.php:1027
 msgid "Auto Bulk Walk Size Selected."
 msgstr "選擇了自動批量步行大小。"
 
-#: lib/data_query.php:1008 lib/data_query.php:1067
+#: lib/data_query.php:1049 lib/data_query.php:1108
 #, fuzzy
 msgid "Failed to load SNMP session."
 msgstr "無法加載SNMP會話。"
 
-#: lib/data_query.php:1018
+#: lib/data_query.php:1059
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "測試批量步行大小 %d，響應為 %2.4f。"
 
-#: lib/data_query.php:1029
+#: lib/data_query.php:1070
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "選擇的批量步行大小為 %d。"
 
-#: lib/data_query.php:1032
+#: lib/data_query.php:1073
 msgid "Saving Bulk Walk Size to Device."
 msgstr "將批量步行大小保存到設備。"
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1087
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "批量步行大小固定為 %d。"
 
-#: lib/data_query.php:1080
+#: lib/data_query.php:1121
 #, fuzzy, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "執行SNMP獲取索引數量@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1082
+#: lib/data_query.php:1123
 #, fuzzy
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "XML文件中缺少&lt;oid_num_indexes&gt;，通過計算oid_index條目模擬“索引計數已更改”"
 
-#: lib/data_query.php:1085
+#: lib/data_query.php:1126
 #, fuzzy, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "執行SNMP walk for index列表@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1089
+#: lib/data_query.php:1130
 #, fuzzy
 msgid "No SNMP data returned"
 msgstr "沒有返回SNMP數據"
 
-#: lib/data_query.php:1094
+#: lib/data_query.php:1135
 #, fuzzy, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "在OID找到的索引：&#39;%s&#39;值：&#39;%s&#39;"
 
-#: lib/data_query.php:1125
+#: lib/data_query.php:1166
 #, fuzzy, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "過濾索引列表@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1129
+#: lib/data_query.php:1170
 #, fuzzy, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "在OID找到過濾的索引：&#39;%s&#39;值：&#39;%s&#39;"
 
-#: lib/data_query.php:1145
+#: lib/data_query.php:1186
 #, fuzzy, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "過濾索引列表@&#39;%s&#39;索引計數：%s"
 
-#: lib/data_query.php:1149
+#: lib/data_query.php:1190
 #, fuzzy, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "在OID找到過濾的索引：&#39;%s&#39;值：&#39;%s&#39;"
 
-#: lib/data_query.php:1169
+#: lib/data_query.php:1210
 #, fuzzy, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "修復&#39;%s&#39;錯誤的&#39;方法&#39;字段，因為&#39;rewrite_index&#39;或&#39;oid_suffix&#39;已定義"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1217
 #, fuzzy, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "插入字段&#39;%s&#39;的索引數據[value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1181
+#: lib/data_query.php:1222
 #, fuzzy, php-format
 msgid "Located input field '%s' [get]"
 msgstr "位於輸入字段&#39;%s&#39;[get]"
 
-#: lib/data_query.php:1190
+#: lib/data_query.php:1231
 #, fuzzy, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "找到OID重寫規則：&#39;s /%s /%s /&#39;"
 
-#: lib/data_query.php:1201
+#: lib/data_query.php:1242
 #, fuzzy, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "OID的oid_rewrite：&#39;%s&#39;新的OID：&#39;%s&#39;"
 
-#: lib/data_query.php:1206
+#: lib/data_query.php:1247
 #, fuzzy, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "執行SNMP獲取數據@&#39;%s&#39;[value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1217
+#: lib/data_query.php:1258
 #, fuzzy, php-format
 msgid "Field '%s' %s"
 msgstr "字段&#39;%s&#39;%s"
 
-#: lib/data_query.php:1278
+#: lib/data_query.php:1319
 #, fuzzy, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "執行SNMP獲取%s oids（%s）"
 
-#: lib/data_query.php:1316 lib/data_query.php:1423 lib/data_query.php:1431
+#: lib/data_query.php:1357 lib/data_query.php:1464 lib/data_query.php:1472
 #, fuzzy, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "返回的排序字段不是數據。無法繼續重新索引OID [%s]"
 
-#: lib/data_query.php:1322
+#: lib/data_query.php:1363
 #, fuzzy, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "找到數據的結果@&#39;%s&#39;[value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1335
+#: lib/data_query.php:1376
 #, fuzzy, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "設置數據@&#39;%s&#39;的結果[key =&#39;%s&#39;，value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1345
+#: lib/data_query.php:1386
 #, fuzzy, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "數據的跳過結果@&#39;%s&#39;[key =&#39;%s&#39;，value =&#39;%s&#39;]"
 
-#: lib/data_query.php:1363
+#: lib/data_query.php:1404
 #, fuzzy, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "獲得SNMP獲取數據的結果@&#39;%s&#39;[value =&#39;%s&#39;]（索引：%s）"
 
-#: lib/data_query.php:1377
+#: lib/data_query.php:1418
 #, fuzzy, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "執行SNMP獲取數據@&#39;%s&#39;[value =&#39;$ value&#39;]"
 
-#: lib/data_query.php:1385
+#: lib/data_query.php:1426
 #, fuzzy, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "位於輸入字段&#39;%s&#39;[walk]"
 
-#: lib/data_query.php:1436
+#: lib/data_query.php:1477
 #, fuzzy, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "執行SNMP walk for data @&#39;%s&#39;"
 
-#: lib/data_query.php:1455 lib/data_query.php:1513 lib/data_query.php:1562
-#: lib/data_query.php:1613
+#: lib/data_query.php:1496 lib/data_query.php:1554 lib/data_query.php:1603
+#: lib/data_query.php:1654
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr ""
 
-#: lib/data_query.php:1496
+#: lib/data_query.php:1537
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s [來自%s]"
 
-#: lib/data_query.php:1538
+#: lib/data_query.php:1579
 #, fuzzy, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "找到OCTET STRING&#39;%s&#39;解碼值：&#39;%s&#39;"
 
-#: lib/data_query.php:1544 lib/data_query.php:1593
+#: lib/data_query.php:1585 lib/data_query.php:1634
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s [來自regexp oid parse]"
 
-#: lib/data_query.php:1621
+#: lib/data_query.php:1662
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "找到項目[%s =&#39;%s&#39;]索引：%s [來自regexp oid value parse]"
 
-#: lib/data_query.php:1856
+#: lib/data_query.php:1904
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr ""
 
-#: lib/data_query.php:1869
+#: lib/data_query.php:1917
 msgid "Could not parse translation map (rewrite_value)"
 msgstr ""
 
-#: lib/data_query.php:1893
+#: lib/data_query.php:1941
 #, fuzzy, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "OID的oid_rewrite：&#39;%s&#39;新的OID：&#39;%s&#39;"
 
-#: lib/data_query.php:2007
+#: lib/data_query.php:2055
 msgid "Update graph data query cache complete"
 msgstr "更新數據查詢排序緩存完成"
 
-#: lib/data_query.php:2026
+#: lib/data_query.php:2074
 #, fuzzy
 msgid "Re-Indexing Data Query complete"
 msgstr "重新索引數據查詢完成"
 
-#: lib/data_query.php:2178
+#: lib/data_query.php:2226
 #, fuzzy
 msgid "Unknown Index"
 msgstr "未知索引"
 
-#: lib/data_query.php:2792
+#: lib/data_query.php:2844
 #, fuzzy, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "您必須為數據源'%s'選擇XML輸出列，並將復選框切換到右側"
 
-#: lib/data_query.php:2798
+#: lib/data_query.php:2850
 #, fuzzy
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "您的圖表模板尚未使用數據模板。請更正您的圖表模板"
@@ -14630,7 +14619,7 @@ msgid "User Community"
 msgstr "用戶社區"
 
 #: lib/functions.php:4272 lib/functions.php:4297 lib/html.php:2906
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 #, fuzzy
 msgid "Documentation"
 msgstr "文件"
@@ -17873,11 +17862,11 @@ msgstr "需要：Kadupul&gt; =%s"
 msgid "Not Stated"
 msgstr "沒有說明"
 
-#: lib/poller.php:2026
+#: lib/poller.php:2028
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2275
+#: lib/poller.php:2052 lib/poller.php:2277
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -18515,215 +18504,215 @@ msgstr "圖形創建"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr ""
 
-#: lib/utility.php:1155
+#: lib/utility.php:1168
 #, fuzzy
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+和MariaDB 10.0+是很棒的版本，是非常好的版本。確保你運行最新的版本，雖然它解決了一個長期存在的低級別網絡問題，這個問題導致脊柱出現許多可靠性問題。"
 
-#: lib/utility.php:1167
+#: lib/utility.php:1180
 #, fuzzy, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "建議您在大於5.1的任何%s版本中啟用InnoDB。"
 
-#: lib/utility.php:1180 lib/utility.php:1217
+#: lib/utility.php:1193 lib/utility.php:1230
 #, fuzzy
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "將Kadupul與英語以外的語言一起使用時，使用utf8mb4_unicode_ci校對類型非常重要，因為某些字符需要多個字節。"
 
-#: lib/utility.php:1186 lib/utility.php:1192 lib/utility.php:1223
-#: lib/utility.php:1229
+#: lib/utility.php:1199 lib/utility.php:1205 lib/utility.php:1236
+#: lib/utility.php:1242
 #, fuzzy
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "將Kadupul與英語以外的語言一起使用時，使用utf8mb4字符集非常重要，因為某些字符需要多個字節。"
 
-#: lib/utility.php:1205
+#: lib/utility.php:1218
 #, fuzzy, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "建議您在大於5.1的任何%s版本中啟用InnoDB。"
 
-#: lib/utility.php:1238
+#: lib/utility.php:1251
 #, fuzzy, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "根據登錄次數和使用脊椎數據收集器，%s將需要許多連接。 spine的計算是：total_connections = total_processes *（total_threads + script_servers + 1），然後您必須為用戶連接留出空間，這將根據並發登錄帳戶的數量而變化。"
 
-#: lib/utility.php:1243
+#: lib/utility.php:1256
 #, fuzzy
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "使用innodb_file_per_table時，保持表緩存更大意味著更少的文件打開/關閉操作。"
 
-#: lib/utility.php:1248
+#: lib/utility.php:1261
 #, fuzzy
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "使用遠程輪詢功能，大量數據將從主服務器同步到遠程輪詢器。因此，請將此值保持在16M或以上。"
 
-#: lib/utility.php:1254
+#: lib/utility.php:1267
 #, fuzzy, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "如果使用Kadupul Performance Booster並選擇內存存儲引擎，則必須小心在系統內存表空間耗盡之前刷新Performance Booster緩衝區。這有兩種方法，首先將輸出列的大小減小到恰當的大小。此列位於表poller_output和poller_output_boost中。您可以做的第二件事是為內存表分配更多內存。我們已經任意選擇了10 %%系統內存的推薦值，但如果您使用的是SSD磁盤驅動器，或者係統較小，則可以忽略此建議或選擇其他存儲引擎。您可能會在Console  - &gt; System Utilities  - &gt; View Boost Status下看到Performance Booster表的預期消耗。"
 
-#: lib/utility.php:1260
+#: lib/utility.php:1273
 #, fuzzy
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "執行子查詢時，臨時表大小較大時，請將這些臨時表保留在內存中。"
 
-#: lib/utility.php:1266 lib/utility.php:1272
+#: lib/utility.php:1279 lib/utility.php:1285
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1278
+#: lib/utility.php:1291
 #, fuzzy, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "使用InnoDB存儲時，將表空間分開是很重要的。這使得對於%s的長時間用戶來說，管理表更簡單。如果您當前正在運行此服務，則可以通過啟用該功能，然後在所有InnoDB表上運行alter語句來遷移到每個文件存儲。"
 
-#: lib/utility.php:1284
+#: lib/utility.php:1297
 #, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "使用innodb_file_per_table時，將innodb_file_format設置為Barracuda非常重要。此設置將允許更長的索引對某些Kadupul表很重要。"
 
-#: lib/utility.php:1290
+#: lib/utility.php:1303
 #, fuzzy
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "如果表的索引很大，則必須使用梭子魚的innodb_file_format和innodb_large_prefix等於1的操作。否則可能導致插件無法正確創建表。"
 
-#: lib/utility.php:1296
+#: lib/utility.php:1309
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB將盡可能多地保存系統內存中的表和索引。因此，你應該使innodb_buffer_pool足夠大，以便在內存中保存盡可能多的表和索引。檢查/ var / lib / mysql / Kadupul目錄的大小將有助於確定此值。我們建議您的系統總內存佔25 %%，但您的要求會因係統大小而異。"
 
-#: lib/utility.php:1302
+#: lib/utility.php:1315
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "除非您的Kadupul實例在ZFS或FusionI / O上運行，並且兩者都具有內部日記功能以適應突然的系統崩潰，否則此設置應保持為ON。但是，如果您的電源非常好，並且系統很少宕機並且有備份，那麼將此設置設置為OFF可以使數據庫性能提高近50％。"
 
-#: lib/utility.php:1307
+#: lib/utility.php:1320
 #, fuzzy
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "這是存儲元數據的地方。如果你有很多表，那麼增加它會很有用。"
 
-#: lib/utility.php:1312
+#: lib/utility.php:1325
 #, fuzzy
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Rogue查詢不應該讓數據庫脫機到其他人。在殺死您的系統之前殺死這些查詢。"
 
-#: lib/utility.php:1317
+#: lib/utility.php:1330
 #, fuzzy
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "使用O_DIRECT方法刷新頁面時，會發生最大I / O性能。"
 
-#: lib/utility.php:1327
+#: lib/utility.php:1340
 #, fuzzy, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "將此值設置為2意味著您將每秒刷新所有事務而不是提交。這允許%s更少地執行寫入。"
 
-#: lib/utility.php:1332
+#: lib/utility.php:1345
 #, fuzzy
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "使用現代SSD類型存儲，具有多個io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1340 lib/utility.php:1382
+#: lib/utility.php:1353 lib/utility.php:1395
 #, fuzzy, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "從%s%s開始，您可以控制%s將事務刷新到磁盤的頻率。默認值為1秒，但在高I / O系統中設置為大於1的值可以允許磁盤I / O更順序"
 
-#: lib/utility.php:1345
+#: lib/utility.php:1358
 #, fuzzy
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "使用現代SSD類型存儲，具有多個讀取io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1350
+#: lib/utility.php:1363
 #, fuzzy
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "使用現代SSD類型存儲，具有多個寫入io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1356
+#: lib/utility.php:1369
 #, fuzzy, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s會將innodb_buffer_pool劃分為內存區域以提高性能。最大值為64.當你的innodb_buffer_pool小於1GB時，你應該使用池大小除以128MB。繼續使用此公式，最大值為64。"
 
-#: lib/utility.php:1356
+#: lib/utility.php:1369
 #, fuzzy, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s會將innodb_buffer_pool劃分為內存區域以提高性能。最大值為64.當你的innodb_buffer_pool小於1GB時，你應該使用池大小除以128MB。繼續使用此公式，最大值為64。"
 
-#: lib/utility.php:1362 lib/utility.php:1398
+#: lib/utility.php:1375 lib/utility.php:1411
 #, fuzzy
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "如果您有SSD磁盤，請使用此建議。如果您有物理硬盤驅動器，請使用200 *陣列中的活動驅動器數量。如果使用NVMe或PCIe閃存，可以使用高達100000的更大數字。"
 
-#: lib/utility.php:1368 lib/utility.php:1404
+#: lib/utility.php:1381 lib/utility.php:1417
 #, fuzzy
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "如果您有SSD磁盤，請使用此建議。如果您有物理硬盤驅動器，請使用2000 *陣列中的活動驅動器數量。如果使用NVMe或PCIe Flash，則可以使用高達200000的更大數字。"
 
-#: lib/utility.php:1374 lib/utility.php:1410
+#: lib/utility.php:1387 lib/utility.php:1423
 #, fuzzy
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "如果您有SSD磁盤，請使用此建議。否則，請勿設置此設置。"
 
-#: lib/utility.php:1387
+#: lib/utility.php:1400
 #, fuzzy
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "使用現代SSD類型存儲，具有多個讀取io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1392
+#: lib/utility.php:1405
 #, fuzzy
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "使用現代SSD類型存儲，具有多個寫入io線程對於具有高io特性的應用是有利的。"
 
-#: lib/utility.php:1423
+#: lib/utility.php:1436
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "使用 MariaDB 10.2.4 及更高版本時，如果啟用了原子寫入，則應關閉此設置。因此，請啟用原子寫入而不是雙寫入緩衝區，因為它會提高性能。"
 
-#: lib/utility.php:1430
+#: lib/utility.php:1443
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "使用 MariaDB 10.2.4 及更高版本時，您可以在雙寫緩衝區上使用原子寫入來提高性能。"
 
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 #, fuzzy, php-format
 msgid "%s Tuning"
 msgstr "%s調整"
 
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 #, fuzzy
 msgid "Note: Many changes below require a database restart"
 msgstr "注意：以下許多更改都需要重新啟動數據庫"
 
-#: lib/utility.php:1455
+#: lib/utility.php:1468
 #, fuzzy
 msgid "Variable"
 msgstr "变数"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1469
 #, fuzzy
 msgid "Current Value"
 msgstr "當前的數值"
 
-#: lib/utility.php:1458
+#: lib/utility.php:1471
 #, fuzzy
 msgid "Recommended Value"
 msgstr "推薦值"
 
-#: lib/utility.php:1459
+#: lib/utility.php:1472
 #, fuzzy
 msgid "Comments"
 msgstr "評論"
 
-#: lib/utility.php:2053
+#: lib/utility.php:2066
 #, fuzzy, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP%s是最小版本"
 
-#: lib/utility.php:2055
+#: lib/utility.php:2068
 #, fuzzy, php-format
 msgid "A minimum of %s memory limit"
 msgstr "至少%s MB內存限制"
 
-#: lib/utility.php:2057
+#: lib/utility.php:2070
 #, fuzzy, php-format
 msgid "A minimum of %s m execution time"
 msgstr "至少%sm執行時間"
 
-#: lib/utility.php:2059
+#: lib/utility.php:2072
 #, fuzzy
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "與MySQL和系統匹配的有效時區"

@@ -11676,7 +11676,7 @@ msgstr ""
 #: lib/api_device.php:1495 lib/api_device.php:1682 lib/api_device.php:1686
 #: lib/api_device.php:1722 lib/api_device.php:1726 lib/api_device.php:1771
 #: lib/api_device.php:1775 lib/api_device.php:1836 lib/api_device.php:1840
-#: lib/utility.php:744
+#: lib/utility.php:757
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "הסמן המרוחק %s מושבת, יהיה עליך לבצע FullSync ברגע שהוא יעלה שוב"
@@ -12017,430 +12017,421 @@ msgstr "סיסמאות לא תואמות"
 msgid "System Device"
 msgstr "סנכרון התקנים"
 
-#: lib/data_query.php:73 lib/data_query.php:446
+#: lib/data_query.php:81 lib/data_query.php:235
 msgid "Automation Execution for Data Query complete"
 msgstr "ביצוע אוטומציה עבור שאילתת הנתונים הושלם"
 
-#: lib/data_query.php:76 lib/data_query.php:449
+#: lib/data_query.php:84 lib/data_query.php:238
 msgid "Plugin Hooks complete"
 msgstr "Plugin הוקס מלאה"
 
-#: lib/data_query.php:94
+#: lib/data_query.php:102
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "הפעלת שאילתת נתונים [ %s]."
 
-#: lib/data_query.php:106
+#: lib/data_query.php:114
 #, fuzzy, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "נמצא סוג = '{ 0 }' [%s]."
 
-#: lib/data_query.php:128
+#: lib/data_query.php:136
 #, fuzzy, php-format
 msgid "Unknown Type = '%s'."
 msgstr "סוג לא ידוע"
 
-#: lib/data_query.php:163
-msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
-msgstr "אזהרה: ארגון שדה מיון השתנה. בעיות מיפוי מחדש עשויות להתרחש!"
-
-#: lib/data_query.php:175
-msgid "Update Data Query Sort Cache complete"
-msgstr "עדכן את מטמון המיון של שאילתת הנתונים במלואו"
-
-#: lib/data_query.php:202
-#, php-format
-msgid "Found %s Local Data ID's to Verify"
-msgstr "נמצאו טבלאות%s להמרה"
-
-#: lib/data_query.php:308
-#, php-format
-msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
-msgstr "מדד השינוי זוהה! נוכחי: %s, הקודםהבא: %s"
-
-#: lib/data_query.php:332
-#, php-format
-msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
-msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
-
-#: lib/data_query.php:335
-#, php-format
-msgid "Index Removal Detected! PreviousIndex: %s"
-msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
-
-#: lib/data_query.php:375
+#: lib/data_query.php:158
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "אימות של %s מזהה הנתונים המקומי הושלם"
 
-#: lib/data_query.php:378
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "נמצא שהשתנו%s ו-%s מזהי נתונים מקומיים יתומים למפה מחדש."
-
-#: lib/data_query.php:381
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Remapping גרפים לאינדקסים החדשים שלהם"
-
-#: lib/data_query.php:387 lib/data_query.php:394
+#: lib/data_query.php:163 lib/data_query.php:170
 msgid "Done updating Data Source Title Cache"
 msgstr "פרופיל מקור נתונים כפולים"
 
-#: lib/data_query.php:390 lib/data_query.php:397
+#: lib/data_query.php:166 lib/data_query.php:173
 msgid "Done updating Graph Title Cache"
 msgstr "הסתיים עדכון מטמון כותרת הגרף"
 
-#: lib/data_query.php:401
+#: lib/data_query.php:177
 msgid "Index Association with Local Data complete"
 msgstr "איגוד המדדים עם נתונים מקומיים הושלם"
 
-#: lib/data_query.php:407
+#: lib/data_query.php:189
 #, fuzzy, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "עדכון מטמון אינדקס חוזר הושלם. היו %s שינויי אינדקס, ו -{ 1} אינדקסים יתומים."
 
-#: lib/data_query.php:411
+#: lib/data_query.php:192
 msgid "Update Poller Cache for Query complete"
 msgstr "עדכן את הקובץ השמור של השואל עבור שאילתה"
 
-#: lib/data_query.php:413
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "לא נמצאו שינויים במדד, מדלגים מחדש אינדקס ומטמון פולר מחדש האוכלוסייה"
+#: lib/data_query.php:194
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
-#: lib/data_query.php:438
+#: lib/data_query.php:225
 msgid "Automation Executing for Data Query complete"
 msgstr "ביצוע אוטומציה עבור שאילתת הנתונים הושלם"
 
-#: lib/data_query.php:441
+#: lib/data_query.php:228
 msgid "Plugin hooks complete"
 msgstr "Plug- ווים מלאה"
 
-#: lib/data_query.php:554
+#: lib/data_query.php:293
+msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
+msgstr "אזהרה: ארגון שדה מיון השתנה. בעיות מיפוי מחדש עשויות להתרחש!"
+
+#: lib/data_query.php:305
+msgid "Update Data Query Sort Cache complete"
+msgstr "עדכן את מטמון המיון של שאילתת הנתונים במלואו"
+
+#: lib/data_query.php:346
+#, php-format
+msgid "Found %s Local Data ID's to Verify"
+msgstr "נמצאו טבלאות%s להמרה"
+
+#: lib/data_query.php:428
+#, php-format
+msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
+msgstr "מדד השינוי זוהה! נוכחי: %s, הקודםהבא: %s"
+
+#: lib/data_query.php:456
+#, php-format
+msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
+msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
+
+#: lib/data_query.php:459
+#, php-format
+msgid "Index Removal Detected! PreviousIndex: %s"
+msgstr "הסרת אינדקס זוהתה! הקודם Endex: %s"
+
+#: lib/data_query.php:591
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "בדיקת שינוי שדה מיון. לא זוהו שינויים."
 
-#: lib/data_query.php:559
+#: lib/data_query.php:596
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "שדה מיון חדש זוהה: &#39; %s&#39; שדה מיון ישן &#39; %s&#39;"
 
-#: lib/data_query.php:580
+#: lib/data_query.php:617
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "שגיאה: שדה מיון חדש אינו מתאים. שדה המיון לא ישתנה."
 
-#: lib/data_query.php:594
+#: lib/data_query.php:631
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "שדה מיון חדש תוקן. שדה המיון יעודכן."
 
-#: lib/data_query.php:707
+#: lib/data_query.php:748
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "לא ניתן למצוא קובץ XML לשאילתת נתונים ב- &#39; %s&#39;"
 
-#: lib/data_query.php:711
+#: lib/data_query.php:752
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "נמצא קובץ שאילתת נתוני XML ב- &#39; %s&#39;"
 
-#: lib/data_query.php:735 lib/data_query.php:968 lib/data_query.php:2668
+#: lib/data_query.php:776 lib/data_query.php:1009 lib/data_query.php:2720
 msgid "Error parsing XML file into an array."
 msgstr "שגיאה בהעברת קובץ XML למערך."
 
-#: lib/data_query.php:739 lib/data_query.php:972
+#: lib/data_query.php:780 lib/data_query.php:1013
 msgid "XML file parsed ok."
 msgstr "קובץ XML מנותח אישור."
 
-#: lib/data_query.php:747 lib/data_query.php:975
+#: lib/data_query.php:788 lib/data_query.php:1016
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "שדה לא חוקי &lt;index_order&gt; %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:748 lib/data_query.php:976
+#: lib/data_query.php:789 lib/data_query.php:1017
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "חייב להכיל שדות &lt;כיוון&gt; כיוון &lt;/ כיוון&gt; או &lt;כיוון&gt; קלט / פלט &lt;/ כיוון&gt; בלבד"
 
-#: lib/data_query.php:765
+#: lib/data_query.php:806
 msgid "Data Query returned no indexes."
 msgstr "שגיאה: שאילתת הנתונים החזירה לא אינדקסים."
 
-#: lib/data_query.php:766
+#: lib/data_query.php:807
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת אינדקס שונתה&#39; אינה נתמכת"
 
-#: lib/data_query.php:769
+#: lib/data_query.php:810
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "ביצוע סקריפט עבור num של אינדקסים &#39; %s&#39;"
 
-#: lib/data_query.php:772
+#: lib/data_query.php:813
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "נמצאו מספר אינדקסים: %s"
 
-#: lib/data_query.php:776
+#: lib/data_query.php:817
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת אינדקס שונתה&#39; אינה נתמכת"
 
-#: lib/data_query.php:778
+#: lib/data_query.php:819
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; חסר בקובץ XML, &#39;ספירת האינדקס שונתה&#39; חיקתה על ידי ספירת ערכי arg_index"
 
-#: lib/data_query.php:789
+#: lib/data_query.php:830
 msgid "ERROR: Data Query returned no indexes."
 msgstr "שגיאה: שאילתת הנתונים החזירה לא אינדקסים."
 
-#: lib/data_query.php:793
+#: lib/data_query.php:834
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "ביצוע סקריפט לרשימה &#39; %s&#39; של אינדקסים, ספירת אינדקס: %s"
 
-#: lib/data_query.php:795
+#: lib/data_query.php:836
 msgid "Click to show Data Query output for 'index'"
 msgstr "לחץ כדי להציג פלט שאילתת נתונים עבור &#39;index&#39;"
 
-#: lib/data_query.php:798
+#: lib/data_query.php:839
 #, php-format
 msgid "Found index: %s"
 msgstr "אינדקס נמצא: %s"
 
-#: lib/data_query.php:813 lib/data_query.php:1383
+#: lib/data_query.php:854 lib/data_query.php:1424
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "לחץ כדי להציג פלט שאילתת נתונים עבור השדה &#39; %s&#39;"
 
-#: lib/data_query.php:819
+#: lib/data_query.php:860
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "שדה המיון לא החזיר נתונים עבור שם השדה %s, מדלג"
 
-#: lib/data_query.php:821
+#: lib/data_query.php:862
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "מבצעת שאילתת Script &#39; %s&#39;"
 
-#: lib/data_query.php:832 lib/data_query.php:839
+#: lib/data_query.php:873 lib/data_query.php:880
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;]: %s"
 
-#: lib/data_query.php:879 lib/data_query.php:895
+#: lib/data_query.php:920 lib/data_query.php:936
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "סה&quot;כ:% f, דלתא:% f, %s"
 
-#: lib/data_query.php:962
+#: lib/data_query.php:1003
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Host_id לא חוקי: %s"
 
-#: lib/data_query.php:986
+#: lib/data_query.php:1027
 msgid "Auto Bulk Walk Size Selected."
 msgstr "גודל ההליכה האוטומטית בכמות גדולה נבחר."
 
-#: lib/data_query.php:1008 lib/data_query.php:1067
+#: lib/data_query.php:1049 lib/data_query.php:1108
 msgid "Failed to load SNMP session."
 msgstr "טעינת הפעלת SNMP נכשלה."
 
-#: lib/data_query.php:1018
+#: lib/data_query.php:1059
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "גודל ההליכה בתפזורת נבדק %d עם תגובה של %2.4f."
 
-#: lib/data_query.php:1029
+#: lib/data_query.php:1070
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "גודל ההליכה בכמות גדולה שנבחר היה %d."
 
-#: lib/data_query.php:1032
+#: lib/data_query.php:1073
 msgid "Saving Bulk Walk Size to Device."
 msgstr "שמירת גודל הליכה בכמות גדולה במכשיר."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1087
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "גודל ההליכה בכמות גדולה קבוע ב- %d."
 
-#: lib/data_query.php:1080
+#: lib/data_query.php:1121
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "ביצוע SNMP עבור מספר של אינדקסים @ &#39; %s&#39; אינדקס ספירה: %s"
 
-#: lib/data_query.php:1082
+#: lib/data_query.php:1123
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; חסר בקובץ XML, &#39;ספירת האינדקס שונתה&#39; חיקתה על ידי ספירת רשומות oid_index"
 
-#: lib/data_query.php:1085
+#: lib/data_query.php:1126
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "ביצוע SNMP עבור רשימת אינדקסים @ &#39; %s&#39; אינדקס ספירה: %s"
 
-#: lib/data_query.php:1089
+#: lib/data_query.php:1130
 msgid "No SNMP data returned"
 msgstr "לא הוחזרו נתוני SNMP"
 
-#: lib/data_query.php:1094
+#: lib/data_query.php:1135
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "אינדקס שנמצא ב- OID: &#39; %s&#39; ערך: &#39; %s&#39;"
 
-#: lib/data_query.php:1125
+#: lib/data_query.php:1166
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "סינון רשימת אינדקסים &#39;&#39; %s &#39;אינדקס ספירה: %s"
 
-#: lib/data_query.php:1129
+#: lib/data_query.php:1170
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "אינדקס מסונן נמצא ב- OID: &#39; %s&#39; ערך: &#39; %s&#39;"
 
-#: lib/data_query.php:1145
+#: lib/data_query.php:1186
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "סינון רשימת אינדקסים &#39;&#39; %s &#39;אינדקס ספירה: %s"
 
-#: lib/data_query.php:1149
+#: lib/data_query.php:1190
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "אינדקס מסונן נמצא ב- OID: &#39; %s&#39; ערך: &#39; %s&#39;"
 
-#: lib/data_query.php:1169
+#: lib/data_query.php:1210
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "תיקון שדה &#39;שיטה&#39; שגוי עבור &#39; %s&#39; מאחר ש- rewrite_index &#39;או&#39; oid_suffix &#39;מוגדר"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1217
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "הוספת נתוני אינדקס לשדה &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1181
+#: lib/data_query.php:1222
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "שדה קלט ממוקם &#39; %s&#39; [get]"
 
-#: lib/data_query.php:1190
+#: lib/data_query.php:1231
 #, fuzzy, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "נמצא כלל לשכתוב OID: 's /{ 0 }/{ 1 }/'"
 
-#: lib/data_query.php:1201
+#: lib/data_query.php:1242
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite ב- OID: &#39; %s&#39; חדש OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1206
+#: lib/data_query.php:1247
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "ביצוע SNMP עבור נתונים @ &#39; %s&#39; [ערך = &#39; %s&#39;]"
 
-#: lib/data_query.php:1217
+#: lib/data_query.php:1258
 #, php-format
 msgid "Field '%s' %s"
 msgstr "שדה &#39; %s&#39; %s"
 
-#: lib/data_query.php:1278
+#: lib/data_query.php:1319
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "ביצוע SNMP מקבל עבור %s oids ( %s)"
 
-#: lib/data_query.php:1316 lib/data_query.php:1423 lib/data_query.php:1431
+#: lib/data_query.php:1357 lib/data_query.php:1464 lib/data_query.php:1472
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "שדה מיון לא החזיר נתונים. לא ניתן להמשיך בהדפסה מחדש עבור OID [ %s]"
 
-#: lib/data_query.php:1322
+#: lib/data_query.php:1363
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "נמצאה תוצאה של נתונים @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1335
+#: lib/data_query.php:1376
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "הגדרת תוצאה עבור נתונים @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1345
+#: lib/data_query.php:1386
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "התוצאה דילגה עבור נתונים @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1363
+#: lib/data_query.php:1404
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "קיבלת תוצאה של SNMP עבור נתונים @ &#39; %s&#39; [value = &#39; %s&#39;] (index: %s)"
 
-#: lib/data_query.php:1377
+#: lib/data_query.php:1418
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "ביצוע SNMP עבור נתונים @ &#39; %s&#39; [value = &#39;$ value&#39;]"
 
-#: lib/data_query.php:1385
+#: lib/data_query.php:1426
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "שדה קלט נמצא &#39; %s&#39; [walk]"
 
-#: lib/data_query.php:1436
+#: lib/data_query.php:1477
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "ביצוע הליכה ב- SNMP עבור נתונים @ &#39; %s&#39;"
 
-#: lib/data_query.php:1455 lib/data_query.php:1513 lib/data_query.php:1562
-#: lib/data_query.php:1613
+#: lib/data_query.php:1496 lib/data_query.php:1554 lib/data_query.php:1603
+#: lib/data_query.php:1654
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "אין אינדקס[%s] ב - VALUE_INDEX_PARSE, מדלג."
 
-#: lib/data_query.php:1496
+#: lib/data_query.php:1537
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] אינדקס: %s [מ- %s]"
 
-#: lib/data_query.php:1538
+#: lib/data_query.php:1579
 #, fuzzy, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "נמצא מחרוזת אוקטט '{ 0 }' מפוענח ערך: '{ 1 }'"
 
-#: lib/data_query.php:1544 lib/data_query.php:1593
+#: lib/data_query.php:1585 lib/data_query.php:1634
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] index: %s [מתוך regexp oid לנתח]"
 
-#: lib/data_query.php:1621
+#: lib/data_query.php:1662
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] index: %s [מתוך rexxp oid value parse]"
 
-#: lib/data_query.php:1856
+#: lib/data_query.php:1904
 #, fuzzy, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "נמצא פריט REWRITE_VALUE מזויף, INDEX='{ 0 }'"
 
-#: lib/data_query.php:1869
+#: lib/data_query.php:1917
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "לא ניתן לנתח את מפת התרגום (REWRITE_VALUE)"
 
-#: lib/data_query.php:1893
+#: lib/data_query.php:1941
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite ב- OID: &#39; %s&#39; חדש OID: &#39; %s&#39;"
 
-#: lib/data_query.php:2007
+#: lib/data_query.php:2055
 msgid "Update graph data query cache complete"
 msgstr "עדכן את מטמון המיון של שאילתת הנתונים במלואו"
 
-#: lib/data_query.php:2026
+#: lib/data_query.php:2074
 msgid "Re-Indexing Data Query complete"
 msgstr "ביצוע שאילתה מחדש של נתוני הנתונים הושלם"
 
-#: lib/data_query.php:2178
+#: lib/data_query.php:2226
 msgid "Unknown Index"
 msgstr "אינדקס לא ידוע"
 
-#: lib/data_query.php:2792
+#: lib/data_query.php:2844
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "עליך לבחור עמודת פלט של XML עבור 'מקור הנתונים' %s ולהעביר את תיבת הסימון שמימינה"
 
-#: lib/data_query.php:2798
+#: lib/data_query.php:2850
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "תבנית התבנית שלך אינה מכילה תבניות נתונים בשימוש. תקן את תבנית התרשים שלך"
 
@@ -12533,7 +12524,7 @@ msgid "User Community"
 msgstr "קהילת המשתמשים"
 
 #: lib/functions.php:4272 lib/functions.php:4297 lib/html.php:2906
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 msgid "Documentation"
 msgstr "תיעוד"
 
@@ -15322,11 +15313,11 @@ msgstr "דורש: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "לא צויין"
 
-#: lib/poller.php:2026
+#: lib/poller.php:2028
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2275
+#: lib/poller.php:2052 lib/poller.php:2277
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -15936,191 +15927,191 @@ msgstr "הגרף לא נוצר עבור %s עקב נתונים שגויים"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "הערה: הגרף לא נוסף עבור שאילתת נתונים %s ואינדקס %s עקב כשל באימות מקור נתונים"
 
-#: lib/utility.php:1155
+#: lib/utility.php:1168
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6 + ו MariaDB 10.0 + הם משחרר נהדר, והם גרסאות טובות מאוד לבחור. ודא שאתה מפעיל את המהדורה העדכנית ביותר על אף שתיקן ארוך עומד ברמה נמוכה בעיה ברשת שגורמת עמוד השדרה בעיות רבות עם אמינות."
 
-#: lib/utility.php:1167
+#: lib/utility.php:1180
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "מומלץ להפעיל את InnoDB בכל גרסת %s יותר מ -5.1."
 
-#: lib/utility.php:1180 lib/utility.php:1217
+#: lib/utility.php:1193 lib/utility.php:1230
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "בעת שימוש ב- Kadupul עם שפות שאינן אנגלית, חשוב להשתמש בסוג utf8mb4_unicode_ci איסוף כמו כמה תווים לקחת יותר מאשר בית אחד."
 
-#: lib/utility.php:1186 lib/utility.php:1192 lib/utility.php:1223
-#: lib/utility.php:1229
+#: lib/utility.php:1199 lib/utility.php:1205 lib/utility.php:1236
+#: lib/utility.php:1242
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "בעת שימוש Kadupul עם שפות אחרות מאשר אנגלית, חשוב להשתמש בתו utf8mb4 להגדיר כמו תווים מסוימים לקחת יותר מאשר בתים בודדים."
 
-#: lib/utility.php:1205
+#: lib/utility.php:1218
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "מומלץ להפעיל את InnoDB בכל גרסת %s יותר מ -5.1."
 
-#: lib/utility.php:1238
+#: lib/utility.php:1251
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "בהתאם למספר כניסות ושימוש באספן נתונים בעמוד השדרה, %s יצטרכו חיבורים רבים. חישוב עמוד השדרה הוא: total_connections = total_processes * (total_threads + script_servers + 1), אז אתה חייב לעזוב את הראש עבור חיבורי משתמש, אשר ישתנה בהתאם למספר חשבונות כניסה בו זמנית."
 
-#: lib/utility.php:1243
+#: lib/utility.php:1256
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "שמירה על מטמון השולחן גדול יותר פירושו פחות קובץ לפתוח / לסגור פעולות בעת שימוש innodb_file_per_table."
 
-#: lib/utility.php:1248
+#: lib/utility.php:1261
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "עם יכולות הסריקה מרחוק, כמויות גדולות של נתונים יסונכרנו בין השרת הראשי לבין הסוקרים המרוחקים. לכן, שמור ערך זה מעל 16M או מעל."
 
-#: lib/utility.php:1254
+#: lib/utility.php:1267
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "אם אתה משתמש Kadupul Booster ביצועים ובחירת זיכרון אחסון מנוע, אתה צריך להיות זהיר כדי לשטוף את חיץ Booster ביצועים לפני המערכת אוזל שטח שולחן הזיכרון. זה נעשה בשתי דרכים, הראשון הפחתת גודל עמודת הפלט שלך בדיוק את הגודל הנכון. עמודה זו נמצאת בטבלאות poller_output ו- poller_output_boost. הדבר השני שאתה יכול לעשות הוא להקצות זיכרון נוסף לטבלאות זיכרון. בחרנו באופן שרירותי ערך מומלץ של 10 %% מזיכרון המערכת, אך אם אתה משתמש בכונני דיסק SSD, או אם יש לך מערכת קטנה יותר, תוכל להתעלם מהמלצה זו או לבחור מנוע אחסון אחר. ייתכן שתראה את הצריכה הצפויה של טבלאות הביצועים Booster תחת Console -&gt; System Utilities -&gt; View Boost Status."
 
-#: lib/utility.php:1260
+#: lib/utility.php:1273
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "בעת ביצוע שאילתות משנה, כאשר יש גודל שולחן זמני גדול יותר, שמור את הטבלאות הזמניות בזיכרון."
 
-#: lib/utility.php:1266 lib/utility.php:1272
+#: lib/utility.php:1279 lib/utility.php:1285
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1278
+#: lib/utility.php:1291
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "בעת שימוש באחסון InnoDB חשוב לשמור על מרווחי הטבלה נפרדים. זה עושה את ניהול טבלאות פשוט יותר עבור משתמשים זמן רב של %s. אם אתה פועל עם זה כרגע, אתה יכול להעביר לאחסון לפי קובץ על ידי הפעלת התכונה, ולאחר מכן מפעיל הצהרה לשנות על כל שולחנות InnoDB."
 
-#: lib/utility.php:1284
+#: lib/utility.php:1297
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "בעת שימוש innodb_file_per_table, חשוב להגדיר את innodb_file_format כדי Barracuda. הגדרה זו תאפשר אינדקסים ארוכים יותר חשוב עבור טבלאות Kadupul מסוימים."
 
-#: lib/utility.php:1290
+#: lib/utility.php:1303
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "אם לטבלאות שלכם יש אינדקסים גדולים מאוד, עליכם לפעול באמצעות Barracuda innodb_file_format ו- innodb_large_prefix שווה ל -1. אי ביצוע פעולה זו עלול לגרום לתוספים שלא יכולים ליצור טבלאות כראוי."
 
-#: lib/utility.php:1296
+#: lib/utility.php:1309
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB תקיים כמה טבלאות ואינדקסים בזיכרון המערכת ככל האפשר. לכן, אתה צריך לעשות את innodb_buffer_pool גדול מספיק כדי להחזיק כמה שיותר שולחנות ואינדקס בזיכרון. בדיקת גודל הספרייה / var / lib / mysql / Kadupul תסייע בקביעת ערך זה. אנו ממליצים על 25 %% מהמערכת הכוללת של הזיכרון, אך הדרישות שלך ישתנו בהתאם לגודל המערכות שלך."
 
-#: lib/utility.php:1302
+#: lib/utility.php:1315
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "הגדרות אלה צריכות להישאר פועלות אלא אם כן מופעי Kadupul שלך פועלים בשני ZFS או ב- FusionI / O, שלשניהם יש יומן פנימי כדי לאפשר קריסות מערכת פתאומיות. עם זאת, אם יש לך כוח טוב מאוד, והמערכות שלך לעתים נדירות נופלות ויש לך גיבויים, הפיכת הגדרה זו למצב OFF יכולה להביא לעלייה כמעט של 50% בביצועי מסד הנתונים."
 
-#: lib/utility.php:1307
+#: lib/utility.php:1320
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "זה המקום שבו מאוחסן מטה. אם היו לך הרבה שולחנות, זה יהיה שימושי כדי להגדיל את זה."
 
-#: lib/utility.php:1312
+#: lib/utility.php:1325
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "שאילתות רמאי לא צריך עבור מסד הנתונים ללכת לא מקוון לאחרים. להרוג שאילתות אלה לפני שהם הורגים את המערכת."
 
-#: lib/utility.php:1317
+#: lib/utility.php:1330
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "ביצועי I / O מקסימליים מתרחשים כאשר אתה משתמש בשיטה O_DIRECT לשטיפת דפים."
 
-#: lib/utility.php:1327
+#: lib/utility.php:1340
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "הגדרת ערך זה ל -2 פירושה שתשטוף את כל העסקאות בכל שנייה במקום בהתחייבות. זה מאפשר %s לבצע כתיבה בתדירות נמוכה יותר."
 
-#: lib/utility.php:1332
+#: lib/utility.php:1345
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "עם אחסון מסוג SSD מודרני, בעל מספר רב של שרשורים io הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1340 lib/utility.php:1382
+#: lib/utility.php:1353 lib/utility.php:1395
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "החל מ- %s %s, באפשרותך לשלוט בתדירות של %s בעסקאות לדיסק. ברירת המחדל היא שנייה אחת, אך במערכות קלט / פלט גבוהות לערך גדול מ -1 ניתן לאפשר דיסק I / O להיות רציף יותר"
 
-#: lib/utility.php:1345
+#: lib/utility.php:1358
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "עם אחסון מסוג SSD המודרני, לאחר מספר פתילים io לקרוא הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1350
+#: lib/utility.php:1363
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "עם אחסון מסוג SSD מודרני, בעל מספר רב של חוטי כתיבה io הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1356
+#: lib/utility.php:1369
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s יחלק את innodb_buffer_pool לאזורי זיכרון כדי לשפר את הביצועים. הערך המרבי הוא 64. כאשר innodb_buffer_pool שלך הוא פחות מ 1GB, אתה צריך להשתמש בגודל הבריכה מחולק 128MB. המשך להשתמש במשוואה זו upto מקסימום של 64."
 
-#: lib/utility.php:1356
+#: lib/utility.php:1369
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s יחלק את innodb_buffer_pool לאזורי זיכרון כדי לשפר את הביצועים. הערך המרבי הוא 64. כאשר innodb_buffer_pool שלך הוא פחות מ 1GB, אתה צריך להשתמש בגודל הבריכה מחולק 128MB. המשך להשתמש במשוואה זו upto מקסימום של 64."
 
-#: lib/utility.php:1362 lib/utility.php:1398
+#: lib/utility.php:1375 lib/utility.php:1411
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "אם יש לך דיסקים SSD, השתמש הצעה זו. אם יש לך כוננים קשיחים פיזיים, השתמש 200 * מספר הכוננים הפעילים במערך. אם משתמשים ב- NVMe או ב- PCIe Flash, ניתן להשתמש במספרים גדולים בהרבה עד 100000."
 
-#: lib/utility.php:1368 lib/utility.php:1404
+#: lib/utility.php:1381 lib/utility.php:1417
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "אם יש לך דיסקים SSD, השתמש הצעה זו. אם יש לך כוננים קשיחים פיזיים, השתמש ב- 2000 * מספר הכוננים הפעילים במערך. אם באמצעות NVMe או PCIe Flash, מספרים גדולים בהרבה כמו 200000 ניתן להשתמש."
 
-#: lib/utility.php:1374 lib/utility.php:1410
+#: lib/utility.php:1387 lib/utility.php:1423
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "אם יש לך דיסקים SSD, השתמש הצעה זו. אחרת, אל תגדיר הגדרה זו."
 
-#: lib/utility.php:1387
+#: lib/utility.php:1400
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "עם אחסון מסוג SSD המודרני, לאחר מספר פתילים io לקרוא הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1392
+#: lib/utility.php:1405
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "עם אחסון מסוג SSD מודרני, בעל מספר רב של חוטי כתיבה io הוא יתרון עבור יישומים עם מאפיינים io גבוהה."
 
-#: lib/utility.php:1423
+#: lib/utility.php:1436
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "בעת שימוש ב- MariaDB 10.2.4 ומעלה, הגדרה זו צריכה להיות כבויה אם כתיבה אטומית מופעלת. לכן, אנא הפעל כתיבה אטומית במקום מאגר הכתיבה הכפול מכיוון שהוא יגביר את הביצועים."
 
-#: lib/utility.php:1430
+#: lib/utility.php:1443
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "בעת שימוש ב- MariaDB 10.2.4 ומעלה, באפשרותך להשתמש בכתיבות אטומיות מעל המאגר הכפול כדי להגדיל את הביצועים."
 
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 #, php-format
 msgid "%s Tuning"
 msgstr "%s כוונון"
 
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 msgid "Note: Many changes below require a database restart"
 msgstr "הערה: שינויים רבים להלן דורשים הפעלה מחדש של מסד נתונים"
 
-#: lib/utility.php:1455
+#: lib/utility.php:1468
 msgid "Variable"
 msgstr "משתנה"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1469
 msgid "Current Value"
 msgstr "ערך נוכחי"
 
-#: lib/utility.php:1458
+#: lib/utility.php:1471
 msgid "Recommended Value"
 msgstr "ערך מומלץ"
 
-#: lib/utility.php:1459
+#: lib/utility.php:1472
 msgid "Comments"
 msgstr "תגובות"
 
-#: lib/utility.php:2053
+#: lib/utility.php:2066
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s הוא הגרסה המיטבית"
 
-#: lib/utility.php:2055
+#: lib/utility.php:2068
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "מינימום של %s MB זיכרון מגבלה"
 
-#: lib/utility.php:2057
+#: lib/utility.php:2070
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "זמן ביצוע מינימלי של %s מ'"
 
-#: lib/utility.php:2059
+#: lib/utility.php:2072
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "אזור זמן חוקי התואם את MySQL ואת המערכת"
 

@@ -11597,7 +11597,7 @@ msgstr ""
 #: lib/api_device.php:1495 lib/api_device.php:1682 lib/api_device.php:1686
 #: lib/api_device.php:1722 lib/api_device.php:1726 lib/api_device.php:1771
 #: lib/api_device.php:1775 lib/api_device.php:1836 lib/api_device.php:1840
-#: lib/utility.php:744
+#: lib/utility.php:757
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr ""
@@ -11938,430 +11938,421 @@ msgstr "Mất khẩu không hợp lệ"
 msgid "System Device"
 msgstr "Thiết bị đồng bộ hóa"
 
-#: lib/data_query.php:73 lib/data_query.php:446
+#: lib/data_query.php:81 lib/data_query.php:235
 msgid "Automation Execution for Data Query complete"
 msgstr "Hoàn thành tự động hóa cho truy vấn dữ liệu"
 
-#: lib/data_query.php:76 lib/data_query.php:449
+#: lib/data_query.php:84 lib/data_query.php:238
 msgid "Plugin Hooks complete"
 msgstr "Plugin Hook hoàn tất"
 
-#: lib/data_query.php:94
+#: lib/data_query.php:102
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Chạy truy vấn dữ liệu [ %s]."
 
-#: lib/data_query.php:106
+#: lib/data_query.php:114
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Loại tìm thấy = &#39; %s&#39; [ %s]."
 
-#: lib/data_query.php:128
+#: lib/data_query.php:136
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Loại không xác định = &#39; %s&#39;."
 
-#: lib/data_query.php:163
-msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
-msgstr "CẢNH BÁO: Sắp xếp Hiệp hội lĩnh vực đã thay đổi. Vấn đề ánh xạ lại có thể xảy ra!"
-
-#: lib/data_query.php:175
-msgid "Update Data Query Sort Cache complete"
-msgstr "Cập nhật truy vấn dữ liệu Sắp xếp Cache hoàn tất"
-
-#: lib/data_query.php:202
-#, php-format
-msgid "Found %s Local Data ID's to Verify"
-msgstr "Đã tìm thấy bảng%s để chuyển đổi"
-
-#: lib/data_query.php:308
-#, php-format
-msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
-msgstr "Đã phát hiện thay đổi chỉ mục! Hiện tại: %s, Trước đó: %s"
-
-#: lib/data_query.php:332
-#, php-format
-msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
-msgstr "Đã xóa chỉ mục! Chỉ số trước: %s"
-
-#: lib/data_query.php:335
-#, php-format
-msgid "Index Removal Detected! PreviousIndex: %s"
-msgstr "Đã xóa chỉ mục! Chỉ số trước: %s"
-
-#: lib/data_query.php:375
+#: lib/data_query.php:158
 #, fuzzy, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Hiệp hội chỉ mục với dữ liệu địa phương hoàn tất"
 
-#: lib/data_query.php:378
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Đã tìm thấy Đã thay đổi%s và%s ID dữ liệu cục bộ mồ côi thành ánh xạ lại."
-
-#: lib/data_query.php:381
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Ánh xạ ánh xạ tới các chỉ mục mới của họ"
-
-#: lib/data_query.php:387 lib/data_query.php:394
+#: lib/data_query.php:163 lib/data_query.php:170
 msgid "Done updating Data Source Title Cache"
 msgstr "Hồ sơ nguồn dữ liệu trùng lặp"
 
-#: lib/data_query.php:390 lib/data_query.php:397
+#: lib/data_query.php:166 lib/data_query.php:173
 msgid "Done updating Graph Title Cache"
 msgstr "Đã cập nhật xong bộ đệm ẩn tiêu đề đồ thị"
 
-#: lib/data_query.php:401
+#: lib/data_query.php:177
 msgid "Index Association with Local Data complete"
 msgstr "Hiệp hội chỉ mục với dữ liệu địa phương hoàn tất"
 
-#: lib/data_query.php:407
+#: lib/data_query.php:189
 #, fuzzy, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Cập nhật Re-Index Cache hoàn tất. Đã có"
 
-#: lib/data_query.php:411
+#: lib/data_query.php:192
 msgid "Update Poller Cache for Query complete"
 msgstr "Cập nhật Pug Cache cho truy vấn hoàn tất"
 
-#: lib/data_query.php:413
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Không có thay đổi chỉ mục nào được phát hiện, bỏ qua Re-Index và Pug Cache Dân số lại"
+#: lib/data_query.php:194
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
-#: lib/data_query.php:438
+#: lib/data_query.php:225
 msgid "Automation Executing for Data Query complete"
 msgstr "Hoàn thành tự động hóa cho truy vấn dữ liệu"
 
-#: lib/data_query.php:441
+#: lib/data_query.php:228
 msgid "Plugin hooks complete"
 msgstr "Plugin hook hoàn tất"
 
-#: lib/data_query.php:554
+#: lib/data_query.php:293
+msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
+msgstr "CẢNH BÁO: Sắp xếp Hiệp hội lĩnh vực đã thay đổi. Vấn đề ánh xạ lại có thể xảy ra!"
+
+#: lib/data_query.php:305
+msgid "Update Data Query Sort Cache complete"
+msgstr "Cập nhật truy vấn dữ liệu Sắp xếp Cache hoàn tất"
+
+#: lib/data_query.php:346
+#, php-format
+msgid "Found %s Local Data ID's to Verify"
+msgstr "Đã tìm thấy bảng%s để chuyển đổi"
+
+#: lib/data_query.php:428
+#, php-format
+msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
+msgstr "Đã phát hiện thay đổi chỉ mục! Hiện tại: %s, Trước đó: %s"
+
+#: lib/data_query.php:456
+#, php-format
+msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
+msgstr "Đã xóa chỉ mục! Chỉ số trước: %s"
+
+#: lib/data_query.php:459
+#, php-format
+msgid "Index Removal Detected! PreviousIndex: %s"
+msgstr "Đã xóa chỉ mục! Chỉ số trước: %s"
+
+#: lib/data_query.php:591
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Kiểm tra thay đổi Trường sắp xếp. Không có thay đổi được phát hiện."
 
-#: lib/data_query.php:559
+#: lib/data_query.php:596
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Đã phát hiện trường sắp xếp mới: &#39; %s&#39; Trường sắp xếp cũ &#39; %s&#39;"
 
-#: lib/data_query.php:580
+#: lib/data_query.php:617
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "LRI: Trường sắp xếp mới không phù hợp. Trường sắp xếp sẽ không thay đổi."
 
-#: lib/data_query.php:594
+#: lib/data_query.php:631
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Trường sắp xếp mới được xác thực. Trường sắp xếp được cập nhật."
 
-#: lib/data_query.php:707
+#: lib/data_query.php:748
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Không thể tìm thấy tệp XML truy vấn dữ liệu tại &#39; %s&#39;"
 
-#: lib/data_query.php:711
+#: lib/data_query.php:752
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Tìm thấy tệp XML truy vấn dữ liệu tại &#39; %s&#39;"
 
-#: lib/data_query.php:735 lib/data_query.php:968 lib/data_query.php:2668
+#: lib/data_query.php:776 lib/data_query.php:1009 lib/data_query.php:2720
 msgid "Error parsing XML file into an array."
 msgstr "Lỗi phân tích tệp XML thành một mảng."
 
-#: lib/data_query.php:739 lib/data_query.php:972
+#: lib/data_query.php:780 lib/data_query.php:1013
 msgid "XML file parsed ok."
 msgstr "Tập tin XML được phân tích cú pháp ok."
 
-#: lib/data_query.php:747 lib/data_query.php:975
+#: lib/data_query.php:788 lib/data_query.php:1016
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Trường không hợp lệ &lt;index_order&gt; %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:748 lib/data_query.php:976
+#: lib/data_query.php:789 lib/data_query.php:1017
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Phải chứa các trường &lt;direction&gt; input &lt;/ direction&gt; hoặc &lt;direction&gt; input-output &lt;/ direction&gt;"
 
-#: lib/data_query.php:765
+#: lib/data_query.php:806
 msgid "Data Query returned no indexes."
 msgstr "LRI: Truy vấn dữ liệu không trả về chỉ mục."
 
-#: lib/data_query.php:766
+#: lib/data_query.php:807
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; bị thiếu trong tệp XML, &#39;Số lượng chỉ mục đã thay đổi&#39; không được hỗ trợ"
 
-#: lib/data_query.php:769
+#: lib/data_query.php:810
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Tập lệnh thực thi cho số chỉ mục &#39; %s&#39;"
 
-#: lib/data_query.php:772
+#: lib/data_query.php:813
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Đã tìm thấy số chỉ mục: %s"
 
-#: lib/data_query.php:776
+#: lib/data_query.php:817
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; bị thiếu trong tệp XML, &#39;Số lượng chỉ mục đã thay đổi&#39; không được hỗ trợ"
 
-#: lib/data_query.php:778
+#: lib/data_query.php:819
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; bị thiếu trong tệp XML, &#39;Chỉ số được thay đổi&#39; được mô phỏng bằng cách đếm các mục nhập arg_index"
 
-#: lib/data_query.php:789
+#: lib/data_query.php:830
 msgid "ERROR: Data Query returned no indexes."
 msgstr "LRI: Truy vấn dữ liệu không trả về chỉ mục."
 
-#: lib/data_query.php:793
+#: lib/data_query.php:834
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Tập lệnh thực thi cho danh sách các chỉ mục &#39; %s&#39;, Chỉ số đếm: %s"
 
-#: lib/data_query.php:795
+#: lib/data_query.php:836
 msgid "Click to show Data Query output for 'index'"
 msgstr "Nhấp để hiển thị đầu ra Truy vấn Dữ liệu cho &#39;chỉ mục&#39;"
 
-#: lib/data_query.php:798
+#: lib/data_query.php:839
 #, php-format
 msgid "Found index: %s"
 msgstr "Chỉ mục tìm thấy: %s"
 
-#: lib/data_query.php:813 lib/data_query.php:1383
+#: lib/data_query.php:854 lib/data_query.php:1424
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Bấm để hiển thị đầu ra Truy vấn Dữ liệu cho trường &#39; %s&#39;"
 
-#: lib/data_query.php:819
+#: lib/data_query.php:860
 #, fuzzy, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Trường sắp xếp trả về không có dữ liệu. Không thể tiếp tục lập chỉ mục lại."
 
-#: lib/data_query.php:821
+#: lib/data_query.php:862
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Thực hiện truy vấn tập lệnh &#39; %s&#39;"
 
-#: lib/data_query.php:832 lib/data_query.php:839
+#: lib/data_query.php:873 lib/data_query.php:880
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Mục tìm thấy [ %s = &#39; %s&#39;] chỉ mục: %s"
 
-#: lib/data_query.php:879 lib/data_query.php:895
+#: lib/data_query.php:920 lib/data_query.php:936
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Tổng cộng:% f, Delta:% f, %s"
 
-#: lib/data_query.php:962
+#: lib/data_query.php:1003
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Host_id không hợp lệ: %s"
 
-#: lib/data_query.php:986
+#: lib/data_query.php:1027
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Đã chọn Kích thước Đi bộ Hàng loạt Tự động."
 
-#: lib/data_query.php:1008 lib/data_query.php:1067
+#: lib/data_query.php:1049 lib/data_query.php:1108
 msgid "Failed to load SNMP session."
 msgstr "Không thể tải phiên SNMP."
 
-#: lib/data_query.php:1018
+#: lib/data_query.php:1059
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Đã kiểm tra Kích thước Đi bộ Hàng loạt %d với phản hồi là %2.4f."
 
-#: lib/data_query.php:1029
+#: lib/data_query.php:1070
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Kích thước Đi bộ Hàng loạt được chọn là %d."
 
-#: lib/data_query.php:1032
+#: lib/data_query.php:1073
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Lưu kích thước đi bộ hàng loạt vào thiết bị."
 
-#: lib/data_query.php:1046
+#: lib/data_query.php:1087
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Kích thước Đi bộ Hàng loạt được cố định tại %d."
 
-#: lib/data_query.php:1080
+#: lib/data_query.php:1121
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Đang thực hiện SNMP lấy số chỉ mục @ &#39; %s&#39; Chỉ số: %s"
 
-#: lib/data_query.php:1082
+#: lib/data_query.php:1123
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; bị thiếu trong tệp XML, &#39;Chỉ số được thay đổi&#39; được mô phỏng bằng cách đếm các mục nhập oid_index"
 
-#: lib/data_query.php:1085
+#: lib/data_query.php:1126
 #, fuzzy, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Đang thực hiện đi bộ SNMP cho danh sách các chỉ mục @ &#39; %s&#39; Chỉ số:"
 
-#: lib/data_query.php:1089
+#: lib/data_query.php:1130
 msgid "No SNMP data returned"
 msgstr "Không có dữ liệu SNMP được trả về"
 
-#: lib/data_query.php:1094
+#: lib/data_query.php:1135
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Chỉ mục được tìm thấy tại OID: &#39; %s&#39; value: &#39; %s&#39;"
 
-#: lib/data_query.php:1125
+#: lib/data_query.php:1166
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Danh sách lọc các chỉ mục @ &#39; %s&#39; Chỉ số đếm: %s"
 
-#: lib/data_query.php:1129
+#: lib/data_query.php:1170
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Chỉ mục đã lọc được tìm thấy tại OID: &#39; %s&#39; value: &#39; %s&#39;"
 
-#: lib/data_query.php:1145
+#: lib/data_query.php:1186
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Danh sách lọc các chỉ mục @ &#39; %s&#39; Chỉ số đếm: %s"
 
-#: lib/data_query.php:1149
+#: lib/data_query.php:1190
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Chỉ mục đã lọc được tìm thấy tại OID: &#39; %s&#39; value: &#39; %s&#39;"
 
-#: lib/data_query.php:1169
+#: lib/data_query.php:1210
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Sửa trường &#39;phương thức&#39; sai cho &#39; %s&#39; vì &#39;Rewrite_index&#39; hoặc &#39;oid_suffix&#39; được xác định"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1217
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Chèn dữ liệu chỉ mục cho trường &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1181
+#: lib/data_query.php:1222
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Trường nhập nằm &#39; %s&#39; [get]"
 
-#: lib/data_query.php:1190
+#: lib/data_query.php:1231
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Đã tìm thấy quy tắc viết lại OID: &#39;s / %s / %s /&#39;"
 
-#: lib/data_query.php:1201
+#: lib/data_query.php:1242
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite tại OID: &#39; %s&#39; OID mới: &#39; %s&#39;"
 
-#: lib/data_query.php:1206
+#: lib/data_query.php:1247
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1217
+#: lib/data_query.php:1258
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Trường &#39; %s&#39; %s"
 
-#: lib/data_query.php:1278
+#: lib/data_query.php:1319
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Thực hiện SNMP nhận được %s oids ( %s)"
 
-#: lib/data_query.php:1316 lib/data_query.php:1423 lib/data_query.php:1431
+#: lib/data_query.php:1357 lib/data_query.php:1464 lib/data_query.php:1472
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Trường sắp xếp trả về không dữ liệu. Không thể tiếp tục lập chỉ mục lại cho OID [ %s]"
 
-#: lib/data_query.php:1322
+#: lib/data_query.php:1363
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Kết quả tìm thấy cho dữ liệu @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1335
+#: lib/data_query.php:1376
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Đặt kết quả cho dữ liệu @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1345
+#: lib/data_query.php:1386
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Bỏ qua kết quả cho dữ liệu @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1363
+#: lib/data_query.php:1404
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Có SNMP nhận kết quả cho dữ liệu @ &#39; %s&#39; [value = &#39; %s&#39;] (index: %s)"
 
-#: lib/data_query.php:1377
+#: lib/data_query.php:1418
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$ value&#39;]"
 
-#: lib/data_query.php:1385
+#: lib/data_query.php:1426
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Trường nhập nằm &#39; %s&#39; [walk]"
 
-#: lib/data_query.php:1436
+#: lib/data_query.php:1477
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Thực hiện đi bộ SNMP cho dữ liệu @ &#39; %s&#39;"
 
-#: lib/data_query.php:1455 lib/data_query.php:1513 lib/data_query.php:1562
-#: lib/data_query.php:1613
+#: lib/data_query.php:1496 lib/data_query.php:1554 lib/data_query.php:1603
+#: lib/data_query.php:1654
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr ""
 
-#: lib/data_query.php:1496
+#: lib/data_query.php:1537
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Mục tìm thấy [ %s = &#39; %s&#39;] chỉ mục: %s [từ %s]"
 
-#: lib/data_query.php:1538
+#: lib/data_query.php:1579
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Đã tìm thấy giá trị giải mã OCTET STRING &#39; %s&#39;: &#39; %s&#39;"
 
-#: lib/data_query.php:1544 lib/data_query.php:1593
+#: lib/data_query.php:1585 lib/data_query.php:1634
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Mục tìm thấy [ %s = &#39; %s&#39;] chỉ mục: %s [từ phân tích chính quy"
 
-#: lib/data_query.php:1621
+#: lib/data_query.php:1662
 #, fuzzy, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Mục đã tìm thấy [ %s = &#39; %s&#39;]"
 
-#: lib/data_query.php:1856
+#: lib/data_query.php:1904
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr ""
 
-#: lib/data_query.php:1869
+#: lib/data_query.php:1917
 msgid "Could not parse translation map (rewrite_value)"
 msgstr ""
 
-#: lib/data_query.php:1893
+#: lib/data_query.php:1941
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite tại OID: &#39; %s&#39; OID mới: &#39; %s&#39;"
 
-#: lib/data_query.php:2007
+#: lib/data_query.php:2055
 msgid "Update graph data query cache complete"
 msgstr "Cập nhật truy vấn dữ liệu Sắp xếp Cache hoàn tất"
 
-#: lib/data_query.php:2026
+#: lib/data_query.php:2074
 msgid "Re-Indexing Data Query complete"
 msgstr "Hoàn thành lập chỉ mục truy vấn dữ liệu"
 
-#: lib/data_query.php:2178
+#: lib/data_query.php:2226
 msgid "Unknown Index"
 msgstr "Chỉ mục không xác định"
 
-#: lib/data_query.php:2792
+#: lib/data_query.php:2844
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Bạn phải chọn cột đầu ra XML cho Nguồn dữ liệu ' %s' và chuyển hộp kiểm sang bên phải"
 
-#: lib/data_query.php:2798
+#: lib/data_query.php:2850
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Mẫu biểu đồ của bạn không sử dụng Mẫu dữ liệu. Vui lòng sửa Mẫu biểu đồ của bạn"
 
@@ -12454,7 +12445,7 @@ msgid "User Community"
 msgstr "Cộng Đồng Người Dùng"
 
 #: lib/functions.php:4272 lib/functions.php:4297 lib/html.php:2906
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 msgid "Documentation"
 msgstr "Tài liệu"
 
@@ -15237,11 +15228,11 @@ msgstr "Yêu cầu: Kadupul&gt; = %s"
 msgid "Not Stated"
 msgstr "Không nêu"
 
-#: lib/poller.php:2026
+#: lib/poller.php:2028
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2275
+#: lib/poller.php:2052 lib/poller.php:2277
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -15850,191 +15841,191 @@ msgstr "Tạo đồ thị"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr ""
 
-#: lib/utility.php:1155
+#: lib/utility.php:1168
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ và MariaDB 10.0+ là những bản phát hành tuyệt vời và là phiên bản rất tốt để lựa chọn. Hãy chắc chắn rằng bạn chạy bản phát hành mới nhất mặc dù đã khắc phục được sự cố mạng cấp độ thấp đã gây ra nhiều vấn đề về độ tin cậy."
 
-#: lib/utility.php:1167
+#: lib/utility.php:1180
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Bạn nên bật InnoDB ở bất kỳ phiên bản %s nào lớn hơn 5.1."
 
-#: lib/utility.php:1180 lib/utility.php:1217
+#: lib/utility.php:1193 lib/utility.php:1230
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "Khi sử dụng Kadupul với các ngôn ngữ khác tiếng Anh, điều quan trọng là sử dụng loại đối chiếu utf8mb4_unicode_ci vì một số ký tự mất nhiều hơn một byte."
 
-#: lib/utility.php:1186 lib/utility.php:1192 lib/utility.php:1223
-#: lib/utility.php:1229
+#: lib/utility.php:1199 lib/utility.php:1205 lib/utility.php:1236
+#: lib/utility.php:1242
 msgid "When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "Khi sử dụng Kadupul với các ngôn ngữ khác tiếng Anh, điều quan trọng là sử dụng bộ ký tự utf8mb4 vì một số ký tự mất nhiều hơn một byte."
 
-#: lib/utility.php:1205
+#: lib/utility.php:1218
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Bạn nên bật InnoDB ở bất kỳ phiên bản %s nào lớn hơn 5.1."
 
-#: lib/utility.php:1238
+#: lib/utility.php:1251
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "Tùy thuộc vào số lần đăng nhập và sử dụng trình thu thập dữ liệu cột sống, %s sẽ cần nhiều kết nối. Tính toán cho cột sống là: Total_connections = total_ Processes * (total_threads + script_servers + 1), sau đó bạn phải để lại khoảng trống cho các kết nối người dùng, sẽ thay đổi tùy thuộc vào số lượng tài khoản đăng nhập đồng thời."
 
-#: lib/utility.php:1243
+#: lib/utility.php:1256
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Giữ bộ đệm của bảng lớn hơn có nghĩa là các thao tác mở / đóng tệp ít hơn khi sử dụng innodb_file_per_table."
 
-#: lib/utility.php:1248
+#: lib/utility.php:1261
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Với khả năng bỏ phiếu từ xa, một lượng lớn dữ liệu sẽ được đồng bộ hóa từ máy chủ chính đến các công cụ bỏ phiếu từ xa. Do đó, giữ giá trị này ở mức hoặc trên 16M."
 
-#: lib/utility.php:1254
+#: lib/utility.php:1267
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Nếu sử dụng Kadupul Performance Booster và chọn công cụ lưu trữ bộ nhớ, bạn phải cẩn thận để xóa bộ đệm Performance Booster trước khi hệ thống hết dung lượng bảng nhớ. Điều này được thực hiện theo hai cách, đầu tiên là giảm kích thước cột đầu ra của bạn xuống đúng kích thước. Cột này nằm trong bảng pollerDefput và pollerDefput_boost. Điều thứ hai bạn có thể làm là phân bổ thêm bộ nhớ cho các bảng bộ nhớ. Chúng tôi đã tùy ý chọn giá trị đề xuất là 10 %% bộ nhớ hệ thống, nhưng nếu bạn đang sử dụng ổ đĩa SSD hoặc có hệ thống nhỏ hơn, bạn có thể bỏ qua đề xuất này hoặc chọn một công cụ lưu trữ khác. Bạn có thể thấy mức tiêu thụ dự kiến của các bảng Performance Booster trong Bảng điều khiển -&gt; Tiện ích hệ thống -&gt; Xem Trạng thái tăng."
 
-#: lib/utility.php:1260
+#: lib/utility.php:1273
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Khi thực hiện các truy vấn con, có kích thước bảng tạm thời lớn hơn, hãy giữ các bảng tạm thời đó trong bộ nhớ."
 
-#: lib/utility.php:1266 lib/utility.php:1272
+#: lib/utility.php:1279 lib/utility.php:1285
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1278
+#: lib/utility.php:1291
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Khi sử dụng bộ lưu trữ InnoDB, điều quan trọng là phải tách biệt các không gian bảng của bạn. Điều này làm cho việc quản lý các bảng đơn giản hơn đối với người dùng %s trong thời gian dài. Nếu bạn đang chạy với tính năng này hiện đang tắt, bạn có thể di chuyển đến mỗi bộ lưu trữ tệp bằng cách bật tính năng và sau đó chạy câu lệnh thay đổi trên tất cả các bảng InnoDB."
 
-#: lib/utility.php:1284
+#: lib/utility.php:1297
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Khi sử dụng innodb_file_per_table, điều quan trọng là phải đặt innodb_file_format thành Barracuda. Cài đặt này sẽ cho phép các chỉ mục dài hơn quan trọng đối với các bảng Kadupul nhất định."
 
-#: lib/utility.php:1290
+#: lib/utility.php:1303
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Nếu các bảng của bạn có các chỉ mục rất lớn, bạn phải hoạt động với Barracuda innodb_file_format và innodb_large_prefix bằng 1. Việc không làm điều này có thể dẫn đến các plugin không thể tạo bảng đúng cách."
 
-#: lib/utility.php:1296
+#: lib/utility.php:1309
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB sẽ giữ càng nhiều bảng và chỉ mục trong bộ nhớ hệ thống càng tốt. Do đó, bạn nên làm cho innodb_buffer_pool đủ lớn để chứa càng nhiều bảng và chỉ mục trong bộ nhớ. Kiểm tra kích thước của thư mục / var / lib / mysql / Kadupul sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị 25 %% tổng bộ nhớ hệ thống của bạn, nhưng yêu cầu của bạn sẽ thay đổi tùy thuộc vào kích thước hệ thống của bạn."
 
-#: lib/utility.php:1302
+#: lib/utility.php:1315
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Cài đặt này sẽ duy trì BẬT trừ khi các phiên bản Kadupul của bạn đang chạy trên ZFS hoặc FusionI / O, cả hai đều có nhật ký nội bộ để khắc phục sự cố hệ thống đột ngột. Tuy nhiên, nếu bạn có sức mạnh rất tốt và hệ thống của bạn hiếm khi ngừng hoạt động và bạn có các bản sao lưu, việc chuyển cài đặt này thành TẮT có thể giúp bạn tăng hiệu suất cơ sở dữ liệu lên gần 50%."
 
-#: lib/utility.php:1307
+#: lib/utility.php:1320
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Đây là nơi siêu dữ liệu được lưu trữ. Nếu bạn có nhiều bảng, sẽ rất hữu ích khi tăng cái này."
 
-#: lib/utility.php:1312
+#: lib/utility.php:1325
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Các truy vấn giả không nên để cơ sở dữ liệu ngoại tuyến với người khác. Giết các truy vấn này trước khi chúng giết hệ thống của bạn."
 
-#: lib/utility.php:1317
+#: lib/utility.php:1330
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Hiệu suất I / O tối đa xảy ra khi bạn sử dụng phương pháp O_DIRECT để xóa trang."
 
-#: lib/utility.php:1327
+#: lib/utility.php:1340
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Đặt giá trị này thành 2 có nghĩa là bạn sẽ xóa tất cả các giao dịch mỗi giây thay vì tại cam kết. Điều này cho phép %s thực hiện viết ít thường xuyên hơn."
 
-#: lib/utility.php:1332
+#: lib/utility.php:1345
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1340 lib/utility.php:1382
+#: lib/utility.php:1353 lib/utility.php:1395
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Kể từ %s %s, bạn có thể kiểm soát tần suất %s xóa các giao dịch vào đĩa. Mặc định là 1 giây, nhưng trong các hệ thống I / O cao, cài đặt giá trị lớn hơn 1 có thể cho phép I / O của đĩa được tuần tự hơn"
 
-#: lib/utility.php:1345
+#: lib/utility.php:1358
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io đọc là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1350
+#: lib/utility.php:1363
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io ghi là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1356
+#: lib/utility.php:1369
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s sẽ chia innodb_buffer_pool thành các vùng bộ nhớ để cải thiện hiệu suất. Giá trị tối đa là 64. Khi innodb_buffer_pool của bạn dưới 1GB, bạn nên sử dụng kích thước nhóm chia cho 128MB. Tiếp tục sử dụng phương trình này tối đa 64."
 
-#: lib/utility.php:1356
+#: lib/utility.php:1369
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s sẽ chia innodb_buffer_pool thành các vùng bộ nhớ để cải thiện hiệu suất. Giá trị tối đa là 64. Khi innodb_buffer_pool của bạn dưới 1GB, bạn nên sử dụng kích thước nhóm chia cho 128MB. Tiếp tục sử dụng phương trình này tối đa 64."
 
-#: lib/utility.php:1362 lib/utility.php:1398
+#: lib/utility.php:1375 lib/utility.php:1411
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu bạn có ổ cứng vật lý, hãy sử dụng 200 * số lượng ổ đĩa hoạt động trong mảng. Nếu sử dụng NVMe hoặc PCIe Flash, có thể sử dụng số lượng lớn hơn nhiều tới 100000."
 
-#: lib/utility.php:1368 lib/utility.php:1404
+#: lib/utility.php:1381 lib/utility.php:1417
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu bạn có ổ đĩa cứng vật lý, hãy sử dụng 2000 * số lượng ổ đĩa hoạt động trong mảng. Nếu sử dụng NVMe hoặc PCIe Flash, có thể sử dụng số lượng lớn hơn nhiều tới 200000."
 
-#: lib/utility.php:1374 lib/utility.php:1410
+#: lib/utility.php:1387 lib/utility.php:1423
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Nếu bạn có đĩa SSD, hãy sử dụng đề xuất này. Nếu không, không đặt cài đặt này."
 
-#: lib/utility.php:1387
+#: lib/utility.php:1400
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io đọc là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1392
+#: lib/utility.php:1405
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Với lưu trữ loại SSD hiện đại, việc có nhiều luồng io ghi là lợi thế cho các ứng dụng có đặc tính io cao."
 
-#: lib/utility.php:1423
+#: lib/utility.php:1436
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "Khi sử dụng MariaDB 10.2.4 trở lên, cài đặt này sẽ bị tắt nếu tính năng ghi nguyên tử được bật. Do đó, hãy bật tính năng ghi nguyên tử thay vì bộ đệm ghi kép vì nó sẽ tăng hiệu suất."
 
-#: lib/utility.php:1430
+#: lib/utility.php:1443
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Khi sử dụng MariaDB 10.2.4 trở lên, bạn có thể sử dụng ghi nguyên tử trên bộ đệm viết đôi để tăng hiệu suất."
 
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Điều chỉnh"
 
-#: lib/utility.php:1447
+#: lib/utility.php:1460
 msgid "Note: Many changes below require a database restart"
 msgstr "Lưu ý: Nhiều thay đổi dưới đây yêu cầu khởi động lại cơ sở dữ liệu"
 
-#: lib/utility.php:1455
+#: lib/utility.php:1468
 msgid "Variable"
 msgstr "Biến thể"
 
-#: lib/utility.php:1456
+#: lib/utility.php:1469
 msgid "Current Value"
 msgstr "Giá trị hiện tại"
 
-#: lib/utility.php:1458
+#: lib/utility.php:1471
 msgid "Recommended Value"
 msgstr "Giá trị đề xuất"
 
-#: lib/utility.php:1459
+#: lib/utility.php:1472
 msgid "Comments"
 msgstr "Bình luận"
 
-#: lib/utility.php:2053
+#: lib/utility.php:2066
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s là phiên bản tối thiểu"
 
-#: lib/utility.php:2055
+#: lib/utility.php:2068
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Giới hạn bộ nhớ tối thiểu %s MB"
 
-#: lib/utility.php:2057
+#: lib/utility.php:2070
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Tối thiểu %sm thời gian thực hiện"
 
-#: lib/utility.php:2059
+#: lib/utility.php:2072
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Một múi giờ hợp lệ phù hợp với MySQL và hệ thống"
 

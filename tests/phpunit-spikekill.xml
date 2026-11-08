@@ -2,6 +2,8 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>Unit/ReindexPublicationOutcomeTest.php</file>
+      <file>Unit/RemoteReindexOutcomeTest.php</file>
       <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
       <file>Unit/MailPreflightTest.php</file>
       <file>Unit/Security/CrashConsistencyTest.php</file>

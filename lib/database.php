@@ -505,7 +505,7 @@ function db_statement_count(bool $executed = false): int
  */
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array())
 {
-    global $error_logged, $config, $database_total_queries, $database_last_error, $database_log, $affected_rows;
+    global $error_logged, $config, $database_total_queries, $database_last_error, $database_log, $affected_rows, $database_fail_fast;
 
     [$database_hostname, $database_port, $database_default] = \Kadupul\Platform\Infrastructure\Legacy\LegacyConnectionRegistry::defaultTarget();
     $default_key = "$database_hostname:$database_port:$database_default";
@@ -533,7 +533,7 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
             }
 
             $database_last_error = 'DB ' . $execute_name . ' -- No connection found';
-            if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+            if (!empty($database_fail_fast) || (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS)) {
                 throw new Error('Database operation failed.');
             }
 
@@ -655,7 +655,7 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
             // failure. Isolated workers catch Throwable at their outer boundary.
             // Transactional workers must stop before later statements can
             // run after a deadlock or another SQL failure releases their locks.
-            if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+            if (!empty($database_fail_fast) || (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS)) {
                 throw new Error('Database operation failed.');
             }
 
