@@ -13,6 +13,7 @@
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
       <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
+      <file>Unit/Security/Shell/SpikekillUnknownLimitsTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/DataQueryOrphanStateTest.php</file>
