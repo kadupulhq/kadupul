@@ -1743,48 +1743,49 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
 		}
 	}
 
-	if (cacti_sizeof($declared_keys)) {
-		foreach ($allindexes as $n => $index) {
-			if ($n == 'PRIMARY') {
-				continue;
-			}
+	foreach ($allindexes as $n => $index) {
+		if ($n == 'PRIMARY') {
+			continue;
+		}
 
-			if (isset($declared_keys[$n])) {
-				$k   = $declared_keys[$n];
-				$add = array_diff($k['columns'], $index);
-				$del = array_diff($index, $k['columns']);
+		if (isset($declared_keys[$n])) {
+			$k   = $declared_keys[$n];
+			$add = array_diff($k['columns'], $index);
+			$del = array_diff($index, $k['columns']);
 
-				if (!empty($add) || !empty($del) || $uniqueindex[$n] !== $k['unique']) {
-					$columns = db_format_index_create($k['columns']);
+			// Only a unique_keys entry forces UNIQUE.  A live unique index listed
+			// under keys (as cli/sqltable_to_php.php writes every index) keeps its
+			// uniqueness, as in 1.2.31.
+			if (!empty($add) || !empty($del) || ($k['unique'] && !$uniqueindex[$n])) {
+				$columns = db_format_index_create($k['columns']);
 
-					if (!db_is_safe_identifier($n) || $columns === false) {
-						return false;
-					}
-
-					$alter_clauses[] = "DROP INDEX `$n`";
-					$alter_clauses[] = 'ADD ' . ($k['unique'] ? 'UNIQUE ' : '') . 'INDEX `' . $n . '` (' . $columns . ')';
-				}
-			} elseif (isset($data['keys'])) {
-				// As in 1.2.31, undeclared indexes are removed only when keys are declared
-				if (!db_is_safe_identifier($n)) {
+				if (!db_is_safe_identifier($n) || $columns === false) {
 					return false;
 				}
 
 				$alter_clauses[] = "DROP INDEX `$n`";
+				$alter_clauses[] = 'ADD ' . ($k['unique'] ? 'UNIQUE ' : '') . 'INDEX `' . $n . '` (' . $columns . ')';
 			}
+		} elseif (isset($data['keys'])) {
+			// As in 1.2.31, undeclared indexes are removed only when keys are declared
+			if (!db_is_safe_identifier($n)) {
+				return false;
+			}
+
+			$alter_clauses[] = "DROP INDEX `$n`";
 		}
+	}
 
-		// Add any missing indexes (regular and unique alike)
-		foreach ($declared_keys as $name => $k) {
-			if (!isset($allindexes[$name])) {
-				$columns = db_format_index_create($k['columns']);
+	// Add any missing indexes (regular and unique alike)
+	foreach ($declared_keys as $name => $k) {
+		if (!isset($allindexes[$name])) {
+			$columns = db_format_index_create($k['columns']);
 
-				if (!db_is_safe_identifier($name) || $columns === false) {
-					return false;
-				}
-
-				$alter_clauses[] = 'ADD ' . ($k['unique'] ? 'UNIQUE ' : '') . 'INDEX `' . $name . '` (' . $columns . ')';
+			if (!db_is_safe_identifier($name) || $columns === false) {
+				return false;
 			}
+
+			$alter_clauses[] = 'ADD ' . ($k['unique'] ? 'UNIQUE ' : '') . 'INDEX `' . $name . '` (' . $columns . ')';
 		}
 	}
 

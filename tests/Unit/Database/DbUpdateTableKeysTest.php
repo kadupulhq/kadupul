@@ -106,6 +106,17 @@ test('db_update_table reconciles unique keys and accepts string key columns', fu
         array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
         array(),
     ),
+    // cli/sqltable_to_php.php lists every secondary index under keys, unique or not.
+    'unique index declared under keys keeps its uniqueness' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 0)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    'empty keys still removes undeclared indexes' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('stale', 1, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array()),
+        array('DROP INDEX `stale`'),
+    ),
     'compound key given as one string matches' => array(
         array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('idx', 2, 'name', 1)),
         array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => 'id`,`name'))),
