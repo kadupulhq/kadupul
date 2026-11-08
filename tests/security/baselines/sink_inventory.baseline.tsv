@@ -555,7 +555,7 @@ fs_write	./src/Platform/Infrastructure/Profiling/RequestProfileLog.php:52	      
 fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:176	            $handle = @fopen($path, 're');
 fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:181	                $handle = @fopen($path, 'xe');
 fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:184	                    $handle = @fopen($path, 're');
-fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:228	        $handle = @fopen($marker, 'xe');
+fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:229	        $handle = @fopen($marker, 'xe');
 fs_write	./src/Platform/Infrastructure/Symfony/Console/SignPackageCommand.php:126	        if (file_put_contents($temporary, $bytes) !== strlen($bytes) || !chmod($temporary, $mode) || !rename($temporary, $target)) {
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:120	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {

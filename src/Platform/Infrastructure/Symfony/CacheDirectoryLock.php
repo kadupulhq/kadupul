@@ -212,25 +212,46 @@ final class CacheDirectoryLock
 
     /**
      * Rate-limited through an exclusively created marker in the temporary
-     * directory, so concurrent requests log one warning per interval.
+     * directory, so concurrent requests log one warning per interval. Only a
+     * marker this user owns counts: the name is predictable, and another local
+     * user who kept a fresh one there must not be able to silence the warning.
      */
     private static function warnRefused(string $buildDir): void
     {
         $marker = sys_get_temp_dir() . '/kadupul-cache-lock-warning-' . hash('sha256', $buildDir);
-        clearstatcache(true, $marker);
-        $stat = @lstat($marker);
-        if ($stat !== false) {
-            if (!is_link($marker) && time() - $stat['mtime'] < self::WARNING_INTERVAL_SECONDS) {
-                return;
-            }
+        $stat = self::ownMarker($marker);
+        if ($stat !== null && time() - $stat['mtime'] < self::WARNING_INTERVAL_SECONDS) {
+            return;
+        }
+        if (@lstat($marker) !== false) {
             @unlink($marker);
         }
         $handle = @fopen($marker, 'xe');
-        if ($handle === false) {
+        if ($handle !== false) {
+            fclose($handle);
+        } elseif (self::ownMarker($marker) !== null) {
+            // A concurrent request of this user created it and logs instead.
             return;
         }
-        fclose($handle);
         error_log(sprintf('Kadupul: web requests are running without the Symfony cache lock, so a cache refresh can make them fail. Refused %s or %s: each must be a regular file with mode 0640 or stricter, owned by the application user, in a directory other users cannot write. Delete them to let the application user recreate them.', self::gatePath($buildDir), self::path($buildDir)));
+    }
+
+    /**
+     * Returns the marker's lstat() result when it is a regular file owned by
+     * the effective user, or null when it is missing or belongs to anyone else.
+     *
+     * @return array<int|string, int>|null
+     */
+    private static function ownMarker(string $marker): ?array
+    {
+        clearstatcache(true, $marker);
+        $stat = @lstat($marker);
+        if ($stat === false || is_link($marker) || !is_file($marker)) {
+            return null;
+        }
+        $euid = function_exists('posix_geteuid') ? posix_geteuid() : null;
+
+        return $euid === null || $stat['uid'] === $euid ? $stat : null;
     }
 
     /**
