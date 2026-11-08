@@ -51,6 +51,7 @@ function __($text, ...$args) { return vsprintf($text, $args); }
 function html_common_header($title) {}
 class CactiSecureHeaders {
     public static function getNonceAttribute() { return ''; }
+    public static function getNonce() { return 'fixture'; }
     public static function contentSecurityPolicies() { return array('Content-Security-Policy' => "default-src 'self'"); }
 }
 $_SERVER['APP_ENV'] = 'test';
@@ -97,7 +98,7 @@ PHP;
         rmdir($dir);
     }
 
-    expect($exit)->toBe(0);
+    expect($exit)->toBe(0, $stderr);
 
     $result = json_decode($stdout, true);
     expect($result)->toBeArray();
