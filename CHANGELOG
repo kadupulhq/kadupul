@@ -42,6 +42,7 @@ Cacti CHANGELOG
 -issue: Let a Boost child with no rows in its partition succeed instead of failing the run, while a failed row count still fails it (#762)
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
 -issue: Replace a remote collector table in one transaction during full synchronization, so a failed insert keeps its previous rows instead of leaving it empty; non-InnoDB tables keep the 1.2.31 behavior (#761)
+-issue: Document the shared-group setup for the Real-time and Boost cache directories in docs/cache-directory-permissions.md; the 0644 file mode is unchanged
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
 -issue: Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed (#198)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
