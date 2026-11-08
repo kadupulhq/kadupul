@@ -1785,6 +1785,20 @@ Known differences from `cli/add_perms.php`:
 - `--list-groups` still prints `This option has not yet been implemented` and
   lists nothing; under `bin/console` it fails with exit 1.
 
+`php bin/console kadupul:user:legacy-passwords` lists the local (realm 0)
+accounts whose `user_auth.password` is still an unsalted MD5 digest: 32
+lowercase hex digits, the only stored form that the MD5 fallback in
+`compat_password_verify()` can match. LDAP, Web Basic and domain accounts are
+not listed, because local login never checks their stored value. Disabled,
+template and guest accounts are listed with their enabled state. Each row gives
+the id, username, enabled state and the latest successful login in `user_log`
+(password, token or password change), or none when the log holds none. The
+stored value and any part of it are never printed. The command changes nothing:
+such a password keeps working and is rehashed on its next successful login.
+It needs the Console Access and User Management realms, like the other user
+tools, and takes `--local` and `--as`. `--json` prints `status`, `database`,
+`count` and `accounts`. This is a new report with no `cli/` original.
+
 `php bin/console kadupul:graph:reapply-titles --host-id=<all|0|id,id,...>`
 reapplies the suggested graph titles to existing graphs and refreshes their
 cached titles. It runs the same `api_reapply_suggested_graph_title()` and
