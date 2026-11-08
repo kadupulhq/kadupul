@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 01:05-0800\n"
+"POT-Creation-Date: 2026-11-08 11:15-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -12470,7 +12470,7 @@ msgstr "Влезли сте като %s"
 msgid "Edit Profile"
 msgstr "Редактирай Профила"
 
-#: lib/functions.php:4301 lib/html.php:2889 logout.php:96
+#: lib/functions.php:4301 lib/html.php:2889 logout.php:98
 msgid "Logout"
 msgstr "Изход"
 
