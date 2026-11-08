@@ -33,6 +33,7 @@
       <file>./Unit/AggregateMemberSequenceTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
+      <file>./Unit/Core/Cli/RepairDatabaseOutcomesTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
       <file>./Unit/Core/Poller/ReplicateOutTableReplacementTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
