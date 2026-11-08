@@ -14,7 +14,7 @@ namespace Kadupul\Tests\SnmpWalkExitCode;
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
 /** Run the production walk in a child process against an owned fake snmpwalk. */
-function walk(string $output, int $exit, string $version = '2', string $authProtocol = 'SHA'): array
+function walk(string $output, int $exit, string $version = '2', string $authProtocol = 'SHA', string $oidCheckDisabled = ''): array
 {
     $root = dirname(__DIR__, 2);
     $program = <<<'CHILD'
@@ -26,7 +26,7 @@ function walk(string $output, int $exit, string $version = '2', string $authProt
         foreach (array('cacti_format_ipv6_colon', 'cacti_escapeshellarg', 'cacti_sizeof', 'is_hex_string', 'is_ipaddress', 'is_mac_address') as $function) {
             eval(test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
         }
-        function read_config_option($name) { return $name === 'path_snmpwalk' ? $GLOBALS['fakeWalk'] : ''; }
+        function read_config_option($name) { return $name === 'path_snmpwalk' ? $GLOBALS['fakeWalk'] : ($name === 'oid_increasing_check_disable' ? $GLOBALS['scenario']['oidcheck'] : ''); }
         function debug_log_insert($channel, $message) {}
         function __esc($message, ...$arguments) { return sprintf($message, ...$arguments); }
         function cacti_log($message, ...$arguments) { $GLOBALS['warnings'][] = $message; }
@@ -49,7 +49,7 @@ function walk(string $output, int $exit, string $version = '2', string $authProt
             rmdir($owned);
         }
         CHILD;
-    $run = \test_php_run([PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, json_encode(['output' => $output, 'exit' => $exit, 'version' => $version, 'auth' => $authProtocol], JSON_THROW_ON_ERROR)]);
+    $run = \test_php_run([PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $root, json_encode(['output' => $output, 'exit' => $exit, 'version' => $version, 'auth' => $authProtocol, 'oidcheck' => $oidCheckDisabled], JSON_THROW_ON_ERROR)]);
     expect($run['status'])->toBe(0, $run['err']);
 
     return json_decode($run['out'], true, 512, JSON_THROW_ON_ERROR);
@@ -66,15 +66,16 @@ test('a successful walk keeps rows whose values mention Timeout or tooBig', func
     ])->and($result['warnings'])->toBe([]);
 });
 
-test('a walk that exits non-zero returns no rows, even after partial output', function (string $output, int $exit) {
+test('a walk that exits non-zero returns no rows, even after partial output', function (string $output, int $exit, string $hint) {
     $result = walk($output, $exit);
 
     expect($result['rows'])->toBe([])
-        ->and($result['warnings'])->toBe(["WARNING: SNMP Error:'Exit Code $exit', Device:'192.0.2.1', OID:'.1.3.6.1.2.1.31.1.1.1.18'"]);
+        ->and($result['warnings'])->toBe(["WARNING: SNMP Error:'Exit Code $exit', Device:'192.0.2.1', OID:'.1.3.6.1.2.1.31.1.1.1.18'" . $hint]);
 })->with([
-    'no output' => ['', 1],
-    'partial output before a timeout' => [ROWS, 1],
-    'another failure code' => [ROWS, 2],
+    'no output' => ['', 1, ''],
+    // net-snmp exits 1 after the rows for a timeout and for an OID out of order alike
+    'partial output before a timeout or an OID out of order' => [ROWS, 1, " The walk failed after returning rows; if the device returns OIDs out of order, enable 'Disable increasing OID Check' under Settings > Poller."],
+    'another failure code' => [ROWS, 2, ''],
 ]);
 
 test('a walk without credentials for its version is refused before running', function () {
@@ -82,4 +83,11 @@ test('a walk without credentials for its version is refused before running', fun
 
     expect($result['rows'])->toBe([])
         ->and($result['warnings'])->toBe(["WARNING: SNMP Error:'Missing credentials', Device:'192.0.2.1', OID:'.1.3.6.1.2.1.31.1.1.1.18'"]);
+});
+
+test('the out-of-order hint is left out when the increasing OID check is already disabled', function () {
+    $result = walk(ROWS, 1, '2', 'SHA', 'on');
+
+    expect($result['rows'])->toBe([])
+        ->and($result['warnings'])->toBe(["WARNING: SNMP Error:'Exit Code 1', Device:'192.0.2.1', OID:'.1.3.6.1.2.1.31.1.1.1.18'"]);
 });

@@ -918,7 +918,14 @@ function cacti_snmp_walk(
         // there only ever matched device data. A failed walk, including one cut
         // short after some rows, is known from its exit code (#1099).
         if ($exit_code !== 0) {
-            cacti_log("WARNING: SNMP Error:'Exit Code $exit_code', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+            // net-snmp also exits 1 after printing rows when an agent returns an
+            // OID out of order, so such an agent now yields no rows. Name the
+            // setting that lets it be walked.
+            $hint = $exit_code === 1 && $oidCheck === '' && cacti_sizeof($temp_array)
+                ? " The walk failed after returning rows; if the device returns OIDs out of order, enable 'Disable increasing OID Check' under Settings > Poller."
+                : '';
+
+            cacti_log("WARNING: SNMP Error:'Exit Code $exit_code', Device:'$hostname', OID:'$oid'" . $hint, false, 'SNMP', POLLER_VERBOSITY_HIGH);
 
             return array();
         }
