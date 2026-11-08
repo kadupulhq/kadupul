@@ -47,7 +47,14 @@ async function main(input) {
             }
         }
         const response = await page.goto(`${input.base}${input.front}/graph-definitions/vdefs/${input.vdefId}/items/0`);
-        assert.equal(response.status(), 200);
+        if (!response || response.status() !== 200) {
+            // Classify only the error-page signature; never print page data or cookies.
+            const sample = response ? (await response.body()).subarray(0, 4096).toString('utf8') : '';
+            const kind = /<title>404 Not Found<\/title>/i.test(sample) && /<address>Apache\//i.test(sample)
+                ? 'apache-not-found' : 'unclassified';
+            assert.equal(response?.status(), 200,
+                `VDEF initial editor HTTP ${response?.status() ?? 'no-response'}; front=${input.front}; error=${kind}`);
+        }
         assert.ok(response.headers()['content-security-policy'].includes("default-src 'self'"));
         // Record the real callback before it destroys its document, then resume
         // the unchanged callback and verify the resulting navigation and save.
