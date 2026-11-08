@@ -17,6 +17,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
+- Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
 - Give each native child coverage invocation a distinct test identity and report stem so reused process IDs cannot conflate execution or overwrite reports and evidence sidecars.
 - Preserve checkout sources and originating unit coverage when coverage-merger scratch cleanup runs with the checkout beneath the temporary directory.
 - Update development coverage reporting to coverage.py 7.17.0 and the hash-locked Semgrep scanner to 1.182.1, retaining the existing Python 3.12 runtime and coverage/security gates.
