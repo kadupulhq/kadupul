@@ -1204,6 +1204,36 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 }
 
 /**
+ * Validate that a redirect target is an absolute path on this site.
+ *
+ * A Location value that starts with a single '/' stays on the current
+ * origin. A second leading '/' or '\' names another host, and a value that
+ * does not start with '/' may carry a scheme. Browsers drop tabs and line
+ * breaks anywhere in a URL before parsing it, so control characters are
+ * refused as well. The accepted value is returned unchanged.
+ *
+ * @param string $url     The redirect target to check
+ * @param string $default The target to use when $url is not a local path
+ *
+ * @return string $url when it is a local absolute path, otherwise $default
+ */
+function validate_local_redirect_path($url, $default = 'index.php') {
+	if (!is_string($url) || $url === '' || $url[0] !== '/') {
+		return $default;
+	}
+
+	if (isset($url[1]) && ($url[1] === '/' || $url[1] === '\\')) {
+		return $default;
+	}
+
+	if (preg_match('/[\x00-\x1f\x7f]/', $url)) {
+		return $default;
+	}
+
+	return $url;
+}
+
+/**
  * Returns a Host header that is a well-formed host with an optional port.
  *
  * Underscores are accepted because 1.2.31 redirected to such names. Anything

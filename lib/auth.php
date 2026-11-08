@@ -5250,7 +5250,8 @@ function auth_login_redirect($login_opts = ''): never {
 
 				cacti_log(sprintf("DEBUG: Referer from HTTP_REFERER with Value: '%s', Effective: '%s'", $_SERVER['HTTP_REFERER'], $referer), false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 			} elseif (isset($_SERVER['REQUEST_URI'])) {
-				$referer = sanitize_uri($_SERVER['REQUEST_URI']);
+				/* the request target is client supplied and may name another host */
+				$referer = validate_local_redirect_path(sanitize_uri($_SERVER['REQUEST_URI']), $config['url_path'] . 'index.php');
 
 				if (auth_basename($referer) == 'logout.php') {
 					$referer = $config['url_path'] . 'index.php';
