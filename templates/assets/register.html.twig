@@ -11,6 +11,7 @@
 <main>
     <h1>{{ 'Asset register'|trans }}</h1>
     <p>{{ 'Network equipment pilot. Discovery reports observations; approved records retain ownership and lifecycle history.'|trans }}</p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
     <p><a href="{{ path('inventory_devices') }}">{{ 'Devices'|trans }}</a></p>
     {% if error %}<p role="alert">{{ error|trans }}</p>{% endif %}
     {% if saved %}<p role="status">{{ 'Change recorded.'|trans }}</p>{% endif %}
@@ -46,11 +47,13 @@
         <table>
             <caption>{{ 'Accepted records'|trans }}</caption>
             <thead><tr><th scope="col">{{ 'Name'|trans }}</th><th scope="col">{{ 'Owner'|trans }}</th><th scope="col">{{ 'State'|trans }}</th><th scope="col">{{ 'Service'|trans }}</th><th scope="col">{{ 'Criticality'|trans }}</th></tr></thead>
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the validated asset ID. #}
             <tbody>{% for asset in asset_page %}<tr><th scope="row"><a href="{{ path('asset_register', {asset: asset.id}) }}">{{ asset.fields.name }}</a></th><td>{{ asset.fields.owner }}</td><td>{{ asset.state|trans }}</td><td>{{ asset.fields.service }}</td><td>{{ asset.fields.criticality|trans }}</td></tr>{% else %}<tr><td colspan="5">{{ 'No records.'|trans }}</td></tr>{% endfor %}</tbody>
         </table>
     </section>
     <details{% if selected %} open{% endif %}>
         <summary>{{ (selected ? 'Edit asset' : 'Create asset')|trans }}</summary>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
         {% if selected %}<p>{{ 'Asset ID'|trans }}: <code>{{ selected.id }}</code> · {{ selected.state|trans }}</p><p><a href="{{ path('asset_register') }}">{{ 'Create another asset'|trans }}</a></p>{% endif %}
         <form method="post" action="{{ path('asset_register', selected ? {asset: selected.id} : {}) }}">
             {{ _self.command(selected ? 'edit' : 'create', revision, request_id) }}
@@ -96,6 +99,7 @@
         {% for identity in identity_page %}<details><summary>{{ identity.source }} / {{ identity.key }} · {{ identity.asset_id ? assets[identity.asset_id].fields.name : 'Unlinked'|trans }}</summary>
             <p>{{ 'Observed at'|trans }}: {{ identity.observed_at }} · {{ 'Ingested at'|trans }}: {{ identity.ingested_at }}</p>
             <dl>{% for key, value in identity.fields %}<dt>{{ key|trans }}</dt><dd>{{ value }}</dd>{% endfor %}</dl>
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the monitoring device ID. #}
             {% if identity.source == 'kadupul-monitoring' %}<p><a href="{{ path('inventory_device_details', {id: identity.key}) }}">{{ 'Monitoring device'|trans }}</a></p>{% endif %}
             <form method="post" action="{{ path('asset_register') }}">{{ _self.command('link', revision, request_id) }}<input type="hidden" name="identity_id" value="{{ identity.id }}">
                 <p><label>{{ 'Asset ID (blank to unlink)'|trans }} <input name="asset_id" list="asset-identifiers" value="{{ identity.asset_id }}"></label></p>
@@ -106,6 +110,7 @@
                 <p><label>{{ 'Evidence or approval reference'|trans }} <input name="evidence" maxlength="500" required></label></p><button>{{ 'Accept selected observations'|trans }}</button>
             </form>{% endif %}
         </details>{% else %}<p>{{ 'No records.'|trans }}</p>{% endfor %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the integer page. #}
         <nav aria-label="{{ 'Register pages'|trans }}">{% if page > 1 %}<a href="{{ path('asset_register', {page: page - 1}) }}">{{ 'Previous'|trans }}</a>{% endif %} {{ page }} {% if assets|length > page * 50 or identities|length > page * 50 %}<a href="{{ path('asset_register', {page: page + 1}) }}">{{ 'Next'|trans }}</a>{% endif %}</nav>
     </section>
     <details><summary>{{ 'Sources and collection failures'|trans }}</summary>
@@ -128,6 +133,7 @@
     {% endif %}
     <section aria-labelledby="history-heading"><h2 id="history-heading">{{ 'Change history'|trans }}</h2>
         {% for event in history %}<details><summary>{{ event.occurred_at }} · {{ event.actor }} · {{ event.action|trans }}</summary><p>{{ event.evidence }}</p><p>{{ 'Receipt'|trans }}: <code>{{ event.request_id }}</code></p><pre>{{ event.changes|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></details>{% else %}<p>{{ 'No records.'|trans }}</p>{% endfor %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the integer history sequence. #}
         {% if history|length == 50 %}<a href="{{ path('asset_register', {before: (history|last).sequence}) }}">{{ 'Older changes'|trans }}</a>{% endif %}
     </section>
 </main>

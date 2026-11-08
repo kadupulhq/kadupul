@@ -21,16 +21,16 @@ interface AssetStore
      */
     public function atomic(\Closure $operation): mixed;
     /**
-     * @return Snapshot
+     * @phpstan-return Snapshot
      */
     public function snapshot(): array;
     /**
-     * @param Snapshot $before
-     * @param Snapshot $after
+     * @phpstan-param Snapshot $before
+     * @phpstan-param Snapshot $after
      */
     public function save(array $before, array $after): void;
     /**
-     * @return array{actor_id: int, command_hash: string, result: Result}|null
+     * @phpstan-return array{actor_id: int, command_hash: string, result: Result}|null
      */
     public function receipt(string $requestId): ?array;
     /**
@@ -42,7 +42,7 @@ interface AssetStore
      */
     public function observe(array $observations): void;
     /**
-     * @return list<History>
+     * @phpstan-return list<History>
      */
     public function history(int $before, int $limit): array;
 }

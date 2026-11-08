@@ -4,6 +4,7 @@
 
 {% block body %}
 <main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
     {% if assets_enabled|default(false) %}<p><a href="{{ path('asset_register') }}">{{ 'Asset register'|trans({}, 'assets') }}</a></p>{% endif %}
     <h1>{{ 'Devices'|trans({}, 'inventory') }}</h1>
     {% if created|default(false) %}<p><output>{{ 'Device created.'|trans({}, 'inventory') }}</output></p>{% endif %}

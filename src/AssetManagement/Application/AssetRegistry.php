@@ -33,7 +33,7 @@ final readonly class AssetRegistry implements AssetWriter
 
     /**
      * @param array<string, mixed> $command
-     * @return Result
+     * @phpstan-return Result
      */
     public function apply(array $command): array
     {
@@ -66,7 +66,7 @@ final readonly class AssetRegistry implements AssetWriter
 
     /**
      * @param array<string, mixed> $command
-     * @return Result
+     * @phpstan-return Result
      */
     private function execute(array $command): array
     {
@@ -251,7 +251,7 @@ final readonly class AssetRegistry implements AssetWriter
     }
 
     /**
-     * @param Snapshot $state
+     * @phpstan-param Snapshot $state
      * @param array<string, mixed> $command
      * @return list<array<string, mixed>>
      */
@@ -295,7 +295,7 @@ final readonly class AssetRegistry implements AssetWriter
     }
 
     /**
-     * @param Snapshot $state
+     * @phpstan-param Snapshot $state
      * @param array<string, mixed> $command
      */
     private function dependency(array &$state, array $command): void
@@ -335,7 +335,7 @@ final readonly class AssetRegistry implements AssetWriter
     }
 
     /**
-     * @param Snapshot $state
+     * @phpstan-param Snapshot $state
      */
     private function asset(array $state, mixed $id): string
     {
@@ -347,7 +347,7 @@ final readonly class AssetRegistry implements AssetWriter
     }
 
     /**
-     * @param Snapshot $state
+     * @phpstan-param Snapshot $state
      */
     private function identity(array $state, mixed $id): string
     {

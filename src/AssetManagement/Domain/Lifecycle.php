@@ -14,8 +14,8 @@ namespace Kadupul\AssetManagement\Domain;
 final class Lifecycle
 {
     /**
-     * @param Snapshot $register
-     * @return Asset
+     * @phpstan-param Snapshot $register
+     * @phpstan-return Asset
      */
     public static function transition(array $register, string $id, string $state): array
     {
@@ -44,7 +44,7 @@ final class Lifecycle
     }
 
     /**
-     * @param Asset $asset
+     * @phpstan-param Asset $asset
      */
     public static function requireOwnership(array $asset): void
     {

@@ -52,7 +52,7 @@ final class AssetUpgradeTest extends TestCase
         $this->assertIsString($sql);
         $fresh = [];
         foreach (['asset_registry', 'asset_record', 'asset_event', 'asset_observation'] as $table) {
-            $this->assertSame(1, preg_match('/CREATE TABLE IF NOT EXISTS `' . $table . '` \(.*?\) ENGINE=InnoDB[^;]+;/s', $sql, $match));
+            $this->assertSame(1, preg_match('/^CREATE TABLE `' . $table . '` \(.*?\) ENGINE=InnoDB[^;]+;/ms', $sql, $match));
             $this->db->exec($match[0]);
             $fresh[$table] = $this->db->query('SHOW CREATE TABLE ' . $table)->fetch(\PDO::FETCH_NUM)[1];
             $this->db->exec('DROP TABLE ' . $table);

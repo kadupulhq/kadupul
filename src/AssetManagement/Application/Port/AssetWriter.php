@@ -12,7 +12,7 @@ interface AssetWriter
 {
     /**
      * @param array<string, mixed> $command
-     * @return Result
+     * @phpstan-return Result
      */
     public function apply(array $command): array;
 }

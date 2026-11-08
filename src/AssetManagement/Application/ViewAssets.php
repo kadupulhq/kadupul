@@ -24,7 +24,7 @@ final readonly class ViewAssets
     public function __construct(private AssetAccess $access, private AssetStore $store) {}
 
     /**
-     * @return array{revision: int, policy: Policy, assets: array<string, Asset>, identities: array<string, Identity>, dependencies: array<string, Dependency>, sources: Sources, metrics: array<string, int|bool>, conflicts: list<array<string, string>>, critical_gaps: array<string, Asset>, history: list<History>}
+     * @phpstan-return array{revision: int, policy: Policy, assets: array<string, Asset>, identities: array<string, Identity>, dependencies: array<string, Dependency>, sources: Sources, metrics: array<string, int|bool>, conflicts: list<array<string, string>>, critical_gaps: array<string, Asset>, history: list<History>}
      */
     public function __invoke(int $before = PHP_INT_MAX): array
     {

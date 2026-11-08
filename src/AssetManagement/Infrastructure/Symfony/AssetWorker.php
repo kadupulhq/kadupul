@@ -26,7 +26,11 @@ final readonly class AssetWorker implements AssetWriter
         if (strlen($payload) > 524288) {
             throw new AssetError('invalid_command');
         }
-        $process = new Process([$binary, $this->projectDir . '/bin/console', 'assets:register', '--worker', '--no-interaction', '--no-ansi'], $this->projectDir, null, $payload, 60);
+        // Under Apache's PHP module Process's default environment keeps only
+        // variables that also appear in $_SERVER, which drops the process
+        // environment (feature flag, APP_SECRET). Pass that environment so the
+        // worker evaluates its own gate exactly as any other command would.
+        $process = new Process([$binary, $this->projectDir . '/bin/console', 'assets:register', '--worker', '--no-interaction', '--no-ansi'], $this->projectDir, getenv(null, true), $payload, 60);
         try {
             $process->run();
             $result = json_decode(trim($process->getOutput()), true, 20, JSON_THROW_ON_ERROR);
