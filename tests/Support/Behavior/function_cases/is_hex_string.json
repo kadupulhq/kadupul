@@ -10,7 +10,7 @@
     {"id": "short_part", "args": ["Hex-00 1"]},
     {"id": "non_hex_part", "args": ["Hex-0g 01"]},
     {"id": "double_space", "args": ["Hex-00  01"]},
-    {"id": "hex_string_prefix_is_dead_branch", "args": ["Hex-STRING: 00 01"], "note": "the hex- test matches first, so the Hex-STRING: branch is unreachable and \"String:\" is treated as a part"},
+    {"id": "hex_string_prefix", "args": ["Hex-STRING: 00 01"], "note": "the Hex-STRING: prefix is tested before Hex- and stripped (#1030)"},
     {"id": "colon_form", "args": ["Hex:00 01"]},
     {"id": "prefix_not_at_start", "args": ["xHex-00 01"]},
     {"id": "repeated_prefix_all_removed", "args": ["Hex-00 01 Hex-02 03"]},

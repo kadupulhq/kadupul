@@ -16,10 +16,10 @@ $source = file_get_contents(dirname(__DIR__, 2) . '/lib/poller.php');
 if ($source === false) {
     throw new \RuntimeException('Cannot read production replication helpers.');
 }
-foreach (['replicate_out_table', 'replicate_table_to_poller'] as $name) {
+foreach (['replicate_out_table', 'replicate_out_rollback', 'replicate_table_to_poller'] as $name) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name));
 }
-foreach (['POLLER_VERBOSITY_NONE' => 0, 'POLLER_VERBOSITY_MEDIUM' => 3] as $name => $value) {
+foreach (['POLLER_VERBOSITY_NONE' => 0, 'POLLER_VERBOSITY_LOW' => 2, 'POLLER_VERBOSITY_MEDIUM' => 3] as $name => $value) {
     if (!defined($name)) {
         define($name, $value);
     }
@@ -37,6 +37,7 @@ function statement(string $sql, PDO|false $connection): PDOStatement|false
         str_starts_with($sql, 'DROP') => 'drop',
         str_starts_with($sql, 'CREATE') => 'create',
         str_starts_with($sql, 'TRUNCATE') => 'truncate',
+        str_starts_with($sql, 'DELETE') => 'delete',
         default => 'insert',
     };
     $state['queries'][] = $kind;
@@ -135,32 +136,40 @@ test('replication helpers propagate real database failures and retain success co
     $remote = $connect();
     $schema = file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
     expect(preg_match('/^CREATE TABLE data_input \(.*?^\)[^;]*;/ms', $schema, $match))->toBe(1);
-    $ddl = str_replace('CREATE TABLE data_input (', 'CREATE TEMPORARY TABLE data_input (', $match[0]);
-    $GLOBALS['table_replication'] = ['source' => $primary, 'failure' => $failure, 'suffix' => bin2hex(random_bytes(6)), 'queries' => [], 'inserts' => 0, 'affected' => 0, 'logs' => [], 'failed_at' => null];
+    $suffix = bin2hex(random_bytes(6));
+    // A uniquely named table: temporary on the primary session, permanent on the
+    // remote one. MariaDB does not restore a temporary table's deleted rows on
+    // ROLLBACK after a later insert, so a temporary remote would hide #761.
+    $table = 'kadupul_761_' . $suffix;
+    $ddl = str_replace('CREATE TABLE data_input (', "CREATE TABLE $table (", $match[0]);
+    $GLOBALS['table_replication'] = ['source' => $primary, 'failure' => $failure, 'suffix' => $suffix, 'queries' => [], 'inserts' => 0, 'affected' => 0, 'logs' => [], 'failed_at' => null];
     try {
-        expect($primary->exec($ddl))->not->toBeFalse();
+        expect($primary->exec(str_replace('CREATE TABLE ', 'CREATE TEMPORARY TABLE ', $ddl)))->not->toBeFalse();
         if ($shape !== 'missing') {
-            expect($remote->exec($shape === 'different' ? 'CREATE TEMPORARY TABLE data_input (id INT PRIMARY KEY)' : $ddl))->not->toBeFalse();
+            expect($remote->exec($shape === 'different' ? "CREATE TABLE $table (id INT PRIMARY KEY)" : $ddl))->not->toBeFalse();
             if ($shape !== 'empty-target') {
                 $oldName = $shape === 'unchanged' ? 'replacement' : 'previous';
-                expect($remote->exec($shape === 'different' ? 'INSERT INTO data_input VALUES (1)' : "INSERT INTO data_input (id,name,input_string) VALUES (1,'$oldName','')"))->not->toBeFalse();
+                expect($remote->exec($shape === 'different' ? "INSERT INTO $table VALUES (1)" : "INSERT INTO $table (id,name,input_string) VALUES (1,'$oldName','')"))->not->toBeFalse();
             }
         }
+        if ($shape === 'myisam') {
+            expect($remote->exec("ALTER TABLE $table ENGINE=MyISAM"))->not->toBeFalse();
+        }
         if ($shape === 'case-columns') {
-            expect($remote->exec("ALTER TABLE data_input CHANGE name NAME VARCHAR(200) NOT NULL DEFAULT ''"))->not->toBeFalse();
+            expect($remote->exec("ALTER TABLE $table CHANGE name NAME VARCHAR(200) NOT NULL DEFAULT ''"))->not->toBeFalse();
         }
         if (!in_array($shape, ['empty', 'invalid'], true)) {
             if ($failure === 'late-insert') {
                 $values = array_map(static fn(int $id): string => "($id,'row-$id','')", range(1, 1002));
-                expect($primary->exec('INSERT INTO data_input (id,name,input_string) VALUES ' . implode(',', $values)))->not->toBeFalse();
+                expect($primary->exec("INSERT INTO $table (id,name,input_string) VALUES " . implode(',', $values)))->not->toBeFalse();
             } else {
-                expect($primary->exec("INSERT INTO data_input (id,name,input_string) VALUES (1,'replacement','')"))->not->toBeFalse();
+                expect($primary->exec("INSERT INTO $table (id,name,input_string) VALUES (1,'replacement','')"))->not->toBeFalse();
             }
         }
         // Match the SELECT * producer shape, including defaults and nullable columns.
-        $data = $shape === 'invalid' ? false : $primary->query('SELECT * FROM data_input ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
+        $data = $shape === 'invalid' ? false : $primary->query("SELECT * FROM $table ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
         $exclude = in_array($shape, ['excluded', 'empty-target'], true) ? ['name'] : false;
-        $result = $mode === 'upsert' ? replicate_table_to_poller($remote, $data, 'data_input', $exclude) : replicate_out_table($remote, $data, 'data_input', 2, $mode !== 'update', $exclude);
+        $result = $mode === 'upsert' ? replicate_table_to_poller($remote, $data, $table, $exclude) : replicate_out_table($remote, $data, $table, 2, $mode !== 'update', $exclude);
         $state = $GLOBALS['table_replication'];
         $success = $failure === '' && $shape !== 'invalid';
         expect($result)->toBe($success);
@@ -174,17 +183,15 @@ test('replication helpers propagate real database failures and retain success co
             expect(count($state['queries']))->toBe($state['failed_at']);
         }
         expect(str_contains(implode('\n', $state['logs']), ' With '))->toBe($success && $shape !== 'empty');
-        $rows = $remote->query('SELECT * FROM data_input ORDER BY id');
+        $rows = $remote->query("SELECT * FROM $table ORDER BY id");
         $rows = $rows === false ? null : array_map(static fn(array $row): array => array_change_key_case($row), $rows->fetchAll(PDO::FETCH_ASSOC));
         if ($success) {
             expect($rows)->toHaveCount($shape === 'empty' && $mode === 'bulk' ? 0 : 1);
             if ($shape !== 'empty') {
                 expect($rows[0]['name'])->toBe($shape === 'excluded' ? 'previous' : 'replacement');
             }
-        } elseif ($failure === 'late-insert') {
-            // The first batch is already committed; #761 tracks atomic replacement separately.
-            expect($rows)->toHaveCount(1001)->and($rows[0]['name'])->toBe('row-1');
-        } elseif ($failure === 'insert' && $mode === 'bulk') {
+        } elseif ($shape === 'myisam') {
+            // A non-transactional table cannot be rolled back, so it is still emptied first.
             expect($rows)->toBe([]);
         } elseif ($shape === 'missing' || ($shape === 'different' && $failure === 'create')) {
             expect($rows)->toBeNull();
@@ -196,8 +203,9 @@ test('replication helpers propagate real database failures and retain success co
         }
     } finally {
         foreach ([$primary, $remote] as $connection) {
-            $connection->exec('DROP TEMPORARY TABLE IF EXISTS data_input');
+            $connection->exec("DROP TEMPORARY TABLE IF EXISTS $table");
         }
+        $remote->exec("DROP TABLE IF EXISTS $table");
         unset($GLOBALS['table_replication']);
     }
 })->with([
@@ -215,7 +223,8 @@ test('replication helpers propagate real database failures and retain success co
     'bulk first create' => ['bulk', 'create', 'missing'],
     'bulk drop' => ['bulk', 'drop', 'different'],
     'bulk recreate' => ['bulk', 'create', 'different'],
-    'bulk truncate' => ['bulk', 'truncate', 'normal'],
+    'bulk delete' => ['bulk', 'delete', 'normal'],
+    'bulk non-transactional insert' => ['bulk', 'insert', 'myisam'],
     'bulk empty truncate' => ['bulk', 'truncate', 'empty'],
     'bulk insert' => ['bulk', 'insert', 'normal'],
     'bulk later batch' => ['bulk', 'late-insert', 'normal'],

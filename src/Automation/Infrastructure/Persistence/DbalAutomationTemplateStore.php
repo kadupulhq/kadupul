@@ -20,15 +20,17 @@ use Kadupul\Automation\Domain\AutomationTemplateFilters;
 use Kadupul\Automation\Domain\AutomationTemplatePage;
 use Kadupul\Automation\Domain\AutomationTemplateRevision;
 use Kadupul\Automation\Domain\AvailabilityMethods;
-use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Infrastructure\Persistence\AuditedPrimaryWrite;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsAlias(AutomationTemplateStore::class)]
 final readonly class DbalAutomationTemplateStore implements AutomationTemplateStore
 {
+    // Every table a write changes or locks, with the permission tables the actor recheck reads.
+    private const array WRITE_TABLES = ['automation_templates', 'host_template', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'];
     private const string STALE = 'The automation template changed since you opened this form. Reload before saving.';
     private const string ORDER_STALE = 'The automation template order changed since you opened this page. Reload before moving.';
     private const string SELECT = 'SELECT at.id, at.host_template, at.availability_method, at.sysDescr, at.sysName, at.sysOid, at.sequence, ht.name
@@ -36,13 +38,17 @@ final readonly class DbalAutomationTemplateStore implements AutomationTemplateSt
     // MariaDB reports a pattern it cannot compile as 1139; MySQL 8 uses 3684 to 3700.
     private const array REGEXP_ERRORS = [1139, 3684, 3685, 3686, 3687, 3688, 3689, 3690, 3691, 3692, 3693, 3694, 3695, 3696, 3697, 3698, 3699, 3700];
 
+    private AuditedPrimaryWrite $writes;
+
     public function __construct(
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
-        private AutomationTemplateAccess $access,
-        private AuditTrail $audit,
-        private LegacyConfiguration $configuration,
-    ) {}
+        AutomationTemplateAccess $access,
+        AuditTrail $audit,
+        LegacyConfiguration $configuration,
+    ) {
+        $this->writes = new AuditedPrimaryWrite($database, $audit, $configuration, $access->assertCurrent(...), self::WRITE_TABLES, 'Automation template', 'Automation templates', 'automation.template', 'automation_template');
+    }
 
     public function defaultRows(): int
     {
@@ -121,7 +127,7 @@ final readonly class DbalAutomationTemplateStore implements AutomationTemplateSt
             'sysOid' => $sysOid,
         ];
         AutomationTemplate::validateMatches($sysName, $sysOid);
-        return $this->write($actorId, $id === null ? 'create' : 'edit', function () use ($id, $values, $revision): int {
+        return $this->writes->run($actorId, $id === null ? 'create' : 'edit', 'automation_template', function () use ($id, $values, $revision): int {
             // Discovery compiles each match with REGEXP; one it cannot compile
             // fails the lookup for every template, not only this one.
             $this->assertCompiles($values['sysDescr'], 'System Description Match is not a regular expression the database accepts.');
@@ -151,7 +157,7 @@ final readonly class DbalAutomationTemplateStore implements AutomationTemplateSt
         if (!in_array($offset, [-1, 1], true)) {
             throw new \InvalidArgumentException('Invalid automation template order.');
         }
-        $this->write($actorId, 'move', function () use ($id, $offset, $order): void {
+        $this->writes->run($actorId, 'move', 'automation_template', function () use ($id, $offset, $order): void {
             $rows = $this->order($this->forUpdate());
             if (!hash_equals(AutomationTemplateRevision::order($rows), $order)) {
                 throw new \InvalidArgumentException(self::ORDER_STALE);
@@ -175,8 +181,8 @@ final readonly class DbalAutomationTemplateStore implements AutomationTemplateSt
 
     public function delete(int $actorId, array $ids, array $revisions): void
     {
-        self::validateSelection($ids, $revisions);
-        $this->write($actorId, 'delete', function () use ($ids, $revisions): void {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 4294967295, 'Invalid automation template selection.', self::STALE);
+        $this->writes->run($actorId, 'delete', 'automation_template', function () use ($ids, $revisions): void {
             foreach ($ids as $id) {
                 $this->lockRevision($id, $revisions[$id]);
             }
@@ -233,84 +239,6 @@ final readonly class DbalAutomationTemplateStore implements AutomationTemplateSt
                 throw new \InvalidArgumentException($message);
             }
             throw $error;
-        }
-    }
-
-    /**
-     * @param list<int> $ids
-     * @param array<int, string> $revisions
-     */
-    private static function validateSelection(array $ids, array $revisions): void
-    {
-        $sorted = $ids;
-        sort($sorted, SORT_NUMERIC);
-        if ($ids === [] || count($ids) > self::MAX_SELECTION || !array_is_list($ids) || $sorted !== $ids
-            || count(array_unique($ids)) !== count($ids)
-            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 4294967295)) {
-            throw new \InvalidArgumentException('Invalid automation template selection.');
-        }
-        $keys = array_keys($revisions);
-        sort($keys, SORT_NUMERIC);
-        if ($keys !== $ids || array_any($revisions, static fn(mixed $revision): bool => !is_string($revision))) {
-            throw new \InvalidArgumentException(self::STALE);
-        }
-    }
-
-    private function write(int $actorId, string $action, callable $operation): mixed
-    {
-        $decision = AuditEvent::DENIED;
-        $outcome = AuditEvent::DENIED;
-        try {
-            $this->prepareWrite();
-            $this->database->beginTransaction();
-            try {
-                $this->access->assertCurrent($actorId);
-                $decision = AuditEvent::ALLOWED;
-                $outcome = AuditEvent::FAILED;
-                $result = $operation();
-                $this->database->commit();
-            } catch (\Throwable $error) {
-                if ($this->database->isTransactionActive()) {
-                    $this->database->rollBack();
-                }
-                throw $error;
-            }
-            $outcome = AuditEvent::SUCCEEDED;
-            return $result;
-        } finally {
-            $this->record($actorId, $action, $decision, $outcome);
-        }
-    }
-
-    private function prepareWrite(): void
-    {
-        if ($this->database->isTransactionActive()) {
-            throw new \RuntimeException('Automation template writes require their own transaction.');
-        }
-        if (!$this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
-            return;
-        }
-        // Remote collectors receive the table by replication from the primary.
-        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
-            throw new \RuntimeException('Automation templates must be changed on the primary collector.');
-        }
-        foreach (['automation_templates', 'host_template', 'user_auth', 'user_auth_realm', 'user_auth_group',
-            'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            // SHOW CREATE TABLE sees a temporary table that shadows the real one.
-            $definition = $this->database->fetchNumeric('SHOW CREATE TABLE ' . $this->database->quoteIdentifier($table));
-            if ($definition === false || !is_string($definition[1] ?? null) || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
-                throw new \RuntimeException('Automation template writes require transactional tables.');
-            }
-        }
-        // Keep the order and device template locks when the session default is READ COMMITTED.
-        $this->database->executeStatement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-    }
-
-    private function record(int $actorId, string $action, string $decision, string $outcome): void
-    {
-        try {
-            $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'automation.template.' . $action, 'automation_template', 'automation_template', $decision, $outcome));
-        } catch (\Throwable) { /* Audit failure cannot change a confirmed persistence result. */
         }
     }
 

@@ -110,6 +110,46 @@ test('a rejected item field stops the template import and names the field in the
     'maximum with a space' => [['data_source_name' => 'in', 'rrd_minimum' => '0', 'rrd_maximum' => '1 2'], 'rrd_maximum'],
 ]);
 
+test('an empty field whose per-data-source override is set is accepted as exported', function (string $field) {
+    $item = ['data_source_name' => 'traffic_in', 'rrd_minimum' => '0', 'rrd_maximum' => 'U'];
+    $item[$field] = '';
+    $item['t_' . $field] = 'on';
+
+    [$result, $invalid, $logs] = importItem($item);
+
+    expect($result)->toBeArray()->and($invalid)->toBeNull()->and($logs)->toBe([]);
+})->with(['data_source_name', 'rrd_minimum', 'rrd_maximum']);
+
+test('an empty field without its per-data-source override is still rejected', function (string $field, string $override) {
+    $item = ['data_source_name' => 'traffic_in', 'rrd_minimum' => '0', 'rrd_maximum' => 'U'];
+    $item[$field] = '';
+    $item['t_' . $field] = $override;
+
+    [$result, $invalid] = importItem($item);
+
+    expect($result)->toBeFalse()->and($invalid[0])->toBe($field);
+})->with([
+    'override cleared' => ['rrd_maximum', ''],
+    'override absent value' => ['data_source_name', 'off'],
+    'minimum override cleared' => ['rrd_minimum', ''],
+]);
+
+test('a set override does not admit a non-empty invalid value', function () {
+    [$result, $invalid] = importItem(['data_source_name' => 'in', 'rrd_minimum' => '0', 'rrd_maximum' => '1 2', 't_rrd_maximum' => 'on']);
+
+    expect($result)->toBeFalse()->and($invalid[0])->toBe('rrd_maximum');
+});
+
+test('a field holding child elements is rejected without a type error', function (string $field) {
+    $item = ['data_source_name' => 'traffic_in', 'rrd_minimum' => '0', 'rrd_maximum' => 'U'];
+    $item[$field] = ['b' => 'x'];
+
+    [$result, $invalid, $logs] = importItem($item);
+
+    expect($result)->toBeFalse()->and($invalid)->toBe([$field, ''])
+        ->and($logs)->toHaveCount(1)->and($logs[0])->toContain("'" . $field . "'");
+})->with(['data_source_name', 'rrd_minimum', 'rrd_maximum']);
+
 test('a rejected value cannot add lines to the log', function () {
     [, , $logs] = importItem(['data_source_name' => "ok\nFATAL: forged", 'rrd_minimum' => '0', 'rrd_maximum' => 'U']);
 

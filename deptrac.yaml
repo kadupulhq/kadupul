@@ -263,6 +263,12 @@ deptrac:
           value: src/Platform/Infrastructure/Symfony/Console/(ResultRenderer|LegacyArguments|CommandResult|OutputMode|CliPresentation|LegacyRequest|InvalidLegacyArgument|LegacyCli)\.php
         - type: directory
           value: src/Platform/Infrastructure/Legacy/InstallationVersion\.php
+    # The audited primary-collector write transaction the DBAL stores of several
+    # modules share. Each store passes its own connection and nouns.
+    - name: PersistenceSupport
+      collectors:
+        - type: directory
+          value: src/Platform/Infrastructure/Persistence/AuditedPrimaryWrite\.php
     - name: Platform.Infrastructure
       collectors:
         - type: bool
@@ -274,6 +280,8 @@ deptrac:
               value: src/Platform/Infrastructure/Legacy/.*
             - type: directory
               value: src/Platform/Infrastructure/Symfony/Console/(ResultRenderer|LegacyArguments|CommandResult|OutputMode|CliPresentation|LegacyRequest|InvalidLegacyArgument|LegacyCli)\.php
+            - type: directory
+              value: src/Platform/Infrastructure/Persistence/AuditedPrimaryWrite\.php
     - name: Reporting.Domain
       collectors:
         - type: directory
@@ -399,6 +407,7 @@ deptrac:
       - Vendor
       - Contract
       - PlatformContract
+      - PersistenceSupport
       - Automation.Legacy
     Automation.Legacy:
       - Automation.Domain
@@ -447,6 +456,7 @@ deptrac:
       - Vendor
       - Contract
       - PlatformContract
+      - PersistenceSupport
       - GraphDefinition.Legacy
     GraphDefinition.Legacy:
       - GraphDefinition.Domain
@@ -472,6 +482,7 @@ deptrac:
       - Contract
       - PlatformContract
       - ConsoleSupport
+      - PersistenceSupport
       - Graphing.Legacy
     Graphing.Legacy:
       - Graphing.Domain
@@ -619,6 +630,10 @@ deptrac:
       - PlatformContract
       - Platform.Legacy
       - ConsoleSupport
+    PersistenceSupport:
+      - Vendor
+      - Contract
+      - PlatformContract
     ConsoleSupport:
       - Platform.Domain
       - Platform.Application
