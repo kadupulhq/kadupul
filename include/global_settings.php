@@ -2397,7 +2397,7 @@ $settings = array(
 		),
 		'rrd_path_containment' => array(
 			'friendly_name' => __('Restrict RRDfiles to the RRA Directory'),
-			'description' => __('When checked, Cacti refuses to save, create or update an RRDfile whose path resolves outside the RRA directory (&lt;path_cacti&gt;/rra), following symbolic links. A symbolic link inside the RRA directory that points elsewhere is refused as well. Leave this unchecked if any Data Source uses a custom path outside the RRA directory, or those Data Sources will stop updating.'),
+			'description' => __('When checked, Cacti refuses to save, create or update an RRDfile whose path resolves outside the RRA directory ($config[\'rra_path\'] in include/config.php, &lt;path_cacti&gt;/rra by default), following symbolic links. A symbolic link inside the RRA directory that points elsewhere is refused as well. Leave this unchecked if any Data Source uses a custom path outside the RRA directory, or those Data Sources will stop updating.'),
 			'method' => 'checkbox',
 			'default' => ''
 		),

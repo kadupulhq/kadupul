@@ -229,3 +229,32 @@ test('with the restriction on, create still finds an existing RRD in the RRA dir
 	expect(rrdPathGuard_rrdtool_function_create(12, false))->toBe(-1)
 		->and($GLOBALS['rrd_path_guard']['logs'])->toBe(array());
 });
+
+test('with the restriction on, realtime RRDs in the realtime cache directory are still updated', function () {
+	$GLOBALS['test_rrd_containment_settings']['rrd_path_containment'] = 'on';
+	mkdir($this->tmp . '/realtime', 0700);
+	$realtime = $this->tmp . '/realtime/user_abc_12.rrd';
+	touch($realtime);
+
+	try {
+		/* poller_realtime.php names the realtime cache directory as the base */
+		expect(rrdPathGuard_rrdtool_function_update(rrdPathGuardCache($realtime), false, $completed, $this->tmp . '/realtime'))->toBe(1)
+			->and($GLOBALS['rrd_path_guard']['executed'])->toHaveCount(1)
+			->and($GLOBALS['rrd_path_guard']['executed'][0])->toStartWith('update ' . $realtime . ' ')
+			->and($GLOBALS['rrd_path_guard']['logs'])->toBe(array());
+
+		/* the default base stays the RRA directory, so a poller cache path there is refused */
+		$GLOBALS['rrd_path_guard']['executed'] = array();
+		expect(rrdPathGuard_rrdtool_function_update(rrdPathGuardCache($realtime)))->toBeFalse()
+			->and($GLOBALS['rrd_path_guard']['executed'])->toBe(array());
+	} finally {
+		unlink($realtime);
+		rmdir($this->tmp . '/realtime');
+	}
+});
+
+test('poller_realtime.php passes the realtime cache directory to the update', function () use ($root) {
+	$source = file_get_contents($root . '/poller_realtime.php');
+
+	expect($source)->toContain("rrdtool_function_update(\$rrd_update_array, \$rrdtool_pipe, \$completed, read_config_option('realtime_cache_path'))");
+});
