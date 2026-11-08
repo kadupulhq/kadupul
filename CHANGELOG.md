@@ -6,6 +6,22 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Move local, LDAP and domain failed-login counter updates, threshold locks and failure audit writes behind a shared IdentityAccess use case while preserving the native authentication facade.
+- Coordinate post-authentication eligibility, remembered-credential validation, session rotation, permission-cache clearing and credential binding through an IdentityAccess use case, preserving the native session adapter and entry-point facade.
+- Extend installed authentication coverage for disabled and locked guest accounts and add Apache-authenticated Basic login checks to the HTTP session-backend matrix.
+
+- Reject malformed login credential fields and realm selectors with HTTP 400 before authentication processing, preserving ordinary missing-credential validation.
+
+- Render the login form through an injected Symfony/Twig service while preserving native plugin order, early plugin exits, CSRF rewriting, realm selection and credential submission.
+
+- Share native password verification, hashing and rehash decisions with Symfony through a compatibility hasher, preserving existing password bytes, algorithms, costs and session-preserving rehash persistence.
+- Share Logout Everywhere persistence between its native facade and an injectable IdentityAccess service, preserving credential generation, transaction ownership, rollback and post-commit browser cleanup. Verify its installed-schema transaction and concurrent credential handling in the database CI matrix.
+- Require POST with native CSRF validation for logout, render confirmation and automatic messages through Symfony/Twig, and submit automatic browser logout events using POST. Existing GET logout links now require confirmation. Preserve native session teardown, plugin hooks, translated messages, theme assets and CSP policies.
+- Route native account-lockout checks through an injected application query, preserving realm scope, disabled-policy behavior and login/remember-me ordering.
+- Share password-complexity rules in the domain layer across login and password-setting paths, preserving native settings, validation order and translated messages.
+- Move post-verification password-change policy and login activity coordination into an application service, preserving native settings, messages, local-realm writes and authenticated password-change handoff.
+- Move local credential confirmation and rehash coordination into an application service, preserving native login hooks, timing, password policy and session issuance.
+- Authenticate the session and About routes through a stateless Symfony Security firewall while retaining native session formats, credential revocation, Basic/remembered-login restoration and existing realm requirements. Login and password-change forms remain on their existing paths.
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 

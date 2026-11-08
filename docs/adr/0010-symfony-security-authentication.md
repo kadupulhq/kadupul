@@ -2,7 +2,26 @@
 
 ## Status
 
-Proposed. This record is a plan. No production code accompanies it.
+Accepted for incremental implementation. The first request-authentication slice
+is implemented locally: Symfony Security authenticates `/session`, `/about` and
+`/about/legacy` using the existing native adapters. Automatic logout messages now
+use Symfony/Twig after native teardown and hooks. GET/HEAD now render a Symfony/Twig
+confirmation form; POST validates native CSRF before teardown, and automatic
+browser callers submit POST. Logout Everywhere persistence has one injectable
+implementation shared with its native facade. Native password helpers now share
+the `legacy_native` Symfony compatibility hasher. Login form sections now render
+through a Symfony-injected Twig service around the original native hooks.
+Local credential confirmation and rehash coordination now use an application
+service with a native compatibility port.
+Forced-change handoff and login activity now use a second application service
+with native settings and persistence.
+Complexity rules now live in a pure domain class with a native settings/translation
+adapter shared by login and password-setting callers.
+The shared native lockout gate now uses an application query and persistence port.
+Symfony stateless CSRF, lockout writes and session issuance,
+the logout application use case, password change, LDAP migration and rate limiting
+remain planned. See the
+[implementation and next steps](../migrations/symfony-security-authentication.md).
 
 ## Context
 
@@ -43,6 +62,11 @@ on `main`, in stages behind one switch, with no schema change.
    `7.4.10` and `7.4.22` are the latest 7.4 releases at the time of writing.
    `ext-ldap` is already required. `symfony/security-core`, `security-csrf` and
    `password-hasher` are already installed.
+
+   The first slice installs only SecurityBundle and its HTTP integration, with
+   direct `security-core` and `security-http` requirements for the interfaces used
+   by production code. PasswordHasher is now also a direct dependency, retaining
+   the installed 7.4.8 version. LDAP and rate-limiter packages wait for their consumers.
 
 2. **Identity stays in the legacy session.** The firewall is stateless from
    Symfony's point of view. A single authenticator derives the user on each request
@@ -147,9 +171,10 @@ on `main`, in stages behind one switch, with no schema change.
     and keeps every valid session working: the payload and cookie are unchanged.
     The one unsafe rollback is to application code older than the one that checks
     the `v1.` MAC and the generation; `docs/symfony-migration.md` already forbids it.
-    The implementing change adds a minimum-version guard (open question 7), and
-    the release notes require fresh authentication and revocation of remembered
-    credentials before any such downgrade.
+    A database marker cannot make old binaries enforce a check they do not
+    contain. Deployment tooling must enforce any minimum-version policy; until
+    that exists, the release notes require fresh authentication and revocation
+    of remembered credentials before any such downgrade.
 
 13. **Authorization is out of scope.** Realm and resource authorization stay with
     `ConsoleAccess`, `RealmGrants` and `ResourceAccess`. The firewall authenticates;
@@ -266,10 +291,10 @@ These could not be resolved from the code, with the recommendation in each case.
    login, and how the offline menu interacts with an unreachable main database.
    Recommendation: treat login on a collector as unsupported until traced, and
    fail closed with 503.
-7. **A minimum-version guard for rollback.** Recommendation: a `settings` row
-   written when the generation-aware code first runs, checked at startup by any
-   code that reads credentials, so older code refuses to authenticate rather than
-   accept revoked tokens. Needs a decision on the row name and on `lts/1.2`.
+7. **A minimum-version guard for rollback.** Unresolved deployment work. A
+   `settings` row only protects binaries already taught to check it; it cannot
+   constrain an older release. Enforce the rollback floor outside the downgraded
+   application and retain the documented credential-revocation prerequisite.
 8. **Guest account under the firewall.** The guest is an authenticated identity
    with a real `user_auth` row and a shared session user. Recommendation: model it
    as a distinct role with an explicit "guest allowed" attribute per route, never

@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+security:
+    password_hashers:
+        legacy_native:
+            id: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyPasswordHasher
+    firewalls:
+        native_session:
+            request_matcher: Kadupul\IdentityAccess\Infrastructure\Symfony\Security\NativeSessionRoutes
+            stateless: true
+            custom_authenticators:
+                - Kadupul\IdentityAccess\Infrastructure\Symfony\Security\NativeSessionAuthenticator

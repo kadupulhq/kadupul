@@ -16,7 +16,7 @@ $mode = $scenario['mode'] ?? 'login';
 define('CACTI_LOCALE', 'en-US');
 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (isset($argv[3])) {
-    $coverageSources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'auth_login.php', 'auth_changepassword.php', 'logout.php', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+    $coverageSources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'include/vendor/csrf/csrf-magic.php', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Application/Port/LocalCredentials.php', 'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Application/Command/TransitionAuthenticationSession.php', 'src/IdentityAccess/Application/Port/AuthenticationTransitionAccounts.php', 'src/IdentityAccess/Application/Port/AuthenticationTransitionSession.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionAccounts.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionSession.php', 'auth_login.php', 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php', 'templates/identity_access/login.html.twig', 'config/services.yaml', 'auth_changepassword.php', 'logout.php', 'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php', 'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php', 'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php', 'templates/platform/logout_message.html.twig', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
     $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-controller-native.php', $argv[1], $coverageSources);
 }
 chdir($directory);
@@ -27,6 +27,7 @@ $_SERVER['REQUEST_METHOD'] = 'POST';
 $_SESSION = array('sess_user_realms' => array(99), 'sess_user_config_array' => array('stale'), 'sess_config_array' => array('stale'));
 $events = array();
 $messages = array();
+$rememberCookieHadIdentity = null;
 $db = new PDO('sqlite::memory:');
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $database_hostname = 'native';
@@ -44,7 +45,7 @@ $db->exec('CREATE TABLE user_log (username TEXT, user_id INTEGER, result INTEGER
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group_members (user_id INTEGER, group_id INTEGER, show_tree TEXT, show_list TEXT, show_preview TEXT)');
 $db->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
-$db->exec('CREATE TABLE user_auth_cache (user_id INTEGER)');
+$db->exec('CREATE TABLE user_auth_cache (user_id INTEGER, hostname TEXT, last_update TEXT, token TEXT)');
 $db->exec('CREATE TABLE sessions (user_id INTEGER)');
 // Fixed historical test vector for Correct1!: migration must replace an existing
 // weak legacy record; new fixture credentials always use password_hash().
@@ -53,6 +54,7 @@ $hash = ($scenario['legacy_hash'] ?? false)
     : password_hash('Correct1!', PASSWORD_DEFAULT);
 $db->prepare('INSERT INTO user_auth (id, username, password) VALUES (42, ?, ?)')->execute(array('alice', $hash));
 $db->prepare('INSERT INTO user_auth (id, username, password) VALUES (43, ?, ?)')->execute(array('bob', $hash));
+$db->prepare('INSERT INTO user_auth (id, username, realm, password) VALUES (44, ?, 1001, ?)')->execute(array('alice', $hash));
 foreach ($scenario['account'] ?? array() as $field => $value) {
     if (!in_array($field, array('enabled', 'locked', 'lastfail', 'failed_attempts', 'must_change_password', 'password_change', 'realm'), true)) {
         throw new InvalidArgumentException('Unknown account fixture field.');
@@ -69,7 +71,7 @@ if ($scenario['group_realm'] ?? false) {
     $db->exec("INSERT INTO user_auth_group_members VALUES (42, 5, '', '', '')");
     $db->exec('INSERT INTO user_auth_group_realm VALUES (5, 7)');
 }
-$db->exec('INSERT INTO user_auth_cache VALUES (42), (43)');
+$db->exec('INSERT INTO user_auth_cache (user_id) VALUES (42), (43)');
 $db->exec('INSERT INTO sessions VALUES (42), (43)');
 function db_fetch_row_prepared($sql, $params = array())
 {
@@ -165,13 +167,26 @@ function user_setting_exists(...$args)
 {
     return false;
 }
-function cacti_log(...$args) {}
+function cacti_log(...$args)
+{
+    if (isset($args[0]) && str_contains($args[0], 'auth transition completed')) {
+        $GLOBALS['events'][] = 'AUTH_TRANSITION_COMPLETED';
+    }
+}
+function cacti_cookie_session_set($user, $realm, $token)
+{
+    $GLOBALS['rememberCookieHadIdentity'] = isset($_SESSION['sess_user_id']);
+    $GLOBALS['events'][] = 'REMEMBER_COOKIE_PUBLISHED';
+}
 function db_check_password_length()
 {
     $GLOBALS['events'][] = 'PASSWORD_COLUMN_CHECK';
 }
 function cacti_session_start($rotate = false)
 {
+    if ($rotate && !empty($GLOBALS['scenario']['lock_during_transition'])) {
+        db_execute_prepared("UPDATE user_auth SET locked = 'on' WHERE id = 42", array());
+    }
     $GLOBALS['events'][] = $rotate ? 'ROTATE_SESSION' : 'START_SESSION';
 }
 function cacti_session_destroy()
@@ -208,9 +223,22 @@ function api_plugin_hook_function($name, ...$args)
     // Stop after controller decisions, before unrelated visual theming.
     return in_array($name, array('custom_login', 'custom_password'), true) && empty($GLOBALS['scenario']['render_login']) ? OPER_MODE_RESKIN : ($args[0] ?? false);
 }
-function get_selected_theme() { return 'classic'; }
-function get_current_page() { return 'login.php'; }
-function html_escape($value) { return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8'); }
+function get_selected_theme()
+{
+    return 'classic';
+}
+function get_current_page()
+{
+    return 'login.php';
+}
+function html_escape($value)
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+}
+function html_escape_charset(): string
+{
+    return 'UTF-8';
+}
 function cacti_require_post_actions($actions)
 {
     // Real method/token behavior has its own native LoginMutationCsrfTest.
@@ -228,6 +256,11 @@ function html_common_header($title)
 }
 final class CactiSecureHeaders
 {
+    public static function contentSecurityPolicies(): array
+    {
+        return ['Content-Security-Policy' => "default-src 'self'; script-src 'nonce-fixture'"];
+    }
+
     public static function getNonceAttribute()
     {
         return "nonce='fixture'";
@@ -244,13 +277,49 @@ ob_start();
 register_shutdown_function(static function () use ($db, $mode) {
     $html = ob_get_clean();
     $account = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = 42');
-    $state = array('credential_valid' => isset($_SESSION['sess_user_id']) && auth_session_credentials_valid($account['password']), 'session' => $_SESSION, 'events' => $GLOBALS['events'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html);
+    $state = array('credential_valid' => isset($_SESSION['sess_user_id']) && auth_session_credentials_valid($account['password']), 'session' => $_SESSION, 'events' => $GLOBALS['events'], 'remember_cookie_had_identity' => $GLOBALS['rememberCookieHadIdentity'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'other_realm_policy' => $db->query('SELECT lastlogin, must_change_password FROM user_auth WHERE id = 44')->fetch(PDO::FETCH_ASSOC), 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html, 'status' => http_response_code() ?: 200);
     $encoded = json_encode($state, JSON_THROW_ON_ERROR);
     // The collector appends serialization after application shutdown handlers.
     define('NATIVE_COVERAGE_COMPLETED', array('auth-controller-observed:' . $mode, 'auth-controller-persisted-state-readback'));
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_abort();
+    }
     print $encoded;
 });
 if ($mode === 'logout') {
+    $_SERVER['REQUEST_METHOD'] = $scenario['method'] ?? 'POST';
+    $_SERVER['HTTP_HOST'] = 'localhost';
+    $_SERVER['SCRIPT_NAME'] = '/monitoring/logout.php';
+    $_SERVER['SCRIPT_FILENAME'] = $root . '/logout.php';
+    $_SERVER['REQUEST_URI'] = '/monitoring/logout.php';
+    $config['url_path'] = '/monitoring/';
+    $_GET = $scenario['request'] ?? [];
+    $_POST = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_GET : [];
+    $savedSession = $_SESSION;
+    session_save_path($directory);
+    session_start(['use_cookies' => false]);
+    $_SESSION = $savedSession;
+    $_COOKIE['Cacti'] = session_id();
+    function csrf_startup()
+    {
+        csrf_conf('secret', bin2hex(random_bytes(32)));
+        csrf_conf('rewrite', false);
+        csrf_conf('defer', true);
+        csrf_conf('allow-ip', false);
+        csrf_conf('expires', 7200);
+    }
+    require $root . '/include/vendor/csrf/csrf-magic.php';
+    $token = $scenario['csrf'] ?? 'valid';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $token !== 'missing') {
+        $_POST['__csrf_magic'] = match ($token) {
+            'valid' => csrf_get_tokens(),
+            'expired' => 'sid:' . csrf_hash(session_id(), time() - 7201),
+            default => 'invalid',
+        };
+    }
+    $_SERVER['APP_ENV'] = 'test';
+    $_SERVER['APP_DEBUG'] = '1';
+    $_SERVER['SHELL_VERBOSITY'] = $_ENV['SHELL_VERBOSITY'] = '-1';
     $_SESSION['sess_user_id'] = 42;
     require $root . '/logout.php';
 } elseif ($mode === 'password') {
@@ -261,5 +330,8 @@ if ($mode === 'logout') {
     }
     require $root . '/auth_changepassword.php';
 } else {
+    $_SERVER['APP_ENV'] = 'test';
+    $_SERVER['APP_DEBUG'] = '1';
+    $_SERVER['SHELL_VERBOSITY'] = $_ENV['SHELL_VERBOSITY'] = '-1';
     require $root . '/auth_login.php';
 }

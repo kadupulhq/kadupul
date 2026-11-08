@@ -40,7 +40,7 @@ function read_config_option($name, $force = false) { return array('secpass_minle
 function __($text, ...$args) { return vsprintf($text, $args); }
 PHP;
 
-    $program .= "\n" . test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php'), 'secpass_check_pass') . "\n" . $body;
+    $program .= "\n" . str_replace('__DIR__', var_export(dirname(__DIR__, 4) . '/lib', true), test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php'), 'secpass_check_pass')) . "\n" . $body;
 
     $pipes = array();
     $process = proc_open(

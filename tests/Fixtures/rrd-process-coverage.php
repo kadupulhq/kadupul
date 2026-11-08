@@ -130,6 +130,14 @@ if (defined('TREE_CONFIRMATION_TEST_COVERAGE')) {
     }
 }
 if (defined('AUTH_POLICY_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Domain/PasswordComplexity.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Port/AccountLockoutStatus.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Query/IsAccountLocked.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_item_choices.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
 }
@@ -210,7 +218,23 @@ if (defined('REPORT_PERSISTENCE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_reports.php');
 }
+if (defined('AUTH_CONTROLLER_TEST_COVERAGE') || defined('AUTH_HARDENING_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Command/VerifyLocalCredentials.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Domain/PasswordComplexity.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Port/AccountLockoutStatus.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Query/IsAccountLocked.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php');
+    foreach (['LegacyLogoutPage.php', 'NativeLogoutPage.php', 'Controller/LogoutMessageController.php'] as $logoutSource) {
+        $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Symfony/' . $logoutSource);
+    }
+}
 if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');
@@ -221,7 +245,7 @@ if (defined('DATA_INPUT_INDEX_UPGRADE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/global_arrays.php');
 }
 if (defined('SYMFONY_SESSION_TEST_COVERAGE')) {
-    foreach (['lib/session_metadata.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php', 'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php'] as $coverageFile) {
+    foreach (['lib/session_metadata.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php', 'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php', 'src/Navigation/Infrastructure/Legacy/LegacyLinkAccess.php', 'src/IdentityAccess/Infrastructure/Symfony/CompleteSessionRevocation.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php', 'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php', 'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php'] as $coverageFile) {
         $coverageFilter->includeFile($coverageRoot . '/' . $coverageFile);
     }
 }
@@ -326,6 +350,7 @@ if (defined('DATA_SOURCE_LIMIT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
 }
 if (defined('DOMAINS_LOGIN_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
 }

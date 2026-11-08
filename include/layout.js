@@ -3220,6 +3220,37 @@ function stripHeaderSuppression(url) {
 	return url.replace('headercontent=true', '').replace('?&', '?').replace('&&', '&');
 }
 
+/** Submit automatic logout with the current native CSRF binding. */
+function submitLogout(action) {
+	if (!['timeout', 'disabled', 'remote'].includes(action)) {
+		return false;
+	}
+	const target = new URL(urlPath + 'logout.php', document.location.href);
+	if (target.origin !== document.location.origin || !['http:', 'https:'].includes(target.protocol)) {
+		return false;
+	}
+	if (typeof csrfMagicToken !== 'string' || csrfMagicToken === '') {
+		// Missing tokens require a fresh confirmation page, never a bare POST.
+		target.searchParams.set('action', action);
+		document.location.assign(target.href);
+		return false;
+	}
+	const form = document.createElement('form');
+	form.method = 'post';
+	form.action = target.href;
+	form.hidden = true;
+	for (const [name, value] of [['action', action], ['__csrf_magic', csrfMagicToken]]) {
+		const field = document.createElement('input');
+		field.type = 'hidden';
+		field.name = name;
+		field.value = value;
+		form.appendChild(field);
+	}
+	document.body.appendChild(form);
+	HTMLFormElement.prototype.submit.call(form);
+	return true;
+}
+
 /** setupPageTimeout - This function will setup the page timeout based upon
  *  the plugin developers $refresh requirements.  It also sets up a location
  *  to redirect the user to upon timeout.  This is generally done for automatically
@@ -3233,7 +3264,7 @@ function setupPageTimeout() {
 	if (typeof refreshMSeconds != 'undefined') {
 		myRefresh = setTimeout(function() {
 			if (refreshIsLogout) {
-				document.location = urlPath + 'logout.php?action=timeout';
+				submitLogout('timeout');
 			} else {
 				if (previousPage != '') {
 					refreshPage = previousPage;
@@ -3579,10 +3610,10 @@ function checkForRedirects(data, href) {
 		return true;
 	} else if (data.indexOf('cactiLoginSuspend') >= 0) {
 		$.ajaxQ.abortAll();
-		document.location = urlPath + 'logout.php?action=disabled';
+		submitLogout('disabled');
 	} else if (data.indexOf('cactiRemoteState') >= 0) {
 		$.ajaxQ.abortAll();
-		document.location = urlPath + 'logout.php?action=remote';
+		submitLogout('remote');
 	} else if (data.indexOf('cactiPermissionDenied') >= 0) {
 		$.ajaxQ.abortAll();
 		document.location = urlPath + 'permission_denied.php';
@@ -3596,7 +3627,7 @@ function checkForRedirects(data, href) {
 		}
 	} else if (data.indexOf('cactiLoginLogo') >= 0) {
 		$.ajaxQ.abortAll();
-		document.location = urlPath + 'logout.php?action=timeout';
+		submitLogout('timeout');
 	}
 
 	return false;

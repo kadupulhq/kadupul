@@ -194,7 +194,7 @@ if (str_starts_with($credentialScenario, 'reset')) {
     $db->exec("UPDATE user_auth SET password='replacement-password-hash' WHERE id=9");
 }
 if ($credentialScenario === 'logout') {
-    if (!auth_logout_everywhere(9, auth_session_credential_key('old-password-hash'), $db)) {
+    if (!(new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeSessionRevocation($connection))->revoke(9, auth_session_credential_key('old-password-hash'))) {
         throw new RuntimeException('Actual logout-everywhere revocation failed.');
     }
 }

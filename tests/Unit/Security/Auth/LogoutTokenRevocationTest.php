@@ -44,11 +44,18 @@ function cacti_session_destroy() { $GLOBALS['events'][] = 'session_destroy'; }
 function get_cacti_version() { return '1.3.0'; }
 function api_plugin_hook($name) {}
 function api_plugin_hook_function($name, $arg = null) { return $arg; }
+function csrf_check($fatal = true) { return true; }
 function set_default_action($default = '') {}
 function get_request_var($name, $default = '') { return $_GET[$name] ?? $default; }
 function __($text, ...$args) { return vsprintf($text, $args); }
 function html_common_header($title) {}
-class CactiSecureHeaders { public static function getNonceAttribute() { return ''; } }
+class CactiSecureHeaders {
+    public static function getNonceAttribute() { return ''; }
+    public static function contentSecurityPolicies() { return array('Content-Security-Policy' => "default-src 'self'"); }
+}
+$_SERVER['APP_ENV'] = 'test';
+$_SERVER['APP_DEBUG'] = '1';
+$_SERVER['SHELL_VERBOSITY'] = $_ENV['SHELL_VERBOSITY'] = '-1';
 register_shutdown_function(function () {
     $output = ob_get_clean();
     print json_encode(array('events' => $GLOBALS['events'], 'output' => $output, 'bound' => $GLOBALS['bound'] ?? null, 'cache_users' => $GLOBALS['cache_db']->query('SELECT DISTINCT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN)));
@@ -65,13 +72,13 @@ PHP;
     file_put_contents($dir . '/include/auth.php', $stubs);
     file_put_contents($dir . '/include/global_session.php', "<?php\n");
 
-    $program = '$GLOBALS["cache_enabled"] = ' . ($enabled ? 'true;' : 'false;') . '$_GET["action"] = $argv[1];'
+    $program = '$GLOBALS["cache_enabled"] = ' . ($enabled ? 'true;' : 'false;') . '$_SERVER["REQUEST_METHOD"] = "POST"; $_POST["action"] = $_GET["action"] = $argv[1];'
         . 'if ($argv[2] !== "") { $_COOKIE["cacti_remembers"] = json_decode($argv[2], true); }'
         . 'require ' . var_export($root . '/logout.php', true) . ';';
 
     try {
         $process = proc_open(
-            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $action, $cookie === null ? '' : json_encode($cookie)), $coverage_dir, child_coverage_registration(__FILE__, 'logout-token-revocation', array($action, $cookie), array('logout-state-readback'), array('logout.php'), array())),
+            child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-d', 'error_reporting=' . E_ALL, '-r', $program, $action, $cookie === null ? '' : json_encode($cookie)), $coverage_dir, child_coverage_registration(__FILE__, 'logout-token-revocation', array($action, $cookie), array('logout-state-readback'), array('logout.php'), array('src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php', 'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php', 'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php', 'templates/platform/logout_message.html.twig'))),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir

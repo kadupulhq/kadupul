@@ -37,6 +37,23 @@ class ShardPartitionTest(unittest.TestCase):
             if 'account_lifecycle' in shard:
                 self.assertEqual('account_lifecycle', shard[-1])
 
+    def test_local_authentication_runs_in_its_shard_for_both_session_backends(self):
+        selected = [step for step in selected_steps('3/3') if step.__name__ == 'local_authentication']
+        self.assertEqual(1, len(selected))
+        for backend in (False, True):
+            fixture = SimpleNamespace(harness=object(), database_sessions=backend)
+            with patch('local_authentication_scenarios.verify_local_authentication') as verify:
+                selected[0](fixture)
+            verify.assert_called_once_with(fixture.harness, backend, session_bridge.check)
+
+    def test_basic_authentication_runs_in_its_http_shard(self):
+        selected = [step for step in selected_steps('3/3') if step.__name__ == 'basic_authentication']
+        self.assertEqual(1, len(selected))
+        fixture = SimpleNamespace(harness=object())
+        with patch('basic_auth_scenarios.verify_basic_authentication') as verify:
+            selected[0](fixture)
+        verify.assert_called_once_with(fixture.harness, session_bridge.check)
+
     def test_unassigned_step_is_reported(self):
         shards = (SHARDS[0][1:],) + SHARDS[1:]
         self.assertIn(f'step {SHARDS[0][0]} is assigned to 0 shards', shard_errors(shards=shards))

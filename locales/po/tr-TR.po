@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-07 21:27-0800\n"
+"POT-Creation-Date: 2026-11-08 01:05-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -795,7 +795,7 @@ msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kadupul şifre."
 msgid "Please enter your new Kadupul password."
 msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kadupul şifre."
 
-#: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
+#: auth_changepassword.php:397 auth_login.php:344
 #: include/global_settings.php:1851 lib/functions.php:6242
 msgid "Username"
 msgstr "Kullanıcı Adı"
@@ -818,7 +818,7 @@ msgstr "Yeni şifreyi onayla"
 msgid "Save"
 msgstr "Kaydet"
 
-#: auth_changepassword.php:424 auth_login.php:421
+#: auth_changepassword.php:424 auth_login.php:386
 #, php-format
 msgid "Version %s | %s"
 msgstr "Sürüm %s %s"
@@ -839,80 +839,81 @@ msgstr "Parolalar uyuşmuyor"
 msgid "Passwords Match"
 msgstr "Şifre uyuşması"
 
-#: auth_login.php:69
+#: auth_login.php:82
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 
-#: auth_login.php:104
+#: auth_login.php:117
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 
-#: auth_login.php:119 lib/auth.php:4407 lib/auth.php:4413 lib/auth.php:4503
-#: lib/auth.php:4512 lib/auth.php:4559 lib/auth.php:4584 lib/auth.php:4607
-#: lib/auth.php:4647 lib/auth.php:4659 lib/auth.php:4682 lib/auth.php:4805
-#: lib/auth.php:4825 lib/auth.php:5037 lib/auth.php:5079 lib/auth.php:5089
-#: lib/auth.php:5105 lib/auth.php:5119 lib/auth.php:5157
+#: auth_login.php:132 lib/auth.php:4304 lib/auth.php:4319 lib/auth.php:4429
+#: lib/auth.php:4454 lib/auth.php:4477 lib/auth.php:4517 lib/auth.php:4529
+#: lib/auth.php:4552 lib/auth.php:4675 lib/auth.php:4695 lib/auth.php:4907
+#: lib/auth.php:4949 lib/auth.php:4959 lib/auth.php:4975 lib/auth.php:4989
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php:72
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php:55
 msgid "Access Denied!  Login Failed."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
-#: auth_login.php:141
+#: auth_login.php:154
 msgid "User was Authenticated, but the Template Account is disabled.  Using Guest Account"
 msgstr "Kullanıcının Kimliği Doğrulandı, ancak Şablon Hesabı devre dışı bırakıldı. Misafir Hesabını Kullanma"
 
-#: auth_login.php:148
+#: auth_login.php:161
 #, php-format
 msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
 msgstr "Erişim Reddedildi!  Misafir kullanıcı kimliği %s mevcut değil.  Lütfen Yöneticinizle iletişime geçin."
 
-#: auth_login.php:186
+#: auth_login.php:199
 msgid "Access Denied!  User account disabled."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
-#: auth_login.php:197
+#: auth_login.php:210
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
 msgstr "Bunun bir hata olduğunu düşünüyorsanız. Lütfen Kadupul Yöneticinizle görüşün."
 
-#: auth_login.php:224
+#: auth_login.php:227
 #, fuzzy
 msgid "Access Denied! User account locked."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
-#: auth_login.php:312 lib/html_tree.php:147
+#: auth_login.php:330 lib/html_tree.php:147
 msgid "Login to Kadupul"
 msgstr "Kadupul&#39;ye giriş yapın"
 
-#: auth_login.php:319
+#: auth_login.php:331
 msgid "User Login"
 msgstr "Kullanıcı Girişi"
 
-#: auth_login.php:333
+#: auth_login.php:343
 msgid "Enter your Username and Password below"
 msgstr "Kullanıcı adınızı ve şifrenizi aşağıya girin"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6243
+#: auth_login.php:345 include/global_form.php:1519 lib/functions.php:6243
 msgid "Password"
 msgstr "Şifre"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1046
+#: auth_login.php:353 include/global_settings.php:2350 lib/auth.php:1046
 #: lib/auth.php:1068 lib/auth.php:1078 lib/auth.php:1083 user_admin.php:2124
 msgid "Local"
 msgstr "Yerel"
 
-#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1079
+#: auth_login.php:354 include/global_arrays.php:880 lib/auth.php:1079
 #: lib/auth.php:1084
 msgid "LDAP"
 msgstr "LDAP"
 
-#: auth_login.php:383 user_admin.php:2119 user_admin.php:2249
+#: auth_login.php:366 user_admin.php:2119 user_admin.php:2249
 #: user_group_admin.php:741
 msgid "Realm"
 msgstr "Ülke:"
 
-#: auth_login.php:400
+#: auth_login.php:380
 msgid "Keep me signed in"
 msgstr "Oturum açık kalsın"
 
-#: auth_login.php:406
+#: auth_login.php:382
 msgid "Login"
 msgstr "Giriş"
 
@@ -4749,7 +4750,7 @@ msgstr "Bu Kadupul erişmek için giriş yapmalısınız."
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Bu Kadupul alanına erişmek için giriş yapmalısınız."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5659
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5443
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Tekrar giriş yap"
@@ -11786,64 +11787,42 @@ msgstr "Şube:"
 msgid "Device:"
 msgstr "Cihaz:"
 
-#: lib/auth.php:4311 lib/auth.php:4402
+#: lib/auth.php:4269 lib/auth.php:4316
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
 
-#: lib/auth.php:4361
+#: lib/auth.php:4310
 msgid "Access Denied!  Login Disabled."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
-#: lib/auth.php:4436
+#: lib/auth.php:4341
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Web Temel Kimlik Doğrulaması yapılandırıldı, ancak web sunucusundan kullanıcı adı geçilmedi. Lütfen web sunucusunda kimlik doğrulamanın etkin olduğundan emin olun."
 
-#: lib/auth.php:4452
+#: lib/auth.php:4357
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s Web Sunucusu tarafından doğrulandı, ancak hem Şablon hem de Konuk Kullanıcılar Kadupul&#39;de tanımlanmadı."
 
-#: lib/auth.php:4619 lib/auth.php:4818
+#: lib/auth.php:4489 lib/auth.php:4688
 msgid "Access Denied!  No password provided by user."
 msgstr "Erişim reddedildi! Kullanıcı tarafından sağlanan şifre yok."
 
-#: lib/auth.php:4791 lib/auth.php:5866
+#: lib/auth.php:4661 lib/auth.php:5650
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Erişim Reddedildi!  Şablon kullanıcı kimliği %s mevcut değil.  Lütfen Yöneticinizle iletişime geçin."
 
-#: lib/auth.php:4799
+#: lib/auth.php:4669
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5152
-#, fuzzy
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
-
-#: lib/auth.php:5192
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Şifre en az% d karakter olmalı!"
-
-#: lib/auth.php:5198
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
-
-#: lib/auth.php:5202
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
-
-#: lib/auth.php:5208
-msgid "Your password must contain at least 1 special character!"
-msgstr "Şifreniz en az 1 özel karakter içermelidir!"
-
-#: lib/auth.php:5652
+#: lib/auth.php:5436
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul Günlüğü Temizlendi"
 
-#: lib/auth.php:5952
+#: lib/auth.php:5736
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Kimlik doğrulama önceden ayarlanmamıştı. Yerel Kimlik Doğrulamaya ayarlanmaya çalışıldı, ancak Yönetici hesabı bulunamadı."
 
@@ -12515,7 +12494,7 @@ msgstr "%s olarak giriş yaptınız"
 msgid "Edit Profile"
 msgstr "Profili Düzenle"
 
-#: lib/functions.php:4301 lib/html.php:2889
+#: lib/functions.php:4301 lib/html.php:2889 logout.php:96
 msgid "Logout"
 msgstr "Çıkış"
 
@@ -16254,36 +16233,36 @@ msgstr "Dış Bağlantılar [değiştir: %s]"
 msgid "External Links [new]"
 msgstr "Dış Bağlantılar [yeni]"
 
-#: logout.php:43
+#: logout.php:56
 #, fuzzy
 msgid "You have been logged out of Kadupul due to a session timeout."
 msgstr "Bir oturum zaman aşımı nedeniyle Kadupul&#39;den çıkış yaptınız."
 
-#: logout.php:45
+#: logout.php:58
 #, fuzzy
 msgid "You have been logged out of Kadupul due to an account suspension."
 msgstr "Bir oturum zaman aşımı nedeniyle Kadupul&#39;den çıkış yaptınız."
 
-#: logout.php:47
+#: logout.php:60
 #, fuzzy
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "Bir oturum zaman aşımı nedeniyle Kadupul&#39;den çıkış yaptınız."
 
-#: logout.php:55
+#: logout.php:70 logout.php:73
 #, fuzzy
 msgid "Logout of Kadupul"
 msgstr "Kadupul Oturumu Kapat"
 
-#: logout.php:62
-msgid "Automatic Logout"
-msgstr "Otomatik Çıkış"
-
-#: logout.php:65
+#: logout.php:72
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
 msgstr "Lütfen tarayıcınızı kapatın veya %sLogin Again %s"
 
-#: logout.php:69 utilities.php:835
+#: logout.php:73
+msgid "Automatic Logout"
+msgstr "Otomatik Çıkış"
+
+#: logout.php:74 utilities.php:835
 #, php-format
 msgid "Version %s"
 msgstr "Sürüm %s"
@@ -17532,6 +17511,28 @@ msgstr "FATAL: Spike Kill yöntemi &#39; %s&#39; geçersiz"
 #: spikekill.php:125
 msgid "FATAL: Spike Kill Not Allowed"
 msgstr "FATAL: Spike Kill İzin verilmez"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php:46
+#, fuzzy
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:31
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Şifre en az% d karakter olmalı!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:34
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:37
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:40
+msgid "Your password must contain at least 1 special character!"
+msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php:55
 msgid "New Poller"

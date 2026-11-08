@@ -15,6 +15,29 @@ final class AuthControllerNativeCoverageTest extends TestCase
 {
     use \PestCodeCoverageCompatibility;
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('malformedLogins')]
+    public function testMalformedLoginStopsBeforeVerificationAndCredentialPublication(array $request): void
+    {
+        $state = $this->runController(['malformed_login' => true, 'request' => $request]);
+        self::assertSame(400, $state['status']);
+        self::assertSame('', $state['html']);
+        self::assertSame([], $state['events']);
+        self::assertSame([], $state['audit']);
+        self::assertSame(0, $state['failed_attempts']);
+        self::assertArrayNotHasKey('sess_user_id', $state['session']);
+        self::assertTrue($state['password_matches_original']);
+        self::assertSame([42, 43], $state['cache_users']);
+    }
+
+    public static function malformedLogins(): iterable
+    {
+        yield 'username collection' => [['login_username' => ['alice']]];
+        yield 'password collection' => [['login_password' => ['fixture-value']]];
+        yield 'nested password collection' => [['login_password' => [['fixture-value']]]];
+        yield 'realm collection' => [['realm' => ['0']]];
+        yield 'invalid scalar realm' => [['realm' => 'invalid']];
+    }
+
     public function testLoginRendersAnAccessibleDocumentHeading(): void
     {
         $state = $this->runController(array('render_login' => true, 'request' => array('action' => '', 'login_username' => '')));
@@ -29,6 +52,38 @@ final class AuthControllerNativeCoverageTest extends TestCase
         self::assertSame(array(), $state['audit']);
     }
 
+    public function testRememberedCredentialIsPublishedAfterAuthenticationTransition(): void
+    {
+        $state = $this->runController(array(
+            'options' => array('auth_cache_enabled' => 'on'),
+            'request' => array('remember_me' => 'on'),
+        ));
+
+        self::assertFalse($state['error']);
+        self::assertTrue($state['remember_cookie_had_identity']);
+        self::assertLessThan(
+            array_search('REMEMBER_COOKIE_PUBLISHED', $state['events'], true),
+            array_search('AUTH_TRANSITION_COMPLETED', $state['events'], true),
+        );
+        self::assertContains(42, $state['cache_users']);
+    }
+
+    public function testRejectedPostCredentialTransitionDoesNotPublishRememberedCredential(): void
+    {
+        $state = $this->runController(array(
+            'lock_during_transition' => true,
+            'options' => array('auth_cache_enabled' => 'on'),
+            'request' => array('remember_me' => 'on'),
+        ));
+
+        self::assertTrue($state['error']);
+        self::assertSame('on', $state['locked']);
+        self::assertNull($state['remember_cookie_had_identity']);
+        self::assertNotContains('REMEMBER_COOKIE_PUBLISHED', $state['events']);
+        self::assertArrayNotHasKey('sess_remember_token', $state['session']);
+        self::assertSame(array(42, 43), $state['cache_users']);
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('loginCases')]
     public function testLoginPersistsAuthenticationDecision(array $scenario, array $expected): void
     {
@@ -37,7 +92,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertSame($value, $state[$key], $key);
         }
         if (!$expected['error']) {
-            self::assertSame(array('sess_user_id', 'sess_user_credential'), array_keys($state['session']));
+            $sessionKeys = array_keys($state['session']);
+            sort($sessionKeys);
+            self::assertSame(array('sess_user_credential', 'sess_user_id'), $sessionKeys);
             self::assertSame(42, $state['session']['sess_user_id']);
             self::assertTrue($state['credential_valid']);
             self::assertContains('ROTATE_SESSION', $state['events']);
@@ -45,6 +102,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertArrayNotHasKey('sess_user_id', $state['session']);
             self::assertNotSame('', $state['error_message']);
         }
+        self::assertSame(array('lastlogin' => 0, 'must_change_password' => ''), $state['other_realm_policy']);
         self::assertSame(array(42, 43), $state['cache_users']);
         self::assertSame(array(42, 43), $state['session_users']);
     }
@@ -85,6 +143,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
             self::assertFalse($state['lastlogin']);
             self::assertNotSame('', $state['error_message']);
         }
+        self::assertSame(array('lastlogin' => 0, 'must_change_password' => ''), $state['other_realm_policy']);
         self::assertSame(array(42, 43), $state['cache_users']);
         self::assertSame(array(42, 43), $state['session_users']);
     }
@@ -115,6 +174,39 @@ final class AuthControllerNativeCoverageTest extends TestCase
         }
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('complexityCases')]
+    public function testPasswordChangeRunsEverySharedComplexityRule(string $password, string $error): void
+    {
+        $state = $this->runController(array(
+            'mode' => 'password',
+            'options' => array('secpass_reqnum' => 'on', 'secpass_reqmixcase' => 'on', 'secpass_reqspec' => 'on'),
+            'request' => array('action' => 'changepassword', 'password' => $password, 'password_confirm' => $password, 'current_password' => 'Correct1!'),
+        ));
+        if ($error !== '') {
+            self::assertStringContainsString($error, $state['password_error']);
+            self::assertTrue($state['password_matches_original']);
+            self::assertNotContains('password_success', $state['messages']);
+            self::assertSame(array(42, 43), $state['cache_users']);
+            self::assertSame(42, $state['session']['sess_user_id']);
+        } else {
+            self::assertTrue($state['password_matches_new']);
+            self::assertContains('password_success', $state['messages']);
+            self::assertSame(array(43), $state['cache_users']);
+            self::assertArrayNotHasKey('sess_user_id', $state['session']);
+        }
+        self::assertSame(array('lastlogin' => 0, 'must_change_password' => ''), $state['other_realm_policy']);
+    }
+
+    public static function complexityCases(): array
+    {
+        return array(
+            'number' => array('LettersOnly!', 'at least 1 numerical character'),
+            'case' => array('lowercase1!', 'mix of lower case and upper case'),
+            'special' => array('Mixedcase1', 'at least 1 special character'),
+            'all requirements met' => array('NewCorrect2!', ''),
+        );
+    }
+
     public static function passwordCases(): array
     {
         return array(
@@ -136,6 +228,42 @@ final class AuthControllerNativeCoverageTest extends TestCase
         self::assertSame(array(), $state['audit']);
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('logoutRequests')]
+    public function testLogoutRequestBoundary(string $method, string $token, mixed $action, int $status, bool $form): void
+    {
+        $state = $this->runController(['mode' => 'logout', 'method' => $method, 'csrf' => $token, 'request' => ['action' => $action]]);
+        self::assertSame($status, $state['status']);
+        self::assertSame([], $state['events']);
+        self::assertSame(42, $state['session']['sess_user_id']);
+        self::assertSame([42, 43], $state['cache_users']);
+        self::assertSame([42, 43], $state['session_users']);
+        if ($form) {
+            $document = new \DOMDocument();
+            @$document->loadHTML($state['html']);
+            $xpath = new \DOMXPath($document);
+            self::assertSame('post', $xpath->evaluate('string(//form/@method)'));
+            self::assertSame('http://localhost/monitoring/logout.php', $xpath->evaluate('string(//form/@action)'));
+            self::assertSame($action, $xpath->evaluate('string(//input[@name="action"]/@value)'));
+            self::assertStringStartsWith('sid:', $xpath->evaluate('string(//input[@name="__csrf_magic"]/@value)'));
+            self::assertSame('Logout', $xpath->evaluate('string(//button)'));
+        } else {
+            self::assertSame('', $state['html']);
+        }
+    }
+
+    public static function logoutRequests(): iterable
+    {
+        foreach (['', 'timeout', 'disabled', 'remote'] as $action) {
+            yield 'confirm ' . $action => ['GET', 'missing', $action, 200, true];
+        }
+        yield 'HEAD is safe' => ['HEAD', 'missing', 'timeout', 200, false];
+        foreach (['missing', 'invalid', 'expired'] as $token) {
+            yield $token => ['POST', $token, 'timeout', 403, false];
+        }
+        yield 'unsupported method' => ['DELETE', 'valid', '', 405, false];
+        yield 'array action' => ['POST', 'valid', ['timeout'], 400, false];
+    }
+
     public static function logoutCases(): array
     {
         return array('timeout' => array('timeout', 'session timeout'), 'disabled' => array('disabled', 'account suspension'));
@@ -151,7 +279,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
             file_put_contents($directory . '/include/' . $file . '.php', '<?php');
         }
         $coverage = $this->getTestResultObject()->getCodeCoverage();
-        $command = array(PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/auth-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
+        $command = array(PHP_BINARY, '-d', 'memory_limit=2G', '-d', 'auto_prepend_file=', '-d', 'error_reporting=24575', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $root . '/tests/Fixtures/auth-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $directory);
         if ($coverage !== null) {
             $command[] = 'coverage';
         }
@@ -167,11 +295,44 @@ final class AuthControllerNativeCoverageTest extends TestCase
             if ($coverage !== null) {
                 $reports = glob($directory . '/*.coverage');
                 self::assertCount(1, $reports);
-                $sources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'auth_login.php', 'auth_changepassword.php', 'logout.php', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+                $sources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'include/vendor/csrf/csrf-magic.php', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Application/Port/LocalCredentials.php', 'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Application/Command/TransitionAuthenticationSession.php', 'src/IdentityAccess/Application/Port/AuthenticationTransitionAccounts.php', 'src/IdentityAccess/Application/Port/AuthenticationTransitionSession.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionAccounts.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionSession.php', 'auth_login.php', 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php', 'templates/identity_access/login.html.twig', 'config/services.yaml', 'auth_changepassword.php', 'logout.php', 'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php', 'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php', 'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php', 'templates/platform/logout_message.html.twig', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
                 $mode = $scenario['mode'] ?? 'login';
                 $controller = array('login' => 'auth_login.php', 'password' => 'auth_changepassword.php', 'logout' => 'logout.php')[$mode];
                 $markers = array('auth-controller-observed:' . $mode, 'auth-controller-persisted-state-readback');
-                $hits = $mode === 'logout' ? array($controller) : array('lib/auth.php', $controller);
+                $hits = $mode === 'logout' ? [$controller, 'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php'] : ['lib/auth.php', $controller];
+                if ($scenario['malformed_login'] ?? false) {
+                    // Shape refusal precedes any authentication helper execution.
+                    $hits = [$controller];
+                }
+                if ($scenario['render_login'] ?? false) {
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php';
+                }
+                if ($scenario === [] || ($scenario['legacy_hash'] ?? false) || isset($scenario['options']['secpass_forceold'])) {
+                    $hits[] = 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php';
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php';
+                }
+                if (isset($scenario['options']['secpass_forceold'])) {
+                    $hits[] = 'src/IdentityAccess/Domain/PasswordComplexity.php';
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php';
+                }
+                if ($scenario === [] || ($scenario['legacy_hash'] ?? false)) {
+                    $hits[] = 'src/IdentityAccess/Application/Query/IsAccountLocked.php';
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php';
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php';
+                    $hits[] = 'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php';
+                    $hits[] = 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php';
+                }
+                if ($mode === 'login' && ($scenario === [] || ($scenario['legacy_hash'] ?? false)
+                    || ($scenario['group_realm'] ?? false) || ($scenario['lock_during_transition'] ?? false))) {
+                    $hits = array_merge($hits, array(
+                        'src/IdentityAccess/Application/Command/TransitionAuthenticationSession.php',
+                        'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionAccounts.php',
+                        'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionSession.php',
+                    ));
+                }
+                if ($mode === 'logout' && (!isset($scenario['method']) || $scenario['method'] === 'GET' || $scenario['method'] === 'HEAD')) {
+                    $hits = array_merge($hits, ['src/Platform/Infrastructure/Symfony/NativeLogoutPage.php', 'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php']);
+                }
                 $arguments = array($reports[0], $root, 'tests/Fixtures/auth-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $sources, $markers, $hits);
                 $measured = NativeChildCoverageEvidence::load(...$arguments);
                 static $verifiedOmissions = false;
@@ -185,6 +346,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
         } finally {
             foreach (glob($directory . '/child-*') as $report) {
                 unlink($report);
+            }
+            foreach (glob($directory . '/sess_*') as $file) {
+                unlink($file);
             }
             foreach (glob($directory . '/include/*') as $file) {
                 unlink($file);

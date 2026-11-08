@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" bootstrap="include/vendor/autoload.php" cacheDirectory="var/phpunit" failOnWarning="true" failOnRisky="true">
+    <testsuites>
+        <testsuite name="Symfony modules">
+            <file>tests/Symfony/AboutAuthenticationStorageTest.php</file><file>tests/Symfony/AboutPresentationTest.php</file><file>tests/Symfony/ActionTemplateRenderingTest.php</file><file>tests/Symfony/AddDataSourceCommandTest.php</file><file>tests/Symfony/AddDataSourceTest.php</file><file>tests/Symfony/AddGraphsCommandTest.php</file><file>tests/Symfony/AddGraphsTest.php</file><file>tests/Symfony/AddTreeCommandTest.php</file><file>tests/Symfony/AddTreeTest.php</file><file>tests/Symfony/AdministrationCatalogNativeTest.php</file><file>tests/Symfony/AdministrationCatalogWiringTest.php</file><file>tests/Symfony/AdministrationListRoutesTest.php</file><file>tests/Symfony/AdministratorNotificationTest.php</file><file>tests/Symfony/AggregateCacheCursorTest.php</file><file>tests/Symfony/AggregateGraphItemsBoundaryTest.php</file><file>tests/Symfony/AggregateGraphStatementTest.php</file><file>tests/Symfony/AggregateItemTransactionTest.php</file><file>tests/Symfony/AnalyzeDatabaseCommandTest.php</file><file>tests/Symfony/AnalyzeDatabaseTest.php</file><file>tests/Symfony/ApplyLocalLoginPolicyTest.php</file><file>tests/Symfony/ArchitectureTest.php</file><file>tests/Symfony/AssociateDataQueryCommandTest.php</file><file>tests/Symfony/AssociateDataQueryTest.php</file><file>tests/Symfony/AttachGraphTemplateCommandTest.php</file><file>tests/Symfony/AttachGraphTemplateTest.php</file><file>tests/Symfony/AuditCoverageChecksTest.php</file><file>tests/Symfony/AuditDatabaseCommandTest.php</file><file>tests/Symfony/AuditDatabaseTest.php</file><file>tests/Symfony/AuditEventTest.php</file><file>tests/Symfony/AuditSchemaSafetyDatabaseTest.php</file><file>tests/Symfony/AuditSchemaSafetyTest.php</file><file>tests/Symfony/AuditSchemaTest.php</file><file>tests/Symfony/AuditTrailTest.php</file></testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+            <file>bin/legacy-console-home.php</file>
+            <file>bin/legacy-console-menu.php</file>
+            <file>bin/legacy-console-handoff.php</file>
+            <file>index.php</file>
+            <file>login.php</file>
+            <file>lib/headers_secure.php</file>
+            <file>include/session.php</file>
+            <file>bin/legacy-device-edit.php</file>
+            <file>bin/legacy-device-create.php</file>
+            <file>bin/legacy-device-template.php</file>
+            <file>bin/legacy-device-collector.php</file>
+            <file>bin/legacy-device-state.php</file>
+            <file>lib/api_device.php</file>
+            <file>bin/legacy-device-remove.php</file>
+            <file>bin/legacy-assignment-bootstrap.php</file>
+            <file>bin/worker-io.php</file>
+            <file>include/admin_notifications.php</file>
+            <file>sites.php</file>
+            <file>data_input.php</file>
+            <file>bin/legacy-data-input.php</file>
+            <file>bin/legacy-data-input-handoff.php</file>
+            <file>lib/data_input_worker.php</file>
+            <file>color.php</file>
+            <file>vdef.php</file>
+            <file>links.php</file>
+            <file>link.php</file>
+            <file>lib/auth.php</file>
+            <file>lib/database.php</file>
+            <file>lib/reference_write.php</file>
+            <file>lib/functions.php</file>
+            <file>lib/variables.php</file>
+            <file>utilities.php</file>
+            <file>cli/upgrade_database.php</file>
+            <file>lib/schema_repair_integrity.php</file>
+            <file>install/upgrades/1_2_31.php</file>
+            <file>install/upgrades/1_2_35.php</file>
+            <file>install/upgrades/1_2_36.php</file>
+            <file>install/upgrades/1_2_37.php</file>
+            <file>install/upgrades/1_2_38.php</file>
+            <file>scripts/script_command.php</file>
+            <file>scripts/ping.php</file>
+            <file>scripts/unix_processes.php</file>
+            <file>scripts/unix_users.php</file>
+            <file>scripts/loadavg_multi.php</file>
+            <file>scripts/linux_memory.php</file>
+            <file>scripts/query_unix_partitions.php</file>
+            <file>scripts/motorola_surfboard_SB6141.php</file>
+            <file>scripts/ss_apache_stats.php</file>
+            <file>tools/edit-package.php</file>
+            <file>include/request_profile.php</file>
+            <file>automation_templates.php</file>
+            <file>cdef.php</file>
+            <file>data_source_profiles.php</file>
+            <file>gprint_presets.php</file>
+            <file>host.php</file>
+        </include>
+    </source>
+</phpunit>

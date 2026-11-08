@@ -4237,44 +4237,13 @@ function auth_get_username()
  */
 function auth_checkclear_lockout($username, $realm)
 {
-    // Unlock the user account if timing permits
-    $secPassLockFailed = read_config_option('secpass_lockfailed');
-    if ($secPassLockFailed > 0) {
-        $max = intval($secPassLockFailed);
-        if ($max > 0) {
-            $user = db_fetch_row_prepared(
-                "SELECT id, username, lastfail, failed_attempts, `locked`, password
-				FROM user_auth
-				WHERE username = ?
-				AND realm = ?
-				AND enabled = 'on'",
-                array($username, $realm)
-            );
-
-            if (cacti_sizeof($user)) {
-                $unlock = intval(read_config_option('secpass_unlocktime'));
-                if ($unlock > 1440) {
-                    $unlock = 1440;
-                }
-
-                $secs_unlock = $unlock * 60;
-                $secs_fail = time() - $user['lastfail'];
-
-                cacti_log('DEBUG: User \'' . $username . '\' secs_fail = ' . $secs_fail . ', secs_unlock = ' . $secs_unlock, false, 'AUTH', POLLER_VERBOSITY_DEBUG);
-
-                if ($unlock > 0 && ($secs_fail > $secs_unlock)) {
-                    db_execute_prepared(
-                        "UPDATE user_auth
-						SET lastfail = 0, failed_attempts = 0, `locked` = ''
-						WHERE username = ?
-						AND realm = ?
-						AND enabled = 'on'",
-                        array($username, $realm)
-                    );
-                }
-            }
-        }
-    }
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    $recover = new \Kadupul\IdentityAccess\Application\Command\RecoverExpiredLockout(
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutStatus(),
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutRecovery(),
+        new \Kadupul\IdentityAccess\Infrastructure\Symfony\IdentityAccessClock(new \Symfony\Component\Clock\NativeClock()),
+    );
+    $recover($username, $realm);
 }
 
 /**
@@ -4291,28 +4260,15 @@ function auth_process_lockout_check($username, $realm)
 {
     global $error, $error_msg;
 
-    // Mark failed login attempts
-    $secPassLockFailed = read_config_option('secpass_lockfailed');
-    if ($secPassLockFailed > 0) {
-        $max = intval($secPassLockFailed);
-        if ($max > 0) {
-            $user = db_fetch_row_prepared(
-                "SELECT id, username, lastfail, failed_attempts, `locked`, password
-				FROM user_auth
-				WHERE username = ?
-				AND realm = ?
-				AND locked = 'on'
-				AND enabled = 'on'",
-                array($username, $realm)
-            );
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    $isLocked = new \Kadupul\IdentityAccess\Application\Query\IsAccountLocked(
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutStatus()
+    );
+    if ($isLocked($username, $realm)) {
+        $error     = true;
+        $error_msg = __('Your account has been locked.  Please contact your Administrator.');
 
-            if (cacti_sizeof($user)) {
-                $error     = true;
-                $error_msg = __('Your account has been locked.  Please contact your Administrator.');
-
-                return true;
-            }
-        }
+        return true;
     }
 
     return false;
@@ -4332,88 +4288,37 @@ function auth_process_lockout($username, $realm)
 {
     global $error, $error_msg;
 
-    $secPassLockFailed = read_config_option('secpass_lockfailed');
-    if ($secPassLockFailed > 0) {
-        $max = intval($secPassLockFailed);
-        if ($max > 0) {
-            $user = db_fetch_row_prepared(
-                "SELECT id, enabled, `locked`
-				FROM user_auth
-				WHERE username = ?
-				AND realm = ?",
-                array($username, $realm)
-            );
-
-            if (cacti_sizeof($user)) {
-                /* Atomic increment to prevent TOCTOU race in concurrent requests */
-                db_execute_prepared(
-                    "UPDATE user_auth
-					SET lastfail = ?, failed_attempts = failed_attempts + 1
-					WHERE username = ?
-					AND realm = ?",
-                    array(time(), $username, $realm)
-                );
-
-                if ($user['enabled'] == '') {
-                    cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.  User account Disabled.", false, 'AUTH');
-
-                    $error     = true;
-                    $error_msg = __('Access Denied!  Login Disabled.');
-
-                    return;
-                }
-
-                /* Retrieve deterministic state post-increment */
-                $failed = db_fetch_cell_prepared(
-                    "SELECT failed_attempts
-					FROM user_auth
-					WHERE username = ?
-					AND realm = ?
-					AND enabled = 'on'",
-                    array($username, $realm)
-                );
-
-                cacti_log("LOGIN FAILED: User '$username' failed authentication, incrementing lockout ($failed of $max)", false, 'AUTH', POLLER_VERBOSITY_LOW);
-
-                if ($failed >= $max && $user['locked'] != 'on') {
-                    db_execute_prepared(
-                        "UPDATE user_auth
-						SET `locked` = 'on'
-						WHERE username = ?
-						AND realm = ?
-						AND enabled = 'on'",
-                        array($username, $realm)
-                    );
-
-                    $user['locked'] = 'on';
-                }
-
-                db_execute_prepared(
-                    'INSERT IGNORE INTO user_log
-					(username, user_id, result, ip, time)
-					VALUES (?, ?, 0, ?, NOW())',
-                    array($username, isset($user['id']) ? $user['id'] : 0, get_client_addr())
-                );
-
-                if ($user['locked'] == 'on') {
-                    cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.  Account is locked out.", false, 'AUTH');
-
-                    $error     = true;
-                    $error_msg = __('Your account has been locked.  Please contact your Administrator.');
-                } else {
-                    cacti_log("LOGIN FAILED: Local Login Failed for user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
-
-                    $error     = true;
-                    $error_msg = __('Access Denied!  Login Failed.');
-                }
-            } else {
-                cacti_log("LOGIN FAILED: Local Login Failed to find user '" . $username . "' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
-
-                $error     = true;
-                $error_msg = __('Access Denied!  Login Failed.');
-            }
-        }
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    $record = new \Kadupul\IdentityAccess\Application\Command\RecordLocalLoginFailure(
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutStatus(),
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutFailure(),
+    );
+    $failure = $record($username, $realm, time(), (string) get_client_addr());
+    if ($failure === null) {
+        return;
     }
+
+    if (!$failure->accountFound) {
+        cacti_log("LOGIN FAILED: Local Login Failed to find user '$username' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+        $error = true;
+        $error_msg = __('Access Denied!  Login Failed.');
+        return;
+    }
+    if ($failure->disabled) {
+        cacti_log("LOGIN FAILED: Local Login Failed for user '$username' from IP Address '" . get_client_addr() . "'.  User account Disabled.", false, 'AUTH');
+        $error = true;
+        $error_msg = __('Access Denied!  Login Disabled.');
+        return;
+    }
+
+    if ($failure->locked) {
+        cacti_log("LOGIN FAILED: Local Login Failed for user '$username' from IP Address '" . get_client_addr() . "'.  Account is locked out.", false, 'AUTH');
+        $error_msg = __('Your account has been locked.  Please contact your Administrator.');
+    } else {
+        cacti_log("LOGIN FAILED: Local Login Failed for user '$username' from IP Address '" . get_client_addr() . "'.", false, 'AUTH');
+        $error_msg = __('Access Denied!  Login Failed.');
+    }
+    $error = true;
 }
 
 /**
@@ -4473,50 +4378,15 @@ function local_auth_login_process($username)
 {
     $started = hrtime(true);
     try {
-        global $error, $error_msg;
-
-        $user = array();
-
-        if (!api_plugin_hook_function('login_process', false)) {
-            $user = secpass_login_process($username);
-
-            /**
-             * secpass_login_process() is the only password verification, so a
-             * returned row means the password matched. Verifying again here
-             * made a known account cost one more hash than an unknown one.
-             */
-            if (cacti_sizeof($user) && !$error) {
-                $verified_hash = $user['password'];
-
-                $user = db_fetch_row_prepared(
-                    'SELECT *
-				FROM user_auth
-				WHERE username = ?
-				AND realm = 0',
-                    array($username)
-                );
-
-                // The session binds to the stored hash, so a password replaced
-                // since verification must not log in under the new one.
-                if (!cacti_sizeof($user) || !is_string($user['password']) || !hash_equals($verified_hash, $user['password'])) {
-                    $error     = true;
-                    $error_msg = __('Access Denied!  Login Failed.');
-                    $user      = array();
-                } elseif (compat_password_needs_rehash($verified_hash, PASSWORD_DEFAULT)) {
-                    // Rehash only the local row that logged in; other realms may
-                    // reuse the username, and a refused login changes nothing.
-                    $password = compat_password_hash(get_nfilter_request_var('login_password'), PASSWORD_DEFAULT);
-                    db_check_password_length();
-                    if (!auth_rehash_password_preserving_sessions($user['id'], $verified_hash, $password)) {
-                        $error     = true;
-                        $error_msg = __('Access Denied!  Login Failed.');
-                        $user      = array();
-                    }
-                }
-            }
+        if (api_plugin_hook_function('login_process', false)) {
+            return array();
         }
 
-        return $user;
+        require_once __DIR__ . '/../include/vendor/autoload.php';
+        $verify = new \Kadupul\IdentityAccess\Application\Command\VerifyLocalCredentials(
+            new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeLocalCredentials(),
+        );
+        return $verify($username ?? '');
     } finally {
         auth_local_login_timing_floor($started);
     }
@@ -5125,54 +4995,12 @@ function secpass_login_process($username)
         return array();
     }
 
-    /**
-     * Check if old password doesn't meet specifications and must be changed
-     * This only applies to local logins where we store the actual hashed
-     * password.
-     *
-     * The password is verified by now. The login completes and auth_login.php
-     * sends the user to the change page through must_change_password; leaving
-     * from here, before the session exists, sent them back to the login page
-     * every time.
-     */
-    if (read_config_option('secpass_forceold') == 'on') {
-        $message = secpass_check_pass($password);
-
-        if ($message != 'ok') {
-            if (($user['password_change'] ?? '') == 'on') {
-                db_execute_prepared(
-                    "UPDATE user_auth
-					SET must_change_password = 'on'
-					WHERE id = ?
-					AND realm = 0
-					AND enabled = 'on'",
-                    array($user['id'])
-                );
-
-                raise_message('forced_password', __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.'), MESSAGE_LEVEL_INFO);
-            } else {
-                // The account could never reach a compliant password, so the
-                // rule is enforced by refusing it with the ordinary failure.
-                $error     = true;
-                $error_msg = __('Access Denied!  Login Failed.');
-
-                cacti_log(sprintf('LOGIN FAILED: User %s has a password that fails the complexity rules and may not change it.', $username), false, 'AUTH');
-
-                return array();
-            }
-        }
-    }
-
-    // Set the last Login time
-    if (read_config_option('secpass_expireaccount') > 0) {
-        db_execute_prepared(
-            "UPDATE user_auth
-			SET lastlogin = ?
-			WHERE username = ?
-			AND realm = 0
-			AND enabled = 'on'",
-            array(time(), $username)
-        );
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    $applyPolicy = new \Kadupul\IdentityAccess\Application\Command\ApplyLocalLoginPolicy(
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeLocalLoginPolicy(),
+    );
+    if (!$applyPolicy($username, $password, $user)) {
+        return array();
     }
 
     return $user;
@@ -5187,28 +5015,11 @@ function secpass_login_process($username)
  */
 function secpass_check_pass($password)
 {
-    $minlen = read_config_option('secpass_minlen');
-    if (strlen($password) < $minlen) {
-        return __('Password must be at least %d characters!', $minlen);
-    }
-
-    if (read_config_option('secpass_reqnum') == 'on' &&
-        str_replace(array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'), '', $password) == $password
-    ) {
-        return __('Your password must contain at least 1 numerical character!');
-    }
-
-    if (read_config_option('secpass_reqmixcase') == 'on' && strtolower($password) == $password) {
-        return __('Your password must contain a mix of lower case and upper case characters!');
-    }
-
-    if (read_config_option('secpass_reqspec') == 'on' &&
-        str_replace(array('~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '[', '{', ']', '}', ';', ':', '<', ',', '.', '>', '?', '|', '/', '\\'), '', $password) == $password
-    ) {
-        return __('Your password must contain at least 1 special character!');
-    }
-
-    return 'ok';
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    $checker = new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativePasswordComplexity(
+        new \Kadupul\IdentityAccess\Domain\PasswordComplexity(),
+    );
+    return $checker->check($password ?? '');
 }
 
 /**
@@ -5450,9 +5261,8 @@ function auth_perm_cache_check_reset($user_id)
 }
 
 /**
- * compat_password_verify - if the secure function exists, verify against that
- *   first.  If that checks fails or does not exist, check against older md5
- *   version
+ * compat_password_verify - shared Symfony-compatible native verification,
+ *   including existing MD5 records and fixed-cost padding.
  *
  * @param  (string) $password - password to verify
  * @param  (string) $hash     - current password hash
@@ -5461,21 +5271,9 @@ function auth_perm_cache_check_reset($user_id)
  */
 function compat_password_verify($password, $hash)
 {
-    // Legacy MD5, empty and malformed hashes otherwise return immediately,
-    // exposing those accounts against the fixed-cost unknown-user path.
-    if (password_get_info((string) $hash)['algo'] === null) {
-        compat_password_hash("kadupul-login-timing-padding", PASSWORD_DEFAULT);
-    }
-
-    if (function_exists('password_verify')) {
-        if (password_verify($password, $hash)) {
-            return true;
-        }
-    }
-
-    $md5 = md5($password);
-
-    return compat_hash_equals($md5, $hash);
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    // Internal PHP functions historically coerce null to an empty string.
+    return (new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyPasswordHasher())->verify($hash ?? '', $password ?? '');
 }
 
 /**
@@ -5516,30 +5314,22 @@ function compat_hash_equals($known_string, $user_string)
 }
 
 /**
- * compat_password_hash - if the secure function exists, hash using that.
- *   If that does not exist, hash older md5 function instead
+ * compat_password_hash - hash with the shared native password policy.
  *
  * @param  (string) $password - password to hash
  * @param  (string) $algo     - algorithm to use (PASSWORD_DEFAULT)
  *
- * @return (bool)   true if password hash matches, false otherwise
+ * @return (string) The generated native password hash
  */
 function compat_password_hash($password, $algo, $options = array())
 {
-    if (function_exists('password_hash')) {
-        // Check if options array has anything, only pass when required
-        return (cacti_sizeof($options) > 0) ?
-            password_hash($password, $algo, $options) :
-            password_hash($password, $algo);
-    }
-
-    return md5($password);
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    return (new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyPasswordHasher($algo, cacti_sizeof($options) > 0 ? $options : array()))->hash($password ?? '');
 }
 
 /**
- * compat_password_needs_rehash - if the secure function exists, check hash
- *   using that. If that does not exist, return false as md5 doesn't need a
- *   rehash
+ * compat_password_needs_rehash - compare the stored hash with the shared
+ *   native algorithm and options without changing credentials or sessions.
  *
  * @param  (string) $password - password to hash
  * @param  (string) $algo     - algorithm to use (PASSWORD_DEFAULT)
@@ -5548,14 +5338,8 @@ function compat_password_hash($password, $algo, $options = array())
  */
 function compat_password_needs_rehash($password, $algo, $options = array())
 {
-    if (function_exists('password_needs_rehash')) {
-        // Check if options array has anything, only pass when required
-        return (cacti_sizeof($options) > 0) ?
-            password_needs_rehash($password, $algo, $options) :
-            password_needs_rehash($password, $algo);
-    }
-
-    return true;
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    return (new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyPasswordHasher($algo, cacti_sizeof($options) > 0 ? $options : array()))->needsRehash($password ?? '');
 }
 
 /**
@@ -5993,49 +5777,12 @@ function check_reset_no_authentication($auth_method)
  */
 function cacti_auth_transition($user_id, $reason = 'login')
 {
-    $restored = $_SESSION['sess_cookie_credential'] ?? null;
-    unset($_SESSION['sess_cookie_credential']);
-    /* Recheck account eligibility at every authentication boundary. */
-    $account = db_fetch_row_prepared(
-        'SELECT enabled, locked, password
-		FROM user_auth
-		WHERE id = ?',
-        array($user_id)
+    require_once __DIR__ . '/../include/vendor/autoload.php';
+    $transition = new \Kadupul\IdentityAccess\Application\Command\TransitionAuthenticationSession(
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationTransitionAccounts(),
+        new \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationTransitionSession(),
     );
-
-    if (!$account || ($account['enabled'] !== 'on' && (int) $user_id !== (int) get_guest_account()) || $account['locked'] === 'on') {
-        cacti_log('SECURITY: auth transition blocked for unavailable, disabled or locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
-
-        return false;
-    }
-
-    if ($reason === 'cookie_restore' && (!is_array($restored) || ($restored['user_id'] ?? null) !== (int) $user_id
-        || !is_string($restored['generation'] ?? null)
-        || !hash_equals(auth_session_credential_generation($user_id, $account['password']), $restored['generation']))) {
-        return false;
-    }
-
-    /* regenerate session ID to prevent fixation */
-    if (session_status() === PHP_SESSION_ACTIVE) {
-        session_regenerate_id(true);
-    }
-
-    /* invalidate cached permissions so fresh checks occur */
-    kill_session_var('sess_user_realms');
-    kill_session_var('sess_user_config_array');
-    kill_session_var('sess_config_array');
-
-    if ($reason === 'cookie_restore') {
-        // Keep the snapshot that admitted the token even if revocation commits
-        // after the check above. Never bind that credential to a newer generation.
-        $_SESSION['sess_user_credential'] = $restored['generation'];
-    } else {
-        auth_session_bind_credentials($user_id);
-    }
-
-    cacti_log('NOTE: auth transition completed for user ' . $user_id . ' reason=' . $reason, false, 'AUTH', POLLER_VERBOSITY_MEDIUM);
-
-    return true;
+    return $transition((int) $user_id, (string) $reason);
 }
 
 /**
@@ -6064,70 +5811,14 @@ function auth_logout_everywhere($user_id, $credential, $db = false)
     if (!$db instanceof PDO) {
         $db = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
     }
-    if (!$db instanceof PDO || $db->inTransaction()) {
+    if (!$db instanceof PDO) {
         return false;
     }
-    try {
-        if (!$db->beginTransaction()) {
-            return false;
-        }
-        $mysql = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql';
-        if (!$mysql && $db->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite') {
-            throw new RuntimeException('Unsupported session revocation database.');
-        }
-        if ($mysql) {
-            foreach (array('user_auth', 'settings_user', 'user_auth_cache', 'sessions') as $table) {
-                $query = $db->query('SELECT * FROM `' . $table . '` LIMIT 0');
-                if ($query === false || $query->errorCode() !== '00000') {
-                    throw new RuntimeException('Session revocation table could not be inspected.');
-                }
-                $query->closeCursor();
-                $query = $db->query('SHOW CREATE TABLE `' . $table . '`');
-                $row = $query === false ? false : $query->fetch(PDO::FETCH_NUM);
-                if (!is_array($row) || $query->errorCode() !== '00000' || !isset($row[1])
-                    || stripos($row[1], 'CREATE TEMPORARY TABLE') !== false || !preg_match('/\bENGINE=InnoDB\b/i', $row[1])) {
-                    throw new RuntimeException('Session revocation requires persistent InnoDB tables.');
-                }
-            }
-        }
-        $query = $db->prepare('SELECT password FROM user_auth WHERE id = ?' . ($mysql ? ' FOR UPDATE' : ''));
-        if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
-            throw new RuntimeException('Session revocation account read failed.');
-        }
-        $password = $query->fetchColumn();
-        if (!is_string($password) || $query->errorCode() !== '00000'
-            || !hash_equals(auth_session_credential_generation($user_id, $password, $db), $credential)) {
-            throw new RuntimeException('Session revocation credential is no longer current.');
-        }
-        $mapping = auth_session_credential_key($password) . ':' . bin2hex(random_bytes(32));
-        $query = $db->prepare("REPLACE INTO settings_user (user_id, name, value) VALUES (?, 'auth_credential_generation', ?)");
-        if ($query === false || !$query->execute(array($user_id, $mapping)) || $query->errorCode() !== '00000') {
-            throw new RuntimeException('Session revocation generation write failed.');
-        }
-        // Confirm the stored value before reporting a successful revocation.
-        if (auth_session_credential_generation($user_id, $password, $db) !== substr($mapping, 65)) {
-            throw new RuntimeException('Session revocation generation was not preserved.');
-        }
-        foreach (array('user_auth_cache', 'sessions') as $table) {
-            $query = $db->prepare('DELETE FROM ' . $table . ' WHERE user_id = ?');
-            if ($query === false || !$query->execute(array($user_id)) || $query->errorCode() !== '00000') {
-                throw new RuntimeException('Session revocation deletion failed.');
-            }
-        }
-        if (!$db->commit()) {
-            throw new RuntimeException('Session revocation commit failed.');
-        }
-        return true;
-    } catch (Throwable $error) {
-        if ($db->inTransaction()) {
-            try {
-                $db->rollBack();
-            } catch (Throwable $cleanup_error) {
-                // Preserve failure even if the connection also refuses cleanup.
-            }
-        }
-        return false;
+    if (!class_exists(\Kadupul\IdentityAccess\Infrastructure\Legacy\NativeSessionRevocation::class)) {
+        require_once dirname(__DIR__) . '/src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php';
     }
+
+    return \Kadupul\IdentityAccess\Infrastructure\Legacy\NativeSessionRevocation::onConnection($db, $user_id, $credential);
 }
 
 /**

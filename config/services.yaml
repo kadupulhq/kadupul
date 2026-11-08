@@ -129,6 +129,39 @@ services:
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
 
+    Kadupul\IdentityAccess\Domain\PasswordComplexity: ~
+
+    Kadupul\IdentityAccess\Application\Command\RecoverExpiredLockout: ~
+    Kadupul\IdentityAccess\Application\Command\RecordLocalLoginFailure: ~
+    Kadupul\IdentityAccess\Application\Command\TransitionAuthenticationSession: ~
+    Kadupul\IdentityAccess\Application\Port\AuthenticationTransitionAccounts:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationTransitionAccounts
+    Kadupul\IdentityAccess\Application\Port\AuthenticationTransitionSession:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAuthenticationTransitionSession
+    Kadupul\IdentityAccess\Application\Port\Clock:
+        alias: Kadupul\IdentityAccess\Infrastructure\Symfony\IdentityAccessClock
+    Kadupul\IdentityAccess\Application\Port\AccountLockoutFailure:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutFailure
+    Kadupul\IdentityAccess\Application\Port\AccountLockoutRecovery:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutRecovery
+
+    Kadupul\IdentityAccess\Application\Query\IsAccountLocked: ~
+    Kadupul\IdentityAccess\Application\Port\AccountLockoutStatus:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeAccountLockoutStatus
+
+    Kadupul\IdentityAccess\Application\Command\ApplyLocalLoginPolicy: ~
+    Kadupul\IdentityAccess\Application\Port\LocalLoginPolicy:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeLocalLoginPolicy
+
+    Kadupul\IdentityAccess\Application\Command\VerifyLocalCredentials: ~
+    Kadupul\IdentityAccess\Application\Port\LocalCredentials:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\NativeLocalCredentials
+
+    # Native auth_login.php is the composition boundary while hooks and POST
+    # processing retain their original global scope and output order.
+    Kadupul\IdentityAccess\Infrastructure\Symfony\LoginPageRenderer:
+        public: true
+
     # One shared instance, so the operator AnalyzeDatabase selects is the one it
     # then checks. Command-line only: ConsoleAccess stays on the session adapter,
     # and CliConsoleAccess does not implement it, so no route can resolve it.

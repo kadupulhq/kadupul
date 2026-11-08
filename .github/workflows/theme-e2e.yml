@@ -8,7 +8,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main, 'chore/consolidate-main-*', 'migration/twig-*']
+    branches: [main, 'chore/consolidate-main-*', 'migration/twig-*', 'feat/symfony-*']
   merge_group:
 
 permissions:
@@ -85,6 +85,12 @@ jobs:
       - name: Install checksum-verified legacy browser dependencies
         run: php tools/dependencies/install-legacy.php
 
+      - name: Cache Composer downloads
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
+
+      - name: Install PHP dependencies for native Twig pages and asset compilation
+        run: composer install --no-interaction --no-progress --prefer-dist
+
       - name: Run theme Playwright suite
         run: npm run test:themes -- --config=playwright.config.js
         working-directory: tests/e2e
@@ -95,12 +101,6 @@ jobs:
       - name: Run browser library compatibility suite
         run: node node_modules/@playwright/test/cli.js test --config=playwright.config.js vendor-assets.spec.js billboard.spec.js legacy-js-partial.spec.js
         working-directory: tests/e2e
-
-      - name: Cache Composer downloads
-        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
-
-      - name: Install PHP dependencies for asset compilation
-        run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Compile browser assets
         run: php bin/console asset-map:compile

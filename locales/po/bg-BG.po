@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-07 21:27-0800\n"
+"POT-Creation-Date: 2026-11-08 01:05-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -791,7 +791,7 @@ msgstr "Моля, въведете текущата си парола и нов�
 msgid "Please enter your new Kadupul password."
 msgstr "Моля, въведете текущата си парола и новата си <br> Kadupul парола."
 
-#: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
+#: auth_changepassword.php:397 auth_login.php:344
 #: include/global_settings.php:1851 lib/functions.php:6242
 msgid "Username"
 msgstr "Потребител"
@@ -814,7 +814,7 @@ msgstr "Потвърди новата парола"
 msgid "Save"
 msgstr "Запази"
 
-#: auth_changepassword.php:424 auth_login.php:421
+#: auth_changepassword.php:424 auth_login.php:386
 #, php-format
 msgid "Version %s | %s"
 msgstr "Версия %s %s"
@@ -835,80 +835,81 @@ msgstr "Паролите не съвпадат"
 msgid "Passwords Match"
 msgstr "Паролите съвпадат"
 
-#: auth_login.php:69
+#: auth_login.php:82
 msgid "Kadupul no longer supports No Authentication mode. Please contact your System Administrator."
 msgstr "Достъпът е отказан, моля, свържете се с администратора на Kadupul."
 
-#: auth_login.php:104
+#: auth_login.php:117
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr "Достъпът е отказан, моля, свържете се с администратора на Kadupul."
 
-#: auth_login.php:119 lib/auth.php:4407 lib/auth.php:4413 lib/auth.php:4503
-#: lib/auth.php:4512 lib/auth.php:4559 lib/auth.php:4584 lib/auth.php:4607
-#: lib/auth.php:4647 lib/auth.php:4659 lib/auth.php:4682 lib/auth.php:4805
-#: lib/auth.php:4825 lib/auth.php:5037 lib/auth.php:5079 lib/auth.php:5089
-#: lib/auth.php:5105 lib/auth.php:5119 lib/auth.php:5157
+#: auth_login.php:132 lib/auth.php:4304 lib/auth.php:4319 lib/auth.php:4429
+#: lib/auth.php:4454 lib/auth.php:4477 lib/auth.php:4517 lib/auth.php:4529
+#: lib/auth.php:4552 lib/auth.php:4675 lib/auth.php:4695 lib/auth.php:4907
+#: lib/auth.php:4949 lib/auth.php:4959 lib/auth.php:4975 lib/auth.php:4989
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php:72
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php:55
 msgid "Access Denied!  Login Failed."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
-#: auth_login.php:141
+#: auth_login.php:154
 msgid "User was Authenticated, but the Template Account is disabled.  Using Guest Account"
 msgstr "Потребителят е удостоверен, но шаблонният акаунт е деактивиран. Използване на акаунт за гости"
 
-#: auth_login.php:148
+#: auth_login.php:161
 #, php-format
 msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
 msgstr "Достъпът е отказан! Потребителският идентификатор на госта %s не съществува.  Моля, свържете се с вашия администратор."
 
-#: auth_login.php:186
+#: auth_login.php:199
 msgid "Access Denied!  User account disabled."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
-#: auth_login.php:197
+#: auth_login.php:210
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
 msgstr "Ако смятате, че това е грешка. Моля, свържете се с вашия Kadupul Administrator."
 
-#: auth_login.php:224
+#: auth_login.php:227
 #, fuzzy
 msgid "Access Denied! User account locked."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
-#: auth_login.php:312 lib/html_tree.php:147
+#: auth_login.php:330 lib/html_tree.php:147
 msgid "Login to Kadupul"
 msgstr "Влезте в Kadupul"
 
-#: auth_login.php:319
+#: auth_login.php:331
 msgid "User Login"
 msgstr "?џ???‚?Ђ?µ?±???‚?µ?»"
 
-#: auth_login.php:333
+#: auth_login.php:343
 msgid "Enter your Username and Password below"
 msgstr "По-долу въведете потребителското си име и парола"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6243
+#: auth_login.php:345 include/global_form.php:1519 lib/functions.php:6243
 msgid "Password"
 msgstr "Парола"
 
-#: auth_login.php:360 include/global_settings.php:2350 lib/auth.php:1046
+#: auth_login.php:353 include/global_settings.php:2350 lib/auth.php:1046
 #: lib/auth.php:1068 lib/auth.php:1078 lib/auth.php:1083 user_admin.php:2124
 msgid "Local"
 msgstr "Местен"
 
-#: auth_login.php:364 include/global_arrays.php:880 lib/auth.php:1079
+#: auth_login.php:354 include/global_arrays.php:880 lib/auth.php:1079
 #: lib/auth.php:1084
 msgid "LDAP"
 msgstr "LDAP"
 
-#: auth_login.php:383 user_admin.php:2119 user_admin.php:2249
+#: auth_login.php:366 user_admin.php:2119 user_admin.php:2249
 #: user_group_admin.php:741
 msgid "Realm"
 msgstr "Област:"
 
-#: auth_login.php:400
+#: auth_login.php:380
 msgid "Keep me signed in"
 msgstr "Запомни ме на този компютър"
 
-#: auth_login.php:406
+#: auth_login.php:382
 msgid "Login"
 msgstr "Вход"
 
@@ -4739,7 +4740,7 @@ msgstr "Трябва да сте влезли, за да имате достъп
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Трябва да сте влезли в системата за достъп до тази зона на Kadupul."
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5659
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5443
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr "Влезте отново"
@@ -11762,63 +11763,42 @@ msgstr "Отрасъл:"
 msgid "Device:"
 msgstr "Изделие:"
 
-#: lib/auth.php:4311 lib/auth.php:4402
+#: lib/auth.php:4269 lib/auth.php:4316
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Достъпът е отказан, моля, свържете се с администратора на Kadupul."
 
-#: lib/auth.php:4361
+#: lib/auth.php:4310
 msgid "Access Denied!  Login Disabled."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
-#: lib/auth.php:4436
+#: lib/auth.php:4341
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr "Уеб базовото удостоверяване е конфигурирано, но от уеб сървъра не е прехвърлено потребителско име. Уверете се, че сте активирали удостоверяване на уеб сървъра."
 
-#: lib/auth.php:4452
+#: lib/auth.php:4357
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr "%s удостоверено от Web Server, но както шаблонът, така и гостът не са дефинирани в Kadupul."
 
-#: lib/auth.php:4619 lib/auth.php:4818
+#: lib/auth.php:4489 lib/auth.php:4688
 msgid "Access Denied!  No password provided by user."
 msgstr "Отказан достъп! Не е предоставена парола от потребителя."
 
-#: lib/auth.php:4791 lib/auth.php:5866
+#: lib/auth.php:4661 lib/auth.php:5650
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Достъпът е отказан! Потребителският идентификатор на шаблона %s не съществува.  Моля, свържете се с вашия администратор."
 
-#: lib/auth.php:4799
+#: lib/auth.php:4669
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5152
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Вашият Kadupul администратор е принудил сложни пароли за влизания и текущата ви Kadupul парола не отговаря на новите изисквания. Следователно трябва да промените паролата си сега."
-
-#: lib/auth.php:5192
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Паролата трябва да е поне% d знака!"
-
-#: lib/auth.php:5198
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Вашата парола трябва да съдържа поне 1 цифров знак!"
-
-#: lib/auth.php:5202
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Вашата парола трябва да съдържа комбинация от малки букви и главни букви!"
-
-#: lib/auth.php:5208
-msgid "Your password must contain at least 1 special character!"
-msgstr "Вашата парола трябва да съдържа поне 1 специален знак!"
-
-#: lib/auth.php:5652
+#: lib/auth.php:5436
 #, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Изчистена регистрация на Kadupul"
 
-#: lib/auth.php:5952
+#: lib/auth.php:5736
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Удостоверяването преди това не е било зададено. Опит за настройка на локално удостоверяване, но не беше намерен административен акаунт."
 
@@ -12490,7 +12470,7 @@ msgstr "Влезли сте като %s"
 msgid "Edit Profile"
 msgstr "Редактирай Профила"
 
-#: lib/functions.php:4301 lib/html.php:2889
+#: lib/functions.php:4301 lib/html.php:2889 logout.php:96
 msgid "Logout"
 msgstr "Изход"
 
@@ -16217,32 +16197,32 @@ msgstr "Външни връзки [редактиране: %s]"
 msgid "External Links [new]"
 msgstr "Външни връзки [нови]"
 
-#: logout.php:43
+#: logout.php:56
 msgid "You have been logged out of Kadupul due to a session timeout."
 msgstr "Вие сте излезли от Kadupul поради прекъсване на сесията."
 
-#: logout.php:45
+#: logout.php:58
 msgid "You have been logged out of Kadupul due to an account suspension."
 msgstr "Вие сте излезли от Kadupul поради прекъсване на сесията."
 
-#: logout.php:47
+#: logout.php:60
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "Вие сте излезли от Kadupul поради прекъсване на сесията."
 
-#: logout.php:55
+#: logout.php:70 logout.php:73
 msgid "Logout of Kadupul"
 msgstr "Изход от Kadupul"
 
-#: logout.php:62
-msgid "Automatic Logout"
-msgstr "Автоматично излизане"
-
-#: logout.php:65
+#: logout.php:72
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
 msgstr "Моля, затворете браузъра си или %sLogin Again %s"
 
-#: logout.php:69 utilities.php:835
+#: logout.php:73
+msgid "Automatic Logout"
+msgstr "Автоматично излизане"
+
+#: logout.php:74 utilities.php:835
 #, php-format
 msgid "Version %s"
 msgstr "Версия %s"
@@ -17489,6 +17469,27 @@ msgstr "FATAL: Методът &#39; %s&#39; е невалиден"
 #: spikekill.php:125
 msgid "FATAL: Spike Kill Not Allowed"
 msgstr "ФАТАЛНО: Спайк Убие Не е позволено"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php:46
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Вашият Kadupul администратор е принудил сложни пароли за влизания и текущата ви Kadupul парола не отговаря на новите изисквания. Следователно трябва да промените паролата си сега."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:31
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Паролата трябва да е поне% d знака!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:34
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Вашата парола трябва да съдържа поне 1 цифров знак!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:37
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Вашата парола трябва да съдържа комбинация от малки букви и главни букви!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php:40
+msgid "Your password must contain at least 1 special character!"
+msgstr "Вашата парола трябва да съдържа поне 1 специален знак!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php:55
 msgid "New Poller"

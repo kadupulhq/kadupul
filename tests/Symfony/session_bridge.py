@@ -163,6 +163,16 @@ def forged_session(fixture):
         check(probe['exit'] == 0 and probe['stdout'] == 'absent', 'unknown file session cannot be created')
 
 
+def local_authentication(fixture):
+    from local_authentication_scenarios import verify_local_authentication
+    verify_local_authentication(fixture.harness, fixture.database_sessions, check)
+
+
+def basic_authentication(fixture):
+    from basic_auth_scenarios import verify_basic_authentication
+    verify_basic_authentication(fixture.harness, check)
+
+
 def login_policy(fixture):
     harness = fixture.harness
     fixture.session = session = fixture.login()
@@ -314,6 +324,8 @@ def account_lifecycle(fixture):
         session = fixture.login()
 
     session.request('/logout.php')
+    check(fixture.actor(session).get('json') == expected, 'logout confirmation preserves Symfony access')
+    session.request('/logout.php', {'action': '', '__csrf_magic': session.token})
     check(fixture.actor(session)['status'] == 401, 'legacy logout removes Symfony access')
     harness.sql(f"UPDATE user_auth SET must_change_password='on', password_change='on' WHERE id={user_id}")
     session = fixture.login()
@@ -328,7 +340,7 @@ def account_lifecycle(fixture):
 STEPS = (
     console_home, console_collectors, console_prefix, permission_denied, plugin_menu, anonymous_entry,
     script_server, cli_parity, tree_cli, schema_parity, audit_parity, user_parity, graph_parity, forged_session,
-    login_policy, cdef_legacy_pages, data_inputs, about_authentication, about, inventory,
+    basic_authentication, local_authentication, login_policy, cdef_legacy_pages, data_inputs, about_authentication, about, inventory,
     data_source_profile_deletion, data_source_profile_heartbeat, site_edit, links,
     site_create, site_lifecycle, device_create, palette_colors, gprint_presets,
     color_templates, vdefs, rrdcheck, cdefs, automation_templates,
@@ -391,7 +403,7 @@ SHARDS = (
     ('schema_parity', 'audit_parity'),
     ('cdef_legacy_pages', 'inventory', 'device_create'),
     ('console_home', 'console_collectors', 'console_prefix', 'permission_denied', 'plugin_menu', 'anonymous_entry',
-     'script_server', 'cli_parity', 'tree_cli', 'user_parity', 'graph_parity', 'forged_session', 'login_policy', 'data_inputs',
+     'script_server', 'cli_parity', 'tree_cli', 'user_parity', 'graph_parity', 'forged_session', 'basic_authentication', 'local_authentication', 'login_policy', 'data_inputs',
      'about_authentication', 'about', 'data_source_profile_deletion', 'data_source_profile_heartbeat',
      'site_edit', 'links', 'site_create', 'site_lifecycle', 'palette_colors', 'gprint_presets',
      'color_templates', 'vdefs', 'rrdcheck', 'cdefs', 'automation_templates', 'account_lifecycle'),

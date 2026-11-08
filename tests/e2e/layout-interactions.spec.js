@@ -381,3 +381,58 @@ for (const nativeApi of [true, false]) {
     expect(result).toEqual({ ordinary: ['fa fa-plus', '', 'registry-value', '.fa.fa-plus', '<i class="fa fa-plus" aria-hidden="true"></i>'], inherited: '' });
   });
 }
+
+for (const [action, marker] of [['timeout', null], ['disabled', 'cactiLoginSuspend'], ['remote', 'cactiRemoteState']]) {
+  test(`automatic ${action} logout submits CSRF by POST under CSP and a foreign base`, async ({ page, baseURL }) => {
+    await loadLayout(page);
+    await page.route('**/monitoring/logout.php', route => route.fulfill({ body: 'Logout request received' }));
+    await page.evaluate(() => {
+      const policy = document.createElement('meta');
+      policy.httpEquiv = 'Content-Security-Policy';
+      policy.content = "default-src 'self'; script-src 'self' 'nonce-fixture'; form-action 'self'";
+      document.head.appendChild(policy);
+      const base = document.createElement('base');
+      base.href = 'https://foreign.invalid/';
+      document.head.appendChild(base);
+      window.urlPath = '/monitoring/';
+      window.csrfMagicToken = 'sid:fixture-token,123456';
+      $.ajaxQ = { abortAll() {} };
+    });
+    const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
+    await page.evaluate(marker => {
+      if (marker === null) {
+        window.refreshIsLogout = true;
+        window.refreshMSeconds = 1;
+        setupPageTimeout();
+      } else {
+        checkForRedirects(marker, null);
+      }
+    }, marker);
+    const sent = await request;
+    expect(sent.method()).toBe('POST');
+    expect(Object.fromEntries(new URLSearchParams(sent.postData()))).toEqual({ action, __csrf_magic: 'sid:fixture-token,123456' });
+    expect(new URL(sent.url()).origin).toBe(new URL(baseURL).origin);
+  });
+}
+
+test('automatic logout without a CSRF token opens confirmation by GET', async ({ page }) => {
+  await loadLayout(page);
+  await page.route('**/logout.php?*', route => route.fulfill({ body: 'Confirm logout' }));
+  const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
+  await page.evaluate(() => { window.urlPath = '/monitoring/'; delete window.csrfMagicToken; submitLogout('timeout'); });
+  const sent = await request;
+  expect(sent.method()).toBe('GET');
+  expect(new URL(sent.url()).searchParams.get('action')).toBe('timeout');
+});
+
+test('logout refuses a foreign destination or unknown reason before creating a form', async ({ page }) => {
+  await loadLayout(page);
+  const result = await page.evaluate(() => {
+    window.urlPath = 'https://foreign.invalid/';
+    window.csrfMagicToken = 'fixture-token';
+    const foreign = submitLogout('timeout');
+    window.urlPath = '/monitoring/';
+    return [foreign, submitLogout('unknown'), document.forms.length];
+  });
+  expect(result).toEqual([false, false, 0]);
+});

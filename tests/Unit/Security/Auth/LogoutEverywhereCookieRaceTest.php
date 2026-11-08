@@ -10,7 +10,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 function logout_cookie_race_probe(bool $revoke): array
 {
     $auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
-    $program = '';
+    $program = 'require_once ' . var_export(dirname(__DIR__, 4) . '/src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php', true) . ';';
     foreach (['clear_auth_cookie', 'set_auth_cookie', 'check_auth_cookie', 'auth_cookie_generation_valid', 'auth_cookie_user_id', 'auth_logout_everywhere', 'auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_bind_credentials', 'auth_session_credentials_valid', 'cacti_auth_transition'] as $name) {
         $program .= test_php_function_source($auth, $name) . "\n";
     }
