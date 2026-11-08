@@ -71,6 +71,9 @@ function data_input_whitelist_update(string $configuredPath, callable $readRecor
             usleep(10000);
         }
         $remaining();
+        // One hour is safe only while every caller's $deadline stays well under
+        // it: whitelists in one directory have separate locks, so this sweep can
+        // see another whitelist's live replacement (see the docblock below).
         data_input_whitelist_remove_stale($directory, time() - 3600);
         // Query only after ownership: a waiting full update must not publish a
         // database snapshot older than another successful whitelist update.
@@ -184,6 +187,18 @@ function data_input_whitelist_update(string $configuredPath, callable $readRecor
  * update is bounded by its deadline, so one older than the cutoff that is seen
  * while holding the lock belongs to a run that died before its rename or cleanup.
  * Only regular files with the exact replacement name are removed.
+ *
+ * The name does not say which whitelist a replacement belongs to, and two
+ * whitelists in one directory take separate locks. The cutoff must therefore
+ * stay longer than any writer's deadline (cli/input_whitelist.php allows 25
+ * seconds); a caller that allows an update to run for longer must lower its
+ * deadline or raise this cutoff, or one writer can remove another's live
+ * replacement.
+ *
+ * @param string $directory The directory that holds the whitelist.
+ * @param int    $cutoff    Unix time; replacements last modified before it are removed.
+ *
+ * @return int The number of replacements removed.
  */
 function data_input_whitelist_remove_stale(string $directory, int $cutoff): int
 {
