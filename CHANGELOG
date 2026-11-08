@@ -35,6 +35,7 @@ Cacti CHANGELOG
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
 -issue: Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200)
+-issue: Keep an RRDfile unchanged when rrdtool tune rejects a later option, and return whether rrdtool_function_tune() succeeded (#777)
 -issue: Retain queued Boost samples when the fallback RRD path query fails, while preserving cleanup for a successfully confirmed missing data source (#738)
 -issue: Reconcile unique_keys in db_update_table() so a declared unique index is not dropped, and accept a primary key or index columns given as a string (#1065, #1060)
 -issue: Treat obsolete colour and data source delete action names as unknown actions instead of calling undefined handlers; bulk deletion remains available (#685)
