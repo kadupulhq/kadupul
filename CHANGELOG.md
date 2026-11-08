@@ -16,6 +16,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
+- Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
 - Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
