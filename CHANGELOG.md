@@ -57,6 +57,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Bound Windows RRDtool one-shot commands by the command/poller deadline and prevent large input/output deadlocks using temporary file handles. Windows now requires writable temporary storage (#782).
 - Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.
 
+- Hold a shared lock on the Symfony production cache for each web request and an exclusive lock while `cache:clear` runs, so web requests no longer fail with HTTP 500 when the installer or `cli/upgrade_database.php` refreshes the cache. Web requests wait while the cache is replaced; a refresh waits up to 30 seconds for running requests.
 
 - Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
 - Exclude disabled SNMP notification receivers during discovery and final trap selection, preserving enabled receivers whose legacy disabled flag is NULL. This carries the existing LTS fix into main.

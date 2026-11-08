@@ -7,6 +7,7 @@
 
 namespace Kadupul;
 
+use Kadupul\Platform\Infrastructure\Symfony\CacheDirectoryLock;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,6 +16,31 @@ use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 final class Kernel extends BaseKernel implements CompilerPassInterface
 {
     use MicroKernelTrait;
+
+    private ?CacheDirectoryLock $cacheLock = null;
+
+    /**
+     * Web requests keep the build directory from being swapped by cache:clear
+     * until shutdown, because the container loads service files lazily by path.
+     * Console processes are excluded: the installer worker boots a kernel and
+     * then runs cache:clear as its own child.
+     */
+    #[\Override]
+    public function boot(): void
+    {
+        if (!$this->booted && $this->cacheLock === null && !\in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+            $this->cacheLock = CacheDirectoryLock::shared($this->getBuildDir());
+        }
+        parent::boot();
+    }
+
+    #[\Override]
+    public function shutdown(): void
+    {
+        parent::shutdown();
+        $this->cacheLock?->release();
+        $this->cacheLock = null;
+    }
 
     #[\Override]
     public function process(ContainerBuilder $container): void

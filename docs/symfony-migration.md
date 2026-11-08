@@ -368,6 +368,15 @@ their existing behavior and do not refresh it. Cache refresh has a 120-second
 timeout; a failure stops the upgrade before schema or version writes. Ensure
 the upgrade user can write `var/cache/`, correct the reported problem and retry.
 
+`cache:clear` swaps the cache directory, so it takes an exclusive lock on the
+sibling file `var/cache/prod.lock` while it runs. Web requests hold a shared
+lock on that file from kernel boot until the request ends, so a request does
+not load services from a directory that is being replaced. New web requests
+wait while the refresh runs, for at most 150 seconds; after that they proceed
+without the lock. A refresh waits at most 30 seconds for running web requests
+to finish and otherwise fails before changing the cache; retry it once they
+finish. Console commands do not take the shared lock.
+
 Run scheduled Symfony commands as the deployment or service account that owns
 `var/cache/`. A root cron job can create root-owned files in `var/cache/prod`
 and prevent later web requests or workers from rebuilding the cache. If this
