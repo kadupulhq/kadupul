@@ -16,6 +16,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
+- Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
 - Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
@@ -33,9 +34,12 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
+- Ignore an unknown (NaN) data source minimum or maximum when SpikeKill builds its standard-deviation cutoffs (#1095).
 
 - Add opt-in installer runtime comparison and bounded local operational evidence, standalone/collector presets, and a validator for declared human usability observations. Extend release rehearsals with real interrupted finishing tasks, database outages and repaired collector synchronization; retained evidence distinguishes scoped cached-runtime probes from the full pinned release gate (#1293).
+- Replace a remote collector table in one transaction during full synchronization, so a failed insert or commit keeps the rows it had instead of leaving it empty or half written (#761). A remote table that is not InnoDB keeps the previous emptying and logs a warning.
 - Guide installer setup with grouped optional settings, explicit backup and recovery checklists, actionable runtime checks and read-only post-installation evidence. Add local unattended configuration validation, environment-backed SNMP secret references and authenticated redacted diagnostic downloads. Include English/French guidance and keyboard/browser regression coverage (#1313).
+- Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed; earlier orphans are still cleared as before (#198).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
