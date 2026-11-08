@@ -326,13 +326,13 @@ dynamic_include	./lib/installer.php:3876	                include_once($upgrade_f
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);
 dynamic_include	./lib/plugins.php:469	    include_once($config['library_path'] . '/database.php');
-dynamic_include	./lib/plugins.php:559	    include_once($config['library_path'] . '/database.php');
-dynamic_include	./lib/plugins.php:638	            include_once($plugin_setup);
-dynamic_include	./lib/plugins.php:748	            include_once($plugin_setup);
-dynamic_include	./lib/plugins.php:800	            include_once($plugin_setup);
+dynamic_include	./lib/plugins.php:577	    include_once($config['library_path'] . '/database.php');
+dynamic_include	./lib/plugins.php:656	            include_once($plugin_setup);
+dynamic_include	./lib/plugins.php:766	            include_once($plugin_setup);
+dynamic_include	./lib/plugins.php:818	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:81	                        include_once($full_path);
-dynamic_include	./lib/plugins.php:878	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./lib/plugins.php:906	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./lib/plugins.php:896	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./lib/plugins.php:924	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/poller.php:334	    include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/poller.php:335	    include_once($config['library_path'] . '/snmp.php');
 dynamic_include	./lib/poller.php:922	    include_once($config['library_path'] . '/rrd.php');
@@ -798,7 +798,7 @@ header_redirect	./lib/html_reports.php:449	        header('Location: ' . get_rep
 header_redirect	./lib/html_reports.php:541	        header('Location: ' . get_reports_page() . '?header=false');
 header_redirect	./lib/html_reports.php:571	        header('Location: ' . get_reports_page() . '?header=false');
 header_redirect	./lib/index.php:7	header("Location:../index.php");
-header_redirect	./lib/plugins.php:624	        header('Location: plugins.php?header=false');
+header_redirect	./lib/plugins.php:642	        header('Location: plugins.php?header=false');
 header_redirect	./link.php:37	    header('Location: index.php');
 header_redirect	./link.php:86	        header('Location: index.php');
 header_redirect	./log/index.php:7	header("Location:../index.php");
