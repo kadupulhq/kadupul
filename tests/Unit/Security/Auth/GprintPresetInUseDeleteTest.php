@@ -36,6 +36,7 @@ function run_delete(array $selected, $lookupFails = false) {
 $selected = ' . var_export($selected, true) . ';
 $in_use = array(2, 4);
 $axis_use = array(9);
+$aggregate_axis_use = array(11);
 $lookup_fails = ' . var_export($lookupFails, true) . ';
 $deleted = array();
 $message = null;
@@ -53,7 +54,8 @@ function array_to_sql_or($ids, $column) { return $column . " IN (" . implode(","
 function array_rekey($rows, $key, $value) { return array_column($rows, $value, $key); }
 function db_fetch_assoc($sql) {
 	if ($GLOBALS["lookup_fails"]) { return false; }
-	$source = strpos($sql, "right_axis_format") !== false ? $GLOBALS["axis_use"] : $GLOBALS["in_use"];
+	$source = strpos($sql, "aggregate_graph_templates_graph") !== false ? $GLOBALS["aggregate_axis_use"]
+		: (strpos($sql, "right_axis_format") !== false ? $GLOBALS["axis_use"] : $GLOBALS["in_use"]);
 	$rows = array();
 	foreach ($source as $id) {
 		if (strpos($sql, (string) $id) !== false) { $rows[] = array("gprint_id" => $id); }
@@ -62,12 +64,14 @@ function db_fetch_assoc($sql) {
 }
 function db_execute($sql) {
 	$GLOBALS["atomic"] = strpos($sql, "NOT EXISTS") !== false;
+	$GLOBALS["aggregate_guard"] = strpos($sql, "aggregate_graph_templates_graph") !== false;
 	preg_match("/IN \(([0-9,]*)\)/", $sql, $matches);
 	$GLOBALS["deleted"] = $matches[1] === "" ? array() : array_map("intval", explode(",", $matches[1]));
 	return true;
 }
 $atomic = false;
-register_shutdown_function(function () { echo json_encode(array("deleted" => $GLOBALS["deleted"], "message" => $GLOBALS["message"], "atomic" => $GLOBALS["atomic"])); });
+$aggregate_guard = false;
+register_shutdown_function(function () { echo json_encode(array("deleted" => $GLOBALS["deleted"], "message" => $GLOBALS["message"], "atomic" => $GLOBALS["atomic"], "aggregate_guard" => $GLOBALS["aggregate_guard"])); });
 ' . $functions . 'form_actions();
 ';
 
@@ -114,4 +118,8 @@ test('a numeric id that is not an integer is refused', function () {
 test('a failed lookup deletes nothing rather than everything', function () {
 	// db_fetch_assoc returns false on a SQL error, which must not read as "none in use".
 	expect(run_delete(array(1, 3), true))->toMatchArray(array('deleted' => array(), 'message' => 'gprint_in_use'));
+});
+
+test('a preset used only as an aggregate template right-axis format is not deleted', function () {
+	expect(run_delete(array(1, 11)))->toMatchArray(array('deleted' => array(1), 'message' => 'gprint_in_use', 'aggregate_guard' => true));
 });
