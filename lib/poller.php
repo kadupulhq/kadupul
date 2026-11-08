@@ -2226,15 +2226,8 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
                 return $fail();
             }
 
-            if (!db_execute_prepared(
-                "DELETE FROM poller_item
-				WHERE last_updated < ?
-				AND last_updated > 0
-				AND last_updated IS NOT NULL",
-                array(date('Y-m-d H:i:s', $time)),
-                false,
-                $rcnn_id
-            )) {
+            // The copy above succeeded, so $data lists every item the collector keeps
+            if (!replicate_out_remove_stale_items($rcnn_id, $data)) {
                 return $fail();
             }
         }
@@ -2369,6 +2362,57 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
     if ($class != 'plugins' && $config['is_web']) {
         replicate_log('Synchronization of Poller ' . $remote_poller_id . ' completed', POLLER_VERBOSITY_LOW);
         raise_message('poller_sync');
+    }
+
+    return true;
+}
+
+/**
+ * Remove the remote poller items that the main data collector no longer holds
+ * for this collector.
+ *
+ * The copy leaves last_updated alone on a row it did not change, so current
+ * items keep older times than new ones and a time cutoff would remove them too.
+ * Items are compared by key instead.
+ *
+ * @param PDO $conn The remote collector connection
+ * @param array<int, array<string, mixed>> $items The rows just copied from main
+ */
+function replicate_out_remove_stale_items($conn, array $items): bool
+{
+    $current = array();
+
+    foreach ($items as $item) {
+        $current[(int) $item['local_data_id'] . "\0" . $item['rrd_name']] = true;
+    }
+
+    $remote = db_fetch_assoc('SELECT local_data_id, rrd_name FROM poller_item', false, $conn);
+
+    if (!is_array($remote)) {
+        return false;
+    }
+
+    $stale = array();
+
+    foreach ($remote as $row) {
+        if (!isset($current[(int) $row['local_data_id'] . "\0" . $row['rrd_name']])) {
+            $stale[] = $row;
+        }
+    }
+
+    foreach (array_chunk($stale, 500) as $chunk) {
+        $clauses = array();
+        $params = array();
+
+        foreach ($chunk as $row) {
+            $clauses[] = '(local_data_id = ? AND rrd_name = ?)';
+            $params[] = $row['local_data_id'];
+            $params[] = $row['rrd_name'];
+        }
+
+        if (!db_execute_prepared('DELETE FROM poller_item WHERE ' . implode(' OR ', $clauses), $params, false, $conn)) {
+            return false;
+        }
     }
 
     return true;
