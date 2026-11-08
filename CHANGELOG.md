@@ -6,11 +6,14 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Record the system-MIB collection time only after a collector has been started with `--mibs`, so a poll that exits early no longer postpones collection for four hours (#1348).
+- Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
+- Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
+- Record the system-MIB collection time only after a collector has been started with `--mibs`, so a poll that exits early no longer postpones collection for four hours (#1348).
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
+- Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
