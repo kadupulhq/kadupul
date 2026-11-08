@@ -104,6 +104,29 @@ final class InstallerProbeDiagnosticsTest extends TestCase
         }
     }
 
+    public function testLoggedClassNamesAreResolvedWithoutLoadingTheirFiles(): void
+    {
+        $directory = sys_get_temp_dir() . '/probe-classes-' . bin2hex(random_bytes(6));
+        mkdir($directory);
+        $marker = $directory . '/loaded';
+        file_put_contents($directory . '/LoggedFailure.php', '<?php namespace ProbeLogged; touch(' . var_export($marker, true) . '); final class LoggedFailure extends \\RuntimeException {}');
+        $loader = new \Composer\Autoload\ClassLoader();
+        $loader->addPsr4('ProbeLogged\\', $directory);
+        $loader->register();
+        try {
+            $data = InstallerProbeDiagnostics::server("PHP Fatal error: Uncaught ProbeLogged\\LoggedFailure: x\n"
+                . "PHP Fatal error: Uncaught ProbeLogged\\NotInstalled: y\nPHP Fatal error: Uncaught Countable: z\n", '/owned/project');
+            self::assertSame(['ProbeLogged\\LoggedFailure'], $data['exception_classes']);
+            self::assertFileDoesNotExist($marker);
+            self::assertFalse(class_exists('ProbeLogged\\LoggedFailure', false));
+        } finally {
+            $loader->unregister();
+            if (is_file($marker)) unlink($marker);
+            unlink($directory . '/LoggedFailure.php');
+            rmdir($directory);
+        }
+    }
+
     public function testUnknownMessagesAreDigestedAndLogProcessingIsBounded(): void
     {
         $log = str_repeat('x', InstallerProbeDiagnostics::MAX_LOG_BYTES) . ' password=private SQL SELECT private';

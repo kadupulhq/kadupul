@@ -41,6 +41,32 @@ final class InstallerProbeDiagnostics
             'response_sha256' => $request['response_sha256']];
     }
 
+    /**
+     * Whether a class name from the server log names an installed Throwable,
+     * without loading any file: the name comes from log text, so autoloading it
+     * would run whichever project file the log chose.
+     *
+     * A loaded class is checked against Throwable. A class that is not loaded
+     * yet counts when an installed Composer autoloader maps it to a file, which
+     * is located but not included.
+     */
+    private static function knownThrowable(string $class): bool
+    {
+        if (class_exists($class, false)) {
+            return is_a($class, \Throwable::class, true);
+        }
+        if (interface_exists($class, false) || trait_exists($class, false)) {
+            return false;
+        }
+        foreach (spl_autoload_functions() as $loader) {
+            if (is_array($loader) && $loader[0] instanceof \Composer\Autoload\ClassLoader && $loader[0]->findFile($class) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /** @return array{kind:string,exception_classes:list<string>,frames:list<array{file:string,line:int}>,unresolved_frames:list<array{path_sha256:string,line:int}>,logged_locations:list<array{basename_sha256:string,line:int}>,log_sha256:string,truncated:bool} */
     public static function server(string $log, string $projectRoot): array
     {
@@ -52,7 +78,7 @@ final class InstallerProbeDiagnostics
             try {
                 // Only real Throwable types from the installed autoloaders are names,
                 // rather than arbitrary strings supplied in a request or message.
-                if (is_a($class, \Throwable::class, true)) {
+                if (self::knownThrowable($class)) {
                     $classes[$class] = $class;
                 }
             } catch (\Throwable) {
