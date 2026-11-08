@@ -17,12 +17,13 @@
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
+      <file>./Unit/CdefInUseDeleteTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
-      <file>./Unit/CdefInUseDeleteTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
