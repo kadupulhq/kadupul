@@ -312,7 +312,8 @@ test('Boost releases a native writer when archive discovery or row selection is 
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
     $outcome = json_decode(file_get_contents($this->dir . '/outcome'), true);
-    expect($outcome[0] === false || $outcome[0] === -1)->toBeTrue()->and($outcome[1])->toBeTrue();
+    // No archive is a failure; an empty partition is an idle child that succeeds (#762).
+    expect($outcome[0])->toBe($emptyArchives ? -1 : 0)->and($outcome[1])->toBeTrue();
 })->with(array(true, false));
 
 
