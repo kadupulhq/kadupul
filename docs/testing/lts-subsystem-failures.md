@@ -11,8 +11,11 @@ reads and update/insert/delete stages, successful and empty replacements,
 nontransactional tables, temporary-table shadows, caller transactions, site
 unlink failures, name limits, invalid and successful device saves, sample retry,
 permissive-mode truncation, stable delayed timestamps and real local script exit
-statuses. Logging, request/session setup and unrelated hooks are fixture
-boundaries. It does not contact devices or write production RRDs.
+statuses. A separate destination database verifies byte-preserving parameter
+binding with quoted and Unicode values, native and emulated prepares, and
+`NO_BACKSLASH_ESCAPES`. Both prepare modes retain truncating batches and restore
+the original connection mode. Logging, request/session setup and unrelated hooks
+are fixture boundaries. It does not contact devices or write production RRDs.
 
 Run from `tests/` with a disposable server and an account allowed to create and
 drop fixture databases:
@@ -30,12 +33,16 @@ skips native database tests; it is not a database pass. Invoke the full runner
 with `--php` pointing to the selected runtime's actual binary so nested processes
 do not resolve a different local shim.
 
-Local evidence: PHP 8.1.34, MariaDB 10.11.19 and MySQL 8.4 each passed all 40 new
-database cases. The existing five sql_save outcome cases passed on MariaDB.
-Twenty command/queue tests passed on PHP 8.1.34. Measured native-fixture coverage
-alone is 82.2% of executable lines in `database_atomic.php` and 83.5% in
-`poller_output_spool.php`; this is not 100% code coverage. Additional local queue
-tests exercise paths outside that subprocess measurement. Full-suite outcomes
+Local evidence: PHP 8.1.34, MariaDB 10.11.19 and MySQL 8.4.13 each passed all 43
+database cases. The 43 cases also passed on PHP 8.4.25 with MySQL 8.4.13, using
+the unit runner's legacy-Pest deprecation setting. The existing five sql_save
+outcome cases passed on MariaDB at
+`ab6685862e`. Twenty command/queue tests passed on PHP 8.1.34. The Boost contract
+suite with RRDtool passed 260 cases, with five environment-dependent skips.
+Historical native-fixture coverage at `ab6685862e` measured 82.2% of executable
+lines in `database_atomic.php` and 83.5% in `poller_output_spool.php`; this is not
+100% code coverage or a measurement of the subsequent correction. Additional
+local queue tests exercise paths outside that subprocess measurement. Full-suite outcomes
 and final revision checks belong in the PR verification record.
 
 A separate source review traced web and CLI rebuild outcomes, device disable
@@ -44,6 +51,14 @@ reviewed the exclusive queue file creation, same-connection metadata checks,
 rollback/savepoint ownership and the distinct remote commit boundary. Sink
 inventory entries were refreshed only for affected files after reviewing these
 changes; existing checks were retained.
+
+CI exposed an obsolete handoff assertion for manual SQL quoting. Replacing it
+with destination-binding coverage also caught MySQL's unsupported prepared
+`SHOW WARNINGS` protocol: PDO's fallback overwrote insert diagnostics. The warning
+query now uses the text protocol temporarily, preserving both insert diagnostics
+and the caller's prepare setting. The native-destination case failed before this
+correction. Review database diagnostics under both prepare modes when changing
+the handoff path; success and retained-warning cases must both execute.
 
 Main propagation assessment: main's device save has already removed the early
 disable call, and `sites.php` forwards to Symfony workflows. Those replacements

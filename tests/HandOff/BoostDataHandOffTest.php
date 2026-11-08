@@ -79,12 +79,12 @@ test('Archive discovery validates every dynamic table identifier', function () {
 	expect(boost_is_valid_archive_table("poller_output_boost_arch_123\nDROP"))->toBeFalse();
 });
 
-test('Remote tuples are quoted by their destination connection', function () {
+test('Remote handoffs retain their destination connection', function () {
 	$cmd      = boostSource('cmd.php');
 	$recovery = boostSource('poller_recovery.php');
 
-	expect($cmd)->toContain("db_qstr(\$item['rrd_name'], \$poller_db_cnn_id)");
-	expect($cmd)->toContain('db_qstr($output, $poller_db_cnn_id)');
+	// Native destination/encoding coverage lives in SubsystemFailureNativeTest.
+	expect($cmd)->toContain('poller_output_replay($output_spool, $poller_db_cnn_id)');
 	expect($recovery)->toContain("db_qstr(\$r['rrd_name'], \$remote_db_cnn_id)");
 });
 

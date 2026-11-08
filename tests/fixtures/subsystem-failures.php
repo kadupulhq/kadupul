@@ -65,6 +65,7 @@ $db = new PDO('mysql:host=' . $database_hostname . ';port=' . $database_port . '
 $database_sessions = ["$database_hostname:$database_port:$database_default" => $db];
 $db->exec("SET SESSION sql_mode='STRICT_ALL_TABLES'");
 $result = [];
+$destination_database = null;
 try {
 	$sql = file_get_contents($root . '/cacti.sql');
 	foreach (['sites', 'host', 'data_local', 'data_template_data', 'data_input', 'data_input_data', 'data_input_fields', 'poller_item', 'poller_output', 'poller_output_boost', 'settings', 'host_snmp_query', 'poller_reindex', 'graph_local', 'poller'] as $table) {
@@ -130,12 +131,37 @@ try {
 		$result['ok'] = api_device_save(7,0,$description,'example.invalid','public',2,'','',161,500,'on',2,$ping,23,400,1,'','','','','','',5,1,1,7);
 		$result['disabled'] = $db->query('SELECT disabled FROM host WHERE id=7')->fetchColumn();
 		$result['cache_retained'] = $before === $db->query('SELECT * FROM poller_item ORDER BY local_data_id')->fetchAll(PDO::FETCH_ASSOC);
+	} elseif (str_starts_with($scenario, 'output-destination-')) {
+		$name = $database_default . '_destination';
+		$admin->exec("CREATE DATABASE `$name` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+		$destination_database = $name;
+		$destination = new PDO('mysql:host=' . $database_hostname . ';port=' . $database_port . ';dbname=' . $name . ';charset=utf8mb4',
+			getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '',
+			[PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_EMULATE_PREPARES => $scenario === 'output-destination-emulated']);
+		$destination->exec("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_BACKSLASH_ESCAPES'");
+		foreach (['poller_output', 'poller_output_boost'] as $table) {
+			if (!preg_match('/CREATE TABLE (?:`?' . $table . '`?)\s*\([\s\S]*?;/', $sql, $match)) throw new RuntimeException('Missing shipped table ' . $table);
+			$destination->exec($match[0]);
+		}
+		$rows = [[7, "o'brien\\界", "label:'temp'\\café 界"], [8, 'zero', '0']];
+		$spool = poller_output_spool(1);
+		$result['queued'] = poller_output_enqueue($spool, $rows, true);
+		$result['ok'] = poller_output_replay($spool, $destination);
+		$result['emulated'] = (bool) $destination->getAttribute(PDO::ATTR_EMULATE_PREPARES);
+		$result['pending'] = (int) $spool->querySingle('SELECT COUNT(*) FROM batches');
+		foreach (['poller_output', 'poller_output_boost'] as $table) {
+			$result[$table] = $destination->query('SELECT local_data_id,rrd_name,output FROM ' . $table . ' ORDER BY local_data_id')->fetchAll(PDO::FETCH_NUM);
+			$result['default_' . $table] = (int) $db->query('SELECT COUNT(*) FROM ' . $table)->fetchColumn();
+		}
+		$spool->close();
+		$spool = null;
 	} elseif (str_starts_with($scenario, 'output-')) {
 		$spool = poller_output_spool(1);
 		$redirect = $scenario !== 'output-plain';
 		$rows = [[7,'value','42'],[8,'value','0']];
-		if ($scenario === 'output-truncation') {
+		if (in_array($scenario, ['output-truncation', 'output-truncation-native'], true)) {
 			$db->exec("SET SESSION sql_mode=''");
+			$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, $scenario === 'output-truncation');
 			$rows[1][1] = str_repeat('x', 30);
 		}
 		$result['queued'] = poller_output_enqueue($spool, $rows, $redirect);
@@ -148,6 +174,7 @@ try {
 		if ($scenario === 'output-second-fail') $db->exec("CREATE TRIGGER refuse_output BEFORE INSERT ON poller_output_boost FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='fixture refusal'");
 		if ($scenario === 'output-idempotent') $db->exec("INSERT INTO poller_output SELECT 7,'value',FROM_UNIXTIME(" . $spool->querySingle('SELECT time FROM batches') . "),'42'");
 		$result['ok'] = poller_output_replay($spool, $db);
+		$result['emulated'] = (bool) $db->getAttribute(PDO::ATTR_EMULATE_PREPARES);
 		if ($scenario === 'output-borrowed') {
 			$result['borrowed'] = $db->inTransaction();
 			$result['caller'] = $db->query('SELECT name FROM sites WHERE id=8')->fetchColumn();
@@ -172,6 +199,7 @@ try {
 	}
 } finally {
 	if ($db->inTransaction()) $db->rollBack();
+	if ($destination_database !== null) $admin->exec("DROP DATABASE `$destination_database`");
 	$admin->exec("DROP DATABASE `$database_default`");
 	foreach (glob($directory . '/spool/*') as $file) unlink($file);
 	if (is_dir($directory . '/spool')) rmdir($directory . '/spool');

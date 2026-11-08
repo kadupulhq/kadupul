@@ -66,7 +66,8 @@ test('failed output handoff retains the local batch and rolls back both destinat
 	expect($r['queued'])->toBeTrue()->and($r['ok'])->toBeFalse()->and($r['pending'])->toBe(1)->and($r['rows'])->toBe(0)->and($r['boost'])->toBe(0);
 	if ($scenario === 'output-borrowed') expect($r['borrowed'])->toBeTrue()->and($r['caller'])->toBe('caller pending');
 	if ($scenario === 'output-retry') expect($r['retry'])->toBeTrue()->and($r['retry_rows'])->toBe(2)->and($r['retry_pending'])->toBe(0)->and($r['times_match'])->toBe(2);
-})->with(['output-first-fail','output-second-fail','output-retry','output-truncation','output-borrowed']);
+	if (str_starts_with($scenario, 'output-truncation')) expect($r['emulated'])->toBe($scenario === 'output-truncation');
+})->with(['output-first-fail','output-second-fail','output-retry','output-truncation','output-truncation-native','output-borrowed']);
 
 test('output handoff preserves timestamps, zero values and idempotency', function (string $scenario, int $boost): void {
 	$r = subsystem_failure_run($scenario);
@@ -76,6 +77,16 @@ test('output handoff preserves timestamps, zero values and idempotency', functio
 test('script completion status controls whether the sample is accepted', function (string $scenario, string $value): void {
 	expect(subsystem_failure_run($scenario)['value'])->toBe($value);
 })->with([['script-success','0'],['script-fail','U'],['script-empty','U'],['script-large','42']]);
+
+test('output handoff preserves exact values on the supplied destination connection', function (string $scenario): void {
+	$r = subsystem_failure_run($scenario);
+	$expected = [[7, "o'brien\\界", "label:'temp'\\café 界"], [8, 'zero', '0']];
+	expect($r['queued'])->toBeTrue()->and($r['ok'])->toBeTrue()->and($r['pending'])->toBe(0);
+	expect($r['emulated'])->toBe($scenario === 'output-destination-emulated');
+	foreach (['poller_output', 'poller_output_boost'] as $table) {
+		expect($r[$table])->toBe($expected)->and($r['default_' . $table])->toBe(0);
+	}
+})->with(['output-destination-native', 'output-destination-emulated']);
 
 test('a valid device save still disables the device', function (): void {
 	$r = subsystem_failure_run('device-success');

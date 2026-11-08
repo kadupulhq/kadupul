@@ -116,9 +116,21 @@ function poller_output_deliver(array $batch, $connection = false): bool {
 			if (!db_atomic_execute($db, $sql, $parameters)) {
 				return false;
 			}
-			$warnings = $db->query('SHOW WARNINGS');
-			if ($warnings === false || $warnings->fetch(PDO::FETCH_ASSOC) !== false || !$warnings->closeCursor()) {
-				return false;
+			// MySQL cannot prepare SHOW WARNINGS: PDO's fallback overwrites the
+			// insert diagnostics with error 1295. Use the text protocol here only.
+			$emulated = $db->getAttribute(PDO::ATTR_EMULATE_PREPARES);
+			try {
+				if (!$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, true)) {
+					return false;
+				}
+				$warnings = $db->query('SHOW WARNINGS');
+				if ($warnings === false || $warnings->fetch(PDO::FETCH_ASSOC) !== false || !$warnings->closeCursor()) {
+					return false;
+				}
+			} finally {
+				if (!$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, $emulated)) {
+					throw new RuntimeException('Could not restore database prepare mode.');
+				}
 			}
 		}
 		return true;
