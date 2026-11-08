@@ -18,7 +18,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
     foreach ($all as $name) {
         $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
     }
-    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
+    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$mibs_recorded=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
     $program .= '$rrd_cleanup_failed=' . ($cleanupFailed ? 'true' : 'false') . ';';
     $program .= '$rrd_write_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');

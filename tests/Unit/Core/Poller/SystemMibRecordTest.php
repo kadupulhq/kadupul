@@ -91,3 +91,25 @@ test('the four-hour decision itself writes nothing', function () {
 
 	expect($observed)->toBe(array(true))->and($writes)->toBe(array());
 });
+
+function bad_index_check($mibs) {
+	$GLOBALS['bad_index_checks'][] = $mibs;
+}
+
+test('the bad index check follows a launched MIB run, not an open window', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+	expect($source)->toBeString();
+
+	$start = strpos($source, "\tbad_index_check(\$");
+	expect($start)->not->toBeFalse();
+	$call = substr($source, $start, strpos($source, ';', $start) - $start + 1);
+	$post = eval('namespace ' . __NAMESPACE__ . '; return function ($mibs, $mibs_recorded) {' . $call . '};'); // nosemgrep: php.lang.security.eval-use.eval-use
+
+	/* the first run has the window open but started no collector, as when polling is disabled */
+	$GLOBALS['bad_index_checks'] = array();
+	$post(true, false);
+	$post(true, true);
+	$post(false, false);
+
+	expect($GLOBALS['bad_index_checks'])->toBe(array(false, true, false));
+});

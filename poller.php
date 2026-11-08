@@ -987,7 +987,9 @@ if ($poller_id == 1) {
 	poller_maintenance();
 	rrdcheck_poller_bottom();
 	api_plugin_hook('poller_bottom');
-	bad_index_check($mibs);
+	/* warn about bad indexes with the MIB run it accompanies, not on every
+	 * poll while the window stays open because no collector started */
+	bad_index_check($mibs_recorded);
 	host_status_cache_check();
 	poller_heartbeat_check();
 } else {
