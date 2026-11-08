@@ -1,8 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
--issue: Treat a binary SNMP walk that exits non-zero as failed and return no rows, instead of matching "Timeout" or "(tooBig)" in device values (#1099)
+-issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
@@ -20,6 +21,7 @@ Cacti CHANGELOG
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
+-issue: Treat a binary SNMP walk that exits non-zero as failed and return no rows, instead of matching "Timeout" or "(tooBig)" in device values (#1099)
 -issue: Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200)
 -issue: Retain queued Boost samples when the fallback RRD path query fails, while preserving cleanup for a successfully confirmed missing data source (#738)
 -issue: Treat obsolete colour and data source delete action names as unknown actions instead of calling undefined handlers; bulk deletion remains available (#685)
