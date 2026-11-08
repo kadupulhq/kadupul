@@ -6,11 +6,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226).
+- Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
+- Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
+- Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
@@ -27,6 +29,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
+- Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226).
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 
 - Add opt-in installer runtime comparison and bounded local operational evidence, standalone/collector presets, and a validator for declared human usability observations. Extend release rehearsals with real interrupted finishing tasks, database outages and repaired collector synchronization; retained evidence distinguishes scoped cached-runtime probes from the full pinned release gate (#1293).
