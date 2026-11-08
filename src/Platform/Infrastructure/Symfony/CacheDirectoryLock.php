@@ -156,15 +156,6 @@ final class CacheDirectoryLock
             // own refresh. flock() does not need write access, so an
             // existing file opens read-only.
             $handle = @fopen($path, 'xe');
-            if ($handle !== false && function_exists('posix_geteuid') && posix_geteuid() === 0) {
-                // A root-run upgrade leaves the file usable by the application
-                // user who owns the directory.
-                $directoryStat = stat($directory);
-                if ($directoryStat !== false) {
-                    @chown($path, $directoryStat['uid']);
-                    @chgrp($path, $directoryStat['gid']);
-                }
-            }
             if ($handle === false) {
                 $handle = @fopen($path, 're');
             }
@@ -184,11 +175,10 @@ final class CacheDirectoryLock
     }
 
     /**
-     * Only the owner may create lock files beside the cache: owned by this
-     * process or root (or any owner when root runs), and writable by no one
-     * else. A group-writable
-     * directory is accepted only for the owner's private group, the default
-     * for users created with their own group.
+     * No other user may create or replace lock files beside the cache: the
+     * directory is owned by this process or root (any owner when root runs)
+     * and is not writable by other users. Group members who can write it can
+     * already change the compiled PHP in the cache, so group write is allowed.
      */
     private static function privateDirectory(string $directory): bool
     {
@@ -201,20 +191,11 @@ final class CacheDirectoryLock
             return false;
         }
         if (!function_exists('posix_geteuid')) {
-            return ($stat['mode'] & 0o020) === 0;
-        }
-        // Root may run upgrades in the application user's directory.
-        $euid = posix_geteuid();
-        if ($stat['uid'] !== $euid && $stat['uid'] !== 0 && $euid !== 0) {
-            return false;
-        }
-        if (($stat['mode'] & 0o020) === 0) {
             return true;
         }
-        $owner = posix_getpwuid($stat['uid']);
-        $group = posix_getgrgid($stat['gid']);
+        $euid = posix_geteuid();
 
-        return is_array($owner) && is_array($group) && $group['name'] === $owner['name'] && $group['members'] === [];
+        return $euid === 0 || $stat['uid'] === $euid || $stat['uid'] === 0;
     }
 
     /**
