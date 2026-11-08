@@ -1,8 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
--issue: Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226)
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
+-issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
@@ -14,6 +15,7 @@ Cacti CHANGELOG
 -issue: Keep CSV export bounds on one clock snapshot and trim samples beyond an unaligned requested end, retaining complete rows and empty-window metadata (#1092)
 -issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)
+-issue: Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226)
 -issue: Store explicitly empty or null nullable numeric fields as SQL NULL in sql_save; preserve explicit zero, omitted fields and non-nullable defaults, leaving existing stored zeros unchanged (#1108)
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)

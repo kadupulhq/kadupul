@@ -24,6 +24,14 @@ function db_fetch_cell_prepared($sql, $params) {
 function db_install_fetch_cell($sql, $params = array(), $log = true) {
     return array('status' => 3, 'data' => db_fetch_cell_prepared($sql, $params));
 }
+function db_install_fetch_row($sql, $params = array(), $log = true) {
+    $statement = $GLOBALS['durable_queue_pdo']->prepare($sql);
+    $statement->execute($params);
+    return array('status' => 3, 'data' => $statement->fetch(\PDO::FETCH_ASSOC));
+}
+function db_install_add_cache($status, $sql, $params = null) {
+    $GLOBALS['durable_queue_install_errors'][] = $sql;
+}
 $root = dirname(__DIR__, 2);
 foreach (array('/install/upgrades/1_2_32.php' => 'upgrade_to_1_2_32', '/lib/rrd_maintenance.php' => 'rrd_maintenance_queue_configuration_error') as $path => $name) {
     eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source(file_get_contents($root . $path), $name)); // nosemgrep: php.lang.security.eval-use.eval-use

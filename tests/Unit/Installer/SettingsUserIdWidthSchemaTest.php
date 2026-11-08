@@ -57,3 +57,31 @@ test('the schema audit baseline records settings_user.user_id as cacti.sql defin
 	expect($audit)->toContain("INSERT INTO `table_columns` VALUES ('settings_user',1,'user_id','mediumint(8) unsigned','NO','PRI','0','');")
 		->and($audit)->toContain("INSERT INTO `table_columns` VALUES ('user_auth',1,'id','mediumint(8) unsigned',");
 });
+
+test('cacti.sql makes each account and group id column as wide as the id it holds (#927)', function () {
+	$user = settings_user_schema_integer_type(settings_user_schema_column('user_auth', 'id'));
+	$group = settings_user_schema_integer_type(settings_user_schema_column('user_auth_group', 'id'));
+
+	expect($group)->toBe('int(10) unsigned')
+		->and(settings_user_schema_integer_type(settings_user_schema_column('user_log', 'user_id')))->toBe($user)
+		->and(settings_user_schema_integer_type(settings_user_schema_column('user_auth_row_cache', 'user_id')))->toBe($user)
+		->and(settings_user_schema_integer_type(settings_user_schema_column('settings_user_group', 'group_id')))->toBe($group);
+});
+
+test('the 1.2.32 upgrade widens each account and group id column to its cacti.sql definition (#927)', function () {
+	$upgrade = file_get_contents(dirname(__DIR__, 3) . '/install/upgrades/1_2_32.php');
+
+	foreach (array('user_log' => 'user_id', 'user_auth_row_cache' => 'user_id', 'settings_user_group' => 'group_id') as $table => $column) {
+		expect(preg_match("/array\\('" . $table . "',\\s+'" . $column . "',\\s+'[a-z]+',\\s+\"([^\"]+)\"\\)/", $upgrade, $definition))->toBe(1)
+			->and(strtolower($definition[1]))->toBe(strtolower(settings_user_schema_column($table, $column)));
+	}
+});
+
+test('the schema audit baseline records the account and group id columns as cacti.sql defines them (#927)', function () {
+	$audit = file_get_contents(dirname(__DIR__, 3) . '/docs/audit_schema.sql');
+
+	expect($audit)->toContain("INSERT INTO `table_columns` VALUES ('user_log',2,'user_id','mediumint(8) unsigned','NO','PRI','0','');")
+		->and($audit)->toContain("INSERT INTO `table_columns` VALUES ('user_auth_row_cache',1,'user_id','mediumint(8) unsigned','NO','PRI','0','');")
+		->and($audit)->toContain("INSERT INTO `table_columns` VALUES ('settings_user_group',1,'group_id','int(10) unsigned','NO','PRI','0','');")
+		->and($audit)->toContain("INSERT INTO `table_columns` VALUES ('user_auth_group',1,'id','int(10) unsigned',");
+});
