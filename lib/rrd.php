@@ -895,11 +895,59 @@ function rrd_resolve_missing_path($path, $windows)
 }
 
 /**
+ * The directories config.php names in $config['rrd_additional_paths'], where
+ * data source RRDfiles may live besides the RRA directory. Only absolute
+ * paths are kept. The list is read from config.php alone, not the settings
+ * table, so it cannot be widened from the web interface.
+ *
+ * @return list<string>
+ */
+function rrd_additional_roots()
+{
+    // Read, not declared global, so the global statement count in this file does not rise.
+    $configured = $GLOBALS['config']['rrd_additional_paths'] ?? array();
+    if (!is_array($configured)) {
+        return array();
+    }
+
+    $roots = array();
+    foreach ($configured as $root) {
+        if (is_string($root) && (str_starts_with($root, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $root) === 1)) {
+            $roots[] = $root;
+        }
+    }
+
+    return $roots;
+}
+
+/**
+ * Whether a local RRD path resolves inside one of rrd_additional_roots(),
+ * by the same rules rrd_path_is_contained() applies to the RRA directory. A
+ * root that resolves to the filesystem root contains nothing.
+ *
+ * @param mixed $path Expanded RRD file path.
+ *
+ * @return bool
+ */
+function rrd_path_in_additional_root($path)
+{
+    foreach (rrd_additional_roots() as $root) {
+        if (rrd_path_is_contained($path, $root)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Check a data source RRD path before it reaches RRDtool or the filesystem.
  * Every code path that takes a path from data_source_path, the poller cache or
  * a caller-supplied file list calls this first. With the RRDtool proxy the
  * proxy resolves paths under its own root, so only the text of the path is
- * checked and a path relative to that root stays valid.
+ * checked and a path relative to that root stays valid. Local paths are also
+ * accepted inside a directory listed in $config['rrd_additional_paths'],
+ * unless the caller names its own $rra_base.
  *
  * @param mixed       $path     Expanded RRD file path.
  * @param string|null $rra_base RRA directory; defaults to the rra_path setting.
@@ -911,13 +959,71 @@ function rrd_check_path($path, $rra_base = null, $logopt = null)
 {
     // Read, not declared global, so the global statement count in this file does not rise.
 
-    $allowed = rrd_path_is_contained($path, $rra_base ?? (string) ($GLOBALS['config']['rra_path'] ?? ''), rrdtool_uses_proxy());
+    $proxy   = rrdtool_uses_proxy();
+    $allowed = rrd_path_is_contained($path, $rra_base ?? (string) ($GLOBALS['config']['rra_path'] ?? ''), $proxy)
+        || ($rra_base === null && !$proxy && rrd_path_in_additional_root($path));
 
     if (!$allowed && $logopt !== null) {
         cacti_log('ERROR: RRD path is outside the RRA directory or cannot be used, and was not accessed: ' . (is_string($path) ? $path : gettype($path)), false, $logopt);
     }
 
     return $allowed;
+}
+
+/**
+ * List the Data Sources whose stored RRD path rrd_check_path() refuses, so an
+ * upgrade can report RRDfiles that will no longer be created or updated. The
+ * stored path is expanded as get_data_source_path() expands it, without
+ * saving anything. An empty stored path is skipped, since the poller then
+ * generates one inside the RRA directory. Rows are read in batches.
+ *
+ * @param int $limit Most Data Sources to return; 'total' still counts them all.
+ *
+ * @return array{total: int, items: list<array{local_data_id: int, path: string}>}|false
+ *         False when the database could not be read.
+ */
+function rrd_data_sources_outside_allowed_paths($limit = 25)
+{
+    $rra   = rtrim((string) ($GLOBALS['config']['rra_path'] ?? ''), '/\\');
+    $total = 0;
+    $items = array();
+    $last  = 0;
+
+    do {
+        // db_fetch_assoc_prepared() returns an empty list on failure too.
+        $GLOBALS['database_last_error'] = '';
+
+        $rows = db_fetch_assoc_prepared(
+            "SELECT local_data_id, data_source_path
+			FROM data_template_data
+			WHERE local_data_id > ?
+			AND data_source_path != ''
+			ORDER BY local_data_id
+			LIMIT 1000",
+            array($last)
+        );
+
+        if (!is_array($rows) || db_error() != '') {
+            return false;
+        }
+
+        foreach ($rows as $row) {
+            $last   = (int) $row['local_data_id'];
+            $stored = (string) $row['data_source_path'];
+            $path   = str_contains($stored, '/') ? $stored : '<path_rra>/' . $stored;
+            $path   = str_replace('<path_rra>/', $rra . '/', $path);
+
+            if (!rrd_check_path($path)) {
+                $total++;
+
+                if (count($items) < $limit) {
+                    $items[] = array('local_data_id' => $last, 'path' => $stored);
+                }
+            }
+        }
+    } while (count($rows) === 1000);
+
+    return array('total' => $total, 'items' => $items);
 }
 
 /**

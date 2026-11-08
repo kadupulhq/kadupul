@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-01 10:54-0800\n"
+"POT-Creation-Date: 2026-11-07 22:29-0800\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -399,7 +399,7 @@ msgstr "Overeenkomende grafieken"
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
-#: data_sources.php:1789 data_templates.php:1101 graph_templates.php:726
+#: data_sources.php:1790 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2139 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
@@ -417,7 +417,7 @@ msgid "Search"
 msgstr "Zoeken"
 
 #: aggregate_graphs.php:1291 aggregate_graphs.php:1327
-#: aggregate_graphs.php:1590 data_sources.php:1979 data_sources.php:2118
+#: aggregate_graphs.php:1590 data_sources.php:1980 data_sources.php:2119
 #: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2156
 #: graphs.php:2348 include/global_arrays.php:1000
 #: include/global_arrays.php:1236 include/global_arrays.php:2022
@@ -433,7 +433,7 @@ msgstr "Grafieken"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1383 data_sources.php:1799 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1800 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2160
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -455,7 +455,7 @@ msgstr "Onderdeel van aggregatie"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1739 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1740 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -470,7 +470,7 @@ msgstr "Ga"
 
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1739 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1740 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -486,7 +486,7 @@ msgstr "Stel in/vernieuw filters"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1399 data_sources.php:1740 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1741 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2131
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -501,7 +501,7 @@ msgid "Clear"
 msgstr "Herstel"
 
 #: aggregate_graphs.php:1307 aggregate_graphs.php:1600 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1740
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1741
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2131 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -520,7 +520,7 @@ msgstr "Grafiektitel"
 
 #: aggregate_graphs.php:1333 aggregate_graphs.php:1666
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1484 data_sources.php:1973
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1974
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2364
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2327 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -540,8 +540,8 @@ msgid "Size"
 msgstr "Grootte"
 
 #: aggregate_graphs.php:1351 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2060
-#: data_sources.php:2061 data_templates.php:1321 graph_templates.php:920
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2061
+#: data_sources.php:2062 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1439 tree.php:2420
 #: tree.php:2421 user_admin.php:2269 user_domains.php:757
@@ -549,7 +549,15 @@ msgstr "Grootte"
 msgid "No"
 msgstr "Nee"
 
-#: aggregate_graphs.php:1351 aggregate_templates.php:724 automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786 data_debug.php:791 data_queries.php:1536 data_sources.php:2060 data_sources.php:2061 data_templates.php:1321 graph_templates.php:920 host_templates.php:997 include/global_settings.php:1942 include/global_settings.php:968 lib/api_automation.php:1439 lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4054 tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753 user_domains.php:757 user_group_admin.php:2088
+#: aggregate_graphs.php:1351 aggregate_templates.php:724
+#: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2061
+#: data_sources.php:2062 data_templates.php:1321 graph_templates.php:920
+#: host_templates.php:997 include/global_settings.php:968
+#: include/global_settings.php:1942 lib/api_automation.php:1439
+#: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4105
+#: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
+#: user_domains.php:757 user_group_admin.php:2088
 msgid "Yes"
 msgstr "Ja"
 
@@ -566,7 +574,7 @@ msgstr "[ Aangepaste grafieklijst toegepast - Filter VAN lijst ]"
 msgid "Aggregate Graphs"
 msgstr "Geaggregeerde grafieken"
 
-#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1708
+#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1709
 #: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2902
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
@@ -579,7 +587,7 @@ msgstr "Template"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
-#: data_debug.php:1114 data_sources.php:1712 graph_templates_items.php:447
+#: data_debug.php:1114 data_sources.php:1713 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3993 lib/auth.php:4042
@@ -597,7 +605,7 @@ msgstr "Alle"
 #: automation_graph_rules.php:972 automation_graph_rules.php:973
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:621 data_sources.php:1098
-#: data_sources.php:1713 data_sources.php:2034 data_templates.php:1323
+#: data_sources.php:1714 data_sources.php:2035 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:976 graphs.php:1621 graphs.php:1630
 #: graphs.php:2097 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:530 include/global_arrays.php:588
@@ -683,7 +691,9 @@ msgstr "Aggregeer template [nieuw]"
 msgid "Aggregate Templates"
 msgstr "Aggregeer template"
 
-#: aggregate_templates.php:612 include/global_arrays.php:1009 include/global_arrays.php:1073 lib/installer.php:2802 user_admin.php:2365 user_group_admin.php:2164
+#: aggregate_templates.php:612 include/global_arrays.php:1009
+#: include/global_arrays.php:1073 lib/installer.php:2853 user_admin.php:2365
+#: user_group_admin.php:2164
 msgid "Templates"
 msgstr "Sjablonen"
 
@@ -699,7 +709,7 @@ msgstr "Templatetitel"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "Geaggregeerde templates die in gebruik zijn kunnen niet worden verwijderd. In gebruik betekent dat ze zijn gekoppeld aan een aggregaat."
 
-#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1991
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1992
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 msgid "Deletable"
 msgstr "Verwijderbaar"
@@ -1104,7 +1114,12 @@ msgstr "Locatie"
 msgid "Contact"
 msgstr "Contactgegevens"
 
-#: automation_devices.php:276 include/global_form.php:1133 include/global_form.php:1169 include/global_form.php:1363 include/global_form.php:1739 lib/api_automation.php:1196 lib/api_automation.php:278 lib/installer.php:2108 lib/installer.php:2803 managers.php:214 user_admin.php:1073 user_admin.php:924 user_group_admin.php:1095 user_group_admin.php:2076
+#: automation_devices.php:276 include/global_form.php:1133
+#: include/global_form.php:1169 include/global_form.php:1363
+#: include/global_form.php:1739 lib/api_automation.php:278
+#: lib/api_automation.php:1196 lib/installer.php:2108 lib/installer.php:2854
+#: managers.php:214 user_admin.php:924 user_admin.php:1073
+#: user_group_admin.php:1095 user_group_admin.php:2076
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -1121,7 +1136,17 @@ msgstr "Uptime"
 msgid "SNMP"
 msgstr "SNMP"
 
-#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:587 package_import.php:672 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
+#: automation_devices.php:280 automation_devices.php:524
+#: automation_graph_rules.php:835 automation_networks.php:1075
+#: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
+#: data_sources.php:1769 data_templates.php:1289 lib/api_automation.php:52
+#: lib/api_automation.php:53 lib/api_automation.php:280
+#: lib/api_automation.php:573 lib/api_automation.php:1199
+#: lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216
+#: package_import.php:587 package_import.php:672 plugins.php:497
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
+#: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
+#: utilities.php:2141
 msgid "Status"
 msgstr "Status"
 
@@ -1305,7 +1330,7 @@ msgstr "Data query"
 #: automation_graph_rules.php:840 automation_graph_rules.php:965
 #: automation_graph_rules.php:981 automation_networks.php:535
 #: automation_tree_rules.php:854 automation_tree_rules.php:974
-#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1773
+#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1774
 #: include/global_arrays.php:924 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1320,7 +1345,7 @@ msgstr "Ingeschakeld"
 
 #: automation_graph_rules.php:841 automation_graph_rules.php:981
 #: automation_networks.php:1090 automation_tree_rules.php:855
-#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1774
+#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1775
 #: data_templates.php:1325 include/global_arrays.php:923
 #: include/global_arrays.php:1583 include/global_arrays.php:1875
 #: include/global_settings.php:437 include/global_settings.php:453
@@ -1467,7 +1492,20 @@ msgstr "Zoek netwerk binnen bereik [nieuw]"
 msgid "General Settings"
 msgstr "Algemene Instellingen"
 
-#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:1211 data_queries.php:817 data_queries.php:924 graph_templates.php:499 include/global_form.php:1085 include/global_form.php:1125 include/global_form.php:1327 include/global_form.php:1355 include/global_form.php:1428 include/global_form.php:1456 include/global_form.php:201 include/global_form.php:2101 include/global_form.php:2199 include/global_form.php:2244 include/global_form.php:267 include/global_form.php:324 include/global_form.php:344 include/global_form.php:385 include/global_form.php:515 include/global_form.php:552 include/global_form.php:659 lib/installer.php:2108 lib/installer.php:2181 lib/installer.php:2211 lib/installer.php:2803 lib/installer.php:2891 lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924 user_domains.php:310 utilities.php:3206 utilities.php:864
+#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
+#: include/global_form.php:201 include/global_form.php:267
+#: include/global_form.php:324 include/global_form.php:344
+#: include/global_form.php:385 include/global_form.php:515
+#: include/global_form.php:552 include/global_form.php:659
+#: include/global_form.php:1085 include/global_form.php:1125
+#: include/global_form.php:1327 include/global_form.php:1355
+#: include/global_form.php:1428 include/global_form.php:1456
+#: include/global_form.php:2101 include/global_form.php:2199
+#: include/global_form.php:2244 lib/installer.php:2108 lib/installer.php:2181
+#: lib/installer.php:2211 lib/installer.php:2854 lib/installer.php:2942
+#: lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924
+#: user_domains.php:310 utilities.php:864 utilities.php:3206
 msgid "Name"
 msgstr "Naam"
 
@@ -1574,7 +1612,7 @@ msgstr "%d Minuut"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1532 include/global_arrays.php:718
+#: data_sources.php:1533 include/global_arrays.php:718
 #: include/global_arrays.php:719 include/global_arrays.php:720
 #: include/global_arrays.php:721 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:761
@@ -2021,7 +2059,7 @@ msgstr "Vernieuwen"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1528 include/global_arrays.php:716
+#: data_sources.php:1529 include/global_arrays.php:716
 #: include/global_arrays.php:752 include/global_arrays.php:753
 #: include/global_arrays.php:754 include/global_arrays.php:755
 #: include/global_arrays.php:756 include/global_arrays.php:757
@@ -2310,7 +2348,8 @@ msgstr "Criteria voor het aanmaken van een menuitem"
 msgid "Change Leaf Type"
 msgstr "Verander Bladtype"
 
-#: automation_tree_rules.php:738 lib/installer.php:4279 utilities.php:2752 utilities.php:2753 utilities.php:2756 utilities.php:2757
+#: automation_tree_rules.php:738 lib/installer.php:4330 utilities.php:2752
+#: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "WAARSCHUWING:"
 
@@ -2576,7 +2615,8 @@ msgstr "De interne ID van de gegevensbron."
 msgid "The Status of the Data Source Debug Check."
 msgstr "De status van de Data Source Debug Check."
 
-#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594 package_import.php:641
+#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594
+#: package_import.php:641
 msgid "Writable"
 msgstr "Schrijfbaar"
 
@@ -2592,7 +2632,7 @@ msgstr "Bestaan"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "Bepaalt of de gegevensbron zich in de Poller Cache bevindt."
 
-#: data_debug.php:541 data_sources.php:1997 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:1998 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 msgid "Active"
 msgstr "Actief"
@@ -2633,8 +2673,8 @@ msgstr "Edities"
 msgid "Summary of issues found for the Data Source."
 msgstr "Eventuele samenvattende problemen die voor de gegevensbron zijn gevonden."
 
-#: data_debug.php:646 data_debug.php:1220 data_sources.php:1795
-#: data_sources.php:1957 include/global_arrays.php:1001
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1796
+#: data_sources.php:1958 include/global_arrays.php:1001
 #: include/global_arrays.php:1047 include/global_arrays.php:2318
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
@@ -2749,7 +2789,7 @@ msgstr "Herhaling van de analyse"
 msgid "Check"
 msgstr "Controleer"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4495
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4601
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "Waarde"
@@ -2805,7 +2845,8 @@ msgstr "Niet van toepassing"
 msgid "Failed"
 msgstr "Mislukt"
 
-#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073 lib/installer.php:2134
+#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073
+#: lib/installer.php:2134
 msgid "Passed"
 msgstr "Geslaagd"
 
@@ -2838,13 +2879,13 @@ msgstr "Voer alles uit"
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr "Voer controles uit op momenteel gefilterde gegevensbronnen en bewaar andere resultaten"
 
-#: data_debug.php:1150 data_sources.php:1748 data_templates.php:1107
+#: data_debug.php:1150 data_sources.php:1749 data_templates.php:1107
 #: lib/html.php:2914
 msgid "Profile"
 msgstr "Profiel"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
-#: data_sources.php:1752 data_sources.php:1772 data_templates.php:1111
+#: data_sources.php:1753 data_sources.php:1773 data_templates.php:1111
 #: graphs.php:2149 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
@@ -3431,100 +3472,100 @@ msgstr "Data bron debug"
 msgid "RRDtool Tune Info"
 msgstr "RRDtool tune info"
 
-#: data_sources.php:1526 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1527 data_templates.php:1324 include/global_form.php:582
 msgid "External"
 msgstr "Extern"
 
-#: data_sources.php:1530 include/global_arrays.php:717
+#: data_sources.php:1531 include/global_arrays.php:717
 #: include/global_arrays.php:1214 include/global_arrays.php:1589
 #: include/global_arrays.php:1625 include/global_arrays.php:1643
 #: include/global_settings.php:1713 include/global_settings.php:2688
 msgid "1 Minute"
 msgstr "1 Minuut"
 
-#: data_sources.php:1689
+#: data_sources.php:1690
 msgid "Data Sources [ All Devices ]"
 msgstr "Data bron [geen apparaat]"
 
-#: data_sources.php:1691
+#: data_sources.php:1692
 msgid "Data Sources [ Non Device Based ]"
 msgstr "Data bron [geen apparaat]"
 
-#: data_sources.php:1694
+#: data_sources.php:1695
 #, php-format
 msgid "Data Sources [ %s ]"
 msgstr "Data bronnen [%s]"
 
-#: data_sources.php:1775
+#: data_sources.php:1776
 msgid "Bad Indexes"
 msgstr "Index"
 
-#: data_sources.php:1781 graphs.php:2125
+#: data_sources.php:1782 graphs.php:2125
 msgid "Note that this query may take some time to run."
 msgstr "Houd er rekening mee dat het enige tijd kan duren voordat deze query wordt uitgevoerd."
 
-#: data_sources.php:1781 graphs.php:2125
+#: data_sources.php:1782 graphs.php:2125
 msgid "Orphaned"
 msgstr "Overerfd"
 
-#: data_sources.php:1967 utilities.php:2282
+#: data_sources.php:1968 utilities.php:2282
 msgid "Data Source Name"
 msgstr "Data bron naam"
 
-#: data_sources.php:1970
+#: data_sources.php:1971
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "De naam van deze data bron. Over het algemeen programmatisch gegenereerd op basis van de data template definitie."
 
-#: data_sources.php:1976
+#: data_sources.php:1977
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "De interne database ID voor deze data bron. Handig voor automatisering of debugging."
 
-#: data_sources.php:1982
+#: data_sources.php:1983
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "Het aantal grafiektemplates dat deze data query gebruikt."
 
-#: data_sources.php:1985 include/global_settings.php:1248
+#: data_sources.php:1986 include/global_settings.php:1248
 msgid "Poller Interval"
 msgstr "Poller interval"
 
-#: data_sources.php:1988
+#: data_sources.php:1989
 msgid "The frequency that data is collected for this Data Source."
 msgstr "De frequentie voor het verzamelen van data voor deze data bron."
 
-#: data_sources.php:1994
+#: data_sources.php:1995
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "Als deze data bron niet langer gebruikt wordt in grafieken, dan kan deze worden verwijderd."
 
-#: data_sources.php:2000
+#: data_sources.php:2001
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "Moet er wel of niet data verzameld worden voor deze data bron. Dit wordt aangestuurd op data template niveau."
 
-#: data_sources.php:2003 package_import.php:669 templates_import.php:243
+#: data_sources.php:2004 package_import.php:669 templates_import.php:243
 #: user_admin.php:1212 user_group_admin.php:1231
 msgid "Template Name"
 msgstr "Templatenaam"
 
-#: data_sources.php:2006
+#: data_sources.php:2007
 msgid "The Data Template that this Data Source was based upon."
 msgstr "De data template waarop deze data bron was gebaseerd."
 
-#: data_sources.php:2047
+#: data_sources.php:2048
 msgid "Damaged Data Source Name"
 msgstr "Data bron naam"
 
-#: data_sources.php:2067
+#: data_sources.php:2068
 msgid "No Data Sources Found"
 msgstr "Geen data bron gevonden"
 
-#: data_sources.php:2120
+#: data_sources.php:2121
 msgid "No Graphs"
 msgstr "Grafieken"
 
-#: data_sources.php:2124 include/global_arrays.php:1002
+#: data_sources.php:2125 include/global_arrays.php:1002
 msgid "Aggregates"
 msgstr "Geaggregeerde"
 
-#: data_sources.php:2126
+#: data_sources.php:2127
 msgid "No Aggregates"
 msgstr "Geaggregeerde"
 
@@ -3742,7 +3783,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool grafiek syntax"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2857
+#: lib/rrd.php:2963
 msgid "The Kadupul Poller has not run yet."
 msgstr "De Kadupul Poller heeft nog niet gelopen."
 
@@ -4443,7 +4484,9 @@ msgstr "Grafiektemplate gebaseerd"
 msgid "Save Filters"
 msgstr "Filters opslaan"
 
-#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4537 utilities.php:1838 utilities.php:866
+#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
+#: lib/html_filter.php:55 lib/installer.php:2942 lib/rrd.php:4643
+#: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Rijen"
 
@@ -5578,7 +5621,7 @@ msgstr "Natuurlijke sortering"
 msgid "Numeric Ordering"
 msgstr "Numerieke sortering"
 
-#: include/global_arrays.php:959 lib/rrd.php:4461
+#: include/global_arrays.php:959 lib/rrd.php:4567
 msgid "Header"
 msgstr "Kolomkop"
 
@@ -7216,7 +7259,7 @@ msgstr "Heartbeat"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Hoe lang kunnen gegevens ontbreken voordat RRDtool onbekende gegevens registreert.  Verhoog deze waarde als uw gegevensbron onstabiel is en u oude gegevens wilt overdragen in plaats van hiaten in uw grafieken te tonen.  Deze waarde wordt vermenigvuldigd met de X-Files Factor om de werkelijke hoeveelheid tijd te bepalen."
 
-#: include/global_form.php:226 lib/rrd.php:4540
+#: include/global_form.php:226 lib/rrd.php:4646
 msgid "X-Files Factor"
 msgstr "X-bestanden Factor"
 
@@ -7786,7 +7829,7 @@ msgstr "Opaciteit/Alpha-kanaal"
 msgid "The opacity/alpha channel of the color."
 msgstr "Het opaciteit/alfa kanaal van de kleur."
 
-#: include/global_form.php:989 lib/rrd.php:4536
+#: include/global_form.php:989 lib/rrd.php:4642
 msgid "Consolidation Function"
 msgstr "Kies een of meerdere consolidatie functie(s)"
 
@@ -11426,7 +11469,7 @@ msgstr "Herstellende"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
-#: lib/plugins.php:1412 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
+#: lib/plugins.php:1412 lib/rrd.php:4619 lib/rrd.php:4631 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11434,7 +11477,7 @@ msgstr "Onbekend"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4490
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4596
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "Type"
@@ -13809,7 +13852,7 @@ msgstr "Slechte UTF-8 offset fout!"
 msgid "Down (Thold)"
 msgstr "Download"
 
-#: lib/html_utility.php:1359 lib/installer.php:2149 lib/installer.php:4195
+#: lib/html_utility.php:1359 lib/installer.php:2149 lib/installer.php:4246
 msgid "Error"
 msgstr "Fout"
 
@@ -13953,7 +13996,7 @@ msgstr "Geen instelling van gespecificeerde %sRRDTool versie: %s"
 msgid "Invalid Theme Specified"
 msgstr "Ongeldig Thema Gespecificeerd"
 
-#: lib/installer.php:1009 lib/installer.php:962
+#: lib/installer.php:962 lib/installer.php:1009
 msgid "Unexpected path parameter"
 msgstr "Onverwachte padparameter"
 
@@ -14063,11 +14106,12 @@ msgstr "Test verbinding"
 msgid "Begin"
 msgstr "Start"
 
-#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305 lib/installer.php:2947
+#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305
+#: lib/installer.php:2998
 msgid "Upgrade"
 msgstr "Upgrade"
 
-#: lib/installer.php:1869 lib/installer.php:2951
+#: lib/installer.php:1869 lib/installer.php:3002
 msgid "Downgrade"
 msgstr "Downgrade"
 
@@ -14135,7 +14179,8 @@ msgstr "Pre installatie controle"
 msgid "Location checks"
 msgstr "Locatie controles"
 
-#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247 lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4299
+#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247
+#: lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4350
 msgid "ERROR:"
 msgstr "FOUT:"
 
@@ -14468,553 +14513,591 @@ msgstr "Zodra de installatie het CSRF-pad heeft voltooid, moet het worden ingest
 msgid "All folders are writable"
 msgstr "Alle directories zijn schrijfbaar"
 
-#: lib/installer.php:2656
+#: lib/installer.php:2670
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php:2675
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php:2678
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
+
+#: lib/installer.php:2681
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php:2684
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php:2685
+msgid "Or move the RRDfiles into the RRA directory and clear the Data Source Path so the poller generates it, or run structure_rra_paths.php."
+msgstr ""
+
+#: lib/installer.php:2695
+#, php-format
+msgid "and %d more"
+msgstr ""
+
+#: lib/installer.php:2698
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php:2699
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
+
+#: lib/installer.php:2707
 msgid "Input Validation Whitelist Protection"
 msgstr "Inputvalidatie Whitelist Protection"
 
-#: lib/installer.php:2657
+#: lib/installer.php:2708
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "Kadupul-gegevensinvoermethoden die een script aanroepen, kunnen worden misbruikt op een manier dat een niet-beheerder schade kan toebrengen aan bestanden die eigendom zijn van het poller-account en in gevallen waarin iemand de Kadupul-poller als root uitvoert, het besturingssysteem kan aantasten waardoor aanvallers gebruik uw infrastructuur."
 
-#: lib/installer.php:2658
+#: lib/installer.php:2709
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Daarom is Kadupul verschillende versies geleden verbeterd om Whitelist-mogelijkheden te bieden voor dit soort gegevensinvoermethoden. Hoewel dit Kadupul meer grondig beveiligt, verhoogt het de hoeveelheid werk die de Kadupul-beheerder nodig heeft om sjablonen en pakketten te importeren en te beheren."
 
-#: lib/installer.php:2659
+#: lib/installer.php:2710
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "De manier waarop de witte lijst werkt, is dat wanneer u voor het eerst een gegevensinvoermethode importeert, of u een gegevensinvoermethode opnieuw importeert, en het script en / of de agistrieën op welke manier dan ook veranderen, de gegevensinvoermethode en alle bijbehorende gegevensbronnen onmiddellijk worden uitgeschakeld totdat de beheerder bevestigt dat de gegevensinvoermethode geldig is."
 
-#: lib/installer.php:2660
+#: lib/installer.php:2711
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Om identificerende gegevensinvoermethoden in deze staat te identificeren, hebben we een validatiescript in de CLI-directory van Kadupul geleverd dat kan worden uitgevoerd met de volgende opties:"
 
-#: lib/installer.php:2664
+#: lib/installer.php:2715
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "Deze scriptoptie zoekt naar gegevensinvoermethoden die momenteel zijn verboden en geeft details over waarom."
 
-#: lib/installer.php:2665
+#: lib/installer.php:2716
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "Deze scriptoptie heft de gegevensinvoermethoden op die momenteel zijn verbannen."
 
-#: lib/installer.php:2666
+#: lib/installer.php:2717
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Met deze scriptoptie worden alle uitgeschakelde gegevensbronnen weer ingeschakeld."
 
-#: lib/installer.php:2670
+#: lib/installer.php:2721
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$ input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
 
-#: lib/installer.php:2672
+#: lib/installer.php:2723
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "Vink het selectievakje hieronder aan om te bevestigen dat u deze beveiligingskwestie hebt gelezen en begrepen"
 
-#: lib/installer.php:2674
+#: lib/installer.php:2725
 msgid "I have read this statement"
 msgstr "Ik heb deze verklaring gelezen"
 
-#: lib/installer.php:2691 lib/installer.php:2697
+#: lib/installer.php:2742 lib/installer.php:2748
 msgid "Default Profile"
 msgstr "Standaardprofiel"
 
-#: lib/installer.php:2692
+#: lib/installer.php:2743
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "Selecteer a.u.b. het standaard Data Source Profile dat gebruikt moet worden voor polling bronnen.  Dit is de maximale hoeveelheid tijd tussen scantoestellen voor informatie, dus hoe lager het pollinginterval, hoe meer werk er op de Kadupul Server host wordt geplaatst.  Selecteer ook het beoogde of geconfigureerde Cron-interval dat u wilt gebruiken voor gegevensverzameling."
 
-#: lib/installer.php:2703
+#: lib/installer.php:2754
 msgid "Cron Interval"
 msgstr "Cron interval"
 
-#: lib/installer.php:2724
+#: lib/installer.php:2775
 msgid "Default Automation Network"
 msgstr "Standaard Automatiseringsnetwerk"
 
-#: lib/installer.php:2725
+#: lib/installer.php:2776
 #, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kadupul kunnen het netwerk automatisch scannen zodra de installatie is voltooid. Hierbij wordt gebruik gemaakt van het onderstaande netwerkbereik om het bereik van IP-adressen uit te werken dat gescand kan worden.  Voor het scannen zijn vooraf gedefinieerde opties gedefinieerd, waaronder het gebruik van zowel 'publieke' als 'private' gemeenschappen."
 
-#: lib/installer.php:2726
+#: lib/installer.php:2777
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "Als uw apparaten eerst een andere set opties moeten worden gebruikt, kunt u deze hieronder definiëren en zullen ze worden gebruikt voordat de standaardwaarden worden gebruikt"
 
-#: lib/installer.php:2727
+#: lib/installer.php:2778
 msgid "All options may be adjusted post installation"
 msgstr "Alle opties kunnen na installatie worden aangepast"
 
-#: lib/installer.php:2731
+#: lib/installer.php:2782
 msgid "Default Options"
 msgstr "Standaard opties"
 
-#: lib/installer.php:2735
+#: lib/installer.php:2786
 msgid "Scan Mode"
 msgstr "Scanmodus"
 
-#: lib/installer.php:2740
+#: lib/installer.php:2791
 msgid "Network Range"
 msgstr "Netwerk reeks"
 
-#: lib/installer.php:2746
+#: lib/installer.php:2797
 msgid "Additional Defaults"
 msgstr "Extra standaardinstellingen"
 
-#: lib/installer.php:2767
+#: lib/installer.php:2818
 msgid "Additional SNMP Options"
 msgstr "Extra SNMP-opties"
 
-#: lib/installer.php:2780
+#: lib/installer.php:2831
 msgid "Error Locating Profiles"
 msgstr "Fout bij het lokaliseren van profielen"
 
-#: lib/installer.php:2781
+#: lib/installer.php:2832
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "De installatie kan niet doorgaan omdat er geen profielen gevonden konden worden."
 
-#: lib/installer.php:2782
+#: lib/installer.php:2833
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "Dit kan gebeuren als je een lege database hebt en je het cacti.sql bestand nog niet hebt geïmporteerd."
 
-#: lib/installer.php:2791
+#: lib/installer.php:2842
 msgid "Template Setup"
 msgstr "Template installatie"
 
-#: lib/installer.php:2794
+#: lib/installer.php:2845
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "Selecteer het type sjabloon dat u wilt exporteren vanuit Kadupul."
 
-#: lib/installer.php:2795
+#: lib/installer.php:2846
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "Het is niet raadzaam om sjablonen bij te werken waarin u al wijzigingen hebt aangebracht. De upgrade van de sjablonen verwijdert GEEN wijzigingen aan grafiek- en gegevenssjablonen en kan leiden tot onverwacht gedrag. Als u echter geen wijzigingen hebt aangebracht in een grafiek, gegevensquery of gegevenssjabloon, zou het opnieuw importeren van het pakket geen invloed moeten hebben. In dat geval moet u na de update 'Grafieken synchroniseren' uit de sjablonen."
 
-#: lib/installer.php:2797
+#: lib/installer.php:2848
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Selecteert u alstublieft de apparaat templates die u wilt gebruiken na de installatie. Als uw besturingssysteem Windows is, dan moet u erop letten dat u de 'Windows Device' templates selecteert. Als uw besturingssysteem Linux/UNIX is, let er dan op dat u de 'Local Linux Machine' apparaat template selecteert."
 
-#: lib/installer.php:2803 package_import.php:537 plugins.php:630
+#: lib/installer.php:2854 package_import.php:537 plugins.php:630
 msgid "Author"
 msgstr "Auteur"
 
-#: lib/installer.php:2803 package_import.php:540
+#: lib/installer.php:2854 package_import.php:540
 msgid "Homepage"
 msgstr "Homepage"
 
-#: lib/installer.php:2829
+#: lib/installer.php:2880
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "Apparaat templates geven u de gelegenheid om een vaste selectie van data binnen Kadupul te monitoren. Nadat u de gewenste apparaat templates heeft geselecteerd, drukt u op 'Volgende' om de installatie te voltooien. Heb geduld gedurende dit proces omdat het importeren van de apparaat templates enige minuten in beslag kan nemen."
 
-#: lib/installer.php:2838
+#: lib/installer.php:2889
 msgid "Server Collation"
 msgstr "Server Verzamelen"
 
-#: lib/installer.php:2845
+#: lib/installer.php:2896
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "Uw servercollation blijkt UTF8-compliant te zijn"
 
-#: lib/installer.php:2848
+#: lib/installer.php:2899
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Uw servercollation lijkt NIET volledig compatibel te zijn met UTF8."
 
-#: lib/installer.php:2849
+#: lib/installer.php:2900
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "Onder de sectie [mysqld] kunt u de vermeldingen 'character&#8209;set&#8209;server' en 'collation&#8209;server' vinden en als volgt instellen:"
 
-#: lib/installer.php:2856
+#: lib/installer.php:2907
 msgid "Database Collation"
 msgstr "Databank Verzamelen"
 
-#: lib/installer.php:2861
+#: lib/installer.php:2912
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "De standaardverzameling van uw database lijkt te voldoen aan UTF8."
 
-#: lib/installer.php:2864
+#: lib/installer.php:2915
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "Uw database wordt NIET volledig UTF8-conform weergegeven."
 
-#: lib/installer.php:2865
+#: lib/installer.php:2916
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "Alle tabellen die door plugins zijn gemaakt, kunnen problemen hebben met Kadupul Core tabellen als de vergelijking niet wordt geëvenaard.   Zorg ervoor dat uw database wordt gewijzigd in 'utf8mb4_unicode_ci' door het volgende uit te voeren:"
 
-#: lib/installer.php:2872
+#: lib/installer.php:2923
 msgid "Table Setup"
 msgstr "Tafelinstelling"
 
-#: lib/installer.php:2883
+#: lib/installer.php:2934
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "U heeft meer tabellen dan uw PHP-configuratie ons in staat zal stellen om weer te geven / te converteren. Wijzig de max_input_vars-instelling in php.ini naar een waarde boven%s"
 
-#: lib/installer.php:2886
+#: lib/installer.php:2937
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "Conversie van tabellen kan enige tijd in beslag nemen, vooral bij grotere tabellen.  De conversie van deze tabellen zal op de achtergrond plaatsvinden, maar zal de installateur er niet van weerhouden deze tabellen in te vullen.  Dit kan sommige servers vertragen als er niet genoeg middelen voor MySQL zijn om de conversie te verwerken."
 
-#: lib/installer.php:2890
+#: lib/installer.php:2941
 msgid "Tables"
 msgstr "Tabellen"
 
-#: lib/installer.php:2891 utilities.php:870
+#: lib/installer.php:2942 utilities.php:870
 msgid "Collation"
 msgstr "Collatie"
 
-#: lib/installer.php:2891 utilities.php:865
+#: lib/installer.php:2942 utilities.php:865
 msgid "Engine"
 msgstr "Motor"
 
-#: lib/installer.php:2891 utilities.php:871
+#: lib/installer.php:2942 utilities.php:871
 msgid "Row Format"
 msgstr "Regelindeling"
 
-#: lib/installer.php:2923
+#: lib/installer.php:2974
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "Een of meer tafels zijn te groot om tijdens de installatie om te zetten.  Gebruik het cli/convert_tables.php script om de conversie uit te voeren en vernieuw deze pagina. Bijvoorbeeld:"
 
-#: lib/installer.php:2926
+#: lib/installer.php:2977
 msgid "Run it as an account with the Installation/Upgrades realm and no pending password change, for example with --as=<user>."
 msgstr ""
 
-#: lib/installer.php:2929
+#: lib/installer.php:2980
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "De volgende tabellen moeten worden omgezet naar UTF8 en InnoDB.  Selecteer de tabellen die u tijdens het installatieproces wilt converteren."
 
-#: lib/installer.php:2935
+#: lib/installer.php:2986
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "Al uw tabellen lijken UTF8-conform te zijn"
 
-#: lib/installer.php:2946
+#: lib/installer.php:2997
 msgid "Confirm Upgrade"
 msgstr "Upgrade bevestigen"
 
-#: lib/installer.php:2950
+#: lib/installer.php:3001
 msgid "Confirm Downgrade"
 msgstr "Bevestig Downgrade"
 
-#: lib/installer.php:2954
+#: lib/installer.php:3005
 msgid "Confirm Installation"
 msgstr "Bevestig de installatie"
 
-#: lib/installer.php:2955 plugins.php:23
+#: lib/installer.php:3006 plugins.php:23
 msgid "Install"
 msgstr "Installeer"
 
-#: lib/installer.php:2960
+#: lib/installer.php:3011
 msgid "DOWNGRADE DETECTED"
 msgstr "GECONSTATEERDE VERSLECHTERING"
 
-#: lib/installer.php:2961
+#: lib/installer.php:3012
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "U MOET HANDELIJKE HANDELIJKE WIJZIGING VAN DE Kadupul-DATABASE VOOR EEN UPGHANDELIJKE WIJZIGING VAN EEN UPGRADE WIJZIGE WIJZIGINGEN DIE HEBBEN MADE.<br/>THE INSTALLER HEEFT GEEN BEREIK om deze AUTOMATISCHE WIJZIGINGEN VOOR U te DOEN"
 
-#: lib/installer.php:2962
+#: lib/installer.php:3013
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "Downgraden mag alleen worden uitgevoerd wanneer dit absoluut noodzakelijk is en dit kan uw installatie breken."
 
-#: lib/installer.php:2965
+#: lib/installer.php:3016
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "Uw Kadupul Server is bijna klaar.  Controleer of u graag verder wilt gaan."
 
-#: lib/installer.php:2968
+#: lib/installer.php:3019
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "Druk op '%s' en klik vervolgens op '%s' om het installatieproces te voltooien na het selecteren van uw Device Templates."
 
-#: lib/installer.php:2985
+#: lib/installer.php:3036
 #, fuzzy, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "Kadupul installeren v%s"
 
-#: lib/installer.php:2986
+#: lib/installer.php:3037
 msgid "Your Kadupul Server is now installing"
 msgstr "Uw Kadupul Server is nu aan het installeren"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3124
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "Achtergrondproces paaien:%s%s"
 
-#: lib/installer.php:3100
+#: lib/installer.php:3151
 msgid "Complete"
 msgstr "Voltooid"
 
-#: lib/installer.php:3101
+#: lib/installer.php:3152
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "Uw Kadupul Server v%s is geïnstalleerd/geüpdatet.  U kunt nu beginnen met het gebruik van de software."
 
-#: lib/installer.php:3105
+#: lib/installer.php:3156
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "Uw Kadupul Server v%s is geïnstalleerd / bijgewerkt met fouten"
 
-#: lib/installer.php:3219
+#: lib/installer.php:3270
 msgid "Get Help"
 msgstr "Hulp vragen"
 
-#: lib/installer.php:3224
+#: lib/installer.php:3275
 msgid "Report Issue"
 msgstr "Probleem melden"
 
-#: lib/installer.php:3227
+#: lib/installer.php:3278
 msgid "Get Started"
 msgstr "Begin"
 
-#: lib/installer.php:3311
+#: lib/installer.php:3362
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "%s proces starten voor v%s"
 
-#: lib/installer.php:3360
+#: lib/installer.php:3411
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3379
+#: lib/installer.php:3430
 msgid "The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/installer.php:3390
+#: lib/installer.php:3441
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
 msgstr ""
 
-#: lib/installer.php:3402
+#: lib/installer.php:3453
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Voltooid%s-proces voor v%s"
 
-#: lib/installer.php:3433
+#: lib/installer.php:3484
 msgid "The installer CLI interpreter is unavailable for refreshing the Symfony production cache."
 msgstr ""
 
-#: lib/installer.php:3436
+#: lib/installer.php:3487
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
 msgstr ""
 
-#: lib/installer.php:3504
+#: lib/installer.php:3555
 #, php-format
 msgid "Found %s templates to install"
 msgstr "%s sjablonen gevonden om te installeren"
 
-#: lib/installer.php:3514
+#: lib/installer.php:3565
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Staat op het punt Pakket #%s '%s' te importeren."
 
-#: lib/installer.php:3523
+#: lib/installer.php:3574
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Importeren van pakket #%s '%s' onder Profiel '%s' is gelukt"
 
-#: lib/installer.php:3529
+#: lib/installer.php:3580
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Importeren van pakket #%s '%s' onder Profiel '%s' is mislukt"
 
-#: lib/installer.php:3546
+#: lib/installer.php:3597
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Toewijzingsautomatiseringssjabloon voor apparaatsjabloon '%s'"
 
-#: lib/installer.php:3567
+#: lib/installer.php:3618
 msgid "No templates were selected for import"
 msgstr "Er zijn geen sjablonen geselecteerd om te importeren"
 
-#: lib/installer.php:3577
+#: lib/installer.php:3628
 msgid "Updating remote configuration file"
 msgstr "In afwachting van configuratie"
 
-#: lib/installer.php:3612
+#: lib/installer.php:3663
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Standaardgegevensbronprofiel instellen op %s (%s)"
 
-#: lib/installer.php:3640
+#: lib/installer.php:3691
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Kan het geselecteerde profiel niet vinden (%s), er zijn geen wijzigingen aangebracht"
 
-#: lib/installer.php:3649
+#: lib/installer.php:3700
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Automatiseringsnetwerk updaten (%s), modus \"%s\" => \"%s\", subnet \"%s\" =>%s \""
 
-#: lib/installer.php:3659
+#: lib/installer.php:3710
 msgid "Failed to find automation network, no changes were made"
 msgstr "Kan het automatiseringsnetwerk niet vinden, er zijn geen wijzigingen aangebracht"
 
-#: lib/installer.php:3663
+#: lib/installer.php:3714
 msgid "Adding extra snmp settings for automation"
 msgstr "Extra snmp-instellingen toevoegen voor automatisering"
 
-#: lib/installer.php:3669
+#: lib/installer.php:3720
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Selecteer Automatiseringsoptie Set %s"
 
-#: lib/installer.php:3682
+#: lib/installer.php:3733
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Optieset voor automatisering bijwerken %s"
 
-#: lib/installer.php:3685
+#: lib/installer.php:3736
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Automation Option Set%s is bijgewerkt"
 
-#: lib/installer.php:3687
+#: lib/installer.php:3738
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Optie Automatisering opnieuw uit te voeren %s"
 
-#: lib/installer.php:3695
+#: lib/installer.php:3746
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Bijwerken automatiseringsoptieset %s mislukt"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3749
 msgid "Failed to find any automation option set"
 msgstr "Geen gegevens gevonden om te kopiëren!"
 
-#: lib/installer.php:3728
+#: lib/installer.php:3779
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Apparaattemplate [wijzig: %s]"
 
-#: lib/installer.php:3758
+#: lib/installer.php:3809
 msgid "Creating Graphs for Default Device"
 msgstr "Maak grafieken voor dit apparaat"
 
-#: lib/installer.php:3765
+#: lib/installer.php:3816
 msgid "Adding Device to Default Tree"
 msgstr "Apparaat standaardinstellingen"
 
-#: lib/installer.php:3773
+#: lib/installer.php:3824
 msgid "No templated graphs for Default Device were found"
 msgstr "Er zijn geen sjabloongrafieken voor het standaardapparaat gevonden"
 
-#: lib/installer.php:3777
+#: lib/installer.php:3828
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "WAARSCHUWING: apparaatsjabloon voor uw besturingssysteem niet gevonden. U moet apparaatsjablonen of Kadupul importeren om uw Kadupul te bewaken."
 
-#: lib/installer.php:3784
+#: lib/installer.php:3835
 msgid "Running first-time data query for local host"
 msgstr "Eerste query voor gegevens uitvoeren voor lokale host"
 
-#: lib/installer.php:3792
+#: lib/installer.php:3843
 msgid "Repopulating poller cache"
 msgstr "Poller cache opnieuw opbouwen"
 
-#: lib/installer.php:3797
+#: lib/installer.php:3848
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPAgent cache opnieuw opbouwen"
 
-#: lib/installer.php:3802
+#: lib/installer.php:3853
 msgid "Generating RSA Key Pair"
 msgstr "RSA-sleutelpaar genereren"
 
-#: lib/installer.php:3813
+#: lib/installer.php:3864
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "%s tabellen gevonden om te converteren"
 
-#: lib/installer.php:3820
+#: lib/installer.php:3871
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Tabel #%s '%s' converteren"
 
-#: lib/installer.php:3828
+#: lib/installer.php:3879
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3836
+#: lib/installer.php:3887
 msgid "No tables where found or selected for conversion"
 msgstr "Geen tabellen gevonden of geselecteerd voor conversie"
 
-#: lib/installer.php:3848
+#: lib/installer.php:3899
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Omgeschakeld van%s naar%s"
 
-#: lib/installer.php:3852
+#: lib/installer.php:3903
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "OPMERKING: een tijdelijk bestand gebruiken voor db cache:%s"
 
-#: lib/installer.php:3874
+#: lib/installer.php:3925
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Upgraden van v%s (DB%s) naar v%s"
 
-#: lib/installer.php:3882
+#: lib/installer.php:3933
 #, php-format
 msgid "ERROR: Failed to find upgrade function for v%s"
 msgstr ""
 
-#: lib/installer.php:3891
+#: lib/installer.php:3942
 #, php-format
 msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
 msgstr ""
 
-#: lib/installer.php:3900
+#: lib/installer.php:3951
 #, php-format
 msgid "ERROR: Required upgrade file for v%s was not found."
 msgstr ""
 
-#: lib/installer.php:3952
+#: lib/installer.php:4003
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Installatie afgebroken vanwege geen acceptatie door EULA"
 
-#: lib/installer.php:3976
+#: lib/installer.php:4027
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Achtergrond was al begonnen bij%s, deze poging bij%s werd overgeslagen"
 
-#: lib/installer.php:4000
+#: lib/installer.php:4051
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Uitzondering opgetreden tijdens installatie: #%s - %s"
 
-#: lib/installer.php:4019
+#: lib/installer.php:4070
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "De installatie werd gestart in %s, voltooid in %s"
 
-#: lib/installer.php:4056
+#: lib/installer.php:4107
 msgid "Both"
 msgstr "Beide"
 
-#: lib/installer.php:4056
+#: lib/installer.php:4107
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "RRA [wijzig: %s %s]"
 
-#: lib/installer.php:4061
+#: lib/installer.php:4112
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "N/A"
 
-#: lib/installer.php:4061 lib/installer.php:4063
+#: lib/installer.php:4112 lib/installer.php:4114
 msgid "Web"
 msgstr "Website"
 
-#: lib/installer.php:4063 lib/installer.php:4066
+#: lib/installer.php:4114 lib/installer.php:4117
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "RRA [wijzig: %s %s]"
 
-#: lib/installer.php:4066
+#: lib/installer.php:4117
 msgid "Cli"
 msgstr "Klassiek"
 
-#: lib/installer.php:4072
+#: lib/installer.php:4123
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP-optie%s =%s instellen"
 
-#: lib/installer.php:4078
+#: lib/installer.php:4129
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Kan PHP-optie%s niet instellen, is%s (moet%s zijn)"
 
-#: lib/installer.php:4115
+#: lib/installer.php:4166
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Dataverzamelaar(s) niet gevonden bij een poging tot synchronisatie"
 
@@ -15201,7 +15284,7 @@ msgstr "De plug-in in de map '%s' bevat geen versiefunctie '%s()'.  Deze functie
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "De plug-in in de map '%s' bevat geen installatiefunctie '%s()'.  Deze functie moet bestaan om de plug-in te kunnen installeren."
 
-#: lib/plugins.php:1328
+#: lib/plugins.php:1310
 msgid "Legacy Plugin"
 msgstr "Oude plugin(s)"
 
@@ -15297,198 +15380,198 @@ msgstr "Mislukt Rapportgrafiekitem '<i>%s</i>' Bestaat al"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Overgeslagen Rapport Grafiek Item '<i>%s</i>' Bestaat al"
 
-#: lib/rrd.php:2463
+#: lib/rrd.php:2569
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2466
+#: lib/rrd.php:2572
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2838 lib/rrd.php:2841 lib/rrd.php:4747
+#: lib/rrd.php:2944 lib/rrd.php:2947 lib/rrd.php:4853
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2854
+#: lib/rrd.php:2960
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "FOUT: RRD bestand %s is niet schrijfbaar"
 
-#: lib/rrd.php:4278
+#: lib/rrd.php:4384
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "De vereiste stapgrootte van het RRD-bestand is '%s' , maar de waargenomen stap is '%s'"
 
-#: lib/rrd.php:4314
+#: lib/rrd.php:4420
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Type voor gegevensbron \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4320
+#: lib/rrd.php:4426
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Hartslag voor gegevensbron \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4332
+#: lib/rrd.php:4438
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD minimum voor gegevensbron \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4341
+#: lib/rrd.php:4447
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "DS \"%s\" ontbreekt in de definitie van Kadupul"
 
-#: lib/rrd.php:4355 lib/rrd.php:4356
+#: lib/rrd.php:4461 lib/rrd.php:4462
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 
-#: lib/rrd.php:4369 lib/rrd.php:4370
+#: lib/rrd.php:4475 lib/rrd.php:4476
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Bestand RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 
-#: lib/rrd.php:4402
+#: lib/rrd.php:4508
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "De pdp_per_row van '%s' is ongeldig voor RRA '%s' moet '%s' zijn.  Overweeg om RRD-bestanden te verwijderen en toe te staan dat Kadupul deze opnieuw maken."
 
-#: lib/rrd.php:4406
+#: lib/rrd.php:4512
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF voor Kadupul RRA id \"%s\" moet \"%s\" zijn"
 
-#: lib/rrd.php:4410
+#: lib/rrd.php:4516
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Het aantal rijen voor Kadupul RRA-id '%s' is onjuist.  Het aantal rijen is '%s' maar moet '%s' zijn"
 
-#: lib/rrd.php:4427
+#: lib/rrd.php:4533
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA '%s' ontbreekt in het RRD bestand"
 
-#: lib/rrd.php:4435
+#: lib/rrd.php:4541
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA '%s' ontbreekt in de Kadupul definitie"
 
-#: lib/rrd.php:4457
+#: lib/rrd.php:4563
 msgid "RRD File Information"
 msgstr "RRD bestandsinformatie"
 
-#: lib/rrd.php:4489
+#: lib/rrd.php:4595
 msgid "Data Source Items"
 msgstr "50000 Data bron items (Standaard)"
 
-#: lib/rrd.php:4491
+#: lib/rrd.php:4597
 msgid "Minimal Heartbeat"
 msgstr "Minimale heartbeat"
 
-#: lib/rrd.php:4492
+#: lib/rrd.php:4598
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:4493
+#: lib/rrd.php:4599
 msgid "Max"
 msgstr "Max"
 
-#: lib/rrd.php:4494
+#: lib/rrd.php:4600
 msgid "Last DS"
 msgstr "Laatste DS"
 
-#: lib/rrd.php:4496
+#: lib/rrd.php:4602
 msgid "Unknown Sec"
 msgstr "Onbekend Sec."
 
-#: lib/rrd.php:4535
+#: lib/rrd.php:4641
 msgid "Round Robin Archive"
 msgstr "Ronde Robin Archief"
 
-#: lib/rrd.php:4538
+#: lib/rrd.php:4644
 msgid "Cur Row"
 msgstr "Huidige rij"
 
-#: lib/rrd.php:4539
+#: lib/rrd.php:4645
 msgid "PDP per Row"
 msgstr "PDP per rij"
 
-#: lib/rrd.php:4541
+#: lib/rrd.php:4647
 msgid "CDP Prep Value (0)"
 msgstr "CDP Prep Waarde (0)"
 
-#: lib/rrd.php:4542
+#: lib/rrd.php:4648
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Onbekende gegevenspunten (0)"
 
-#: lib/rrd.php:4627
+#: lib/rrd.php:4733
 msgid "Errors Found"
 msgstr "Geen %s gevonden"
 
-#: lib/rrd.php:4639
+#: lib/rrd.php:4745
 msgid "Optional Tuning Recommendations"
 msgstr "Data bron velden"
 
-#: lib/rrd.php:4666 lib/rrd.php:4669
+#: lib/rrd.php:4772 lib/rrd.php:4775
 #, php-format
 msgid "rename %s to %s"
 msgstr "hernoem %s naar %s"
 
-#: lib/rrd.php:4767
+#: lib/rrd.php:4873
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "FOUT tijdens het schrijven van XML bestand: %s"
 
-#: lib/rrd.php:4773
+#: lib/rrd.php:4879
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4779
+#: lib/rrd.php:4885
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "FOUT: RRD bestand %s is niet schrijfbaar"
 
-#: lib/rrd.php:4800
+#: lib/rrd.php:4906
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Fout tijdens het parsen van de RRDtool dump XML"
 
-#: lib/rrd.php:4836 lib/rrd.php:4855
+#: lib/rrd.php:4942 lib/rrd.php:4961
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Fout tijdens het parsen van de RRDtool dump XML"
 
-#: lib/rrd.php:5073
+#: lib/rrd.php:5179
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, RIJEN=%d, PDP_PER_RIJ=%d, XFF=%1.2f) verwijderd van RRD bestand"
 
-#: lib/rrd.php:5111
+#: lib/rrd.php:5217
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, RIJEN=%d, PDP_PER_RIJ=%d, XFF=%1.2f) toegevoegd aan RRD bestand"
 
-#: lib/rrd.php:5142 lib/rrd.php:5158
+#: lib/rrd.php:5248 lib/rrd.php:5264
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Website heeft geen schrijftoegang tot %s, kan niet in staat zijn om RRDs aan te maken/bij te werken"
 
-#: lib/rrd.php:5154
+#: lib/rrd.php:5260
 msgid "(Custom)"
 msgstr "Aangepast"
 
-#: lib/rrd.php:5160
+#: lib/rrd.php:5266
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Als het bestand niet wordt geopend, is het mogelijk dat de poller nog niet is uitgevoerd."
 
-#: lib/rrd.php:5163
+#: lib/rrd.php:5269
 msgid "RRA Folder"
 msgstr "RRA-map"
 
-#: lib/rrd.php:5163
+#: lib/rrd.php:5269
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:5243
+#: lib/rrd.php:5349
 msgid "Unknown RRDtool Error"
 msgstr "Onbekende RRDtool fout"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-01 10:54-0800\n"
+"POT-Creation-Date: 2026-11-07 22:29-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -439,7 +439,7 @@ msgstr "匹配圖"
 #: automation_graph_rules.php:807 automation_networks.php:1180
 #: automation_networks.php:1224 automation_snmp.php:703
 #: automation_tree_rules.php:843 data_debug.php:1214 data_queries.php:1373
-#: data_sources.php:1789 data_templates.php:1101 graph_templates.php:726
+#: data_sources.php:1790 data_templates.php:1101 graph_templates.php:726
 #: graph_view.php:667 graphs.php:2139 graphs_new.php:526 host_templates.php:795
 #: lib/api_automation.php:42 lib/api_automation.php:43
 #: lib/api_automation.php:480 lib/api_automation.php:708
@@ -458,7 +458,7 @@ msgid "Search"
 msgstr "搜尋"
 
 #: aggregate_graphs.php:1291 aggregate_graphs.php:1327
-#: aggregate_graphs.php:1590 data_sources.php:1979 data_sources.php:2118
+#: aggregate_graphs.php:1590 data_sources.php:1980 data_sources.php:2119
 #: graph_view.php:488 graph_view.php:739 graph_view.php:803 graphs.php:2156
 #: graphs.php:2348 include/global_arrays.php:1000
 #: include/global_arrays.php:1236 include/global_arrays.php:2022
@@ -475,7 +475,7 @@ msgstr "圖表"
 #: aggregate_templates.php:622 automation_devices.php:582
 #: automation_graph_rules.php:849 automation_networks.php:1190
 #: automation_snmp.php:713 automation_tree_rules.php:863 data_debug.php:1224
-#: data_queries.php:1383 data_sources.php:1799 data_templates.php:1130
+#: data_queries.php:1383 data_sources.php:1800 data_templates.php:1130
 #: graph_templates.php:736 graph_view.php:743 graphs.php:2160
 #: graphs_new.php:536 host_templates.php:805 include/global_form.php:242
 #: lib/api_automation.php:182 lib/api_automation.php:490
@@ -499,7 +499,7 @@ msgstr "聚合的一部分"
 #: aggregate_templates.php:643 automation_devices.php:509
 #: automation_graph_rules.php:861 automation_networks.php:1224
 #: automation_snmp.php:728 automation_tree_rules.php:875 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1739 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1740 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/api_automation.php:187
 #: lib/api_automation.php:471 lib/api_automation.php:723
@@ -515,7 +515,7 @@ msgstr "送出"
 
 #: aggregate_graphs.php:1306 aggregate_graphs.php:1599
 #: automation_devices.php:509 automation_snmp.php:728 data_debug.php:1139
-#: data_queries.php:1398 data_sources.php:1739 data_templates.php:1151
+#: data_queries.php:1398 data_sources.php:1740 data_templates.php:1151
 #: graph_templates.php:757 graph_view.php:675 graphs.php:2130
 #: graphs_new.php:515 host_templates.php:786 lib/html_graph.php:178
 #: managers.php:169 managers.php:528 managers.php:793 plugins.php:530
@@ -532,7 +532,7 @@ msgstr "設置/刷新過濾器"
 #: aggregate_templates.php:644 automation_devices.php:510
 #: automation_graph_rules.php:862 automation_networks.php:1225
 #: automation_snmp.php:729 automation_tree_rules.php:876 data_debug.php:1140
-#: data_queries.php:1399 data_sources.php:1740 data_templates.php:1152
+#: data_queries.php:1399 data_sources.php:1741 data_templates.php:1152
 #: graph_templates.php:758 graph_view.php:676 graphs.php:2131
 #: graphs_new.php:516 host_templates.php:787 lib/api_automation.php:188
 #: lib/api_automation.php:472 lib/api_automation.php:724
@@ -548,7 +548,7 @@ msgid "Clear"
 msgstr "清除"
 
 #: aggregate_graphs.php:1307 aggregate_graphs.php:1600 automation_snmp.php:729
-#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1740
+#: data_debug.php:1140 data_queries.php:1399 data_sources.php:1741
 #: data_templates.php:1152 graph_templates.php:758 graph_view.php:676
 #: graphs.php:2131 graphs_new.php:516 host_templates.php:787
 #: lib/html_graph.php:179 lib/html_tree.php:1010 managers.php:170
@@ -569,7 +569,7 @@ msgstr "圖標題"
 
 #: aggregate_graphs.php:1333 aggregate_graphs.php:1666
 #: automation_graph_rules.php:962 automation_tree_rules.php:969
-#: data_debug.php:517 data_queries.php:1484 data_sources.php:1973
+#: data_debug.php:517 data_queries.php:1484 data_sources.php:1974
 #: data_templates.php:1260 graph_templates.php:863 graphs.php:2364
 #: host_templates.php:949 lib/api_automation.php:282 pollers.php:995
 #: tree.php:2327 user_admin.php:809 user_admin.php:924 user_admin.php:1073
@@ -592,8 +592,8 @@ msgid "Size"
 msgstr "尺寸"
 
 #: aggregate_graphs.php:1351 aggregate_templates.php:724
-#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2060
-#: data_sources.php:2061 data_templates.php:1321 graph_templates.php:920
+#: automation_tree_rules.php:721 data_queries.php:1536 data_sources.php:2061
+#: data_sources.php:2062 data_templates.php:1321 graph_templates.php:920
 #: host_templates.php:997 include/global_settings.php:969
 #: include/global_settings.php:1943 lib/api_automation.php:1439 tree.php:2420
 #: tree.php:2421 user_admin.php:2269 user_domains.php:757
@@ -602,7 +602,15 @@ msgstr "尺寸"
 msgid "No"
 msgstr "否"
 
-#: aggregate_graphs.php:1351 aggregate_templates.php:724 automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786 data_debug.php:791 data_queries.php:1536 data_sources.php:2060 data_sources.php:2061 data_templates.php:1321 graph_templates.php:920 host_templates.php:997 include/global_settings.php:1942 include/global_settings.php:968 lib/api_automation.php:1439 lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4054 tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753 user_domains.php:757 user_group_admin.php:2088
+#: aggregate_graphs.php:1351 aggregate_templates.php:724
+#: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2061
+#: data_sources.php:2062 data_templates.php:1321 graph_templates.php:920
+#: host_templates.php:997 include/global_settings.php:968
+#: include/global_settings.php:1942 lib/api_automation.php:1439
+#: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4105
+#: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
+#: user_domains.php:757 user_group_admin.php:2088
 #, fuzzy
 msgid "Yes"
 msgstr "是"
@@ -623,7 +631,7 @@ msgstr " [自定義圖表列表已應用 - 從列表中過濾]"
 msgid "Aggregate Graphs"
 msgstr "聚合圖"
 
-#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1708
+#: aggregate_graphs.php:1565 data_debug.php:1110 data_sources.php:1709
 #: graph_view.php:699 graphs.php:2092 include/global_arrays.php:2902
 #: include/global_settings.php:703 lib/api_automation.php:446
 #: lib/html_graph.php:139 lib/html_tree.php:973 rrdcleaner.php:379
@@ -637,7 +645,7 @@ msgstr "模板"
 #: automation_devices.php:528 automation_devices.php:546
 #: automation_devices.php:564 automation_graph_rules.php:817
 #: automation_graph_rules.php:839 automation_tree_rules.php:853
-#: data_debug.php:1114 data_sources.php:1712 graph_templates_items.php:447
+#: data_debug.php:1114 data_sources.php:1713 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
 #: lib/api_automation.php:450 lib/auth.php:3993 lib/auth.php:4042
@@ -656,7 +664,7 @@ msgstr "任何"
 #: automation_graph_rules.php:972 automation_graph_rules.php:973
 #: automation_networks.php:460 automation_tree_rules.php:981
 #: data_debug.php:1115 data_sources.php:621 data_sources.php:1098
-#: data_sources.php:1713 data_sources.php:2034 data_templates.php:1323
+#: data_sources.php:1714 data_sources.php:2035 data_templates.php:1323
 #: graph_templates_items.php:53 graphs.php:976 graphs.php:1621 graphs.php:1630
 #: graphs.php:2097 graphs_items.php:271 graphs_items.php:391
 #: include/global_arrays.php:530 include/global_arrays.php:588
@@ -750,7 +758,9 @@ msgstr "聚合模板[新]"
 msgid "Aggregate Templates"
 msgstr "聚合模板"
 
-#: aggregate_templates.php:612 include/global_arrays.php:1009 include/global_arrays.php:1073 lib/installer.php:2802 user_admin.php:2365 user_group_admin.php:2164
+#: aggregate_templates.php:612 include/global_arrays.php:1009
+#: include/global_arrays.php:1073 lib/installer.php:2853 user_admin.php:2365
+#: user_group_admin.php:2164
 #, fuzzy
 msgid "Templates"
 msgstr "模板"
@@ -770,7 +780,7 @@ msgstr "模版標題"
 msgid "Aggregate Templates that are in use can not be Deleted.  In use is defined as being referenced by an Aggregate."
 msgstr "無法刪除正在使用的聚合模板。在使用中定義為由Aggregate引用。"
 
-#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1991
+#: aggregate_templates.php:707 data_queries.php:1490 data_sources.php:1992
 #: data_templates.php:1266 graph_templates.php:869 host_templates.php:955
 #, fuzzy
 msgid "Deletable"
@@ -1242,7 +1252,12 @@ msgstr "地點"
 msgid "Contact"
 msgstr "聯絡"
 
-#: automation_devices.php:276 include/global_form.php:1133 include/global_form.php:1169 include/global_form.php:1363 include/global_form.php:1739 lib/api_automation.php:1196 lib/api_automation.php:278 lib/installer.php:2108 lib/installer.php:2803 managers.php:214 user_admin.php:1073 user_admin.php:924 user_group_admin.php:1095 user_group_admin.php:2076
+#: automation_devices.php:276 include/global_form.php:1133
+#: include/global_form.php:1169 include/global_form.php:1363
+#: include/global_form.php:1739 lib/api_automation.php:278
+#: lib/api_automation.php:1196 lib/installer.php:2108 lib/installer.php:2854
+#: managers.php:214 user_admin.php:924 user_admin.php:1073
+#: user_group_admin.php:1095 user_group_admin.php:2076
 #, fuzzy
 msgid "Description"
 msgstr "描述"
@@ -1263,7 +1278,17 @@ msgstr "運行時間"
 msgid "SNMP"
 msgstr "SNMP"
 
-#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:587 package_import.php:672 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
+#: automation_devices.php:280 automation_devices.php:524
+#: automation_graph_rules.php:835 automation_networks.php:1075
+#: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
+#: data_sources.php:1769 data_templates.php:1289 lib/api_automation.php:52
+#: lib/api_automation.php:53 lib/api_automation.php:280
+#: lib/api_automation.php:573 lib/api_automation.php:1199
+#: lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216
+#: package_import.php:587 package_import.php:672 plugins.php:497
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
+#: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
+#: utilities.php:2141
 #, fuzzy
 msgid "Status"
 msgstr "狀態"
@@ -1469,7 +1494,7 @@ msgstr "數據查詢"
 #: automation_graph_rules.php:840 automation_graph_rules.php:965
 #: automation_graph_rules.php:981 automation_networks.php:535
 #: automation_tree_rules.php:854 automation_tree_rules.php:974
-#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1773
+#: automation_tree_rules.php:992 data_debug.php:1175 data_sources.php:1774
 #: include/global_arrays.php:924 include/global_form.php:1527
 #: include/global_settings.php:438 include/global_settings.php:454
 #: lib/api_automation.php:27 lib/html_reports.php:2036
@@ -1485,7 +1510,7 @@ msgstr "啟用"
 
 #: automation_graph_rules.php:841 automation_graph_rules.php:981
 #: automation_networks.php:1090 automation_tree_rules.php:855
-#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1774
+#: automation_tree_rules.php:992 data_debug.php:1176 data_sources.php:1775
 #: data_templates.php:1325 include/global_arrays.php:923
 #: include/global_arrays.php:1583 include/global_arrays.php:1875
 #: include/global_settings.php:437 include/global_settings.php:453
@@ -1649,7 +1674,20 @@ msgstr "網絡發現範圍[新]"
 msgid "General Settings"
 msgstr "一般設定"
 
-#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:1211 data_queries.php:817 data_queries.php:924 graph_templates.php:499 include/global_form.php:1085 include/global_form.php:1125 include/global_form.php:1327 include/global_form.php:1355 include/global_form.php:1428 include/global_form.php:1456 include/global_form.php:201 include/global_form.php:2101 include/global_form.php:2199 include/global_form.php:2244 include/global_form.php:267 include/global_form.php:324 include/global_form.php:344 include/global_form.php:385 include/global_form.php:515 include/global_form.php:552 include/global_form.php:659 lib/installer.php:2108 lib/installer.php:2181 lib/installer.php:2211 lib/installer.php:2803 lib/installer.php:2891 lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924 user_domains.php:310 utilities.php:3206 utilities.php:864
+#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
+#: include/global_form.php:201 include/global_form.php:267
+#: include/global_form.php:324 include/global_form.php:344
+#: include/global_form.php:385 include/global_form.php:515
+#: include/global_form.php:552 include/global_form.php:659
+#: include/global_form.php:1085 include/global_form.php:1125
+#: include/global_form.php:1327 include/global_form.php:1355
+#: include/global_form.php:1428 include/global_form.php:1456
+#: include/global_form.php:2101 include/global_form.php:2199
+#: include/global_form.php:2244 lib/installer.php:2108 lib/installer.php:2181
+#: lib/installer.php:2211 lib/installer.php:2854 lib/installer.php:2942
+#: lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924
+#: user_domains.php:310 utilities.php:864 utilities.php:3206
 #, fuzzy
 msgid "Name"
 msgstr "名稱"
@@ -1776,7 +1814,7 @@ msgstr "%d 分鐘"
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
 #: automation_networks.php:1212 automation_networks.php:1213
-#: data_sources.php:1532 include/global_arrays.php:718
+#: data_sources.php:1533 include/global_arrays.php:718
 #: include/global_arrays.php:719 include/global_arrays.php:720
 #: include/global_arrays.php:721 include/global_arrays.php:758
 #: include/global_arrays.php:759 include/global_arrays.php:761
@@ -2316,7 +2354,7 @@ msgstr "重新整理"
 
 #: automation_networks.php:1207 automation_networks.php:1208
 #: automation_networks.php:1209 automation_networks.php:1210
-#: data_sources.php:1528 include/global_arrays.php:716
+#: data_sources.php:1529 include/global_arrays.php:716
 #: include/global_arrays.php:752 include/global_arrays.php:753
 #: include/global_arrays.php:754 include/global_arrays.php:755
 #: include/global_arrays.php:756 include/global_arrays.php:757
@@ -2650,7 +2688,8 @@ msgstr "樹創建標準"
 msgid "Change Leaf Type"
 msgstr "改變葉子類型"
 
-#: automation_tree_rules.php:738 lib/installer.php:4279 utilities.php:2752 utilities.php:2753 utilities.php:2756 utilities.php:2757
+#: automation_tree_rules.php:738 lib/installer.php:4330 utilities.php:2752
+#: utilities.php:2753 utilities.php:2756 utilities.php:2757
 #, fuzzy
 msgid "WARNING:"
 msgstr "警告："
@@ -2966,7 +3005,8 @@ msgstr "數據源內部ID。"
 msgid "The Status of the Data Source Debug Check."
 msgstr "數據源調試檢查的狀態。"
 
-#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594 package_import.php:641
+#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594
+#: package_import.php:641
 #, fuzzy
 msgid "Writable"
 msgstr "可寫入"
@@ -2986,7 +3026,7 @@ msgstr "存在"
 msgid "Determines if the Data Source is located in the Poller Cache."
 msgstr "確定數據源是否位於輪詢器高速緩存中。"
 
-#: data_debug.php:541 data_sources.php:1997 data_templates.php:1325
+#: data_debug.php:541 data_sources.php:1998 data_templates.php:1325
 #: plugins.php:32 plugins.php:503
 #, fuzzy
 msgid "Active"
@@ -3036,8 +3076,8 @@ msgstr "您正在運行的以下 add-ons 版本尚未使用 Gravity 表單 %s �
 msgid "Summary of issues found for the Data Source."
 msgstr "發現數據源的任何摘要問題。"
 
-#: data_debug.php:646 data_debug.php:1220 data_sources.php:1795
-#: data_sources.php:1957 include/global_arrays.php:1001
+#: data_debug.php:646 data_debug.php:1220 data_sources.php:1796
+#: data_sources.php:1958 include/global_arrays.php:1001
 #: include/global_arrays.php:1047 include/global_arrays.php:2318
 #: lib/api_automation.php:284 user_admin.php:1073 user_group_admin.php:1095
 #: utilities.php:325
@@ -3176,7 +3216,7 @@ msgstr "重新運行分析"
 msgid "Check"
 msgstr "檢查"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4495
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4601
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 #, fuzzy
 msgid "Value"
@@ -3243,7 +3283,8 @@ msgstr "不適用"
 msgid "Failed"
 msgstr "失敗"
 
-#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073 lib/installer.php:2134
+#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073
+#: lib/installer.php:2134
 #, fuzzy
 msgid "Passed"
 msgstr "通過"
@@ -3281,14 +3322,14 @@ msgstr ""
 msgid "Run checks on currently filtered Data Sources and preserve other results"
 msgstr ""
 
-#: data_debug.php:1150 data_sources.php:1748 data_templates.php:1107
+#: data_debug.php:1150 data_sources.php:1749 data_templates.php:1107
 #: lib/html.php:2914
 #, fuzzy
 msgid "Profile"
 msgstr "個人資料"
 
 #: data_debug.php:1154 data_debug.php:1173 data_debug.php:1184
-#: data_sources.php:1752 data_sources.php:1772 data_templates.php:1111
+#: data_sources.php:1753 data_sources.php:1773 data_templates.php:1111
 #: graphs.php:2149 graphs_new.php:488 host_templates.php:716
 #: host_templates.php:734 lib/clog_webapi.php:549 lib/html.php:227
 #: lib/html_reports.php:1138 lib/html_reports.php:2284 plugins.php:501
@@ -3945,12 +3986,12 @@ msgstr "數據源調試"
 msgid "RRDtool Tune Info"
 msgstr "RRDtool Tune Info"
 
-#: data_sources.php:1526 data_templates.php:1324 include/global_form.php:582
+#: data_sources.php:1527 data_templates.php:1324 include/global_form.php:582
 #, fuzzy
 msgid "External"
 msgstr "外部"
 
-#: data_sources.php:1530 include/global_arrays.php:717
+#: data_sources.php:1531 include/global_arrays.php:717
 #: include/global_arrays.php:1214 include/global_arrays.php:1589
 #: include/global_arrays.php:1625 include/global_arrays.php:1643
 #: include/global_settings.php:1713 include/global_settings.php:2688
@@ -3958,106 +3999,106 @@ msgstr "外部"
 msgid "1 Minute"
 msgstr "1 分鐘"
 
-#: data_sources.php:1689
+#: data_sources.php:1690
 #, fuzzy
 msgid "Data Sources [ All Devices ]"
 msgstr "數據源[無設備]"
 
-#: data_sources.php:1691
+#: data_sources.php:1692
 #, fuzzy
 msgid "Data Sources [ Non Device Based ]"
 msgstr "數據源[無設備]"
 
-#: data_sources.php:1694
+#: data_sources.php:1695
 #, fuzzy, php-format
 msgid "Data Sources [ %s ]"
 msgstr "數據來源[%s]"
 
-#: data_sources.php:1775
+#: data_sources.php:1776
 #, fuzzy
 msgid "Bad Indexes"
 msgstr "索引"
 
-#: data_sources.php:1781 graphs.php:2125
+#: data_sources.php:1782 graphs.php:2125
 msgid "Note that this query may take some time to run."
 msgstr "請注意，此查詢可能需要一些時間才能運行。"
 
-#: data_sources.php:1781 graphs.php:2125
+#: data_sources.php:1782 graphs.php:2125
 #, fuzzy
 msgid "Orphaned"
 msgstr "孤"
 
-#: data_sources.php:1967 utilities.php:2282
+#: data_sources.php:1968 utilities.php:2282
 #, fuzzy
 msgid "Data Source Name"
 msgstr "數據源名稱"
 
-#: data_sources.php:1970
+#: data_sources.php:1971
 msgid "The name of this Data Source. Generally programmatically generated from the Data Template definition."
 msgstr "此數據源的名稱。通常以編程方式從數據模板定義生成。"
 
-#: data_sources.php:1976
+#: data_sources.php:1977
 #, fuzzy
 msgid "The internal database ID for this Data Source. Useful when performing automation or debugging."
 msgstr "此數據源的內部數據庫ID。在執行自動化或調試時很有用。"
 
-#: data_sources.php:1982
+#: data_sources.php:1983
 #, fuzzy
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
 msgstr "使用此數據查詢的圖表模板數。"
 
-#: data_sources.php:1985 include/global_settings.php:1248
+#: data_sources.php:1986 include/global_settings.php:1248
 #, fuzzy
 msgid "Poller Interval"
 msgstr "輪詢間隔"
 
-#: data_sources.php:1988
+#: data_sources.php:1989
 #, fuzzy
 msgid "The frequency that data is collected for this Data Source."
 msgstr "為此數據源收集數據的頻率。"
 
-#: data_sources.php:1994
+#: data_sources.php:1995
 #, fuzzy
 msgid "If this Data Source is no long in use by Graphs, it can be Deleted."
 msgstr "如果圖表不再使用此數據源，則可以將其刪除。"
 
-#: data_sources.php:2000
+#: data_sources.php:2001
 #, fuzzy
 msgid "Whether or not data will be collected for this Data Source. Controlled at the Data Template level."
 msgstr "是否將為此數據源收集數據。受控於數據模板級別。"
 
-#: data_sources.php:2003 package_import.php:669 templates_import.php:243
+#: data_sources.php:2004 package_import.php:669 templates_import.php:243
 #: user_admin.php:1212 user_group_admin.php:1231
 #, fuzzy
 msgid "Template Name"
 msgstr "模板名稱"
 
-#: data_sources.php:2006
+#: data_sources.php:2007
 #, fuzzy
 msgid "The Data Template that this Data Source was based upon."
 msgstr "此數據源所基於的數據模板。"
 
-#: data_sources.php:2047
+#: data_sources.php:2048
 #, fuzzy
 msgid "Damaged Data Source Name"
 msgstr "數據源名稱"
 
-#: data_sources.php:2067
+#: data_sources.php:2068
 #, fuzzy
 msgid "No Data Sources Found"
 msgstr "沒有找到數據源"
 
-#: data_sources.php:2120
+#: data_sources.php:2121
 #, fuzzy
 msgid "No Graphs"
 msgstr "圖表"
 
-#: data_sources.php:2124 include/global_arrays.php:1002
+#: data_sources.php:2125 include/global_arrays.php:1002
 #, fuzzy
 msgid "Aggregates"
 msgstr "骨料"
 
-#: data_sources.php:2126
+#: data_sources.php:2127
 #, fuzzy
 msgid "No Aggregates"
 msgstr "骨料"
@@ -4304,7 +4345,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2857
+#: lib/rrd.php:2963
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
@@ -5107,7 +5148,9 @@ msgstr "基於圖表模板"
 msgid "Save Filters"
 msgstr "儲存過濾條件"
 
-#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4537 utilities.php:1838 utilities.php:866
+#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
+#: lib/html_filter.php:55 lib/installer.php:2942 lib/rrd.php:4643
+#: utilities.php:866 utilities.php:1838
 #, fuzzy
 msgid "Rows"
 msgstr "行"
@@ -6451,7 +6494,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "數字訂購"
 
-#: include/global_arrays.php:959 lib/rrd.php:4461
+#: include/global_arrays.php:959 lib/rrd.php:4567
 #, fuzzy
 msgid "Header"
 msgstr "頁首"
@@ -8411,7 +8454,7 @@ msgstr "心跳"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool記錄未知數據之前，數據可以丟失多長時間。如果您的數據源不穩定並且您希望繼承舊數據而不是在圖表中顯示間隙，請增加此值。此值乘以X-Files因子以確定實際的時間量。"
 
-#: include/global_form.php:226 lib/rrd.php:4540
+#: include/global_form.php:226 lib/rrd.php:4646
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
@@ -9113,7 +9156,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "顏色的不透明度/ alpha通道。"
 
-#: include/global_form.php:989 lib/rrd.php:4536
+#: include/global_form.php:989 lib/rrd.php:4642
 #, fuzzy
 msgid "Consolidation Function"
 msgstr "合併功能"
@@ -13450,7 +13493,7 @@ msgstr "正在復原"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
-#: lib/plugins.php:1412 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
+#: lib/plugins.php:1412 lib/rrd.php:4619 lib/rrd.php:4631 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 #, fuzzy
@@ -13459,7 +13502,7 @@ msgstr "未知"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4490
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4596
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 #, fuzzy
 msgid "Type"
@@ -16204,7 +16247,7 @@ msgstr "錯誤的UTF-8偏移錯誤！"
 msgid "Down (Thold)"
 msgstr "下載"
 
-#: lib/html_utility.php:1359 lib/installer.php:2149 lib/installer.php:4195
+#: lib/html_utility.php:1359 lib/installer.php:2149 lib/installer.php:4246
 #, fuzzy
 msgid "Error"
 msgstr "錯誤"
@@ -16372,7 +16415,7 @@ msgstr "無法設置指定的%sRRDTool版本：%s"
 msgid "Invalid Theme Specified"
 msgstr "指定的主題無效"
 
-#: lib/installer.php:1009 lib/installer.php:962
+#: lib/installer.php:962 lib/installer.php:1009
 #, fuzzy
 msgid "Unexpected path parameter"
 msgstr "意外的路徑參數"
@@ -16501,12 +16544,13 @@ msgstr "測試連結"
 msgid "Begin"
 msgstr "開始"
 
-#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305 lib/installer.php:2947
+#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305
+#: lib/installer.php:2998
 #, fuzzy
 msgid "Upgrade"
 msgstr "升級"
 
-#: lib/installer.php:1869 lib/installer.php:2951
+#: lib/installer.php:1869 lib/installer.php:3002
 #, fuzzy
 msgid "Downgrade"
 msgstr "降級"
@@ -16586,7 +16630,8 @@ msgstr "安裝前檢查"
 msgid "Location checks"
 msgstr "位置檢查"
 
-#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247 lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4299
+#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247
+#: lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4350
 #, fuzzy
 msgid "ERROR:"
 msgstr "錯誤:"
@@ -16982,627 +17027,665 @@ msgstr "安裝完成後，CSRF路徑應設置為只讀。"
 msgid "All folders are writable"
 msgstr "所有文件夾都是可寫的"
 
-#: lib/installer.php:2656
+#: lib/installer.php:2670
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php:2675
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php:2678
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
+
+#: lib/installer.php:2681
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php:2684
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php:2685
+msgid "Or move the RRDfiles into the RRA directory and clear the Data Source Path so the poller generates it, or run structure_rra_paths.php."
+msgstr ""
+
+#: lib/installer.php:2695
+#, php-format
+msgid "and %d more"
+msgstr ""
+
+#: lib/installer.php:2698
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php:2699
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
+
+#: lib/installer.php:2707
 #, fuzzy
 msgid "Input Validation Whitelist Protection"
 msgstr "輸入驗證白名單保護"
 
-#: lib/installer.php:2657
+#: lib/installer.php:2708
 #, fuzzy
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "可以以某種方式利用調用腳本的Kadupul Data Input方法，使非管理員可以破壞輪詢器帳戶擁有的任何文件，並且在有人以root用戶身份運行Kadupul輪詢器的情況下，可以破壞操作系統，使攻擊者能夠利用您的基礎架構。"
 
-#: lib/installer.php:2658
+#: lib/installer.php:2709
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "因此，在多個版本之前，Kadupul進行了增強，可以在這些類型的數據輸入法上提供白名單功能。儘管這樣做確實可以更徹底地保護Kadupul，但是它確實增加了Kadupul管理員導入和管理模板和軟件包所需的工作量。"
 
-#: lib/installer.php:2659
+#: lib/installer.php:2710
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "白名單的工作方式是，當您首次導入數據輸入法或重新導入數據輸入法，並且腳本和/或參數以任何方式發生變化時，數據輸入法以及所有相應的數據源都會立即禁用，直到管理員確認數據輸入法有效。"
 
-#: lib/installer.php:2660
+#: lib/installer.php:2711
 #, fuzzy
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "為了在此狀態下識別數據輸入法，我們在Kadupul的CLI目錄中提供了一個驗證腳本，該腳本可以使用以下選項運行："
 
-#: lib/installer.php:2664
+#: lib/installer.php:2715
 #, fuzzy
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "該腳本選項將搜索當前禁止的任何數據輸入方法，並提供有關原因的詳細信息。"
 
-#: lib/installer.php:2665
+#: lib/installer.php:2716
 #, fuzzy
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "此腳本選項取消禁止當前禁止的數據輸入法。"
 
-#: lib/installer.php:2666
+#: lib/installer.php:2717
 #, fuzzy
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "此腳本選項將重新啟用所有禁用的數據源。"
 
-#: lib/installer.php:2670
+#: lib/installer.php:2721
 #, fuzzy
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "強烈建議您通過取消註釋<b>$ input_whitelist</b>變量並在基於Web的安裝完成後運行上面的三個CLI腳本選項來更新config.php以啟用此功能。"
 
-#: lib/installer.php:2672
+#: lib/installer.php:2723
 #, fuzzy
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "選中下面的複選框以確認您已閱讀並理解此安全問題"
 
-#: lib/installer.php:2674
+#: lib/installer.php:2725
 #, fuzzy
 msgid "I have read this statement"
 msgstr "我已閱讀此聲明"
 
-#: lib/installer.php:2691 lib/installer.php:2697
+#: lib/installer.php:2742 lib/installer.php:2748
 #, fuzzy
 msgid "Default Profile"
 msgstr "默認配置文件"
 
-#: lib/installer.php:2692
+#: lib/installer.php:2743
 #, fuzzy
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "請選擇用於輪詢源的默認數據源配置文件。這是掃描設備之間獲取信息的最長時間，因此輪詢間隔越小，Kadupul Server主機上的工作就越多。此外，選擇要用於數據收集的預期或配置的Cron間隔。"
 
-#: lib/installer.php:2703
+#: lib/installer.php:2754
 #, fuzzy
 msgid "Cron Interval"
 msgstr "Cron 間隔"
 
-#: lib/installer.php:2724
+#: lib/installer.php:2775
 #, fuzzy
 msgid "Default Automation Network"
 msgstr "默認自動化網絡"
 
-#: lib/installer.php:2725
+#: lib/installer.php:2776
 #, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "安裝完成後，Kadupul可以自動掃描網絡。這將利用下面的網絡範圍來計算可掃描的IP範圍。為掃描定義了一組預定義的選項，包括使用“公共”和“私人”社區。"
 
-#: lib/installer.php:2726
+#: lib/installer.php:2777
 #, fuzzy
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "如果您的設備需要先使用一組不同的選項，您可以在下面定義它們，它們將在默認值之前使用"
 
-#: lib/installer.php:2727
+#: lib/installer.php:2778
 #, fuzzy
 msgid "All options may be adjusted post installation"
 msgstr "安裝後可以調整所有選項"
 
-#: lib/installer.php:2731
+#: lib/installer.php:2782
 #, fuzzy
 msgid "Default Options"
 msgstr "默認選項"
 
-#: lib/installer.php:2735
+#: lib/installer.php:2786
 #, fuzzy
 msgid "Scan Mode"
 msgstr "掃描模式"
 
-#: lib/installer.php:2740
+#: lib/installer.php:2791
 #, fuzzy
 msgid "Network Range"
 msgstr "網絡範圍"
 
-#: lib/installer.php:2746
+#: lib/installer.php:2797
 #, fuzzy
 msgid "Additional Defaults"
 msgstr "附加默認值"
 
-#: lib/installer.php:2767
+#: lib/installer.php:2818
 #, fuzzy
 msgid "Additional SNMP Options"
 msgstr "其他SNMP選項"
 
-#: lib/installer.php:2780
+#: lib/installer.php:2831
 #, fuzzy
 msgid "Error Locating Profiles"
 msgstr "查找配置文件時出錯"
 
-#: lib/installer.php:2781
+#: lib/installer.php:2832
 #, fuzzy
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "安裝無法繼續，因為找不到配置文件。"
 
-#: lib/installer.php:2782
+#: lib/installer.php:2833
 #, fuzzy
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "如果您有一個空數據庫並且尚未導入cacti.sql文件，則可能會發生這種情況"
 
-#: lib/installer.php:2791
+#: lib/installer.php:2842
 #, fuzzy
 msgid "Template Setup"
 msgstr "模板設置"
 
-#: lib/installer.php:2794
+#: lib/installer.php:2845
 #, fuzzy
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "選擇要從Kadupul導出的模板類型。"
 
-#: lib/installer.php:2795
+#: lib/installer.php:2846
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "不建議更新您已經修改過的模板。模板的升級不會刪除對圖形和數據模板的修改，並可能導致意外行為。但是，如果您沒有對任何圖形、數據查詢或數據模板進行更改，則重新導入包應該沒有任何影響。在這種情況下，您必須在更新後從模板“同步圖表”。"
 
-#: lib/installer.php:2797
+#: lib/installer.php:2848
 #, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "請在安裝後選擇您要使用的設備模板。如果操作系統是Windows，則需要確保選擇“Windows設備”模板。如果您的操作系統是Linux / UNIX，請確保選擇“本地Linux計算機”設備模板。"
 
-#: lib/installer.php:2803 package_import.php:537 plugins.php:630
+#: lib/installer.php:2854 package_import.php:537 plugins.php:630
 #, fuzzy
 msgid "Author"
 msgstr "作者"
 
-#: lib/installer.php:2803 package_import.php:540
+#: lib/installer.php:2854 package_import.php:540
 #, fuzzy
 msgid "Homepage"
 msgstr "首頁"
 
-#: lib/installer.php:2829
+#: lib/installer.php:2880
 #, fuzzy
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "設備模板允許您監視和繪製Kadupul中的各種數據。選擇所需的設備模板後，按“完成”，安裝將完成。請耐心等待此步驟，因為輸入設備模板可能需要幾分鐘時間。"
 
-#: lib/installer.php:2838
+#: lib/installer.php:2889
 #, fuzzy
 msgid "Server Collation"
 msgstr "服務器整理"
 
-#: lib/installer.php:2845
+#: lib/installer.php:2896
 #, fuzzy
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "您的服務器排序規則似乎符合UTF8標準"
 
-#: lib/installer.php:2848
+#: lib/installer.php:2899
 #, fuzzy
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "您的服務器排序規則似乎不完全符合UTF8標準。 "
 
-#: lib/installer.php:2849
+#: lib/installer.php:2900
 #, fuzzy
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "在[mysqld]部分下，找到名為&#39;character-set-server&#39;和&#39;collation-server&#39;的條目，並按如下所示進行設置："
 
-#: lib/installer.php:2856
+#: lib/installer.php:2907
 #, fuzzy
 msgid "Database Collation"
 msgstr "資料庫整理"
 
-#: lib/installer.php:2861
+#: lib/installer.php:2912
 #, fuzzy
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "您的數據庫默認排序規則似乎符合UTF8"
 
-#: lib/installer.php:2864
+#: lib/installer.php:2915
 #, fuzzy
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "您的數據庫默認排序規則似乎不符合UTF8標準。 "
 
-#: lib/installer.php:2865
+#: lib/installer.php:2916
 #, fuzzy
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "如果排序規則不匹配，則插件創建的任何表都可能存在與Kadupul Core錶鍊接的問題。請運行以下命令，確保將數據庫更改為“utf8mb4_unicode_ci”： "
 
-#: lib/installer.php:2872
+#: lib/installer.php:2923
 #, fuzzy
 msgid "Table Setup"
 msgstr "表設置"
 
-#: lib/installer.php:2883
+#: lib/installer.php:2934
 #, fuzzy, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "您的表數量超出了PHP配置所允許的顯示/轉換數量。請修改php.ini中的max_input_vars設置為%s以上的值"
 
-#: lib/installer.php:2886
+#: lib/installer.php:2937
 #, fuzzy
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "表的轉換可能需要一些時間，尤其是在較大的表上。這些表的轉換將在後台進行，但不會阻止安裝程序完成。如果MySQL沒有足夠的資源來處理轉換，這可能會降低某些服務器的速度。"
 
-#: lib/installer.php:2890
+#: lib/installer.php:2941
 #, fuzzy
 msgid "Tables"
 msgstr "表格"
 
-#: lib/installer.php:2891 utilities.php:870
+#: lib/installer.php:2942 utilities.php:870
 #, fuzzy
 msgid "Collation"
 msgstr "整理"
 
-#: lib/installer.php:2891 utilities.php:865
+#: lib/installer.php:2942 utilities.php:865
 #, fuzzy
 msgid "Engine"
 msgstr "引擎"
 
-#: lib/installer.php:2891 utilities.php:871
+#: lib/installer.php:2942 utilities.php:871
 #, fuzzy
 msgid "Row Format"
 msgstr "格式"
 
-#: lib/installer.php:2923
+#: lib/installer.php:2974
 #, fuzzy
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "一個或多個表太大而無法在安裝期間進行轉換。您應該使用cli / convert_tables.php腳本來執行轉換，然後刷新此頁面。例如： "
 
-#: lib/installer.php:2926
+#: lib/installer.php:2977
 msgid "Run it as an account with the Installation/Upgrades realm and no pending password change, for example with --as=<user>."
 msgstr ""
 
-#: lib/installer.php:2929
+#: lib/installer.php:2980
 #, fuzzy
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "以下表格應轉換為UTF8和InnoDB。請在安裝過程中選擇要轉換的表。"
 
-#: lib/installer.php:2935
+#: lib/installer.php:2986
 #, fuzzy
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "您的所有表格似乎都符合UTF8標準"
 
-#: lib/installer.php:2946
+#: lib/installer.php:2997
 #, fuzzy
 msgid "Confirm Upgrade"
 msgstr "確認升級"
 
-#: lib/installer.php:2950
+#: lib/installer.php:3001
 #, fuzzy
 msgid "Confirm Downgrade"
 msgstr "確認降級"
 
-#: lib/installer.php:2954
+#: lib/installer.php:3005
 #, fuzzy
 msgid "Confirm Installation"
 msgstr "確認安裝"
 
-#: lib/installer.php:2955 plugins.php:23
+#: lib/installer.php:3006 plugins.php:23
 #, fuzzy
 msgid "Install"
 msgstr "安裝"
 
-#: lib/installer.php:2960
+#: lib/installer.php:3011
 #, fuzzy
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE被檢測到"
 
-#: lib/installer.php:2961
+#: lib/installer.php:3012
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "您必須手動更改Kadupul數據庫以修改已經進行的任何升級更改。 <br/>安裝人員沒有辦法自動為您做這件事"
 
-#: lib/installer.php:2962
+#: lib/installer.php:3013
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "降級只應在絕對必要時執行，這樣做可能會破壞您的安裝"
 
-#: lib/installer.php:2965
+#: lib/installer.php:3016
 #, fuzzy
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "您的Kadupul服務器幾乎準備就緒。請檢查您是否樂意繼續。"
 
-#: lib/installer.php:2968
+#: lib/installer.php:3019
 #, fuzzy, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "選擇設備模板後，按“%s”，然後單擊“%s”以完成安裝過程。"
 
-#: lib/installer.php:2985
+#: lib/installer.php:3036
 #, fuzzy, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "安裝Kadupul Server v%s"
 
-#: lib/installer.php:2986
+#: lib/installer.php:3037
 #, fuzzy
 msgid "Your Kadupul Server is now installing"
 msgstr "您的Kadupul服務器現在正在安裝"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3124
 #, fuzzy, php-format
 msgid "Spawning background process: %s %s"
 msgstr "產生後台進程：%s%s"
 
-#: lib/installer.php:3100
+#: lib/installer.php:3151
 #, fuzzy
 msgid "Complete"
 msgstr "完成"
 
-#: lib/installer.php:3101
+#: lib/installer.php:3152
 #, fuzzy, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "您的Kadupul Server v%s已安裝/更新。您現在可以開始使用該軟件。"
 
-#: lib/installer.php:3105
+#: lib/installer.php:3156
 #, fuzzy, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "您的Kadupul Server v%s已安裝/更新時出錯"
 
-#: lib/installer.php:3219
+#: lib/installer.php:3270
 #, fuzzy
 msgid "Get Help"
 msgstr "取得說明"
 
-#: lib/installer.php:3224
+#: lib/installer.php:3275
 #, fuzzy
 msgid "Report Issue"
 msgstr "報告問題"
 
-#: lib/installer.php:3227
+#: lib/installer.php:3278
 #, fuzzy
 msgid "Get Started"
 msgstr "開始使用"
 
-#: lib/installer.php:3311
+#: lib/installer.php:3362
 #, fuzzy, php-format
 msgid "Starting %s Process for v%s"
 msgstr "為v%s啟動%s流程"
 
-#: lib/installer.php:3360
+#: lib/installer.php:3411
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3379
+#: lib/installer.php:3430
 msgid "The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/installer.php:3390
+#: lib/installer.php:3441
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
 msgstr ""
 
-#: lib/installer.php:3402
+#: lib/installer.php:3453
 #, fuzzy, php-format
 msgid "Finished %s Process for v%s"
 msgstr "v%s完成的%s處理"
 
-#: lib/installer.php:3433
+#: lib/installer.php:3484
 msgid "The installer CLI interpreter is unavailable for refreshing the Symfony production cache."
 msgstr ""
 
-#: lib/installer.php:3436
+#: lib/installer.php:3487
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
 msgstr ""
 
-#: lib/installer.php:3504
+#: lib/installer.php:3555
 #, fuzzy, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安裝的%s模板"
 
-#: lib/installer.php:3514
+#: lib/installer.php:3565
 #, fuzzy, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即將導入軟件包＃%s'%s'。"
 
-#: lib/installer.php:3523
+#: lib/installer.php:3574
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下導入軟件包＃%s'%s'"
 
-#: lib/installer.php:3529
+#: lib/installer.php:3580
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件“%s”下導入軟件包＃%s“%s”失敗"
 
-#: lib/installer.php:3546
+#: lib/installer.php:3597
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "[已刪除模板]的自動化模板"
 
-#: lib/installer.php:3567
+#: lib/installer.php:3618
 #, fuzzy
 msgid "No templates were selected for import"
 msgstr "未選擇要導入的模板"
 
-#: lib/installer.php:3577
+#: lib/installer.php:3628
 #, fuzzy
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3612
+#: lib/installer.php:3663
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "此數據模板的默認數據源配置文件。"
 
-#: lib/installer.php:3640
+#: lib/installer.php:3691
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "無法應用指定的配置文件%s！=%s"
 
-#: lib/installer.php:3649
+#: lib/installer.php:3700
 #, fuzzy, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自動化網絡（%s），模式“%s” =>“%s”，子網“%s” =>%s“"
 
-#: lib/installer.php:3659
+#: lib/installer.php:3710
 #, fuzzy
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自動化網絡，未進行任何更改"
 
-#: lib/installer.php:3663
+#: lib/installer.php:3714
 #, fuzzy
 msgid "Adding extra snmp settings for automation"
 msgstr "添加額外的snmp設置以實現自動化"
 
-#: lib/installer.php:3669
+#: lib/installer.php:3720
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "刪除自動化模板"
 
-#: lib/installer.php:3682
+#: lib/installer.php:3733
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化SNMP選項"
 
-#: lib/installer.php:3685
+#: lib/installer.php:3736
 #, fuzzy, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自動化選項集%s"
 
-#: lib/installer.php:3687
+#: lib/installer.php:3738
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "在設備上運行自動化"
 
-#: lib/installer.php:3695
+#: lib/installer.php:3746
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "無法應用指定的自動化範圍"
 
-#: lib/installer.php:3698
+#: lib/installer.php:3749
 #, fuzzy
 msgid "Failed to find any automation option set"
 msgstr "無法找到要復制的數據！"
 
-#: lib/installer.php:3728
+#: lib/installer.php:3779
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "設備模板[編輯：%s]"
 
-#: lib/installer.php:3758
+#: lib/installer.php:3809
 #, fuzzy
 msgid "Creating Graphs for Default Device"
 msgstr "為此設備創建圖表"
 
-#: lib/installer.php:3765
+#: lib/installer.php:3816
 #, fuzzy
 msgid "Adding Device to Default Tree"
 msgstr "設備默認值"
 
-#: lib/installer.php:3773
+#: lib/installer.php:3824
 #, fuzzy
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默認設備的模板化圖"
 
-#: lib/installer.php:3777
+#: lib/installer.php:3828
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系統的設備模板。您將需要導入設備模板或Kadupul軟件包來監視您的Kadupul服務器。"
 
-#: lib/installer.php:3784
+#: lib/installer.php:3835
 #, fuzzy
 msgid "Running first-time data query for local host"
 msgstr "運行本地主機的首次數據查詢"
 
-#: lib/installer.php:3792
+#: lib/installer.php:3843
 #, fuzzy
 msgid "Repopulating poller cache"
 msgstr "重建輪詢器緩存"
 
-#: lib/installer.php:3797
+#: lib/installer.php:3848
 #, fuzzy
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent緩存"
 
-#: lib/installer.php:3802
+#: lib/installer.php:3853
 #, fuzzy
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密鑰對"
 
-#: lib/installer.php:3813
+#: lib/installer.php:3864
 #, fuzzy, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要轉換的%s表"
 
-#: lib/installer.php:3820
+#: lib/installer.php:3871
 #, fuzzy, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "轉換錶＃%s'%s'"
 
-#: lib/installer.php:3828
+#: lib/installer.php:3879
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
 msgstr ""
 
-#: lib/installer.php:3836
+#: lib/installer.php:3887
 #, fuzzy
 msgid "No tables where found or selected for conversion"
 msgstr "沒有找到或選擇要轉換的表"
 
-#: lib/installer.php:3848
+#: lib/installer.php:3899
 #, fuzzy, php-format
 msgid "Switched from %s to %s"
 msgstr "從%s切換到%s"
 
-#: lib/installer.php:3852
+#: lib/installer.php:3903
 #, fuzzy, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用臨時文件進行數據庫高速緩存：%s"
 
-#: lib/installer.php:3874
+#: lib/installer.php:3925
 #, fuzzy, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "從v%s（數據庫%s）升級到v%s"
 
-#: lib/installer.php:3882
+#: lib/installer.php:3933
 #, php-format
 msgid "ERROR: Failed to find upgrade function for v%s"
 msgstr ""
 
-#: lib/installer.php:3891
+#: lib/installer.php:3942
 #, php-format
 msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
 msgstr ""
 
-#: lib/installer.php:3900
+#: lib/installer.php:3951
 #, php-format
 msgid "ERROR: Required upgrade file for v%s was not found."
 msgstr ""
 
-#: lib/installer.php:3952
+#: lib/installer.php:4003
 #, fuzzy
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由於未接受EULA，安裝被中止"
 
-#: lib/installer.php:3976
+#: lib/installer.php:4027
 #, fuzzy, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "後台已在%s開始，此嘗試已在%s跳過"
 
-#: lib/installer.php:4000
+#: lib/installer.php:4051
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安裝期間發生異常：＃"
 
-#: lib/installer.php:4019
+#: lib/installer.php:4070
 #, fuzzy, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安裝在%s開始，在%s完成"
 
-#: lib/installer.php:4056
+#: lib/installer.php:4107
 #, fuzzy
 msgid "Both"
 msgstr "兩者"
 
-#: lib/installer.php:4056
+#: lib/installer.php:4107
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s Minutes"
 
-#: lib/installer.php:4061
+#: lib/installer.php:4112
 #, php-format
 msgid "%s - N/A"
 msgstr "%s Minutes"
 
-#: lib/installer.php:4061 lib/installer.php:4063
+#: lib/installer.php:4112 lib/installer.php:4114
 #, fuzzy
 msgid "Web"
 msgstr "網頁"
 
-#: lib/installer.php:4063 lib/installer.php:4066
+#: lib/installer.php:4114 lib/installer.php:4117
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s Minutes"
 
-#: lib/installer.php:4066
+#: lib/installer.php:4117
 #, fuzzy
 msgid "Cli"
 msgstr "經典"
 
-#: lib/installer.php:4072
+#: lib/installer.php:4123
 #, fuzzy, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "設置PHP選項%s =%s"
 
-#: lib/installer.php:4078
+#: lib/installer.php:4129
 #, fuzzy, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "無法設置PHP選項%s，為%s（應為%s）"
 
-#: lib/installer.php:4115
+#: lib/installer.php:4166
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "嘗試同步時找不到數據收集器"
 
@@ -17804,7 +17887,7 @@ msgstr ""
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr ""
 
-#: lib/plugins.php:1328
+#: lib/plugins.php:1310
 #, fuzzy
 msgid "Legacy Plugin"
 msgstr "傳統插件"
@@ -17910,216 +17993,216 @@ msgstr "添加報表圖項&#39; <i>%s</i> &#39;失敗已經存在"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
 
-#: lib/rrd.php:2463
+#: lib/rrd.php:2569
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2466
+#: lib/rrd.php:2572
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2838 lib/rrd.php:2841 lib/rrd.php:4747
+#: lib/rrd.php:2944 lib/rrd.php:2947 lib/rrd.php:4853
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2854
+#: lib/rrd.php:2960
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4278
+#: lib/rrd.php:4384
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必需的RRD步長為&#39;%s&#39;"
 
-#: lib/rrd.php:4314
+#: lib/rrd.php:4420
 #, fuzzy, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的類型應為&#39;%s&#39;"
 
-#: lib/rrd.php:4320
+#: lib/rrd.php:4426
 #, fuzzy, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的心跳應為&#39;%s&#39;"
 
-#: lib/rrd.php:4332
+#: lib/rrd.php:4438
 #, fuzzy, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的RRD最小值應為&#39;%s&#39;"
 
-#: lib/rrd.php:4341
+#: lib/rrd.php:4447
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少DS&#39;%s&#39;"
 
-#: lib/rrd.php:4355 lib/rrd.php:4356
+#: lib/rrd.php:4461 lib/rrd.php:4462
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4369 lib/rrd.php:4370
+#: lib/rrd.php:4475 lib/rrd.php:4476
 #, fuzzy, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:4402
+#: lib/rrd.php:4508
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:4406
+#: lib/rrd.php:4512
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "KadupulRRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
-#: lib/rrd.php:4410
+#: lib/rrd.php:4516
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id&#39;%s&#39;的行數應為&#39;%s&#39;"
 
-#: lib/rrd.php:4427
+#: lib/rrd.php:4533
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRD文件中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4435
+#: lib/rrd.php:4541
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:4457
+#: lib/rrd.php:4563
 #, fuzzy
 msgid "RRD File Information"
 msgstr "RRD文件信息"
 
-#: lib/rrd.php:4489
+#: lib/rrd.php:4595
 #, fuzzy
 msgid "Data Source Items"
 msgstr "數據源項目"
 
-#: lib/rrd.php:4491
+#: lib/rrd.php:4597
 #, fuzzy
 msgid "Minimal Heartbeat"
 msgstr "最小的心跳"
 
-#: lib/rrd.php:4492
+#: lib/rrd.php:4598
 #, fuzzy
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:4493
+#: lib/rrd.php:4599
 #, fuzzy
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:4494
+#: lib/rrd.php:4600
 #, fuzzy
 msgid "Last DS"
 msgstr "最後一個DS"
 
-#: lib/rrd.php:4496
+#: lib/rrd.php:4602
 #, fuzzy
 msgid "Unknown Sec"
 msgstr "未知的秒"
 
-#: lib/rrd.php:4535
+#: lib/rrd.php:4641
 #, fuzzy
 msgid "Round Robin Archive"
 msgstr "Round Robin Archive"
 
-#: lib/rrd.php:4538
+#: lib/rrd.php:4644
 #, fuzzy
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:4539
+#: lib/rrd.php:4645
 #, fuzzy
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:4541
+#: lib/rrd.php:4647
 #, fuzzy
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備值（0）"
 
-#: lib/rrd.php:4542
+#: lib/rrd.php:4648
 #, fuzzy
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP未知數據點（0）"
 
-#: lib/rrd.php:4627
+#: lib/rrd.php:4733
 msgid "Errors Found"
 msgstr "沒有 %s 找到"
 
-#: lib/rrd.php:4639
+#: lib/rrd.php:4745
 msgid "Optional Tuning Recommendations"
 msgstr "數據源字段"
 
-#: lib/rrd.php:4666 lib/rrd.php:4669
+#: lib/rrd.php:4772 lib/rrd.php:4775
 #, fuzzy, php-format
 msgid "rename %s to %s"
 msgstr "將%s重命名為%s"
 
-#: lib/rrd.php:4767
+#: lib/rrd.php:4873
 #, fuzzy, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "編寫XML文件時出錯：%s"
 
-#: lib/rrd.php:4773
+#: lib/rrd.php:4879
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4779
+#: lib/rrd.php:4885
 #, fuzzy, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:4800
+#: lib/rrd.php:4906
 #, fuzzy
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:4836 lib/rrd.php:4855
+#: lib/rrd.php:4942 lib/rrd.php:4961
 #, fuzzy
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:5073
+#: lib/rrd.php:5179
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "從RRD文件中刪除RRA（CF=%s，ROWS=%d，PDP_PER_ROW =%d，XFF =%1.2f）"
 
-#: lib/rrd.php:5111
+#: lib/rrd.php:5217
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA（CF =%s，ROWS =%d，PDP_PER_ROW =%d，XFF =%1.2f）添加到RRD文件"
 
-#: lib/rrd.php:5142 lib/rrd.php:5158
+#: lib/rrd.php:5248 lib/rrd.php:5264
 #, fuzzy, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "網站沒有%s的寫入權限，可能無法創建/更新RRD"
 
-#: lib/rrd.php:5154
+#: lib/rrd.php:5260
 #, fuzzy
 msgid "(Custom)"
 msgstr "自訂"
 
-#: lib/rrd.php:5160
+#: lib/rrd.php:5266
 #, fuzzy
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "無法打開數據文件，輪詢器可能尚未運行"
 
-#: lib/rrd.php:5163
+#: lib/rrd.php:5269
 #, fuzzy
 msgid "RRA Folder"
 msgstr "RRA文件夾"
 
-#: lib/rrd.php:5163
+#: lib/rrd.php:5269
 #, fuzzy
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:5243
+#: lib/rrd.php:5349
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"

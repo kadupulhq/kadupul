@@ -2646,9 +2646,60 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         $output .= Installer::sectionSubTitleEnd();
         $output .= $permissions;
 
+        if ($this->mode == Installer::MODE_UPGRADE) {
+            $output .= $this->rrdLocationSection($sections);
+        }
+
         $this->buttonNext->Enabled = !isset($writable);
         $this->stepData = array('Sections' => $sections);
         return $output;
+    }
+
+    /**
+     * Report Data Sources whose RRDfile path is refused because it lies outside
+     * the RRA directory and every directory listed in rrd_additional_paths.
+     * Those RRDfiles are no longer created or updated after the upgrade. The
+     * report does not block the upgrade.
+     *
+     * @param array<string, int> $sections Section states for the step data.
+     */
+    private function rrdLocationSection(array &$sections): string
+    {
+        include_once(__DIR__ . '/rrd.php');
+
+        $output = Installer::sectionSubTitle(__('RRDfile Locations'), 'rrd_locations');
+        $outside = rrd_data_sources_outside_allowed_paths(25);
+
+        if ($outside === false) {
+            $sections['rrd_locations'] = DB_STATUS_WARNING;
+            $output .= Installer::sectionNormal(__('The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log.'));
+        } elseif ($outside['total'] === 0) {
+            $sections['rrd_locations'] = DB_STATUS_SUCCESS;
+            $output .= Installer::sectionNormal('<font color="#008000">' . __('Every Data Source RRDfile path is inside an allowed directory') . '</font>');
+        } else {
+            $sections['rrd_locations'] = DB_STATUS_WARNING;
+            $output .= Installer::sectionNormal(__('%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config[\'rrd_additional_paths\'] in include/config.php, so these Data Sources will stop updating until one of the following is done:', $outside['total']));
+            $output .= Installer::sectionNormal(
+                '<ul>' .
+                '<li>' . __('List the directory that holds them in $config[\'rrd_additional_paths\'] in include/config.php, for example $config[\'rrd_additional_paths\'] = array(\'/data/rrd\');') . '</li>' .
+                '<li>' . __('Or move the RRDfiles into the RRA directory and clear the Data Source Path so the poller generates it, or run structure_rra_paths.php.') . '</li>' .
+                '</ul>'
+            );
+
+            $list = '';
+            foreach ($outside['items'] as $item) {
+                $list .= html_escape($item['local_data_id'] . ': ' . $item['path']) . '<br />';
+            }
+
+            if ($outside['total'] > count($outside['items'])) {
+                $list .= html_escape(__('and %d more', $outside['total'] - count($outside['items'])));
+            }
+
+            $output .= Installer::sectionNote('<span class="cactiInstallSectionCode" style="width: 95%; display: inline-flex;">' . $list . '</span>', '', '', __('DATA SOURCES:'));
+            $output .= Installer::sectionNote(__('See docs/rrd-path-containment.md for details.'));
+        }
+
+        return $output . Installer::sectionSubTitleEnd();
     }
 
     public function processStepInputValidation()
