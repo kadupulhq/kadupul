@@ -6,11 +6,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056).
+- Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
+- Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
+- Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
@@ -25,6 +27,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
+- Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.

@@ -8,6 +8,7 @@
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
+      <file>Unit/SnmpValueAndWalkGuardsTest.php</file>
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
       <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
@@ -89,7 +90,7 @@
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>Unit/Core/Poller/SystemMibIntervalTest.php</file>
-      <file>Unit/SnmpValueAndWalkGuardsTest.php</file>
+      <file>Unit/Database/PluginTableRefreshTest.php</file>
       <file>Unit/Ui/Aggregate/AggregateTotalLegendNativeTest.php</file>
       <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/RealtimeScriptServerBatchTest.php</file>
