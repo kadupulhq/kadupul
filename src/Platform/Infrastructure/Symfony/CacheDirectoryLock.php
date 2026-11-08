@@ -33,6 +33,9 @@ final class CacheDirectoryLock
     private const DIRECTORY_MODE = 0o750;
     /** Applied to fopen's default 0666, lock files are created 0640 or stricter. */
     private const UMASK = 0o027;
+    private const WARNING_INTERVAL_SECONDS = 3600;
+    private const REFUSED = 'refused';
+    private const DEFERRED = 'deferred';
 
     /** @var list<resource> */
     private array $handles;
@@ -58,25 +61,25 @@ final class CacheDirectoryLock
      * Returns null when no lock can be held safely: a lock file that cannot
      * be created, or one that is not a private regular file. A refresh
      * refuses the same files, so it cannot swap the cache under this reader.
+     * A refused file is reported to the server log, at most once an hour.
      *
      * @throws CacheRefreshInProgress when a refresh holds the gate past the timeout
      */
     public static function shared(string $buildDir, float $timeout = self::SHARED_TIMEOUT_SECONDS): ?self
     {
         $gate = self::open(self::gatePath($buildDir));
-        if ($gate === null) {
-            return null;
-        }
-        $lock = self::open(self::path($buildDir));
-        if ($lock === null) {
-            fclose($gate);
+        $lock = is_resource($gate) ? self::open(self::path($buildDir)) : null;
+        if (!is_resource($gate) || !is_resource($lock)) {
+            self::close($gate, $lock);
+            if ($gate === self::REFUSED || $lock === self::REFUSED) {
+                self::warnRefused($buildDir);
+            }
 
             return null;
         }
         $deadline = microtime(true) + $timeout;
         if (!self::lock($gate, LOCK_SH, $deadline)) {
-            fclose($gate);
-            fclose($lock);
+            self::close($gate, $lock);
 
             throw new CacheRefreshInProgress();
         }
@@ -94,30 +97,38 @@ final class CacheDirectoryLock
         return new self([$lock]);
     }
 
-    /** @throws \RuntimeException before the caller changes the cache */
+    /**
+     * A root-run refresh in a directory the application user owns does not
+     * create missing lock files. That one run proceeds unlocked and says so;
+     * the next web request creates the files as the application user.
+     *
+     * @throws \RuntimeException before the caller changes the cache
+     */
     public static function exclusive(string $buildDir, float $timeout = self::EXCLUSIVE_TIMEOUT_SECONDS): self
     {
         $deadline = microtime(true) + $timeout;
         $gate = self::open(self::gatePath($buildDir));
-        $lock = $gate === null ? null : self::open(self::path($buildDir));
-        if ($gate !== null && $lock !== null && self::lock($gate, LOCK_EX, $deadline)) {
-            // New readers now wait at the gate; only running requests remain.
-            if (self::lock($lock, LOCK_EX, $deadline)) {
-                return new self([$lock, $gate]);
+        $lock = is_resource($gate) ? self::open(self::path($buildDir)) : null;
+        if (is_resource($gate) && is_resource($lock)) {
+            if (self::lock($gate, LOCK_EX, $deadline)) {
+                // New readers now wait at the gate; only running requests remain.
+                if (self::lock($lock, LOCK_EX, $deadline)) {
+                    return new self([$lock, $gate]);
+                }
+                flock($gate, LOCK_UN);
             }
-            flock($gate, LOCK_UN);
+            self::close($gate, $lock);
+
+            throw new \RuntimeException('Cannot lock the Symfony cache for refreshing; web requests are still using it. Retry when they finish.');
         }
-        foreach ([$lock, $gate] as $handle) {
-            if ($handle !== null) {
-                fclose($handle);
-            }
+        self::close($gate, $lock);
+        if ($gate !== self::REFUSED && $lock !== self::REFUSED && ($gate === self::DEFERRED || $lock === self::DEFERRED)) {
+            error_log(sprintf('Kadupul: refreshing the Symfony cache as root without the web request lock, because %s or %s does not exist yet. Run cache refreshes as the application user.', self::gatePath($buildDir), self::path($buildDir)));
+
+            return new self([]);
         }
 
-        if ($gate === null || $lock === null) {
-            throw new \RuntimeException('Cannot create private Symfony cache lock files. The directory containing the cache must be owned by the application user and not writable by other users, and existing lock files must be private regular files.');
-        }
-
-        throw new \RuntimeException('Cannot lock the Symfony cache for refreshing; web requests are still using it. Retry when they finish.');
+        throw new \RuntimeException('Cannot create private Symfony cache lock files. The directory containing the cache must be owned by the application user and not writable by other users, and existing lock files must be private regular files.');
     }
 
     /** Releases the main lock before the gate, so no reader passes the gate early. */
@@ -135,86 +146,91 @@ final class CacheDirectoryLock
         $this->release();
     }
 
-    /** @return resource|null */
+    /** @return resource|self::REFUSED|self::DEFERRED */
     private static function open(string $path)
     {
         $directory = dirname($path);
+        $euid = function_exists('posix_geteuid') ? posix_geteuid() : null;
+        $posix = PHP_OS_FAMILY !== 'Windows';
         // Create both restrictive from the start rather than chmod() later,
         // so no other user can open a fresh lock file. umask() is
         // process-wide; it is restored before any other work.
         $mask = umask(umask() | self::UMASK);
         try {
             if (!is_dir($directory)) {
+                if ($euid === 0) {
+                    return self::DEFERRED;
+                }
                 @mkdir($directory, self::DIRECTORY_MODE, true);
             }
-            if (!self::privateDirectory($directory)) {
-                return null;
+            clearstatcache(true, $directory);
+            $directoryStat = @stat($directory);
+            if ($directoryStat === false || ($posix && !CacheLockPolicy::directoryUsable($directoryStat, $euid))) {
+                return self::REFUSED;
             }
             // "e" sets close-on-exec. The web installer starts its worker
             // through a shell, and an inherited descriptor would keep this
             // request's shared lock for the worker's lifetime and block its
             // own refresh. flock() does not need write access, so an
             // existing file opens read-only.
-            $handle = @fopen($path, 'xe');
-            if ($handle === false) {
-                $handle = @fopen($path, 're');
+            $handle = @fopen($path, 're');
+            if ($handle === false && !file_exists($path) && !is_link($path)) {
+                if ($posix && !CacheLockPolicy::mayCreate($euid, $directoryStat['uid'])) {
+                    return self::DEFERRED;
+                }
+                $handle = @fopen($path, 'xe');
+                if ($handle === false) {
+                    // Another process may have created it in between.
+                    $handle = @fopen($path, 're');
+                }
             }
         } finally {
             umask($mask);
         }
         if ($handle === false) {
-            return null;
+            return self::REFUSED;
         }
-        if (!self::privateFile($path, $handle)) {
+        $stat = fstat($handle);
+        if ($posix && ($stat === false || !CacheLockPolicy::fileUsable($stat, is_link($path), $euid, $directoryStat['uid']))) {
             fclose($handle);
 
-            return null;
+            return self::REFUSED;
         }
 
         return $handle;
     }
 
-    /**
-     * No other user may create or replace lock files beside the cache: the
-     * directory is owned by this process or root (any owner when root runs)
-     * and is not writable by other users. Group members who can write it can
-     * already change the compiled PHP in the cache, so group write is allowed.
-     */
-    private static function privateDirectory(string $directory): bool
+    /** @param resource|string|null ...$handles */
+    private static function close(...$handles): void
     {
-        if (PHP_OS_FAMILY === 'Windows') {
-            return true;
+        foreach ($handles as $handle) {
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
         }
-        clearstatcache(true, $directory);
-        $stat = @stat($directory);
-        if ($stat === false || ($stat['mode'] & 0o002) !== 0) {
-            return false;
-        }
-        if (!function_exists('posix_geteuid')) {
-            return true;
-        }
-        $euid = posix_geteuid();
-
-        return $euid === 0 || $stat['uid'] === $euid || $stat['uid'] === 0;
     }
 
     /**
-     * Accept only a regular file, not a symlink, with no access for other
-     * users, owned by this process, root or the directory owner.
-     *
-     * @param resource $handle
+     * Rate-limited through an exclusively created marker in the temporary
+     * directory, so concurrent requests log one warning per interval.
      */
-    private static function privateFile(string $path, $handle): bool
+    private static function warnRefused(string $buildDir): void
     {
-        if (PHP_OS_FAMILY === 'Windows') {
-            return true;
+        $marker = sys_get_temp_dir() . '/kadupul-cache-lock-warning-' . hash('sha256', $buildDir);
+        clearstatcache(true, $marker);
+        $stat = @lstat($marker);
+        if ($stat !== false) {
+            if (!is_link($marker) && time() - $stat['mtime'] < self::WARNING_INTERVAL_SECONDS) {
+                return;
+            }
+            @unlink($marker);
         }
-        $stat = fstat($handle);
-        if (is_link($path) || $stat === false || ($stat['mode'] & 0o170000) !== 0o100000 || ($stat['mode'] & 0o007) !== 0) {
-            return false;
+        $handle = @fopen($marker, 'xe');
+        if ($handle === false) {
+            return;
         }
-
-        return !function_exists('posix_geteuid') || in_array($stat['uid'], [posix_geteuid(), 0, @fileowner(dirname($path))], true);
+        fclose($handle);
+        error_log(sprintf('Kadupul: web requests are running without the Symfony cache lock, so a cache refresh can make them fail. Refused %s or %s: each must be a regular file with mode 0640 or stricter, owned by the application user, in a directory other users cannot write. Delete them to let the application user recreate them.', self::gatePath($buildDir), self::path($buildDir)));
     }
 
     /**

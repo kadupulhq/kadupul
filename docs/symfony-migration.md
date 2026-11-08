@@ -383,13 +383,16 @@ The lock files are created with mode 0640 and missing parent directories with
 mode 0750 or stricter: the process umask is tightened while they are created.
 The directory that holds `var/cache/prod` must be owned by the application user
 or root and must not be writable by other users; group write is allowed. Root
-may refresh the cache in a directory owned by the application user, but the
-lock files it creates then belong to root, as `var/cache/prod` already does
-after a root-run `cache:clear`; run upgrades as the application user. An
+uses existing lock files that the application user owns, but does not create
+missing ones in that user's directory: a root-owned lock file would be
+unreadable to web requests. That root run proceeds without the lock and logs a
+notice; the next web request creates the files. Run upgrades as the
+application user. An
 existing lock file must be a regular file, not a symlink, with no access for
 other users, owned by the running user, root or the directory owner.
-Otherwise web requests run without the lock and a refresh fails with an error
-naming these requirements. Users who can write `var/cache/` can already change
+Otherwise web requests run without the lock and log a warning naming the
+files, at most once an hour, and a refresh fails with an error naming these
+requirements. Users who can write `var/cache/` can already change
 the compiled PHP it holds, so keep that directory private to the application.
 
 Run scheduled Symfony commands as the deployment or service account that owns

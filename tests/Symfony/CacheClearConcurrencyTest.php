@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests;
 
 use Kadupul\Platform\Infrastructure\Symfony\CacheDirectoryLock;
+use Kadupul\Platform\Infrastructure\Symfony\CacheLockPolicy;
 use Kadupul\Platform\Infrastructure\Symfony\CacheRefreshInProgress;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -25,6 +26,7 @@ final class CacheClearConcurrencyTest extends TestCase
     private string $directory;
     private string $cacheRoot;
     private ?Process $server = null;
+    private string|false $errorLog = false;
 
     #[\Override]
     protected function setUp(): void
@@ -32,6 +34,8 @@ final class CacheClearConcurrencyTest extends TestCase
         $this->directory = sys_get_temp_dir() . '/kadupul-cache-swap-' . bin2hex(random_bytes(8));
         $this->cacheRoot = $this->directory . '/cache';
         self::assertTrue(mkdir($this->directory, 0o700));
+        // Refusal warnings from in-process locks go to an owned file.
+        $this->errorLog = ini_set('error_log', $this->directory . '/php-error.log');
         $warmup = $this->console('cache:warmup');
         $warmup->run();
         self::assertSame(0, $warmup->getExitCode(), $warmup->getErrorOutput());
@@ -41,6 +45,16 @@ final class CacheClearConcurrencyTest extends TestCase
     protected function tearDown(): void
     {
         $this->server?->stop();
+        if ($this->errorLog !== false) {
+            ini_set('error_log', $this->errorLog);
+        }
+        // Rate-limit markers of in-process refusals live in the system temporary directory.
+        foreach (['/fresh/cache/prod', '/fresh/cache/other', '/shared-777/prod', '/shared-757/prod'] as $buildDir) {
+            $marker = sys_get_temp_dir() . '/kadupul-cache-lock-warning-' . hash('sha256', $this->directory . $buildDir);
+            if (is_file($marker)) {
+                unlink($marker);
+            }
+        }
         (new Filesystem())->remove($this->directory);
     }
 
@@ -248,6 +262,49 @@ final class CacheClearConcurrencyTest extends TestCase
         self::assertSame($mask, umask());
     }
 
+    public function testRefusedLockFileIsLoggedOnceAndRequestsContinue(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            self::markTestSkipped('POSIX modes do not apply on Windows.');
+        }
+        $lockFile = CacheDirectoryLock::path($this->cacheRoot . '/prod');
+        self::assertTrue(touch($lockFile) && chmod($lockFile, 0o644));
+        $address = $this->startServer();
+        foreach ([1, 2] as $attempt) {
+            $response = $this->receive($this->send($address, '/'), 20);
+            self::assertStringContainsString(' 200 ', strtok($response, "\r\n"), $attempt . ': ' . $response);
+        }
+        $log = (string) $this->server?->getErrorOutput();
+        self::assertSame(1, substr_count($log, 'web requests are running without the Symfony cache lock'), $log);
+        self::assertStringContainsString($lockFile, $log);
+        self::assertStringNotContainsString('Kadupul: ', strstr($response, "\r\n\r\n") ?: '', 'the warning reached the response');
+    }
+
+    public function testRootUsesApplicationOwnedLockFilesButDoesNotCreateThem(): void
+    {
+        $application = 33;
+        $directory = ['mode' => 0o040755, 'uid' => $application];
+        $lockFile = ['mode' => 0o100640, 'uid' => $application];
+
+        // Root (a privileged CLI upgrade) in the application user's directory.
+        self::assertTrue(CacheLockPolicy::directoryUsable($directory, 0));
+        self::assertTrue(CacheLockPolicy::fileUsable($lockFile, false, 0, $application));
+        self::assertFalse(CacheLockPolicy::mayCreate(0, $application), 'root would create a lock file the web user cannot open');
+        self::assertTrue(CacheLockPolicy::mayCreate(0, 0));
+        // The application user itself.
+        self::assertTrue(CacheLockPolicy::mayCreate($application, $application));
+        self::assertTrue(CacheLockPolicy::fileUsable($lockFile, false, $application, $application));
+
+        // Another unprivileged user's directory or file, other access, symlinks.
+        self::assertFalse(CacheLockPolicy::directoryUsable(['mode' => 0o040755, 'uid' => 1001], $application));
+        self::assertFalse(CacheLockPolicy::directoryUsable(['mode' => 0o040757, 'uid' => $application], $application));
+        self::assertTrue(CacheLockPolicy::directoryUsable(['mode' => 0o040775, 'uid' => $application], $application));
+        self::assertFalse(CacheLockPolicy::fileUsable(['mode' => 0o100640, 'uid' => 1001], false, 0, $application));
+        self::assertFalse(CacheLockPolicy::fileUsable(['mode' => 0o100644, 'uid' => $application], false, 0, $application));
+        self::assertFalse(CacheLockPolicy::fileUsable($lockFile, true, 0, $application));
+        self::assertFalse(CacheLockPolicy::fileUsable(['mode' => 0o040750, 'uid' => $application], false, 0, $application));
+    }
+
     private function console(string $command): Process
     {
         $root = dirname(__DIR__, 2);
@@ -281,7 +338,7 @@ final class CacheClearConcurrencyTest extends TestCase
         $address = stream_socket_get_name($socket, false);
         self::assertIsString($address);
         fclose($socket);
-        $this->server = new Process([PHP_BINARY, '-S', $address, $router], $root);
+        $this->server = new Process([PHP_BINARY, '-S', $address, $router], $root, ['TMPDIR' => $this->directory]);
         $this->server->start();
         $this->waitFor(static function () use ($address): bool {
             $connection = @stream_socket_client('tcp://' . $address, $error, $message, 0.1);
