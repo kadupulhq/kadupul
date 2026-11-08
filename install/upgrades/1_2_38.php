@@ -16,6 +16,17 @@ declare(strict_types=1);
  */
 function upgrade_to_1_2_38(): void
 {
+    // cacti.sql has created this Boost work list since 1.2.19, but no upgrade
+    // did, and Boost only creates it on its first run. The installer requires
+    // every cacti.sql table (#1088), so an older install that never ran Boost
+    // gets it here. An existing table, whatever its shape, is left alone.
+    db_install_execute('CREATE TABLE IF NOT EXISTS `poller_output_boost_local_data_ids` (
+        `local_data_id` int(10) unsigned NOT NULL DEFAULT 0,
+        `process_handler` int(10) unsigned DEFAULT 0,
+        PRIMARY KEY (`local_data_id`),
+        KEY `process_handler` (`process_handler`)
+    ) ENGINE=MEMORY');
+
     foreach (upgrade_boost_queue_tables() as $table => $definition) {
         db_install_execute($definition['create']);
 
