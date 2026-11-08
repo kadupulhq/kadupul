@@ -7,6 +7,7 @@
       <file>./Unit/ImportDataSourceItemValidationTest.php</file>
       <file>./Unit/ImportDataSourceItemOverrideTest.php</file>
       <file>Unit/Core/Rrd/RrdCommandFailuresNativeTest.php</file>
+      <file>./Unit/DataDebugRepairPostTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyWriteRegressionTest.php</file>
       <file>./Unit/Import/PackageExpandedSizeTest.php</file>
       <file>./Unit/Import/PackageImportTrustedKeysTest.php</file>
