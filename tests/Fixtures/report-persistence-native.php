@@ -14,7 +14,7 @@ $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 $directory = $argv[2];
 require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 $coverageSources = array('tests/Unit/Security/Auth/ReportPersistenceNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'tests/Fixtures/report-persistence-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
-    'lib/auth.php', 'lib/database.php', 'tests/Helpers/PhpSource.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
+    'lib/auth.php', 'lib/database.php', 'tests/Helpers/PhpSource.php', 'lib/reports.php', 'lib/html_reports.php', 'include/global_constants.php', 'include/global_arrays.php', 'include/global_languages.php', 'lib/time.php', 'lib/html.php', 'lib/html_form.php', 'lib/data_query.php', 'lib/sort.php', 'lib/html_tree.php', 'lib/html_utility.php',
     'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
 if (isset($argv[3])) {
     $GLOBALS['nativeCoverageEvidence'] = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/report-persistence-native.php', $argv[1], $coverageSources);
@@ -53,6 +53,13 @@ require_once $root . '/src/Platform/Infrastructure/Legacy/LegacyConnectionRegist
 foreach (['db_begin_transaction', 'db_commit_transaction', 'db_rollback_transaction'] as $function) {
     eval(test_php_function_source($databaseSource, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
+// Preserve the production escaping wrapper while isolating locale/session bootstrap.
+// This extracted dependency is hashed, not attributed whole-file coverage hits.
+$translationSource = file_get_contents($root . '/include/global_languages.php');
+if (!is_string($translationSource)) {
+    throw new RuntimeException('Cannot read the report translation wrapper.');
+}
+eval(test_php_function_source($translationSource, '__esc')); // nosemgrep: php.lang.security.eval-use.eval-use
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $db->exec('CREATE TABLE user_auth_realm (user_id INTEGER, realm_id INTEGER)');
 $db->exec('CREATE TABLE user_auth_group (id INTEGER, enabled TEXT)');

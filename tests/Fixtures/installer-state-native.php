@@ -19,7 +19,7 @@ if (($argv[3] ?? '') === 'coverage') {
     require $root . '/tests/vendor/autoload.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
     foreach (InstallerStateEvidence::sources() as $source) {
-        if (str_starts_with($source, 'lib/')) {
+        if (str_starts_with($source, 'lib/') || str_starts_with($source, 'src/Platform/')) {
             $filter->includeFile($root . '/' . $source);
         }
     }
@@ -204,6 +204,8 @@ $installSource = file_get_contents($root . '/install/functions.php');
 if ($installSource === false) {
     throw new RuntimeException('Installer setting source is unavailable.');
 }
+require_once $root . '/src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php';
+require_once $root . '/src/Platform/Infrastructure/Legacy/InstallerConfigurationWriter.php';
 eval(test_php_function_source($installSource, 'set_install_config_option'));
 require $root . '/lib/installer.php';
 $worker = (new ReflectionClass(Installer::class))->newInstanceWithoutConstructor();

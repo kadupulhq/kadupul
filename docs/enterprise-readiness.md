@@ -4,6 +4,8 @@ This records the affected requirement only; other enterprise requirements remain
 
 | Requirement and acceptance criteria | Subsystem | Status | Verification evidence | Known gaps and risks | Release gate |
 | --- | --- | --- | --- | --- | --- |
+| Shared filter preference persistence preserves feature policy, validation and transaction ownership. | Automation, graph definitions and graphing | implemented | PHP 8.4.25: original adapters pass 12 SQLite characterization cases / 108 assertions. Current locked production/test caches with PHPUnit 12 pass 69 cases / 376 assertions, including stored-only domain validation, raw empty-map retention, actual container wiring, revoked/denied actors, owned transactions, malformed JSON, encoding/write failure rollback and unchanged replacement. PCOV passes 17 cases / 151 assertions and measures all 65 executable statements in the provider and three adapters. | Local persistence uses SQLite and a no-dev application cache plus the locked test stack. PHPUnit 12 reports 68 mock-without-expectations notices in the 69 cases; assertions remain active. Current-head full-dev CI/static checks and actual Sonar duplication measurement remain pending. Internal adapter constructors now receive the shared contract; the two explicit test callers were updated. Public feature ports and stored keys are unchanged. | Require separate review and current-head CI. Deploy the provider, contract and three adapters together; no schema, dependency or setting migration. |
+| Coverage shard discovery retains every listed Pest and native PHPUnit class. | CI verification | implemented | The original parser drops ANSI-colored DSL classes. The mixed-format regression fails before the correction and passes afterward; complete inventory tooling passes 31 tests / 81 assertions. The actual full listing partitions all 459 classes exactly once across six nonempty shards and admits all 28 graph-query cases. | Fresh complete hosted execution is required. Previously green shards omitted colored DSL cases and do not establish execution of those cases. No exclusions, assertions or quality thresholds are relaxed. | Require separate review and full current-head producers before merging affected changes. |
 | Operators can explicitly compare web/installer runtimes, inspect bounded local operational evidence, select supported deployment-role presets and record usability observations without automatic release acceptance. | Installer readiness | implemented | Focused preset, runtime subprocess/protocol, authorization, real-schema/RRD and usability-report tests. Native command and browser proof artifacts identify exact source snapshots. The release rehearsal requires partial collector, worker-crash and database-outage evidence and a real repaired synchronization delta. | Human sessions remain unavailable; the assessor validates declarations only. Local RRD timestamps do not establish rendering or device success. Cached native recovery probes use a recorded earlier source and do not satisfy the full pinned runtime/release gate. | Require current-head CI, independent review, the full pinned rehearsal and actual human/operational acceptance before release. No schema/runtime/dependency change. |
 | Coverage scratch cleanup preserves checkout sources and originating unit measurements when the checkout is beneath the temporary directory. | CI coverage provenance | implemented | PHP 8.4.25 / installed PCOV: actual native helper execution and the real poller reports reproduce checkout-source deletion with the original merger; the corrected merger passes the existing negative selftest, retains source bytes and unit identities, and removes associated scratch copies. The regression explicitly exercises the nested layout on other CI checkout layouts too. | Focused local merger evidence only; complete producer composition and current-head CI remain separate gates. | Require current-head CI and review. No dependency, application, schema or coverage-threshold change. |
 | Installer operators can diagnose prerequisites, review changes, recover explicitly, validate unattended configuration and export diagnostics without exposing secrets. | Installer operator experience | implemented | PHP 8.4.25: 99 focused tests/440 assertions plus 39 native database/readiness cases/168 assertions. Actual CLI validation success/error exit codes and 63 native browser checks on PHP 8.4.26/MySQL 8.4.11 cover keyboard disclosure, consent, CSRF, French health text and authenticated diagnostic privacy. PHPStan and architectural dependency checks run separately. The redacted export is allowlisted and authorization precedes inspection. [Unattended configuration](installer-unattended.md), [usability acceptance](installer-usability.md). | Human first-time usability and assistive-technology sessions remain unverified. Recorded poller starts do not establish completed collection, device health, graph updates or backup recoverability. | Current-head CI before merge; human acceptance and representative operational verification before claiming release readiness. Deploy templates, assets, catalogs and PHP together; no schema/dependency change. |
@@ -248,3 +250,57 @@ the old serialization and cannot repair previously stored values.
 - API: `Platform\Contract\DatabaseTarget` captures a connection identity. The existing `Platform\Application\Port\DatabaseTarget` local/main enum remains unchanged and serves a different contract.
 - Scope: shared Platform capabilities only. Existing administrative routes are unchanged; each consumer must bind its displayed form target and pass the original server capture before this protects a workflow. These capabilities do not authenticate or authorize an actor.
 - Verification: actual two-schema selection regressions run on MariaDB 10.11 and MySQL 8.4 with direct PHP 8.4.25. Current-head CI and consumer integration remain merge and rollout gates. No schema, runtime or dependency changes; reverting removes the unused capability before consumers adopt it.
+
+
+### Installer support-service extraction
+
+| Requirement | Subsystem | Status | Verification and remaining gate |
+| --- | --- | --- | --- |
+| Historical helper entry points delegate to shared typed implementations | Platform installer | verified | All 42 original names remain compatibility adapters; 14 services hold the implementations. Root Symfony and native/Pest suites exercise paths, packages, defaults, schema operations, progress, file failures and collector outcomes. Local PHP 8.4 Docker evidence covers 309 Symfony installer tests (1,841 assertions) and 42 native installer compatibility tests (510 assertions). The 14 extracted services have complete statement coverage; this does not cover every historical upgrade. Current version-persistence evidence is in `var/installer-version`; earlier execution evidence is in `var/installer-execution` and helper evidence is in `var/installer-services`. |
+| Native database identity and caller-owned work remain explicit | Platform installer persistence | verified | Real shipped DDL, bound native queries, exact table identity, distinct local/remote collector IDs and caller-owned rollback are exercised on isolated database engines. This does not promise atomic DDL or distributed collector rollback. |
+| Safe mixed-version deployment and full legacy retirement | Platform installer operations | planned | Stop/drain workers and deploy the whole slice before cache rebuild. Native engine retirement, full production upgrade/restoration rehearsals, Windows and collector recovery remain release gates. No deployment or release is claimed. |
+
+This is main/1.3 architectural work. LTS is unchanged and requires separate
+maintenance verification for shared native reliability corrections; the new
+Symfony architecture is not a backport.
+
+Local verification also passes maximum-level PHPStan, Deptrac with zero
+uncovered dependencies, Symfony container lint, the global-state inventory and
+23 gettext PO/MO pairs. Entry-point inventory admits all 421 entries with
+no unknown gates; 27 installer source-pin regression checks pass. All 13 architecture tests now pass after registering the two existing installer
+operational-verification adapters in the explicit worker allowlist. After
+reconciling current main, sink and architectural-hotspot checks pass with
+`LC_ALL=C`; only affected source entries were regenerated. GitHub checks on
+the published revision remain required before merge.
+
+
+### Installer application execution
+
+| Requirement | Subsystem | Status | Evidence and remaining gate |
+| --- | --- | --- | --- |
+| Preserve native phase ordering and failure boundaries in an application service | Platform installer execution | verified | `InstallationExecution` uses the explicit `InstallationActions` boundary. Mode constants, fresh/upgrade/collector/downgrade/none paths, primary role timing, returned failures and interruptions are exercised through the service and actual native handoff. New service/enum statement coverage is complete. |
+| Retire native phase implementations | Platform installer operations | planned | Native database conversion, package import, primary setup and versioned upgrade internals remain. Full fresh-install/upgrade, production recovery and Windows rehearsals remain release gates. |
+
+The extraction does not change native worker authorization or exclusion, add a
+second write path, or imply atomic rollback of schema and external side effects.
+No LTS changes or deployment were performed.
+
+
+### Installer version confirmation
+
+| Requirement | Subsystem | Status | Evidence and remaining gate |
+| --- | --- | --- | --- |
+| Preserve confirmed migration markers and caller transaction ownership | Platform installer persistence | verified | Extracted `InstallerVersionWriter`, retaining the native PDO selection and transaction protocol. Tests cover actual shipped DDL on MariaDB/MySQL, real SQLite write/readback/commit failures, native CLI retry boundaries and injected driver/cleanup failures. New service has 55/55 statements covered. |
+| Validate complete production upgrade and restoration | Platform installer operations | planned | Full historical upgrade chains, production-sized concurrent workloads and restoration remain release gates. No deployment, full-install certification or distributed rollback is claimed. |
+
+Original extraction verification used non-root Docker PHP 8.4.27 with PCOV 1.0.12
+and unchanged locked Composer dependencies: 309 tests / 1,841 assertions with
+no skips. The upgrade-discovery correction passes all 309 installer tests with
+1,840 assertions and no skips on PHP 8.4.25 / MariaDB 10.11.19. Current-head
+coverage and release rehearsals remain GitHub CI gates. The focused version suite passes 59 tests / 315
+assertions on MariaDB; the additional MySQL run passes 36 tests / 171 assertions.
+The native CLI upgrade/retry regression passes with 146 assertions, and native
+state/automation/secret checks pass 42 tests / 510 assertions. Historical profile
+upgrade/refusal/retry integration passes 9 tests / 107 assertions, including
+missing-source, marker and execution-evidence rejection controls. This architectural
+slice does not change LTS or introduce a second version write path.

@@ -26,6 +26,9 @@ final class CdefCliCoverageRegistration
         return array_values(array_unique(array_merge(CdefNativeCoverageRegistration::sources(), [
             'cli/upgrade_database.php', 'include/cli_check.php', 'include/global.php',
             'lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php',
+            'src/Platform/Infrastructure/Legacy/NativeInstallerFunctions.php',
+            'src/Platform/Infrastructure/Legacy/InstallerMigrationDatabase.php',
+            'src/Platform/Infrastructure/Legacy/InstallerMigrationProgress.php',
             'lib/rrd_maintenance.php', 'lib/data_source_profile_integrity.php',
             'install/upgrades/1_2_34.php', 'install/upgrades/1_2_35.php', 'install/upgrades/1_2_36.php', 'install/upgrades/1_2_37.php', 'lib/schema_repair_integrity.php',
             'src/Platform/Infrastructure/Legacy/LegacyComponentAutoloader.php',

@@ -128,18 +128,19 @@ test('no argument of the remote call is taken from the local settings', function
  * is the precedent the fix follows.
  */
 test('the installer already passed the remote retry count', function () use ($vars) {
-    // Run the installer's own call, rather than counting a variable name that
-    // also appears in the global declaration above it.
-    // install/functions.php has three of these; the local one comes first.
-    $arguments = connect_arguments(
-        '$connection = db_connect_real(',
-        $vars,
-        'install/functions.php',
-        'function install_test_remote_database_connection()'
-    );
-
-    expect($arguments[0])->toBe('main.invalid')
-        ->and($arguments[RETRIES])->toBe(1);
+    // Execute the compatibility adapter and its real typed diagnostic bridge.
+    $code = 'function db_connect_real() { echo json_encode(func_get_args()); exit(0); }';
+    foreach ($vars as $name => $value) {
+        $code .= '$' . $name . ' = ' . var_export($value, true) . ';';
+    }
+    $code .= 'require ' . var_export(dirname(__DIR__, 4) . '/install/functions.php', true) . '; install_test_remote_database_connection();';
+    $result = \test_php_run($code);
+    expect($result['err'])->toBe('');
+    $expected = [];
+    foreach (['hostname', 'username', 'password', 'default', 'type', 'port', 'retries', 'ssl', 'ssl_key', 'ssl_cert', 'ssl_ca'] as $field) {
+        $expected[] = $vars['rdatabase_' . $field];
+    }
+    expect(json_decode($result['out'], true))->toBe($expected);
 });
 
 /**

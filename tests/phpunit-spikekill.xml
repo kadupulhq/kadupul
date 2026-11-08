@@ -36,6 +36,7 @@
       <file>Unit/Installer/InstallerAutomationModeTest.php</file>
       <file>Unit/Security/Auth/GraphTemplateBulkCsrfTest.php</file>
       <file>Unit/Security/Auth/RemoteGraphPermissionTest.php</file>
+      <file>Unit/Security/Auth/RemoteGraphQueryComponentsTest.php</file>
       <file>Unit/BundledDependencyCompatibilityTest.php</file>
       <file>Unit/PhpseclibBranchCompatibilityTest.php</file>
       <file>Unit/Security/Auth/BasicAuthAuthorizationTest.php</file>
@@ -88,6 +89,7 @@
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>Unit/Core/Poller/SystemMibIntervalTest.php</file>
+      <file>Unit/Database/PluginTableRefreshTest.php</file>
       <file>Unit/Ui/Aggregate/AggregateTotalLegendNativeTest.php</file>
       <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/RealtimeScriptServerBatchTest.php</file>
