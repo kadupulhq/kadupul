@@ -11,7 +11,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
 - Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
-- Record the system-MIB collection time only after a collector has been started with `--mibs`, so a poll that exits early no longer postpones collection for four hours (#1348).
+- Record the system-MIB collection time only after a collector has been started with `--mibs`, so a poll that exits early no longer postpones collection for four hours; the bad SNMP index warning accompanies that run instead of repeating every poll while polling is disabled (#1348).
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 

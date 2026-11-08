@@ -80,3 +80,19 @@ test('a poll that exits before starting a collector keeps the MIB window open', 
         [['poller_mibsrun_2', 36120]],
     ]);
 });
+
+test('the bad index check follows a launched MIB run, not an open window', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    expect($source)->not->toBeFalse();
+    $start = strpos($source, '    bad_index_check($');
+    expect($start)->not->toBeFalse();
+    $call = substr($source, $start, strpos($source, ';', $start) - $start + 1);
+    // The first run has the window open but started no collector, as when polling is disabled.
+    $program = 'namespace MibBadIndexProbe;$checks=[];'
+        . 'function bad_index_check($mibs){$GLOBALS["checks"][]=$mibs;}'
+        . 'foreach([[true,false],[true,true],[false,false]] as [$mibs,$mibs_recorded]) {' . $call . '}'
+        . 'echo json_encode($checks);';
+    $result = test_php_run($program);
+    expect($result['status'])->toBe(0, $result['err'])->and($result['err'])->toBe('')
+        ->and(json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR))->toBe([false, true, false]);
+});
