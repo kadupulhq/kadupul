@@ -12,6 +12,9 @@
       <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
+      <file>./Unit/Security/Xss/RrdTuneRecommendationEscapeTest.php</file>
+      <file>./Unit/Security/Xss/FormMetadataBatchTest.php</file>
+      <file>./Unit/Core/Log/CactiLogControlCharacterTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Csp/NonceFailureErrorPageTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>

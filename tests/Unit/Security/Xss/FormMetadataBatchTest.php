@@ -78,6 +78,19 @@ test('color metadata is encoded without changing raw selection and callbacks', f
 	expect($session['form_change_actions'])->toBe(array($payload => 'this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;changed()'));
 })->with('form metadata payloads');
 
+test('the color none label is printed as text', function ($payload) {
+	Database::$colors = array();
+	Database::$current = '';
+	list($doc) = capture(function () use ($payload) {
+		form_color_dropdown('color', '', $payload, '');
+	});
+	$options = $doc->getElementsByTagName('option');
+	expect($options->length)->toBe(1);
+	expect($options->item(0)->getAttribute('value'))->toBe('0');
+	expect($options->item(0)->childNodes->length)->toBe(1);
+	expect($options->item(0)->textContent)->toBe(decoded($payload));
+})->with('form metadata payloads');
+
 test('checkbox group IDs are safe in both layouts and retain raw child callbacks', function ($flex, $payload) {
 	list($doc, $session) = capture(function () use ($flex, $payload) {
 		$field = array('method' => 'checkbox_group', 'type' => $flex ? 'flex' : '', 'friendly_name' => 'Group',
