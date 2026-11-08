@@ -154,9 +154,8 @@ function api_aggregate_associate($local_graph_id, $graphs)
                 array($aggregate_id)
             );
 
-            if ($max_sequence == '') {
-                $max_sequence = 1;
-            }
+            /* append after the last member, since MAX(sequence) itself ties with it */
+            $max_sequence = ($max_sequence == '' ? 1 : $max_sequence + 1);
 
             foreach ($graphs as $graph) {
                 aggregate_graph_execute(
