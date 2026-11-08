@@ -11,9 +11,9 @@
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
       <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
-      <file>Unit/DataQueryOrphanStateTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
+      <file>Unit/DataQueryOrphanStateTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
       <file>Unit/Base1024GraphDivisorTest.php</file>
@@ -90,6 +90,7 @@
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>Unit/Core/Poller/SystemMibIntervalTest.php</file>
+      <file>Unit/Database/PluginTableRefreshTest.php</file>
       <file>Unit/Ui/Aggregate/AggregateTotalLegendNativeTest.php</file>
       <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/RealtimeScriptServerBatchTest.php</file>

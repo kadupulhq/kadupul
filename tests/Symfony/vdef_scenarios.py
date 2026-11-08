@@ -6,6 +6,8 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import sys
+import time
 import urllib.parse
 import urllib.request
 import urllib.error
@@ -75,6 +77,68 @@ class Scenario:
         values.update(fields)
         action = urllib.parse.urljoin(self.base + "/", form["action"])
         return self.request(action, values)
+
+
+def wait_for_prefix_alias(base: str, marker: str, expected: bytes, deadline_seconds: float = 10) -> None:
+    """Wait for this fixture's Apache alias, never retry an application action."""
+    origin = urllib.parse.urlsplit(base)
+    if (origin.scheme != 'http' or origin.hostname not in ('127.0.0.1', 'localhost', '::1')
+            or origin.username is not None or origin.password is not None
+            or origin.path not in ('', '/') or origin.query or origin.fragment
+            or re.fullmatch(r'vdef-prefix-ready-[0-9a-f]{32}\.txt', marker) is None
+            or not expected or not 0 < deadline_seconds <= 10):
+        raise ValueError('An owned local alias readiness marker is required.')
+
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, request, response, code, message, headers, new_url):
+            return None
+
+    # No session cookies or proxy credentials belong in a static setup probe.
+    client = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+    deadline = time.monotonic() + deadline_seconds
+    observed = 'no response'
+    while time.monotonic() < deadline:
+        request = urllib.request.Request(base.rstrip('/') + '/cacti/' + marker,
+                                         headers={'Cache-Control': 'no-store', 'Connection': 'close'})
+        try:
+            with client.open(request, timeout=min(1, max(0.001, deadline - time.monotonic()))) as response:
+                observed = 'HTTP ' + str(response.status)
+                if response.status != 200 or response.read(len(expected) + 1) != expected:
+                    raise RuntimeError('Apache prefix readiness returned an unexpected marker response: ' + observed)
+                return
+        except urllib.error.HTTPError as error:
+            observed = 'HTTP ' + str(error.code)
+            error.close()
+            if error.code not in (404, 503):
+                raise RuntimeError('Apache prefix readiness failed: ' + observed) from None
+        except (urllib.error.URLError, TimeoutError):
+            observed = 'connection unavailable'
+        remaining = deadline - time.monotonic()
+        if remaining > 0:
+            time.sleep(min(0.1, remaining))
+    raise RuntimeError('Apache prefix readiness deadline expired: ' + observed)
+
+
+def cleanup_prefix_fixture(harness, marker_name: str | None, original_error: BaseException | None) -> None:
+    failures = []
+    actions = []
+    if marker_name is not None:
+        actions.append(lambda: harness.command('php', '-r', 'if (!unlink($argv[1])) { throw new RuntimeException("Cannot remove alias marker."); }', marker_name, check=True))
+    actions.extend((
+        lambda: harness.command('php', '-r', 'if (!copy("/tmp/vdef-prefix-config.php", "include/config.php") || !unlink("/tmp/vdef-prefix-config.php")) { throw new RuntimeException("Cannot restore prefix fixture configuration."); }', check=True),
+        lambda: harness.compose('exec', '-T', 'web', 'sh', '-ec', 'a2disconf vdef-prefix; apachectl -k graceful', check=True),
+    ))
+    for action in actions:
+        try:
+            action()
+        except Exception as error:
+            failures.append(type(error).__name__)
+    if failures:
+        message = 'VDEF prefix cleanup failed: ' + ', '.join(failures)
+        if original_error is not None:
+            original_error.add_note(message)
+        else:
+            raise RuntimeError(message)
 
 
 def verify_vdefs(harness, session, user_id, check):
@@ -192,14 +256,19 @@ def verify_vdefs(harness, session, user_id, check):
     verify_browser_front('/app.php')
     verify_browser_front('/public/index.php')
     harness.command('php', '-r', 'if (!copy("include/config.php", "/tmp/vdef-prefix-config.php")) { throw new RuntimeException("Cannot back up prefix fixture configuration."); }', check=True)
+    marker_name = 'vdef-prefix-ready-' + uuid.uuid4().hex + '.txt'
+    marker_value = 'owned-vdef-prefix-' + uuid.uuid4().hex
+    marker_created = False
     try:
+        harness.command('php', '-r', '$file=fopen($argv[1], "x"); if ($file === false) { throw new RuntimeException("Cannot create alias marker."); } try { try { if (fwrite($file, $argv[2]) !== strlen($argv[2])) { throw new RuntimeException("Cannot write alias marker."); } } finally { fclose($file); } } catch (Throwable $error) { unlink($argv[1]); throw $error; }', marker_name, marker_value, check=True)
+        marker_created = True
         harness.command('php', '-r', 'if (file_put_contents("include/config.php", PHP_EOL . chr(36) . "url_path = " . var_export("/cacti/", true) . ";" . PHP_EOL, FILE_APPEND) === false) { throw new RuntimeException("Cannot write prefix fixture configuration."); }', check=True)
         harness.compose('exec', '-T', 'web', 'sh', '-ec', "printf 'Alias /cacti/ /var/www/html/\\n' > /etc/apache2/conf-available/vdef-prefix.conf; a2enconf vdef-prefix; apachectl -k graceful", check=True)
+        wait_for_prefix_alias(harness.base, marker_name, marker_value.encode('ascii'))
         verify_browser_front('/cacti/app.php')
         verify_browser_front('/cacti/public/index.php')
     finally:
-        harness.command('php', '-r', 'if (!copy("/tmp/vdef-prefix-config.php", "include/config.php") || !unlink("/tmp/vdef-prefix-config.php")) { throw new RuntimeException("Cannot restore prefix fixture configuration."); }', check=True)
-        harness.compose('exec', '-T', 'web', 'sh', '-ec', 'a2disconf vdef-prefix; apachectl -k graceful', check=True)
+        cleanup_prefix_fixture(harness, marker_name if marker_created else None, sys.exception())
     check(browser_fronts == ['/app.php', '/public/index.php', '/cacti/app.php', '/cacti/public/index.php'], 'VDEF browser type change and save pass under CSP')
 
     # Two editor tabs with the same initial revision: the first update saves,
