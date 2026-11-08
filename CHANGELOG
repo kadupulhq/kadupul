@@ -32,6 +32,7 @@ Cacti CHANGELOG
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
+-issue: Replace a remote collector table in one transaction during full synchronization, so a failed insert keeps its previous rows instead of leaving it empty; non-InnoDB tables keep the 1.2.31 behavior (#761)
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
 -issue: Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed (#198)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
