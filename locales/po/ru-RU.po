@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-01 10:54-0800\n"
+"POT-Creation-Date: 2026-11-07 21:27-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -546,7 +546,15 @@ msgstr "Размер"
 msgid "No"
 msgstr "Нет"
 
-#: aggregate_graphs.php:1351 aggregate_templates.php:724 automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786 data_debug.php:791 data_queries.php:1536 data_sources.php:2060 data_sources.php:2061 data_templates.php:1321 graph_templates.php:920 host_templates.php:997 include/global_settings.php:1942 include/global_settings.php:968 lib/api_automation.php:1439 lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4054 tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753 user_domains.php:757 user_group_admin.php:2088
+#: aggregate_graphs.php:1351 aggregate_templates.php:724
+#: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2060
+#: data_sources.php:2061 data_templates.php:1321 graph_templates.php:920
+#: host_templates.php:997 include/global_settings.php:968
+#: include/global_settings.php:1942 lib/api_automation.php:1439
+#: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4054
+#: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
+#: user_domains.php:757 user_group_admin.php:2088
 msgid "Yes"
 msgstr "Да"
 
@@ -680,7 +688,9 @@ msgstr "Агрегированный шаблон [новый]"
 msgid "Aggregate Templates"
 msgstr "Агрегированные Шаблоны"
 
-#: aggregate_templates.php:612 include/global_arrays.php:1009 include/global_arrays.php:1073 lib/installer.php:2802 user_admin.php:2365 user_group_admin.php:2164
+#: aggregate_templates.php:612 include/global_arrays.php:1009
+#: include/global_arrays.php:1073 lib/installer.php:2802 user_admin.php:2365
+#: user_group_admin.php:2164
 msgid "Templates"
 msgstr "Шаблоны"
 
@@ -1101,7 +1111,12 @@ msgstr "Местоположение"
 msgid "Contact"
 msgstr "Контакт"
 
-#: automation_devices.php:276 include/global_form.php:1133 include/global_form.php:1169 include/global_form.php:1363 include/global_form.php:1739 lib/api_automation.php:1196 lib/api_automation.php:278 lib/installer.php:2108 lib/installer.php:2803 managers.php:214 user_admin.php:1073 user_admin.php:924 user_group_admin.php:1095 user_group_admin.php:2076
+#: automation_devices.php:276 include/global_form.php:1133
+#: include/global_form.php:1169 include/global_form.php:1363
+#: include/global_form.php:1739 lib/api_automation.php:278
+#: lib/api_automation.php:1196 lib/installer.php:2108 lib/installer.php:2803
+#: managers.php:214 user_admin.php:924 user_admin.php:1073
+#: user_group_admin.php:1095 user_group_admin.php:2076
 msgid "Description"
 msgstr "Описание"
 
@@ -1118,7 +1133,17 @@ msgstr "Аптайм"
 msgid "SNMP"
 msgstr "SNMP"
 
-#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:587 package_import.php:672 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
+#: automation_devices.php:280 automation_devices.php:524
+#: automation_graph_rules.php:835 automation_networks.php:1075
+#: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
+#: data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:52
+#: lib/api_automation.php:53 lib/api_automation.php:280
+#: lib/api_automation.php:573 lib/api_automation.php:1199
+#: lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216
+#: package_import.php:587 package_import.php:672 plugins.php:497
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
+#: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
+#: utilities.php:2141
 msgid "Status"
 msgstr "Статус"
 
@@ -1464,7 +1489,20 @@ msgstr "Диапазон обнаружения сети [новый]"
 msgid "General Settings"
 msgstr "Общие Настройки"
 
-#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:1211 data_queries.php:817 data_queries.php:924 graph_templates.php:499 include/global_form.php:1085 include/global_form.php:1125 include/global_form.php:1327 include/global_form.php:1355 include/global_form.php:1428 include/global_form.php:1456 include/global_form.php:201 include/global_form.php:2101 include/global_form.php:2199 include/global_form.php:2244 include/global_form.php:267 include/global_form.php:324 include/global_form.php:344 include/global_form.php:385 include/global_form.php:515 include/global_form.php:552 include/global_form.php:659 lib/installer.php:2108 lib/installer.php:2181 lib/installer.php:2211 lib/installer.php:2803 lib/installer.php:2891 lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924 user_domains.php:310 utilities.php:3206 utilities.php:864
+#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
+#: include/global_form.php:201 include/global_form.php:267
+#: include/global_form.php:324 include/global_form.php:344
+#: include/global_form.php:385 include/global_form.php:515
+#: include/global_form.php:552 include/global_form.php:659
+#: include/global_form.php:1085 include/global_form.php:1125
+#: include/global_form.php:1327 include/global_form.php:1355
+#: include/global_form.php:1428 include/global_form.php:1456
+#: include/global_form.php:2101 include/global_form.php:2199
+#: include/global_form.php:2244 lib/installer.php:2108 lib/installer.php:2181
+#: lib/installer.php:2211 lib/installer.php:2803 lib/installer.php:2891
+#: lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924
+#: user_domains.php:310 utilities.php:864 utilities.php:3206
 msgid "Name"
 msgstr "Имя"
 
@@ -2306,7 +2344,8 @@ msgstr "Критерии создания дерева"
 msgid "Change Leaf Type"
 msgstr "Изменить тип листа"
 
-#: automation_tree_rules.php:738 lib/installer.php:4279 utilities.php:2752 utilities.php:2753 utilities.php:2756 utilities.php:2757
+#: automation_tree_rules.php:738 lib/installer.php:4279 utilities.php:2752
+#: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "ВНИМАНИЕ:"
 
@@ -2571,7 +2610,8 @@ msgstr "Внутренний ID Источника Данных."
 msgid "The Status of the Data Source Debug Check."
 msgstr "Проверка состояния отладки Источника Данных."
 
-#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594 package_import.php:641
+#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594
+#: package_import.php:641
 msgid "Writable"
 msgstr "Доступно для записи"
 
@@ -2800,7 +2840,8 @@ msgstr "Непригодный"
 msgid "Failed"
 msgstr "Ошибка"
 
-#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073 lib/installer.php:2134
+#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073
+#: lib/installer.php:2134
 msgid "Passed"
 msgstr "Пройдено"
 
@@ -4458,7 +4499,9 @@ msgstr "Графический шаблон на основе шаблона"
 msgid "Save Filters"
 msgstr "Сохранить фильтры"
 
-#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4537 utilities.php:1838 utilities.php:866
+#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
+#: lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4537
+#: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Строк"
 
@@ -14004,7 +14047,7 @@ msgstr "Не удалось установить указанную версию
 msgid "Invalid Theme Specified"
 msgstr "Недействительная тема Уточненная тема"
 
-#: lib/installer.php:1009 lib/installer.php:962
+#: lib/installer.php:962 lib/installer.php:1009
 msgid "Unexpected path parameter"
 msgstr "Параметр Неожиданный путь"
 
@@ -14115,7 +14158,8 @@ msgstr "Тест подключения"
 msgid "Begin"
 msgstr "Начало"
 
-#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305 lib/installer.php:2947
+#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305
+#: lib/installer.php:2947
 msgid "Upgrade"
 msgstr "Обновить"
 
@@ -14188,7 +14232,8 @@ msgstr "Предварительная установка Проверки"
 msgid "Location checks"
 msgstr "Проверка местоположения"
 
-#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247 lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4299
+#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247
+#: lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4299
 msgid "ERROR:"
 msgstr "ОШИБКА:"
 
@@ -15255,7 +15300,7 @@ msgstr "Плагин в каталоге '%s' не включает функци
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "Плагин в каталоге '%s' не включает функцию установки '%s()'.  Эта функция должна существовать для установки плагина."
 
-#: lib/plugins.php:1328
+#: lib/plugins.php:1310
 msgid "Legacy Plugin"
 msgstr "Наследие Плагин"
 
@@ -15280,7 +15325,7 @@ msgstr "Не указано"
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2282
+#: lib/poller.php:2050 lib/poller.php:2275
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
