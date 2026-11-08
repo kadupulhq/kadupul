@@ -242,7 +242,8 @@ final class AuthControllerNativeCoverageTest extends TestCase
             @$document->loadHTML($state['html']);
             $xpath = new \DOMXPath($document);
             self::assertSame('post', $xpath->evaluate('string(//form/@method)'));
-            self::assertSame('http://localhost/monitoring/logout.php', $xpath->evaluate('string(//form/@action)'));
+            // The target comes from the configured path, never from the Host header.
+            self::assertSame('/monitoring/logout.php', $xpath->evaluate('string(//form/@action)'));
             self::assertSame($action, $xpath->evaluate('string(//input[@name="action"]/@value)'));
             self::assertStringStartsWith('sid:', $xpath->evaluate('string(//input[@name="__csrf_magic"]/@value)'));
             self::assertSame('Logout', $xpath->evaluate('string(//button)'));

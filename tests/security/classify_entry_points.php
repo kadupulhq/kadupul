@@ -2271,8 +2271,8 @@ const NATIVE_SESSION_FIREWALL_SOURCES = [
 
 // This route renders only an in-process native logout presentation object.
 const LOGOUT_PRESENTATION_SOURCES = [
-    'logout.php' => 'b59ef059d87e0e414f384b7c581605e12c1ec8875b48d359eb4832f3b2cd24b9',
-    'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => 'a72bb26d7cd828c7179377c6cdf2aa179dae4029d90ed7584fa2f5de9ce808e2',
+    'logout.php' => '90511be9f62acb62915dbe9bad1fcd0b85c93e259fa2ca4584b50165e43858f1',
+    'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => '49a1a9f5ca2b68442eaa237b24964a11093b40ee1c9cebbc1e88e562719e2cb7',
     'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php' => 'e5b20511ae219ac9f5052c9f2964ae29659c219443cfd3176b905b978348b7d6',
     'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php' => '20a13f081e47d27cad5832203b3acfcd75930167b2d21a6547ca6f63a9675eba',
     'src/Platform/Infrastructure/Symfony/LegacyPageForwarder.php' => 'd709a29dd12cdc0b138266dd01a016d2e0481eeedd62d41c554eacef549c6843',

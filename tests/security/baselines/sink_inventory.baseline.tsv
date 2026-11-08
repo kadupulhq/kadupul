@@ -799,7 +799,7 @@ header_redirect	./link.php:37	    header('Location: index.php');
 header_redirect	./link.php:86	        header('Location: index.php');
 header_redirect	./log/index.php:7	header("Location:../index.php");
 header_redirect	./login.php:15	header('Location: ' . $config['url_path'] . 'index.php', true, 303);
-header_redirect	./logout.php:101	    header('Location: index.php', true, 303);
+header_redirect	./logout.php:103	    header('Location: index.php', true, 303);
 header_redirect	./managers.php:1032	            header('Location: managers.php?action=edit&id=' . get_nfilter_request_var('id') . '&tab=notifications&header=false');
 header_redirect	./managers.php:1076	                header('Location: managers.php?header=false');
 header_redirect	./managers.php:912	            header('Location: managers.php?action=edit&tab=notifications&id=' . get_request_var('id'));

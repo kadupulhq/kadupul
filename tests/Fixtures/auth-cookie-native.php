@@ -230,5 +230,6 @@ $nativeChildCoverageMarkers = array('native-auth-operation-returned', 'credentia
 $state['lockout_queries'] = $lockout_queries;
 $state['error_message'] = $error_msg ?? '';
 $state['recovery_queries'] = $recovery_queries;
-$state['accounts'] = $db->query('SELECT id,locked,lastfail,failed_attempts,enabled FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
+// The legacy-schema scenario drops lastfail; read back only the columns that remain.
+$state['accounts'] = $db->query('SELECT id,locked,' . (db_column_exists('user_auth', 'lastfail') ? 'lastfail,' : '') . 'failed_attempts,enabled FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
 fwrite(STDOUT, json_encode($state, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));
