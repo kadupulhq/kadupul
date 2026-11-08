@@ -11,6 +11,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
 - Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
+- Record the system-MIB collection time only after a collector has been started with `--mibs`, so a poll that exits early no longer postpones collection for four hours; the bad SNMP index warning accompanies that run instead of repeating every poll while polling is disabled (#1348).
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
 - Accept an empty Data Source item name, minimum or maximum in an imported template when its per-data-source override is set, as the data template form and export allow, and reject a field holding child elements with the import message instead of a type error (#1349).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
@@ -49,6 +50,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
+- Update the locked Symfony Config, Filesystem, FrameworkBundle, HttpClient, HttpFoundation, HttpKernel, Routing and Yaml packages to 7.4.23 and Mime to 7.4.22 to take upstream security fixes, retaining the Symfony 7.4 constraints and other locked versions.
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
 - Remove only the remote poller items the main data collector no longer holds after copying them to a Remote Data Collector, comparing item keys. The previous `last_updated` cutoff also removed current items that the copy left unchanged (#1408).
 - Record gettext source references by file without line numbers, so changes that only shift lines in PHP or Twig sources no longer rewrite and conflict on `locales/po` catalogs (a move that swaps two messages within one file still reorders their catalog blocks on the next rebuild); the catalog verifier now rejects line-numbered references.

@@ -397,8 +397,8 @@ dynamic_include	./lib/utility.php:177	    include_once($config['library_path'] .
 dynamic_include	./lib/utility.php:34	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:775	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:75	                include_once($file);
-dynamic_include	./poller.php:1163	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1342	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1171	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1350	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:19	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:20	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:21	require_once($config['base_path'] . '/lib/rrd.php');

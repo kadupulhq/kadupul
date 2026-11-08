@@ -227,9 +227,10 @@ $poller_lastrun  = read_config_option('poller_lastrun_' . $poller_id);
 $poller_mibsrun  = read_config_option('poller_mibsrun_' . $poller_id);
 // collect the system mibs every 4 hours
 if (empty($poller_mibsrun) || ($current_time - $poller_mibsrun > 14400)) {
-    set_config_option('poller_mibsrun_' . $poller_id, $current_time);
     $mibs = true;
 }
+
+$mibs_recorded = false;
 // get the poller data
 $poller = db_fetch_row_prepared(
     'SELECT *
@@ -805,6 +806,13 @@ while ($poller_runs_completed < $poller_runs) {
                 $started_processes++;
             }
 
+            /* record the system MIB run once a collector has been started with --mibs,
+             * so an exit before launch leaves the four-hour window open */
+            if ($mibs && $started_processes > 0 && !$mibs_recorded) {
+                set_config_option('poller_mibsrun_' . $poller_id, $current_time);
+                $mibs_recorded = true;
+            }
+
             if ($poller_id == 1) {
                 // insert the current date/time for graphs
                 set_config_option('date', date('Y-m-d H:i:s'));
@@ -1051,7 +1059,7 @@ if ($poller_id == 1) {
     poller_maintenance();
     rrdcheck_poller_bottom();
     api_plugin_hook('poller_bottom');
-    bad_index_check($mibs);
+    bad_index_check($mibs_recorded);
     host_status_cache_check();
     poller_heartbeat_check();
 } else {
