@@ -12,6 +12,7 @@
       <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
+      <file>Unit/Core/Poller/ReplicateOutTableReplacementTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
@@ -62,7 +63,6 @@
       <file>Unit/Core/Rrd/RrdTuneLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerReplicationOutcomeTest.php</file>
       <file>Unit/Core/Poller/PollerReplicationSequenceTest.php</file>
-      <file>Unit/Core/Poller/ReplicateOutTableReplacementTest.php</file>
       <file>Unit/Core/Poller/PollerWriterDeadlineNativeTest.php</file>
       <file>Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
@@ -90,6 +90,7 @@
       <file>Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>Unit/Core/Poller/SystemMibIntervalTest.php</file>
+      <file>Unit/Database/PluginTableRefreshTest.php</file>
       <file>Unit/Ui/Aggregate/AggregateTotalLegendNativeTest.php</file>
       <file>Unit/Core/Poller/ScriptServerStartFailureTest.php</file>
       <file>Unit/Core/Poller/RealtimeScriptServerBatchTest.php</file>
