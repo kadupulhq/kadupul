@@ -1526,3 +1526,27 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-01-28 15:03:03
+
+-- Asset management pilot baseline.
+INSERT INTO `table_columns` VALUES ('asset_registry',1,'id','int(10) unsigned','NO','PRI',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('asset_registry',2,'revision','int(10) unsigned','NO','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('asset_registry',3,'policy','longtext','NO','',NULL,'','utf8mb4_bin');
+INSERT INTO `table_columns` VALUES ('asset_registry',4,'sources','longtext','NO','',NULL,'','utf8mb4_bin');
+INSERT INTO `table_indexes` VALUES ('asset_registry',0,'PRIMARY',1,'id','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_columns` VALUES ('asset_record',1,'kind','varchar(16)','NO','PRI',NULL,'','utf8mb4_bin');
+INSERT INTO `table_columns` VALUES ('asset_record',2,'record_id','varchar(65)','NO','PRI',NULL,'','utf8mb4_bin');
+INSERT INTO `table_columns` VALUES ('asset_record',3,'data','longtext','NO','',NULL,'','utf8mb4_bin');
+INSERT INTO `table_indexes` VALUES ('asset_record',0,'PRIMARY',1,'kind','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('asset_record',0,'PRIMARY',2,'record_id','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_columns` VALUES ('asset_event',1,'sequence','bigint(20) unsigned','NO','PRI',NULL,'auto_increment',NULL);
+INSERT INTO `table_columns` VALUES ('asset_event',2,'request_id','char(32)','NO','UNI',NULL,'','utf8mb4_bin');
+INSERT INTO `table_columns` VALUES ('asset_event',3,'data','longtext','NO','',NULL,'','utf8mb4_bin');
+INSERT INTO `table_indexes` VALUES ('asset_event',0,'PRIMARY',1,'sequence','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('asset_event',0,'asset_request',1,'request_id','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_columns` VALUES ('asset_observation',1,'sequence','bigint(20) unsigned','NO','PRI',NULL,'auto_increment',NULL);
+INSERT INTO `table_columns` VALUES ('asset_observation',2,'run_id','char(32)','NO','MUL',NULL,'','utf8mb4_bin');
+INSERT INTO `table_columns` VALUES ('asset_observation',3,'identity_id','char(64)','NO','',NULL,'','utf8mb4_bin');
+INSERT INTO `table_columns` VALUES ('asset_observation',4,'data','longtext','NO','',NULL,'','utf8mb4_bin');
+INSERT INTO `table_indexes` VALUES ('asset_observation',0,'PRIMARY',1,'sequence','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('asset_observation',0,'asset_run_identity',1,'run_id','A',1,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('asset_observation',0,'asset_run_identity',2,'identity_id','A',1,NULL,NULL,'','BTREE','');

@@ -26,7 +26,7 @@ final class InstallerCommandTest extends TestCase
 {
     private function plan(): array
     {
-        return ['mode' => 'install', 'schema' => 'new_install', 'target' => '1.2.38',
+        return ['mode' => 'install', 'schema' => 'new_install', 'target' => '1.2.40',
             'ready' => true, 'discovery' => false, 'job' => ['state' => 'not_started'],
             'checks' => [['name' => 'PHP', 'ok' => true, 'observed' => '8.4.25', 'remedy' => 'Enable the required runtime.']]];
     }
@@ -34,7 +34,7 @@ final class InstallerCommandTest extends TestCase
     private function statusReceipt(string $state): array
     {
         $complete = in_array($state, ['succeeded', 'partial'], true);
-        return ['state' => $state, 'schema' => $complete ? '1.2.38' : 'new_install', 'phase' => 'Waiting for the installation worker',
+        return ['state' => $state, 'schema' => $complete ? '1.2.40' : 'new_install', 'phase' => 'Waiting for the installation worker',
             'progress' => $complete ? 100 : 0, 'attempt' => 1, 'pending_collectors' => $state === 'partial' ? 1 : 0,
             'error' => in_array($state, ['failed', 'partial'], true) ? 'Installation stopped.' : null];
     }
@@ -137,7 +137,7 @@ final class InstallerCommandTest extends TestCase
 
     public function testStartRequiresACompleteReceiptForTheExpectedSchema(): void
     {
-        foreach (['1.2.38' => 0, '1.2.33' => 1] as $schema => $expectedExit) {
+        foreach (['1.2.40' => 0, '1.2.38' => 1, '1.2.33' => 1] as $schema => $expectedExit) {
             $receipt = $this->statusReceipt('succeeded');
             $receipt['schema'] = $schema;
             $worker = $this->createMock(LegacyWorkerRunner::class);

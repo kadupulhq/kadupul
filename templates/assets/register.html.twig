@@ -1,0 +1,134 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'assets' %}
+{% macro command(action, revision, request_id) %}
+    <input type="hidden" name="action" value="{{ action }}">
+    <input type="hidden" name="revision" value="{{ revision }}">
+    <input type="hidden" name="request_id" value="{{ request_id }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('asset_register') }}">
+{% endmacro %}
+{% block title %}{{ 'Asset register'|trans }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Asset register'|trans }}</h1>
+    <p>{{ 'Network equipment pilot. Discovery reports observations; approved records retain ownership and lifecycle history.'|trans }}</p>
+    <p><a href="{{ path('inventory_devices') }}">{{ 'Devices'|trans }}</a></p>
+    {% if error %}<p role="alert">{{ error|trans }}</p>{% endif %}
+    {% if saved %}<p role="status">{{ 'Change recorded.'|trans }}</p>{% endif %}
+    <section aria-labelledby="asset-quality">
+        <h2 id="asset-quality">{{ 'Data quality and reviews'|trans }}</h2>
+        <dl>
+            <dt>{{ 'Registered assets'|trans }}</dt><dd>{{ metrics.registered }} / 500</dd>
+            <dt>{{ 'Active assets with owner and custodian'|trans }}</dt><dd>{{ metrics.owned_active }} / {{ metrics.active }}</dd>
+            <dt>{{ 'Active assets with fresh observations'|trans }}</dt><dd>{{ metrics.fresh_active }} / {{ metrics.active }}</dd>
+            <dt>{{ 'Independent baseline coverage'|trans }}</dt><dd>{% if metrics.baseline_total %}{{ metrics.baseline_present }} / {{ metrics.baseline_total }}{% else %}{{ 'Not assessed'|trans }}{% endif %}</dd>
+            <dt>{{ 'Unlinked identities'|trans }}</dt><dd>{{ metrics.unlinked }} ({{ metrics.oldest_unlinked_days }} {{ 'days since oldest discovery'|trans }})</dd>
+            <dt>{{ 'Conflicting fields'|trans }}</dt><dd>{{ metrics.conflicts }}</dd>
+            <dt>{{ 'Critical assets missing support or recovery evidence'|trans }}</dt><dd>{{ metrics.critical_gaps }}</dd>
+        </dl>
+        {% if metrics.discrepancy_review_due %}<p>{{ 'Weekly discrepancy review is due.'|trans }}</p>{% endif %}
+        {% if metrics.lifecycle_review_due %}<p>{{ 'Monthly lifecycle review is due.'|trans }}</p>{% endif %}
+        {% for kind, review in policy.reviews|default({}) %}<p>{{ kind|trans }}: {{ review.reviewed_at }} · {{ review.evidence }}{% if review.sample_size is defined %} · {{ 'Sample / incorrect merges / missed duplicates'|trans }}: {{ review.sample_size }} / {{ review.incorrect_merges }} / {{ review.missed_duplicates }}{% endif %}</p>{% endfor %}
+        {% if policy.baseline is defined %}<p>{{ 'Baseline evidence'|trans }}: {{ policy.baseline.evidence }} · {{ policy.baseline.verified_at }}</p>{% endif %}
+    </section>
+    <details{% if not policy %} open{% endif %}>
+        <summary>{{ 'Pilot policy'|trans }}</summary>
+        <form method="post" action="{{ path('asset_register') }}">
+            {{ _self.command('configure', revision, request_id) }}
+            <p><label>{{ 'Population and scope'|trans }} <input name="scope" value="{{ policy.scope|default('') }}" maxlength="200" required></label></p>
+            <p><label>{{ 'Accountable steward'|trans }} <input name="steward" value="{{ policy.steward|default('') }}" maxlength="200" required></label></p>
+            <p><label>{{ 'Observation freshness in seconds'|trans }} <input name="freshness_seconds" type="number" min="300" max="2592000" value="{{ policy.freshness_seconds|default(86400) }}" required></label></p>
+            <button>{{ 'Save policy'|trans }}</button>
+        </form>
+    </details>
+    {% if policy %}
+    <section aria-labelledby="assets-heading">
+        <h2 id="assets-heading">{{ 'Assets'|trans }}</h2>
+        <table>
+            <caption>{{ 'Accepted records'|trans }}</caption>
+            <thead><tr><th scope="col">{{ 'Name'|trans }}</th><th scope="col">{{ 'Owner'|trans }}</th><th scope="col">{{ 'State'|trans }}</th><th scope="col">{{ 'Service'|trans }}</th><th scope="col">{{ 'Criticality'|trans }}</th></tr></thead>
+            <tbody>{% for asset in asset_page %}<tr><th scope="row"><a href="{{ path('asset_register', {asset: asset.id}) }}">{{ asset.fields.name }}</a></th><td>{{ asset.fields.owner }}</td><td>{{ asset.state|trans }}</td><td>{{ asset.fields.service }}</td><td>{{ asset.fields.criticality|trans }}</td></tr>{% else %}<tr><td colspan="5">{{ 'No records.'|trans }}</td></tr>{% endfor %}</tbody>
+        </table>
+    </section>
+    <details{% if selected %} open{% endif %}>
+        <summary>{{ (selected ? 'Edit asset' : 'Create asset')|trans }}</summary>
+        {% if selected %}<p>{{ 'Asset ID'|trans }}: <code>{{ selected.id }}</code> · {{ selected.state|trans }}</p><p><a href="{{ path('asset_register') }}">{{ 'Create another asset'|trans }}</a></p>{% endif %}
+        <form method="post" action="{{ path('asset_register', selected ? {asset: selected.id} : {}) }}">
+            {{ _self.command(selected ? 'edit' : 'create', revision, request_id) }}
+            {% if selected %}<input type="hidden" name="asset_id" value="{{ selected.id }}">{% endif %}
+            {% for key, value in fields %}<p><label>{{ key|trans }} {% if key == 'criticality' %}<select name="fields[{{ key }}]">{% for choice in ['standard','important','critical'] %}<option value="{{ choice }}"{% if value == choice %} selected{% endif %}>{{ choice|trans }}</option>{% endfor %}</select>{% else %}<input name="fields[{{ key }}]" value="{{ value }}" maxlength="500"{% if key == 'name' %} required{% endif %}{% if key in ['support_until','maintenance_due'] %} type="date"{% endif %}>{% endif %}</label></p>{% endfor %}
+            {% if selected %}<p><label>{{ 'Evidence or approval reference'|trans }} <input name="evidence" maxlength="500" required></label></p>{% endif %}
+            <button>{{ 'Save asset'|trans }}</button>
+        </form>
+        {% if selected %}
+        <form method="post" action="{{ path('asset_register', {asset: selected.id}) }}">
+            {{ _self.command('transition', revision, request_id) }}
+            <input type="hidden" name="asset_id" value="{{ selected.id }}">
+            <p><label>{{ 'New lifecycle state'|trans }} <select name="state">{% for state in states %}<option value="{{ state }}">{{ state|trans }}</option>{% endfor %}</select></label></p>
+            <p>{{ 'Commissioning requires an owner, custodian and service. Retirement checks dependencies. Disposal requires prior retirement and disposal or sanitization evidence.'|trans }}</p>
+            <p><label>{{ 'Evidence or approval reference'|trans }} <input name="evidence" maxlength="500" required></label></p>
+            <button>{{ 'Record lifecycle transition'|trans }}</button>
+        </form>
+        <h3>{{ 'Service dependencies'|trans }}</h3>
+        <ul>{% for dependency in dependencies %}{% if dependency.asset_id == selected.id or dependency.depends_on == selected.id %}<li>{{ assets[dependency.asset_id].fields.name }} → {{ assets[dependency.depends_on].fields.name }}</li>{% endif %}{% endfor %}</ul>
+        <form method="post" action="{{ path('asset_register', {asset: selected.id}) }}">
+            {{ _self.command('dependency', revision, request_id) }}<input type="hidden" name="asset_id" value="{{ selected.id }}">
+            <p><label>{{ 'Depends on asset ID'|trans }} <input name="depends_on" list="asset-identifiers" required></label></p>
+            <p><label>{{ 'Operation'|trans }} <select name="remove"><option value="0">{{ 'Add dependency'|trans }}</option><option value="1">{{ 'Remove dependency'|trans }}</option></select></label></p>
+            <p><label>{{ 'Evidence or approval reference'|trans }} <input name="evidence" maxlength="500" required></label></p><button>{{ 'Save dependency'|trans }}</button>
+        </form>
+        {% endif %}
+    </details>
+    <datalist id="asset-identifiers">{% for asset in assets %}<option value="{{ asset.id }}">{{ asset.fields.name }}</option>{% endfor %}</datalist>
+    <details><summary>{{ 'Import monitoring inventory'|trans }}</summary>
+        <form method="post" action="{{ path('asset_register') }}">{{ _self.command('monitoring', revision, request_id) }}
+            <p>{{ 'Read up to 100 existing device IDs. This does not contact equipment or change polling.'|trans }}</p>
+            <p><label>{{ 'Device IDs, separated by spaces'|trans }} <textarea name="device_ids" maxlength="1100" required></textarea></label></p><button>{{ 'Import observations'|trans }}</button>
+        </form>
+    </details>
+    <details><summary>{{ 'Import external observations'|trans }}</summary>
+        <form method="post" action="{{ path('asset_register') }}">{{ _self.command('import', revision, request_id) }}
+            <p><label>{{ 'Source and account scope'|trans }} <input name="source" maxlength="120" required></label></p>
+            <p>{{ 'Paste up to 100 observation records in the documented JSON import format. Include no credentials or personal data.'|trans }}</p>
+            <p><label>{{ 'Observations'|trans }} <textarea name="observations" maxlength="450000" rows="6" required></textarea></label></p><button>{{ 'Import observations'|trans }}</button>
+        </form>
+    </details>
+    <section aria-labelledby="identity-heading"><h2 id="identity-heading">{{ 'Identity reconciliation'|trans }}</h2>
+        {% for identity in identity_page %}<details><summary>{{ identity.source }} / {{ identity.key }} · {{ identity.asset_id ? assets[identity.asset_id].fields.name : 'Unlinked'|trans }}</summary>
+            <p>{{ 'Observed at'|trans }}: {{ identity.observed_at }} · {{ 'Ingested at'|trans }}: {{ identity.ingested_at }}</p>
+            <dl>{% for key, value in identity.fields %}<dt>{{ key|trans }}</dt><dd>{{ value }}</dd>{% endfor %}</dl>
+            {% if identity.source == 'kadupul-monitoring' %}<p><a href="{{ path('inventory_device_details', {id: identity.key}) }}">{{ 'Monitoring device'|trans }}</a></p>{% endif %}
+            <form method="post" action="{{ path('asset_register') }}">{{ _self.command('link', revision, request_id) }}<input type="hidden" name="identity_id" value="{{ identity.id }}">
+                <p><label>{{ 'Asset ID (blank to unlink)'|trans }} <input name="asset_id" list="asset-identifiers" value="{{ identity.asset_id }}"></label></p>
+                <p><label>{{ 'Identity evidence and reason'|trans }} <input name="evidence" maxlength="500" required></label></p><button>{{ 'Save mapping'|trans }}</button>
+            </form>
+            {% if identity.asset_id %}<form method="post" action="{{ path('asset_register') }}">{{ _self.command('accept', revision, request_id) }}<input type="hidden" name="identity_id" value="{{ identity.id }}">
+                {% for field in ['name','manufacturer','serial','location'] %}{% if identity.fields[field] is defined and identity.fields[field] != assets[identity.asset_id].fields[field] %}<p><label><input type="checkbox" name="fields[]" value="{{ field }}">{{ field|trans }}: {{ assets[identity.asset_id].fields[field] }} → {{ identity.fields[field] }}</label></p>{% endif %}{% endfor %}
+                <p><label>{{ 'Evidence or approval reference'|trans }} <input name="evidence" maxlength="500" required></label></p><button>{{ 'Accept selected observations'|trans }}</button>
+            </form>{% endif %}
+        </details>{% else %}<p>{{ 'No records.'|trans }}</p>{% endfor %}
+        <nav aria-label="{{ 'Register pages'|trans }}">{% if page > 1 %}<a href="{{ path('asset_register', {page: page - 1}) }}">{{ 'Previous'|trans }}</a>{% endif %} {{ page }} {% if assets|length > page * 50 or identities|length > page * 50 %}<a href="{{ path('asset_register', {page: page + 1}) }}">{{ 'Next'|trans }}</a>{% endif %}</nav>
+    </section>
+    <details><summary>{{ 'Sources and collection failures'|trans }}</summary>
+        <ul>{% for name, source in sources %}<li>{{ name }} · {{ source.status|trans }} · {{ source.attempted_at }}</li>{% endfor %}</ul>
+        <form method="post" action="{{ path('asset_register') }}">{{ _self.command('source_failure', revision, request_id) }}<p><label>{{ 'Source and account scope'|trans }} <input name="source" maxlength="120" required></label></p><button>{{ 'Record collection failure'|trans }}</button></form>
+    </details>
+    <details><summary>{{ 'Independent baseline and reviews'|trans }}</summary>
+        <p>{{ 'Reconcile the baseline against procurement or a physical audit. Do not use the register count as its own coverage denominator.'|trans }}</p>
+        <form method="post" action="{{ path('asset_register') }}">{{ _self.command('baseline', revision, request_id) }}
+            <p><label>{{ 'Independently verified asset IDs'|trans }} <textarea name="asset_ids" maxlength="17000" required></textarea></label></p>
+            <p><label>{{ 'Baseline evidence'|trans }} <input name="evidence" maxlength="500" required></label></p><button>{{ 'Record baseline'|trans }}</button>
+        </form>
+        <form method="post" action="{{ path('asset_register') }}">{{ _self.command('review', revision, request_id) }}
+            <p><label>{{ 'Review kind'|trans }} <select name="kind">{% for kind in ['discrepancies','lifecycle','identity_sample'] %}<option value="{{ kind }}">{{ kind|trans }}</option>{% endfor %}</select></label></p>
+            <p><label>{{ 'Review evidence and decisions'|trans }} <input name="evidence" maxlength="500" required></label></p>
+            {% for field in ['sample_size','incorrect_merges','missed_duplicates'] %}<p><label>{{ field|trans }} <input name="{{ field }}" type="number" min="0" max="2000" value="0" required></label></p>{% endfor %}
+            <button>{{ 'Record review'|trans }}</button>
+        </form>
+    </details>
+    {% endif %}
+    <section aria-labelledby="history-heading"><h2 id="history-heading">{{ 'Change history'|trans }}</h2>
+        {% for event in history %}<details><summary>{{ event.occurred_at }} · {{ event.actor }} · {{ event.action|trans }}</summary><p>{{ event.evidence }}</p><p>{{ 'Receipt'|trans }}: <code>{{ event.request_id }}</code></p><pre>{{ event.changes|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></details>{% else %}<p>{{ 'No records.'|trans }}</p>{% endfor %}
+        {% if history|length == 50 %}<a href="{{ path('asset_register', {before: (history|last).sequence}) }}">{{ 'Older changes'|trans }}</a>{% endif %}
+    </section>
+</main>
+{% endblock %}

@@ -119,7 +119,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
-    'config/services.yaml' => '9e028407920a0d217f68ddc144d169ffe589e17acdd0c1e1c8be17fc21d229c3',
+    'config/services.yaml' => '29dc2b102335266dc2701b8c53e32bee7f5e770619231c10be28e97acfe9c96c',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -139,6 +139,32 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/Platform/Domain/Installer/InstallationMode.php' => '71e56d248203b9c4f5b832795dc07c929cbdd7a74260602fb912ce198da4956c',
     'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php' => '36cd2dfb4f20fba829a26b274b107e77ee21c8313cf8a4e5602f77c6b54daf40',
 ];
+
+// Asset admission precedes locale loading, then runs again in the controller
+// and command worker. Changes to the reviewed handoff must fail closed.
+const ASSET_AUTHENTICATION_SOURCES = [
+    'src/AssetManagement/Infrastructure/Symfony/AssetRequestAccess.php' => '1ca4e0220e9062188ea8c04b8c342f142e146ca97ce479b3338bcafa04edc665',
+    'src/AssetManagement/Infrastructure/Symfony/WebAssetAccess.php' => '921efb26ab25e09cbdfa91a1d0370a9707635a20a40b1efc9032f6fbbb02b8dd',
+    'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php' => '2023416800b66e74cc63ec175be56f051b1bae2d045d0b9cc9fcde24c7ba45fa',
+    'src/AssetManagement/Infrastructure/Symfony/AssetWorker.php' => '1ea1ead3224edd7cf9afb1ec6e9aa43beab8aac666165fe2fc3e82dc79b998dc',
+    'src/AssetManagement/Infrastructure/Console/CliAssetAccess.php' => '7a0f4d0dbc8a4495c47471f9f2c5d1703bd90eb543e1e5c9b789370bd9cf6175',
+    'src/AssetManagement/Infrastructure/Console/AssetCommand.php' => 'aedb8e25f1e269cd6f55e9488ac70d1784269ee8fd42014196c2c04f0903509f',
+    'src/AssetManagement/Application/AssetRegistry.php' => '709c92828047851062e1de580ea13563857ec97082fb3d22ea6651fc886784bd',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
+    'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => 'bc52ea52ff696759b3f38ed3cf0666cf56767d9a0de439a4053df463a53afb56',
+    'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
+    'config/services.yaml' => '29dc2b102335266dc2701b8c53e32bee7f5e770619231c10be28e97acfe9c96c',
+];
+
+function asset_authentication_review(string $root): ?string
+{
+    foreach (ASSET_AUTHENTICATION_SOURCES as $relative => $expected) {
+        if (!is_file($root . '/' . $relative) || hash_file('sha256', $root . '/' . $relative) !== $expected) {
+            return null;
+        }
+    }
+    return hash('sha256', json_encode(ASSET_AUTHENTICATION_SOURCES, JSON_THROW_ON_ERROR));
+}
 
 function installer_authentication_review(string $root): ?string
 {
@@ -272,7 +298,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '9e028407920a0d217f68ddc144d169ffe589e17acdd0c1e1c8be17fc21d229c3',
+    'config/services.yaml' => '29dc2b102335266dc2701b8c53e32bee7f5e770619231c10be28e97acfe9c96c',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -3176,6 +3202,16 @@ function symfony_routes(string $root, array $files): array
                         }
                         $seen = [];
                         $name = $class->namespacedName?->toString() ?? '';
+                        if ($route['name'] === 'asset_register') {
+                            $review = asset_authentication_review($root);
+                            $valid = $review !== null && $path === 'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php'
+                                && $name === 'Kadupul\\AssetManagement\\Infrastructure\\Symfony\\Controller\\AssetController'
+                                && $route['path'] === '/assets' && $method->name->toString() === '__invoke';
+                            $rows[] = ['app.php' . $route['path'], $valid ? 'symfony:asset_register' : 'unknown',
+                                $valid ? $route['detail'] . '; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at ' . $review
+                                    : 'asset authentication handoff changed or is incomplete'];
+                            continue;
+                        }
                         if ($route['name'] === 'platform_installer') {
                             $review = installer_authentication_review($root);
                             $valid = $review !== null && $path === 'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php'

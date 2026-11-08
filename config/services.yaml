@@ -1,4 +1,6 @@
 parameters:
+    kadupul.assets.default_enabled: "0"
+    kadupul.assets.enabled: '%env(bool:default:kadupul.assets.default_enabled:KADUPUL_ASSETS_ENABLED)%'
     # Model-driven RRD writes. The gate is closed and no environment variable
     # feeds it. Binding approval is decided by the metric_binding workflow guard
     # through IdentityAccess; plan activation has no authorizer yet. The gate
@@ -677,6 +679,53 @@ services:
     Kadupul\Graphing\Application\Command\RecordSamples: ~
     Kadupul\Telemetry\Contract\SampleSink:
         alias: Kadupul\Graphing\Application\Command\RecordSamples
+
+    Kadupul\AssetManagement\Infrastructure\:
+        resource: '../src/AssetManagement/Infrastructure/'
+        exclude: '../src/AssetManagement/Infrastructure/Symfony/AssetFormInput.php'
+    Kadupul\IdentityAccess\Contract\AssetManagementPermission:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
+    Kadupul\AssetManagement\Infrastructure\Symfony\WebAssetAccess:
+        arguments:
+            $enabled: '%kadupul.assets.enabled%'
+    Kadupul\AssetManagement\Infrastructure\Console\CliAssetAccess:
+        arguments:
+            $enabled: '%kadupul.assets.enabled%'
+    Kadupul\AssetManagement\Application\Port\AssetAccess:
+        alias: Kadupul\AssetManagement\Infrastructure\Symfony\WebAssetAccess
+    Kadupul\AssetManagement\Infrastructure\Persistence\DoctrineAssetStore:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    assets.write_store:
+        class: Kadupul\AssetManagement\Infrastructure\Persistence\DoctrineAssetStore
+        arguments:
+            $database: '@doctrine.dbal.local_connection'
+    Kadupul\AssetManagement\Application\Port\AssetStore:
+        alias: Kadupul\AssetManagement\Infrastructure\Persistence\DoctrineAssetStore
+    Kadupul\AssetManagement\Application\Port\AssetWriter:
+        alias: Kadupul\AssetManagement\Infrastructure\Symfony\AssetWorker
+    Kadupul\AssetManagement\Infrastructure\Symfony\AssetWorker:
+        arguments:
+            $database: '@doctrine.dbal.web_connection'
+    Kadupul\AssetManagement\Application\ViewAssets: ~
+    assets.cli_view:
+        class: Kadupul\AssetManagement\Application\ViewAssets
+        arguments:
+            $access: '@Kadupul\AssetManagement\Infrastructure\Console\CliAssetAccess'
+            $store: '@assets.write_store'
+    Kadupul\AssetManagement\Application\AssetRegistry:
+        arguments:
+            $access: '@Kadupul\AssetManagement\Infrastructure\Console\CliAssetAccess'
+            $store: '@assets.write_store'
+    Kadupul\AssetManagement\Infrastructure\Console\AssetCommand:
+        arguments:
+            $view: '@assets.cli_view'
+
+    Kadupul\AssetManagement\Application\Port\MonitoringInventory:
+        alias: Kadupul\AssetManagement\Infrastructure\Persistence\MonitoringSnapshot
+    Kadupul\AssetManagement\Infrastructure\Persistence\MonitoringSnapshot:
+        arguments:
+            $database: '@doctrine.dbal.local_connection'
 
 when@test:
     services:
