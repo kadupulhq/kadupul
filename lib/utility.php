@@ -741,7 +741,7 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 	$buf_count    = 0;
 	$buffer       = '';
 
-	if (cacti_sizeof($poller_items)) {
+	if (cacti_sizeof($poller_items) && !$failed) {
 		foreach ($poller_items as $record) {
 			/* take care of invalid entries */
 			if ($record == '') {

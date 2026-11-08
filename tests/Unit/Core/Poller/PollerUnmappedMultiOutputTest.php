@@ -126,4 +126,23 @@ test('a malformed MULTI sample is retained until expiry instead of being written
     expect($deferred)->toBeFalse()
         ->and($GLOBALS['unmapped_written'])->toBe(array(array('one.rrd', '2001-01-01', array('traffic_in' => '5'))))
         ->and($db->query('SELECT output FROM poller_output')->fetchAll(\PDO::FETCH_COLUMN))->toBe($expired ? array() : array($output));
-})->with(array('empty' => '', 'diagnostic' => 'failed', 'unknown scalar' => 'U'))->with(array('recent' => false, 'expired' => true));
+})->with(array('empty' => '', 'diagnostic' => 'failed'))->with(array('recent' => false, 'expired' => true));
+
+test('a bare U for a MULTI sample is still written as unknown for every mapped field', function ($expired) {
+    $db = $GLOBALS['unmapped_db'];
+    $GLOBALS['unmapped_fields'] = array(array('data_source_name' => 'traffic_in', 'data_name' => 'in'));
+    $db->exec("INSERT INTO data_local VALUES (1,1)");
+    $db->exec("INSERT INTO poller_item VALUES (1,'',1,'one.rrd')");
+    $unknown = $expired ? '2001-01-02' : gmdate('Y-m-d H:i:s', time() - 60);
+    $db->exec("INSERT INTO poller_output VALUES (1,'','2001-01-01','in:5')");
+    $insert = $db->prepare("INSERT INTO poller_output VALUES (1,'',?,'U')");
+    $insert->execute(array($unknown));
+    $pipe = true;
+    process_poller_output($pipe, 0, $deferred, $consumed);
+    expect($deferred)->toBeFalse()
+        ->and($GLOBALS['unmapped_written'])->toBe(array(
+            array('one.rrd', '2001-01-01', array('traffic_in' => '5')),
+            array('one.rrd', gmdate('Y-m-d', strtotime($unknown . ' UTC')), array('traffic_in' => 'U')),
+        ))
+        ->and($db->query('SELECT output FROM poller_output')->fetchAll(\PDO::FETCH_COLUMN))->toBe(array());
+})->with(array('recent' => false, 'expired' => true));

@@ -11,8 +11,8 @@
 */
 
 /*
- * replicate_out() must delete stale remote poller items with a bound cutoff
- * and must report completion only when every replication step succeeded.
+ * replicate_out() must delete only the remote poller items that main no longer
+ * holds, and must report completion only when every replication step succeeded.
  */
 
 namespace ReplicateOutFailure;
@@ -20,7 +20,7 @@ namespace ReplicateOutFailure;
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
-foreach (array('replicate_out', 'replicate_out_execute') as $function) {
+foreach (array('replicate_out', 'replicate_out_execute', 'replicate_out_remove_stale_items') as $function) {
 	eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $function));
 }
 
@@ -36,8 +36,20 @@ function poller_connect_to_remote($poller_id) { return $GLOBALS['rf_remote']; }
 function replicate_log($text, $level = 0) { $GLOBALS['rf_logs'][] = $text; }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['rf_messages'][] = $id; }
 function api_plugin_hook_function($hook, $data = array()) { return $data; }
-function db_fetch_assoc($sql) { return array(); }
-function db_fetch_assoc_prepared($sql, $params = array()) { return array(); }
+function db_fetch_assoc($sql, $log = true, $conn = false) {
+	if (!is_object($conn)) {
+		return array();
+	}
+
+	try {
+		return $conn->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+	} catch (\PDOException $e) {
+		return false;
+	}
+}
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	return strpos($sql, 'FROM poller_item') !== false ? $GLOBALS['rf_items'] : array();
+}
 function db_fetch_row_prepared($sql, $params = array()) { return array('snmp' => 1, 'script' => 0, 'server' => 0); }
 function db_fetch_cell($sql, $col = '', $log = true, $conn = false) { return $GLOBALS['rf_time']; }
 function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate = true, $exclude = false) {
@@ -46,6 +58,8 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 	if ($GLOBALS['rf_fail_table'] === $table) {
 		$replicate_out_success = false;
 	}
+
+	return $replicate_out_success;
 }
 function db_execute($sql, $log = true, $conn = false) {
 	// A bare placeholder is a MySQL syntax error.
@@ -71,7 +85,8 @@ function db_execute_prepared($sql, $params = array(), $log = true, $conn = false
 beforeEach(function () {
 	$GLOBALS['rf_remote'] = new \PDO('sqlite::memory:');
 	$GLOBALS['rf_remote']->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-	$GLOBALS['rf_remote']->exec('CREATE TABLE poller_item(id INTEGER, last_updated TEXT)');
+	$GLOBALS['rf_remote']->exec('CREATE TABLE poller_item(local_data_id INTEGER, rrd_name TEXT, last_updated TEXT)');
+	$GLOBALS['rf_items']      = array();
 	$GLOBALS['rf_time']       = strtotime('2020-01-03 00:00:00 UTC');
 	$GLOBALS['rf_logs']       = array();
 	$GLOBALS['rf_messages']   = array();
@@ -85,11 +100,30 @@ afterEach(function () {
 	date_default_timezone_set($this->timezone);
 });
 
-test('stale remote poller items are deleted with a bound cutoff', function () {
-	$GLOBALS['rf_remote']->exec("INSERT INTO poller_item VALUES (1,'2020-01-01 00:00:00'),(2,'2020-01-03 00:00:00'),(3,NULL)");
+function rf_remote_items() {
+	return $GLOBALS['rf_remote']->query('SELECT local_data_id, rrd_name FROM poller_item ORDER BY local_data_id, rrd_name')->fetchAll(\PDO::FETCH_NUM);
+}
+
+test('only the remote poller items main no longer holds are deleted', function () {
+	// An unchanged current item keeps an older last_updated than a new one.
+	$GLOBALS['rf_remote']->exec("INSERT INTO poller_item VALUES (1,'in','2020-01-01 00:00:00'),(1,'out','2020-01-01 00:00:00'),(2,'','2020-01-03 00:00:00'),(3,'in','2020-01-01 00:00:00'),(4,'',NULL)");
+	$GLOBALS['rf_items'] = array(
+		array('local_data_id' => '1', 'rrd_name' => 'in'),
+		array('local_data_id' => '1', 'rrd_name' => 'out'),
+		array('local_data_id' => '2', 'rrd_name' => ''),
+	);
 
 	expect(replicate_out(2, 'data'))->toBeTrue();
-	expect($GLOBALS['rf_remote']->query('SELECT id FROM poller_item ORDER BY id')->fetchAll(\PDO::FETCH_COLUMN))->toBe(array(2, 3));
+	expect(rf_remote_items())->toBe(array(array(1, 'in'), array(1, 'out'), array(2, '')));
+});
+
+test('a failed poller item copy deletes no remote items', function () {
+	$GLOBALS['rf_remote']->exec("INSERT INTO poller_item VALUES (1,'in','2020-01-01 00:00:00'),(3,'in','2020-01-01 00:00:00')");
+	$GLOBALS['rf_items']      = array(array('local_data_id' => '1', 'rrd_name' => 'in'));
+	$GLOBALS['rf_fail_table'] = 'poller_item';
+
+	expect(replicate_out(2, 'data'))->toBeFalse();
+	expect(rf_remote_items())->toBe(array(array(1, 'in'), array(3, 'in')));
 });
 
 test('a failed stale item cleanup is reported as a failed synchronization', function () {
