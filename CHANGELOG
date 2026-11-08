@@ -26,6 +26,7 @@ Cacti CHANGELOG
 -issue: Take the SpikeKill windowed standard-deviation mean from the samples around the window (#1034), and ignore unknown samples and empty data source limits when building and applying its cutoffs (#1095)
 -issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)
+-issue: Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226)
 -issue: Store explicitly empty or null nullable numeric fields as SQL NULL in sql_save; preserve explicit zero, omitted fields and non-nullable defaults, leaving existing stored zeros unchanged (#1108)
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)

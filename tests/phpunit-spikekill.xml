@@ -29,6 +29,7 @@
       <file>./Unit/Ui/Spikekill/SpikekillReferenceMeanTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
+      <file>./Unit/AggregateMemberSequenceTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
