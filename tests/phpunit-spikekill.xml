@@ -15,6 +15,7 @@
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
+      <file>Unit/DataQueryOrphanStateTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
       <file>Unit/Base1024GraphDivisorTest.php</file>
