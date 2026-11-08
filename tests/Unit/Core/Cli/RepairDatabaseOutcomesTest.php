@@ -28,8 +28,8 @@ function repair_stage_run($function, array $scenario) {
 		. 'function db_execute_prepared($s,$p=array()){if(stripos($s,"UPDATE data_input_data")!==false){$GLOBALS["updates"]++;}return true;}'
 		. 'function db_fetch_cell($s){return stripos($s,"dtd.local_data_id IS NULL")!==false ? $GLOBALS["scenario"]["incomplete"] : 0;}'
 		. 'function db_fetch_assoc($s){return stripos($s,"type_code in")!==false ? $GLOBALS["scenario"]["entries"] : array();}'
-		. 'function db_fetch_row_prepared($s,$p=array()){return stripos($s,"FROM data_local")!==false ? array("id"=>7,"host_id"=>3) : array("id"=>9,"local_data_id"=>7);}'
-		. 'function db_fetch_cell_prepared($s,$p=array()){return $GLOBALS["scenario"]["hostname"];}'
+		. 'function db_fetch_row_prepared($s,$p=array()){if(stripos($s,"FROM host")!==false){$h=$GLOBALS["scenario"]["hostname"];return is_string($h)?array("hostname"=>$h):$h;}return stripos($s,"FROM data_local")!==false ? array("id"=>7,"host_id"=>3) : array("id"=>9,"local_data_id"=>7);}'
+		. 'function db_fetch_cell_prepared($s,$p=array()){return false;}'
 		. 'function db_fetch_assoc_prepared($s,$p=array()){return array();}'
 		. test_php_function_source($source, $function)
 		. 'ob_start();$result=' . $function . '();ob_end_clean();'
@@ -59,14 +59,21 @@ test('the script runs the later stages only when simple_checks did not stop', fu
 	expect($source)->toContain("if (simple_checks() !== false) {\n\tdetailed_checks();\n\tsnmp_repairs();\n\tsnmp_index_repairs();\n}");
 });
 
-test('a failed or empty hostname lookup is counted as a failure, not a repair', function ($function, $hostname) use ($hostnameEntry) {
-	$state = repair_stage_run($function, array('incomplete' => 0, 'entries' => $hostnameEntry, 'hostname' => $hostname));
+test('a failed hostname lookup is counted as a failure, not a repair', function ($function) use ($hostnameEntry) {
+	$state = repair_stage_run($function, array('incomplete' => 0, 'entries' => $hostnameEntry, 'hostname' => false));
 
 	expect($state['updates'])->toBe(0)->and($state['failures'])->toBeGreaterThan(0)->and($state['repairs'])->toBe(0);
+})->with(array('simple_checks', 'snmp_index_repairs'));
+
+test('a missing device or empty hostname is neither a repair nor a failure', function ($function, $hostname) use ($hostnameEntry) {
+	// host_id 0 marks a data source without a device, so no host row is found.
+	$state = repair_stage_run($function, array('incomplete' => 0, 'entries' => $hostnameEntry, 'hostname' => $hostname));
+
+	expect($state['updates'])->toBe(0)->and($state['failures'])->toBe(0)->and($state['repairs'])->toBe(0);
 })->with(array(
-	'simple checks, failed lookup'  => array('simple_checks', false),
-	'simple checks, no device'      => array('simple_checks', ''),
-	'index repairs, failed lookup'  => array('snmp_index_repairs', false),
+	'simple checks, no device'      => array('simple_checks', array()),
+	'simple checks, empty hostname' => array('simple_checks', ''),
+	'index repairs, no device'      => array('snmp_index_repairs', array()),
 ));
 
 test('a found hostname is still written', function ($function) use ($hostnameEntry) {

@@ -331,17 +331,24 @@ function simple_checks() {
 				if (cacti_sizeof($local_data)) {
 					switch($e['type_code']) {
 						case 'hostname':
-							$hostname = db_fetch_cell_prepared('SELECT hostname
+							$host = db_fetch_row_prepared('SELECT hostname
 								FROM host
 								WHERE id = ?',
 								array($local_data['host_id']));
 
-							/* a failed lookup or a missing device is not a repair */
-							if (!is_string($hostname) || $hostname === '') {
+							/* a failed lookup is a failure */
+							if ($host === false) {
 								$total_failures++;
 
 								break;
 							}
+
+							/* no device (such as host_id 0) or no hostname leaves the value as it is */
+							if (!isset($host['hostname']) || !is_string($host['hostname']) || $host['hostname'] === '') {
+								break;
+							}
+
+							$hostname = $host['hostname'];
 
 							if (db_execute_prepared('UPDATE data_input_data
 								SET value = ?
@@ -864,17 +871,24 @@ function snmp_index_repairs() {
 				if (cacti_sizeof($local_data)) {
 					switch($e['type_code']) {
 						case 'hostname':
-							$hostname = db_fetch_cell_prepared('SELECT hostname
+							$host = db_fetch_row_prepared('SELECT hostname
 								FROM host
 								WHERE id = ?',
 								array($local_data['host_id']));
 
-							/* a failed lookup or a missing device is not a repair */
-							if (!is_string($hostname) || $hostname === '') {
+							/* a failed lookup is a failure */
+							if ($host === false) {
 								$total_failures++;
 
 								break;
 							}
+
+							/* no device (such as host_id 0) or no hostname leaves the value as it is */
+							if (!isset($host['hostname']) || !is_string($host['hostname']) || $host['hostname'] === '') {
+								break;
+							}
+
+							$hostname = $host['hostname'];
 
 							if ($force) {
 								if (db_execute_prepared('UPDATE data_input_data
