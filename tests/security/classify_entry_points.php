@@ -2271,14 +2271,14 @@ const NATIVE_SESSION_FIREWALL_SOURCES = [
 
 // This route renders only an in-process native logout presentation object.
 const LOGOUT_PRESENTATION_SOURCES = [
-    'logout.php' => 'b59ef059d87e0e414f384b7c581605e12c1ec8875b48d359eb4832f3b2cd24b9',
-    'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => 'a72bb26d7cd828c7179377c6cdf2aa179dae4029d90ed7584fa2f5de9ce808e2',
-    'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php' => 'e5b20511ae219ac9f5052c9f2964ae29659c219443cfd3176b905b978348b7d6',
+    'logout.php' => '581db993cc1d696564b85bc8696d3b333f740bbac81fbf64ef4ae31e7aa06c61',
+    'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => '49a1a9f5ca2b68442eaa237b24964a11093b40ee1c9cebbc1e88e562719e2cb7',
+    'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php' => '2cc6ef8df06898926492ec80ac06f103f630e44ba7db763547ff1dfd2e6e0823',
     'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php' => '20a13f081e47d27cad5832203b3acfcd75930167b2d21a6547ca6f63a9675eba',
     'src/Platform/Infrastructure/Symfony/LegacyPageForwarder.php' => 'd709a29dd12cdc0b138266dd01a016d2e0481eeedd62d41c554eacef549c6843',
     'src/Platform/Infrastructure/Symfony/ConsoleHomeResponse.php' => '29e1d07cce24ff7340adfe54be46bfa226c4dc2c679d09a8d64bbbe6af14638a',
     'src/Platform/Infrastructure/Symfony/SecurityHeaders.php' => 'd3b6032a8e78e34e7693ddaae0d9924286aee5891ec6b647ba3f04d4f5d58598',
-    'templates/platform/logout_message.html.twig' => 'ab67495253363aacb89a144e4d2539b80d29b86f75a6b71da056273d16171684',
+    'templates/platform/logout_message.html.twig' => 'f710aad05e2c4ec4aa73aa50d4c09556f0987389067d6d7c54f70fe23cec8b04',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'include/global.php' => 'd3b34a027c474472c32d95f4df1c0b30fe00a406daab99a24df1a65093618b48',
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',

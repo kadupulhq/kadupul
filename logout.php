@@ -72,7 +72,7 @@ if (!$logoutConfirmed || in_array($logoutAction, ['timeout', 'disabled', 'remote
     $logoutPrompt = $logoutConfirmed ? __('Please close your browser or %sLogin Again%s', '</p><center>[<a href="index.php">', '</a>]</center>') : '';
     $logoutHeading = $logoutConfirmed ? __('Automatic Logout') : __('Logout of Kadupul');
     $logoutVersion = __('Version %s', $version);
-    $logoutNonce = CactiSecureHeaders::getNonceAttribute();
+    $logoutNonce = CactiSecureHeaders::getNonce();
     ob_start();
     include('./include/global_session.php');
     $logoutFooter = \Kadupul\Platform\Infrastructure\Symfony\LegacyLogoutPage::finishCapture($logoutBufferLevel);

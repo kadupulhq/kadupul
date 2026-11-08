@@ -55,9 +55,9 @@ final readonly class LoginPageRenderer
         return $this->template->renderBlock('submit', ['label' => $label]);
     }
 
-    public function result(Markup $error, string $version, Markup $nonceAttribute, bool $focusUsername): string
+    public function result(Markup $error, string $version, string $nonce, bool $focusUsername): string
     {
-        return $this->template->renderBlock('result', compact('error', 'version', 'nonceAttribute', 'focusUsername'));
+        return $this->template->renderBlock('result', compact('error', 'version', 'nonce', 'focusUsername'));
     }
 
     public function end(): string

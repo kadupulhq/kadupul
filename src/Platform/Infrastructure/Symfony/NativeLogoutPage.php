@@ -27,7 +27,7 @@ final readonly class NativeLogoutPage
         public string $heading,
         public string $version,
         public string $copyright,
-        public string $nonceAttribute,
+        public string $nonce,
         public array $policies,
         public ?array $confirmation = null,
     ) {}

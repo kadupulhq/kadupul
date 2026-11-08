@@ -74,7 +74,7 @@ final class LogoutMessagePresentationTest extends TestCase
                 'Déconnexion automatique',
                 'Version <not-markup>',
                 '2004-2026',
-                'nonce="fixture-nonce"',
+                'fixture-nonce" onload="alert(1)',
                 ['Content-Security-Policy' => "default-src 'self'; script-src 'nonce-fixture-nonce'"],
             );
             $original = Request::create('/monitoring/logout.php?action=timeout', $method, [], ['Cacti' => str_repeat('a', 26), 'cacti_remembers' => 'untrusted'], [], [
@@ -102,7 +102,9 @@ final class LogoutMessagePresentationTest extends TestCase
             $this->assertSame('Version <not-markup> | 2004-2026', $xpath->evaluate('string(//div[@class="versionInfo"])'));
             $this->assertSame(1, $xpath->query('//a[@href="index.php" and .="Connexion"]')->length);
             $this->assertSame(1, $xpath->query('//link[@href="/monitoring/include/themes/modern/main.css"]')->length);
-            $this->assertSame(2, $xpath->query('//script[@nonce="fixture-nonce"]')->length);
+            $this->assertSame(1, $xpath->query('//script[@nonce="fixture-nonce"]')->length);
+            $this->assertSame('fixture-nonce" onload="alert(1)', $xpath->evaluate('string(//script[@type="text/javascript"]/@nonce)'));
+            $this->assertSame(0, $xpath->query('//script[@type="text/javascript"]/@onload')->length);
             $this->assertSame(0, $xpath->query('//div[@class="logoutTitle"]//script')->length);
         } finally {
             $kernel->shutdown();
