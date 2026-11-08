@@ -368,6 +368,33 @@ their existing behavior and do not refresh it. Cache refresh has a 120-second
 timeout; a failure stops the upgrade before schema or version writes. Ensure
 the upgrade user can write `var/cache/`, correct the reported problem and retry.
 
+`cache:clear` swaps the cache directory, so it locks two sibling files,
+`var/cache/prod.gate` and `var/cache/prod.lock`. Web requests hold a shared
+lock on `prod.lock` from kernel boot until the request ends, so a request does
+not load services from a directory that is being replaced. A refresh first
+takes `prod.gate`, which stops new web requests from starting, and then waits
+at most 30 seconds for running requests to finish; otherwise it fails before
+changing the cache and can be retried. A steady stream of new requests cannot
+keep a refresh waiting. While the refresh runs, new web requests wait up to 15
+seconds and then receive HTTP 503 with `Retry-After: 5`. Console commands do
+not take the shared lock.
+
+The lock files are created with mode 0640 and missing parent directories with
+mode 0750 or stricter: the process umask is tightened while they are created.
+The directory that holds `var/cache/prod` must be owned by the application user
+or root and must not be writable by other users; group write is allowed. Root
+uses existing lock files that the application user owns, but does not create
+missing ones in that user's directory: a root-owned lock file would be
+unreadable to web requests. That root run proceeds without the lock and logs a
+notice; the next web request creates the files. Run upgrades as the
+application user. An
+existing lock file must be a regular file, not a symlink, with no access for
+other users, owned by the running user, root or the directory owner.
+Otherwise web requests run without the lock and log a warning naming the
+files, at most once an hour, and a refresh fails with an error naming these
+requirements. Users who can write `var/cache/` can already change
+the compiled PHP it holds, so keep that directory private to the application.
+
 Run scheduled Symfony commands as the deployment or service account that owns
 `var/cache/`. A root cron job can create root-owned files in `var/cache/prod`
 and prevent later web requests or workers from rebuilding the cache. If this
