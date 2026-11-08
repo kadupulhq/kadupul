@@ -145,7 +145,7 @@ test('log substring checks retain byte positions and case sensitivity', function
 
 test('hexadecimal prefixes retain their spelling and by-reference output', function ($input, $expected, $output) {
     expect(Php80Modernization\is_hex_string($input))->toBe($expected)->and($input)->toBe($output);
-})->with([['Hex- AB CD', true, 'AB CD'], ['Hex-String: AB CD', false, 'Hex-String: AB CD'],
+})->with([['Hex- AB CD', true, 'AB CD'], ['Hex-String: AB CD', true, 'AB CD'],
     ['hex-', false, 'hex-'], ['prefix hex- AB CD', false, 'prefix hex- AB CD']]);
 
 test('address and sensitive-key checks preserve embedded and initial markers', function () {

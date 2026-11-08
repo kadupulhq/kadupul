@@ -15,6 +15,7 @@ if ($source === false) {
     throw new \RuntimeException('Cannot read the collector synchronizer.');
 }
 eval('namespace ' . __NAMESPACE__ . ';' . str_replace('__DIR__', var_export($root . '/lib', true), \test_php_function_source($source, 'replicate_out')));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'replicate_out_remove_stale_items'));
 
 const FIXTURE = __DIR__ . '/../../../Fixtures/poller-replication/replicate-out-sequence.json';
 
@@ -47,8 +48,19 @@ function rows(string $sql): array|false
         return false;
     }
 
+    if ($GLOBALS['sync_sequence']['failure'] === 'stale-read' && str_contains($sql, 'local_data_id, rrd_name FROM poller_item')) {
+        return false;
+    }
+
     // Tag rows with their query so each copy proves which read it received.
-    return array(array('sql' => sql_id($sql)));
+    $row = array('sql' => sql_id($sql));
+    if (($table[1] ?? '') === 'poller_item') {
+        // Main holds item 1; the remote also holds item 9, which the cleanup removes.
+        $item = array('local_data_id' => '1', 'rrd_name' => '');
+        return str_starts_with($sql, 'SELECT local_data_id') ? array($row + $item, $row + array('local_data_id' => '9', 'rrd_name' => '')) : array($row + $item);
+    }
+
+    return array($row);
 }
 
 function db_fetch_assoc(string $sql, bool $log = true, mixed $connection = false): array|false
@@ -239,7 +251,7 @@ function replication_cases(): array
         $cases['auth-copy-' . $table] = array('auth', $table, true);
         $cases['auth-cli-copy-' . $table] = array('auth', $table, false);
     }
-    foreach (array('retry-mark', 'connect', 'guards', 'reindex-cleanup', 'cutoff-read', 'no-cutoff', 'cutoff-write', 'cutoff-delete', 'statistics-read', 'statistics-write', 'completion') as $failure) {
+    foreach (array('retry-mark', 'connect', 'guards', 'reindex-cleanup', 'cutoff-read', 'no-cutoff', 'cutoff-write', 'stale-read', 'cutoff-delete', 'statistics-read', 'statistics-write', 'completion') as $failure) {
         $cases[$failure] = array('all', $failure, true);
         $cases[$failure . '-cli'] = array('all', $failure, false);
     }

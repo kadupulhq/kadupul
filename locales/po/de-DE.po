@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-01 10:54-0800\n"
+"POT-Creation-Date: 2026-11-07 21:27-0800\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -558,7 +558,15 @@ msgstr "Größe"
 msgid "No"
 msgstr "Nein"
 
-#: aggregate_graphs.php:1351 aggregate_templates.php:724 automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786 data_debug.php:791 data_queries.php:1536 data_sources.php:2060 data_sources.php:2061 data_templates.php:1321 graph_templates.php:920 host_templates.php:997 include/global_settings.php:1942 include/global_settings.php:968 lib/api_automation.php:1439 lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4054 tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753 user_domains.php:757 user_group_admin.php:2088
+#: aggregate_graphs.php:1351 aggregate_templates.php:724
+#: automation_tree_rules.php:714 data_debug.php:781 data_debug.php:786
+#: data_debug.php:791 data_queries.php:1536 data_sources.php:2060
+#: data_sources.php:2061 data_templates.php:1321 graph_templates.php:920
+#: host_templates.php:997 include/global_settings.php:968
+#: include/global_settings.php:1942 lib/api_automation.php:1439
+#: lib/installer.php:2188 lib/installer.php:2216 lib/installer.php:4054
+#: tree.php:2420 tree.php:2421 user_admin.php:2267 user_domains.php:753
+#: user_domains.php:757 user_group_admin.php:2088
 msgid "Yes"
 msgstr "Ja"
 
@@ -692,7 +700,9 @@ msgstr "Aggregatvorlage[neu]]."
 msgid "Aggregate Templates"
 msgstr "Die ausgewählten Aggregatgrafiken scheinen keine passenden Aggregatvorlagen zu haben."
 
-#: aggregate_templates.php:612 include/global_arrays.php:1009 include/global_arrays.php:1073 lib/installer.php:2802 user_admin.php:2365 user_group_admin.php:2164
+#: aggregate_templates.php:612 include/global_arrays.php:1009
+#: include/global_arrays.php:1073 lib/installer.php:2802 user_admin.php:2365
+#: user_group_admin.php:2164
 msgid "Templates"
 msgstr "Schablonen"
 
@@ -780,7 +790,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "Es gibt Probleme mit der Seite Kennwort ändern.  Wenden Sie sich sofort an Ihren Kadupul-Administrator."
 
 #: auth_changepassword.php:370 auth_changepassword.php:377
-#: include/global_form.php:1552 lib/functions.php:4291 lib/html.php:2888
+#: include/global_form.php:1552 lib/functions.php:4292 lib/html.php:2888
 msgid "Change Password"
 msgstr "Kennwort ändern"
 
@@ -793,7 +803,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "Bitte Benutzernamen und Kennwort eingeben:"
 
 #: auth_changepassword.php:397 auth_login.php:339 auth_login.php:342
-#: include/global_settings.php:1851 lib/functions.php:6241
+#: include/global_settings.php:1851 lib/functions.php:6242
 msgid "Username"
 msgstr "Benutzername"
 
@@ -887,7 +897,7 @@ msgstr "Benutzer anmelden"
 msgid "Enter your Username and Password below"
 msgstr "Geben Sie Ihren Benutzernamen und Kennwort ein"
 
-#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6242
+#: auth_login.php:347 include/global_form.php:1519 lib/functions.php:6243
 msgid "Password"
 msgstr "Kennwort"
 
@@ -1116,7 +1126,12 @@ msgstr "Standort"
 msgid "Contact"
 msgstr "Kontakt"
 
-#: automation_devices.php:276 include/global_form.php:1133 include/global_form.php:1169 include/global_form.php:1363 include/global_form.php:1739 lib/api_automation.php:1196 lib/api_automation.php:278 lib/installer.php:2108 lib/installer.php:2803 managers.php:214 user_admin.php:1073 user_admin.php:924 user_group_admin.php:1095 user_group_admin.php:2076
+#: automation_devices.php:276 include/global_form.php:1133
+#: include/global_form.php:1169 include/global_form.php:1363
+#: include/global_form.php:1739 lib/api_automation.php:278
+#: lib/api_automation.php:1196 lib/installer.php:2108 lib/installer.php:2803
+#: managers.php:214 user_admin.php:924 user_admin.php:1073
+#: user_group_admin.php:1095 user_group_admin.php:2076
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -1133,7 +1148,17 @@ msgstr "Laufzeit"
 msgid "SNMP"
 msgstr "SNMP"
 
-#: automation_devices.php:280 automation_devices.php:524 automation_graph_rules.php:835 automation_networks.php:1075 automation_tree_rules.php:849 data_debug.php:1169 data_debug.php:523 data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:1199 lib/api_automation.php:280 lib/api_automation.php:52 lib/api_automation.php:53 lib/api_automation.php:573 lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216 package_import.php:587 package_import.php:672 plugins.php:497 plugins.php:624 pollers.php:1007 templates_import.php:207 templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095 utilities.php:2141
+#: automation_devices.php:280 automation_devices.php:524
+#: automation_graph_rules.php:835 automation_networks.php:1075
+#: automation_tree_rules.php:849 data_debug.php:523 data_debug.php:1169
+#: data_sources.php:1768 data_templates.php:1289 lib/api_automation.php:52
+#: lib/api_automation.php:53 lib/api_automation.php:280
+#: lib/api_automation.php:573 lib/api_automation.php:1199
+#: lib/html_reports.php:2031 lib/installer.php:2108 managers.php:216
+#: package_import.php:587 package_import.php:672 plugins.php:497
+#: plugins.php:624 pollers.php:1007 templates_import.php:207
+#: templates_import.php:246 user_admin.php:1073 user_group_admin.php:1095
+#: utilities.php:2141
 msgid "Status"
 msgstr "Status"
 
@@ -1181,7 +1206,7 @@ msgstr "Entdeckte Geräte bereinigen"
 #: automation_devices.php:703 automation_networks.php:1149
 #: automation_snmp.php:570 automation_snmp.php:571 automation_snmp.php:572
 #: automation_snmp.php:573 automation_snmp.php:574 automation_snmp.php:575
-#: data_debug.php:698 lib/functions.php:6600 lib/functions.php:6605
+#: data_debug.php:698 lib/functions.php:6601 lib/functions.php:6606
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
 #: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
@@ -1479,7 +1504,20 @@ msgstr "Netzwerk-Erkennungsbereich[neu]"
 msgid "General Settings"
 msgstr "Basis Einstellungen"
 
-#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:1211 data_queries.php:817 data_queries.php:924 graph_templates.php:499 include/global_form.php:1085 include/global_form.php:1125 include/global_form.php:1327 include/global_form.php:1355 include/global_form.php:1428 include/global_form.php:1456 include/global_form.php:201 include/global_form.php:2101 include/global_form.php:2199 include/global_form.php:2244 include/global_form.php:267 include/global_form.php:324 include/global_form.php:344 include/global_form.php:385 include/global_form.php:515 include/global_form.php:552 include/global_form.php:659 lib/installer.php:2108 lib/installer.php:2181 lib/installer.php:2211 lib/installer.php:2803 lib/installer.php:2891 lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924 user_domains.php:310 utilities.php:3206 utilities.php:864
+#: automation_networks.php:439 automation_snmp.php:511 data_queries.php:817
+#: data_queries.php:924 data_queries.php:1211 graph_templates.php:499
+#: include/global_form.php:201 include/global_form.php:267
+#: include/global_form.php:324 include/global_form.php:344
+#: include/global_form.php:385 include/global_form.php:515
+#: include/global_form.php:552 include/global_form.php:659
+#: include/global_form.php:1085 include/global_form.php:1125
+#: include/global_form.php:1327 include/global_form.php:1355
+#: include/global_form.php:1428 include/global_form.php:1456
+#: include/global_form.php:2101 include/global_form.php:2199
+#: include/global_form.php:2244 lib/installer.php:2108 lib/installer.php:2181
+#: lib/installer.php:2211 lib/installer.php:2803 lib/installer.php:2891
+#: lib/vdef.php:56 managers.php:575 pollers.php:46 user_admin.php:924
+#: user_domains.php:310 utilities.php:864 utilities.php:3206
 msgid "Name"
 msgstr "Name"
 
@@ -2160,7 +2198,7 @@ msgstr "Version"
 msgid "Community"
 msgstr "Gemeinschaft"
 
-#: automation_snmp.php:543 lib/functions.php:6237
+#: automation_snmp.php:543 lib/functions.php:6238
 msgid "Port"
 msgstr "Port"
 
@@ -2323,7 +2361,8 @@ msgstr "Kriterien für die Erstellung von Bäumen"
 msgid "Change Leaf Type"
 msgstr "Blatttyp ändern"
 
-#: automation_tree_rules.php:738 lib/installer.php:4279 utilities.php:2752 utilities.php:2753 utilities.php:2756 utilities.php:2757
+#: automation_tree_rules.php:738 lib/installer.php:4279 utilities.php:2752
+#: utilities.php:2753 utilities.php:2756 utilities.php:2757
 msgid "WARNING:"
 msgstr "WARNUNG:"
 
@@ -2369,8 +2408,8 @@ msgstr "Stammverzeichnis"
 msgid "No Tree Rules Found"
 msgstr "Keine Baumregeln gefunden"
 
-#: cactid.php:27 help.php:54 lib/functions.php:6745 lib/functions.php:6820
-#: lib/functions.php:6923 lib/functions.php:7613 poller.php:416 poller.php:583
+#: cactid.php:27 help.php:54 lib/functions.php:6746 lib/functions.php:6821
+#: lib/functions.php:6924 lib/functions.php:7614 poller.php:416 poller.php:583
 #: poller.php:665 poller.php:718 poller.php:873 poller.php:994
 #: poller_automation.php:37 poller_boost.php:477
 #, fuzzy
@@ -2590,7 +2629,8 @@ msgstr "Die interne ID der Datenquelle."
 msgid "The Status of the Data Source Debug Check."
 msgstr "Der Status der Datenquellen-Debug-Prüfung."
 
-#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594 package_import.php:641
+#: data_debug.php:529 lib/installer.php:2562 lib/installer.php:2594
+#: package_import.php:641
 msgid "Writable"
 msgstr "Schreibbar"
 
@@ -2819,7 +2859,8 @@ msgstr "Nicht zutreffend"
 msgid "Failed"
 msgstr "Fehlerhaft"
 
-#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073 lib/installer.php:2134
+#: data_debug.php:1054 data_debug.php:1056 data_debug.php:1073
+#: lib/installer.php:2134
 msgid "Passed"
 msgstr "Bestanden"
 
@@ -3402,7 +3443,7 @@ msgstr "Der Name, der dieser Datenvorlage gegeben wurde.  Bitte beachten Sie, da
 #: data_sources.php:1096 graph_view.php:817 graphs.php:1626
 #: include/global_arrays.php:961 include/global_arrays.php:1010
 #: include/global_arrays.php:1698 include/global_arrays.php:1867
-#: lib/api_automation.php:426 lib/functions.php:6236 lib/html.php:2306
+#: lib/api_automation.php:426 lib/functions.php:6237 lib/html.php:2306
 #: lib/html.php:2343 lib/html_reports.php:1170 utilities.php:1934
 msgid "Device"
 msgstr "Zielsysteme"
@@ -3432,7 +3473,7 @@ msgstr "Zusätzliche Daten"
 msgid "Data Source Item %s"
 msgstr "Datenquellenelement %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:2964
 #: package_import.php:643
 msgid "New"
 msgstr "Neu"
@@ -3763,7 +3804,7 @@ msgid "The Kadupul Poller has not run yet."
 msgstr "Der Kadupul ist noch nicht gelaufen."
 
 #: graph_realtime.php:47 graph_realtime.php:459 include/auth.php:316
-#: lib/functions.php:8316 templates/platform/permission_denied.html.twig
+#: lib/functions.php:8317 templates/platform/permission_denied.html.twig
 msgid "Permission Denied"
 msgstr "Erlaubnis verweigert"
 
@@ -4459,7 +4500,9 @@ msgstr "Name des Graph-Templates"
 msgid "Save Filters"
 msgstr "Filter speichern"
 
-#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613 lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4537 utilities.php:1838 utilities.php:866
+#: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
+#: lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4537
+#: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "Zeilen"
 
@@ -4724,13 +4767,13 @@ msgstr "FATAL: Du musst eingeloggt sein, um Zugang zu diesem Bereich von Kadupul
 msgid "Login Again"
 msgstr "Neu Anmelden"
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:317 lib/functions.php:8318
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Wenn du denkst, dass dies ein Fehler ist. Bitte wenden Sie sich an Ihren Kadupul-Administrator."
 
-#: include/auth.php:317 lib/functions.php:8317
+#: include/auth.php:317 lib/functions.php:8318
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
@@ -6817,7 +6860,7 @@ msgid "List Mode"
 msgstr "Listen Ansicht"
 
 #: include/global_arrays.php:2072 include/global_arrays.php:2078
-#: lib/functions.php:4513 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
+#: lib/functions.php:4514 lib/html.php:1947 lib/html.php:2012 lib/html.php:2898
 #: user_admin.php:1472 user_group_admin.php:1494
 msgid "Console"
 msgstr "Konsole"
@@ -8620,8 +8663,8 @@ msgstr "Daten"
 msgid "Visual"
 msgstr "Visuell"
 
-#: include/global_settings.php:112 lib/functions.php:6240
-#: lib/functions.php:6245
+#: include/global_settings.php:112 lib/functions.php:6241
+#: lib/functions.php:6246
 msgid "Authentication"
 msgstr "LDAP Authentifizierung"
 
@@ -8657,11 +8700,11 @@ msgstr "Schriftart für Diagramme"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() Funktion"
 
-#: include/global_settings.php:153 lib/functions.php:6221
+#: include/global_settings.php:153 lib/functions.php:6222
 msgid "Sendmail"
 msgstr "Sendmail"
 
-#: include/global_settings.php:154 lib/functions.php:6227
+#: include/global_settings.php:154 lib/functions.php:6228
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -10526,7 +10569,7 @@ msgstr "So viele Zeichen sind erlaubt, bevor eine Zeile in der E-Mail automatisc
 msgid "Sendmail Options"
 msgstr "Sendmail-Optionen"
 
-#: include/global_settings.php:1972 lib/functions.php:6221
+#: include/global_settings.php:1972 lib/functions.php:6222
 msgid "Sendmail Path"
 msgstr "Pfad zu Sendmail"
 
@@ -11693,8 +11736,8 @@ msgstr "Umgebung:"
 msgid "Contact:"
 msgstr "Kontakt:"
 
-#: lib/api_device.php:2104 lib/functions.php:6254 lib/functions.php:6256
-#: lib/functions.php:6260
+#: lib/api_device.php:2104 lib/functions.php:6255 lib/functions.php:6257
+#: lib/functions.php:6261
 msgid "Ping Results"
 msgstr "Ping Ergebnisse"
 
@@ -11966,11 +12009,11 @@ msgstr "Passwörter stimmen nicht überein"
 msgid "System Device"
 msgstr "Geräte synchronisieren"
 
-#: lib/data_query.php:73 lib/data_query.php:475
+#: lib/data_query.php:73 lib/data_query.php:446
 msgid "Automation Execution for Data Query complete"
 msgstr "Automatisierung Ausführung für Datenabfrage abgeschlossen"
 
-#: lib/data_query.php:76 lib/data_query.php:478
+#: lib/data_query.php:76 lib/data_query.php:449
 msgid "Plugin Hooks complete"
 msgstr "Plugin-Haken komplett"
 
@@ -12056,340 +12099,340 @@ msgstr "Update Poller Cache für Query abgeschlossen"
 msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
 msgstr "Keine Indexänderungen erkannt, Re-Index und Poller-Cache übersprungen, Wiederbelegung wiederhergestellt"
 
-#: lib/data_query.php:467
+#: lib/data_query.php:438
 msgid "Automation Executing for Data Query complete"
 msgstr "Automatisierung Ausführung für Datenabfrage abgeschlossen"
 
-#: lib/data_query.php:470
+#: lib/data_query.php:441
 msgid "Plugin hooks complete"
 msgstr "Plugin-Haken komplett"
 
-#: lib/data_query.php:529
+#: lib/data_query.php:554
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Überprüfung auf Sortierfeldänderung.  Es wurden keine Änderungen festgestellt."
 
-#: lib/data_query.php:534
+#: lib/data_query.php:559
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Erkanntes neues Sortierfeld: '%s' Altes Sortierfeld '%s'."
 
-#: lib/data_query.php:555
+#: lib/data_query.php:580
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "FEHLER: Neues Sortierfeld nicht geeignet.  Das Sortierfeld ändert sich nicht."
 
-#: lib/data_query.php:569
+#: lib/data_query.php:594
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Neues Sortierfeld bestätigt.  Sortierfeld aktualisiert werden."
 
-#: lib/data_query.php:682
+#: lib/data_query.php:707
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Die XML-Datei zur Datenabfrage konnte nicht gefunden werden unter '%s'."
 
-#: lib/data_query.php:686
+#: lib/data_query.php:711
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Gefundene Datenabfrage-XML-Datei bei'%s'."
 
-#: lib/data_query.php:710 lib/data_query.php:943 lib/data_query.php:2643
+#: lib/data_query.php:735 lib/data_query.php:968 lib/data_query.php:2668
 msgid "Error parsing XML file into an array."
 msgstr "Fehler beim Parsen einer XML-Datei in ein Array."
 
-#: lib/data_query.php:714 lib/data_query.php:947
+#: lib/data_query.php:739 lib/data_query.php:972
 msgid "XML file parsed ok."
 msgstr "XML-Datei geparst."
 
-#: lib/data_query.php:722 lib/data_query.php:950
+#: lib/data_query.php:747 lib/data_query.php:975
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Ungültiges Feld &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:723 lib/data_query.php:951
+#: lib/data_query.php:748 lib/data_query.php:976
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Muss nur Felder enthalten, die &lt;direction&gt;input&lt;/direction&gt; oder &lt;direction&gt;input-output&lt;/direction&gt; enthalten."
 
-#: lib/data_query.php:740
+#: lib/data_query.php:765
 msgid "Data Query returned no indexes."
 msgstr "FEHLER: Data Query lieferte keine Indizes."
 
-#: lib/data_query.php:741
+#: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; fehlt in der XML-Datei,'Index Count Changed' wird nicht unterstützt."
 
-#: lib/data_query.php:744
+#: lib/data_query.php:769
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Ausführendes Skript für die Anzahl der Indizes '%s'."
 
-#: lib/data_query.php:747
+#: lib/data_query.php:772
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Anzahl der gefundenen Indizes: %s"
 
-#: lib/data_query.php:751
+#: lib/data_query.php:776
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; fehlt in der XML-Datei,'Index Count Changed' wird nicht unterstützt."
 
-#: lib/data_query.php:753
+#: lib/data_query.php:778
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; fehlt in der XML-Datei, 'Index Count Changed' wird durch Zählen von arg_index-Einträgen emuliert."
 
-#: lib/data_query.php:764
+#: lib/data_query.php:789
 msgid "ERROR: Data Query returned no indexes."
 msgstr "FEHLER: Data Query lieferte keine Indizes."
 
-#: lib/data_query.php:768
+#: lib/data_query.php:793
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Ausführendes Skript für die Liste der Indizes '%s', Indexanzahl: %s"
 
-#: lib/data_query.php:770
+#: lib/data_query.php:795
 msgid "Click to show Data Query output for 'index'"
 msgstr "Klicken Sie hier, um die Ausgabe der Datenabfrage für den'index' anzuzeigen."
 
-#: lib/data_query.php:773
+#: lib/data_query.php:798
 #, php-format
 msgid "Found index: %s"
 msgstr "Index gefunden: %s"
 
-#: lib/data_query.php:788 lib/data_query.php:1358
+#: lib/data_query.php:813 lib/data_query.php:1383
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Klicken Sie hier, um die Datenabfrageausgabe für das Feld'%s' anzuzeigen."
 
-#: lib/data_query.php:794
+#: lib/data_query.php:819
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Feld sortieren hat keine Daten für Feldname %s zurückgegeben, wird übersprungen"
 
-#: lib/data_query.php:796
+#: lib/data_query.php:821
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Skriptabfrage ausführen '%s'."
 
-#: lib/data_query.php:807 lib/data_query.php:814
+#: lib/data_query.php:832 lib/data_query.php:839
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Index des gefundenen Elements[%s='%s']: %s"
 
-#: lib/data_query.php:854 lib/data_query.php:870
+#: lib/data_query.php:879 lib/data_query.php:895
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Gesamt: %f, Delta: %f, %s"
 
-#: lib/data_query.php:937
+#: lib/data_query.php:962
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Ungültige host_id: %s"
 
-#: lib/data_query.php:961
+#: lib/data_query.php:986
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Auto-Bulk-Walk-Größe ausgewählt."
 
-#: lib/data_query.php:983 lib/data_query.php:1042
+#: lib/data_query.php:1008 lib/data_query.php:1067
 msgid "Failed to load SNMP session."
 msgstr "SNMP-Sitzung konnte nicht geladen werden."
 
-#: lib/data_query.php:993
+#: lib/data_query.php:1018
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Getestete Bulk-Walk-Größe %d mit einer Antwort von %2.4f."
 
-#: lib/data_query.php:1004
+#: lib/data_query.php:1029
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Die ausgewählte Bulk-Walk-Größe war %d."
 
-#: lib/data_query.php:1007
+#: lib/data_query.php:1032
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Speichern der Bulk-Walk-Größe auf dem Gerät."
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:1046
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Die Bulk-Walk-Größe ist auf %d festgelegt."
 
-#: lib/data_query.php:1055
+#: lib/data_query.php:1080
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Ausführen von SNMP get für die Anzahl der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:1057
+#: lib/data_query.php:1082
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; fehlt in der XML-Datei, 'Index Count Changed' wird durch Zählen von oid_index-Einträgen emuliert."
 
-#: lib/data_query.php:1060
+#: lib/data_query.php:1085
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Ausführen von SNMP-Walk für die Liste der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:1064
+#: lib/data_query.php:1089
 msgid "No SNMP data returned"
 msgstr "Keine SNMP Daten erhalten"
 
-#: lib/data_query.php:1069
+#: lib/data_query.php:1094
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Index gefunden bei OID: '%s' Wert: '%s'"
 
-#: lib/data_query.php:1100
+#: lib/data_query.php:1125
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Filtern der Liste der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:1104
+#: lib/data_query.php:1129
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Gefilterter Index nach Wert gefunden bei OID: '%s' Wert: '%s'"
 
-#: lib/data_query.php:1120
+#: lib/data_query.php:1145
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Filtern der Liste der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:1124
+#: lib/data_query.php:1149
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Gefilterter Index gefunden bei OID: '%s' Wert: '%s'"
 
-#: lib/data_query.php:1144
+#: lib/data_query.php:1169
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Korrektur des falschen Feldes'Methode' für'%s', da'rewrite_index' oder'oid_suffix' definiert ist."
 
-#: lib/data_query.php:1151
+#: lib/data_query.php:1176
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Einfügen von Indexdaten für das Feld'%s' [value='%s']"
 
-#: lib/data_query.php:1156
+#: lib/data_query.php:1181
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Eingabefeld entdeckt '%s' [get]"
 
-#: lib/data_query.php:1165
+#: lib/data_query.php:1190
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "OID-Neuschreibungsregel gefunden: 's/%s/%s/'"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1201
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite bei OID: '%s' neue OID: '%s'"
 
-#: lib/data_query.php:1181
+#: lib/data_query.php:1206
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Ausführen von SNMP get for data @ '%s' [value='%s']]"
 
-#: lib/data_query.php:1192
+#: lib/data_query.php:1217
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Feld '%s' %s"
 
-#: lib/data_query.php:1253
+#: lib/data_query.php:1278
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Ausführen von SNMP get for %s oids (%s)"
 
-#: lib/data_query.php:1291 lib/data_query.php:1398 lib/data_query.php:1406
+#: lib/data_query.php:1316 lib/data_query.php:1423 lib/data_query.php:1431
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Das Sortierfeld lieferte keine Daten.  Re-Index für OID[%s] kann nicht fortgesetzt werden."
 
-#: lib/data_query.php:1297
+#: lib/data_query.php:1322
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Ergebnis für Daten gefunden @'%s' [value='%s']"
 
-#: lib/data_query.php:1310
+#: lib/data_query.php:1335
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Ergebnis für Daten einstellen @'%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1320
+#: lib/data_query.php:1345
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Übersprungenes Ergebnis für Daten @'%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1338
+#: lib/data_query.php:1363
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Got SNMP get Ergebnis für Daten @ '%s' [value='%s'] (Index: %s)"
 
-#: lib/data_query.php:1352
+#: lib/data_query.php:1377
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Ausführen von SNMP get for data @ '%s' [value='$value']]"
 
-#: lib/data_query.php:1360
+#: lib/data_query.php:1385
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Eingabefeld entdeckt '%s' [walk]"
 
-#: lib/data_query.php:1411
+#: lib/data_query.php:1436
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Führe SNMP-Walk aus für die Daten @ '%s'"
 
-#: lib/data_query.php:1430 lib/data_query.php:1488 lib/data_query.php:1537
-#: lib/data_query.php:1588
+#: lib/data_query.php:1455 lib/data_query.php:1513 lib/data_query.php:1562
+#: lib/data_query.php:1613
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Kein Index[%s] in VALUE_index_Parse, wird übersprungen."
 
-#: lib/data_query.php:1471
+#: lib/data_query.php:1496
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Index des gefundenen Elements[%s='%s']: %s [von %s]"
 
-#: lib/data_query.php:1513
+#: lib/data_query.php:1538
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Gefundener OCTET STRING '%s' dekodierter Wert: '%s'."
 
-#: lib/data_query.php:1519 lib/data_query.php:1568
+#: lib/data_query.php:1544 lib/data_query.php:1593
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Index des gefundenen Elements[%s='%s']: %s[aus regexp oid parse]"
 
-#: lib/data_query.php:1596
+#: lib/data_query.php:1621
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Index des gefundenen Elements[%s='%s']: %s[von regexp oid value parse]"
 
-#: lib/data_query.php:1831
+#: lib/data_query.php:1856
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Falsches rewrite_value-Element gefunden, index='%s'"
 
-#: lib/data_query.php:1844
+#: lib/data_query.php:1869
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Übersetzungskarte konnte nicht analysiert werden (rewrite_value)"
 
-#: lib/data_query.php:1868
+#: lib/data_query.php:1893
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
-#: lib/data_query.php:1982
+#: lib/data_query.php:2007
 msgid "Update graph data query cache complete"
 msgstr "Update Datenabfrage Sortier-Cache abgeschlossen"
 
-#: lib/data_query.php:2001
+#: lib/data_query.php:2026
 msgid "Re-Indexing Data Query complete"
 msgstr "Re-Indizierung der Datenabfrage abgeschlossen"
 
-#: lib/data_query.php:2153
+#: lib/data_query.php:2178
 msgid "Unknown Index"
 msgstr "Unbekannter Index"
 
-#: lib/data_query.php:2767
+#: lib/data_query.php:2792
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Sie müssen eine XML-Ausgabespalte für die Datenquelle'%s' auswählen und das Kontrollkästchen rechts umschalten."
 
-#: lib/data_query.php:2773
+#: lib/data_query.php:2798
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ihre Grafikvorlage hat keine Datenvorlagen in Verwendung.  Bitte korrigieren Sie Ihre Grafikvorlage."
 
@@ -12461,168 +12504,168 @@ msgstr "Nachricht nicht gefunden."
 msgid "Error %s is not readable"
 msgstr "Fehler %s ist nicht lesbar."
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "Logged in a Guest"
 msgstr "Angemeldet als"
 
-#: lib/functions.php:4267 lib/functions.php:4285
+#: lib/functions.php:4268 lib/functions.php:4286
 msgid "Logged in as"
 msgstr "Angemeldet als"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "Login as Regular User"
 msgstr "Als normaler Benutzer anmelden"
 
-#: lib/functions.php:4267
+#: lib/functions.php:4268
 msgid "guest"
 msgstr "Gast"
 
-#: lib/functions.php:4270 lib/functions.php:4295 lib/html.php:2904
+#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2904
 msgid "User Community"
 msgstr "Benutzer-Community"
 
-#: lib/functions.php:4271 lib/functions.php:4296 lib/html.php:2906
+#: lib/functions.php:4272 lib/functions.php:4297 lib/html.php:2906
 #: lib/utility.php:1447
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: lib/functions.php:4288
+#: lib/functions.php:4289
 #, php-format
 msgid "Logged in as %s"
 msgstr "Angemeldet als %s"
 
-#: lib/functions.php:4290 lib/html.php:2885
+#: lib/functions.php:4291 lib/html.php:2885
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
 
-#: lib/functions.php:4300 lib/html.php:2889
+#: lib/functions.php:4301 lib/html.php:2889
 msgid "Logout"
 msgstr "Abmelden"
 
-#: lib/functions.php:4454
+#: lib/functions.php:4455
 msgid "Leaf"
 msgstr "Blatt"
 
-#: lib/functions.php:4478 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:4479 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "Nicht abfragebasiert"
 
-#: lib/functions.php:4516
+#: lib/functions.php:4517
 #, php-format
 msgid "Link %s"
 msgstr "%s verbinden"
 
-#: lib/functions.php:4978 tree.php:1825 tree.php:1899 tree.php:2007
+#: lib/functions.php:4979 tree.php:1825 tree.php:1899 tree.php:2007
 #: user_admin.php:18 user_group_admin.php:20
 msgid "Copy"
 msgstr "Kopieren"
 
-#: lib/functions.php:5795
+#: lib/functions.php:5796
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer-Fehler: Nein <b>TO</b>Adresse gesetzt!<br>Wenn Sie den Link <i>Test Mail</i> verwenden, setzen Sie bitte die Einstellung <b>Alarmmail</b>."
 
-#: lib/functions.php:6192
+#: lib/functions.php:6193
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO fehlgeschlagen: %s"
 
-#: lib/functions.php:6195
+#: lib/functions.php:6196
 msgid "SMTP error: "
 msgstr "SMTP-Fehler:"
 
-#: lib/functions.php:6208
+#: lib/functions.php:6209
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Dies ist eine von Kadupul generierte Testnachricht.  Diese Nachricht wurde gesendet, um die Konfiguration Ihrer Mail-Einstellungen zu testen."
 
-#: lib/functions.php:6209
+#: lib/functions.php:6210
 msgid "Your email settings are currently set as follows"
 msgstr "Ihre e-Mail-Einstellungen sind derzeit wie folgt festgelegt"
 
-#: lib/functions.php:6210
+#: lib/functions.php:6211
 msgid "Method"
 msgstr "Methode"
 
-#: lib/functions.php:6212
+#: lib/functions.php:6213
 msgid "Checking Configuration...<br>"
 msgstr "Konfiguration prüfen....<br><br>"
 
-#: lib/functions.php:6219
+#: lib/functions.php:6220
 msgid "PHP's Mailer Class"
 msgstr "PHP's Mailer-Klasse"
 
-#: lib/functions.php:6225
+#: lib/functions.php:6226
 msgid "Method: SMTP"
 msgstr "Methode: SMTP"
 
-#: lib/functions.php:6242
+#: lib/functions.php:6243
 msgid "Not Shown for Security Reasons"
 msgstr "Aus Sicherheitsgründen nicht angezeigt"
 
-#: lib/functions.php:6243
+#: lib/functions.php:6244
 msgid "Security"
 msgstr "Sicherheit"
 
-#: lib/functions.php:6251
+#: lib/functions.php:6252
 msgid "Ping Results:"
 msgstr "Ping Ergebnisse"
 
-#: lib/functions.php:6251 lib/functions.php:6256
+#: lib/functions.php:6252 lib/functions.php:6257
 msgid "Success"
 msgstr "Erfolgreich"
 
-#: lib/functions.php:6260
+#: lib/functions.php:6261
 msgid "Bypassed"
 msgstr "Bypass"
 
-#: lib/functions.php:6269
+#: lib/functions.php:6270
 msgid "Creating Message Text..."
 msgstr "Nachrichtentext erstellen....."
 
-#: lib/functions.php:6272
+#: lib/functions.php:6273
 msgid "Sending Message..."
 msgstr "Nachricht wird gesendet…"
 
-#: lib/functions.php:6276
+#: lib/functions.php:6277
 #, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul-Testmeldung"
 
-#: lib/functions.php:6278
+#: lib/functions.php:6279
 msgid "Success!"
 msgstr "Erfolgreich!"
 
-#: lib/functions.php:6281
+#: lib/functions.php:6282
 msgid "Message Not Sent due to ping failure."
 msgstr "Nachricht nicht gesendet aufgrund eines Ping-Fehlers."
 
-#: lib/functions.php:6745 lib/functions.php:6820
+#: lib/functions.php:6746 lib/functions.php:6821
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul hat das Plugin %s aufgrund des folgenden Fehlers deaktiviert: %s!  Weitere Informationen finden Sie in der Kadupul-Logdatei."
 
-#: lib/functions.php:6923
+#: lib/functions.php:6924
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "WARNUNG: PollerID:%s hat einen ungültigen Hostnamen:%s.  Ist es nicht über DNS erreichbar!"
 
-#: lib/functions.php:7376 lib/functions.php:7378
+#: lib/functions.php:7377 lib/functions.php:7379
 #: templates/platform/console_home_body.html.twig
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:7376 templates/platform/console_home_body.html.twig
+#: lib/functions.php:7377 templates/platform/console_home_body.html.twig
 #, php-format
 msgid "Version %s %s"
 msgstr "Version %s %s"
 
-#: lib/functions.php:7378
+#: lib/functions.php:7379
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:7613
+#: lib/functions.php:7614
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "WARNUNG:  Key Kadupul Include Datei %s fehlt.  Bitte suchen und ersetzen Sie diese Datei"
@@ -13628,7 +13671,7 @@ msgstr "Ereignisse"
 msgid "Send Report"
 msgstr "Bericht senden"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3049 user_admin.php:1776
 msgid "[new]"
 msgstr "[Neu]"
 
@@ -13898,90 +13941,90 @@ msgstr "%s \"%s\" existiert bereits."
 msgid "not writable"
 msgstr "Schreibbar"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2062 lib/import.php:2083
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "Diagramm [Vorlage: %s]"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2097 lib/import.php:2109
 #, php-format
 msgid "New Data Query: %s"
 msgstr "Datenabfrage[%s]"
 
-#: lib/import.php:2731
+#: lib/import.php:2746
 msgid "Unknown Field"
 msgstr "Unbekanntes Feld"
 
-#: lib/import.php:2947
+#: lib/import.php:2962
 msgid "Updated"
 msgstr "Aktualisieren"
 
-#: lib/import.php:2951
+#: lib/import.php:2966
 msgid "Damaged"
 msgstr "Datenquelle, Grafik"
 
-#: lib/import.php:2953 package_import.php:637
+#: lib/import.php:2968 package_import.php:637
 msgid "Unchanged"
 msgstr "[Unverändert]"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Preview Results"
 msgstr "Vorschau-Ergebnisse importieren"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Results"
 msgstr "Ergebnisse importieren"
 
-#: lib/import.php:2993
+#: lib/import.php:3008
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul würde die folgenden Änderungen vornehmen, wenn das Paket importiert würde:"
 
-#: lib/import.php:2995
+#: lib/import.php:3010
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul hat die folgenden Elemente für das Paket importiert:"
 
-#: lib/import.php:2998
+#: lib/import.php:3013
 msgid "Package Files"
 msgstr "Paketdateien"
 
-#: lib/import.php:3002
+#: lib/import.php:3017
 msgid "[preview] "
 msgstr "Vorschau"
 
-#: lib/import.php:3007
+#: lib/import.php:3022
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul würde die folgenden Änderungen vornehmen, wenn die Vorlage importiert würde:"
 
-#: lib/import.php:3009
+#: lib/import.php:3024
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul hat die folgenden Elemente für die Vorlage importiert:"
 
-#: lib/import.php:3024
+#: lib/import.php:3039
 msgid "[success]"
 msgstr "Erfolgreich!"
 
-#: lib/import.php:3026
+#: lib/import.php:3041
 msgid "[fail]"
 msgstr "[Fehlgeschlagen]"
 
-#: lib/import.php:3028
+#: lib/import.php:3043
 msgid "[preview]"
 msgstr "Vorschau"
 
-#: lib/import.php:3032
+#: lib/import.php:3047
 msgid "[updated]"
 msgstr "[Aktualisiert]"
 
-#: lib/import.php:3036
+#: lib/import.php:3051
 msgid "[unchanged]"
 msgstr "[Unverändert]"
 
-#: lib/import.php:3072
+#: lib/import.php:3087
 msgid "Found Dependency:"
 msgstr "Abhängigkeit gefunden:"
 
-#: lib/import.php:3074
+#: lib/import.php:3089
 msgid "Unmet Dependency:"
 msgstr "Ungelöste Abhängigkeit gefunden:"
 
@@ -14002,7 +14045,7 @@ msgstr "Die angegebene %sRRRDTool-Version konnte nicht gesetzt werden: %s"
 msgid "Invalid Theme Specified"
 msgstr "Ungültiges Thema angegeben"
 
-#: lib/installer.php:1009 lib/installer.php:962
+#: lib/installer.php:962 lib/installer.php:1009
 msgid "Unexpected path parameter"
 msgstr "Unerwarteter Pfadparameter"
 
@@ -14113,7 +14156,8 @@ msgstr "Verbindung prüfen"
 msgid "Begin"
 msgstr "Anfang"
 
-#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305 lib/installer.php:2947
+#: lib/installer.php:1867 lib/installer.php:2295 lib/installer.php:2305
+#: lib/installer.php:2947
 msgid "Upgrade"
 msgstr "Upgrade"
 
@@ -14185,7 +14229,8 @@ msgstr "Vor-Installations Prüfung"
 msgid "Location checks"
 msgstr "Standortprüfungen"
 
-#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247 lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4299
+#: lib/installer.php:2092 lib/installer.php:2243 lib/installer.php:2247
+#: lib/installer.php:2403 lib/installer.php:2408 lib/installer.php:4299
 msgid "ERROR:"
 msgstr "FEHLER:"
 
@@ -15252,7 +15297,7 @@ msgstr "Das Plugin im Verzeichnis '%s' enthält keine Versionsfunktion '%s()'.  
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "Das Plugin im Verzeichnis '%s' enthält keine Installationsfunktion '%s()'.  Diese Funktion muss vorhanden sein, damit das Plugin installiert werden kann."
 
-#: lib/plugins.php:1328
+#: lib/plugins.php:1310
 msgid "Legacy Plugin"
 msgstr "Legacy Plugin"
 
@@ -15277,7 +15322,7 @@ msgstr "Keine Angabe"
 msgid "Synchronization failed. See the log for details."
 msgstr ""
 
-#: lib/poller.php:2050 lib/poller.php:2282
+#: lib/poller.php:2050 lib/poller.php:2275
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
 msgstr ""
 
@@ -15568,7 +15613,7 @@ msgstr ""
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
 msgstr ""
 
-#: lib/snmp.php:387 lib/snmp.php:876 lib/snmp.php:899
+#: lib/snmp.php:387 lib/snmp.php:885 lib/snmp.php:908
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP-Optionen[Bearbeiten: %s]"
