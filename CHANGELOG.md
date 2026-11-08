@@ -12,6 +12,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
 - Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
+- Accept an empty Data Source item name, minimum or maximum in an imported template when its per-data-source override is set, as the data template form and export allow, and reject a field holding child elements with the import message instead of a type error (#1349).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
@@ -56,6 +57,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Store explicitly empty or null nullable numeric fields as SQL NULL in `sql_save()`, preserving explicit zero, omitted fields and non-nullable defaults (#1108). Existing stored zeros are unchanged.
 - Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero in poller cache entries under strict SQL, preserving stored host settings and explicit overrides.
+- Share the audited primary-collector write transaction of the CDEF, automation template and Data Source Profile stores, the unchecked legacy argument loop of the graphing CLI maps, and the device catalog of the graph template and data query commands, preserving every message, audit record, argument and output.
 
 - Bound Windows RRDtool one-shot commands by the command/poller deadline and prevent large input/output deadlocks using temporary file handles. Windows now requires writable temporary storage (#782).
 - Match SNMP notification history descriptions by MIB and notification name, preventing cache aliases from duplicating events or inflating pagination.

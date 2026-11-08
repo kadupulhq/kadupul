@@ -3551,7 +3551,7 @@ msgstr "البيانات المخصصة"
 msgid "Data Source Item %s"
 msgstr "عنصر مصدر البيانات %s"
 
-#: data_sources.php:1262 data_templates.php:817 lib/import.php:2949
+#: data_sources.php:1262 data_templates.php:817 lib/import.php:2964
 #: package_import.php:643
 msgid "New"
 msgstr "جديد"
@@ -13737,7 +13737,7 @@ msgstr "الفعاليات"
 msgid "Send Report"
 msgstr "ارسال تبليغ"
 
-#: lib/html_reports.php:1644 lib/import.php:3034 user_admin.php:1776
+#: lib/html_reports.php:1644 lib/import.php:3049 user_admin.php:1776
 msgid "[new]"
 msgstr "[الجديد]"
 
@@ -14008,94 +14008,94 @@ msgstr "لا يوجد"
 msgid "not writable"
 msgstr "قابل للكتابة"
 
-#: lib/import.php:2047 lib/import.php:2068
+#: lib/import.php:2062 lib/import.php:2083
 #, php-format
 msgid "New Graph Template: %s"
 msgstr "قالب رسم بياني جديد: %s"
 
-#: lib/import.php:2082 lib/import.php:2094
+#: lib/import.php:2097 lib/import.php:2109
 #, php-format
 msgid "New Data Query: %s"
 msgstr "استعلام بيانات جديد: %s"
 
-#: lib/import.php:2731
+#: lib/import.php:2746
 msgid "Unknown Field"
 msgstr "حقل غير معروف"
 
-#: lib/import.php:2947
+#: lib/import.php:2962
 msgid "Updated"
 msgstr "تم التحديث"
 
-#: lib/import.php:2951
+#: lib/import.php:2966
 #, fuzzy
 msgid "Damaged"
 msgstr "اسم مصدر البيانات"
 
-#: lib/import.php:2953 package_import.php:637
+#: lib/import.php:2968 package_import.php:637
 #, fuzzy
 msgid "Unchanged"
 msgstr "[دون تغيير]"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Preview Results"
 msgstr "استيراد نتائج المعاينة"
 
-#: lib/import.php:2989
+#: lib/import.php:3004
 msgid "Import Results"
 msgstr "نتائج الاستيراد"
 
-#: lib/import.php:2993
+#: lib/import.php:3008
 #, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
 
-#: lib/import.php:2995
+#: lib/import.php:3010
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "قامت Kadupul باستيراد العناصر التالية للحزمة:"
 
-#: lib/import.php:2998
+#: lib/import.php:3013
 msgid "Package Files"
 msgstr "ملفات الحزمة"
 
-#: lib/import.php:3002
+#: lib/import.php:3017
 msgid "[preview] "
 msgstr "معاينة"
 
-#: lib/import.php:3007
+#: lib/import.php:3022
 #, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد القالب:"
 
-#: lib/import.php:3009
+#: lib/import.php:3024
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "قامت Kadupul باستيراد العناصر التالية للقالب:"
 
-#: lib/import.php:3024
+#: lib/import.php:3039
 #, fuzzy
 msgid "[success]"
 msgstr "نجاح"
 
-#: lib/import.php:3026
+#: lib/import.php:3041
 msgid "[fail]"
 msgstr "فشل"
 
-#: lib/import.php:3028
+#: lib/import.php:3043
 msgid "[preview]"
 msgstr "معاينة"
 
-#: lib/import.php:3032
+#: lib/import.php:3047
 msgid "[updated]"
 msgstr "[updated]"
 
-#: lib/import.php:3036
+#: lib/import.php:3051
 msgid "[unchanged]"
 msgstr "[دون تغيير]"
 
-#: lib/import.php:3072
+#: lib/import.php:3087
 msgid "Found Dependency:"
 msgstr "وجدت التبعية:"
 
-#: lib/import.php:3074
+#: lib/import.php:3089
 msgid "Unmet Dependency:"
 msgstr "الإعالة غير الملباة:"
 
