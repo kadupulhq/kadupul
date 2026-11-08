@@ -1154,8 +1154,10 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 		if ($deferred) {
 			/* Earlier DELETE chunks may have committed, so their RRD updates
-			 * above must still run. Retained rows use the timestamp-idempotent
-			 * update path on retry; do not recurse or report a successful drain. */
+			 * above must still run. Retained rows are resent on retry, one
+			 * timestamp per update, so a sample RRDtool already holds is refused
+			 * and logged without blocking newer ones; do not recurse or report a
+			 * successful drain. */
 			cacti_log('ERROR: Poller source cleanup failed; remaining samples retained for retry.', false, 'POLLER');
 			return $rrds_processed;
 		}

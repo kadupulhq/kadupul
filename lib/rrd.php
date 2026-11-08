@@ -1764,12 +1764,6 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					}
 				}
 
-				if (cacti_version_compare(get_rrdtool_version(), '1.5', '>=')) {
-					$update_options = '--skip-past-updates';
-				} else {
-					$update_options = '';
-				}
-
 				if (isset($rrd_fields['template']) && $rrd_update_template == '') {
 					$rrd_update_template = $rrd_fields['template'];
 				}
@@ -1785,7 +1779,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 				// Never advance this RRD's timestamp after dropping a valid field.
 				// A schema mismatch must retain the full sample for replay after repair.
-				$updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+				$updated = rrdtool_execute("update $rrd_path --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 
 				if ($updated !== true) {
 					$rejection = rrdtool_last_rejection();
@@ -4327,14 +4321,6 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 	 * data source information
 	 -----------------------------------------------------------------------------------*/
 	if (cacti_sizeof($cacti_info) && cacti_sizeof($info)) {
-		/* get the heartbeat from the profile */
-		$profile_heartbeat = db_fetch_cell_prepared('SELECT heartbeat
-			FROM data_source_profiles AS dsp
-			INNER JOIN data_template_data AS dtd
-			ON dsp.id = dtd.data_source_profile_id
-			WHERE dtd.local_data_id = ?',
-			array($data_source_id));
-
 		/* cursory checks on total data sources */
 		if (isset($cacti_info['ds']) && isset($info['ds'])) {
 			if (cacti_sizeof($cacti_info['ds']) != cacti_sizeof($info['ds'])) {
@@ -4355,22 +4341,6 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 					$info['ds'][$data_source_name]['seen'] = true;
 
 					continue;
-				}
-
-				/**
-				 * Accommodate a Cacti bug where the heartbeat was not
-				 * propagated.
-				 */
-				if ($data_source['minimal_heartbeat'] != $profile_heartbeat) {
-					cacti_log(sprintf('NOTE: Incorrect Data Source heartbeat found and corrected for Local Data ID %s and Data Source \'%s\'', $data_source_id, $data_source_name), false, 'DSDEBUG');
-
-					db_execute_prepared('UPDATE data_template_rrd
-						SET rrd_heartbeat = ?
-						WHERE local_data_id = ?
-						AND data_source_name = ?',
-						array($profile_heartbeat, $data_source_id, $data_source_name));
-
-					$cacti_info['ds'][$data_source_name]['minimal_heartbeat'] = $profile_heartbeat;
 				}
 
 				/* verity that all data sources are seen */
@@ -4478,9 +4448,9 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 						if ($cacti_rra['rows'] != $file_rra['rows'] && $resize) {
 							$diff['rra'][$file_rra_id]['rows'] = __("The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'", $cacti_rra_id, $file_rra['rows'], $cacti_rra['rows']);
 							if ($cacti_rra['rows'] > $file_rra['rows']) {
-								$diff['resize'][] = $info['filename'] . ' ' . $cacti_rra_id . ' GROW ' . ($cacti_rra['rows'] - $file_rra['rows']);
+								$diff['resize'][] = $info['filename'] . ' ' . $file_rra_id . ' GROW ' . ($cacti_rra['rows'] - $file_rra['rows']);
 							} else {
-								$diff['resize'][] = $info['filename'] . ' ' . $cacti_rra_id . ' SHRINK ' . ($file_rra['rows'] - $cacti_rra['rows']);
+								$diff['resize'][] = $info['filename'] . ' ' . $file_rra_id . ' SHRINK ' . ($file_rra['rows'] - $cacti_rra['rows']);
 							}
 						}
 					}
@@ -4727,8 +4697,18 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 					print '<tr><td>' . html_escape(__('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file)) . '</td></tr>';
 				}
 			} else {
-				if (!cacti_has_control_chars($line)) {
-				rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_STDOUT);
+				if (cacti_has_control_chars($line)) {
+					cacti_log('ERROR: RRD resize command skipped. It contains a control character; original file retained.', false, 'UTIL');
+
+					return false;
+				}
+
+				/* replace the file only when RRDtool confirmed the resize, otherwise a
+				   leftover resize.rrd would take the place of the original */
+				if (rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_BOOLEAN) !== true) {
+					cacti_log('ERROR: RRD resize failed; original file retained.', false, 'UTIL');
+
+					return false;
 				}
 
 				/* when run locally rrdtool writes resize.rrd to the PHP process cwd; under a
@@ -4739,7 +4719,11 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 					$resize_rrd = getcwd() . '/resize.rrd';
 				}
 
-				rename($resize_rrd, $rrd_file);
+				if (!is_file($resize_rrd) || is_link($resize_rrd) || !@rename($resize_rrd, $rrd_file)) {
+					cacti_log('ERROR: RRD resize could not replace the original file; original file retained.', false, 'UTIL');
+
+					return false;
+				}
 			}
 		}
 	}

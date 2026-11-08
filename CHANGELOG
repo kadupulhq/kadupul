@@ -21,6 +21,10 @@ Cacti CHANGELOG
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
 -issue: Remove a deleted graph from the aggregates that list it by passing the aggregate's graph id and a member list to the disassociation, so the aggregate's copied items are rebuilt without it (#227)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
+-issue: Keep the stored data source heartbeat when the data source info view compares an RRD file, and report the difference instead of rewriting it (#774)
+-issue: Count an update RRDtool refuses as older than the last update as not stored, instead of reporting it written and deleting its queued sample (#775)
+-issue: Name the archive inside the RRD file, not the profile position, in resize recommendations (#780)
+-issue: Replace an RRD file with the resized copy only after RRDtool confirmed the resize (#773)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
 -issue: Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056)
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings

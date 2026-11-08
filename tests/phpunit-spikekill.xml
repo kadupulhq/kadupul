@@ -23,6 +23,9 @@
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
       <file>./Unit/Ui/Aggregate/AggregateMemberRemovalTest.php</file>
       <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
+      <file>./Unit/Core/Rrd/RrdCompareReadOnlyTest.php</file>
+      <file>./Unit/Core/Rrd/RrdTuneResizeFailureTest.php</file>
+      <file>./Unit/Core/Rrd/RrdPastSampleNativeTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/SnmpValueAndWalkGuardsTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
