@@ -6,11 +6,13 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). Mirrors the installer part of upstream Cacti #7625.
+- Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
+- Share JSON filter preference persistence for automation templates, CDEFs and data source profiles, retaining feature authorization, validation, primary-collector restrictions and transactional replacement behavior.
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
+- Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
@@ -36,6 +38,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
+- Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). Mirrors the installer part of upstream Cacti #7625.
 
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
 

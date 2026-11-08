@@ -5801,7 +5801,7 @@ msgid "Export Templates"
 msgstr "Exporteer templates"
 
 #: include/global_arrays.php:1036 include/global_arrays.php:1058
-#: include/global_arrays.php:1077 lib/plugins.php:1337
+#: include/global_arrays.php:1077 lib/plugins.php:1355
 msgid "Configuration"
 msgstr "Configuratie"
 
@@ -11468,8 +11468,8 @@ msgid "Recovering"
 msgstr "Herstellende"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
+#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
+#: lib/plugins.php:1412 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -15230,53 +15230,53 @@ msgstr "TCP ping timed out"
 msgid "Ping not performed due to setting."
 msgstr "Ping niet uitgevoerd vanwege de instelling."
 
-#: lib/plugins.php:596
+#: lib/plugins.php:614
 #, php-format
 msgid "%s Version %s or above is required for %s. "
 msgstr "%s Versie %s of hoger is vereist voor %s."
 
-#: lib/plugins.php:600
+#: lib/plugins.php:618
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
 msgstr "%s is vereist voor %s, en het is niet geïnstalleerd."
 
-#: lib/plugins.php:616
+#: lib/plugins.php:634
 msgid "Plugin cannot be installed."
 msgstr "Plugin kan niet worden geïnstalleerd."
 
-#: lib/plugins.php:676
+#: lib/plugins.php:694
 #, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
 msgstr "De plug-inmap '%s' moet worden hernoemd om 'plugin_' uit de naam te verwijderen voordat deze kan worden geïnstalleerd."
 
-#: lib/plugins.php:679
+#: lib/plugins.php:697
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "De plug-in in de map '%s' bevat geen versiefunctie '%s()'.  Deze functie moet bestaan om de plug-in te kunnen installeren."
 
-#: lib/plugins.php:712
+#: lib/plugins.php:730
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "De plug-in in de map '%s' bevat geen installatiefunctie '%s()'.  Deze functie moet bestaan om de plug-in te kunnen installeren."
 
-#: lib/plugins.php:1310
+#: lib/plugins.php:1328
 msgid "Legacy Plugin"
 msgstr "Oude plugin(s)"
 
-#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:596
+#: lib/plugins.php:1355 lib/plugins.php:1363 plugins.php:511 plugins.php:596
 msgid "Plugins"
 msgstr "Plugins"
 
-#: lib/plugins.php:1365
+#: lib/plugins.php:1383
 msgid "Plugin INFO must declare a valid compat version"
 msgstr ""
 
-#: lib/plugins.php:1369 lib/plugins.php:1372
+#: lib/plugins.php:1387 lib/plugins.php:1390
 #, php-format
 msgid "Requires: Kadupul >= %s"
 msgstr "Benodigd: Kadupul >= %s"
 
-#: lib/plugins.php:1395
+#: lib/plugins.php:1413
 msgid "Not Stated"
 msgstr "Niet vermeld"
 

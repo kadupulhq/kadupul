@@ -5783,7 +5783,7 @@ msgid "Export Templates"
 msgstr "템플릿 내보내기"
 
 #: include/global_arrays.php:1036 include/global_arrays.php:1058
-#: include/global_arrays.php:1077 lib/plugins.php:1337
+#: include/global_arrays.php:1077 lib/plugins.php:1355
 msgid "Configuration"
 msgstr "구성"
 
@@ -11446,8 +11446,8 @@ msgid "Recovering"
 msgstr "복구 중"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
+#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
+#: lib/plugins.php:1412 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -15212,53 +15212,53 @@ msgstr "TCP 핑이 시간 초과되었습니다."
 msgid "Ping not performed due to setting."
 msgstr "설정으로 인해 핑이 수행되지 않았습니다."
 
-#: lib/plugins.php:596
+#: lib/plugins.php:614
 #, php-format
 msgid "%s Version %s or above is required for %s. "
 msgstr "%s 에 %s 버전 %s 이상이 필요합니다."
 
-#: lib/plugins.php:600
+#: lib/plugins.php:618
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
 msgstr "%s에는  %s이 (가) 필요하며 설치되지 않았습니다."
 
-#: lib/plugins.php:616
+#: lib/plugins.php:634
 msgid "Plugin cannot be installed."
 msgstr "플러그인을 설치할 수 없습니다."
 
-#: lib/plugins.php:676
+#: lib/plugins.php:694
 #, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
 msgstr "플러그인 디렉토리 '%s' 을 (를) 설치하기 전에 이름에서 'plugin_' 을 (를) 제거하려면 이름을 변경해야 합니다."
 
-#: lib/plugins.php:679
+#: lib/plugins.php:697
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "'%s' 디렉토리의 플러그인에 버전 함수 '%s ()' 이 (가) 포함되어 있지 않습니다. 플러그인을 설치하려면 이 기능이 있어야 합니다."
 
-#: lib/plugins.php:712
+#: lib/plugins.php:730
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "'%s' 디렉토리의 플러그인에 설치 함수 '%s ()' 이 (가) 포함되어 있지 않습니다. 플러그인을 설치하려면 이 기능이 있어야 합니다."
 
-#: lib/plugins.php:1310
+#: lib/plugins.php:1328
 msgid "Legacy Plugin"
 msgstr "레거시 플러그인"
 
-#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:596
+#: lib/plugins.php:1355 lib/plugins.php:1363 plugins.php:511 plugins.php:596
 msgid "Plugins"
 msgstr "플러그인"
 
-#: lib/plugins.php:1365
+#: lib/plugins.php:1383
 msgid "Plugin INFO must declare a valid compat version"
 msgstr ""
 
-#: lib/plugins.php:1369 lib/plugins.php:1372
+#: lib/plugins.php:1387 lib/plugins.php:1390
 #, php-format
 msgid "Requires: Kadupul >= %s"
 msgstr "요구 사항 : Kadupul&gt; =  %s"
 
-#: lib/plugins.php:1395
+#: lib/plugins.php:1413
 msgid "Not Stated"
 msgstr "명시되지 않은"
 
