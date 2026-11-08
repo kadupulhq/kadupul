@@ -279,15 +279,25 @@ bridge; the planned Symfony stateless CSRF manager is not yet in use.
 
 `include/layout.js` submits timeout, suspension and collector-state events using
 POST and the current token. Its target is an absolute same-origin URL, independent
-of a document's base element. Without a token it navigates to confirmation.
-Source inspection confirms that expired tokens handled by the native bootstrap
-redirect to GET confirmation through its existing callback.
+of a document's base element, and carries the reason in its query string. Without
+a token it navigates to confirmation. An expired session fails CSRF, and the
+native callback redirects to that URL by GET; with no authenticated session left,
+`logout.php?action=timeout` shows the timeout message instead of confirmation,
+because there is nothing to end. The Midwinter logout icon submits the same POST.
 
-This deliberately changes GET logout compatibility: menu, theme, plugin and
-server redirect links now require confirmation. Integrations needing immediate
-logout must submit a valid token using POST. No GET page automatically submits
-the form. Existing URLs, POST hook ordering, session formats and credential
-mutations remain shared; there is no second write path. Existing gettext messages
+Server-side logouts end the session in the code path that decided to log out,
+which already holds the authenticated session: `clog.php` and `clog_user.php` on a
+remote collector, and a completed password change. `auth_end_session()` in
+`lib/auth.php` runs the logout hooks, remembered-token revocation and
+cookie/session teardown for these paths and for a confirmed `logout.php` POST, in
+the same order. A known reason is stored in a new session and shown once by the
+following GET of `logout.php`; that GET performs no teardown.
+
+This deliberately changes GET logout compatibility: menu and plugin links to
+`logout.php`, and any GET from another site, receive confirmation. Integrations
+needing immediate logout must submit a valid token using POST. No GET page
+automatically submits the form. Existing URLs, POST hook ordering, session
+formats and credential mutations remain shared; there is no second write path. Existing gettext messages
 are reused, so this slice needs no catalog content changes.
 
 ### Verification and separate review

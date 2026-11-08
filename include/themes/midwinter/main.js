@@ -409,7 +409,11 @@ function setupTheme() {
 	})
 
 	$('.compact_nav_icon:not(.mdw_logout)').off().on( "click", toggleCactiNavigationBox );
-	$('.compact_nav_icon.mdw_logout').off().on('click', {url: urlPath+'logout.php'}, redirect);
+	// Log out by POST with the CSRF token; a plain link only opens confirmation.
+	$('.compact_nav_icon.mdw_logout').off().on('click', function(event) {
+		event.preventDefault();
+		submitLogout('');
+	});
 
 	$('.dialog_client').off().on('click', {id: 'dialog_client'}, dialog_client);
 
@@ -434,12 +438,6 @@ function redesignConsoleMenu(menu) {
 		// Clean up: kick out Main Console
 		$('#menu_main_console').remove();
 	}
-}
-
-function redirect(event) {
-	event.preventDefault();
-	let url = event.data.url;
-	window.location = url;
 }
 
 function toggleCactiNavigationBox(event) {

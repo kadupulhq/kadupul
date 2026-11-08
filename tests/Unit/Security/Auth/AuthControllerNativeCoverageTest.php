@@ -165,6 +165,10 @@ final class AuthControllerNativeCoverageTest extends TestCase
         if ($changed) {
             self::assertSame(array(3), $state['audit']);
             self::assertContains('password_success', $state['messages']);
+            // The change ends the session itself rather than redirecting to the logout confirmation.
+            $teardown = array('logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy');
+            self::assertSame($teardown, array_values(array_intersect($state['events'], $teardown)));
+            self::assertSame(array(), $state['session']);
             self::assertArrayNotHasKey('sess_user_id', $state['session']);
             self::assertArrayNotHasKey('sess_change_password', $state['session']);
         } else {
@@ -265,6 +269,57 @@ final class AuthControllerNativeCoverageTest extends TestCase
         yield 'array action' => ['POST', 'valid', ['timeout'], 400, false];
     }
 
+    #[\PHPUnit\Framework\Attributes\DataProvider('serverLogoutReasons')]
+    public function testServerInitiatedLogoutEndsTheSessionAndKeepsOnlyItsReason(string $reason): void
+    {
+        $state = $this->runController(['mode' => 'end_session', 'reason' => $reason]);
+        $teardown = ['logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy'];
+        $known = in_array($reason, ['timeout', 'disabled', 'remote'], true);
+        self::assertSame($known ? [...$teardown, 'START_SESSION'] : $teardown, $state['events']);
+        self::assertSame($known ? ['sess_logout_notice' => $reason] : [], $state['session']);
+        if ($known) {
+            self::assertTrue($state['session_replaced'], 'The notice must not reuse the destroyed session identifier.');
+        }
+    }
+
+    public static function serverLogoutReasons(): iterable
+    {
+        foreach (['', 'timeout', 'disabled', 'remote'] as $reason) {
+            yield 'reason ' . ($reason === '' ? 'none' : $reason) => [$reason];
+        }
+        yield 'unknown reason leaves no notice' => ['bogus'];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('completedLogoutPages')]
+    public function testGetReportsACompletedLogoutWithoutPerformingOne(array $scenario, ?string $message): void
+    {
+        $state = $this->runController($scenario + ['mode' => 'logout', 'method' => 'GET', 'csrf' => 'missing', 'request' => []]);
+        self::assertSame(200, $state['status']);
+        self::assertSame([], $state['events'], 'A GET must never run logout hooks or teardown.');
+        self::assertArrayNotHasKey('sess_logout_notice', $state['session'], 'A notice is shown at most once.');
+        $document = new \DOMDocument();
+        self::assertTrue($document->loadHTML($state['html'], LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING));
+        $xpath = new \DOMXPath($document);
+        if ($message === null) {
+            self::assertSame(1, $xpath->query('//form[@method="post"]')->length);
+        } else {
+            self::assertSame(0, $xpath->query('//form')->length);
+            self::assertStringContainsString($message, $state['html']);
+        }
+    }
+
+    public static function completedLogoutPages(): iterable
+    {
+        yield 'server remote notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'remote']], 'Remote Data Collector'];
+        yield 'server disabled notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'disabled']], 'account suspension'];
+        yield 'server timeout notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'timeout']], 'session timeout'];
+        yield 'expired session timeout' => [['anonymous' => true, 'request' => ['action' => 'timeout']], 'session timeout'];
+        yield 'unknown notice still confirms' => [['session' => ['sess_logout_notice' => 'bogus']], null];
+        yield 'live session timeout still confirms' => [['request' => ['action' => 'timeout']], null];
+        yield 'expired session without a reason still confirms' => [['anonymous' => true], null];
+        yield 'expired session suspension claim still confirms' => [['anonymous' => true, 'request' => ['action' => 'disabled']], null];
+    }
+
     public static function logoutCases(): array
     {
         return array('timeout' => array('timeout', 'session timeout'), 'disabled' => array('disabled', 'account suspension'));
@@ -298,9 +353,9 @@ final class AuthControllerNativeCoverageTest extends TestCase
                 self::assertCount(1, $reports);
                 $sources = array('tests/Unit/Security/Auth/AuthControllerNativeCoverageTest.php', 'composer.lock', 'tests/composer.lock', 'include/vendor/csrf/csrf-magic.php', 'tests/Fixtures/auth-controller-native.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Application/Port/LocalCredentials.php', 'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Application/Command/TransitionAuthenticationSession.php', 'src/IdentityAccess/Application/Port/AuthenticationTransitionAccounts.php', 'src/IdentityAccess/Application/Port/AuthenticationTransitionSession.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionAccounts.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionSession.php', 'auth_login.php', 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php', 'templates/identity_access/login.html.twig', 'config/services.yaml', 'auth_changepassword.php', 'logout.php', 'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php', 'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php', 'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php', 'templates/platform/logout_message.html.twig', 'lib/ldap.php', 'include/global_constants.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
                 $mode = $scenario['mode'] ?? 'login';
-                $controller = array('login' => 'auth_login.php', 'password' => 'auth_changepassword.php', 'logout' => 'logout.php')[$mode];
+                $controller = array('login' => 'auth_login.php', 'password' => 'auth_changepassword.php', 'logout' => 'logout.php', 'end_session' => 'lib/auth.php')[$mode];
                 $markers = array('auth-controller-observed:' . $mode, 'auth-controller-persisted-state-readback');
-                $hits = $mode === 'logout' ? [$controller, 'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php'] : ['lib/auth.php', $controller];
+                $hits = $mode === 'logout' ? [$controller, 'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php'] : array_values(array_unique(['lib/auth.php', $controller]));
                 if ($scenario['malformed_login'] ?? false) {
                     // Shape refusal precedes any authentication helper execution.
                     $hits = [$controller];

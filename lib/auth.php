@@ -134,6 +134,36 @@ function clear_auth_cookie($db = false, $expire = null, $remembered = null)
 }
 
 /**
+ * auth_end_session - end the current session from a server-side decision.
+ *
+ * Only code that already holds the session and decided to log it out may call
+ * this, so it opens no cross-site GET logout. It runs the hooks and teardown of
+ * a confirmed logout.php POST, in the same order. A known reason is kept in
+ * the replacement session so that logout.php can show it once.
+ *
+ * @param  (string) $reason '', 'timeout', 'disabled' or 'remote'
+ *
+ * @return (void)
+ */
+function auth_end_session($reason = '')
+{
+    api_plugin_hook('logout_pre_session_destroy');
+
+    // Revoke remembered credentials before discarding cookie/session ownership.
+    clear_auth_cookie();
+    cacti_cookie_logout();
+    cacti_session_destroy();
+    api_plugin_hook('logout_post_session_destroy');
+
+    if (in_array($reason, array('timeout', 'disabled', 'remote'), true)) {
+        // A new identifier, never the destroyed one, carries only the notice.
+        session_id(session_create_id());
+        cacti_session_start();
+        $_SESSION['sess_logout_notice'] = $reason;
+    }
+}
+
+/**
  * set_auth_cookie - sets a users security token
  *
  * @param  (array) user is the user_auth row for the user

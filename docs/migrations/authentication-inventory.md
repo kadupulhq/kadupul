@@ -90,8 +90,10 @@ Restore requires an enabled, unlocked account of the stated realm, the token
 hash, the same client address as stored, a passing lockout check, and, for a
 versioned token, a matching MAC. Restore rotates: the old row is deleted and a
 new token is issued. Versioned tokens are `v1.<64 hex>.<hmac_sha256(64 hex,
-generation)>`; an unversioned token is accepted until revoked and is converted
-on restore. `auth_cache_enabled` must be `on`. Tokens for the guest account are
+generation)>`. A password login issues a versioned token bound to the
+generation its new session was bound to, so a Logout Everywhere that commits
+before the token row is written still revokes it. An unversioned token issued
+before this change is accepted until revoked and is converted on restore. `auth_cache_enabled` must be `on`. Tokens for the guest account are
 refused.
 
 **Logout Everywhere.** `auth_logout_everywhere()` (`lib/auth.php:5937`) delegates
@@ -167,13 +169,13 @@ returned to core); "action" is `api_plugin_hook` (no return value used).
 | `login_before` | fn | `auth_login.php:331` | array with `error`, `error_msg`, `username` and further keys not read here; output is echoed inside the form |
 | `login_realms` | fn | `auth_login.php:349` | realm array keyed by realm id with `name` and `selected`; LDAP method only |
 | `login_after` | action | `auth_login.php:382` | none; output is echoed |
-| `login_process` | fn | `lib/auth.php:4463` | `false`; a truthy return skips core local verification |
-| `login_options_navigate` | fn | `lib/auth.php:5633` | the user's `login_opts`; reached in the default branch of the post-login redirect |
-| `logout_pre_session_destroy` | action | `logout.php:33` | none; runs after POST/CSRF validation and before token revocation |
-| `logout_post_session_destroy` | action | `logout.php:40` | none; presentation reads any changed action afterward |
-| `custom_logout_message` | fn | `logout.php:42` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
-| `custom_password` | fn | `auth_changepassword.php:278` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` as above |
-| `change_password_title` | fn | `auth_changepassword.php:370` | the default title string |
+| `login_process` | fn | `lib/auth.php:4411` | `false`; a truthy return skips core local verification |
+| `login_options_navigate` | fn | `lib/auth.php:5581` | the user's `login_opts`; reached in the default branch of the post-login redirect |
+| `logout_pre_session_destroy` | action | `lib/auth.php:150` | none; `auth_end_session()` runs it after logout.php POST/CSRF validation or a server-side logout decision, before token revocation |
+| `logout_post_session_destroy` | action | `lib/auth.php:156` | none; presentation reads any changed action afterward |
+| `custom_logout_message` | fn | `logout.php:38` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
+| `custom_password` | fn | `auth_changepassword.php:279` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` as above |
+| `change_password_title` | fn | `auth_changepassword.php:371` | the default title string |
 | `auth_profile_update_data` | fn | `auth_profile.php:43` | the current tab |
 | `auth_profile_tabs` | fn | `auth_profile.php:66` | the tab array |
 | `auth_profile_run_action` | fn | `auth_profile.php:93` | the requested tab |

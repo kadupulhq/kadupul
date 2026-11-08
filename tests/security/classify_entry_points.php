@@ -117,7 +117,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'install/background.php' => 'e5f6566d90a88eae13d0fa05c7d818a876f968bb75a37083f570d86642bbf237',
     'install/installer-bootstrap.php' => '1dc2ba4f219239ebf06e6f1da1d0423ef1203314244cec3a27b21a013b596793',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
-    'lib/auth.php' => '1f6da633c214be3580aa5f48093a0d4df265bcdfc76725f391b70cd5fa381192',
+    'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -276,7 +276,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
-    'lib/auth.php' => '1f6da633c214be3580aa5f48093a0d4df265bcdfc76725f391b70cd5fa381192',
+    'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -2271,7 +2271,7 @@ const NATIVE_SESSION_FIREWALL_SOURCES = [
 
 // This route renders only an in-process native logout presentation object.
 const LOGOUT_PRESENTATION_SOURCES = [
-    'logout.php' => '581db993cc1d696564b85bc8696d3b333f740bbac81fbf64ef4ae31e7aa06c61',
+    'logout.php' => '3aece22245c571449f8dfb9aabe1f134839527b61c7dc3c3055f8ec77921a0f7',
     'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => '49a1a9f5ca2b68442eaa237b24964a11093b40ee1c9cebbc1e88e562719e2cb7',
     'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php' => '2cc6ef8df06898926492ec80ac06f103f630e44ba7db763547ff1dfd2e6e0823',
     'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php' => '20a13f081e47d27cad5832203b3acfcd75930167b2d21a6547ca6f63a9675eba',
@@ -2282,7 +2282,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'include/global.php' => 'd3b34a027c474472c32d95f4df1c0b30fe00a406daab99a24df1a65093618b48',
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
-    'lib/auth.php' => '1f6da633c214be3580aa5f48093a0d4df265bcdfc76725f391b70cd5fa381192',
+    'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -2295,7 +2295,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'src/IdentityAccess/Application/Port/AccountLockoutStatus.php' => '54d4a8d16b5df9320d99752c35e5173e96ceac8500eab86945115809e41c1e32',
     'src/IdentityAccess/Application/Query/IsAccountLocked.php' => 'cdf547461024111a7f55f5613717404f916a53f0c8e613a755f6a764d1492eed',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
-    'include/layout.js' => '1405bdac265d99dbce2f5ff52b5faea57408d98b77326a3b05b22dba0069720b',
+    'include/layout.js' => '8a70ecb2e10e20616cc4133456e9219ca9fe871138e1b1ae3a3e79cb23e47d9c',
     'include/vendor/csrf/csrf-magic.php' => '4159c4d545c18181fbda73c99d00722de5dc9138ad1e75830d45740ce09511f0',
     'include/vendor/csrf/csrf-conf.php' => '61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514',
 ];

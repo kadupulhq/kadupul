@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.38\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 11:52-0800\n"
+"POT-Creation-Date: 2026-11-08 12:16-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,7 +160,7 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr ""
 
 #: aggregate_graphs.php:409 aggregate_graphs.php:459 aggregate_graphs.php:507
-#: auth_changepassword.php:415 auth_profile.php:464 automation_networks.php:387
+#: auth_changepassword.php:416 auth_profile.php:464 automation_networks.php:387
 #: automation_snmp.php:245 graphs.php:1195 graphs.php:1245 graphs.php:1248
 #: graphs.php:1292 graphs.php:1884 include/auth.php:309
 #: lib/api_aggregate.php:2249 lib/api_aggregate.php:2264 lib/html_form.php:1423
@@ -568,7 +568,7 @@ msgstr ""
 #: data_debug.php:1114 data_sources.php:1712 graph_templates_items.php:447
 #: graphs.php:2096 graphs_items.php:270 lib/api_automation.php:26
 #: lib/api_automation.php:47 lib/api_automation.php:430
-#: lib/api_automation.php:450 lib/auth.php:3993 lib/auth.php:4042
+#: lib/api_automation.php:450 lib/auth.php:4023 lib/auth.php:4072
 #: lib/html.php:2310 lib/html.php:2338 lib/html.php:2377 lib/html.php:2411
 #: lib/html_reports.php:1030 lib/html_reports.php:1034
 #: lib/html_reports.php:1157 lib/html_reports.php:1167
@@ -599,8 +599,8 @@ msgstr ""
 #: include/global_settings.php:715 include/global_settings.php:723
 #: include/global_settings.php:1352 include/global_settings.php:2017
 #: lib/api_automation.php:48 lib/api_automation.php:431
-#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:3996
-#: lib/auth.php:4045 lib/auth.php:4091 lib/html.php:228 lib/html.php:2311
+#: lib/api_automation.php:451 lib/api_automation.php:589 lib/auth.php:4026
+#: lib/auth.php:4075 lib/auth.php:4121 lib/html.php:228 lib/html.php:2311
 #: lib/html.php:2336 lib/html.php:2378 lib/html.php:2412 lib/html_form.php:392
 #: lib/html_reports.php:1041 lib/html_reports.php:1045
 #: lib/html_reports.php:1081 lib/html_reports.php:1157
@@ -723,94 +723,94 @@ msgstr ""
 msgid "Your new password cannot be the same as the old password. Please try again."
 msgstr ""
 
-#: auth_changepassword.php:283
+#: auth_changepassword.php:284
 msgid "Forced password change"
 msgstr ""
 
-#: auth_changepassword.php:287
+#: auth_changepassword.php:288
 msgid "Password requirements include:"
 msgstr ""
 
-#: auth_changepassword.php:291
+#: auth_changepassword.php:292
 #, php-format
 msgid "Must be at least %d characters in length"
 msgstr ""
 
-#: auth_changepassword.php:295
+#: auth_changepassword.php:296
 msgid "Must include mixed case"
 msgstr ""
 
-#: auth_changepassword.php:299
+#: auth_changepassword.php:300
 msgid "Must include at least 1 number"
 msgstr ""
 
-#: auth_changepassword.php:303
+#: auth_changepassword.php:304
 msgid "Must include at least 1 special character"
 msgstr ""
 
-#: auth_changepassword.php:307
+#: auth_changepassword.php:308
 #, php-format
 msgid "Cannot be reused for %d password changes"
 msgstr ""
 
-#: auth_changepassword.php:360
+#: auth_changepassword.php:361
 msgid "There are problems with the Change Password page.  Contact your Kadupul administrator right away."
 msgstr ""
 
-#: auth_changepassword.php:370 auth_changepassword.php:377
+#: auth_changepassword.php:371 auth_changepassword.php:378
 #: include/global_form.php:1552 lib/functions.php:4292 lib/html.php:2888
 msgid "Change Password"
 msgstr ""
 
-#: auth_changepassword.php:387
+#: auth_changepassword.php:388
 msgid "Please enter your current password and your new<br>Kadupul password."
 msgstr ""
 
-#: auth_changepassword.php:389
+#: auth_changepassword.php:390
 msgid "Please enter your new Kadupul password."
 msgstr ""
 
-#: auth_changepassword.php:397 auth_login.php:344
+#: auth_changepassword.php:398 auth_login.php:347
 #: include/global_settings.php:1851 lib/functions.php:6242
 msgid "Username"
 msgstr ""
 
-#: auth_changepassword.php:400
+#: auth_changepassword.php:401
 msgid "Current password"
 msgstr ""
 
-#: auth_changepassword.php:405
+#: auth_changepassword.php:406
 msgid "New password"
 msgstr ""
 
-#: auth_changepassword.php:409
+#: auth_changepassword.php:410
 msgid "Confirm new password"
 msgstr ""
 
-#: auth_changepassword.php:413 auth_profile.php:582 graphs_new.php:517
+#: auth_changepassword.php:414 auth_profile.php:582 graphs_new.php:517
 #: lib/html_form.php:1420 lib/html_form.php:1429 lib/html_graph.php:181
 #: lib/html_tree.php:1012 settings.php:560
 msgid "Save"
 msgstr ""
 
-#: auth_changepassword.php:424 auth_login.php:386
+#: auth_changepassword.php:425 auth_login.php:389
 #, php-format
 msgid "Version %s | %s"
 msgstr ""
 
-#: auth_changepassword.php:437 user_admin.php:1840
+#: auth_changepassword.php:438 user_admin.php:1840
 msgid "Password Too Short"
 msgstr ""
 
-#: auth_changepassword.php:443 user_admin.php:1845
+#: auth_changepassword.php:444 user_admin.php:1845
 msgid "Password Validation Passes"
 msgstr ""
 
-#: auth_changepassword.php:459 user_admin.php:1859
+#: auth_changepassword.php:460 user_admin.php:1859
 msgid "Passwords do Not Match"
 msgstr ""
 
-#: auth_changepassword.php:463 user_admin.php:1862
+#: auth_changepassword.php:464 user_admin.php:1862
 msgid "Passwords Match"
 msgstr ""
 
@@ -822,10 +822,10 @@ msgstr ""
 msgid "Unable to determine user Login Realm or Domain. Please contact your System Administrator."
 msgstr ""
 
-#: auth_login.php:132 lib/auth.php:4304 lib/auth.php:4319 lib/auth.php:4429
-#: lib/auth.php:4454 lib/auth.php:4477 lib/auth.php:4517 lib/auth.php:4529
-#: lib/auth.php:4552 lib/auth.php:4675 lib/auth.php:4695 lib/auth.php:4907
-#: lib/auth.php:4949 lib/auth.php:4959 lib/auth.php:4975 lib/auth.php:4989
+#: auth_login.php:132 lib/auth.php:4334 lib/auth.php:4349 lib/auth.php:4459
+#: lib/auth.php:4484 lib/auth.php:4507 lib/auth.php:4547 lib/auth.php:4559
+#: lib/auth.php:4582 lib/auth.php:4705 lib/auth.php:4725 lib/auth.php:4937
+#: lib/auth.php:4979 lib/auth.php:4989 lib/auth.php:5005 lib/auth.php:5019
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php:72
 #: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php:55
 msgid "Access Denied!  Login Failed."
@@ -852,42 +852,42 @@ msgstr ""
 msgid "Access Denied! User account locked."
 msgstr ""
 
-#: auth_login.php:330 lib/html_tree.php:147
+#: auth_login.php:333 lib/html_tree.php:147
 msgid "Login to Kadupul"
 msgstr ""
 
-#: auth_login.php:331
+#: auth_login.php:334
 msgid "User Login"
 msgstr ""
 
-#: auth_login.php:343
+#: auth_login.php:346
 msgid "Enter your Username and Password below"
 msgstr ""
 
-#: auth_login.php:345 include/global_form.php:1519 lib/functions.php:6243
+#: auth_login.php:348 include/global_form.php:1519 lib/functions.php:6243
 msgid "Password"
 msgstr ""
 
-#: auth_login.php:353 include/global_settings.php:2350 lib/auth.php:1046
-#: lib/auth.php:1068 lib/auth.php:1078 lib/auth.php:1083 user_admin.php:2124
+#: auth_login.php:356 include/global_settings.php:2350 lib/auth.php:1076
+#: lib/auth.php:1098 lib/auth.php:1108 lib/auth.php:1113 user_admin.php:2124
 msgid "Local"
 msgstr ""
 
-#: auth_login.php:354 include/global_arrays.php:880 lib/auth.php:1079
-#: lib/auth.php:1084
+#: auth_login.php:357 include/global_arrays.php:880 lib/auth.php:1109
+#: lib/auth.php:1114
 msgid "LDAP"
 msgstr ""
 
-#: auth_login.php:366 user_admin.php:2119 user_admin.php:2249
+#: auth_login.php:369 user_admin.php:2119 user_admin.php:2249
 #: user_group_admin.php:741
 msgid "Realm"
 msgstr ""
 
-#: auth_login.php:380
+#: auth_login.php:383
 msgid "Keep me signed in"
 msgstr ""
 
-#: auth_login.php:382
+#: auth_login.php:385
 msgid "Login"
 msgstr ""
 
@@ -4419,7 +4419,7 @@ msgstr ""
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr ""
 
-#: include/auth.php:309 include/auth.php:311 lib/auth.php:5443
+#: include/auth.php:309 include/auth.php:311 lib/auth.php:5473
 #: templates/platform/permission_denied.html.twig
 msgid "Login Again"
 msgstr ""
@@ -11102,7 +11102,7 @@ msgstr ""
 msgid "Recovering"
 msgstr ""
 
-#: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
+#: lib/api_automation.php:33 lib/auth.php:3128 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
 #: lib/plugins.php:1412 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
@@ -11344,101 +11344,101 @@ msgstr ""
 msgid "New Branch"
 msgstr ""
 
-#: lib/auth.php:1085
+#: lib/auth.php:1115
 msgid "Web Basic"
 msgstr ""
 
-#: lib/auth.php:2927
+#: lib/auth.php:2957
 msgid "Device:(Hide Disabled)"
 msgstr ""
 
-#: lib/auth.php:2945 lib/auth.php:2947 lib/auth.php:2953 lib/auth.php:2955
+#: lib/auth.php:2975 lib/auth.php:2977 lib/auth.php:2983 lib/auth.php:2985
 #, php-format
 msgid "Graph:(%s%s)"
 msgstr ""
 
-#: lib/auth.php:2968 lib/auth.php:2974 lib/auth.php:3041 lib/auth.php:3043
-#: lib/auth.php:3047 lib/auth.php:3049
+#: lib/auth.php:2998 lib/auth.php:3004 lib/auth.php:3071 lib/auth.php:3073
+#: lib/auth.php:3077 lib/auth.php:3079
 #, php-format
 msgid "Device:(%s%s)"
 msgstr ""
 
-#: lib/auth.php:2982 lib/auth.php:2988 lib/auth.php:3057 lib/auth.php:3059
-#: lib/auth.php:3063 lib/auth.php:3065
+#: lib/auth.php:3012 lib/auth.php:3018 lib/auth.php:3087 lib/auth.php:3089
+#: lib/auth.php:3093 lib/auth.php:3095
 #, php-format
 msgid "Template:(%s%s)"
 msgstr ""
 
-#: lib/auth.php:2995
+#: lib/auth.php:3025
 #, php-format
 msgid "Graph+Device+Template:(%s%s)"
 msgstr ""
 
-#: lib/auth.php:3032 lib/auth.php:3034
+#: lib/auth.php:3062 lib/auth.php:3064
 #, php-format
 msgid "Device+Template:(%s%s)"
 msgstr ""
 
-#: lib/auth.php:3078 lib/auth.php:3085 lib/auth.php:3094
+#: lib/auth.php:3108 lib/auth.php:3115 lib/auth.php:3124
 msgid "Restricted By: "
 msgstr ""
 
-#: lib/auth.php:3082
+#: lib/auth.php:3112
 msgid "Granted By: "
 msgstr ""
 
-#: lib/auth.php:3089
+#: lib/auth.php:3119
 msgid "Granted"
 msgstr ""
 
-#: lib/auth.php:3091 lib/auth.php:3096
+#: lib/auth.php:3121 lib/auth.php:3126
 msgid "Restricted"
 msgstr ""
 
-#: lib/auth.php:3330 lib/auth.php:3365
+#: lib/auth.php:3360 lib/auth.php:3395
 msgid "Branch:"
 msgstr ""
 
-#: lib/auth.php:3339 lib/auth.php:3373 lib/html_tree.php:949
+#: lib/auth.php:3369 lib/auth.php:3403 lib/html_tree.php:949
 #: lib/reports.php:1117
 msgid "Device:"
 msgstr ""
 
-#: lib/auth.php:4269 lib/auth.php:4316
+#: lib/auth.php:4299 lib/auth.php:4346
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:4310
+#: lib/auth.php:4340
 msgid "Access Denied!  Login Disabled."
 msgstr ""
 
-#: lib/auth.php:4341
+#: lib/auth.php:4371
 msgid "Web Basic Authentication configured, but no username was passed from the web server. Please make sure you have authentication enabled on the web server."
 msgstr ""
 
-#: lib/auth.php:4357
+#: lib/auth.php:4387
 #, php-format
 msgid "%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul."
 msgstr ""
 
-#: lib/auth.php:4489 lib/auth.php:4688
+#: lib/auth.php:4519 lib/auth.php:4718
 msgid "Access Denied!  No password provided by user."
 msgstr ""
 
-#: lib/auth.php:4661 lib/auth.php:5650
+#: lib/auth.php:4691 lib/auth.php:5680
 #, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:4669
+#: lib/auth.php:4699
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
 msgstr ""
 
-#: lib/auth.php:5436
+#: lib/auth.php:5466
 msgid "Kadupul Login Failure"
 msgstr ""
 
-#: lib/auth.php:5736
+#: lib/auth.php:5766
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr ""
 
@@ -12110,7 +12110,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: lib/functions.php:4301 lib/html.php:2889 logout.php:98
+#: lib/functions.php:4301 lib/html.php:2889 logout.php:109
 msgid "Logout"
 msgstr ""
 
@@ -15665,32 +15665,32 @@ msgstr ""
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
 msgstr ""
 
-#: logout.php:56
+#: logout.php:67
 msgid "You have been logged out of Kadupul due to a session timeout."
 msgstr ""
 
-#: logout.php:58
+#: logout.php:69
 msgid "You have been logged out of Kadupul due to an account suspension."
 msgstr ""
 
-#: logout.php:60
+#: logout.php:71
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr ""
 
-#: logout.php:70 logout.php:73
+#: logout.php:81 logout.php:84
 msgid "Logout of Kadupul"
 msgstr ""
 
-#: logout.php:72
+#: logout.php:83
 #, php-format
 msgid "Please close your browser or %sLogin Again%s"
 msgstr ""
 
-#: logout.php:73
+#: logout.php:84
 msgid "Automatic Logout"
 msgstr ""
 
-#: logout.php:74 utilities.php:835
+#: logout.php:85 utilities.php:835
 #, php-format
 msgid "Version %s"
 msgstr ""

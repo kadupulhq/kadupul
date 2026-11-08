@@ -3220,18 +3220,22 @@ function stripHeaderSuppression(url) {
 	return url.replace('headercontent=true', '').replace('?&', '?').replace('&&', '&');
 }
 
-/** Submit automatic logout with the current native CSRF binding. */
+/** Submit a logout ('' or an automatic reason) with the current native CSRF binding. */
 function submitLogout(action) {
-	if (!['timeout', 'disabled', 'remote'].includes(action)) {
+	if (!['', 'timeout', 'disabled', 'remote'].includes(action)) {
 		return false;
 	}
 	const target = new URL(urlPath + 'logout.php', document.location.href);
 	if (target.origin !== document.location.origin || !['http:', 'https:'].includes(target.protocol)) {
 		return false;
 	}
+	if (action !== '') {
+		// An expired session fails CSRF and is redirected to this URL by GET,
+		// so the reason must survive in the query to keep its message.
+		target.searchParams.set('action', action);
+	}
 	if (typeof csrfMagicToken !== 'string' || csrfMagicToken === '') {
 		// Missing tokens require a fresh confirmation page, never a bare POST.
-		target.searchParams.set('action', action);
 		document.location.assign(target.href);
 		return false;
 	}

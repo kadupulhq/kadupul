@@ -385,7 +385,7 @@ for (const nativeApi of [true, false]) {
 for (const [action, marker] of [['timeout', null], ['disabled', 'cactiLoginSuspend'], ['remote', 'cactiRemoteState']]) {
   test(`automatic ${action} logout submits CSRF by POST under CSP and a foreign base`, async ({ page, baseURL }) => {
     await loadLayout(page);
-    await page.route('**/monitoring/logout.php', route => route.fulfill({ body: 'Logout request received' }));
+    await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
     await page.evaluate(() => {
       const policy = document.createElement('meta');
       policy.httpEquiv = 'Content-Security-Policy';
@@ -412,8 +412,22 @@ for (const [action, marker] of [['timeout', null], ['disabled', 'cactiLoginSuspe
     expect(sent.method()).toBe('POST');
     expect(Object.fromEntries(new URLSearchParams(sent.postData()))).toEqual({ action, __csrf_magic: 'sid:fixture-token,123456' });
     expect(new URL(sent.url()).origin).toBe(new URL(baseURL).origin);
+    // An expired session fails CSRF and is redirected to this URL by GET; the reason must survive.
+    expect(new URL(sent.url()).searchParams.get('action')).toBe(action);
   });
 }
+
+test('a user logout submits CSRF by POST without an automatic reason', async ({ page, baseURL }) => {
+  await loadLayout(page);
+  await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+  const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
+  await page.evaluate(() => { window.urlPath = '/monitoring/'; window.csrfMagicToken = 'sid:fixture-token,123456'; submitLogout(''); });
+  const sent = await request;
+  expect(sent.method()).toBe('POST');
+  expect(new URL(sent.url()).search).toBe('');
+  expect(Object.fromEntries(new URLSearchParams(sent.postData()))).toEqual({ action: '', __csrf_magic: 'sid:fixture-token,123456' });
+  expect(new URL(sent.url()).origin).toBe(new URL(baseURL).origin);
+});
 
 test('automatic logout without a CSRF token opens confirmation by GET', async ({ page }) => {
   await loadLayout(page);

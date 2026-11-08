@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -20,7 +21,9 @@ if (!clog_admin()) {
 			print '<div style="display:none">cactiPermissionDenied</div>';
 		}
 	} elseif ($config['poller_id'] > 1) {
-		header('Location: logout.php?action=remote');
+		// The session is held here, so end it rather than ask for confirmation.
+		auth_end_session('remote');
+		header('Location: logout.php', true, 303);
 	} else {
 		header('Location: permission_denied.php');
 	}

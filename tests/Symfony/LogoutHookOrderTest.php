@@ -40,7 +40,11 @@ final class LogoutHookOrderTest extends TestCase
         $root = dirname(__DIR__, 2);
         $directory = sys_get_temp_dir() . '/logout-order-' . bin2hex(random_bytes(8));
         mkdir($directory . '/include', 0700, true);
-        file_put_contents($directory . '/include/auth.php', $this->stubs($reskin, $failure));
+        // The shared teardown runs from lib/auth.php itself, not from a copy.
+        require_once $root . '/tests/Helpers/PhpSource.php';
+        $source = file_get_contents($root . '/lib/auth.php');
+        self::assertIsString($source);
+        file_put_contents($directory . '/include/auth.php', $this->stubs($reskin, $failure) . "\n" . test_php_function_source($source, 'auth_end_session') . "\n");
         file_put_contents($directory . '/include/global_session.php', '<?php if (session_status() !== PHP_SESSION_ACTIVE || ($_SESSION["post_logout"] ?? null) !== "retained") { throw new RuntimeException("Lost post-hook session state"); }');
         try {
             $process = proc_open(
@@ -120,6 +124,7 @@ final class LogoutHookOrderTest extends TestCase
             function html_common_header(string \$title): void { note('page'); }
             class CactiSecureHeaders {
                 public static function getNonceAttribute(): string { return ''; }
+                public static function getNonce(): string { return 'fixture'; }
                 public static function contentSecurityPolicies(): array { return ['Content-Security-Policy' => "default-src 'self'"]; }
             }
             \$_SERVER['APP_ENV'] = 'test';

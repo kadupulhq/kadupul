@@ -70,6 +70,16 @@ test('native compact navigation preserves menu glyphs and one dialog binding', a
   expect(await page.evaluate(() => $._data(document.querySelector('#compact_user_menu .dialog_client'), 'events').click.length)).toBe(1);
 });
 
+test('the compact logout icon submits CSRF by POST instead of opening confirmation', async ({ page }) => {
+  await loadNativeNavigation(page);
+  await page.route('**/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+  const request = page.waitForRequest(request => new URL(request.url()).pathname === '/logout.php');
+  await page.evaluate(() => { window.csrfMagicToken = 'sid:fixture-token,123456'; $('#compact_user_menu .mdw_logout').trigger('click'); });
+  const sent = await request;
+  expect(sent.method()).toBe('POST');
+  expect(Object.fromEntries(new URLSearchParams(sent.postData()))).toEqual({ action: '', __csrf_magic: 'sid:fixture-token,123456' });
+});
+
 const clientProfiles = [
   ['chrome windows', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36', 'Chrome', 'Windows', 'device-desktop'],
   ['internet explorer', 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko', 'IE', 'Windows', 'device-desktop'],
