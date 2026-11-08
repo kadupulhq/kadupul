@@ -1,8 +1,8 @@
 {# SPDX-FileCopyrightText: 2004-2026 The Cacti Group #}
 {# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors #}
 {# SPDX-License-Identifier: GPL-2.0-or-later #}
-{# Sections render around native hooks. Markup values come only from native
-   html_escape() or CactiSecureHeaders, preserving legacy entity/charset rules. #}
+{# Sections render around native hooks. Text and attribute values are escaped
+   here; Markup is limited to native html_escape() compatibility output. #}
 {% block begin %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang='{{ locale }}'>
@@ -62,8 +62,7 @@
     <div class='versionInfo'>{{ version }}</div>
     </div>
     <div class='loginRight'></div>
-    {# nosemgrep: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var -- CactiSecureHeaders::getNonceAttribute() emits the complete quoted nonce attribute as Markup. #}
-    <script type='text/javascript' {{ nonceAttribute }}>
+    <script type='text/javascript' nonce='{{ nonce }}'>
     var storage = Storages.localStorage;
 
     $(function() {

@@ -256,6 +256,11 @@ function html_common_header($title)
 }
 final class CactiSecureHeaders
 {
+    public static function getNonce(): string
+    {
+        return 'fixture';
+    }
+
     public static function contentSecurityPolicies(): array
     {
         return ['Content-Security-Policy' => "default-src 'self'; script-src 'nonce-fixture'"];

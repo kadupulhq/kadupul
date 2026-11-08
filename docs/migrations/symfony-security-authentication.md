@@ -58,9 +58,10 @@ scenarios passed on MySQL 8.4.13 and MariaDB 10.11.19/11.8.9 with both session
 backends: 768 checks across six reports. Each report covers 2,621 source files
 with zero hash mismatches against the integrated checkout. MySQL installation
 used the test-server `log_bin_trust_function_creators` setting because binary
-logging otherwise refused the installer-owned readiness procedure for the scoped
-account (error 1419). Production privilege/configuration requirements remain an
-operator/deployment gate. The MySQL runner uses its native client binary; these
+logging otherwise refused CDEF trigger creation for the scoped account (error
+1419). Trigger installation precedes creation of the readiness procedure.
+Production privilege/configuration requirements remain an operator/deployment
+gate. The MySQL runner uses its native client binary; these
 local results do not certify the pinned private CI image or an unconfigured
 production server.
 

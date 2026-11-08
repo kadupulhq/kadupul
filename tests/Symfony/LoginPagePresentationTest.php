@@ -39,13 +39,15 @@ final class LoginPagePresentationTest extends TestCase
                 . $renderer->realms('Domaine', [['value' => '2', 'name' => new Markup('LDAP &amp; Local', 'UTF-8'), 'selected' => true]])
                 . $renderer->remember('Rester connecté', true)
                 . $renderer->submit('Connexion')
-                . $renderer->result(new Markup('Refus &lt;reason&gt;', 'UTF-8'), 'Version <1>', new Markup('nonce="fixture"', 'UTF-8'), false)
+                . $renderer->result(new Markup('Refus &lt;reason&gt;', 'UTF-8'), 'Version <1>', 'fixture" onload="alert(1)', false)
                 . $renderer->end();
             $xpath = $this->document($page);
             self::assertSame('alice & bob', $xpath->evaluate('string(//input[@name="login_username"]/@value)'));
             self::assertSame('LDAP & Local', $xpath->evaluate('string(//option[@selected])'));
             self::assertSame('Refus <reason>', $xpath->evaluate('string(//div[@class="loginErrors"])'));
             self::assertSame('Version <1>', $xpath->evaluate('string(//div[@class="versionInfo"])'));
+            self::assertSame('fixture" onload="alert(1)', $xpath->evaluate('string(//script/@nonce)'));
+            self::assertSame(0, $xpath->query('//script/@onload')->length);
             self::assertSame(1, $xpath->query('//input[@name="remember_me" and @checked]')->length);
             self::assertStringContainsString("$('#login_password').focus();", $page);
         } finally {

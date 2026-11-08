@@ -384,7 +384,7 @@ api_plugin_hook('login_after');
 print $loginRenderer->result(
     new \Twig\Markup($error ? (string) html_escape($error_msg) : '', $loginCharset),
     __('Version %s | %s', $version, COPYRIGHT_YEARS_SHORT),
-    new \Twig\Markup(CactiSecureHeaders::getNonceAttribute(), $loginCharset),
+    (string) CactiSecureHeaders::getNonce(),
     empty($username),
 );
 include_once(__DIR__ . '/include/global_session.php');
