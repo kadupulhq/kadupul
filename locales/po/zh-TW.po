@@ -586,7 +586,7 @@ msgid "Included in Aggregate"
 msgstr "包含在Aggregate中"
 
 #: aggregate_graphs.php:1335 aggregate_graphs.php:1668 graph_templates.php:880
-#: graph_view.php:832 graph_view.php:845 graphs.php:2382 lib/spikekill.php:1745
+#: graph_view.php:832 graph_view.php:845 graphs.php:2382 lib/spikekill.php:1758
 #, fuzzy
 msgid "Size"
 msgstr "尺寸"
@@ -1350,11 +1350,11 @@ msgstr "清除發現的設備"
 #: data_debug.php:698 lib/functions.php:6601 lib/functions.php:6606
 #: lib/html.php:1393 lib/html.php:1465 lib/html_reports.php:1810
 #: lib/html_reports.php:1838 lib/html_reports.php:1915
-#: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1734
-#: lib/spikekill.php:1735 lib/spikekill.php:1800 lib/spikekill.php:1801
-#: lib/spikekill.php:1802 lib/spikekill.php:1803 lib/spikekill.php:1804
-#: lib/spikekill.php:1805 lib/spikekill.php:1806 lib/spikekill.php:1807
-#: lib/spikekill.php:1808 lib/spikekill.php:1809 lib/spikekill.php:1810
+#: lib/html_reports.php:1916 lib/html_reports.php:1917 lib/spikekill.php:1747
+#: lib/spikekill.php:1748 lib/spikekill.php:1813 lib/spikekill.php:1814
+#: lib/spikekill.php:1815 lib/spikekill.php:1816 lib/spikekill.php:1817
+#: lib/spikekill.php:1818 lib/spikekill.php:1819 lib/spikekill.php:1820
+#: lib/spikekill.php:1821 lib/spikekill.php:1822 lib/spikekill.php:1823
 #: plugins.php:781 pollers.php:1115 user_admin.php:2261 utilities.php:738
 #: utilities.php:1190 utilities.php:2757 utilities.php:2885 utilities.php:2893
 #: utilities.php:2904 utilities.php:2915 utilities.php:2940 utilities.php:2990
@@ -18222,12 +18222,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:279 lib/spikekill.php:1751
+#: lib/spikekill.php:279 lib/spikekill.php:1764
 #, fuzzy
 msgid "StdDev"
 msgstr "刪除StdDev"
 
-#: lib/spikekill.php:285 lib/spikekill.php:1752
+#: lib/spikekill.php:285 lib/spikekill.php:1765
 #, fuzzy
 msgid "Variance"
 msgstr "变数"
@@ -18426,62 +18426,62 @@ msgstr ""
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1746
+#: lib/spikekill.php:1759
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1747
+#: lib/spikekill.php:1760
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1748
+#: lib/spikekill.php:1761
 #, fuzzy
 msgid "Samples"
 msgstr "簡單"
 
-#: lib/spikekill.php:1749
+#: lib/spikekill.php:1762
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1750
+#: lib/spikekill.php:1763
 #, fuzzy
 msgid "Avg"
 msgstr "平均："
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1766
 #, fuzzy
 msgid "MaxValue"
 msgstr "值"
 
-#: lib/spikekill.php:1754
+#: lib/spikekill.php:1767
 #, fuzzy
 msgid "MinValue"
 msgstr "值"
 
-#: lib/spikekill.php:1755
+#: lib/spikekill.php:1768
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1756
+#: lib/spikekill.php:1769
 #, fuzzy
 msgid "MinStdDev"
 msgstr "Dry Run StdDev"
 
-#: lib/spikekill.php:1757
+#: lib/spikekill.php:1770
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1758
+#: lib/spikekill.php:1771
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1759
+#: lib/spikekill.php:1772
 msgid "WindSamples"
 msgstr ""
 
-#: lib/spikekill.php:1760
+#: lib/spikekill.php:1773
 msgid "WindKilled"
 msgstr ""
 
