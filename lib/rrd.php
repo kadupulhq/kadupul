@@ -661,6 +661,53 @@ function rrd_check_path($path, $rra_base = null) {
 }
 
 /**
+ * rrd_check_containment - when 'Restrict RRDfiles to the RRA Directory' is
+ *   on, accept only an RRD path that resolves inside the RRA directory.
+ *
+ *   The path is judged by its deepest part that exists, so a file that is
+ *   about to be created is judged by the directory that will hold it, and a
+ *   symbolic link anywhere on the way is followed. With the setting off,
+ *   every path is accepted as in 1.2.31.
+ *
+ *   Realtime graphs keep their RRDfiles in the realtime cache directory, so
+ *   their caller names that directory as $rra_base.
+ *
+ * @param  (string) $path     - the RRD file path, with <path_rra> expanded
+ * @param  (string) $rra_base - the directory the path must be inside;
+ *   defaults to the RRA directory
+ *
+ * @return (bool) true when the path may be used
+ */
+function rrd_check_containment($path, $rra_base = null) {
+	global $config;
+
+	if (read_config_option('rrd_path_containment') != 'on') {
+		return true;
+	}
+
+	$path = (string) $path;
+
+	if (!rrd_check_path($path)) {
+		return false;
+	}
+
+	$probe = $path;
+
+	while (!file_exists($probe) && !is_link($probe)) {
+		$parent = dirname($probe);
+
+		if ($parent === $probe) {
+			return false;
+		}
+
+		$probe = $parent;
+	}
+
+	/* a dangling link does not resolve, so it is refused here */
+	return cacti_path_is_within($probe, $rra_base === null ? $config['rra_path'] : $rra_base);
+}
+
+/**
  * rrdtool_quote_argument - quote one argument of a command line that is
  *   written to 'rrdtool -' rather than run by a shell.
  *
@@ -1429,6 +1476,12 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 		return false;
 	}
 
+	if (!rrd_check_containment($data_source_path)) {
+		cacti_log("ERROR: Refusing RRD file path outside the RRA directory for local_data_id: $local_data_id.", false, 'POLLER');
+
+		return false;
+	}
+
 	/* ok, if that passes lets check to make sure an rra does not already
 	exist, the last thing we want to do is overright data! */
 	if ($show_source != true) {
@@ -1595,7 +1648,19 @@ function rrdtool_rejection_is_permanent($reason) {
 	);
 }
 
-function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
+/**
+ * rrdtool_function_update - write poller cache samples to their RRDfiles.
+ *
+ * @param  (array)  $update_cache_array - samples keyed by RRD file path
+ * @param  (mixed)  $rrdtool_pipe       - an open RRDtool pipe, or false
+ * @param  (array)  $completed          - set to the samples that were written
+ *   or permanently refused, keyed by path and time
+ * @param  (string) $rra_base           - the directory rrd_check_containment()
+ *   confines the paths to; defaults to the RRA directory
+ *
+ * @return (mixed) the number of RRDfiles processed, or false on a failure
+ */
+function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null, $rra_base = null) {
 	global $config;
 
 	static $retained_logs = array();
@@ -1607,7 +1672,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 	foreach ($update_cache_array as $rrd_path => $rrd_fields) {
 		$create_rrd_file = false;
 
-		if (!cacti_rrdtool_valid_path($rrd_path) || !rrd_check_path($rrd_path)) {
+		if (!cacti_rrdtool_valid_path($rrd_path) || !rrd_check_path($rrd_path) || !rrd_check_containment($rrd_path, $rra_base)) {
 			cacti_log("ERROR: Invalid RRD file path in poller cache for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 			foreach ($rrd_fields['times'] as $update_time => $field_array) {

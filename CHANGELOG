@@ -42,6 +42,7 @@ Cacti CHANGELOG
 -issue: Refuse to delete CDEFs that graphs, aggregates or other CDEFs still use, as the CDEF list already indicates (#1078)
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
 -issue: Stop repair_database.php after it reports that it is stopping (#742), and count a failed or empty hostname lookup or row read as a failure instead of a repair (#743)
+-security: Add the 'Restrict RRDfiles to the RRA Directory' setting, off by default. When checked, Data Source paths that resolve outside the RRA directory, including through symbolic links, are refused when a Data Source is saved and when the poller or Boost creates or updates the RRDfile
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
 -issue: Let a Boost child with no rows in its partition succeed instead of failing the run, while a failed row count still fails it (#762)
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)

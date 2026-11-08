@@ -3168,6 +3168,30 @@ function get_data_source_item_name($data_template_rrd_id) {
 }
 
 /**
+ * expand_data_source_path - turn a stored data source path into the path the
+ *   RRDfile uses. A bare file name lives in the RRA directory.
+ *
+ * @param $data_source_path - (string) the stored data_template_data.data_source_path
+ * @param $expand_paths - (bool) whether to expand the <path_rra> variable into its full path or not
+ *
+ * @return - the data source path
+ */
+function expand_data_source_path($data_source_path, $expand_paths = true) {
+	global $config;
+
+	if (!strstr($data_source_path, '/')) {
+		$data_source_path = '<path_rra>/' . $data_source_path;
+	}
+
+	/* whether to show the "actual" path or the <path_rra> variable name (for edit boxes) */
+	if ($expand_paths == true) {
+		$data_source_path = str_replace('<path_rra>/', $config['rra_path'] . '/', $data_source_path);
+	}
+
+	return $data_source_path;
+}
+
+/**
  * get_data_source_path - gets the full path to the .rrd file associated with a given data source
  *
  * @param $local_data_id - (int) the ID of the data source
@@ -3196,16 +3220,11 @@ function get_data_source_path($local_data_id, $expand_paths) {
 		if (empty($data_source['data_source_path'])) {
 			/* no custom path was specified */
 			$data_source_path = generate_data_source_path($local_data_id);
-		} elseif (!strstr($data_source['data_source_path'], '/')) {
-			$data_source_path = '<path_rra>/' . $data_source['data_source_path'];
 		} else {
 			$data_source_path = $data_source['data_source_path'];
 		}
 
-		/* whether to show the "actual" path or the <path_rra> variable name (for edit boxes) */
-		if ($expand_paths == true) {
-			$data_source_path = str_replace('<path_rra>/', $config['rra_path'] . '/', $data_source_path);
-		}
+		$data_source_path = expand_data_source_path($data_source_path, $expand_paths);
 
 		$data_source_path_cache[$local_data_id] = $data_source_path;
 
