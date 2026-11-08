@@ -1710,9 +1710,14 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
                 $arr['unsigned'] = true;
             }
 
-            if ($column['type'] != $arr['Type'] || (isset($column['NULL']) && ($column['NULL'] ? 'YES' : 'NO') != $arr['Null'])
-                || (((!isset($column['unsigned']) || !$column['unsigned']) && isset($arr['unsigned']))
-                    || (isset($column['unsigned']) && $column['unsigned'] && !isset($arr['unsigned'])))
+            // A definition may carry UNSIGNED in its type instead of the flag.
+            $declared_unsigned = (isset($column['unsigned']) && $column['unsigned']) || preg_match('/\bunsigned\b/i', $column['type']);
+
+            // MySQL 8.0.19 and later report int(11) as int, so compare integer
+            // types without their display width or every call rebuilds the column.
+            if (db_column_type_normalize($column['type']) != db_column_type_normalize($arr['Type']) || (isset($column['NULL']) && ($column['NULL'] ? 'YES' : 'NO') != $arr['Null'])
+                || (!$declared_unsigned && isset($arr['unsigned']))
+                || ($declared_unsigned && !isset($arr['unsigned']))
                 || (isset($column['auto_increment']) && ($column['auto_increment'] ? 'auto_increment' : '') != $arr['Extra'])) {
                 $definition = db_build_column_definition_sql($column, $db_conn, false);
 
@@ -1760,9 +1765,23 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
     }
 
     foreach ($indexes as $index) {
-        $allindexes[$index['Key_name']][$index['Seq_in_index'] - 1] = $index['Column_name'];
+        // A prefix index reports the column in Column_name and its length in
+        // Sub_part, so rebuild the name(n) form the definition uses.
+        $index_column = $index['Column_name'];
+
+        if (isset($index['Sub_part']) && $index['Sub_part'] !== '') {
+            $index_column .= '(' . (int) $index['Sub_part'] . ')';
+        }
+
+        $allindexes[$index['Key_name']][$index['Seq_in_index'] - 1] = $index_column;
         // Non_unique is 0 for a UNIQUE index.
         $uniqueindex[$index['Key_name']] = (isset($index['Non_unique']) && $index['Non_unique'] == 0);
+    }
+
+    // Column order is part of an index, so compare ordered lists.
+    foreach ($allindexes as $name => $columns) {
+        ksort($columns);
+        $allindexes[$name] = array_values($columns);
     }
 
     // Reconcile keys and unique_keys together, so a declared unique index is
@@ -1786,12 +1805,10 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
 
         if (isset($declared_keys[$n])) {
             $k = $declared_keys[$n];
-            $add = array_diff($k['columns'], $index);
-            $del = array_diff($index, $k['columns']);
             // Only a unique_keys entry forces UNIQUE.  A live unique index listed
             // under keys (as cli/sqltable_to_php.php writes every index) keeps
             // its uniqueness.
-            if (!empty($add) || !empty($del) || ($k['unique'] && !$uniqueindex[$n])) {
+            if (!db_index_columns_equal($k['columns'], $index) || ($k['unique'] && !$uniqueindex[$n])) {
                 $columns = db_format_index_create($k['columns']);
 
                 if (!db_is_safe_identifier($n) || $columns === false) {
@@ -1851,15 +1868,13 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
             }
         } else {
             // A single-column primary key may be given as a string (#1060).
-            $primary_columns = db_index_columns_to_array($data['primary']);
-            $add = array_diff($primary_columns, $allindexes['PRIMARY']);
-            $del = array_diff($allindexes['PRIMARY'], $primary_columns);
-            if (!empty($add) || !empty($del)) {
+            if (!db_index_columns_equal(db_index_columns_to_array($data['primary']), $allindexes['PRIMARY'])) {
                 $primary = db_format_index_create($data['primary']);
 
+                // One statement, so a new key the server rejects (such as one
+                // over duplicate rows) leaves the old primary key in place.
                 if ($primary === false
-                    || !db_execute("ALTER TABLE `$table` DROP PRIMARY KEY", $log, $db_conn)
-                    || !db_execute("ALTER TABLE `$table` ADD PRIMARY KEY(" . $primary . ')', $log, $db_conn)) {
+                    || !db_execute("ALTER TABLE `$table` DROP PRIMARY KEY, ADD PRIMARY KEY(" . $primary . ')', $log, $db_conn)) {
                     return false;
                 }
             }
@@ -1870,13 +1885,15 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
 }
 
 /**
- * db_index_columns_to_array - normalize an index column definition to a list of
- *   column names.  Plugins give a compound key either as an array or as one
- *   'col1`,`col2' string, and a single-column key as a plain string.
+ * db_index_columns_to_array - normalize an index column definition to an
+ *   ordered list of columns.  Plugins give a compound key either as an array or
+ *   as one 'col1`,`col2' string, and a single-column key as a plain string.  A
+ *   prefix column is returned as 'name(10)', the form db_update_table() builds
+ *   from SHOW INDEX.
  *
  * @param  (array|string) The index columns
  *
- * @return (array) The column names without surrounding backticks or whitespace
+ * @return (array) The columns without surrounding backticks or whitespace
  */
 function db_index_columns_to_array($columns)
 {
@@ -1887,10 +1904,52 @@ function db_index_columns_to_array($columns)
     $normalized = array();
 
     foreach ($columns as $column) {
-        $normalized[] = trim((string) $column, " \t\n\r\0\x0B`");
+        $column = trim((string) $column, " \t\n\r\0\x0B`");
+        // 'name` (10)' and 'name (10)' describe the same prefix as 'name(10)'.
+        $normalized[] = preg_replace('/^(.*?)[`\s]*\(\s*(\d+)\s*\)$/', '$1($2)', $column);
     }
 
     return $normalized;
+}
+
+/**
+ * db_index_columns_equal - compare a declared index column list with the live
+ *   one.  Order and prefix lengths count; letter case does not, because MySQL
+ *   column names are case-insensitive.
+ *
+ * @param  (array) The declared columns from db_index_columns_to_array()
+ * @param  (array) The live columns, ordered by Seq_in_index
+ *
+ * @return (bool) True when both describe the same index columns
+ */
+function db_index_columns_equal($declared, $live)
+{
+    return array_map('strtolower', array_values($declared)) === array_map('strtolower', array_values($live));
+}
+
+/**
+ * db_column_type_normalize - reduce a column type to the form used to decide
+ *   whether db_update_table() must change a column.  Integer display widths are
+ *   dropped, because MySQL 8.0.19 and later no longer report them (int(11) is
+ *   shown as int), unless the column is ZEROFILL, where the width still matters.
+ *   UNSIGNED is compared separately and is removed here.
+ *
+ * @param  (string) The declared or live column type
+ *
+ * @return (string) The type to compare
+ */
+function db_column_type_normalize($type)
+{
+    $type = trim((string) $type);
+
+    if (stripos($type, 'zerofill') === false
+        && preg_match('/^(tinyint|smallint|mediumint|integer|int|bigint)\s*(?:\(\s*\d+\s*\))?(?:\s+unsigned)?\s*$/i', $type, $matches)) {
+        $base = strtolower($matches[1]);
+
+        return $base == 'integer' ? 'int' : $base;
+    }
+
+    return $type;
 }
 
 /**
