@@ -51,8 +51,13 @@ if (!function_exists('rrdclean_error_handler')) {
 }
 
 const MESSAGE_LEVEL_ERROR = 2;
+const RRDTOOL_OUTPUT_NULL   = 0;
+const RRDTOOL_OUTPUT_STDOUT = 1;
 
-function read_config_option($name) { return ''; }
+function read_config_option($name) { return $GLOBALS['rrdclean_options'][$name] ?? ''; }
+function rrd_init(...$args) { return false; }
+function rrd_close(...$args) {}
+function rrdtool_execute($command, ...$args) { return $command === 'rrd-list' ? $GLOBALS['rrdclean_list'] : null; }
 function db_execute($sql) { $GLOBALS['rrdclean_queries'][] = $sql; return true; }
 
 function cacti_log($message, ...$args) { $GLOBALS['rrdclean_logs'][] = $message; }
@@ -211,6 +216,39 @@ test('the rescan quotes each listed file name as an SQL string', function () {
 
 	expect($insert)->toContain("('it\\'s.rrd', 1, '$date',0)")
 		->and($insert)->toContain("('plain.rrd', 2, '$date',0)");
+});
+
+test('a proxy rescan inserts its file list in batches of 400', function () {
+	$saved     = $GLOBALS['config'] ?? null;
+	$reporting = error_reporting();
+	$files     = array();
+
+	for ($i = 0; $i < 401; $i++) {
+		$files[] = "/rra/f$i.rrd,1,1700000000";
+	}
+
+	$GLOBALS['config']           = array('cacti_server_os' => 'unix', 'rra_path' => '/rra');
+	$GLOBALS['rra_path']         = '/rra/';
+	$GLOBALS['rrdclean_options'] = array('storage_location' => '1');
+	$GLOBALS['rrdclean_list']    = implode("\r\n", $files);
+	$GLOBALS['rrdclean_queries'] = array();
+
+	try {
+		get_files();
+	} finally {
+		error_reporting($reporting);
+		$GLOBALS['config']           = $saved;
+		$GLOBALS['rrdclean_options'] = array();
+	}
+
+	/* the first query copies the Cacti data sources; the file size of each
+	 * listed file must not reset the row counter */
+	$inserts = array_slice($GLOBALS['rrdclean_queries'], 1);
+
+	expect($inserts)->toHaveCount(2)
+		->and(substr_count($inserts[0], ',0)'))->toBe(400)
+		->and(substr_count($inserts[1], ',0)'))->toBe(1)
+		->and($inserts[1])->toContain("('f400.rrd', 1, ");
 });
 
 test('the RRD Cleaner page bar carries the search filter URL-encoded', function () {
