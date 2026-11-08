@@ -481,6 +481,24 @@ function api_plugin_db_table_create($plugin, $table, $data)
                 array($plugin, $table)
             );
         }
+
+        return;
+    }
+
+    /* Bring an existing table up to the plugin's current definition (#1067), but
+     * only a table this plugin created, so a plugin can not reshape a core or
+     * another plugin's table, and never remove columns, which would drop data. */
+    $owned = db_fetch_cell_prepared(
+        "SELECT COUNT(*)
+		FROM plugin_db_changes
+		WHERE plugin = ?
+		AND `table` = ?
+		AND method = 'create'",
+        array($plugin, $table)
+    );
+
+    if (is_numeric($owned) && (int) $owned > 0) {
+        db_update_table($table, $data, false);
     }
 }
 
