@@ -583,6 +583,11 @@ jobs:
       - name: Dependency analyser
         run: composer run-script dependency-analyser
 
+      # Yuan et al. (OSDI 2014): failures cluster in error-handling paths. A
+      # run marker written before an early exit records work that never ran.
+      - name: Run markers recorded before an exit
+        run: php tests/security/check_marker_before_exit.php
+
   spike-removal:
     timeout-minutes: 45
     name: Spike-removal contracts

@@ -15,6 +15,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Retain ANSI-colored Pest test classes when partitioning mixed native/DSL discovery lists, so coverage shards execute every listed class.
 - Accept an empty Data Source item name, minimum or maximum in an imported template when its per-data-source override is set, as the data template form and export allow, and reject a field holding child elements with the import message instead of a type error (#1349).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
+- Add a CI check that reports a run marker recorded with `set_config_option()` before an early `exit` or `die` in the same scope, with a reviewed baseline of the five existing matches.
 
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
