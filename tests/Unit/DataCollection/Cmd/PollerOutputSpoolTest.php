@@ -84,3 +84,34 @@ test('shared POSIX queue permissions are refused', function (): void {
 		expect(poller_output_spool(1))->toBeFalse();
 	});
 });
+
+test('a spool directory owned by another account names the owner and the fix', function (): void {
+	$stat = array('mode' => 0040700, 'uid' => 0, 'nlink' => 2);
+	$message = poller_output_spool_problem($stat, 'directory', '/var/lib/cacti/poller-output', 0040000, 501);
+
+	expect($message)->toStartWith('ERROR: Poller output spool directory /var/lib/cacti/poller-output is owned by ')
+		->and($message)->toContain('uid 0')
+		->and($message)->toContain('This usually follows a poller run as root.')
+		->and($message)->toContain('chown -R ')
+		->and($message)->toContain(' /var/lib/cacti/poller-output"')
+		->and($message)->toContain('Do not delete pending queue files.');
+});
+
+test('a spool file owned by another account points the fix at its directory', function (): void {
+	$message = poller_output_spool_problem(array('mode' => 0100600, 'uid' => 0, 'nlink' => 1), 'file', '/q/poller-1.sqlite', 0100000, 501);
+
+	expect($message)->toContain('Poller output spool file /q/poller-1.sqlite is owned by')
+		->and($message)->toContain(' /q"');
+});
+
+test('shared spool permissions name the mode and the chmod to run', function (): void {
+	$message = poller_output_spool_problem(array('mode' => 0040755, 'uid' => 501, 'nlink' => 2), 'directory', '/q', 0040000, 501);
+
+	expect($message)->toContain('has mode 0755')->and($message)->toContain('"chmod 0700 /q"');
+});
+
+test('a private spool owned by the poller account has no problem, and Windows skips POSIX ownership', function (): void {
+	expect(poller_output_spool_problem(array('mode' => 0040700, 'uid' => 501, 'nlink' => 2), 'directory', '/q', 0040000, 501))->toBeNull()
+		->and(poller_output_spool_problem(array('mode' => 0040777, 'uid' => 0, 'nlink' => 2), 'directory', 'C:/q', 0040000, null))->toBeNull()
+		->and(poller_output_spool_problem(false, 'directory', '/q', 0040000, 501))->toContain('cannot be read');
+});

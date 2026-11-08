@@ -12,7 +12,14 @@
 
 declare(strict_types=1);
 
-/** Execute a local operation without committing work owned by its caller. */
+/**
+ * Execute a local operation without committing work owned by its caller.
+ *
+ * The operation is atomic only when every table it names is InnoDB. When one
+ * is not (MyISAM, or a MEMORY poller_output_boost), the statements still run
+ * in order, as they did in 1.2.31, and a failure can leave earlier statements
+ * applied to the non-transactional tables.
+ */
 function db_atomic(array $tables, callable $operation, $connection = false): bool {
 	global $database_sessions, $database_hostname, $database_port, $database_default;
 
@@ -31,10 +38,18 @@ function db_atomic(array $tables, callable $operation, $connection = false): boo
 		if (!$started) {
 			return false;
 		}
+		$nontransactional = array();
 		foreach (array_unique($tables) as $table) {
-			if (!db_atomic_table($connection, $table)) {
+			$engine = db_atomic_table($connection, $table);
+			if ($engine === false) {
 				return false;
 			}
+			if ($engine !== 'InnoDB') {
+				$nontransactional[$table] = $engine;
+			}
+		}
+		if ($nontransactional) {
+			db_atomic_note_nontransactional($nontransactional);
 		}
 		if ($operation($connection) === true && $connection->inTransaction()) {
 			$complete = $owned ? $connection->commit() : db_atomic_execute($connection, 'RELEASE SAVEPOINT ' . $savepoint);
@@ -66,8 +81,24 @@ function db_atomic_execute(PDO $connection, string $sql, array $parameters = [])
 	return $statement !== false && $statement->execute($parameters) && $statement->closeCursor();
 }
 
-/** Inspect the actual table, holding its metadata lock through the mutation. */
-function db_atomic_table(PDO $connection, string $table): bool {
+/** Log once per process and table that its writes cannot be rolled back. */
+function db_atomic_note_nontransactional(array $engines): void {
+	static $noted = array();
+
+	foreach ($engines as $table => $engine) {
+		if (!isset($noted[$table])) {
+			$noted[$table] = true;
+			cacti_log('NOTICE: Table ' . $table . ' uses the ' . $engine . ' storage engine, so its writes run without a transaction, as in 1.2.31. Convert it to InnoDB for atomic updates.', false, 'DBCALL');
+		}
+	}
+}
+
+/**
+ * Inspect the actual table, holding its metadata lock through the mutation.
+ * Returns its storage engine, or false when it is missing, shadowed by a
+ * temporary table or cannot be inspected.
+ */
+function db_atomic_table(PDO $connection, string $table): string|false {
 	if (preg_match('/\A[a-z_]+\z/D', $table) !== 1 || $connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
 		return false;
 	}
@@ -88,5 +119,8 @@ function db_atomic_table(PDO $connection, string $table): bool {
 		return false;
 	}
 	$row = $statement->fetch(PDO::FETCH_ASSOC);
-	return $statement->closeCursor() && ($row['Name'] ?? null) === $table && ($row['Engine'] ?? null) === 'InnoDB';
+	if (!$statement->closeCursor() || ($row['Name'] ?? null) !== $table || !is_string($row['Engine'] ?? null) || $row['Engine'] === '') {
+		return false;
+	}
+	return $row['Engine'];
 }

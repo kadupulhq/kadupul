@@ -172,6 +172,12 @@ try {
 			$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, $scenario === 'output-truncation');
 			$rows[1][1] = str_repeat('x', 30);
 		}
+		/* the fixture session is STRICT_ALL_TABLES */
+		if ($scenario === 'output-truncation-strict') $rows[1][2] = str_repeat('9', 600);
+		if ($scenario === 'output-memory-boost') $db->exec('ALTER TABLE poller_output_boost ENGINE=MEMORY');
+		if ($scenario === 'output-malformed') {
+			$spool->exec("INSERT INTO batches (time,redirect,payload) VALUES (1700000000,1,'not json')");
+		}
 		$result['queued'] = poller_output_enqueue($spool, $rows, $redirect);
 		if ($scenario === 'output-borrowed') {
 			$db->beginTransaction();
@@ -188,7 +194,9 @@ try {
 			$result['caller'] = $db->query('SELECT name FROM sites WHERE id=8')->fetchColumn();
 		}
 		$result['pending'] = (int) $spool->querySingle('SELECT COUNT(*) FROM batches');
+		$result['quarantined'] = (int) $spool->querySingle("SELECT COUNT(*) FROM sqlite_master WHERE name='quarantine'") ? (int) $spool->querySingle('SELECT COUNT(*) FROM quarantine') : 0;
 		$result['rows'] = (int) $db->query('SELECT COUNT(*) FROM poller_output')->fetchColumn();
+		$result['stored'] = $db->query('SELECT rrd_name, LENGTH(output) FROM poller_output ORDER BY local_data_id')->fetchAll(PDO::FETCH_NUM);
 		$result['boost'] = (int) $db->query('SELECT COUNT(*) FROM poller_output_boost')->fetchColumn();
 		if ($scenario === 'output-retry') {
 			$db->exec('DROP TRIGGER refuse_output');
@@ -200,8 +208,13 @@ try {
 		$spool->close();
 		$spool = null;
 	} elseif (str_starts_with($scenario, 'script-')) {
-		$code = match ($scenario) { 'script-fail' => 'print "42\\n"; exit(7);', 'script-empty' => 'exit(0);', 'script-large' => 'print "42\\n"; print str_repeat("x", 1048576);', default => 'print "0\\n";' };
+		$code = match ($scenario) { 'script-fail', 'script-shell-exec' => 'print "42\\n"; exit(7);', 'script-fail-empty' => 'exit(7);', 'script-empty' => 'exit(0);', 'script-large' => 'print "42\\n"; print str_repeat("x", 1048576);', default => 'print "0\\n";' };
+		$result['popen'] = function_exists('popen');
 		$result['value'] = trim(exec_poll(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg($code)));
+	} elseif ($scenario === 'spool-mode') {
+		mkdir($config['poller_output_spool'], 0755);
+		chmod($config['poller_output_spool'], 0755);
+		$result['ok'] = poller_output_spool(1) !== false;
 	} else {
 		throw new RuntimeException('Unknown scenario ' . $scenario);
 	}
@@ -215,4 +228,5 @@ try {
 	rmdir($directory . '/include');
 	rmdir($directory);
 }
+$result['logs'] = $logs;
 echo json_encode($result, JSON_THROW_ON_ERROR), PHP_EOL;

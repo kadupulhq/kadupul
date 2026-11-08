@@ -63,10 +63,11 @@ cmd_exec	./lib/poller.php:181				exec($safe_filename . ' ' . $args . ' > /dev/nu
 cmd_exec	./lib/poller.php:184				exec($safe_filename . ' ' . $args . ' ' . $redirect_args . ' &');
 cmd_exec	./lib/poller.php:225		$process = @proc_open($command, $descriptors, $pipes, null, null, array('bypass_shell' => true));
 cmd_exec	./lib/poller.php:320		$process = proc_open($cmd, $descriptors, $pipes);
-cmd_exec	./lib/poller.php:41		$fp = popen($command, $config['cacti_server_os'] == 'unix' ? 'r' : 'rb');
+cmd_exec	./lib/poller.php:37			$fp = popen($command, $config['cacti_server_os'] == 'unix' ? 'r' : 'rb');
 cmd_exec	./lib/poller.php:67	 *                    of the proc_open() and proc_close() functions (php 4.3+)
 cmd_exec	./lib/poller.php:68	 * @param  (array)    $pipes - the array of r/w pipes returned from proc_open()
 cmd_exec	./lib/poller.php:69	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
+cmd_exec	./lib/poller.php:75			$output = shell_exec($command);
 cmd_exec	./lib/rrd.php:120			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 cmd_exec	./lib/rrd.php:153		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:1670						$fp = popen($rrdtool_cmd, 'r');

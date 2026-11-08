@@ -7,14 +7,17 @@ regressions instead of duplicating it.
 
 `SubsystemFailureNativeTest` executes production functions with the shipped
 MySQL schema in a uniquely owned temporary database. It covers failed cache
-reads and update/insert/delete stages, successful and empty replacements,
-nontransactional tables, temporary-table shadows, caller transactions, site
-unlink failures, name limits, invalid and successful device saves, sample retry,
-permissive-mode truncation, stable delayed timestamps and real local script exit
-statuses. A separate destination database verifies byte-preserving parameter
+reads and update/insert/delete stages, successful and empty replacements, the
+1.2.31 non-transactional writes for MyISAM tables and a MEMORY Boost table,
+temporary-table shadows, caller transactions, site unlink failures, name limits,
+invalid and successful device saves, sample retry, truncation stored with a
+warning in permissive and strict modes, quarantine of a malformed queued batch,
+stable delayed timestamps, real local script exit statuses (a printed value is
+kept with a warning; no output is unknown), the `shell_exec` path when `popen`
+is disabled, and the spool permission message. A separate destination database verifies byte-preserving parameter
 binding with quoted and Unicode values, native and emulated prepares, and
-`NO_BACKSLASH_ESCAPES`. Both prepare modes retain truncating batches and restore
-the original connection mode. Logging, request/session setup and unrelated hooks
+`NO_BACKSLASH_ESCAPES`. Both prepare modes store truncating batches with a
+warning and restore the original connection mode. Logging, request/session setup and unrelated hooks
 are fixture boundaries. It does not contact devices or write production RRDs.
 
 Run from `tests/` with a disposable server and an account allowed to create and
@@ -33,7 +36,9 @@ skips native database tests; it is not a database pass. Invoke the full runner
 with `--php` pointing to the selected runtime's actual binary so nested processes
 do not resolve a different local shim.
 
-Local evidence: PHP 8.1.34, MariaDB 10.11.19 and MySQL 8.4.13 each passed all 43
+Local evidence for the 1.2.31 fallbacks: PHP 8.1.34 with MariaDB 10.11 passed all
+52 database cases; 13 of them fail against the previous revision `e3b0dfb0c6`.
+Earlier evidence: PHP 8.1.34, MariaDB 10.11.19 and MySQL 8.4.13 each passed all 43
 database cases. The 43 cases also passed on PHP 8.4.25 with MySQL 8.4.13, using
 the unit runner's legacy-Pest deprecation setting. The existing five sql_save
 outcome cases passed on MariaDB at
