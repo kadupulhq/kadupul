@@ -33,6 +33,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
+- Ignore an unknown (NaN) data source minimum or maximum when SpikeKill builds its standard-deviation cutoffs (#1095).
 
 - Add opt-in installer runtime comparison and bounded local operational evidence, standalone/collector presets, and a validator for declared human usability observations. Extend release rehearsals with real interrupted finishing tasks, database outages and repaired collector synchronization; retained evidence distinguishes scoped cached-runtime probes from the full pinned release gate (#1293).
 - Guide installer setup with grouped optional settings, explicit backup and recovery checklists, actionable runtime checks and read-only post-installation evidence. Add local unattended configuration validation, environment-backed SNMP secret references and authenticated redacted diagnostic downloads. Include English/French guidance and keyboard/browser regression coverage (#1313).
