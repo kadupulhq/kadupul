@@ -1,16 +1,18 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
+-issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
+-issue: Remove a deleted graph from the aggregates that list it by passing the aggregate's graph id and a member list to the disassociation, so the aggregate's copied items are rebuilt without it (#227)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
--issue: Remove a deleted graph from the aggregates that list it by passing the aggregate's graph id and a member list to the disassociation, so the aggregate's copied items are rebuilt without it (#227)
 -issue: Keep CSV export bounds on one clock snapshot and trim samples beyond an unaligned requested end, retaining complete rows and empty-window metadata (#1092)
 -issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)

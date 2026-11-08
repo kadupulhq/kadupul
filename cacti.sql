@@ -2448,7 +2448,7 @@ CREATE TABLE settings_user (
 --
 
 CREATE TABLE settings_user_group (
-  group_id smallint(8) unsigned NOT NULL DEFAULT '0',
+  group_id int(10) unsigned NOT NULL DEFAULT '0',
   name varchar(50) NOT NULL DEFAULT '',
   value varchar(2048) NOT NULL DEFAULT '',
   PRIMARY KEY (group_id, name)
@@ -2783,7 +2783,7 @@ INSERT INTO user_auth_realm VALUES (1043,1);
 --
 
 CREATE TABLE user_auth_row_cache (
-  `user_id` mediumint(8) NOT NULL default '0',
+  `user_id` mediumint(8) unsigned NOT NULL default '0',
   `class` varchar(20) NOT NULL default '',
   `hash` varchar(32) NOT NULL default '0',
   `total_rows` int(10) unsigned NOT NULL default '0',
@@ -2801,7 +2801,7 @@ CREATE TABLE user_auth_row_cache (
 
 CREATE TABLE user_log (
   `username` varchar(50) NOT NULL default '0',
-  `user_id` mediumint(8) NOT NULL default '0',
+  `user_id` mediumint(8) unsigned NOT NULL default '0',
   `time` timestamp NOT NULL default '0000-00-00 00:00:00',
   `result` tinyint(3) unsigned NOT NULL default '0',
   `ip` varchar(40) NOT NULL default '',
