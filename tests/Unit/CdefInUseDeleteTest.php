@@ -17,7 +17,7 @@
 
 require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
 
-function cdef_delete_run($selected) {
+function cdef_delete_run($selected, $stale_check = false) {
 	$root    = dirname(__DIR__, 2);
 	$library = file_get_contents($root . '/lib/cdef.php');
 	$page    = file_get_contents($root . '/cdef.php');
@@ -29,7 +29,8 @@ function cdef_delete_run($selected) {
 		. '"INSERT INTO cdef VALUES (1,\'graphed\'),(2,\'unused\'),(3,\'parent\'),(4,\'child\'),(5,\'aggregated\')",'
 		. '"INSERT INTO cdef_items VALUES (1,1,4,\'CURRENT_DATA_SOURCE\'),(2,2,4,\'x\'),(3,3,5,\'4\'),(4,4,4,\'y\'),(5,5,4,\'z\')",'
 		. '"INSERT INTO graph_templates_item VALUES (1,1)","INSERT INTO aggregate_graphs_graph_item VALUES (5)") as $sql) { $db->exec($sql); }'
-		. 'function db_fetch_assoc_prepared($s,$p=array()){$q=$GLOBALS["db"]->prepare($s);$q->execute($p);return $q->fetchAll();}'
+		. '$stale_check=' . var_export($stale_check, true) . ';'
+		. 'function db_fetch_assoc_prepared($s,$p=array()){if($GLOBALS["stale_check"]){return array();}$q=$GLOBALS["db"]->prepare($s);$q->execute($p);return $q->fetchAll();}'
 		. 'function db_execute_prepared($s,$p=array()){$q=$GLOBALS["db"]->prepare($s);return $q->execute($p);}'
 		. 'function cacti_sizeof($a){return is_countable($a)?count($a):0;}function cacti_count($a){return cacti_sizeof($a);}'
 		. 'function get_filter_request_var(...$a){return "1";}function get_nfilter_request_var($n){return $n==="drp_action"?"1":$GLOBALS["selected"];}'
@@ -67,3 +68,12 @@ test('a referenced CDEF is refused and nothing in the selection is deleted', fun
 test('a CDEF referenced only by a CDEF deleted with it can go', function () {
 	expect(cdef_delete_run(array('3', '4')))->toBe(array(array(1, 2, 5), array(1, 2, 5), array()));
 });
+
+test('a reference the check did not see still keeps the CDEF', function ($selected) {
+	// The check reads nothing, as if each reference was added after it ran.
+	expect(cdef_delete_run($selected, true))->toBe(array(array(1, 2, 3, 4, 5), array(1, 2, 3, 4, 5), array()));
+})->with(array(
+	'used by a graph'      => array(array('1')),
+	'used by an aggregate' => array(array('5')),
+	'used by another CDEF' => array(array('4')),
+));
