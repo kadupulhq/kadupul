@@ -10,6 +10,8 @@
       <file>Unit/Core/Rrd/RrdProxyWriteRegressionTest.php</file>
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
+      <file>./Unit/Import/ImportPreviewRepairTest.php</file>
+      <file>./Unit/DataCollection/SortFieldReadFailureTest.php</file>
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
       <file>./Unit/Ui/Aggregate/AggregateMemberRemovalTest.php</file>
       <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
