@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-07 18:53-0800\n"
+"POT-Creation-Date: 2026-11-08 02:01-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2793,7 +2793,7 @@ msgstr "Rerun ניתוח"
 msgid "Check"
 msgstr "בדוק"
 
-#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4579
+#: data_debug.php:908 include/global_form.php:1018 lib/rrd.php:4626
 #: utilities.php:798 utilities.php:815 utilities.php:3206
 msgid "Value"
 msgstr "ערך"
@@ -3825,7 +3825,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool גרף תחביר"
 
 #: graph_image.php:174 graph_json.php:208 graph_realtime.php:330
-#: lib/rrd.php:2936
+#: lib/rrd.php:2983
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller עדיין לא רץ."
 
@@ -4528,7 +4528,7 @@ msgid "Save Filters"
 msgstr "שמור מסננים"
 
 #: graphs_new.php:532 include/global_form.php:284 lib/html.php:613
-#: lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4621
+#: lib/html_filter.php:55 lib/installer.php:2891 lib/rrd.php:4668
 #: utilities.php:866 utilities.php:1838
 msgid "Rows"
 msgstr "שורות"
@@ -5664,7 +5664,7 @@ msgstr "הזמנה טבעית"
 msgid "Numeric Ordering"
 msgstr "הזמנה מספרית"
 
-#: include/global_arrays.php:959 lib/rrd.php:4545
+#: include/global_arrays.php:959 lib/rrd.php:4592
 msgid "Header"
 msgstr "כותרת"
 
@@ -7305,7 +7305,7 @@ msgstr "דופק"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "כמה זמן יכול להיות חסר נתונים לפני RRDtool רשומות נתונים לא ידועים. הגדל את הערך אם מקור הנתונים שלך אינו יציב וברצונך להעביר נתונים ישנים במקום להציג פערים בגרפים שלך. ערך זה מוכפל בפקטור X-Files כדי לקבוע את משך הזמן בפועל."
 
-#: include/global_form.php:226 lib/rrd.php:4624
+#: include/global_form.php:226 lib/rrd.php:4671
 msgid "X-Files Factor"
 msgstr "X- קבצים פקטור"
 
@@ -7875,7 +7875,7 @@ msgstr "אטימות / ערוץ אלפא"
 msgid "The opacity/alpha channel of the color."
 msgstr "ערוץ אטימות / אלפא של הצבע."
 
-#: include/global_form.php:989 lib/rrd.php:4620
+#: include/global_form.php:989 lib/rrd.php:4667
 msgid "Consolidation Function"
 msgstr "פונקציית איחוד"
 
@@ -11518,7 +11518,7 @@ msgstr "שחזור"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
 #: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
-#: lib/plugins.php:1412 lib/rrd.php:4597 lib/rrd.php:4609 lib/spikekill.php:301
+#: lib/plugins.php:1412 lib/rrd.php:4644 lib/rrd.php:4656 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -11526,7 +11526,7 @@ msgstr "לא ידוע"
 
 #: lib/api_automation.php:44 lib/api_automation.php:46 lib/clog_webapi.php:543
 #: lib/html_reports.php:1117 lib/html_reports.php:1787
-#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4574
+#: lib/html_reports.php:2140 lib/html_reports.php:2151 lib/rrd.php:4621
 #: utilities.php:356 utilities.php:1480 utilities.php:3206
 msgid "Type"
 msgstr "סוג"
@@ -15397,198 +15397,198 @@ msgstr "נכשל הוספת פריט גרף דוח &#39; <i> %s</i> &#39; כבר
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "דלג על דוח גרף פריט &#39; <i> %s</i> &#39; כבר קיים"
 
-#: lib/rrd.php:2542
+#: lib/rrd.php:2589
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2545
+#: lib/rrd.php:2592
 msgid "The Graph contains a value RRDtool cannot accept."
 msgstr ""
 
-#: lib/rrd.php:2917 lib/rrd.php:2920 lib/rrd.php:4831
+#: lib/rrd.php:2964 lib/rrd.php:2967 lib/rrd.php:4878
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
 msgstr ""
 
-#: lib/rrd.php:2933
+#: lib/rrd.php:2980
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
-#: lib/rrd.php:4362
+#: lib/rrd.php:4409
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "גודל שלב RRDfile הנדרש הוא '{ 0 }' אך השלב הנצפה הוא '{ 1 }'"
 
-#: lib/rrd.php:4398
+#: lib/rrd.php:4445
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "סוג עבור מקור הנתונים &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4404
+#: lib/rrd.php:4451
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "פעימת הלב עבור מקור הנתונים &#39; %s&#39; צריכה להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4416
+#: lib/rrd.php:4463
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "המינימום של RRD עבור מקור הנתונים &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4425
+#: lib/rrd.php:4472
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "&#39; %s&#39; חסר בהגדרת Kadupul"
 
-#: lib/rrd.php:4439 lib/rrd.php:4440
+#: lib/rrd.php:4486 lib/rrd.php:4487
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "ל- Kadupul RRA &#39; %s&#39; יש אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
-#: lib/rrd.php:4453 lib/rrd.php:4454
+#: lib/rrd.php:4500 lib/rrd.php:4501
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "קובץ ה- RRA &#39; %s&#39; כולל אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
-#: lib/rrd.php:4486
+#: lib/rrd.php:4533
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "ה - pdp_per_row של '{ 0 }' אינו חוקי עבור RRA '{ 1 }' צריך להיות '{ 2 }'. שקול למחוק ולאפשר ל - Kadupul ליצור מחדש RRDfile."
 
-#: lib/rrd.php:4490
+#: lib/rrd.php:4537
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF עבור Kadupul RRA id &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
-#: lib/rrd.php:4494
+#: lib/rrd.php:4541
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "מספר השורות עבור מזהה Kadupul RRA '{ 0 }' שגוי. מספר השורות הוא '{ 1 }' אבל צריך להיות '{ 2 }'"
 
-#: lib/rrd.php:4511
+#: lib/rrd.php:4558
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "קובץ ה - RRA '{ 0 }' חסר Kadupul RRD הקיים"
 
-#: lib/rrd.php:4519
+#: lib/rrd.php:4566
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "RRA &#39; %s&#39; חסר בהגדרת Kadupul"
 
-#: lib/rrd.php:4541
+#: lib/rrd.php:4588
 msgid "RRD File Information"
 msgstr "מידע על קובץ RRD"
 
-#: lib/rrd.php:4573
+#: lib/rrd.php:4620
 msgid "Data Source Items"
 msgstr "פריטי מקור נתונים"
 
-#: lib/rrd.php:4575
+#: lib/rrd.php:4622
 msgid "Minimal Heartbeat"
 msgstr "פעימות לב מינימליות"
 
-#: lib/rrd.php:4576
+#: lib/rrd.php:4623
 msgid "Min"
 msgstr "מינימום"
 
-#: lib/rrd.php:4577
+#: lib/rrd.php:4624
 msgid "Max"
 msgstr "מקסימום"
 
-#: lib/rrd.php:4578
+#: lib/rrd.php:4625
 msgid "Last DS"
 msgstr "DS האחרון"
 
-#: lib/rrd.php:4580
+#: lib/rrd.php:4627
 msgid "Unknown Sec"
 msgstr "Sec לא ידוע"
 
-#: lib/rrd.php:4619
+#: lib/rrd.php:4666
 msgid "Round Robin Archive"
 msgstr "סיבוב רובין ארכיון"
 
-#: lib/rrd.php:4622
+#: lib/rrd.php:4669
 msgid "Cur Row"
 msgstr "שורה"
 
-#: lib/rrd.php:4623
+#: lib/rrd.php:4670
 msgid "PDP per Row"
 msgstr "PDP לכל שורה"
 
-#: lib/rrd.php:4625
+#: lib/rrd.php:4672
 msgid "CDP Prep Value (0)"
 msgstr "CDP Prep Value (0)"
 
-#: lib/rrd.php:4626
+#: lib/rrd.php:4673
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP לא ידוע נקודות נתונים (0)"
 
-#: lib/rrd.php:4711
+#: lib/rrd.php:4758
 msgid "Errors Found"
 msgstr "אין %s"
 
-#: lib/rrd.php:4723
+#: lib/rrd.php:4770
 msgid "Optional Tuning Recommendations"
 msgstr "שדות מקור נתונים"
 
-#: lib/rrd.php:4750 lib/rrd.php:4753
+#: lib/rrd.php:4797 lib/rrd.php:4800
 #, php-format
 msgid "rename %s to %s"
 msgstr "שינוי שם %s ל - %s"
 
-#: lib/rrd.php:4851
+#: lib/rrd.php:4898
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ERROR בעת כתיבת קובץ XML: %s"
 
-#: lib/rrd.php:4857
+#: lib/rrd.php:4904
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
 msgstr ""
 
-#: lib/rrd.php:4863
+#: lib/rrd.php:4910
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
-#: lib/rrd.php:4884
+#: lib/rrd.php:4931
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "שגיאה בעת ניתוח XML של drd rdtool"
 
-#: lib/rrd.php:4920 lib/rrd.php:4939
+#: lib/rrd.php:4967 lib/rrd.php:4986
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "שגיאה בעת ניתוח XML של DDR"
 
-#: lib/rrd.php:5157
+#: lib/rrd.php:5204
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוסר מקובץ RRD"
 
-#: lib/rrd.php:5195
+#: lib/rrd.php:5242
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוספה לקובץ RRD"
 
-#: lib/rrd.php:5226 lib/rrd.php:5242
+#: lib/rrd.php:5273 lib/rrd.php:5289
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "לאתר אין גישה לכתיבה ל- %s, ייתכן שלא תוכל ליצור / לעדכן את RRD"
 
-#: lib/rrd.php:5238
+#: lib/rrd.php:5285
 msgid "(Custom)"
 msgstr "(מותאם אישית)"
 
-#: lib/rrd.php:5244
+#: lib/rrd.php:5291
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "פתיחת קובץ הנתונים נכשלה, ייתכן שהפוסטר עדיין לא פועל"
 
-#: lib/rrd.php:5247
+#: lib/rrd.php:5294
 msgid "RRA Folder"
 msgstr "תיקיית RRA"
 
-#: lib/rrd.php:5247
+#: lib/rrd.php:5294
 msgid "Root"
 msgstr "‫Root"
 
-#: lib/rrd.php:5327
+#: lib/rrd.php:5374
 msgid "Unknown RRDtool Error"
 msgstr "שגיאת RRDtool לא ידועה"
 

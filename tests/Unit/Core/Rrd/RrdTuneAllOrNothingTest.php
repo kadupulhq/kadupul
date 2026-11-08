@@ -23,8 +23,11 @@ function rrd_tune_all_or_nothing(object $test, string $dir, string $rrdtool, arr
         'function get_data_source_item_name($id) { return "value"; } function get_data_source_path($id, $expand) { return __DIR__ . "/source.rrd"; }' .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
         'echo json_encode(rrdtool_function_tune(' . var_export($tune, true) . '));');
-    // Backups go to the temporary directory; point it at the fixture to see leftovers.
-    $environment = array_merge(getenv(), array('TMPDIR' => $dir));
+    // The copy is kept beside the RRDfile; a separate TMPDIR shows nothing lands there.
+    if (!is_dir($dir . '/tmp')) {
+        mkdir($dir . '/tmp', 0700);
+    }
+    $environment = array_merge(getenv(), array('TMPDIR' => $dir . '/tmp'));
     unset($environment['RRDCACHED_ADDRESS']);
     $environment = array_merge($environment, $extraEnvironment);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/tune.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, $environment);
@@ -40,7 +43,7 @@ function rrd_tune_all_or_nothing(object $test, string $dir, string $rrdtool, arr
         unlink($reports[0]);
     }
 
-    return array('result' => json_decode($output, true, 512, JSON_THROW_ON_ERROR), 'log' => is_file($dir . '/log') ? file_get_contents($dir . '/log') : '', 'backups' => glob($dir . '/kadupul-tune-*'));
+    return array('result' => json_decode($output, true, 512, JSON_THROW_ON_ERROR), 'log' => is_file($dir . '/log') ? file_get_contents($dir . '/log') : '', 'backups' => glob($dir . '/kadupul-tune-*'), 'temporary' => glob($dir . '/tmp/*'));
 }
 
 function rrd_tune_fixture(): string
@@ -72,6 +75,7 @@ test('a tune command that fails part-way leaves the RRDfile unchanged and report
         file_put_contents($dir . '/rrdtool', "#!/bin/sh\nprintf ' partly tuned' >> \"\$2\"\nexit $exit\n");
         chmod($dir . '/rrdtool', 0700);
         chmod($dir . '/source.rrd', 0640);
+        $inode = fileinode($dir . '/source.rrd');
 
         $run = rrd_tune_all_or_nothing($this, $dir, $dir . '/rrdtool', array('data_source_id' => 1, 'data-source-type' => '', 'heartbeat' => 900, 'minimum' => 'abc', 'maximum' => '', 'data-source-rename' => ''));
 
@@ -84,9 +88,13 @@ test('a tune command that fails part-way leaves the RRDfile unchanged and report
             expect($run['result'])->toBeFalse()
                 ->and(file_get_contents($dir . '/source.rrd'))->toBe('original')
                 ->and(fileperms($dir . '/source.rrd') & 0777)->toBe(0640)
+                // a restored copy is renamed into place; the live file is never truncated
+                ->and(fileinode($dir . '/source.rrd'))->not->toBe($inode)
+                ->and(glob($dir . '/.rrd-restore-*'))->toBe([])
                 ->and($run['log'])->toContain("RRDtool tune failed for '$dir/source.rrd'; the RRDfile was restored unchanged.");
         }
-        expect($run['backups'])->toBe([]);
+        expect($run['backups'])->toBe([])
+            ->and($run['temporary'])->toBe([]);
     } finally {
         rrd_tune_cleanup($dir);
     }
@@ -188,6 +196,7 @@ test('a tune whose restore fails keeps the copy and names it in the log', functi
 
         expect($run['result'])->toBeFalse()
             ->and($run['backups'])->toHaveCount(1)
+            ->and($run['temporary'])->toBe([])
             ->and(file_get_contents($run['backups'][0]))->toBe('original')
             ->and($run['log'])->toContain("RRDtool tune failed for '$dir/source.rrd' and the RRDfile could not be restored; its previous contents are in '" . $run['backups'][0] . "'.");
     } finally {

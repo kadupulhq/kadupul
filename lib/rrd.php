@@ -2309,8 +2309,14 @@ function rrdtool_function_tune($rrd_tune_array)
  * Run an `rrdtool tune` command so that it changes all of its options or none.
  *
  * RRDtool applies each option as it reaches it, so a rejected later option left
- * the earlier ones stored (#777). The file is copied first and written back when
- * the command fails. The caller holds the exclusive RRD maintenance lease.
+ * the earlier ones stored (#777). The file is copied first and put back when the
+ * command fails. The caller holds the exclusive RRD maintenance lease.
+ *
+ * The copy is kept beside the RRDfile, not in the temporary directory: a web
+ * server unit with PrivateTmp discards that directory on restart, and the copy
+ * is the only one left when the restore fails. The restore writes a new file
+ * in the same directory and renames it over the RRDfile, so the RRDfile is
+ * never left empty or half written.
  *
  * @param string             $data_source_path The RRDfile being tuned.
  * @param array<int, string> $rrdtool_argv     The complete tune command.
@@ -2319,16 +2325,9 @@ function rrdtool_function_tune($rrd_tune_array)
  */
 function rrdtool_tune_apply($data_source_path, array $rrdtool_argv)
 {
-    $backup = tempnam(sys_get_temp_dir(), 'kadupul-tune-');
-    $saved  = $backup !== false && @copy($data_source_path, $backup);
+    $backup = rrdtool_tune_backup($data_source_path);
 
-    clearstatcache();
-
-    if (!$saved || hash_file('sha256', $backup) !== hash_file('sha256', $data_source_path)) {
-        if ($backup !== false) {
-            @unlink($backup);
-        }
-
+    if ($backup === false) {
         cacti_log("ERROR: RRD tuning could not copy '$data_source_path' before tuning; no changes were made.");
 
         return false;
@@ -2340,26 +2339,16 @@ function rrdtool_tune_apply($data_source_path, array $rrdtool_argv)
         return true;
     }
 
-    // Write the copy back into the same file, so its owner and mode are kept.
-    $restored = false;
-    $source   = @fopen($backup, 'rb');
-    $target   = @fopen($data_source_path, 'r+b');
+    $hash = hash_file('sha256', $backup);
 
-    if ($source !== false && $target !== false && ftruncate($target, 0) && stream_copy_to_stream($source, $target) === filesize($backup) && fflush($target)) {
-        $restored = true;
-    }
-
-    if ($source !== false) {
-        fclose($source);
-    }
-
-    if ($target !== false) {
-        fclose($target);
-    }
+    require_once __DIR__ . '/rrd_maintenance.php';
+    $restored = rrd_maintenance_restore_atomic($backup, $data_source_path, function ($temporary) use ($backup) {
+        return rrdtool_tune_copy($backup, $temporary);
+    });
 
     clearstatcache();
 
-    if ($restored && hash_file('sha256', $backup) === hash_file('sha256', $data_source_path)) {
+    if ($restored && $hash !== false && hash_file('sha256', $data_source_path) === $hash) {
         @unlink($backup);
         cacti_log("ERROR: RRDtool tune failed for '$data_source_path'; the RRDfile was restored unchanged.");
     } else {
@@ -2367,6 +2356,64 @@ function rrdtool_tune_apply($data_source_path, array $rrdtool_argv)
     }
 
     return false;
+}
+
+/**
+ * Copy an RRDfile to a new file beside it before it is tuned.
+ *
+ * @param string $data_source_path The RRDfile about to be tuned.
+ *
+ * @return string|false The copy's path, or false when no complete copy was made.
+ */
+function rrdtool_tune_backup($data_source_path)
+{
+    // Not ending in .rrd, so the RRD Cleaner does not list a copy that is kept.
+    $backup = dirname($data_source_path) . '/kadupul-tune-' . bin2hex(random_bytes(8)) . '.bak';
+
+    if (!rrdtool_tune_copy($data_source_path, $backup)) {
+        // A partial copy is of no use, and nothing else has this random name.
+        @unlink($backup);
+
+        return false;
+    }
+
+    return $backup;
+}
+
+/**
+ * Copy one file to another, synced to disk and checked against the source.
+ *
+ * @param string $source      The file to copy.
+ * @param string $destination The new file; an existing one is not overwritten,
+ *                            unless it is empty, as rrd_maintenance_restore_atomic()
+ *                            hands it over.
+ *
+ * @return bool True when the destination holds exactly the source's contents.
+ */
+function rrdtool_tune_copy($source, $destination)
+{
+    if (!is_file($source)) {
+        return false;
+    }
+
+    $from = @fopen($source, 'rb');
+    $to   = @fopen($destination, is_file($destination) && filesize($destination) === 0 ? 'r+b' : 'xb');
+    $done = $from !== false && $to !== false
+        && stream_copy_to_stream($from, $to) === filesize($source)
+        && fflush($to)
+        && (!function_exists('fsync') || fsync($to));
+
+    if ($from !== false) {
+        fclose($from);
+    }
+
+    if ($to !== false) {
+        fclose($to);
+    }
+
+    clearstatcache();
+
+    return $done && hash_file('sha256', $source) === hash_file('sha256', $destination);
 }
 
 /** Fetch a data source's values, grouped by data source item and timestamp.
