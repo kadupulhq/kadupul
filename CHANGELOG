@@ -34,6 +34,7 @@ Cacti CHANGELOG
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
+-issue: Treat a binary SNMP walk that exits non-zero as failed and return no rows, instead of matching "Timeout" or "(tooBig)" in device values (#1099)
 -issue: Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200)
 -issue: Keep an RRDfile unchanged when rrdtool tune rejects a later option, and return whether rrdtool_function_tune() succeeded (#777)
 -issue: Retain queued Boost samples when the fallback RRD path query fails, while preserving cleanup for a successfully confirmed missing data source (#738)

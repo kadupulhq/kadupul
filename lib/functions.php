@@ -4412,10 +4412,11 @@ function move_item_up($table_name, $current_id, $group_query = '') {
  *
  * @return - (array) an array containing the command output
  */
-function exec_into_array($command_line) {
+function exec_into_array($command_line, &$return_code = 0) {
 	$out = array();
 	$err = 0;
 	exec($command_line,$out,$err);
+	$return_code = $err;
 
 	return array_values($out);
 }
