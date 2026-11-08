@@ -49,6 +49,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
 
 - Exclude unknown and non-finite samples before percentile aggregation, retaining measured zero and valid same-timestamp contributions (#1112).
+- Update the locked Symfony Config, Filesystem, FrameworkBundle, HttpClient, HttpFoundation, HttpKernel, Routing and Yaml packages to 7.4.23 and Mime to 7.4.22 to take upstream security fixes, retaining the Symfony 7.4 constraints and other locked versions.
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
 - Remove only the remote poller items the main data collector no longer holds after copying them to a Remote Data Collector, comparing item keys. The previous `last_updated` cutoff also removed current items that the copy left unchanged (#1408).
 - Run complete file and database session coverage concurrently in isolated Docker projects, retaining both failure statuses and the existing coverage validation and job deadline.
