@@ -8,6 +8,8 @@
       <file>Unit/Core/Rrd/RrdProxyWriteRegressionTest.php</file>
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
+      <file>./Unit/Import/ImportPreviewRepairTest.php</file>
+      <file>./Unit/DataCollection/SortFieldReadFailureTest.php</file>
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
       <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
@@ -22,8 +24,7 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
-      <file>./Unit/Import/ImportPreviewRepairTest.php</file>
-      <file>./Unit/DataCollection/SortFieldReadFailureTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
