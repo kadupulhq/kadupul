@@ -85,8 +85,11 @@ jobs:
             arguments+=(--order-by=random --random-order-seed="$ORDER_SEED")
             echo "Random order seed: $ORDER_SEED"
           fi
-          php "${arguments[@]}"
-          echo "Pest exited $?"
+          # The default run shell is bash -e; capture the status so a failing
+          # test does not end the job before its report is uploaded and compared.
+          status=0
+          php "${arguments[@]}" || status=$?
+          echo "Pest exited $status"
 
       - name: Require the run's report
         run: test -s "$RUNNER_TEMP/junit.xml"
@@ -106,7 +109,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          sparse-checkout: tests/tools
+          # Cone mode adds only top-level files; the local action needs its directory.
+          sparse-checkout: |
+            tests/tools
+            .github/actions/setup-mise
       - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
         with:
           install_args: python@3.12.12

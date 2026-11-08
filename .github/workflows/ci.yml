@@ -78,12 +78,12 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/tools/test_vdef_alias_readiness.py
       - name: Verify installer usability evidence remains separate from release acceptance
         run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
+      - name: Verify catalog rejection and historical compatibility boundaries
+        run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
       - name: Install hash-locked Python test-tool dependencies
         run: mise exec python@3.12.12 -- python -m pip install --disable-pip-version-check --require-hashes -r tests/tools/requirements.txt
       - name: Verify flaky-test comparison and changed-file test selection
         run: mise exec python@3.12.12 -- python tests/tools/test_flaky_and_selection.py
-      - name: Verify catalog rejection and historical compatibility boundaries
-        run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
       - name: Install interface catalog build dependencies
         run: 'mise exec python@3.12.12 -- python -m pip install --only-binary=:all: --require-hashes -r .github/scripts/catalog/requirements.txt'
       - name: Verify unchanged interface catalog artifacts and rejection cases

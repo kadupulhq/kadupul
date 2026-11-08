@@ -41,7 +41,13 @@ def registered(root: Path) -> dict[str, str]:
 
 
 def changed(root: Path, base: str) -> list[str]:
-    result = subprocess.run(['git', '-C', str(root), 'diff', '--name-only', '--diff-filter=d', f'{base}...HEAD'],
+    """Paths changed since base, including deleted files and both sides of a rename.
+
+    A test that still loads a deleted or renamed source is one the change breaks.
+    """
+    if base.startswith('-'):
+        raise ValueError(f'base revision {base!r} must not start with "-"')
+    result = subprocess.run(['git', '-C', str(root), 'diff', '--name-only', '--no-renames', f'{base}...HEAD'],
                             capture_output=True, text=True, check=False)
     if result.returncode != 0:
         raise ValueError(f'git diff against {base} failed: {result.stderr.strip()}')

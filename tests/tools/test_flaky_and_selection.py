@@ -135,6 +135,21 @@ class SelectTestsTest(unittest.TestCase):
         self.assertNotIn('LibPollerTest', out)
         self.assertIn('--configuration=phpunit-database.xml Unit/DatabaseTest.php', out)
 
+    def test_a_deleted_or_renamed_source_selects_the_tests_that_still_load_it(self):
+        self.git('mv', 'lib/poller.php', 'lib/poller_moved.php')
+        self.git('rm', '-q', 'lib/other.php')
+        self.git('commit', '-qm', 'move and delete')
+        status, out, err = capture(select_tests.main, ['--root', str(self.root), 'HEAD~1'])
+        self.assertEqual(status, 0, err)
+        self.assertIn('Unit/LibPollerTest.php  (lib/poller.php)', out)
+        self.assertIn('Unit/DatabaseTest.php  (lib/other.php)', out)
+
+    def test_a_base_that_looks_like_an_option_is_an_error(self):
+        status, _, err = capture(select_tests.main, ['--root', str(self.root), '--', '--output=x'])
+        self.assertEqual(status, 2)
+        self.assertIn('must not start with', err)
+        self.assertFalse(Path(self.root, 'x...HEAD').exists())
+
     def test_an_unknown_base_is_an_error(self):
         status, _, err = capture(select_tests.main, ['--root', str(self.root), 'no-such-ref'])
         self.assertEqual(status, 2)
