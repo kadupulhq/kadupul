@@ -14,7 +14,8 @@
 
 /*
  * Runs the shipped auth_login_redirect() for the "return to referer" login
- * option with only REQUEST_URI set, and prints the Location header it sends.
+ * option with the given REQUEST_URI or Referer, optionally with a changed
+ * theme, and prints the Location header it sends.
  *
  * The function is evaluated in a namespace that defines header(), so its
  * header() calls are captured while every other call reaches the shipped
@@ -33,8 +34,15 @@ namespace {
 
 	$input = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);
 
-	$config          = array('url_path' => '/cacti/', 'cacti_server_os' => 'unix');
-	$_SERVER         = array('REQUEST_URI' => $input['request_uri']);
+	$config          = array('url_path' => $input['url_path'] ?? '/cacti/', 'cacti_server_os' => 'unix');
+	$_SERVER         = array('SERVER_NAME' => 'unit.test', 'SERVER_PORT' => '80');
+	if (isset($input['request_uri'])) {
+		$_SERVER['REQUEST_URI'] = $input['request_uri'];
+	}
+	if (isset($input['referer'])) {
+		$_SERVER['HTTP_REFERER'] = $input['referer'];
+	}
+	$newtheme        = !empty($input['newtheme']);
 	$_SESSION        = array('sess_user_id' => 1);
 	$probe_headers   = array();
 	$probe_realm_ask = array();
@@ -46,9 +54,10 @@ namespace {
 		return $name === 'action' ? 'login' : $default;
 	}
 
-	function user_setting_exists($name, $user) { return false; }
-	function read_config_option($name, $force = false) { return ''; }
-	function read_user_setting($name, $default = false, $force = false, $user = 0) { return $default; }
+	/* a user theme that differs from the site theme makes the redirect add newtheme=1 */
+	function user_setting_exists($name, $user) { return $name === 'selected_theme' && $GLOBALS['newtheme']; }
+	function read_config_option($name, $force = false) { return $name === 'selected_theme' ? 'modern' : ''; }
+	function read_user_setting($name, $default = false, $force = false, $user = 0) { return $name === 'selected_theme' ? 'dark' : $default; }
 	function is_realm_allowed($realm, $check_user = false) { return true; }
 	function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') {}
 	function api_plugin_hook_function($name, $args = '') { return $args; }
@@ -60,9 +69,9 @@ namespace {
 	}
 
 	foreach (array(
-		'lib/functions.php'    => array('sanitize_uri', 'is_urlencoded'),
-		'lib/html_utility.php' => array('validate_local_redirect_path'),
-		'lib/auth.php'         => array('auth_basename', 'auth_login_redirect'),
+		'lib/functions.php'    => array('sanitize_uri', 'is_urlencoded', 'cacti_sizeof'),
+		'lib/html_utility.php' => array('validate_redirect_url', 'validate_local_redirect_path'),
+		'lib/auth.php'         => array('auth_basename', 'auth_login_strip_action', 'auth_login_redirect'),
 	) as $file => $functions) {
 		$source = file_get_contents($root . '/' . $file);
 
