@@ -492,6 +492,10 @@ jobs:
         working-directory: tests
         run: php ../include/vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --fail-on-empty-test-suite tools/PestInventoryTest.php
 
+      - name: Verify private installer HTTP failure diagnostics and cleanup
+        working-directory: tests
+        run: php ../include/vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --fail-on-empty-test-suite --fail-on-skipped Symfony/InstallerProbeDiagnosticsTest.php
+
       - name: Verify PHP 8.1 idiom contracts
         working-directory: tests
         run: |
