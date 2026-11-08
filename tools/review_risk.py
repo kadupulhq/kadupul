@@ -13,16 +13,18 @@ studies, then ranked by their average percentile across the range:
 - prior fixes: fix and revert commits that touched the same files in the
   preceding window (Kim et al., "Predicting Faults from Cached History",
   ICSE 2007);
-- low ownership: the author's share of earlier commits to the touched files,
-  and how many minor contributors those files have (Bird et al., "Don't Touch
-  My Code!", FSE 2011);
+- low ownership: the author's share of all earlier commits to the touched
+  files, over their whole first-parent history rather than the window, and how
+  many minor contributors those files have (Bird et al., "Don't Touch My
+  Code!", FSE 2011);
 - untested change: production files changed with no test file in the commit;
 - trust boundary: the commit touches authentication, session, database,
   installer, process, import or collection code, which AGENTS.md asks
   reviewers to trace end to end.
 
 Generated and vendored paths (catalogs, baselines, locks) are left out of
-every signal. The score orders commits for a reviewer; it is not a defect
+every signal. In a symmetric range A...B, each commit is measured against the
+history of the side it is on. The score orders commits for a reviewer; it is not a defect
 probability and says nothing about a commit it ranks low.
 """
 from __future__ import annotations
@@ -59,6 +61,7 @@ class Commit:
     when: datetime
     subject: str
     files: dict[str, int] = field(default_factory=dict)  # path -> lines added + deleted
+    renamed: dict[str, str] = field(default_factory=dict)  # new path -> path at the parent
 
 
 @dataclass
@@ -76,22 +79,42 @@ def git(repo: str, *arguments: str) -> str:
     return result.stdout
 
 
-def read_commits(repo: str, *selection: str) -> list[Commit]:
-    """First-parent commits, newest first, with per-file churn from --numstat."""
-    output = git(repo, 'log', '--first-parent', '--no-merges', '--numstat', '--format=%x1e%H%x1f%ae%x1f%cI%x1f%s', *selection)
+def rename_sides(path: str) -> tuple[str, str]:
+    """Split a --numstat rename such as 'lib/{a => b}/c.php' or 'a.php => b.php' into (old, new)."""
+    if '{' in path:
+        old = re.sub(r'\{([^{}]*) => [^{}]*\}', r'\1', path).replace('//', '/')
+        new = re.sub(r'\{[^{}]* => ([^{}]*)\}', r'\1', path).replace('//', '/')
+        return old, new
+    old, _, new = path.partition(' => ')
+    return old, new
+
+
+def read_commits(repo: str, *selection: str, numstat: bool = True) -> list[Commit]:
+    """First-parent commits, newest first, with per-file churn from --numstat.
+
+    With numstat=False the files are read with --name-only and their churn is
+    zero, which is enough to count who touched a file and much cheaper over a
+    long history.
+    """
+    detail = '--numstat' if numstat else '--name-only'
+    output = git(repo, 'log', '--first-parent', '--no-merges', detail, '--format=%x1e%H%x1f%ae%x1f%cI%x1f%s', *selection)
     commits = []
     for record in output.split('\x1e')[1:]:
         header, _, body = record.partition('\n')
         sha, author, when, subject = header.split('\x1f', 3)
         commit = Commit(sha, author.lower(), datetime.fromisoformat(when), subject)
         for line in body.splitlines():
+            if not numstat:
+                if line:
+                    commit.files[line] = 0
+                continue
             parts = line.split('\t')
             if len(parts) != 3:
                 continue
             added, deleted, path = parts
-            if ' => ' in path:  # rename: keep the new path
-                path = re.sub(r'\{[^{}]* => ([^{}]*)\}', r'\1', path).replace('//', '/')
-                path = path.split(' => ')[-1]
+            if ' => ' in path:  # rename: keep the new path, and the old one to size the file at the parent
+                old, path = rename_sides(path)
+                commit.renamed[path] = old
             # Binary files report '-'; count them as one changed line.
             commit.files[path] = (int(added) if added.isdigit() else 1) + (int(deleted) if deleted.isdigit() else 0)
         commits.append(commit)
@@ -122,17 +145,30 @@ def line_counts(repo: str, revision: str, paths: list[str]) -> dict[str, int]:
     return counts
 
 
-def assess(repo: str, commits: list[Commit], history: list[Commit], window_days: int) -> list[Assessment]:
-    """Measure each commit against the commits that came before it."""
-    ordered = sorted(history, key=lambda item: item.when)
+def assess(repo: str, commits: list[Commit], history: list[list[Commit]], owners: list[list[Commit]],
+           window_days: int) -> list[Assessment]:
+    """Measure each commit against the commits that came before it on its own first-parent line.
+
+    history holds each line's commits within the window, for prior fixes;
+    owners holds each line's whole history of the touched files, for
+    ownership. Both lists have one entry per tip, in the same order.
+    """
+    lines = [{item.sha for item in items} for items in history]
     assessments = []
     for commit in commits:
         paths = [path for path in commit.files if not GENERATED.search(path)]
         production = [path for path in paths if not TEST.search(path) and not PROSE.search(path)]
-        earlier = [item for item in ordered if item.when < commit.when and item.sha != commit.sha]
+        line = next((index for index, shas in enumerate(lines) if commit.sha in shas), None)
+        if line is None:  # not on any line read; fall back to every line
+            window = [item for items in history for item in items]
+            ownership = [item for items in owners for item in items]
+        else:
+            window, ownership = history[line], owners[line]
+        earlier = [item for item in window if item.when < commit.when and item.sha != commit.sha]
+        owned_before = [item for item in ownership if item.when < commit.when and item.sha != commit.sha]
         since = commit.when - timedelta(days=window_days)
 
-        parent_lines = line_counts(repo, commit.sha + '^', paths) if paths else {}
+        parent_lines = line_counts(repo, commit.sha + '^', [commit.renamed.get(path, path) for path in paths]) if paths else {}
         churn = sum(commit.files[path] for path in paths)
         relative = churn / max(1, sum(parent_lines.values()))
 
@@ -143,7 +179,7 @@ def assess(repo: str, commits: list[Commit], history: list[Commit], window_days:
         minor = 0
         for path in production:
             authors: dict[str, int] = {}
-            for item in earlier:
+            for item in owned_before:
                 if path in item.files:
                     authors[item.author] = authors.get(item.author, 0) + 1
             total = sum(authors.values())
@@ -196,6 +232,21 @@ def report(assessments: list[Assessment], limit: int) -> str:
     return '\n'.join(lines)
 
 
+def range_tips(revisions: str) -> list[str]:
+    """The tips whose history a range's commits are measured against.
+
+    A..B ranks commits reachable from B, so B is the only tip. A...B also ranks
+    the commits only A reaches, so both sides are tips. A single revision is
+    its own tip, and an empty side means HEAD.
+    """
+    if '...' in revisions:
+        left, _, right = revisions.partition('...')
+        return [left or 'HEAD', right or 'HEAD']
+    if '..' in revisions:
+        return [revisions.partition('..')[2] or 'HEAD']
+    return [revisions]
+
+
 def main(argv: list[str]) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('revisions', nargs='?', default='origin/main~100..origin/main',
@@ -217,12 +268,14 @@ def main(argv: list[str]) -> int:
             raise RuntimeError(f'no commits in {arguments.revisions}')
         oldest = min(item.when for item in commits) - timedelta(days=arguments.window_days)
         newest = max(item.when for item in commits)
-        # The tip of A..B or A...B; a single revision is its own tip.
-        tip = re.split(r'\.\.\.?', arguments.revisions)[-1] or 'HEAD'
-        history = read_commits(arguments.repo, f'--since={oldest.astimezone(timezone.utc).isoformat()}',
-                               f'--until={newest.astimezone(timezone.utc).isoformat()}', tip)
-        known = {item.sha: item for item in history + commits}
-        assessments = assess(arguments.repo, commits, list(known.values()), arguments.window_days)
+        tips = range_tips(arguments.revisions)
+        history = [read_commits(arguments.repo, f'--since={oldest.astimezone(timezone.utc).isoformat()}',
+                                f'--until={newest.astimezone(timezone.utc).isoformat()}', tip) for tip in tips]
+        touched = sorted({path for item in commits for path in item.files if not GENERATED.search(path)})
+        # Ownership counts every earlier commit to the touched files, not only the window's.
+        pathspecs = [':(literal)' + path for path in touched]
+        owners = [read_commits(arguments.repo, tip, '--', *pathspecs, numstat=False) if touched else [] for tip in tips]
+        assessments = assess(arguments.repo, commits, history, owners, arguments.window_days)
     except (RuntimeError, ValueError) as error:
         print(f'ERROR: {error}', file=sys.stderr)
         return 2

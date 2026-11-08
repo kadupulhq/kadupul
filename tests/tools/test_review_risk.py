@@ -109,6 +109,44 @@ class ReviewRiskTest(unittest.TestCase):
                 self.assertEqual(status, 0, err)
                 self.assertEqual({row['sha'] for row in json.loads(out)}, set(shas.values()))
 
+    def test_ownership_counts_history_older_than_the_window(self):
+        self.commit('feat: start', {'lib/util.php': 'u\n' * 100})
+        for day in range(3):
+            self.commit(f'chore: other {day}', {'lib/other.php': f'{day}\n'})
+        base = self.git('rev-parse', 'HEAD').strip()
+        change = self.commit('feat: extend util', {'lib/util.php': 'u\n' * 101}, author='newcomer@example.org')
+        status, out, err = self.run_tool('--json', '--window-days', '1', f'{base}..main')
+        self.assertEqual(status, 0, err)
+        signals = {row['sha']: row['signals'] for row in json.loads(out)}[change]
+        self.assertEqual(signals['low_ownership'], 1.0)        # owner@ wrote every earlier commit, four days back
+        self.assertEqual(signals['minor_contributors'], 0.0)
+
+    def test_a_renamed_file_is_sized_by_its_old_path(self):
+        base = self.commit('feat: start', {'lib/old.php': ''.join(f'line {n}\n' for n in range(100))})
+        self.git('mv', 'lib/old.php', 'lib/new.php')
+        moved = self.commit('refactor: rename', {'lib/new.php': ''.join(f'line {n}\n' for n in range(99)) + 'changed\n'})
+        status, out, err = self.run_tool('--json', f'{base}..main')
+        self.assertEqual(status, 0, err)
+        signals = {row['sha']: row['signals'] for row in json.loads(out)}[moved]
+        self.assertAlmostEqual(signals['relative_churn'], 2 / 100)
+
+    def test_a_symmetric_range_measures_each_side_against_its_own_history(self):
+        base = self.commit('feat: start', {'lib/shared.php': 's\n' * 100})
+        self.git('switch', '-q', '-c', 'side')
+        self.commit('fix: side defect', {'lib/shared.php': 's\n' * 101}, author='sider@example.org')
+        self.git('switch', '-q', 'main')
+        mainline = self.commit('feat: main change', {'lib/shared.php': 'm\n' * 100})
+        status, out, err = self.run_tool('--json', 'side...main')
+        self.assertEqual(status, 0, err)
+        rows = {row['sha']: row['signals'] for row in json.loads(out)}
+        self.assertEqual(len(rows), 2)
+        # The side branch's fix is newer but not an ancestor of the main commit.
+        self.assertEqual(rows[mainline]['prior_fixes'], 0.0)
+        self.assertEqual(rows[mainline]['low_ownership'], 0.0)
+        self.assertEqual(review_risk.range_tips('side...main'), ['side', 'main'])
+        self.assertEqual(review_risk.range_tips(f'{base}..'), ['HEAD'])
+        self.assertEqual(review_risk.range_tips('main'), ['main'])
+
     def test_a_range_that_looks_like_an_option_is_rejected(self):
         self.build_history()
         with self.assertRaises(SystemExit) as raised, contextlib.redirect_stderr(io.StringIO()):
