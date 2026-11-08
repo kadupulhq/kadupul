@@ -102,6 +102,40 @@ failure outcomes and report preservation. The parallel feedback lane does not
 replace full serial coverage, database, browser or deployment checks.
 The manually dispatched `Pest profiling` workflow retains its report and log.
 
+## Mutation testing on changed lines
+
+The advisory `Mutation testing (advisory)` workflow runs
+[Infection](https://infection.github.io/) on the lines a pull request adds or
+modifies under `src/`, and lists in the job summary each mutant no test
+detected, with its diff. A surviving mutant is a change to the code that the
+tests do not notice: add an assertion that fails for it, or explain in the
+review why the behavior does not matter. Survivors never fail the job; it fails
+only when the tool breaks, for example when the initial test run fails or runs
+no tests, or Infection writes no report. The check is not required.
+Infection mutates only added and modified files, so a file moved and edited
+under `src/` is not mutated; the summary lists such files under "Renamed files
+not mutated" so that a refactor's clean result is not read as coverage.
+
+Coverage comes from the PHPUnit suite in `phpunit-symfony.xml`. Legacy files
+are not mutated: the Pest suite evaluates extracted source through
+`tests/Helpers/PhpSource.php`, so its coverage cannot be attributed to them.
+
+To run it locally, install both Composer projects and the built assets as for
+`composer test`, the Python XML parser from `tests/tools/requirements.txt` (see
+above), and load the pcov or Xdebug coverage driver. Then compare with the
+branch the change targets:
+
+```sh
+mise exec -- python tests/tools/mutation_changed_lines.py --base origin/main
+```
+
+The summary and Infection's JSON, text and HTML reports are written to
+`var/infection/`. Options after `--` go to Infection unchanged. The wrapper
+runs Infection with one thread by default because the tests share `var/cache`;
+`--threads` overrides it. Run
+`mise exec -- python tests/tools/test_mutation_changed_lines.py` after changing
+the wrapper.
+
 ## Commits
 
 

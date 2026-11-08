@@ -74,6 +74,10 @@ jobs:
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
       - name: Verify test runner dispatch and missing-suite failures
         run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
+      - name: Verify mutation wrapper outcome classification
+        run: |
+          mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
+          mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
       - name: Verify VDEF Apache alias setup readiness and cleanup
         run: mise exec python@3.12.12 -- python tests/tools/test_vdef_alias_readiness.py
       - name: Verify review risk ranking signals and range errors

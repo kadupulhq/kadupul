@@ -26,6 +26,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
 - Give each native child coverage invocation a distinct test identity and report stem so reused process IDs cannot conflate execution or overwrite reports and evidence sidecars.
 - Preserve checkout sources and originating unit coverage when coverage-merger scratch cleanup runs with the checkout beneath the temporary directory.
+- Add an advisory `Mutation testing (advisory)` workflow that runs Infection 0.35 on the `src/` lines a pull request adds or modifies and lists undetected mutants in the job summary; surviving mutants never fail it, tool failures do.
 - Update development coverage reporting to coverage.py 7.17.0 and the hash-locked Semgrep scanner to 1.182.1, retaining the existing Python 3.12 runtime and coverage/security gates.
 
 - Serve migrated Symfony pages in all 23 shipped gettext languages: module domain keys without a YAML translation fall back to the matching `locales/po` entry, and the locale subscriber accepts every shipped locale with legacy spellings such as `pt_BR`, `zh-CN` and `de-AT`. Plural keys are bridged only where gettext and the English singular/plural choice agree; legacy `__()` and plugin catalogs are unchanged.
