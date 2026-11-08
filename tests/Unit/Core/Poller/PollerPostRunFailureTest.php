@@ -65,7 +65,7 @@ test('the production wait loop retries after a transient drain failure', functio
 test('the final drain reports current failure state after a recovered waiting attempt', function ($failed) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
     $start = strpos($source, '$rrds_processed += process_poller_output_batch(');
-    $end = strpos($source, ' elseif ($config', $start);
+    $end = strpos($source, "\n\n\t\t\t\t\tlog_cacti_stats", $start);
     expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
     $body = substr($source, $start, $end - $start);
     $signature = strpos($body, 'process_poller_output_batch(true,') !== false ? '$final,&$deferred,&$pipe' : '&$deferred,&$pipe';

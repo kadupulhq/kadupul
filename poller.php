@@ -802,9 +802,6 @@ while ($poller_runs_completed < $poller_runs) {
 					if ($poller_id == 1) {
 						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred, $rrdtool_pipe, $poller_start + MAX_POLLER_RUNTIME);
 						$rrd_write_failed = $poller_output_deferred;
-					} elseif ($config['connection'] != 'online') {
-						/* truncate until formal remote management is supported */
-						db_execute('TRUNCATE poller_output');
 					}
 
 					log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads,
@@ -823,9 +820,6 @@ while ($poller_runs_completed < $poller_runs) {
 						if ($poller_output_deferred) {
 							$rrd_write_failed = true;
 						}
-					} elseif ($config['connection'] != 'online') {
-						/* truncate until formal remote management is supported */
-						db_execute('TRUNCATE poller_output');
 					}
 
 					// end the process if the runtime exceeds MAX_POLLER_RUNTIME

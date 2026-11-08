@@ -10,6 +10,11 @@ Cacti CHANGELOG
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -security: Read packages up to an expanded size of 32 MiB before metadata, signature or XML processing, and refuse larger ones with an import log message; IMPORT_PACKAGE_MAX_EXPANDED_BYTES in include/config.php changes the limit (#110)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
+-issue: Keep the previous poller cache and reindex rows when their replacement rows cannot be stored, and report the failed rebuild instead of deleting them (#758)
+-issue: Keep samples a remote collector stores in poller_output while offline until recovery has delivered them, and report a sample batch that cmd.php could not store (#759)
+-issue: Report a failed Data Collector synchronization instead of logging it as completed (#760)
+-issue: Retain malformed MULTI poller output until it expires instead of writing an all-unknown update for it; a bare U is still recorded as unknown (#763)
+-issue: Remove the remote poller items the main data collector no longer holds after a synchronization, comparing item keys so current items are kept (#741)
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
 -issue: Leave legacy system data input fields and mappings unchanged when a template or package import is only previewed; a real import still repairs them (#215)
 -issue: Report a failed read of the stored data query sort field instead of replacing it with the XML field and reordering the index (#744)

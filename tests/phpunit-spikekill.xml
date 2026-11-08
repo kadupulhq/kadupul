@@ -13,6 +13,10 @@
       <file>./Unit/Import/PackageExpandedSizeTest.php</file>
       <file>./Unit/Import/PackageImportTrustedKeysTest.php</file>
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
+      <file>./Unit/Core/Poller/ReplicateOutFailureTest.php</file>
+      <file>./Unit/Core/Poller/PollerCacheRebuildFailureTest.php</file>
+      <file>./Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
+      <file>./Unit/Core/Poller/PollerUnmappedMultiOutputTest.php</file>
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Import/ImportPreviewRepairTest.php</file>
       <file>./Unit/DataCollection/SortFieldReadFailureTest.php</file>
