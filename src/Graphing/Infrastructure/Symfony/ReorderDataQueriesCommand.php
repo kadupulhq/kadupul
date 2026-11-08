@@ -53,19 +53,12 @@ final readonly class ReorderDataQueriesCommand
             return $early;
         }
         if ($input->hostId === null && $input->qid === null && !$input->debug && $mode === OutputMode::Legacy) {
-            return $this->renderer->render(new CommandResult([], [...$legacy->noInput(), $this->version->line(self::UTILITY), ...$legacy->help()], Command::FAILURE), $mode, $output);
+            return $this->renderer->render(new CommandResult([], $legacy->noInput($this->version->line(self::UTILITY)), Command::FAILURE), $mode, $output);
         }
         try {
             $selection = DataQuerySelection::parse($input->hostId ?? 'all', $input->qid);
         } catch (\InvalidArgumentException $invalid) {
-            if ($mode === OutputMode::Legacy) {
-                // The original wrote this to stderr, then exited 1 without the help.
-                ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->writeln('ERROR: ' . $invalid->getMessage(), OutputInterface::OUTPUT_RAW);
-
-                return Command::FAILURE;
-            }
-
-            return $this->renderer->failure($io, $output, $mode, $invalid->getMessage(), new CommandResult(['status' => 'invalid', 'error' => $invalid->getMessage()], [], Command::INVALID));
+            return $this->renderer->invalidSelection($io, $output, $mode, $invalid->getMessage());
         }
         try {
             $report = ($this->reorder)($selection, $input->as, !$input->dryRun);

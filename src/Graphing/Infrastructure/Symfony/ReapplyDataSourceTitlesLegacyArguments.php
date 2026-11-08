@@ -10,69 +10,45 @@ declare(strict_types=1);
 namespace Kadupul\Graphing\Infrastructure\Symfony;
 
 use Kadupul\Graphing\Application\Port\DataSourceTitle;
-use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
-use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
-use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 
-/**
- * poller_data_sources_reapply_names.php accepted a flag with no value or an empty one
- * and rejected it later with its own message, so translate() passes empty
- * values through instead of refusing them as the base map does.
- */
-final class ReapplyDataSourceTitlesLegacyArguments extends LegacyArguments
+/** The arguments of poller_data_sources_reapply_names.php; see HostSelectionLegacyArguments. */
+final class ReapplyDataSourceTitlesLegacyArguments extends HostSelectionLegacyArguments
 {
     #[\Override]
-    protected function flags(): array
+    protected function selectionFlags(): array
     {
         return [
-            '-id' => ['host-id', true],
             '--id' => ['host-id', true],
-            '--host-id' => ['host-id', true],
             '-s' => ['filter', true],
             '--filter' => ['filter', true],
-            '--debug' => ['debug', false],
-            '-d' => ['debug', false],
-            ...self::versionAndHelp(),
         ];
     }
 
     #[\Override]
-    public function translate(array $argv): array
+    protected function usage(): string
     {
-        $flags = $this->flags();
-        $input = [];
-        foreach ($argv as $argument) {
-            // strpos() in the original: a leading "=" was no separator.
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            [$option, $takesValue] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
-            $input['--' . $option] = $takesValue ? $value : true;
-        }
-
-        return [$input, null];
+        return 'usage: poller_data_sources_reapply_names.php --host-id=[id|all][N1,N2,...] [--filter=string] [--debug]';
     }
 
     #[\Override]
-    public function help(): array
+    protected function description(): string
     {
-        return ['', 'usage: poller_data_sources_reapply_names.php --host-id=[id|all][N1,N2,...] [--filter=string] [--debug]', '',
-            'A utility that will recalculate Data Source names for the selected Data Templates.', '',
-            'Required:',
-            "    --host-id=N|all|N1,N2,... - The devices id, 'all' or a comma delimited list of id's", '',
-            'Optional:',
-            '    --filter=search           - A Data Template name or Data Source Title to search for',
-            '    --debug                   - Display verbose output during execution', ''];
+        return 'A utility that will recalculate Data Source names for the selected Data Templates.';
     }
 
-    /** @return list<string> */
-    public function noInput(): array
+    #[\Override]
+    protected function required(): array
     {
-        return ['ERROR: You must supply input parameters', ''];
+        return ["    --host-id=N|all|N1,N2,... - The devices id, 'all' or a comma delimited list of id's"];
+    }
+
+    #[\Override]
+    protected function optional(): array
+    {
+        return [
+            '    --filter=search           - A Data Template name or Data Source Title to search for',
+            '    --debug                   - Display verbose output during execution',
+        ];
     }
 
     /**

@@ -80,6 +80,8 @@ jobs:
           mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
       - name: Verify VDEF Apache alias setup readiness and cleanup
         run: mise exec python@3.12.12 -- python tests/tools/test_vdef_alias_readiness.py
+      - name: Verify review risk ranking signals and range errors
+        run: mise exec python@3.12.12 -- python tests/tools/test_review_risk.py
       - name: Verify installer usability evidence remains separate from release acceptance
         run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
       - name: Verify catalog rejection and historical compatibility boundaries
