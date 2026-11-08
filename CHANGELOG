@@ -1,12 +1,18 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
+-issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
+-issue: Keep the stored data source heartbeat when the data source info view compares an RRD file, and report the difference instead of rewriting it (#774)
+-issue: Count an update RRDtool refuses as older than the last update as not stored, instead of reporting it written and deleting its queued sample (#775)
+-issue: Name the archive inside the RRD file, not the profile position, in resize recommendations (#780)
+-issue: Replace an RRD file with the resized copy only after RRDtool confirmed the resize (#773)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
@@ -467,10 +473,6 @@ Cacti CHANGELOG
 -feature#7364: Allow Users to Choose to Hide Graph Template on Site Trees
 -feature#7388: Allow admin to pass CSV file to change device script for bulk changes
 -issue: Update bundled jQuery UI to 1.14.2 and jQuery Tablesorter to 2.31.3
--issue: Keep the stored data source heartbeat when the data source info view compares an RRD file, and report the difference instead of rewriting it (#774)
--issue: Count an update RRDtool refuses as older than the last update as not stored, instead of reporting it written and deleting its queued sample (#775)
--issue: Name the archive inside the RRD file, not the profile position, in resize recommendations (#780)
--issue: Replace an RRD file with the resized copy only after RRDtool confirmed the resize (#773)
 
 1.2.31
 -security#GHSA-23g4-vf2j-94w4: CVE-2026-39894 RRDtool metric shift via LC_NUMERIC locale comma decimal formatting

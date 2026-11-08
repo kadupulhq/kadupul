@@ -284,6 +284,11 @@ function db_install_fetch_cell($sql, $params = array(), $log = true) {
 	return array('status' => 3, 'data' => 'mediumint');
 }
 
+/* the #927 account and group id columns at least as wide as cacti.sql defines them, so their widening is skipped */
+function db_install_fetch_row($sql, $params = array(), $log = true) {
+	return array('status' => 3, 'data' => array('DATA_TYPE' => 'int', 'COLUMN_TYPE' => 'int(10) unsigned'));
+}
+
 function db_table_exists($table, $log = true, $db_conn = false) {
 	return true;
 }
