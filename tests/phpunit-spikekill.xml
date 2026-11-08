@@ -26,6 +26,7 @@
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Csp/NonceFailureErrorPageTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
+      <file>./Unit/Ui/Spikekill/SpikekillReferenceMeanTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
