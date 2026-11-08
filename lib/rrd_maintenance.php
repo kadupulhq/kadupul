@@ -479,6 +479,9 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
  * of other files in the same directory may be running, so only candidates older than
  * the cutoff are removed, and only regular files with that name.
  *
+ * Bulk callers restore every RRD of one directory in turn, so each directory is read
+ * at most once an hour per process instead of once per restore.
+ *
  * @param string $directory Trusted storage directory the restore is about to use.
  * @param int    $cutoff    Modification time before which a candidate is abandoned.
  *
@@ -486,14 +489,29 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
  */
 function rrd_maintenance_remove_stale_restores($directory, $cutoff)
 {
+    static $swept = array();
+    $now = time();
+    if (($swept[$directory] ?? 0) > $now - 3600) {
+        return 0;
+    }
+    $swept[$directory] = $now;
+    // Read the directory itself: glob() would expand metacharacters in its path.
+    $handle = @opendir($directory);
+    if ($handle === false) {
+        return 0;
+    }
     $removed = 0;
-    foreach (glob($directory . '/.rrd-restore-*', GLOB_NOSORT) ?: array() as $candidate) {
+    while (($name = readdir($handle)) !== false) {
+        if (preg_match('/^\.rrd-restore-[A-Za-z0-9]+\z/', $name) !== 1) {
+            continue;
+        }
+        $candidate = $directory . '/' . $name;
         $entry = @lstat($candidate);
-        if (preg_match('/^\.rrd-restore-[A-Za-z0-9]+\z/', basename($candidate)) === 1 && $entry !== false
-            && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
+        if ($entry !== false && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
             $removed++;
         }
     }
+    closedir($handle);
 
     return $removed;
 }

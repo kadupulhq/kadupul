@@ -187,14 +187,23 @@ function data_input_whitelist_update(string $configuredPath, callable $readRecor
  */
 function data_input_whitelist_remove_stale(string $directory, int $cutoff): int
 {
+    // Read the directory itself: glob() would expand metacharacters in its path.
+    $handle = @opendir($directory);
+    if ($handle === false) {
+        return 0;
+    }
     $removed = 0;
-    foreach (glob($directory . DIRECTORY_SEPARATOR . '.whitelist-*', GLOB_NOSORT) ?: [] as $candidate) {
+    while (($name = readdir($handle)) !== false) {
+        if (preg_match('/^\.whitelist-[0-9a-f]{32}\z/', $name) !== 1) {
+            continue;
+        }
+        $candidate = $directory . DIRECTORY_SEPARATOR . $name;
         $entry = @lstat($candidate);
-        if (preg_match('/^\.whitelist-[0-9a-f]{32}\z/', basename($candidate)) === 1 && $entry !== false
-            && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
+        if ($entry !== false && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
             $removed++;
         }
     }
+    closedir($handle);
 
     return $removed;
 }

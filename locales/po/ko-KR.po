@@ -15482,16 +15482,16 @@ msgstr ""
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
 msgstr ""
 
-#: lib/rrd_maintenance.php:582
+#: lib/rrd_maintenance.php:600
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
 msgstr ""
 
-#: lib/rrd_maintenance.php:582
+#: lib/rrd_maintenance.php:600
 msgid "unavailable"
 msgstr ""
 
-#: lib/rrd_maintenance.php:597
+#: lib/rrd_maintenance.php:615
 msgid "RRD storage configuration requires attention"
 msgstr ""
 

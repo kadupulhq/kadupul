@@ -34,6 +34,13 @@ function stale_temporaries_run(string $scenario, string $directory): array
             . 'data_input_whitelist_update(' . $directoryCode . '."/whitelist.json", fn()=>[$r,false], false, hrtime(true)/1e9+30); echo "ok";',
         'restore' => 'echo rrd_maintenance_restore_atomic(' . $directoryCode . '."/dump.xml", ' . $directoryCode . '."/graph.rrd",'
             . ' function($t){return file_put_contents($t,"NEW")===3;}) ? "ok" : "failed";',
+        // A bulk caller restores RRDs of one directory in turn; a candidate abandoned
+        // after the first sweep waits for a later process instead of a rescan per file.
+        'restore-twice' => '$w=function($t){return file_put_contents($t,"NEW")===3;};'
+            . '$first=rrd_maintenance_restore_atomic(' . $directoryCode . '."/dump.xml", ' . $directoryCode . '."/graph.rrd", $w);'
+            . 'file_put_contents(' . $directoryCode . '."/.rrd-restore-Late99","partial");touch(' . $directoryCode . '."/.rrd-restore-Late99", time()-90000);'
+            . '$second=rrd_maintenance_restore_atomic(' . $directoryCode . '."/dump.xml", ' . $directoryCode . '."/other.rrd", $w);'
+            . 'echo $first && $second ? "ok" : "failed";',
     };
 
     return test_php_run($program);
@@ -116,4 +123,50 @@ test('an RRD restore removes candidates abandoned for a day and keeps a running 
         ->and($entries)->not->toContain('.rrd-restore-Ab12Cd')
         ->and($entries)->toContain('.rrd-restore-Ef34Gh', '.rrd-restore-Ij56Kl', '.rrd-restore-', 'other.rrd')
         ->and(count(preg_grep('/^\.rrd-restore-/', $entries)))->toBe(3);
+});
+
+test('the sweeps read only the writer directory when its path holds glob metacharacters', function (string $scenario, string $stale, string $target) {
+    $parent = sys_get_temp_dir() . '/kadupul-stale-' . bin2hex(random_bytes(6));
+    $directory = $parent . '/s[t]';
+    $sibling = $parent . '/st';
+    expect(mkdir($directory, 0700, true))->toBeTrue()->and(mkdir($sibling, 0700))->toBeTrue();
+    foreach ([$directory, $sibling] as $folder) {
+        expect(file_put_contents($folder . '/' . $stale, 'partial'))->not->toBeFalse()
+            ->and(touch($folder . '/' . $stale, time() - 90000))->toBeTrue();
+    }
+    expect(file_put_contents($directory . '/' . $target, '{"h1":"old"}'))->not->toBeFalse();
+    try {
+        $result = stale_temporaries_run($scenario, $directory);
+        $own = array_values(array_diff(scandir($directory), ['.', '..']));
+        $other = array_values(array_diff(scandir($sibling), ['.', '..']));
+    } finally {
+        stale_temporaries_cleanup($directory);
+        stale_temporaries_cleanup($sibling);
+        rmdir($parent);
+    }
+
+    expect($result['status'])->toBe(0, $result['err'])->and($result['out'])->toBe('ok')
+        ->and($own)->not->toContain($stale)
+        ->and($other)->toBe([$stale]);
+})->with([
+    'whitelist' => ['whitelist', '.whitelist-' . str_repeat('d', 32), 'whitelist.json'],
+    'restore' => ['restore', '.rrd-restore-Mn78Op', 'graph.rrd'],
+]);
+
+test('a process reads each RRD directory for abandoned candidates at most once an hour', function () {
+    $directory = stale_temporaries_directory([
+        'graph.rrd' => ['file', 0],
+        'other.rrd' => ['file', 0],
+        '.rrd-restore-Ab12Cd' => ['file', 90000],
+    ]);
+    try {
+        $result = stale_temporaries_run('restore-twice', $directory);
+        $entries = array_values(array_diff(scandir($directory), ['.', '..']));
+    } finally {
+        stale_temporaries_cleanup($directory);
+    }
+
+    expect($result['status'])->toBe(0, $result['err'])->and($result['out'])->toBe('ok')
+        ->and($entries)->not->toContain('.rrd-restore-Ab12Cd')
+        ->and($entries)->toContain('.rrd-restore-Late99');
 });
