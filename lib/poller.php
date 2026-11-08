@@ -1124,7 +1124,7 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
                         }
                     }
                 }
-            } elseif ($rrd_name != '') {
+            } elseif ($rrd_name != '' || trim($value) === 'U') { // a bare U is the collector's unknown for the whole MULTI sample
                 if ($data_template_id > 0) {
                     $unused_data_source_names = array_rekey(
                         db_fetch_assoc_prepared(

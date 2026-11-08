@@ -50,6 +50,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Run complete file and database session coverage concurrently in isolated Docker projects, retaining both failure statuses and the existing coverage validation and job deadline.
 
 - Import required application coverage entry points before validating their execution, retaining tree and graph CLI worker evidence as migrations add new sources (#1255).
+- Record a bare `U` MULTI poller output as unknown for every mapped field, as 1.2.31 did; cmd.php and Spine write it when a MULTI script fails or times out. Empty and other unparseable MULTI output still waits on the retention path.
 
 - Include client timing, dataset, connection outcome and server diagnostics in failed RRDtool proxy interoperability tests to investigate intermittent fixture failures (#1244).
 - Register native database sessions through `SessionHandlerInterface` to avoid PHP 8.4 callback-registration deprecations, retaining the existing callbacks and shutdown behavior.

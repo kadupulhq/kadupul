@@ -188,8 +188,32 @@ test('malformed MULTI samples never manufacture unknown values or acknowledge an
     ]);
     $remaining = $db->query("SELECT output FROM poller_output WHERE rrd_name='' ORDER BY time")->fetchAll(\PDO::FETCH_COLUMN);
     expect($remaining)->toBe($recent ? [$output] : []);
-})->with(['empty' => '', 'whitespace' => ' ', 'diagnostic' => 'failed', 'unknown scalar' => 'U', 'extra colon' => 'value:bad:token', 'unmapped field' => 'bogus:7'])
+})->with(['empty' => '', 'whitespace' => ' ', 'diagnostic' => 'failed', 'extra colon' => 'value:bad:token', 'unmapped field' => 'bogus:7'])
     ->with(['recent' => true, 'expired' => false]);
+
+test('a bare U MULTI sample is written as unknown for every mapped field and acknowledged', function (string $output, bool $recent) {
+    $db = $GLOBALS['ack_db'];
+    $GLOBALS['debug'] = false;
+    $GLOBALS['ack_table'] = 'poller_output';
+    $GLOBALS['ack_result'] = 1;
+    $db->exec("UPDATE data_local SET data_template_id=1; UPDATE poller_item SET rrd_name='',rrd_num=1");
+    $db->exec("CREATE TABLE data_template_rrd(id INTEGER,local_data_id INTEGER,data_source_name TEXT,data_input_field_id INTEGER); INSERT INTO data_template_rrd VALUES(1,1,'value',1)");
+    $db->exec("CREATE TABLE data_input_fields(id INTEGER,data_name TEXT); INSERT INTO data_input_fields VALUES(1,'value')");
+    $db->exec('CREATE TABLE graph_templates_item(task_item_id INTEGER); INSERT INTO graph_templates_item VALUES(1)');
+    // cmd.php and Spine write a bare U when a MULTI script fails or times out.
+    $unknownTime = $recent ? date('Y-m-d H:i:s', time() - 60) : '2020-01-01 00:05:00';
+    $insert = $db->prepare("INSERT INTO poller_output VALUES(1,'',?,?)");
+    $insert->execute(['2020-01-01 00:00:00', 'value:42']);
+    $insert->execute([$unknownTime, $output]);
+    $pipe = true;
+
+    expect(process_poller_output($pipe, 2))->toBe(2);
+    expect($GLOBALS['ack_updates']['fixture.rrd']['times'])->toBe([
+        strtotime('2020-01-01 00:00:00') => ['value' => '42'],
+        strtotime($unknownTime) => ['value' => 'U'],
+    ]);
+    expect($db->query("SELECT COUNT(*) FROM poller_output WHERE rrd_name=''")->fetchColumn())->toBe(0);
+})->with(['bare' => 'U', 'padded' => ' U '])->with(['recent' => true, 'expired' => false]);
 
 test('malformed MULTI tokens preserve sibling values and rows wait for write acknowledgement', function (string $output, array $expected, bool $written) {
     $db = $GLOBALS['ack_db'];
