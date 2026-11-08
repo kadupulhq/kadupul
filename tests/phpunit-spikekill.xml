@@ -7,6 +7,10 @@
       <file>Unit/Core/Rrd/RrdCommandFailuresNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyWriteRegressionTest.php</file>
       <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
+      <file>./Unit/Core/Poller/ReplicateOutFailureTest.php</file>
+      <file>./Unit/Core/Poller/PollerCacheRebuildFailureTest.php</file>
+      <file>./Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
+      <file>./Unit/Core/Poller/PollerUnmappedMultiOutputTest.php</file>
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
       <file>Unit/Installer/InstallerSnmpOverrideTest.php</file>
@@ -19,13 +23,10 @@
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
-      <file>./Unit/Core/Poller/ReplicateOutFailureTest.php</file>
-      <file>./Unit/Core/Poller/PollerCacheRebuildFailureTest.php</file>
-      <file>./Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
-      <file>./Unit/Core/Poller/PollerUnmappedMultiOutputTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
