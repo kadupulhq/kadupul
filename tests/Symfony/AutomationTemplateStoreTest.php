@@ -22,6 +22,7 @@ use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Infrastructure\Persistence\DbalJsonFilterPreferences;
 use PHPUnit\Framework\TestCase;
 
 final class AutomationTemplateStoreTest extends TestCase
@@ -273,7 +274,7 @@ final class AutomationTemplateStoreTest extends TestCase
         $this->database->executeStatement('CREATE TABLE settings_user (user_id INT, name TEXT, value TEXT, PRIMARY KEY (user_id, name))');
         $access = $this->createMock(AutomationTemplateAccess::class);
         $access->method('authorize')->willReturn(new Actor(7, 'operator'));
-        $preferences = new DbalAutomationTemplatePreferences($access, $this->database, $this->createMock(LegacyConfiguration::class));
+        $preferences = new DbalAutomationTemplatePreferences($access, new DbalJsonFilterPreferences($this->database, $this->createMock(LegacyConfiguration::class)));
         foreach ([['rows' => '0'], ['rows' => '9000'], ['page' => '0'], ['sort_column' => 'id'], ['filter' => str_repeat('x', 201)], ['filter' => ['x']]] as $stored) {
             $this->database->executeStatement('REPLACE INTO settings_user (user_id, name, value) VALUES (7, ?, ?)', ['automation_template_filters', json_encode($stored)]);
             self::assertNull($preferences->load(), json_encode($stored));

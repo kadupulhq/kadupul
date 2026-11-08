@@ -5774,7 +5774,7 @@ msgid "Export Templates"
 msgstr "निर्यात टेम्पलेट्स"
 
 #: include/global_arrays.php:1036 include/global_arrays.php:1058
-#: include/global_arrays.php:1077 lib/plugins.php:1337
+#: include/global_arrays.php:1077 lib/plugins.php:1355
 msgid "Configuration"
 msgstr "कॉन्फ़िगरेशन"
 
@@ -11470,8 +11470,8 @@ msgid "Recovering"
 msgstr "पुन: प्राप्त करना"
 
 #: lib/api_automation.php:33 lib/auth.php:3098 lib/clog_webapi.php:856
-#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1393
-#: lib/plugins.php:1394 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
+#: lib/html_utility.php:1362 lib/import.php:405 lib/plugins.php:1411
+#: lib/plugins.php:1412 lib/rrd.php:4513 lib/rrd.php:4525 lib/spikekill.php:301
 #: package_import.php:567 package_import.php:645 utilities.php:211
 #: utilities.php:212 utilities.php:2753
 msgid "Unknown"
@@ -15248,53 +15248,53 @@ msgstr "टीसीपी पिंग समय से बाहर"
 msgid "Ping not performed due to setting."
 msgstr "सेटिंग के कारण पिंग ने प्रदर्शन नहीं किया।"
 
-#: lib/plugins.php:596
+#: lib/plugins.php:614
 #, php-format
 msgid "%s Version %s or above is required for %s. "
 msgstr "%s का संस्करण %s या उससे ऊपर का %s के लिए आवश्यक है।"
 
-#: lib/plugins.php:600
+#: lib/plugins.php:618
 #, php-format
 msgid "%s is required for %s, and it is not installed. "
 msgstr "%s के लिए %s की आवश्यकता है, और यह स्थापित नहीं है।"
 
-#: lib/plugins.php:616
+#: lib/plugins.php:634
 msgid "Plugin cannot be installed."
 msgstr "प्लगइन स्थापित नहीं किया जा सकता है।"
 
-#: lib/plugins.php:676
+#: lib/plugins.php:694
 #, fuzzy, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
 msgstr "प्लगइन निर्देशिका '{ 0 }' को स्थापित करने से पहले नाम से 'plugin_' को हटाने के लिए नाम बदलने की आवश्यकता है।"
 
-#: lib/plugins.php:679
+#: lib/plugins.php:697
 #, fuzzy, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "'{ 0 }' निर्देशिका में प्लगइन में '{ 1}()' संस्करण फ़ंक्शन शामिल नहीं है। प्लगइन को इंस्टॉल करने के लिए यह फ़ंक्शन मौजूद होना चाहिए।"
 
-#: lib/plugins.php:712
+#: lib/plugins.php:730
 #, fuzzy, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
 msgstr "'{ 0 }' निर्देशिका में प्लगइन में '{ 1}()' इंस्टॉल फ़ंक्शन शामिल नहीं है। प्लगइन को इंस्टॉल करने के लिए यह फ़ंक्शन मौजूद होना चाहिए।"
 
-#: lib/plugins.php:1310
+#: lib/plugins.php:1328
 msgid "Legacy Plugin"
 msgstr "लिगेसी प्लगिन"
 
-#: lib/plugins.php:1337 lib/plugins.php:1345 plugins.php:511 plugins.php:596
+#: lib/plugins.php:1355 lib/plugins.php:1363 plugins.php:511 plugins.php:596
 msgid "Plugins"
 msgstr "प्लग-इनां"
 
-#: lib/plugins.php:1365
+#: lib/plugins.php:1383
 msgid "Plugin INFO must declare a valid compat version"
 msgstr ""
 
-#: lib/plugins.php:1369 lib/plugins.php:1372
+#: lib/plugins.php:1387 lib/plugins.php:1390
 #, fuzzy, php-format
 msgid "Requires: Kadupul >= %s"
 msgstr "आवश्यकता है: Kadupul&gt; = %s"
 
-#: lib/plugins.php:1395
+#: lib/plugins.php:1413
 msgid "Not Stated"
 msgstr "नहीं बताया हुआ"
 
