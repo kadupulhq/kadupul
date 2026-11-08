@@ -23,6 +23,7 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

@@ -1,8 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
--issue: Replace a remote collector table in one transaction during full synchronization, so a failed insert keeps its previous rows instead of leaving it empty; non-InnoDB tables keep the 1.2.31 behavior (#761)
+-issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
@@ -18,6 +19,7 @@ Cacti CHANGELOG
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
+-issue: Replace a remote collector table in one transaction during full synchronization, so a failed insert keeps its previous rows instead of leaving it empty; non-InnoDB tables keep the 1.2.31 behavior (#761)
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
 -issue: Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200)
