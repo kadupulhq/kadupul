@@ -42,9 +42,22 @@ test('a windowed deviation uses the mean of the samples around the window', func
     expect($statistics['average'])->toEqual(10)
         ->and($statistics['stddev'])->toEqual(0)
         ->and($statistics['min_cutoff'])->toEqual(10)
-        ->and($statistics['max_cutoff'])->toEqual(10);
+        ->and($statistics['max_cutoff'])->toEqual(10)
+        ->and($statistics['stddev_killed'])->toBe(1);
 });
 
 test('without a window, or with no samples around it, the overall mean is kept', function (int $start, int $end) {
     expect(spikekill_reference_statistics($start, $end, [100 => '10', 200 => '1000', 300 => '10'])['average'])->toEqual(340);
 })->with(['no window' => [0, 0], 'window covers every sample' => [1, 400]]);
+
+test('fewer than two reference samples leave every sample in place', function (int $start, int $end, array $samples) {
+    $statistics = spikekill_reference_statistics($start, $end, $samples);
+
+    expect($statistics['stddev'])->toBeFalse()
+        ->and($statistics['stddev_killed'])->toBe(0)
+        ->and($statistics['outwind_killed'])->toBe(0);
+})->with([
+    'one sample around the window' => [150, 350, [100 => '10', 200 => '1000', 250 => '20', 300 => '30']],
+    'window covers every sample' => [1, 400, [100 => '10', 200 => '1000', 300 => '10']],
+    'one sample and no window' => [0, 0, [100 => '10']],
+]);

@@ -28,7 +28,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
-- Compute the SpikeKill standard-deviation mean from the same samples around the replacement window as the deviation, so both cutoffs come from one reference set (#1034).
+- Compute the SpikeKill standard-deviation mean from the same samples around the replacement window as the deviation, so both cutoffs come from one reference set; with fewer than two reference samples only the data source limits mark a spike (#1034).
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 

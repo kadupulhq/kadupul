@@ -1545,6 +1545,14 @@ class spikekill
                                 $rra[$rra_num][$ds_num]['max_cutoff'] = $this->ds_max[$ds_num];
                             }
 
+                            /* fewer than two reference samples give no deviation, and a zero-width
+                             * band around the mean would flag every other sample as a spike, so
+                             * only the data source limits can identify one */
+                            if ($rra[$rra_num][$ds_num]['stddev'] === false) {
+                                $rra[$rra_num][$ds_num]['min_cutoff'] = is_numeric($this->ds_min[$ds_num]) ? $this->ds_min[$ds_num] : -INF;
+                                $rra[$rra_num][$ds_num]['max_cutoff'] = is_numeric($this->ds_max[$ds_num]) ? $this->ds_max[$ds_num] : INF;
+                            }
+
                             $rra[$rra_num][$ds_num]['numnksamples'] = 0;
                             $rra[$rra_num][$ds_num]['sumnksamples'] = 0;
                             $rra[$rra_num][$ds_num]['avgnksamples'] = 0;
