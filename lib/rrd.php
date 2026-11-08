@@ -737,6 +737,10 @@ function rrdtool_command_path($path) {
  *   link at the destination rather than following it. The temporary name ends
  *   in .tmp, which the RRD cleaner does not list.
  *
+ *   With RRDCACHED_ADDRESS set, rrdtool may hand the create to rrdcached.
+ *   The daemon must write to the filesystem this process reads, or no local
+ *   temporary file appears and the create is reported as failed.
+ *
  * @param  (string) $path          - the destination RRD path
  * @param  (string) $definition    - the create arguments after the file name
  * @param  (bool)   $log_to_stdout - passed to rrdtool_execute()

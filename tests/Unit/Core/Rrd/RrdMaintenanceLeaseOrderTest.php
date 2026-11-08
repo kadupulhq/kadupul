@@ -19,7 +19,9 @@
  *
  * The RRD Cleaner rescan empties the queued delete and archive actions before
  * reading the RRA directory. It now takes the storage lease first and keeps
- * the queue when the directory cannot be validated.
+ * the queue when storage is busy or the directory is missing. When only the
+ * directory ownership cannot be validated it rescans without the lease, as
+ * 1.2.31 did, and logs a notice.
  *
  * The rescan also quotes each file name and date it lists with db_qstr(), and
  * the RRD Cleaner page bar carries the search filter URL-encoded.
@@ -65,10 +67,15 @@ function raise_message($id, $message, $level) { $GLOBALS['rrdclean_messages'][] 
 function __($text) { return $text; }
 
 function rrdclean_scan_probe() {
-	/* the rescan's shared lease keeps exclusive maintenance out while it reads */
-	$exclusive = \rrd_maintenance_acquire(true);
-	$GLOBALS['rrdclean_queries'][] = $exclusive === false ? 'scan under lease' : 'scan without lease';
-	\rrd_maintenance_release($exclusive);
+	/* the rescan's shared lease keeps exclusive maintenance out while it reads;
+	 * lock the directory directly so an untrusted directory is probed too */
+	$handle = fopen($GLOBALS['config']['rra_path'], 'r');
+	$free   = flock($handle, LOCK_EX | LOCK_NB);
+	$GLOBALS['rrdclean_queries'][] = $free ? 'scan without lease' : 'scan under lease';
+	if ($free) {
+		flock($handle, LOCK_UN);
+	}
+	fclose($handle);
 }
 
 /* MySQL string literal quoting, as db_qstr() produces */
@@ -89,7 +96,7 @@ function get_order_string(...$args) { return ''; }
 function html_nav_bar($url, ...$args) { throw new ListStop($url); }
 
 
-test('a rescan keeps queued actions when the RRA directory cannot be validated', function () {
+test('a rescan keeps queued actions when the RRA directory is missing', function () {
 	$saved     = $GLOBALS['config'] ?? null;
 	$reporting = error_reporting();
 
@@ -143,6 +150,39 @@ test('a rescan of a valid RRA directory still rebuilds the list under the lease'
 
 	expect($GLOBALS['rrdclean_queries'])->toBe(array('TRUNCATE TABLE `data_source_purge_temp`', 'TRUNCATE TABLE `data_source_purge_action`', 'scan under lease'))
 		->and($GLOBALS['rrdclean_messages'])->toBe(array());
+});
+
+test('a rescan of an RRA directory whose owner cannot be validated runs without the lease, as in 1.2.31', function () {
+	if (!function_exists('posix_geteuid')) {
+		$this->markTestSkipped('The storage lease needs PHP POSIX.');
+	}
+
+	$saved     = $GLOBALS['config'] ?? null;
+	$reporting = error_reporting();
+	$dir       = sys_get_temp_dir() . '/rrdclean-untrusted-' . bin2hex(random_bytes(8));
+	mkdir($dir, 0700);
+	/* world-writable without the sticky bit: the lease refuses it */
+	chmod($dir, 0777);
+
+	$GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $dir);
+	$GLOBALS['rrdclean_queries']  = array();
+	$GLOBALS['rrdclean_messages'] = array();
+	$GLOBALS['rrdclean_logs']     = array();
+
+	try {
+		expect(rrd_maintenance_acquire())->toBeFalse('the fixture directory must be untrusted for this case');
+
+		rrdclean_fill_table();
+	} finally {
+		error_reporting($reporting);
+		$GLOBALS['config'] = $saved;
+		rmdir($dir);
+	}
+
+	expect($GLOBALS['rrdclean_queries'])->toBe(array('TRUNCATE TABLE `data_source_purge_temp`', 'TRUNCATE TABLE `data_source_purge_action`', 'scan without lease'))
+		->and($GLOBALS['rrdclean_messages'])->toBe(array())
+		->and($GLOBALS['rrdclean_logs'])->toHaveCount(1)
+		->and($GLOBALS['rrdclean_logs'][0])->toStartWith('NOTICE: RRD Cleaner rescan ran without the RRD storage lease');
 });
 
 test('tuning on Windows is refused instead of running without a lease', function () {

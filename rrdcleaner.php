@@ -98,13 +98,23 @@ function rrdclean_fill_table() {
 	/**
 	 * The rescan empties the queued delete and archive actions before it
 	 * reads the RRA directory. Hold the storage lease across both, and leave
-	 * the queue as it is when the directory cannot be validated.
+	 * the queue as it is when RRD storage is busy or the directory is missing.
+	 * When only the directory ownership cannot be validated for the lease,
+	 * rescan without it, as 1.2.31 did.
 	 */
 	$lock = true;
 	$busy = false;
 
 	if (!read_config_option('storage_location') || (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true)) {
 		$lock = rrd_maintenance_acquire(false, false, null, $busy);
+
+		$rra_dir = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+
+		if ($lock === false && !$busy && is_dir($rra_dir) && !rrd_maintenance_directory_is_trusted($rra_dir)) {
+			cacti_log('NOTICE: RRD Cleaner rescan ran without the RRD storage lease; the owner or permissions of the RRA directory or a parent could not be validated. Set $config[\'rrd_maintenance_trusted_uids\'] or $config[\'rrd_maintenance_trusted_gids\'] in config.php to enable the lease.', false, 'MAINT');
+
+			$lock = true;
+		}
 	}
 
 	if ($lock === false) {
