@@ -16,6 +16,7 @@ Cacti CHANGELOG
 -issue: Remove a deleted graph from the aggregates that list it by passing the aggregate's graph id and a member list to the disassociation, so the aggregate's copied items are rebuilt without it (#227)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
+-issue: Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056)
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings
 -security: Escape the None label of the color dropdown, as the color names already are (#750)
 -security: Escape the differences and the tune and resize recommendations that the Data Source debug view prints, including the RRDfile name (#770)
