@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""List the registered legacy tests that refer to the files a branch changes.
+"""List the registered legacy tests that refer to the files a local change touches.
 
 For quick local feedback before CI runs every suite. Memon et al., "Taming
 Google-Scale Continuous Testing" (ICSE-SEIP 2017), select the tests that
@@ -10,7 +10,9 @@ depend on a change; here the dependency is a test that names a changed file
 every registered test, so a test this misses still runs before merge.
 
     python3 tests/tools/select_tests.py origin/main
-prints the selected files and a Pest command that runs them.
+prints the selected files and a Pest command that runs them. The change is
+everything since the merge base with the given revision: the branch's commits,
+uncommitted edits and untracked files that git does not ignore.
 """
 from __future__ import annotations
 
@@ -40,18 +42,28 @@ def registered(root: Path) -> dict[str, str]:
     return tests
 
 
-def changed(root: Path, base: str) -> list[str]:
-    """Paths changed since base, including deleted files and both sides of a rename.
+def git(root: Path, base: str, *arguments: str) -> list[str]:
+    """Run a read-only git command in root and return its NUL-separated output, or raise ValueError."""
+    result = subprocess.run(['git', '-C', str(root), *arguments], capture_output=True, text=True, check=False)
+    if result.returncode != 0:
+        raise ValueError(f'git diff against {base} failed: {result.stderr.strip()}')
+    return [entry for entry in result.stdout.replace('\0', '\n').splitlines() if entry]
 
-    A test that still loads a deleted or renamed source is one the change breaks.
+
+def changed(root: Path, base: str) -> list[str]:
+    """Paths changed since the merge base with base, including uncommitted and untracked files.
+
+    Deleted files and both sides of a rename count: a test that still loads a
+    deleted or renamed source is one the change breaks. The diff runs against
+    the working tree, not HEAD, so an edit that is not yet committed, staged or
+    not, selects its tests too.
     """
     if base.startswith('-'):
         raise ValueError(f'base revision {base!r} must not start with "-"')
-    result = subprocess.run(['git', '-C', str(root), 'diff', '--name-only', '--no-renames', f'{base}...HEAD'],
-                            capture_output=True, text=True, check=False)
-    if result.returncode != 0:
-        raise ValueError(f'git diff against {base} failed: {result.stderr.strip()}')
-    return [line for line in result.stdout.splitlines() if line]
+    merge_base = git(root, base, 'merge-base', base, 'HEAD')[0]
+    paths = git(root, base, 'diff', '-z', '--name-only', '--no-renames', merge_base, '--')
+    untracked = git(root, base, 'ls-files', '-z', '--others', '--exclude-standard', '--full-name', ':/')
+    return sorted(set(paths) | set(untracked))
 
 
 def refers(text: str, path: str) -> bool:

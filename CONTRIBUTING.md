@@ -73,13 +73,14 @@ to their consumers; the hook tests separately install and assert PHP 8.4.25.
 ## Flaky tests and quick local selection
 
 `python3 tests/tools/select_tests.py origin/main` lists the registered legacy tests that
-name a file your branch changes, with a Pest command to run just those. It is a
+name a file your change touches since the merge base, committed or not, including
+untracked files, with a Pest command to run just those. It is a
 shortcut for local feedback; CI still runs every registered test.
 
 The weekly **Flaky tests** workflow (also runnable from the Actions tab) runs the legacy
 suite four times on one commit: twice in file order and twice in seeded random order.
-`tests/tools/flaky_report.py` compares the runs. A test that passes in one run and fails
-in another is flaky; a test that fails in every run is broken. Either makes the workflow
+`tests/tools/flaky_report.py` compares the runs. A test that fails in one run and passes
+or is skipped in another is flaky; a test that fails in every run is broken. Either makes the workflow
 red without blocking pull requests. The random seeds are printed in the run log, so
 `vendor/bin/pest ... --order-by=random --random-order-seed=<seed>` reproduces an
 order-dependent failure.

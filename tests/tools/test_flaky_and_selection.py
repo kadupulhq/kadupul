@@ -18,11 +18,12 @@ import select_tests  # noqa: E402
 
 
 def junit(cases):
-    """A JUnit report shaped like Pest's: one testcase per (file, name, result)."""
+    """A JUnit report shaped like Pest's: one testcase per (file, name, result[, line])."""
     body = []
-    for file, name, result in cases:
+    for file, name, result, *line in cases:
         inner = {'passed': '', 'failed': '<failure>boom</failure>', 'error': '<error>boom</error>', 'skipped': '<skipped/>'}[result]
-        body.append(f'<testcase name="{name}" file="{file}" class="X">{inner}</testcase>')
+        at = f' line="{line[0]}"' if line else ''
+        body.append(f'<testcase name="{name}" file="{file}" class="X"{at}>{inner}</testcase>')
     return '<?xml version="1.0"?><testsuites><testsuite name="all">' + ''.join(body) + '</testsuite></testsuites>'
 
 
@@ -56,6 +57,23 @@ class FlakyReportTest(unittest.TestCase):
         self.assertIn('| C.php::errors once | passed | failed |', out)
         self.assertIn('- B.php::broken', out)
         self.assertNotIn('stable', out)
+
+    def test_a_failure_beside_a_skip_is_flaky(self):
+        first = self.report('one.xml', [('A.php', 'needs a socket', 'skipped'), ('A.php', 'stable', 'passed')])
+        second = self.report('two.xml', [('A.php', 'needs a socket', 'failed'), ('A.php', 'stable', 'passed')])
+        status, out, err = capture(flaky_report.main, ['--labels', 'one,two', first, second])
+        self.assertEqual(status, 1, err)
+        self.assertIn('2 tests compared across 2 runs: 1 flaky, 0 failing in every run.', out)
+        self.assertIn('| A.php::needs a socket | skipped | failed |', out)
+
+    def test_repeated_names_are_keyed_by_line_not_run_order(self):
+        # Random order swaps two same-named cases; their results follow their lines, so nothing is flaky.
+        first = self.report('one.xml', [('A.php', 'same', 'passed', 10), ('A.php', 'same', 'failed', 20)])
+        second = self.report('two.xml', [('A.php', 'same', 'failed', 20), ('A.php', 'same', 'passed', 10)])
+        status, out, _ = capture(flaky_report.main, [first, second])
+        self.assertEqual(status, 1)
+        self.assertIn('0 flaky, 1 failing in every run.', out)
+        self.assertIn('- A.php::same (line 20)', out)
 
     def test_identical_passing_runs_are_clean(self):
         cases = [('A.php', 'one', 'passed'), ('A.php', 'two', 'skipped')]
@@ -143,6 +161,21 @@ class SelectTestsTest(unittest.TestCase):
         self.assertEqual(status, 0, err)
         self.assertIn('Unit/LibPollerTest.php  (lib/poller.php)', out)
         self.assertIn('Unit/DatabaseTest.php  (lib/other.php)', out)
+
+    def test_uncommitted_and_untracked_changes_are_selected(self):
+        self.change('lib/other.php')
+        Path(self.root, 'lib/poller.php').write_text('<?php // edited, not committed')
+        Path(self.root, 'tests/Unit/NewTest.php').write_text("<?php require 'poller.php';")
+        Path(self.root, '.gitignore').write_text('ignored.php\n')
+        Path(self.root, 'ignored.php').write_text('<?php')
+        self.git('add', '.gitignore')
+        status, out, err = capture(select_tests.main, ['--root', str(self.root), 'HEAD~1'])
+        self.assertEqual(status, 0, err)
+        self.assertIn('Unit/LibPollerTest.php  (lib/poller.php)', out)
+        self.assertIn('Unit/DatabaseTest.php  (lib/other.php)', out)
+        self.assertNotIn('ignored.php', out)
+        self.assertEqual(select_tests.changed(self.root, 'HEAD~1'),
+                         ['.gitignore', 'lib/other.php', 'lib/poller.php', 'tests/Unit/NewTest.php'])
 
     def test_a_base_that_looks_like_an_option_is_an_error(self):
         status, _, err = capture(select_tests.main, ['--root', str(self.root), '--', '--output=x'])

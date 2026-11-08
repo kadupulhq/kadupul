@@ -8,8 +8,8 @@ separate tests that fail consistently from tests whose result changes between
 runs of the same code. The flaky-tests workflow runs the suite several times,
 in file order and in seeded random order, and passes every report here.
 
-A test is flaky when it passes in one run and fails or errors in another. A
-test that fails in every run is reported separately: that is a broken test,
+A test is flaky when it fails or errors in one run and passes or is skipped in
+another. A test that fails in every run is reported separately: that is a broken test,
 not a flaky one. A report that is missing, unreadable or empty, or runs that
 disagree on which tests exist, is a tool error rather than a clean result.
 
@@ -19,7 +19,7 @@ tests found, 2 the reports could not be compared.
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 import sys
 
@@ -38,11 +38,17 @@ def outcomes(report: Path) -> dict[str, str]:
         root = parse(report).getroot()
     except (OSError, SyntaxError) as error:  # ParseError is a SyntaxError
         raise ValueError(f'{report}: {error}') from error
+    cases = list(root.iter('testcase'))
+    names = ['::'.join(part for part in (case.get('file') or case.get('classname') or '', case.get('name') or '') if part)
+             for case in cases]
+    repeated = {name for name, count in Counter(names).items() if count > 1}
     results: dict[str, str] = {}
-    for case in root.iter('testcase'):
-        name = '::'.join(part for part in (case.get('file') or case.get('classname') or '', case.get('name') or '') if part)
+    for case, name in zip(cases, names):
+        if name in repeated and case.get('line'):
+            # A repeated name is told apart by its source line, which does not depend on run order.
+            name = f'{name} (line {case.get("line")})'
         if name in results:
-            # A data set can repeat a name; keep both runs distinct but comparable.
+            # A data set can repeat a name on one line; keep both runs distinct but comparable.
             suffix = 2
             while f'{name} #{suffix}' in results:
                 suffix += 1
@@ -72,7 +78,9 @@ def compare(reports: list[Path]) -> tuple[list[tuple[str, list[str]]], list[str]
     for run in runs:
         for name, result in run.items():
             by_test[name].append(result)
-    flaky = sorted((name, results) for name, results in by_test.items() if PASSED in results and FAILED in results)
+    # A failure in some runs only is flaky, whether the other runs passed or skipped: an
+    # environment-dependent skip hides a failure as well as an order-dependent pass does.
+    flaky = sorted((name, results) for name, results in by_test.items() if FAILED in results and len(set(results)) > 1)
     failing = sorted(name for name, results in by_test.items() if all(result == FAILED for result in results))
     return flaky, failing, len(names)
 
