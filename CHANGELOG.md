@@ -17,6 +17,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
+- Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
 - Give each native child coverage invocation a distinct test identity and report stem so reused process IDs cannot conflate execution or overwrite reports and evidence sidecars.
 - Preserve checkout sources and originating unit coverage when coverage-merger scratch cleanup runs with the checkout beneath the temporary directory.
 - Update development coverage reporting to coverage.py 7.17.0 and the hash-locked Semgrep scanner to 1.182.1, retaining the existing Python 3.12 runtime and coverage/security gates.
@@ -28,6 +29,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
+- Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
