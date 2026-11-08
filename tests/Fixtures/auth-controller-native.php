@@ -288,7 +288,7 @@ register_shutdown_function(static function () use ($db, $mode) {
 });
 if ($mode === 'logout') {
     $_SERVER['REQUEST_METHOD'] = $scenario['method'] ?? 'POST';
-    $_SERVER['HTTP_HOST'] = 'localhost';
+    $_SERVER['HTTP_HOST'] = $scenario['host'] ?? 'localhost';
     $_SERVER['SCRIPT_NAME'] = '/monitoring/logout.php';
     $_SERVER['SCRIPT_FILENAME'] = $root . '/logout.php';
     $_SERVER['REQUEST_URI'] = '/monitoring/logout.php';
