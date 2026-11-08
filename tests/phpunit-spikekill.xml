@@ -15,6 +15,9 @@
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
+      <file>./Unit/Core/Rrd/RrdCreateCommandSafetyTest.php</file>
+      <file>./Unit/Core/Rrd/RealtimeCreateFileTest.php</file>
+      <file>./Unit/Core/Rrd/RrdMaintenanceLeaseOrderTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
@@ -22,9 +25,7 @@
       <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
-      <file>./Unit/Core/Rrd/RrdCreateCommandSafetyTest.php</file>
-      <file>./Unit/Core/Rrd/RealtimeCreateFileTest.php</file>
-      <file>./Unit/Core/Rrd/RrdMaintenanceLeaseOrderTest.php</file>
+      <file>./Unit/Security/Auth/GprintPresetInUseDeleteTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

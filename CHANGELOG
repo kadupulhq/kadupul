@@ -1,12 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
--security: Create a local RRDfile under a temporary name in its directory and rename it into place, so a symbolic link that appears at the path is replaced rather than written through; applies to the poller, Boost and realtime (#740)
--security: Quote the RRDfile path in the RRDtool create and update commands, as fetch already does; with the RRDtool proxy a path that cannot be sent as one bare argument is refused and its samples stay queued (#768)
--security: Keep a gradient AREA legend that holds a double quote or a line break inside its own RRDtool argument (#778)
--security: Tuning an RRDfile requires the exclusive storage lease, so it is refused on Windows as resize and restore already are; an RRD Cleaner rescan takes the storage lease first and keeps queued delete and archive actions when the RRA directory cannot be validated (#218)
--security: Quote the file names and dates the RRD Cleaner rescan writes to its file list with db_qstr(), and URL-encode the search filter in the RRD Cleaner page links
+-issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
+-issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
@@ -17,6 +14,11 @@ Cacti CHANGELOG
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
 -issue: Keep CSV export bounds on one clock snapshot and trim samples beyond an unaligned requested end, retaining complete rows and empty-window metadata (#1092)
 -issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
+-security: Create a local RRDfile under a temporary name in its directory and rename it into place, so a symbolic link that appears at the path is replaced rather than written through; applies to the poller, Boost and realtime (#740)
+-security: Quote the RRDfile path in the RRDtool create and update commands, as fetch already does; with the RRDtool proxy a path that cannot be sent as one bare argument is refused and its samples stay queued (#768)
+-security: Keep a gradient AREA legend that holds a double quote or a line break inside its own RRDtool argument (#778)
+-security: Tuning an RRDfile requires the exclusive storage lease, so it is refused on Windows as resize and restore already are; an RRD Cleaner rescan takes the storage lease first and keeps queued delete and archive actions when the RRA directory cannot be validated (#218)
+-security: Quote the file names and dates the RRD Cleaner rescan writes to its file list with db_qstr(), and URL-encode the search filter in the RRD Cleaner page links
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)
 -issue: Store explicitly empty or null nullable numeric fields as SQL NULL in sql_save; preserve explicit zero, omitted fields and non-nullable defaults, leaving existing stored zeros unchanged (#1108)
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides

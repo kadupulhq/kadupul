@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -129,12 +130,18 @@ function gprint_deletable($ids) {
 		WHERE right_axis_format > 0
 		AND ' . array_to_sql_or($ids, 'right_axis_format'));
 
+	/* aggregate templates copy their right_axis_format onto the graphs they build (#749) */
+	$aggregate_axis = db_fetch_assoc('SELECT DISTINCT right_axis_format AS gprint_id
+		FROM aggregate_graph_templates_graph
+		WHERE right_axis_format > 0
+		AND ' . array_to_sql_or($ids, 'right_axis_format'));
+
 	/* A failed lookup must not read as "nothing is in use". */
-	if (!is_array($rows) || !is_array($axis)) {
+	if (!is_array($rows) || !is_array($axis) || !is_array($aggregate_axis)) {
 		return array();
 	}
 
-	$in_use    = array_rekey(array_merge($rows, $axis), 'gprint_id', 'gprint_id');
+	$in_use    = array_rekey(array_merge($rows, $axis, $aggregate_axis), 'gprint_id', 'gprint_id');
 	$deletable = array();
 
 	foreach ($ids as $id) {
@@ -167,7 +174,8 @@ function form_actions() {
 					db_execute('DELETE FROM graph_templates_gprint
 						WHERE ' . array_to_sql_or($deletable, 'id') . '
 						AND NOT EXISTS (SELECT 1 FROM graph_templates_item AS gti WHERE gti.gprint_id = graph_templates_gprint.id)
-						AND NOT EXISTS (SELECT 1 FROM graph_templates_graph AS gtg WHERE gtg.right_axis_format = graph_templates_gprint.id)');
+						AND NOT EXISTS (SELECT 1 FROM graph_templates_graph AS gtg WHERE gtg.right_axis_format = graph_templates_gprint.id)
+						AND NOT EXISTS (SELECT 1 FROM aggregate_graph_templates_graph AS agtg WHERE agtg.right_axis_format = graph_templates_gprint.id)');
 				}
 
 				if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
@@ -459,8 +467,11 @@ function gprint_presets() {
 		) AS rs
 		LEFT JOIN (
 			SELECT right_axis_format, COUNT(*) AS total
-			FROM graph_templates_graph
-			WHERE right_axis_format > 0
+			FROM (
+				SELECT right_axis_format FROM graph_templates_graph WHERE right_axis_format > 0
+				UNION ALL
+				SELECT right_axis_format FROM aggregate_graph_templates_graph WHERE right_axis_format > 0
+			) AS axis_references
 			GROUP BY right_axis_format
 		) AS axis
 		ON axis.right_axis_format = rs.id
