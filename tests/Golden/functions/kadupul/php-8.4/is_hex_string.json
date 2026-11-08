@@ -76,11 +76,11 @@
     },
     {
       "args": ["Hex-STRING: 00 01"],
-      "id": "hex_string_prefix_is_dead_branch",
-      "note": "the hex- test matches first, so the Hex-STRING: branch is unreachable and \"String:\" is treated as a part",
+      "id": "hex_string_prefix",
+      "note": "the Hex-STRING: prefix is tested before Hex- and stripped (#1030)",
       "result": {
-        "by_ref": {"result": {"type": "string", "value": "Hex-STRING: 00 01"}},
-        "returned": {"type": "bool", "value": false}
+        "by_ref": {"result": {"type": "string", "value": "00 01"}},
+        "returned": {"type": "bool", "value": true}
       }
     },
     {

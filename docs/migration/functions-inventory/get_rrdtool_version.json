@@ -3,8 +3,8 @@
     "name": "get_rrdtool_version",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 7531,
-        "end_line": 7540,
+        "start_line": 7532,
+        "end_line": 7541,
         "line_count": 10,
         "signature": {
             "parameters": [
