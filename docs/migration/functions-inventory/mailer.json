@@ -3,8 +3,8 @@
     "name": "mailer",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 5642,
-        "end_line": 5994,
+        "start_line": 5643,
+        "end_line": 5995,
         "line_count": 353,
         "signature": {
             "parameters": [
