@@ -12,6 +12,7 @@ Cacti CHANGELOG
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
+-security: Generate the CSP nonce when the security headers are sent, before any page output; when no secure random source works the request ends with an error page and a log entry instead of a page that stops partway through (#342)
 -issue: Keep CSV export bounds on one clock snapshot and trim samples beyond an unaligned requested end, retaining complete rows and empty-window metadata (#1092)
 -issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)

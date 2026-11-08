@@ -13,6 +13,7 @@
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
+      <file>./Unit/Security/Csp/NonceFailureErrorPageTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
