@@ -101,6 +101,21 @@ class ReviewRiskTest(unittest.TestCase):
         self.assertEqual(ranked[0], shas['risky'])
         self.assertEqual(ranked[-1], shas['generated'])
 
+    def test_a_symmetric_range_and_an_open_range_rank_the_same_commits(self):
+        base, shas = self.build_history()
+        for revisions in (f'{base}...main', f'{base}..'):
+            with self.subTest(revisions):
+                status, out, err = self.run_tool('--json', revisions)
+                self.assertEqual(status, 0, err)
+                self.assertEqual({row['sha'] for row in json.loads(out)}, set(shas.values()))
+
+    def test_a_range_that_looks_like_an_option_is_rejected(self):
+        self.build_history()
+        with self.assertRaises(SystemExit) as raised, contextlib.redirect_stderr(io.StringIO()):
+            review_risk.main(['--repo', self.repo, '--', '--output=x'])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertFalse(Path(self.repo, 'x').exists())
+
     def test_an_empty_range_or_bad_revision_is_an_error_not_an_empty_report(self):
         self.build_history()
         status, out, err = self.run_tool('main..main')

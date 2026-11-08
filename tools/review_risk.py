@@ -208,13 +208,17 @@ def main(argv: list[str]) -> int:
     if arguments.window_days < 1 or arguments.limit < 1:
         parser.error('--window-days and --limit must be positive')
 
+    if arguments.revisions.startswith('-'):
+        parser.error('the revision range must not start with "-"')
+
     try:
         commits = read_commits(arguments.repo, arguments.revisions)
         if not commits:
             raise RuntimeError(f'no commits in {arguments.revisions}')
         oldest = min(item.when for item in commits) - timedelta(days=arguments.window_days)
         newest = max(item.when for item in commits)
-        tip = arguments.revisions.split('..')[-1] or 'HEAD'
+        # The tip of A..B or A...B; a single revision is its own tip.
+        tip = re.split(r'\.\.\.?', arguments.revisions)[-1] or 'HEAD'
         history = read_commits(arguments.repo, f'--since={oldest.astimezone(timezone.utc).isoformat()}',
                                f'--until={newest.astimezone(timezone.utc).isoformat()}', tip)
         known = {item.sha: item for item in history + commits}
