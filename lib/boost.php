@@ -1847,7 +1847,7 @@ function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {
 		return time();
 	}
 
-	if (!rrd_check_path($rrd_path)) {
+	if (!rrd_check_path($rrd_path) || !rrd_check_containment($rrd_path)) {
 		cacti_log("ERROR: Refusing unsafe RRD file path '$rrd_path' in boost cache.", false, 'BOOST');
 
 		return time();
@@ -1972,7 +1972,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 		return false;
 	}
 
-	if (!rrd_check_path($data_source_path)) {
+	if (!rrd_check_path($data_source_path) || !rrd_check_containment($data_source_path)) {
 		cacti_log("ERROR: Refusing unsafe data source path '$data_source_path' for local_data_id $local_data_id", false, 'BOOST');
 
 		return false;
@@ -2204,7 +2204,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		return 'ERROR';
 	}
 
-	if (!rrd_check_path($rrd_path)) {
+	if (!rrd_check_path($rrd_path) || !rrd_check_containment($rrd_path)) {
 		cacti_log("ERROR: Refusing unsafe data source path '$rrd_path' for local_data_id $local_data_id", false, 'BOOST');
 
 		return 'ERROR';

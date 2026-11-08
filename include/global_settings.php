@@ -2395,6 +2395,12 @@ $settings = array(
 			'size' => '5',
 			'default' => '100'
 		),
+		'rrd_path_containment' => array(
+			'friendly_name' => __('Restrict RRDfiles to the RRA Directory'),
+			'description' => __('When checked, Cacti refuses to save, create or update an RRDfile whose path resolves outside the RRA directory (&lt;path_cacti&gt;/rra), following symbolic links. A symbolic link inside the RRA directory that points elsewhere is refused as well. Leave this unchecked if any Data Source uses a custom path outside the RRA directory, or those Data Sources will stop updating.'),
+			'method' => 'checkbox',
+			'default' => ''
+		),
 		'rrdp_header' => array(
 			'friendly_name' => __('RRDtool Proxy Server'),
 			'method' => 'spacer',

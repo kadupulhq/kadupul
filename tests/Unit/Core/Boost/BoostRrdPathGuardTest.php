@@ -75,6 +75,9 @@ function boostRrdGuardLoad($root) {
 		return;
 	}
 
+	require_once $root . '/tests/Helpers/RrdContainmentSource.php';
+	test_load_rrd_check_containment($root);
+
 	if (!function_exists('rrd_check_path')) {
 		$rrd = file_get_contents($root . '/lib/rrd.php');
 		preg_match('/^function rrd_check_path\(.*?^}\n/ms', $rrd, $match);
