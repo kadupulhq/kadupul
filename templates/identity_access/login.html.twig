@@ -62,6 +62,7 @@
     <div class='versionInfo'>{{ version }}</div>
     </div>
     <div class='loginRight'></div>
+    {# nosemgrep: generic.html-templates.security.unquoted-attribute-var.unquoted-attribute-var -- CactiSecureHeaders::getNonceAttribute() emits the complete quoted nonce attribute as Markup. #}
     <script type='text/javascript' {{ nonceAttribute }}>
     var storage = Storages.localStorage;
 
