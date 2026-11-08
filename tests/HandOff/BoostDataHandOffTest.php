@@ -22,7 +22,7 @@ test('Boost hand-off batches expose database acknowledgement', function () {
 	$boost = boostSource('lib/boost.php');
 
 	expect($boost)->toContain('function boost_flush_output_batch($value_tuples, $conn = false, bool $replace_existing = false)');
-	expect($boost)->toContain('$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) !== false;');
+	expect($boost)->toContain('$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, !$replace_existing, $conn) !== false;');
 	expect($boost)->toContain('$return_value = !boost_flush_output_batch($value_tuples, $conn);');
 });
 

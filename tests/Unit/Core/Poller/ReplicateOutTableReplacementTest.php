@@ -74,7 +74,7 @@ function db_table_exists(string $table, bool $log = true, mixed $connection = fa
 
 function db_fetch_assoc(string $sql, bool $log = true, mixed $connection = false): array|false
 {
-    if (preg_match('/^SHOW COLUMNS FROM (\w+)$/', $sql, $match) !== 1) {
+    if (preg_match('/^SHOW (?:FULL )?COLUMNS FROM (\w+)$/', $sql, $match) !== 1) {
         return false;
     }
 
@@ -177,7 +177,7 @@ test('a failed replacement keeps the collector rows that were there before', fun
     }
     $logs = implode("\n", state()['logs']);
     // The 1.2.31 path still reports the rows it sent after a failed batch.
-    expect(str_contains($logs, 'Replicated to Remote Poller 2'))->toBe($succeeds || $engine !== 'InnoDB');
+    expect(str_contains($logs, 'Replicated to Remote Poller 2'))->toBe($succeeds);
     if (!$succeeds && $engine === 'InnoDB') {
         expect($logs)->toContain('Replicate Out failed for data_input. The remote rows were kept.');
     }
@@ -189,8 +189,8 @@ test('a failed replacement keeps the collector rows that were there before', fun
     'a later batch fails' => ['InnoDB', 'REPLACE', 2, 1500, true, false, ['previous-1', 'previous-2', 'removed']],
     'the delete fails' => ['InnoDB', 'DELETE', 0, 2, true, false, ['previous-1', 'previous-2', 'removed']],
     'the commit is not acknowledged' => ['InnoDB', '', 0, 2, false, false, ['previous-1', 'previous-2', 'removed']],
-    // A non-transactional table cannot be rolled back; it keeps the 1.2.31 emptying.
-    'MyISAM success' => ['MyISAM', '', 0, 2, true, true, ['replacement']],
-    'MyISAM insert fails' => ['MyISAM', 'REPLACE', 1, 2, true, false, []],
-    'MyISAM later batch fails' => ['MyISAM', 'REPLACE', 2, 1500, true, false, ['first-batch']],
+    // Non-transactional replacement is rejected before destroying prior rows.
+    'MyISAM success' => ['MyISAM', '', 0, 2, true, false, ['previous-1', 'previous-2', 'removed']],
+    'MyISAM insert fails' => ['MyISAM', 'REPLACE', 1, 2, true, false, ['previous-1', 'previous-2', 'removed']],
+    'MyISAM later batch fails' => ['MyISAM', 'REPLACE', 2, 1500, true, false, ['previous-1', 'previous-2', 'removed']],
 ]);

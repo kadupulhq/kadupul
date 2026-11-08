@@ -329,9 +329,11 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
 			FROM poller_output_boost', '', true, $local_db_cnn_id);
 
 		$output_records = db_fetch_cell('SELECT EXISTS(SELECT 1 FROM poller_output LIMIT 1)', '', true, $local_db_cnn_id);
+		$recovery_pending = db_fetch_cell("SELECT EXISTS(SELECT 1 FROM settings WHERE name='recovery_pending' AND value='1')", '', true, $local_db_cnn_id);
 
 		// Either local queue can hold samples taken while the main database was unreachable.
-		if ($boost_records > 0 || $output_records > 0) {
+		if ($boost_records === false || $output_records === false || $recovery_pending === false
+			|| $boost_records > 0 || $output_records > 0 || $recovery_pending > 0) {
 			$config['connection'] = 'recovery';
 		}
 	}

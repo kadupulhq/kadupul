@@ -23,6 +23,10 @@ on:
       - 'tests/HandOff/BoostDataHandOffTest.php'
       - 'tests/integration/BoostProcessTableMariaDbTest.php'
       - 'tests/integration/BoostRecoveryRetryMariaDbTest.php'
+      - 'tests/integration/RemoteSyncReplacementMariaDbTest.php'
+      - 'tests/integration/RemoteCollectorOwnershipMariaDbTest.php'
+      - 'tests/Unit/Core/Poller/**'
+      - 'include/global.php'
       - 'tests/integration/InstallerAutomationRepairMariaDbTest.php'
       - 'tests/fixtures/installer-automation-repair-native.php'
       - 'tests/integration/DurablePollerQueueMariaDbTest.php'
@@ -94,11 +98,15 @@ jobs:
         run: |
           QUEUE_ENGINE=InnoDB mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-innodb.json
           QUEUE_ENGINE=MEMORY mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-memory.json
+      - name: Drain full-width recovery samples within the CLI memory budget
+        run: PROFILE_KIND=recovery PROFILE_ROWS=200000 PROFILE_SAMPLES_PER_SOURCE=100 PROFILE_OUTPUT_BYTES=512 mise exec php@system -- php -d memory_limit=128M tests/benchmarks/remote_collector.php > collector-recovery.json
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: queue-${{ matrix.database }}
-          path: queue-*.json
+          path: |
+            queue-*.json
+            collector-recovery.json
   legacy:
     runs-on: ubuntu-22.04
     timeout-minutes: 20

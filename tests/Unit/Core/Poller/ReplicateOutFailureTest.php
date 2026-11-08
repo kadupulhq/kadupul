@@ -20,7 +20,7 @@ namespace ReplicateOutFailure;
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
-foreach (array('replicate_out', 'replicate_out_execute', 'replicate_out_remove_stale_items') as $function) {
+foreach (array('replicate_out', 'replicate_out_locked', 'replicate_out_execute', 'replicate_out_remove_stale_items') as $function) {
 	eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $function));
 }
 
@@ -32,6 +32,8 @@ foreach (array('POLLER_VERBOSITY_NONE' => 0, 'POLLER_VERBOSITY_LOW' => 2, 'MESSA
 
 function __($text) { return $text; }
 function cacti_sizeof($value) { return is_array($value) || $value instanceof \Countable ? count($value) : 0; }
+function poller_sync_lock($conn, $scope) { return 'test-owner'; }
+function poller_sync_unlock($conn, $name) { return true; }
 function poller_connect_to_remote($poller_id) { return $GLOBALS['rf_remote']; }
 function replicate_log($text, $level = 0) { $GLOBALS['rf_logs'][] = $text; }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['rf_messages'][] = $id; }

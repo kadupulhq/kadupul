@@ -385,7 +385,10 @@ function api_device_enable_devices($device_ids) {
 		if ($poller_id > 1) {
 			if (remote_poller_up($poller_id)) {
 				if (($rcnn_id = poller_push_to_remote_db_connect($device_id)) !== false) {
-					poller_push_reindex_data_to_poller($device_id, 0, true, $rcnn_id);
+					if (!poller_push_reindex_data_to_poller($device_id, 0, true, $rcnn_id)) {
+						cacti_log('ERROR: Device reindex replication failed for Poller ' . $poller_id . '.', false, 'REPLICATE');
+						raise_message('poller_sync_failed', __('Synchronization failed. See the log for details.'), MESSAGE_LEVEL_ERROR);
+					}
 				} elseif (!isset($raised[$poller_id])) {
 					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 					$raised[$poller_id] = true;

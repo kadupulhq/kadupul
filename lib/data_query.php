@@ -480,7 +480,11 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 		api_plugin_hook_function('run_data_query', array('host_id' => $host_id, 'snmp_query_id' => $snmp_query_id));
 		query_debug_timer_offset('data_query', __esc('Plugin hooks complete'));
 	} elseif ($config['connection'] == 'online') {
-		poller_push_reindex_data_to_poller($host_id, $snmp_query_id);
+		if (!poller_push_reindex_data_to_poller($host_id, $snmp_query_id)) {
+			global $local_db_cnn_id;
+			db_execute_prepared("REPLACE INTO settings (name, value) VALUES ('recovery_pending', '1')", array(), true, $local_db_cnn_id);
+			cacti_log('ERROR: Reindex replication failed; collector recovery is required.', false, 'REPLICATE');
+		}
 
 		automation_execute_data_query($host_id, $snmp_query_id);
 		query_debug_timer_offset('data_query', __esc('Automation Execution for Data Query complete'));

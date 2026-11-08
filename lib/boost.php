@@ -385,7 +385,7 @@ function boost_flush_output_batch($value_tuples, $conn = false, bool $replace_ex
 
 		if ($out_length > 0 && ($out_length + $overhead + $tuple_length) > $packet_limits[$conn_key]) {
 			try {
-				$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) !== false;
+				$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, !$replace_existing, $conn) !== false;
 			} catch (Throwable $e) {
 				$acknowledged = false;
 			}
@@ -408,7 +408,7 @@ function boost_flush_output_batch($value_tuples, $conn = false, bool $replace_ex
 
 	if ($out_buffer != '') {
 		try {
-			$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) !== false;
+			$acknowledged = db_execute($sql_prefix . $out_buffer . $sql_suffix, !$replace_existing, $conn) !== false;
 		} catch (Throwable $e) {
 			$acknowledged = false;
 		}

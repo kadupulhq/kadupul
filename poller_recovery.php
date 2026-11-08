@@ -132,8 +132,6 @@ function recovery_owned_data_source_ids($rows, $poller_id, $conn) {
 
 global $local_db_cnn_id, $remote_db_cnn_id;
 
-$recovery_pid = db_fetch_cell("SELECT value FROM settings WHERE name='recovery_pid'", '', true, $local_db_cnn_id);
-
 /* process calling arguments */
 $parms = $_SERVER['argv'];
 array_shift($parms);
@@ -198,7 +196,8 @@ if (function_exists('pcntl_signal')) {
 $start = microtime(true);
 
 /* configuration variables */
-$record_limit = 150000;
+// Rows and encoded tuples coexist; keep full-width samples within the CLI memory budget.
+$record_limit = 10000;
 $sleep_time   = 1;
 
 /* global counter variables */
@@ -206,6 +205,18 @@ $records_inserted = 0;
 $transfer_failed  = false;
 
 debug('About to start recovery processing');
+
+$recovery_lock = poller_sync_lock($remote_db_cnn_id, 'recovery:' . (int) $poller_id);
+if ($recovery_lock === false) {
+	cacti_log('RECOVERY ERROR: Another owner is active or recovery ownership could not be established.', false, 'POLLER');
+	exit(1);
+}
+// Keep the same main connection for ownership and writes. Never reconnect a writer.
+register_shutdown_function('poller_sync_unlock', $remote_db_cnn_id, $recovery_lock);
+$recovery_pid = db_fetch_cell("SELECT value FROM settings WHERE name='recovery_pid'", '', false, $local_db_cnn_id);
+if ($recovery_pid === false) {
+	exit(1);
+}
 
 if (!empty($recovery_pid)) {
 	/* This branch reads false as "stale, clear the row and run", so it needs a
@@ -233,23 +244,34 @@ if ($run) {
 
 	cacti_log('RECOVERY: No pid exists, starting recovery process (PID=' . $my_pid . ')!', false, 'POLLER');
 
-	db_execute_prepared('REPLACE INTO settings
+	if (!db_execute_prepared('REPLACE INTO settings
 		(name, value)
 		VALUES (\'recovery_pid\', ?)',
-		array($my_pid), true, $local_db_cnn_id);
+		array($my_pid), false, $local_db_cnn_id)) {
+		exit(1);
+	}
+	if (!db_execute_prepared("REPLACE INTO settings (name, value) VALUES ('recovery_pending', '1')", array(), false, $local_db_cnn_id)) {
+		$transfer_failed = true;
+	}
 
 	/* let the console know you are in recovery mode */
-	db_execute_prepared('UPDATE poller
+	if (!db_execute_prepared('UPDATE poller
 		SET status = 5
 		WHERE id = ?',
-		array($poller_id), true, $remote_db_cnn_id);
+		array($poller_id), false, $remote_db_cnn_id)) {
+		$transfer_failed = true;
+	}
 
-	poller_push_reindex_data_to_poller(0, 0, true);
+	if (!$transfer_failed && !poller_push_reindex_data_to_poller(0, 0, true, $remote_db_cnn_id)) {
+		cacti_log('RECOVERY ERROR: Reindex synchronization failed; recovery remains pending.', false, 'POLLER');
+		$transfer_failed = true;
+	}
 
 	/* either local queue can hold the only copy of a sample taken while offline */
 	$source_table = 'poller_output_boost';
+	$rows_since_sleep = 0;
 
-	while (true) {
+	while (!$transfer_failed) {
 		cacti_log('RECOVERY: Getting max_time for '. $record_limit . ' records.', false, 'POLLER');
 
 		$max_time = db_fetch_cell("SELECT MAX(time)
@@ -260,13 +282,17 @@ if ($run) {
 				LIMIT $record_limit
 			) AS rs", '', true, $local_db_cnn_id);
 
+		if ($max_time === false) {
+			cacti_log('RECOVERY ERROR: Unable to inspect the local queue; recovery remains pending.', false, 'POLLER');
+			$transfer_failed = true;
+			break;
+		}
+
 		if (empty($max_time) && $source_table === 'poller_output_boost') {
 			$source_table = 'poller_output';
 
 			continue;
 		} elseif (empty($max_time)) {
-			db_execute_prepared("DELETE FROM settings WHERE name='recovery_pid'", array(), true, $local_db_cnn_id);
-
 			break;
 		} else {
 			cacti_log('RECOVERY: Fetching records till time: ' . $max_time . ' from poller DB', false, 'POLLER');
@@ -278,7 +304,14 @@ if ($run) {
 				LIMIT ' . (int) $record_limit,
 				array($max_time), true, $local_db_cnn_id);
 
+			if ($rows === false) {
+				cacti_log('RECOVERY ERROR: Unable to fetch queued rows; recovery remains pending.', false, 'POLLER');
+				$transfer_failed = true;
+				break;
+			}
+
 			if (cacti_sizeof($rows)) {
+				$rows_since_sleep += cacti_sizeof($rows);
 				/* one lookup, so a failed query is seen before any row is filtered */
 				$owned = recovery_owned_data_source_ids($rows, $poller_id, $remote_db_cnn_id);
 
@@ -341,17 +374,28 @@ if ($run) {
 				$records_inserted += $record_count;
 			}
 
-			sleep($sleep_time);
+			// Do not retain the previous page while PDO materializes the next one.
+			unset($rows, $sql_array, $owned);
+			// Preserve the previous throttle cadence independently of the memory page size.
+			if ($rows_since_sleep >= 150000) {
+				sleep($sleep_time);
+				$rows_since_sleep = 0;
+			}
 		}
 	}
 
-	db_execute_prepared("DELETE FROM settings WHERE name='recovery_pid'", array(), true, $local_db_cnn_id);
+	if (!db_execute_prepared("DELETE FROM settings WHERE name='recovery_pid' AND value = ?", array((string) $my_pid), false, $local_db_cnn_id)) {
+		$transfer_failed = true;
+	}
 
 	if (!$transfer_failed) {
 		/* let the console know you are in online mode */
-		db_execute_prepared('UPDATE poller
+		if (!db_execute_prepared('UPDATE poller
 			SET status = 2
-			WHERE id = ?', array($poller_id), false, $remote_db_cnn_id);
+			WHERE id = ?', array($poller_id), false, $remote_db_cnn_id)
+			|| !db_execute_prepared("DELETE FROM settings WHERE name='recovery_pending'", array(), false, $local_db_cnn_id)) {
+			$transfer_failed = true;
+		}
 	}
 } else {
 	debug('Recovery process still running, exiting');

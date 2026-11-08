@@ -6,6 +6,7 @@
 	<testsuites>
 		<testsuite name="Boost">
 			<directory suffix="Test.php">./Unit/Core/Boost</directory>
+			<directory suffix="Test.php">./Unit/Core/Poller</directory>
 			<file>./HandOff/BoostDataHandOffTest.php</file>
 			<file>./Unit/Core/Cli/PollerOutputDrainFailureTest.php</file>
 			<file>./Unit/Core/Rrd/RrdNullOffsetCfTest.php</file>

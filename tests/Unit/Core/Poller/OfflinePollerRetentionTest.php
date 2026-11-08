@@ -84,7 +84,7 @@ PHP;
 	expect(json_decode($result['out'], true))->toBe(array(2, $poller_id === 1 ? 2 : 0, 2));
 })->with(array(array('offline', 2), array('recovery', 2), array('online', 2), array('online', 1)));
 
-test('bootstrap enters recovery while either local queue holds samples', function ($boost, $output) {
+test('bootstrap enters recovery while either local queue holds samples', function ($boost, $output, $pending, $failure) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
 	$start  = strpos($source, "\t\t\$boost_records = db_fetch_cell(");
 	$end    = strpos($source, "\t/* gather the existing cactidb version */");
@@ -95,10 +95,12 @@ test('bootstrap enters recovery while either local queue holds samples', functio
 
 	$program = <<<'PHP'
 $local_db_cnn_id = new PDO('sqlite::memory:');
+$local_db_cnn_id->exec('CREATE TABLE settings(name TEXT, value TEXT)');
 foreach (array('poller_output_boost', 'poller_output') as $table) {
 	$local_db_cnn_id->exec("CREATE TABLE $table (output TEXT)");
 }
 function db_fetch_cell($sql, $column = '', $log = true, $connection = false) {
+	if ($GLOBALS['query_failure'] !== '' && str_contains($sql, $GLOBALS['query_failure'])) return false;
 	return $connection->query($sql)->fetchColumn();
 }
 $config = array('connection' => 'online');
@@ -108,11 +110,13 @@ PHP;
 			$program .= '$local_db_cnn_id->exec("INSERT INTO ' . $table . " VALUES ('retained')\");\n";
 		}
 	}
+	$program .= '$query_failure=' . var_export($failure, true) . ';';
+	if ($pending) $program .= '$local_db_cnn_id->exec("INSERT INTO settings VALUES(\"recovery_pending\",\"1\")");';
 	$result = run_php($program . $block . 'echo $config["connection"];');
 
 	expect($result['status'])->toBe(0, $result['out'] . $result['err']);
-	expect($result['out'])->toBe($boost || $output ? 'recovery' : 'online');
-})->with(array(array(0, 0), array(1, 0), array(0, 1), array(1, 1)));
+	expect($result['out'])->toBe($boost || $output || $pending || $failure !== '' ? 'recovery' : 'online');
+})->with(array(array(0,0,0,''), array(1,0,0,''), array(0,1,0,''), array(1,1,0,''), array(0,0,1,''), array(0,0,0,'poller_output_boost'), array(0,0,0,'poller_output LIMIT'), array(0,0,0,'recovery_pending')));
 
 test('cmd.php reports a batch it could not store in either queue', function ($redirect, $failure) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cmd.php');

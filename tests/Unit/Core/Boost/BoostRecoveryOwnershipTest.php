@@ -106,6 +106,7 @@ function boostRecoveryOwnershipLoad($root) {
 		$local_db_cnn_id  = "local";
 		$source_table     = "poller_output_boost";
 		$records_inserted = 0;
+		$rows_since_sleep = 0;
 		$transfer_failed  = false;
 
 		do {' . $rename($batch) . '} while (false);
