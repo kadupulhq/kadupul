@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-07 21:27-0800\n"
+"POT-Creation-Date: 2026-11-08 11:55-0800\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2395,8 +2395,8 @@ msgid "No Tree Rules Found"
 msgstr "Nie znaleziono zasad dotyczących drzew"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6746 lib/functions.php:6821
-#: lib/functions.php:6924 lib/functions.php:7614 poller.php:416 poller.php:583
-#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
+#: lib/functions.php:6924 lib/functions.php:7614 poller.php:417 poller.php:584
+#: poller.php:666 poller.php:719 poller.php:881 poller.php:1002
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
 msgstr "System ostrzegawczy Kadupul"
@@ -16719,50 +16719,50 @@ msgstr "Wtyczka nie jest kompatybilna"
 msgid "Enable Plugin Locally"
 msgstr "Włącz wtyczkę"
 
-#: poller.php:416
+#: poller.php:417
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "OSTRZEŻENIE: %s nie jest zsynchronizowany z interwałem sondy dla identyfikatora sondy %d!  Odstęp między ankietami wynosi %d sekund, maksymalnie %d sekund, ale minęło %d sekund od ostatniej ankiety!"
 
-#: poller.php:583
+#: poller.php:584
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "OSTRZEŻENIE: Wykryto %d procesów przekraczających cykl odpytywania dla identyfikatora sondy %d, należy to zbadać."
 
-#: poller.php:665
+#: poller.php:666
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "OSTRZEŻENIE: Tabela wyjściowa sondy nie jest pusta dla identyfikatora sondy %d.  Zagadnienia: %d, %s."
 
-#: poller.php:718
+#: poller.php:719
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "BŁĄD: ścieżka grzbietu: %s jest nieprawidłowa dla identyfikatora sondy %d.  Ankieta nie może być kontynuowana!"
 
-#: poller.php:873
+#: poller.php:881
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Przekroczono maksymalny czas pracy %d sekund dla identyfikatora sondy %d. Kończenie."
 
-#: poller.php:994
+#: poller.php:1002
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "OSTRZEŻENIE: Przekroczono interwał odpytywania Kadupul o"
 
-#: poller.php:1032
+#: poller.php:1040
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "OSTRZEŻENIE: PollerID:%s o nazwie:%s ma status pulsu"
 
-#: poller.php:1034
+#: poller.php:1042
 msgid "Poller in Heartbeat Mode"
 msgstr "Ankieta w trybie tętna"
 
-#: poller.php:1329
+#: poller.php:1337
 msgid "Kadupul System Notification"
 msgstr "Narzędzia systemu Kadupul"
 
-#: poller.php:1329
+#: poller.php:1337
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "UWAGA: Dodano drugi moduł gromadzący dane Kadupul. Dlatego też automatyczne doładowanie!"
 

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-07 21:27-0800\n"
+"POT-Creation-Date: 2026-11-08 11:55-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2392,8 +2392,8 @@ msgid "No Tree Rules Found"
 msgstr "Правила для деревьев не найдены"
 
 #: cactid.php:27 help.php:54 lib/functions.php:6746 lib/functions.php:6821
-#: lib/functions.php:6924 lib/functions.php:7614 poller.php:416 poller.php:583
-#: poller.php:665 poller.php:718 poller.php:873 poller.php:994
+#: lib/functions.php:6924 lib/functions.php:7614 poller.php:417 poller.php:584
+#: poller.php:666 poller.php:719 poller.php:881 poller.php:1002
 #: poller_automation.php:37 poller_boost.php:477
 msgid "Kadupul System Warning"
 msgstr "Система предупреждения Kadupul"
@@ -16758,49 +16758,49 @@ msgstr "Плагин несовместим"
 msgid "Enable Plugin Locally"
 msgstr "Включить плагин"
 
-#: poller.php:416
+#: poller.php:417
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: %s не синхронизирован с интервалом опроса для идентификатора опроса %d!  Интервал опроса составляет %d секунды, максимум %d секунды, но с момента последнего опроса прошло %d секунды!"
 
-#: poller.php:583
+#: poller.php:584
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Обнаружено %d процессов, перекрывающих цикл опроса для идентификатора опросника %d, пожалуйста, проверьте."
 
-#: poller.php:665
+#: poller.php:666
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "ПРЕДУПРЕЖДЕНИЕ: таблица результатов опроса не пуста для идентификатора опроса %d.  Выпуски: %d, %s."
 
-#: poller.php:718
+#: poller.php:719
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "ОШИБКА: путь к позвоночнику: %s недопустим для идентификатора опросника %d.  Опросник не может продолжаться!"
 
-#: poller.php:873
+#: poller.php:881
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Превышено максимальное время выполнения %d секунд для идентификатора опросника %d. Выход."
 
-#: poller.php:994
+#: poller.php:1002
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "ВНИМАНИЕ: цикл опроса Kadupul превысил интервал опроса на "
 
-#: poller.php:1032
+#: poller.php:1040
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: PollerID:%s с именем:%s находится в состоянии Heartbeat"
 
-#: poller.php:1034
+#: poller.php:1042
 msgid "Poller in Heartbeat Mode"
 msgstr "Опросчик в режиме Heartbeat"
 
-#: poller.php:1329
+#: poller.php:1337
 msgid "Kadupul System Notification"
 msgstr "Утилиты Kadupul"
 
-#: poller.php:1329
+#: poller.php:1337
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "ПРИМЕЧАНИЕ. Добавлен второй сборщик данных Kadupul. Therfore, включающий повышение автоматически!"
 
