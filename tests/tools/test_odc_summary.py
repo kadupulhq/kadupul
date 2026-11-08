@@ -4,7 +4,6 @@
 """Check that tools/odc_summary.py reads the bug form's ODC fields and counts them."""
 import contextlib
 import io
-import json
 from pathlib import Path
 import sys
 import tempfile
@@ -51,8 +50,12 @@ class OdcSummaryTest(unittest.TestCase):
             self.assertEqual(label, labels[key])
             self.assertFalse(required, block_id)            # a reporter may not know the classification
             self.assertGreaterEqual(len(options), 3)
+            self.assertEqual(odc_summary.OPTIONS[key], tuple(option.split(' (')[0] for option in options))
             for option in options:
-                self.assertEqual(odc_summary.classify(form_body({block_id: option}))[key], option.split(' (')[0])
+                expected = option.split(' (')[0]
+                if expected == odc_summary.UNKNOWN.get(key):
+                    expected = odc_summary.UNCLASSIFIED
+                self.assertEqual(odc_summary.classify(form_body({block_id: option}))[key], expected)
 
     def test_counts_classified_and_unclassified_issues(self):
         issues = [
@@ -79,10 +82,31 @@ class OdcSummaryTest(unittest.TestCase):
         type_table = report.split('### Defect type\n')[1].split('###')[0]
         self.assertTrue(type_table.strip().endswith('| unclassified | 2 | 40.0% |'))
 
-    def test_a_hand_written_value_cannot_split_a_table_cell(self):
-        fields = odc_summary.classify('### Defect type\r\n\r\nChecking | other\r\n')
-        self.assertEqual(fields['type'], 'Checking \\| other')
-        self.assertIn('| Checking \\| other | 1 | 100.0% |', odc_summary.summarize([{'number': 1, 'body': '### Defect type\n\nChecking | other'}]))
+    def test_a_value_outside_the_dropdown_counts_as_other(self):
+        fields = odc_summary.classify('### Defect type\r\n\r\nChecking | other\r\n\r\n### Trigger\r\n\r\nRare\r\n')
+        self.assertEqual(fields['type'], odc_summary.OTHER)
+        self.assertEqual(fields['trigger'], odc_summary.OTHER)
+        self.assertIn('| other | 1 | 100.0% |', odc_summary.summarize([{'number': 1, 'body': '### Defect type\n\nChecking | other'}]))
+
+    def test_a_later_or_fenced_heading_cannot_override_the_form(self):
+        injected = 'Injected <img src=x onerror=alert(1)> [x](http://evil)'
+        body = form_body({
+            'odc-type': 'Checking (validation of data or conditions before use)',
+            'logs': f'```text\n### Defect type\n\n{injected}\n### Origin\n\nSymfony migration\n```',
+        }) + f'\n\n### Defect type\n\n{injected}\n\n### Qualifier\n\nMissing'
+        fields = odc_summary.classify(body)
+        self.assertEqual(fields['type'], 'Checking')
+        self.assertEqual(fields['origin'], odc_summary.UNCLASSIFIED)
+        report = odc_summary.summarize([{'number': 1, 'body': body}])
+        self.assertNotIn('Injected', report)
+        self.assertNotIn('<img', report)
+        # A fenced heading is not a section even when the form's own section is absent.
+        self.assertEqual(odc_summary.classify('~~~~\n### Defect type\n\nInterface\n~~~\n~~~~\n')['type'], odc_summary.UNCLASSIFIED)
+        # An empty first section is still the answer; a repeat cannot fill it.
+        self.assertEqual(odc_summary.classify('### Defect type\n\n### Defect type\n\nInterface')['type'], odc_summary.UNCLASSIFIED)
+
+    def test_not_sure_origin_is_unclassified(self):
+        self.assertEqual(odc_summary.classify('### Origin\n\nNot sure')['origin'], odc_summary.UNCLASSIFIED)
 
     def test_a_bad_export_is_an_error(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -123,9 +123,12 @@ state using GitHub's records.
 
 The bug report form asks for the defect type, qualifier, trigger and origin from
 IBM's Orthogonal Defect Classification (Chillarege et al., IEEE TSE 1992). Reporters
-may leave them empty. When a fix is known, fill them in, and add the same
-`### Defect type` / `### Defect qualifier` / `### Trigger` / `### Origin` sections to
-issues filed without the form. Count them with:
+may leave them empty. When a fix is known, replace the `_No response_` under each
+field in the issue body, and add the same `### Defect type` / `### Defect qualifier` /
+`### Trigger` / `### Origin` sections to issues filed without the form. Use one of the
+form's options, in full or as the short name before the parentheses; anything else
+counts as `other`. Only the first section of each name outside a fenced code block
+counts, so a section added below the form's own is ignored. Count them with:
 
     gh issue list --label bug --state all --limit 1000 --json number,title,state,body > bugs.json
     python3 tools/odc_summary.py bugs.json

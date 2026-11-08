@@ -15,9 +15,12 @@ Export the issues with the GitHub CLI and pass the file:
         --json number,title,state,body > bugs.json
     python3 tools/odc_summary.py bugs.json
 
-A field is read from a "### <label>" section of the body, which the form
-writes and a maintainer can add to an issue filed without it. "_No response_"
-and an absent section both count as unclassified.
+A field is read from the first "### <label>" section of the body outside a
+fenced code block, which the form writes and a maintainer can add to an issue
+filed without it. Only the form's dropdown options count, either in full or as
+the short name before the explanation in parentheses; any other value counts
+as "other". "_No response_", an absent section and the origin "Not sure" count
+as unclassified.
 """
 from __future__ import annotations
 
@@ -30,26 +33,70 @@ import sys
 
 FIELDS = (('type', 'Defect type'), ('qualifier', 'Defect qualifier'), ('trigger', 'Trigger'), ('origin', 'Origin'))
 UNCLASSIFIED = 'unclassified'
-SECTION = re.compile(r'^###\s+(.+?)\s*$', re.MULTILINE)
+OTHER = 'other'
+# The short names of the bug form's dropdown options; tests/tools/test_odc_summary.py keeps them in step with the form.
+OPTIONS = {
+    'type': ('Assignment or initialization', 'Checking', 'Algorithm or method', 'Function or class', 'Interface',
+             'Timing or serialization', 'Build, package or merge', 'Documentation'),
+    'qualifier': ('Missing', 'Incorrect', 'Extraneous'),
+    'trigger': ('Normal operation', 'Startup, restart or upgrade', 'Recovery or error handling', 'Workload or stress',
+                'Software configuration', 'Hardware or platform', 'Backward compatibility', 'Lateral compatibility',
+                'Rare situation'),
+    'origin': ('Inherited from Cacti, unchanged', 'Ported from upstream Cacti', 'Kadupul change on the 1.2 maintenance line',
+               'Symfony migration', 'New Kadupul feature', 'Not sure'),
+}
+# Values the form offers for "I do not know", which say nothing about the defect.
+UNKNOWN = {'origin': 'Not sure'}
+SECTION = re.compile(r'^###\s+(.+?)\s*$')
+FENCE = re.compile(r'^ {0,3}(`{3,}|~{3,})')
+
+
+def sections(body: str) -> dict[str, str]:
+    """Map each "### " heading outside a fenced block to the first non-empty line under it.
+
+    The body is untrusted reporter text. Only the first section of each name
+    counts, so a heading repeated later, for example inside pasted log output,
+    cannot override the form's answer.
+    """
+    found: dict[str, str | None] = {}
+    current = None
+    fence = ''
+    for line in (body or '').splitlines():
+        marker = FENCE.match(line)
+        if fence:
+            if marker and marker.group(1)[0] == fence[0] and len(marker.group(1)) >= len(fence) \
+                    and not line.strip().lstrip(fence[0]):
+                fence = ''
+            continue
+        heading = SECTION.match(line)
+        if heading:
+            name = heading.group(1).lower()
+            # None marks a section seen but not yet answered; a repeated heading is ignored.
+            current = None if name in found else name
+            if current is not None:
+                found[current] = None
+            continue
+        if marker:
+            fence = marker.group(1)
+        if current is not None and found[current] is None and line.strip():
+            found[current] = line.strip()
+    return {name: value or '' for name, value in found.items()}
+
+
+def option(key: str, value: str) -> str:
+    """Return the short dropdown option a value names, OTHER when it names none, or UNCLASSIFIED."""
+    if value in ('', '_No response_', 'None'):
+        return UNCLASSIFIED
+    for name in OPTIONS[key]:
+        if value == name or value.startswith(name + ' ('):
+            return UNCLASSIFIED if UNKNOWN.get(key) == name else name
+    return OTHER
 
 
 def classify(body: str) -> dict[str, str]:
     """Read the ODC fields from an issue body; the short name drops the explanation in parentheses."""
-    sections: dict[str, str] = {}
-    headings = list(SECTION.finditer(body or ''))
-    for index, heading in enumerate(headings):
-        end = headings[index + 1].start() if index + 1 < len(headings) else len(body)
-        sections[heading.group(1).lower()] = body[heading.end():end].strip()
-    result = {}
-    for key, label in FIELDS:
-        value = sections.get(label.lower(), '')
-        value = value.splitlines()[0].strip() if value else ''
-        if value in ('', '_No response_', 'None'):
-            result[key] = UNCLASSIFIED
-        else:
-            # A hand-written value may contain "|", which would split the Markdown table cell.
-            result[key] = re.sub(r'\s*\(.*\)$', '', value).replace('|', '\\|')
-    return result
+    found = sections(body)
+    return {key: option(key, found.get(label.lower(), '')) for key, label in FIELDS}
 
 
 def table(title: str, counter: Counter, total: int) -> list[str]:
