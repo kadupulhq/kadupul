@@ -13,6 +13,14 @@ on:
       - 'install/**'
       - 'bin/legacy-installer.php'
       - 'src/Platform/**'
+      - 'src/AssetManagement/**'
+      - 'src/IdentityAccess/**'
+      - 'src/Kernel.php'
+      - 'bin/console'
+      - 'app.php'
+      - 'public/**'
+      - 'templates/assets/**'
+      - 'templates/base.html.twig'
       - 'templates/platform/installer.html.twig'
       - 'config/**'
       - 'cacti.sql'
@@ -27,6 +35,7 @@ on:
       - 'composer.lock'
       - 'tests/e2e/docker/**'
       - 'tests/e2e/installer-native.cjs'
+      - 'tests/e2e/asset-native.cjs'
       - 'tests/e2e/package*.json'
       - 'tests/tools/check_cli_version.sh'
       - '.github/workflows/cli-docker-integration.yml'
@@ -69,6 +78,14 @@ jobs:
             install/*
             bin/legacy-installer.php
             src/Platform/*
+            src/AssetManagement/*
+            src/IdentityAccess/*
+            src/Kernel.php
+            bin/console
+            app.php
+            public/*
+            templates/assets/*
+            templates/base.html.twig
             templates/platform/installer.html.twig
             config/*
             cacti.sql
@@ -78,6 +95,7 @@ jobs:
             composer.lock
             tests/e2e/docker/*
             tests/e2e/installer-native.cjs
+            tests/e2e/asset-native.cjs
             tests/e2e/package*.json
             tests/tools/check_cli_version.sh
             .github/workflows/cli-docker-integration.yml
@@ -142,6 +160,7 @@ jobs:
       - name: Exercise fresh installation through native authentication
         env:
           CACTI_E2E_INSTALLER_BROWSER: '1'
+          CACTI_E2E_ASSETS_BROWSER: '1'
           CACTI_E2E_TEST_GLOB: tests/09-cli-maintenance-integration.sh
         run: tests/e2e/docker/run.sh
 

@@ -104,4 +104,18 @@ LOWPRIV_HASH=$("${DC[@]}" exec -T cacti-master php -r 'echo password_hash("cacti
     DELETE FROM user_auth_perms WHERE user_id=1000;
 "
 
+if [[ "${CACTI_E2E_ASSETS_BROWSER:-0}" == '1' ]]; then
+    # A separate fixture account proves ordinary console access is insufficient.
+    # Reuse only the disposable admin password hash, never its realm grants.
+    "${DC[@]}" exec -T cacti-db mariadb -ucactiuser -pcactiuser cacti -e "
+        INSERT INTO user_auth (id, username, password, realm, full_name, must_change_password, password_change, login_opts)
+            SELECT 1001, 'assetviewer', password, 0, 'Asset browser viewer', '', '', 2 FROM user_auth WHERE id=1;
+        INSERT INTO user_auth_realm (realm_id,user_id) VALUES (8,1001);
+    "
+    echo "[setup] exercising asset register through native authentication and workers"
+    ASSET_TEST_URL="http://127.0.0.1:${CACTI_E2E_PORT:-8088}/" \
+        ASSET_TEST_PASSWORD='cacti-e2e-admin' \
+        node ../asset-native.cjs
+fi
+
 echo "[setup] complete"

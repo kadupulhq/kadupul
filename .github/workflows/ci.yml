@@ -397,6 +397,18 @@ jobs:
           mise exec node@22.22.2 -- npm ci --ignore-scripts
           mise exec node@22.22.2 -- npm run build
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php bin/console asset-map:compile
+      - name: Asset pilot native transaction and upgrade contracts
+        env:
+          KADUPUL_ASSET_TEST_DSN: mysql://root@127.0.0.1:${{ job.services.database.ports['3306'] }}/kadupul_assets_test
+          KADUPUL_ASSET_TEST_PASSWORD: cactiroot
+        run: |
+          php <<'PHP'
+          <?php
+          $url = parse_url(getenv('KADUPUL_ASSET_TEST_DSN'));
+          $db = new PDO('mysql:host=' . $url['host'] . ';port=' . $url['port'], 'root', getenv('KADUPUL_ASSET_TEST_PASSWORD'));
+          $db->exec('CREATE DATABASE kadupul_assets_test');
+          PHP
+          php -d memory_limit=1G include/vendor/bin/phpunit -c phpunit-symfony.xml --fail-on-empty-test-suite --filter 'AssetRegistryDatabaseTest|AssetUpgradeTest'
       - name: Native API coverage and actual installer caller proofs
         env:
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_cdef_reference_test;charset=utf8mb4

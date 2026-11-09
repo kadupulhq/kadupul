@@ -45,3 +45,9 @@ navigation:
         path: '../src/Navigation/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\Navigation\Infrastructure\Symfony\Controller
     type: attribute
+
+asset_management:
+    resource:
+        path: '../src/AssetManagement/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\AssetManagement\Infrastructure\Symfony\Controller
+    type: attribute
