@@ -34,6 +34,7 @@ $config = array('base_path' => $argv[1], 'include_path' => $argv[1] . '/include'
     'url_path' => '/', 'poller_id' => 1, 'php_snmp_support' => false);
 function __($value) { return $value; }
 function __x($context, $value) { return $value; }
+function html_escape($string) { return htmlspecialchars((string) $string, ENT_QUOTES | ENT_HTML5, 'UTF-8', false); }
 function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function api_plugin_hook($name) {}
@@ -148,12 +149,11 @@ PHP;
 // External-link actions are covered by the Symfony Link presentation tests.
 // Data Input Methods, Palette and VDEF now use Symfony. Their presentation and authorization tests
 // cover legacy URL rejection, GET editors, POST mutations and CSRF failures.
+// SNMP Option Set entries use Symfony too (SnmpOptionRoutesTest); the legacy
+// actions are checked below to answer 409 without reaching a handler.
 function itemActionCases()
 {
     return array(
-        array('automation_snmp.php', 'item_moveup', array()),
-        array('automation_snmp.php', 'item_movedown', array()),
-        array('automation_snmp.php', 'item_remove', array()),
         array('automation_graph_rules.php', 'item_moveup', array('rule_type' => '2')),
         array('automation_graph_rules.php', 'item_movedown', array('rule_type' => '2')),
         array('automation_graph_rules.php', 'item_remove', array('rule_type' => '2')),
@@ -195,7 +195,6 @@ function itemActionCases()
         array('tree.php', 'lock', array()),
         array('tree.php', 'unlock', array()),
         array('tree.php', 'ajax_dnd', array('tree_ids' => array('line1', 'line2'))),
-        array('automation_snmp.php', 'ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
         array('graphs_new.php', 'query_reload', array('host_id' => '1')),
         array('automation_graph_rules.php', 'remove', array()),
         array('automation_tree_rules.php', 'remove', array()),
@@ -224,10 +223,23 @@ test('item actions run from a POST that carries a valid token', function ($contr
     expect(runItemActionRequest($this, $controller, 'POST', 'valid', $action, $fields))->toBe($reached . 'STATUS:200');
 })->with(itemActionCases());
 
+test('retired SNMP Option Set actions answer 409 without reaching a handler', function ($action, $fields) {
+    foreach (array(array('GET', 'missing'), array('POST', 'valid')) as [$method, $token]) {
+        $output = runItemActionRequest($this, 'automation_snmp.php', $method, $token, $action, $fields);
+        expect($output)->not->toContain('HANDLER')->toEndWith('STATUS:409');
+    }
+})->with(array(
+    array('save', array('name' => 'Replayed')),
+    array('ajax_dnd', array('snmp_item' => array('line1', 'line2'))),
+    array('item_moveup', array()),
+    array('item_movedown', array()),
+    array('item_remove_confirm', array()),
+    array('item_remove', array()),
+));
+
 test('item editors and lists still open by GET', function ($controller, $action) {
     expect(runItemActionRequest($this, $controller, 'GET', 'missing', $action))->toBe('READSTATUS:200');
 })->with(array(
-    array('automation_snmp.php', 'item_edit'),
     array('automation_graph_rules.php', 'item_edit'), array('automation_tree_rules.php', 'item_edit'),
     array('data_queries.php', 'item_edit'),
     array('data_sources.php', 'data_edit'), array('data_templates.php', 'template_edit'),
@@ -324,13 +336,6 @@ test('no page triggers ajax_dnd or query_reload by GET', function () {
     foreach (array('tree.php') as $file) {
         expect(file_get_contents($root . '/' . $file))
             ->toMatch("/loadPageUsingPost(?:Checked)?\\('[a-z_]+\\.php\\?action=ajax_dnd.*?', \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
-    }
-    // These callers encode the complete URL as a JavaScript value. Keep the
-    // POST/token handoff and all contextual encoding flags in the contract.
-    foreach (array('automation_snmp.php' => 'automation_snmp.php') as $file => $controller) {
-        expect(file_get_contents($root . '/' . $file))
-            ->toContain("loadPageUsingPostChecked(<?php print json_encode('$controller?action=ajax_dnd&id=' . ")
-            ->toMatch("/JSON_HEX_TAG \\| JSON_HEX_AMP \\| JSON_HEX_APOS \\| JSON_HEX_QUOT \\| JSON_THROW_ON_ERROR\\);\\?>, \\$\\.tableDnD\\.serialize\\(\\) \\+ '&__csrf_magic=' \\+ encodeURIComponent\\(csrfMagicToken\\)\\);/");
     }
     expect(file_get_contents($root . '/graphs_new.php'))
         ->toMatch("/loadPageUsingPost\\('graphs_new\\.php\\?action=query_reload', \\{[^;]*__csrf_magic: csrfMagicToken/");
