@@ -1189,6 +1189,9 @@ def verify_logout_presentation_pins():
                     failures.append('changed logout presentation retained admission: ' + path)
             finally:
                 (root / path).write_bytes(original)
+    return failures, count
+
+
 def verify_asset_authentication_pins():
     project = Path(__file__).resolve().parents[2]
     block = re.search(r'const ASSET_AUTHENTICATION_SOURCES = \[(.*?)\n\];', inventory.CLASSIFIER.read_text(), re.S)
