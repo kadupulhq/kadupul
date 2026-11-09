@@ -10,9 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Graphing\Infrastructure\Symfony;
 
 use Kadupul\Graphing\Application\Command\DataSourceAddition;
-use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
-use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 
 /**
  * add_datasource.php split each argument at the first "=" that was not its
@@ -32,25 +30,8 @@ final class AddDataSourceLegacyArguments extends LegacyArguments
     #[\Override]
     public function translate(array $argv): array
     {
-        $flags = $this->flags();
-        $input = [];
-        foreach ($argv as $argument) {
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            [$option] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
-            $input['--' . $option] = $value;
-            // The original exited at the first value that was not numeric, so nothing after it counts.
-            if (!is_numeric($flag === '--host-id' ? trim($value) : $value)) {
-                break;
-            }
-        }
-
-        return [$input, null];
+        // The original exited at the first value that was not numeric, so nothing after it counts.
+        return $this->translateUnchecked($argv, stopsAfter: static fn(string $flag, bool $takesValue, string $value): bool => !is_numeric($flag === '--host-id' ? trim($value) : $value));
     }
 
     #[\Override]

@@ -412,36 +412,7 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
     } else {
         query_debug_timer_offset('data_query', __esc('No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population'));
 
-        $existing_orphans = db_fetch_cell_prepared(
-            'SELECT COUNT(*)
-			FROM data_local
-			WHERE snmp_query_id = ?
-			AND host_id = ?
-			AND orphan = 1',
-            array($snmp_query_id, $host_id)
-        );
-
-        if ($existing_orphans) {
-            $data_template_id = db_fetch_cell_prepared(
-                'SELECT data_template_id
-				FROM data_local
-				WHERE snmp_query_id = ?
-				LIMIT 1',
-                array($snmp_query_id)
-            );
-
-            db_execute_prepared(
-                'UPDATE data_local
-				SET orphan = 0
-				WHERE snmp_query_id = ?
-				AND host_id = ?',
-                array($snmp_query_id, $host_id)
-            );
-
-            if (isset($query_array['index_orphan_removal']) && $query_array['index_orphan_removal'] == 'true') {
-                push_out_host($host_id, 0, $data_template_id);
-            }
-        }
+        data_query_clear_orphans($host_id, $snmp_query_id, $orphaned_ids, $query_array);
     }
 
     if (cacti_sizeof($orphaned_ids) &&
@@ -495,6 +466,60 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
     }
 
     return (isset($result) ? $result : true);
+}
+
+/**
+ * data_query_clear_orphans - clear the orphan flag of a device's data sources for
+ *   a data query when the re-index found no index changes.  Data sources orphaned
+ *   by this re-index keep the flag: their stored index was not found (#198).
+ *
+ * @param  (int)   $host_id       - The device id
+ * @param  (int)   $snmp_query_id - The data query id
+ * @param  (array) $orphaned_ids  - The local data ids orphaned by this re-index
+ * @param  (array) $query_array   - The data query definition
+ *
+ * @return (void)
+ */
+function data_query_clear_orphans($host_id, $snmp_query_id, $orphaned_ids, $query_array)
+{
+    $sql_where  = '';
+    $sql_params = array($snmp_query_id, $host_id);
+
+    if (cacti_sizeof($orphaned_ids)) {
+        $sql_where  = ' AND id NOT IN (' . implode(', ', array_fill(0, cacti_sizeof($orphaned_ids), '?')) . ')';
+        $sql_params = array_merge($sql_params, array_values($orphaned_ids));
+    }
+
+    $existing_orphans = db_fetch_cell_prepared(
+        'SELECT COUNT(*)
+		FROM data_local
+		WHERE snmp_query_id = ?
+		AND host_id = ?
+		AND orphan = 1' . $sql_where,
+        $sql_params
+    );
+
+    if ($existing_orphans) {
+        $data_template_id = db_fetch_cell_prepared(
+            'SELECT data_template_id
+			FROM data_local
+			WHERE snmp_query_id = ?
+			LIMIT 1',
+            array($snmp_query_id)
+        );
+
+        db_execute_prepared(
+            'UPDATE data_local
+			SET orphan = 0
+			WHERE snmp_query_id = ?
+			AND host_id = ?' . $sql_where,
+            $sql_params
+        );
+
+        if (isset($query_array['index_orphan_removal']) && $query_array['index_orphan_removal'] == 'true') {
+            push_out_host($host_id, 0, $data_template_id);
+        }
+    }
 }
 
 function data_query_remove_disabled_items($orphaned_ids)
