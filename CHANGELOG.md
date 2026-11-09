@@ -62,6 +62,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Reconcile `unique_keys` in `db_update_table()`, so a declared unique index is kept, created when missing and rebuilt as unique when its uniqueness drifted, and accept a primary key or index columns given as a string (#1065, #1060). Index columns are compared in order and with their prefix lengths, a primary key is rebuilt in one statement, and integer display widths no longer force a column rebuild on MySQL 8 (#1395). Mirrors upstream Cacti #8115 and #8125.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
+- Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). The 1.2.38 upgrade now creates `poller_output_boost_local_data_ids` when it is missing, since no earlier upgrade did. Mirrors the installer part of upstream Cacti #7625.
 
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
 - Widen `user_log.user_id`, `user_auth_row_cache.user_id`, `settings_user_group.group_id` and `user_auth_group_perms.group_id` to the account and group ids they hold, in `cacti.sql`, the audit baseline and the 1.2.38 upgrade; a column holding a negative id stops the upgrade for review instead of being clamped to 0 (#927).
