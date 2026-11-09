@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
+- Count fully qualified `\__()` gettext calls in the guard that keeps gettext out of migrated `src/` code, and list the two installer adapters that still store legacy-translated defaults.
 - Restore legacy behaviour in the migrated administration and relationship lists: Graph Rules search matches graph type and data query names again, lists use the configured rows-per-page setting when no size or `rows=-1` is requested and accept sizes up to 5000, Networks counts and runtimes are formatted as on the legacy page, and System Utilities links to these lists open as full pages instead of a blank content area (#1425).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
@@ -20,6 +21,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 - Add a CI check that reports a run marker recorded with `set_config_option()` before an early `exit` or `die` in the same scope, with a reviewed baseline of the five existing matches.
 
+- Measure and bind the shared JSON/output helper when copied poller-drain and rejected-sample workers produce native child coverage, refusing missing or changed helper copies before accepting their reports.
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
@@ -56,9 +58,12 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed; earlier orphans are still cleared as before (#198).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
+- Make `rrdtool_function_tune()` change all requested options or none: the RRDfile is copied beside itself first and, when `rrdtool tune` exits non-zero, a restored copy is renamed over it, so it is never left truncated, and the function now returns `true` or `false` instead of nothing (#777).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
+- Reconcile `unique_keys` in `db_update_table()`, so a declared unique index is kept, created when missing and rebuilt as unique when its uniqueness drifted, and accept a primary key or index columns given as a string (#1065, #1060). Index columns are compared in order and with their prefix lengths, a primary key is rebuilt in one statement, and integer display widths no longer force a column rebuild on MySQL 8 (#1395). Mirrors upstream Cacti #8115 and #8125.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
+- Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). The 1.2.38 upgrade now creates `poller_output_boost_local_data_ids` when it is missing, since no earlier upgrade did. Mirrors the installer part of upstream Cacti #7625.
 
 - Keep responsive resize measurements local so resizing cannot overwrite unrelated window properties, and remove unused tab measurements while preserving layout and callback ordering.
 - Widen `user_log.user_id`, `user_auth_row_cache.user_id`, `settings_user_group.group_id` and `user_auth_group_perms.group_id` to the account and group ids they hold, in `cacti.sql`, the audit baseline and the 1.2.38 upgrade; a column holding a negative id stops the upgrade for review instead of being clamped to 0 (#927).
