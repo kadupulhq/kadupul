@@ -290,13 +290,13 @@ dynamic_include	./lib/boost.php:1766	        include_once($config['library_path'
 dynamic_include	./lib/boost.php:358	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:490	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:856	    include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/data_query.php:2150	    include_once($config['library_path'] . '/sort.php');
-dynamic_include	./lib/data_query.php:2600	    include_once($config['library_path'] . '/variables.php');
-dynamic_include	./lib/data_query.php:661	    include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/data_query.php:2175	    include_once($config['library_path'] . '/sort.php');
+dynamic_include	./lib/data_query.php:2625	    include_once($config['library_path'] . '/variables.php');
+dynamic_include	./lib/data_query.php:686	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/data_query.php:85	    include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/data_query.php:86	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/data_query.php:87	    include_once($config['library_path'] . '/utility.php');
-dynamic_include	./lib/data_query.php:918	    include_once($config['library_path'] . '/snmp.php');
+dynamic_include	./lib/data_query.php:943	    include_once($config['library_path'] . '/snmp.php');
 dynamic_include	./lib/database.php:289	        include($config['base_path'] . '/include/config.php');
 dynamic_include	./lib/dsstats.php:1006	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/dsstats.php:1050	        include_once($config['library_path'] . '/poller.php');
@@ -329,8 +329,8 @@ dynamic_include	./lib/plugins.php:469	    include_once($config['library_path'] .
 dynamic_include	./lib/plugins.php:577	    include_once($config['library_path'] . '/database.php');
 dynamic_include	./lib/plugins.php:656	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:766	            include_once($plugin_setup);
-dynamic_include	./lib/plugins.php:818	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:81	                        include_once($full_path);
+dynamic_include	./lib/plugins.php:818	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:896	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/plugins.php:924	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/poller.php:334	    include_once($config['library_path'] . '/data_query.php');
@@ -376,8 +376,8 @@ dynamic_include	./lib/utility.php:177	    include_once($config['library_path'] .
 dynamic_include	./lib/utility.php:34	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:775	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:75	                include_once($file);
-dynamic_include	./poller.php:1163	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1342	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1171	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1350	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:19	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:20	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:21	require_once($config['base_path'] . '/lib/rrd.php');
@@ -552,6 +552,10 @@ fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:70	         
 fs_write	./src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php:276	            $this->filesystem->dumpFile($path, $process->getOutput());
 fs_write	./src/Platform/Infrastructure/Persistence/DbalSystemDiagnostics.php:142	        $handle = @fopen($this->projectDir . '/CHANGELOG.md', 'rb');
 fs_write	./src/Platform/Infrastructure/Profiling/RequestProfileLog.php:52	        file_put_contents($this->path, $line . "\n", FILE_APPEND | LOCK_EX);
+fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:176	            $handle = @fopen($path, 're');
+fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:181	                $handle = @fopen($path, 'xe');
+fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:184	                    $handle = @fopen($path, 're');
+fs_write	./src/Platform/Infrastructure/Symfony/CacheDirectoryLock.php:229	        $handle = @fopen($marker, 'xe');
 fs_write	./src/Platform/Infrastructure/Symfony/Console/SignPackageCommand.php:126	        if (file_put_contents($temporary, $bytes) !== strlen($bytes) || !chmod($temporary, $mode) || !rename($temporary, $target)) {
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:120	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
