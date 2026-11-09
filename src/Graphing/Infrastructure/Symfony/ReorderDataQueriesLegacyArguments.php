@@ -10,69 +10,47 @@ declare(strict_types=1);
 namespace Kadupul\Graphing\Infrastructure\Symfony;
 
 use Kadupul\Graphing\Application\Port\DataQueryIndexItem;
-use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
-use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
-use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 
-/**
- * reorder_data_query.php accepted a flag with no value or an empty one and
- * rejected it later with its own message, so translate() passes empty values
- * through instead of refusing them as the base map does.
- */
-final class ReorderDataQueriesLegacyArguments extends LegacyArguments
+/** The arguments of reorder_data_query.php; see HostSelectionLegacyArguments. */
+final class ReorderDataQueriesLegacyArguments extends HostSelectionLegacyArguments
 {
     #[\Override]
-    protected function flags(): array
+    protected function selectionFlags(): array
     {
         return [
-            '-id' => ['host-id', true],
             '--id' => ['host-id', true],
-            '--host-id' => ['host-id', true],
             '-qid' => ['qid', true],
             '--qid' => ['qid', true],
-            '--debug' => ['debug', false],
-            '-d' => ['debug', false],
-            ...self::versionAndHelp(),
         ];
     }
 
     #[\Override]
-    public function translate(array $argv): array
+    protected function usage(): string
     {
-        $flags = $this->flags();
-        $input = [];
-        foreach ($argv as $argument) {
-            // strpos() in the original: a leading "=" was no separator.
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            [$option, $takesValue] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
-            $input['--' . $option] = $takesValue ? $value : true;
-        }
-
-        return [$input, null];
+        return 'usage: reorder_data_query.php --host-id=[id|all] --qid=[query_id|all] [--debug|-d]';
     }
 
     #[\Override]
-    public function help(): array
+    protected function description(): string
     {
-        return ['', 'usage: reorder_data_query.php --host-id=[id|all] --qid=[query_id|all] [--debug|-d]', '',
-            'A utility to Re-order Kadupul Data Queries for a Device or system in batch mode.', '',
-            'Required:',
-            "    --host-id=N|all - The Device id to be reindexed, or 'all' for every Device.",
-            "    --qid=query_id|all - The query id to reindex, or 'all' for every query.", '',
-            'Optional:',
-            '    --debug | -d   - Display verbose output during execution', ''];
+        return 'A utility to Re-order Kadupul Data Queries for a Device or system in batch mode.';
     }
 
-    /** @return list<string> */
-    public function noInput(): array
+    #[\Override]
+    protected function required(): array
     {
-        return ['ERROR: You must supply input parameters', ''];
+        return [
+            "    --host-id=N|all - The Device id to be reindexed, or 'all' for every Device.",
+            "    --qid=query_id|all - The query id to reindex, or 'all' for every query.",
+        ];
+    }
+
+    #[\Override]
+    protected function optional(): array
+    {
+        return [
+            '    --debug | -d   - Display verbose output during execution',
+        ];
     }
 
     /** What the script wrote to stderr, and stopped with, for an item it could not index. */

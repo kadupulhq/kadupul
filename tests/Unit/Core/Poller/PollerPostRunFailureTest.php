@@ -18,7 +18,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
     foreach ($all as $name) {
         $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
     }
-    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
+    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$mibs_recorded=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
     $program .= '$rrd_runs_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');
     file_put_contents($file, $program);
@@ -96,7 +96,7 @@ test('a failed drain in an earlier run still fails a multi-run poller process', 
         $program .= 'function ' . $name . '(...$args){}';
     }
     // The first run's drain fails; the second run's drain succeeds.
-    $program .= '$poller_id=1;$mibs=false;$config=array("connection"=>"online");$rrd_runs_failed=false;'
+    $program .= '$poller_id=1;$mibs=false;$mibs_recorded=false;$config=array("connection"=>"online");$rrd_runs_failed=false;'
         . 'foreach (array(true, false) as $rrd_write_failed) {' . $accumulate . '}' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-runs-');
     file_put_contents($file, $program);
