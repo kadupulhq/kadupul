@@ -273,6 +273,19 @@ $i18n_text_log = null;
 $config['rrd_maintenance_trusted_uids'] = array();
 $config['rrd_maintenance_trusted_gids'] = array();
 
+/**
+ * Data Source RRDfiles must resolve inside the RRA directory (<path_cacti>/rra).
+ * An install upgraded from 1.2 that keeps RRDfiles elsewhere can list those
+ * directories here, as absolute paths, to keep them updating. Each listed
+ * directory is checked like the RRA directory: links are followed and a path
+ * that leaves it is refused. List only directories that hold RRDfiles. This
+ * is read from config.php alone and cannot be changed from the web interface.
+ * See docs/rrd-path-containment.md.
+ *
+ * Example: $config['rrd_additional_paths'] = array('/data/rrd');
+ */
+//$config['rrd_additional_paths'] = array();
+
 // Timeout for acknowledged commands, POSIX one-shot I/O and proxy replies.
 // Default: 60 seconds. Accepted range: 1 through 3600 seconds. A timed-out
 // acknowledged pipe is invalidated and its queued samples are retained.

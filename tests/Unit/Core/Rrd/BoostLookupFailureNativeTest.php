@@ -22,7 +22,7 @@ function boost_lookup_probe($coverage, string $probe): array
     $script .= 'require ' . var_export($root . '/lib/boost.php', true) . ';';
     // The writer refuses an RRD path outside rra_path, so the real check runs here.
     $script .= 'require ' . var_export($root . '/tests/Helpers/PhpSource.php', true) . ';';
-    $script .= 'foreach (array("rrd_check_path", "rrd_path_is_contained", "rrd_resolve_missing_path") as $function) { eval(test_php_function_source(file_get_contents(' . var_export($root . '/lib/rrd.php', true) . '), $function)); }';
+    $script .= 'foreach (array("rrd_check_path", "rrd_path_is_contained", "rrd_resolve_missing_path", "rrd_additional_roots", "rrd_path_in_additional_root") as $function) { eval(test_php_function_source(file_get_contents(' . var_export($root . '/lib/rrd.php', true) . '), $function)); }';
     $script .= <<<'STUBS'
 $config = array('library_path' => __DIR__, 'rra_path' => __DIR__);
 $writes = array();
