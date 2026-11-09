@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 02:00-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3615,28 +3615,6 @@ msgstr "Vertikālā etiķete iegūtajiem grafikiem."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "Vertikālā etiķete"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "Saistītie grafika vienumi"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "Grafika elementu ievades [rediģēt grafiku: %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "Elements #%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "Nav vienumu"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10840,6 +10818,10 @@ msgstr "Elements # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "Elementa krāsa"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "Nav vienumu"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

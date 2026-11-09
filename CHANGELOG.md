@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Move the graph item input editor (`graph_templates_inputs.php`) to Symfony and Twig. Saves and removals are audited transactions with revision checks, every item must belong to the edited template, removal is a confirmed POST, and the old URL forwards to the new routes.
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 

@@ -33,7 +33,6 @@ data_queries.php	4	6
 data_sources.php	4	6
 data_templates.php	3	7
 graph_templates.php	3	7
-graph_templates_inputs.php	1	4
 graph_templates_items.php	3	5
 graph_view.php	1	3
 graphs.php	5	10

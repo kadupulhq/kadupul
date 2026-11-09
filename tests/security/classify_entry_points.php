@@ -2875,7 +2875,18 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Graphing\\Application\\Port\\DataSourceProfileAccess',
         'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfileAccess',
         'sources' => [
-            'src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php' => 'c06b81cf3ed7160f8f0fc2aa3c10fca2d4d658b9ca15f819ef7d5a93dc85402c',
+            'src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php' => '72b0cd8c0bd0c85e15c436fa7307065b81ad034e6f0c4f919f94589b62e3d0ca',
+            'src/Graphing/Infrastructure/Persistence/DbalRealmPolicy.php' => 'e05fcd76e016f1f0a51c4859d5a9af3a8c9a8152224d337d44a70725558517ea',
+        ],
+    ],
+    '/graphing/graph-templates' => [
+        'label' => 'graph item input',
+        'realm' => 10,
+        'contract' => 'Kadupul\\Graphing\\Application\\Port\\GraphTemplateInputAccess',
+        'adapter' => 'Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalGraphTemplateInputAccess',
+        'sources' => [
+            'src/Graphing/Infrastructure/Persistence/DbalGraphTemplateInputAccess.php' => '72f333ce886a26b2152beacb405393258cdd70942417bc498b7c7ec2ed7f3a12',
+            'src/Graphing/Infrastructure/Persistence/DbalRealmPolicy.php' => 'e05fcd76e016f1f0a51c4859d5a9af3a8c9a8152224d337d44a70725558517ea',
         ],
     ],
     '/graph-definitions/cdefs' => [

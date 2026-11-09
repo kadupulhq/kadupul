@@ -309,7 +309,6 @@ if (defined('GRAPH_INPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/api_graph.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form_template.php');
     $coverageFilter->includeFile($coverageRoot . '/graphs.php');
-    $coverageFilter->includeFile($coverageRoot . '/graph_templates_inputs.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }

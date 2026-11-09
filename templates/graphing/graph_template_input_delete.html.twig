@@ -1,0 +1,12 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends '_item_delete.html.twig' %}
+{% set domain = 'graph_template_input' %}
+{% set heading = t('Delete Graph Item Input', {}, 'graph_template_input') %}
+{% set intro = t("Click 'Continue' to delete the following Graph Item Input.", {}, 'graph_template_input') %}
+{% set cancel_url = template_url %}
+{% block details %}
+    <p>{{ 'Graph Template: %name%'|trans({'%name%': template_name}, 'graph_template_input') }}<br>{{ 'Graph Item Input: %name%'|trans({'%name%': input.name}, 'graph_template_input') }}</p>
+{% endblock %}

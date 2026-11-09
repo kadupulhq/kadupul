@@ -350,7 +350,6 @@ $pages = array(
     )),
     'data_templates-template_edit' => $page('data_templates.php', array('action' => 'template_edit')),
     'graph_templates-template_edit' => $page('graph_templates.php', array('action' => 'template_edit')),
-    'graph_templates_inputs-input_edit' => $page('graph_templates_inputs.php', array('action' => 'input_edit', 'graph_template_id' => '1')),
     'graph_templates_items-item_edit' => $page('graph_templates_items.php', array('action' => 'item_edit', 'graph_template_id' => '1')),
     'graphs-graph_edit' => $page('graphs.php', array('action' => 'graph_edit'), array(
         array('sql' => 'FROM graph_templates AS gt WHERE id NOT IN', 'rows' => array(array('id' => '3', 'name' => 'Interface - Traffic <bits>'), array('id' => '8', 'name' => 'Unix - Load Average'))),

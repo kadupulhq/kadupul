@@ -2388,11 +2388,6 @@ parameters:
 			count: 1
 			path: src/Graphing/Infrastructure/Legacy/PaletteSql.php
 
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 2
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php
 
 		-
 			message: '#^Call to function in_array\(\) with arguments 20\|30\|40\|60\|120\|600\|1200\|1800\|2400\|3600\|7200\|14400\|28800\|57600\|86400\|172800, array\{20, 30, 40, 45, 60, 90, 120, 300, \.\.\.\} and true will always evaluate to true\.$#'
