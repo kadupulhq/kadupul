@@ -424,7 +424,7 @@ def main():
         'src/Inventory/Domain/NewDevice.php',
         'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
-        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'src/Platform/Infrastructure/Symfony/LocaleSubscriber.php',
         'script_server.php',
         'cli/analyze_database.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
@@ -656,7 +656,7 @@ def main():
         'missing-console-chrome-default-check': 'Incomplete Symfony integration',
         'missing-console-chrome-nonce-check': 'Incomplete Symfony integration',
         'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
-        'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/LocaleSubscriber.php',
         'missing-site-creation-check': 'Incomplete Symfony integration',
         'site-create-test-hash': 'Integration test source differs',
         'site-lifecycle-test-hash': 'Integration test source differs',
@@ -1018,7 +1018,7 @@ def main():
                 editor = data['files'][prefix + 'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php']
                 editor['lines'] = {line: -1 for line in editor['lines']}
             elif case == 'unmeasured-locale':
-                locale = data['files'][prefix + 'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php']
+                locale = data['files'][prefix + 'src/Platform/Infrastructure/Symfony/LocaleSubscriber.php']
                 locale['lines'] = {line: -1 for line in locale['lines']}
             elif case == 'path-traversal':
                 data['files'][prefix + 'src/../bin/legacy-device-edit.php'] = data['files'].pop(required[0])

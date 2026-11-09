@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 07:15-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11425,10 +11425,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Обнаружено новое сортировочное поле: \"%s\" Старое сортировочное поле \"%s\"."
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Перепривязка графиков к их новым индексам"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Дублировать профиль источника данных"
 
@@ -11526,11 +11522,6 @@ msgstr "Исправление неправильного поля 'Метод' 
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Найдено%s таблиц для преобразования"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Найдено измененные идентификаторы потерянных локальных данных%s и%s для повторного сопоставления."
 
 #: lib/data_query.php
 #, php-format
@@ -11650,8 +11641,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Подтверждено новое поле сортировки.  Сортировать Поле будет обновлено."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Отсутствие изменений индекса Обнаружено, пропускает повторный индекс и повторное заполнение кэша поллеровского типа"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
