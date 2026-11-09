@@ -1110,12 +1110,50 @@ def verify_installer_authentication_pins():
     return failures, count
 
 
+def verify_asset_authentication_pins():
+    project = Path(__file__).resolve().parents[2]
+    block = re.search(r'const ASSET_AUTHENTICATION_SOURCES = \[(.*?)\n\];', inventory.CLASSIFIER.read_text(), re.S)
+    if block is None:
+        return ['asset authentication source pins are missing'], 1
+    paths = re.findall(r"'([^']+)' => '[a-f0-9]{64}'", block[1])
+    if len(paths) < 10:
+        return ['asset authentication handoff is incomplete'], 1
+    failures = []
+    count = 0
+    with tempfile.TemporaryDirectory(prefix='asset-authentication-pins-') as directory:
+        root = tree(directory)
+        for path in paths:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(project / path, root / path)
+        rows = run(root, [])
+        count += 1
+        if rows.get('app.php/assets', ('missing', ''))[0] != 'symfony:asset_register':
+            failures.append('reviewed asset handoff was not admitted: ' + repr(rows))
+        for path in paths:
+            original = (root / path).read_bytes()
+            (root / path).write_bytes(original + b'\n// unreviewed asset authorization change\n')
+            rows = run(root, [])
+            count += 1
+            if rows.get('app.php/assets', ('missing', ''))[0] != 'unknown':
+                failures.append('changed asset enforcing source retained admission: ' + path)
+            (root / path).write_bytes(original)
+        shutil.copyfile(root / 'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php', root / 'src/ZAssetController.php')
+        rows = run(root, [])
+        count += 1
+        if rows.get('app.php/assets', ('missing', ''))[0] != 'unknown':
+            failures.append('counterfeit asset controller inherited admission')
+    return failures, count
+
+
 def main():
     failures = verify_inventory_pipeline()
     count = 4
     installer_failures, installer_count = verify_installer_authentication_pins()
     failures.extend(installer_failures)
     count += installer_count
+    asset_failures, asset_count = verify_asset_authentication_pins()
+    failures.extend(asset_failures)
+    count += asset_count
     # Real reviewed Data Input routes must pin private/application callees too.
     # Mutate owned copies of the actual source; unchanged action/adapter bytes
     # must not leave the realm annotation identical after removing enforcement.

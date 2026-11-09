@@ -77,7 +77,7 @@ function confirm(array|false $tables): array
 }
 
 test('cacti.sql declares the core tables the check expects', function () {
-    expect(core_tables())->toHaveCount(117)
+    expect(core_tables())->toHaveCount(121)
         ->and(Installer::coreSchemaTables("CREATE TABLE `Host` (\nCREATE TABLE IF NOT EXISTS poller (\n-- CREATE TABLE skipped (\n"))->toBe(['host', 'poller']);
 });
 
