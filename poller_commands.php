@@ -283,6 +283,8 @@ if ($host_id === false) {
                     break;
                 default:
                     cacti_log('ERROR: Unknown poller command issued', true, 'PCOMMAND');
+                    // No retry can succeed, so drop it rather than requeue it forever.
+                    $acknowledge = true;
             }
             if ($acknowledge && $command['last_updated'] < $ack_before) {
                 try {
