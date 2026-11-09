@@ -103,4 +103,11 @@ if (isset($fixture['apply'])) {
     $result['apply'] = apply_locale($fixture['apply']);
     $result['apply_globals'] = [$cacti_locale, $cacti_country];
 }
-echo json_encode($result, JSON_THROW_ON_ERROR);
+// The test reads this JSON from stdout; this child process is never a web response.
+$payload = json_encode($result, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+for ($offset = 0; $offset < strlen($payload); $offset += $written) {
+    $written = fwrite(STDOUT, substr($payload, $offset));
+    if ($written === false || $written === 0) {
+        throw new RuntimeException('Locale fixture output was not written.');
+    }
+}
