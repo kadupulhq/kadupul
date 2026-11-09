@@ -92,6 +92,8 @@ SQL,
         }
         $search = match ($screen) {
             ListScreen::DiscoveredDevices => ['name', 'ip', 'sys_name', 'sys_description', 'sys_location', 'sys_contact'],
+            // automation_graph_rules.php also matches the graph type and data query names.
+            ListScreen::GraphRules => ['name', 'graph_type_name', 'snmp_query_name'],
             default => ['name'],
         };
         $where = implode(' OR ', array_map(static fn(string $column): string => 'listing.' . $column . ' LIKE ?', $search));
