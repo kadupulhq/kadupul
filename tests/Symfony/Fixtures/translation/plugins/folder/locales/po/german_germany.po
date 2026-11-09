@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Test fixture: a plugin whose directory is named "folder", the word that
+# lib/rrd.php passes as the last argument of __(). Its German catalog uses the
+# legacy file-name spelling; compile it with
+#   msgfmt --check-format german_germany.po -o ../LC_MESSAGES/german_germany.mo
+msgid ""
+msgstr ""
+"Project-Id-Version: folder\n"
+"Language: de-DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+msgid "Folder"
+msgstr "Ordner"
