@@ -50,9 +50,9 @@ switch (get_request_var('action')) {
         bottom_footer();
         break;
     case 'qedit':
-        automation_change_query_type();
+        // Rule settings moved to Symfony; the old Data Query and Graph Type change links must not write.
+        graph_rule_settings_expired();
 
-        header('Location: automation_graph_rules.php?header=false&action=edit&name=' . get_request_var('name') . '&id=' . get_filter_request_var('id') . '&snmp_query_id=' . get_request_var('snmp_query_id'));
         break;
     case 'remove':
         automation_graph_rules_remove();
@@ -60,6 +60,12 @@ switch (get_request_var('action')) {
         header('Location: automation_graph_rules.php');
         break;
     case 'edit':
+        if (isempty_request_var('id')) {
+            // Symfony creates rules. Relative targets keep subdirectory installations working.
+            header('Location: app.php/automation/graph-rules/new', true, 302);
+            exit;
+        }
+
         top_header();
         automation_graph_rules_edit();
         bottom_footer();
@@ -78,26 +84,7 @@ switch (get_request_var('action')) {
 function save()
 {
     if (isset_request_var('save_component_automation_graph_rule')) {
-        /* ================= input validation ================= */
-        get_filter_request_var('id');
-        /* ==================================================== */
-
-        $save['id'] = get_nfilter_request_var('id');
-        $save['name'] = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
-        $save['snmp_query_id'] = form_input_validate(get_nfilter_request_var('snmp_query_id'), 'snmp_query_id', '^[0-9]+$', false, 3);
-        $save['graph_type_id'] = (isset_request_var('graph_type_id')) ? form_input_validate(get_nfilter_request_var('graph_type_id'), 'graph_type_id', '^[0-9]+$', false, 3) : 0;
-        $save['enabled'] = (isset_request_var('enabled') ? 'on' : '');
-        if (!is_error_message()) {
-            $rule_id = sql_save($save, 'automation_graph_rules');
-
-            if ($rule_id) {
-                raise_message(1);
-            } else {
-                raise_message(2);
-            }
-        }
-
-        header('Location: automation_graph_rules.php?header=false&action=edit&id=' . (empty($rule_id) ? get_nfilter_request_var('id') : $rule_id));
+        graph_rule_settings_expired();
     } elseif (isset_request_var('save_component_automation_graph_rule_item')) {
         /* ================= input validation ================= */
         get_filter_request_var('id');
@@ -211,6 +198,19 @@ function save()
         raise_message(2);
         header('Location: automation_graph_rules.php?header=false');
     }
+}
+
+/**
+ * Answer an old rule settings form or Data Query change link, which Symfony
+ * now handles, without writing.
+ */
+function graph_rule_settings_expired()
+{
+    http_response_code(409);
+    header('Cache-Control: private, no-store');
+    print html_escape(__('This Graph Rule form has expired. Open the rule again and use its current form.'));
+
+    exit;
 }
 
 /* ------------------------
@@ -490,64 +490,16 @@ function automation_graph_rules_remove()
     }
 }
 
-function automation_change_query_type()
-{
-    $id = get_filter_request_var('id');
-
-    if (isset_request_var('snmp_query_id') && $id > 0) {
-        $snmp_query_id = get_filter_request_var('snmp_query_id');
-        $name = get_nfilter_request_var('name');
-
-        db_execute_prepared(
-            'UPDATE automation_graph_rules
-			SET snmp_query_id = ?, name = ?
-			WHERE id = ?',
-            array($snmp_query_id, $name, $id)
-        );
-
-        $graph_type = db_fetch_cell_prepared('SELECT id
-			FROM snmp_query_graph
-			WHERE snmp_query_id = ?
-			ORDER BY name
-			LIMIT 1', array($snmp_query_id));
-
-        db_execute_prepared(
-            'UPDATE automation_graph_rules
-			SET graph_type_id = ?
-			WHERE id = ?',
-            array($graph_type, $id)
-        );
-    } elseif (isset_request_var('graph_type_id') && $id > 0) {
-        $snmp_query_id = get_filter_request_var('graph_type_id');
-        $name = get_nfilter_request_var('name');
-
-        db_execute_prepared(
-            'UPDATE automation_graph_rules
-			SET graph_type_id = ?, name = ?
-			WHERE id = ?',
-            array($snmp_query_id, $name, $id)
-        );
-    }
-}
-
 function automation_graph_rules_edit()
 {
-    global $fields_automation_graph_rules_edit1, $fields_automation_graph_rules_edit2, $fields_automation_graph_rules_edit3;
+    global $config;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
-    get_filter_request_var('snmp_query_id');
-    get_filter_request_var('graph_type_id');
-
     get_filter_request_var('show_graphs');
     get_filter_request_var('show_hosts');
     get_filter_request_var('show_rule');
     /* ==================================================== */
-
-    /* clean up rule name */
-    if (isset_request_var('name')) {
-        set_request_var('name', sanitize_search_string(get_request_var('name')));
-    }
 
     /* handle show_rule mode */
     if (isset_request_var('show_rule')) {
@@ -582,23 +534,16 @@ function automation_graph_rules_edit()
     /*
      * display the rule -------------------------------------------------------------------------------------
      */
-    $rule = array();
-    if (!isempty_request_var('id')) {
-        $rule = db_fetch_row_prepared('SELECT * FROM automation_graph_rules where id = ?', array(get_request_var('id')));
+    $rule = db_fetch_row_prepared('SELECT * FROM automation_graph_rules WHERE id = ?', array(get_request_var('id')));
 
-        if (!isempty_request_var('graph_type_id')) {
-            $rule['graph_type_id'] = get_request_var('graph_type_id'); # set query_type for display
-        }
+    if (!cacti_sizeof($rule)) {
+        raise_message('rule_not_found', __('Rule not found.'), MESSAGE_LEVEL_ERROR);
+        cacti_header('automation_graph_rules.php');
 
-        # setup header
-        $header_label = __esc('Rule Selection [edit: %s]', $rule['name']);
-    } else {
-        $rule = array(
-            'name' => get_request_var('name'),
-            'snmp_query_id' => get_request_var('snmp_query_id'),
-        );
-        $header_label = __('Rule Selection [new]');
+        exit;
     }
+
+    $header_label = __esc('Rule Selection [edit: %s]', $rule['name']);
 
     /*
      * show rule? ------------------------------------------------------------------------------------------
@@ -646,57 +591,40 @@ function automation_graph_rules_edit()
     }
 
     if ($_SESSION['automation_graph_rules_show_rule']) {
-        form_start('automation_graph_rules.php', 'chk');
-
+        // The settings are edited in Symfony; this page keeps the criteria and previews.
         html_start_box($header_label, '100%', true, '3', 'center', '');
-
-        if (!isempty_request_var('id')) {
-            /* display whole rule */
-            $form_array = $fields_automation_graph_rules_edit1 + $fields_automation_graph_rules_edit2 + $fields_automation_graph_rules_edit3;
-        } else {
-            /* display first part of rule only and request user to proceed */
-            $form_array = $fields_automation_graph_rules_edit1;
+        $query = db_fetch_cell_prepared('SELECT name FROM snmp_query WHERE id = ?', array($rule['snmp_query_id']));
+        $graph_type = db_fetch_cell_prepared('SELECT name FROM snmp_query_graph WHERE id = ?', array($rule['graph_type_id']));
+        foreach (array(
+            __('Data Query') => ($query == '' ? __('None') : $query),
+            __('Graph Type') => ($graph_type == '' ? __('None') : $graph_type),
+            __('Enabled') => ($rule['enabled'] == 'on' ? __('Yes') : __('No')),
+        ) as $label => $value) {
+            form_alternate_row();
+            print '<td>' . html_escape($label) . '</td><td>' . html_escape($value) . '</td></tr>';
         }
-
-        if (isset_request_var('name')) {
-            $rule['name'] = get_request_var('name');
-        }
-
-        draw_edit_form(array(
-            'config' => array('no_form_tag' => true),
-            'fields' => inject_form_variables($form_array, (isset($rule) ? $rule : array()))
-        ));
-
+        form_alternate_row();
+        // A Symfony page is a full navigation, not a partial load.
+        print "<td colspan='2'><a class='linkEditMain' href='" . html_escape($config['url_path'] . 'app.php/automation/graph-rules/' . $rule['id'] . '/edit') . "'>" . __esc('Edit Rule Settings') . '</a></td></tr>';
         html_end_box(true, true);
 
-        form_hidden_box('id', (isset($rule['id']) ? $rule['id'] : '0'), '');
-        form_hidden_box('item_id', (isset($rule['item_id']) ? $rule['item_id'] : '0'), '');
-        form_hidden_box('save_component_automation_graph_rule', '1', '');
+        # display graph rules for host match
+        display_match_rule_items(
+            __('Device Selection Criteria'),
+            $rule['id'],
+            AUTOMATION_RULE_TYPE_GRAPH_MATCH,
+            'automation_graph_rules.php'
+        );
 
-        /*
-         * display the rule items -------------------------------------------------------------------------------
-         */
-        if (!empty($rule['id'])) {
-            # display graph rules for host match
-            display_match_rule_items(
-                __('Device Selection Criteria'),
-                $rule['id'],
-                AUTOMATION_RULE_TYPE_GRAPH_MATCH,
-                'automation_graph_rules.php'
-            );
+        # fetch graph action rules
+        display_graph_rule_items(
+            __('Graph Creation Criteria'),
+            $rule['id'],
+            AUTOMATION_RULE_TYPE_GRAPH_ACTION,
+            'automation_graph_rules.php'
+        );
 
-            # fetch graph action rules
-            display_graph_rule_items(
-                __('Graph Creation Criteria'),
-                $rule['id'],
-                AUTOMATION_RULE_TYPE_GRAPH_ACTION,
-                'automation_graph_rules.php'
-            );
-        }
-
-        form_save_button('automation_graph_rules.php', 'return');
-
-        print '<br>';
+        print "<table style='width:100%;text-align:center;'><tr><td class='saveRow'><input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='automation_graph_rules.php' value='" . __esc('Return') . "'></td></tr></table><br>";
     }
 
     if (!empty($rule['id'])) {
@@ -715,27 +643,6 @@ function automation_graph_rules_edit()
         }
     }
 
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	function applySNMPQueryIdChange() {
-		strURL  = 'automation_graph_rules.php?action=qedit';
-		strURL += '&id=' + $('#id').val();
-		strURL += '&name=' + $('#name').val();
-		strURL += '&snmp_query_id=' + $('#snmp_query_id').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-
-	function applySNMPQueryTypeChange() {
-		strURL  = 'automation_graph_rules.php?action=qedit'
-		strURL += '&id=' + $('#id').val();
-		strURL += '&name=' + $('#name').val();
-		strURL += '&graph_type_id=' + $('#graph_type_id').val();
-		strURL += '&header=false';
-		loadPageNoHeader(strURL);
-	}
-	</script>
-	<?php
 }
 
 function automation_graph_rules()
@@ -795,7 +702,7 @@ function automation_graph_rules()
         }
     }
 
-    html_start_box(__('Graph Rules'), '100%', '', '3', 'center', 'automation_graph_rules.php?action=edit');
+    html_start_box(__('Graph Rules'), '100%', '', '3', 'center', 'app.php/automation/graph-rules/new');
 
     ?>
 	<tr class='even'>

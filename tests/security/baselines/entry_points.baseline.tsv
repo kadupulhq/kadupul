@@ -11,6 +11,8 @@ app.php/administration/user-groups	symfony:admin_user_groups	methods=GET|HEAD; C
 app.php/administration/users	symfony:admin_users	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/graph-rules/new	symfony:automation_graph_rule_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/graph-rules/{id}/edit	symfony:automation_graph_rule_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates	symfony:automation_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
