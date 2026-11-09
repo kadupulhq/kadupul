@@ -23,6 +23,7 @@ final class BoostSchemaUpgradeTest extends TestCase
 {
     private const string QUEUE = 'kadupul_messenger_messages';
     private const string STATUS = 'poller_output_boost_processes';
+    private const string WORK_LIST = 'poller_output_boost_local_data_ids';
 
     private ?PDO $db = null;
 
@@ -205,6 +206,34 @@ final class BoostSchemaUpgradeTest extends TestCase
         self::assertSame('1', $this->scalar('SELECT COUNT(*) FROM poller_output_boost_processes WHERE run_id = ? AND status < 0', $earlier));
     }
 
+    public function testUpgradeCreatesTheBoostWorkListOnlyWhenItIsMissing(): void
+    {
+        // #1088: no earlier upgrade created this cacti.sql table, and the installer now requires it.
+        $db = $this->database();
+        $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+        self::assertNotFalse($db->exec(self::freshInstall($sql, self::WORK_LIST)));
+        $fresh = $this->createStatement(self::WORK_LIST);
+        self::assertNotFalse($db->exec('DROP TABLE ' . self::WORK_LIST));
+
+        upgrade_to_1_2_38();
+
+        self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+        self::assertSame($fresh, $this->createStatement(self::WORK_LIST));
+
+        // A table Boost already created, in its own shape and with rows, is kept as it is.
+        self::assertNotFalse($db->exec('DROP TABLE ' . self::WORK_LIST));
+        self::assertNotFalse($db->exec('CREATE TABLE ' . self::WORK_LIST . ' (local_data_id int unsigned default 0, process_handler int unsigned default 0, PRIMARY KEY (local_data_id), INDEX process_handler(process_handler)) ENGINE=InnoDB'));
+        self::assertNotFalse($db->exec('INSERT INTO ' . self::WORK_LIST . ' (local_data_id, process_handler) VALUES (7, 1)'));
+        $existing = $this->createStatement(self::WORK_LIST);
+        $GLOBALS['forward_schema_status'] = [];
+
+        upgrade_to_1_2_38();
+
+        self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+        self::assertSame($existing, $this->createStatement(self::WORK_LIST));
+        self::assertSame('1', (string) $db->query('SELECT COUNT(*) FROM ' . self::WORK_LIST)->fetchColumn());
+    }
+
     public function testFreshInstallAndUpgradeCreateTheSameTables(): void
     {
         $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
@@ -225,6 +254,11 @@ final class BoostSchemaUpgradeTest extends TestCase
         self::assertCount(7, self::columnDefinitions($statements[0]));
         self::assertSame(self::columnDefinitions($statements[0]), self::columnDefinitions($definition));
         self::assertSame(self::indexOf($statements[0]), self::indexOf($definition), 'the index name is derived from the table name and must match the transport');
+    }
+
+    private function createStatement(string $table): string
+    {
+        return (string) $this->database()->query('SHOW CREATE TABLE `' . $table . '`')->fetch(PDO::FETCH_NUM)[1];
     }
 
     private function database(): PDO
@@ -276,7 +310,7 @@ final class BoostSchemaUpgradeTest extends TestCase
 
     private function drop(): void
     {
-        foreach ([self::STATUS, self::QUEUE] as $table) {
+        foreach ([self::STATUS, self::QUEUE, self::WORK_LIST] as $table) {
             $this->db?->exec('DROP TABLE IF EXISTS ' . $table);
         }
     }

@@ -118,7 +118,8 @@ if ($database === false || $plugins === false) {
 foreach (array(
     'db_has_control_chars', 'db_is_safe_identifier', 'db_format_qualified_identifier', 'db_is_safe_column_type',
     'db_is_safe_table_option', 'db_is_safe_index_column', 'db_is_safe_column_definition',
-    'db_build_column_definition_sql', 'db_is_safe_table_definition',
+    'db_build_column_definition_sql', 'db_is_safe_table_definition', 'db_index_columns_to_array',
+    'db_index_columns_equal', 'db_column_type_normalize',
 ) as $helper) {
     // Loaded when present so a run against the unhardened library reaches the
     // assertions below instead of stopping here.
@@ -376,7 +377,7 @@ test('db_update_table rebuilds a changed index with valid SQL', function () {
         'table_exists' => true,
         'cell'         => '1',
         'row'          => array('ENGINE' => 'InnoDB', 'TABLE_COMMENT' => '', 'Type' => 'int', 'Null' => 'NO', 'Extra' => ''),
-        'indexes'      => array(array('Key_name' => 'idx', 'Seq_in_index' => 1, 'Column_name' => 'id')),
+        'indexes'      => array(array('Key_name' => 'idx', 'Seq_in_index' => 1, 'Column_name' => 'id', 'Non_unique' => 1)),
     ));
 
     expect(db_update_table('plugin_config', array(
@@ -386,10 +387,141 @@ test('db_update_table rebuilds a changed index with valid SQL', function () {
     )))->toBeTrue();
 
     expect(ddl_state()['executed'])->toBe(array(
-        'ALTER TABLE `plugin_config` DROP INDEX `idx`',
-        'ALTER TABLE `plugin_config` ADD INDEX `idx` (`id`,`name`(10))',
+        'ALTER TABLE `plugin_config` DROP INDEX `idx`, ADD INDEX `idx` (`id`,`name`(10))',
     ));
 });
+
+test('db_update_table reconciles unique keys and accepts string key columns', function (array $indexes, array $definition, array $expected) {
+    ddl_reset(array(
+        'table_exists' => true,
+        'cell'         => '1',
+        'row'          => array('ENGINE' => 'InnoDB', 'TABLE_COMMENT' => '', 'Type' => 'int', 'Null' => 'NO', 'Extra' => ''),
+        // SHOW INDEX reports a prefix length in Sub_part and NULL otherwise.
+        'indexes'      => array_map(static fn(array $index): array => array('Key_name' => $index[0], 'Seq_in_index' => $index[1], 'Column_name' => $index[2], 'Non_unique' => $index[3], 'Sub_part' => $index[4] ?? null), $indexes),
+    ));
+
+    expect(db_update_table('plugin_config', array('type' => 'InnoDB', 'columns' => array(array('name' => 'id', 'type' => 'int', 'NULL' => false))) + $definition))->toBeTrue()
+        ->and(ddl_state()['executed'])->toBe($expected);
+})->with(array(
+    // #1065: a unique key declared next to regular keys was dropped as undeclared.
+    'declared unique key is kept' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('u_name', 1, 'name', 0)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('id'))), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    'missing unique key is added as unique' => array(
+        array(array('PRIMARY', 1, 'id', 0)),
+        array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name', 'id')))),
+        array('ALTER TABLE `plugin_config` ADD UNIQUE INDEX `u_name` (`name`,`id`)'),
+    ),
+    'unique key that lost its uniqueness is rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 1)),
+        array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `u_name`, ADD UNIQUE INDEX `u_name` (`name`)'),
+    ),
+    'undeclared index is still removed when keys are declared' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('u_name', 1, 'name', 0), array('stale', 1, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('id'))), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `stale`'),
+    ),
+    'undeclared index is kept when only unique keys are declared' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 0), array('other', 1, 'name', 1)),
+        array('primary' => array('id'), 'unique_keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    // cli/sqltable_to_php.php lists every secondary index under keys, unique or not.
+    'unique index declared under keys keeps its uniqueness' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('u_name', 1, 'name', 0)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'u_name', 'columns' => array('name')))),
+        array(),
+    ),
+    'empty keys still removes undeclared indexes' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('stale', 1, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array()),
+        array('ALTER TABLE `plugin_config` DROP INDEX `stale`'),
+    ),
+    'compound key given as one string matches' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('idx', 2, 'name', 1)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => 'id`,`name'))),
+        array(),
+    ),
+    // #1060: a primary key given as a string raised a TypeError in array_diff().
+    'string primary key matches' => array(
+        array(array('PRIMARY', 1, 'id', 0)),
+        array('primary' => 'id'),
+        array(),
+    ),
+    'changed string primary key is rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0)),
+        array('primary' => 'id`,`name'),
+        array('ALTER TABLE `plugin_config` DROP PRIMARY KEY, ADD PRIMARY KEY(`id`,`name`)'),
+    ),
+    'reordered primary key is rebuilt' => array(
+        array(array('PRIMARY', 1, 'name', 0), array('PRIMARY', 2, 'id', 0)),
+        array('primary' => array('id', 'name')),
+        array('ALTER TABLE `plugin_config` DROP PRIMARY KEY, ADD PRIMARY KEY(`id`,`name`)'),
+    ),
+    // SHOW INDEX lists a prefix key as the bare column plus Sub_part.
+    'prefix key matches its live index' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'name', 1, '10')),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('name(10)')))),
+        array(),
+    ),
+    'prefix key given with spacing matches its live index' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'id', 1), array('idx', 2, 'name', 1, 10)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => 'id`,`name` (10)'))),
+        array(),
+    ),
+    'changed prefix length is rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'name', 1, '20')),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('name(10)')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `idx`, ADD INDEX `idx` (`name`(10))'),
+    ),
+    'full column declared over a live prefix is rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'name', 1, '10')),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('name')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `idx`, ADD INDEX `idx` (`name`)'),
+    ),
+    'reordered index columns are rebuilt' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'name', 1), array('idx', 2, 'id', 1)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('id', 'name')))),
+        array('ALTER TABLE `plugin_config` DROP INDEX `idx`, ADD INDEX `idx` (`id`,`name`)'),
+    ),
+    'rows listed out of order still match' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 2, 'name', 1), array('idx', 1, 'id', 1)),
+        array('primary' => array('id'), 'keys' => array(array('name' => 'idx', 'columns' => array('id', 'name')))),
+        array(),
+    ),
+    'column name case does not force a rebuild' => array(
+        array(array('PRIMARY', 1, 'id', 0), array('idx', 1, 'Name', 1)),
+        array('primary' => array('ID'), 'keys' => array(array('name' => 'idx', 'columns' => array('name')))),
+        array(),
+    ),
+));
+
+test('db_update_table compares integer columns without their display width', function (array $column, string $live_type, bool $changed) {
+    ddl_reset(array(
+        'table_exists' => true,
+        'cell'         => '1',
+        'row'          => array('ENGINE' => 'InnoDB', 'TABLE_COMMENT' => '', 'Type' => $live_type, 'Null' => 'NO', 'Extra' => ''),
+    ));
+
+    expect(db_update_table('plugin_config', array('type' => 'InnoDB', 'columns' => array(array('name' => 'id', 'NULL' => false) + $column))))->toBeTrue()
+        ->and(ddl_state()['executed'] !== array())->toBe($changed);
+})->with(array(
+    // MySQL 8.0.19 and later drop the width that MariaDB and MySQL 5.7 report.
+    'int(11) on MySQL 8'              => array(array('type' => 'int(11)'), 'int', false),
+    'int(11) on MariaDB'              => array(array('type' => 'int(11)'), 'int(11)', false),
+    'unsigned flag on MySQL 8'        => array(array('type' => 'int(10)', 'unsigned' => true), 'int unsigned', false),
+    'unsigned in the type'            => array(array('type' => 'BIGINT UNSIGNED'), 'bigint(20) unsigned', false),
+    'tinyint(1) on MySQL 8'           => array(array('type' => 'tinyint(3)'), 'tinyint(1)', false),
+    'integer alias'                   => array(array('type' => 'integer'), 'int', false),
+    'different integer type'          => array(array('type' => 'int(11)'), 'bigint', true),
+    'lost unsigned'                   => array(array('type' => 'int(11)', 'unsigned' => true), 'int', true),
+    'zerofill keeps its width'        => array(array('type' => 'int(5) zerofill'), 'int(8) zerofill', true),
+    'same zerofill width'             => array(array('type' => 'int(5) zerofill'), 'int(5) zerofill', false),
+    'changed varchar length'          => array(array('type' => 'varchar(64)'), 'varchar(32)', true),
+));
 
 test('plugin DDL wrappers refuse unsafe identifiers and record nothing', function () {
     ddl_reset();
