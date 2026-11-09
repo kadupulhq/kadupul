@@ -147,6 +147,12 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 
 	$old_sort_field = get_best_data_query_index_type($host_id, $snmp_query_id);
 
+	/* without the stored sort field, every Data Source would look re-mapped */
+	if ($old_sort_field === false) {
+		cacti_log('ERROR: Re-Indexing failed because the current sort field for Device[' . $host_id . '] and DQ[' . $snmp_query_id . '] could not be read.  Can not continue with Re-Index.', false, 'REINDEX');
+		return false;
+	}
+
 	/* update the sort cache if there is a sort field */
 	if ($index_is_source == false) {
 		$new_sort_field = update_data_query_sort_cache($host_id, $snmp_query_id);
@@ -415,12 +421,21 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 	} else {
 		query_debug_timer_offset('data_query', __esc('No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population'));
 
+		/* data sources orphaned by this re-index keep the flag (#198) */
+		$sql_orphan_where  = '';
+		$sql_orphan_params = array($snmp_query_id, $host_id);
+
+		if (cacti_sizeof($orphaned_ids)) {
+			$sql_orphan_where  = ' AND id NOT IN (' . implode(', ', array_fill(0, cacti_sizeof($orphaned_ids), '?')) . ')';
+			$sql_orphan_params = array_merge($sql_orphan_params, array_values($orphaned_ids));
+		}
+
 		$existing_orphans = db_fetch_cell_prepared('SELECT COUNT(*)
 			FROM data_local
 			WHERE snmp_query_id = ?
 			AND host_id = ?
-			AND orphan = 1',
-			array($snmp_query_id, $host_id));
+			AND orphan = 1' . $sql_orphan_where,
+			$sql_orphan_params);
 
 		if ($existing_orphans) {
 			$data_template_id = db_fetch_cell_prepared('SELECT data_template_id
@@ -432,8 +447,8 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 			db_execute_prepared('UPDATE data_local
 				SET orphan = 0
 				WHERE snmp_query_id = ?
-				AND host_id = ?',
-				array($snmp_query_id, $host_id));
+				AND host_id = ?' . $sql_orphan_where,
+				$sql_orphan_params);
 
 			if (isset($query_array['index_orphan_removal']) && $query_array['index_orphan_removal'] == 'true') {
 				push_out_host($host_id, 0, $data_template_id);
@@ -2349,11 +2364,18 @@ function update_data_query_sort_cache_by_host($host_id) {
    @returns - a string containing best data query index type. this will be one of the
 	valid input field names as specified in the data query xml file */
 function get_best_data_query_index_type($host_id, $data_query_id) {
-	$index_type = db_fetch_cell_prepared('SELECT sort_field
+	$index_row = db_fetch_row_prepared('SELECT sort_field
 		FROM host_snmp_query
 		WHERE host_id = ?
 		AND snmp_query_id = ?',
 		array($host_id, $data_query_id));
+
+	/* a failed read is not an empty sort field; do not fall back to the XML and store it */
+	if ($index_row === false) {
+		return false;
+	}
+
+	$index_type = $index_row['sort_field'] ?? '';
 
 	if ($index_type == '') {
 		$raw_xml = get_data_query_array($data_query_id);

@@ -649,6 +649,8 @@ function push_out_data_input_method($data_input_id) {
  * @param array/int $local_data_ids - either a scalar (all ids) or an array of data source to act on
  * @param array $poller_items - the new items for poller cache
  * @param int $poller_id - the poller_id of the buffer
+ * @return bool - false when the replacement rows could not be stored and the previous rows were kept,
+ *   on the primary or, for a remote collector, on that collector after the primary was replaced
  */
 function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items, $poller_id = 1) {
 	require_once __DIR__ . '/database_atomic.php';
@@ -736,6 +738,7 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 	if ($poller_id > 1) {
 		$remote = remote_poller_up($poller_id) ? poller_push_to_remote_db_connect($poller_id, true) : false;
 		if ($remote === false || !db_atomic(array('data_local', 'poller_item'), $replace, $remote)) {
+			cacti_log('ERROR: Poller cache replacement on remote collector ' . (int) $poller_id . ' failed or the collector is unreachable; its previous rows were kept. Run a full synchronization once it is available.', false, 'PCACHE');
 			raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 			return false;
 		}

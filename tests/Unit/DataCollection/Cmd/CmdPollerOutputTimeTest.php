@@ -56,7 +56,18 @@ test('failed database delivery never reports a successful flush', function (): v
 	expect(cmdOutputTimeRun(true, false, true))->toBeFalse();
 });
 
-test('each flush checks the shared writer before clearing the batch', function (): void {
+test('each flush checks the shared writer and stops collection with a failing exit status', function (): void {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cmd.php');
-	expect(substr_count($source, 'if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {'))->toBe(3);
+	expect(substr_count($source, 'if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {'))->toBe(3)
+		->and(substr_count($source, '$poller_write_failed = true;'))->toBe(3)
+		->and($source)->toContain('if ($output_count > 0 && !$poller_write_failed) {')
+		->and($source)->toContain('exit($poller_write_failed ? 1 : 0);');
+});
+
+test('cmd.php writes neither output table directly; the spool delivers both copies', function (): void {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cmd.php');
+	// The one INSERT for both tables lives in poller_output_deliver(); see
+	// SubsystemFailureNativeTest for matching times and rollback of both copies.
+	expect($source)->not->toContain('INSERT IGNORE INTO poller_output')
+		->and($source)->not->toContain('SET timestamp');
 });

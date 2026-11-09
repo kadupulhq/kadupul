@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -162,17 +163,20 @@ function api_graph_remove_aggregate_items($local_graph_ids) {
 	}
 
 	foreach($local_graph_ids as $lgid) {
+		/* api_aggregate_disassociate() takes the aggregate's graph id, not its aggregate_graphs row id */
 		$aggregate_graphs = array_rekey(
-			db_fetch_assoc_prepared('SELECT DISTINCT aggregate_graph_id
-				FROM aggregate_graphs_items
-				WHERE local_graph_id = ?',
+			db_fetch_assoc_prepared('SELECT DISTINCT ag.local_graph_id
+				FROM aggregate_graphs_items AS agi
+				INNER JOIN aggregate_graphs AS ag
+				ON ag.id = agi.aggregate_graph_id
+				WHERE agi.local_graph_id = ?',
 				array($lgid)),
-			'aggregate_graph_id', 'aggregate_graph_id'
+			'local_graph_id', 'local_graph_id'
 		);
 
 		if (cacti_sizeof($aggregate_graphs)) {
 			foreach($aggregate_graphs as $ag) {
-				api_aggregate_disassociate($ag, $lgid);
+				api_aggregate_disassociate($ag, array($lgid));
 			}
 		}
 	}

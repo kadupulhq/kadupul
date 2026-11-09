@@ -48,6 +48,7 @@ $sessions   = array();
 $downhosts  = array();
 $host_count = 0;
 $tot_errors = 0;
+$poller_write_failed = false;
 $poller_id  = $config['poller_id'];
 $pmessage   = false;
 $help       = false;
@@ -164,15 +165,25 @@ if (!is_numeric($poller_id) || $poller_id < 1) {
 	exit(-1);
 }
 
-// Drain older samples before collecting newer timestamps for the same RRDs.
+/* Drain older samples before collecting newer timestamps for the same RRDs.
+ * As with a failed write, the run is marked complete so the master does not
+ * wait out its timeout, and the exit status reports the failure; pending
+ * samples stay in the local spool for the next run. */
 try {
 	$output_spool = poller_output_spool((int) $poller_id);
-	if ($output_spool === false || !poller_output_replay($output_spool, $poller_db_cnn_id)) {
+	$output_spool_ready = $output_spool !== false && poller_output_replay($output_spool, $poller_db_cnn_id);
+	if (!$output_spool_ready) {
 		cacti_log('ERROR: Poller output recovery is incomplete; pending samples retained. Check the database and spool directory.', true, 'POLLER');
-		exit(1);
 	}
 } catch (Throwable $error) {
+	$output_spool_ready = false;
 	cacti_log('ERROR: Poller output spool is unavailable; collection was not started.', true, 'POLLER');
+}
+
+if (!$output_spool_ready) {
+	record_cmdphp_started();
+	record_cmdphp_done();
+	db_close();
 	exit(1);
 }
 
@@ -353,8 +364,9 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 					cacti_log("Device[$last_host] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
 					if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {
-						// No completion marker: the master must observe an incomplete run.
-						exit(1);
+						$poller_write_failed = true;
+						$host_id             = $last_host;
+						break;
 					}
 
 					$output_array = array();
@@ -415,8 +427,8 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 				cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
 				if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {
-					// No completion marker: the master must observe an incomplete run.
-					exit(1);
+					$poller_write_failed = true;
+					break;
 				}
 
 				$output_array = array();
@@ -437,13 +449,13 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 	// Record the last hosts polling time
 	$host_end = microtime(true);
 
+	// A failed flush stops collection; do not retry after a failed write.
 	// Flush the items to the output table
-	if ($output_count > 0) {
+	if ($output_count > 0 && !$poller_write_failed) {
 		cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
 		if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {
-			// No completion marker: the master must observe an incomplete run.
-			exit(1);
+			$poller_write_failed = true;
 		}
 	}
 
@@ -544,9 +556,16 @@ record_cmdphp_done();
 // close the database connection
 db_close();
 
-exit(0);
+exit($poller_write_failed ? 1 : 0);
 
-/** Persist the batch before handing it to either output table. */
+/**
+ * Persist the batch before handing it to either output table.
+ *
+ * With Boost redirect the same rows go to poller_output and
+ * poller_output_boost, and Boost matches the copies on their time. Both copies
+ * take the batch time recorded at enqueue through FROM_UNIXTIME(), so a flush
+ * or replay that crosses a second still stamps them identically.
+ */
 function cmd_write_poller_output($output_array, $conn) {
 	global $output_spool;
 
@@ -630,7 +649,8 @@ function open_snmp_session($host_id, &$item) {
 		}
 	}
 
-	return $sessions[$host_id . '_' . $item['snmp_version'] . '_' . $item['snmp_port']];
+	/* a host already marked down has no session */
+	return $sessions[$host_id . '_' . $item['snmp_version'] . '_' . $item['snmp_port']] ?? false;
 }
 
 function snmp_mark_host_down($host_id, &$item) {

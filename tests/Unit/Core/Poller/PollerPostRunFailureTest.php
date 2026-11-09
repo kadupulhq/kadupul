@@ -18,7 +18,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
     foreach ($all as $name) {
         $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
     }
-    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
+    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$mibs_recorded=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
     $program .= '$rrd_cleanup_failed=' . ($cleanupFailed ? 'true' : 'false') . ';';
     $program .= '$rrd_write_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');
@@ -65,7 +65,7 @@ test('the production wait loop retries after a transient drain failure', functio
 test('the final drain reports current failure state after a recovered waiting attempt', function ($failed) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
     $start = strpos($source, '$rrds_processed += process_poller_output_batch(');
-    $end = strpos($source, ' elseif ($config', $start);
+    $end = strpos($source, "\n\n\t\t\t\t\tlog_cacti_stats", $start);
     expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
     $body = substr($source, $start, $end - $start);
     $signature = strpos($body, 'process_poller_output_batch(true,') !== false ? '$final,&$deferred,&$pipe' : '&$deferred,&$pipe';

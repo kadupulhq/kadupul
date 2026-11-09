@@ -9,9 +9,10 @@ in 1.2.31; replay stays safe because a duplicate key keeps the stored row. The
 log notes each such table once per process. The timestamp
 comes from the collector clock at enqueue time; keep collector and database
 clocks synchronized. Only a
-confirmed commit permits deletion from the local queue. A failed handoff exits
-nonzero without a completion marker; the next invocation replays retained work
-before collecting newer samples. This change does not alter Spine's writer.
+confirmed commit permits deletion from the local queue. A failed handoff stops
+collection, records the run as complete so the main poller does not wait out its
+maximum runtime, logs an error and exits nonzero; the next invocation replays
+retained work before collecting newer samples. This change does not alter Spine's writer.
 
 If the poller is ever run as root while the spool directory does not exist yet,
 root creates it, and later runs as the collector account refuse to start. The log

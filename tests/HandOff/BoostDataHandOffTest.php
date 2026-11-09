@@ -29,10 +29,10 @@ test('Boost hand-off batches expose database acknowledgement', function () {
 test('Recovery deletes only the exact rows acknowledged by the main collector', function () {
 	$recovery = boostSource('poller_recovery.php');
 
-	expect($recovery)->toContain('function recovery_delete_acknowledged_rows($rows, $conn)');
+	expect($recovery)->toContain('function recovery_delete_acknowledged_rows($rows, $conn, $source_table = \'poller_output_boost\')');
 	expect($recovery)->toContain('(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))');
 	expect($recovery)->toContain('if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id, true))');
-	expect($recovery)->toContain('if (!recovery_delete_acknowledged_rows($rows, $local_db_cnn_id))');
+	expect($recovery)->toContain('if (!recovery_delete_acknowledged_rows($rows, $local_db_cnn_id, $source_table))');
 	expect($recovery)->not->toContain('DELETE FROM poller_output_boost WHERE time <=');
 });
 

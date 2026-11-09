@@ -81,7 +81,12 @@ function debug($string) {
 	}
 }
 
-function recovery_delete_acknowledged_rows($rows, $conn) {
+function recovery_delete_acknowledged_rows($rows, $conn, $source_table = 'poller_output_boost') {
+	/* the table name is concatenated below, so only the two local queues are accepted */
+	if (!in_array($source_table, array('poller_output_boost', 'poller_output'), true)) {
+		return false;
+	}
+
 	foreach (array_chunk($rows, 500) as $chunk) {
 		$clauses = array();
 		$params  = array();
@@ -94,7 +99,7 @@ function recovery_delete_acknowledged_rows($rows, $conn) {
 			$params[]  = $row['output'];
 		}
 
-		if (db_execute_prepared('DELETE FROM poller_output_boost WHERE ' . implode(' OR ', $clauses), $params, true, $conn) === false) {
+		if (db_execute_prepared('DELETE FROM ' . $source_table . ' WHERE ' . implode(' OR ', $clauses), $params, true, $conn) === false) {
 			return false;
 		}
 	}
@@ -241,18 +246,25 @@ if ($run) {
 
 	poller_push_reindex_data_to_poller(0, 0, true);
 
+	/* either local queue can hold the only copy of a sample taken while offline */
+	$source_table = 'poller_output_boost';
+
 	while (true) {
 		cacti_log('RECOVERY: Getting max_time for '. $record_limit . ' records.', false, 'POLLER');
 
 		$max_time = db_fetch_cell("SELECT MAX(time)
 			FROM (
 				SELECT time
-				FROM poller_output_boost
+				FROM $source_table
 				ORDER BY time ASC
 				LIMIT $record_limit
 			) AS rs", '', true, $local_db_cnn_id);
 
-		if (empty($max_time)) {
+		if (empty($max_time) && $source_table === 'poller_output_boost') {
+			$source_table = 'poller_output';
+
+			continue;
+		} elseif (empty($max_time)) {
 			db_execute_prepared("DELETE FROM settings WHERE name='recovery_pid'", array(), true, $local_db_cnn_id);
 
 			break;
@@ -260,7 +272,7 @@ if ($run) {
 			cacti_log('RECOVERY: Fetching records till time: ' . $max_time . ' from poller DB', false, 'POLLER');
 
 			$rows = db_fetch_assoc_prepared('SELECT *
-				FROM poller_output_boost
+				FROM ' . $source_table . '
 				WHERE time <= ?
 				ORDER BY time ASC, local_data_id ASC, rrd_name ASC
 				LIMIT ' . (int) $record_limit,
@@ -320,7 +332,7 @@ if ($run) {
 					break;
 				}
 
-				if (!recovery_delete_acknowledged_rows($rows, $local_db_cnn_id)) {
+				if (!recovery_delete_acknowledged_rows($rows, $local_db_cnn_id, $source_table)) {
 					cacti_log('RECOVERY ERROR: Unable to remove acknowledged local Boost rows; they will be retried idempotently.', false, 'POLLER');
 					$transfer_failed = true;
 					break;

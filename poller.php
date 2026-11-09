@@ -228,10 +228,10 @@ $poller_mibsrun  = read_config_option('poller_mibsrun_' . $poller_id);
 
 // collect the system mibs every 4 hours
 if (empty($poller_mibsrun) || ($current_time - $poller_mibsrun > 14400)) {
-	set_config_option('poller_mibsrun_' . $poller_id, $current_time);
-
 	$mibs = true;
 }
+
+$mibs_recorded = false;
 
 // get the poller data
 $poller = db_fetch_row_prepared('SELECT *
@@ -766,6 +766,13 @@ while ($poller_runs_completed < $poller_runs) {
 				$started_processes++;
 			}
 
+			/* record the system MIB run once a collector has been started with --mibs,
+			 * so an exit before launch leaves the four-hour window open */
+			if ($mibs && $started_processes > 0 && !$mibs_recorded) {
+				set_config_option('poller_mibsrun_' . $poller_id, $current_time);
+				$mibs_recorded = true;
+			}
+
 			if ($poller_id == 1) {
 				// insert the current date/time for graphs
 				set_config_option('date', date('Y-m-d H:i:s'));
@@ -795,9 +802,6 @@ while ($poller_runs_completed < $poller_runs) {
 					if ($poller_id == 1) {
 						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred, $rrdtool_pipe, $poller_start + MAX_POLLER_RUNTIME);
 						$rrd_write_failed = $poller_output_deferred;
-					} elseif ($config['connection'] != 'online') {
-						/* truncate until formal remote management is supported */
-						db_execute('TRUNCATE poller_output');
 					}
 
 					log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads,
@@ -816,9 +820,6 @@ while ($poller_runs_completed < $poller_runs) {
 						if ($poller_output_deferred) {
 							$rrd_write_failed = true;
 						}
-					} elseif ($config['connection'] != 'online') {
-						/* truncate until formal remote management is supported */
-						db_execute('TRUNCATE poller_output');
 					}
 
 					// end the process if the runtime exceeds MAX_POLLER_RUNTIME
@@ -980,7 +981,9 @@ if ($poller_id == 1) {
 	poller_maintenance();
 	rrdcheck_poller_bottom();
 	api_plugin_hook('poller_bottom');
-	bad_index_check($mibs);
+	/* warn about bad indexes with the MIB run it accompanies, not on every
+	 * poll while the window stays open because no collector started */
+	bad_index_check($mibs_recorded);
 	host_status_cache_check();
 	poller_heartbeat_check();
 } else {

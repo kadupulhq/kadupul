@@ -799,19 +799,29 @@ function boost_output_rrd_data($child) {
 	$total_rows = 0;
 
 	foreach($arch_tables as $table) {
-		$total_rows += db_fetch_cell_prepared("SELECT COUNT(at.local_data_id)
+		$table_rows = db_fetch_cell_prepared("SELECT COUNT(at.local_data_id)
 			FROM $table AS at
 			INNER JOIN poller_output_boost_local_data_ids AS bpt
 			ON at.local_data_id = bpt.local_data_id
 			AND bpt.run_id = ?
 			AND bpt.process_handler = ?",
 			array($run_id, $child));
+
+		/* a failed count is a failure; zero rows is not */
+		if (!is_numeric($table_rows)) {
+			rrd_close($rrdtool_pipe);
+
+			return -1;
+		}
+
+		$total_rows += (int) $table_rows;
 	}
 
+	/* a child with no rows in its partition has nothing to do and succeeds (#762) */
 	if ($total_rows == 0) {
 		rrd_close($rrdtool_pipe);
 
-		return -1;
+		return 0;
 	}
 
 	boost_debug("Processes:$child, TotalRows:$total_rows");
