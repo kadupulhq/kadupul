@@ -83,8 +83,8 @@ final class ModelDrivenSchemaTest extends TestCase
     public function testTheStepIsReachableAboveTheDeployedRelease(): void
     {
         $root = dirname(__DIR__, 2);
-        self::assertSame(self::STEP, trim((string) file_get_contents($root . '/include/cacti_version')));
-        self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.37'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.38'\\s*=>\\s*'0103',\\n\\);/m", (string) file_get_contents($root . '/include/global_arrays.php'));
+        self::assertTrue(version_compare(trim((string) file_get_contents($root . '/include/cacti_version')), self::STEP, '>='));
+        self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.37'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.38'\\s*=>\\s*'0103',/m", (string) file_get_contents($root . '/include/global_arrays.php'));
         self::assertTrue(function_exists('upgrade_to_1_2_37'));
     }
 

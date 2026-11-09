@@ -42,6 +42,17 @@ configuration, one CSRF refresh, required execution consent, the native worker,
 CSP and French locale selection. Both CLI and browser installation jobs gate
 the CLI Docker integration result in CI.
 
+Set `CACTI_E2E_ASSETS_BROWSER=1` to exercise the asset register after installation.
+This enables the pilot on the disposable primary server, uses the ordinary
+administrator login and runs `../asset-native.cjs` through real command workers.
+It requires the same locked browser dependencies and is enabled in the native
+browser CI job. It checks lifecycle and editing, reconciliation, dependency
+changes and refusal, monitoring imports, reviews, stale tabs, CSRF, native
+validation and receipt history. A console-only fixture account must reach its
+console but receive asset permission refusals for reads and writes.
+The runner requires an empty register
+and a localhost URL; do not point it at an existing installation.
+
 By default the master Kadupul UI binds to `127.0.0.1:8088`. To use a different port, set `CACTI_E2E_PORT` before running: `CACTI_E2E_PORT=8090 ./run.sh`.
 
 ## Tests
@@ -79,7 +90,8 @@ master container so the algorithm matches the running PHP build.
 - Setup is idempotent: re-running `run.sh` drops and recreates the schema, and
   user/poller rows use `ON DUPLICATE KEY UPDATE`.
 - Teardown uses `--volumes --remove-orphans` so nothing is left behind.
-- All tests are curl-based shell scripts; no Node or Playwright dependency on the host or in CI.
+- Shell checks use curl. The opt-in installer and asset browser checks require
+  the locked Node/Playwright dependencies described above.
 
 ## Current status (work in progress)
 

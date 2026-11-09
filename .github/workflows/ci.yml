@@ -72,6 +72,22 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y gettext
       - name: Verify every shipped source and compiled catalog
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
+      # The rendered translation corpus reads these plugin fixture catalogs.
+      # Compare decompiled messages, not bytes: msgfmt versions lay out the
+      # hash table differently, so a byte comparison fails on a valid .mo.
+      - name: Verify translation fixture catalogs compile from their sources
+        run: |
+          set -euo pipefail
+          count=0
+          for po in tests/Symfony/Fixtures/translation/plugins/*/locales/po/*.po; do
+            mo="$(dirname "$(dirname "$po")")/LC_MESSAGES/$(basename "$po" .po).mo"
+            msgfmt --check-format "$po" -o "$RUNNER_TEMP/fixture.mo"
+            msgunfmt "$RUNNER_TEMP/fixture.mo" | msgcat --sort-output --no-wrap - -o "$RUNNER_TEMP/expected.po"
+            msgunfmt "$mo" | msgcat --sort-output --no-wrap - -o "$RUNNER_TEMP/actual.po"
+            diff -u "$RUNNER_TEMP/expected.po" "$RUNNER_TEMP/actual.po"
+            count=$((count + 1))
+          done
+          test "$count" -eq 2
       - name: Verify test runner dispatch and missing-suite failures
         run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
       - name: Verify mutation wrapper outcome classification
@@ -257,6 +273,10 @@ jobs:
       working-directory: tests
       run: composer install --no-interaction --no-progress --prefer-dist
 
+    - name: Allow failure-injection triggers in the disposable MySQL service
+      if: startsWith(matrix.database, 'mysql')
+      run: |
+        docker exec "${{ job.services.mysql.id }}" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -uroot -e "SET GLOBAL log_bin_trust_function_creators=1"'
     - name: Record database behavior and run contracts
       working-directory: tests
       env:
@@ -377,6 +397,18 @@ jobs:
           mise exec node@22.22.2 -- npm ci --ignore-scripts
           mise exec node@22.22.2 -- npm run build
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php bin/console asset-map:compile
+      - name: Asset pilot native transaction and upgrade contracts
+        env:
+          KADUPUL_ASSET_TEST_DSN: mysql://root@127.0.0.1:${{ job.services.database.ports['3306'] }}/kadupul_assets_test
+          KADUPUL_ASSET_TEST_PASSWORD: cactiroot
+        run: |
+          php <<'PHP'
+          <?php
+          $url = parse_url(getenv('KADUPUL_ASSET_TEST_DSN'));
+          $db = new PDO('mysql:host=' . $url['host'] . ';port=' . $url['port'], 'root', getenv('KADUPUL_ASSET_TEST_PASSWORD'));
+          $db->exec('CREATE DATABASE kadupul_assets_test');
+          PHP
+          php -d memory_limit=1G include/vendor/bin/phpunit -c phpunit-symfony.xml --fail-on-empty-test-suite --filter 'AssetRegistryDatabaseTest|AssetUpgradeTest'
       - name: Native API coverage and actual installer caller proofs
         env:
           KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_cdef_reference_test;charset=utf8mb4
