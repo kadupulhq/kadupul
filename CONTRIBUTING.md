@@ -30,6 +30,7 @@ repository root with the PHP and Python versions the repository selects through 
 | Lines move in a file listed in `tests/security/baselines/sink_inventory.baseline.tsv` or `architectural_hotspots.baseline.tsv` | Build with `tests/security/build_sink_inventory.sh` or `build_architectural_helper_report.sh --hotspots`, sort with `LC_ALL=C sort`, and replace only the changed file's lines | `tests/security/verify_sink_inventory.sh`, `verify_architectural_hotspots.sh` |
 | A page, include or other file whose gate is classified in `tests/security/baselines/entry_points.baseline.tsv` | Read the diff, then regenerate with `tests/security/build_entry_point_inventory.py`. For `lib/auth.php` the reviewed hash is in `tests/security/classify_entry_points.php`. | `tests/security/verify_entry_point_inventory.sh` |
 | A translatable string, or adding, removing or renaming a file that has one | `locales/build_gettext.sh` (not `update-pot.sh`, which drops historical identities). Catalogs record file-only references (`#: lib/foo.php`), so moving lines needs no refresh. Catalog order still follows line order within a file, so a move that swaps two messages in one file reorders their blocks on the next rebuild; the verifier compares sets and accepts either order. Revert catalog changes that only touch `POT-Creation-Date`. | `tests/security/verify_gettext_catalogs.py` |
+| A `set_config_option()` call whose key names a run, a last time or a stamp, with an `exit`, a `die` or a call to a function that never returns still able to follow in the same function or script, including on a later iteration of a loop | Move the call after the work it records. The check is a heuristic, not proof: it does not follow method or dynamic calls, exceptions, `goto` or recursion. If the order is intended, add the row with `php tests/security/check_marker_before_exit.php --write-baseline` and explain it in the pull request. Rows are keyed by file, scope and key, so moving lines does not change them. | `php tests/security/check_marker_before_exit.php` |
 | A function in `lib/functions.php` | `php tools/functions-inventory.php` | `php tools/functions-inventory.php --check` |
 | A new test file | Register it in `tests/phpunit-spikekill.xml`, or `tests/phpunit-database.xml` if it needs a database. Write the path relative to `tests/` with no leading `./`. | CI runs `tests/tools/verify_pest_inventory.php`, which compares the registered files with the recorded runs and fails on a mismatch |
 
@@ -70,6 +71,21 @@ an unexpected series and verifies the selected interpreter through mise before
 publishing `KADUPUL_CI_PHP_VERSION` to later steps. These jobs pass that version
 to their consumers; the hook tests separately install and assert PHP 8.4.25.
 
+## Flaky tests and quick local selection
+
+`python3 tests/tools/select_tests.py origin/main` lists the registered legacy tests that
+name a file your change touches since the merge base, committed or not, including
+untracked files, with a Pest command to run just those. It is a
+shortcut for local feedback; CI still runs every registered test.
+
+The weekly **Flaky tests** workflow (also runnable from the Actions tab) runs the legacy
+suite four times on one commit: twice in file order and twice in seeded random order.
+`tests/tools/flaky_report.py` compares the runs. A test that fails in one run and passes
+or is skipped in another is flaky; a test that fails in every run is broken. Either makes the workflow
+red without blocking pull requests. The random seeds are printed in the run log, so
+`vendor/bin/pest ... --order-by=random --random-order-seed=<seed>` reproduces an
+order-dependent failure.
+
 ## Pest profiling and isolated parallel feedback
 
 Install the locked application and test dependencies before running these tools.
@@ -85,6 +101,40 @@ or inventory. It checks serial/parallel discovery parity, empty selections,
 failure outcomes and report preservation. The parallel feedback lane does not
 replace full serial coverage, database, browser or deployment checks.
 The manually dispatched `Pest profiling` workflow retains its report and log.
+
+## Mutation testing on changed lines
+
+The advisory `Mutation testing (advisory)` workflow runs
+[Infection](https://infection.github.io/) on the lines a pull request adds or
+modifies under `src/`, and lists in the job summary each mutant no test
+detected, with its diff. A surviving mutant is a change to the code that the
+tests do not notice: add an assertion that fails for it, or explain in the
+review why the behavior does not matter. Survivors never fail the job; it fails
+only when the tool breaks, for example when the initial test run fails or runs
+no tests, or Infection writes no report. The check is not required.
+Infection mutates only added and modified files, so a file moved and edited
+under `src/` is not mutated; the summary lists such files under "Renamed files
+not mutated" so that a refactor's clean result is not read as coverage.
+
+Coverage comes from the PHPUnit suite in `phpunit-symfony.xml`. Legacy files
+are not mutated: the Pest suite evaluates extracted source through
+`tests/Helpers/PhpSource.php`, so its coverage cannot be attributed to them.
+
+To run it locally, install both Composer projects and the built assets as for
+`composer test`, the Python XML parser from `tests/tools/requirements.txt` (see
+above), and load the pcov or Xdebug coverage driver. Then compare with the
+branch the change targets:
+
+```sh
+mise exec -- python tests/tools/mutation_changed_lines.py --base origin/main
+```
+
+The summary and Infection's JSON, text and HTML reports are written to
+`var/infection/`. Options after `--` go to Infection unchanged. The wrapper
+runs Infection with one thread by default because the tests share `var/cache`;
+`--threads` overrides it. Run
+`mise exec -- python tests/tools/test_mutation_changed_lines.py` after changing
+the wrapper.
 
 ## Commits
 
@@ -118,6 +168,20 @@ permissions and never put secrets in GitHub records, logs, or commits.
 Before handing off or merging a GitHub change, verify its title, description,
 labels, issue links, head commit, checks, review state, and thread-resolution
 state using GitHub's records.
+
+### Classifying bugs
+
+The bug report form asks for the defect type, qualifier, trigger and origin from
+IBM's Orthogonal Defect Classification (Chillarege et al., IEEE TSE 1992). Reporters
+may leave them empty. When a fix is known, replace the `_No response_` under each
+field in the issue body, and add the same `### Defect type` / `### Defect qualifier` /
+`### Trigger` / `### Origin` sections to issues filed without the form. Use one of the
+form's options, in full or as the short name before the parentheses; anything else
+counts as `other`. Only the first section of each name outside a fenced code block
+counts, so a section added below the form's own is ignored. Count them with:
+
+    gh issue list --label bug --state all --limit 1000 --json number,title,state,body > bugs.json
+    python3 tools/odc_summary.py bugs.json
 
 ## Documentation and security
 
