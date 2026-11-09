@@ -59,6 +59,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
 - Make `rrdtool_function_tune()` change all requested options or none: the RRDfile is copied beside itself first and, when `rrdtool tune` exits non-zero, a restored copy is renamed over it, so it is never left truncated, and the function now returns `true` or `false` instead of nothing (#777).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
+- Reconcile `unique_keys` in `db_update_table()`, so a declared unique index is kept, created when missing and rebuilt as unique when its uniqueness drifted, and accept a primary key or index columns given as a string (#1065, #1060). Index columns are compared in order and with their prefix lengths, a primary key is rebuilt in one statement, and integer display widths no longer force a column rebuild on MySQL 8 (#1395). Mirrors upstream Cacti #8115 and #8125.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 
