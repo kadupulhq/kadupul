@@ -16,16 +16,23 @@ namespace Kadupul\Alerting\Application\Port;
  */
 interface IncidentRepository
 {
-    /** Fails when the rule already has an active incident. */
+    /** @throws UnusableRuleRecord when the rule already has an active incident */
     public function open(int $ruleId, int $observedAt): void;
 
-    /** Closes the active incident by recovery; fails when there is none. */
+    /**
+     * Closes the active incident by recovery.
+     *
+     * @throws UnusableRuleRecord when there is none
+     */
     public function close(int $ruleId, int $observedAt): void;
 
     /**
-     * Ends the active incident as orphaned, which is never a recovery.
+     * Ends the rules' active incidents as orphaned, which is never a recovery.
+     * It reads no rule state.
      *
-     * @return bool false when the rule had no active incident
+     * @param list<int> $ruleIds
+     *
+     * @return int incidents ended; a rule with no active incident adds none
      */
-    public function orphan(int $ruleId, int $at): bool;
+    public function orphan(array $ruleIds, int $at): int;
 }

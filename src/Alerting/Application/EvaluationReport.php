@@ -16,12 +16,14 @@ final readonly class EvaluationReport
      * @param int     $skipped        rules whose latest observation was already counted
      * @param ?string $inactiveReason set when nothing was evaluated because the source cannot work
      * @param int     $orphaned       rules whose incident or state was ended because their rule or series is gone
+     * @param int     $failed         rules skipped because a stored record of theirs cannot be used (UnusableRuleRecord)
      */
     public function __construct(
         public int $evaluated,
         public int $skipped,
         public ?string $inactiveReason = null,
         public int $orphaned = 0,
+        public int $failed = 0,
     ) {}
 
     public static function inactive(string $reason): self

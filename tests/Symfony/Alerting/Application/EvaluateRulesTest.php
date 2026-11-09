@@ -23,6 +23,7 @@ use Kadupul\Tests\Alerting\Fakes\InMemoryRuleRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRuleStateStore;
 use Kadupul\Tests\Alerting\Fakes\InMemoryTransactionRunner;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
+use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
@@ -37,21 +38,23 @@ final class EvaluateRulesTest extends TestCase
     private InMemoryIncidentRepository $incidents;
     private InMemoryEvaluationCursor $cursor;
     private InMemoryTransactionRunner $transactions;
+    private RecordingLogger $logger;
 
     protected function setUp(): void
     {
         $this->clock = new MockClock(new \DateTimeImmutable('@' . self::NOW));
         $this->rates = new InMemoryRateSource(clock: $this->clock);
-        $this->rules = new InMemoryRuleRepository();
         $this->states = new InMemoryRuleStateStore();
         $this->incidents = new InMemoryIncidentRepository();
+        $this->rules = new InMemoryRuleRepository($this->states, $this->incidents);
+        $this->logger = new RecordingLogger();
         $this->cursor = new InMemoryEvaluationCursor();
         $this->transactions = new InMemoryTransactionRunner($this->states, $this->incidents);
     }
 
     private function evaluator(): EvaluateRules
     {
-        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->cursor, new MockClockAdapter($this->clock), $this->transactions);
+        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->cursor, new MockClockAdapter($this->clock), $this->transactions, $this->logger);
     }
 
     private static function rule(int $id, Comparator $comparator = Comparator::GreaterThan, float $trigger = 90.0, float $clear = 80.0, int $forCycles = 1): AlertRule
@@ -286,7 +289,7 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame(1, $report->orphaned);
         self::assertSame([['orphan', 1, self::NOW], ['open', 2, self::NOW]], $this->incidents->events);
         self::assertArrayNotHasKey(1, $this->states->states);
-        self::assertSame(2, $this->transactions->committed, 'One transaction for the orphan, one for rule 2.');
+        self::assertSame(2, $this->transactions->committed, 'One transaction for the orphans, one for rule 2.');
         self::assertNotContains('close', array_column($this->incidents->events, 0), 'An orphaned incident is not a recovery.');
     }
 
@@ -303,5 +306,113 @@ final class EvaluateRulesTest extends TestCase
         $this->rates->put($series, new Observation(95.0, self::NOW + 60, 300));
         $this->evaluator()(10, 30.0);
         self::assertSame([['open', 1, self::NOW + 60]], $this->incidents->events);
+    }
+
+    public function testAnUnreadableStateRowSkipsOnlyItsRuleAcrossACursorWrap(): void
+    {
+        foreach ([1, 2, 3, 4, 5] as $id) {
+            $this->rules->add(self::rule($id));
+            $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        }
+        $this->states->unreadable[3] = 'consecutive_oks is set on a closed rule.';
+
+        // A zero budget runs one batch of two per call, so the pass takes three calls.
+        $reports = [];
+        $positions = [];
+        foreach (range(1, 4) as $call) {
+            $reports[] = $this->evaluator()(2, 0.0);
+            $positions[] = $this->cursor->position();
+        }
+
+        self::assertSame([2, 4, 0, 2], $positions, 'The cursor passes rule 3 and wraps.');
+        self::assertSame([[2, 0], [1, 1], [1, 0], [0, 0]], array_map(static fn($r): array => [$r->evaluated, $r->failed], $reports));
+        self::assertSame(2, $reports[3]->skipped, 'After the wrap rules 1 and 2 run again; their observation was already counted.');
+        self::assertSame([1, 2, 4, 5], array_column($this->incidents->events, 1));
+        self::assertArrayNotHasKey(3, $this->states->states, 'The unreadable row is left for an operator, not overwritten.');
+        self::assertSame('consecutive_oks is set on a closed rule.', $this->states->unreadable[3]);
+        self::assertSame([['level' => 'warning', 'message' => 'Alert rule {rule} was skipped: {reason}', 'context' => ['rule' => 3, 'reason' => 'consecutive_oks is set on a closed rule.']]], $this->logger->records);
+
+        // The next pass reaches it again and still skips only it.
+        self::assertSame(1, $this->evaluator()(2, 0.0)->failed);
+        self::assertCount(2, $this->logger->records);
+    }
+
+    public function testAnUnreadableRuleRowIsSkippedAndThePassFinishes(): void
+    {
+        $this->rules->add(self::rule(1), self::rule(3));
+        $this->rules->unusable[2] = 'comparator is not one the rule form writes.';
+        foreach ([1, 3] as $id) {
+            $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        }
+
+        // A zero budget stops after the first batch, which ends with the unusable rule.
+        $first = $this->evaluator()(2, 0.0);
+        self::assertSame([1, 1], [$first->evaluated, $first->failed]);
+        self::assertSame(2, $this->cursor->position(), 'The cursor moves past the unusable rule.');
+        self::assertSame(2, $this->logger->records[0]['context']['rule']);
+
+        $second = $this->evaluator()(2, 0.0);
+        self::assertSame([1, 0], [$second->evaluated, $second->failed]);
+        self::assertSame(0, $this->cursor->position());
+        self::assertSame([['101:traffic_in'], ['103:traffic_in']], $this->rates->requests, 'An unusable rule asks for no rate.');
+    }
+
+    public function testAnIncidentThatDisagreesWithTheStateSkipsOnlyThatRule(): void
+    {
+        $this->rules->add(self::rule(1), self::rule(2));
+        // Rule 1 has an active incident, but no state says so.
+        $this->incidents->active[1] = true;
+        foreach ([1, 2] as $id) {
+            $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        }
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame([1, 1], [$report->evaluated, $report->failed]);
+        self::assertArrayNotHasKey(1, $this->states->states, 'The state save was rolled back with the refused open.');
+        self::assertSame([['open', 2, self::NOW]], $this->incidents->events);
+        self::assertSame(1, $this->logger->records[0]['context']['rule']);
+        self::assertSame(0, $this->cursor->position());
+
+        self::assertSame(1, $this->evaluator()(10, 30.0)->failed, 'It stays skipped until the rows agree.');
+    }
+
+    public function testMoreOrphansThanABatchAreEndedOverSeveralRunsWhileRulesStillRun(): void
+    {
+        $this->rules->add(self::rule(10));
+        $this->rules->orphaned = [1, 2, 3, 4, 5];
+        foreach ($this->rules->orphaned as $id) {
+            $this->states->states[$id] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 900);
+            $this->incidents->active[$id] = true;
+        }
+
+        $orphaned = [];
+        foreach (range(1, 4) as $run) {
+            $this->clock->sleep(300);
+            $this->rates->put(new SeriesKey(110, 'traffic_in'), new Observation(50.0, $this->clock->now()->getTimestamp(), 300));
+            $report = $this->evaluator()(2, 30.0);
+            $orphaned[] = $report->orphaned;
+            self::assertSame(1, $report->evaluated, 'run ' . $run);
+        }
+
+        self::assertSame([2, 2, 1, 0], $orphaned);
+        self::assertSame([2, 2, 2, 2], $this->rules->orphanLimits, 'The batch size caps each run.');
+        self::assertSame([[1, 2], [3, 4], [5]], $this->states->deleted);
+        self::assertSame([1, 2, 3, 4, 5], array_column($this->incidents->events, 1));
+        self::assertSame([], $this->incidents->active);
+    }
+
+    public function testAnOrphanWithAnUnreadableStateRowIsRemoved(): void
+    {
+        $this->rules->orphaned = [7];
+        $this->states->unreadable[7] = 'is_unknown is neither 0 nor 1.';
+        $this->incidents->active[7] = true;
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame([1, 0], [$report->orphaned, $report->failed]);
+        self::assertSame([], $this->states->unreadable);
+        self::assertSame([['orphan', 7, self::NOW]], $this->incidents->events);
+        self::assertSame(0, $this->evaluator()(10, 30.0)->orphaned);
     }
 }

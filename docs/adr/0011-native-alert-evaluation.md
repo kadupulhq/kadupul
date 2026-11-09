@@ -181,9 +181,10 @@ behavior until an administrator opts in.
    A rule's state change and its incident change are written in one
    transaction, state first, and commit together or not at all. Opening an
    incident when one is already active, or closing one when none is, fails
-   that transaction: the two tables disagree only if someone edited them, and
-   the evaluator reports it (exit 1) rather than guess. A transaction the
-   caller already holds is not committed by the evaluator's stores.
+   that transaction: the two tables disagree only if someone edited them.
+   The evaluator does not guess; it rolls the rule back and skips it as
+   decision 8 describes. A transaction the caller already holds is not
+   committed by the evaluator's stores.
 
    **Orphans.** Each run first looks for rules whose series no longer
    exists: the `data_local` row is gone; its device is gone or marked
@@ -194,7 +195,8 @@ behavior until an administrator opts in.
    deleted series from a missing rate, so this check reads the definitions.
    For such a rule, and for a deleted rule, the active incident moves to
    `orphaned` at the evaluator's clock and the state row is deleted, in one
-   transaction, and no notification is queued. Only rules with a state row
+   transaction, and no notification is queued. Neither write reads the
+   state row, so an unreadable one is deleted like any other. Only rules with a state row
    or an active incident are handled, so an orphan is ended once. A rule
    whose series is gone is never evaluated again, even while its last rate is
    still fresh, so it cannot open a new incident.
@@ -231,6 +233,25 @@ behavior until an administrator opts in.
    ordered by oldest evaluation. Task 5 sets defaults from a measurement; this
    record does not fix numbers. Delivery has its own bound inside the same
    budget.
+
+   The orphan sweep (decision 6) that starts each run is capped at the batch
+   size: at most one batch of orphans, ended by one bounded `DELETE` and one
+   bounded `UPDATE` in one transaction. Handled orphans no longer qualify, so
+   the rest are ended by later runs, and the rule batches still run every
+   time. The cap is a count, not a charge to the time budget, so the first
+   batch always runs as before.
+
+   A failure is classified by what it concerns. A stored record of one rule
+   that cannot be used (a rule or state row the domain refuses, or an
+   incident row that disagrees with the state) is an `UnusableRuleRecord`.
+   That rule is rolled back, logged as a warning with its id and the reason
+   (column names, never values), counted as `failed` in the report and
+   skipped. The run continues and the cursor moves past it, so it never holds
+   back the rules after it, or those before it once the cursor wraps. Each
+   pass reaches it again and skips it again until an operator corrects or
+   deletes the row. Any other failure, such as a lost connection or a failed
+   rate read, is not about one rule: it propagates, the run exits 1 and the
+   cursor stays where the last completed batch left it.
 
 9. **Inactive is not ok.** Before evaluating, the command checks that the rate
    source can work: `dsstats_enable` is `on` (a missing setting is off, its
@@ -347,6 +368,8 @@ behavior until an administrator opts in.
 | Database restart empties the MEMORY table | Rules `unknown` for a cycle or two, no recoveries or breaches | Task 3 |
 | Rate source read fails | Error, exit status 1; no verdict written, nothing read as `unknown` | Task 3 |
 | Incident write fails after the state was saved | Both roll back; the next run counts the same observation again | Task 3 |
+| A rule's stored row is unreadable, or its incident disagrees with its state | That rule is rolled back, logged and counted as `failed`; the other rules are evaluated and the cursor moves past it, every run, until the row is fixed | Task 3 |
+| More orphans than one batch | One batch of orphans ended per run; the rest on later runs; rule batches still run | Task 3 |
 | Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Task 1 |
 | Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |
 | Rule deleted with an incident open | Incident `orphaned` on the next run, state removed, no mail | Task 3 |

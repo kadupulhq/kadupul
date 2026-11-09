@@ -38,6 +38,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
 use Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
+use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
@@ -61,9 +62,9 @@ final class CountingStates implements RuleStateStore
         $this->inner->save($ruleId, $state);
     }
 
-    public function delete(int $ruleId): void
+    public function delete(array $ruleIds): void
     {
-        $this->inner->delete($ruleId);
+        $this->inner->delete($ruleIds);
     }
 }
 
@@ -84,9 +85,9 @@ final readonly class FailingIncidents implements IncidentRepository
         throw new \RuntimeException('injected failure after the incident update');
     }
 
-    public function orphan(int $ruleId, int $at): bool
+    public function orphan(array $ruleIds, int $at): int
     {
-        return $this->inner->orphan($ruleId, $at);
+        return $this->inner->orphan($ruleIds, $at);
     }
 }
 
@@ -147,7 +148,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
         }
     }
 
-    private function evaluate(?IncidentRepository $incidents = null): EvaluationReport
+    private function evaluate(?IncidentRepository $incidents = null, int $batchSize = 100, float $budgetSeconds = 30.0, ?RecordingLogger $logger = null): EvaluationReport
     {
         $evaluate = new EvaluateRules(
             new DsstatsRateSource($this->database),
@@ -157,9 +158,10 @@ final class AlertPersistenceDatabaseTest extends TestCase
             new DbalEvaluationCursor($this->database),
             new MockClockAdapter($this->clock),
             new DbalTransactionRunner($this->database),
+            $logger ?? new RecordingLogger(),
         );
 
-        return $evaluate(100, 30.0);
+        return $evaluate($batchSize, $budgetSeconds);
     }
 
     /** A device, a data source on it and a rule on its traffic_in (gt 90, clear 80). */
@@ -408,5 +410,100 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame(RuleState::COUNTER_LIMIT, $this->stateRow(1)['consecutive_breaches']);
         self::assertSame(self::NOW, $this->stateRow(1)['last_observed_at']);
+    }
+
+    public function testAnUnreadableStateRowSkipsOnlyItsRuleAcrossACursorWrap(): void
+    {
+        foreach ([1, 2, 3, 4, 5] as $rule) {
+            $this->watch($rule, 100 + $rule, 10);
+            $this->sample(100 + $rule, self::NOW, 95.0);
+        }
+        // An ok run on a closed rule: no verdict sequence writes this.
+        $this->database->insert('alert_rule_state', ['rule_id' => 3, 'incident_open' => 0, 'consecutive_oks' => 2, 'last_observed_at' => self::NOW - self::STEP]);
+        $bad = $this->stateRow(3);
+        $logger = new RecordingLogger();
+        $cursor = new DbalEvaluationCursor($this->database);
+
+        $runs = [];
+        foreach (range(1, 4) as $run) {
+            // A zero budget runs one batch of two per call.
+            $report = $this->evaluate(batchSize: 2, budgetSeconds: 0.0, logger: $logger);
+            $runs[] = [$report->evaluated, $report->failed, $cursor->position()];
+        }
+
+        self::assertSame([[2, 0, 2], [1, 1, 4], [1, 0, 0], [0, 0, 2]], $runs, 'The cursor passes rule 3 and wraps to rules 1 and 2.');
+        foreach ([1, 2, 4, 5] as $rule) {
+            self::assertEquals([new Incident($rule < 3 ? $rule : $rule - 1, $rule, IncidentStatus::Open, self::NOW)], $this->incidents->forRule($rule), 'rule ' . $rule);
+        }
+        self::assertSame([], $this->incidents->forRule(3));
+        self::assertSame($bad, $this->stateRow(3), 'The unreadable row is left for an operator.');
+        self::assertCount(1, $logger->records);
+        self::assertSame(3, $logger->records[0]['context']['rule']);
+        self::assertStringContainsString('alert_rule_state 3', $logger->records[0]['context']['reason']);
+        self::assertFalse($this->database->isTransactionActive());
+    }
+
+    public function testAnIncidentThatDisagreesWithTheStateSkipsOnlyThatRule(): void
+    {
+        $this->watch(1, 101, 10);
+        $this->watch(2, 102, 10);
+        // Rule 1 has an open incident, but no state row says so.
+        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP]);
+        $this->sample(101, self::NOW, 95.0);
+        $this->sample(102, self::NOW, 95.0);
+        $logger = new RecordingLogger();
+
+        $report = $this->evaluate(logger: $logger);
+
+        self::assertSame([1, 1], [$report->evaluated, $report->failed]);
+        self::assertFalse($this->stateRow(1), 'The state save was rolled back with the refused insert.');
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW - self::STEP)], $this->incidents->forRule(1));
+        self::assertSame(IncidentStatus::Open, $this->incidents->forRule(2)[0]->status);
+        self::assertSame(1, $logger->records[0]['context']['rule']);
+        self::assertSame(0, (new DbalEvaluationCursor($this->database))->position());
+        self::assertFalse($this->database->isTransactionActive());
+
+        self::assertSame(1, $this->evaluate()->failed, 'It stays skipped until the rows agree.');
+    }
+
+    public function testMoreOrphansThanABatchAreEndedOverSeveralRuns(): void
+    {
+        foreach ([1, 2, 3, 4, 5, 9] as $rule) {
+            $this->watch($rule, 100 + $rule, 10);
+            $this->sample(100 + $rule, self::NOW, 95.0);
+        }
+        $this->evaluate();
+        $this->database->executeStatement('DELETE FROM data_local WHERE id IN (101, 102, 103, 104, 105)');
+
+        $runs = [];
+        foreach (range(1, 4) as $run) {
+            $this->at(self::NOW + $run * self::STEP);
+            $this->sample(109, self::NOW + $run * self::STEP, 95.0);
+            $report = $this->evaluate(batchSize: 2);
+            $runs[] = [$report->orphaned, $report->evaluated];
+        }
+
+        self::assertSame([[2, 1], [2, 1], [1, 1], [0, 1]], $runs, 'At most a batch of orphans per run, and rule 9 is evaluated every run.');
+        foreach ([1, 2, 3, 4, 5] as $rule) {
+            self::assertSame([IncidentStatus::Orphaned], array_map(static fn(Incident $incident): IncidentStatus => $incident->status, $this->incidents->forRule($rule)), 'rule ' . $rule);
+            self::assertFalse($this->stateRow($rule), 'rule ' . $rule);
+        }
+        self::assertSame(IncidentStatus::Open, $this->incidents->forRule(9)[0]->status);
+        self::assertSame(0, $this->notifications());
+    }
+
+    public function testAnOrphanWithAnUnreadableStateRowIsRemoved(): void
+    {
+        $this->watch(1, 101, 10);
+        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP]);
+        $this->database->insert('alert_rule_state', ['rule_id' => 1, 'incident_open' => 2, 'last_observed_at' => self::NOW - self::STEP]);
+        $this->database->executeStatement('DELETE FROM data_local WHERE id = 101');
+
+        $report = $this->evaluate();
+
+        self::assertSame([1, 0], [$report->orphaned, $report->failed]);
+        self::assertFalse($this->stateRow(1));
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Orphaned, self::NOW - self::STEP, self::NOW)], $this->incidents->forRule(1));
+        self::assertSame(0, $this->evaluate()->orphaned);
     }
 }

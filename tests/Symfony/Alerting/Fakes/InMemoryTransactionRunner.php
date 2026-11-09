@@ -24,12 +24,12 @@ final class InMemoryTransactionRunner implements TransactionRunner
     public function run(\Closure $work): void
     {
         $states = array_map(static fn($state) => clone $state, $this->states->states);
-        $saved = $this->states->saved;
+        [$saved, $unreadable] = [$this->states->saved, $this->states->unreadable];
         [$events, $active] = [$this->incidents->events, $this->incidents->active];
         try {
             $work();
         } catch (\Throwable $e) {
-            [$this->states->states, $this->states->saved] = [$states, $saved];
+            [$this->states->states, $this->states->saved, $this->states->unreadable] = [$states, $saved, $unreadable];
             [$this->incidents->events, $this->incidents->active] = [$events, $active];
 
             throw $e;

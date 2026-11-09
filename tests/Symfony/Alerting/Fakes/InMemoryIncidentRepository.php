@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests\Alerting\Fakes;
 
 use Kadupul\Alerting\Application\Port\IncidentRepository;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 
 final class InMemoryIncidentRepository implements IncidentRepository
 {
@@ -24,7 +25,7 @@ final class InMemoryIncidentRepository implements IncidentRepository
     {
         $this->fail();
         if (isset($this->active[$ruleId])) {
-            throw new \LogicException('Rule ' . $ruleId . ' already has an active incident.');
+            throw new UnusableRuleRecord($ruleId, 'it already has an active incident.');
         }
         $this->active[$ruleId] = true;
         $this->events[] = ['open', $ruleId, $observedAt];
@@ -34,22 +35,25 @@ final class InMemoryIncidentRepository implements IncidentRepository
     {
         $this->fail();
         if (!isset($this->active[$ruleId])) {
-            throw new \LogicException('Rule ' . $ruleId . ' has no active incident to close.');
+            throw new UnusableRuleRecord($ruleId, 'it has no active incident to close.');
         }
         unset($this->active[$ruleId]);
         $this->events[] = ['close', $ruleId, $observedAt];
     }
 
-    public function orphan(int $ruleId, int $at): bool
+    public function orphan(array $ruleIds, int $at): int
     {
         $this->fail();
-        if (!isset($this->active[$ruleId])) {
-            return false;
+        $ended = 0;
+        foreach ($ruleIds as $ruleId) {
+            if (isset($this->active[$ruleId])) {
+                unset($this->active[$ruleId]);
+                $this->events[] = ['orphan', $ruleId, $at];
+                ++$ended;
+            }
         }
-        unset($this->active[$ruleId]);
-        $this->events[] = ['orphan', $ruleId, $at];
 
-        return true;
+        return $ended;
     }
 
     private function fail(): void

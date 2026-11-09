@@ -12,6 +12,7 @@ namespace Kadupul\Alerting\Infrastructure\Dbal;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Kadupul\Alerting\Application\Port\RuleRepository;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\InvalidRule;
@@ -65,7 +66,7 @@ final readonly class DbalRuleRepository implements RuleRepository
      * unknown, and the incident stays open. A rule with nothing to end is not
      * returned, so an orphan is handled once and then left alone.
      */
-    public function orphanedRuleIds(): array
+    public function orphanedRuleIds(int $limit): array
     {
         $ids = $this->database->fetchFirstColumn(
             'SELECT r.id FROM alert_rule r ' . self::SERIES_JOINS . '
@@ -77,20 +78,27 @@ final readonly class DbalRuleRepository implements RuleRepository
             UNION
             SELECT i.rule_id FROM alert_incident i WHERE i.active_rule_id IS NOT NULL
                 AND NOT EXISTS (SELECT 1 FROM alert_rule r WHERE r.id = i.rule_id)
-            ORDER BY 1',
+            ORDER BY 1 LIMIT ?',
+            [$limit],
+            [ParameterType::INTEGER],
         );
 
         return array_map(static fn(mixed $id): int => StoredValue::int($id, 'alert_rule', 'id'), $ids);
     }
 
-    /** @param array<string, mixed> $row */
-    private static function rule(array $row): AlertRule
+    /**
+     * A row the domain refuses becomes that rule's UnusableRuleRecord. An
+     * unreadable primary key names no rule and is thrown.
+     *
+     * @param array<string, mixed> $row
+     */
+    private static function rule(array $row): AlertRule|UnusableRuleRecord
     {
         $id = StoredValue::int($row['id'], 'alert_rule', 'id');
         $where = 'alert_rule ' . $id;
         $comparator = is_string($row['comparator']) ? Comparator::tryFrom($row['comparator']) : null;
         if ($comparator === null || !is_string($row['rrd_name'])) {
-            throw StoredAlertingRowUnreadable::because($where, 'comparator or rrd_name is not one the rule form writes.');
+            return new UnusableRuleRecord($id, StoredAlertingRowUnreadable::because($where, 'comparator or rrd_name is not one the rule form writes.')->getMessage());
         }
         try {
             return new AlertRule(
@@ -104,7 +112,9 @@ final readonly class DbalRuleRepository implements RuleRepository
                 ),
             );
         } catch (InvalidRule $e) {
-            throw StoredAlertingRowUnreadable::because($where, $e->getMessage(), $e);
+            return new UnusableRuleRecord($id, StoredAlertingRowUnreadable::because($where, $e->getMessage())->getMessage(), $e);
+        } catch (StoredAlertingRowUnreadable $e) {
+            return new UnusableRuleRecord($id, $e->getMessage(), $e);
         }
     }
 }

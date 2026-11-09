@@ -16,20 +16,23 @@ interface RuleRepository
     /**
      * Up to $limit rules with an id greater than $afterRuleId, in ascending id
      * order, leaving out rules whose series no longer exists (those are
-     * orphanedRuleIds()' to end, never evaluated again).
+     * orphanedRuleIds()' to end, never evaluated again). A rule whose row
+     * cannot be read is returned in its place as an UnusableRuleRecord, so
+     * one bad row neither hides the other rules nor holds the cursor.
      *
-     * @return list<AlertRule>
+     * @return list<AlertRule|UnusableRuleRecord>
      */
     public function batchAfter(int $afterRuleId, int $limit): array;
 
     /**
-     * Rules that need orphan handling, in ascending id order: a rule whose
+     * Up to $limit rules that need orphan handling, in ascending id order: a rule whose
      * data source, device or RRD data source no longer exists and that still
      * has a stored state or an active incident, and the id of a deleted rule
      * that still has either. A deleted series is not "missing data": the rate
      * source cannot tell them apart, so this reads the definitions instead.
+     * A handled orphan has neither left, so the next call returns the next ones.
      *
      * @return list<int>
      */
-    public function orphanedRuleIds(): array;
+    public function orphanedRuleIds(int $limit): array;
 }

@@ -12,13 +12,15 @@ namespace Kadupul\Alerting\Infrastructure\Dbal;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Evaluation\InvalidRuleState;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 
 /**
  * One alert_rule_state row per rule. Every RuleState field is stored,
  * including the unknown flag, so an incident reported unknown is not reported
- * again after a reload. A row that RuleState refuses is reported.
+ * again after a reload. A row that RuleState refuses is returned as that
+ * rule's UnusableRuleRecord; an unreadable rule_id names no rule and throws.
  */
 final readonly class DbalRuleStateStore implements RuleStateStore
 {
@@ -39,7 +41,11 @@ final readonly class DbalRuleStateStore implements RuleStateStore
             );
             foreach ($rows as $row) {
                 $id = StoredValue::int($row['rule_id'], 'alert_rule_state', 'rule_id');
-                $states[$id] = self::state($id, $row);
+                try {
+                    $states[$id] = self::state($id, $row);
+                } catch (StoredAlertingRowUnreadable $e) {
+                    $states[$id] = new UnusableRuleRecord($id, $e->getMessage(), $e);
+                }
             }
         }
 
@@ -55,9 +61,11 @@ final readonly class DbalRuleStateStore implements RuleStateStore
         );
     }
 
-    public function delete(int $ruleId): void
+    public function delete(array $ruleIds): void
     {
-        $this->database->executeStatement('DELETE FROM alert_rule_state WHERE rule_id = ?', [$ruleId]);
+        foreach (array_chunk(array_values(array_unique($ruleIds)), self::CHUNK) as $ids) {
+            $this->database->executeStatement('DELETE FROM alert_rule_state WHERE rule_id IN (?)', [$ids], [ArrayParameterType::INTEGER]);
+        }
     }
 
     /** @param array<string, mixed> $row */

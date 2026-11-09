@@ -9,9 +9,12 @@ declare(strict_types=1);
 
 namespace Kadupul\Alerting\Infrastructure\Dbal;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\ParameterType;
 use Kadupul\Alerting\Application\Port\IncidentRepository;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
 use Kadupul\Alerting\Domain\Incident\InvalidIncident;
@@ -21,10 +24,14 @@ use Kadupul\Alerting\Domain\Incident\InvalidIncident;
  * open or acknowledged and NULL once it ends; its unique key is what allows
  * one active incident per rule. Every change names the active incident by
  * that column, and a change that finds none, or a second active incident,
- * fails so the caller's transaction rolls back the rule state with it.
+ * throws UnusableRuleRecord so the caller's transaction rolls back the rule
+ * state with it and the evaluator skips only that rule.
  */
 final readonly class DbalIncidentRepository implements IncidentRepository
 {
+    /** Rule ids per orphaning UPDATE, bounding the IN list. */
+    private const int CHUNK = 500;
+
     public function __construct(private Connection $database) {}
 
     public function open(int $ruleId, int $observedAt): void
@@ -35,20 +42,33 @@ final readonly class DbalIncidentRepository implements IncidentRepository
                 [$ruleId, IncidentStatus::Open->value, $ruleId, $observedAt],
             );
         } catch (UniqueConstraintViolationException $e) {
-            throw new \LogicException('Rule ' . $ruleId . ' already has an open or acknowledged incident; its stored state says it has none.', 0, $e);
+            throw new UnusableRuleRecord($ruleId, 'it already has an open or acknowledged incident; its stored state says it has none.', $e);
         }
     }
 
     public function close(int $ruleId, int $observedAt): void
     {
-        if (!$this->end($ruleId, IncidentStatus::Closed, $observedAt)) {
-            throw new \LogicException('Rule ' . $ruleId . ' recovered, but it has no open or acknowledged incident to close.');
+        $changed = $this->database->executeStatement(
+            'UPDATE alert_incident SET status = ?, active_rule_id = NULL, ended_at = ? WHERE active_rule_id = ?',
+            [IncidentStatus::Closed->value, $observedAt, $ruleId],
+        );
+        if ($changed !== 1) {
+            throw new UnusableRuleRecord($ruleId, 'it recovered, but it has no open or acknowledged incident to close.');
         }
     }
 
-    public function orphan(int $ruleId, int $at): bool
+    public function orphan(array $ruleIds, int $at): int
     {
-        return $this->end($ruleId, IncidentStatus::Orphaned, $at);
+        $ended = 0;
+        foreach (array_chunk(array_values(array_unique($ruleIds)), self::CHUNK) as $ids) {
+            $ended += (int) $this->database->executeStatement(
+                'UPDATE alert_incident SET status = ?, active_rule_id = NULL, ended_at = ? WHERE active_rule_id IN (?)',
+                [IncidentStatus::Orphaned->value, $at, $ids],
+                [ParameterType::STRING, ParameterType::INTEGER, ArrayParameterType::INTEGER],
+            );
+        }
+
+        return $ended;
     }
 
     /**
@@ -65,16 +85,6 @@ final readonly class DbalIncidentRepository implements IncidentRepository
         );
 
         return array_map(self::incident(...), $rows);
-    }
-
-    private function end(int $ruleId, IncidentStatus $status, int $at): bool
-    {
-        $changed = $this->database->executeStatement(
-            'UPDATE alert_incident SET status = ?, active_rule_id = NULL, ended_at = ? WHERE active_rule_id = ?',
-            [$status->value, $at, $ruleId],
-        );
-
-        return $changed === 1;
     }
 
     /** @param array<string, mixed> $row */

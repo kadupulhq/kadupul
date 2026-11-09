@@ -16,9 +16,12 @@ use Kadupul\Alerting\Application\Port\RateSource;
 use Kadupul\Alerting\Application\Port\RuleRepository;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
 use Kadupul\Alerting\Application\Port\TransactionRunner;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * One evaluation run (ADR 0011 decisions 4, 5, 8 and 9). Rules are read in
@@ -30,9 +33,16 @@ use Kadupul\Alerting\Domain\Rule\AlertRule;
  * Each rule's writes run in one transaction: its state is saved first and
  * its incident change follows, so a failed incident write also undoes the
  * state. A rule whose state did not change is not written. Before the
- * batches, rules whose series or rule row is gone end their active incident
- * as orphaned and lose their state (ADR 0011 decision 6); that is never a
- * recovery.
+ * batches, up to one batch of rules whose series or rule row is gone end
+ * their active incident as orphaned and lose their state (ADR 0011 decision
+ * 6); that is never a recovery, and the rest wait for later runs.
+ *
+ * Failures are split by what they concern (decision 8). An UnusableRuleRecord
+ * is about one rule's stored rows: that rule is logged, counted as failed and
+ * skipped, and the run and the cursor move on, so it cannot hold back the
+ * rules after it, or before it once the cursor wraps. Every other exception,
+ * such as a lost connection or a failed rate read, is not about one rule and
+ * propagates without moving the cursor.
  */
 final readonly class EvaluateRules
 {
@@ -46,6 +56,7 @@ final readonly class EvaluateRules
         private EvaluationCursor $cursor,
         private Clock $clock,
         private TransactionRunner $transaction,
+        private LoggerInterface $logger = new NullLogger(),
     ) {}
 
     public function __invoke(int $batchSize, float $budgetSeconds): EvaluationReport
@@ -61,9 +72,10 @@ final readonly class EvaluateRules
         }
 
         $started = self::seconds($this->clock->now());
-        $orphaned = $this->endOrphans();
+        $orphaned = $this->endOrphans($batchSize);
         $evaluated = 0;
         $skipped = 0;
+        $failed = 0;
         $after = $this->cursor->position();
         do {
             $batch = $this->rules->batchAfter($after, $batchSize);
@@ -71,10 +83,12 @@ final readonly class EvaluateRules
                 $this->cursor->moveTo(0);
                 break;
             }
-            [$batchEvaluated, $batchSkipped] = $this->evaluateBatch($batch);
+            [$batchEvaluated, $batchSkipped, $batchFailed] = $this->evaluateBatch($batch);
             $evaluated += $batchEvaluated;
             $skipped += $batchSkipped;
-            $after = max(array_map(static fn(AlertRule $rule): int => $rule->id, $batch));
+            $failed += $batchFailed;
+            // An unusable rule counts as passed, so the cursor never stops at it.
+            $after = max(array_map(static fn(AlertRule|UnusableRuleRecord $rule): int => $rule instanceof AlertRule ? $rule->id : $rule->ruleId, $batch));
             if (count($batch) < $batchSize) {
                 $this->cursor->moveTo(0);
                 break;
@@ -82,50 +96,71 @@ final readonly class EvaluateRules
             $this->cursor->moveTo($after);
         } while (self::seconds($this->clock->now()) - $started < $budgetSeconds);
 
-        return new EvaluationReport($evaluated, $skipped, null, $orphaned);
+        return new EvaluationReport($evaluated, $skipped, null, $orphaned, $failed);
     }
 
-    /** @return int rules whose incident or state was ended */
-    private function endOrphans(): int
+    /**
+     * Ends at most $limit orphans, the batch size, in one transaction. Neither
+     * write reads the rule's state, so an unreadable state row is deleted
+     * like any other. Handled orphans no longer qualify, so the rest are
+     * found by later runs.
+     *
+     * @return int rules whose incident or state was ended
+     */
+    private function endOrphans(int $limit): int
     {
-        $ids = $this->rules->orphanedRuleIds();
+        $ids = $this->rules->orphanedRuleIds($limit);
         if ($ids === []) {
             return 0;
         }
-        $stored = $this->states->load($ids);
         $at = $this->clock->now()->getTimestamp();
-        foreach ($ids as $id) {
-            $this->transaction->run(function () use ($id, $stored, $at): void {
-                if (isset($stored[$id])) {
-                    $this->states->delete($id);
-                }
-                // No notification: an orphaned incident did not recover.
-                $this->incidents->orphan($id, $at);
-            });
-        }
+        $this->transaction->run(function () use ($ids, $at): void {
+            $this->states->delete($ids);
+            // No notification: an orphaned incident did not recover.
+            $this->incidents->orphan($ids, $at);
+        });
 
         return count($ids);
     }
 
     /**
-     * @param list<AlertRule> $batch
+     * @param list<AlertRule|UnusableRuleRecord> $batch
      *
-     * @return array{int, int} evaluated and skipped counts
+     * @return array{int, int, int} evaluated, skipped and failed counts
      */
     private function evaluateBatch(array $batch): array
     {
-        $keys = [];
+        $failed = 0;
+        $rules = [];
         foreach ($batch as $rule) {
+            if ($rule instanceof UnusableRuleRecord) {
+                $this->quarantine($rule);
+                ++$failed;
+            } else {
+                $rules[] = $rule;
+            }
+        }
+        if ($rules === []) {
+            return [0, 0, $failed];
+        }
+        $keys = [];
+        foreach ($rules as $rule) {
             $keys[$rule->series->id()] = $rule->series;
         }
+        // A failed rate read is not about one rule: it propagates.
         $observations = $this->rates->currentRates(array_values($keys));
-        $states = $this->states->load(array_map(static fn(AlertRule $rule): int => $rule->id, $batch));
+        $states = $this->states->load(array_map(static fn(AlertRule $rule): int => $rule->id, $rules));
         $now = $this->clock->now()->getTimestamp();
 
         $evaluated = 0;
         $skipped = 0;
-        foreach ($batch as $rule) {
+        foreach ($rules as $rule) {
             $state = $states[$rule->id] ?? new RuleState();
+            if ($state instanceof UnusableRuleRecord) {
+                $this->quarantine($state);
+                ++$failed;
+                continue;
+            }
             $before = clone $state;
             $observation = $observations[$rule->series->id()] ?? null;
 
@@ -144,19 +179,31 @@ final readonly class EvaluateRules
             }
 
             if (!$state->equals($before)) {
-                $this->transaction->run(function () use ($rule, $state, $transition, $observedAt): void {
-                    $this->states->save($rule->id, $state);
-                    if ($observedAt !== null && $transition === Transition::Opened) {
-                        $this->incidents->open($rule->id, $observedAt);
-                    } elseif ($observedAt !== null && $transition === Transition::Recovered) {
-                        $this->incidents->close($rule->id, $observedAt);
-                    }
-                });
+                try {
+                    $this->transaction->run(function () use ($rule, $state, $transition, $observedAt): void {
+                        $this->states->save($rule->id, $state);
+                        if ($observedAt !== null && $transition === Transition::Opened) {
+                            $this->incidents->open($rule->id, $observedAt);
+                        } elseif ($observedAt !== null && $transition === Transition::Recovered) {
+                            $this->incidents->close($rule->id, $observedAt);
+                        }
+                    });
+                } catch (UnusableRuleRecord $mismatch) {
+                    // Rolled back: the incident rows disagree with this rule's state.
+                    $this->quarantine($mismatch);
+                    ++$failed;
+                    continue;
+                }
             }
             ++$evaluated;
         }
 
-        return [$evaluated, $skipped];
+        return [$evaluated, $skipped, $failed];
+    }
+
+    private function quarantine(UnusableRuleRecord $record): void
+    {
+        $this->logger->warning('Alert rule {rule} was skipped: {reason}', ['rule' => $record->ruleId, 'reason' => $record->reason]);
     }
 
     private static function seconds(\DateTimeImmutable $instant): float

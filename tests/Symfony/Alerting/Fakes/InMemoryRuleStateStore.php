@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests\Alerting\Fakes;
 
 use Kadupul\Alerting\Application\Port\RuleStateStore;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 
 final class InMemoryRuleStateStore implements RuleStateStore
@@ -18,12 +19,18 @@ final class InMemoryRuleStateStore implements RuleStateStore
     public array $states = [];
     /** @var list<int> rule ids in the order they were saved */
     public array $saved = [];
+    /** @var array<int, string> stored rows that cannot be read, by rule id, with the reason */
+    public array $unreadable = [];
+    /** @var list<list<int>> the ids of each delete() call */
+    public array $deleted = [];
 
     public function load(array $ruleIds): array
     {
         $found = [];
         foreach ($ruleIds as $id) {
-            if (isset($this->states[$id])) {
+            if (isset($this->unreadable[$id])) {
+                $found[$id] = new UnusableRuleRecord($id, $this->unreadable[$id]);
+            } elseif (isset($this->states[$id])) {
                 // A copy, so only save() changes what is stored.
                 $found[$id] = clone $this->states[$id];
             }
@@ -38,8 +45,11 @@ final class InMemoryRuleStateStore implements RuleStateStore
         $this->saved[] = $ruleId;
     }
 
-    public function delete(int $ruleId): void
+    public function delete(array $ruleIds): void
     {
-        unset($this->states[$ruleId]);
+        $this->deleted[] = $ruleIds;
+        foreach ($ruleIds as $id) {
+            unset($this->states[$id], $this->unreadable[$id]);
+        }
     }
 }

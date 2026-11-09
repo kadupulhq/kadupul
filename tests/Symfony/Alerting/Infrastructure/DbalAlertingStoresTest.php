@@ -24,6 +24,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredAlertingRowUnreadable;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredValue;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -103,10 +104,17 @@ final class DbalAlertingStoresTest extends TestCase
         $this->addRule(3, 103);
         $this->addSeries(103, 0, $column === 'rrd_name' ? '' : 'traffic_in');
         $this->database->update('alert_rule', [$column => $value], ['id' => 3]);
+        $this->addRule(4, 104);
+        $this->addSeries(104, 0);
 
-        $this->expectException(StoredAlertingRowUnreadable::class);
-        $this->expectExceptionMessage('alert_rule 3');
-        (new DbalRuleRepository($this->database))->batchAfter(0, 10);
+        // The unreadable row stands in its place; it does not hide rule 4.
+        [$unusable, $next] = (new DbalRuleRepository($this->database))->batchAfter(0, 10);
+
+        self::assertInstanceOf(UnusableRuleRecord::class, $unusable);
+        self::assertSame(3, $unusable->ruleId);
+        self::assertStringContainsString('alert_rule 3', $unusable->reason);
+        self::assertInstanceOf(AlertRule::class, $next);
+        self::assertSame(4, $next->id);
     }
 
     public function testOrphansAreRulesWithAGoneSeriesAndSomethingToEnd(): void
@@ -145,7 +153,9 @@ final class DbalAlertingStoresTest extends TestCase
         $this->addRule(30, 130);
         $this->database->insert('alert_incident', ['rule_id' => 30, 'status' => 'acknowledged', 'active_rule_id' => 30, 'opened_at' => 100, 'acknowledged_at' => 110, 'acknowledged_by' => 1]);
 
-        self::assertSame([2, 5, 6, 7, 20, 21, 30], (new DbalRuleRepository($this->database))->orphanedRuleIds());
+        $rules = new DbalRuleRepository($this->database);
+        self::assertSame([2, 5, 6, 7, 20, 21, 30], $rules->orphanedRuleIds(10));
+        self::assertSame([2, 5, 6], $rules->orphanedRuleIds(3), 'The limit takes the lowest ids.');
     }
 
     public function testTheDataSourceNameMustMatchExactly(): void
@@ -154,7 +164,7 @@ final class DbalAlertingStoresTest extends TestCase
         $this->addRule(1, 101);
         $this->database->insert('alert_rule_state', ['rule_id' => 1]);
 
-        self::assertSame([1], (new DbalRuleRepository($this->database))->orphanedRuleIds());
+        self::assertSame([1], (new DbalRuleRepository($this->database))->orphanedRuleIds(10));
     }
 
     public function testEveryStateFieldSurvivesAReload(): void
@@ -174,8 +184,11 @@ final class DbalAlertingStoresTest extends TestCase
         self::assertEquals($states, $store->load([4, 3, 2, 1, 1, 99]));
         self::assertSame(4, (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_rule_state'));
 
-        $store->delete(2);
+        $store->delete([2]);
         self::assertSame([1, 3, 4], array_keys($store->load([1, 2, 3, 4])));
+        $store->delete([]);
+        $store->delete([3, 4, 3, 99]);
+        self::assertSame([1], array_keys($store->load([1, 2, 3, 4])));
         self::assertSame([], $store->load([]));
     }
 
@@ -208,10 +221,19 @@ final class DbalAlertingStoresTest extends TestCase
     public function testAStateRowNoVerdictSequenceCanReachIsReported(array $row): void
     {
         $this->database->insert('alert_rule_state', ['rule_id' => 7] + $row);
+        $store = new DbalRuleStateStore($this->database);
+        $store->save(8, new RuleState(false, 1, 0, false, 100));
 
-        $this->expectException(StoredAlertingRowUnreadable::class);
-        $this->expectExceptionMessage('alert_rule_state 7');
-        (new DbalRuleStateStore($this->database))->load([7]);
+        $loaded = $store->load([7, 8]);
+
+        self::assertInstanceOf(UnusableRuleRecord::class, $loaded[7]);
+        self::assertSame(7, $loaded[7]->ruleId);
+        self::assertStringContainsString('alert_rule_state 7', $loaded[7]->reason);
+        self::assertEquals(new RuleState(false, 1, 0, false, 100), $loaded[8], 'One unreadable row does not hide the others.');
+
+        // Deleting does not read the row, so an unreadable one goes too.
+        $store->delete([7]);
+        self::assertSame([8], array_keys($store->load([7, 8])));
     }
 
     public function testIncidentsOpenCloseAndOrphanTheActiveIncidentOnly(): void
@@ -221,9 +243,10 @@ final class DbalAlertingStoresTest extends TestCase
         $incidents->open(1, 100);
         $incidents->close(1, 200);
         $incidents->open(1, 300);
-        self::assertTrue($incidents->orphan(1, 400));
-        self::assertFalse($incidents->orphan(1, 500), 'An ended incident is not ended again.');
-        self::assertFalse($incidents->orphan(2, 500));
+        self::assertSame(1, $incidents->orphan([1], 400));
+        self::assertSame(0, $incidents->orphan([1], 500), 'An ended incident is not ended again.');
+        self::assertSame(0, $incidents->orphan([2], 500));
+        self::assertSame(0, $incidents->orphan([], 500));
 
         self::assertEquals([
             new Incident(1, 1, IncidentStatus::Closed, 100, 200),
@@ -239,12 +262,30 @@ final class DbalAlertingStoresTest extends TestCase
         try {
             $incidents->open(1, 200);
             self::fail('A second active incident was opened.');
-        } catch (\LogicException $e) {
-            self::assertStringContainsString('Rule 1 already has an open or acknowledged incident', $e->getMessage());
+        } catch (UnusableRuleRecord $e) {
+            self::assertSame(1, $e->ruleId);
+            self::assertStringContainsString('already has an open or acknowledged incident', $e->reason);
         }
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Rule 2 recovered, but it has no open or acknowledged incident to close.');
-        $incidents->close(2, 300);
+        try {
+            $incidents->close(2, 300);
+            self::fail('A recovery closed an incident that does not exist.');
+        } catch (UnusableRuleRecord $e) {
+            self::assertSame([2, 'it recovered, but it has no open or acknowledged incident to close.'], [$e->ruleId, $e->reason]);
+        }
+    }
+
+    public function testOrphaningEndsEveryActiveIncidentOfTheRulesInOneCall(): void
+    {
+        $incidents = new DbalIncidentRepository($this->database);
+        foreach ([1, 2, 3] as $rule) {
+            $incidents->open($rule, 100);
+        }
+
+        self::assertSame(2, $incidents->orphan([1, 3, 3, 9], 400));
+
+        self::assertSame(IncidentStatus::Orphaned, $incidents->forRule(1)[0]->status);
+        self::assertSame(IncidentStatus::Open, $incidents->forRule(2)[0]->status);
+        self::assertSame(IncidentStatus::Orphaned, $incidents->forRule(3)[0]->status);
     }
 
     public function testAnAcknowledgedIncidentClosesAndKeepsItsAcknowledgement(): void
