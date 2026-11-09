@@ -7,6 +7,7 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 
 - Validate administrative and test mail SMTP settings once through a typed, trace-redacted settings object shared by Symfony Mailer and the legacy fallback selection, and wire the Alerting module through service discovery; mail delivery is unchanged, and a non-numeric primary admin setting is now treated as unset (#1426).
+- Restore legacy behaviour in the migrated administration and relationship lists: Graph Rules search matches graph type and data query names again, lists use the configured rows-per-page setting when no size or `rows=-1` is requested and accept sizes up to 5000, Networks counts and runtimes are formatted as on the legacy page, and System Utilities links to these lists open as full pages instead of a blank content area (#1425).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
@@ -26,20 +27,26 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
 - Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
 - Give each native child coverage invocation a distinct test identity and report stem so reused process IDs cannot conflate execution or overwrite reports and evidence sidecars.
+- Check at poller startup that the configured spine or PHP binary exists and is executable, and exit with status 1 before recording the run when it is not; a wrong `path_php_binary` no longer waits for collectors that never start.
 - Preserve checkout sources and originating unit coverage when coverage-merger scratch cleanup runs with the checkout beneath the temporary directory.
 - Add an advisory `Mutation testing (advisory)` workflow that runs Infection 0.35 on the `src/` lines a pull request adds or modifies and lists undetected mutants in the job summary; surviving mutants never fail it, tool failures do.
 - Update development coverage reporting to coverage.py 7.17.0 and the hash-locked Semgrep scanner to 1.182.1, retaining the existing Python 3.12 runtime and coverage/security gates.
+- Remove temporary files that a killed data input whitelist update (older than an hour, found while holding the whitelist lock) or RRD restore (older than a day) left beside its target (#1357).
 
+- Measure the existing function-inventory regressions and its real read-only CLI check, binding native evidence to the command's repository inputs and retaining strict coverage import validation.
 - Serve migrated Symfony pages in all 23 shipped gettext languages: module domain keys without a YAML translation fall back to the matching `locales/po` entry, and the locale subscriber accepts every shipped locale with legacy spellings such as `pt_BR`, `zh-CN` and `de-AT`. Plural keys are bridged only where gettext and the English singular/plural choice agree; legacy `__()` and plugin catalogs are unchanged.
 - Add a weekly Flaky tests workflow that runs the legacy suite in file and random order and lists tests whose result changes between runs, and `tests/tools/select_tests.py` to run only the registered tests that name a changed file locally.
 - Update locked Doctrine, Symfony 7.4 and Twig 3 dependencies while retaining the PHP 8.4 platform and Symfony 7.4 component stack. Record Symfony's corrected deprecation option name in the exact error-handler characterization.
+- Submit the Data Source Troubleshooter's Apply Suggested Fixes and Rerun Analysis links as token-bearing POST requests, and refuse those actions by GET (#1038).
 
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
+- Compute the SpikeKill standard-deviation mean from the same samples around the replacement window as the deviation, so both cutoffs come from one reference set; with fewer than two reference samples only the data source limits mark a spike (#1034).
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
+- Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order, and number newly associated graphs after the last member instead of tying with it (#226).
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 - Ignore an unknown (NaN) data source minimum or maximum when SpikeKill builds its standard-deviation cutoffs (#1095).
 
@@ -60,6 +67,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Update the locked Symfony Config, Filesystem, FrameworkBundle, HttpClient, HttpFoundation, HttpKernel, Routing and Yaml packages to 7.4.23 and Mime to 7.4.22 to take upstream security fixes, retaining the Symfony 7.4 constraints and other locked versions.
 - Preserve native collector recovery while ordinary or Boost output is pending or unreadable: administration refuses primary reads and the console keeps the local database/session backend until recovery finishes (#759).
 - Remove only the remote poller items the main data collector no longer holds after copying them to a Remote Data Collector, comparing item keys. The previous `last_updated` cutoff also removed current items that the copy left unchanged (#1408).
+- Record gettext source references by file without line numbers, so changes that only shift lines in PHP or Twig sources no longer rewrite and conflict on `locales/po` catalogs (a move that swaps two messages within one file still reorders their catalog blocks on the next rebuild); the catalog verifier now rejects line-numbered references.
 - Run complete file and database session coverage concurrently in isolated Docker projects, retaining both failure statuses and the existing coverage validation and job deadline.
 
 - Import required application coverage entry points before validating their execution, retaining tree and graph CLI worker evidence as migrations add new sources (#1255).
