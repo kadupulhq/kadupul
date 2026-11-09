@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 23:22-0800\n"
+"POT-Creation-Date: 2026-11-09 03:54-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -16122,6 +16122,11 @@ msgstr "Удалить плагин"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Удаление этого плагина удалит все данные и настройки плагина.  Если вы действительно хотите удалить плагин, нажмите кнопку \"Удалить\" ниже.  В противном случае нажмите кнопку \"Отмена\"."
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format
