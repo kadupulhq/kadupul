@@ -119,7 +119,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'include/csrf.php' => '6a5ad7f93aa4d00592be201e4160c7a77b2c8854309e8b29db083c760b8be74c',
-    'config/services.yaml' => '9d5b3ec3a9fe9083c6779b058c8ce6c11bda2b8186ac2ee23b05bb03c885c61d',
+    'config/services.yaml' => '55c1529f5d7a9363c60844ff244acc619f86be56e487136663cd33ce25538e9d',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -272,7 +272,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '9d5b3ec3a9fe9083c6779b058c8ce6c11bda2b8186ac2ee23b05bb03c885c61d',
+    'config/services.yaml' => '55c1529f5d7a9363c60844ff244acc619f86be56e487136663cd33ce25538e9d',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter

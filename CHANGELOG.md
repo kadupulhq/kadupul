@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Type the report device-placement adapter and report catalog rows, prepare the placement statements once per request instead of once per device, and bind the adapter with `#[AsAlias]`; report placement and listing behaviour are unchanged.
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 

@@ -69,6 +69,55 @@ final class DevicePlacementCatalogTest extends TestCase
         $placement->verify(42, [7], 1, 10, $receipt);
     }
 
+    public function testReportPlacementAppendsOnlyMissingDevicesAndVerifiesTheReceipt(): void
+    {
+        $sqlite = new \PDO('sqlite::memory:');
+        $sqlite->exec("CREATE TABLE reports (id INTEGER, name TEXT, user_id INTEGER);
+            INSERT INTO reports VALUES (1,'Owned',42),(2,'Foreign',43);
+            CREATE TABLE host (id INTEGER, host_template_id INTEGER, site_id INTEGER, deleted TEXT);
+            INSERT INTO host VALUES (7,3,9,''),(8,4,0,''),(9,4,0,'on');
+            CREATE TABLE reports_items (id INTEGER PRIMARY KEY AUTOINCREMENT, report_id INTEGER, item_type INTEGER, host_template_id INTEGER, site_id INTEGER,
+                host_id INTEGER, graph_template_id INTEGER, local_graph_id INTEGER, timespan INTEGER, align INTEGER, sequence INTEGER, item_text TEXT, tree_id INTEGER DEFAULT 0);
+            INSERT INTO reports_items (report_id, item_type, host_template_id, site_id, host_id, graph_template_id, local_graph_id, timespan, align, sequence, item_text)
+                VALUES (1,1,0,0,0,0,11,7,1,4,'graph'),(1,5,4,0,8,-1,0,7,1,2,'')");
+        // Row locks are covered by the MariaDB placement probe; SQLite checks the SQL.
+        $pdo = $this->createMock(\PDO::class);
+        $pdo->method('inTransaction')->willReturn(true);
+        $pdo->method('prepare')->willReturnCallback(static fn(string $sql): \PDOStatement => $sqlite->prepare((string) preg_replace('/ FOR UPDATE$/', '', $sql)));
+        $db = $this->createMock(DatabaseConnection::class);
+        $db->method('get')->willReturn($pdo);
+        $access = $this->createMock(ResourceAccess::class);
+        $access->method('canManageReport')->willReturnCallback(static fn(int $actor, int $owner): bool => $actor === $owner);
+        $placement = new LegacyDeviceReportPlacement($db, $access);
+
+        $receipt = $placement->place(42, [7, 8], 1, 7, 2);
+
+        // Device 8 keeps its alignment and sequence; device 7 is appended after the highest sequence.
+        self::assertSame([[8, 1, 2], [7, 2, 5]], array_map(
+            static fn(array $row): array => [(int) $row['host_id'], (int) $row['align'], (int) $row['sequence']],
+            $receipt,
+        ));
+        self::assertSame(['3', '9', '-1', '0'], array_map('strval', [$receipt[1]['host_template_id'], $receipt[1]['site_id'], $receipt[1]['graph_template_id'], $receipt[1]['local_graph_id']]));
+        self::assertSame($receipt, $placement->place(42, [7, 8], 1, 7, 2), 'A repeated placement adds nothing.');
+        $placement->verify(42, [7, 8], 1, 7, 2, $receipt);
+
+        $sqlite->exec('UPDATE reports_items SET sequence = 9 WHERE host_id = 7');
+        try {
+            $placement->verify(42, [7, 8], 1, 7, 2, $receipt);
+            self::fail('A placement changed by a callback must be refused.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('Placement changed during callbacks', $error->getMessage());
+        }
+        foreach ([[2, [7]], [3, [7]], [1, [9]]] as [$report, $devices]) {
+            try {
+                $placement->place(42, $devices, $report, 7, 2);
+                self::fail('Foreign, missing reports and deleted devices must be refused.');
+            } catch (\RuntimeException) {
+            }
+        }
+        self::assertSame(0, (int) $sqlite->query('SELECT COUNT(*) FROM reports_items WHERE report_id <> 1 OR host_id = 9')->fetchColumn());
+    }
+
     public static function legacyBranches(): iterable
     {
         yield 'site branch' => [9, 'Site'];
