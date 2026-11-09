@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 14:40-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,8 +398,9 @@ msgid "Report Name"
 msgstr "Tên report"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Trở về trang cài đặt bắt buộc Plugins"
@@ -1972,20 +1973,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Bạn có chắc chắn muốn XÓA quy tắc &#39; %s&#39; không?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Bạn có chắc muốn tiếp tục không?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Tại Subtree"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Bằng cách thay đổi loại lá, tất cả các quy tắc không hợp lệ sẽ tự động bị xóa và sẽ không thể phục hồi được."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Thay đổi loại lá"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -2000,8 +1989,16 @@ msgid "Created Trees"
 msgstr "Tạo cây"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Đối tượng đủ điều kiện"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Biểu đồ nhóm"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -2012,6 +2009,10 @@ msgstr "Móc vào cây"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Tên trường sẽ được sử dụng cho Mục quy tắc này."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Loại vật phẩm lá"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Không tìm thấy quy tắc cây"
@@ -2020,13 +2021,29 @@ msgstr "Không tìm thấy quy tắc cây"
 msgid "Object Selection Criteria"
 msgstr "Tiêu chí lựa chọn đối tượng"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Tùy chọn: Mục cây"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "Root"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Loại này"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Cây thân gỗ"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -2042,20 +2059,8 @@ msgid "Tree Rules"
 msgstr "Quy tắc cây"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Lựa chọn quy tắc cây [mới]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Sử dụng nhóm"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "LƯU Ý:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Bạn đang thay đổi loại lá thành &quot;Thiết bị&quot; không hỗ trợ khớp / tạo đối tượng dựa trên đồ thị."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -6103,10 +6108,6 @@ msgstr "Tổng cộng tất cả các nguồn dữ liệu"
 msgid "Total Similar Data Sources"
 msgstr "Tổng nguồn dữ liệu tương tự"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Cây thân gỗ"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Chế độ cây"
@@ -7035,10 +7036,6 @@ msgstr "Cung cấp cho thực thể SNMP này một mô tả có ý nghĩa."
 msgid "Give this host a meaningful description."
 msgstr "Cung cấp cho chủ nhà này một mô tả có ý nghĩa."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Biểu đồ nhóm"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Loại đồ thị"
@@ -7190,10 +7187,6 @@ msgid "Is this to carry the template?"
 msgstr "Đây có phải là để mang mẫu?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Loại vật phẩm lá"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Trình định dạng trục trái (--left-trục-formatter &lt;formatname&gt;)"
 
@@ -7312,10 +7305,6 @@ msgstr "Thao tác"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Tổng đài xin nghe."
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Tùy chọn: Mục cây"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -14302,6 +14291,10 @@ msgstr "Nâng cấp từ <strong> %s</strong> lên <strong> %s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Nâng cấp từ v%s (DB%s) lên v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "LƯU Ý:"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."

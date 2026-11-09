@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 14:40-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -395,8 +395,9 @@ msgid "Report Name"
 msgstr "Rapportnamn"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Tillbaka"
@@ -1967,20 +1968,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Är du säker på att du vill TA BORT regeln '%s'?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Är du säker på att du vill fortsätta?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "På Subtree"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Genom att ändra bladtypen kommer alla ogiltiga regler att tas bort automatiskt och kan inte återställas."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Ändra bladtyp"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1995,8 +1984,16 @@ msgid "Created Trees"
 msgstr "Skapade träd"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Stödberättigade objekt"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Stil för gruppering av grafer"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -2007,6 +2004,10 @@ msgstr "Krok i träd"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Det fältnamn som ska användas för denna Rule Item."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Blad Artikeltyp"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Inga trädregler hittades"
@@ -2015,13 +2016,29 @@ msgstr "Inga trädregler hittades"
 msgid "Object Selection Criteria"
 msgstr "Kriterier för urval av objekt"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Valfritt: Underträdspost"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROT"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Denna typ"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Träd"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -2037,20 +2054,8 @@ msgid "Tree Rules"
 msgstr "Regler för träd"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Val av trädregler [ny]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Använda gruppering"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "VARNING:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Du ändrar bladtypen till \"Device\", vilket inte stöder grafbaserad matchning/skapande av objekt."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -6112,10 +6117,6 @@ msgstr "Totalt Alla datakällor"
 msgid "Total Similar Data Sources"
 msgstr "Totalt Liknande datakällor"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Träd"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Trädläge"
@@ -7044,10 +7045,6 @@ msgstr "Ge denna SNMP-enhet en meningsfull beskrivning."
 msgid "Give this host a meaningful description."
 msgstr "Ge denna värd en meningsfull beskrivning."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Stil för gruppering av grafer"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Typ av grafiskt objekt"
@@ -7199,10 +7196,6 @@ msgid "Is this to carry the template?"
 msgstr "Är det för att bära mallen?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Blad Artikeltyp"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Formatering av vänster axel (--left-axis-formatter &lt;formatname&gt;)"
 
@@ -7321,10 +7314,6 @@ msgstr "Operation"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Operatör."
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Valfritt: Underträdspost"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -14300,6 +14289,10 @@ msgstr "Uppgradera från <strong>%s</strong> till <strong>%s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Uppgradering från v%s (DB %s) till v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "VARNING:"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
