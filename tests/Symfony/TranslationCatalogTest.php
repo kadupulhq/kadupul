@@ -30,7 +30,12 @@ final class TranslationCatalogTest extends TestCase
      */
     private const GETTEXT_ALLOWLIST = [
         'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php' => 7,
+        // Installer adapters store the same translated defaults the legacy installer writes.
+        'src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php' => 1,
+        'src/Platform/Infrastructure/Legacy/InstallerToolPaths.php' => 1,
     ];
+
+    private const GETTEXT_FUNCTIONS = ['__', '__esc', '_n', '__x', '_x', 'gettext', '_'];
 
     /** @return iterable<string, array{string}> */
     public static function domains(): iterable
@@ -103,7 +108,9 @@ final class TranslationCatalogTest extends TestCase
             foreach ($code as $index => $token) {
                 $previous = $code[$index - 1] ?? null;
                 if (
-                    $token->is(T_STRING) && in_array($token->text, ['__', '__esc', '_n', '__x', '_x', 'gettext', '_'], true)
+                    // `\__()` is one T_NAME_FULLY_QUALIFIED token, not a T_STRING.
+                    (($token->is(T_STRING) && in_array($token->text, self::GETTEXT_FUNCTIONS, true))
+                        || ($token->is(T_NAME_FULLY_QUALIFIED) && in_array(substr($token->text, 1), self::GETTEXT_FUNCTIONS, true)))
                     && ($code[$index + 1] ?? null)?->text === '('
                     && !($previous?->is([T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR, T_DOUBLE_COLON, T_FUNCTION, T_NEW]))
                 ) {

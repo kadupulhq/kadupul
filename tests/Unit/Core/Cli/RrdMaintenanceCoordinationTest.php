@@ -37,7 +37,7 @@ function rrd_cli_containment_source(): string
 
     $source = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
     $code   = 'function rrdtool_uses_proxy() { return false; }';
-    foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path') as $function) {
+    foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrd_additional_roots', 'rrd_path_in_additional_root') as $function) {
         $code .= "\n" . test_php_function_source($source, $function);
     }
 

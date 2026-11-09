@@ -33,6 +33,14 @@ test('legacy navigation opens Symfony Sites as a full document through either lo
   }
 });
 
+test('every Symfony page opens as a full document because none renders #main', () => {
+  for (const path of ['app.php/utilities/notification-receivers', 'app.php/utilities/login-history', 'app.php/automation/graph-rules?filter=x', 'app.php/inventory/devices', 'public/index.php/administration/users']) {
+    const { scope, locations } = context();
+    scope.loadPage(path);
+    assert.deepEqual(locations, [new URL(path, scope.window.location.href).href], path);
+  }
+});
+
 test('Sites navigation preserves the unsaved-form cancellation', () => {
   for (const loader of ['loadPage', 'loadPageNoHeader']) {
     const { scope, locations } = context(false);
@@ -43,7 +51,7 @@ test('Sites navigation preserves the unsaved-form cancellation', () => {
 
 test('unrelated paths, foreign origins and lookalike query strings remain outside the handoff', () => {
   const { scope, locations } = context();
-  for (const path of ['host.php?next=sites.php', 'sites.php.bak', 'app.php/inventory/sites-malicious', 'https://foreign.test/sites.php', 'javascript:alert(1)', 'http://[invalid']) {
+  for (const path of ['host.php?next=sites.php', 'host.php?next=app.php/console', 'sites.php.bak', 'myapp.php/console', 'app.phpx/console', 'app.php', 'app.php/', 'app.php//foreign.test/', 'https://foreign.test/sites.php', 'javascript:alert(1)', 'http://[invalid']) {
     assert.equal(scope.navigateToSymfonySites(path), false, path);
   }
   assert.deepEqual(locations, []);
@@ -59,7 +67,7 @@ test('graph item input links from the legacy template page open the Symfony edit
     }
   }
   const { scope, locations } = context();
-  for (const path of ['graph_templates.php?action=template_edit&id=2', 'graph_templates_items.php?action=item_edit', 'app.php/graphing/graph-templates', 'app.php/graphing/graph-templates/0/inputs/new', 'app.php/graphing/graph-templates/2/inputs-x', 'graph_templates_inputs.php.bak']) {
+  for (const path of ['graph_templates.php?action=template_edit&id=2', 'graph_templates_items.php?action=item_edit', 'graph_templates_inputs.php.bak', 'xgraph_templates_inputs.php']) {
     assert.equal(scope.navigateToSymfonySites(path), false, path);
   }
   assert.deepEqual(locations, []);

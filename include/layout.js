@@ -2447,7 +2447,9 @@ function navigateToSymfonySites(href) {
 	} catch (error) {
 		return false;
 	}
-	if (target.origin !== window.location.origin || !(/\/(?:sites|index|graph_templates_inputs)\.php$|\/(?:app\.php|public\/index\.php)\/(?:inventory\/sites|console|help|graphing\/graph-templates\/[1-9][0-9]*\/inputs)(?:\/|$)/).test(target.pathname)) {
+	/* Every Symfony page renders its own document without #main, so loading
+	 * one by AJAX would blank the content area. */
+	if (target.origin !== window.location.origin || !(/\/(?:sites|index|graph_templates_inputs)\.php$|\/(?:app\.php|public\/index\.php)\/[^/]/).test(target.pathname)) {
 		return false;
 	}
 	window.location.assign(target.href);
