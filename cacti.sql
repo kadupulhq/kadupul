@@ -178,6 +178,74 @@ CREATE TABLE `aggregate_graphs_items` (
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Aggregate Graph Items';
 
 --
+-- Table structure for table `alert_incident`
+--
+
+CREATE TABLE alert_incident (
+  id int(10) unsigned NOT NULL auto_increment,
+  rule_id int(10) unsigned NOT NULL,
+  status varchar(16) NOT NULL,
+  active_rule_id int(10) unsigned default NULL,
+  opened_at int(10) unsigned NOT NULL,
+  acknowledged_at int(10) unsigned default NULL,
+  acknowledged_by mediumint(8) unsigned default NULL,
+  ended_at int(10) unsigned default NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY active_rule_id (active_rule_id),
+  KEY rule_id (rule_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
+-- Table structure for table `alert_notification`
+--
+
+CREATE TABLE alert_notification (
+  id bigint(20) unsigned NOT NULL auto_increment,
+  incident_id int(10) unsigned NOT NULL,
+  kind varchar(16) NOT NULL,
+  status varchar(16) NOT NULL default 'queued',
+  attempts smallint(5) unsigned NOT NULL default 0,
+  queued_at int(10) unsigned NOT NULL,
+  next_attempt_at int(10) unsigned NOT NULL,
+  sent_at int(10) unsigned default NULL,
+  last_error varchar(255) NOT NULL default '',
+  PRIMARY KEY (id),
+  KEY status_next_attempt (status, next_attempt_at),
+  KEY incident_id (incident_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
+-- Table structure for table `alert_rule`
+--
+
+CREATE TABLE alert_rule (
+  id int(10) unsigned NOT NULL auto_increment,
+  local_data_id int(10) unsigned NOT NULL,
+  rrd_name varbinary(19) NOT NULL,
+  comparator char(2) NOT NULL,
+  trigger_threshold double NOT NULL,
+  clear_threshold double NOT NULL,
+  for_cycles smallint(5) unsigned NOT NULL default 1,
+  owner_id mediumint(8) unsigned NOT NULL default 0,
+  PRIMARY KEY (id),
+  KEY series (local_data_id, rrd_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
+-- Table structure for table `alert_rule_state`
+--
+
+CREATE TABLE alert_rule_state (
+  rule_id int(10) unsigned NOT NULL,
+  incident_open tinyint(3) unsigned NOT NULL default 0,
+  consecutive_breaches int(10) unsigned NOT NULL default 0,
+  consecutive_oks int(10) unsigned NOT NULL default 0,
+  is_unknown tinyint(3) unsigned NOT NULL default 0,
+  last_observed_at int(10) unsigned default NULL,
+  PRIMARY KEY (rule_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
 -- Table structure for table `automation_devices`
 --
 

@@ -65,8 +65,8 @@ function repairAssert(PDO $database): void
         'actual repaired schema preserves stored creation time across a later aggregate update'
     );
     installerAssert(
-        $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.39',
-        'actual entrypoint publishes reachable forward version 1.2.39 after repair'
+        $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.40',
+        'actual entrypoint publishes reachable forward version 1.2.40 after repair'
     );
 }
 $root = dirname(__DIR__, 2);

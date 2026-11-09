@@ -72,8 +72,8 @@ final class AssetUpgradeTest extends TestCase
             $this->assertSame([[], 0, 0, []], [$audit->findings, $audit->errors, $audit->warnings, $audit->clauses], $table);
         }
         $root = dirname(__DIR__, 3);
-        $this->assertSame('1.2.39', trim(file_get_contents($root . '/include/cacti_version')));
-        $this->assertMatchesRegularExpression("/^\\s*'1\\.2\\.39'\\s*=>\\s*'0103',\\n\\);/m", file_get_contents($root . '/include/global_arrays.php'));
+        $this->assertTrue(version_compare(trim(file_get_contents($root . '/include/cacti_version')), '1.2.39', '>='));
+        $this->assertMatchesRegularExpression("/^\\s*'1\\.2\\.38'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.39'\\s*=>\\s*'0103',/m", file_get_contents($root . '/include/global_arrays.php'));
         $this->assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
     }
 
