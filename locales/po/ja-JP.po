@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 01:04-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -942,9 +942,9 @@ msgstr "最終チェック"
 msgid "Location"
 msgstr "場所"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "該当なし"
 
@@ -1442,9 +1442,9 @@ msgstr "日に毎月"
 msgid "Months of Year"
 msgstr "年の月"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "名前"
 
@@ -1760,22 +1760,6 @@ msgstr "X週間ごと。"
 msgid "every X."
 msgstr "すべてのX。"
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "アクション"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "認証パスワード"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "認証プロトコル"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "認証ユーザー名"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "自動化アイテムが存在しません。複製できません。"
@@ -1789,55 +1773,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "自動化SNMPオプション"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "[続行]をクリックして、次のSNMPオプション項目を削除します。"
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "次のSNMPオプションを削除するには、[続行]をクリックします。"
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "[続行]をクリックして、次のSNMPオプションを複製します。新しいSNMPオプションのタイトルフォーマットはオプションで変更できます。"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "コミュニティ"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "属性"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "SNMPオプション項目の削除"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "このSNMPオプションセットの名前を入力してください。"
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "項目"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "アイテム#%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "最大OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "下へ"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "上へムーブ"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1848,37 +1789,8 @@ msgid "Networks Using"
 msgstr "ネットワーク"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "SNMP項目なし"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "SNMPオプションセットが見つかりません"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "ポート"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "特権パスフレーズ"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "特権プロトコル"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "SNMPアイテムを削除する"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "再試行"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMPコミュニティ/ユーザー名<b>：%s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1889,52 +1801,16 @@ msgid "SNMP Option Set"
 msgstr "SNMPオプションセット"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMPオプションセット[編集：%s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMPオプションセット[new]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "SNMPオプションセット"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "SNMPオプション"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMPオプション[編集：%s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "SNMPオプション[new]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMPルール"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP バージョン: <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "配列"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "項目のシーケンス"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "タイムアウト"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1948,19 +1824,9 @@ msgstr "V2エントリー"
 msgid "V3 Entries"
 msgstr "V3エントリー"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "バージョン"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "名前"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "なし"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2698,6 +2564,10 @@ msgstr "ホワイトリストの検証に失敗しました。修正するため
 msgid "White List Verification Succeeded."
 msgstr "ホワイトリストの検証に成功しました。"
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "アクション"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "追加"
@@ -2822,6 +2692,16 @@ msgstr "グラフを含むマップグラフテンプレートは読み取り専
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "マッピングID"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "下へ"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "上へムーブ"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4356,6 +4236,11 @@ msgstr "現時点では、インストール/アップグレード権限を持�
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "進行中のインストールまたはアップグレードがあります。"
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "バージョン"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7528,6 +7413,10 @@ msgstr "ã¬ã¦ã·ã¢ã³:"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "データソースプロファイルを選択します。データソースプロファイルは、結果として得られるデータソースのポーリング間隔、データ集約、および保存ポリシーを制御します。"
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "配列"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "配列"
@@ -8350,6 +8239,10 @@ msgstr "MySQL  -  TimeZoneのサポート"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "営業時間に使用する色"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "コミュニティ"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9646,6 +9539,10 @@ msgid "Restrictive"
 msgstr "限定的"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "再試行"
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Kadupulログを回転させる"
@@ -10526,6 +10423,10 @@ msgid "TimeZone Support"
 msgstr "MySQL  -  TimeZoneのサポート"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "タイムアウト"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "タイトルフォント設定"
 
@@ -10850,6 +10751,15 @@ msgstr "フィールド"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "グラフ一致ルール"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "項目"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "アイテム#%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11895,6 +11805,10 @@ msgstr "PHPのメーラクラス"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "pingの結果："
+
+#: lib/functions.php
+msgid "Port"
+msgstr "ポート"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12979,6 +12893,10 @@ msgstr "画像添付ファイルに指定されたタイプの1つを選択し�
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "レポートを送信"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "項目のシーケンス"
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"

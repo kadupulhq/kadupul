@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Serve the SNMP Option Set editor through Symfony and Twig. Set and entry edits, deletes and moves are revision-checked, recheck the Automation realm in their transaction and are audited; stored SNMP credentials are no longer displayed, and an edit keeps or replaces them. Old `automation_snmp.php` edit links navigate; posts of its old forms no longer change data. The set list and its bulk actions are unchanged.
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 

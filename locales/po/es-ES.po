@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 01:04-0800\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -939,9 +939,9 @@ msgstr "Ultimo control"
 msgid "Location"
 msgstr "Ubicación"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "n/d"
 
@@ -1437,9 +1437,9 @@ msgstr "Mensualmente el día"
 msgid "Months of Year"
 msgstr "Meses del año"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "Nombre"
 
@@ -1756,22 +1756,6 @@ msgstr "cada X semanas."
 msgid "every X."
 msgstr "cada X."
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Acción"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Contraseña de autenticación"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Protocolo de autenticación"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Usuario de autenticación"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "El elemento de Automation no existe.  No se puede duplicar."
@@ -1785,55 +1769,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Las opciones SNMP de Automation han sido duplicadas."
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Haga clic en 'Continuar' para eliminar el siguiente elemento de la opción SNMP."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Haga clic en 'Continuar' para eliminar la(s) siguiente(s) opcion(es) SNMP."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Haga clic en 'Continuar' para duplicar las siguientes opciones SNMP. Opcionalmente puedes cambiar el formato de título para las nuevas opciones SNMP."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Comunidad"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Contexto"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Eliminar item de opción SNMP"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Complete el nombre para este conjunto de opciones SNMP."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Item"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Item#%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "OIDs Máximas"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Mover hacia abajo"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Mover hacia arriba"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1844,37 +1785,8 @@ msgid "Networks Using"
 msgstr "Redes en uso"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "No hay items de SNMP"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "No se encontraron conjunto de opciones SNMP"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Puerto"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Contraseña de privacidad"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Protocolo de privacidad"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Remover elemento SNMP"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Reintentos"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "Comunidad/usuario de SNMP: <b>%s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1885,52 +1797,16 @@ msgid "SNMP Option Set"
 msgstr "Conjunto de opciones SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "Conjunto de opciones SNMP [editar: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "Conjunto de opciones SNMP [nuevo]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "Conjunto de opciones SNMP"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "Opción SNMP:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "Opciones de SNMP: [editar: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "Opciones SNMP [Nuevo]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "Reglas de SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "Versión SNMP: <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Secuencia"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Secuencia de Item."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Tiempo de espera"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1944,19 +1820,9 @@ msgstr "Entradas V2"
 msgid "V3 Entries"
 msgstr "Entradas V3"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Versión"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "Nombre"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "Ninguno"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2695,6 +2561,10 @@ msgstr "Verificación de lista blanca fallida. Ejecute el script CLI input_white
 msgid "White List Verification Succeeded."
 msgstr "Verificación de lista blanca exitosa."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Acción"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Agregar"
@@ -2823,6 +2693,16 @@ msgstr "Las plantillas de gráficos asociadas con gráficos son solo lectura"
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "ID Asociado"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Mover hacia abajo"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Mover hacia arriba"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4368,6 +4248,11 @@ msgstr "Sólo los administradores de Kadupul con privilegios de instalación/act
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Hay una instalación o actualización en progreso."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Versión"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7534,6 +7419,10 @@ msgstr "Opciones de escala"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Seleccione el perfil de Data Source. El perfil de Data Source controla el intervalo de Sondeo, la agregación de datos, y política de retención para los Data Sources resultantes."
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Secuencia"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "Secuencia."
@@ -8356,6 +8245,10 @@ msgstr "MySQL - Soporte de Zona horaria"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Color para usar en horario comercial"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Comunidad"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9649,6 +9542,10 @@ msgid "Restrictive"
 msgstr "Restrictivo"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Reintentos"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Rotar el Log de Kadupul"
 
@@ -10526,6 +10423,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - Soporte de Zona horaria"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Tiempo de espera"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Opciones de fuente del título"
 
@@ -10850,6 +10751,15 @@ msgstr "Campo"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Reglas de coincidencia gráficos"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Item"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Item#%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11893,6 +11803,10 @@ msgstr "PHP's Mailer Class"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Resultados de ping:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Puerto"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12972,6 +12886,10 @@ msgstr "Seleccionado uno de los siguientes tipos para los adjuntos de imágenes"
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Enviar Reporte"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Secuencia de Item."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"

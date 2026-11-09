@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 01:04-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -942,9 +942,9 @@ msgstr "Τελευταία Έλεγχος"
 msgid "Location"
 msgstr "Τοποθεσία"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "Μη Διαθέσιμο"
 
@@ -1441,9 +1441,9 @@ msgstr "Μηνιαία την ημέρα"
 msgid "Months of Year"
 msgstr "Μήνες του έτους"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "Όνομα"
 
@@ -1759,22 +1759,6 @@ msgstr "κάθε X εβδομάδες."
 msgid "every X."
 msgstr "κάθε X."
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Ενέργεια"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Auth Password"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Πρωτόκολλο Auth"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Όνομα χρήστη Auth"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "Το στοιχείο αυτοματισμού δεν υπάρχει. Δεν είναι δυνατή η αναπαραγωγή."
@@ -1788,55 +1772,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Επιλογές SNMP αυτοματοποίησης"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε το παρακάτω στοιχείο επιλογής SNMP."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να διαγράψετε τις ακόλουθες επιλογές SNMP."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; για να αντιγράψετε τις ακόλουθες επιλογές SNMP. Μπορείτε να αλλάξετε προαιρετικά τη μορφή τίτλου για τις νέες επιλογές SNMP."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Κοινότητα"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Γενικό πλαίσιο"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Διαγραφή στοιχείου επιλογής SNMP"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Συμπληρώστε το όνομα αυτού του συνόλου επιλογών SNMP."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Είδος"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Στοιχείο #%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Max OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Προς τα κάτω"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Προς τα πάνω"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1847,37 +1788,8 @@ msgid "Networks Using"
 msgstr "Χρήση Δικτύων"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Δεν υπάρχουν στοιχεία SNMP"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Δεν βρέθηκαν σύνολα επιλογών SNMP"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Θύρα"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv Passphrase"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Πρωτόκολλο Priv"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Κατάργηση στοιχείου SNMP"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Επαναλαμβάνει"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP Κοινότητα / Όνομα Χρήστη: <b> %s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1888,52 +1800,16 @@ msgid "SNMP Option Set"
 msgstr "SNMP Option Set"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "Επιλογή επιλογών SNMP [επεξεργασία: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "Επιλογή επιλογών SNMP [new]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "Επιλογές SNMP"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "Επιλογή SNMP:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "Επιλογές SNMP [επεξεργασία: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "Επιλογές SNMP [νέο]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "Κανόνες SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "Έκδοση SNMP: <b> %s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Αλληλουχία"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Ακολουθία στοιχείου."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Τέλος χρόνου"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1947,19 +1823,9 @@ msgstr "Καταχωρήσεις V2"
 msgid "V3 Entries"
 msgstr "Καταχωρήσεις V3"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Έκδοση"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "όνομα"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "κανένα"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2698,6 +2564,10 @@ msgstr "Η επαλήθευση λευκής λίστας απέτυχε. Εκτ
 msgid "White List Verification Succeeded."
 msgstr "Επαλήθευση λευκής λίστας πέτυχε."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Ενέργεια"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Προσθήκη"
@@ -2826,6 +2696,16 @@ msgstr "Τα χαρτογραφημένα πρότυπα γραφημάτων μ
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "ID χαρτογράφησης"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Προς τα κάτω"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Προς τα πάνω"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4372,6 +4252,11 @@ msgstr "Μόνο οι διαχειριστές Kadupul με δικαιώματα
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Υπάρχει μια εγκατάσταση ή αναβάθμιση σε εξέλιξη."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Έκδοση"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7538,6 +7423,10 @@ msgstr "Επιλογές κλιμάκωσης"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Επιλέξτε το προφίλ προέλευσης δεδομένων. Το Προφίλ προέλευσης δεδομένων ελέγχει το διάστημα δημοσκόπησης, τη συνάθροιση δεδομένων και την πολιτική διατήρησης των πηγών δεδομένων που προκύπτουν."
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Αλληλουχία"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "Αλληλουχία"
@@ -8360,6 +8249,10 @@ msgstr "MySQL - Υποστήριξη TimeZone"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Χρώμα για χρήση κατά τις εργάσιμες ώρες"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Κοινότητα"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9654,6 +9547,10 @@ msgid "Restrictive"
 msgstr "Περιοριστικός"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Επαναλαμβάνει"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Περιστρέψτε το αρχείο καταγραφής Kadupul"
 
@@ -10532,6 +10429,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - Υποστήριξη TimeZone"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Τέλος χρόνου"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Ρύθμιση γραμματοσειράς τίτλου"
 
@@ -10856,6 +10757,15 @@ msgstr "Πεδίο"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Πρόγραμμα αντιστοίχισης γραφήματος"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Είδος"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Στοιχείο #%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11900,6 +11810,10 @@ msgstr "Η τάξη Mailer της PHP"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Αποτελέσματα Ping:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Θύρα"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12979,6 +12893,10 @@ msgstr "Επιλέξτε έναν από τους τύπους που δίνον
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Αποστολή αναφοράς"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Ακολουθία στοιχείου."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
