@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Validate administrative and test mail SMTP settings once through a typed, trace-redacted settings object shared by Symfony Mailer and the legacy fallback selection, and wire the Alerting module through service discovery; mail delivery is unchanged, and a non-numeric primary admin setting is now treated as unset (#1426).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
