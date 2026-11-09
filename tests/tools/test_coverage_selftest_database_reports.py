@@ -65,10 +65,11 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
             'cli/poller_output_empty.php', 'bin/legacy-poller-output-empty.php',
             'cli/rebuild_poller_cache.php', 'bin/legacy-poller-cache-rebuild.php',
             'cli/replay_rejected_samples.php', 'bin/legacy-rejected-samples-replay.php',
-            'bin/worker-io.php', 'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
+            'bin/worker-io.php', 'tools/functions-inventory.php', 'cli/analyze_database.php', 'src/Graphing/Domain/GraphRemovalFilter.php',
             'graphs.php',
         ]
         excluded = [
+            'tools/unregistered-inventory.php',
             'include/vendor/autoload.php', 'include/config.php',
             'var/cache/prod/App_Kernel.php', 'plugins/example/setup.php',
             'tests/Fixtures/legacy-cli/remove_graphs.php',

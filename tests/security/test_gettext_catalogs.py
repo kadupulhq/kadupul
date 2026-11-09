@@ -120,9 +120,42 @@ class GettextCatalogIntegrityTest(unittest.TestCase):
             verify(ROOT, self.catalogs)
 
     def test_static_location_drift_is_rejected(self):
-        self.mutate(self.catalogs / "po/cacti.pot", ("", "Delete", ""), lambda block: re.sub(r"^#:.*$", "#: missing.php:1", block, flags=re.MULTILINE))
+        self.mutate(self.catalogs / "po/cacti.pot", ("", "Delete", ""), lambda block: re.sub(r"^#:.*$", "#: missing.php", block, flags=re.MULTILINE))
         with self.assertRaisesRegex(ValueError, "source locations"):
             verify(ROOT, self.catalogs)
+
+    def test_stale_translation_file_reference_is_rejected(self):
+        self.mutate(self.catalogs / "po/fr-FR.po", ("", "Delete", ""), lambda block: re.sub(r"^#: ", "#: missing.php ", block, count=1, flags=re.MULTILINE))
+        with self.assertRaisesRegex(ValueError, "PO source locations"):
+            verify(ROOT, self.catalogs)
+
+    def test_line_numbered_reference_is_rejected(self):
+        for name in ("cacti.pot", "fr-FR.po"):
+            with self.subTest(catalog=name):
+                path = self.catalogs / "po" / name
+                original = path.read_text()
+                self.mutate(path, ("", "Delete", ""), lambda block: re.sub(r"^#: (\S+)", r"#: \1:1", block, count=1, flags=re.MULTILINE))
+                with self.assertRaisesRegex(ValueError, "records a source line"):
+                    verify(ROOT, self.catalogs)
+                path.write_text(original)
+
+    def test_pure_line_move_is_admitted(self):
+        # Moving a message within its file must not require new catalogs.
+        source = self.directory / "moved-source"
+        files = [path.relative_to(ROOT) for path in (*ROOT.glob("*.php"), *ROOT.glob("*/*.php"), *(ROOT / "src").rglob("*.php"))]
+        for relative in files:
+            (source / relative).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(ROOT / relative, source / relative)
+        shutil.copytree(ROOT / "templates", source / "templates")
+        (source / "locales").mkdir(exist_ok=True)
+        for name in ("catalogs.json", "historical-compatibility.json"):
+            shutil.copy2(ROOT / "locales" / name, source / "locales" / name)
+        reference = entries((self.catalogs / "po/cacti.pot").read_text())[("", "Delete", "")]["references"].split()[0]
+        moved = source / reference
+        original = moved.read_text()
+        first, rest = original.split("\n", 1)
+        moved.write_text(first + "\n\n\n\n" + rest)
+        verify(source, self.catalogs)
 
     def test_build_entry_reports_failed_compatibility_as_incomplete(self):
         build = self.directory / "owned-build"

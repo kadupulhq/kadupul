@@ -117,4 +117,45 @@ abstract class LegacyArguments
 
         return [$input, null];
     }
+
+    /**
+     * The loop of a script that read its own arguments and checked their values
+     * later. The first "=" after a flag's first character splits it, as strpos()
+     * did, so a flag written without one, or with only a leading one, has an
+     * empty value. An unknown flag is refused, a skipped flag is read past, and
+     * a version or help flag ends the loop. Every other flag is stored under its
+     * option as $value returns it: by default the value as given, even empty,
+     * for a flag that takes one and true for the others. $stopsAfter returns true
+     * where the script exited, so nothing after that argument counts.
+     *
+     * @param list<string> $argv arguments after the script name
+     * @param ?\Closure(string, bool, string, string): mixed $value flag, takes a value, value, whole argument => what to store; may throw InvalidLegacyArgument
+     * @param ?\Closure(string, bool, string): bool $stopsAfter flag, takes a value, value => whether to ignore the rest
+     * @param list<string> $skipped
+     * @return array{0: array<string, mixed>, 1: ?LegacyRequest}
+     */
+    protected function translateUnchecked(array $argv, ?\Closure $value = null, ?\Closure $stopsAfter = null, array $skipped = []): array
+    {
+        $flags = $this->flags();
+        $input = [];
+        foreach ($argv as $argument) {
+            [$flag, $given] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
+            if (!array_key_exists($flag, $flags)) {
+                throw new InvalidLegacyArgument($argument);
+            }
+            if (in_array($flag, $skipped, true)) {
+                continue;
+            }
+            [$option, $takesValue] = $flags[$flag];
+            if ($option === null) {
+                return [[], $this->special($flag)];
+            }
+            $input['--' . $option] = $value === null ? ($takesValue ? $given : true) : $value($flag, $takesValue, $given, $argument);
+            if ($stopsAfter !== null && $stopsAfter($flag, $takesValue, $given)) {
+                break;
+            }
+        }
+
+        return [$input, null];
+    }
 }

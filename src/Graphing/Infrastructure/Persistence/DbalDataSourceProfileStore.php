@@ -19,15 +19,17 @@ use Kadupul\Graphing\Domain\DataSourceProfileFilters;
 use Kadupul\Graphing\Domain\DataSourceProfilePage;
 use Kadupul\Graphing\Domain\DataSourceProfileRevision;
 use Kadupul\Graphing\Domain\DataSourceProfileRra;
-use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Infrastructure\Persistence\AuditedPrimaryWrite;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsAlias(DataSourceProfileStore::class)]
 final readonly class DbalDataSourceProfileStore implements DataSourceProfileStore
 {
+    // Every table a write changes or locks, with the permission tables the actor recheck reads.
+    private const array WRITE_TABLES = ['data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_template_data', 'data_template_rrd', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'];
     private const string STALE = 'The Data Source Profile changed since you opened this form. Reload before saving.';
     private const string ARCHIVE_STALE = 'The RRA changed since you opened this form. Reload before saving.';
     private const string NOT_FOUND = 'Data Source Profile not found.';
@@ -39,13 +41,17 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
         GROUP BY data_source_profile_id';
     private const string COLUMNS = 'p.id, p.hash, p.name, p.step, p.heartbeat, p.x_files_factor, p.`default`';
 
+    private AuditedPrimaryWrite $writes;
+
     public function __construct(
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
-        private DataSourceProfileAccess $access,
-        private AuditTrail $audit,
-        private LegacyConfiguration $configuration,
-    ) {}
+        DataSourceProfileAccess $access,
+        AuditTrail $audit,
+        LegacyConfiguration $configuration,
+    ) {
+        $this->writes = new AuditedPrimaryWrite($database, $audit, $configuration, $access->assertCurrent(...), self::WRITE_TABLES, 'Data Source Profile', 'Data Source Profiles', 'graphing.data_source_profile', 'data_source_profile', $this->assertReferenceGuards(...));
+    }
 
     public function defaultRows(): int
     {
@@ -121,7 +127,7 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
         if ($id === null && ($step === null || $heartbeat === null || $factor === null)) {
             throw new \InvalidArgumentException('Choose a polling interval, heartbeat and X-Files Factor.');
         }
-        return $this->write($actorId, $id === null ? 'create' : 'edit', $id === null ? 'new' : (string) $id, function () use ($id, $name, $step, $heartbeat, $factor, $functions, $makeDefault, $revision): array {
+        return $this->writes->run($actorId, $id === null ? 'create' : 'edit', $id === null ? 'new' : (string) $id, function () use ($id, $name, $step, $heartbeat, $factor, $functions, $makeDefault, $revision): array {
             if ($id === null) {
                 if (!in_array($step, DataSourceProfile::SAMPLING_INTERVALS, true) || !in_array($heartbeat, DataSourceProfile::HEARTBEATS, true)) {
                     throw new \InvalidArgumentException('Choose a listed polling interval and heartbeat.');
@@ -205,7 +211,7 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
         if ($archiveId === null && ($levelSeconds === null || $rows === null)) {
             throw new \InvalidArgumentException('Choose an aggregation level and a number of rows.');
         }
-        return $this->write($actorId, $archiveId === null ? 'rra.create' : 'rra.edit', (string) $profileId, function () use ($profileId, $archiveId, $name, $levelSeconds, $rows, $timespan, $revision): int {
+        return $this->writes->run($actorId, $archiveId === null ? 'rra.create' : 'rra.edit', (string) $profileId, function () use ($profileId, $archiveId, $name, $levelSeconds, $rows, $timespan, $revision): int {
             $parent = $this->lockParent($profileId);
             $readOnly = $this->localSources($profileId) > 0;
             $steps = $levelSeconds === null ? null : DataSourceProfileRra::stepsFor($levelSeconds, (int) $parent['step']);
@@ -231,7 +237,7 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
 
     public function deleteArchive(int $actorId, int $profileId, int $archiveId, string $revision): void
     {
-        $this->write($actorId, 'rra.delete', (string) $profileId, function () use ($profileId, $archiveId, $revision): void {
+        $this->writes->run($actorId, 'rra.delete', (string) $profileId, function () use ($profileId, $archiveId, $revision): void {
             $this->lockParent($profileId);
             $this->lockArchive($profileId, $archiveId, $revision);
             // The legacy page only hid the delete marker of a read-only profile.
@@ -246,11 +252,11 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
 
     public function duplicate(int $actorId, array $ids, array $revisions, string $titleFormat): void
     {
-        self::validateSelection($ids, $revisions);
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 16777215, 'Invalid profile selection.', self::STALE);
         if (mb_strlen($titleFormat, 'UTF-8') > 255 || preg_match('//u', $titleFormat) !== 1 || preg_match('/[\x00\r\n]/', $titleFormat) === 1) {
             throw new \InvalidArgumentException('Enter a valid title format.');
         }
-        $this->write($actorId, 'duplicate', self::target($ids), function () use ($ids, $revisions, $titleFormat): void {
+        $this->writes->run($actorId, 'duplicate', self::target($ids), function () use ($ids, $revisions, $titleFormat): void {
             foreach ($ids as $id) {
                 [$parent, $functions, $archives] = $this->lockProfile($id, $revisions[$id]);
                 // The copy is never the default; its hash is new, as get_hash_data_source_profile(0) made it.
@@ -278,8 +284,8 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
 
     public function delete(int $actorId, array $ids, array $revisions): void
     {
-        self::validateSelection($ids, $revisions);
-        $this->write($actorId, 'delete', self::target($ids), function () use ($ids, $revisions): void {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 16777215, 'Invalid profile selection.', self::STALE);
+        $this->writes->run($actorId, 'delete', self::target($ids), function () use ($ids, $revisions): void {
             foreach ($ids as $id) {
                 [$parent] = $this->lockProfile($id, $revisions[$id]);
                 if ($parent['default'] === 'on') {
@@ -404,83 +410,10 @@ final readonly class DbalDataSourceProfileStore implements DataSourceProfileStor
         return $functions;
     }
 
-    /**
-     * @param list<int> $ids
-     * @param array<int, string> $revisions
-     */
-    private static function validateSelection(array $ids, array $revisions): void
-    {
-        $sorted = $ids;
-        sort($sorted, SORT_NUMERIC);
-        if ($ids === [] || count($ids) > self::MAX_SELECTION || !array_is_list($ids) || $sorted !== $ids
-            || count(array_unique($ids)) !== count($ids)
-            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16777215)) {
-            throw new \InvalidArgumentException('Invalid profile selection.');
-        }
-        $keys = array_keys($revisions);
-        sort($keys, SORT_NUMERIC);
-        if ($keys !== $ids || array_any($revisions, static fn(mixed $revision): bool => !is_string($revision))) {
-            throw new \InvalidArgumentException(self::STALE);
-        }
-    }
-
     /** @param list<int> $ids */
     private static function target(array $ids): string
     {
         return count($ids) === 1 ? (string) $ids[0] : 'selection-' . substr(hash('sha256', implode(',', $ids)), 0, 32);
-    }
-
-    private function write(int $actorId, string $action, string $target, callable $operation): mixed
-    {
-        $decision = AuditEvent::DENIED;
-        $outcome = AuditEvent::DENIED;
-        try {
-            $this->prepareWrite();
-            $this->database->beginTransaction();
-            try {
-                $this->access->assertCurrent($actorId);
-                $decision = AuditEvent::ALLOWED;
-                $outcome = AuditEvent::FAILED;
-                $result = $operation();
-                $this->database->commit();
-            } catch (\Throwable $error) {
-                if ($this->database->isTransactionActive()) {
-                    $this->database->rollBack();
-                }
-                throw $error;
-            }
-            $outcome = AuditEvent::SUCCEEDED;
-            return $result;
-        } finally {
-            try {
-                $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'graphing.data_source_profile.' . $action, 'data_source_profile', $target, $decision, $outcome));
-            } catch (\Throwable) { /* Audit failure cannot change a confirmed persistence result. */
-            }
-        }
-    }
-
-    private function prepareWrite(): void
-    {
-        if ($this->database->isTransactionActive()) {
-            throw new \RuntimeException('Data Source Profile writes require their own transaction.');
-        }
-        if (!$this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
-            return;
-        }
-        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
-            throw new \RuntimeException('Data Source Profiles must be changed on the primary collector.');
-        }
-        foreach (['data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_template_data', 'data_template_rrd',
-            'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            // SHOW CREATE TABLE sees a temporary table that shadows the real one.
-            $definition = $this->database->fetchNumeric('SHOW CREATE TABLE ' . $this->database->quoteIdentifier($table));
-            if ($definition === false || !is_string($definition[1] ?? null) || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
-                throw new \RuntimeException('Data Source Profile writes require transactional tables.');
-            }
-        }
-        $this->assertReferenceGuards();
-        // Keep the reference range locks when the session default is READ COMMITTED.
-        $this->database->executeStatement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
     }
 
     /**
