@@ -15,6 +15,7 @@ use Kadupul\IdentityAccess\Contract\AuthenticatedAccess;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\LocalePreference;
 use Kadupul\Kernel;
+use Kadupul\Navigation\Application\Port\ListPageSize;
 use Kadupul\Navigation\Application\Port\RelationshipAccess;
 use Kadupul\Navigation\Application\Query\AdministrationListDenied;
 use Kadupul\Navigation\Application\Query\ViewRelationships;
@@ -93,7 +94,7 @@ final class RelationshipRoutesTest extends TestCase
             }
             return new RelationshipPage('Parent <b>', $this->empty ? [] : array_fill(0, $filters->rows + 1, $record));
         });
-        $container->set(ViewRelationships::class, new ViewRelationships([$catalog], $access));
+        $container->set(ViewRelationships::class, new ViewRelationships([$catalog], $access, $this->pageSize()));
         $configuration = $this->createStub(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['collector_id' => 1, 'url_path' => '/monitor/']);
         $container->set(LegacyConfiguration::class, $configuration);
@@ -181,7 +182,7 @@ final class RelationshipRoutesTest extends TestCase
 
     public function testFilterShapesRangesUnicodeAndParentIdentitiesAreValidated(): void
     {
-        foreach (['filter[]=x', 'page=0', 'page=-1', 'page=1e3', 'page=100000', 'rows=0', 'rows=-1', 'rows=101', 'sort_column=password', 'sort_direction=sideways', 'purge=1', 'filter=%00', 'filter=' . str_repeat('x', 256)] as $query) {
+        foreach (['filter[]=x', 'page=0', 'page=-1', 'page=1e3', 'page=100000', 'rows=0', 'rows=-2', 'rows=01', 'rows=1e2', 'rows=5001', 'sort_column=password', 'sort_direction=sideways', 'purge=1', 'filter=%00', 'filter=' . str_repeat('x', 256)] as $query) {
             self::assertSame(400, $this->get('/relationships/snmp-option-entries/4?' . $query)->getStatusCode(), $query);
         }
         self::assertSame(400, $this->get('/relationships/data-template-definitions/4294967296')->getStatusCode());
@@ -302,4 +303,29 @@ final class RelationshipRoutesTest extends TestCase
     {
         return $this->kernel->handle(Request::create($uri));
     }
+
+    private function pageSize(): ListPageSize
+    {
+        $pageSize = $this->createStub(ListPageSize::class);
+        $pageSize->method('defaultRows')->willReturn(40);
+        return $pageSize;
+    }
+
+    public function testAbsentAndDefaultRowsUseTheConfiguredPageSize(): void
+    {
+        foreach (['', '?rows=-1'] as $query) {
+            $this->reads = [];
+            $html = (string) $this->get('/relationships/snmp-option-entries/4' . $query)->getContent();
+            self::assertSame(40, $this->reads[0][1]->rows);
+            $dom = new \DOMDocument();
+            self::assertTrue(@$dom->loadHTML($html));
+            $xpath = new \DOMXPath($dom);
+            self::assertSame('-1', $xpath->query('//select[@name="rows"]/option[@selected]')->item(0)?->getAttribute('value'));
+            self::assertStringContainsString('rows=-1', $xpath->query('//a[@rel="next"]')->item(0)->getAttribute('href'));
+        }
+        $this->reads = [];
+        self::assertSame(200, $this->get('/relationships/snmp-option-entries/4?rows=5000')->getStatusCode());
+        self::assertSame(5000, $this->reads[0][1]->rows);
+    }
+
 }

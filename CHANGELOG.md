@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Restore legacy behaviour in the migrated administration and relationship lists: Graph Rules search matches graph type and data query names again, lists use the configured rows-per-page setting when no size or `rows=-1` is requested and accept sizes up to 5000, Networks counts and runtimes are formatted as on the legacy page, and System Utilities links to these lists open as full pages instead of a blank content area (#1425).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
@@ -18,6 +19,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 - Add a CI check that reports a run marker recorded with `set_config_option()` before an early `exit` or `die` in the same scope, with a reviewed baseline of the five existing matches.
 
+- Measure and bind the shared JSON/output helper when copied poller-drain and rejected-sample workers produce native child coverage, refusing missing or changed helper copies before accepting their reports.
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
@@ -25,21 +27,26 @@ follows [Semantic Versioning](VERSIONING.md).
 - Preserve native coverage test-hit lists after overlapping coverage runs are merged, so valid merged evidence remains readable by the coverage composer.
 - Add bounded crash tests for the data input whitelist, RRD restore and Boost image cache writers: a crash before or after any filesystem call leaves the old file or the whole new one, and a rerun publishes the new file (#1357 tracks the temporary files a crashed run leaves).
 - Give each native child coverage invocation a distinct test identity and report stem so reused process IDs cannot conflate execution or overwrite reports and evidence sidecars.
+- Check at poller startup that the configured spine or PHP binary exists and is executable, and exit with status 1 before recording the run when it is not; a wrong `path_php_binary` no longer waits for collectors that never start.
 - Preserve checkout sources and originating unit coverage when coverage-merger scratch cleanup runs with the checkout beneath the temporary directory.
 - Add an advisory `Mutation testing (advisory)` workflow that runs Infection 0.35 on the `src/` lines a pull request adds or modifies and lists undetected mutants in the job summary; surviving mutants never fail it, tool failures do.
 - Update development coverage reporting to coverage.py 7.17.0 and the hash-locked Semgrep scanner to 1.182.1, retaining the existing Python 3.12 runtime and coverage/security gates.
+- Remove temporary files that a killed data input whitelist update (older than an hour, found while holding the whitelist lock) or RRD restore (older than a day) left beside its target (#1357).
 
 - Measure the existing function-inventory regressions and its real read-only CLI check, binding native evidence to the command's repository inputs and retaining strict coverage import validation.
 - Serve migrated Symfony pages in all 23 shipped gettext languages: module domain keys without a YAML translation fall back to the matching `locales/po` entry, and the locale subscriber accepts every shipped locale with legacy spellings such as `pt_BR`, `zh-CN` and `de-AT`. Plural keys are bridged only where gettext and the English singular/plural choice agree; legacy `__()` and plugin catalogs are unchanged.
 - Add a weekly Flaky tests workflow that runs the legacy suite in file and random order and lists tests whose result changes between runs, and `tests/tools/select_tests.py` to run only the registered tests that name a changed file locally.
 - Update locked Doctrine, Symfony 7.4 and Twig 3 dependencies while retaining the PHP 8.4 platform and Symfony 7.4 component stack. Record Symfony's corrected deprecation option name in the exact error-handler characterization.
+- Submit the Data Source Troubleshooter's Apply Suggested Fixes and Rerun Analysis links as token-bearing POST requests, and refuse those actions by GET (#1038).
 
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056).
 - Preserve native database session activity and logout state across concurrent requests, confirm storage outcomes without committing caller-owned work, and bound session display metadata.
+- Compute the SpikeKill standard-deviation mean from the same samples around the replacement window as the deviation, so both cutoffs come from one reference set; with fewer than two reference samples only the data source limits mark a spike (#1034).
 - Declare legacy ping and spike-removal properties explicitly public, preserving their visibility, defaults and serialization.
+- Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order, and number newly associated graphs after the last member instead of tying with it (#226).
 - Retain native collector recovery when a read-only queue probe fails inside an authenticated worker, preserving strict authentication/write failure handling.
 - Ignore an unknown (NaN) data source minimum or maximum when SpikeKill builds its standard-deviation cutoffs (#1095).
 
@@ -49,6 +56,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed; earlier orphans are still cleared as before (#198).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
+- Make `rrdtool_function_tune()` change all requested options or none: the RRDfile is copied beside itself first and, when `rrdtool tune` exits non-zero, a restored copy is renamed over it, so it is never left truncated, and the function now returns `true` or `false` instead of nothing (#777).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.

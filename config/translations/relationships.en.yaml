@@ -70,6 +70,7 @@
   "Timeout (ms)": "Timeout (ms)",
   "matches": "matches",
   "Rows": "Rows",
+  "Default (%count%)": "Default (%count%)",
   "Definitions": "Definitions",
   "Numeric": "Numeric",
   "Graph Mappings": "Graph Mappings",

@@ -219,6 +219,23 @@ if ($config['connection'] == 'online') {
     update_resource_cache($poller_id);
 }
 
+// check the collector binary before this run records anything
+if (read_config_option('poller_enabled') == 'on') {
+    $collector_error = poller_collector_preflight(read_config_option('poller_type'), read_config_option('path_spine'), read_config_option('path_php_binary'));
+
+    if ($collector_error !== null) {
+        if ($collector_error[0] == 'path_spine') {
+            cacti_log('ERROR: The spine path: ' . $collector_error[1] . ' is invalid.  Poller can not continue!', true, 'POLLER');
+            admin_email(__('Kadupul System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!', $collector_error[1], $poller_id));
+        } else {
+            cacti_log('ERROR: The PHP binary path: ' . $collector_error[1] . ' is invalid.  Poller can not continue!', true, 'POLLER');
+            admin_email(__('Kadupul System Warning'), __('ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!', $collector_error[1], $poller_id));
+        }
+
+        exit(1);
+    }
+}
+
 // get number of polling items from the database
 $poller_interval = read_config_option('poller_interval');
 

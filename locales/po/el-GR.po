@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 23:22-0800\n"
+"POT-Creation-Date: 2026-11-09 04:13-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -16026,6 +16026,11 @@ msgstr "Απεγκατάσταση προσθήκης"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Η κατάργηση της εγκατάστασης αυτής της προσθήκης θα καταργήσει όλα τα δεδομένα και τις ρυθμίσεις πρόσθετων στοιχείων. Εάν θέλετε πραγματικά να καταργήσετε την εγκατάσταση της προσθήκης, κάντε κλικ στο κουμπί &quot;Κατάργηση εγκατάστασης&quot; παρακάτω. Διαφορετικά κάντε κλικ στην επιλογή &#39;Ακύρωση&#39;"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format
