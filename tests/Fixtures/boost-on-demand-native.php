@@ -134,7 +134,7 @@ foreach (array('BOOST_TIMER_START' => 0, 'BOOST_TIMER_END' => 1, 'BOOST_TIMER_TO
 require $root . '/tests/Helpers/PhpSource.php';
 require $root . '/src/Graphing/Infrastructure/Rrd/UnrepresentableArgument.php';
 require $root . '/src/Graphing/Infrastructure/Rrd/PipeEncoder.php';
-foreach (array('rrdtool_pipe_encoder', 'rrdtool_pipe_quote', 'rrdtool_proxy_token_is_safe', 'rrdtool_proxy_token', 'rrdtool_uses_proxy', 'rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrdtool_command_argument', 'rrdtool_command_path', 'rrdtool_ds_name_is_valid', 'rrdtool_ds_template_is_valid', 'rrdtool_create_ds', 'rrdtool_create_minimum', 'rrdtool_create_maximum', 'rrdtool_create_rras', 'rrdtool_create_path', 'rrdtool_create_prepare', 'rrdtool_create_structured_path') as $function) {
+foreach (array('rrdtool_pipe_encoder', 'rrdtool_pipe_quote', 'rrdtool_proxy_token_is_safe', 'rrdtool_proxy_token', 'rrdtool_uses_proxy', 'rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrd_additional_roots', 'rrd_path_in_additional_root', 'rrdtool_command_argument', 'rrdtool_command_path', 'rrdtool_ds_name_is_valid', 'rrdtool_ds_template_is_valid', 'rrdtool_create_ds', 'rrdtool_create_minimum', 'rrdtool_create_maximum', 'rrdtool_create_rras', 'rrdtool_create_path', 'rrdtool_create_prepare', 'rrdtool_create_structured_path') as $function) {
     eval(test_php_function_source(file_get_contents($root . '/lib/rrd.php'), $function));
 }
 require $root . '/lib/boost.php';

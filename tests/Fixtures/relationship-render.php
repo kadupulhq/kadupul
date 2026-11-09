@@ -30,7 +30,9 @@ $catalog = new class implements Kadupul\Navigation\Contract\RelationshipCatalog 
         return new Kadupul\Navigation\Contract\Relationships\RelationshipPage('Parent <b>', [$row]);
     }
 };
-$container->set(Kadupul\Navigation\Application\Query\ViewRelationships::class, new Kadupul\Navigation\Application\Query\ViewRelationships([$catalog], $access));
+$container->set(Kadupul\Navigation\Application\Query\ViewRelationships::class, new Kadupul\Navigation\Application\Query\ViewRelationships([$catalog], $access, new class implements Kadupul\Navigation\Application\Port\ListPageSize {
+    public function defaultRows(): int { return 25; }
+}));
 $container->set(Kadupul\Platform\Contract\LegacyConfiguration::class, new class implements Kadupul\Platform\Contract\LegacyConfiguration {
     public function values(): array { return ['collector_id' => 1, 'url_path' => '/']; }
 });

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 01:04-0800\n"
+"POT-Creation-Date: 2026-11-09 11:12-0800\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13278,6 +13278,11 @@ msgid "written"
 msgstr "geschrieben"
 
 #: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "Woche 24"
@@ -13437,6 +13442,10 @@ msgid "Current"
 msgstr "Aktuell"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "HERABSTUFUNG ERKANNT"
 
@@ -13527,6 +13536,10 @@ msgstr "Speicher Engine"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "Fehler beim Lokalisieren von Profilen"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, php-format
@@ -13735,6 +13748,10 @@ msgid "License Agreement"
 msgstr "Lizenzvertrag"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "Informationen zur lokalen Datenbankverbindung"
 
@@ -13855,6 +13872,10 @@ msgid "Optional Modules"
 msgstr "Optionale Module"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - Modulunterstützung (optional)"
 
@@ -13940,6 +13961,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "Drücken Sie'%s' und klicken Sie dann auf'%s', um den Installationsprozess abzuschließen, nachdem Sie Ihre Gerätevorlagen ausgewählt haben."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "Empfohlen"
 
@@ -13985,6 +14010,11 @@ msgstr "Erforderlich Beschreibbar nur zur Installationszeit"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Automatisierungsoption %s neu sequenzieren"
 
@@ -14011,6 +14041,10 @@ msgstr "Erstmalige Datenabfrage für lokalen Host"
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "Scan-Modus"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14081,6 +14115,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "Vielen Dank, dass Sie sich die Zeit genommen haben Kadupul, die graphische Komplettlösung für Ihr Netzwerk, herunterzuladen und zu installieren. Bevor Sie beginnen können, coole Diagramme zu erzeugen, gibt es ein paar Daten, die Kadupul von Ihnen wissen muss."
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Der Installer weist automatisch eine $poller_id zu und fügt sie der Datei config.php hinzu."
 
@@ -14111,6 +14149,14 @@ msgstr "Die folgenden Tabellen sollten in UTF8 und InnoDB umgewandelt werden.  B
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Die Installation kann nicht fortgesetzt werden, da keine Profile gefunden werden konnten."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14360,6 +14406,11 @@ msgstr "Ihre Server-Sammlung scheint UTF8-konform zu sein."
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Ihre Server-Sammlung scheint NICHT vollständig UTF8-konform zu sein."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -15998,6 +16049,11 @@ msgstr "Plugin deinstallieren"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Durch die Deinstallation dieses Plugins werden alle Daten und Einstellungen des Plugins entfernt.  Wenn Sie das Plugin wirklich deinstallieren möchten, klicken Sie unten auf \"Deinstallieren\".  Andernfalls klicken Sie auf'Abbrechen'."
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format

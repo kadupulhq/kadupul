@@ -2646,9 +2646,60 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         $output .= Installer::sectionSubTitleEnd();
         $output .= $permissions;
 
+        if ($this->mode == Installer::MODE_UPGRADE) {
+            $output .= $this->rrdLocationSection($sections);
+        }
+
         $this->buttonNext->Enabled = !isset($writable);
         $this->stepData = array('Sections' => $sections);
         return $output;
+    }
+
+    /**
+     * Report Data Sources whose RRDfile path is refused because it lies outside
+     * the RRA directory and every directory listed in rrd_additional_paths.
+     * Those RRDfiles are no longer created or updated after the upgrade. The
+     * report does not block the upgrade.
+     *
+     * @param array<string, int> $sections Section states for the step data.
+     */
+    private function rrdLocationSection(array &$sections): string
+    {
+        include_once(__DIR__ . '/rrd.php');
+
+        $output = Installer::sectionSubTitle(__('RRDfile Locations'), 'rrd_locations');
+        $outside = rrd_data_sources_outside_allowed_paths(25);
+
+        if ($outside === false) {
+            $sections['rrd_locations'] = DB_STATUS_WARNING;
+            $output .= Installer::sectionNormal(__('The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log.'));
+        } elseif ($outside['total'] === 0) {
+            $sections['rrd_locations'] = DB_STATUS_SUCCESS;
+            $output .= Installer::sectionNormal('<font color="#008000">' . __('Every Data Source RRDfile path is inside an allowed directory') . '</font>');
+        } else {
+            $sections['rrd_locations'] = DB_STATUS_WARNING;
+            $output .= Installer::sectionNormal(__('%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config[\'rrd_additional_paths\'] in include/config.php, so these Data Sources will stop updating until one of the following is done:', $outside['total']));
+            $output .= Installer::sectionNormal(
+                '<ul>' .
+                '<li>' . __('List the directory that holds them in $config[\'rrd_additional_paths\'] in include/config.php, for example $config[\'rrd_additional_paths\'] = array(\'/data/rrd\');') . '</li>' .
+                '<li>' . __('Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config[\'rrd_additional_paths\'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile.') . '</li>' .
+                '</ul>'
+            );
+
+            $list = '';
+            foreach ($outside['items'] as $item) {
+                $list .= html_escape($item['local_data_id'] . ': ' . $item['path']) . '<br />';
+            }
+
+            if ($outside['total'] > count($outside['items'])) {
+                $list .= html_escape(__('and %d more', $outside['total'] - count($outside['items'])));
+            }
+
+            $output .= Installer::sectionNote('<span class="cactiInstallSectionCode" style="width: 95%; display: inline-flex;">' . $list . '</span>', '', '', __('DATA SOURCES:'));
+            $output .= Installer::sectionNote(__('See docs/rrd-path-containment.md for details.'));
+        }
+
+        return $output . Installer::sectionSubTitleEnd();
     }
 
     public function processStepInputValidation()
@@ -3382,10 +3433,16 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         }
     }
 
-    /** Confirm readback before publishing the version marker and progress. */
+    /** Confirm the core schema and readback before publishing the version marker and progress. */
     public function confirmInstallationVersion(): string
     {
         $this->setProgress(Installer::PROGRESS_VERSION_BEGIN);
+        // An incomplete schema must not be recorded as installed (#1088).
+        $failure = $this->validateCoreSchema(dirname(__DIR__) . '/cacti.sql');
+        if ($failure !== '') {
+            $this->addError(Installer::STEP_ERROR, 'Database schema', $failure);
+            return $failure;
+        }
         if (!$this->recordInstalledVersion()) {
             $failure = __('The installed database version could not be confirmed. Review the installer errors before retrying.');
             $this->addError(Installer::STEP_ERROR, 'Database version', $failure);
@@ -3394,6 +3451,49 @@ class Installer implements JsonSerializable, \Kadupul\Platform\Application\Insta
         set_install_config_option('install_version', CACTI_VERSION);
         $this->setProgress(Installer::PROGRESS_VERSION_END);
         return '';
+    }
+
+    /**
+     * Compare the tables of the selected database with the core tables that
+     * cacti.sql creates.
+     *
+     * @param string $path The cacti.sql that created the schema
+     *
+     * @return string An empty string when every core table exists, otherwise the failure
+     */
+    private function validateCoreSchema(string $path): string
+    {
+        $schema = is_file($path) && is_readable($path) ? file_get_contents($path) : false;
+        $expected = is_string($schema) ? self::coreSchemaTables($schema) : array();
+        if ($expected === array()) {
+            return __('The installed database could not be checked because the core table list could not be read from cacti.sql.');
+        }
+
+        $rows = db_fetch_assoc('SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = SCHEMA()');
+        if (!is_array($rows)) {
+            return __('The installed database could not be checked because its table list could not be read.');
+        }
+
+        $missing = array_values(array_diff($expected, array_map('strtolower', array_column($rows, 'TABLE_NAME'))));
+        sort($missing, SORT_STRING);
+
+        if ($missing !== array()) {
+            return __('Required core database tables are missing: %s', implode(', ', $missing));
+        }
+
+        return '';
+    }
+
+    /**
+     * List the tables created by a cacti.sql schema, in lower case.
+     *
+     * @return array<int, string>
+     */
+    public static function coreSchemaTables(string $schema): array
+    {
+        preg_match_all('/^CREATE TABLE\s+(?:IF NOT EXISTS\s+)?`?([A-Za-z0-9_]+)`?\s*\(/m', $schema, $matches);
+
+        return array_values(array_unique(array_map('strtolower', $matches[1])));
     }
 
     /** Preserve native finish logging before collector synchronization. */

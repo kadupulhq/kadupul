@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 01:04-0800\n"
+"POT-Creation-Date: 2026-11-09 11:12-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -15631,6 +15631,11 @@ msgstr "書面"
 
 #: lib/installer.php
 #, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "%s - N/A"
 msgstr "%s Minutes"
 
@@ -15820,6 +15825,10 @@ msgid "Current"
 msgstr "當前"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE被檢測到"
@@ -15922,6 +15931,10 @@ msgstr "引擎"
 #, fuzzy
 msgid "Error Locating Profiles"
 msgstr "查找配置文件時出錯"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -16158,6 +16171,10 @@ msgid "License Agreement"
 msgstr "使用授權協議"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy
 msgid "Local Database Connection Information"
 msgstr "本地數據庫連接信息"
@@ -16302,6 +16319,10 @@ msgid "Optional Modules"
 msgstr "可選模塊"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP  - 模塊支持（可選）"
@@ -16399,6 +16420,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "選擇設備模板後，按“%s”，然後單擊“%s”以完成安裝過程。"
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy
 msgid "Recommended"
 msgstr "推薦"
@@ -16454,6 +16479,11 @@ msgid "Required Writable at Install Time Only"
 msgstr "僅在安裝時可寫"
 
 #: lib/installer.php
+#, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "在設備上運行自動化"
@@ -16485,6 +16515,10 @@ msgstr "運行本地主機的首次數據查詢"
 #, fuzzy
 msgid "Scan Mode"
 msgstr "掃描模式"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy
@@ -16562,6 +16596,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "感謝您抽出寶貴時間下載並安裝Kadupul，這是您網絡的完整圖形解決方案。在開始製作酷圖之前，Kadupul需要了解一些數據。"
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "安裝程序自動分配$ poller_id並將其添加到config.php文件中。"
@@ -16600,6 +16638,14 @@ msgstr "以下表格應轉換為UTF8和InnoDB。請在安裝過程中選擇要�
 #, fuzzy
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "安裝無法繼續，因為找不到配置文件。"
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -16881,6 +16927,11 @@ msgstr "您的服務器排序規則似乎符合UTF8標準"
 #, fuzzy
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "您的服務器排序規則似乎不完全符合UTF8標準。 "
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 #, fuzzy
@@ -18666,6 +18717,11 @@ msgstr "卸載插件"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "卸載此插件將刪除所有插件數據和設置。如果您確實要卸載插件，請單擊下面的“卸載”。否則點擊“取消”"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, fuzzy, php-format
