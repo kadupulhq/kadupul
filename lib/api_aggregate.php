@@ -3,6 +3,7 @@
 declare(strict_types=1);
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -1586,12 +1587,15 @@ function push_out_aggregates_operation($aggregate_template_id, $local_graph_id =
         foreach ($aggregate_graphs as $ag) {
             $member_graphs = array();
 
+            /* keep the stored member order, which No Reordering relies on */
             $graphs = aggregate_graph_fetch_rows(
-                'SELECT DISTINCT agi.local_graph_id
+                'SELECT agi.local_graph_id
 				FROM aggregate_graphs AS ag
 				INNER JOIN aggregate_graphs_items AS agi
 				ON ag.id=agi.aggregate_graph_id
-				WHERE ag.local_graph_id = ?',
+				WHERE ag.local_graph_id = ?
+				GROUP BY agi.local_graph_id
+				ORDER BY MIN(agi.sequence), agi.local_graph_id',
                 array($ag)
             );
 
