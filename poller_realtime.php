@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -260,8 +261,17 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 					continue;
 				}
 
-				// replace path
-				$command = str_replace($data_source_path, $rt_graph_path, $command);
+				/* keep the definition; rrdtool_create_file() writes the path */
+				$prefix = read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path;
+
+				if (strpos($command, $prefix) !== 0) {
+					cacti_log('ERROR: Realtime could not prepare the RRD create for local_data_id ' . (int) $item['local_data_id'] . '.', false, 'POLLER');
+
+					$skipped = true;
+					continue;
+				}
+
+				$command = substr($command, strlen($prefix));
 
 				/* minimum refresh interval */
 				$step = read_config_option('realtime_interval');
@@ -276,15 +286,8 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				in there (text format) */
 				$command = str_replace("\\\n", ' ', $command);
 
-				// create the rrdfile
-				$rrdtool = read_config_option('path_rrdtool') . ' ';
-
-				if (strpos($command, $rrdtool) === 0) {
-					$command = substr($command, strlen($rrdtool));
-				}
-
 				if (!cacti_has_control_chars($command)) {
-					rrdtool_execute($command, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+					rrdtool_create_file($rt_graph_path, $command, false, $rrdtool_pipe, 'POLLER');
 				} else {
 					cacti_log('ERROR: Realtime skipped RRD create with control characters for local_data_id ' . (int) $item['local_data_id'] . '.', false, 'POLLER');
 				}

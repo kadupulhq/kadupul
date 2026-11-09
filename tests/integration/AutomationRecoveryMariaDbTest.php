@@ -12,7 +12,7 @@ test('automation preserves run ownership and retry outcomes on the native databa
 	\PHPUnit\Framework\Assert::assertSame(0,$exit,$out.$error);
 	$result=json_decode(trim($out),true,512,JSON_THROW_ON_ERROR);
 	expect($result['checks'])->toBeGreaterThan(0);
-})->with(array('ownership','queue','schema','success','child-failure','deadline','completion-write','cancel','read-failure','launch-failure','schedule-write','priming-write','borrowed-transaction','manual-success','schedule-edit','disabled-force'));
+})->with(array('ownership','queue','schema','success','child-failure','deadline','completion-write','cancel','read-failure','launch-failure','schedule-write','priming-write','borrowed-transaction','manual-success','schedule-edit','disabled-force','deadlock-retry'));
 
 
 test('the version-gated Installer upgrades automation and retries without advancing failed versions', function ($mode, $failure) {

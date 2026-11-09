@@ -34,6 +34,15 @@ foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_STDERR' => 2, 'RRDT
 	}
 }
 
+/* The path guards are under test here, not the quoting, so paths pass bare. */
+function boostPipedCreate_rrdtool_command_path($path) {
+	return $path;
+}
+
+function boostPipedCreate_cacti_log_safe_value($value) {
+	return json_encode((string) $value);
+}
+
 function boostPipedCreate_cacti_rrdtool_valid_path($path) {
 	return is_string($path) && $path !== '' && !preg_match('/[\x00-\x1f\x7f]/', $path);
 }
@@ -213,7 +222,7 @@ function boostPipedCreateLoad($root) {
 }
 
 function boostPipedCreateEval($code) {
-	eval(preg_replace('/\b(rrd_close|boost_rrdtool_pipe_creates|boost_rrdtool_get_last_update_time|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
+	eval(preg_replace('/\b(rrdtool_command_path|cacti_log_safe_value|rrd_close|boost_rrdtool_pipe_creates|boost_rrdtool_get_last_update_time|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
 }
 
 /* The acknowledgement test Boost applies to this return value. */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 // SPDX-License-Identifier: GPL-3.0-or-later
 namespace AutomationRecoveryFixture;
 use PDO;
+use PDOException;
 use PDOStatement;
 use RuntimeException;
 use Throwable;
@@ -20,7 +21,7 @@ $names = array();
 preg_match_all('/^function (\w+)\(/m', $runtime, $names);
 foreach ($names[1] as $name) {
 	if (!in_array($name, array('automation_start_child','automation_default_connection'), true)) {
-		eval('namespace AutomationRecoveryFixture; use PDO; use PDOStatement; use RuntimeException; use Throwable; use OutOfRangeException; use DateTimeZone; use DateTimeImmutable; ' . \test_php_function_source($runtime, $name));
+		eval('namespace AutomationRecoveryFixture; use PDO; use PDOException; use PDOStatement; use RuntimeException; use Throwable; use OutOfRangeException; use DateTimeZone; use DateTimeImmutable; ' . \test_php_function_source($runtime, $name));
 	}
 }
 foreach (array('automation_primeIPAddressTable','calculateNextStartForYear') as $name) {
@@ -54,6 +55,23 @@ $dsn = "mysql:host=$host;port=$port;dbname=$database;charset=utf8mb4";
 $connection = new PDO($dsn, getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION,PDO::MYSQL_ATTR_FOUND_ROWS=>true));
 $connection->exec("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_ENGINE_SUBSTITUTION'");
 $scenario = $argv[1] ?? '';
+if ($scenario === '--deadlock-holder') {
+	// Lock 192.0.2.2, wait until the parent's ascending primary-key scan holds
+	// 192.0.2.1 and waits for 192.0.2.2, then request 192.0.2.1 to close the cycle.
+	// Rows written to another table make this transaction heavier, so InnoDB chooses
+	// the parent as victim without adding locks to automation_ips.
+	$connection->beginTransaction();
+	$connection->exec("INSERT INTO automation_processes (pid,network_id,task) SELECT 100000 + seq.n, 99, 'weight' FROM (SELECT a.n * 20 + b.n + 1 AS n FROM (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a CROSS JOIN (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19) b) seq");
+	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=1 AND ip_address='192.0.2.2'");
+	print "ready\n";
+	$waiting = $connection->prepare("SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE ID=? AND INFO LIKE 'UPDATE automation_ips SET hostname=%'");
+	$until = microtime(true) + 10;
+	do { usleep(50000); $waiting->execute(array((int)$argv[2])); } while ((int)$waiting->fetchColumn() === 0 && microtime(true) < $until);
+	usleep(200000);
+	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=1 AND ip_address='192.0.2.1'");
+	$connection->commit();
+	exit(0);
+}
 if ($scenario === '--child') {
 	$scenario = $argv[2];
 	$options = array();
@@ -132,7 +150,43 @@ try {
 		check($connection->inTransaction(),'caller transaction remains open');
 		check($connection->query('SELECT name FROM automation_networks WHERE id=1')->fetchColumn()==='caller work','caller writes preserved');
 		$connection->rollBack();
-	} elseif ($scenario==='priming-write') {
+	} elseif ($scenario==='deadlock-retry') {
+		// Concurrent workers' claim and completion updates can deadlock. An
+		// autocommitted victim is retried; a victim inside a transaction is not.
+		// MySQL has no Innodb_deadlocks status; the victim session's rollback counter
+		// is available to this account on both servers.
+		$deadlocks = static function () use ($connection): int {
+			return (int)$connection->query("SHOW SESSION STATUS LIKE 'Handler_rollback'")->fetch(PDO::FETCH_NUM)[1];
+		};
+		$deadlock = static function (callable $statement) use ($connection, $deadlocks): array {
+			automation_query($connection, "DELETE FROM automation_ips");
+			automation_query($connection, "DELETE FROM automation_processes WHERE network_id=99");
+			automation_query($connection, "INSERT INTO automation_ips (ip_address,network_id,pid,status,thread,run_id) VALUES ('192.0.2.1',1,0,0,0,''),('192.0.2.2',1,0,0,0,'')");
+			$before = $deadlocks();
+			$holder = proc_open(array(PHP_BINARY, __FILE__, '--deadlock-holder', (string)$connection->query('SELECT CONNECTION_ID()')->fetchColumn()), array(0=>array('pipe','r'),1=>array('pipe','w'),2=>array('pipe','w')), $pipes);
+			check(is_resource($holder), 'deadlock holder started');
+			fclose($pipes[0]);
+			check(trim((string)fgets($pipes[1])) === 'ready', 'deadlock holder owns its first row');
+			$outcome = null;
+			try { $statement(); } catch (Throwable $error) { $outcome = $error; }
+			stream_get_contents($pipes[1]); fclose($pipes[1]); $holderError = stream_get_contents($pipes[2]); fclose($pipes[2]);
+			check(proc_close($holder) === 0, 'deadlock holder committed: ' . $holderError);
+			check($deadlocks() > $before, 'the server rolled back the deadlock victim');
+			return array($outcome, automation_query($connection, "SELECT hostname FROM automation_ips WHERE network_id=1 ORDER BY ip_address")->fetchAll(PDO::FETCH_COLUMN));
+		};
+		$worker = "UPDATE automation_ips SET hostname='worker' WHERE network_id=1";
+		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+		list($outcome, $names) = $deadlock(static function () use ($connection, $worker) { automation_query($connection, $worker); });
+		check($outcome === null, 'autocommitted deadlock victim is retried: ' . ($outcome ? $outcome->getMessage() : ''));
+		check($names === array('worker', 'worker'), 'retried statement applies after the survivor commits');
+		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		list($outcome, $names) = $deadlock(static function () use ($connection, $worker) {
+			$connection->beginTransaction();
+			try { automation_query($connection, $worker); } finally { if ($connection->inTransaction()) { $connection->rollBack(); } }
+		});
+		check($outcome instanceof PDOException && (int)($outcome->errorInfo[1] ?? 0) === 1213, 'transactional deadlock victim is returned to the caller');
+		check($names === array('holder', 'holder'), 'transactional victim is not re-executed');
+} elseif ($scenario==='priming-write') {
 		$oldRun=str_repeat('c',32);
 		$connection->beginTransaction();
 		automation_primeIPAddressTable(1,$oldRun,$connection,microtime(true)+10);

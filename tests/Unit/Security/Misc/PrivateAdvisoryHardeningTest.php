@@ -108,7 +108,7 @@ test('db_update_table batches schema changes into one alter statement', function
 
 test('realtime poller avoids direct rrdtool shell create', function () use ($realtimeSource) {
 	expect($realtimeSource)->toContain('cacti_exec(read_config_option(\'path_php_binary\'), array(');
-	expect($realtimeSource)->toContain('rrdtool_execute($command, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, \'POLLER\')');
+	expect($realtimeSource)->toContain('rrdtool_create_file($rt_graph_path, $command, false, $rrdtool_pipe, \'POLLER\')');
 	expect($realtimeSource)->not->toContain('shell_exec("$command_string $extra_args")');
 	expect($realtimeSource)->not->toContain('shell_exec($command)');
 });

@@ -26,11 +26,42 @@ declare(strict_types=1);
 
 /** Queries on an ownership connection must never reconnect or hide failure. */
 function automation_query(PDO $connection, string $sql, array $parameters = array()): PDOStatement {
-	$query = $connection->prepare($sql);
-	if ($query === false || !$query->execute($parameters)) {
-		throw new RuntimeException('Automation database operation failed.');
+	for ($attempt = 1; ; $attempt++) {
+		$failure = null;
+		try {
+			$query = $connection->prepare($sql);
+			if ($query !== false && $query->execute($parameters)) {
+				return $query;
+			}
+			$error = $query === false ? $connection->errorInfo() : $query->errorInfo();
+		} catch (PDOException $exception) {
+			$failure = $exception;
+			$error = $exception->errorInfo ?? array();
+		}
+		if (!automation_retry_deadlock($connection, $error, $attempt)) {
+			throw $failure ?? new RuntimeException('Automation database operation failed.');
+		}
+		usleep(random_int(10000, 50000) * $attempt);
 	}
-	return $query;
+}
+
+/**
+ * Concurrent workers' claim and completion updates on automation_ips can deadlock
+ * in InnoDB. The server rolls back only the victim statement when it runs
+ * autocommitted, so re-executing it is safe; without a retry the worker exits and
+ * the whole discovery run fails. Inside a transaction the server has rolled back
+ * the caller's earlier work too, so that failure is returned to the caller.
+ */
+function automation_retry_deadlock(PDO $connection, array $error, int $attempt): bool {
+	if ((int)($error[1] ?? 0) !== 1213 || $attempt >= 3 || $connection->inTransaction()) {
+		return false;
+	}
+	try {
+		$autocommit = $connection->query('SELECT @@autocommit');
+		return $autocommit !== false && (int)$autocommit->fetchColumn() === 1;
+	} catch (PDOException $ignored) {
+		return false;
+	}
 }
 
 function automation_lock_name(PDO $connection, int $network, int $thread = 0): string {

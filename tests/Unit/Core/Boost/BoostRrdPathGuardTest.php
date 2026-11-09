@@ -19,6 +19,15 @@ foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_BOOLEAN' => 3, 'POL
 	}
 }
 
+/* The path guards are under test here, not the quoting, so paths pass bare. */
+function boostRrdGuard_rrdtool_command_path($path) {
+	return $path;
+}
+
+function boostRrdGuard_cacti_log_safe_value($value) {
+	return json_encode((string) $value);
+}
+
 function boostRrdGuard_cacti_rrdtool_valid_path($path) {
 	return is_string($path) && $path !== '' && !preg_match('/[\x00-\x1f\x7f]/', $path);
 }
@@ -93,7 +102,7 @@ function boostRrdGuardLoad($root) {
 		expect($start)->not->toBeFalse()
 			->and($end)->not->toBeFalse();
 
-		$function = preg_replace('/\b(rrdtool_last_rejection|rrdtool_rejection_is_permanent|boost_rrdtool_function_update|boost_rrdtool_get_last_update_time|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostRrdGuard_$1(', substr($source, $start, $end - $start));
+		$function = preg_replace('/\b(rrdtool_command_path|cacti_log_safe_value|rrdtool_last_rejection|rrdtool_rejection_is_permanent|boost_rrdtool_function_update|boost_rrdtool_get_last_update_time|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostRrdGuard_$1(', substr($source, $start, $end - $start));
 
 		eval($function);
 	}
