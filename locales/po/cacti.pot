@@ -1,4 +1,4 @@
-# #-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#
+# #-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR The Cacti Group
 # This file is distributed under the same license as the Kadupul package.
@@ -7,10 +7,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"#-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#\n"
-"Project-Id-Version: Kadupul 1.2.38\n"
+"#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
+"Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 12:29-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

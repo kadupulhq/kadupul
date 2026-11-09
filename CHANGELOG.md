@@ -66,6 +66,8 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 - Reconcile `unique_keys` in `db_update_table()`, so a declared unique index is kept, created when missing and rebuilt as unique when its uniqueness drifted, and accept a primary key or index columns given as a string (#1065, #1060). Index columns are compared in order and with their prefix lengths, a primary key is rebuilt in one statement, and integer display widths no longer force a column rebuild on MySQL 8 (#1395). Mirrors upstream Cacti #8115 and #8125.
 
+- Add an opt-in network-equipment asset register (schema 1.2.39) with browser and CLI worker commands, explicit monitoring reconciliation, dependency checks and recorded reviews; it is disabled by default in both web and workers.
+
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
 - Fail an installation or upgrade, before the version marker is written, when a core table created by `cacti.sql` is missing from the database, or when the table list cannot be read (#1088). The 1.2.38 upgrade now creates `poller_output_boost_local_data_ids` when it is missing, since no earlier upgrade did. Mirrors the installer part of upstream Cacti #7625.
 

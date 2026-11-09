@@ -216,3 +216,13 @@ the request locale for legacy pages and Symfony routes alike; on Symfony routes 
 fed by IdentityAccess's public LocalePreference contract and existing installation
 settings. Inventory's Twig/forms/controllers translate UI messages;
 domain/application errors and rules remain framework- and locale-independent.
+
+## Asset management pilot
+
+`AssetManagement` owns the independent equipment register, source-to-asset mappings,
+observation evidence, lifecycle decisions, dependency graph and reconciliation
+history. Inventory continues to own monitoring devices. The bounded read adapter
+imports selected device metadata without changing Inventory or polling state.
+HTTP reads use the web connection; mutations cross a command-worker boundary and
+revalidate the existing administrator account. The pilot is disabled by default.
+See [asset management](asset-management.md) for storage bounds and release gates.
