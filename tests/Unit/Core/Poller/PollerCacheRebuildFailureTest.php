@@ -20,13 +20,30 @@ namespace PollerCacheRebuildFailure;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/utility.php'), 'poller_update_poller_cache_from_buffer'));
+/* The shipped function replaces the cache inside db_atomic(). database_atomic.php
+ * needs a MySQL driver, so the transaction boundary is replaced below by one that
+ * keeps its contract (begin, run, commit on true, roll back otherwise) on SQLite;
+ * SubsystemFailureNativeTest drives the real boundary against MariaDB/MySQL. */
+(function (): void {
+	$source  = \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/utility.php'), 'poller_update_poller_cache_from_buffer');
+	$require = "\trequire_once __DIR__ . '/database_atomic.php';\n";
+	if (substr_count($source, $require) !== 1) {
+		throw new \RuntimeException('poller_update_poller_cache_from_buffer no longer loads database_atomic.php as expected');
+	}
+	eval('namespace ' . __NAMESPACE__ . '; use PDO;' . str_replace($require, '', $source));
+})();
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'poller_update_poller_reindex_from_buffer'));
+
+if (!defined('MESSAGE_LEVEL_WARN')) {
+	define('MESSAGE_LEVEL_WARN', 2);
+}
 
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function cacti_log($message, ...$args) { $GLOBALS['pc_logs'][] = $message; }
 function set_config_option($name, $value) {}
-function raise_message(...$args) {}
+function raise_message(...$args) { $GLOBALS['pc_messages'][] = $args[0]; }
+function remote_poller_up($poller_id) { return $GLOBALS['pc_remote_up']; }
+function poller_push_to_remote_db_connect($poller_id, $retry) { return $GLOBALS['pc_remote']; }
 function __($text, ...$args) { return $text; }
 function poller_push_reindex_only_data_to_main($host_id, $data_query_id) { $GLOBALS['pc_pushed']++; return $GLOBALS['pc_push_ok']; }
 
@@ -64,6 +81,41 @@ function db_execute($sql, $log = true, $conn = false) {
 	return true;
 }
 
+function db_atomic(array $tables, callable $operation, $connection = false): bool {
+	$db = $connection instanceof \PDO ? $connection : $GLOBALS['pc_db'];
+	$db->beginTransaction();
+	try {
+		$ok = $operation($db) === true;
+	} catch (\Throwable $error) {
+		$ok = false;
+	}
+	$ok ? $db->commit() : $db->rollBack();
+
+	return $ok;
+}
+
+// Stands in for INSERT ... ON DUPLICATE KEY UPDATE, which SQLite cannot parse.
+function db_atomic_execute(\PDO $connection, string $sql, array $parameters = array()): bool {
+	$sql = trim(preg_replace('/\s+/', ' ', $sql));
+	if (pc_fails($sql)) {
+		return false;
+	}
+	if (strpos($sql, 'SELECT id FROM data_local') === 0) {
+		return true;
+	}
+	if (strpos($sql, 'INSERT INTO poller_item') === 0) {
+		$GLOBALS['pc_inserts']++;
+		preg_match_all('/\((\d+), (\d+)\)/', $sql, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			$connection->exec("INSERT OR REPLACE INTO poller_item VALUES ({$match[1]}, 1, 1)");
+		}
+
+		return true;
+	}
+
+	return $connection->prepare($sql)->execute($parameters);
+}
+
 beforeEach(function () {
 	$db = new \PDO('sqlite::memory:');
 	$db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -78,6 +130,9 @@ beforeEach(function () {
 	$GLOBALS['pc_seen']    = 0;
 	$GLOBALS['pc_inserts'] = 0;
 	$GLOBALS['pc_pushed']  = 0;
+	$GLOBALS['pc_messages'] = array();
+	$GLOBALS['pc_remote_up'] = true;
+	$GLOBALS['pc_remote']   = false;
 	$GLOBALS['pc_push_ok'] = true;
 });
 
@@ -101,19 +156,41 @@ test('a failed replacement insert keeps the previous poller cache rows', functio
 	$GLOBALS['pc_fail_at'] = $failing_batch;
 
 	expect(poller_update_poller_cache_from_buffer(array(1, 2), $items, 1))->toBeFalse();
-	expect(pc_rows('poller_item'))->toContain(array(1, 1, 1))->toContain(array(2, 1, 1));
-	expect($GLOBALS['pc_db']->query('SELECT COUNT(*) FROM poller_item WHERE present = 0')->fetchColumn())->toBe(0);
-	expect(implode("\n", $GLOBALS['pc_logs']))->toContain('previous rows were kept');
+	// The whole replacement rolls back: no new row and no row left marked stale.
+	expect(pc_rows('poller_item'))->toBe(array(array(1, 1, 1), array(2, 1, 1)));
+	expect($GLOBALS['pc_inserts'])->toBe($failing_batch - 1);
+	expect(implode("\n", $GLOBALS['pc_logs']))->toContain('previous cache retained');
 })->with(array('first batch' => 1, 'later batch' => 2));
 
 test('a failed mark leaves the poller cache untouched and stores nothing', function () {
 	$items = array('(1, 1)');
 
-	$GLOBALS['pc_fail'] = 'UPDATE poller_item SET present = 0';
+	$GLOBALS['pc_fail'] = 'UPDATE poller_item SET present=0';
 
 	expect(poller_update_poller_cache_from_buffer(array(1, 2), $items, 1))->toBeFalse();
 	expect($GLOBALS['pc_inserts'])->toBe(0);
 	expect(pc_rows('poller_item'))->toBe(array(array(1, 1, 1), array(2, 1, 1)));
+});
+
+test('a remote collector that cannot be updated keeps its rows, is logged and reports failure', function () {
+	$items = array('(1, 1)', '(3, 1)');
+	$GLOBALS['pc_db']->exec('UPDATE poller_item SET poller_id = 2');
+	$remote = new \PDO('sqlite::memory:');
+	$remote->exec('CREATE TABLE poller_item(local_data_id INTEGER PRIMARY KEY, poller_id INTEGER, present INTEGER)');
+	$remote->exec('INSERT INTO poller_item VALUES (1, 2, 1), (2, 2, 1)');
+
+	$GLOBALS['pc_remote_up'] = false;
+	expect(poller_update_poller_cache_from_buffer(array(1, 2, 3), $items, 2))->toBeFalse();
+	expect(implode("\n", $GLOBALS['pc_logs']))->toContain('remote collector 2 failed or the collector is unreachable');
+	expect($GLOBALS['pc_messages'])->toBe(array('poller_down_2'));
+
+	$GLOBALS['pc_remote_up'] = true;
+	$GLOBALS['pc_remote']    = $remote;
+	$GLOBALS['pc_fail']      = 'INSERT';
+	$GLOBALS['pc_fail_at']   = 2;
+	$GLOBALS['pc_seen']      = 0;
+	expect(poller_update_poller_cache_from_buffer(array(1, 2, 3), $items, 2))->toBeFalse();
+	expect($remote->query('SELECT * FROM poller_item ORDER BY 1')->fetchAll(\PDO::FETCH_NUM))->toBe(array(array(1, 2, 1), array(2, 2, 1)));
 });
 
 test('a successful reindex rebuild removes stale rows and pushes to main', function () {

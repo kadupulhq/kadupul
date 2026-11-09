@@ -15,7 +15,10 @@ foreach (array('lib/data_query.php' => array('run_data_query_work'),
 	'lib/utility.php' => array('update_poller_cache_from_query','poller_update_poller_cache_from_buffer')) as $file => $functions) {
 	$source = file_get_contents($root . '/' . $file);
 	if ($source === false) { throw new RuntimeException('Missing pipeline source'); }
-	foreach ($functions as $name) { eval('namespace ReindexPipelineFixture; use PDO; use RuntimeException; use Throwable;' . \test_php_function_source($source, $name)); }
+	// Evaluated code reports this fixture's directory as __DIR__; give each
+	// function the directory of its own source so its includes resolve.
+	$directory = var_export(dirname($root . '/' . $file), true);
+	foreach ($functions as $name) { eval('namespace ReindexPipelineFixture; use PDO; use RuntimeException; use Throwable;' . str_replace('__DIR__', $directory, \test_php_function_source($source, $name))); }
 }
 function db_column_exists($table, $column) { return true; }
 function query_snmp_host($host, $query) { return true; }

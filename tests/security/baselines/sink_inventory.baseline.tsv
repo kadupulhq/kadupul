@@ -17,7 +17,7 @@ cmd_exec	./cli/reset_password.php:156		shell_exec('stty -echo');
 cmd_exec	./cli/splice_rrd.php:261	$response = shell_exec(cacti_escapeshellcmd($rrdtool));
 cmd_exec	./cli/splice_rrd.php:932		$result      = exec($command, $output, $return_var);
 cmd_exec	./cli/update_heartbeat.php:304				$result = exec($command, $output, $return_code);
-cmd_exec	./cmd.php:313			$cactiphp = proc_open($command, $cactides, $pipes);
+cmd_exec	./cmd.php:326			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:115				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./install/functions.php:542				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:125			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
@@ -52,24 +52,23 @@ cmd_exec	./lib/ping.php:192					$result = shell_exec('chcp 437 && ping -w ' . $t
 cmd_exec	./lib/ping.php:199						$result = shell_exec('ping -6 -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:201						$result = shell_exec('ping -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']) . ' 2>&1');
 cmd_exec	./lib/ping.php:212							$result = shell_exec($ping_path . ' -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
-cmd_exec	./lib/poller.php:101					$fp = popen($command, 'r');
-cmd_exec	./lib/poller.php:103					$fp = popen($command, 'rb');
-cmd_exec	./lib/poller.php:116				$output = shell_exec($command);
-cmd_exec	./lib/poller.php:164					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
-cmd_exec	./lib/poller.php:1642										$output = system($php_path . ' -l ' . $tmpfile, $exit);
-cmd_exec	./lib/poller.php:166					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
-cmd_exec	./lib/poller.php:170				exec($safe_filename . ' ' . $args . ' > /dev/null 2>&1 &');
-cmd_exec	./lib/poller.php:173				exec($safe_filename . ' ' . $args . ' ' . $redirect_args . ' &');
-cmd_exec	./lib/poller.php:178				exec($safe_filename . ' ' . $args . ' > /dev/null 2>&1 &');
-cmd_exec	./lib/poller.php:181				exec($safe_filename . ' ' . $args . ' ' . $redirect_args . ' &');
-cmd_exec	./lib/poller.php:222		$process = @proc_open($command, $descriptors, $pipes, null, null, array('bypass_shell' => true));
-cmd_exec	./lib/poller.php:317		$process = proc_open($cmd, $descriptors, $pipes);
-cmd_exec	./lib/poller.php:38				$fp = popen($command, 'r');
-cmd_exec	./lib/poller.php:40				$fp = popen($command, 'rb');
-cmd_exec	./lib/poller.php:53			$output = shell_exec($command);
-cmd_exec	./lib/poller.php:64	 *                    of the proc_open() and proc_close() functions (php 4.3+)
-cmd_exec	./lib/poller.php:65	 * @param  (array)    $pipes - the array of r/w pipes returned from proc_open()
-cmd_exec	./lib/poller.php:66	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
+cmd_exec	./lib/poller.php:104					$fp = popen($command, 'r');
+cmd_exec	./lib/poller.php:106					$fp = popen($command, 'rb');
+cmd_exec	./lib/poller.php:119				$output = shell_exec($command);
+cmd_exec	./lib/poller.php:1645										$output = system($php_path . ' -l ' . $tmpfile, $exit);
+cmd_exec	./lib/poller.php:167					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
+cmd_exec	./lib/poller.php:169					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
+cmd_exec	./lib/poller.php:173				exec($safe_filename . ' ' . $args . ' > /dev/null 2>&1 &');
+cmd_exec	./lib/poller.php:176				exec($safe_filename . ' ' . $args . ' ' . $redirect_args . ' &');
+cmd_exec	./lib/poller.php:181				exec($safe_filename . ' ' . $args . ' > /dev/null 2>&1 &');
+cmd_exec	./lib/poller.php:184				exec($safe_filename . ' ' . $args . ' ' . $redirect_args . ' &');
+cmd_exec	./lib/poller.php:225		$process = @proc_open($command, $descriptors, $pipes, null, null, array('bypass_shell' => true));
+cmd_exec	./lib/poller.php:320		$process = proc_open($cmd, $descriptors, $pipes);
+cmd_exec	./lib/poller.php:37			$fp = popen($command, $config['cacti_server_os'] == 'unix' ? 'r' : 'rb');
+cmd_exec	./lib/poller.php:67	 *                    of the proc_open() and proc_close() functions (php 4.3+)
+cmd_exec	./lib/poller.php:68	 * @param  (array)    $pipes - the array of r/w pipes returned from proc_open()
+cmd_exec	./lib/poller.php:69	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
+cmd_exec	./lib/poller.php:75			$output = shell_exec($command);
 cmd_exec	./lib/rrd.php:120			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 cmd_exec	./lib/rrd.php:153		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:1917		$fp     = popen($rrdtool_cmd, 'r');
@@ -268,8 +267,8 @@ dynamic_include	./cli/upgrade_database.php:36	require_once($config['base_path'] 
 dynamic_include	./cli/upgrade_database.php:37	require_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./cmd.php:119	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cmd.php:120	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cmd.php:121	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./cmd.php:122	require_once($config['base_path'] . '/lib/ping.php');
+dynamic_include	./cmd.php:122	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./cmd.php:123	require_once($config['base_path'] . '/lib/ping.php');
 dynamic_include	./cmd_realtime.php:26	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cmd_realtime.php:27	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cmd_realtime.php:28	require_once($config['base_path'] . '/lib/rrd.php');
@@ -399,9 +398,9 @@ dynamic_include	./lib/plugins.php:708				include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:755				include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:844		include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/plugins.php:92							include_once($full_path);
-dynamic_include	./lib/poller.php:433		include_once($config['library_path'] . '/data_query.php');
-dynamic_include	./lib/poller.php:434		include_once($config['library_path'] . '/snmp.php');
-dynamic_include	./lib/poller.php:776		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./lib/poller.php:436		include_once($config['library_path'] . '/data_query.php');
+dynamic_include	./lib/poller.php:437		include_once($config['library_path'] . '/snmp.php');
+dynamic_include	./lib/poller.php:779		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./lib/reports.php:1028		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/reports.php:1029		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/reports.php:1030		include_once($config['library_path'] . '/html_tree.php');
@@ -579,9 +578,10 @@ fs_write	./lib/import.php:839							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2996				$file = fopen($cacheFile, "r");
 fs_write	./lib/maintenance_cli.php:160		$handle = @fopen($path, 'x+b');
 fs_write	./lib/maintenance_cli.php:386		$handle = @fopen($path, 'ab');
-fs_write	./lib/poller.php:1641									if (file_put_contents($tmpfile, $contents) !== false) {
-fs_write	./lib/poller.php:1648												file_put_contents($mypath, $contents);
-fs_write	./lib/poller.php:1677								file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1644									if (file_put_contents($tmpfile, $contents) !== false) {
+fs_write	./lib/poller.php:1651												file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1680								file_put_contents($mypath, $contents);
+fs_write	./lib/poller_output_spool.php:35				$file = @fopen($path, 'x');
 fs_write	./lib/reports.php:1717			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1757			$f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:1935		$source   = @fopen($backup, 'rb');
@@ -962,8 +962,9 @@ header_redirect	./settings.php:342			header('Location: settings.php?tab=' . get_
 header_redirect	./settings.php:70					header('Location: settings.php?header=false&tab=' . get_request_var('tab'));
 header_redirect	./settings.php:72					header('Location: settings.php?tab=' . get_request_var('tab'));
 header_redirect	./sites.php:271			header('Location: sites.php?header=false&action=edit&id=' . (empty($site_id) ? get_nfilter_request_var('id') : $site_id));
-header_redirect	./sites.php:405			header('Location: sites.php?header=false');
-header_redirect	./sites.php:455			header('Location: sites.php?header=false');
+header_redirect	./sites.php:417						header('Location: sites.php?header=false');
+header_redirect	./sites.php:432			header('Location: sites.php?header=false');
+header_redirect	./sites.php:482			header('Location: sites.php?header=false');
 header_redirect	./templates_export.php:72					header('Location: templates_export.php');
 header_redirect	./templates_import.php:124				header('Location: templates_import.php');
 header_redirect	./templates_import.php:72				header('Location: templates_import.php'); exit;

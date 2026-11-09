@@ -114,34 +114,40 @@ PHP;
 	expect($result['out'])->toBe($boost || $output ? 'recovery' : 'online');
 })->with(array(array(0, 0), array(1, 0), array(0, 1), array(1, 1)));
 
+/* cmd.php hands each batch to the local spool, which delivers poller_output and,
+ * with redirect, poller_output_boost in one handoff (SubsystemFailureNativeTest
+ * covers both copies and their rollback against MariaDB/MySQL). Here the shipped
+ * helper must report and log every stage at which a batch could not be stored. */
 test('cmd.php reports a batch it could not store in either queue', function ($redirect, $failure) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cmd.php');
 	$body   = \test_php_function_source($source, 'cmd_write_poller_output');
 
 	$program = <<<'PHP'
-$db = new PDO('sqlite::memory:');
-foreach (array('poller_output', 'poller_output_boost') as $table) {
-	$db->exec("CREATE TABLE $table (local_data_id INT, rrd_name TEXT, time TEXT, output TEXT)");
-}
-$calls = 0;
-$clock_resets = 0;
 $logs = array();
+$output_spool = 'spool';
 function cacti_log($message, ...$args) { $GLOBALS['logs'][] = $message; }
 function read_config_option($name) { return $GLOBALS['redirect'] ? 'on' : ''; }
-function db_execute($sql, $log, $connection) {
-	if (strpos($sql, 'SET timestamp = DEFAULT') !== false) { $GLOBALS['clock_resets']++; return true; }
-	if (strpos($sql, 'SET timestamp') !== false) { return true; }
-	if (++$GLOBALS['calls'] === $GLOBALS['failure']) { return false; }
-	return $connection->exec(str_replace('INSERT IGNORE', 'INSERT OR IGNORE', $sql)) !== false;
+function poller_output_enqueue($spool, $rows, $redirect) {
+	if ($GLOBALS['failure'] === 3) { throw new RuntimeException('spool unavailable'); }
+	$GLOBALS['queued'] = array($spool, $rows, $redirect);
+	return $GLOBALS['failure'] !== 1;
+}
+function poller_output_replay($spool, $connection) {
+	$GLOBALS['replayed'] = $connection;
+	return $GLOBALS['failure'] !== 2;
 }
 PHP;
 	$program .= '$redirect=' . var_export($redirect, true) . ';$failure=' . $failure . ';' . $body
-		. '$ok = cmd_write_poller_output(array("(1, \'value\', \'2026-01-01 00:00:00\', \'sample\')"), $db);'
-		. 'echo json_encode(array($ok, (int) $db->query("SELECT count(*) FROM poller_output")->fetchColumn(), (int) $db->query("SELECT count(*) FROM poller_output_boost")->fetchColumn(), $clock_resets, count($logs)));';
+		. '$ok = cmd_write_poller_output(array(array(1, "value", "sample")), "db");'
+		. 'echo json_encode(array($ok, $GLOBALS["queued"][2] ?? null, $GLOBALS["replayed"] ?? null, count($logs)));';
 	$result = run_php($program);
 
-	$copies = $redirect;
-	$failed = $failure === 1 || ($failure === 2 && $copies);
+	$failed = $failure !== 0;
 	expect($result['status'])->toBe(0, $result['out'] . $result['err']);
-	expect(json_decode($result['out'], true))->toBe(array(!$failed, $failure === 1 ? 0 : 1, $copies && $failure !== 2 ? 1 : 0, $copies ? 1 : 0, $failed ? 1 : 0));
-})->with(array(false, true))->with(array(0, 1, 2));
+	expect(json_decode($result['out'], true))->toBe(array(
+		!$failed,
+		$failure === 3 ? null : $redirect,
+		$failure === 0 || $failure === 2 ? 'db' : null,
+		$failed ? 1 : 0,
+	));
+})->with(array(false, true))->with(array(0, 1, 2, 3));

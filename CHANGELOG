@@ -9,6 +9,9 @@ Cacti CHANGELOG
 -issue: Retry an automation discovery queue statement that InnoDB rolls back as a deadlock victim, so concurrent discovery workers no longer fail the whole run
 
 1.2.32
+-issue: Retain the previous poller cache on failed reads or transactional replacement and report rebuild failures; tables that are not InnoDB keep the 1.2.31 non-transactional writes
+-issue: Validate device saves before applying disable side effects; keep site deletion and device disassociation atomic on InnoDB and reject oversized duplicate site names
+-issue: Retain PHP poller batches in a local recovery queue until both output destinations confirm persistence; truncated values are stored with a warning as in 1.2.31, a malformed queued batch is quarantined, and a spool directory with the wrong owner or mode is reported with the fix; a script that exits unsuccessfully after printing a value keeps the value with a warning
 -issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
 -issue: Record the system MIB collection time only after a collector has been started with --mibs, so a poller run that exits early no longer postpones collection for four hours; the bad SNMP index warning accompanies that run instead of repeating every poll while polling is disabled (#1348)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior

@@ -300,3 +300,14 @@ $config['rrd_maintenance_trusted_gids'] = array();
 // A command can hold the writer lease for this entire period. Keep this below
 // the poller interval/runtime budget; larger values can delay other writers.
 // $config['rrd_command_timeout'] = 60;
+
+// PHP poller output recovery queue. The default is a private application-specific
+// directory in sys_get_temp_dir(). For retention across temporary-file cleanup,
+// select persistent local storage outside the document root. Its parent must
+// exist; the poller creates the final directory. POSIX: collector-owned mode 0700.
+// Windows: grant the collector account exclusive write access with directory ACLs.
+// All PHP poller children for this installation must use the same directory.
+// Do not run the PHP poller as root: a root run can create the directory as root,
+// and later runs then stop with a message naming the chown to run.
+// See docs/poller-output-recovery.md before changing this path or rolling back.
+// $config['poller_output_spool'] = '/var/lib/cacti/poller-output';

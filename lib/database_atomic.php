@@ -1,0 +1,140 @@
+<?php
+/*
+ +-------------------------------------------------------------------------+
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
+ |                                                                         |
+ | This program is free software; you can redistribute it and/or           |
+ | modify it under the terms of the GNU General Public License             |
+ | as published by the Free Software Foundation; either version 2          |
+ | of the License, or (at your option) any later version.                  |
+ +-------------------------------------------------------------------------+
+*/
+
+declare(strict_types=1);
+
+/**
+ * Execute a local operation without committing work owned by its caller.
+ *
+ * The operation is atomic only when every table it names is InnoDB. When one
+ * is not (MyISAM, or a MEMORY poller_output_boost), the statements still run
+ * in order, as they did in 1.2.31, and a failure can leave earlier statements
+ * applied to the non-transactional tables. They then run as autocommitted
+ * statements, as in 1.2.31: a server enforcing GTID consistency (the MySQL 9
+ * default) rejects a transaction that writes both kinds of table. Inside a
+ * caller-owned transaction that fallback is impossible, so such a server
+ * refuses the operation and nothing is confirmed.
+ */
+function db_atomic(array $tables, callable $operation, $connection = false): bool {
+	global $database_sessions, $database_hostname, $database_port, $database_default;
+
+	if ($connection === false) {
+		$connection = $database_sessions["$database_hostname:$database_port:$database_default"] ?? null;
+	}
+	if (!$connection instanceof PDO) {
+		return false;
+	}
+
+	$started = $complete = false;
+	$owned = !$connection->inTransaction();
+	$savepoint = 'operation_' . bin2hex(random_bytes(8));
+	try {
+		$started = $owned ? $connection->beginTransaction() : db_atomic_execute($connection, 'SAVEPOINT ' . $savepoint);
+		if (!$started) {
+			return false;
+		}
+		$nontransactional = array();
+		foreach (array_unique($tables) as $table) {
+			$engine = db_atomic_table($connection, $table);
+			if ($engine === false) {
+				return false;
+			}
+			if ($engine !== 'InnoDB') {
+				$nontransactional[$table] = $engine;
+			}
+		}
+		if ($nontransactional) {
+			db_atomic_note_nontransactional($nontransactional);
+			if ($owned) {
+				// Nothing has been written yet; release the inspection transaction.
+				if (!$connection->commit()) {
+					return false;
+				}
+				$started = false;
+				$complete = $operation($connection) === true && !$connection->inTransaction();
+
+				return $complete;
+			}
+		}
+		if ($operation($connection) === true && $connection->inTransaction()) {
+			$complete = $owned ? $connection->commit() : db_atomic_execute($connection, 'RELEASE SAVEPOINT ' . $savepoint);
+		}
+	} catch (Throwable $error) {
+		// SQL and exception text can contain collected values or credentials.
+		cacti_log('ERROR: Database operation failed; changes were not confirmed.', false, 'DBCALL');
+	} finally {
+		if ($started && !$complete && $connection->inTransaction()) {
+			try {
+				$rolled_back = $owned ? $connection->rollBack()
+					: db_atomic_execute($connection, 'ROLLBACK TO SAVEPOINT ' . $savepoint)
+						&& db_atomic_execute($connection, 'RELEASE SAVEPOINT ' . $savepoint);
+				if (!$rolled_back) {
+					cacti_log('ERROR: Database operation rollback was not confirmed.', false, 'DBCALL');
+				}
+			} catch (Throwable $error) {
+				cacti_log('ERROR: Database operation rollback was not confirmed.', false, 'DBCALL');
+			}
+		}
+	}
+
+	return $complete;
+}
+
+/** Never reconnect or retry a single statement inside a logical transaction. */
+function db_atomic_execute(PDO $connection, string $sql, array $parameters = []): bool {
+	$statement = $connection->prepare($sql);
+	return $statement !== false && $statement->execute($parameters) && $statement->closeCursor();
+}
+
+/** Log once per process and table that its writes cannot be rolled back. */
+function db_atomic_note_nontransactional(array $engines): void {
+	static $noted = array();
+
+	foreach ($engines as $table => $engine) {
+		if (!isset($noted[$table])) {
+			$noted[$table] = true;
+			cacti_log('NOTICE: Table ' . $table . ' uses the ' . $engine . ' storage engine, so its writes run without a transaction, as in 1.2.31. Convert it to InnoDB for atomic updates.', false, 'DBCALL');
+		}
+	}
+}
+
+/**
+ * Inspect the actual table, holding its metadata lock through the mutation.
+ * Returns its storage engine, or false when it is missing, shadowed by a
+ * temporary table or cannot be inspected.
+ */
+function db_atomic_table(PDO $connection, string $table): string|false {
+	if (preg_match('/\A[a-z_]+\z/D', $table) !== 1 || $connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql') {
+		return false;
+	}
+	if (!db_atomic_execute($connection, 'SELECT 1 FROM `' . $table . '` LIMIT 0')) {
+		return false;
+	}
+	$statement = $connection->query('SHOW CREATE TABLE `' . $table . '`');
+	if ($statement === false) {
+		return false;
+	}
+	$definition = $statement->fetch(PDO::FETCH_NUM);
+	if (!$statement->closeCursor() || preg_match('/\ACREATE TABLE\s/i', $definition[1] ?? '') !== 1) {
+		return false;
+	}
+	// A table comment can contain ENGINE=InnoDB; inspect structured metadata.
+	$statement = $connection->query("SHOW TABLE STATUS WHERE Name = '$table'");
+	if ($statement === false) {
+		return false;
+	}
+	$row = $statement->fetch(PDO::FETCH_ASSOC);
+	if (!$statement->closeCursor() || ($row['Name'] ?? null) !== $table || !is_string($row['Engine'] ?? null) || $row['Engine'] === '') {
+		return false;
+	}
+	return $row['Engine'];
+}

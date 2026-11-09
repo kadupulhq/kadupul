@@ -34,21 +34,43 @@ function exec_poll($command) {
 	global $config;
 
 	if (function_exists('popen')) {
-		if ($config['cacti_server_os'] == 'unix') {
-			$fp = popen($command, 'r');
-		} else {
-			$fp = popen($command, 'rb');
-		}
+		$fp = popen($command, $config['cacti_server_os'] == 'unix' ? 'r' : 'rb');
 
 		/* return if the popen command was not successful */
 		if (!is_resource($fp)) {
-			cacti_log('WARNING; Problem with POPEN command.', false, 'POLLER');
+			cacti_log('WARNING: Problem with POPEN command.', false, 'POLLER');
 			return 'U';
 		}
 
 		$output = fgets($fp, 8192);
 
-		pclose($fp);
+		/* Drain remaining output so a verbose child can finish before pclose.
+		 * Stop after 8 MiB so a script that never stops printing is closed,
+		 * as 1.2.31 closed it after the first line. */
+		$drained = 0;
+		while (!feof($fp) && $drained < 8388608) {
+			$chunk = fread($fp, 8192);
+			if ($chunk === false) {
+				break;
+			}
+			$drained += strlen($chunk);
+		}
+
+		$status = pclose($fp);
+
+		/* only a script that printed nothing is unknown; a value it printed
+		 * before exiting non-zero is recorded, as in 1.2.31 */
+		if ($output === false || trim($output) === '') {
+			if ($status !== 0) {
+				cacti_log('WARNING: Collection script exited with status ' . $status . ' and printed no value; recorded as unknown.', false, 'POLLER');
+			}
+
+			return 'U';
+		}
+
+		if ($status !== 0) {
+			cacti_log('WARNING: Collection script exited with status ' . $status . ' after printing a value; the value was recorded.', false, 'POLLER');
+		}
 	} else {
 		$output = shell_exec($command);
 	}

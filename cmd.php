@@ -119,6 +119,7 @@ if (sizeof($parms)) {
 
 require_once($config['base_path'] . '/lib/snmp.php');
 require_once($config['base_path'] . '/lib/poller.php');
+require_once __DIR__ . '/lib/poller_output_spool.php';
 require_once($config['base_path'] . '/lib/rrd.php');
 require_once($config['base_path'] . '/lib/ping.php');
 
@@ -162,6 +163,28 @@ if ($first == NULL && $last == NULL) {
 if (!is_numeric($poller_id) || $poller_id < 1) {
 	cacti_log('FATAL: The poller needs to be a positive numeric value', true, 'POLLER');
 	exit(-1);
+}
+
+/* Drain older samples before collecting newer timestamps for the same RRDs.
+ * As with a failed write, the run is marked complete so the master does not
+ * wait out its timeout, and the exit status reports the failure; pending
+ * samples stay in the local spool for the next run. */
+try {
+	$output_spool = poller_output_spool((int) $poller_id);
+	$output_spool_ready = $output_spool !== false && poller_output_replay($output_spool, $poller_db_cnn_id);
+	if (!$output_spool_ready) {
+		cacti_log('ERROR: Poller output recovery is incomplete; pending samples retained. Check the database and spool directory.', true, 'POLLER');
+	}
+} catch (Throwable $error) {
+	$output_spool_ready = false;
+	cacti_log('ERROR: Poller output spool is unavailable; collection was not started.', true, 'POLLER');
+}
+
+if (!$output_spool_ready) {
+	record_cmdphp_started();
+	record_cmdphp_done();
+	db_close();
+	exit(1);
 }
 
 // notify cacti processes that a poller is running
@@ -394,10 +417,10 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 
 			if ($set_spike_kill && !substr_count($output, ':')) {
 				// insert a U in place of the actual value if the snmp agent restarts
-				$output_array[] = sprintf('(%d, %s, CURRENT_TIMESTAMP(), "U")', $item['local_data_id'], db_qstr($item['rrd_name'], $poller_db_cnn_id));
+				$output_array[] = array((int) $item['local_data_id'], (string) $item['rrd_name'], 'U');
 			} else {
 				// otherwise, just insert the value received from the poller
-				$output_array[] = sprintf('(%d, %s, CURRENT_TIMESTAMP(), %s)', $item['local_data_id'], db_qstr($item['rrd_name'], $poller_db_cnn_id), db_qstr($output, $poller_db_cnn_id));
+				$output_array[] = array((int) $item['local_data_id'], (string) $item['rrd_name'], (string) $output);
 			}
 
 			if ($output_count > 2000) {
@@ -535,43 +558,32 @@ db_close();
 
 exit($poller_write_failed ? 1 : 0);
 
-/* With Boost redirect on the same rows go to poller_output and
- * poller_output_boost in two statements, and Boost matches the copies on their
- * time.  CURRENT_TIMESTAMP() is read as each statement starts, so a flush that
- * crossed a second stamped the copies differently and Boost staged the sample
- * twice.  Pinning the session clock keeps CURRENT_TIMESTAMP() and the value it
- * stores. */
+/**
+ * Persist the batch before handing it to either output table.
+ *
+ * With Boost redirect the same rows go to poller_output and
+ * poller_output_boost, and Boost matches the copies on their time. Both copies
+ * take the batch time recorded at enqueue through FROM_UNIXTIME(), so a flush
+ * or replay that crosses a second still stamps them identically.
+ */
 function cmd_write_poller_output($output_array, $conn) {
-	$values   = implode(', ', $output_array);
-	$redirect = read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on';
+	global $output_spool;
 
-	if ($redirect && db_execute('SET timestamp = UNIX_TIMESTAMP()', true, $conn) === false) {
-		cacti_log('ERROR: Unable to pin collector sample time; the batch was not written.', true, 'POLLER');
-
+	try {
+		$redirect = read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on';
+		if (!poller_output_enqueue($output_spool, $output_array, $redirect)) {
+			cacti_log('ERROR: Collected samples could not be retained in the local spool. Collection stopped.', true, 'POLLER');
+			return false;
+		}
+		if (!poller_output_replay($output_spool, $conn)) {
+			cacti_log('ERROR: Poller output handoff failed; samples retained in the local spool for retry.', true, 'POLLER');
+			return false;
+		}
+		return true;
+	} catch (Throwable $error) {
+		cacti_log('ERROR: Poller output persistence failed. Check the database and local spool before restarting collection.', true, 'POLLER');
 		return false;
 	}
-
-	$written = db_execute('INSERT IGNORE INTO poller_output
-		(local_data_id, rrd_name, time, output)
-		VALUES ' . $values, true, $conn) !== false;
-
-	if ($redirect) {
-		$boost_written = db_execute('INSERT IGNORE INTO poller_output_boost
-			(local_data_id, rrd_name, time, output)
-			VALUES ' . $values, true, $conn) !== false;
-
-		$written = $written && $boost_written;
-
-		if (db_execute('SET timestamp = DEFAULT', true, $conn) === false) {
-			$written = false;
-		}
-	}
-
-	if (!$written) {
-		cacti_log('ERROR: Unable to store collected samples in a poller output queue.', true, 'POLLER');
-	}
-
-	return $written;
 }
 
 // function to assist in logging
