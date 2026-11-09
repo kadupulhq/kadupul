@@ -73,6 +73,8 @@ jobs:
       - name: Verify every shipped source and compiled catalog
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
       # The rendered translation corpus reads these plugin fixture catalogs.
+      # Compare decompiled messages, not bytes: msgfmt versions lay out the
+      # hash table differently, so a byte comparison fails on a valid .mo.
       - name: Verify translation fixture catalogs compile from their sources
         run: |
           set -euo pipefail
@@ -80,7 +82,9 @@ jobs:
           for po in tests/Symfony/Fixtures/translation/plugins/*/locales/po/*.po; do
             mo="$(dirname "$(dirname "$po")")/LC_MESSAGES/$(basename "$po" .po).mo"
             msgfmt --check-format "$po" -o "$RUNNER_TEMP/fixture.mo"
-            cmp "$RUNNER_TEMP/fixture.mo" "$mo"
+            msgunfmt "$RUNNER_TEMP/fixture.mo" | msgcat --sort-output --no-wrap - -o "$RUNNER_TEMP/expected.po"
+            msgunfmt "$mo" | msgcat --sort-output --no-wrap - -o "$RUNNER_TEMP/actual.po"
+            diff -u "$RUNNER_TEMP/expected.po" "$RUNNER_TEMP/actual.po"
             count=$((count + 1))
           done
           test "$count" -eq 2
