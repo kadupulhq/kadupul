@@ -12,7 +12,7 @@ cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:265				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:296			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./lib/database.php:2689	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
+cmd_exec	./lib/database.php:2690	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1103	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/functions.php:2600	                $output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:2618	                    $output = shell_exec($php . ' -q ' . $script);
@@ -317,7 +317,7 @@ dynamic_include	./lib/data_query.php:93	    include_once($config['library_path']
 dynamic_include	./lib/data_query.php:94	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/data_query.php:95	    include_once($config['library_path'] . '/utility.php');
 dynamic_include	./lib/data_query.php:984	    include_once($config['library_path'] . '/snmp.php');
-dynamic_include	./lib/database.php:289	        include($config['base_path'] . '/include/config.php');
+dynamic_include	./lib/database.php:290	        include($config['base_path'] . '/include/config.php');
 dynamic_include	./lib/dsstats.php:1006	        include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/dsstats.php:1050	        include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/export.php:447		include_once($config['library_path'] . '/vdef.php');

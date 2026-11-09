@@ -14,6 +14,9 @@ savepoints. Permanent InnoDB tables are required; temporary shadows and
 nontransactional tables fail before mutation. A per-host/query advisory lock
 serializes complete reindexes without holding row locks across device I/O.
 Database helpers stop on failure instead of reconnecting after ownership is lost.
+The failure policy uses a nested scope with guaranteed restoration, without
+adding legacy globals. Scope nesting, exceptions and the existing remote handoff
+contracts are covered by the Symfony tests.
 
 Cache publication runs on every successful local reindex, including a retry whose
 indexes already changed. A failed local write or collector publication returns
@@ -36,7 +39,9 @@ the parsed definition. Shared graphs retain the prior last-supplied-source rule.
 
 Local verification on 2026-11-08 used PHP 8.4.25, MySQL 8.4.13 and MariaDB
 10.11.19 in disposable databases. All 58 registered regression cases passed on
-each engine. They execute shipped DDL and production database code, with device
+each engine, using a schema-scoped account. CI enables trigger creation only in
+its disposable MySQL service so failure injections need no application SUPER
+privilege. They execute shipped DDL and production database code, with device
 acquisition, item construction and unrelated completion effects as explicit test
 boundaries. Cases cover failed first/late writes, mark/delete/preserve failures,
 silent PDO failures, begin/commit/savepoint refusal, caller rollback, absent
@@ -63,13 +68,13 @@ coordinator/transport fixtures do not establish whole-application coverage.
 | data_query_reindex_local | 102/117 | 87.2% |
 | data_query_remap_indexes | 22/24 | 91.7% |
 | data_query_statement | 4/4 | 100.0% |
-| data_query_serialized | 28/29 | 96.6% |
-| data_query_transaction | 40/44 | 90.9% |
+| data_query_serialized | 24/25 | 96.0% |
+| data_query_transaction | 38/41 | 92.7% |
 
 The 1,001-source graph fixture uses six SQL statements (three reads and three
 writes), compared with 3,003 in the original function. Three runs against the same
-local MySQL instance had median elapsed times of 429.67 ms before
-and 11.86 ms after. Stored graph indexes match in both versions.
+local MySQL instance had median elapsed times of 402.86 ms before
+and 11.88 ms after. Stored graph indexes match in both versions.
 This measures graph remapping only, not a complete poll cycle or device latency.
 The regression asserts the six-query budget and checks all 1,001 persisted rows.
 

@@ -122,7 +122,7 @@ try {
         if ($scenario === 'wrapper-disabled') { $connection->exec("UPDATE host SET disabled='on' WHERE id=1"); }
         if ($scenario === 'wrapper-missing') { $connection->exec('DELETE FROM host WHERE id=1'); }
         check(run_data_query(1,1) === ($scenario !== 'wrapper-missing'), 'Public wrapper preserves skipped and missing host outcomes');
-        check(empty($database_fail_fast), 'Public wrapper restores database policy');
+        check(!\Kadupul\Platform\Infrastructure\Legacy\LegacyDatabaseFailureScope::active(), 'Public wrapper restores database policy');
     } elseif ($scenario === 'guard-missing-connection') {
         $saved = $database_sessions; $database_sessions = array();
         try {
@@ -140,7 +140,7 @@ try {
     } elseif (str_starts_with($scenario, 'unlock-')) {
         $connection->failure = $scenario;
         check(data_query_serialized(1,1, static fn() => true) === false, 'Unconfirmed release cannot report success');
-        check(empty($database_fail_fast), 'Release failure restores database policy');
+        check(!\Kadupul\Platform\Infrastructure\Legacy\LegacyDatabaseFailureScope::active(), 'Release failure restores database policy');
         $connection->failure = '';
         $name = 'reindex.' . substr(hash('sha256', $database_default . ':1:1'), 0, 48);
         $connection->prepare('SELECT RELEASE_LOCK(?)')->execute(array($name));
@@ -163,7 +163,7 @@ try {
 		}) === ($scenario === 'lock-success'), 'Serialized work preserves its outcome');
 		check($calls === 1, 'Only owner ran');
 		check(data_query_serialized(1, 1, static fn() => true), 'Ownership released after all outcomes');
-		check(empty($database_fail_fast), 'Database policy restored');
+		check(!\Kadupul\Platform\Infrastructure\Legacy\LegacyDatabaseFailureScope::active(), 'Database policy restored');
 	} elseif (str_starts_with($scenario, 'pipeline-')) {
 		require __DIR__ . '/reindex-pipeline-boundary.php';
 		seed_sources();

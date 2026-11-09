@@ -39,8 +39,8 @@ function runQuery(array $scenario): array
         empty($scenario['probeReturns']) ? 'whole-snmp-query-get' : 'snmp-query-get-return-values',
         $scenario,
         array_merge(array('actual-snmp-query-completed', 'actual-snmp-cache-readback', 'actual-session-close'), empty($scenario['probeReturns']) ? array() : array('native-helper-values-preserved')),
-        array('lib/data_query.php', 'lib/data_query_runtime.php', 'lib/xml.php'),
-        array('tests/Fixtures/data-query-snmp-get-native.php', 'lib/data_query.php', 'lib/data_query_runtime.php', 'lib/xml.php', 'include/global_constants.php', 'cacti.sql', 'lib/snmp.php', 'tests/Helpers/PhpSource.php')
+        array('lib/data_query.php', 'lib/data_query_runtime.php', 'src/Platform/Infrastructure/Legacy/LegacyDatabaseFailureScope.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php', 'lib/xml.php'),
+        array('tests/Fixtures/data-query-snmp-get-native.php', 'lib/data_query.php', 'lib/data_query_runtime.php', 'src/Platform/Infrastructure/Legacy/LegacyDatabaseFailureScope.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php', 'lib/xml.php', 'include/global_constants.php', 'cacti.sql', 'lib/snmp.php', 'tests/Helpers/PhpSource.php')
     );
     $registration['collectorPrelude'] = 'define("SNMP_QUERY_NATIVE_TEST_COVERAGE", true);';
     $command = \child_coverage_command(array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program,
