@@ -24,8 +24,8 @@ test('system MIB scheduling uses elapsed time for its own collector', function (
     expect($mibs)->toBe($expected)
         ->and($stored['poller_lastrun_2'])->toBe($now - 60)
         ->and($stored['poller_mibsrun_1'])->toBe($now - 20000)
-        ->and($stored['poller_mibsrun_2'])->toBe($expected ? $now : $lastMibs)
-        ->and($writes)->toBe($expected ? [['poller_mibsrun_2', $now]] : []);
+        ->and($stored['poller_mibsrun_2'])->toBe($lastMibs)
+        ->and($writes)->toBe([]);
 })->with([
     'missing first run' => ['', 36000, true],
     'false first run' => [false, 36000, true],
@@ -46,16 +46,53 @@ test('an admitted MIB collection does not repeat on the next poll or leak betwee
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
     expect($source)->not->toBeFalse();
     $schedule = test_php_block_source($source, '// retrieve the last time the poller ran');
+    $record = test_php_block_source($source, '/* record the system MIB run');
     $program = 'namespace MibSequenceProbe;$settings=[];$writes=[];$observed=[];'
         . 'function read_config_option($key){return $GLOBALS["settings"][$key]??"";}'
         . 'function set_config_option($key,$value){$GLOBALS["writes"][]=[$key,$value];$GLOBALS["settings"][$key]=$value;}'
         . 'foreach([[2,36000],[2,36060],[3,36060],[2,36300],[2,50400],[2,50401]] as [$poller_id,$current_time]) {'
-        . '$mibs=false;$settings["poller_lastrun_".$poller_id]=$current_time-60;'
-        . $schedule . '$observed[]=$mibs;}echo json_encode([$observed,$writes]);';
+        . '$mibs=false;$mibs_recorded=false;$started_processes=1;$settings["poller_lastrun_".$poller_id]=$current_time-60;'
+        . $schedule . $record . $record . '$observed[]=$mibs;}echo json_encode([$observed,$writes]);';
     $result = test_php_run($program);
     expect($result['status'])->toBe(0, $result['err'])->and($result['err'])->toBe('');
     expect(json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR))->toBe([
         [true, false, true, false, false, true],
         [['poller_mibsrun_2', 36000], ['poller_mibsrun_3', 36060], ['poller_mibsrun_2', 50401]],
     ]);
+});
+
+test('a poll that exits before starting a collector keeps the MIB window open', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    expect($source)->not->toBeFalse();
+    $schedule = test_php_block_source($source, '// retrieve the last time the poller ran');
+    $record = test_php_block_source($source, '/* record the system MIB run');
+    // Each run: [time, whether it reached the launch, collectors started there].
+    $program = 'namespace MibEarlyExitProbe;$settings=["poller_mibsrun_2"=>20000];$writes=[];$observed=[];'
+        . 'function read_config_option($key){return $GLOBALS["settings"][$key]??"";}'
+        . 'function set_config_option($key,$value){$GLOBALS["writes"][]=[$key,$value];$GLOBALS["settings"][$key]=$value;}'
+        . 'foreach([[36000,false,0],[36060,true,0],[36120,true,2],[36180,true,2]] as [$current_time,$launch,$started_processes]) {'
+        . '$poller_id=2;$mibs=false;$mibs_recorded=false;'
+        . $schedule . 'if($launch){' . $record . '}$observed[]=$mibs;}echo json_encode([$observed,$writes]);';
+    $result = test_php_run($program);
+    expect($result['status'])->toBe(0, $result['err'])->and($result['err'])->toBe('');
+    expect(json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR))->toBe([
+        [true, true, true, false],
+        [['poller_mibsrun_2', 36120]],
+    ]);
+});
+
+test('the bad index check follows a launched MIB run, not an open window', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    expect($source)->not->toBeFalse();
+    $start = strpos($source, '    bad_index_check($');
+    expect($start)->not->toBeFalse();
+    $call = substr($source, $start, strpos($source, ';', $start) - $start + 1);
+    // The first run has the window open but started no collector, as when polling is disabled.
+    $program = 'namespace MibBadIndexProbe;$checks=[];'
+        . 'function bad_index_check($mibs){$GLOBALS["checks"][]=$mibs;}'
+        . 'foreach([[true,false],[true,true],[false,false]] as [$mibs,$mibs_recorded]) {' . $call . '}'
+        . 'echo json_encode($checks);';
+    $result = test_php_run($program);
+    expect($result['status'])->toBe(0, $result['err'])->and($result['err'])->toBe('')
+        ->and(json_decode($result['out'], true, 512, JSON_THROW_ON_ERROR))->toBe([false, true, false]);
 });

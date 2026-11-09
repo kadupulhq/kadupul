@@ -38,7 +38,6 @@
     "SELECT pi.*\n\t\t\tFROM poller_item AS pi\n\t\t\tWHERE pi.poller_id = ?",
     "SELECT MAX(UNIX_TIMESTAMP(last_updated)) FROM poller_item",
     "UPDATE poller_item\n\t\t\t\tSET last_updated = FROM_UNIXTIME(?)\n\t\t\t\tWHERE poller_id = ?",
-    "DELETE FROM poller_item\n\t\t\t\tWHERE last_updated < ?\n\t\t\t\tAND last_updated > 0\n\t\t\t\tAND last_updated IS NOT NULL",
     "SELECT dl.*\n\t\t\tFROM data_local AS dl\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
     "SELECT gl.*\n\t\t\tFROM graph_local AS gl\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=gl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
     "SELECT dtd.*\n\t\t\tFROM data_template_data AS dtd\n\t\t\tINNER JOIN data_local AS dl\n\t\t\tON dtd.local_data_id=dl.id\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
@@ -47,7 +46,9 @@
     "SELECT did.*\n\t\t\tFROM data_input_data AS did\n\t\t\tINNER JOIN data_template_data AS dtd\n\t\t\tON did.data_template_data_id=dtd.id\n\t\t\tINNER JOIN data_local AS dl\n\t\t\tON dl.id=dtd.local_data_id\n\t\t\tINNER JOIN host AS h\n\t\t\tON h.id=dl.host_id\n\t\t\tWHERE h.poller_id = ?\n\t\t\tAND h.deleted = \"\"",
     "SELECT\n\t\tSUM(CASE WHEN action=0 THEN 1 ELSE 0 END) AS snmp,\n\t\tSUM(CASE WHEN action=1 THEN 1 ELSE 0 END) AS script,\n\t\tSUM(CASE WHEN action=2 THEN 1 ELSE 0 END) AS server\n\t\tFROM poller_item\n\t\tWHERE poller_id = ?",
     "UPDATE poller\n\t\t\tSET snmp = ?, script = ?, server = ?\n\t\t\tWHERE id = ?",
-    "UPDATE poller SET last_sync=NOW(), requires_sync=\"\" WHERE id=?"
+    "UPDATE poller SET last_sync=NOW(), requires_sync=\"\" WHERE id=?",
+    "SELECT local_data_id, rrd_name FROM poller_item",
+    "DELETE FROM poller_item WHERE (local_data_id = ? AND rrd_name = ?)"
   ],
   "cases": {
     "all||web": {
@@ -129,23 +130,24 @@
         ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
         ["fetch_cell",36,"",false,"remote"],
         ["execute_prepared",37,[1700000000,2],true,"local"],
-        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc",47,"remote"],
+        ["execute_prepared",48,["9",""],false,"remote"],
+        ["fetch_assoc_prepared",38,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[38],4],
         ["fetch_assoc_prepared",39,[2],"local"],
-        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["copy","graph_local",2,true,false,"remote",[39],4],
         ["fetch_assoc_prepared",40,[2],"local"],
-        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["copy","data_template_data",2,true,false,"remote",[40],4],
         ["fetch_assoc_prepared",41,[2],"local"],
-        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["copy","data_template_rrd",2,true,false,"remote",[41],4],
         ["fetch_assoc_prepared",42,[2],"local"],
-        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["copy","graph_templates_item",2,true,false,"remote",[42],4],
         ["fetch_assoc_prepared",43,[2],"local"],
-        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
-        ["fetch_assoc_prepared",44,[2],"local"],
-        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["copy","data_input_data",2,true,false,"remote",[43],4],
         ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["execute_prepared",47,[2],true,"local"],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
+        ["execute_prepared",46,[2],true,"local"],
         ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
@@ -229,23 +231,24 @@
         ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
         ["fetch_cell",36,"",false,"remote"],
         ["execute_prepared",37,[1700000000,2],true,"local"],
-        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc",47,"remote"],
+        ["execute_prepared",48,["9",""],false,"remote"],
+        ["fetch_assoc_prepared",38,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[38],4],
         ["fetch_assoc_prepared",39,[2],"local"],
-        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["copy","graph_local",2,true,false,"remote",[39],4],
         ["fetch_assoc_prepared",40,[2],"local"],
-        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["copy","data_template_data",2,true,false,"remote",[40],4],
         ["fetch_assoc_prepared",41,[2],"local"],
-        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["copy","data_template_rrd",2,true,false,"remote",[41],4],
         ["fetch_assoc_prepared",42,[2],"local"],
-        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["copy","graph_templates_item",2,true,false,"remote",[42],4],
         ["fetch_assoc_prepared",43,[2],"local"],
-        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
-        ["fetch_assoc_prepared",44,[2],"local"],
-        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["copy","data_input_data",2,true,false,"remote",[43],4],
         ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["execute_prepared",47,[2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
+        ["execute_prepared",46,[2],true,"local"]
       ]
     },
     "data||web": {
@@ -271,22 +274,23 @@
         ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
         ["fetch_cell",36,"",false,"remote"],
         ["execute_prepared",37,[1700000000,2],true,"local"],
-        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc",47,"remote"],
+        ["execute_prepared",48,["9",""],false,"remote"],
+        ["fetch_assoc_prepared",38,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[38],4],
         ["fetch_assoc_prepared",39,[2],"local"],
-        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["copy","graph_local",2,true,false,"remote",[39],4],
         ["fetch_assoc_prepared",40,[2],"local"],
-        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["copy","data_template_data",2,true,false,"remote",[40],4],
         ["fetch_assoc_prepared",41,[2],"local"],
-        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["copy","data_template_rrd",2,true,false,"remote",[41],4],
         ["fetch_assoc_prepared",42,[2],"local"],
-        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["copy","graph_templates_item",2,true,false,"remote",[42],4],
         ["fetch_assoc_prepared",43,[2],"local"],
-        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
-        ["fetch_assoc_prepared",44,[2],"local"],
-        ["copy","data_input_data",2,true,false,"remote",[44],4],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["execute_prepared",47,[2],true,"local"],
+        ["copy","data_input_data",2,true,false,"remote",[43],4],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
+        ["execute_prepared",46,[2],true,"local"],
         ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
@@ -314,22 +318,23 @@
         ["copy","poller_item",2,false,["last_updated"],"remote",[35],6],
         ["fetch_cell",36,"",false,"remote"],
         ["execute_prepared",37,[1700000000,2],true,"local"],
-        ["execute_prepared",38,["2023-11-14 22:13:20"],false,"remote"],
+        ["fetch_assoc",47,"remote"],
+        ["execute_prepared",48,["9",""],false,"remote"],
+        ["fetch_assoc_prepared",38,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[38],4],
         ["fetch_assoc_prepared",39,[2],"local"],
-        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["copy","graph_local",2,true,false,"remote",[39],4],
         ["fetch_assoc_prepared",40,[2],"local"],
-        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["copy","data_template_data",2,true,false,"remote",[40],4],
         ["fetch_assoc_prepared",41,[2],"local"],
-        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["copy","data_template_rrd",2,true,false,"remote",[41],4],
         ["fetch_assoc_prepared",42,[2],"local"],
-        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["copy","graph_templates_item",2,true,false,"remote",[42],4],
         ["fetch_assoc_prepared",43,[2],"local"],
-        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
-        ["fetch_assoc_prepared",44,[2],"local"],
-        ["copy","data_input_data",2,true,false,"remote",[44],4],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["execute_prepared",47,[2],true,"local"]
+        ["copy","data_input_data",2,true,false,"remote",[43],4],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
+        ["execute_prepared",46,[2],true,"local"]
       ]
     },
     "settings||web": {
@@ -341,8 +346,8 @@
         ["index","remote"],
         ["fetch_assoc",1,"local"],
         ["upsert","settings","remote",[1],3],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
         ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
@@ -356,8 +361,8 @@
         ["index","remote"],
         ["fetch_assoc",1,"local"],
         ["upsert","settings","remote",[1],3],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"]
       ]
     },
     "auth||web": {
@@ -383,8 +388,8 @@
         ["copy","user_domains",2,true,false,"remote",[27],4],
         ["fetch_assoc",28,"local"],
         ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
         ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
@@ -412,8 +417,8 @@
         ["copy","user_domains",2,true,false,"remote",[27],4],
         ["fetch_assoc",28,"local"],
         ["copy","user_domains_ldap",2,true,false,"remote",[28],4],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"]
       ]
     },
     "plugins||web": {
@@ -427,8 +432,8 @@
         ["copy","plugin_hooks",2,true,false,"remote",[18],4],
         ["fetch_assoc",19,"local"],
         ["copy","plugin_realms",2,true,false,"remote",[19],4],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"]
       ]
     },
     "plugins||cli": {
@@ -442,8 +447,8 @@
         ["copy","plugin_hooks",2,true,false,"remote",[18],4],
         ["fetch_assoc",19,"local"],
         ["copy","plugin_realms",2,true,false,"remote",[19],4],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"]
       ]
     },
     "unknown||web": {
@@ -451,8 +456,8 @@
       "events": [
         ["replicate_log","Attempting to replicate to Poller 2",[]],
         ["connect",2],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
         ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
@@ -462,8 +467,8 @@
       "events": [
         ["replicate_log","Attempting to replicate to Poller 2",[]],
         ["connect",2],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"]
       ]
     },
     "all|settings|web": {
@@ -1115,7 +1120,7 @@
     "all|data_local|web": {
       "result": false,
       "base": "all||web",
-      "shared": 79,
+      "shared": 80,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1124,7 +1129,7 @@
     "all|read-data_local|web": {
       "result": false,
       "base": "all||web",
-      "shared": 78,
+      "shared": 79,
       "tail": [
         ["copy","data_local",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
@@ -1134,7 +1139,7 @@
     "all|graph_local|web": {
       "result": false,
       "base": "all||web",
-      "shared": 81,
+      "shared": 82,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1143,7 +1148,7 @@
     "all|read-graph_local|web": {
       "result": false,
       "base": "all||web",
-      "shared": 80,
+      "shared": 81,
       "tail": [
         ["copy","graph_local",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
@@ -1153,7 +1158,7 @@
     "all|data_template_data|web": {
       "result": false,
       "base": "all||web",
-      "shared": 83,
+      "shared": 84,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed while replicating data-source definitions. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1162,7 +1167,7 @@
     "all|read-data_template_data|web": {
       "result": false,
       "base": "all||web",
-      "shared": 82,
+      "shared": 83,
       "tail": [
         ["copy","data_template_data",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]],
@@ -1172,7 +1177,7 @@
     "all|data_template_rrd|web": {
       "result": false,
       "base": "all||web",
-      "shared": 85,
+      "shared": 86,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1181,7 +1186,7 @@
     "all|read-data_template_rrd|web": {
       "result": false,
       "base": "all||web",
-      "shared": 84,
+      "shared": 85,
       "tail": [
         ["copy","data_template_rrd",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
@@ -1191,7 +1196,7 @@
     "all|graph_templates_item|web": {
       "result": false,
       "base": "all||web",
-      "shared": 87,
+      "shared": 88,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1200,7 +1205,7 @@
     "all|read-graph_templates_item|web": {
       "result": false,
       "base": "all||web",
-      "shared": 86,
+      "shared": 87,
       "tail": [
         ["copy","graph_templates_item",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
@@ -1210,7 +1215,7 @@
     "all|data_input_data|web": {
       "result": false,
       "base": "all||web",
-      "shared": 89,
+      "shared": 90,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1219,7 +1224,7 @@
     "all|read-data_input_data|web": {
       "result": false,
       "base": "all||web",
-      "shared": 88,
+      "shared": 89,
       "tail": [
         ["copy","data_input_data",2,true,false,"remote",false,4],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
@@ -1368,22 +1373,22 @@
       "base": "all||web",
       "shared": 75,
       "tail": [
+        ["fetch_assoc_prepared",38,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[38],4],
         ["fetch_assoc_prepared",39,[2],"local"],
-        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["copy","graph_local",2,true,false,"remote",[39],4],
         ["fetch_assoc_prepared",40,[2],"local"],
-        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["copy","data_template_data",2,true,false,"remote",[40],4],
         ["fetch_assoc_prepared",41,[2],"local"],
-        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["copy","data_template_rrd",2,true,false,"remote",[41],4],
         ["fetch_assoc_prepared",42,[2],"local"],
-        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["copy","graph_templates_item",2,true,false,"remote",[42],4],
         ["fetch_assoc_prepared",43,[2],"local"],
-        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
-        ["fetch_assoc_prepared",44,[2],"local"],
-        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["copy","data_input_data",2,true,false,"remote",[43],4],
         ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["execute_prepared",47,[2],true,"local"],
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
+        ["execute_prepared",46,[2],true,"local"],
         ["replicate_log","Synchronization of Poller 2 completed",["POLLER_VERBOSITY_LOW"]],
         ["raise_message","poller_sync",[]]
       ]
@@ -1393,22 +1398,22 @@
       "base": "all||cli",
       "shared": 75,
       "tail": [
+        ["fetch_assoc_prepared",38,[2],"local"],
+        ["copy","data_local",2,true,false,"remote",[38],4],
         ["fetch_assoc_prepared",39,[2],"local"],
-        ["copy","data_local",2,true,false,"remote",[39],4],
+        ["copy","graph_local",2,true,false,"remote",[39],4],
         ["fetch_assoc_prepared",40,[2],"local"],
-        ["copy","graph_local",2,true,false,"remote",[40],4],
+        ["copy","data_template_data",2,true,false,"remote",[40],4],
         ["fetch_assoc_prepared",41,[2],"local"],
-        ["copy","data_template_data",2,true,false,"remote",[41],4],
+        ["copy","data_template_rrd",2,true,false,"remote",[41],4],
         ["fetch_assoc_prepared",42,[2],"local"],
-        ["copy","data_template_rrd",2,true,false,"remote",[42],4],
+        ["copy","graph_templates_item",2,true,false,"remote",[42],4],
         ["fetch_assoc_prepared",43,[2],"local"],
-        ["copy","graph_templates_item",2,true,false,"remote",[43],4],
-        ["fetch_assoc_prepared",44,[2],"local"],
-        ["copy","data_input_data",2,true,false,"remote",[44],4],
+        ["copy","data_input_data",2,true,false,"remote",[43],4],
         ["hook","replicate_out",{"remote_poller_id":2,"rcnn_id":"remote","class":"all"}],
-        ["fetch_row_prepared",45,[2],"local"],
-        ["execute_prepared",46,[3,2,1,2],true,"local"],
-        ["execute_prepared",47,[2],true,"local"]
+        ["fetch_row_prepared",44,[2],"local"],
+        ["execute_prepared",45,[3,2,1,2],true,"local"],
+        ["execute_prepared",46,[2],true,"local"]
       ]
     },
     "all|cutoff-write|web": {
@@ -1431,7 +1436,7 @@
     "all|cutoff-delete|web": {
       "result": false,
       "base": "all||web",
-      "shared": 77,
+      "shared": 78,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1440,7 +1445,7 @@
     "all|cutoff-delete|cli": {
       "result": false,
       "base": "all||cli",
-      "shared": 77,
+      "shared": 78,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
       ]
@@ -1448,7 +1453,7 @@
     "all|statistics-read|web": {
       "result": false,
       "base": "all||web",
-      "shared": 91,
+      "shared": 92,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1457,7 +1462,7 @@
     "all|statistics-read|cli": {
       "result": false,
       "base": "all||cli",
-      "shared": 91,
+      "shared": 92,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
       ]
@@ -1465,7 +1470,7 @@
     "all|statistics-write|web": {
       "result": false,
       "base": "all||web",
-      "shared": 92,
+      "shared": 93,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
         ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
@@ -1474,7 +1479,7 @@
     "all|statistics-write|cli": {
       "result": false,
       "base": "all||cli",
-      "shared": 92,
+      "shared": 93,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
       ]
@@ -1482,7 +1487,7 @@
     "all|completion|web": {
       "result": false,
       "base": "all||web",
-      "shared": 93,
+      "shared": 94,
       "tail": [
         ["cacti_log","ERROR: Poller 2 completion-state write failed; synchronization remains required.",[false,"REPLICATE"]],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
@@ -1492,7 +1497,7 @@
     "all|completion|cli": {
       "result": false,
       "base": "all||cli",
-      "shared": 93,
+      "shared": 94,
       "tail": [
         ["cacti_log","ERROR: Poller 2 completion-state write failed; synchronization remains required.",[false,"REPLICATE"]],
         ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
@@ -1501,9 +1506,26 @@
     "data|data_template_data|cli": {
       "result": false,
       "base": "data||cli",
-      "shared": 27,
+      "shared": 28,
       "tail": [
         ["cacti_log","ERROR: Synchronization of Poller 2 failed while replicating data-source definitions.",[false,"REPLICATE"]]
+      ]
+    },
+    "all|stale-read|web": {
+      "result": false,
+      "base": "all||web",
+      "shared": 77,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]],
+        ["raise_message","poller_sync_failed",["Synchronization failed. See the log for details.","MESSAGE_LEVEL_ERROR"]]
+      ]
+    },
+    "all|stale-read|cli": {
+      "result": false,
+      "base": "all||cli",
+      "shared": 77,
+      "tail": [
+        ["cacti_log","ERROR: Synchronization of Poller 2 failed.",[false,"REPLICATE"]]
       ]
     }
   }
