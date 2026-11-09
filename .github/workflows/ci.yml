@@ -74,14 +74,24 @@ jobs:
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/verify_gettext_catalogs.py
       - name: Verify test runner dispatch and missing-suite failures
         run: mise exec python@3.12.12 -- python tests/tools/test_suite_runner.py
+      - name: Verify mutation wrapper outcome classification
+        run: |
+          mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
+          mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
       - name: Verify VDEF Apache alias setup readiness and cleanup
         run: mise exec python@3.12.12 -- python tests/tools/test_vdef_alias_readiness.py
       - name: Verify review risk ranking signals and range errors
         run: mise exec python@3.12.12 -- python tests/tools/test_review_risk.py
       - name: Verify installer usability evidence remains separate from release acceptance
         run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
+      - name: Verify defect classification fields match the bug form
+        run: mise exec python@3.12.12 -- python tests/tools/test_odc_summary.py
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
+      - name: Install hash-locked Python test-tool dependencies
+        run: mise exec python@3.12.12 -- python -m pip install --disable-pip-version-check --require-hashes -r tests/tools/requirements.txt
+      - name: Verify flaky-test comparison and changed-file test selection
+        run: mise exec python@3.12.12 -- python tests/tools/test_flaky_and_selection.py
       - name: Install interface catalog build dependencies
         run: 'mise exec python@3.12.12 -- python -m pip install --only-binary=:all: --require-hashes -r .github/scripts/catalog/requirements.txt'
       - name: Verify unchanged interface catalog artifacts and rejection cases
@@ -387,7 +397,7 @@ jobs:
           mise exec python@3.12.12 -- python tests/security/test_cdef_reference_gettext.py
           mise exec "php@$KADUPUL_CI_PHP_VERSION" -- php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' include/vendor/bin/phpunit \
-            -c phpunit-symfony.xml --filter 'NativeCollectorRecoveryProbeTest|CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerNativeStateTest|InstallerFailedPollTest|InstallerOperationalNativeEvidenceTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|DbalMonitoringStoreDatabaseTest' \
+            -c phpunit-symfony.xml --filter 'NativeCollectorRecoveryProbeTest|CdefReferenceNativeTest|InstallerVersionConfirmationTest|InstallerNativeStateTest|InstallerFailedPollTest|InstallerOperationalNativeEvidenceTest|LegacyAggregateSaveRefusalTest|AggregateItemTransactionTest|CdefNativeProbeCoverageTest|CdefCliNativeCoverageTest|AggregateGraphStatementTest|AggregateGraphItemsBoundaryTest|AggregateCacheCursorTest|HostDataSubstitutionTest|ForwardSchemaRepairTest|PackageScriptUpgradeTest|ModelDrivenSchemaDatabaseTest|BoostSchemaUpgradeTest|AccountIdColumnWidthUpgradeTest|DbalMonitoringStoreDatabaseTest' \
             --coverage-php "$RUNNER_TEMP/cdef-api-coverage/native.php" \
             --coverage-clover "$RUNNER_TEMP/cdef-api-coverage/native.xml"
           mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/run_cdef_reference_contracts.py \
@@ -488,6 +498,10 @@ jobs:
         working-directory: tests
         run: php ../include/vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --fail-on-empty-test-suite tools/PestInventoryTest.php
 
+      - name: Verify private installer HTTP failure diagnostics and cleanup
+        working-directory: tests
+        run: php ../include/vendor/bin/phpunit --no-configuration --bootstrap ../include/vendor/autoload.php --fail-on-empty-test-suite --fail-on-skipped Symfony/InstallerProbeDiagnosticsTest.php
+
       - name: Verify PHP 8.1 idiom contracts
         working-directory: tests
         run: |
@@ -578,6 +592,11 @@ jobs:
 
       - name: Dependency analyser
         run: composer run-script dependency-analyser
+
+      # Yuan et al. (OSDI 2014): failures cluster in error-handling paths. A
+      # run marker written before an early exit records work that never ran.
+      - name: Run markers recorded before an exit
+        run: php tests/security/check_marker_before_exit.php
 
   spike-removal:
     timeout-minutes: 45

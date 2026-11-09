@@ -132,7 +132,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
     'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php' => 'fda951991b7fa7e43deb90f51d3160cd51e43c5e7973cac9d4766223f73a9993',
     'include/csrf.php' => '7b6c50f6f82345eaa910ee608b1258d92771480b0ab9a5ea644125e58bd4565c',
-    'config/services.yaml' => '92e3908dec17e810e9cfe85cc1a17557e37d70be39333cb4e81233ad02a4b74f',
+    'config/services.yaml' => 'c4fab591a8a547d87bdd29768a5ccb05bd563b4fa01b7f9ac6668c2f54d0501e',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -298,7 +298,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '92e3908dec17e810e9cfe85cc1a17557e37d70be39333cb4e81233ad02a4b74f',
+    'config/services.yaml' => 'c4fab591a8a547d87bdd29768a5ccb05bd563b4fa01b7f9ac6668c2f54d0501e',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2257,7 +2257,7 @@ const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/packages/framework.yaml' => 'cb52228318ebed11b205997e1b7967a3213a6c54fad95d7a5e7e38e30bf9acd4',
     'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
     'config/routes.yaml' => 'c47b269a8f4f40f5036615df429c712d95325f3fee359c89ec4236e8d6487d9b',
-    'src/Kernel.php' => '7744649e4089c5915dac635a2b5e8a4bbaa07c4da535757ecb3dcf01d5bd9cf7',
+    'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
     'src/IdentityAccess/Application/Query/CurrentActor.php' => '8d88f75c2ee5361f682fb3f499711a59d2d49bc893e8ef7780d896844654cbb5',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '1685618e05a572a98218c336e856ab9180e00c5ff22bfc9c1971116166fbd55e',
     'src/IdentityAccess/Infrastructure/Symfony/Controller/SessionController.php' => '01f99f2bba9cf4d2aae8bf46e92fd42cc9a7f4fd236442898d1910dcfade2c0f',

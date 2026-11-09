@@ -178,6 +178,9 @@ services:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyItemPermissions
     Kadupul\IdentityAccess\Application\Port\PermissionCatalog:
         alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalPermissionCatalog
+    Kadupul\IdentityAccess\Application\Query\ListLegacyPasswordAccounts: ~
+    Kadupul\IdentityAccess\Application\Port\LegacyPasswordAccounts:
+        alias: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalLegacyPasswordAccounts
 
     # Session expiry/revocation must commit independently of application writes.
     # Rolling back a site edit must never restore a rejected credential.

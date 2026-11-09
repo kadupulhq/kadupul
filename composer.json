@@ -74,6 +74,7 @@
     },
     "require-dev": {
         "deptrac/deptrac": "^4.7",
+        "infection/infection": "^0.35",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.3",
         "phpstan/phpstan-doctrine": "^2.0",
@@ -95,7 +96,8 @@
         "sort-packages": true,
         "vendor-dir": "./include/vendor",
         "allow-plugins": {
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "infection/extension-installer": false
         }
     },
     "autoload": {
