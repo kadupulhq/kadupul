@@ -12695,9 +12695,9 @@ msgstr "오류: range1-range2 형식의 IP 범위는 더 이상 지원되지 않
 #: lib/api_device.php:1099 lib/api_device.php:1268 lib/api_device.php:1272
 #: lib/api_device.php:1299 lib/api_device.php:1303 lib/api_device.php:1335
 #: lib/api_device.php:1339 lib/api_device.php:1391 lib/api_device.php:1395
-#: lib/utility.php:680 lib/utility.php:684 lib/utility.php:760
-#: lib/utility.php:764 lib/utility.php:786 lib/utility.php:790
-#: lib/utility.php:813 lib/utility.php:816
+#: lib/utility.php:702 lib/utility.php:706 lib/utility.php:790
+#: lib/utility.php:794 lib/utility.php:820 lib/utility.php:824
+#: lib/utility.php:868 lib/utility.php:871
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "원격 폴러 %s 이 (가) 다운되었습니다. 다시 시작되면 FullSync를 수행해야 합니다"
@@ -13030,430 +13030,426 @@ msgstr "비밀번호가 일치하지 않습니다"
 msgid "System Device"
 msgstr "동기 장치"
 
-#: lib/data_query.php:79 lib/data_query.php:448
+#: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
 msgstr "데이터 쿼리 완료를위한 자동화 실행"
 
-#: lib/data_query.php:82 lib/data_query.php:451
+#: lib/data_query.php:92 lib/data_query.php:278
 msgid "Plugin Hooks complete"
 msgstr "플러그인 후크 완료"
 
-#: lib/data_query.php:100
+#: lib/data_query.php:110
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "실행중인 데이터 쿼리 [ %s]."
 
-#: lib/data_query.php:110
+#: lib/data_query.php:120
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "발견 된 유형 = &#39; %s&#39;[ %s]."
 
-#: lib/data_query.php:132
+#: lib/data_query.php:142
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "알 수없는 Type = &#39; %s&#39;."
 
-#: lib/data_query.php:167
+#: lib/data_query.php:331
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "경고 : 정렬 필드 연결이 변경되었습니다. 다시 매핑 문제가 발생할 수 있습니다!"
 
-#: lib/data_query.php:179
+#: lib/data_query.php:343
 msgid "Update Data Query Sort Cache complete"
 msgstr "데이터 업데이트 쿼리 캐시 완료 정렬"
 
-#: lib/data_query.php:204
+#: lib/data_query.php:382
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "변환 할 %s 테이블을 찾았습니다."
 
-#: lib/data_query.php:298
+#: lib/data_query.php:458
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "색인 변경이 감지되었습니다! CurrentIndex :  %s, 이전 인덱스 :  %s"
 
-#: lib/data_query.php:318
+#: lib/data_query.php:482
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "색인 제거가 감지되었습니다! 이전 색인 :  %s"
 
-#: lib/data_query.php:321
+#: lib/data_query.php:485
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "색인 제거가 감지되었습니다! 이전 색인 :  %s"
 
-#: lib/data_query.php:355
+#: lib/data_query.php:164
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "%s 로컬 데이터 ID의 확인 완료"
 
-#: lib/data_query.php:358
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "다시 매핑 할 변경된 %s 및 %s 고아 로컬 데이터 ID를 찾았습니다."
+#~ msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
+#~ msgstr "다시 매핑 할 변경된 %s 및 %s 고아 로컬 데이터 ID를 찾았습니다."
 
-#: lib/data_query.php:361
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "그래프를 새 인덱스로 다시 매핑"
+#~ msgid "Done remapping Graphs to their new Indexes"
+#~ msgstr "그래프를 새 인덱스로 다시 매핑"
 
-#: lib/data_query.php:367 lib/data_query.php:374
+#: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
 msgstr "중복 데이터 소스 프로필"
 
-#: lib/data_query.php:370 lib/data_query.php:377
+#: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
 msgstr "그래프 제목 캐시 업데이트 완료"
 
-#: lib/data_query.php:381
+#: lib/data_query.php:184
 msgid "Index Association with Local Data complete"
 msgstr "로컬 데이터와 색인 연관 완료"
 
-#: lib/data_query.php:387
+#: lib/data_query.php:197
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "재색인 캐시 업데이트가 완료되었습니다. 인덱스가 %s 개 변경되고 고아가 된 인덱스가 %s 개 변경되었습니다."
 
-#: lib/data_query.php:391
+#: lib/data_query.php:201
 msgid "Update Poller Cache for Query complete"
 msgstr "쿼리 완성을위한 폴러 캐시 업데이트"
 
-#: lib/data_query.php:393
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "인덱스 변경 감지, 건너 뛰기 다시 인덱싱 및 폴러 캐시 다시 채우기"
+#~ msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
+#~ msgstr "인덱스 변경 감지, 건너 뛰기 다시 인덱싱 및 폴러 캐시 다시 채우기"
 
-#: lib/data_query.php:440
+#: lib/data_query.php:265
 msgid "Automation Executing for Data Query complete"
 msgstr "데이터 쿼리 완료를위한 자동화 실행"
 
-#: lib/data_query.php:443
+#: lib/data_query.php:268
 msgid "Plugin hooks complete"
 msgstr "플러그인 후크 완료"
 
-#: lib/data_query.php:499
+#: lib/data_query.php:553
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "정렬 필드 변경 확인 중. 변경 사항이 감지되지 않았습니다."
 
-#: lib/data_query.php:504
+#: lib/data_query.php:558
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "감지 된 새 정렬 필드 : &#39; %s&#39;이전 정렬 필드 &#39; %s&#39;"
 
-#: lib/data_query.php:521
+#: lib/data_query.php:575
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "오류 : 새 정렬 필드가 적합하지 않습니다. 정렬 필드는 변경되지 않습니다."
 
-#: lib/data_query.php:533
+#: lib/data_query.php:587
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "새 정렬 필드 유효성이 검사되었습니다. 필드 정렬 정렬."
 
-#: lib/data_query.php:631
+#: lib/data_query.php:696
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "&#39; %s&#39;에서 데이터 쿼리 XML 파일을 찾을 수 없습니다."
 
-#: lib/data_query.php:635
+#: lib/data_query.php:700
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "&#39; %s&#39;에 데이터 쿼리 XML 파일이 있습니다."
 
-#: lib/data_query.php:658 lib/data_query.php:846 lib/data_query.php:2419
+#: lib/data_query.php:723 lib/data_query.php:911 lib/data_query.php:2501
 msgid "Error parsing XML file into an array."
 msgstr "배열로 XML 파일을 구문 분석하는 중 오류가 발생했습니다."
 
-#: lib/data_query.php:662 lib/data_query.php:850
+#: lib/data_query.php:727 lib/data_query.php:915
 msgid "XML file parsed ok."
 msgstr "XML 파일을 확인했습니다."
 
-#: lib/data_query.php:670 lib/data_query.php:853
+#: lib/data_query.php:735 lib/data_query.php:918
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "잘못된 필드 &lt;index_order&gt;  %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:671 lib/data_query.php:854
+#: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "&lt;방향&gt; 입력 &lt;/ 방향&gt; 또는 &lt;방향&gt; 입출력 &lt;/ 방향&gt; 필드 만 포함해야합니다."
 
-#: lib/data_query.php:688
+#: lib/data_query.php:753
 msgid "Data Query returned no indexes."
 msgstr "오류 : 데이터 쿼리가 인덱스를 반환하지 않았습니다."
 
-#: lib/data_query.php:689
+#: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; XML 파일에 &#39;Index Count Changed&#39;가 없습니다."
 
-#: lib/data_query.php:692
+#: lib/data_query.php:757
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "num &#39;개의 인덱스&#39; %s &#39;에 대한 스크립트 실행 중"
 
-#: lib/data_query.php:695
+#: lib/data_query.php:760
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "발견 된 인덱스 수 :  %s"
 
-#: lib/data_query.php:699
+#: lib/data_query.php:764
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; XML 파일에 &#39;Index Count Changed&#39;가 없습니다."
 
-#: lib/data_query.php:701
+#: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; XML 파일에 누락되었습니다. &#39;인덱스 개수 변경됨&#39;arg_index 항목 수를 계산하여 에뮬레이트되었습니다."
 
-#: lib/data_query.php:712
+#: lib/data_query.php:777
 msgid "ERROR: Data Query returned no indexes."
 msgstr "오류 : 데이터 쿼리가 인덱스를 반환하지 않았습니다."
 
-#: lib/data_query.php:716
+#: lib/data_query.php:781
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "인덱스 &#39; %s&#39;목록에 대한 스크립트 실행, 인덱스 개수 :  %s"
 
-#: lib/data_query.php:718
+#: lib/data_query.php:783
 msgid "Click to show Data Query output for 'index'"
 msgstr "&#39;index&#39;에 대한 데이터 쿼리 출력을 표시하려면 클릭하십시오."
 
-#: lib/data_query.php:721
+#: lib/data_query.php:786
 #, php-format
 msgid "Found index: %s"
 msgstr "발견 색인 :  %s"
 
-#: lib/data_query.php:736 lib/data_query.php:1238
+#: lib/data_query.php:801 lib/data_query.php:1303
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "&#39; %s&#39;필드에 대한 데이터 쿼리 출력을 표시하려면 클릭하십시오."
 
-#: lib/data_query.php:742
+#: lib/data_query.php:807
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "정렬 필드가 필드 이름 %s 에 대한 데이터를 반환하지 않았습니다. 건너뛰기"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:809
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "스크립트 쿼리 &#39; %s&#39;실행 중"
 
-#: lib/data_query.php:755 lib/data_query.php:762
+#: lib/data_query.php:820 lib/data_query.php:827
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "발견 된 항목 [ %s = &#39; %s&#39;] 색인 :  %s"
 
-#: lib/data_query.php:800 lib/data_query.php:815
+#: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "총계 : % f, 델타 : % f,  %s"
 
-#: lib/data_query.php:840
+#: lib/data_query.php:905
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "잘못된 host_id :  %s"
 
-#: lib/data_query.php:864
+#: lib/data_query.php:929
 msgid "Auto Bulk Walk Size Selected."
 msgstr "자동 대량 워크 크기가 선택되었습니다."
 
-#: lib/data_query.php:874 lib/data_query.php:919
+#: lib/data_query.php:939 lib/data_query.php:984
 msgid "Failed to load SNMP session."
 msgstr "SNMP 세션을로드하지 못했습니다."
 
-#: lib/data_query.php:884
+#: lib/data_query.php:949
 #, fuzzy, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "%2.4f 의 응답으로 테스트된 벌크 워크 크기 %d."
 
-#: lib/data_query.php:895
+#: lib/data_query.php:960
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "선택한 일괄 워크 크기는 %d입니다."
 
-#: lib/data_query.php:898
+#: lib/data_query.php:963
 msgid "Saving Bulk Walk Size to Device."
 msgstr "벌크 워크 크기를 장치에 저장합니다."
 
-#: lib/data_query.php:910
+#: lib/data_query.php:975
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Bulk Walk Size는 %d에서 고정됩니다."
 
-#: lib/data_query.php:932
+#: lib/data_query.php:997
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "SNMP를 실행하면 인덱스 수 &#39; %s&#39;에 대해 얻습니다. 인덱스 수 :  %s"
 
-#: lib/data_query.php:934
+#: lib/data_query.php:999
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; XML 파일에 누락되었습니다. &#39;Index Count Changed&#39;oid_index 항목을 계산하여 에뮬레이트되었습니다."
 
-#: lib/data_query.php:937
+#: lib/data_query.php:1002
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "@ &#39; %s&#39;인덱스 목록에 SNMP walk 실행 인덱스 개수 :  %s"
 
-#: lib/data_query.php:941
+#: lib/data_query.php:1006
 msgid "No SNMP data returned"
 msgstr "반환 된 SNMP 데이터가 없습니다."
 
-#: lib/data_query.php:946
+#: lib/data_query.php:1011
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "OID에있는 색인 : &#39; %s&#39;값 : &#39; %s&#39;"
 
-#: lib/data_query.php:977
+#: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "@ &#39; %s&#39;인덱스 목록 필터링 인덱스 개수 :  %s"
 
-#: lib/data_query.php:981
+#: lib/data_query.php:1046
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "OID에서 필터링 된 인덱스 : &#39; %s&#39;값 : &#39; %s&#39;"
 
-#: lib/data_query.php:997
+#: lib/data_query.php:1062
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "@ &#39; %s&#39;인덱스 목록 필터링 인덱스 개수 :  %s"
 
-#: lib/data_query.php:1001
+#: lib/data_query.php:1066
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "OID에서 필터링 된 인덱스 : &#39; %s&#39;값 : &#39; %s&#39;"
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:1086
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "&#39;rewrite_index&#39;또는 &#39;oid_suffix&#39;가 정의되었으므로 &#39; %s&#39;에 대한 잘못된 &#39;method&#39;필드 수정"
 
-#: lib/data_query.php:1028
+#: lib/data_query.php:1093
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "필드 &#39; %s&#39;의 인덱스 데이터 삽입 [값 = &#39; %s&#39;]"
 
-#: lib/data_query.php:1033
+#: lib/data_query.php:1098
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "위치한 입력 필드 &#39; %s&#39;[가져 오기]"
 
-#: lib/data_query.php:1042
+#: lib/data_query.php:1107
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "발견 된 OID 다시 쓰기 규칙 : &#39;s /  %s /  %s /&#39;"
 
-#: lib/data_query.php:1053
+#: lib/data_query.php:1118
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "OID에서 oid_rewrite : &#39; %s&#39;새로운 OID : &#39; %s&#39;"
 
-#: lib/data_query.php:1074
+#: lib/data_query.php:1139
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "SNMP를 실행하면 데이터 &#39; %s&#39;에 도착합니다 [값 = &#39; %s&#39;]"
 
-#: lib/data_query.php:1085
+#: lib/data_query.php:1150
 #, php-format
 msgid "Field '%s' %s"
 msgstr "필드 &#39; %s&#39; %s"
 
-#: lib/data_query.php:1146
+#: lib/data_query.php:1211
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "%s oids ( %s)에 대해 SNMP 실행을 실행 중입니다."
 
-#: lib/data_query.php:1172 lib/data_query.php:1264 lib/data_query.php:1272
+#: lib/data_query.php:1237 lib/data_query.php:1329 lib/data_query.php:1337
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "정렬 필드가 데이터가 아닙니다. OID [ %s]의 Re-Index를 계속할 수 없습니다."
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1241
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "데이터 &#39; %s&#39;에 대한 발견 된 결과 [값 = &#39; %s&#39;]"
 
-#: lib/data_query.php:1184
+#: lib/data_query.php:1249
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "데이터 &#39; %s&#39;에 대한 결과 설정 [key = &#39; %s&#39;, 값 = &#39; %s&#39;]"
 
-#: lib/data_query.php:1188
+#: lib/data_query.php:1253
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "데이터 &#39; %s&#39;에 대한 결과 건너 뛰기 [key = &#39; %s&#39;, 값 = &#39; %s&#39;]"
 
-#: lib/data_query.php:1202
+#: lib/data_query.php:1267
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "SNMP @ &#39; %s&#39;에 대한 결과 가져 오기 [값 = &#39; %s&#39;] (색인 :  %s)"
 
-#: lib/data_query.php:1232
+#: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "SNMP를 실행하면 데이터 @ &#39; %s&#39;에 도착합니다 [value = &#39;$ value&#39;]"
 
-#: lib/data_query.php:1240
+#: lib/data_query.php:1305
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "위치한 입력 필드 &#39; %s&#39;[walk]"
 
-#: lib/data_query.php:1277
+#: lib/data_query.php:1342
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "데이터 &#39; %s&#39;에 대해 SNMP 워크 실행"
 
-#: lib/data_query.php:1296 lib/data_query.php:1354 lib/data_query.php:1403
-#: lib/data_query.php:1454
+#: lib/data_query.php:1361 lib/data_query.php:1419 lib/data_query.php:1468
+#: lib/data_query.php:1519
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "VALUE_INDEX_PARSE에 인덱스 [%s] 이 (가) 없습니다."
 
-#: lib/data_query.php:1337
+#: lib/data_query.php:1402
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "발견 된 항목 [ %s = &#39; %s&#39;] 색인 :  %s [from  %s]"
 
-#: lib/data_query.php:1379
+#: lib/data_query.php:1444
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "발견된 옥텟 문자열 '%s' 디코딩된 값: '%s'"
 
-#: lib/data_query.php:1385 lib/data_query.php:1434
+#: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "발견 된 항목 [ %s = &#39; %s&#39;] 색인 :  %s [from regexp oid parse]"
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1527
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "발견 된 항목 [ %s = &#39; %s&#39;] 색인 :  %s [from regexp oid value parse]"
 
-#: lib/data_query.php:1684
+#: lib/data_query.php:1753
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "BOGUS REWRITE_VALUE 항목 발견, INDEX = '%s'"
 
-#: lib/data_query.php:1697
+#: lib/data_query.php:1766
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "번역 맵을 구문 분석할 수 없습니다 (rewrite_value)"
 
-#: lib/data_query.php:1721
+#: lib/data_query.php:1790
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "OID에서 oid_rewrite : &#39; %s&#39;새로운 OID : &#39; %s&#39;"
 
-#: lib/data_query.php:1826
+#: lib/data_query.php:1895
 msgid "Update graph data query cache complete"
 msgstr "데이터 업데이트 쿼리 캐시 완료 정렬"
 
-#: lib/data_query.php:1843
+#: lib/data_query.php:1912
 msgid "Re-Indexing Data Query complete"
 msgstr "데이터 인덱싱 다시 완료"
 
-#: lib/data_query.php:1974
+#: lib/data_query.php:2043
 msgid "Unknown Index"
 msgstr "알 수없는 색인"
 
-#: lib/data_query.php:2532
+#: lib/data_query.php:2628
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "데이터 소스 ' %s'에 대한 XML 출력 열을 선택하고 오른쪽으로 확인란을 전환해야합니다."
 
-#: lib/data_query.php:2538
+#: lib/data_query.php:2634
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "그래프 템플릿에 데이터 템플릿이 사용되지 않았습니다. 그래프 템플릿을 수정하십시오."
 
@@ -13556,7 +13552,7 @@ msgid "User Community"
 msgstr "사용자 커뮤니티"
 
 #: lib/functions.php:3837 lib/functions.php:3860 lib/html.php:2887
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 msgid "Documentation"
 msgstr "문서"
 
@@ -16910,191 +16906,191 @@ msgstr "잘못된 데이터로 인해 %s 에 대해 그래프가 생성되지 �
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "참고: 데이터 원본 확인 실패로 인해 데이터 쿼리 %s 및 인덱스 %s 에 그래프가 추가되지 않음"
 
-#: lib/utility.php:1200
+#: lib/utility.php:1258
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+와 MariaDB 10.0+는 훌륭한 릴리스이며 선택할 수있는 아주 좋은 버전입니다. 최신 릴리스를 실행했는지 확인하십시오. 안정성이있는 많은 문제를 야기하는 오랜 저급 네트워킹 문제가 수정되었습니다."
 
-#: lib/utility.php:1212
+#: lib/utility.php:1270
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "5.5.3보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
-#: lib/utility.php:1225 lib/utility.php:1262
+#: lib/utility.php:1283 lib/utility.php:1320
 msgid "When using Cacti with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "영어 이외의 언어로 Cacti를 사용하는 경우 일부 문자는 1 바이트 이상을 사용하므로 utf8mb4_unicode_ci 데이터 정렬 유형을 사용하는 것이 중요합니다."
 
-#: lib/utility.php:1231 lib/utility.php:1237 lib/utility.php:1268
-#: lib/utility.php:1274
+#: lib/utility.php:1289 lib/utility.php:1295 lib/utility.php:1326
+#: lib/utility.php:1332
 msgid "When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "영어 이외의 언어로 Cacti를 사용하는 경우 일부 문자는 1 바이트 이상을 사용하므로 utf8mb4 문자 세트를 사용하는 것이 중요합니다."
 
-#: lib/utility.php:1250
+#: lib/utility.php:1308
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "5.1보다 큰 %s 버전에서 InnoDB를 활성화하는 것이 좋습니다."
 
-#: lib/utility.php:1283
+#: lib/utility.php:1341
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "로그인 수 및 척추 데이터 수집기 사용에 따라  %s에 많은 연결이 필요합니다. 척추에 대한 계산은 total_connections = total_processes * (total_threads + script_servers + 1)이므로 사용자 연결을위한 헤드 룸을 남겨 두어야합니다. 이는 동시 로그인 계정의 수에 따라 변경됩니다."
 
-#: lib/utility.php:1288
+#: lib/utility.php:1346
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "테이블 캐쉬를 크게 유지하면 innodb_file_per_table을 사용할 때 파일 열기 / 닫기 작업이 줄어 듭니다."
 
-#: lib/utility.php:1293
+#: lib/utility.php:1351
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "원격 폴링 기능을 사용하면 많은 양의 데이터가 주 서버에서 원격 폴러로 동기화됩니다. 따라서이 값을 16M 이상으로 유지하십시오."
 
-#: lib/utility.php:1299
+#: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Cacti Performance Booster를 사용하고 메모리 스토리지 엔진을 선택하는 경우 시스템의 메모리 테이블 공간이 부족해지기 전에 Performance Booster 버퍼를 플러시해야합니다. 이것은 두 가지 방법으로 수행됩니다. 먼저 출력 열의 크기를 적절한 크기로 줄입니다. 이 열은 poller_output 및 poller_output_boost 테이블에 있습니다. 두 번째로 할 수있는 것은 메모리 테이블에 더 많은 메모리를 할당하는 것입니다. 우리는 임의로 시스템 메모리의 권장 값 10 %%를 선택했지만, SSD 디스크 드라이브를 사용하거나 시스템이 더 작은 경우이 권장 사항을 무시하거나 다른 스토리지 엔진을 선택할 수 있습니다. 콘솔 -&gt; 시스템 유틸리티 -&gt; 부스트 상태보기에서 성능 향상 표의 예상 소비량을 볼 수 있습니다."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "임시 테이블 크기가 더 큰 서브 쿼리를 실행할 때 임시 테이블을 메모리에 보관하십시오."
 
-#: lib/utility.php:1311 lib/utility.php:1317
+#: lib/utility.php:1369 lib/utility.php:1375
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1323
+#: lib/utility.php:1381
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "InnoDB 스토리지를 사용할 때 테이블 공간을 분리하여 보관하는 것이 중요합니다. 이렇게하면 오랫동안  %s 사용자에게 테이블을 더 간단하게 관리 할 수 있습니다. 현재이 기능을 사용하지 않고 실행중인 경우이 기능을 활성화 한 다음 모든 InnoDB 테이블에서 alter 문을 실행하여 파일 저장소 단위로 마이그레이션 할 수 있습니다."
 
-#: lib/utility.php:1329
+#: lib/utility.php:1387
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Cacti tables."
 msgstr "innodb_file_per_table을 사용할 때, innodb_file_format을 바라쿠다로 설정하는 것이 중요합니다. 이 설정을 사용하면 특정 Cacti 테이블에서 더 긴 인덱스를 사용할 수 있습니다."
 
-#: lib/utility.php:1335
+#: lib/utility.php:1393
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "테이블에 인덱스가 매우 큰 경우 Barracuda innodb_file_format 및 innodb_large_prefix를 1로 사용하여 작업해야합니다.이를 수행하지 않으면 테이블을 제대로 작성할 수없는 플러그인이 발생할 수 있습니다."
 
-#: lib/utility.php:1341
+#: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "InnoDB는 가능한 많은 테이블과 인덱스를 시스템 메모리에 보유합니다. 그러므로, innodb_buffer_pool을 메모리에서 많은 테이블과 인덱스를 저장할만큼 충분히 크게 만들어야한다. / var / lib / mysql / cacti 디렉토리의 크기를 확인하면이 값을 결정하는 데 도움이됩니다. 시스템 총 메모리의 25 %%를 권장하지만 사용자의 요구 사항은 시스템 크기에 따라 다릅니다."
 
-#: lib/utility.php:1347
+#: lib/utility.php:1405
 #, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "갑작스러운 시스템 충돌을 수용하기 위해 내부 저널링이있는 ZFS 또는 FusionI / O에서 Cacti 인스턴스를 실행하지 않는 한이 설정은 ON으로 유지되어야합니다. 그러나 전원이 매우 양호하고 시스템이 거의 다운되지 않고 백업이있는 경우이 설정을 끄면 데이터베이스 성능이 거의 50 % 향상 될 수 있습니다."
 
-#: lib/utility.php:1352
+#: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "여기서 메타 데이터가 저장됩니다. 테이블이 많으면이 값을 늘리는 것이 좋습니다."
 
-#: lib/utility.php:1357
+#: lib/utility.php:1415
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "사기성 쿼리는 데이터베이스가 다른 데이터베이스로 오프라인 상태가되어서는 안됩니다. 그들이 시스템을 죽이기 전에 이러한 쿼리를 종료하십시오."
 
-#: lib/utility.php:1362
+#: lib/utility.php:1420
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "최대 I / O 성능은 O_DIRECT 메서드를 사용하여 페이지를 플러시 할 때 발생합니다."
 
-#: lib/utility.php:1372
+#: lib/utility.php:1430
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "이 값을 2로 설정하면 커밋보다 매초마다 모든 트랜잭션을 플러시합니다. 이렇게하면  %s에서 글을 자주 적게 수행 할 수 있습니다."
 
-#: lib/utility.php:1377
+#: lib/utility.php:1435
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "현대의 SSD 타입 스토리지에서, 다수의 IO 스레드를 갖는 것은 높은 IO 특성을 갖는 어플리케이션에 유리합니다."
 
-#: lib/utility.php:1385 lib/utility.php:1427
+#: lib/utility.php:1443 lib/utility.php:1485
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "%s  %s부터는  %s에서 트랜잭션을 디스크로 플러시하는 빈도를 제어 할 수 있습니다. 기본값은 1 초이지만 높은 I / O 시스템에서 1보다 큰 값으로 설정하면 디스크 I / O가보다 순차적으로 이루어질 수 있습니다"
 
-#: lib/utility.php:1390
+#: lib/utility.php:1448
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "최신 SSD 유형 저장 장치를 사용하면 다중 읽기 스레드를 갖는 것이 io 특성이 높은 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1395
+#: lib/utility.php:1453
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "최신 SSD 유형의 저장 장치를 사용하면 쓰기 스레드가 여러 개인 경우 높은 IO 특성을 가진 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1459
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1459
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s는 성능을 향상시키기 위해 innodb_buffer_pool을 메모리 영역으로 나눕니다. 최대 값은 64입니다. innodb_buffer_pool이 1GB보다 작 으면 풀 크기를 128MB로 나눈 값을 사용해야합니다. 이 방정식을 최대 64까지 계속 사용하십시오."
 
-#: lib/utility.php:1407 lib/utility.php:1443
+#: lib/utility.php:1465 lib/utility.php:1501
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 실제 하드 드라이브가있는 경우 어레이의 활성 드라이브 수를 200 * 사용하십시오. NVMe 또는 PCIe 플래시를 사용하는 경우 100,000만큼 큰 숫자를 사용할 수 있습니다."
 
-#: lib/utility.php:1413 lib/utility.php:1449
+#: lib/utility.php:1471 lib/utility.php:1507
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 물리적 하드 드라이브가있는 경우 2000 * 어레이의 활성 드라이브 수를 사용하십시오. NVMe 또는 PCIe 플래시를 사용하는 경우 200000보다 훨씬 큰 숫자를 사용할 수 있습니다."
 
-#: lib/utility.php:1419 lib/utility.php:1455
+#: lib/utility.php:1477 lib/utility.php:1513
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "SSD 디스크가있는 경우이 제안을 사용하십시오. 그렇지 않은 경우이 설정을 지정하지 마십시오."
 
-#: lib/utility.php:1432
+#: lib/utility.php:1490
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "최신 SSD 유형 저장 장치를 사용하면 다중 읽기 스레드를 갖는 것이 io 특성이 높은 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1437
+#: lib/utility.php:1495
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "최신 SSD 유형의 저장 장치를 사용하면 쓰기 스레드가 여러 개인 경우 높은 IO 특성을 가진 응용 프로그램에 유리합니다."
 
-#: lib/utility.php:1468
+#: lib/utility.php:1526
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "MariaDB 10.2.4 이상을 사용할 때 원자 쓰기가 활성화된 경우 이 설정을 꺼야 합니다. 따라서 성능이 향상되므로 이중 쓰기 버퍼 대신 원자 쓰기를 활성화하십시오."
 
-#: lib/utility.php:1475
+#: lib/utility.php:1533
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "MariaDB 10.2.4 이상을 사용하는 경우 이중 쓰기 버퍼에 원자적 쓰기를 사용하여 성능을 높일 수 있습니다."
 
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 #, php-format
 msgid "%s Tuning"
 msgstr "%s 튜닝"
 
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 msgid "Note: Many changes below require a database restart"
 msgstr "참고 : 아래의 많은 변경 사항은 데이터베이스를 다시 시작해야합니다."
 
-#: lib/utility.php:1500
+#: lib/utility.php:1558
 msgid "Variable"
 msgstr "변수"
 
-#: lib/utility.php:1501
+#: lib/utility.php:1559
 msgid "Current Value"
 msgstr "현재 가치"
 
-#: lib/utility.php:1503
+#: lib/utility.php:1561
 msgid "Recommended Value"
 msgstr "권장 값"
 
-#: lib/utility.php:1504
+#: lib/utility.php:1562
 msgid "Comments"
 msgstr "댓글"
 
-#: lib/utility.php:2089
+#: lib/utility.php:2147
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP  %s이 (는) 최소 버전입니다."
 
-#: lib/utility.php:2091
+#: lib/utility.php:2149
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "최소  %s MB 메모리 제한"
 
-#: lib/utility.php:2093
+#: lib/utility.php:2151
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "최소  %sm 실행 시간"
 
-#: lib/utility.php:2095
+#: lib/utility.php:2153
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "MySQL 및 시스템과 일치하는 유효한 시간대"
 
@@ -20678,4 +20674,12 @@ msgstr ""
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
+msgstr ""
+
+#: lib/data_query.php:203
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
+
+#: lib/poller.php:2193
+msgid "Synchronization failed. See the log for details."
 msgstr ""

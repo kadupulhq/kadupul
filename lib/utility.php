@@ -128,6 +128,10 @@ function update_poller_cache_from_query($host_id, $data_query_id, $local_data_id
 
 	include_once($config['library_path'] . '/api_data_source.php');
 
+	if (!$local_data_ids) {
+		return true;
+	}
+
 	/* SECURITY: Cast all elements to integers to prevent SQL Injection */
 	$safe_ids = array_map('intval', $local_data_ids);
 
@@ -144,6 +148,10 @@ function update_poller_cache_from_query($host_id, $data_query_id, $local_data_id
 		WHERE id = ?',
 		array($host_id));
 
+	if ($poller_data === false || $poller_id === false) {
+		return false;
+	}
+
 	$i = 0;
 	$poller_items = $local_data_ids = array();
 
@@ -155,20 +163,25 @@ function update_poller_cache_from_query($host_id, $data_query_id, $local_data_id
 
 			if ($i > 500) {
 				$i = 0;
-				poller_update_poller_cache_from_buffer($local_data_ids, $poller_items, $poller_id);
+				if (poller_update_poller_cache_from_buffer($local_data_ids, $poller_items, $poller_id) === false) {
+					return false;
+				}
 				$local_data_ids = array();
 				$poller_items   = array();
 			}
 		}
 
 		if ($i > 0) {
-			poller_update_poller_cache_from_buffer($local_data_ids, $poller_items, $poller_id);
+			if (poller_update_poller_cache_from_buffer($local_data_ids, $poller_items, $poller_id) === false) {
+				return false;
+			}
 		}
 	}
 
 	if ($poller_id > 1) {
 		api_data_source_cache_crc_update($poller_id);
 	}
+	return true;
 }
 
 function update_poller_cache($data_source, $commit = false) {

@@ -131,6 +131,10 @@ jobs:
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=127.0.0.1;port=3306", "root", getenv("MYSQL_ROOT_PASSWORD"), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); $db->exec("CREATE DATABASE cacti_auth_policy_contract CHARACTER SET utf8mb4"); $db->exec("GRANT ALL ON cacti_auth_policy_contract.* TO \"cactiuser\"@\"%\""); $db->exec("CREATE DATABASE cacti_settings_user_contract CHARACTER SET utf8mb4"); $db->exec("GRANT ALL ON cacti_settings_user_contract.* TO \"cactiuser\"@\"%\"");'
 
+    - name: Allow failure-injection triggers in the disposable MySQL service
+      if: startsWith(matrix.database, 'mysql')
+      run: |
+        docker exec "${{ job.services.mysql.id }}" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -uroot -e "SET GLOBAL log_bin_trust_function_creators=1"'
     - name: Record database behavior and run contracts
       working-directory: tests
       env:

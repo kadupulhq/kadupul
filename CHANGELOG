@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.33 (unreleased)
+-issue: Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types
 -issue#207: Retain distinct addresses from overlapping discovery ranges and isolate concurrent network queues
 -issue#1032: Validate discovery ranges and scan valid .255 endpoints
 -issue: Preserve automation discovery work across failures, isolate concurrent network runs, enforce deadlines, and acknowledge schedules only after completed discovery

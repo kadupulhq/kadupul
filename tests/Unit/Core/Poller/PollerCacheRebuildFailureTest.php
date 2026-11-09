@@ -45,7 +45,7 @@ function raise_message(...$args) { $GLOBALS['pc_messages'][] = $args[0]; }
 function remote_poller_up($poller_id) { return $GLOBALS['pc_remote_up']; }
 function poller_push_to_remote_db_connect($poller_id, $retry) { return $GLOBALS['pc_remote']; }
 function __($text, ...$args) { return $text; }
-function poller_push_reindex_only_data_to_main($host_id, $data_query_id) { $GLOBALS['pc_pushed']++; }
+function poller_push_reindex_only_data_to_main($host_id, $data_query_id) { $GLOBALS['pc_pushed']++; return $GLOBALS['pc_push_ok']; }
 
 function pc_fails($sql) {
 	return $GLOBALS['pc_fail'] !== '' && strpos($sql, $GLOBALS['pc_fail']) === 0 && ++$GLOBALS['pc_seen'] >= $GLOBALS['pc_fail_at'];
@@ -133,6 +133,7 @@ beforeEach(function () {
 	$GLOBALS['pc_messages'] = array();
 	$GLOBALS['pc_remote_up'] = true;
 	$GLOBALS['pc_remote']   = false;
+	$GLOBALS['pc_push_ok'] = true;
 });
 
 function pc_rows($table) {
@@ -207,4 +208,19 @@ test('a failed reindex insert keeps the previous rows and does not push to main'
 	expect(poller_update_poller_reindex_from_buffer(1, 7, $stack))->toBeFalse();
 	expect(pc_rows('poller_reindex'))->toBe(array(array(1, 7, 1), array(2, 7, 1)));
 	expect($GLOBALS['pc_pushed'])->toBe(0);
+});
+
+
+test('a failed reindex cleanup is retained for retry and not published', function () {
+    $stack = array('(1, 7)');
+    $GLOBALS['pc_fail'] = 'DELETE FROM poller_reindex';
+    expect(poller_update_poller_reindex_from_buffer(1, 7, $stack))->toBeFalse();
+    expect($GLOBALS['pc_pushed'])->toBe(0);
+});
+
+test('a failed reindex publication is not reported as success', function () {
+    $stack = array('(1, 7)');
+    $GLOBALS['pc_push_ok'] = false;
+    expect(poller_update_poller_reindex_from_buffer(1, 7, $stack))->toBeFalse();
+    expect($GLOBALS['pc_pushed'])->toBe(1);
 });

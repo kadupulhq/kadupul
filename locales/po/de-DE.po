@@ -12778,9 +12778,9 @@ msgstr "FEHLER: IP-Bereiche in Form von range1-range2 werden nicht mehr unterst�
 #: lib/api_device.php:1099 lib/api_device.php:1268 lib/api_device.php:1272
 #: lib/api_device.php:1299 lib/api_device.php:1303 lib/api_device.php:1335
 #: lib/api_device.php:1339 lib/api_device.php:1391 lib/api_device.php:1395
-#: lib/utility.php:680 lib/utility.php:684 lib/utility.php:760
-#: lib/utility.php:764 lib/utility.php:786 lib/utility.php:790
-#: lib/utility.php:813 lib/utility.php:816
+#: lib/utility.php:702 lib/utility.php:706 lib/utility.php:790
+#: lib/utility.php:794 lib/utility.php:820 lib/utility.php:824
+#: lib/utility.php:868 lib/utility.php:871
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Remote Poller %s ist deaktiviert, Sie müssen eine FullSync durchführen, sobald sie wieder aktiviert ist"
@@ -13114,430 +13114,426 @@ msgstr "Passwörter stimmen nicht überein"
 msgid "System Device"
 msgstr "Geräte synchronisieren"
 
-#: lib/data_query.php:79 lib/data_query.php:448
+#: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
 msgstr "Automatisierung Ausführung für Datenabfrage abgeschlossen"
 
-#: lib/data_query.php:82 lib/data_query.php:451
+#: lib/data_query.php:92 lib/data_query.php:278
 msgid "Plugin Hooks complete"
 msgstr "Plugin-Haken komplett"
 
-#: lib/data_query.php:100
+#: lib/data_query.php:110
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Laufende Datenabfrage[%s]."
 
-#: lib/data_query.php:110
+#: lib/data_query.php:120
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Gefundener Typ ='%s'[%s]."
 
-#: lib/data_query.php:132
+#: lib/data_query.php:142
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Unbekannter Typ ='%s'."
 
-#: lib/data_query.php:167
+#: lib/data_query.php:331
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "WARNUNG: Die Sortierfeldzuordnung hat sich geändert.  Es können Probleme beim Re-mapping auftreten!"
 
-#: lib/data_query.php:179
+#: lib/data_query.php:343
 msgid "Update Data Query Sort Cache complete"
 msgstr "Update Datenabfrage Sortier-Cache abgeschlossen"
 
-#: lib/data_query.php:204
+#: lib/data_query.php:382
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "%s Tabellen zum Konvertieren gefunden"
 
-#: lib/data_query.php:298
+#: lib/data_query.php:458
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Indexänderung erkannt! Aktueller Index: %s, PreviousIndex: %s"
 
-#: lib/data_query.php:318
+#: lib/data_query.php:482
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Indexentfernung erkannt! PreviousIndex: %s"
 
-#: lib/data_query.php:321
+#: lib/data_query.php:485
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Indexentfernung erkannt! PreviousIndex: %s"
 
-#: lib/data_query.php:355
+#: lib/data_query.php:164
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Verifizierung von %s lokalen Daten-IDs abgeschlossen"
 
-#: lib/data_query.php:358
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Gefunden Geänderte%s und%s verwaiste lokale Daten-IDs wurden neu zugeordnet."
+#~ msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
+#~ msgstr "Gefunden Geänderte%s und%s verwaiste lokale Daten-IDs wurden neu zugeordnet."
 
-#: lib/data_query.php:361
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Umschlüsselung von Graphen auf ihre neuen Indizes"
+#~ msgid "Done remapping Graphs to their new Indexes"
+#~ msgstr "Umschlüsselung von Graphen auf ihre neuen Indizes"
 
-#: lib/data_query.php:367 lib/data_query.php:374
+#: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
 msgstr "In Daten-Schablone umwandeln"
 
-#: lib/data_query.php:370 lib/data_query.php:377
+#: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
 msgstr "Aktualisierung des Graphentitel-Cache abgeschlossen"
 
-#: lib/data_query.php:381
+#: lib/data_query.php:184
 msgid "Index Association with Local Data complete"
 msgstr "Indexzuordnung mit lokalen Daten abgeschlossen"
 
-#: lib/data_query.php:387
+#: lib/data_query.php:197
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Aktualisierung des Re-Index-Cache abgeschlossen. Es gab %s Indexänderungen und %s verwaiste Indizes."
 
-#: lib/data_query.php:391
+#: lib/data_query.php:201
 msgid "Update Poller Cache for Query complete"
 msgstr "Update Poller Cache für Query abgeschlossen"
 
-#: lib/data_query.php:393
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Keine Indexänderungen erkannt, Re-Index und Poller-Cache übersprungen, Wiederbelegung wiederhergestellt"
+#~ msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
+#~ msgstr "Keine Indexänderungen erkannt, Re-Index und Poller-Cache übersprungen, Wiederbelegung wiederhergestellt"
 
-#: lib/data_query.php:440
+#: lib/data_query.php:265
 msgid "Automation Executing for Data Query complete"
 msgstr "Automatisierung Ausführung für Datenabfrage abgeschlossen"
 
-#: lib/data_query.php:443
+#: lib/data_query.php:268
 msgid "Plugin hooks complete"
 msgstr "Plugin-Haken komplett"
 
-#: lib/data_query.php:499
+#: lib/data_query.php:553
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Überprüfung auf Sortierfeldänderung.  Es wurden keine Änderungen festgestellt."
 
-#: lib/data_query.php:504
+#: lib/data_query.php:558
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Erkanntes neues Sortierfeld: '%s' Altes Sortierfeld '%s'."
 
-#: lib/data_query.php:521
+#: lib/data_query.php:575
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "FEHLER: Neues Sortierfeld nicht geeignet.  Das Sortierfeld ändert sich nicht."
 
-#: lib/data_query.php:533
+#: lib/data_query.php:587
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Neues Sortierfeld bestätigt.  Sortierfeld aktualisiert werden."
 
-#: lib/data_query.php:631
+#: lib/data_query.php:696
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Die XML-Datei zur Datenabfrage konnte nicht gefunden werden unter '%s'."
 
-#: lib/data_query.php:635
+#: lib/data_query.php:700
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Gefundene Datenabfrage-XML-Datei bei'%s'."
 
-#: lib/data_query.php:658 lib/data_query.php:846 lib/data_query.php:2419
+#: lib/data_query.php:723 lib/data_query.php:911 lib/data_query.php:2501
 msgid "Error parsing XML file into an array."
 msgstr "Fehler beim Parsen einer XML-Datei in ein Array."
 
-#: lib/data_query.php:662 lib/data_query.php:850
+#: lib/data_query.php:727 lib/data_query.php:915
 msgid "XML file parsed ok."
 msgstr "XML-Datei geparst."
 
-#: lib/data_query.php:670 lib/data_query.php:853
+#: lib/data_query.php:735 lib/data_query.php:918
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Ungültiges Feld &lt;index_order&gt;%s&lt;/index_order&gt;"
 
-#: lib/data_query.php:671 lib/data_query.php:854
+#: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Muss nur Felder enthalten, die &lt;direction&gt;input&lt;/direction&gt; oder &lt;direction&gt;input-output&lt;/direction&gt; enthalten."
 
-#: lib/data_query.php:688
+#: lib/data_query.php:753
 msgid "Data Query returned no indexes."
 msgstr "FEHLER: Data Query lieferte keine Indizes."
 
-#: lib/data_query.php:689
+#: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; fehlt in der XML-Datei,'Index Count Changed' wird nicht unterstützt."
 
-#: lib/data_query.php:692
+#: lib/data_query.php:757
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Ausführendes Skript für die Anzahl der Indizes '%s'."
 
-#: lib/data_query.php:695
+#: lib/data_query.php:760
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Anzahl der gefundenen Indizes: %s"
 
-#: lib/data_query.php:699
+#: lib/data_query.php:764
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; fehlt in der XML-Datei,'Index Count Changed' wird nicht unterstützt."
 
-#: lib/data_query.php:701
+#: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; fehlt in der XML-Datei, 'Index Count Changed' wird durch Zählen von arg_index-Einträgen emuliert."
 
-#: lib/data_query.php:712
+#: lib/data_query.php:777
 msgid "ERROR: Data Query returned no indexes."
 msgstr "FEHLER: Data Query lieferte keine Indizes."
 
-#: lib/data_query.php:716
+#: lib/data_query.php:781
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Ausführendes Skript für die Liste der Indizes '%s', Indexanzahl: %s"
 
-#: lib/data_query.php:718
+#: lib/data_query.php:783
 msgid "Click to show Data Query output for 'index'"
 msgstr "Klicken Sie hier, um die Ausgabe der Datenabfrage für den'index' anzuzeigen."
 
-#: lib/data_query.php:721
+#: lib/data_query.php:786
 #, php-format
 msgid "Found index: %s"
 msgstr "Index gefunden: %s"
 
-#: lib/data_query.php:736 lib/data_query.php:1238
+#: lib/data_query.php:801 lib/data_query.php:1303
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Klicken Sie hier, um die Datenabfrageausgabe für das Feld'%s' anzuzeigen."
 
-#: lib/data_query.php:742
+#: lib/data_query.php:807
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Feld sortieren hat keine Daten für Feldname %s zurückgegeben, wird übersprungen"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:809
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Skriptabfrage ausführen '%s'."
 
-#: lib/data_query.php:755 lib/data_query.php:762
+#: lib/data_query.php:820 lib/data_query.php:827
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Index des gefundenen Elements[%s='%s']: %s"
 
-#: lib/data_query.php:800 lib/data_query.php:815
+#: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Gesamt: %f, Delta: %f, %s"
 
-#: lib/data_query.php:840
+#: lib/data_query.php:905
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Ungültige host_id: %s"
 
-#: lib/data_query.php:864
+#: lib/data_query.php:929
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Auto-Bulk-Walk-Größe ausgewählt."
 
-#: lib/data_query.php:874 lib/data_query.php:919
+#: lib/data_query.php:939 lib/data_query.php:984
 msgid "Failed to load SNMP session."
 msgstr "SNMP-Sitzung konnte nicht geladen werden."
 
-#: lib/data_query.php:884
+#: lib/data_query.php:949
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Getestete Bulk-Walk-Größe %d mit einer Antwort von %2.4f."
 
-#: lib/data_query.php:895
+#: lib/data_query.php:960
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Die ausgewählte Bulk-Walk-Größe war %d."
 
-#: lib/data_query.php:898
+#: lib/data_query.php:963
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Speichern der Bulk-Walk-Größe auf dem Gerät."
 
-#: lib/data_query.php:910
+#: lib/data_query.php:975
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Die Bulk-Walk-Größe ist auf %d festgelegt."
 
-#: lib/data_query.php:932
+#: lib/data_query.php:997
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Ausführen von SNMP get für die Anzahl der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:934
+#: lib/data_query.php:999
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; fehlt in der XML-Datei, 'Index Count Changed' wird durch Zählen von oid_index-Einträgen emuliert."
 
-#: lib/data_query.php:937
+#: lib/data_query.php:1002
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Ausführen von SNMP-Walk für die Liste der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:941
+#: lib/data_query.php:1006
 msgid "No SNMP data returned"
 msgstr "Keine SNMP Daten erhalten"
 
-#: lib/data_query.php:946
+#: lib/data_query.php:1011
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Index gefunden bei OID: '%s' Wert: '%s'"
 
-#: lib/data_query.php:977
+#: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Filtern der Liste der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:981
+#: lib/data_query.php:1046
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Gefilterter Index nach Wert gefunden bei OID: '%s' Wert: '%s'"
 
-#: lib/data_query.php:997
+#: lib/data_query.php:1062
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Filtern der Liste der Indizes @'%s' Index Count: %s"
 
-#: lib/data_query.php:1001
+#: lib/data_query.php:1066
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Gefilterter Index gefunden bei OID: '%s' Wert: '%s'"
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:1086
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Korrektur des falschen Feldes'Methode' für'%s', da'rewrite_index' oder'oid_suffix' definiert ist."
 
-#: lib/data_query.php:1028
+#: lib/data_query.php:1093
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Einfügen von Indexdaten für das Feld'%s' [value='%s']"
 
-#: lib/data_query.php:1033
+#: lib/data_query.php:1098
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Eingabefeld entdeckt '%s' [get]"
 
-#: lib/data_query.php:1042
+#: lib/data_query.php:1107
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "OID-Neuschreibungsregel gefunden: 's/%s/%s/'"
 
-#: lib/data_query.php:1053
+#: lib/data_query.php:1118
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite bei OID: '%s' neue OID: '%s'"
 
-#: lib/data_query.php:1074
+#: lib/data_query.php:1139
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Ausführen von SNMP get for data @ '%s' [value='%s']]"
 
-#: lib/data_query.php:1085
+#: lib/data_query.php:1150
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Feld '%s' %s"
 
-#: lib/data_query.php:1146
+#: lib/data_query.php:1211
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Ausführen von SNMP get for %s oids (%s)"
 
-#: lib/data_query.php:1172 lib/data_query.php:1264 lib/data_query.php:1272
+#: lib/data_query.php:1237 lib/data_query.php:1329 lib/data_query.php:1337
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Das Sortierfeld lieferte keine Daten.  Re-Index für OID[%s] kann nicht fortgesetzt werden."
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1241
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Ergebnis für Daten gefunden @'%s' [value='%s']"
 
-#: lib/data_query.php:1184
+#: lib/data_query.php:1249
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Ergebnis für Daten einstellen @'%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1188
+#: lib/data_query.php:1253
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Übersprungenes Ergebnis für Daten @'%s' [key='%s', value='%s']"
 
-#: lib/data_query.php:1202
+#: lib/data_query.php:1267
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Got SNMP get Ergebnis für Daten @ '%s' [value='%s'] (Index: %s)"
 
-#: lib/data_query.php:1232
+#: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Ausführen von SNMP get for data @ '%s' [value='$value']]"
 
-#: lib/data_query.php:1240
+#: lib/data_query.php:1305
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Eingabefeld entdeckt '%s' [walk]"
 
-#: lib/data_query.php:1277
+#: lib/data_query.php:1342
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Führe SNMP-Walk aus für die Daten @ '%s'"
 
-#: lib/data_query.php:1296 lib/data_query.php:1354 lib/data_query.php:1403
-#: lib/data_query.php:1454
+#: lib/data_query.php:1361 lib/data_query.php:1419 lib/data_query.php:1468
+#: lib/data_query.php:1519
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Kein Index[%s] in VALUE_index_Parse, wird übersprungen."
 
-#: lib/data_query.php:1337
+#: lib/data_query.php:1402
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Index des gefundenen Elements[%s='%s']: %s [von %s]"
 
-#: lib/data_query.php:1379
+#: lib/data_query.php:1444
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Gefundener OCTET STRING '%s' dekodierter Wert: '%s'."
 
-#: lib/data_query.php:1385 lib/data_query.php:1434
+#: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Index des gefundenen Elements[%s='%s']: %s[aus regexp oid parse]"
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1527
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Index des gefundenen Elements[%s='%s']: %s[von regexp oid value parse]"
 
-#: lib/data_query.php:1684
+#: lib/data_query.php:1753
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Falsches rewrite_value-Element gefunden, index='%s'"
 
-#: lib/data_query.php:1697
+#: lib/data_query.php:1766
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Übersetzungskarte konnte nicht analysiert werden (rewrite_value)"
 
-#: lib/data_query.php:1721
+#: lib/data_query.php:1790
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "rewrite_value: '%s' => '%s'"
 
-#: lib/data_query.php:1826
+#: lib/data_query.php:1895
 msgid "Update graph data query cache complete"
 msgstr "Update Datenabfrage Sortier-Cache abgeschlossen"
 
-#: lib/data_query.php:1843
+#: lib/data_query.php:1912
 msgid "Re-Indexing Data Query complete"
 msgstr "Re-Indizierung der Datenabfrage abgeschlossen"
 
-#: lib/data_query.php:1974
+#: lib/data_query.php:2043
 msgid "Unknown Index"
 msgstr "Unbekannter Index"
 
-#: lib/data_query.php:2532
+#: lib/data_query.php:2628
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Sie müssen eine XML-Ausgabespalte für die Datenquelle'%s' auswählen und das Kontrollkästchen rechts umschalten."
 
-#: lib/data_query.php:2538
+#: lib/data_query.php:2634
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Ihre Grafikvorlage hat keine Datenvorlagen in Verwendung.  Bitte korrigieren Sie Ihre Grafikvorlage."
 
@@ -13640,7 +13636,7 @@ msgid "User Community"
 msgstr "Benutzer-Community"
 
 #: lib/functions.php:3837 lib/functions.php:3860 lib/html.php:2887
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 msgid "Documentation"
 msgstr "Dokumentation"
 
@@ -17006,191 +17002,191 @@ msgstr "Diagramm aufgrund fehlerhafter Daten nicht für %s erstellt"
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "HINWEIS: Das Diagramm wurde für die Datenabfrage %s und den Index %s nicht hinzugefügt, da die Datenquellenüberprüfung fehlgeschlagen ist"
 
-#: lib/utility.php:1200
+#: lib/utility.php:1258
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "MySQL 5.6+ und MariaDB 10.0+ sind großartige Releases und sehr gute Versionen. Stellen Sie sicher, dass Sie die allerneueste Version ausführen, die ein langjähriges Netzwerkproblem behebt, das viele Probleme mit der Wirbelsäule verursacht hat."
 
-#: lib/utility.php:1212
+#: lib/utility.php:1270
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Es wird empfohlen, InnoDB in jeder %s-Version größer als 5.1 zu aktivieren."
 
-#: lib/utility.php:1225 lib/utility.php:1262
+#: lib/utility.php:1283 lib/utility.php:1320
 msgid "When using Cacti with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "Wenn Sie Cacti mit anderen Sprachen als Englisch verwenden, ist es wichtig, den Sortierungstyp utf8mb4_unicode_ci zu verwenden, da einige Zeichen mehr als ein einzelnes Byte benötigen."
 
-#: lib/utility.php:1231 lib/utility.php:1237 lib/utility.php:1268
-#: lib/utility.php:1274
+#: lib/utility.php:1289 lib/utility.php:1295 lib/utility.php:1326
+#: lib/utility.php:1332
 msgid "When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "Wenn Sie Cacti mit anderen Sprachen als Englisch verwenden, ist es wichtig, den Zeichensatz utf8mb4 zu verwenden, da einige Zeichen mehr als ein einzelnes Byte benötigen."
 
-#: lib/utility.php:1250
+#: lib/utility.php:1308
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Es wird empfohlen, InnoDB in jeder %s-Version größer als 5.1 zu aktivieren."
 
-#: lib/utility.php:1283
+#: lib/utility.php:1341
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "Abhängig von der Anzahl der Anmeldungen und der Verwendung des Spine Data Collectors benötigt %s viele Verbindungen.  Die Berechnung für die Wirbelsäule lautet: total_connections = total_processes * (total_threads + script_servers + 1), dann müssen Sie Kopfraum für Benutzerverbindungen lassen, der sich je nach Anzahl der gleichzeitigen Anmeldekonten ändert."
 
-#: lib/utility.php:1288
+#: lib/utility.php:1346
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Wenn Sie den Tabellen-Cache größer halten, bedeutet dies, dass Sie bei der Verwendung von innodb_file_per_table weniger Datei-Öffnungs-/Schließvorgänge durchführen müssen."
 
-#: lib/utility.php:1293
+#: lib/utility.php:1351
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Mit den Remote Polling-Funktionen werden große Datenmengen vom Hauptserver mit den Remote Pollern synchronisiert.  Halten Sie daher diesen Wert bei oder über 16M."
 
-#: lib/utility.php:1299
+#: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr ""
 
-#: lib/utility.php:1305
+#: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Wenn Sie Subqueries mit einer größeren Größe der temporären Tabelle ausführen, behalten Sie diese temporären Tabellen im Speicher."
 
-#: lib/utility.php:1311 lib/utility.php:1317
+#: lib/utility.php:1369 lib/utility.php:1375
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1323
+#: lib/utility.php:1381
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Bei der Verwendung von InnoDB-Speicher ist es wichtig, dass Sie Ihre Tablespaces getrennt halten.  Dies erleichtert die Verwaltung der Tabellen für Langzeitbenutzer von %s.  Wenn Sie mit diesem aktuell deaktivierten Dateispeicher arbeiten, können Sie auf den Speicher pro Datei migrieren, indem Sie die Funktion aktivieren und dann eine alter-Anweisung für alle InnoDB-Tabellen ausführen."
 
-#: lib/utility.php:1329
+#: lib/utility.php:1387
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Cacti tables."
 msgstr "Bei der Verwendung von innodb_file_per_table ist es wichtig, das innodb_file_format auf Barracuda einzustellen.  Diese Einstellung ermöglicht längere Indizes, die für bestimmte Cacti-Tabellen wichtig sind."
 
-#: lib/utility.php:1335
+#: lib/utility.php:1393
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Wenn Ihre Tabellen sehr große Indizes haben, müssen Sie mit dem Barracuda innodb_file_format und dem innodb_large_prefix gleich 1 arbeiten. Wenn Sie dies nicht tun, kann dies zu Plugins führen, die Tabellen nicht ordnungsgemäß erstellen können."
 
-#: lib/utility.php:1341
+#: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr ""
 
-#: lib/utility.php:1347
+#: lib/utility.php:1405
 #, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Diese Einstellungen sollten aktiviert bleiben, es sei denn, Ihre Cacti-Instanzen werden auf ZFS oder FusionI / O ausgeführt, die beide über ein internes Journal verfügen, um plötzlichen Systemabstürzen Rechnung zu tragen. Wenn Sie jedoch über eine sehr gute Leistung verfügen und Ihre Systeme selten ausfallen und Sie Backups haben, können Sie durch Deaktivieren dieser Einstellung die Datenbankleistung um fast 50%steigern."
 
-#: lib/utility.php:1352
+#: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Hier werden Metadaten gespeichert. Wenn Sie viele Tabellen haben, wäre es sinnvoll, diese zu erhöhen."
 
-#: lib/utility.php:1357
+#: lib/utility.php:1415
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Rogue-Abfragen sollten nicht dazu führen, dass die Datenbank offline zu anderen geht.  Beenden Sie diese Anfragen, bevor sie Ihr System beenden."
 
-#: lib/utility.php:1362
+#: lib/utility.php:1420
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Die maximale I/O-Leistung tritt ein, wenn Sie die O_DIRECT-Methode zum Flush von Seiten verwenden."
 
-#: lib/utility.php:1372
+#: lib/utility.php:1430
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Wenn Sie diesen Wert auf 2 setzen, bedeutet dies, dass Sie alle Transaktionen jede Sekunde und nicht beim Commit löschen werden.  Dies ermöglicht es %s, das Schreiben seltener durchzuführen."
 
-#: lib/utility.php:1377
+#: lib/utility.php:1435
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Mit modernem SSD-Speicher ist die Verwendung mehrerer io-Threads für Anwendungen mit hohen io-Eigenschaften von Vorteil."
 
-#: lib/utility.php:1385 lib/utility.php:1427
+#: lib/utility.php:1443 lib/utility.php:1485
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Ab %s %s können Sie steuern, wie oft %s Transaktionen auf die Festplatte leeren.  Die Standardeinstellung ist 1 Sekunde, aber bei hohen E/A-Systemen, die auf einen Wert größer als 1 eingestellt sind, kann die Festplatten-E/A sequenzieller sein"
 
-#: lib/utility.php:1390
+#: lib/utility.php:1448
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Mit modernem SSD-Speicher ist die Verwendung mehrerer Read-Io-Threads für Anwendungen mit hohen Io-Eigenschaften von Vorteil."
 
-#: lib/utility.php:1395
+#: lib/utility.php:1453
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Mit modernem SSD-Speicher ist die Verwendung mehrerer Schreib-io-Threads für Anwendungen mit hohen io-Eigenschaften von Vorteil."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1459
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "%s teilt den innodb_buffer_pool in Speicherbereiche auf, um die Performance zu verbessern.  Der Maximalwert ist 64.  Wenn Ihr innodb_buffer_pool kleiner als 1GB ist, sollten Sie die Poolgröße geteilt durch 128MB verwenden.  Verwenden Sie diese Gleichung bis zum Maximum von 64 weiter."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1459
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "%s teilt den innodb_buffer_pool in Speicherbereiche auf, um die Performance zu verbessern.  Der Maximalwert ist 64.  Wenn Ihr innodb_buffer_pool kleiner als 1GB ist, sollten Sie die Poolgröße geteilt durch 128MB verwenden.  Verwenden Sie diese Gleichung bis zum Maximum von 64 weiter."
 
-#: lib/utility.php:1407 lib/utility.php:1443
+#: lib/utility.php:1465 lib/utility.php:1501
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Wenn Sie SSD-Festplatten haben, verwenden Sie diesen Vorschlag.  Wenn Sie physische Festplatten haben, verwenden Sie 200 * die Anzahl der aktiven Festplatten in dem Array.  Bei Verwendung von NVMe oder PCIe Flash können viel größere Zahlen bis zu 100000 verwendet werden."
 
-#: lib/utility.php:1413 lib/utility.php:1449
+#: lib/utility.php:1471 lib/utility.php:1507
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Wenn Sie SSD-Festplatten haben, verwenden Sie diesen Vorschlag.  Wenn Sie physische Festplatten haben, verwenden Sie 2000 * die Anzahl der aktiven Festplatten in dem Array.  Bei Verwendung von NVMe oder PCIe Flash können viel größere Zahlen bis 200000 verwendet werden."
 
-#: lib/utility.php:1419 lib/utility.php:1455
+#: lib/utility.php:1477 lib/utility.php:1513
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Wenn Sie SSD-Festplatten haben, verwenden Sie diesen Vorschlag. Andernfalls sollten Sie diese Einstellung nicht vornehmen."
 
-#: lib/utility.php:1432
+#: lib/utility.php:1490
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Mit modernem SSD-Speicher ist die Verwendung mehrerer Read-Io-Threads für Anwendungen mit hohen Io-Eigenschaften von Vorteil."
 
-#: lib/utility.php:1437
+#: lib/utility.php:1495
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Mit modernem SSD-Speicher ist die Verwendung mehrerer Schreib-io-Threads für Anwendungen mit hohen io-Eigenschaften von Vorteil."
 
-#: lib/utility.php:1468
+#: lib/utility.php:1526
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "Bei Verwendung von MariaDB 10.2.4 und höher sollte diese Einstellung deaktiviert sein, wenn atomare Schreibvorgänge aktiviert sind. Bitte aktivieren Sie daher atomare Schreibvorgänge anstelle des doppelten Schreibpuffers, da dies die Leistung erhöht."
 
-#: lib/utility.php:1475
+#: lib/utility.php:1533
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Wenn Sie MariaDB 10.2.4 und höher verwenden, können Sie atomare Schreibvorgänge über den Doublewrite-Puffer verwenden, um die Leistung zu erhöhen."
 
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Tuning"
 
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 msgid "Note: Many changes below require a database restart"
 msgstr "Hinweis: Viele der folgenden Änderungen erfordern einen Neustart der Datenbank."
 
-#: lib/utility.php:1500
+#: lib/utility.php:1558
 msgid "Variable"
 msgstr "Variable"
 
-#: lib/utility.php:1501
+#: lib/utility.php:1559
 msgid "Current Value"
 msgstr "Aktueller Wert"
 
-#: lib/utility.php:1503
+#: lib/utility.php:1561
 msgid "Recommended Value"
 msgstr "Empfohlener Wert"
 
-#: lib/utility.php:1504
+#: lib/utility.php:1562
 msgid "Comments"
 msgstr "Kommentare"
 
-#: lib/utility.php:2089
+#: lib/utility.php:2147
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "PHP %s ist die minimale Version."
 
-#: lib/utility.php:2091
+#: lib/utility.php:2149
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Ein Minimum von %s MB-Speichergrenze"
 
-#: lib/utility.php:2093
+#: lib/utility.php:2151
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Mindestens %s m Ausführungszeit"
 
-#: lib/utility.php:2095
+#: lib/utility.php:2153
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Eine gültige Zeitzone, die mit MySQL und dem System übereinstimmt."
 
@@ -20827,4 +20823,12 @@ msgstr ""
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
+msgstr ""
+
+#: lib/data_query.php:203
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
+
+#: lib/poller.php:2193
+msgid "Synchronization failed. See the log for details."
 msgstr ""
