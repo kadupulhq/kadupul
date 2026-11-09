@@ -13,6 +13,7 @@
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
       <file>Unit/Security/StaleWriterTemporariesTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
+      <file>Unit/Security/PackageExpandedSizeTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/SnmpValueAndWalkGuardsTest.php</file>
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
