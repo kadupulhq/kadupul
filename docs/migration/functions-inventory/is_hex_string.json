@@ -4,8 +4,8 @@
     "static": {
         "file": "lib/functions.php",
         "start_line": 2244,
-        "end_line": 2285,
-        "line_count": 42,
+        "end_line": 2286,
+        "line_count": 43,
         "signature": {
             "parameters": [
                 {

@@ -304,7 +304,7 @@ try {
     throw $error;
 } finally {
     if ($created && $mode === 'web') {
-        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes);
+        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes, $directory . '/server.log');
     }
     $trustRestoreFailed = false;
     if ($restoreTrust !== null) {

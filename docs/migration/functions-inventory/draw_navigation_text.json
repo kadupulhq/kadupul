@@ -3,8 +3,8 @@
     "name": "draw_navigation_text",
     "static": {
         "file": "lib/functions.php",
-        "start_line": 4314,
-        "end_line": 4538,
+        "start_line": 4315,
+        "end_line": 4539,
         "line_count": 225,
         "signature": {
             "parameters": [
@@ -40,7 +40,7 @@
                     "name": "draw_navigation_text",
                     "resolved": true,
                     "expression": null,
-                    "line": 4318
+                    "line": 4319
                 }
             ]
         },
