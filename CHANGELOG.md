@@ -23,6 +23,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Move post-verification password-change policy and login activity coordination into an application service, preserving native settings, messages, local-realm writes and authenticated password-change handoff.
 - Move local credential confirmation and rehash coordination into an application service, preserving native login hooks, timing, password policy and session issuance.
 - Authenticate the session and About routes through a stateless Symfony Security firewall while retaining native session formats, credential revocation, Basic/remembered-login restoration and existing realm requirements. Login and password-change forms remain on their existing paths.
+- Count fully qualified `\__()` gettext calls in the guard that keeps gettext out of migrated `src/` code, and list the two installer adapters that still store legacy-translated defaults.
 - Restore legacy behaviour in the migrated administration and relationship lists: Graph Rules search matches graph type and data query names again, lists use the configured rows-per-page setting when no size or `rows=-1` is requested and accept sizes up to 5000, Networks counts and runtimes are formatted as on the legacy page, and System Utilities links to these lists open as full pages instead of a blank content area (#1425).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
@@ -36,6 +37,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 - Add a CI check that reports a run marker recorded with `set_config_option()` before an early `exit` or `die` in the same scope, with a reviewed baseline of the five existing matches.
 
+- Measure and bind the shared JSON/output helper when copied poller-drain and rejected-sample workers produce native child coverage, refusing missing or changed helper copies before accepting their reports.
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
@@ -72,6 +74,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed; earlier orphans are still cleared as before (#198).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
+- Make `rrdtool_function_tune()` change all requested options or none: the RRDfile is copied beside itself first and, when `rrdtool tune` exits non-zero, a restored copy is renamed over it, so it is never left truncated, and the function now returns `true` or `false` instead of nothing (#777).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
