@@ -48,6 +48,8 @@ function upgrade_to_1_2_38(): void
             }
         }
     }
+
+    upgrade_widen_account_id_columns();
 }
 
 /**
@@ -147,4 +149,58 @@ function upgrade_boost_queue_tables(): array
             'index_columns' => array('queue_name', 'available_at', 'delivered_at', 'id'),
         ),
     );
+}
+
+/**
+ * Give the account and group id columns the type of the id they hold (#927).
+ * user_log.user_id and user_auth_row_cache.user_id were signed mediumint, so
+ * an account id above 8388607 was stored as 8388607, and
+ * settings_user_group.group_id was smallint and user_auth_group_perms.group_id
+ * was mediumint, so a group id above their range was stored as the largest
+ * value they hold. A column that is already as wide is left alone, so a rerun
+ * changes nothing, and a missing table is skipped. A failed read or a negative
+ * id, which the upgrade session would clamp to 0, stops the upgrade before the
+ * version is recorded.
+ */
+function upgrade_widen_account_id_columns(): void
+{
+    $ranks = array('tinyint' => 1, 'smallint' => 2, 'mediumint' => 3, 'int' => 4, 'bigint' => 5);
+    $columns = array(
+        array('user_log', 'user_id', 'mediumint', "mediumint(8) unsigned NOT NULL default '0'"),
+        array('user_auth_row_cache', 'user_id', 'mediumint', "mediumint(8) unsigned NOT NULL default '0'"),
+        array('settings_user_group', 'group_id', 'int', "int(10) unsigned NOT NULL default '0'"),
+        array('user_auth_group_perms', 'group_id', 'int', "int(10) unsigned NOT NULL default '0'"),
+    );
+
+    foreach ($columns as list($table, $column, $type, $definition)) {
+        $current = db_install_fetch_cell(
+            'SELECT CONCAT_WS(\'|\', DATA_TYPE, COLUMN_TYPE) FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+            array($table, $column)
+        );
+        if ($current['status'] === DB_STATUS_ERROR) {
+            throw new RuntimeException('The type of ' . $table . '.' . $column . ' could not be read. Rerun the upgrade.');
+        }
+        if (!is_string($current['data']) || $current['data'] === '') {
+            continue;
+        }
+
+        list($data_type, $column_type) = array_pad(explode('|', strtolower($current['data']), 2), 2, '');
+        $rank = $ranks[$data_type] ?? 0;
+        if ($rank > $ranks[$type] || ($rank === $ranks[$type] && str_contains($column_type, 'unsigned'))) {
+            continue;
+        }
+
+        $negative = db_install_fetch_cell('SELECT COUNT(*) FROM `' . $table . '` WHERE `' . $column . '` < 0');
+        if ($negative['status'] === DB_STATUS_ERROR) {
+            throw new RuntimeException('Table ' . $table . ' could not be read. Rerun the upgrade.');
+        }
+        if ((int) $negative['data'] > 0) {
+            throw new RuntimeException('Column ' . $table . '.' . $column . ' holds negative ids, which widening would change to 0. Review them and rerun the upgrade.');
+        }
+
+        if (db_install_execute('ALTER TABLE `' . $table . '` MODIFY `' . $column . '` ' . $definition) === DB_STATUS_ERROR) {
+            throw new RuntimeException('Column ' . $table . '.' . $column . ' could not be widened. Rerun the upgrade.');
+        }
+    }
 }

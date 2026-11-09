@@ -18,6 +18,7 @@ if ($source === false) {
 }
 // Resolve the production include relative to its source file, not this extracted function.
 eval('namespace ' . __NAMESPACE__ . ';' . str_replace('__DIR__', var_export($root . '/lib', true), \test_php_function_source($source, 'replicate_out')));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'replicate_out_remove_stale_items'));
 
 function db_execute_prepared(string $sql, array $params, bool $log = true, mixed $connection = false): bool
 {
@@ -41,6 +42,11 @@ function db_execute(string $sql, bool $log = true, mixed $connection = false): b
 
 function db_fetch_assoc(string $sql): array|false
 {
+    if (str_contains($sql, 'local_data_id, rrd_name FROM poller_item')) {
+        // One remote item main no longer holds, so a cleanup issues its delete.
+        return $GLOBALS['sync_outcome']['failure'] === 'stale-read' ? false : [['local_data_id' => '9', 'rrd_name' => '']];
+    }
+
     preg_match('/FROM\s+([a-z_]+)/', $sql, $table);
 
     return $GLOBALS['sync_outcome']['failure'] === 'read-' . ($table[1] ?? '') ? false : [];
@@ -60,7 +66,7 @@ function db_fetch_cell(string $sql, string $column = '', bool $log = true, mixed
 {
     return match ($GLOBALS['sync_outcome']['failure']) {
         'cutoff-read' => false,
-        'cutoff-write', 'cutoff-delete' => 100,
+        'cutoff-write', 'cutoff-delete', 'stale-read' => 100,
         default => null,
     };
 }
@@ -161,7 +167,7 @@ test('collector synchronization acknowledges only confirmed work', function (str
     foreach ($tables as $table) {
         $cases['copy-' . $table] = ['all', $table, true];
     }
-    foreach (['retry-mark', 'completion', 'statistics-read', 'statistics-write', 'reindex-cleanup', 'cutoff-read', 'cutoff-write', 'cutoff-delete', 'read-settings', 'read-data_input', 'read-host', 'read-data_input_data'] as $failure) {
+    foreach (['retry-mark', 'completion', 'statistics-read', 'statistics-write', 'reindex-cleanup', 'cutoff-read', 'cutoff-write', 'stale-read', 'cutoff-delete', 'read-settings', 'read-data_input', 'read-host', 'read-data_input_data'] as $failure) {
         $cases[$failure] = ['all', $failure, true];
     }
     foreach (['all', 'data', 'settings', 'auth', 'plugins'] as $class) {
