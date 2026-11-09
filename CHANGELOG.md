@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Bind the data source repair and rerun method-refusal coverage evidence to the request guard that actually runs, requiring the exact 405 or 403 refusal line instead of library code the refused request never reaches.
 - Count fully qualified `\__()` gettext calls in the guard that keeps gettext out of migrated `src/` code, and list the two installer adapters that still store legacy-translated defaults.
 - Restore legacy behaviour in the migrated administration and relationship lists: Graph Rules search matches graph type and data query names again, lists use the configured rows-per-page setting when no size or `rows=-1` is requested and accept sizes up to 5000, Networks counts and runtimes are formatted as on the legacy page, and System Utilities links to these lists open as full pages instead of a blank content area (#1425).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
