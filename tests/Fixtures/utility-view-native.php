@@ -441,7 +441,7 @@ if ($debugView && isset($scenario['debug_purge_policy'])) {
         $after = [];
         foreach ($tables as $table) $after[$table] = $db->query('SELECT * FROM ' . $table)->fetchAll(PDO::FETCH_ASSOC);
         define('NATIVE_COVERAGE_COMPLETED', ['utility-view-observed:debug', 'debug-controller-outcome-observed']);
-        $payload = json_encode(['before' => $before, 'after' => $after, 'queries' => $GLOBALS['queries'], 'html' => $html, 'request' => $_REQUEST, 'session' => $_SESSION, 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log')], JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        $payload = json_encode(['before' => $before, 'after' => $after, 'queries' => $GLOBALS['queries'], 'html' => $html, 'request' => $_REQUEST, 'session' => $_SESSION, 'status' => http_response_code(), 'log_before' => $logBefore, 'log_after' => hash_file('sha256', $directory . '/cacti.log')], JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
         $offset = 0;
         while ($offset < strlen($payload)) {
             $written = fwrite(STDOUT, substr($payload, $offset));
