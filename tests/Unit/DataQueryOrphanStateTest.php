@@ -27,7 +27,7 @@ $GLOBALS['data_query_orphans_source'] = $source;
 function clear(int $host, int $query, array $orphaned, array $definition): void
 {
     $source = $GLOBALS['data_query_orphans_source'];
-    $start = strpos($source, "__esc('No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population'));");
+    $start = strpos($source, "__esc('No Index Changes Detected, Poller Cache Refreshed'));");
     $end = strpos($source, "\n\t}\n\n\tif (cacti_sizeof(\$orphaned_ids) &&", (int) $start);
     expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
     $body = substr($source, $start, $end - $start);

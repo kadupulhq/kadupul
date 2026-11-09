@@ -12730,9 +12730,9 @@ msgstr "ΣΦΑΛΜΑ: Τα εύρη IP με τη μορφή εύρους1-εύρ
 #: lib/api_device.php:1099 lib/api_device.php:1268 lib/api_device.php:1272
 #: lib/api_device.php:1299 lib/api_device.php:1303 lib/api_device.php:1335
 #: lib/api_device.php:1339 lib/api_device.php:1391 lib/api_device.php:1395
-#: lib/utility.php:680 lib/utility.php:684 lib/utility.php:760
-#: lib/utility.php:764 lib/utility.php:786 lib/utility.php:790
-#: lib/utility.php:813 lib/utility.php:816
+#: lib/utility.php:702 lib/utility.php:706 lib/utility.php:790
+#: lib/utility.php:794 lib/utility.php:820 lib/utility.php:824
+#: lib/utility.php:868 lib/utility.php:871
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
 msgstr "Η απομακρυσμένη δημοσκόπηση %s είναι κάτω, θα χρειαστεί να εκτελέσετε ένα FullSync μόλις ενεργοποιηθεί ξανά"
@@ -13065,430 +13065,426 @@ msgstr "Οι κωδικοί πρόσβασης δεν ταιριάζουν"
 msgid "System Device"
 msgstr "Συγχρονισμός συσκευών"
 
-#: lib/data_query.php:79 lib/data_query.php:448
+#: lib/data_query.php:89 lib/data_query.php:275
 msgid "Automation Execution for Data Query complete"
 msgstr "Η εκτέλεση του Automation for Data Query ολοκληρώθηκε"
 
-#: lib/data_query.php:82 lib/data_query.php:451
+#: lib/data_query.php:92 lib/data_query.php:278
 msgid "Plugin Hooks complete"
 msgstr "Τα συμπληρωματικά άγκιστρα συμπληρώνονται"
 
-#: lib/data_query.php:100
+#: lib/data_query.php:110
 #, php-format
 msgid "Running Data Query [%s]."
 msgstr "Εκτέλεση ερωτήματος δεδομένων [ %s]."
 
-#: lib/data_query.php:110
+#: lib/data_query.php:120
 #, php-format
 msgid "Found Type = '%s' [%s]."
 msgstr "Βρέθηκε Τύπος = &#39; %s&#39; [ %s]."
 
-#: lib/data_query.php:132
+#: lib/data_query.php:142
 #, php-format
 msgid "Unknown Type = '%s'."
 msgstr "Άγνωστος τύπος = &#39; %s&#39;."
 
-#: lib/data_query.php:167
+#: lib/data_query.php:331
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Η Ταξινόμηση πεδίου σύνδεσης έχει αλλάξει. Μπορεί να προκύψουν ζητήματα ανασύνθεσης!"
 
-#: lib/data_query.php:179
+#: lib/data_query.php:343
 msgid "Update Data Query Sort Cache complete"
 msgstr "Η ενημέρωση της ερώτησης για την ταξινόμηση της συλλογής δεδομένων ολοκληρώθηκε"
 
-#: lib/data_query.php:204
+#: lib/data_query.php:382
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Βρέθηκαν%s Τοπικά αναγνωριστικά δεδομένων για επαλήθευση"
 
-#: lib/data_query.php:298
+#: lib/data_query.php:458
 #, php-format
 msgid "Index Change Detected! CurrentIndex: %s, PreviousIndex: %s"
 msgstr "Ανίχνευση αλλαγής ευρετηρίου! CurrentIndex: %s, PreviousIndex: %s"
 
-#: lib/data_query.php:318
+#: lib/data_query.php:482
 #, php-format
 msgid "Transient Index Removal Detected! PreviousIndex: %s.  No action taken."
 msgstr "Η ανίχνευση ευρετηρίου εντοπίστηκε! PreviousIndex: %s"
 
-#: lib/data_query.php:321
+#: lib/data_query.php:485
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
 msgstr "Η ανίχνευση ευρετηρίου εντοπίστηκε! PreviousIndex: %s"
 
-#: lib/data_query.php:355
+#: lib/data_query.php:164
 #, php-format
 msgid "Verification of %s Local Data ID's Complete"
 msgstr "Ολοκληρώθηκε η επαλήθευση του αναγνωριστικού τοπικών δεδομένων %s"
 
-#: lib/data_query.php:358
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Βρέθηκαν Αλλαγή%s και%s Ορφανών τοπικών αναγνωριστικών δεδομένων για εκ νέου χάρτη."
+#~ msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
+#~ msgstr "Βρέθηκαν Αλλαγή%s και%s Ορφανών τοπικών αναγνωριστικών δεδομένων για εκ νέου χάρτη."
 
-#: lib/data_query.php:361
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Επανατοποθέτηση γραφημάτων στους νέους τους δείκτες"
+#~ msgid "Done remapping Graphs to their new Indexes"
+#~ msgstr "Επανατοποθέτηση γραφημάτων στους νέους τους δείκτες"
 
-#: lib/data_query.php:367 lib/data_query.php:374
+#: lib/data_query.php:170 lib/data_query.php:177
 msgid "Done updating Data Source Title Cache"
 msgstr "Διπλότυπο προφίλ προέλευσης δεδομένων"
 
-#: lib/data_query.php:370 lib/data_query.php:377
+#: lib/data_query.php:173 lib/data_query.php:180
 msgid "Done updating Graph Title Cache"
 msgstr "Έγινε ενημέρωση της κρυφής μνήμης τίτλου γραφήματος"
 
-#: lib/data_query.php:381
+#: lib/data_query.php:184
 msgid "Index Association with Local Data complete"
 msgstr "Σύνδεση ευρετηρίου με τοπικά δεδομένα"
 
-#: lib/data_query.php:387
+#: lib/data_query.php:197
 #, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
 msgstr "Η ενημέρωση της προσωρινής μνήμης Re-Index ολοκληρώθηκε. Υπήρξαν %s αλλαγές ευρετηρίου και %s ορφανά ευρετήρια."
 
-#: lib/data_query.php:391
+#: lib/data_query.php:201
 msgid "Update Poller Cache for Query complete"
 msgstr "Ενημερώστε την ενημερωμένη προσωρινή μνήμη Poller για το ερώτημα"
 
-#: lib/data_query.php:393
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Δεν εντοπίστηκαν αλλαγές στο ευρετήριο, παρακάμπτοντας την επανάληψη ευρετηρίου και την επαναπληροφόρηση της προσωρινής μνήμης cache"
+#~ msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
+#~ msgstr "Δεν εντοπίστηκαν αλλαγές στο ευρετήριο, παρακάμπτοντας την επανάληψη ευρετηρίου και την επαναπληροφόρηση της προσωρινής μνήμης cache"
 
-#: lib/data_query.php:440
+#: lib/data_query.php:265
 msgid "Automation Executing for Data Query complete"
 msgstr "Η εκτέλεση του Automation Executing for Data Query ολοκληρώνεται"
 
-#: lib/data_query.php:443
+#: lib/data_query.php:268
 msgid "Plugin hooks complete"
 msgstr "Τα άγκιστρα προσθήκης ολοκληρώθηκαν"
 
-#: lib/data_query.php:499
+#: lib/data_query.php:553
 msgid "Checking for Sort Field change.  No changes detected."
 msgstr "Έλεγχος αλλαγής ταξινόμησης πεδίου. Δεν εντοπίστηκαν αλλαγές."
 
-#: lib/data_query.php:504
+#: lib/data_query.php:558
 #, php-format
 msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Εντοπίστηκε νέο πεδίο ταξινόμησης: &#39; %s&#39; Παλιό πεδίο ταξινόμησης &#39; %s&#39;"
 
-#: lib/data_query.php:521
+#: lib/data_query.php:575
 msgid "ERROR: New Sort Field not suitable.  Sort Field will not change."
 msgstr "Σφάλμα: Το νέο πεδίο ταξινόμησης δεν είναι κατάλληλο. Το πεδίο ταξινόμησης δεν θα αλλάξει."
 
-#: lib/data_query.php:533
+#: lib/data_query.php:587
 msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Το νέο πεδίο ταξινόμησης επικυρώθηκε. Το πεδίο Ταξινόμηση ενημερώνεται."
 
-#: lib/data_query.php:631
+#: lib/data_query.php:696
 #, php-format
 msgid "Could not find data query XML file at '%s'"
 msgstr "Δεν ήταν δυνατή η εύρεση αρχείου XML ερώτησης δεδομένων στο &#39; %s&#39;"
 
-#: lib/data_query.php:635
+#: lib/data_query.php:700
 #, php-format
 msgid "Found data query XML file at '%s'"
 msgstr "Βρέθηκε αρχείο XML ερωτήματος δεδομένων στο &#39; %s&#39;"
 
-#: lib/data_query.php:658 lib/data_query.php:846 lib/data_query.php:2419
+#: lib/data_query.php:723 lib/data_query.php:911 lib/data_query.php:2501
 msgid "Error parsing XML file into an array."
 msgstr "Σφάλμα κατά την ανάλυση του αρχείου XML σε έναν πίνακα."
 
-#: lib/data_query.php:662 lib/data_query.php:850
+#: lib/data_query.php:727 lib/data_query.php:915
 msgid "XML file parsed ok."
 msgstr "Το αρχείο XML αναλύθηκε εντάξει."
 
-#: lib/data_query.php:670 lib/data_query.php:853
+#: lib/data_query.php:735 lib/data_query.php:918
 #, php-format
 msgid "Invalid field &lt;index_order&gt;%s&lt;/index_order&gt;"
 msgstr "Μη έγκυρο πεδίο &lt;index_order&gt; %s &lt;/ index_order&gt;"
 
-#: lib/data_query.php:671 lib/data_query.php:854
+#: lib/data_query.php:736 lib/data_query.php:919
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
 msgstr "Πρέπει να περιέχει μόνο πεδία &lt;direction&gt; input / direction&gt; ή &lt;direction&gt; input-output &lt;/ direction&gt;"
 
-#: lib/data_query.php:688
+#: lib/data_query.php:753
 msgid "Data Query returned no indexes."
 msgstr "Σφάλμα: Το ερώτημα δεδομένων δεν επέστρεψε ευρετήρια."
 
-#: lib/data_query.php:689
+#: lib/data_query.php:754
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, το &#39;Count Count Changed&#39; δεν υποστηρίζεται"
 
-#: lib/data_query.php:692
+#: lib/data_query.php:757
 #, php-format
 msgid "Executing script for num of indexes '%s'"
 msgstr "Εκτέλεση δέσμης ενεργειών για τον αριθμό των ευρετηρίων &#39; %s&#39;"
 
-#: lib/data_query.php:695
+#: lib/data_query.php:760
 #, php-format
 msgid "Found number of indexes: %s"
 msgstr "Βρέθηκε αριθμός δεικτών: %s"
 
-#: lib/data_query.php:699
+#: lib/data_query.php:764
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' not supported"
 msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, το &#39;Count Count Changed&#39; δεν υποστηρίζεται"
 
-#: lib/data_query.php:701
+#: lib/data_query.php:766
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
 msgstr "&lt;arg_num_indexes&gt; που λείπουν σε αρχείο XML, &#39;Index Count Changed&#39; προσομοιωμένοι με την καταμέτρηση των καταχωρίσεων arg_index"
 
-#: lib/data_query.php:712
+#: lib/data_query.php:777
 msgid "ERROR: Data Query returned no indexes."
 msgstr "Σφάλμα: Το ερώτημα δεδομένων δεν επέστρεψε ευρετήρια."
 
-#: lib/data_query.php:716
+#: lib/data_query.php:781
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
 msgstr "Εκτέλεση δέσμης ενεργειών για τη λίστα ευρετηρίων &#39; %s&#39;, Index Count: %s"
 
-#: lib/data_query.php:718
+#: lib/data_query.php:783
 msgid "Click to show Data Query output for 'index'"
 msgstr "Κάντε κλικ για να εμφανίσετε την έξοδο δεδομένων Query για &#39;index&#39;"
 
-#: lib/data_query.php:721
+#: lib/data_query.php:786
 #, php-format
 msgid "Found index: %s"
 msgstr "Βρέθηκε ευρετήριο: %s"
 
-#: lib/data_query.php:736 lib/data_query.php:1238
+#: lib/data_query.php:801 lib/data_query.php:1303
 #, php-format
 msgid "Click to show Data Query output for field '%s'"
 msgstr "Κάντε κλικ για να εμφανίσετε την έξοδο δεδομένων ερωτήματος για το πεδίο &#39; %s&#39;"
 
-#: lib/data_query.php:742
+#: lib/data_query.php:807
 #, php-format
 msgid "Sort field returned no data for field name %s, skipping"
 msgstr "Το πεδίο ταξινόμησης δεν επέστρεψε δεδομένα για το όνομα πεδίου %s, παρακάμπτοντας"
 
-#: lib/data_query.php:744
+#: lib/data_query.php:809
 #, php-format
 msgid "Executing script query '%s'"
 msgstr "Εκτέλεση ερωτήματος δέσμης ενεργειών &#39; %s&#39;"
 
-#: lib/data_query.php:755 lib/data_query.php:762
+#: lib/data_query.php:820 lib/data_query.php:827
 #, php-format
 msgid "Found item [%s='%s'] index: %s"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s"
 
-#: lib/data_query.php:800 lib/data_query.php:815
+#: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
 msgstr "Σύνολο:% f, Δέλτα:% f, %s"
 
-#: lib/data_query.php:840
+#: lib/data_query.php:905
 #, php-format
 msgid "Invalid host_id: %s"
 msgstr "Μη έγκυρο host_id: %s"
 
-#: lib/data_query.php:864
+#: lib/data_query.php:929
 msgid "Auto Bulk Walk Size Selected."
 msgstr "Επιλεγμένο μέγεθος αυτόματου μαζικού περπατήματος."
 
-#: lib/data_query.php:874 lib/data_query.php:919
+#: lib/data_query.php:939 lib/data_query.php:984
 msgid "Failed to load SNMP session."
 msgstr "Αποτυχία φόρτωσης της περιόδου σύνδεσης SNMP."
 
-#: lib/data_query.php:884
+#: lib/data_query.php:949
 #, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
 msgstr "Δοκιμασμένο μέγεθος μαζικής βόλτας %d με απάντηση %2.4f."
 
-#: lib/data_query.php:895
+#: lib/data_query.php:960
 #, php-format
 msgid "Bulk Walk Size selected was %d."
 msgstr "Το μέγεθος μαζικού περιπάτου που επιλέχθηκε ήταν %d."
 
-#: lib/data_query.php:898
+#: lib/data_query.php:963
 msgid "Saving Bulk Walk Size to Device."
 msgstr "Αποθήκευση μεγέθους μαζικής διαδρομής στη συσκευή."
 
-#: lib/data_query.php:910
+#: lib/data_query.php:975
 #, php-format
 msgid "Bulk Walk Size is fixed at %d."
 msgstr "Το μέγεθος μαζικού περπατήματος έχει καθοριστεί σε %d."
 
-#: lib/data_query.php:932
+#: lib/data_query.php:997
 #, php-format
 msgid "Executing SNMP get for num of indexes @ '%s' Index Count: %s"
 msgstr "Εκτέλεση του SNMP για αριθμούς ευρετηρίων @ &#39; %s&#39; Αριθμός Αναφοράς: %s"
 
-#: lib/data_query.php:934
+#: lib/data_query.php:999
 msgid "&lt;oid_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting oid_index entries"
 msgstr "&lt;oid_num_indexes&gt; που λείπουν σε αρχείο XML, &#39;Αναπροσαρμογή ευρετηρίου&#39; αναμιγνύεται με την καταμέτρηση εγγραφών oid_index"
 
-#: lib/data_query.php:937
+#: lib/data_query.php:1002
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
 msgstr "Εκτέλεση περιπάτου SNMP για τη λίστα ευρετηρίων @ &#39; %s&#39; Count Count: %s"
 
-#: lib/data_query.php:941
+#: lib/data_query.php:1006
 msgid "No SNMP data returned"
 msgstr "Δεν επιστράφηκαν δεδομένα SNMP"
 
-#: lib/data_query.php:946
+#: lib/data_query.php:1011
 #, php-format
 msgid "Index found at OID: '%s' value: '%s'"
 msgstr "Ευρετήριο που βρέθηκε στο OID: &#39; %s&#39; αξία: &#39; %s&#39;"
 
-#: lib/data_query.php:977
+#: lib/data_query.php:1042
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
 msgstr "Φιλτράρισμα λίστας ευρετηρίων @ &#39; %s&#39; Αριθμός αναφορών: %s"
 
-#: lib/data_query.php:981
+#: lib/data_query.php:1046
 #, php-format
 msgid "Filtered Index by value found at OID: '%s' value: '%s'"
 msgstr "Φιλτράρισμα ευρετηρίου που βρέθηκε στο OID: &#39; %s&#39; αξία: &#39; %s&#39;"
 
-#: lib/data_query.php:997
+#: lib/data_query.php:1062
 #, php-format
 msgid "Filtering list of indexes @ '%s' Index Count: %s"
 msgstr "Φιλτράρισμα λίστας ευρετηρίων @ &#39; %s&#39; Αριθμός αναφορών: %s"
 
-#: lib/data_query.php:1001
+#: lib/data_query.php:1066
 #, php-format
 msgid "Filtered Index found at OID: '%s' value: '%s'"
 msgstr "Φιλτράρισμα ευρετηρίου που βρέθηκε στο OID: &#39; %s&#39; αξία: &#39; %s&#39;"
 
-#: lib/data_query.php:1021
+#: lib/data_query.php:1086
 #, php-format
 msgid "Fixing wrong 'method' field for '%s' since 'rewrite_index' or 'oid_suffix' is defined"
 msgstr "Προσδιορισμός λανθασμένου πεδίου &#39;μεθόδου&#39; για το &#39; %s&#39; από τη στιγμή που ορίζεται &#39;rewrite_index&#39; ή &#39;oid_suffix&#39;"
 
-#: lib/data_query.php:1028
+#: lib/data_query.php:1093
 #, php-format
 msgid "Inserting index data for field '%s' [value='%s']"
 msgstr "Εισαγωγή δεδομένων ευρετηρίου για το πεδίο &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1033
+#: lib/data_query.php:1098
 #, php-format
 msgid "Located input field '%s' [get]"
 msgstr "Βρίσκεται πεδίο εισαγωγής &#39; %s&#39; [get]"
 
-#: lib/data_query.php:1042
+#: lib/data_query.php:1107
 #, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
 msgstr "Βρήκε τον κανόνα επανεγγραφής OID: &#39;s / %s / %s /&#39;"
 
-#: lib/data_query.php:1053
+#: lib/data_query.php:1118
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
 msgstr "oid_rewrite στο OID: &#39; %s&#39; νέο OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1074
+#: lib/data_query.php:1139
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='%s']"
 msgstr "Εκτέλεση του SNMP get για δεδομένα @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1085
+#: lib/data_query.php:1150
 #, php-format
 msgid "Field '%s' %s"
 msgstr "Πεδίο &#39; %s&#39; %s"
 
-#: lib/data_query.php:1146
+#: lib/data_query.php:1211
 #, php-format
 msgid "Executing SNMP get for %s oids (%s)"
 msgstr "Εκτέλεση του SNMP για %s ( %s)"
 
-#: lib/data_query.php:1172 lib/data_query.php:1264 lib/data_query.php:1272
+#: lib/data_query.php:1237 lib/data_query.php:1329 lib/data_query.php:1337
 #, php-format
 msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Το πεδίο ταξινόμησης δεν επέστρεψε δεδομένα. Δεν είναι δυνατή η συνέχιση του νέου δείκτη για το OID [ %s]"
 
-#: lib/data_query.php:1176
+#: lib/data_query.php:1241
 #, php-format
 msgid "Found result for data @ '%s' [value='%s']"
 msgstr "Βρέθηκε αποτέλεσμα για δεδομένα @ &#39; %s&#39; [value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1184
+#: lib/data_query.php:1249
 #, php-format
 msgid "Setting result for data @ '%s' [key='%s', value='%s']"
 msgstr "Ορισμός αποτελέσματος για δεδομένα @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1188
+#: lib/data_query.php:1253
 #, php-format
 msgid "Skipped result for data @ '%s' [key='%s', value='%s']"
 msgstr "Παραλήφθηκε αποτέλεσμα για δεδομένα @ &#39; %s&#39; [key = &#39; %s&#39;, value = &#39; %s&#39;]"
 
-#: lib/data_query.php:1202
+#: lib/data_query.php:1267
 #, php-format
 msgid "Got SNMP get result for data @ '%s' [value='%s'] (index: %s)"
 msgstr "Λήψη SNMP πάρει αποτέλεσμα για δεδομένα @ &#39; %s&#39; [value = &#39; %s&#39;] (ευρετήριο: %s)"
 
-#: lib/data_query.php:1232
+#: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
 msgstr "Εκτέλεση του SNMP get για δεδομένα @ &#39; %s&#39; [value = &#39;value value&#39;]"
 
-#: lib/data_query.php:1240
+#: lib/data_query.php:1305
 #, php-format
 msgid "Located input field '%s' [walk]"
 msgstr "Βρίσκεται πεδίο εισαγωγής &#39; %s&#39; [με τα πόδια]"
 
-#: lib/data_query.php:1277
+#: lib/data_query.php:1342
 #, php-format
 msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Εκτέλεση βάδισης SNMP για δεδομένα @ &#39; %s&#39;"
 
-#: lib/data_query.php:1296 lib/data_query.php:1354 lib/data_query.php:1403
-#: lib/data_query.php:1454
+#: lib/data_query.php:1361 lib/data_query.php:1419 lib/data_query.php:1468
+#: lib/data_query.php:1519
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
 msgstr "Δεν υπάρχει δείκτης[%s] στο value_index_parse, παράλειψη."
 
-#: lib/data_query.php:1337
+#: lib/data_query.php:1402
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s [από %s]"
 
-#: lib/data_query.php:1379
+#: lib/data_query.php:1444
 #, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
 msgstr "Βρέθηκε OCTET STRING αποκωδικοποιημένη τιμή &#39; %s&#39;: &#39; %s&#39;"
 
-#: lib/data_query.php:1385 lib/data_query.php:1434
+#: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s [από regexp oid parse]"
 
-#: lib/data_query.php:1462
+#: lib/data_query.php:1527
 #, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο: %s [από το regexp oid value parse]"
 
-#: lib/data_query.php:1684
+#: lib/data_query.php:1753
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
 msgstr "Βρέθηκε ψεύτικο στοιχείο rewrite_value, index='%s'"
 
-#: lib/data_query.php:1697
+#: lib/data_query.php:1766
 msgid "Could not parse translation map (rewrite_value)"
 msgstr "Δεν ήταν δυνατή η ανάλυση του χάρτη μετάφρασης (rewrite_value)"
 
-#: lib/data_query.php:1721
+#: lib/data_query.php:1790
 #, php-format
 msgid "rewrite_value: '%s' => '%s'"
 msgstr "oid_rewrite στο OID: &#39; %s&#39; νέο OID: &#39; %s&#39;"
 
-#: lib/data_query.php:1826
+#: lib/data_query.php:1895
 msgid "Update graph data query cache complete"
 msgstr "Η ενημέρωση της ερώτησης για την ταξινόμηση της συλλογής δεδομένων ολοκληρώθηκε"
 
-#: lib/data_query.php:1843
+#: lib/data_query.php:1912
 msgid "Re-Indexing Data Query complete"
 msgstr "Επαναπροσδιορισμός ερωτήματος δεδομένων ολοκληρώθηκε"
 
-#: lib/data_query.php:1974
+#: lib/data_query.php:2043
 msgid "Unknown Index"
 msgstr "Άγνωστος ευρετήριο"
 
-#: lib/data_query.php:2532
+#: lib/data_query.php:2628
 #, php-format
 msgid "You must select an XML output column for Data Source '%s' and toggle the checkbox to its right"
 msgstr "Πρέπει να επιλέξετε μια στήλη εξόδου XML για την προέλευση δεδομένων ' %s' και να αλλάξετε το πλαίσιο ελέγχου στα δεξιά της"
 
-#: lib/data_query.php:2538
+#: lib/data_query.php:2634
 msgid "Your Graph Template has not Data Templates in use.  Please correct your Graph Template"
 msgstr "Το πρότυπο γραφήματος δεν χρησιμοποιεί πρότυπα δεδομένων. Διορθώστε το πρότυπο γραφήματος"
 
@@ -13591,7 +13587,7 @@ msgid "User Community"
 msgstr "Κοινότητα χρηστών"
 
 #: lib/functions.php:3837 lib/functions.php:3860 lib/html.php:2887
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
@@ -16945,191 +16941,191 @@ msgstr "Το γράφημα δεν δημιουργήθηκε για %s λόγω
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
 msgstr "ΣΗΜΕΊΩΣΗ: Το γράφημα δεν προστέθηκε για το ερώτημα δεδομένων %s και το ευρετήριο %s λόγω αποτυχίας επαλήθευσης προέλευσης δεδομένων"
 
-#: lib/utility.php:1200
+#: lib/utility.php:1258
 msgid "MySQL 5.6+ and MariaDB 10.0+ are great releases, and are very good versions to choose. Make sure you run the very latest release though which fixes a long standing low level networking issue that was causing spine many issues with reliability."
 msgstr "Το MySQL 5.6+ και το MariaDB 10.0+ είναι εξαιρετικές εκδόσεις και είναι πολύ καλές εκδοχές για επιλογή. Βεβαιωθείτε ότι έχετε εκτελέσει την πιο πρόσφατη έκδοση, αν και καθορίζει ένα μακροχρόνιο ζήτημα δικτύωσης χαμηλού επιπέδου το οποίο προκαλεί πολλά προβλήματα με την αξιοπιστία της σπονδυλικής στήλης."
 
-#: lib/utility.php:1212
+#: lib/utility.php:1270
 #, php-format
 msgid "It is STRONGLY recommended that you enable InnoDB in any %s version greater than 5.5.3."
 msgstr "Συνιστάται να ενεργοποιήσετε το InnoDB σε οποιαδήποτε έκδοση %s μεγαλύτερη από 5.1."
 
-#: lib/utility.php:1225 lib/utility.php:1262
+#: lib/utility.php:1283 lib/utility.php:1320
 msgid "When using Cacti with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte."
 msgstr "Όταν χρησιμοποιείτε το Cacti με γλώσσες διαφορετικές από την αγγλική, είναι σημαντικό να χρησιμοποιήσετε τον τύπο ταξινόμησης utf8mb4_unicode_ci καθώς ορισμένοι χαρακτήρες παίρνουν περισσότερα από ένα μόνο byte."
 
-#: lib/utility.php:1231 lib/utility.php:1237 lib/utility.php:1268
-#: lib/utility.php:1274
+#: lib/utility.php:1289 lib/utility.php:1295 lib/utility.php:1326
+#: lib/utility.php:1332
 msgid "When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte."
 msgstr "Όταν χρησιμοποιείτε το Cacti με γλώσσες διαφορετικές από την αγγλική, είναι σημαντικό να χρησιμοποιήσετε το σύνολο χαρακτήρων utf8mb4 καθώς ορισμένοι χαρακτήρες παίρνουν περισσότερα από ένα μόνο byte."
 
-#: lib/utility.php:1250
+#: lib/utility.php:1308
 #, php-format
 msgid "It is recommended that you enable InnoDB in any %s version greater than 5.1."
 msgstr "Συνιστάται να ενεργοποιήσετε το InnoDB σε οποιαδήποτε έκδοση %s μεγαλύτερη από 5.1."
 
-#: lib/utility.php:1283
+#: lib/utility.php:1341
 #, php-format
 msgid "Depending on the number of logins and use of spine data collector, %s will need many connections.  The calculation for spine is: total_connections = total_processes * (total_threads + script_servers + 1), then you must leave headroom for user connections, which will change depending on the number of concurrent login accounts."
 msgstr "Ανάλογα με τον αριθμό των συνδέσεων και τη χρήση του συλλέκτη δεδομένων σπονδυλικής στήλης, το %s θα χρειαστεί πολλές συνδέσεις. Ο υπολογισμός για τη σπονδυλική στήλη είναι: total_connections = total_processes * (total_threads + script_servers + 1), τότε πρέπει να αφήσετε χώρο για συνδέσεις χρηστών, οι οποίοι θα αλλάξουν ανάλογα με τον αριθμό των ταυτόχρονων λογαριασμών σύνδεσης."
 
-#: lib/utility.php:1288
+#: lib/utility.php:1346
 msgid "Keeping the table cache larger means less file open/close operations when using innodb_file_per_table."
 msgstr "Η διατήρηση της μεγαλύτερης μνήμης cache του τραπέζι σημαίνει λιγότερες ανοικτές / κλειστές λειτουργίες κατά τη χρήση του innodb_file_per_table."
 
-#: lib/utility.php:1293
+#: lib/utility.php:1351
 msgid "With Remote polling capabilities, large amounts of data will be synced from the main server to the remote pollers.  Therefore, keep this value at or above 16M."
 msgstr "Με τις δυνατότητες απομακρυσμένης διερεύνησης, θα συγχρονίζονται μεγάλα ποσά δεδομένων από τον κύριο διακομιστή στους απομακρυσμένους παραλήπτες. Συνεπώς, διατηρήστε αυτήν την τιμή 16M ή μεγαλύτερη."
 
-#: lib/utility.php:1299
+#: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
 msgstr "Εάν χρησιμοποιείτε το Cacti Performance Booster και επιλέγετε μια μηχανή αποθήκευσης μνήμης, θα πρέπει να είστε προσεκτικοί για να ξεπλύνετε το ρυθμιστή απόδοσης Booster πριν το σύστημα ξεπεράσει το χώρο μνήμης. Αυτό γίνεται με δύο τρόπους, αρχικά μειώνοντας το μέγεθος της στήλης εξόδου σας στο σωστό μέγεθος. Αυτή η στήλη βρίσκεται στους πίνακες poller_output και poller_output_boost. Το δεύτερο πράγμα που μπορείτε να κάνετε είναι να διαθέσετε περισσότερη μνήμη στους πίνακες μνήμης. Έχουμε επιλέξει αυθαίρετα μια συνιστώμενη τιμή 10 %% μνήμης συστήματος, αλλά αν χρησιμοποιείτε SSD δίσκους ή έχετε μικρότερο σύστημα, μπορείτε να αγνοήσετε αυτή τη σύσταση ή να επιλέξετε διαφορετική μηχανή αποθήκευσης. Ενδέχεται να δείτε την αναμενόμενη κατανάλωση των πινάκων Performance Booster κάτω από την Κονσόλα -&gt; Συστήματα Utilities -&gt; View Boost Status."
 
-#: lib/utility.php:1305
+#: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
 msgstr "Όταν εκτελείτε υποερωτήσεις, έχοντας ένα μεγαλύτερο προσωρινό μέγεθος πίνακα, κρατήστε αυτούς τους προσωρινούς πίνακες στη μνήμη."
 
-#: lib/utility.php:1311 lib/utility.php:1317
+#: lib/utility.php:1369 lib/utility.php:1375
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
 msgstr ""
 
-#: lib/utility.php:1323
+#: lib/utility.php:1381
 #, php-format
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Όταν χρησιμοποιείτε χώρο αποθήκευσης InnoDB, είναι σημαντικό να διατηρείτε χωριστά τους πίνακες σας. Αυτό καθιστά τη διαχείριση των πινάκων απλούστερη για τους χρήστες με μεγάλο χρονικό διάστημα του %s. Εάν εκτελείτε αυτήν την περίοδο αυτήν τη στιγμή, μπορείτε να κάνετε μετεγκατάσταση στο χώρο αποθήκευσης ανά αρχείο ενεργοποιώντας τη λειτουργία και, στη συνέχεια, τρέχοντας μια μεταβολή δήλωση σε όλους τους πίνακες InnoDB."
 
-#: lib/utility.php:1329
+#: lib/utility.php:1387
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Cacti tables."
 msgstr "Όταν χρησιμοποιείτε το innodb_file_per_table, είναι σημαντικό να ρυθμίσετε το innodb_file_format στο Barracuda. Αυτή η ρύθμιση θα επιτρέψει μεγαλύτερα ευρετήρια σημαντικά για ορισμένους πίνακες Cacti."
 
-#: lib/utility.php:1335
+#: lib/utility.php:1393
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
 msgstr "Εάν τα τραπέζια σας έχουν πολύ μεγάλα ευρετήρια, πρέπει να λειτουργήσετε με το Barracuda innodb_file_format και το innodb_large_prefix ίσο με 1. Εάν δεν το κάνετε αυτό μπορεί να οδηγήσει σε προσθήκες που δεν μπορούν να δημιουργήσουν σωστά πίνακες."
 
-#: lib/utility.php:1341
+#: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
 msgstr "Το InnoDB θα κρατήσει όσο το δυνατόν περισσότερους πίνακες και ευρετήρια στη μνήμη του συστήματος. Επομένως, θα πρέπει να κάνετε το innodb_buffer_pool αρκετά μεγάλο για να κρατήσετε όσο περισσότερους πίνακες και ευρετήριο στη μνήμη. Ο έλεγχος του μεγέθους του κατάλογο / var / lib / mysql / cacti θα βοηθήσει στον προσδιορισμό αυτής της τιμής. Συνιστούμε 25 %% από τα συστήματα σας για μνήμη, αλλά οι απαιτήσεις σας θα διαφέρουν ανάλογα με το μέγεθος των συστημάτων σας."
 
-#: lib/utility.php:1347
+#: lib/utility.php:1405
 #, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Αυτές οι ρυθμίσεις θα πρέπει να παραμείνουν ΕΝΕΡΓΟ, εκτός εάν οι παρουσίες Cacti εκτελούνται είτε σε ZFS είτε σε FusionI / O, τα οποία έχουν και τα δύο εσωτερικά περιοδικά για να εξυπηρετήσουν απότομες διακοπές λειτουργίας του συστήματος. Ωστόσο, εάν έχετε πολύ καλή ισχύ και τα συστήματά σας σπάνια κατεβαίνουν και έχετε αντίγραφα ασφαλείας, η απενεργοποίηση αυτής της ρύθμισης μπορεί να σας οδηγήσει σε αύξηση σχεδόν 50% στην απόδοση της βάσης δεδομένων."
 
-#: lib/utility.php:1352
+#: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
 msgstr "Αυτό είναι όπου αποθηκεύονται τα μεταδεδομένα. Αν είχατε πολλά τραπέζια, θα ήταν χρήσιμο να αυξήσετε αυτό το ποσό."
 
-#: lib/utility.php:1357
+#: lib/utility.php:1415
 msgid "Rogue queries should not for the database to go offline to others.  Kill these queries before they kill your system."
 msgstr "Τα ερωτήματα Rogue δεν πρέπει να αποσυνδεθούν από τη βάση δεδομένων για άλλους. Σκοτώστε αυτά τα ερωτήματα πριν σκοτώσουν το σύστημά σας."
 
-#: lib/utility.php:1362
+#: lib/utility.php:1420
 msgid "Maximum I/O performance happens when you use the O_DIRECT method to flush pages."
 msgstr "Η μέγιστη απόδοση Ι / Ο συμβαίνει όταν χρησιμοποιείτε τη μέθοδο O_DIRECT για την εκκαθάριση σελίδων."
 
-#: lib/utility.php:1372
+#: lib/utility.php:1430
 #, php-format
 msgid "Setting this value to 2 means that you will flush all transactions every second rather than at commit.  This allows %s to perform writing less often."
 msgstr "Ο ορισμός αυτής της τιμής σε 2 σημαίνει ότι θα ξεπλύνετε όλες τις συναλλαγές κάθε δευτερόλεπτο και όχι κατά τη διαδικασία δέσμευσης. Αυτό επιτρέπει στο %s να εκτελεί γραφή λιγότερο συχνά."
 
-#: lib/utility.php:1377
+#: lib/utility.php:1435
 msgid "With modern SSD type storage, having multiple io threads is advantageous for applications with high io characteristics."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η κατοχή πολλαπλών συνδέσμων io είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1385 lib/utility.php:1427
+#: lib/utility.php:1443 lib/utility.php:1485
 #, php-format
 msgid "As of %s %s, the you can control how often %s flushes transactions to disk.  The default is 1 second, but in high I/O systems setting to a value greater than 1 can allow disk I/O to be more sequential"
 msgstr "Από το %s %s, μπορείτε να ελέγξετε πόσο συχνά το %s ξεχειλίζει τις συναλλαγές στο δίσκο. Η προεπιλογή είναι 1 δευτερόλεπτο, αλλά σε υψηλά συστήματα εισόδου / εξόδου ρύθμιση σε τιμή μεγαλύτερη από 1 μπορεί να επιτρέψει δίσκο I / O να είναι πιο διαδοχική"
 
-#: lib/utility.php:1390
+#: lib/utility.php:1448
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η πολλαπλή ανάγνωση των νημάτων είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1395
+#: lib/utility.php:1453
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics.  Depending on your MariaDB/MySQL versions, this value can go as high as 64.  But try to keep the number less than your total SMT threads on the database server."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η ύπαρξη πολλαπλών κειμένων εγγραφής είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1459
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MariaDB less than 10.5.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max the number of CPU cores or 64."
 msgstr "Το %s θα διαιρέσει το innodb_buffer_pool σε περιοχές μνήμης για να βελτιώσει την απόδοση. Η μέγιστη τιμή είναι 64. Όταν το innodb_buffer_pool σας είναι μικρότερο από 1GB, θα πρέπει να χρησιμοποιήσετε το μέγεθος της πισίνας διαιρούμενο με 128MB. Συνεχίστε να χρησιμοποιείτε αυτήν την εξίσωση μέχρι το μέγιστο των 64."
 
-#: lib/utility.php:1401
+#: lib/utility.php:1459
 #, php-format
 msgid "%s will divide the innodb_buffer_pool into memory regions to improve performance for versions of MySQL upto and including MySQL 8.0.  The max value is 64, but should not exceed more than the number of CPU cores/threads.  When your innodb_buffer_pool is less than 1GB, you should use the pool size divided by 128MB.  Continue to use this equation up to the max of the number of CPU cores or 64."
 msgstr "Το %s θα διαιρέσει το innodb_buffer_pool σε περιοχές μνήμης για να βελτιώσει την απόδοση. Η μέγιστη τιμή είναι 64. Όταν το innodb_buffer_pool σας είναι μικρότερο από 1GB, θα πρέπει να χρησιμοποιήσετε το μέγεθος της πισίνας διαιρούμενο με 128MB. Συνεχίστε να χρησιμοποιείτε αυτήν την εξίσωση μέχρι το μέγιστο των 64."
 
-#: lib/utility.php:1407 lib/utility.php:1443
+#: lib/utility.php:1465 lib/utility.php:1501
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
 msgstr "Εάν διαθέτετε δίσκους SSD, χρησιμοποιήστε αυτήν την πρόταση. Εάν έχετε φυσικούς σκληρούς δίσκους, χρησιμοποιήστε 200 * τον αριθμό ενεργών μονάδων δίσκου στον πίνακα. Εάν χρησιμοποιείτε NVMe ή PCIe Flash, μπορούν να χρησιμοποιηθούν πολύ μεγαλύτεροι αριθμοί έως και 100000."
 
-#: lib/utility.php:1413 lib/utility.php:1449
+#: lib/utility.php:1471 lib/utility.php:1507
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 2000 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 200000 can be used."
 msgstr "Εάν διαθέτετε δίσκους SSD, χρησιμοποιήστε αυτήν την πρόταση. Εάν διαθέτετε φυσικούς σκληρούς δίσκους, χρησιμοποιήστε 2000 * τον αριθμό ενεργών μονάδων δίσκου στον πίνακα. Εάν χρησιμοποιείτε NVMe ή PCIe Flash, μπορούν να χρησιμοποιηθούν πολύ μεγαλύτεροι αριθμοί έως 200000."
 
-#: lib/utility.php:1419 lib/utility.php:1455
+#: lib/utility.php:1477 lib/utility.php:1513
 msgid "If you have SSD disks, use this suggestion. Otherwise, do not set this setting."
 msgstr "Εάν διαθέτετε δίσκους SSD, χρησιμοποιήστε αυτήν την πρόταση. Διαφορετικά, μην ορίσετε αυτήν τη ρύθμιση."
 
-#: lib/utility.php:1432
+#: lib/utility.php:1490
 msgid "With modern SSD type storage, having multiple read io threads is advantageous for applications with high io characteristics."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η πολλαπλή ανάγνωση των νημάτων είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1437
+#: lib/utility.php:1495
 msgid "With modern SSD type storage, having multiple write io threads is advantageous for applications with high io characteristics."
 msgstr "Με τη σύγχρονη αποθήκευση τύπου SSD, η ύπαρξη πολλαπλών κειμένων εγγραφής είναι πλεονεκτική για εφαρμογές με υψηλά χαρακτηριστικά io."
 
-#: lib/utility.php:1468
+#: lib/utility.php:1526
 msgid "When using MariaDB 10.2.4 and above, this setting should be off if atomic writes are enabled.  Therefore, please enable atomic writes instead of the double write buffer as it will increase performance."
 msgstr "Όταν χρησιμοποιείτε το MariaDB 10.2.4 και άνω, αυτή η ρύθμιση θα πρέπει να είναι απενεργοποιημένη εάν είναι ενεργοποιημένες οι ατομικές εγγραφές. Επομένως, ενεργοποιήστε τις ατομικές εγγραφές αντί για το buffer διπλής εγγραφής, καθώς θα αυξήσει την απόδοση."
 
-#: lib/utility.php:1475
+#: lib/utility.php:1533
 msgid "When using MariaDB 10.2.4 and above, you can use atomic writes over the doublewrite buffer to increase performance."
 msgstr "Όταν χρησιμοποιείτε το MariaDB 10.2.4 και άνω, μπορείτε να χρησιμοποιήσετε ατομικές εγγραφές στο buffer διπλής εγγραφής για να αυξήσετε την απόδοση."
 
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 #, php-format
 msgid "%s Tuning"
 msgstr "%s Συντονισμός"
 
-#: lib/utility.php:1492
+#: lib/utility.php:1550
 msgid "Note: Many changes below require a database restart"
 msgstr "Σημείωση: Πολλές αλλαγές παρακάτω απαιτούν την επανεκκίνηση της βάσης δεδομένων"
 
-#: lib/utility.php:1500
+#: lib/utility.php:1558
 msgid "Variable"
 msgstr "Μεταβλητή"
 
-#: lib/utility.php:1501
+#: lib/utility.php:1559
 msgid "Current Value"
 msgstr "Τρέχουσα αξία"
 
-#: lib/utility.php:1503
+#: lib/utility.php:1561
 msgid "Recommended Value"
 msgstr "Συνιστώμενη τιμή"
 
-#: lib/utility.php:1504
+#: lib/utility.php:1562
 msgid "Comments"
 msgstr "Σχόλια"
 
-#: lib/utility.php:2089
+#: lib/utility.php:2147
 #, php-format
 msgid "PHP %s is the minimum version"
 msgstr "Η PHP %s είναι η έκδοση mimimum"
 
-#: lib/utility.php:2091
+#: lib/utility.php:2149
 #, php-format
 msgid "A minimum of %s memory limit"
 msgstr "Ένα ελάχιστο όριο μνήμης %s MB"
 
-#: lib/utility.php:2093
+#: lib/utility.php:2151
 #, php-format
 msgid "A minimum of %s m execution time"
 msgstr "Τουλάχιστον %s m χρόνος εκτέλεσης"
 
-#: lib/utility.php:2095
+#: lib/utility.php:2153
 msgid "A valid timezone that matches MySQL and the system"
 msgstr "Μια έγκυρη ζώνη ώρας που ταιριάζει με τη MySQL και το σύστημα"
 
@@ -20754,4 +20750,12 @@ msgstr ""
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
+msgstr ""
+
+#: lib/data_query.php:203
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
+
+#: lib/poller.php:2193
+msgid "Synchronization failed. See the log for details."
 msgstr ""

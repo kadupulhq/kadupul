@@ -22,7 +22,9 @@ require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
 
 $sf_source = file_get_contents(dirname(__DIR__, 3) . '/lib/data_query.php');
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($sf_source, 'get_best_data_query_index_type'));
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($sf_source, 'run_data_query'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($sf_source, 'run_data_query_work'));
+eval('namespace ' . __NAMESPACE__ . '; use PDO;' . str_replace('__DIR__', var_export(dirname(__DIR__, 3) . '/lib', true), \test_php_function_source($sf_source, 'data_query_reindex_local')));
+function data_query_transaction($host, $tables, $work) { return $work($GLOBALS['sf_db']); }
 
 const HOST_DOWN = 1;
 const DATA_INPUT_TYPE_SNMP_QUERY = 3;
@@ -139,7 +141,7 @@ test('a re-index stops before rewriting the sort cache when the stored sort fiel
 	$GLOBALS['sf_read_fails'] = true;
 
 	try {
-		$result = run_data_query(1, 2);
+		$result = run_data_query_work(1, 2);
 	} finally {
 		foreach (array('poller.php', 'api_data_source.php', 'utility.php') as $file) {
 			unlink($library . '/' . $file);
