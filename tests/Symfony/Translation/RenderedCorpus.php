@@ -22,7 +22,7 @@ namespace Kadupul\Tests\Translation;
  *
  * @phpstan-type Call array{0: string, 1: list<int|string>}
  * @phpstan-type Result array{value: mixed, error: ?string, warnings: list<string>}
- * @phpstan-type Rendering array{locale: string, handler: int, domains: array<string, string>, plural_index: array<string, list<int|bool>>, values: list<mixed>, errors: array<int, string>, warnings: array<int, list<string>>}
+ * @phpstan-type Rendering array{locale: string, handler: int, domains: array<string, string>, readers: array<string, string>, plural_index: array<string, list<int|bool>>, values: list<mixed>, errors: array<int, string>, warnings: array<int, list<string>>}
  */
 final class RenderedCorpus
 {
@@ -209,8 +209,9 @@ final class RenderedCorpus
      *
      * @param list<string> $locales
      * @param list<Call> $calls
+     * @param ?string $symfonyCache render over Symfony catalogues compiled here instead of php-gettext
      */
-    public static function render(string $root, array $locales, array $calls): self
+    public static function render(string $root, array $locales, array $calls, ?string $symfonyCache = null): self
     {
         if ($calls === [] || $locales === []) {
             throw new \RuntimeException('An empty corpus proves nothing.');
@@ -242,7 +243,11 @@ final class RenderedCorpus
                     $errors = $work . '/' . $locale . '.err';
                     $owned[] = $output;
                     $owned[] = $errors;
-                    $process = proc_open([PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', self::ORACLE, $root, $base, $locale, $callsFile, $output], [0 => ['file', '/dev/null', 'r'], 1 => ['file', $errors, 'w'], 2 => ['file', $errors, 'a']], $pipes);
+                    $command = [PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=stderr', self::ORACLE, $root, $base, $locale, $callsFile, $output];
+                    if ($symfonyCache !== null) {
+                        $command[] = $symfonyCache;
+                    }
+                    $process = proc_open($command, [0 => ['file', '/dev/null', 'r'], 1 => ['file', $errors, 'w'], 2 => ['file', $errors, 'a']], $pipes);
                     if (!is_resource($process)) {
                         throw new \RuntimeException('Cannot start the legacy oracle for ' . $locale);
                     }

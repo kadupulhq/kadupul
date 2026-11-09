@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Add a `cacti` Symfony translation domain that is not yet read at runtime: `GettextMoLoader` loads each shipped `.mo` with its gettext identities (context, plural pair, every plural form including empty ones, and the header), `PluralFormsExpression` evaluates `Plural-Forms` rules without `eval`, and `TranslationResources` lists the resources, serving `fr-FR` as both `fr` and `fr_FR`. The legacy helpers render the whole translation corpus identically over this domain and over php-gettext for every shipped locale, through a cold and a warm catalogue cache.
 - Add a rendered translation corpus test: every catalog identity, plural count and fixed `sprintf`, `%%` and text-domain case is rendered through the legacy `__()` helpers and php-gettext over the shipped `.mo` files for en-US and all 23 shipped locales, with two German fixture plugins (`i18nprobe` and `folder`) for plugin domains. The harness fails on an empty corpus, a locale with no translated entry or a missing php-gettext reader. It is the oracle for moving legacy translation onto Symfony.
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.

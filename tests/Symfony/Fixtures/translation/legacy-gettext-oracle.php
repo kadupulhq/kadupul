@@ -12,15 +12,20 @@
 // heuristic and the catalog reader are the production ones.
 //
 // Arguments: <project root> <base path> <locale> <calls file> <output file>
+//            [<Symfony cache directory>]
 // The base path holds locales/ and plugins/ the way an installation does.
+// With a cache directory, the text domains php-gettext loaded are then
+// answered from Symfony catalogues instead (CatalogueGettextReader), so the
+// same helpers render over the new loader.
 // Like the legacy pages it stands in for, this file is not strictly typed.
 
-if (PHP_SAPI !== 'cli' || $argc !== 6) {
-    fwrite(STDERR, "usage: legacy-gettext-oracle.php <root> <base> <locale> <calls> <output>\n");
+if (PHP_SAPI !== 'cli' || ($argc !== 6 && $argc !== 7)) {
+    fwrite(STDERR, "usage: legacy-gettext-oracle.php <root> <base> <locale> <calls> <output> [<cache>]\n");
     exit(2);
 }
 
 [, $root, $base, $locale, $callsFile, $outputFile] = $argv;
+$symfonyCache = $argv[6] ?? null;
 
 date_default_timezone_set('UTC');
 
@@ -113,6 +118,12 @@ if ($translated && !isset($i18n['cacti'])) {
     exit(3);
 }
 
+if ($symfonyCache !== null) {
+    // After the legacy runtime has chosen its domains, as a handler would.
+    require $root . '/include/vendor/autoload.php';
+    $i18n = Kadupul\Tests\Translation\CatalogueGettextReader::replace($i18n ?? [], $cacti_textdomains, $root, $symfonyCache, $locale);
+}
+
 $calls = unserialize((string) file_get_contents($callsFile), ['allowed_classes' => false]);
 if (!is_array($calls) || $calls === []) {
     fwrite(STDERR, "no calls to render\n");
@@ -160,6 +171,7 @@ $output = serialize([
     'locale' => CACTI_LOCALE,
     'handler' => CACTI_LANGUAGE_HANDLER,
     'domains' => array_map(static fn(array $paths): string => $paths['path2catalogue'], $cacti_textdomains),
+    'readers' => array_map(static fn(object $reader): string => $reader::class, $i18n ?? []),
     'plural_index' => $pluralIndex,
     'values' => $values,
     'errors' => $errors,
