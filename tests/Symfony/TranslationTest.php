@@ -90,6 +90,29 @@ final class TranslationTest extends TestCase
         self::assertSame('fr', $request->attributes->get('_locale'));
     }
 
+    #[DataProvider('notificationReceiverRoutes')]
+    public function testNotificationReceiverRoutesUseConfiguredLocale(string $route): void
+    {
+        $preference = $this->createMock(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn(null);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+        $subscriber = new InventoryLocaleSubscriber($preference, $this->database([]), $configuration);
+        $request = Request::create('/utilities/notification-receivers/new', 'GET', [], ['Cacti' => 'fixture']);
+        $request->attributes->set('_route', $route);
+        $request->headers->set('Accept-Language', 'en');
+
+        $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+
+        self::assertSame('fr', $request->attributes->get('_locale'));
+    }
+
+    public static function notificationReceiverRoutes(): iterable
+    {
+        yield 'create' => ['notification_receiver_create'];
+        yield 'edit' => ['notification_receiver_edit'];
+    }
+
     #[DataProvider('installationLocales')]
     public function testActualInstallationConfigurationSelectsLocale(string $source, string $expected): void
     {

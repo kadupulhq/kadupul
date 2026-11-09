@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.38\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 07:15-0800\n"
+"POT-Creation-Date: 2026-11-09 12:16-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -7381,38 +7381,6 @@ msgstr ""
 
 #: include/global_form.php package_import.php
 msgid "The Width to be used when importing or updating Graph Templates."
-msgstr ""
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr ""
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr ""
-
-#: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr ""
-
-#: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr ""
-
-#: include/global_form.php
-msgid "Maximum Log Size"
-msgstr ""
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr ""
-
-#: include/global_form.php
-msgid "SNMP Message Type"
-msgstr ""
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
 msgstr ""
 
 #: include/global_form.php
@@ -15178,6 +15146,10 @@ msgstr ""
 
 #: managers.php utilities.php
 msgid "No SNMP Notification Log Entries"
+msgstr ""
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
 msgstr ""
 
 #: managers.php

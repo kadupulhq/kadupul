@@ -2814,6 +2814,28 @@ const REVIEWED_FEATURE_ACCESS = [
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
     ],
+    // The receiver editor delegates to the reviewed Utilities realm check; these
+    // keys precede the list page's prefix, which uses AdministrationListAccess.
+    '/utilities/notification-receivers/new' => [
+        'label' => 'notification receiver',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Platform\\Application\\Port\\NotificationReceiverAccess',
+        'adapter' => 'Kadupul\\Platform\\Infrastructure\\Persistence\\DbalNotificationReceiverAccess',
+        'sources' => [
+            'src/Platform/Infrastructure/Persistence/DbalNotificationReceiverAccess.php' => '5b2013e9eefbb9159906dcf43a9030dafa674da6ea964f9d9b65365ee4214ee3',
+            'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
+        ],
+    ],
+    '/utilities/notification-receivers/{id}' => [
+        'label' => 'notification receiver',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Platform\\Application\\Port\\NotificationReceiverAccess',
+        'adapter' => 'Kadupul\\Platform\\Infrastructure\\Persistence\\DbalNotificationReceiverAccess',
+        'sources' => [
+            'src/Platform/Infrastructure/Persistence/DbalNotificationReceiverAccess.php' => '5b2013e9eefbb9159906dcf43a9030dafa674da6ea964f9d9b65365ee4214ee3',
+            'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
+        ],
+    ],
     '/utilities/notification-receivers' => [
         'label' => 'administration list',
         'realm' => 15,
