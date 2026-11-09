@@ -24,14 +24,14 @@ final class LocalRrdVerification
         $path = str_contains($storedPath, '/') ? $storedPath : '<path_rra>/' . $storedPath;
         $path = str_replace('<path_rra>/', rtrim($root, '/\\') . '/', $path);
         if ($root === '' || strpbrk($path, "<>\0\r\n") !== false || !function_exists('rrd_path_is_contained')
-            || !\rrd_path_is_contained($path, $root, false)) {
+            || !$this->contained($path, $root)) {
             return ['status' => 'failed', 'reason' => 'local_path_rejected'];
         }
         $resolved = realpath($path);
         if ($resolved === false || !is_file($resolved)) {
             return ['status' => 'absent', 'reason' => 'local_rrd_missing'];
         }
-        if (!\rrd_path_is_contained($resolved, $root, false)) {
+        if (!$this->contained($resolved, $root)) {
             return ['status' => 'failed', 'reason' => 'local_path_rejected'];
         }
         if (!is_readable($resolved)) {
@@ -77,5 +77,13 @@ final class LocalRrdVerification
         $last = filter_var(trim($stdout), FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
         return is_int($last) ? ['status' => 'observed', 'reason' => 'local_rrd_timestamp_read', 'last_update' => $last]
             : ['status' => 'failed', 'reason' => 'local_rrdtool_result_unconfirmed'];
+    }
+
+    /** Inside the RRA directory, or below a directory config.php lists in rrd_additional_paths. */
+    private function contained(string $path, string $root): bool
+    {
+        return function_exists('rrd_path_is_contained')
+            && (\rrd_path_is_contained($path, $root, false)
+                || (function_exists('rrd_path_in_additional_root') && \rrd_path_in_additional_root($path)));
     }
 }

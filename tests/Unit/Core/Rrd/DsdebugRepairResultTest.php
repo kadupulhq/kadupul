@@ -20,7 +20,7 @@ require $GLOBALS['root'] . '/tests/Helpers/PhpSource.php';
 // Load the checks when lib/rrd.php has them, so a run against the unchecked code reaches the assertions.
 $rrd_source = file_get_contents($GLOBALS['root'] . '/lib/rrd.php');
 if (str_contains($rrd_source, 'function rrd_check_path(')) {
-    foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path') as $function) {
+    foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrd_additional_roots', 'rrd_path_in_additional_root') as $function) {
         eval(test_php_function_source($rrd_source, $function));
     }
 } else {
