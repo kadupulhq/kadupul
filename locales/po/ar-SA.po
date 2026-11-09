@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 11:49-0800\n"
+"POT-Creation-Date: 2026-11-09 12:43-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11474,10 +11474,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "حقل فرز جديد تم اكتشافه: حقل فرز قديم \"%s\" %s\""
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "إعادة رسم الرسوم البيانية إلى فهارسها الجديدة"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "تكرار مصدر بيانات الملف"
 
@@ -11575,11 +11571,6 @@ msgstr "إصلاح حقل \"الطريقة\" الخاطئ ل \"%s\" حيث تم 
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "تم العثور على %s معرفات البيانات المحلية للتحقق منها"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "تم العثور على %s تم تغييرها ومعرف بيانات محلي معزول %s لإعادة تعيينه."
 
 #: lib/data_query.php
 #, php-format
@@ -11699,8 +11690,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "حقل فرز جديد تم التحقق منه. يتم تحديث حقل الفرز."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "لم يتم اكتشاف أي تغييرات في الفهرس ، وإعادة تخطي إعادة الفهرسة وإعادة مخبأ Poller"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

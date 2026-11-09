@@ -8,6 +8,7 @@
 
 // include/global.php connects before it loads Composer.
 require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php';
+require_once __DIR__ . '/../src/Platform/Infrastructure/Legacy/LegacyDatabaseFailureScope.php';
 
 /**
  * Queue health is a read-only bootstrap decision, not a worker mutation.
@@ -533,7 +534,7 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
             }
 
             $database_last_error = 'DB ' . $execute_name . ' -- No connection found';
-            if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+            if (\Kadupul\Platform\Infrastructure\Legacy\LegacyDatabaseFailureScope::active() || (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS)) {
                 throw new Error('Database operation failed.');
             }
 
@@ -655,7 +656,7 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
             // failure. Isolated workers catch Throwable at their outer boundary.
             // Transactional workers must stop before later statements can
             // run after a deadlock or another SQL failure releases their locks.
-            if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+            if (\Kadupul\Platform\Infrastructure\Legacy\LegacyDatabaseFailureScope::active() || (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS)) {
                 throw new Error('Database operation failed.');
             }
 

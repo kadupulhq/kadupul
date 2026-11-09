@@ -2,6 +2,8 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>Unit/ReindexPublicationOutcomeTest.php</file>
+      <file>Unit/RemoteReindexOutcomeTest.php</file>
       <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
       <file>Unit/Security/MarkerBeforeExitCheckTest.php</file>
       <file>Unit/MailPreflightTest.php</file>
@@ -25,6 +27,7 @@
       <file>Unit/ObsoleteDeleteActionTest.php</file>
       <file>Unit/DataQueryOrphanStateTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
+      <file>Unit/SnmpWalkExitCodeTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
       <file>Unit/Core/Rrd/RrdTuneAllOrNothingTest.php</file>
       <file>Unit/Base1024GraphDivisorTest.php</file>

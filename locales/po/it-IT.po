@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 11:49-0800\n"
+"POT-Creation-Date: 2026-11-09 12:43-0800\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11361,10 +11361,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Campo di ordinamento nuovo rilevato: \"%s\" Campo di ordinamento vecchio \"%s\"."
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Riapplicazione dei grafici ai loro nuovi indici"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Duplicare il profilo dell'origine dati"
 
@@ -11462,11 +11458,6 @@ msgstr "Fissazione del campo 'metodo' errato per '%s', dato che viene definito '
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Trovate%s tabelle da convertire"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Trovati%s e%s ID dati locali orfani modificati per rimappare."
 
 #: lib/data_query.php
 #, php-format
@@ -11586,8 +11577,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Nuovo campo di ordinamento convalidato.  Ordina campo essere aggiornato."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Non sono state rilevate modifiche all'indice, saltando Re-Index e Poller Cache Re-popolazione."
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
