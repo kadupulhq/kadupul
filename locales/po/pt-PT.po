@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 03:53-0800\n"
+"POT-Creation-Date: 2026-11-09 06:49-0800\n"
 "PO-Revision-Date: 2024-04-20 19:18-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13984,6 +13984,11 @@ msgstr "Gravável necessário somente no momento da instalação"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Conjunto de Opções de Automação de Resequenciamento %s"
 
@@ -14110,6 +14115,14 @@ msgstr "As tabelas a seguir devem ser convertidas para UTF8 e InnoDB.  Selecione
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "A instalação não pode continuar porque não foi possível encontrar perfis."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."

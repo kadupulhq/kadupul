@@ -10,7 +10,7 @@ cmd_exec	./cli/float_rrdfiles.php:667		return proc_open($args, array(0 => STDIN,
 cmd_exec	./cli/push_out_hosts.php:50		passthru($command, $exit_code);
 cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:265				$result = exec($command, $output, $return_code);
-cmd_exec	./lib/database.php:2689	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
+cmd_exec	./lib/database.php:2794	    $process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1103	    $process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/functions.php:2600	                $output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:2618	                    $output = shell_exec($php . ' -q ' . $script);
@@ -24,7 +24,7 @@ cmd_exec	./lib/functions.php:7819	            exec(sprintf('grep :%s: /etc/passw
 cmd_exec	./lib/functions.php:8161	 * shell_exec() callers that already assemble the command string.
 cmd_exec	./lib/functions.php:8203	    $process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:8272	 * shell_exec() and expect a string return value.
-cmd_exec	./lib/installer.php:3730	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3779	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:902	            $process = @proc_open(
 cmd_exec	./lib/ping.php:163	                $result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:165	                $result = shell_exec('ping -m ' . ceil($this->timeout / 1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -324,7 +324,7 @@ dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . 
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:16	    include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/import.php:2336	    include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/installer.php:3876	                include_once($upgrade_file);
+dynamic_include	./lib/installer.php:3925	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:145	                        include_once($plugin_include);
 dynamic_include	./lib/plugins.php:469	    include_once($config['library_path'] . '/database.php');
