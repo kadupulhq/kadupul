@@ -5,6 +5,7 @@
       <file>Unit/ReindexPublicationOutcomeTest.php</file>
       <file>Unit/RemoteReindexOutcomeTest.php</file>
       <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
+      <file>Unit/Security/MarkerBeforeExitCheckTest.php</file>
       <file>Unit/MailPreflightTest.php</file>
       <file>Unit/Security/CrashConsistencyTest.php</file>
       <file>Unit/SnmpagentDisabledReceiverTest.php</file>
