@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 23:20-0800\n"
+"POT-Creation-Date: 2026-11-09 04:13-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -14011,6 +14011,11 @@ msgstr "Задължително записване само при време �
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Набор от опции за автоматизация за преоразмеряване %s"
 
@@ -14137,6 +14142,14 @@ msgstr "Следващите таблици трябва да се преобр�
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Инсталирането не може да продължи, тъй като не могат да бъдат намерени профили."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
