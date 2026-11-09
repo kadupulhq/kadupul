@@ -252,7 +252,7 @@ dynamic_include	./include/global.php:561	include_once($config['library_path'] . 
 dynamic_include	./include/global.php:562	include_once($config['include_path'] . '/csrf.php');
 dynamic_include	./include/global.php:563	include_once($config['include_path'] . '/vendor/autoload.php');
 dynamic_include	./include/global.php:564	include_once($config['include_path'] . '/request_profile.php');
-dynamic_include	./include/global_languages.php:156				require_once($providerFull);
+dynamic_include	./include/global_languages.php:162				require_once($providerFull);
 dynamic_include	./install/background.php:16	include_once($config['base_path'] . '/install/functions.php');
 dynamic_include	./install/background.php:17	include_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./install/background.php:18	include_once($config['base_path'] . '/lib/api_device.php');
@@ -486,8 +486,8 @@ fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:339	file_put_contents($newxmlfile, $new_xml);
 fs_write	./cli/splice_rrd.php:39			if (($f = @fopen($path, 'w'))) {
 fs_write	./cli/splice_rrd.php:875		return file_put_contents($xmlfile, $output);
-fs_write	./include/global_languages.php:939			file_put_contents($config['i18n_log'], $text . $eol, $mode);
-fs_write	./include/global_languages.php:947			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
+fs_write	./include/global_languages.php:889			file_put_contents($config['i18n_log'], $text . $eol, $mode);
+fs_write	./include/global_languages.php:897			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
 fs_write	./lib/api_device.php:3181	                        file_put_contents($new_xmlfile, $data);
 fs_write	./lib/boost.php:594	                            if ($fileptr = fopen($cache_file, 'rb')) {
 fs_write	./lib/boost.php:724	                        $handle    = @fopen($temp_file, 'xb');

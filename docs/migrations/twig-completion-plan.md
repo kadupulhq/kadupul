@@ -53,7 +53,7 @@ The native Twig layers already have no `global`, `$GLOBALS` or superglobal acces
 2. **Subdirectory installs.** `url_path` of `/cacti/` with the repository-root front controller. Expected: every link, form action and redirect stays under `/cacti/`. Owning task: slice recipe step R6 (`url_path` fixture in every route test).
 3. **Bulk action at the page-size maximum.** Selecting every row at the largest supported `rows` value and confirming a delete. Expected: one confirmation page, bounded queries, no per-row worker. Owning task: Task 0.4 query-count budget plus recipe step R5.
 4. **Offline or recovering remote collector.** A Twig page served on a collector whose `poller_id` is not the primary and whose main database is unreachable. Expected: the four-entry offline menu and a controlled 503, never a stack trace. Owning task: recipe step R6 (`collector_offline` case).
-5. **French locale through user preference.** `user_auth.lang` set to `fr`, not a test-forced locale. Expected: translated strings and pluralization on the migrated page. Owning task: recipe step R6 (`InventoryLocaleSubscriber` path).
+5. **French locale through user preference.** `user_auth.lang` set to `fr`, not a test-forced locale. Expected: translated strings and pluralization on the migrated page. Owning task: recipe step R6 (`LocaleSubscriber` path).
 
 ---
 
