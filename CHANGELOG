@@ -7,6 +7,7 @@ Cacti CHANGELOG
 -issue: Preserve automation discovery work across failures, isolate concurrent network runs, enforce deadlines, and acknowledge schedules only after completed discovery
 -issue: Retry the automation recovery regression tests with the run limit their work needs, so a slow runner no longer fails the deadline and later-batch retries intermittently
 -issue: Retry an automation discovery queue statement that InnoDB rolls back as a deadlock victim, so concurrent discovery workers no longer fail the whole run
+-issue: Retry discovery workers' direct device, hostname and discovered-device writes when InnoDB rolls them back as deadlock victims
 
 1.2.32
 -issue: Retain the previous poller cache on failed reads or transactional replacement and report rebuild failures; tables that are not InnoDB keep the 1.2.31 non-transactional writes
