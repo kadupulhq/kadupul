@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 13:23-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -341,12 +341,12 @@ msgstr "Không tìm thấy đồ thị tổng hợp"
 msgid "No Graphs Found"
 msgstr "Không tìm thấy đồ thị"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -1079,11 +1079,11 @@ msgstr "Bản sao"
 msgid "Enable"
 msgstr "Bật"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr "Bật"
 
@@ -1152,17 +1152,6 @@ msgstr "Định dạng tiêu đề:"
 msgid "rule_name"
 msgstr "Tên quy tắc"
 
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr "%d giờ"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, php-format
-msgid "%d Hours"
-msgstr "%d giờ"
-
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
@@ -1182,52 +1171,6 @@ msgstr "% d Giây"
 
 #: automation_networks.php
 #, php-format
-msgid "%d Thread"
-msgstr "% d Chủ đề"
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr "% d Chủ đề"
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "Một danh sách được phân tách bằng dấu cách của Máy chủ DNS thay thế để sử dụng cho độ phân giải DNS. Nếu trống, hệ điều hành pug sẽ được sử dụng để phân giải tên DNS."
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "Sau một thất bại ban đầu, số lần thử lại ping Kadupul sẽ thử trước khi thất bại."
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "Sau khi Giới hạn chạy được chọn, quá trình khám phá sẽ bị chấm dứt."
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr "Cho phép cùng sysName trên các máy chủ khác nhau"
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr "Máy chủ DNS thay thế"
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr "Tháng 4"
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr "Trang web liên kết"
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr "Tháng 8"
-
-#: automation_networks.php
-msgid "Automatically Add to Kadupul"
-msgstr "Tự động thêm vào Kadupul"
-
-#: automation_networks.php
-#, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "Không thể thực hiện khám phá cho mạng bị vô hiệu hóa &#39; %s&#39;"
 
@@ -1239,14 +1182,6 @@ msgstr "Không thể khởi động lại Discovery để khám phá trong tiế
 #: automation_networks.php
 msgid "Cancel Discovery"
 msgstr "Hủy khám phá"
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "Chọn Bộ thu thập dữ liệu / Xe đẩy Kadupul sẽ được sử dụng để thu thập dữ liệu từ Thiết bị này."
-
-#: automation_networks.php
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "Chọn Trang web Kadupul mà bạn muốn liên kết các Thiết bị được phát hiện."
 
 #: automation_networks.php
 msgid "Clear Filtered"
@@ -1282,129 +1217,12 @@ msgid "Data Collector"
 msgstr "Thu thập dữ liệu"
 
 #: automation_networks.php
-msgid "Day(s) of Week"
-msgstr "Ngày trong tuần"
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr "Ngày trong tháng"
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr "Ngày trong tuần"
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr "Tháng 12"
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr "Xác định tần số thu thập."
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "Xác định số lượng luồng để sử dụng để khám phá Phạm vi Mạng này."
-
-#: automation_networks.php
 msgid "Discover Now"
 msgstr "Khám phá ngay"
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr "Khám phá chủ đề"
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr "Thời gian khám phá"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "LRI: Mạng &#39; %s&#39; không hợp lệ."
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "LRI: Bạn phải chỉ định cả Tháng và Ngày trong Tháng. Vô hiệu hóa mạng %s!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "LRI: Bạn phải chỉ định Tháng, Tuần trong Tháng và Ngày trong Tuần. Vô hiệu hóa mạng %s!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "LRI: Bạn phải chỉ định ngày trong tuần. Vô hiệu hóa mạng %s!."
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr "Kích hoạt NetBIOS"
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr "Kích hoạt Phạm vi Mạng này."
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "Nhập IP hoặc FQDN của Máy chủ DNS"
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "Nhập Phạm vi Mạng hợp lệ được phân tách bằng dấu phẩy. Bạn có thể sử dụng địa chỉ IP, phạm vi Mạng như 192.168.1.0/24 hoặc 192.168.1.0/255.255.255.0 hoặc sử dụng các ký tự đại diện như 192.168. *. *."
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr "Tháng 2"
-
-#: automation_networks.php
-msgid "First"
-msgstr "Đầu tiên"
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "Đối với mọi Thiết bị mới được phát hiện có thể truy cập bằng SNMP và phù hợp với Quy tắc thiết bị, hãy thêm chúng vào Kadupul."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr "Thứ sáu"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr "Cài đặt chung"
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr "Đặt cho Mạng này một cái tên có ý nghĩa."
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
 msgstr "Rảnh rỗi"
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "Nếu một thiết bị được thêm vào Kadupul trước đó được tìm thấy, hãy chạy lại các truy vấn dữ liệu của nó."
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "Nếu được chọn, khi Mạng Tự động được quét, một báo cáo sẽ được gửi đến tài khoản Email Thông báo .."
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr "Tháng 1"
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr "Tháng 7"
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr "Tháng 6"
-
-#: automation_networks.php
-msgid "Last"
-msgstr "Cuối cùng"
 
 #: automation_networks.php
 msgid "Last Runtime"
@@ -1419,18 +1237,6 @@ msgid "Manual"
 msgstr "Thủ công"
 
 #: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr "Tháng 3"
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr "Tháng 5"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr "Thứ hai"
-
-#: automation_networks.php include/global_arrays.php
 msgid "Monthly"
 msgstr "Hàng tháng"
 
@@ -1439,36 +1245,12 @@ msgid "Monthly on Day"
 msgstr "Hàng tháng vào ngày"
 
 #: automation_networks.php
-msgid "Months of Year"
-msgstr "Tháng trong năm"
-
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "Tên"
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "Phạm vi Khám phá Mạng [chỉnh sửa: %s]"
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr "Phạm vi khám phá mạng [mới]"
-
-#: automation_networks.php
 msgid "Network Filters"
 msgstr "Bộ lọc mạng"
 
 #: automation_networks.php
 msgid "Network Name"
 msgstr "Tên mạng"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "Không tìm thấy tập tin"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Networks"
@@ -1480,10 +1262,6 @@ msgid "Never"
 msgstr "Không bao giờ"
 
 #: automation_networks.php
-msgid "New Network Discovery Range"
-msgstr "Phạm vi khám phá mạng mới"
-
-#: automation_networks.php
 msgid "Next Start"
 msgstr "Bắt đầu tiếp theo"
 
@@ -1492,81 +1270,17 @@ msgid "No Networks Found"
 msgstr "Không tìm thấy kết nối mạng"
 
 #: automation_networks.php
-msgid "Notification Email"
-msgstr "Email thông báo"
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr "Thông báo đã bật"
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr "Thông báo từ địa chỉ email"
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr "Thông báo từ tên"
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr "Thiết lập Thông báo"
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr "Tháng 11"
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr "Tháng 10"
-
-#: automation_networks.php
 msgid "Pending/Running/Done"
 msgstr "Đang chờ / Chạy / Xong"
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr "Phương pháp Ping"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr "Cảng Ping"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr "Số lượng thử lại Ping"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr "Giá trị thời gian chờ Ping"
 
 #: automation_networks.php
 msgid "Progress"
 msgstr "Tiến độ"
 
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr "Cài đặt khả năng hiển thị"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 msgid "Refresh"
 msgstr "Làm mới"
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr "Truy vấn dữ liệu chạy lại"
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr "Chạy lại mỗi"
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr "Phát hiện chạy lại cho Phạm vi Mạng này mỗi X."
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr "Chạy giới hạn"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1576,189 +1290,33 @@ msgstr "Chạy khám phá trong chế độ gỡ lỗi"
 msgid "Running"
 msgstr "Đang chạy"
 
-#: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
-msgstr "Nhận SNMP"
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr "Tùy chọn SNMP"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr "Thứ bảy"
-
 #: automation_networks.php
 msgid "Schedule"
 msgstr "Lịch trình"
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr "Lập lịch khởi hành"
-
-#: automation_networks.php
-msgid "Second"
-msgstr "Giây"
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "Chọn Tùy chọn SNMP để sử dụng để khám phá Phạm vi Mạng này."
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr "Chọn (các) ngày trong tháng"
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr "Chọn (các) ngày trong tuần"
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr "Chọn các ngày trong tuần"
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr "Chọn (các) tháng trong năm"
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr "Chọn (các) tuần trong tháng"
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr "Tháng 9"
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr "Ngày / giờ bắt đầu"
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr "Phạm vi mạng con"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr "Chủ nhật"
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr "Cổng TCP hoặc UDP để thử kết nối."
 
 #: automation_networks.php
 msgid "The Current Status of this Networks Discovery"
 msgstr "Trạng thái hiện tại của Khám phá Mạng này"
 
 #: automation_networks.php
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "Địa chỉ Email sẽ được sử dụng làm Email người gửi cho Email thông báo. Nếu để trống, Kadupul sẽ sử dụng Địa chỉ email thông báo tự động mặc định nếu được chỉ định, nếu không, nó sẽ sử dụng Địa chỉ email mặc định của hệ thống Kadupul"
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "Tên tài khoản Email sẽ được sử dụng làm tên người gửi cho Email thông báo. Nếu để trống, Kadupul sẽ sử dụng Tên thông báo tự động mặc định nếu được chỉ định, nếu không, nó sẽ sử dụng tên Email mặc định của hệ thống Kadupul"
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "Tài khoản Email sẽ được sử dụng để gửi Email thông báo tới."
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "Giá trị hết thời gian sử dụng cho máy chủ ICMP và ping UDP. Giá trị thời gian chờ SNMP của máy chủ này áp dụng cho ping SNMP."
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr "Các loại gói ping để gửi."
-
-#: automation_networks.php
-msgid "Third"
-msgstr "Thứ ba"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 msgid "Threads"
 msgstr "Chủ đề"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr "Thứ năm"
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr "Tổng số địa chỉ IP"
 
 #: automation_networks.php
 msgid "Total IPs"
 msgstr "Tổng số IP"
 
 #: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "Tổng số Địa chỉ IP có thể đánh địa chỉ trong Phạm vi Mạng này."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr "Thứ ba"
-
-#: automation_networks.php
 msgid "Up/SNMP Hosts"
 msgstr "Máy chủ lưu trữ lên / SNMP"
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "Sử dụng NetBIOS để cố gắng giải quyết tên máy chủ lưu trữ."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr "Thứ tư"
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr "Tuần (s) của tháng"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "Hàng tuần"
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "Ngày nào trong tháng của Phạm vi Mạng này sẽ được phát hiện."
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "Ngày nào trong tuần, Phạm vi Mạng này sẽ được phát hiện."
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "Tháng nào trong năm của Phạm vi Mạng này sẽ được phát hiện."
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "Tuần nào của Phạm vi Mạng này sẽ được phát hiện."
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr "Mạng này sẽ khám phá mục này bắt đầu lúc mấy giờ?"
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "Khi khám phá thiết bị, cho phép thêm tên hệ thống trùng lặp trên các máy chủ khác nhau"
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr "mỗi X ngày"
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr "mỗi X ngày."
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr "mỗi X tuần"
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr "mỗi X tuần."
-
-#: automation_networks.php
-msgid "every X."
-msgstr "mỗi X."
 
 #: automation_snmp.php data_queries.php utilities.php
 msgid "Action"
@@ -1838,6 +1396,12 @@ msgstr "Chuyển xuống"
 #: lib/html_reports.php tree.php
 msgid "Move Up"
 msgstr "Chuyển lên"
+
+#: automation_snmp.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
+msgid "Name"
+msgstr "Tên"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -4395,6 +3959,16 @@ msgstr "% d GByte"
 
 #: include/global_arrays.php
 #, php-format
+msgid "%d Hour"
+msgstr "%d giờ"
+
+#: include/global_arrays.php include/global_settings.php
+#, php-format
+msgid "%d Hours"
+msgstr "%d giờ"
+
+#: include/global_arrays.php
+#, php-format
 msgid "%d Lines"
 msgstr "% d Dòng"
 
@@ -4422,6 +3996,11 @@ msgstr "% d Tháng"
 #, php-format
 msgid "%d Months"
 msgstr "% d Tháng"
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
+msgstr "% d Chủ đề"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -4650,6 +4229,10 @@ msgid "Apr"
 msgstr "Tháng 4"
 
 #: include/global_arrays.php
+msgid "April"
+msgstr "Tháng 4"
+
+#: include/global_arrays.php
 msgid "Arabic"
 msgstr "Tiếng A-rập"
 
@@ -4668,6 +4251,10 @@ msgstr "Hình ảnh PNG đính kèm"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
+msgstr "Tháng 8"
+
+#: include/global_arrays.php
+msgid "August"
 msgstr "Tháng 8"
 
 #: include/global_arrays.php include/global_settings.php
@@ -4985,6 +4572,10 @@ msgid "Dec"
 msgstr "Tháng 12"
 
 #: include/global_arrays.php
+msgid "December"
+msgstr "Tháng 12"
+
+#: include/global_arrays.php
 msgid "Demand"
 msgstr "Yêu cầu"
 
@@ -5111,6 +4702,10 @@ msgid "Feb"
 msgstr "Tháng 2"
 
 #: include/global_arrays.php
+msgid "February"
+msgstr "Tháng 2"
+
+#: include/global_arrays.php
 msgid "Fixed String"
 msgstr "Chuỗi cố định"
 
@@ -5122,6 +4717,10 @@ msgstr "Pháp"
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "T6"
+
+#: include/global_arrays.php
+msgid "Friday"
+msgstr "Thứ sáu"
 
 #: include/global_arrays.php
 msgid "Function"
@@ -5333,6 +4932,10 @@ msgid "Jan"
 msgstr "Tháng 1"
 
 #: include/global_arrays.php
+msgid "January"
+msgstr "Tháng 1"
+
+#: include/global_arrays.php
 msgid "Japanese"
 msgstr "Tiếng Nhật"
 
@@ -5342,8 +4945,16 @@ msgid "Jul"
 msgstr "Tháng 7"
 
 #: include/global_arrays.php
+msgid "July"
+msgstr "Tháng 7"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
+msgstr "Tháng 6"
+
+#: include/global_arrays.php
+msgid "June"
 msgstr "Tháng 6"
 
 #: include/global_arrays.php
@@ -5529,6 +5140,14 @@ msgid "Mar"
 msgstr "Tháng 3"
 
 #: include/global_arrays.php
+msgid "March"
+msgstr "Tháng 3"
+
+#: include/global_arrays.php
+msgid "May"
+msgstr "Tháng 5"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Tháng 5"
@@ -5545,6 +5164,10 @@ msgstr "Hiện đại"
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "T2"
+
+#: include/global_arrays.php
+msgid "Monday"
+msgstr "Thứ hai"
 
 #: include/global_arrays.php
 msgid "Mono"
@@ -5631,6 +5254,10 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Tháng 11"
 
+#: include/global_arrays.php
+msgid "November"
+msgstr "Tháng 11"
+
 #: include/global_arrays.php tree.php
 msgid "Numeric"
 msgstr "Số"
@@ -5642,6 +5269,10 @@ msgstr "Đặt hàng số"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
+msgstr "Tháng 10"
+
+#: include/global_arrays.php
+msgid "October"
 msgstr "Tháng 10"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
@@ -5847,6 +5478,10 @@ msgid "SNMP Field Value (From User)"
 msgstr "Giá trị trường SNMP (Từ người dùng)"
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr "Nhận SNMP"
+
+#: include/global_arrays.php
 msgid "SNMP Output Type (Dropdown)"
 msgstr "Loại đầu ra SNMP (thả xuống)"
 
@@ -5870,6 +5505,10 @@ msgstr "Cụm mật khẩu SNMPv3 phải có 8 ký tự trở lên."
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "T7"
+
+#: include/global_arrays.php
+msgid "Saturday"
+msgstr "Thứ bảy"
 
 #: include/global_arrays.php
 msgid "Save Failed due to field input errors (Check red fields)."
@@ -5918,6 +5557,10 @@ msgstr "Gửi ngay"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
+msgstr "Tháng 9"
+
+#: include/global_arrays.php
+msgid "September"
 msgstr "Tháng 9"
 
 #: include/global_arrays.php lib/html.php
@@ -5988,6 +5631,10 @@ msgstr "Giá trị đề xuất không được nhập. Vui lòng nhập một g
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "CN"
+
+#: include/global_arrays.php
+msgid "Sunday"
+msgstr "Chủ nhật"
 
 #: include/global_arrays.php
 msgid "Sunrise"
@@ -6088,6 +5735,10 @@ msgid "Thu"
 msgstr "T5"
 
 #: include/global_arrays.php
+msgid "Thursday"
+msgstr "Thứ năm"
+
+#: include/global_arrays.php
 msgid "Timestamp"
 msgstr "Dấu thời gian"
 
@@ -6131,6 +5782,10 @@ msgstr "Thử"
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "T3"
+
+#: include/global_arrays.php
+msgid "Tuesday"
+msgstr "Thứ ba"
 
 #: include/global_arrays.php
 msgid "Turkish"
@@ -6322,6 +5977,10 @@ msgstr ""
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "T4"
+
+#: include/global_arrays.php
+msgid "Wednesday"
+msgstr "Thứ tư"
 
 #: include/global_arrays.php
 msgid "Week(s)"
@@ -6636,6 +6295,10 @@ msgid "Additional Options"
 msgstr "Tùy chọn bổ sung"
 
 #: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "Sau một thất bại ban đầu, số lần thử lại ping Kadupul sẽ thử trước khi thất bại."
+
+#: include/global_form.php
 msgid "Aggregate Graph Settings"
 msgstr "Cài đặt đồ thị tổng hợp"
 
@@ -6799,6 +6462,10 @@ msgstr "Chọn Mẫu thiết bị để sử dụng để xác định Mẫu bi�
 #: include/global_form.php
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "Chọn Mẫu biểu đồ để sử dụng cho mục Mẫu biểu đồ truy vấn dữ liệu này."
+
+#: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "Chọn Bộ thu thập dữ liệu / Xe đẩy Kadupul sẽ được sử dụng để thu thập dữ liệu từ Thiết bị này."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -7026,6 +6693,10 @@ msgstr "Tùy chọn thiết bị chung"
 #: include/global_form.php
 msgid "General SNMP Entity Options"
 msgstr "Tùy chọn thực thể SNMP chung"
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
+msgstr "Cài đặt chung"
 
 #: include/global_form.php
 msgid "Give this SNMP entity a meaningful description."
@@ -7326,6 +6997,22 @@ msgid "Pad text so that legend and graph data always line up. Note: this could c
 msgstr "Văn bản pad để truyền thuyết và dữ liệu đồ thị luôn xếp hàng. Lưu ý: điều này có thể khiến đồ thị mất nhiều thời gian hơn để hiển thị do chi phí lớn hơn. Ngoài ra Auto Padding có thể không chính xác trên tất cả các loại biểu đồ, ghi nhãn nhất quán thường giúp."
 
 #: include/global_form.php
+msgid "Ping Method"
+msgstr "Phương pháp Ping"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr "Cảng Ping"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr "Số lượng thử lại Ping"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr "Giá trị thời gian chờ Ping"
+
+#: include/global_form.php
 msgid "Place the legend at the given side of the graph."
 msgstr "Đặt chú thích ở phía đã cho của đồ thị."
 
@@ -7462,6 +7149,10 @@ msgid "SNMP Message Type"
 msgstr "Loại tin nhắn SNMP"
 
 #: include/global_form.php
+msgid "SNMP Options"
+msgstr "Tùy chọn SNMP"
+
+#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "Mật khẩu SNMP (v3)"
 
@@ -7576,6 +7267,10 @@ msgstr "Mẫu biểu đồ nguồn"
 #: include/global_form.php
 msgid "Special Type Code"
 msgstr "Mã loại đặc biệt"
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr "Cổng TCP hoặc UDP để thử kết nối."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7776,6 +7471,10 @@ msgstr "Kết quả kiểm tra xác minh khoảng trắng cho Phương thức nh
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
 msgstr "Tập lệnh / nguồn được sử dụng để thu thập dữ liệu cho nguồn dữ liệu này."
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "Giá trị hết thời gian sử dụng cho máy chủ ICMP và ping UDP. Giá trị thời gian chờ SNMP của máy chủ này áp dụng cho ping SNMP."
 
 #: include/global_form.php
 msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."

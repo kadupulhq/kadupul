@@ -331,7 +331,6 @@ $pages = array(
             'id' => '1', 'name' => 'Traffic <rule>', 'snmp_query_id' => '1', 'graph_type_id' => '2', 'enabled' => 'on',
         ))),
     ))),
-    'automation_networks-edit' => $page('automation_networks.php', array('action' => 'edit')),
     'automation_snmp-edit' => $page('automation_snmp.php', array('action' => 'edit')),
     'automation_snmp-item_edit' => $page('automation_snmp.php', array('action' => 'item_edit', 'id' => '1'), array(
         array('sql' => 'FROM automation_snmp WHERE id = ?', 'params' => array(1), 'rows' => array(array('id' => '1', 'name' => 'Default <snmp>'))),

@@ -125,3 +125,24 @@ PHP;
 
     expect($saved)->toBe(array('snmp_community' => 'public', 'snmp_username' => 'operator', 'snmp_password' => 'password1', 'snmp_priv_passphrase' => 'privphrase', 'snmp_engine_id' => '8000'));
 });
+
+test('a replayed discovery network save writes nothing', function () {
+    // The edit form moved to Symfony; an old legacy form posted again must not save.
+    $program = 'namespace Probe;' . automation_preview_source('automation_networks.php', 'form_save')
+        . <<<'PHP'
+$_POST = array('save_component_network' => '1', 'id' => '0', 'name' => 'Replayed', 'subnet_range' => '10.0.0.0/8', 'enabled' => 'on');
+function __($text) { return $text; }
+function html_escape($text) { return ''; }
+function http_response_code($code) { $GLOBALS['status'] = $code; }
+function header($value) { $GLOBALS['headers'][] = $value; }
+function sql_save(...$args) { $GLOBALS['saved'] = true; }
+function api_networks_save(...$args) { $GLOBALS['saved'] = true; }
+register_shutdown_function(static function (): void {
+    echo json_encode(array('status' => $GLOBALS['status'] ?? null, 'headers' => $GLOBALS['headers'] ?? array(), 'saved' => $GLOBALS['saved'] ?? false));
+});
+form_save();
+PHP;
+    $state = automation_preview_run($program);
+
+    expect($state)->toBe(array('status' => 409, 'headers' => array('Cache-Control: private, no-store'), 'saved' => false));
+});

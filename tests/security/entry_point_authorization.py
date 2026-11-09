@@ -248,6 +248,10 @@ def route_fixtures(rig, rows, ids):
     if present('automation/templates'):
         template = int(rig.sql("INSERT INTO automation_templates (host_template,availability_method,sysDescr,sequence) SELECT MIN(id),2,'entry-sweep',1 FROM host_template; SELECT LAST_INSERT_ID()").strip())
         ids['automation/templates'] = {'id': template}
+    if present('automation/networks/'):
+        # Disabled and manual, so the sweep never schedules a discovery run.
+        network = int(rig.sql("INSERT INTO automation_networks (name,subnet_range,enabled,sched_type,snmp_id) SELECT 'entry-sweep','192.0.2.1','',1,MIN(id) FROM automation_snmp; SELECT LAST_INSERT_ID()").strip())
+        ids['automation/networks'] = {'id': network}
     if present('aggregate-templates'):
         template = int(rig.sql("INSERT INTO aggregate_graph_templates (name,graph_template_id,gprint_prefix,graph_type,total,total_type,total_prefix,order_type,user_id) SELECT 'entry-sweep',MIN(gt.id),'',1,0,1,'',0,1 FROM graph_templates gt JOIN graph_templates_graph g ON g.graph_template_id=gt.id WHERE g.local_graph_id=0; SELECT LAST_INSERT_ID()").strip())
         rig.sql(f'INSERT INTO aggregate_graph_templates_graph (aggregate_template_id) VALUES ({template})')

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 13:23-0800\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -341,12 +341,12 @@ msgstr "Geen geaggregeerde grafieken gevonden"
 msgid "No Graphs Found"
 msgstr "Geen grafieken gevonden"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -1077,11 +1077,11 @@ msgstr "Dupliceer"
 msgid "Enable"
 msgstr "Inschakelen"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr "Ingeschakeld"
 
@@ -1150,17 +1150,6 @@ msgstr "Indeling titel"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr "%d Uur"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, php-format
-msgid "%d Hours"
-msgstr "%d Uren"
-
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
@@ -1180,52 +1169,6 @@ msgstr "%d Seconden"
 
 #: automation_networks.php
 #, php-format
-msgid "%d Thread"
-msgstr "%d Thread"
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr "%d Threads"
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "Een spatie gescheiden lijst van alternatieve DNS servers voor het ophalen van DNS gegevens. Indien niet opgegeven zal de poller de DNS servers van het OS gebruiken om DNS namen te resolven."
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "Het aantal pogingen Kadupul opnieuw zal proberen te pingen."
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "Na de opgegeven draaitijd zal de scanopdracht worden gestopt."
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr "Sta dezelfde sysName toe op verschillende hosts"
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr "Alternatieve DNS servers"
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr "April"
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr "Gekoppelde locatie"
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr "Augustus"
-
-#: automation_networks.php
-msgid "Automatically Add to Kadupul"
-msgstr "Automatisch toevoegen aan Kadupul"
-
-#: automation_networks.php
-#, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "Kan geen Discovery for Disabled Network '%s' uitvoeren"
 
@@ -1237,14 +1180,6 @@ msgstr "Kan Discovery for Discovery in Progress niet herstarten voor Discovery i
 #: automation_networks.php
 msgid "Cancel Discovery"
 msgstr "Annuleer zoeken"
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "Kies de Kadupul Data Collector/poller die gebruikt dient te worden voor het ophalen van informatie van dit apparaat."
-
-#: automation_networks.php
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "Kies de Kadupul locatie die u wilt koppelen aan de gevonden apparaten."
 
 #: automation_networks.php
 msgid "Clear Filtered"
@@ -1280,129 +1215,12 @@ msgid "Data Collector"
 msgstr "Data Collector"
 
 #: automation_networks.php
-msgid "Day(s) of Week"
-msgstr "Dag(en) per week"
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr "Dagen per maand"
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr "Dagen per week"
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr "December"
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr "Definieer een verzamelfrequentie."
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "Definieer het aantal threads om te gebruiken voor het scannen van dit netwerk."
-
-#: automation_networks.php
 msgid "Discover Now"
 msgstr "Zoek nu"
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr "Aantal threads"
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr "Scan tijd"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "FOUT: Netwerk '%s' is ongeldig."
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "FOUT: U moet zowel een maand als de dag(en) van de maand specificeren. Het netwerk %s wordt uitgeschakeld!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "FOUT: U moet een maand, week van de maand en dagen van de week specificeren. Het netwerk %s wordt uitgeschakeld!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "FOUT: U moet een dag van de week specificeren. Het netwerk %s wordt uitgeschakeld!."
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr "Activeer NetBIOS"
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr "Activeer dit netwerksegment."
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "Voer IPs or FQDNs in van DNS servers"
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "Voer een valide netwerkbereik in, gescheiden met komma's. U mag een IP adres, netwerkbereik zoals 192.168.1.0/24 of 192.168.1.0/255.255.255.0 gebruiken, of gebruik maken van wildcards zoals 192.168.*.*"
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr "Februari"
-
-#: automation_networks.php
-msgid "First"
-msgstr "Eerste"
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "Ieder nieuw ontdekt apparaat dat bereikbaar is via SNMP en dat aan de apparaatregels voldoet, toevoegen aan Kadupul."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr "Vrijdag"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr "Algemene Instellingen"
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr "Geef dit netwerk een naam."
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
 msgstr "Inactief"
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "Als een apparaat dat eerder is toegevoegd aan Kadupul, is gevonden, voer dan de data queries opnieuw uit."
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "Als deze optie is aangevinkt, wordt bij het scannen van het automatiseringsnetwerk een rapport naar de e-mailaccount voor kennisgeving verzonden."
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr "Januari"
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr "Juli"
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr "Juni"
-
-#: automation_networks.php
-msgid "Last"
-msgstr "Laatste"
 
 #: automation_networks.php
 msgid "Last Runtime"
@@ -1417,18 +1235,6 @@ msgid "Manual"
 msgstr "Handmatig"
 
 #: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr "Maart"
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr "Mei"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr "Maandag"
-
-#: automation_networks.php include/global_arrays.php
 msgid "Monthly"
 msgstr "Maandelijks"
 
@@ -1437,36 +1243,12 @@ msgid "Monthly on Day"
 msgstr "Maandelijks op dag"
 
 #: automation_networks.php
-msgid "Months of Year"
-msgstr "Maanden per jaar"
-
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "Naam"
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "Zoek netwerk binnen bereik [wijzig: %s]"
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr "Zoek netwerk binnen bereik [nieuw]"
-
-#: automation_networks.php
 msgid "Network Filters"
 msgstr "Netwerkfilters"
 
 #: automation_networks.php
 msgid "Network Name"
 msgstr "Netwerknaam"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "Bestand niet gevonden"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Networks"
@@ -1478,10 +1260,6 @@ msgid "Never"
 msgstr "Nooit"
 
 #: automation_networks.php
-msgid "New Network Discovery Range"
-msgstr "Nieuwe netwerk zoek bereik"
-
-#: automation_networks.php
 msgid "Next Start"
 msgstr "Volgende start"
 
@@ -1490,81 +1268,17 @@ msgid "No Networks Found"
 msgstr "Geen netwerken gevonden"
 
 #: automation_networks.php
-msgid "Notification Email"
-msgstr "Notificatie email"
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr "Kennisgeving ingeschakeld"
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr "Kennisgeving van e-mail adres"
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr "Kennisgeving van naam"
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr "Notificatie instellingen"
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr "November"
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr "Oktober"
-
-#: automation_networks.php
 msgid "Pending/Running/Done"
 msgstr "Wachtende/Actief/Gereed"
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr "Ping methode"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr "Pingpoort"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr "Aantal keren opnieuw proberen te pingen"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr "Ping timeout waarde"
 
 #: automation_networks.php
 msgid "Progress"
 msgstr "Voortgang"
 
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr "Bereikbaarheidsinstellingen"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 msgid "Refresh"
 msgstr "Vernieuwen"
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr "Data Queries opnieuw uitvoeren"
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr "Opnieuw uitvoeren iedere"
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr "Scan opnieuw uitvoeren voor dit netwerk iedere X."
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr "Draaitijd"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1574,190 +1288,33 @@ msgstr "Uitvoeren ontdekken in debug-modus"
 msgid "Running"
 msgstr "Actief"
 
-#: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
-msgstr "SNMP get"
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr "SNMP opties"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr "Zaterdag"
-
 #: automation_networks.php
 msgid "Schedule"
 msgstr "Schema"
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr "Schematype"
-
-#: automation_networks.php
-msgid "Second"
-msgstr "Tweede"
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "Selecteer de SNMP opties die voor deze netwerk scan gebruikt dienen te worden."
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr "Selecteer de dag(en) van de maand"
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr "Selecteer de dag(en) van de week"
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr "Selecteer de dag(en) van de week"
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr "Selecteer de maand(en) van het jaar"
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr "Selecteer de we(e)k(en) van de maand"
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr "September"
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr "Startdatum/tijd"
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr "Subnet bereik"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr "Zondag"
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr "TCP of UDP poort voor de verbinding."
 
 #: automation_networks.php
 msgid "The Current Status of this Networks Discovery"
 msgstr "De huidige status van de netwerkscan"
 
 #: automation_networks.php
-#, fuzzy
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "Het e-mailadres dat moet worden gebruikt als afzenders-e-mail voor de notificatie-e-mail.  Indien leeg gelaten, zal Kadupul het standaard E-mailadres van de Automatiseringsmelding gebruiken indien gespecificeerd, anders zal het het standaard E-mailadres van het Kadupul-systeem gebruiken."
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "De naam van de e-mailaccount die moet worden gebruikt als de naam van de afzender voor de kennisgevingsemail.  Indien leeg gelaten, zal Kadupul de standaard naam van de Automatiseringsmelding gebruiken indien gespecificeerd, anders zal het de standaard e-mailnaam van het Kadupul-systeem gebruiken."
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "Het e-mailaccount dat gebruikt moet worden om de kennisgevingsmail naartoe te sturen."
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "De timeout waarde die gebruikt moet worden voor de host ICMP en UDP ping. De host SNMP timeout waarde geldt voor de SNMP ping."
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr "Het type pingpakket dat moet worden verzonden."
-
-#: automation_networks.php
-msgid "Third"
-msgstr "Derde"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 msgid "Threads"
 msgstr "Threads"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr "Donderdag"
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr "Totaal aantal IP adressen"
 
 #: automation_networks.php
 msgid "Total IPs"
 msgstr "Totaal aantal IP adressen"
 
 #: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "Totaal te adresseren IP adressen in dit netwerk."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr "Dinsdag"
-
-#: automation_networks.php
 msgid "Up/SNMP Hosts"
 msgstr "Actieve/SNMP hosts"
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "Gebruik NetBIOS om de hostname te herkennen van online hosts."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr "Woensdag"
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr "We(e)k(en) per maand"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "Wekelijks"
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "Welke dag(en) van de maand moet dit netwerk worden gescant."
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "Welke dag(en) van de week moet dit netwerk worden gescant."
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "Welke maand(en) van het jaar moet dit netwerk worden gescant."
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "Welke we(e)k(en) van de maand moet dit netwerk worden gescant."
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr "Om welke tijd moet deze netwerkscan starten?"
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "Bij het ontdekken van apparaten, laat toe om dubbele sysnamen toe te voegen op verschillende hosts"
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr "iedere X dagen"
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr "iedere X dagen."
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr "iedere X weken"
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr "iedere X weken."
-
-#: automation_networks.php
-msgid "every X."
-msgstr "iedere X."
 
 #: automation_snmp.php data_queries.php utilities.php
 msgid "Action"
@@ -1837,6 +1394,12 @@ msgstr "Naar beneden"
 #: lib/html_reports.php tree.php
 msgid "Move Up"
 msgstr "Naar boven"
+
+#: automation_snmp.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
+msgid "Name"
+msgstr "Naam"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -4418,6 +3981,16 @@ msgstr "%d GBytes"
 
 #: include/global_arrays.php
 #, php-format
+msgid "%d Hour"
+msgstr "%d Uur"
+
+#: include/global_arrays.php include/global_settings.php
+#, php-format
+msgid "%d Hours"
+msgstr "%d Uren"
+
+#: include/global_arrays.php
+#, php-format
 msgid "%d Lines"
 msgstr "%d Regels"
 
@@ -4445,6 +4018,11 @@ msgstr "%d Maand"
 #, php-format
 msgid "%d Months"
 msgstr "%d Maanden"
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
+msgstr "%d Threads"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -4672,6 +4250,10 @@ msgid "Apr"
 msgstr "Apr"
 
 #: include/global_arrays.php
+msgid "April"
+msgstr "April"
+
+#: include/global_arrays.php
 msgid "Arabic"
 msgstr "Arabisch"
 
@@ -4691,6 +4273,10 @@ msgstr "Bijgevoegd PNG afbeelding"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Aug"
+
+#: include/global_arrays.php
+msgid "August"
+msgstr "Augustus"
 
 #: include/global_arrays.php include/global_settings.php
 msgid "Automation"
@@ -5007,6 +4593,10 @@ msgid "Dec"
 msgstr "Dec"
 
 #: include/global_arrays.php
+msgid "December"
+msgstr "December"
+
+#: include/global_arrays.php
 msgid "Demand"
 msgstr "Vraag"
 
@@ -5133,6 +4723,10 @@ msgid "Feb"
 msgstr "Feb"
 
 #: include/global_arrays.php
+msgid "February"
+msgstr "Februari"
+
+#: include/global_arrays.php
 msgid "Fixed String"
 msgstr "Vaste waarde"
 
@@ -5144,6 +4738,10 @@ msgstr "Frans"
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "Vr"
+
+#: include/global_arrays.php
+msgid "Friday"
+msgstr "Vrijdag"
 
 #: include/global_arrays.php
 msgid "Function"
@@ -5355,6 +4953,10 @@ msgid "Jan"
 msgstr "Jan"
 
 #: include/global_arrays.php
+msgid "January"
+msgstr "Januari"
+
+#: include/global_arrays.php
 msgid "Japanese"
 msgstr "Japans"
 
@@ -5364,9 +4966,17 @@ msgid "Jul"
 msgstr "Jul"
 
 #: include/global_arrays.php
+msgid "July"
+msgstr "Juli"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Jun"
+
+#: include/global_arrays.php
+msgid "June"
+msgstr "Juni"
 
 #: include/global_arrays.php
 msgid "Justified"
@@ -5547,6 +5157,14 @@ msgid "Mar"
 msgstr "Maa"
 
 #: include/global_arrays.php
+msgid "March"
+msgstr "Maart"
+
+#: include/global_arrays.php
+msgid "May"
+msgstr "Mei"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Mei"
@@ -5563,6 +5181,10 @@ msgstr "Modern"
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "Ma"
+
+#: include/global_arrays.php
+msgid "Monday"
+msgstr "Maandag"
 
 #: include/global_arrays.php
 msgid "Mono"
@@ -5649,6 +5271,10 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Nov"
 
+#: include/global_arrays.php
+msgid "November"
+msgstr "November"
+
 #: include/global_arrays.php tree.php
 msgid "Numeric"
 msgstr "Numeriek"
@@ -5661,6 +5287,10 @@ msgstr "Numerieke sortering"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Okt"
+
+#: include/global_arrays.php
+msgid "October"
+msgstr "Oktober"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
 msgid "Operator"
@@ -5865,6 +5495,10 @@ msgid "SNMP Field Value (From User)"
 msgstr "SNMP veld waarde (Van gebruiker)"
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr "SNMP get"
+
+#: include/global_arrays.php
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP uitvoer type (Dropdown)"
 
@@ -5888,6 +5522,10 @@ msgstr "SNMPv3 Auth wachtwoord moet minimaal 8 karakters lang zijn."
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "Za"
+
+#: include/global_arrays.php
+msgid "Saturday"
+msgstr "Zaterdag"
 
 #: include/global_arrays.php
 msgid "Save Failed due to field input errors (Check red fields)."
@@ -5937,6 +5575,10 @@ msgstr "Nu versturen"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Sep"
+
+#: include/global_arrays.php
+msgid "September"
+msgstr "September"
 
 #: include/global_arrays.php lib/html.php
 msgid "Settings"
@@ -6006,6 +5648,10 @@ msgstr "De voorgestelde waarde is niet ingevoerd.  Voer een voorgestelde waarde 
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Zo"
+
+#: include/global_arrays.php
+msgid "Sunday"
+msgstr "Zondag"
 
 #: include/global_arrays.php
 msgid "Sunrise"
@@ -6106,6 +5752,10 @@ msgid "Thu"
 msgstr "Do"
 
 #: include/global_arrays.php
+msgid "Thursday"
+msgstr "Donderdag"
+
+#: include/global_arrays.php
 msgid "Timestamp"
 msgstr "Timestamp"
 
@@ -6149,6 +5799,10 @@ msgstr "Proberen"
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "Di"
+
+#: include/global_arrays.php
+msgid "Tuesday"
+msgstr "Dinsdag"
 
 #: include/global_arrays.php
 msgid "Turkish"
@@ -6340,6 +5994,10 @@ msgstr "Webservergerelateerd"
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "Wo"
+
+#: include/global_arrays.php
+msgid "Wednesday"
+msgstr "Woensdag"
 
 #: include/global_arrays.php
 msgid "Week(s)"
@@ -6654,6 +6312,10 @@ msgid "Additional Options"
 msgstr "Additionele opties"
 
 #: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "Het aantal pogingen Kadupul opnieuw zal proberen te pingen."
+
+#: include/global_form.php
 msgid "Aggregate Graph Settings"
 msgstr "Geaggregeerde grafiek instellingen"
 
@@ -6817,6 +6479,10 @@ msgstr "Kies het apparaat template om de standaard grafiektemplates en data quer
 #: include/global_form.php
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "Kies het Grafieksjabloon om te gebruiken voor dit gegevenssjabloonitem."
+
+#: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "Kies de Kadupul Data Collector/poller die gebruikt dient te worden voor het ophalen van informatie van dit apparaat."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -7044,6 +6710,10 @@ msgstr "Algemene apparaat opties"
 #: include/global_form.php
 msgid "General SNMP Entity Options"
 msgstr "Algemene SNMP-opties voor entiteiten"
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
+msgstr "Algemene Instellingen"
 
 #: include/global_form.php
 msgid "Give this SNMP entity a meaningful description."
@@ -7344,6 +7014,22 @@ msgid "Pad text so that legend and graph data always line up. Note: this could c
 msgstr "Pad tekst, zodat legenda en grafiekdata altijd op één lijn staan. Opmerking: dit kan tot gevolg hebben dat de weergave van grafieken langer duurt vanwege de grotere overhead. Ook kan het zijn dat de automatische vulling niet op alle soorten grafieken nauwkeurig is, een consistente etikettering helpt meestal wel."
 
 #: include/global_form.php
+msgid "Ping Method"
+msgstr "Ping methode"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr "Pingpoort"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr "Aantal keren opnieuw proberen te pingen"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr "Ping timeout waarde"
+
+#: include/global_form.php
 msgid "Place the legend at the given side of the graph."
 msgstr "Plaats de legende aan de gegeven kant van de grafiek."
 
@@ -7480,6 +7166,10 @@ msgid "SNMP Message Type"
 msgstr "SNMP-berichttype"
 
 #: include/global_form.php
+msgid "SNMP Options"
+msgstr "SNMP opties"
+
+#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP wachtwoord (v3)"
 
@@ -7594,6 +7284,10 @@ msgstr "Bron Grafieksjabloon"
 #: include/global_form.php
 msgid "Special Type Code"
 msgstr "Speciaal type code"
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr "TCP of UDP poort voor de verbinding."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7794,6 +7488,10 @@ msgstr "Het resultaat van de Whitespace-verificatie voor de specifieke invoermet
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
 msgstr "Het script/bron dat wordt gebruikt om gegevens voor deze gegevensbron te verzamelen."
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "De timeout waarde die gebruikt moet worden voor de host ICMP en UDP ping. De host SNMP timeout waarde geldt voor de SNMP ping."
 
 #: include/global_form.php
 msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."

@@ -1,0 +1,62 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (network ? 'Edit Discovery Network' : 'Add Discovery Network')|trans({}, 'discovery_network') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() of a fixed route without parameters. #}
+    <p><a href="{{ path('admin_networks') }}">{{ 'Back to Networks'|trans({}, 'discovery_network') }}</a></p>
+    <h1>{% if network %}{{ 'Network Discovery Range [edit: %name%]'|trans({'%name%': network.name}, 'discovery_network') }}{% else %}{{ 'Network Discovery Range [new]'|trans({}, 'discovery_network') }}{% endif %}</h1>
+    {% if saved %}<p role="status">{{ 'Discovery network saved.'|trans({}, 'discovery_network') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <fieldset>
+            <legend>{{ 'General Settings'|trans({}, 'discovery_network') }}</legend>
+            {{ form_row(form.name) }}
+            {{ form_row(form.poller_id) }}
+            {{ form_row(form.site_id) }}
+            {{ form_row(form.subnet_range) }}
+            {% if network %}<p>{{ 'Total IP Addresses: %count%'|trans({'%count%': network.totalIps|console_number(app.request.locale)}, 'discovery_network') }}</p>{% endif %}
+            {{ form_row(form.dns_servers) }}
+            {{ form_row(form.sched_type) }}
+            {{ form_row(form.threads) }}
+            {{ form_row(form.run_limit) }}
+            {{ form_row(form.enabled) }}
+            {{ form_row(form.enable_netbios) }}
+            {{ form_row(form.add_to_cacti) }}
+            {{ form_row(form.same_sysname) }}
+            {{ form_row(form.rerun_data_queries) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'Notification Settings'|trans({}, 'discovery_network') }}</legend>
+            {{ form_row(form.notification_enabled) }}
+            {{ form_row(form.notification_email) }}
+            {{ form_row(form.notification_fromname) }}
+            {{ form_row(form.notification_fromemail) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'Discovery Timing'|trans({}, 'discovery_network') }}</legend>
+            <p>{{ 'Daily and Weekly schedules use the start and Rerun Every; Weekly also uses Days of Week. Monthly uses Months and Days of Month; Monthly on Day uses Months, Weeks of Month and Days of Week.'|trans({}, 'discovery_network') }}</p>
+            {{ form_row(form.start_at) }}
+            {{ form_row(form.recur_every) }}
+            {{ form_row(form.day_of_week) }}
+            {{ form_row(form.month) }}
+            {{ form_row(form.day_of_month) }}
+            {{ form_row(form.monthly_week) }}
+            {{ form_row(form.monthly_day) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'Reachability Settings'|trans({}, 'discovery_network') }}</legend>
+            {{ form_row(form.snmp_id) }}
+            {{ form_row(form.ping_method) }}
+            {{ form_row(form.ping_port) }}
+            {{ form_row(form.ping_timeout) }}
+            {{ form_row(form.ping_retries) }}
+        </fieldset>
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'discovery_network') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
