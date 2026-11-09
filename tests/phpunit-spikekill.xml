@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Spikekill">
       <file>Unit/Core/Rrd/RrdWindowsOneShotTest.php</file>
+      <file>Unit/Security/MarkerBeforeExitCheckTest.php</file>
       <file>Unit/MailPreflightTest.php</file>
       <file>Unit/Security/CrashConsistencyTest.php</file>
       <file>Unit/SnmpagentDisabledReceiverTest.php</file>
@@ -14,8 +15,11 @@
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
       <file>Unit/UnpolledSnmpMetadataTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
+      <file>Unit/Security/Shell/SpikekillUnknownLimitsTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
+      <file>Unit/Core/Poller/ReplicateOutTableReplacementTest.php</file>
       <file>Unit/ObsoleteDeleteActionTest.php</file>
+      <file>Unit/DataQueryOrphanStateTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
       <file>Unit/Base1024GraphDivisorTest.php</file>
