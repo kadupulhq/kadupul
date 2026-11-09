@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 11:12-0800\n"
+"POT-Creation-Date: 2026-11-09 12:32-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11272,10 +11272,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "감지 된 새 정렬 필드 : &#39; %s&#39;이전 정렬 필드 &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "그래프를 새 인덱스로 다시 매핑"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "중복 데이터 소스 프로필"
 
@@ -11373,11 +11369,6 @@ msgstr "&#39;rewrite_index&#39;또는 &#39;oid_suffix&#39;가 정의되었으므
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "변환 할 %s 테이블을 찾았습니다."
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "다시 매핑 할 변경된 %s 및 %s 고아 로컬 데이터 ID를 찾았습니다."
 
 #: lib/data_query.php
 #, php-format
@@ -11497,8 +11488,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "새 정렬 필드 유효성이 검사되었습니다. 필드 정렬 정렬."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "인덱스 변경 감지, 건너 뛰기 다시 인덱싱 및 폴러 캐시 다시 채우기"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

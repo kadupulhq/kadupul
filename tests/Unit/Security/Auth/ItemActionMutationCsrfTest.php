@@ -53,6 +53,15 @@ function set_page_refresh($refresh) {}
 function top_header() { echo 'READ'; exit; }
 // The first database call or sequence change shows the action handler ran.
 function handler_reached() { echo 'HANDLER'; exit; }
+// Reindex now starts with a native PDO lock query. Keep the same first-I/O
+// boundary as the legacy query stubs below; denied requests must never reach it.
+final class ItemActionConnection extends PDO {
+    public function __construct() {}
+    public function prepare(string $query, array $options = array()): PDOStatement|false { handler_reached(); }
+}
+$database_hostname = 'fixture'; $database_port = '0'; $database_default = 'fixture';
+$database_sessions = array('fixture:0:fixture' => new ItemActionConnection());
+
 function move_item_up(...$args) { handler_reached(); }
 function move_item_down(...$args) { handler_reached(); }
 function db_execute(...$args) { handler_reached(); }
