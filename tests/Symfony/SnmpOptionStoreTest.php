@@ -13,6 +13,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Kadupul\Automation\Application\Port\AutomationTemplateAccess;
 use Kadupul\Automation\Application\Query\AutomationTemplateAccessDenied;
+use Kadupul\Automation\Domain\SnmpOptionEntry;
 use Kadupul\Automation\Domain\SnmpOptionEntryChange;
 use Kadupul\Automation\Infrastructure\Persistence\DbalSnmpOptionStore;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
@@ -61,7 +62,7 @@ final class SnmpOptionStoreTest extends TestCase
         });
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['collector_id' => 1]);
-        $this->store = new DbalSnmpOptionStore($this->database, $access, $audit, $configuration);
+        $this->store = new DbalSnmpOptionStore($this->database, $access, $audit, $configuration, 'test-revision-key');
     }
 
     public function testSetsAreCreatedRenamedAndRefuseStaleOrInvalidNames(): void
@@ -105,6 +106,12 @@ final class SnmpOptionStoreTest extends TestCase
         $entry = $this->store->findEntry($set, $created);
         self::assertStringNotContainsString('secret-community', serialize($entry));
         self::assertStringNotContainsString('secret-community', serialize($this->store->entries($set)));
+        // The revision reaches the page, so it must not be a digest anyone can recompute from guessed credentials.
+        $stored = $this->database->fetchAssociative('SELECT * FROM automation_snmp_items WHERE id = ?', [$created]);
+        $values = array_map(static fn(string $column): ?string => $stored[$column] === null ? null : (string) $stored[$column], ['id', 'snmp_id', ...SnmpOptionEntryChange::COLUMNS]);
+        self::assertNotSame(hash('sha256', json_encode($values, JSON_THROW_ON_ERROR)), $entry->revision);
+        self::assertSame(SnmpOptionEntry::revisionOf($stored, 'test-revision-key'), $entry->revision);
+        self::assertNotSame(SnmpOptionEntry::revisionOf($stored, 'another-key'), $entry->revision);
         self::assertSame('[None]', $this->store->entries($set)->entries[0]->authProtocol);
 
         $v3 = ['snmp_version' => 3, 'snmp_auth_protocol' => 'SHA256', 'snmp_priv_protocol' => 'AES128'] + self::V2;

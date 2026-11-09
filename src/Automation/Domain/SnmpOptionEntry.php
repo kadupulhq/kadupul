@@ -51,12 +51,14 @@ final readonly class SnmpOptionEntry
 
     /**
      * Credentials are part of the digest, so an editor goes stale when another
-     * administrator replaces them. The sequence is left out: reordering must
-     * not invalidate an open editor.
+     * administrator replaces them. The digest is keyed because the page carries
+     * it: an unkeyed hash would let a reader test guesses of the credentials.
+     * The sequence is left out: reordering must not invalidate an open editor.
      *
      * @param array<string, mixed> $row every automation_snmp_items column except sequence
+     * @param string $key a server-side secret, never sent to the browser
      */
-    public static function revisionOf(array $row): string
+    public static function revisionOf(#[\SensitiveParameter] array $row, #[\SensitiveParameter] string $key): string
     {
         $values = [];
         foreach (['id', 'snmp_id', ...SnmpOptionEntryChange::COLUMNS] as $column) {
@@ -66,7 +68,7 @@ final readonly class SnmpOptionEntry
             }
             $values[] = $value === null ? null : (string) $value;
         }
-        return hash('sha256', json_encode($values, JSON_THROW_ON_ERROR));
+        return hash_hmac('sha256', "snmp-option-entry-v1\0" . json_encode($values, JSON_THROW_ON_ERROR), $key);
     }
 
     /** @param list<array<string, mixed>> $rows id and sequence of every entry in discovery order */

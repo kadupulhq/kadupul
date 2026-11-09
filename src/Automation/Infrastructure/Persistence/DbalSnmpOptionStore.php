@@ -47,7 +47,14 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
         AutomationTemplateAccess $access,
         AuditTrail $audit,
         LegacyConfiguration $configuration,
+        /** Keys the entry revisions shown to the browser; see SnmpOptionEntry::revisionOf(). */
+        #[Autowire('%kernel.secret%')]
+        #[\SensitiveParameter]
+        private string $revisionKey,
     ) {
+        if ($revisionKey === '') {
+            throw new \LogicException('The SNMP entry revision key is not configured.');
+        }
         // SNMP Option Sets share the automation realm, so the Device Rules recheck applies unchanged.
         $this->writes = new AuditedPrimaryWrite($database, $audit, $configuration, $access->assertCurrent(...), self::WRITE_TABLES, 'SNMP Option Set', 'SNMP Option Sets', 'automation.snmp_option', 'automation_snmp_option');
     }
@@ -87,13 +94,13 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
     public function entries(int $setId): SnmpOptionEntries
     {
         $rows = $this->database->fetchAllAssociative('SELECT ' . self::ENTRY_COLUMNS . ' FROM automation_snmp_items WHERE snmp_id = ? ORDER BY sequence, id', [$setId]);
-        return new SnmpOptionEntries(array_map(self::entry(...), $rows), SnmpOptionEntry::orderOf($rows));
+        return new SnmpOptionEntries(array_map($this->entry(...), $rows), SnmpOptionEntry::orderOf($rows));
     }
 
     public function findEntry(int $setId, int $entryId): ?SnmpOptionEntry
     {
         $row = $this->database->fetchAssociative('SELECT ' . self::ENTRY_COLUMNS . ' FROM automation_snmp_items WHERE id = ? AND snmp_id = ?', [$entryId, $setId]);
-        return $row === false ? null : self::entry($row);
+        return $row === false ? null : $this->entry($row);
     }
 
     public function saveSet(int $actorId, ?int $id, string $name, ?string $revision): int
@@ -193,14 +200,14 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
         if ($row === false) {
             throw new \InvalidArgumentException('SNMP entry not found.');
         }
-        if (!hash_equals(SnmpOptionEntry::revisionOf($row), $revision)) {
+        if (!hash_equals(SnmpOptionEntry::revisionOf($row, $this->revisionKey), $revision)) {
             throw new \InvalidArgumentException(self::ENTRY_STALE);
         }
         return $row;
     }
 
     /** @param array<string, mixed> $row */
-    private static function entry(array $row): SnmpOptionEntry
+    private function entry(array $row): SnmpOptionEntry
     {
         // Legacy rows for SNMP versions 1 and 2 may hold an empty protocol.
         $protocol = static fn(mixed $value): string => in_array(self::text($value), ['', '0'], true) ? '[None]' : self::text($value);
@@ -218,7 +225,7 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
             $protocol($row['snmp_priv_protocol'] ?? ''),
             self::text($row['snmp_context'] ?? ''),
             self::text($row['snmp_engine_id'] ?? ''),
-            SnmpOptionEntry::revisionOf($row),
+            SnmpOptionEntry::revisionOf($row, $this->revisionKey),
         );
     }
 
