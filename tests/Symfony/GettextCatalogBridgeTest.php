@@ -20,7 +20,7 @@ use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Infrastructure\Symfony\ConsoleTranslations;
 use Kadupul\Platform\Infrastructure\Symfony\GettextCatalog;
 use Kadupul\Platform\Infrastructure\Symfony\GettextCatalogLoader;
-use Kadupul\Platform\Infrastructure\Symfony\InventoryLocaleSubscriber;
+use Kadupul\Platform\Infrastructure\Symfony\LocaleSubscriber;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -351,7 +351,7 @@ final class GettextCatalogBridgeTest extends TestCase
         $preference->method('preferredLocale')->willReturn($user);
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['forced_locale' => $forced]);
-        $subscriber = new InventoryLocaleSubscriber($preference, $database, $configuration, self::ROOT);
+        $subscriber = new LocaleSubscriber($preference, $database, $configuration, self::ROOT);
         $request = Request::create('/inventory/sites', 'GET', ['language' => '../../locales/po/ar-SA', '_locale' => 'ar_SA'], ['Cacti' => 'fixture', 'language' => 'ar-SA', '_locale' => 'ar_SA']);
         $request->attributes->set('_route', 'inventory_sites');
         $request->headers->set('Accept-Language', $browser);

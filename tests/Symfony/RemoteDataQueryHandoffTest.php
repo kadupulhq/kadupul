@@ -18,7 +18,7 @@ $source = file_get_contents(__DIR__ . '/../../lib/data_query.php');
 if (!is_string($source)) {
     throw new RuntimeException('Unable to read production data-query source');
 }
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'run_data_query')); // nosemgrep: php.lang.security.eval-use.eval-use
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'run_data_query_work')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 const HOST_DOWN = 1;
 
@@ -132,7 +132,7 @@ final class RemoteDataQueryHandoffTest extends TestCase
     {
         $_SESSION['inventory_diagnostics_sanitized'] = true;
         RemoteQueryFixture::$response = json_encode(['result' => true, 'data_query' => ['interface eth0', 'interface eth1']] + $marker, JSON_THROW_ON_ERROR);
-        self::assertTrue(run_data_query(7, 4));
+        self::assertTrue(run_data_query_work(7, 4));
         self::assertSame(['interface eth0', 'interface eth1'], $_SESSION['debug_log']['data_query']);
         self::assertSame($expected, $_SESSION['inventory_diagnostics_sanitized']);
         self::assertArrayNotHasKey('response', $_SESSION['debug_log']);
@@ -157,7 +157,7 @@ final class RemoteDataQueryHandoffTest extends TestCase
             RemoteQueryFixture::$timeout = (string) $configured;
             RemoteQueryFixture::$response = '';
             RemoteQueryFixture::$http = [];
-            self::assertFalse(run_data_query(7, 4));
+            self::assertFalse(run_data_query_work(7, 4));
             self::assertSame($expected, RemoteQueryFixture::$http[0]['timeout']);
             self::assertGreaterThanOrEqual($expected + 120, \Kadupul\Inventory\Infrastructure\Legacy\DeviceWorkerTimeout::forRemoteCalls(1));
         }
@@ -167,7 +167,7 @@ final class RemoteDataQueryHandoffTest extends TestCase
     public function testMalformedOrPreUpgradeResponseCannotRunAutomation(string $response): void
     {
         RemoteQueryFixture::$response = $response;
-        self::assertFalse(run_data_query(7, 4));
+        self::assertFalse(run_data_query_work(7, 4));
         self::assertSame([], RemoteQueryFixture::$automation);
         self::assertSame([], RemoteQueryFixture::$hooks);
         self::assertSame(['previous diagnostic'], $_SESSION['debug_log']['data_query']);
@@ -194,7 +194,7 @@ final class RemoteDataQueryHandoffTest extends TestCase
         RemoteQueryFixture::$hostname = $hostname;
         RemoteQueryFixture::$address = $address;
         RemoteQueryFixture::$response = json_encode(['result' => true, 'data_query' => []], JSON_THROW_ON_ERROR);
-        self::assertFalse(run_data_query(7, 4));
+        self::assertFalse(run_data_query_work(7, 4));
         self::assertSame([], RemoteQueryFixture::$http);
         self::assertSame([], RemoteQueryFixture::$automation);
     }
@@ -215,14 +215,14 @@ final class RemoteDataQueryHandoffTest extends TestCase
     {
         RemoteQueryFixture::$hostname = '[fd00::5]';
         RemoteQueryFixture::$response = '';
-        self::assertFalse(run_data_query(7, 4));
+        self::assertFalse(run_data_query_work(7, 4));
         self::assertSame([['url' => 'https://[fd00::5]/kadupul/remote_agent.php?action=runquery&host_id=7&data_query_id=4', 'timeout' => 30, 'allowed' => ['[fd00::5]'], 'connect' => 'fd00::5']], RemoteQueryFixture::$http);
 
         foreach (['127.0.0.1', '10.1.2.3'] as $address) {
             RemoteQueryFixture::$hostname = 'collector.invalid';
             RemoteQueryFixture::$address = $address;
             RemoteQueryFixture::$http = [];
-            run_data_query(7, 4);
+            run_data_query_work(7, 4);
             self::assertSame($address, RemoteQueryFixture::$http[0]['connect']);
         }
     }
