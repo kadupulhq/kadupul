@@ -7,12 +7,16 @@
       <file>Unit/MailPreflightTest.php</file>
       <file>Unit/Security/CrashConsistencyTest.php</file>
       <file>Unit/SnmpagentDisabledReceiverTest.php</file>
+      <file>Unit/Core/Poller/CollectorPreflightTest.php</file>
       <file>Unit/Core/Rrd/InterfaceCatalogCounterTest.php</file>
+      <file>Unit/Security/StaleWriterTemporariesTest.php</file>
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
       <file>Unit/SnmpValueAndWalkGuardsTest.php</file>
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
+      <file>Unit/Security/Shell/SpikekillReferenceMeanTest.php</file>
       <file>Unit/UnpolledSnmpMetadataTest.php</file>
+      <file>Unit/AggregateMemberSequenceTest.php</file>
       <file>Unit/DataQuerySortReadFailureTest.php</file>
       <file>Unit/Security/Shell/SpikekillUnknownLimitsTest.php</file>
       <file>Unit/XmlStrictParsingTest.php</file>
@@ -21,6 +25,7 @@
       <file>Unit/DataQueryOrphanStateTest.php</file>
       <file>Unit/EmptyShellArgumentTest.php</file>
       <file>Unit/HostStatusAverageTest.php</file>
+      <file>Unit/Core/Rrd/RrdTuneAllOrNothingTest.php</file>
       <file>Unit/Base1024GraphDivisorTest.php</file>
       <file>Unit/Core/Cli/MaintenanceCliValidationTest.php</file>
       <file>Unit/Security/HostReindexExecutionTest.php</file>

@@ -390,8 +390,16 @@ if (defined('GRAPH_ITEM_EDITOR_TEST_COVERAGE')) {
 if (defined('AUDIT_PLUGIN_LIFECYCLE_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/Platform/Infrastructure/Legacy/LegacyUpgradePluginLifecycle.php');
 }
+$copiedCliSources = array();
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
-    $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+    $copiedCliSources[RRD_TEST_CLI_COVERAGE_COPY] = RRD_TEST_CLI_COVERAGE_SOURCE;
+}
+if (defined('WORKER_IO_COPY_TEST_COVERAGE')) {
+    require_once $coverageRoot . '/tests/Symfony/WorkerIoCoverage.php';
+    $copiedCliSources = Kadupul\Tests\WorkerIoCoverage::copies($coverageRoot, RRD_TEST_CLI_COVERAGE_COPY, WORKER_IO_COPY_TEST_COVERAGE);
+}
+foreach ($copiedCliSources as $copiedCliSource => $canonicalCliSource) {
+    $coverageFilter->includeFile($copiedCliSource);
 }
 if (defined('THEME_SELECTION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
@@ -565,6 +573,10 @@ if (defined('NATIVE_SESSION_PERSISTENCE_TEST_COVERAGE')) {
 if (defined('BROWSER_REALM_DENIAL_TEST_COVERAGE')) {
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 }
+if (defined('WORKER_IO_COPY_TEST_COVERAGE')) {
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    foreach ($copiedCliSources as $copy => $source) $coverageFilter->includeFile($copy);
+}
 if (defined('RRD_TEST_ADDITIONAL_COVERAGE_COPIES')) {
     foreach (RRD_TEST_ADDITIONAL_COVERAGE_COPIES as $additionalCoverageCopy => $additionalCoverageSource) {
         if (!is_string($additionalCoverageCopy) || !is_string($additionalCoverageSource) || !is_file($additionalCoverageCopy) || !is_file($additionalCoverageSource)) {
@@ -594,10 +606,10 @@ function rrd_test_coverage_invocation(string $directory, int $pid): array
 $childInvocation = rrd_test_coverage_invocation(RRD_TEST_COVERAGE_DIRECTORY, getmypid());
 $childCoverage->start($childInvocation['id']);
 $childCoverageFile = $childInvocation['report'];
-register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
+register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader, $copiedCliSources) {
     // Append collection after application shutdown handlers so implicit pipe
     // close/drain is measured too, not just the main body of the child script.
-    register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader) {
+    register_shutdown_function(function () use ($childCoverage, $childCoverageFile, $coveragePackageVersion, $testLoader, $copiedCliSources) {
         // Application bootstrap prepends its Composer loader. Restore the test
         // loader as first choice before PHPUnit 12 lazily creates its analyser.
         $testLoader->unregister();
@@ -609,23 +621,29 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
         if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
             // Measure the real copied CLI, then map only its filename. Refuse
             // attribution unless every source byte (and thus line) is identical.
-            $copyHash = hash_file('sha256', RRD_TEST_CLI_COVERAGE_COPY);
-            $sourceHash = hash_file('sha256', RRD_TEST_CLI_COVERAGE_SOURCE);
-            if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
-                throw new RuntimeException('Copied CLI changed while measuring coverage');
+            $canonicalCliSources = array();
+            foreach ($copiedCliSources as $copy => $source) {
+                $copyHash = is_file($copy) ? hash_file('sha256', $copy) : false;
+                $sourceHash = is_file($source) ? hash_file('sha256', $source) : false;
+                if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
+                    throw new RuntimeException('Copied CLI changed while measuring coverage');
+                }
+                $canonicalCliSources[realpath($copy)] = realpath($source);
+                $childCoverage->getData(true)->renameFile(realpath($copy), realpath($source));
             }
             // Preserve canonical measured paths and support both installed filter APIs.
-            $childCoverage->getData(true)->renameFile(realpath(RRD_TEST_CLI_COVERAGE_COPY), realpath(RRD_TEST_CLI_COVERAGE_SOURCE));
             if (method_exists($childCoverage->filter(), 'excludeFile')) {
-                $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
-                $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
+                foreach ($canonicalCliSources as $copy => $source) {
+                    $childCoverage->filter()->excludeFile($copy);
+                    $childCoverage->filter()->includeFile($source);
+                }
             } else {
                 // The newer allowlist cannot remove a copy. Rebuild it with the
                 // canonical path so getData() cannot rediscover the old copy as
                 // uncovered after its measured lines have been renamed.
                 $canonicalFilter = new SebastianBergmann\CodeCoverage\Filter();
                 foreach ($childCoverage->filter()->files() as $file) {
-                    $canonicalFilter->includeFile($file === realpath(RRD_TEST_CLI_COVERAGE_COPY) ? RRD_TEST_CLI_COVERAGE_SOURCE : $file);
+                    $canonicalFilter->includeFile($canonicalCliSources[$file] ?? $file);
                 }
                 $canonicalCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
                     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($canonicalFilter),

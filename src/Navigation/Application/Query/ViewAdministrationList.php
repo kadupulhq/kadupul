@@ -12,26 +12,28 @@ namespace Kadupul\Navigation\Application\Query;
 
 use Kadupul\Navigation\Contract\AdministrationCatalog;
 use Kadupul\Navigation\Application\Port\AdministrationListAccess;
+use Kadupul\Navigation\Application\Port\ListPageSize;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
 use Kadupul\Navigation\Contract\Administration\ListScreen;
 
 final readonly class ViewAdministrationList
 {
     /** @param iterable<AdministrationCatalog> $catalogs */
-    public function __construct(private iterable $catalogs, private AdministrationListAccess $access) {}
+    public function __construct(private iterable $catalogs, private AdministrationListAccess $access, private ListPageSize $pageSize) {}
 
     /**
      * @param array<string, mixed> $query
-     * @return array{filters: ListFilters, records: list<array<string, int|float|string|null>>, hasNext: bool}
+     * @return array{filters: ListFilters, defaultRows: int, records: list<array<string, int|float|string|null>>, hasNext: bool}
      */
     public function __invoke(ListScreen $screen, array $query): array
     {
         $this->access->authorize($screen);
-        $filters = ListFilters::fromQuery($screen, $query);
+        $defaultRows = $this->pageSize->defaultRows();
+        $filters = ListFilters::fromQuery($screen, $query, $defaultRows);
         foreach ($this->catalogs as $catalog) {
             if ($catalog->supports($screen)) {
                 $records = $catalog->read($screen, $filters);
-                return ['filters' => $filters, 'records' => array_slice($records, 0, $filters->rows),
+                return ['filters' => $filters, 'defaultRows' => $defaultRows, 'records' => array_slice($records, 0, $filters->rows),
                     'hasNext' => count($records) > $filters->rows && $filters->page < 99999];
             }
         }

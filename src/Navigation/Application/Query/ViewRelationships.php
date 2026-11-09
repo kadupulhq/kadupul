@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Application\Query;
 
+use Kadupul\Navigation\Application\Port\ListPageSize;
 use Kadupul\Navigation\Application\Port\RelationshipAccess;
 use Kadupul\Navigation\Contract\RelationshipCatalog;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
@@ -18,8 +19,9 @@ use Kadupul\Navigation\Contract\Relationships\RelationshipScreen;
 final readonly class ViewRelationships
 {
     /** @param iterable<RelationshipCatalog> $catalogs */
-    public function __construct(private iterable $catalogs, private RelationshipAccess $access) {}
+    public function __construct(private iterable $catalogs, private RelationshipAccess $access, private ListPageSize $pageSize) {}
 
+    /** @param array<string, mixed> $query */
     public function __invoke(RelationshipScreen $screen, array $query, string $id): array
     {
         $this->access->authorize($screen);
@@ -27,11 +29,12 @@ final readonly class ViewRelationships
         if (!preg_match('/\A[1-9][0-9]{0,9}\z/D', $id) || $parentId === false || $parentId < 1 || $parentId > 4294967295) {
             throw new \InvalidArgumentException('Invalid relationship parent.');
         }
-        $filters = ListFilters::fromColumns($screen->columns(), $query, $screen->defaultSort(), $screen === RelationshipScreen::ReceiverHistory ? 'DESC' : 'ASC');
+        $defaultRows = $this->pageSize->defaultRows();
+        $filters = ListFilters::fromColumns($screen->columns(), $query, $screen->defaultSort(), $screen === RelationshipScreen::ReceiverHistory ? 'DESC' : 'ASC', $defaultRows);
         foreach ($this->catalogs as $catalog) {
             if ($catalog->supports($screen)) {
                 $page = $catalog->read($screen, $filters, $parentId);
-                return ['filters' => $filters->query(), 'parentName' => $page->parentName, 'parentId' => $parentId,
+                return ['filters' => $filters->query(), 'defaultRows' => $defaultRows, 'parentName' => $page->parentName, 'parentId' => $parentId,
                     'records' => array_slice($page->records, 0, $filters->rows), 'hasNext' => count($page->records) > $filters->rows && $filters->page < 99999];
             }
         }

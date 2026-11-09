@@ -245,11 +245,41 @@ final class DataDebugNativeCoverageTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('deniedDebugRequestCases')]
     public function testDirectDebugRequestsDenyBeforePersistedChanges(string $action, int $id, string $message): void
     {
-        $state = $this->render(['action' => $action, 'id' => $id], ['debug_purge_policy' => ['exceptions' => [1]], 'debug_non_rendering' => true, 'debug_rejects_before_policy' => in_array($id, [0,105,999], true)]);
+        $mutation = in_array($action, ['run_debug', 'run_repair'], true) ? ['method' => 'POST', 'csrf_valid' => true] : [];
+        $state = $this->render(['action' => $action, 'id' => $id], ['debug_purge_policy' => ['exceptions' => [1]], 'debug_non_rendering' => true, 'debug_rejects_before_policy' => in_array($id, [0,105,999], true)] + $mutation);
         self::assertSame($state['before'], $state['after']);
         self::assertArrayHasKey($message, $state['session']['sess_messages']);
         $writes = array_filter($state['queries'], static fn(array $query): bool => preg_match('/^(DELETE|INSERT|UPDATE)\s/i', $query[0]) === 1);
         self::assertSame([], array_values($writes));
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('repairMethodCases')]
+    public function testRerunAndRepairRequireATokenBearingPost(string $action, array $method, int $status): void
+    {
+        $state = $this->render(['action' => $action, 'id' => 101], ['debug_purge_policy' => ['exceptions' => [1]], 'debug_non_rendering' => true] + $method);
+        self::assertSame($status, $state['status']);
+        self::assertSame($state['before'], $state['after']);
+        self::assertArrayNotHasKey('rerun', $state['session']['sess_messages'] ?? []);
+        self::assertArrayNotHasKey('repair', $state['session']['sess_messages'] ?? []);
+        $writes = array_filter($state['queries'], static fn(array $query): bool => preg_match('/^(DELETE|INSERT|UPDATE)\s/i', $query[0]) === 1);
+        self::assertSame([], array_values($writes));
+    }
+
+    public static function repairMethodCases(): iterable
+    {
+        yield 'rerun by GET' => ['run_debug', [], 405];
+        yield 'repair by GET' => ['run_repair', [], 405];
+        yield 'rerun POST without a token' => ['run_debug', ['method' => 'POST'], 403];
+        yield 'repair POST without a token' => ['run_repair', ['method' => 'POST'], 403];
+    }
+
+    public function testRerunAndRepairLinksSubmitAsPostActions(): void
+    {
+        $source = file_get_contents(dirname(__DIR__, 2) . '/data_debug.php');
+        self::assertIsString($source);
+        self::assertStringContainsString("class=\"cactiPostAction linkEditMain\" data-url=\"' . html_escape('data_debug.php?action=run_debug&id=' . \$id) . '\"", $source);
+        self::assertStringContainsString("class=\"cactiPostAction linkEditMain\" data-url=\"' . html_escape('data_debug.php?action=run_repair&id=' . \$id) . '\"", $source);
+        self::assertStringNotContainsString("loadPage('data_debug.php?action=run_", $source);
     }
 
     public static function deniedDebugRequestCases(): iterable
@@ -392,7 +422,8 @@ final class DataDebugNativeCoverageTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('directMutationFailureCases')]
     public function testDirectMutationReadFailurePrecedesResetAndSuccessMessage(string $action, int $id): void
     {
-        $state = $this->render(['action' => $action,'id' => $id], ['debug_purge_policy' => ['exceptions' => [2]], 'debug_policy_failure' => true, 'debug_non_rendering' => true]);
+        $mutation = in_array($action, ['run_debug', 'run_repair'], true) ? ['method' => 'POST', 'csrf_valid' => true] : [];
+        $state = $this->render(['action' => $action,'id' => $id], ['debug_purge_policy' => ['exceptions' => [2]], 'debug_policy_failure' => true, 'debug_non_rendering' => true] + $mutation);
         self::assertSame($state['before'], $state['after']);
         self::assertArrayHasKey('debug_access_denied', $state['session']['sess_messages']);
         self::assertArrayNotHasKey('rerun', $state['session']['sess_messages']);
@@ -450,7 +481,8 @@ final class DataDebugNativeCoverageTest extends TestCase
             }
             self::assertTrue($ready, file_get_contents($directory . '/stderr.log'));
             foreach (self::directMutationFailureCases() as [$action,$id]) {
-                $scenario = ['view' => 'debug','request' => ['action' => $action,'id' => $id], 'debug_purge_policy' => ['exceptions' => [2]], 'debug_policy_failure' => true, 'debug_non_rendering' => true];
+                $scenario = ['view' => 'debug','request' => ['action' => $action,'id' => $id], 'debug_purge_policy' => ['exceptions' => [2]], 'debug_policy_failure' => true, 'debug_non_rendering' => true]
+                    + (in_array($action, ['run_debug', 'run_repair'], true) ? ['method' => 'POST', 'csrf_valid' => true] : []);
                 file_put_contents($directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
                 $context = stream_context_create(['http' => ['follow_location' => 0,'ignore_errors' => true,'timeout' => 5]]);
                 $body = file_get_contents('http://' . $address . '/data_debug.php?action=' . $action . '&id=' . $id, false, $context);
