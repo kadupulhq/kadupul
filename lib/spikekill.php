@@ -1522,6 +1522,19 @@ class spikekill
                                 $rra[$rra_num][$ds_num]['average'] = 0;
                             }
 
+                            /* windowed deviation and its mean must use the same reference samples */
+                            if ($this->method == SPIKE_METHOD_STDDEV && $this->out_start > 0) {
+                                $reference = [];
+                                foreach ($samples[$rra_num][$ds_num] as $timestamp => $value) {
+                                    if (($timestamp < $this->out_start || $timestamp > $this->out_end) && is_numeric($value)) {
+                                        $reference[] = $value;
+                                    }
+                                }
+                                if (count($reference) > 0) {
+                                    $rra[$rra_num][$ds_num]['average'] = array_sum($reference) / count($reference);
+                                }
+                            }
+
                             $rra[$rra_num][$ds_num]['min_cutoff'] = $rra[$rra_num][$ds_num]['average'] - ($this->stddev * $rra[$rra_num][$ds_num]['stddev']);
                             if (is_numeric($this->ds_min[$ds_num]) && $rra[$rra_num][$ds_num]['min_cutoff'] < $this->ds_min[$ds_num]) {
                                 $rra[$rra_num][$ds_num]['min_cutoff'] = $this->ds_min[$ds_num];
@@ -1530,6 +1543,14 @@ class spikekill
                             $rra[$rra_num][$ds_num]['max_cutoff'] = $rra[$rra_num][$ds_num]['average'] + ($this->stddev * $rra[$rra_num][$ds_num]['stddev']);
                             if (is_numeric($this->ds_max[$ds_num]) && $rra[$rra_num][$ds_num]['max_cutoff'] > $this->ds_max[$ds_num]) {
                                 $rra[$rra_num][$ds_num]['max_cutoff'] = $this->ds_max[$ds_num];
+                            }
+
+                            /* fewer than two reference samples give no deviation, and a zero-width
+                             * band around the mean would flag every other sample as a spike, so
+                             * only the data source limits can identify one */
+                            if ($rra[$rra_num][$ds_num]['stddev'] === false) {
+                                $rra[$rra_num][$ds_num]['min_cutoff'] = is_numeric($this->ds_min[$ds_num]) ? $this->ds_min[$ds_num] : -INF;
+                                $rra[$rra_num][$ds_num]['max_cutoff'] = is_numeric($this->ds_max[$ds_num]) ? $this->ds_max[$ds_num] : INF;
                             }
 
                             $rra[$rra_num][$ds_num]['numnksamples'] = 0;

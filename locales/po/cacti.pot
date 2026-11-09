@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.38\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-08 23:20-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15490,6 +15490,16 @@ msgstr ""
 
 #: poller.php
 #, php-format
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
+
+#: poller.php
+#, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr ""
 
@@ -15501,11 +15511,6 @@ msgstr ""
 #: poller.php
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
-msgstr ""
-
-#: poller.php
-#, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr ""
 
 #: poller.php

@@ -73,7 +73,7 @@ namespace Kadupul\Tests\CrashScenario {
 
     switch ($scenario) {
         case 'whitelist':
-            load('lib/input_whitelist.php', 'data_input_whitelist_update');
+            load('lib/input_whitelist.php', 'data_input_whitelist_update', 'data_input_whitelist_remove_stale');
             $records = [
                 ['id' => 1, 'name' => 'one', 'hash' => 'h1', 'input_string' => 'new-one'],
                 ['id' => 2, 'name' => 'two', 'hash' => 'h2', 'input_string' => 'new-two'],
@@ -82,7 +82,7 @@ namespace Kadupul\Tests\CrashScenario {
             break;
 
         case 'rrd-restore':
-            load('lib/rrd_maintenance.php', 'rrd_maintenance_directory_is_trusted', 'rrd_maintenance_restore_atomic');
+            load('lib/rrd_maintenance.php', 'rrd_maintenance_directory_is_trusted', 'rrd_maintenance_remove_stale_restores', 'rrd_maintenance_restore_atomic');
             $config = ['rrd_maintenance_trusted_gids' => [], 'rrd_maintenance_trusted_uids' => []];
             // rrdtool restore writes the candidate in pieces; this callback does the same through the wrapped calls.
             $restore = static function (string $temporary): bool {
