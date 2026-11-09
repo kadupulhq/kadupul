@@ -5,6 +5,7 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Register the legacy database failure scope and the shared locale resolver classes in the presentation native fixtures' source registries, which refuse any project file they do not list, so the legacy coverage shards load the database and language bootstrap again.
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
 - Select the locale of legacy pages and Symfony routes with one shared resolver, `Kadupul\Platform\Application\Locale\LocaleResolver`. Accept-Language is now read as a weighted list on legacy pages too: when the browser's first language has no catalog, its next shipped preference is shown instead of the default language, and the weight decides between entries. `?language=`, forced, session, saved and default languages behave as before. Symfony routes now follow the legacy rules for `zh-HK`, `pt-AO` and strict mode with plugins, and every route except the probe, installer, session, login handoff and JSON/CSV routes is localized.
