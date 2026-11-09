@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -42,10 +43,9 @@ test('boost_graph_set_file casts IDs to int', function () use ($boostSource) {
 });
 
 test('RRD update boundaries reject unsafe paths templates and values', function () use ($boostSource) {
-	$start = strpos($boostSource, 'function boost_rrdtool_function_update(');
-	expect($start)->not->toBeFalse();
+	require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-	$body = substr($boostSource, $start, 5000);
+	$body = test_php_function_source($boostSource, 'boost_rrdtool_function_update');
 
 	expect($body)->toContain('cacti_rrdtool_valid_path($rrd_path)')
 		->and($body)->toContain('cacti_rrdtool_valid_ds_template($rrd_update_template)')

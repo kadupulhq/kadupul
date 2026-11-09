@@ -2095,7 +2095,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 	if ($show_source == true) {
 		return read_config_option('path_rrdtool') . ' create' . RRD_NL . $data_source_path . $definition;
 	} else {
-		$success = rrdtool_execute("create $data_source_path $definition", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+		$success = rrdtool_create_file($data_source_path, $definition, false, $rrdtool_pipe, 'BOOST');
 
 		$owned_path = cacti_rrd_owned_path($data_source_path);
 		/**
@@ -2309,6 +2309,15 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 	}
 
 	if ($valid_entry) {
+		/* samples for a path RRDtool cannot be given stay queued */
+		$command_path = rrdtool_command_path($rrd_path);
+
+		if ($command_path === false) {
+			cacti_log('ERROR: Boost samples retained; the path cannot be sent to RRDtool: ' . cacti_log_safe_value($rrd_path), false, 'BOOST');
+
+			return 'ERROR: Unable to send the RRD path to RRDtool';
+		}
+
 		if ($rrd_update_template != '') {
 			if (!cacti_rrdtool_valid_ds_template($rrd_update_template) || cacti_has_control_chars($rrd_update_values)) {
 				cacti_log("ERROR: Invalid RRD update template or value set for local_data_id: $local_data_id.", false, 'BOOST');
@@ -2318,7 +2327,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 			cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-			$result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $command_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		} else {
 			if (cacti_has_control_chars($rrd_update_values)) {
 				cacti_log("ERROR: Invalid RRD update value set for local_data_id: $local_data_id.", false, 'BOOST');
@@ -2328,7 +2337,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 			cacti_log("update $rrd_path $update_options $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-			$result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $command_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		}
 
 		if ($result !== true) {
