@@ -56,6 +56,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed; earlier orphans are still cleared as before (#198).
 - Replace the installer web and CLI orchestration with a shared Symfony review and execution workflow for 1.3. Add read-only preflight/status, explicit discovery consent, signed reviews, worker locking, stopped-attempt recovery, partial collector outcomes, CSP-safe forms and English/French installer catalogs. Retain native migrations, imports and plugin integration. The CLI now enforces existing operator eligibility and upgrade permissions; deployments must provide the same strong `APP_SECRET` to web and CLI processes (#1293).
 - Honor explicitly disabled native SNMP overrides while retaining omitted values; preserve explicit CLI credential clearing and blank browser password-field retention (#1300).
+- Make `rrdtool_function_tune()` change all requested options or none: the RRDfile is copied beside itself first and, when `rrdtool tune` exits non-zero, a restored copy is renamed over it, so it is never left truncated, and the function now returns `true` or `false` instead of nothing (#777).
 - Keep Midwinter form and hover callbacks scoped to their widgets and bind handlers once across repeated theme initialization.
 
 - Add shared server-selected database target capabilities for native administrative form and worker handoffs, without changing existing routes or connection selection.
