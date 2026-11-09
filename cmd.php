@@ -48,6 +48,7 @@ $sessions   = array();
 $downhosts  = array();
 $host_count = 0;
 $tot_errors = 0;
+$poller_write_failed = false;
 $poller_id  = $config['poller_id'];
 $pmessage   = false;
 $help       = false;
@@ -339,7 +340,11 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 				if ($output_count > 0) {
 					cacti_log("Device[$last_host] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-					cmd_write_poller_output($output_array, $poller_db_cnn_id);
+					if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {
+						$poller_write_failed = true;
+						$host_id             = $last_host;
+						break;
+					}
 
 					$output_array = array();
 					$output_count = 0;
@@ -398,7 +403,10 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 			if ($output_count > 2000) {
 				cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-				cmd_write_poller_output($output_array, $poller_db_cnn_id);
+				if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {
+					$poller_write_failed = true;
+					break;
+				}
 
 				$output_array = array();
 				$output_count = 0;
@@ -418,11 +426,14 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 	// Record the last hosts polling time
 	$host_end = microtime(true);
 
+	// A failed flush stops collection; do not retry after a failed write.
 	// Flush the items to the output table
-	if ($output_count > 0) {
+	if ($output_count > 0 && !$poller_write_failed) {
 		cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-		cmd_write_poller_output($output_array, $poller_db_cnn_id);
+		if (!cmd_write_poller_output($output_array, $poller_db_cnn_id)) {
+			$poller_write_failed = true;
+		}
 	}
 
 	db_execute_prepared('UPDATE host
@@ -522,7 +533,7 @@ record_cmdphp_done();
 // close the database connection
 db_close();
 
-exit(0);
+exit($poller_write_failed ? 1 : 0);
 
 /* With Boost redirect on the same rows go to poller_output and
  * poller_output_boost in two statements, and Boost matches the copies on their
@@ -534,21 +545,33 @@ function cmd_write_poller_output($output_array, $conn) {
 	$values   = implode(', ', $output_array);
 	$redirect = read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on';
 
-	if ($redirect) {
-		db_execute('SET timestamp = UNIX_TIMESTAMP()', true, $conn);
+	if ($redirect && db_execute('SET timestamp = UNIX_TIMESTAMP()', true, $conn) === false) {
+		cacti_log('ERROR: Unable to pin collector sample time; the batch was not written.', true, 'POLLER');
+
+		return false;
 	}
 
-	db_execute('INSERT IGNORE INTO poller_output
+	$written = db_execute('INSERT IGNORE INTO poller_output
 		(local_data_id, rrd_name, time, output)
-		VALUES ' . $values, true, $conn);
+		VALUES ' . $values, true, $conn) !== false;
 
 	if ($redirect) {
-		db_execute('INSERT IGNORE INTO poller_output_boost
+		$boost_written = db_execute('INSERT IGNORE INTO poller_output_boost
 			(local_data_id, rrd_name, time, output)
-			VALUES ' . $values, true, $conn);
+			VALUES ' . $values, true, $conn) !== false;
 
-		db_execute('SET timestamp = DEFAULT', true, $conn);
+		$written = $written && $boost_written;
+
+		if (db_execute('SET timestamp = DEFAULT', true, $conn) === false) {
+			$written = false;
+		}
 	}
+
+	if (!$written) {
+		cacti_log('ERROR: Unable to store collected samples in a poller output queue.', true, 'POLLER');
+	}
+
+	return $written;
 }
 
 // function to assist in logging
@@ -614,7 +637,8 @@ function open_snmp_session($host_id, &$item) {
 		}
 	}
 
-	return $sessions[$host_id . '_' . $item['snmp_version'] . '_' . $item['snmp_port']];
+	/* a host already marked down has no session */
+	return $sessions[$host_id . '_' . $item['snmp_version'] . '_' . $item['snmp_port']] ?? false;
 }
 
 function snmp_mark_host_down($host_id, &$item) {

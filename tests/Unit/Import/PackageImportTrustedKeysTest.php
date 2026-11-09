@@ -72,6 +72,7 @@ foreach (array(
 	array($import, 'get_public_key_sha256'),
 	array($import, 'get_public_key'),
 	array($import, 'import_package_get_public_key'),
+	array($import, 'import_package_read'),
 	array($import, 'import_package_get_details'),
 	array($import, 'import_read_package_data'),
 	array($import, 'xml_to_array'),

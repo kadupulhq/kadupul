@@ -5263,10 +5263,13 @@ function auth_login_redirect($login_opts = ''): never {
 				cacti_log(sprintf("DEBUG: Referer Short Circuit to '%s'", 'index.php'), false, 'AUTH', POLLER_VERBOSITY_DEBUG);
 			}
 
+			/* Strip out the login from the referer if present */
+			$referer = auth_login_strip_action($referer);
+
 			$referer .= ($newtheme ? (strpos($referer, '?') === false ? '?':'&') . 'newtheme=1':'');
 
-			/* Strip out the login from the referer if present */
-			$referer  = str_replace('?action=login', '', $referer);
+			/* check the final value: every source above is client supplied */
+			$referer = validate_local_redirect_path($referer, $config['url_path'] . 'index.php');
 
 			if (api_user_realm_auth(auth_basename($referer))) {
 				header('Location: ' . $referer);
@@ -5298,6 +5301,35 @@ function auth_login_redirect($login_opts = ''): never {
 	}
 
 	exit;
+}
+
+/**
+ * auth_login_strip_action - remove a leading action=login parameter from a
+ *   redirect target so the user does not land on the login action again.
+ *
+ * Only a first query parameter that is exactly action=login is removed, and
+ * the remaining parameters keep their order and encoding.
+ *
+ * @param  (string) $url - the redirect target
+ *
+ * @return (string) the target without the login action
+ */
+function auth_login_strip_action($url) {
+	$parts = explode('?', $url, 2);
+
+	if (!isset($parts[1])) {
+		return $url;
+	}
+
+	$params = explode('&', $parts[1]);
+
+	if ($params[0] !== 'action=login') {
+		return $url;
+	}
+
+	array_shift($params);
+
+	return $parts[0] . (cacti_sizeof($params) ? '?' . implode('&', $params) : '');
 }
 
 /**

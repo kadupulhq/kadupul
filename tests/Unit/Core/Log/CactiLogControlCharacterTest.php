@@ -25,6 +25,12 @@ function cactiLogControlProgram(): string
     } catch (RuntimeException $e) {
     }
 
+    // Older trees have no PCRE-free fallback.
+    try {
+        $functions .= "\n" . clogProductionFunction('lib/functions.php', 'cacti_log_neutralize_without_pcre');
+    } catch (RuntimeException $e) {
+    }
+
     $program = <<<'CODE'
 $GLOBALS['warnings'] = array();
 set_error_handler(function ($level, $message) { $GLOBALS['warnings'][] = $message; return true; });
@@ -181,13 +187,33 @@ test('invalid UTF-8 is written unchanged and does not drop the line', function (
     expectCactiLogSinks(cactiLogControlRun($text, "E\xffV"), "E\xffV", $text);
 });
 
-// pcre.backtrack_limit=1 with JIT off makes every match fail. The raw ESC in
-// the result shows the failure path ran; the LF must still become a space.
+// pcre.backtrack_limit=1 with JIT off makes every match fail, so the PCRE-free
+// fallback runs. It escapes what the regex escapes, not only CR and LF.
 test('a regex failure still turns CR and LF in environ into spaces', function () {
     $result = cactiLogControlRun('ERROR: msg', "CMD\x1b\r\nPHP", array('backtrack_limit' => '1'));
 
-    expect($result['file'])->toBe("DATE - CMD\x1b  PHP " . PHP_EOL);
+    expect($result['file'])->toBe('DATE - CMD\x1b  PHP ' . PHP_EOL);
 });
+
+test('a regex failure still writes controls as visible escapes', function (string $raw, string $escaped) {
+    $result = cactiLogControlRun('ERROR: msg', 'ENV' . $raw . 'X', array('backtrack_limit' => '1'));
+
+    // clean_up_lines() also fails under this limit, so the message is empty.
+    expect($result['file'])->toBe('DATE - ENV' . $escaped . 'X ' . PHP_EOL)
+        ->and($result['stdout'])->toBe('DATE - ENV' . $escaped . 'X ' . PHP_EOL)
+        ->and($result['syslog'])->toBe(array('ENV' . $escaped . 'X: ERROR: msg'));
+})->with(array(
+    'ESC'    => array("\x1b", '\x1b'),
+    'NUL'    => array("\x00", '\x00'),
+    'DEL'    => array("\x7f", '\x7f'),
+    'U+0085' => array("\u{0085}", '\u0085'),
+    'U+061C' => array("\u{061C}", '\u061c'),
+    'U+2028' => array("\u{2028}", '\u2028'),
+    'U+202E' => array("\u{202E}", '\u202e'),
+    'U+2069' => array("\u{2069}", '\u2069'),
+    'tab'    => array("\t", "\t"),
+    'text'   => array('é😀', 'é😀'),
+));
 
 // clean_up_lines() returns null under the same limit.
 test('a null from clean_up_lines raises no diagnostic', function () {

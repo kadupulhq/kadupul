@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -228,8 +229,38 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM cdef WHERE ' . array_to_sql_or($selected_items, 'id'));
-				db_execute('DELETE FROM cdef_items WHERE ' . array_to_sql_or($selected_items, 'cdef_id'));
+				$selected_items = array_map('intval', $selected_items);
+				$in_use         = false;
+
+				foreach ($selected_items as $cdef_id) {
+					if (cdef_is_in_use($cdef_id, $selected_items)) {
+						$in_use = true;
+
+						break;
+					}
+				}
+
+				if ($in_use) {
+					raise_message('cdef_in_use', __('One or more CDEFs are in use and cannot be deleted.'), MESSAGE_LEVEL_ERROR);
+				} else {
+					$placeholders = implode(', ', array_fill(0, cacti_count($selected_items), '?'));
+
+					/* The NOT EXISTS clauses repeat the check inside the delete, so a
+					   reference added between the two statements still wins. */
+					db_execute_prepared('DELETE FROM cdef
+						WHERE id IN (' . $placeholders . ')
+						AND NOT EXISTS (SELECT 1 FROM graph_templates_item AS gti WHERE gti.cdef_id = cdef.id)
+						AND NOT EXISTS (SELECT 1 FROM aggregate_graph_templates_item AS agti WHERE agti.cdef_id = cdef.id)
+						AND NOT EXISTS (SELECT 1 FROM aggregate_graphs_graph_item AS aggi WHERE aggi.cdef_id = cdef.id)
+						AND NOT EXISTS (SELECT 1 FROM cdef_items AS ci WHERE ci.type = 5 AND ci.value = cdef.id AND ci.cdef_id NOT IN (' . $placeholders . '))',
+						array_merge($selected_items, $selected_items));
+
+					/* only the items of a CDEF that was actually deleted go with it */
+					db_execute_prepared('DELETE FROM cdef_items
+						WHERE cdef_id IN (' . $placeholders . ')
+						AND NOT EXISTS (SELECT 1 FROM cdef AS cd WHERE cd.id = cdef_items.cdef_id)',
+						$selected_items);
+				}
 			} elseif (get_nfilter_request_var('drp_action') == '2') { /* duplicate */
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
 					duplicate_cdef($selected_items[$i], get_nfilter_request_var('title_format'));

@@ -1475,7 +1475,8 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 		" id='$form_name_html' name='$form_name_html'" . $class . ">";
 
 	if ($form_none_entry != '') {
-		print "<option value='0'>$form_none_entry</option>";
+		$none_html = htmlspecialchars((string) $form_none_entry, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
+		print "<option value='0'>" . str_replace('`', '&#96;', $none_html) . '</option>';
 	}
 
 	if (cacti_sizeof($colors_list)) {

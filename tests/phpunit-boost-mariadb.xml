@@ -5,6 +5,7 @@
 		colors="true">
 	<testsuites>
 		<testsuite name="Boost MariaDB">
+			<file>integration/AutomationRecoveryMariaDbTest.php</file>
 			<file>./integration/BoostProcessTableMariaDbTest.php</file>
 			<file>Unit/Database/DdlCharsetNativeTest.php</file>
 			<file>Unit/Database/SqlSaveOutcomeNativeTest.php</file>

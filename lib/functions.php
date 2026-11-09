@@ -1309,8 +1309,8 @@ function get_selective_log_level() {
  * cacti_log_neutralize - makes control characters in a log line visible
  *
  * The match is byte oriented so invalid UTF-8 can never make it fail and
- * drop the line. If PCRE fails anyway, CR and LF still become spaces so a
- * line break cannot reach the log.
+ * drop the line. If PCRE fails anyway, cacti_log_neutralize_without_pcre()
+ * applies the same escaping.
  *
  * @param $text - (string) the text to write to the log
  *
@@ -1343,7 +1343,47 @@ function cacti_log_neutralize($text) {
 		return sprintf('\u%04x', ((ord($bytes[0]) & 0x0f) << 12) | ((ord($bytes[1]) & 0x3f) << 6) | (ord($bytes[2]) & 0x3f));
 	}, $text);
 
-	return $clean === null ? str_replace(array("\r", "\n"), ' ', $text) : $clean;
+	return $clean === null ? cacti_log_neutralize_without_pcre($text) : $clean;
+}
+
+/**
+ * cacti_log_neutralize_without_pcre - the cacti_log_neutralize() escaping
+ *   for when PCRE fails, so every control character it escapes, not only CR
+ *   and LF, is still made visible
+ *
+ * strtr() needs no regex or Unicode extension, keeps malformed UTF-8 as it
+ * is and never rescans the text it inserts.
+ *
+ * @param $text - (string) the text to write to the log
+ *
+ * @return string	The text with CR and LF as spaces and other controls escaped
+ */
+function cacti_log_neutralize_without_pcre($text) {
+	static $replacements = null;
+
+	if ($replacements === null) {
+		$replacements = array("\r" => ' ', "\n" => ' ', "\x7f" => '\x7f');
+
+		for ($byte = 0; $byte < 0x20; $byte++) {
+			if ($byte != 0x09 && $byte != 0x0a && $byte != 0x0d) {
+				$replacements[chr($byte)] = sprintf('\x%02x', $byte);
+			}
+		}
+
+		for ($byte = 0x80; $byte <= 0x9f; $byte++) {
+			$replacements["\xc2" . chr($byte)] = sprintf('\u%04x', $byte);
+		}
+
+		foreach (array(0x61c, 0x200e, 0x200f, 0x2028, 0x2029, 0x202a, 0x202b, 0x202c, 0x202d, 0x202e, 0x2066, 0x2067, 0x2068, 0x2069) as $codepoint) {
+			$character = $codepoint < 0x800
+				? chr(0xc0 | ($codepoint >> 6)) . chr(0x80 | ($codepoint & 0x3f))
+				: chr(0xe0 | ($codepoint >> 12)) . chr(0x80 | (($codepoint >> 6) & 0x3f)) . chr(0x80 | ($codepoint & 0x3f));
+
+			$replacements[$character] = sprintf('\u%04x', $codepoint);
+		}
+	}
+
+	return strtr((string) $text, $replacements);
 }
 
 /**
@@ -2023,10 +2063,10 @@ function is_hex_string(&$result) {
 	 * Hex- is considered due to the stripping of 'String:' in
 	 * lib/snmp.php
 	 */
-	if (str_starts_with($compare, 'hex-')) {
-		$check = trim(str_ireplace('hex-', '', $result));
-	} elseif (str_starts_with($compare, 'hex-string:')) {
+	if (str_starts_with($compare, 'hex-string:')) {
 		$check = trim(str_ireplace('hex-string:', '', $result));
+	} elseif (str_starts_with($compare, 'hex-')) {
+		$check = trim(str_ireplace('hex-', '', $result));
 	} else {
 		return false;
 	}
@@ -3128,6 +3168,30 @@ function get_data_source_item_name($data_template_rrd_id) {
 }
 
 /**
+ * expand_data_source_path - turn a stored data source path into the path the
+ *   RRDfile uses. A bare file name lives in the RRA directory.
+ *
+ * @param $data_source_path - (string) the stored data_template_data.data_source_path
+ * @param $expand_paths - (bool) whether to expand the <path_rra> variable into its full path or not
+ *
+ * @return - the data source path
+ */
+function expand_data_source_path($data_source_path, $expand_paths = true) {
+	global $config;
+
+	if (!strstr($data_source_path, '/')) {
+		$data_source_path = '<path_rra>/' . $data_source_path;
+	}
+
+	/* whether to show the "actual" path or the <path_rra> variable name (for edit boxes) */
+	if ($expand_paths == true) {
+		$data_source_path = str_replace('<path_rra>/', $config['rra_path'] . '/', $data_source_path);
+	}
+
+	return $data_source_path;
+}
+
+/**
  * get_data_source_path - gets the full path to the .rrd file associated with a given data source
  *
  * @param $local_data_id - (int) the ID of the data source
@@ -3156,16 +3220,11 @@ function get_data_source_path($local_data_id, $expand_paths) {
 		if (empty($data_source['data_source_path'])) {
 			/* no custom path was specified */
 			$data_source_path = generate_data_source_path($local_data_id);
-		} elseif (!strstr($data_source['data_source_path'], '/')) {
-			$data_source_path = '<path_rra>/' . $data_source['data_source_path'];
 		} else {
 			$data_source_path = $data_source['data_source_path'];
 		}
 
-		/* whether to show the "actual" path or the <path_rra> variable name (for edit boxes) */
-		if ($expand_paths == true) {
-			$data_source_path = str_replace('<path_rra>/', $config['rra_path'] . '/', $data_source_path);
-		}
+		$data_source_path = expand_data_source_path($data_source_path, $expand_paths);
 
 		$data_source_path_cache[$local_data_id] = $data_source_path;
 
@@ -4372,10 +4431,11 @@ function move_item_up($table_name, $current_id, $group_query = '') {
  *
  * @return - (array) an array containing the command output
  */
-function exec_into_array($command_line) {
+function exec_into_array($command_line, &$return_code = 0) {
 	$out = array();
 	$err = 0;
 	exec($command_line,$out,$err);
+	$return_code = $err;
 
 	return array_values($out);
 }

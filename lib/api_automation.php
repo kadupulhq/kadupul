@@ -23,6 +23,8 @@
 */
 
 /** Convert configured URL bytes for JSON without turning conversion failures into boolean URLs. */
+require_once __DIR__ . '/automation_runtime.php';
+
 function automation_url_utf8($url)
 {
 	$url = (string)$url;
@@ -3408,107 +3410,17 @@ function automation_get_valid_mask($range) {
 }
 
 function automation_get_network_info($range) {
-	$network   = false;
-	$broadcast = false;
-	$mask      = array();
-	$detail    = array();
-
-	$range = trim($range);
-	if (strpos($range, '/') !== false) {
-		// 10.1.0.0/24 or 10.1.0.0/255.255.255.0
-		$range_parts = explode('/', $range);
-
-		if (!filter_var($range_parts[0], FILTER_VALIDATE_IP)) {
-			return false;
-		}
-
-		$mask = automation_get_valid_mask($range_parts[1]);
-		if (cacti_sizeof($mask)) {
-			$network = automation_get_valid_ip($range_parts[0]);
-
-			if ($mask['cidr'] != 0) {
-				$dec = ip2long($network) & ip2long($mask['subnet']);
-				$count     = $mask['cidr'] == 32 ? 0 : $mask['count'];
-				$network   = long2ip($dec);
-				$broadcast = long2ip($dec + $count);
-			}
-		}
-	} elseif (strpos($range, '*') !== false && strpos($range, '-') === false) {
-		$test = str_replace('*', 0, $range);
-
-		if (!filter_var($test, FILTER_VALIDATE_IP)) {
-			return false;
-		}
-
-		$range_parts = explode('.', $range);
-		$network     = '';
-		$broadcast   = '';
-		$part_count  = 0;
-		foreach ($range_parts as $part) {
-			if ($part != '*') {
-				$part_count++;
-				if (is_numeric($part)) {
-					if ($part >= 0 && $part <= 255) {
-						$network .= $part . '.';
-						$broadcast .= '255.';
-					} else {
-						$network = false;
-						break;
-					}
-				} else {
-					$network = false;
-					break;
-				}
-			} else {
-				break;
-			}
-		}
-
-		if ($part_count == 0 || $part_count > 3) {
-			$network = false;
-			$broadcast = false;
-		} else {
-			while ($part_count < 4) {
-				$part_count += 1;
-				$broadcast .= '0.';
-				$network   .= '0.';
-			}
-
-			return automation_get_network_info(rtrim($network,'.').'/'.rtrim($broadcast,'.'));
-		}
-	} elseif (strpos($range, '-') !== false) {
-		raise_message('automation_iprange', __('ERROR: IP ranges in the form of range1-range2 are no longer supported.'), MESSAGE_LEVEL_ERROR);
-
-		return false;
-	} else {
-		$network   = automation_get_valid_ip($range);
-		$broadcast = automation_get_valid_ip($range);
-	}
-
-	if ($network !== false && $broadcast !== false) {
-		if (ip2long($network) <= ip2long($broadcast)) {
-			$detail['network']   = $network;
-			$detail['broadcast'] = $broadcast;
-			$detail['cidr']      = isset($mask['cidr']) ? $mask['cidr'] : false;
-
-			if ($network == $broadcast) {
-				$detail['type']  = 'single';
-				$detail['count'] = 1;
-				$detail['cidr']  = 32;
-				$detail['start'] = $network;
-				$detail['end']   = $network;
-			} else {
-				$detail['type']  = isset($mask['cidr']) ? 'subnet' : 'range';
-				$detail['count'] = ip2long($broadcast) - ip2long($network) - 1;
-				$detail['start'] = long2ip(ip2long($network) + 1);
-				$detail['end']   = long2ip(ip2long($broadcast) - 1);
-			}
-		}
-	} else {
+	$decoded = automation_address_range((string) $range);
+	if ($decoded === null) {
 		return false;
 	}
-
-	return $detail;
+	$start = automation_address_at($decoded, 0);
+	$end = automation_address_at($decoded, $decoded['count'] - 1);
+	return array('network' => isset($decoded['network']) ? long2ip($decoded['network']) : $start,
+		'broadcast' => isset($decoded['broadcast']) ? long2ip($decoded['broadcast']) : $end,
+		'cidr' => $decoded['cidr'] ?? false,
+		'type' => $decoded['count'] === 1 ? 'single' : (isset($decoded['cidr']) ? 'subnet' : 'range'),
+		'count' => $decoded['count'], 'start' => $start, 'end' => $end);
 }
 
 function automation_calculate_start($range) {
@@ -3536,83 +3448,50 @@ function automation_calculate_total_ips($range) {
 }
 
 function automation_get_next_host($start, $total, $count, $range) {
-	if ($count == $total || $total < 1) {
+	if ($count < 0 || $count >= $total || $total < 1) {
 		return false;
 	}
-
-	if (preg_match('/^([0-9]{1,3}\.[0-9]{1,3}\.)\*(\.[0-9]{1,3})$/', $range, $matches)) {
-		// 10.1.*.1
-		return $matches[1] . ++$count . $matches[2];
-	} else {
-		// other cases
-		$ip = explode('.', $start);
-		$y  = 16777216;
-
-		for ($x = 0; $x < 4; $x++) {
-			$ip[$x] += intval($count/$y);
-			$count -= (intval($count/$y) * $y);
-			$y = $y / 256;
-		}
-
-		for ($x = 3; $x > 0; $x--) {
-			if ($ip[$x] >= 256) {
-				$ip[$x-1] += intval($ip[$x] / 256);
-				$ip[$x]    = $ip[$x] % 256;
-			}
-		}
-
-		return implode('.', $ip);
+	if (strpos($range, '*') !== false) {
+		$decoded = automation_address_range($range);
+		return $decoded === null ? false : automation_address_at($decoded, (int) $count);
 	}
+	$ip = ip2long($start);
+	return $ip === false || $ip + $count > 4294967295 ? false : long2ip($ip + $count);
 }
 
-function automation_primeIPAddressTable($network_id) {
-	$subNets = db_fetch_cell_prepared('SELECT subnet_range
-		FROM automation_networks
-		WHERE id = ?',
-		array($network_id));
-
-	$subNets    = explode(',', trim($subNets));
-	$total      = 0;
-
-	if (cacti_sizeof($subNets)) {
-		foreach($subNets as $position => $subNet) {
-			$count = 1;
-			$sql   = array();
-			$subNetTotal = automation_calculate_total_ips($subNet);
-			$total += $subNetTotal;
-
-			$start = automation_calculate_start($subNet);
-
-			if ($start != '') {
-				$sql[] = "('$start', '', $network_id, '0', '0', '0')";
-			}
-
-			while ($count < $subNetTotal) {
-				$ip = automation_get_next_host($start, $subNetTotal, $count, $subNet);
-
-				$count++;
-
-				if ($ip != '') {
-					$sql[] = "('$ip', '', $network_id, '0', '0', '0')";
+/** Called inside the master's transaction, before any children are launched. */
+function automation_primeIPAddressTable($network_id, $run_id, PDO $connection, float $deadline): int {
+	$subnets = automation_query($connection, 'SELECT subnet_range FROM automation_networks WHERE id = ?', array($network_id))->fetchColumn();
+	if (!is_string($subnets) || trim($subnets) === '') {
+		throw new RuntimeException('Discovery ranges are unavailable.');
+	}
+	$ranges = array();
+	$total = 0;
+	foreach (explode(',', $subnets) as $subnet) {
+		$range = automation_address_range($subnet);
+		if ($range === null || ($total += $range['count']) > 1048576) {
+			throw new RuntimeException('Invalid discovery range or more than 1048576 addresses.');
+		}
+		$ranges[] = $range;
+	}
+	foreach ($ranges as $range) {
+		$parameters = array();
+		$values = array();
+		for ($i = 0; $i < $range['count']; $i++) {
+			$values[] = '(?, ?, ?, 0, 0, 0)';
+			array_push($parameters, automation_address_at($range, $i), $network_id, $run_id);
+			if (count($values) === 1000 || $i + 1 === $range['count']) {
+				if (microtime(true) >= $deadline) {
+					throw new RuntimeException('Discovery exceeded its run limit while preparing addresses.');
 				}
-
-				if ($count % 1000 == 0) {
-					db_execute("INSERT INTO automation_ips
-						(ip_address, hostname, network_id, pid, status, thread)
-						VALUES " . implode(',', $sql));
-					$sql = array();
-				}
-			}
-
-			if (cacti_sizeof($sql)) {
-				db_execute("INSERT INTO automation_ips
-					(ip_address, hostname, network_id, pid, status, thread)
-					VALUES " . implode(',', $sql));
+				automation_query($connection, 'INSERT INTO automation_ips
+					(ip_address, network_id, run_id, pid, status, thread) VALUES ' . implode(',', $values) . '
+					ON DUPLICATE KEY UPDATE ip_address = VALUES(ip_address)', $parameters);
+				$parameters = $values = array();
 			}
 		}
 	}
-
-	automation_debug("A Total of $total IP Addresses Primed\n");
+	return (int) automation_query($connection, 'SELECT COUNT(*) FROM automation_ips WHERE network_id = ? AND run_id = ?', array($network_id, $run_id))->fetchColumn();
 }
 
 function automation_valid_snmp_device(&$device) {
@@ -3754,132 +3633,25 @@ function automation_get_dns_from_ip($ip, $dns, $timeout = 1000) {
 }
 
 function api_automation_is_time_to_start($network_id) {
-	$net = db_fetch_row_prepared('SELECT *
-		FROM automation_networks
-		WHERE id = ?',
-		array($network_id));
-
-	$now   = time();
-
-	switch($net['sched_type']) {
-	case '1':
+	$network = db_fetch_row_prepared('SELECT * FROM automation_networks WHERE id = ?', array($network_id));
+	if (!is_array($network) || !$network || $network['enabled'] !== 'on') {
 		return false;
-
-		break;
-	case '2':
-		$recur = $net['recur_every'] * 86400; // days
-		$start = strtotime($net['start_at']);
-		$next  = strtotime($net['next_start']);
-
-		if ($net['next_start'] == '0000-00-00 00:00:00') {
-			$target = $start;
-		} else {
-			$target = $next;
-		}
-
-		if ($now > $target) {
-			while($now > $target) {
-				$target += $recur;
-			}
-
-			db_execute_prepared('UPDATE automation_networks
-				SET next_start = ?
-				WHERE id = ?',
-				array(date('Y-m-d H:i', $target), $network_id));
-
-			return true;
-
-			break;
-		}
-
+	}
+	try {
+		$due = automation_due_time($network);
+		return $due !== null && $due <= time();
+	} catch (Throwable $error) {
+		cacti_log('ERROR: Invalid discovery schedule for network ' . (int) $network_id, false, 'AUTOM8');
 		return false;
-
-		break;
-	case '3':
-		$recur = $net['recur_every'] * 86400 * 7; // weeks
-		$start = strtotime($net['start_at']);
-		$next  = strtotime($net['next_start']);
-		$days  = explode(',', $net['day_of_week']);
-		$day   = 86400;
-		$week  = 86400 * 7;
-
-		if ($net['next_start'] == '0000-00-00 00:00:00') {
-			$target = $start;
-		} else {
-			$target = $next;
-		}
-
-		if ($now > $target) {
-			while(true) {
-				$target += $day;
-				$cur_day = date('w', $target) + 1;
-
-				$key = array_search($cur_day, $days, false);
-				if ($key !== false && $key >= 0) {
-					if ($key == 0) {
-						$target += $recur - $week;
-					}
-
-					break;
-				}
-			}
-
-			db_execute_prepared('UPDATE automation_networks
-				SET next_start = ?
-				WHERE id = ?',
-				array(date('Y-m-d H:i', $target), $network_id));
-
-			return true;
-		}
-
-		return false;
-
-		break;
-	case '4':
-	case '5':
-		$next = calculateNextStart($net);
-
-		/* No schedulable date was found (e.g. an incomplete schedule). Leave
-		   next_start untouched instead of writing a 1970 timestamp, which the
-		   run check below would then treat as due every poller cycle. */
-		if (empty($next)) {
-			return false;
-		}
-
-		db_execute_prepared('UPDATE automation_networks
-			SET next_start = ?
-			WHERE id = ?',
-			array(date('Y-m-d H:i', $next), $network_id));
-
-		if ($net['next_start'] == '0000-00-00 00:00:00') {
-			if ($now > strtotime($net['start_at'])) {
-				return true;
-			} else {
-				return false;
-			}
-		} elseif ($now > strtotime($net['next_start'])) {
-			return true;
-		}
-
-		return false;
-
-		break;
 	}
 }
 
 function calculateNextStart($net) {
-	$now = time();
-
-	/* Evaluate this year first; when every selected date has already passed,
-	   roll over to the next year so a valid monthly schedule never resolves to
-	   false (which the caller would otherwise store as a 1970 next_start). */
-	$next = calculateNextStartForYear($net, (int) date('Y', $now), $now);
-
-	if ($next === false) {
-		$next = calculateNextStartForYear($net, (int) date('Y', $now) + 1, $now);
+	try {
+		return automation_next_schedule($net, time());
+	} catch (Throwable $error) {
+		return false;
 	}
-
-	return $next;
 }
 
 function calculateNextStartForYear($net, $year, $now) {
@@ -3891,6 +3663,9 @@ function calculateNextStartForYear($net, $year, $now) {
 		$days   = explode(',', $net['day_of_month']);
 
 		foreach($months as $month) {
+			if (!ctype_digit((string) $month) || (int)$month < 1 || (int)$month > 12) {
+				return false;
+			}
 			foreach($days as $day) {
 				switch($month) {
 				case '1':
@@ -3934,7 +3709,9 @@ function calculateNextStartForYear($net, $year, $now) {
 				if ($day == '32') {
 					$dates[] = strtotime("last day of $smonth $year");
 				} else {
-					$dates[] = strtotime("$smonth $day $year");
+					if (ctype_digit((string) $day) && checkdate((int)$month, (int)$day, $year)) {
+						$dates[] = strtotime("$smonth $day $year");
+					}
 				}
 			}
 		}
@@ -3946,8 +3723,17 @@ function calculateNextStartForYear($net, $year, $now) {
 		$days   = explode(',', $net['monthly_day']);
 
 		foreach($months as $month) {
+			if (!ctype_digit((string) $month) || (int)$month < 1 || (int)$month > 12) {
+				return false;
+			}
 			foreach($weeks as $week) {
+				if (!in_array($week, array('1', '2', '3', '4', '32'), true)) {
+					return false;
+				}
 				foreach($days as $day) {
+					if (!in_array($day, array('1', '2', '3', '4', '5', '6', '7'), true)) {
+						return false;
+					}
 					switch($month) {
 					case '1':
 						$smonth = 'January';

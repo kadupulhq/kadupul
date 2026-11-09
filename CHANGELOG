@@ -1,18 +1,45 @@
 Cacti CHANGELOG
 
+1.2.33 (unreleased)
+-issue#207: Retain distinct addresses from overlapping discovery ranges and isolate concurrent network queues
+-issue#1032: Validate discovery ranges and scan valid .255 endpoints
+-issue: Preserve automation discovery work across failures, isolate concurrent network runs, enforce deadlines, and acknowledge schedules only after completed discovery
+
 1.2.32
 -issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
+-issue: Record the system MIB collection time only after a collector has been started with --mibs, so a poller run that exits early no longer postpones collection for four hours; the bad SNMP index warning accompanies that run instead of repeating every poll while polling is disabled (#1348)
 -security: Web Basic authentication takes the user from REMOTE_USER or REDIRECT_REMOTE_USER when the web server sets either, ahead of PHP_AUTH_USER, which PHP fills from the client's Authorization header; servers that pass only PHP_AUTH_USER keep the 1.2.31 behavior
+-issue: Accept an empty Data Source item name, minimum or maximum in an imported template when its per-Data Source override is set, as the Data Template form and export allow (#1349)
 -issue: Widen user_log.user_id, user_auth_row_cache.user_id and settings_user_group.group_id to the account and group ids they hold, in new installs and the 1.2.32 upgrade (#927)
+-issue: Send the Data Source Troubleshooter's Apply Suggested Fixes and Rerun Analysis as POST actions and check the request method before either runs (#1038)
 -issue: Honor explicitly disabled installer SNMP overrides while retaining omitted values (#1300)
+-security: Read packages up to an expanded size of 32 MiB before metadata, signature or XML processing, and refuse larger ones with an import log message; IMPORT_PACKAGE_MAX_EXPANDED_BYTES in include/config.php changes the limit (#110)
 -issue: Preserve automation rule references when optional templates are not selected; fail installation on database errors and repair the rules when their templates become available
+-issue: Keep the previous poller cache and reindex rows when their replacement rows cannot be stored, and report the failed rebuild instead of deleting them (#758)
+-issue: Keep samples a remote collector stores in poller_output while offline until recovery has delivered them, and report a sample batch that cmd.php could not store (#759)
+-issue: Report a failed Data Collector synchronization instead of logging it as completed (#760)
+-issue: Retain malformed MULTI poller output until it expires instead of writing an all-unknown update for it; a bare U is still recorded as unknown (#763)
+-issue: Remove the remote poller items the main data collector no longer holds after a synchronization, comparing item keys so current items are kept (#741)
 -issue: Preserve an explicitly disabled installer Scan Mode through settings reload and the automation network update (#1116)
+-issue: Leave legacy system data input fields and mappings unchanged when a template or package import is only previewed; a real import still repairs them (#215)
+-issue: Report a failed read of the stored data query sort field instead of replacing it with the XML field and reordering the index (#744)
 -issue: Reuse one PHP script server per remote realtime polling batch and close it after success or failure (#1114)
+-issue: Remove a deleted graph from the aggregates that list it by passing the aggregate's graph id and a member list to the disassociation, so the aggregate's copied items are rebuilt without it (#227)
 -issue: Exclude unknown and non-finite samples before percentile aggregation, preserving measured zero and valid timestamp sums (#1112)
+-issue: Keep the stored data source heartbeat when the data source info view compares an RRD file, and report the difference instead of rewriting it (#774)
+-issue: Count an update RRDtool refuses as older than the last update as not stored, instead of reporting it written and deleting its queued sample (#775)
+-issue: Name the archive inside the RRD file, not the profile position, in resize recommendations (#780)
+-issue: Replace an RRD file with the resized copy only after RRDtool confirmed the resize (#773)
 -issue: Register the database session callbacks through SessionHandlerInterface to avoid PHP 8.4 deprecation output while preserving existing persistence and shutdown behavior
+-issue: Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056)
 -issue: Read group graph-setting presence from the group row, preserving stored empty and zero values without inheriting unrelated user settings
+-security: Escape the None label of the color dropdown, as the color names already are (#750)
+-security: Escape the differences and the tune and resize recommendations that the Data Source debug view prints, including the RRDfile name (#770)
+-security: When PCRE fails, still write every control character in a log line, not only CR and LF, as the visible escape it gets when PCRE succeeds (#942)
 -issue: Use true binary unit divisors for percentile and bandwidth-summation graph variables, preserving decimal and automatic scaling (#1110)
+-security: Generate the CSP nonce when the security headers are sent, before any page output; when no secure random source works the request ends with an error page and a log entry instead of a page that stops partway through (#342)
 -issue: Keep CSV export bounds on one clock snapshot and trim samples beyond an unaligned requested end, retaining complete rows and empty-window metadata (#1092)
+-issue: Take the SpikeKill windowed standard-deviation mean from the samples around the window (#1034), and ignore unknown samples and empty data source limits when building and applying its cutoffs (#1095)
 -issue: Match percentile ranks to RRDtool for small samples, low percentiles and half-rank boundaries without changing CSV headers (#1092)
 -security: Create a local RRDfile under a temporary name in its directory and rename it into place, so a symbolic link that appears at the path is replaced rather than written through; applies to the poller, Boost and realtime. With RRDCACHED_ADDRESS set, rrdcached must create files on the filesystem Cacti reads; a daemon that writes to another host or filesystem leaves no local temporary file and the create is reported as failed (#740)
 -security: Quote the RRDfile path in the RRDtool create and update commands, as fetch already does; with the RRDtool proxy a path that cannot be sent as one bare argument is refused and its samples stay queued (#768)
@@ -20,18 +47,30 @@ Cacti CHANGELOG
 -security: Tuning an RRDfile requires the exclusive storage lease, so it is refused on Windows as resize and restore already are; an RRD Cleaner rescan takes the storage lease first and keeps queued delete and archive actions when storage is busy or the RRA directory is missing; when the directory owner cannot be validated for the lease it rescans without it, as 1.2.31 did, and logs a notice (#218)
 -security: Quote the file names and dates the RRD Cleaner rescan writes to its file list with db_qstr(), and URL-encode the search filter in the RRD Cleaner page links; a rescan through the RRDtool proxy inserts its file list in batches of 400, as a local rescan does
 -issue: Return a failed database write from sql_save instead of falling back to a record ID; preserve successful and unchanged writes and caller-owned transactions (#1251)
+-issue: Rebuild aggregate graphs with their members in the stored sequence, so No Reordering keeps the chosen order (#226)
 -issue: Store explicitly empty or null nullable numeric fields as SQL NULL in sql_save; preserve explicit zero, omitted fields and non-nullable defaults, leaving existing stored zeros unchanged (#1108)
+-issue: Refuse to delete CDEFs that graphs, aggregates or other CDEFs still use, as the CDEF list already indicates (#1078)
 -issue: Serialize nullable SNMP text as empty strings and non-device numeric defaults as zero when rebuilding poller cache entries under strict SQL, retaining configured values and overrides
+-issue: Stop repair_database.php after it reports that it is stopping (#742), and count a failed or empty hostname lookup or row read as a failure instead of a repair (#743)
+-security: Add the 'Restrict RRDfiles to the RRA Directory' setting, off by default. When checked, Data Source paths that resolve outside the RRA directory, including through symbolic links, are refused when a Data Source is saved and when the poller or Boost creates or updates the RRDfile
 -issue: Supply the configured SNMP credentials, protocol, context, port and timeout when checking availability for devices without poller items (#1105)
+-issue: Let a Boost child with no rows in its partition succeed instead of failing the run, while a failed row count still fails it (#762)
 -issue: Preserve graph-view actions and query delimiters when a URI match begins at position zero (#1102)
+-issue: Replace a remote collector table in one transaction during full synchronization, so a failed insert keeps its previous rows instead of leaving it empty; non-InnoDB tables keep the 1.2.31 behavior (#761)
+-issue: Document the shared-group setup for the Real-time and Boost cache directories in docs/cache-directory-permissions.md; the 0644 file mode is unchanged
 -issue: Preserve destination graph-view actions and default-mode selection when validating redirects; retain legacy URI navigation and bracket behavior (#1241)
+-issue: Keep the orphan flag of data sources whose stored index a re-index could not find when no other index changed (#198)
 -issue: Use the existing error image for malformed remote graph responses, preserving valid image bytes and local permission checks (#1113)
+-issue: Treat a binary SNMP walk that exits non-zero as failed and return no rows, instead of matching "Timeout" or "(tooBig)" in device values (#1099)
 -issue: Match the SMTP settings preflight to delivery for STARTTLS, implicit TLS, authentication and embedded host ports, retaining certificate verification (#200)
+-issue: Keep an RRDfile unchanged when rrdtool tune rejects a later option, and return whether rrdtool_function_tune() succeeded (#777)
 -issue: Retain queued Boost samples when the fallback RRD path query fails, while preserving cleanup for a successfully confirmed missing data source (#738)
+-issue: Reconcile unique_keys in db_update_table() so a declared unique index is not dropped, and accept a primary key or index columns given as a string (#1065, #1060)
 -issue: Treat obsolete colour and data source delete action names as unknown actions instead of calling undefined handlers; bulk deletion remains available (#685)
 -issue: Keep quoted empty shell arguments in their original position while preserving unquoted and legacy null/false values (#1103)
 -issue: Fall back to the current response time when inconsistent device counters leave no successful polls for the average (#1101)
 -security: Keep data input field values literal whatever quoting the input string puts around them (GHSA-5v3j-wcrr-jxjg). Fields are substituted in one pass. An input string that places a field or backslash inside backticks or ${...}, uses $'...' or $"..." quoting, places a field directly after an unescaped $, puts a backslash inside $(...), contains a newline, a word-initial # or << at the top level, or uses grouping, case, comments or redirection inside $(...) now produces no command. Test Data Source drops a script server function name only when it is a plain word. The shipped data input methods produce the same commands as 1.2.31
+-security: Check the referer login redirect after the login action is removed and send the console page when the target would leave the site; a leading action=login is removed as a parameter, so the rest of the query stays well formed
 -issue: Upgrade phpseclib to 4.0.1 with matching RSA and RRDproxy namespaces, retaining existing encrypted proxy framing and legacy key compatibility
 -security: Require configured data input validation before collection; invalid or missing approvals stop affected methods. Unconfigured installations retain their existing behavior; refresh configured approvals with the input whitelist CLI before resuming collection.
 -issue: Use Spine's engine-first counter, including zero after a reset, for PHP uptime-backwards reindex baselines and assertions while retaining the device-display uptime heuristic

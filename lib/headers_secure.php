@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -216,6 +217,28 @@ class CactiSecureHeaders {
 	 */
 
 	/**
+	 * End the request before any page output when no secure nonce exists.
+	 * The response still carries a restrictive policy and is never cached.
+	 */
+	private static function refuseWithoutNonce() {
+		if (function_exists('cacti_log')) {
+			cacti_log('ERROR: The page was not served because a secure CSP nonce could not be generated. Check the PHP random source.', false, 'SYSTEM');
+		}
+
+		http_response_code(503);
+		header('Content-Type: text/plain; charset=UTF-8');
+		header("Content-Security-Policy: default-src 'none'");
+		header('X-Content-Type-Options: nosniff');
+		header('Cache-Control: no-store, no-cache, must-revalidate');
+
+		print (function_exists('__')
+			? __('This page cannot be shown because the server could not generate secure random data. Ask the administrator to check the Cacti log.')
+			: 'This page cannot be shown because the server could not generate secure random data. Ask the administrator to check the Cacti log.') . PHP_EOL;
+
+		exit;
+	}
+
+	/**
 	 * Emit the full security-header set. Safe to call multiple times;
 	 * headers_sent() short-circuits re-emission after output begins.
 	 */
@@ -224,8 +247,19 @@ class CactiSecureHeaders {
 			return;
 		}
 
+		/* Inline tags throughout the page body ask for the nonce, in every
+		 * mode. Generate it here, before any output, so an entropy failure
+		 * ends the request with an error page instead of a page cut off
+		 * partway through. */
+		try {
+			$nonce = self::getNonce();
+		} catch (\RuntimeException $e) {
+			self::refuseWithoutNonce();
+			return;
+		}
+
 		$mode       = self::getCspMode();
-		$nonce      = self::isNonceMode() ? self::getNonce() : '';
+		$nonce      = self::isNonceMode() ? $nonce : '';
 		$alternates = '';
 		$report_uri = '';
 

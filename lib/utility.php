@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -648,12 +649,14 @@ function push_out_data_input_method($data_input_id) {
  * @param array/int $local_data_ids - either a scalar (all ids) or an array of data source to act on
  * @param array $poller_items - the new items for poller cache
  * @param int $poller_id - the poller_id of the buffer
+ * @return bool - false when the replacement rows could not be stored and the previous rows were kept
  */
 function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items, $poller_id = 1) {
 	global $config;
 
 	$ids    = '';
 	$raised = false;
+	$failed = false;
 
 	/* set all fields present value to 0, to mark the outliers when we are all done */
 	if (cacti_sizeof($local_data_ids)) {
@@ -662,20 +665,26 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 		$ids      = implode(', ', $safe_ids);
 
 		if ($ids != '') {
-			db_execute_prepared("UPDATE poller_item
+			if (db_execute_prepared("UPDATE poller_item
 				SET present = 0
 				WHERE poller_id = ?
 				AND local_data_id IN ($ids)",
-				array($poller_id));
+				array($poller_id)) === false) {
+				cacti_log('ERROR: Unable to mark the poller cache for replacement; the previous rows were kept.', false, 'POLLER');
+
+				return false;
+			}
 
 			if ($poller_id > 1) {
 				if (remote_poller_up($poller_id)) {
 					if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-						db_execute_prepared("UPDATE poller_item
+						if (db_execute_prepared("UPDATE poller_item
 							SET present = 0
 							WHERE poller_id = ?
 							AND local_data_id IN ($ids)",
-							array($poller_id), true, $rcnn_id);
+							array($poller_id), true, $rcnn_id) === false) {
+							$failed = true;
+						}
 					} else {
 						raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 						$raised = true;
@@ -732,7 +741,7 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 	$buf_count    = 0;
 	$buffer       = '';
 
-	if (cacti_sizeof($poller_items)) {
+	if (cacti_sizeof($poller_items) && !$failed) {
 		foreach ($poller_items as $record) {
 			/* take care of invalid entries */
 			if ($record == '') {
@@ -750,12 +759,20 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 			$buf_len += strlen($record);
 
 			if ($overhead + $buf_len > $max_packet - 1024) {
-				db_execute($sql_prefix . $buffer . $sql_suffix);
+				if (db_execute($sql_prefix . $buffer . $sql_suffix) === false) {
+					$failed = true;
+
+					break;
+				}
 
 				if ($poller_id > 1) {
 					if (remote_poller_up($poller_id)) {
 						if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-							db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id);
+							if (db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id) === false) {
+								$failed = true;
+
+								break;
+							}
 						} elseif (!$raised) {
 							raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 							$raised = true;
@@ -775,13 +792,17 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 		}
 	}
 
-	if ($buf_count > 0) {
-		db_execute($sql_prefix . $buffer . $sql_suffix);
+	if ($buf_count > 0 && !$failed) {
+		if (db_execute($sql_prefix . $buffer . $sql_suffix) === false) {
+			$failed = true;
+		}
 
-		if ($poller_id > 1) {
+		if ($poller_id > 1 && !$failed) {
 			if (remote_poller_up($poller_id)) {
 				if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
-					db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id);
+					if (db_execute($sql_prefix . $buffer . $sql_suffix, true, $rcnn_id) === false) {
+						$failed = true;
+					}
 				} else {
 					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 					$raised = true;
@@ -793,8 +814,29 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 		}
 	}
 
-	/* remove stale records FROM the poller cache */
-	if ($ids != '') {
+	/* a failed replacement must leave the previous rows in place */
+	if ($failed) {
+		cacti_log('ERROR: Unable to store the replacement poller cache rows; the previous rows were kept.', false, 'POLLER');
+
+		if ($ids != '') {
+			db_execute_prepared("UPDATE poller_item
+				SET present = 1
+				WHERE present = 0
+				AND poller_id = ?
+				AND local_data_id IN ($ids)",
+				array($poller_id));
+
+			if ($poller_id > 1 && remote_poller_up($poller_id) && ($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
+				db_execute_prepared("UPDATE poller_item
+					SET present = 1
+					WHERE present = 0
+					AND poller_id = ?
+					AND local_data_id IN ($ids)",
+					array($poller_id), true, $rcnn_id);
+			}
+		}
+	} elseif ($ids != '') {
+		/* remove stale records FROM the poller cache */
 		db_execute_prepared("DELETE FROM poller_item
 			WHERE present = 0
 			AND poller_id = ?
@@ -823,6 +865,8 @@ function poller_update_poller_cache_from_buffer($local_data_ids, &$poller_items,
 	 * for Caching.
 	 */
 	set_config_option('time_last_change_poller_item', time());
+
+	return !$failed;
 }
 
 /** for a given data template, update all input data and the poller cache

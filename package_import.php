@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -430,11 +431,10 @@ function import_validate_public_key($xmlfile, $accept = false) {
 		return false;
 	}
 
-	$filename = "compress.zlib://$xmlfile";
+	/* bounded like the import itself (#110) */
+	$data = import_package_read($xmlfile);
 
-	$data = file_get_contents($filename);
-
-	if ($data != '') {
+	if ($data !== false && $data != '') {
 		$name              = '';
 		$author            = '';
 		$homepage          = '';

@@ -813,6 +813,15 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 		return array();
 	}
 
+	/* An empty OID is a caller error.  Net-SNMP rejects it as its own argument
+	 * with 'Unknown Object Identifier (Sub-id not found: (top) -> )', and a
+	 * shell command that dropped it would walk all of MIB-2 instead. */
+	if (trim((string) $oid) === '') {
+		cacti_log("WARNING: SNMP walk requested without an OID, Device:'$hostname'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+
+		return array();
+	}
+
 	$path_snmpbulkwalk = read_config_option('path_snmpbulkwalk');
 
 	if (snmp_get_method('walk', $version, $context, $engineid, $value_output_format) == SNMP_METHOD_PHP) {
@@ -889,6 +898,8 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 			$oidCheck = '';
 		}
 
+		$return_code = 0;
+
 		if (file_exists($path_snmpbulkwalk) && ($version > 1) && ($bulk_walk_size > 1)) {
 			$command = cacti_escapeshellcmd($path_snmpbulkwalk) .
 				' -O QnU'  . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x ':' ') . $snmp_auth .
@@ -904,7 +915,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 				debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 			}
 
-			$temp_array = exec_into_array(snmp_exec_prefix() . $command);
+			$temp_array = exec_into_array(snmp_exec_prefix() . $command, $return_code);
 		} else {
 			$command = cacti_escapeshellcmd(read_config_option('path_snmpwalk')) .
 				' -O QnU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x ':' ') . $snmp_auth .
@@ -919,15 +930,19 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 				debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 			}
 
-			$temp_array = exec_into_array(snmp_exec_prefix() . $command);
+			$temp_array = exec_into_array(snmp_exec_prefix() . $command, $return_code);
 		}
 
-		if (strpos(implode(' ', $temp_array), 'Timeout') !== false) {
-			cacti_log("WARNING: SNMP Error:'Timeout', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
-		}
+		/**
+		 * net-snmp reports a timeout or an oversized response on stderr, which
+		 * is not part of the walk output, so matching 'Timeout' or '(tooBig)' in the
+		 * walk output only matched device data.  A failed walk, including one
+		 * cut short after some rows, is known from its exit code (#1099).
+		 */
+		if ($return_code != 0) {
+			cacti_log("WARNING: SNMP Error:'Exit Code $return_code', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
 
-		if (strpos(implode(' ', $temp_array), '(tooBig)') !== false) {
-			cacti_log("WARNING: SNMP Error:'Error in packet.  Response message would have been too large.', Device:'$hostname', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+			return array();
 		}
 
 		/* check for bad entries */
