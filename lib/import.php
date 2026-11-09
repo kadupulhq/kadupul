@@ -1285,11 +1285,26 @@ function import_invalid_data_source_item($xml_array)
 
     foreach ($xml_array['items'] as $item_array) {
         foreach (array('data_source_name', 'rrd_minimum', 'rrd_maximum') as $field_name) {
-            if (!isset($item_array[$field_name]) || preg_match('/hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})/', $item_array[$field_name])) {
+            if (!isset($item_array[$field_name])) {
+                continue;
+            }
+
+            /* an element with child elements decodes to an array, which no field accepts */
+            if (!is_string($item_array[$field_name])) {
+                return array($field_name, '');
+            }
+
+            if (preg_match('/hash_([a-f0-9]{2})([a-f0-9]{4})([a-f0-9]{32})/', $item_array[$field_name])) {
                 continue;
             }
 
             $value = xml_character_decode($item_array[$field_name]);
+
+            /* the Data Template form saves an empty value when the per-Data Source
+             * override is set, and export writes it; each Data Source supplies its own */
+            if ($value === '' && ($item_array['t_' . $field_name] ?? '') === 'on') {
+                continue;
+            }
 
             if (!import_validate_data_source_item($field_name, $value)) {
                 return array($field_name, $value);

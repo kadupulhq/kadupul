@@ -1,0 +1,38 @@
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+//
+// Advisory mutation testing of the Symfony code in src/ against the PHPUnit
+// suite in phpunit-symfony.xml. Run it through
+// tests/tools/mutation_changed_lines.py, which limits mutation to the lines a
+// change adds or modifies and writes var/infection/phpunit/phpunit.xml as a
+// copy of phpunit-symfony.xml with absolute paths: Infection only discovers a
+// file named phpunit.xml, and the root phpunit.xml is the legacy Pest suite.
+//
+// The wrapper runs the initial test run itself and passes its coverage with
+// --coverage and --skip-initial-tests: Infection stops its own initial run at
+// the first byte on stderr, which this suite writes on purpose.
+//
+// No minMsi is set on purpose. Escaped mutants are reported, never fatal; a
+// nonzero exit from Infection always means the tool itself failed.
+{
+    "$schema": "include/vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": ["src"]
+    },
+    "phpUnit": {
+        "configDir": "var/infection/phpunit",
+        "customPath": "include/vendor/bin/phpunit"
+    },
+    "testFramework": "phpunit",
+    "tmpDir": "var/infection/tmp",
+    "timeout": 120,
+    "logs": {
+        "text": "var/infection/infection.log",
+        "summary": "var/infection/summary.log",
+        "json": "var/infection/infection.json",
+        "html": "var/infection/infection.html"
+    },
+    "mutators": {
+        "@default": true
+    }
+}

@@ -35,7 +35,7 @@ fi
 echo "Updating Cacti language gettext language files"
 
 cd ${BASE_PATH}
-${XGETTEXT_BIN} --from-code=UTF-8 --no-wrap --copyright-holder="The Cacti Group" --package-name="Kadupul" --package-version=`cat include/cacti_version` --msgid-bugs-address="https://github.com/kadupulhq/kadupul/issues" -F -k__gettext -k__ -k__n:1,2 -k__x:1c,2 -k__xn:1c,2,3 -k__esc -k__esc_n:1,2 -k__esc_x:1c,2 -k__esc_xn:1c,2,3 -k__date -o locales/po/cacti.pot `find . -maxdepth 2 -name \*.php` `find src -type f -name \*.php`
+${XGETTEXT_BIN} --from-code=UTF-8 --no-wrap --add-location=file --copyright-holder="The Cacti Group" --package-name="Kadupul" --package-version=`cat include/cacti_version` --msgid-bugs-address="https://github.com/kadupulhq/kadupul/issues" -F -k__gettext -k__ -k__n:1,2 -k__x:1c,2 -k__xn:1c,2,3 -k__esc -k__esc_n:1,2 -k__esc_x:1c,2 -k__esc_xn:1c,2,3 -k__date -o locales/po/cacti.pot `find . -maxdepth 2 -name \*.php` `find src -type f -name \*.php`
 
 
 # Keep the migrated console identities in the shared gettext catalogue.
@@ -46,6 +46,6 @@ if [ -f templates/platform/console_home_body.html.twig ]; then
         echo "ERROR: Console Twig extraction failed; translation artifacts remain incomplete." >&2
         exit 1
     fi
-    msgcat --no-wrap locales/po/cacti.pot "$CONSOLE_POT_DIR/console.pot" -o "$CONSOLE_POT_DIR/merged.pot" || exit 1
+    msgcat --no-wrap --add-location=file locales/po/cacti.pot "$CONSOLE_POT_DIR/console.pot" -o "$CONSOLE_POT_DIR/merged.pot" || exit 1
     cp "$CONSOLE_POT_DIR/merged.pot" locales/po/cacti.pot || exit 1
 fi

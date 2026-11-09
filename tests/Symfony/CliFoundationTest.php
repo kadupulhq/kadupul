@@ -26,6 +26,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\ConsoleSectionOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class CliFoundationTest extends TestCase
@@ -295,5 +298,113 @@ final class CliFoundationTest extends TestCase
         // audit_database.php with no arguments printed its help and exited 1.
         self::assertSame(1, $exit);
         self::assertStringStartsWith("Version line\n\nusage: convert_tables.php", $output->fetch());
+    }
+
+    /**
+     * A map whose translate() is the unchecked loop, with the given hooks.
+     *
+     * @param list<string> $skipped
+     */
+    private function uncheckedMap(?\Closure $value = null, ?\Closure $stopsAfter = null, array $skipped = []): LegacyArguments
+    {
+        return new class ($value, $stopsAfter, $skipped) extends LegacyArguments {
+            /** @param list<string> $skipped */
+            public function __construct(private ?\Closure $value, private ?\Closure $stopsAfter, private array $skipped) {}
+
+            protected function flags(): array
+            {
+                return ['-d' => [null, false], '--debug' => ['debug', false], '--id' => ['id', true], '--name' => ['name', true], ...self::versionAndHelp()];
+            }
+
+            public function translate(array $argv): array
+            {
+                return $this->translateUnchecked($argv, $this->value, $this->stopsAfter, $this->skipped);
+            }
+
+            public function help(): array
+            {
+                return ['usage: x.php'];
+            }
+        };
+    }
+
+    public function testTheUncheckedLoopKeepsEmptyValuesAndSplitsOnlyAfterTheFirstCharacter(): void
+    {
+        $map = $this->uncheckedMap();
+        self::assertSame([['--id' => '', '--name' => 'a=b', '--debug' => true], null], $map->translate(['--id', '--name=a=b', '--debug=ignored']));
+        self::assertSame([['--id' => ''], null], $map->translate(['--id=']));
+        self::assertSame([[], LegacyRequest::Help], $map->translate(['--id=1', '-h', '--bogus']));
+        self::assertSame([[], LegacyRequest::Version], $map->translate(['-V']));
+        // strpos() > 0: a leading "=" is part of the flag, so it is unknown.
+        try {
+            $map->translate(['--id=1', '=2']);
+            self::fail('Expected rejection');
+        } catch (InvalidLegacyArgument $error) {
+            self::assertSame('=2', $error->argument);
+        }
+    }
+
+    public function testTheUncheckedLoopSkipsReadsPastAndStopsWhereTheScriptExited(): void
+    {
+        $seen = [];
+        $map = $this->uncheckedMap(
+            static function (string $flag, bool $takesValue, string $value, string $argument) use (&$seen): string|true {
+                $seen[] = [$flag, $takesValue, $value, $argument];
+                if ($value === 'bad') {
+                    throw new InvalidLegacyArgument($argument);
+                }
+
+                return $takesValue ? strtoupper($value) : true;
+            },
+            static fn(string $flag, bool $takesValue, string $value): bool => $flag === '--id' && !is_numeric($value),
+            ['-d'],
+        );
+        // -d maps to a special mode but is read past; nothing after the first bad id counts.
+        self::assertSame([['--name' => 'X', '--id' => 'Y'], null], $map->translate(['-d', '--name=x', '--id=y', '--bogus', '-h']));
+        self::assertSame([['--name', true, 'x', '--name=x'], ['--id', true, 'y', '--id=y']], $seen);
+        try {
+            $map->translate(['--name=bad']);
+            self::fail('Expected rejection');
+        } catch (InvalidLegacyArgument $error) {
+            self::assertSame('--name=bad', $error->argument);
+        }
+    }
+
+    public function testAnInvalidSelectionGoesToStderrOnlyInLegacyMode(): void
+    {
+        $renderer = new ResultRenderer();
+        $out = new BufferedOutput();
+        $io = new SymfonyStyle(new ArrayInput([]), $out);
+        self::assertSame(1, $renderer->invalidSelection($io, $out, OutputMode::Legacy, 'Pick a device.'));
+        self::assertSame("ERROR: Pick a device.\n", $out->fetch());
+        self::assertSame(2, $renderer->invalidSelection($io, $out, OutputMode::Json, 'Pick a device.'));
+        self::assertSame(['status' => 'invalid', 'error' => 'Pick a device.'], json_decode($out->fetch(), true));
+        $console = new class extends BufferedOutput implements ConsoleOutputInterface {
+            public BufferedOutput $errors;
+
+            public function __construct()
+            {
+                parent::__construct();
+                $this->errors = new BufferedOutput();
+            }
+
+            public function getErrorOutput(): OutputInterface
+            {
+                return $this->errors;
+            }
+
+            public function setErrorOutput(OutputInterface $error): void
+            {
+                throw new \LogicException('Not used.');
+            }
+
+            public function section(): ConsoleSectionOutput
+            {
+                throw new \LogicException('Not used.');
+            }
+        };
+        self::assertSame(1, $renderer->invalidSelection(new SymfonyStyle(new ArrayInput([]), $console), $console, OutputMode::Legacy, 'Pick a device.'));
+        self::assertSame('', $console->fetch());
+        self::assertSame("ERROR: Pick a device.\n", $console->errors->fetch());
     }
 }

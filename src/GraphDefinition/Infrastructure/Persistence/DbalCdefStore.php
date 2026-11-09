@@ -26,6 +26,7 @@ use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\CdefReferenceReadiness;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use Kadupul\Platform\Infrastructure\Persistence\AuditedPrimaryWrite;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -35,6 +36,8 @@ final readonly class DbalCdefStore implements CdefStore
     // Far longer than any usable RPN expression; keeps the editor page bounded.
     private const int PREVIEW_LIMIT = 16384;
     private const string PREVIEW_TRUNCATED = ' [preview truncated]';
+    // Every table a write changes or locks, with the permission tables the actor recheck reads.
+    private const array WRITE_TABLES = ['cdef', 'cdef_items', 'graph_templates_item', 'aggregate_graph_templates_item', 'aggregate_graphs_graph_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'];
     private const string STALE = 'The CDEF changed since you opened this form. Reload before saving.';
     // Legacy counts distinct graph/template uses, not graph items.
     private const string USAGE = 'SELECT c.id, c.name,
@@ -42,14 +45,18 @@ final readonly class DbalCdefStore implements CdefStore
         (SELECT COUNT(*) FROM (SELECT DISTINCT cdef_id, graph_template_id, local_graph_id FROM graph_templates_item WHERE local_graph_id = 0) t WHERE t.cdef_id = c.id) AS templates
         FROM cdef c';
 
+    private AuditedPrimaryWrite $writes;
+
     public function __construct(
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
         private CdefAccess $access,
-        private AuditTrail $audit,
+        AuditTrail $audit,
         private LegacyConfiguration $configuration,
         private CdefReferenceReadiness $readiness,
-    ) {}
+    ) {
+        $this->writes = new AuditedPrimaryWrite($database, $audit, $configuration, $access->assertCurrent(...), self::WRITE_TABLES, 'CDEF', 'CDEFs', 'graph_definition.cdef', 'cdef');
+    }
 
     public function defaultRows(): int
     {
@@ -139,7 +146,7 @@ final readonly class DbalCdefStore implements CdefStore
     public function save(int $actorId, ?int $id, string $name, ?string $revision): int
     {
         self::validateName($name);
-        return $this->write($actorId, $id === null ? 'create' : 'edit', function () use ($id, $name, $revision): int {
+        return $this->writes->run($actorId, $id === null ? 'create' : 'edit', 'cdef', function () use ($id, $name, $revision): int {
             if ($id === null) {
                 // A 32-digit hex hash, the shape get_hash_cdef() gives templates and exports.
                 $this->database->insert('cdef', ['hash' => bin2hex(random_bytes(16)), '`system`' => 0, 'name' => $name]);
@@ -160,7 +167,7 @@ final readonly class DbalCdefStore implements CdefStore
         if (!isset(CdefFunctions::TYPES[$type])) {
             throw new \InvalidArgumentException('Choose a valid CDEF item type.');
         }
-        $this->write($actorId, 'item', function () use ($cdefId, $itemId, $type, $value, $revision): void {
+        $this->writes->run($actorId, 'item', 'cdef', function () use ($cdefId, $itemId, $type, $value, $revision): void {
             if ($type === CdefFunctions::CDEF) {
                 // Two writers adding edges between disjoint CDEFs can still close a
                 // cycle together, so every reference write takes all parent locks.
@@ -182,7 +189,7 @@ final readonly class DbalCdefStore implements CdefStore
 
     public function deleteItem(int $actorId, int $cdefId, int $itemId, string $revision): void
     {
-        $this->write($actorId, 'item', function () use ($cdefId, $itemId, $revision): void {
+        $this->writes->run($actorId, 'item', 'cdef', function () use ($cdefId, $itemId, $revision): void {
             $this->lockRevision($cdefId, $revision);
             if ($this->database->executeStatement('DELETE FROM cdef_items WHERE id = ? AND cdef_id = ?', [$itemId, $cdefId]) !== 1) {
                 throw new \InvalidArgumentException('CDEF item not found.');
@@ -195,7 +202,7 @@ final readonly class DbalCdefStore implements CdefStore
         if (!in_array($offset, [-1, 1], true)) {
             throw new \InvalidArgumentException('Invalid CDEF item order.');
         }
-        $this->write($actorId, 'item', function () use ($cdefId, $itemId, $offset, $revision): void {
+        $this->writes->run($actorId, 'item', 'cdef', function () use ($cdefId, $itemId, $offset, $revision): void {
             $order = array_map(static fn(array $item): int => (int) $item['id'], $this->lockRevision($cdefId, $revision));
             $position = array_search($itemId, $order, true);
             if (!is_int($position) || !isset($order[$position + $offset])) {
@@ -210,11 +217,11 @@ final readonly class DbalCdefStore implements CdefStore
 
     public function duplicate(int $actorId, array $ids, array $revisions, string $titleFormat): void
     {
-        self::validateSelection($ids, $revisions);
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 16777215, 'Invalid CDEF selection.', self::STALE);
         if (mb_strlen($titleFormat) > 255 || preg_match('/[\x00\r\n]/', $titleFormat) === 1 || preg_match('//u', $titleFormat) !== 1) {
             throw new \InvalidArgumentException('Enter a valid title format.');
         }
-        $this->write($actorId, 'duplicate', function () use ($ids, $revisions, $titleFormat): void {
+        $this->writes->run($actorId, 'duplicate', 'cdef', function () use ($ids, $revisions, $titleFormat): void {
             foreach ($ids as $id) {
                 $items = $this->lockRevision($id, $revisions[$id]);
                 $name = str_replace('<cdef_title>', (string) $this->database->fetchOne('SELECT name FROM cdef WHERE id = ?', [$id]), $titleFormat);
@@ -230,11 +237,11 @@ final readonly class DbalCdefStore implements CdefStore
 
     public function delete(int $actorId, array $ids, array $revisions): void
     {
-        self::validateSelection($ids, $revisions);
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 16777215, 'Invalid CDEF selection.', self::STALE);
         $decision = AuditEvent::DENIED;
         $outcome = AuditEvent::DENIED;
         try {
-            $this->prepareWrite();
+            $this->writes->prepare();
             $native = $this->database->getNativeConnection();
             if (!$native instanceof \PDO) {
                 throw new \RuntimeException('CDEF deletion requires a PDO connection.');
@@ -263,7 +270,7 @@ final readonly class DbalCdefStore implements CdefStore
             });
             $outcome = AuditEvent::SUCCEEDED;
         } finally {
-            $this->record($actorId, 'delete', $decision, $outcome);
+            $this->writes->record($actorId, 'delete', 'cdef', $decision, $outcome);
         }
     }
 
@@ -407,83 +414,6 @@ final readonly class DbalCdefStore implements CdefStore
     {
         if (trim($name) === '' || mb_strlen($name) > 255 || preg_match('//u', $name) !== 1 || preg_match('/[\x00\r\n]/', $name) === 1) {
             throw new \InvalidArgumentException('Enter a CDEF name of at most 255 characters.');
-        }
-    }
-
-    /**
-     * @param list<int> $ids
-     * @param array<int, string> $revisions
-     */
-    private static function validateSelection(array $ids, array $revisions): void
-    {
-        $sorted = $ids;
-        sort($sorted, SORT_NUMERIC);
-        if ($ids === [] || count($ids) > self::MAX_SELECTION || !array_is_list($ids) || $sorted !== $ids
-            || count(array_unique($ids)) !== count($ids)
-            || array_any($ids, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 16777215)) {
-            throw new \InvalidArgumentException('Invalid CDEF selection.');
-        }
-        $keys = array_keys($revisions);
-        sort($keys, SORT_NUMERIC);
-        if ($keys !== $ids || array_any($revisions, static fn(mixed $revision): bool => !is_string($revision))) {
-            throw new \InvalidArgumentException(self::STALE);
-        }
-    }
-
-    private function write(int $actorId, string $action, callable $operation): mixed
-    {
-        $decision = AuditEvent::DENIED;
-        $outcome = AuditEvent::DENIED;
-        try {
-            $this->prepareWrite();
-            $this->database->beginTransaction();
-            try {
-                $this->access->assertCurrent($actorId);
-                $decision = AuditEvent::ALLOWED;
-                $outcome = AuditEvent::FAILED;
-                $result = $operation();
-                $this->database->commit();
-            } catch (\Throwable $error) {
-                if ($this->database->isTransactionActive()) {
-                    $this->database->rollBack();
-                }
-                throw $error;
-            }
-            $outcome = AuditEvent::SUCCEEDED;
-            return $result;
-        } finally {
-            $this->record($actorId, $action, $decision, $outcome);
-        }
-    }
-
-    private function prepareWrite(): void
-    {
-        if ($this->database->isTransactionActive()) {
-            throw new \RuntimeException('CDEF writes require their own transaction.');
-        }
-        if (!$this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform) {
-            return;
-        }
-        if (($this->configuration->values()['collector_id'] ?? null) !== 1) {
-            throw new \RuntimeException('CDEFs must be changed on the primary collector.');
-        }
-        foreach (['cdef', 'cdef_items', 'graph_templates_item', 'aggregate_graph_templates_item', 'aggregate_graphs_graph_item',
-            'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'] as $table) {
-            // SHOW CREATE TABLE sees a temporary table that shadows the real one.
-            $definition = $this->database->fetchNumeric('SHOW CREATE TABLE ' . $this->database->quoteIdentifier($table));
-            if ($definition === false || !is_string($definition[1] ?? null) || preg_match('/\n\) ENGINE=InnoDB\b/i', $definition[1]) !== 1) {
-                throw new \RuntimeException('CDEF writes require transactional tables.');
-            }
-        }
-        // Keep the dependency range locks when the session default is READ COMMITTED.
-        $this->database->executeStatement('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
-    }
-
-    private function record(int $actorId, string $action, string $decision, string $outcome): void
-    {
-        try {
-            $this->audit->record(new AuditEvent(bin2hex(random_bytes(16)), $actorId, 'graph_definition.cdef.' . $action, 'cdef', 'cdef', $decision, $outcome));
-        } catch (\Throwable) { /* Audit failure cannot change a confirmed persistence result. */
         }
     }
 
