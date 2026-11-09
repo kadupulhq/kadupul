@@ -105,6 +105,12 @@ behavior until an administrator opts in.
    verdict neither opens nor closes an incident and does not change the
    consecutive counters. It is shown as such and never counted as `ok` or as
    `breach`.
+   A fourth verdict, `hold`, is a rate that lies between the clear and trigger
+   thresholds while an incident is open. It counts toward neither breach nor
+   recovery and leaves the counters and state unchanged. Later code must never
+   treat `hold` as `ok`. A `hold` is a usable observation, so it ends a run of
+   `unknown` verdicts: an incident reports `unknown` once per run, and an
+   `unknown` that follows a `hold` starts a new run.
 
 5. **State machine and counters.** Per rule, `alert_rule_state` keeps the
    consecutive breach count, the consecutive ok count, the last observation time

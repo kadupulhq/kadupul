@@ -99,7 +99,7 @@ final class RuleStateTest extends TestCase
         // Still unknown: reported once, not on every cycle.
         self::assertSame(Transition::None, $this->step($state, $rule, null));
         self::assertTrue($state->isOpen());
-        // Unknown did not count as ok, so the first real ok still needs for_cycles.
+        // Unknown did not count as ok, but for_cycles is 1, so one real ok recovers.
         self::assertSame(Transition::Recovered, $this->step($state, $rule, 70.0));
     }
 
@@ -111,5 +111,48 @@ final class RuleStateTest extends TestCase
         $state->advance(Verdict::Breach, $rule);
         self::assertSame(Transition::None, $state->advance(Verdict::Unknown, $rule));
         self::assertSame(Transition::Opened, $state->advance(Verdict::Breach, $rule));
+    }
+
+    private function openIncident(int $forCycles): array
+    {
+        $rule = new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, $forCycles);
+        $state = new RuleState();
+        for ($i = 0; $i < $forCycles; ++$i) {
+            $state->advance(Verdict::Breach, $rule);
+        }
+        self::assertTrue($state->isOpen());
+
+        return [$state, $rule];
+    }
+
+    public function testABreachResetsTheRecoveryRun(): void
+    {
+        [$state, $rule] = $this->openIncident(2);
+
+        self::assertSame(Transition::None, $state->advance(Verdict::Ok, $rule));
+        self::assertSame(Transition::None, $state->advance(Verdict::Breach, $rule));
+        self::assertSame(Transition::None, $state->advance(Verdict::Ok, $rule));
+        self::assertTrue($state->isOpen());
+        self::assertSame(Transition::Recovered, $state->advance(Verdict::Ok, $rule));
+    }
+
+    public function testUnknownNeitherCountsAsOkNorResetsTheRecoveryRun(): void
+    {
+        // ADR 0011 decision 4: unknown does not change the consecutive counters.
+        [$state, $rule] = $this->openIncident(2);
+
+        self::assertSame(Transition::None, $state->advance(Verdict::Ok, $rule));
+        self::assertSame(Transition::BecameUnknown, $state->advance(Verdict::Unknown, $rule));
+        self::assertSame(1, $state->consecutiveOks());
+        self::assertSame(Transition::Recovered, $state->advance(Verdict::Ok, $rule));
+    }
+
+    public function testAHoldEndsAnUnknownRun(): void
+    {
+        [$state, $rule] = $this->openIncident(2);
+
+        self::assertSame(Transition::BecameUnknown, $state->advance(Verdict::Unknown, $rule));
+        self::assertSame(Transition::None, $state->advance(Verdict::Hold, $rule));
+        self::assertSame(Transition::BecameUnknown, $state->advance(Verdict::Unknown, $rule));
     }
 }
