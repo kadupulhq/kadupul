@@ -47,7 +47,7 @@ foreach (['cacti_sizeof', 'cacti_count', 'clean_up_lines', 'array_rekey', 'versi
     eval(test_php_function_source(file_get_contents($loss_root . '/lib/functions.php'), $function));
 }
 // The writer refuses an RRD path outside rra_path, so the real check runs here.
-foreach (['rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path'] as $function) {
+foreach (['rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrd_additional_roots', 'rrd_path_in_additional_root'] as $function) {
     eval(test_php_function_source(file_get_contents($loss_root . '/lib/rrd.php'), $function));
 }
 require $loss_root . '/lib/boost.php';
