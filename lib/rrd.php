@@ -2314,13 +2314,20 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
     return $failed ? false : $rrds_processed;
 }
 
+/**
+ * Tune a data source's RRDfile.
+ *
+ * @param array $rrd_tune_array Data source id, type and the options to change.
+ *
+ * @return bool True when every option was applied, or there was nothing to change.
+ */
 function rrdtool_function_tune($rrd_tune_array)
 {
     global $config, $data_source_types;
 
     if (getenv('RRDCACHED_ADDRESS')) {
         cacti_log('ERROR: Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.');
-        return;
+        return false;
     }
 
     include($config['include_path'] . '/global_arrays.php');
@@ -2383,17 +2390,136 @@ function rrdtool_function_tune($rrd_tune_array)
                     return false;
                 }
                 try {
-                    rrdtool_run_process($rrdtool_argv);
+                    $tuned = rrdtool_tune_apply($data_source_path, $rrdtool_argv);
                 } finally {
                     rrd_maintenance_release($lock);
                 }
 
                 cacti_log('CACTI2RRD: ' . $rrdtool_cmd, false, 'WEBLOG', POLLER_VERBOSITY_DEBUG);
+
+                return $tuned;
             } else {
                 cacti_log("ERROR: RRDtool executable not found, not executable or error in path '" . read_config_option('path_rrdtool') . "'.  No output written to RRDfile.");
+
+                return false;
             }
         }
+
+        return false;
     }
+
+    return true;
+}
+
+/**
+ * Run an `rrdtool tune` command so that it changes all of its options or none.
+ *
+ * RRDtool applies each option as it reaches it, so a rejected later option left
+ * the earlier ones stored (#777). The file is copied first and put back when the
+ * command fails. The caller holds the exclusive RRD maintenance lease.
+ *
+ * The copy is kept beside the RRDfile, not in the temporary directory: a web
+ * server unit with PrivateTmp discards that directory on restart, and the copy
+ * is the only one left when the restore fails. The restore writes a new file
+ * in the same directory and renames it over the RRDfile, so the RRDfile is
+ * never left empty or half written.
+ *
+ * @param string             $data_source_path The RRDfile being tuned.
+ * @param array<int, string> $rrdtool_argv     The complete tune command.
+ *
+ * @return bool True when the command succeeded.
+ */
+function rrdtool_tune_apply($data_source_path, array $rrdtool_argv)
+{
+    $backup = rrdtool_tune_backup($data_source_path);
+
+    if ($backup === false) {
+        cacti_log("ERROR: RRD tuning could not copy '$data_source_path' before tuning; no changes were made.");
+
+        return false;
+    }
+
+    if (rrdtool_run_process($rrdtool_argv)) {
+        @unlink($backup);
+
+        return true;
+    }
+
+    $hash = hash_file('sha256', $backup);
+
+    require_once __DIR__ . '/rrd_maintenance.php';
+    $restored = rrd_maintenance_restore_atomic($backup, $data_source_path, function ($temporary) use ($backup) {
+        return rrdtool_tune_copy($backup, $temporary);
+    });
+
+    clearstatcache();
+
+    if ($restored && $hash !== false && hash_file('sha256', $data_source_path) === $hash) {
+        @unlink($backup);
+        cacti_log("ERROR: RRDtool tune failed for '$data_source_path'; the RRDfile was restored unchanged.");
+    } else {
+        cacti_log("ERROR: RRDtool tune failed for '$data_source_path' and the RRDfile could not be restored; its previous contents are in '$backup'.");
+    }
+
+    return false;
+}
+
+/**
+ * Copy an RRDfile to a new file beside it before it is tuned.
+ *
+ * @param string $data_source_path The RRDfile about to be tuned.
+ *
+ * @return string|false The copy's path, or false when no complete copy was made.
+ */
+function rrdtool_tune_backup($data_source_path)
+{
+    // Not ending in .rrd, so the RRD Cleaner does not list a copy that is kept.
+    $backup = dirname($data_source_path) . '/kadupul-tune-' . bin2hex(random_bytes(8)) . '.bak';
+
+    if (!rrdtool_tune_copy($data_source_path, $backup)) {
+        // A partial copy is of no use, and nothing else has this random name.
+        @unlink($backup);
+
+        return false;
+    }
+
+    return $backup;
+}
+
+/**
+ * Copy one file to another, synced to disk and checked against the source.
+ *
+ * @param string $source      The file to copy.
+ * @param string $destination The new file; an existing one is not overwritten,
+ *                            unless it is empty, as rrd_maintenance_restore_atomic()
+ *                            hands it over.
+ *
+ * @return bool True when the destination holds exactly the source's contents.
+ */
+function rrdtool_tune_copy($source, $destination)
+{
+    if (!is_file($source)) {
+        return false;
+    }
+
+    $from = @fopen($source, 'rb');
+    $to   = @fopen($destination, is_file($destination) && filesize($destination) === 0 ? 'r+b' : 'xb');
+    $done = $from !== false && $to !== false
+        && stream_copy_to_stream($from, $to) === filesize($source)
+        && fflush($to)
+        && (!function_exists('fsync') || fsync($to));
+
+    if ($from !== false) {
+        fclose($from);
+    }
+
+    if ($to !== false) {
+        fclose($to);
+    }
+
+    clearstatcache();
+
+    return $done && hash_file('sha256', $source) === hash_file('sha256', $destination);
 }
 
 /** Fetch a data source's values, grouped by data source item and timestamp.
@@ -3738,6 +3864,8 @@ function rrdtool_pipe_quote($argument)
 /**
  * Run one RRDtool command to completion without a shell, discarding its
  * output. Its stderr is passed on to ours, where the shell pipe left it.
+ *
+ * @return bool True when the command started and exited with status 0.
  */
 function rrdtool_run_process(array $argv)
 {
@@ -3756,6 +3884,9 @@ function rrdtool_run_process(array $argv)
     } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
         // Failing to start the shell pipe was silent as well.
     }
+
+    // A process that did not start has no exit code, so it is not successful.
+    return $process->isSuccessful();
 }
 
 function rrdtool_pipe_encoder()

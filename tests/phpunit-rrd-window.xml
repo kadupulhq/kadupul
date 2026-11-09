@@ -4,6 +4,7 @@
     <testsuite name="Observed RRD windows">
       <file>Unit/Core/Rrd/RrdObservedWindowTest.php</file>
       <file>Unit/Core/Rrd/RrdPathOverrideCoverageTest.php</file>
+      <file>Unit/Core/Rrd/RrdTuneAllOrNothingTest.php</file>
     </testsuite>
   </testsuites>
   <source>
