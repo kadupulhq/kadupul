@@ -6,6 +6,7 @@ Cacti CHANGELOG
 -issue#1032: Validate discovery ranges and scan valid .255 endpoints
 -issue: Preserve automation discovery work across failures, isolate concurrent network runs, enforce deadlines, and acknowledge schedules only after completed discovery
 -issue: Retry the automation recovery regression tests with the run limit their work needs, so a slow runner no longer fails the deadline and later-batch retries intermittently
+-issue: Retry an automation discovery queue statement that InnoDB rolls back as a deadlock victim, so concurrent discovery workers no longer fail the whole run
 
 1.2.32
 -issue: Treat a GPRINT preset used as an aggregate template right-axis format as in use, in the list and when deleting (#749)
