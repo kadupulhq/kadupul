@@ -69,6 +69,20 @@ final class DevicePlacementCatalogTest extends TestCase
         $placement->verify(42, [7], 1, 10, $receipt);
     }
 
+    public function testUnreadableReportDestinationsAreRefusedBeforeAuthorization(): void
+    {
+        // Silent mode makes query() return false for the missing reports table.
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+        $db = $this->createMock(DatabaseConnection::class);
+        $db->method('get')->willReturn($pdo);
+        $access = $this->createMock(ResourceAccess::class);
+        $access->expects(self::never())->method('canManageReport');
+
+        $this->expectExceptionObject(new \RuntimeException('Report destinations unavailable'));
+        (new LegacyDeviceReportPlacement($db, $access))->destinations(42);
+    }
+
     public function testReportPlacementAppendsOnlyMissingDevicesAndVerifiesTheReceipt(): void
     {
         $sqlite = new \PDO('sqlite::memory:');

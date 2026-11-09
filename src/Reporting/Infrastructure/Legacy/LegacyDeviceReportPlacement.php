@@ -124,25 +124,16 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
     /** @return list<array<string, mixed>> */
     private static function rows(\PDOStatement $statement): array
     {
-        $rows = [];
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if (!is_array($row)) {
-                throw new \UnexpectedValueException('Unexpected report row');
-            }
-            /** @var array<string, mixed> $row FETCH_ASSOC keys are column names. */
-            $rows[] = $row;
-        }
+        /** @var list<array<string, mixed>> $rows FETCH_ASSOC returns one column-name keyed array per row. */
+        $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         return $rows;
     }
 
-    /** Drivers return integers, floats, strings or NULL; NULL reads as '' as it did when concatenated or cast. */
+    /** NULL reads as '' as it did when concatenated or cast. */
     private static function scalar(mixed $value): string
     {
-        if ($value !== null && !is_scalar($value)) {
-            throw new \UnexpectedValueException('Unexpected report column value');
-        }
-
+        /** @var bool|float|int|string|null $value PDO returns only driver scalars or NULL for a column. */
         return (string) $value;
     }
 }
