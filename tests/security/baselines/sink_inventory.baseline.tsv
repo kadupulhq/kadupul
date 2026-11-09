@@ -510,7 +510,7 @@ fs_write	./lib/functions.php:953	            file_put_contents(sys_get_temp_dir(
 fs_write	./lib/functions.php:962	                file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/import.php:483	    $f   = fopen($filename, 'r');
 fs_write	./lib/import.php:721	                        $file = fopen($filename, 'wb');
-fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
+fs_write	./lib/input_whitelist.php:115	        $stream = @fopen($temporary, 'x+b');
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
 fs_write	./lib/installer.php:3127	            $file = fopen($cacheFile, "r");
