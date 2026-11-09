@@ -97,6 +97,26 @@ final class TestMailTest extends TestCase
         }
     }
 
+    public function testUnreadableSettingsTableIsASanitizedFailure(): void
+    {
+        $database = new class implements DatabaseConnection {
+            public function get(): \PDO
+            {
+                // Silent mode makes query() return false instead of throwing.
+                $pdo = new \PDO('sqlite::memory:');
+                $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
+
+                return $pdo;
+            }
+        };
+        try {
+            (new InstallationTestMailDelivery($database, new SmtpMessageSender()))->send('Test', 'Test');
+            self::fail('Expected sanitized failure.');
+        } catch (MailDeliveryFailed $error) {
+            self::assertNull($error->getPrevious());
+        }
+    }
+
     public static function smtpScenarios(): iterable
     {
         yield 'accepted' => ['accept', [], 0, true];
