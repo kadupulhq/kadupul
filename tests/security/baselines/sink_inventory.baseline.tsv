@@ -329,8 +329,8 @@ dynamic_include	./lib/plugins.php:469	    include_once($config['library_path'] .
 dynamic_include	./lib/plugins.php:577	    include_once($config['library_path'] . '/database.php');
 dynamic_include	./lib/plugins.php:656	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:766	            include_once($plugin_setup);
-dynamic_include	./lib/plugins.php:818	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:81	                        include_once($full_path);
+dynamic_include	./lib/plugins.php:818	            include_once($plugin_setup);
 dynamic_include	./lib/plugins.php:896	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/plugins.php:924	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/poller.php:334	    include_once($config['library_path'] . '/data_query.php');
