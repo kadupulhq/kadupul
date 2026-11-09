@@ -50,8 +50,6 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
         private LoggerInterface $logger,
     ) {
         $this->writes = new AuditedPrimaryWrite($database, $audit, $configuration, $access->assertCurrent(...), self::WRITE_TABLES, 'Graph Item Input', 'Graph Item Inputs', 'graphing.graph_template_input', 'graph_template_input');
-        // The column allowlist and the stored-value rules stay in one place.
-        require_once dirname(__DIR__, 4) . '/lib/graph_template_input.php';
     }
 
     public function save(int $actorId, int $templateId, ?int $inputId, string $name, string $description, string $column, array $itemIds, ?string $revision): int
@@ -60,12 +58,14 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
         GraphTemplateInput::validateDescription($description);
         // GraphTemplateInputColumn is graph_template_input_column()'s allowlist;
         // GraphTemplateInputEditorTest holds the two equal.
-        $column = GraphTemplateInputColumn::tryFrom($column)?->value;
-        if ($column === null) {
+        $field = GraphTemplateInputColumn::tryFrom($column);
+        if ($field === null) {
             throw new \InvalidArgumentException('Choose a field type.');
         }
+        // Only the enum's literal reaches SQL as an identifier.
+        $column = $field->value;
         $itemIds = self::itemIds($itemIds);
-        return $this->writes->run($actorId, $inputId === null ? 'create' : 'edit', (string) $templateId, function () use ($templateId, $inputId, $name, $description, $column, $itemIds, $revision): int {
+        return $this->writes->run($actorId, $inputId === null ? 'create' : 'edit', (string) $templateId, function () use ($templateId, $inputId, $name, $description, $field, $column, $itemIds, $revision): int {
             $this->lockTemplate($templateId);
             $previous = [];
             if ($inputId === null) {
@@ -85,7 +85,7 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
                 $this->database->executeStatement('UPDATE graph_template_input SET hash = ?, name = ?, description = ?, column_name = ? WHERE id = ? AND graph_template_id = ?', [$hash, $name, $description, $column, $inputId, $templateId]);
             }
             $this->assertItemsBelong($templateId, $itemIds);
-            $this->pushOut($templateId, $column, $previous, array_values(array_diff($itemIds, $previous)));
+            $this->pushOut($templateId, $field, $previous, array_values(array_diff($itemIds, $previous)));
             $this->database->executeStatement('DELETE FROM graph_template_input_defs WHERE graph_template_input_id = ?', [$inputId]);
             if ($itemIds !== []) {
                 $this->database->executeStatement(
@@ -119,8 +119,9 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
      * @param list<int> $previous
      * @param list<int> $added
      */
-    private function pushOut(int $templateId, string $column, array $previous, array $added): void
+    private function pushOut(int $templateId, GraphTemplateInputColumn $field, array $previous, array $added): void
     {
+        $column = $field->value;
         if ($previous === [] || $added === []) {
             return;
         }
@@ -142,14 +143,14 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
         // A stored value comes from earlier saves and imports; refuse the
         // whole push-out if any is malformed, and keep the save, as legacy did.
         foreach ($values as $value) {
-            if ($value !== null && \graph_template_input_value_is_allowed($column, $value) !== true) {
+            if ($value !== null && !$field->allows($value)) {
                 $this->logger->error('Graph item input push-out refused an invalid stored value.', ['column' => $column, 'graph_template_id' => $templateId]);
                 return;
             }
         }
         foreach ($values as $graphId => $value) {
             // An empty data source would detach the graph item from its data.
-            if ($column === 'task_item_id' && in_array($value, [null, '', '0', 0], true)) {
+            if ($field === GraphTemplateInputColumn::DataSource && in_array($value, [null, '', '0', 0], true)) {
                 continue;
             }
             $this->database->executeStatement(

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Graphing\Infrastructure\Symfony\Form;
 
+use Kadupul\Graphing\Domain\GraphTemplateInput;
 use Kadupul\Graphing\Domain\GraphTemplateInputColumn;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -28,7 +29,7 @@ final class GraphTemplateInputType extends AbstractType
             $columns[$column->label()] = $column->value;
         }
         $builder
-            ->add('name', TextType::class, ['label' => 'Name', 'required' => false, 'trim' => false, 'empty_data' => '', 'help' => 'Enter a name for this graph item input, make sure it is something you recognize.', 'attr' => ['maxlength' => 50, 'size' => 40]])
+            ->add('name', TextType::class, ['label' => 'Name', 'required' => false, 'trim' => false, 'empty_data' => '', 'help' => 'Enter a name for this graph item input, make sure it is something you recognize.', 'attr' => ['maxlength' => GraphTemplateInput::MAX_NAME, 'size' => 40]])
             ->add('description', TextareaType::class, ['label' => 'Description', 'required' => false, 'trim' => false, 'empty_data' => '', 'help' => 'Enter a description for this graph item input to describe what this input is used for.', 'attr' => ['rows' => 5, 'cols' => 40]])
             ->add('column_name', ChoiceType::class, ['label' => 'Field Type', 'placeholder' => false, 'choices' => $columns, 'help' => 'How data is to be represented on the graph.'])
             // Only this template's items are choices; anything else fails validation before the editor.

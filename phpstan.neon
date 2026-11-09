@@ -10,9 +10,6 @@ parameters:
     level: max
     paths:
         - src
-    scanFiles:
-        # Pure legacy functions that src calls after require_once; discovered, not analysed.
-        - lib/graph_template_input.php
     checkUninitializedProperties: true
     checkImplicitMixed: true
     reportUnmatchedIgnoredErrors: true

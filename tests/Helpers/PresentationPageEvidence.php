@@ -55,7 +55,7 @@ final class PresentationPageEvidence
             'lib/data_source_profile_integrity.php',
             'lib/export.php',
             'lib/graph_item_editor.php',
-            'lib/graph_template_input.php',
+            'lib/graph_template_input.php', 'src/Graphing/Domain/GraphTemplateInputColumn.php',
             'lib/graphs.php', 'lib/graph_data_removal.php',
             'lib/html_form_template.php',
             'lib/html_graph.php',

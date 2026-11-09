@@ -36,10 +36,6 @@
     "symfony": "app.php/graphing/gprint-presets/legacy"
   },
   {
-    "legacy": "graph_templates_inputs.php?action=input_edit&graph_template_id=1",
-    "symfony": "app.php/graphing/graph-templates/inputs/legacy?action=input_edit&graph_template_id=1"
-  },
-  {
     "legacy": "host.php",
     "symfony": "app.php/inventory/devices/legacy"
   },

@@ -100,7 +100,7 @@ final class InputWhitelistNativeTest extends TestCase
             $hits = ['cli/input_whitelist.php', 'lib/input_whitelist.php'];
             $arguments = json_decode($running[3], true, flags: JSON_THROW_ON_ERROR)[0];
             if (in_array('--audit', $arguments, true)) {
-                array_push($sources, 'lib/template.php', 'lib/graph_template_input.php');
+                array_push($sources, 'lib/template.php', 'lib/graph_template_input.php', 'src/Graphing/Domain/GraphTemplateInputColumn.php');
                 $hits = ['cli/input_whitelist.php', 'lib/template.php'];
             }
             if (in_array('--id=0', $arguments, true)) {

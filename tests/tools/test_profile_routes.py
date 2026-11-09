@@ -123,16 +123,20 @@ class PairsTest(unittest.TestCase):
     def test_shipped_pairs_cover_every_forwarding_shim(self):
         root = Path(__file__).resolve().parents[2]
         pairs = pr.load_pairs(root / "tests/tools/route-pairs.json")
-        self.assertEqual(len(pairs), 17)
+        self.assertEqual(len(pairs), 16)
         baseline = (root / "tests/security/baselines/entry_points.baseline.tsv").read_text().splitlines()
         shims = {line.split("\t")[0]: line.split("\t")[2] for line in baseline
                  if line.split("\t")[1] == "symfony:forward"}
-        # color_templates_items.php and graph_templates_inputs.php need a template id to
-        # render; the query is not part of the route.
+        # color_templates_items.php needs a template id to render; the query is not part of the route.
         for pair in pairs:
             legacy, symfony = pair["legacy"].split("?")[0], pair["symfony"].split("?")[0]
             self.assertEqual(shims[legacy], "forwards to " + symfony)
-        self.assertEqual(set(shims), {pair["legacy"].split("?")[0] for pair in pairs})
+        # Shims without a pair yet, each with its reason. graph_templates_inputs.php
+        # needs a graph template, and the tests/e2e fixture seeds none, so both sides
+        # of a pair would measure a 404; it is profiled once the fixture has one.
+        unprofiled = {"graph_templates_inputs.php"}
+        self.assertEqual(set(shims) - unprofiled, {pair["legacy"].split("?")[0] for pair in pairs})
+        self.assertTrue(unprofiled <= set(shims), "an unprofiled shim that no longer exists")
 
 
 class ComparisonTest(unittest.TestCase):

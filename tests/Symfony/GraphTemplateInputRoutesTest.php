@@ -101,7 +101,8 @@ final class GraphTemplateInputRoutesTest extends TestCase
         $xpath = $this->xpath($response);
         self::assertStringContainsString('Graph Item Inputs [edit graph: Traffic <script>]', $xpath->query('//h1')->item(0)->textContent);
         self::assertSame('Legend <b>', $xpath->query('//input[@name="graph_template_input[name]"]')->item(0)->getAttribute('value'));
-        self::assertSame('50', $xpath->query('//input[@name="graph_template_input[name]"]')->item(0)->getAttribute('maxlength'));
+        // graph_template_input.name is varchar(255): the browser limit matches the server's.
+        self::assertSame('255', $xpath->query('//input[@name="graph_template_input[name]"]')->item(0)->getAttribute('maxlength'));
         self::assertSame('Shown <i>', $xpath->query('//textarea[@name="graph_template_input[description]"]')->item(0)->textContent);
         // The option order and labels of the recorded legacy golden.
         self::assertSame([
