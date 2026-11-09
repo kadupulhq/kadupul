@@ -30,19 +30,18 @@ if (!defined('HOST_DOWN')) {
 if (!function_exists(__NAMESPACE__ . '\debug_log_return')) {
 	$root = dirname(__DIR__, 4);
 	$code = '';
+	require_once $root . '/tests/Helpers/PhpSource.php';
 
 	$sources = array(
 		'/lib/functions.php'  => array('debug_log_insert_section_start', 'debug_log_insert_section_end', 'debug_log_insert', 'debug_log_return', 'debug_log_escape'),
-		'/lib/data_query.php' => array('run_data_query'),
+		'/lib/data_query.php' => array('run_data_query_work'),
 	);
 
 	foreach ($sources as $file => $names) {
 		$source = file_get_contents($root . $file);
 
 		foreach ($names as $name) {
-			if (preg_match('/^function ' . $name . '\(.*?^}\n/ms', $source, $match)) {
-				$code .= $match[0];
-			}
+			$code .= \test_php_function_source($source, $name);
 		}
 	}
 
@@ -89,7 +88,7 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 }
 
 function call_remote_data_collector($poller_id, $url) {
-	return json_encode(array('data_query' => $GLOBALS['remote_log']));
+	return json_encode(array('data_query' => $GLOBALS['remote_log'], 'result' => false));
 }
 
 function local_log() {
@@ -110,7 +109,7 @@ function render_remote_log(array $remote_log) {
 
 	$_SESSION = array();
 
-	run_data_query(7, 4);
+	run_data_query_work(7, 4);
 
 	return debug_log_return('data_query');
 }
