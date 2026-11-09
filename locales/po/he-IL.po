@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 06:49-0800\n"
+"POT-Creation-Date: 2026-11-09 09:03-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13345,6 +13345,11 @@ msgid "written"
 msgstr "כתוב"
 
 #: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "אין"
@@ -13504,6 +13509,10 @@ msgid "Current"
 msgstr "נוכחי"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE זוהה"
 
@@ -13594,6 +13603,10 @@ msgstr "נפח מנוע"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "שגיאה איתור פרופילים"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -13802,6 +13815,10 @@ msgid "License Agreement"
 msgstr "הסכם רישיון"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "מידע על חיבור מסד נתונים מקומי"
 
@@ -13922,6 +13939,10 @@ msgid "Optional Modules"
 msgstr "מודולים אופציונליים"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - תמיכה מודולרית (אופציונלי)"
 
@@ -14005,6 +14026,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "לחץ על '{ 0 }' ולאחר מכן לחץ על '{ 1 }' כדי להשלים את תהליך ההתקנה לאחר בחירת תבניות המכשיר שלך."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "מומלץ"
 
@@ -14083,6 +14108,10 @@ msgid "Scan Mode"
 msgstr "מצב סריקה"
 
 #: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
+
+#: lib/installer.php
 msgid "Select default theme: "
 msgstr "בחר עיצוב ברירת מחדל:"
 
@@ -14149,6 +14178,10 @@ msgstr "בדיקת חיבור"
 #: lib/installer.php
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "תודה שהקדשת מזמנך להוריד ולהתקין את Kadupul, פתרון הגרפים המלא עבור הרשת שלך. לפני שאתה יכול להתחיל לעשות גרפים מגניב, יש כמה חתיכות של נתונים, כי Kadupul צריך לדעת."
+
+#: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
@@ -14439,6 +14472,11 @@ msgstr "אוסף השרתים שלך נראה תואם ל- UTF8"
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "איסוף השרתים שלך אינו נראה תואם לחלוטין ל- UTF8."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"

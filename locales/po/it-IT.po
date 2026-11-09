@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 06:49-0800\n"
+"POT-Creation-Date: 2026-11-09 09:03-0800\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13290,6 +13290,11 @@ msgid "written"
 msgstr "in forma scritta"
 
 #: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "N/A"
@@ -13449,6 +13454,10 @@ msgid "Current"
 msgstr "Attuale"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "DECLASSAMENTO RILEVATO"
 
@@ -13539,6 +13548,10 @@ msgstr "Motore"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "Errore di localizzazione dei profili"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, php-format
@@ -13746,6 +13759,10 @@ msgid "License Agreement"
 msgstr "Contratto di licenza"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "Informazioni sulla connessione al database locale"
 
@@ -13866,6 +13883,10 @@ msgid "Optional Modules"
 msgstr "Moduli opzionali:"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - Supporto del modulo (opzionale)"
 
@@ -13950,6 +13971,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "Premere '%s', quindi fare clic su '%s' per completare il processo di installazione dopo aver selezionato i modelli del dispositivo."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "Raccomandato"
 
@@ -14028,6 +14053,10 @@ msgid "Scan Mode"
 msgstr "Modalità Scan"
 
 #: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
+
+#: lib/installer.php
 msgid "Select default theme: "
 msgstr "Selezionare il tema predefinito:"
 
@@ -14094,6 +14123,10 @@ msgstr "Test connessione"
 #: lib/installer.php
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "Grazie per aver dedicato del tempo a scaricare e installare Kadupul, la soluzione grafica completa per la vostra rete. Prima di iniziare a creare grafici interessanti, ci sono alcuni dati che Kadupul deve conoscere."
+
+#: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
@@ -14383,6 +14416,11 @@ msgstr "Il tuo ordinamento del server sembra essere conforme a UTF8"
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Il tuo ordinamento del server NON sembra essere completamente conforme a UTF8."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"

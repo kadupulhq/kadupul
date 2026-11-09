@@ -25,7 +25,7 @@ function cacti_log($message, ...$arguments)
 
 // The functions under test are this repository's own lib/rrd.php source, as in RrdCommandArgumentValidationTest.
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
-foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path') as $function) {
+foreach (array('rrd_check_path', 'rrd_path_is_contained', 'rrd_resolve_missing_path', 'rrd_additional_roots', 'rrd_path_in_additional_root') as $function) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 
@@ -158,6 +158,75 @@ test('the RRA directory defaults to the rra_path setting', function () {
     try {
         expect(rrd_check_path($this->rra . '/7/42.rrd'))->toBeTrue()
             ->and(rrd_check_path($this->root . '/outside/secret.rrd'))->toBeFalse();
+    } finally {
+        unset($GLOBALS['config']['rra_path']);
+    }
+});
+
+test('a directory config.php lists in rrd_additional_paths is checked like the RRA directory', function () {
+    $GLOBALS['config']['rra_path']             = $this->rra;
+    $GLOBALS['config']['rrd_additional_paths'] = array($this->root . '/outside');
+    symlink($this->rra . '/7', $this->root . '/outside/back');
+    symlink($this->root . '/rra-other', $this->root . '/outside/away');
+
+    try {
+        expect(rrd_check_path($this->root . '/outside/secret.rrd'))->toBeTrue()
+            ->and(rrd_check_path($this->root . '/outside/9/new.rrd'))->toBeTrue()
+            ->and(rrd_check_path($this->rra . '/7/42.rrd'))->toBeTrue()
+            // where a link resolves decides: into the RRA directory is allowed, anywhere else is not
+            ->and(rrd_check_path($this->root . '/outside/back/42.rrd'))->toBeTrue()
+            ->and(rrd_check_path($this->root . '/outside/away/x.rrd'))->toBeFalse()
+            ->and(rrd_check_path($this->root . '/outside/../rra-other/x.rrd'))->toBeFalse()
+            ->and(rrd_check_path($this->root . '/rra-other/x.rrd'))->toBeFalse()
+            // a link from the RRA directory into the listed directory resolves inside it
+            ->and(rrd_check_path($this->rra . '/escape/secret.rrd'))->toBeTrue();
+    } finally {
+        unset($GLOBALS['config']['rra_path'], $GLOBALS['config']['rrd_additional_paths']);
+    }
+});
+
+test('rrd_additional_paths applies only to local paths and the default RRA directory', function () {
+    $GLOBALS['config']['rra_path']             = $this->rra;
+    $GLOBALS['config']['rrd_additional_paths'] = array($this->root . '/outside');
+
+    try {
+        // a caller that names its own RRA directory keeps that directory alone
+        expect(rrd_check_path($this->root . '/outside/secret.rrd', $this->rra))->toBeFalse();
+
+        // the RRDtool proxy confines paths to its own root
+        $GLOBALS['rrd_containment_proxy'] = true;
+        expect(rrd_check_path($this->root . '/outside/secret.rrd'))->toBeTrue()
+            ->and(rrd_path_in_additional_root($this->root . '/outside/secret.rrd'))->toBeTrue();
+        $GLOBALS['rrd_containment_proxy'] = false;
+        expect(rrd_check_path('../outside/secret.rrd'))->toBeFalse();
+    } finally {
+        unset($GLOBALS['config']['rra_path'], $GLOBALS['config']['rrd_additional_paths']);
+    }
+});
+
+test('only absolute rrd_additional_paths entries are used, and the filesystem root contains nothing', function ($configured, array $expected) {
+    $GLOBALS['config']['rrd_additional_paths'] = $configured;
+
+    try {
+        expect(rrd_additional_roots())->toBe($expected)
+            ->and(rrd_path_in_additional_root('/etc/passwd'))->toBeFalse();
+    } finally {
+        unset($GLOBALS['config']['rrd_additional_paths']);
+    }
+})->with(array(
+    'not set' => array(null, array()),
+    'not a list' => array('/data/rrd', array()),
+    'relative and empty entries' => array(array('rrd', '', 7, null, '/data/rrd'), array('/data/rrd')),
+    'drive letter' => array(array('C:/rrd', 'D:\\rrd'), array('C:/rrd', 'D:\\rrd')),
+    'filesystem root' => array(array('/'), array('/')),
+));
+
+test('without rrd_additional_paths a path outside the RRA directory is still refused', function () {
+    $GLOBALS['config']['rra_path'] = $this->rra;
+
+    try {
+        expect(rrd_check_path($this->root . '/outside/secret.rrd'))->toBeFalse()
+            ->and(rrd_path_in_additional_root($this->root . '/outside/secret.rrd'))->toBeFalse();
     } finally {
         unset($GLOBALS['config']['rra_path']);
     }
