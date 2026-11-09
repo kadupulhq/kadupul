@@ -13,6 +13,7 @@ final class RrdObservedWindowCoverageRegistration
         'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/RrdCharacterization.php',
         'tests/Helpers/GraphXport.php', 'tests/Fixtures/rrd-process-coverage.php',
         'tests/Unit/Core/Rrd/RrdObservedWindowTest.php',
+        'tests/Unit/Core/Rrd/RrdPathOverrideCoverageTest.php',
         'lib/rrd.php', 'lib/xml.php', 'lib/functions.php', 'lib/variables.php', 'lib/boost.php',
         'graph_xport.php', 'include/global_constants.php',
         'src/Graphing/Infrastructure/Rrd/OneShotRrdtool.php',
