@@ -18,6 +18,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Wait for the owned Apache subdirectory alias before VDEF browser fixtures begin, retaining exact browser assertions and reporting failed editor responses without page contents or cookies.
 - Add a CI check that reports a run marker recorded with `set_config_option()` before an early `exit` or `die` in the same scope, with a reviewed baseline of the five existing matches.
 
+- Measure and bind the shared JSON/output helper when copied poller-drain and rejected-sample workers produce native child coverage, refusing missing or changed helper copies before accepting their reports.
 - Encode graph and archive identifiers as query components when graph pages request remote collector rendering, retaining existing numeric validation and archive sentinels.
 - Add `tools/review_risk.py`, which ranks a commit range for retrospective review by relative churn, spread, earlier fixes to the same files, ownership, untested production changes and trust-boundary paths.
 - Read and decode each legacy worker's JSON command through one shared helper, and share the newline-preserving output marker of the poller-output and rejected-sample workers, keeping every worker's byte cap, nesting depth, errors, statuses and output unchanged.
