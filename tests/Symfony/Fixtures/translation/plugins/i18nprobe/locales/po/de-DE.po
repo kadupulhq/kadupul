@@ -1,0 +1,77 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Test fixture: the German catalog of a plugin named i18nprobe. The rendered
+# corpus reads it through the legacy plugin text-domain lookup; compile it with
+#   msgfmt --check-format de-DE.po -o ../LC_MESSAGES/de-DE.mo
+msgid ""
+msgstr ""
+"Project-Id-Version: i18nprobe\n"
+"Language: de-DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+# Shadows the core catalog's translation of the same msgid.
+msgid "Devices"
+msgstr "Sondengeräte"
+
+# Exists both without and with a context.
+msgid "Delete"
+msgstr "Löschen (Sonde)"
+
+msgctxt "probe"
+msgid "Delete"
+msgstr "Sonde entfernen"
+
+#, php-format
+msgid "Probe %s ready"
+msgstr "Sonde %s bereit"
+
+#, php-format
+msgid "Usage %d%%"
+msgstr "Auslastung %d%%"
+
+# The core catalog translates this; the plugin domain must not.
+#, php-format
+msgid "%d Minutes"
+msgstr "%d Sondenminuten"
+
+# A translation whose text becomes a conversion once %% is unescaped.
+msgid "Plain value"
+msgstr "Wert %%d"
+
+msgid "Left|Right"
+msgstr "Links|Rechts"
+
+#, php-format
+msgid "%d probe"
+msgid_plural "%d probes"
+msgstr[0] "%d Sonde"
+msgstr[1] "%d Sonden"
+
+msgid "One|item"
+msgid_plural "Many|items"
+msgstr[0] "Ein|Element"
+msgstr[1] "Viele|Elemente"
+
+# An empty plural form is compiled; gettext returns it as an empty string.
+#, php-format
+msgid "%d slot"
+msgid_plural "%d slots"
+msgstr[0] "%d Platz"
+msgstr[1] ""
+
+msgctxt "probe"
+msgid "Item"
+msgid_plural "Items"
+msgstr[0] "Sondenelement"
+msgstr[1] "Sondenelemente"
+
+#, fuzzy
+msgid "Fuzzy probe"
+msgstr "Unscharfe Sonde"
+
+msgid "Untranslated probe"
+msgstr ""
