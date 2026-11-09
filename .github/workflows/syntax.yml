@@ -156,6 +156,11 @@ jobs:
         php vendor/bin/pest --configuration=phpunit-unit.xml Unit/DataCollection/Snmp/SnmpEventDescriptionIdentityTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
         php vendor/bin/pest --configuration=phpunit-unit.xml Unit/DataCollection/Snmp/PollerCacheNullNativeTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
         php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Session/DatabaseSessionRegistrationTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
+        php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Session/NativeSessionDataTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
+        php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Session/NativeSessionPersistenceTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
+        php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Session/NativeSessionProbeTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
+        php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Session/DatabaseSessionLogoutTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
+        php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Session/SessionActivityWriteTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
         php vendor/bin/pest --configuration=phpunit-unit.xml Unit/Security/Auth/GroupSettingsPresenceNativeTest.php --test-directory=. --fail-on-empty-test-suite --colors=never
 
     - name: Aggregate item replacement contracts

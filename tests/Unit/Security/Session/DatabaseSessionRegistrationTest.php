@@ -9,7 +9,9 @@ test('shipped database session registration uses the native web session engine w
     $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
     if (!is_string($dsn) || !str_starts_with($dsn, 'mysql:')) $this->markTestSkipped('Disposable MySQL required.');
     $dsn = 'mysql:' . implode(';', array_filter(explode(';', substr($dsn, 6)), static fn(string $part): bool => !str_starts_with($part, 'dbname=')));
-    $database = new PDO($dsn, getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $fixtureUser = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') !== false ? getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') : (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root');
+    $fixturePassword = getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') !== false ? getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') : (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: '');
+    $database = new PDO($dsn, $fixtureUser, $fixturePassword, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
     $schema = 'session_registration_' . bin2hex(random_bytes(8));
     $root = dirname(__DIR__, 4);
     $server = null;
@@ -27,6 +29,9 @@ test('shipped database session registration uses the native web session engine w
         $address = stream_socket_get_name($socket, false);
         fclose($socket);
         $environment = getenv();
+        // Native children use the same resolved fixture credentials, including empty passwords.
+        $environment['KADUPUL_TEST_MYSQL_USER'] = $fixtureUser;
+        $environment['KADUPUL_TEST_MYSQL_PASSWORD'] = $fixturePassword;
         $environment['KADUPUL_SESSION_FIXTURE_DSN'] = $dsn . ';dbname=' . $schema;
         $server = proc_open([getenv('KADUPUL_TEST_SESSION_PHP') ?: PHP_BINARY, '-d', 'error_reporting=32767', '-S', $address, $root . '/tests/fixtures/database-session-registration-web.php'], [0 => ['file', '/dev/null', 'r'], 1 => ['file', '/dev/null', 'a'], 2 => ['file', '/dev/null', 'a']], $pipes, $root, $environment);
         expect(is_resource($server))->toBeTrue();

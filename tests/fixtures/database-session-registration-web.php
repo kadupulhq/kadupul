@@ -10,7 +10,11 @@ ini_set('zend.exception_ignore_args', '1');
 set_error_handler(static function (int $severity): bool {
     throw new RuntimeException('Native session registration warning: ' . $severity);
 });
-$database = new PDO(getenv('KADUPUL_SESSION_FIXTURE_DSN'), getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ?: (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') ?: (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$database = new PDO(getenv('KADUPUL_SESSION_FIXTURE_DSN'), getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') !== false ? getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') : (getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root'), getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') !== false ? getenv('KADUPUL_TEST_MYSQL_ADMIN_PASSWORD') : (getenv('KADUPUL_TEST_MYSQL_PASSWORD') ?: ''), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$database_hostname = 'native-registration';
+$database_port = 1;
+$database_default = $database->query('SELECT DATABASE()')->fetchColumn();
+$database_sessions = ['native-registration:1:' . $database_default => $database];
 function db_column_exists(string $table, string $column): bool {
     $statement = $GLOBALS['database']->prepare('SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?');
     $statement->execute([$table, $column]);
