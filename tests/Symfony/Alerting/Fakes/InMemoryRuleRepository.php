@@ -16,6 +16,8 @@ final class InMemoryRuleRepository implements RuleRepository
 {
     /** @var array<int, AlertRule> */
     private array $rules = [];
+    /** @var list<int> */
+    public array $orphaned = [];
 
     public function add(AlertRule ...$rules): void
     {
@@ -35,5 +37,10 @@ final class InMemoryRuleRepository implements RuleRepository
         }
 
         return $batch;
+    }
+
+    public function orphanedRuleIds(): array
+    {
+        return $this->orphaned;
     }
 }

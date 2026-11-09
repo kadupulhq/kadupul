@@ -23,4 +23,7 @@ interface RuleStateStore
     public function load(array $ruleIds): array;
 
     public function save(int $ruleId, RuleState $state): void;
+
+    /** Forgets a rule's state; a rule with no stored state starts closed with no counts. */
+    public function delete(int $ruleId): void;
 }

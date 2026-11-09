@@ -283,6 +283,36 @@ services:
         alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorRecipients
     Kadupul\Alerting\Application\Port\AdministrativeMailDelivery:
         alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministrativeMailDelivery
+
+    # Native alert evaluation (ADR 0011). Every store uses the main connection:
+    # rules and incidents are central, dsstats fills its tables on the main
+    # poller, and a rule's state and incident change commit in one
+    # transaction, which needs one connection. Nothing invokes EvaluateRules
+    # yet; the console command and its clock arrive with the poller wiring.
+    Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Application\Port\RateSource:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource
+    Kadupul\Alerting\Application\Port\RuleRepository:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository
+    Kadupul\Alerting\Application\Port\RuleStateStore:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore
+    Kadupul\Alerting\Application\Port\IncidentRepository:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository
+    Kadupul\Alerting\Application\Port\EvaluationCursor:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor
+    Kadupul\Alerting\Application\Port\TransactionRunner:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
 

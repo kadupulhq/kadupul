@@ -12,11 +12,15 @@ namespace Kadupul\Alerting\Domain\Evaluation;
 /**
  * A rate read from dsstats with the time it was sampled and the polling
  * interval (rrd_step) of its data source. ADR 0011 decision 4: it is fresh
- * while it is no older than two of those intervals.
+ * while it is no older than two of those intervals, and no more than
+ * MAX_FORWARD_SKEW_SECONDS ahead of the evaluator's clock. A time further
+ * ahead would count as fresh until real time passed it and hold the counters
+ * that long, so it is not trusted.
  */
 final readonly class Observation
 {
     public const int FRESH_INTERVALS = 2;
+    public const int MAX_FORWARD_SKEW_SECONDS = 60;
 
     /**
      * @param int $observedAt  sample time, Unix seconds
@@ -40,6 +44,8 @@ final readonly class Observation
 
     public function isFreshAt(int $now): bool
     {
-        return $now - $this->observedAt <= self::FRESH_INTERVALS * $this->stepSeconds;
+        $age = $now - $this->observedAt;
+
+        return $age >= -self::MAX_FORWARD_SKEW_SECONDS && $age <= self::FRESH_INTERVALS * $this->stepSeconds;
     }
 }

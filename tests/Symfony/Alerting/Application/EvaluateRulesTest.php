@@ -21,6 +21,7 @@ use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRateSource;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRuleRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRuleStateStore;
+use Kadupul\Tests\Alerting\Fakes\InMemoryTransactionRunner;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
@@ -35,6 +36,7 @@ final class EvaluateRulesTest extends TestCase
     private InMemoryRuleStateStore $states;
     private InMemoryIncidentRepository $incidents;
     private InMemoryEvaluationCursor $cursor;
+    private InMemoryTransactionRunner $transactions;
 
     protected function setUp(): void
     {
@@ -44,11 +46,12 @@ final class EvaluateRulesTest extends TestCase
         $this->states = new InMemoryRuleStateStore();
         $this->incidents = new InMemoryIncidentRepository();
         $this->cursor = new InMemoryEvaluationCursor();
+        $this->transactions = new InMemoryTransactionRunner($this->states, $this->incidents);
     }
 
     private function evaluator(): EvaluateRules
     {
-        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->cursor, new MockClockAdapter($this->clock));
+        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->cursor, new MockClockAdapter($this->clock), $this->transactions);
     }
 
     private static function rule(int $id, Comparator $comparator = Comparator::GreaterThan, float $trigger = 90.0, float $clear = 80.0, int $forCycles = 1): AlertRule
@@ -80,15 +83,14 @@ final class EvaluateRulesTest extends TestCase
         $this->rules->add(self::rule(1, Comparator::LessThan, 1.0, 2.0));
         // An open incident with counters: unknown must neither close it nor reset them.
         $this->rules->add(self::rule(2));
-        $this->states->states[2] = new RuleState(open: true, consecutiveOks: 1);
+        $this->states->states[2] = new RuleState(open: true, consecutiveOks: 1, lastObservedAt: self::NOW - 900);
 
         $report = $this->evaluator()(10, 30.0);
 
         self::assertNull($report->inactiveReason);
         self::assertSame(2, $report->evaluated);
         self::assertSame([], $this->incidents->events);
-        self::assertFalse($this->states->states[1]->isOpen());
-        self::assertSame(0, $this->states->states[1]->consecutiveBreaches());
+        self::assertArrayNotHasKey(1, $this->states->states, 'An unknown verdict that changes nothing writes no state.');
         self::assertTrue($this->states->states[2]->isOpen());
         self::assertTrue($this->states->states[2]->isUnknown());
         self::assertSame(1, $this->states->states[2]->consecutiveOks());
@@ -103,7 +105,7 @@ final class EvaluateRulesTest extends TestCase
         $this->rates->put($series, new Observation(0.0, self::NOW - 601, 300));
         $this->evaluator()(10, 30.0);
         self::assertSame([], $this->incidents->events);
-        self::assertSame(0, $this->states->states[1]->consecutiveBreaches());
+        self::assertArrayNotHasKey(1, $this->states->states);
 
         // Exactly two intervals old is still fresh.
         $this->rates->put($series, new Observation(0.0, self::NOW - 600, 300));
@@ -177,18 +179,19 @@ final class EvaluateRulesTest extends TestCase
         $first = $this->evaluator()(2, 1.0);
 
         self::assertSame(4, $first->evaluated, 'Two batches fit: the budget is checked between batches.');
-        self::assertSame([3, 5, 8, 13], $this->states->saved);
+        self::assertSame([['103:traffic_in', '105:traffic_in'], ['108:traffic_in', '113:traffic_in']], $this->rates->requests);
         self::assertSame(13, $this->cursor->position());
 
         $second = $this->evaluator()(2, 1.0);
 
         self::assertSame(1, $second->evaluated);
-        self::assertSame([3, 5, 8, 13, 21], $this->states->saved, 'No rule is evaluated twice across calls.');
         self::assertSame(0, $this->cursor->position(), 'A completed pass starts the next run from the first rule.');
-        self::assertSame([['103:traffic_in', '105:traffic_in'], ['108:traffic_in', '113:traffic_in'], ['121:traffic_in']], $this->rates->requests);
+        self::assertSame([['103:traffic_in', '105:traffic_in'], ['108:traffic_in', '113:traffic_in'], ['121:traffic_in']], $this->rates->requests, 'No rule is evaluated twice across calls.');
 
         $this->evaluator()(2, 1.0);
-        self::assertSame([3, 5, 8, 13, 21, 3, 5, 8, 13], $this->states->saved);
+        self::assertSame(['103:traffic_in', '105:traffic_in'], $this->rates->requests[3]);
+        self::assertSame(['108:traffic_in', '113:traffic_in'], $this->rates->requests[4]);
+        self::assertCount(5, $this->rates->requests);
     }
 
     public function testAnExactlyFullLastBatchEndsThePass(): void
@@ -199,7 +202,7 @@ final class EvaluateRulesTest extends TestCase
 
         self::assertSame(2, $report->evaluated);
         self::assertSame(0, $this->cursor->position());
-        self::assertSame([1, 2], $this->states->saved);
+        self::assertSame([['101:traffic_in', '102:traffic_in']], $this->rates->requests);
     }
 
     public function testInvalidLimitsAreRefusedBeforeAnyRead(): void
@@ -212,5 +215,93 @@ final class EvaluateRulesTest extends TestCase
                 self::assertSame([], $this->rates->requests);
             }
         }
+    }
+
+    public function testAnUnchangedUnknownWritesNoState(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->states->states[1] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 900);
+
+        $this->evaluator()(10, 30.0);
+        self::assertSame([1], $this->states->saved, 'Becoming unknown is a change and is saved once.');
+        self::assertTrue($this->states->states[1]->isUnknown());
+
+        $report = $this->evaluator()(10, 30.0);
+        self::assertSame(1, $report->evaluated);
+        self::assertSame([1], $this->states->saved, 'A rule that stays unknown is not written again.');
+        self::assertSame(1, $this->transactions->committed);
+    }
+
+    public function testARateSourceFailurePropagatesInsteadOfReadingAsUnknown(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->states->states[1] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 900);
+        $this->cursor->moveTo(0);
+        $this->rates->failure = new \RuntimeException('dsstats read failed');
+
+        try {
+            $this->evaluator()(10, 30.0);
+            self::fail('A failed rate read was not reported.');
+        } catch (\RuntimeException $e) {
+            self::assertSame('dsstats read failed', $e->getMessage());
+        }
+        self::assertSame([], $this->states->saved);
+        self::assertFalse($this->states->states[1]->isUnknown(), 'A failed read is not an unknown verdict.');
+        self::assertSame([], $this->incidents->events);
+        self::assertSame(0, $this->cursor->position());
+    }
+
+    public function testAFailedIncidentWriteLeavesTheRuleStateAsItWas(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->incidents->failure = new \RuntimeException('incident insert failed');
+
+        try {
+            $this->evaluator()(10, 30.0);
+            self::fail('A failed incident write was not reported.');
+        } catch (\RuntimeException $e) {
+            self::assertSame('incident insert failed', $e->getMessage());
+        }
+        // The state was saved first, inside the same transaction, and rolled back with it.
+        self::assertArrayNotHasKey(1, $this->states->states);
+        self::assertSame([], $this->incidents->events);
+        self::assertSame(0, $this->transactions->committed);
+
+        $this->incidents->failure = null;
+        $this->evaluator()(10, 30.0);
+        self::assertSame([['open', 1, self::NOW]], $this->incidents->events, 'The same observation opens the incident on the retry.');
+    }
+
+    public function testAnOrphanedRuleEndsItsIncidentAsOrphanedAndForgetsItsState(): void
+    {
+        $this->rules->add(self::rule(1), self::rule(2));
+        $this->states->states[1] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 900);
+        $this->incidents->active[1] = true;
+        $this->rules->orphaned = [1];
+        $this->rates->put(new SeriesKey(102, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame(1, $report->orphaned);
+        self::assertSame([['orphan', 1, self::NOW], ['open', 2, self::NOW]], $this->incidents->events);
+        self::assertArrayNotHasKey(1, $this->states->states);
+        self::assertSame(2, $this->transactions->committed, 'One transaction for the orphan, one for rule 2.');
+        self::assertNotContains('close', array_column($this->incidents->events, 0), 'An orphaned incident is not a recovery.');
+    }
+
+    public function testAnObservationTooFarAheadOfTheClockIsUnknown(): void
+    {
+        $this->rules->add(self::rule(1));
+        $series = new SeriesKey(101, 'traffic_in');
+
+        $this->rates->put($series, new Observation(95.0, self::NOW + 61, 300));
+        $this->evaluator()(10, 30.0);
+        self::assertSame([], $this->incidents->events);
+        self::assertArrayNotHasKey(1, $this->states->states);
+
+        $this->rates->put($series, new Observation(95.0, self::NOW + 60, 300));
+        $this->evaluator()(10, 30.0);
+        self::assertSame([['open', 1, self::NOW + 60]], $this->incidents->events);
     }
 }

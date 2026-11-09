@@ -129,7 +129,11 @@ behavior until an administrator opts in.
    clock. The polling interval is the data source's
    `data_template_data.rrd_step`, the value dsstats divides counter deltas by
    (`lib/dsstats.php:780-790`). A data source with `rrd_step` 0 has no interval
-   and yields `unknown`. Two intervals allow one missed poll. The presence of a
+   and yields `unknown`. An observation time more than 60 seconds ahead of the
+   evaluator's clock is also not fresh: it would otherwise count as fresh
+   until real time passed it and hold the counters that long. Sixty seconds
+   allows ordinary clock skew between the poller and the evaluator, which run
+   on the same host in Phase 1. Two intervals allow one missed poll. The presence of a
    row never means fresh, and no adapter may default to that. An `unknown`
    verdict neither opens nor closes an incident and does not change the
    consecutive counters. It is shown as such and never counted as `ok` or as
@@ -155,12 +159,59 @@ behavior until an administrator opts in.
    trigger threshold is `ok`. Together hysteresis and `for_cycles` stop a value
    that oscillates around the threshold from producing an incident per cycle.
 
+   The state row holds every field the state machine needs: whether an
+   incident is open, both consecutive counts, the last observation time, and
+   whether the open incident's latest verdict was `unknown`, so a reload does
+   not report `unknown` again. A run writes the row only when one of those
+   changed; a rule that stays `unknown` is not written every cycle. A stored
+   row that no sequence of verdicts can produce (a negative count, an ok run
+   on a closed rule, `unknown` on a closed rule, a breach run and an ok run at
+   once, counts with no observation time) is refused with an error naming the
+   rule, never clamped. Counters stop at 4294967295, the largest value of
+   their unsigned column. `ok`, `breach` and `hold` enter the state only with
+   their observation time; a missing or stale rate enters as `unknown` and has
+   none.
+
 6. **Incident lifecycle.** An incident is `open`, `acknowledged`, `closed` or
    `orphaned`. `open` moves to `acknowledged` by user action. Either state moves
-   to `closed` by recovery. If the data source or its device no longer exists
-   (checked against `data_local` and `host` on each evaluation), the incident
-   moves to `orphaned`, its rule state resets, and no recovery notification is
-   queued. At most one incident per rule is open or acknowledged.
+   to `closed` by recovery. At most one incident per rule is open or
+   acknowledged: `alert_incident.active_rule_id` equals the rule id while it
+   is and is `NULL` afterwards, and its unique key enforces the limit.
+
+   A rule's state change and its incident change are written in one
+   transaction, state first, and commit together or not at all. Opening an
+   incident when one is already active, or closing one when none is, fails
+   that transaction: the two tables disagree only if someone edited them, and
+   the evaluator reports it (exit 1) rather than guess. A transaction the
+   caller already holds is not committed by the evaluator's stores.
+
+   **Orphans.** Each run first looks for rules whose series no longer
+   exists: the `data_local` row is gone; its device is gone or marked
+   `deleted` (a remote collector's device is flagged before removal,
+   `lib/api_device.php`); or the data source no longer has the rule's RRD
+   data source name, compared byte for byte. `host_id` 0 is a data source
+   without a device and is not an orphan. The rate source cannot tell a
+   deleted series from a missing rate, so this check reads the definitions.
+   For such a rule, and for a deleted rule, the active incident moves to
+   `orphaned` at the evaluator's clock and the state row is deleted, in one
+   transaction, and no notification is queued. Only rules with a state row
+   or an active incident are handled, so an orphan is ended once. A rule
+   whose series is gone is never evaluated again, even while its last rate is
+   still fresh, so it cannot open a new incident.
+
+   Conservative choices for the remaining cases:
+   - **A disabled device or data source** still exists. Its rate goes stale,
+     its rules are `unknown`, and an open incident stays open and is reported
+     `unknown` once. Enabling it again resumes evaluation.
+   - **A rule deleted while its incident is open** orphans the incident on the
+     next run, whatever removed the rule. The rule-editing use case (Task 7)
+     orphans it in the same transaction as the delete; the evaluator's check
+     covers any other path.
+   - **A series that stays `unknown`** keeps its incident open indefinitely.
+     There is no age-out: closing it would report a recovery nobody observed.
+     It is visible as `unknown`; an operator may acknowledge it, and it ends
+     when collection returns and the rate recovers, or when the rule or data
+     source is deleted.
 
 7. **Notifications are queued, then delivered.** In the same database
    transaction that changes an incident, the evaluator inserts a row in
@@ -171,7 +222,8 @@ behavior until an administrator opts in.
    next-attempt time. After a bounded number of attempts the row is marked
    `failed` and stays visible. A row is marked `sent` only after the port
    reports success. The evaluator never reports delivery from the act of
-   queueing.
+   queueing. Task 3 creates the `alert_notification` table; the row is written
+   through the same per-rule transaction as the state and incident change.
 
 8. **Bounded work.** The command evaluates rules in batches. Both the batch size
    and the total time budget are settings, and the command checks the budget
@@ -220,7 +272,14 @@ behavior until an administrator opts in.
     `include/cacti_version` moves from 1.2.39 to 1.2.40 the way PR #1136 moved
     it, and the version is written only after every step succeeds so a failed
     upgrade can be retried. Persistent tables are used because counters and
-    incidents must survive a restart, unlike the MEMORY source.
+    incidents must survive a restart, unlike the MEMORY source. Times are Unix
+    seconds in unsigned integer columns, so no value depends on a session time
+    zone. `alert_rule.rrd_name` is `varbinary(19)`, so a rule names one exact
+    data source name. The step creates each table only when it is missing and
+    then reads its engine, collation, columns and keys back; a table of another
+    shape, or one it could not create, stops the upgrade unchanged before the
+    version is recorded. The resume cursor of decision 8 is the settings row
+    `alerting_evaluation_cursor`, written only when it moves.
 
 14. **Boundaries.** `src/Alerting/Domain` holds `ThresholdRule`, `BaselineRule`,
     `Verdict`, `RuleState` and `Incident`. It imports nothing from Symfony, DBAL
@@ -286,8 +345,14 @@ behavior until an administrator opts in.
 | dsstats off | "inactive: rate source unavailable", exit status 2, no verdicts written | Task 2 |
 | Boost enabled | Evaluation works as without Boost; no separate inactive reason | Task 2 |
 | Database restart empties the MEMORY table | Rules `unknown` for a cycle or two, no recoveries or breaches | Task 3 |
+| Rate source read fails | Error, exit status 1; no verdict written, nothing read as `unknown` | Task 3 |
+| Incident write fails after the state was saved | Both roll back; the next run counts the same observation again | Task 3 |
 | Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Task 1 |
 | Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |
+| Rule deleted with an incident open | Incident `orphaned` on the next run, state removed, no mail | Task 3 |
+| Device or data source disabled | Rules `unknown`; an open incident stays open | Task 3 |
+| Series `unknown` indefinitely | Incident stays open; no age-out | Task 3 |
+| Observation time over 60 s ahead of the clock | `unknown` | Task 3 |
 | Mail transport fails | Incident kept, notification stays queued, bounded retries, never marked sent | Task 4 |
 
 ## Alternatives

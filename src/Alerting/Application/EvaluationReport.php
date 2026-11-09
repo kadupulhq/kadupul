@@ -15,11 +15,13 @@ final readonly class EvaluationReport
      * @param int     $evaluated      rules whose verdict was applied and state saved
      * @param int     $skipped        rules whose latest observation was already counted
      * @param ?string $inactiveReason set when nothing was evaluated because the source cannot work
+     * @param int     $orphaned       rules whose incident or state was ended because their rule or series is gone
      */
     public function __construct(
         public int $evaluated,
         public int $skipped,
         public ?string $inactiveReason = null,
+        public int $orphaned = 0,
     ) {}
 
     public static function inactive(string $reason): self

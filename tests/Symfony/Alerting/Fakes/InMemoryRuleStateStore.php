@@ -37,4 +37,9 @@ final class InMemoryRuleStateStore implements RuleStateStore
         $this->states[$ruleId] = clone $state;
         $this->saved[] = $ruleId;
     }
+
+    public function delete(int $ruleId): void
+    {
+        unset($this->states[$ruleId]);
+    }
 }

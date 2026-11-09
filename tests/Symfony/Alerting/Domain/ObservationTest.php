@@ -28,6 +28,18 @@ final class ObservationTest extends TestCase
         self::assertFalse($observation->isFreshAt(1121));
     }
 
+    public function testAFutureObservationIsFreshOnlyWithinTheAllowedClockSkew(): void
+    {
+        self::assertSame(60, Observation::MAX_FORWARD_SKEW_SECONDS);
+        $observation = new Observation(1.5, 1000, 300);
+
+        // Up to 60 seconds ahead of the evaluator's clock is clock skew.
+        self::assertTrue($observation->isFreshAt(1000 - 60));
+        // Further ahead it is not a usable time, however long the step.
+        self::assertFalse($observation->isFreshAt(1000 - 61));
+        self::assertFalse($observation->isFreshAt(0));
+    }
+
     public function testRefusesUnusableValues(): void
     {
         foreach ([[NAN, 1, 60], [INF, 1, 60], [1.0, 1, 0], [1.0, -1, 60]] as [$rate, $at, $step]) {

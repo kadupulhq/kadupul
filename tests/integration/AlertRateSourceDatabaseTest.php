@@ -256,4 +256,49 @@ final class AlertRateSourceDatabaseTest extends TestCase
         self::poll(self::GAUGE_ID, 'load_1min', time(), '1');
         self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM data_source_stats_hourly_last'));
     }
+
+    public function testADataSourceWithNoPollingIntervalHasNoRate(): void
+    {
+        // rrd_step 0 gives no freshness window (ADR 0011 decision 4), so it is unknown.
+        $noStep = 503;
+        $this->database->insert('data_template_data', ['local_data_id' => $noStep, 'rrd_step' => 0, 'name' => 'load_5min']);
+        $this->database->insert('data_template_rrd', ['local_data_id' => $noStep, 'data_source_name' => 'load_5min', 'data_source_type_id' => 1, 'rrd_maximum' => 'U']);
+        $t0 = time() - 30;
+        self::poll($noStep, 'load_5min', $t0, '1.5');
+        self::poll(self::GAUGE_ID, 'load_1min', $t0, '0.5');
+        self::assertEquals(1.5, (float) $this->database->fetchOne('SELECT calculated FROM data_source_stats_hourly_last WHERE local_data_id = ?', [$noStep]));
+
+        $gauge = new SeriesKey(self::GAUGE_ID, 'load_1min');
+        self::assertEquals(
+            [$gauge->id() => new Observation(0.5, $t0, 60)],
+            (new DsstatsRateSource($this->database))->currentRates([new SeriesKey($noStep, 'load_5min'), $gauge]),
+        );
+    }
+
+    public function testMoreDataSourcesThanOneQueryTakesAreAllRead(): void
+    {
+        // The adapter reads 500 data sources per query; 1001 needs three.
+        $t0 = time() - 30;
+        $keys = [];
+        $expected = [];
+        foreach (array_chunk(range(10_001, 11_001), 250) as $ids) {
+            $data = $cache = $last = [];
+            foreach ($ids as $id) {
+                $data[] = '(' . $id . ', 60, \'bulk\')';
+                $cache[] = '(' . $id . ", 'bulk', FROM_UNIXTIME(" . $t0 . '), ' . $id . ')';
+                $last[] = '(' . $id . ", 'bulk', " . $id . ', ' . $id . ')';
+                $key = new SeriesKey($id, 'bulk');
+                $keys[] = $key;
+                $expected[$key->id()] = new Observation((float) $id, $t0, 60);
+            }
+            $this->database->executeStatement('INSERT INTO data_template_data (local_data_id, rrd_step, name) VALUES ' . implode(',', $data));
+            $this->database->executeStatement('INSERT INTO data_source_stats_hourly_cache (local_data_id, rrd_name, time, value) VALUES ' . implode(',', $cache));
+            $this->database->executeStatement('INSERT INTO data_source_stats_hourly_last (local_data_id, rrd_name, value, calculated) VALUES ' . implode(',', $last));
+        }
+
+        $found = (new DsstatsRateSource($this->database))->currentRates($keys);
+
+        self::assertCount(1001, $found);
+        self::assertEquals($expected, $found);
+    }
 }

@@ -16,6 +16,7 @@
       <file>integration/BoostRecoveryDatabaseTest.php</file>
       <file>integration/BoostConnectionLossDatabaseTest.php</file>
       <file>integration/AlertRateSourceDatabaseTest.php</file>
+      <file>integration/AlertPersistenceDatabaseTest.php</file>
       <file>Unit/Core/Rrd/BoostOnDemandInsertNativeTest.php</file>
       <file>Unit/SnmpEventDescriptionIdentityTest.php</file>
       <file>Unit/PollerCacheNullNativeTest.php</file>

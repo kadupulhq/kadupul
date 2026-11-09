@@ -13,20 +13,47 @@ use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 
 /**
  * Per-rule counters, open/closed state and the time of the last observation
- * counted. advanceAt() counts an observation only when it is newer than that
- * time (ADR 0011 decision 5), so two runs between polls cannot count one
- * sample twice. advance() is for verdicts with no observation, which is
- * unknown.
+ * counted. Ok, Breach and Hold enter only through advanceAt(), which counts an
+ * observation only when it is newer than that time (ADR 0011 decision 5), so
+ * two runs between polls cannot count one sample twice. A missing or stale
+ * rate has no observation and enters through markUnknown().
+ *
+ * The constructor refuses any combination that no sequence of verdicts can
+ * produce, so a stored row that was changed by hand is reported, not used.
+ * Counters saturate at COUNTER_LIMIT, the largest value of their column.
  */
 final class RuleState
 {
+    public const int COUNTER_LIMIT = 4_294_967_295;
+
     public function __construct(
         private bool $open = false,
         private int $consecutiveBreaches = 0,
         private int $consecutiveOks = 0,
         private bool $unknown = false,
         private ?int $lastObservedAt = null,
-    ) {}
+    ) {
+        foreach ([$consecutiveBreaches, $consecutiveOks] as $counter) {
+            if ($counter < 0 || $counter > self::COUNTER_LIMIT) {
+                throw new InvalidRuleState('A consecutive count must be between 0 and ' . self::COUNTER_LIMIT . '.');
+            }
+        }
+        if ($lastObservedAt !== null && $lastObservedAt < 0) {
+            throw new InvalidRuleState('An observation time cannot be negative.');
+        }
+        if ($unknown && !$open) {
+            throw new InvalidRuleState('Only an open incident can be unknown.');
+        }
+        if (!$open && $consecutiveOks > 0) {
+            throw new InvalidRuleState('A closed rule has no recovery run.');
+        }
+        if ($consecutiveBreaches > 0 && $consecutiveOks > 0) {
+            throw new InvalidRuleState('A breach run and an ok run cannot both be in progress.');
+        }
+        if ($lastObservedAt === null && ($open || $consecutiveBreaches > 0)) {
+            throw new InvalidRuleState('Counts and an open incident need a counted observation.');
+        }
+    }
 
     public function isOpen(): bool
     {
@@ -60,9 +87,24 @@ final class RuleState
         return $this->lastObservedAt === null || $observedAt > $this->lastObservedAt;
     }
 
-    /** Counts a verdict from an observation, unless that observation was already counted or is older. */
+    public function equals(self $other): bool
+    {
+        return $this->open === $other->open
+            && $this->consecutiveBreaches === $other->consecutiveBreaches
+            && $this->consecutiveOks === $other->consecutiveOks
+            && $this->unknown === $other->unknown
+            && $this->lastObservedAt === $other->lastObservedAt;
+    }
+
+    /**
+     * Counts a verdict from an observation, unless that observation was
+     * already counted or is older. Unknown has no observation: use markUnknown().
+     */
     public function advanceAt(Verdict $verdict, ThresholdRule $rule, int $observedAt): Transition
     {
+        if ($verdict === Verdict::Unknown) {
+            throw new \InvalidArgumentException('An unknown verdict has no observation time; use markUnknown().');
+        }
         if (!$this->isNewer($observedAt)) {
             return Transition::None;
         }
@@ -71,19 +113,20 @@ final class RuleState
         return $this->advance($verdict, $rule);
     }
 
-    public function advance(Verdict $verdict, ThresholdRule $rule): Transition
+    /** No usable rate: counters hold, and only an open incident reports it, once per run. */
+    public function markUnknown(): Transition
     {
-        if ($verdict === Verdict::Unknown) {
-            // Counters hold. Only an open incident reports it, and only once.
-            if ($this->open && !$this->unknown) {
-                $this->unknown = true;
+        if ($this->open && !$this->unknown) {
+            $this->unknown = true;
 
-                return Transition::BecameUnknown;
-            }
-
-            return Transition::None;
+            return Transition::BecameUnknown;
         }
 
+        return Transition::None;
+    }
+
+    private function advance(Verdict $verdict, ThresholdRule $rule): Transition
+    {
         $this->unknown = false;
 
         if ($verdict === Verdict::Hold) {
@@ -92,7 +135,7 @@ final class RuleState
 
         if ($verdict === Verdict::Breach) {
             $this->consecutiveOks = 0;
-            ++$this->consecutiveBreaches;
+            $this->consecutiveBreaches = min(self::COUNTER_LIMIT, $this->consecutiveBreaches + 1);
             if (!$this->open && $this->consecutiveBreaches >= $rule->forCycles) {
                 $this->open = true;
 
@@ -107,7 +150,7 @@ final class RuleState
             return Transition::None;
         }
 
-        ++$this->consecutiveOks;
+        $this->consecutiveOks = min(self::COUNTER_LIMIT, $this->consecutiveOks + 1);
         if ($this->consecutiveOks >= $rule->forCycles) {
             $this->open = false;
             $this->consecutiveOks = 0;
