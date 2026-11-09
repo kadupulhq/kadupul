@@ -23,6 +23,8 @@ def merge(root: Path) -> None:
             blocks = []
             for (context, singular, plural), item in historical.items():
                 selected = item if locale is None else item["translations"][locale]
+                # The reviewed inventory keeps its original line references; the
+                # gettext tools below write them as file-only references.
                 lines = ["#: " + item["references"]] if item["references"] else []
                 if selected["flags"]:
                     lines.append("#, " + ", ".join(selected["flags"]))
@@ -38,10 +40,10 @@ def merge(root: Path) -> None:
             extension.write_text('msgid ""\nmsgstr ""\n"Content-Type: text/plain; charset=UTF-8\\n"\n\n' + "\n\n".join(blocks) + "\n")
             target = root / "locales/po" / ("cacti.pot" if locale is None else locale + ".po")
             merged = directory / "merged.po"
-            subprocess.run(["msgcat", "--use-first", "--no-wrap", str(target), str(extension), "-o", str(merged)], check=True, timeout=30)
+            subprocess.run(["msgcat", "--use-first", "--no-wrap", "--add-location=file", str(target), str(extension), "-o", str(merged)], check=True, timeout=30)
             if locale is not None:
-                subprocess.run(["msgmerge", "--backup=off", "--no-wrap", "--no-fuzzy-matching", "--update", "-F", str(merged), str(root / "locales/po/cacti.pot")], check=True, timeout=30)
-            subprocess.run(["msgattrib", "--no-obsolete", "--no-wrap", str(merged), "-o", str(target)], check=True, timeout=30)
+                subprocess.run(["msgmerge", "--backup=off", "--no-wrap", "--add-location=file", "--no-fuzzy-matching", "--update", "-F", str(merged), str(root / "locales/po/cacti.pot")], check=True, timeout=30)
+            subprocess.run(["msgattrib", "--no-obsolete", "--no-wrap", "--add-location=file", str(merged), "-o", str(target)], check=True, timeout=30)
             if locale is not None:
                 subprocess.run(["msgfmt", "--check-format", str(target), "-o", str(root / "locales/LC_MESSAGES" / (locale + ".mo"))], check=True, timeout=30)
 

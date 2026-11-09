@@ -241,24 +241,6 @@ parameters:
 			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php
 
 		-
-			message: '#^Call to function array_is_list\(\) with non\-empty\-list\<int\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateStore.php
-
-		-
-			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateStore.php
-
-		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateStore.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 11
@@ -268,12 +250,6 @@ parameters:
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 5
-			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateStore.php
-
-		-
-			message: '#^Method Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateStore\:\:save\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
 			path: src/Automation/Infrastructure/Persistence/DbalAutomationTemplateStore.php
 
 		-
@@ -1015,24 +991,6 @@ parameters:
 			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php
 
 		-
-			message: '#^Call to function array_is_list\(\) with non\-empty\-list\<int\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefStore.php
-
-		-
-			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefStore.php
-
-		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefStore.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 26
@@ -1046,12 +1004,6 @@ parameters:
 
 		-
 			message: '#^Method Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefStore\:\:functions\(\) should return array\<string, string\> but returns array\.$#'
-			identifier: return.type
-			count: 1
-			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefStore.php
-
-		-
-			message: '#^Method Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefStore\:\:save\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/GraphDefinition/Infrastructure/Persistence/DbalCdefStore.php
@@ -2443,12 +2395,6 @@ parameters:
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileAccess.php
 
 		-
-			message: '#^Call to function array_is_list\(\) with non\-empty\-list\<int\> will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
 			message: '#^Call to function in_array\(\) with arguments 20\|30\|40\|60\|120\|600\|1200\|1800\|2400\|3600\|7200\|14400\|28800\|57600\|86400\|172800, array\{20, 30, 40, 45, 60, 90, 120, 300, \.\.\.\} and true will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
@@ -2456,12 +2402,6 @@ parameters:
 
 		-
 			message: '#^Call to function is_int\(\) with int will always evaluate to true\.$#'
-			identifier: function.alreadyNarrowedType
-			count: 2
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
 			identifier: function.alreadyNarrowedType
 			count: 1
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
@@ -2517,18 +2457,6 @@ parameters:
 		-
 			message: '#^Function data_source_profile_reference_triggers not found\.$#'
 			identifier: function.notFound
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Method Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfileStore\:\:save\(\) should return array\{id\: int, retune\: bool\} but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
-
-		-
-			message: '#^Method Kadupul\\Graphing\\Infrastructure\\Persistence\\DbalDataSourceProfileStore\:\:saveArchive\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Graphing/Infrastructure/Persistence/DbalDataSourceProfileStore.php
 

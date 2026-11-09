@@ -42,31 +42,17 @@ final class RepairGraphItemsLegacyArguments extends LegacyArguments
     #[\Override]
     public function translate(array $argv): array
     {
-        $flags = $this->flags();
-        $input = [];
-        foreach ($argv as $argument) {
-            // strpos() in the original: a leading "=" was no separator.
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            [$option, $takesValue] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
+        return $this->translateUnchecked($argv, static function (string $flag, bool $takesValue, string $value, string $argument): string|true {
             if (!$takesValue) {
-                $input['--' . $option] = true;
-
-                continue;
+                return true;
             }
             // is_numeric() in the original also admitted decimals, exponents and signs.
             if (preg_match('/^\d{1,18}$/D', trim($value)) !== 1) {
                 throw new InvalidLegacyArgument($argument);
             }
-            $input['--' . $option] = trim($value);
-        }
 
-        return [$input, null];
+            return trim($value);
+        });
     }
 
     #[\Override]

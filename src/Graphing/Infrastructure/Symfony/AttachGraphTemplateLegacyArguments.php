@@ -12,7 +12,6 @@ namespace Kadupul\Graphing\Infrastructure\Symfony;
 use Kadupul\Graphing\Application\Command\GraphTemplateAttachment;
 use Kadupul\Graphing\Application\Port\CatalogChoice;
 use Kadupul\Graphing\Application\Port\CatalogDevice;
-use Kadupul\Platform\Infrastructure\Symfony\Console\InvalidLegacyArgument;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyArguments;
 use Kadupul\Platform\Infrastructure\Symfony\Console\LegacyRequest;
 
@@ -38,28 +37,10 @@ final class AttachGraphTemplateLegacyArguments extends LegacyArguments
         if ($argv === []) {
             return [[], LegacyRequest::Help];
         }
-        $flags = $this->flags();
-        $input = [];
-        foreach ($argv as $argument) {
-            [$flag, $value] = strpos($argument, '=') > 0 ? explode('=', $argument, 2) : [$argument, ''];
-            if (!array_key_exists($flag, $flags)) {
-                throw new InvalidLegacyArgument($argument);
-            }
-            if ($flag === '-d') {
-                continue;
-            }
-            [$option, $takesValue] = $flags[$flag];
-            if ($option === null) {
-                return [[], $this->special($flag)];
-            }
-            $input['--' . $option] = $takesValue ? $value : true;
-            // The original exited at the first id that was not numeric, so nothing after it counts.
-            if ($flag === '--host-id' && !is_numeric(trim($value)) || $flag === '--graph-template-id' && !is_numeric($value)) {
-                break;
-            }
-        }
 
-        return [$input, null];
+        // The original exited at the first id that was not numeric, so nothing after it counts.
+        return $this->translateUnchecked($argv, stopsAfter: static fn(string $flag, bool $takesValue, string $value): bool => $flag === '--host-id' && !is_numeric(trim($value))
+            || $flag === '--graph-template-id' && !is_numeric($value), skipped: ['-d']);
     }
 
     #[\Override]

@@ -24,6 +24,11 @@ final class ArchitectureTest extends TestCase
         'Kadupul\\Platform\\Infrastructure\\Legacy\\InstallationVersion',
     ];
 
+    /** Keep in step with the PersistenceSupport layer in deptrac.yaml. */
+    private const array PERSISTENCE_SUPPORT = [
+        'Kadupul\\Platform\\Infrastructure\\Persistence\\AuditedPrimaryWrite',
+    ];
+
     public function testModuleDependenciesPointInwardAndCrossOnlyContracts(): void
     {
         $root = dirname(__DIR__, 2) . '/src/';
@@ -65,9 +70,10 @@ final class ArchitectureTest extends TestCase
                         self::assertNotSame('Platform', $targetModule, $relative . ' imports technical integration API ' . $name);
                     }
                     if ($targetModule !== $module) {
-                        // The shared console toolkit (Deptrac layer ConsoleSupport) is the one
-                        // non-Contract API a module's own Infrastructure commands may import.
-                        if ($layer === 'Infrastructure' && in_array($name, self::CONSOLE_SUPPORT, true)) {
+                        // The shared console toolkit and audited write transaction (Deptrac layers
+                        // ConsoleSupport and PersistenceSupport) are the only non-Contract APIs a
+                        // module's own Infrastructure may import.
+                        if ($layer === 'Infrastructure' && in_array($name, [...self::CONSOLE_SUPPORT, ...self::PERSISTENCE_SUPPORT], true)) {
                             continue;
                         }
                         self::assertSame('Contract', $targetLayer, $relative . ' imports ' . $name);

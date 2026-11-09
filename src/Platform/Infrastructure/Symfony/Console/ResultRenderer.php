@@ -11,6 +11,7 @@ use Kadupul\Platform\Application\Command\InstallationAccessDenied;
 use Kadupul\Platform\Infrastructure\Doctrine\MainDatabaseNotConfigured;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationVersion;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -101,6 +102,22 @@ final readonly class ResultRenderer
         $io->getErrorStyle()->error($human);
 
         return $result->exit;
+    }
+
+    /**
+     * A selection the original refused before it started. In legacy mode it
+     * wrote "ERROR: " and the message to stderr and exited 1 without the help;
+     * the other modes report it as invalid input.
+     */
+    public function invalidSelection(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $message): int
+    {
+        if ($mode === OutputMode::Legacy) {
+            ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->writeln('ERROR: ' . $message, OutputInterface::OUTPUT_RAW);
+
+            return Command::FAILURE;
+        }
+
+        return $this->failure($io, $output, $mode, $message, new CommandResult(['status' => 'invalid', 'error' => $message], [], Command::INVALID));
     }
 
     public function denied(SymfonyStyle $io, OutputInterface $output, OutputMode $mode): int
