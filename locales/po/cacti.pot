@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.38\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 07:15-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10971,6 +10971,44 @@ msgid "Unknown Type = '%s'."
 msgstr ""
 
 #: lib/data_query.php
+#, php-format
+msgid "Verification of %s Local Data ID's Complete"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Done updating Data Source Title Cache"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Done updating Graph Title Cache"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Index Association with Local Data complete"
+msgstr ""
+
+#: lib/data_query.php
+#, php-format
+msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
+msgstr ""
+
+#: lib/data_query.php
+msgid "Update Poller Cache for Query complete"
+msgstr ""
+
+#: lib/data_query.php
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Automation Executing for Data Query complete"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Plugin hooks complete"
+msgstr ""
+
+#: lib/data_query.php
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr ""
 
@@ -10996,53 +11034,6 @@ msgstr ""
 #: lib/data_query.php
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Verification of %s Local Data ID's Complete"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr ""
-
-#: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Done updating Data Source Title Cache"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Done updating Graph Title Cache"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Index Association with Local Data complete"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
-msgstr ""
-
-#: lib/data_query.php
-msgid "Update Poller Cache for Query complete"
-msgstr ""
-
-#: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Automation Executing for Data Query complete"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Plugin hooks complete"
 msgstr ""
 
 #: lib/data_query.php

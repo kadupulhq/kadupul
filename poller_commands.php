@@ -177,6 +177,13 @@ if ($host_id === false) {
         exit(0);
     }
 
+    // Commands timestamped this second can be replaced without a new revision.
+    $ack_before = db_fetch_cell_prepared('SELECT NOW()', array(), '', true, $poller_db_cnn_id);
+    if (!is_string($ack_before) || $ack_before === '') {
+        unregister_process('commands', 'child', $host_id + 1000);
+        exit(1);
+    }
+
     $last_host_id   = 0;
     $first_host     = true;
 
@@ -212,7 +219,7 @@ if ($host_id === false) {
     if (cacti_sizeof($poller_commands)) {
         $queued_purge = new \Kadupul\Inventory\Infrastructure\Legacy\QueuedCollectorPurge(new \Kadupul\Platform\Infrastructure\Legacy\NativeReferenceWriteTransactionRunner());
         foreach ($poller_commands as $command) {
-            $acknowledge = true;
+            $acknowledge = false;
             switch ($command['action']) {
                 case POLLER_COMMAND_REINDEX:
                     list($device_id, $data_query_id) = explode(':', $command['command']);
@@ -229,8 +236,16 @@ if ($host_id === false) {
                     }
 
                     cacti_log("Device[$device_id] DQ[$data_query_id] RECACHE: Recache for Device started.", true, 'PCOMMAND', $verbosity);
-                    run_data_query($device_id, $data_query_id);
-                    cacti_log("Device[$device_id] DQ[$data_query_id] RECACHE: Recached successfully.", true, 'PCOMMAND', $verbosity);
+                    try {
+                        $acknowledge = (bool) run_data_query($device_id, $data_query_id);
+                    } catch (Throwable) {
+                        $acknowledge = false;
+                    }
+                    if ($acknowledge) {
+                        cacti_log("Device[$device_id] DQ[$data_query_id] RECACHE: Recached successfully.", true, 'PCOMMAND', $verbosity);
+                    } else {
+                        cacti_log('ERROR: Poller command failed; work remains queued.', true, 'PCOMMAND');
+                    }
 
                     break;
                 case POLLER_COMMAND_PURGE:
@@ -268,8 +283,10 @@ if ($host_id === false) {
                     break;
                 default:
                     cacti_log('ERROR: Unknown poller command issued', true, 'PCOMMAND');
+                    // No retry can succeed, so drop it rather than requeue it forever.
+                    $acknowledge = true;
             }
-            if ($acknowledge) {
+            if ($acknowledge && $command['last_updated'] < $ack_before) {
                 try {
                     $queue = $poller_db_cnn_id instanceof PDO ? $poller_db_cnn_id : ($database_sessions["$database_hostname:$database_port:$database_default"] ?? null);
                     if (!$queue instanceof PDO) {
@@ -286,7 +303,7 @@ if ($host_id === false) {
 
             /* end if runtime has been exceeded */
             if (($current - $start) > MAX_RECACHE_RUNTIME) {
-                cacti_log("ERROR: Poller Command processing timed out after processing '$command'", true, 'PCOMMAND');
+                cacti_log("ERROR: Poller Command processing timed out after processing '{$command['command']}'", true, 'PCOMMAND');
                 break;
             }
         }
