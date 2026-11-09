@@ -1,0 +1,6 @@
+# file	scope	marker key	ordinal; reviewed matches of check_marker_before_exit.php
+data_sources.php	form_save	'time_last_change_data_source'	1
+data_sources.php	form_save	'time_last_change_data_source'	2
+poller.php	(file)	'poller_lastrun'	1
+poller.php	(file)	'poller_lastrun_' . $poller_id	1
+poller.php	(file)	'poller_mibsrun_' . $poller_id	1
