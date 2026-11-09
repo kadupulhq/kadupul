@@ -524,6 +524,10 @@ if (defined('CONSOLE_HANDOFF_TEST_COVERAGE')) {
     $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
     $coverageFilter->includeFile(defined('RRD_TEST_CLI_COVERAGE_COPY') ? RRD_TEST_CLI_COVERAGE_COPY : $coverageRoot . '/' . CONSOLE_HANDOFF_TEST_COVERAGE);
 }
+if (defined('FUNCTIONS_INVENTORY_TEST_COVERAGE')) {
+    $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+    $coverageFilter->includeFile($coverageRoot . '/tools/functions-inventory.php');
+}
 if (defined('INPUT_WHITELIST_RUNTIME_TEST_COVERAGE')) {
     // The runtime producer measures the actual predicate, with no copied or
     // evaluated source and no unrelated RRD execution claim.
@@ -582,6 +586,9 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
         $testLoader->unregister();
         $testLoader->register(true);
         $childCoverage->stop();
+        if (defined('FUNCTIONS_INVENTORY_TEST_COVERAGE')) {
+            Kadupul\Tests\FunctionsInventoryCoverage::verifyInputs(dirname(__DIR__, 2), FUNCTIONS_INVENTORY_COVERAGE_SCENARIO);
+        }
         if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
             // Measure the real copied CLI, then map only its filename. Refuse
             // attribution unless every source byte (and thus line) is identical.
