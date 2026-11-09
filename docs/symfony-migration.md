@@ -747,35 +747,117 @@ values stay `enabled`/`disabled`. Dynamic site names remain escaped after parame
 The HTML language attribute follows the request locale. JSON and CSV representations retain their existing language/data contracts,
 including status values and CSV headers.
 
-Platform's `InventoryLocaleSubscriber` runs after routing and before Symfony's locale
+Platform's `LocaleSubscriber` runs after routing and before Symfony's locale
 listener. IdentityAccess exposes a read-only `LocalePreference` contract backed by
 the existing native session and `settings_user.user_language`. No locale global,
 gettext bootstrap, session write, or PHP process-wide `setlocale()` is introduced.
-Domain/application code still emits its existing errors; the HTTP adapter translates
-them for presentation. Those error strings currently serve as catalog IDs.
+Domain/application errors stay as they are; the HTTP adapter translates them for
+presentation. Those error strings currently serve as catalog IDs.
 
-For migrated Inventory HTML requests carrying cookies, precedence is:
+### One locale resolver
+
+Legacy pages and Symfony routes select the locale with the same application
+service, `Kadupul\Platform\Application\Locale\LocaleResolver`. It is pure: it
+takes a `LocaleInput` value object and returns a `LocaleResolution`, and reads no
+global, session or request. `include/global_languages.php` builds the input from
+the legacy settings, `$i18n_force_language`, the `language` request parameter,
+`sess_user_language`, the saved `user_language` and `HTTP_ACCEPT_LANGUAGE`, then
+applies the result to the request, session and globals as before. The legacy
+bootstrap includes that file before the Composer autoloader, so it requires the
+resolver's four files directly; they use no other class, and `require_once` and
+the autoloader resolve the same real path. The locale table moved into
+`KnownLocales::ALL`, which `get_list_of_locales()` returns unchanged.
+
+Precedence, for both paths:
 
 1. `i18n_language_support=0` forces English.
-2. Trusted installation `$i18n_force_language`, if supported.
-3. Shared-session `sess_user_language`, or saved `user_language` when absent.
-4. Weighted browser languages, unless `i18n_auto_detection` disables detection.
-5. Installation `i18n_default_language`, then English.
+2. The installation's `$i18n_force_language`, else the legacy `language`
+   request parameter.
+3. `sess_user_language`, when it is a known locale exactly.
+4. The saved `user_language`.
+5. Accept-Language, unless `i18n_auto_detection` disables detection.
+6. `i18n_default_language`, then the settings default, then `en-US`.
 
-Every value goes through one allowlist: English, French and the 23 locales in
-`locales/catalogs.json`. `en-US`/`en_US`, `fr-FR`/`fr_FR` and other English or
-French regions map to `en`/`fr`; other locales use their gettext identity with
-an underscore (`pt-BR`, `pt_br` → `pt_BR`). As in legacy `repair_locale()`, a
-bare language or another region of a language with one catalog uses that
-catalog (`de-AT` → `de_DE`), and a bare `pt` or `zh` picks `pt_PT` or `zh_CN`.
-Other regions of Portuguese and Chinese (`pt-AO`, `zh-HK`) are unsupported rather
-than guessed; legacy shows `zh-HK` in English and `pt-AO` in `pt-PT`. Script or
-charset suffixes (`zh-Hant-TW`, `de_DE.UTF-8`) are unsupported. Unsupported values
-fall through this precedence; arbitrary paths cannot select catalogs. Anonymous requests
-without cookies default to English without opening installation/session storage.
-Query parameters such as `language` and `_locale` do not switch or persist a locale.
-Use the existing preference screen to change the saved language; an existing login
-may retain its session language until the next legacy locale refresh/login.
+Every value except Accept-Language is repaired as legacy `repair_locale()`
+always did: `_` becomes `-`, and a value that is not one of the 50 known locales
+takes the first listed locale with the same first two characters (`de-AT` →
+`de-DE`, `pt-AO` → `pt-PT`, `zh-Hant-TW` → `zh-CN`). A value that names a known
+locale ends the search even when that locale ships no catalog, and the page is
+then English: a saved `zh-HK` or `en-GB` shows English, not the browser's
+language. Strict mode (`i18n_language_support=2`) also shows English unless
+every row of `plugin_config` has a catalog for the locale under
+`plugins/<directory>/locales/LC_MESSAGES/`.
+
+Symfony routes map the result to their catalog names: English regions to `en`,
+French regions to `fr` (the YAML file names), and other shipped locales to their
+gettext identity with an underscore (`de_DE`, `pt_BR`). They still differ from
+legacy pages in three deliberate ways:
+
+- They never read the `language` query parameter, and they write no session,
+  user setting or process locale. A legacy `?language=` link still changes the
+  session language, which Symfony routes then use.
+- `LocalePreference` supplies the session language, or the saved one when the
+  session has none, only for an authenticated account that is not changing its
+  password; the resolver repairs either value like a saved language. A session
+  language that is not a known locale therefore hides a valid saved language
+  on Symfony routes, where legacy pages would fall through to it. Legacy writes
+  only known locales or `''` to the session, so this needs a stale session.
+- Anonymous requests without cookies are English without opening installation
+  or session storage, and the probe, installer, session, login handoff and
+  JSON/CSV routes set no locale, as before. JSON and CSV keep their data
+  contracts. Every other route, including new ones, uses the resolver; there is
+  no route allowlist. Strict mode counts a plugin whose directory is not a plain
+  name as lacking a catalog.
+
+Before this step Symfony routes ran their own copy of the rules over the
+shipped catalog list. Using the shared resolver changes these Symfony results to
+the legacy ones: a saved or forced `zh-HK` now shows English instead of
+the next source; `pt-AO` shows `pt_PT` instead of the next source;
+`zh-Hant-TW` in Accept-Language shows `zh_CN` instead of English; and strict mode
+now applies.
+
+#### Decisions recorded for step 1
+
+- **`?language=` (decision 1).** Kept exactly. A requested or forced language
+  that names a known locale clears `sess_current_date1`/`sess_current_date2`,
+  calls `set_user_setting('language', …)` and, through the normal session write,
+  sets `sess_user_language`. Nothing reads a user setting named `language`; the
+  profile reads and writes `user_language`. So the parameter lasts only for the
+  session, and the write that nothing reads stays until it is decided
+  separately.
+- **Accept-Language (decision 2), the one intentional behaviour change.** Legacy
+  pages used only the header's first comma-separated entry, untrimmed and with
+  its parameters, through `repair_locale()`. Both paths now read the header as an
+  RFC 9110 weighted list: ranges are ordered by `q` and then by position, `q=0`,
+  invalid weights and empty members are ignored, and tags are compared without
+  regard to case. The first range that names a locale with a shipped catalog, or
+  any English locale, wins; otherwise the default language applies. When the
+  first entry names a shipped locale the result is unchanged. Legacy pages now
+  differ when it does not:
+
+  | Accept-Language | Before (first entry) | Now (weighted) |
+  | --- | --- | --- |
+  | `xx-YY,de-DE;q=0.8` | default language | `de-DE` |
+  | `fi-FI,de;q=0.5` | English (fi-FI has no catalog) | `de-DE` |
+  | `de;q=0.5,fr` | `de-DE` | `fr-FR` |
+  | `pt-BR;q=0.9` | `pt-PT` (first two characters of `pt-BR;q=0.9`) | `pt-BR` |
+  | empty header | `en-US` | default language |
+
+  Symfony routes already weighted the header; only the shared repair rule
+  changes them (the `zh-Hant-TW` row above).
+- **Strict mode with plugins, en/fr collapse, `zh-HK` and `pt-AO`.** Legacy
+  behaviour is kept on legacy pages, and Symfony routes now follow it, as listed
+  above.
+
+`tests/Symfony/LegacyLocaleResolutionTest.php` runs the real
+`include/global_languages.php` in a child process for each source and records
+the locale, country, session, request parameter, user-setting writes, text
+domains and a translated string. It also sends the same settings, forced
+language, preference, Accept-Language and plugins through `LocaleSubscriber`
+and requires the language the legacy page shows.
+`tests/e2e/locale_http_mariadb.py` repeats the comparison over nginx and PHP-FPM
+with the Compose MariaDB: a legacy page and a Symfony route share one login,
+session and Accept-Language, and must render the same German or French text.
 
 ### Gettext catalog fallback
 

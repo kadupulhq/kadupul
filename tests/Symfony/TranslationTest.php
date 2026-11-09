@@ -20,7 +20,7 @@ use Kadupul\Inventory\Domain\Site;
 use Kadupul\Kernel;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
-use Kadupul\Platform\Infrastructure\Symfony\InventoryLocaleSubscriber;
+use Kadupul\Platform\Infrastructure\Symfony\LocaleSubscriber;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -49,7 +49,7 @@ final class TranslationTest extends TestCase
         $preference->method('preferredLocale')->willReturn($user);
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['forced_locale' => $forced]);
-        $subscriber = new InventoryLocaleSubscriber($preference, $this->database($settings), $configuration);
+        $subscriber = new LocaleSubscriber($preference, $this->database($settings), $configuration);
         $request = Request::create('/inventory/sites', 'GET', ['language' => 'fr', '_locale' => 'fr'], ['Cacti' => 'fixture']);
         $request->attributes->set('_route', 'inventory_sites');
         $request->headers->set('Accept-Language', $browser);
@@ -80,7 +80,7 @@ final class TranslationTest extends TestCase
         $preference->method('preferredLocale')->willReturn(null);
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
-        $subscriber = new InventoryLocaleSubscriber($preference, $this->database([]), $configuration);
+        $subscriber = new LocaleSubscriber($preference, $this->database([]), $configuration);
         $request = Request::create('/graph-definitions/vdefs', 'GET', [], ['Cacti' => 'fixture']);
         $request->attributes->set('_route', 'graph_vdefs');
         $request->headers->set('Accept-Language', 'en');
@@ -97,7 +97,7 @@ final class TranslationTest extends TestCase
         $preference->method('preferredLocale')->willReturn(null);
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
-        $subscriber = new InventoryLocaleSubscriber($preference, $this->database([]), $configuration);
+        $subscriber = new LocaleSubscriber($preference, $this->database([]), $configuration);
         $request = Request::create('/utilities/notification-receivers/new', 'GET', [], ['Cacti' => 'fixture']);
         $request->attributes->set('_route', $route);
         $request->headers->set('Accept-Language', 'en');
@@ -123,7 +123,7 @@ final class TranslationTest extends TestCase
             $configuration = new InstallationConfiguration($directory);
             $preference = $this->createMock(LocalePreference::class);
             $preference->method('preferredLocale')->willReturn('en-US');
-            $subscriber = new InventoryLocaleSubscriber($preference, $this->database([]), $configuration);
+            $subscriber = new LocaleSubscriber($preference, $this->database([]), $configuration);
             $request = Request::create('/inventory/sites', 'GET', [], ['Cacti' => 'fixture']);
             $request->attributes->set('_route', 'inventory_sites');
             $request->headers->set('Accept-Language', 'en-US');

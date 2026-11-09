@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 12:16-0800\n"
+"POT-Creation-Date: 2026-11-09 12:35-0800\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11351,10 +11351,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Gedetecteerd nieuw sorteerveld: \"%s\" Oud sorteerveld \"%s\"."
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Grafieken opnieuw toewijzen aan hun nieuwe indexen"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Dupliceer data bron profiel"
 
@@ -11452,11 +11448,6 @@ msgstr "Fixeren van een verkeerd \"methode\"-veld voor \"%s\" omdat \"rewrite_in
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "%s tabellen gevonden om te converteren"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Gevonden Gewijzigde%s en%s zwevende lokale gegevens-ID's gevonden om opnieuw toe te wijzen."
 
 #: lib/data_query.php
 #, php-format
@@ -11576,8 +11567,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Nieuw sorteerveld gevalideerd.  Sorteerveld worden bijgewerkt."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Geen indexwijzigingen gedetecteerd, overslaan van Re-Index en Poller Cache Re-populatie"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
