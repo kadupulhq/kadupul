@@ -283,7 +283,7 @@ for (const theme of themes) {
         page.getByRole('button', { name: 'Go', exact: true }).click(),
       ]);
       expect(new URL(page.url()).pathname).toBe(uri);
-      expect(new URL(page.url()).searchParams.get('rows')).toBe('25');
+      expect(new URL(page.url()).searchParams.get('rows')).toBe('-1');
     }
     expect(errors).toEqual([]);
   });
@@ -320,7 +320,7 @@ for (const theme of themes) {
         page.getByRole('button', { name: 'Go', exact: true }).click(),
       ]);
       expect(new URL(page.url()).pathname).toBe(uri);
-      expect(new URL(page.url()).searchParams.get('rows')).toBe('25');
+      expect(new URL(page.url()).searchParams.get('rows')).toBe('-1');
     }
     expect(errors).toEqual([]);
   });
@@ -357,7 +357,7 @@ for (const theme of themes) {
         page.getByRole('button', { name: 'Go', exact: true }).click(),
       ]);
       expect(new URL(page.url()).pathname).toBe(uri);
-      expect(new URL(page.url()).searchParams.get('rows')).toBe('25');
+      expect(new URL(page.url()).searchParams.get('rows')).toBe('-1');
     }
     expect(errors).toEqual([]);
   });

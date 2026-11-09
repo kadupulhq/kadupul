@@ -14,6 +14,7 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\LocalePreference;
 use Kadupul\Kernel;
 use Kadupul\Navigation\Application\Port\AdministrationListAccess;
+use Kadupul\Navigation\Application\Port\ListPageSize;
 use Kadupul\Navigation\Application\Query\AdministrationListDenied;
 use Kadupul\Navigation\Application\Query\ViewAdministrationList;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
@@ -32,6 +33,7 @@ final class AdministrationListRoutesTest extends TestCase
     private bool $denied = false;
     private bool $failure = false;
     private int $reads = 0;
+    private ?ListFilters $lastFilters = null;
     /** @var list<ListScreen> */
     private array $authorized = [];
     private bool $empty = false;
@@ -57,6 +59,7 @@ final class AdministrationListRoutesTest extends TestCase
         $catalog->method('supports')->willReturn(true);
         $catalog->method('read')->willReturnCallback(function (ListScreen $screen, ListFilters $filters): array {
             ++$this->reads;
+            $this->lastFilters = $filters;
             if ($this->failure) {
                 throw new \RuntimeException('database credentials must stay private');
             }
@@ -70,10 +73,16 @@ final class AdministrationListRoutesTest extends TestCase
                     $row[$column] = 1700000000;
                 }
             }
+            if ($screen === ListScreen::Networks) {
+                // Native MySQL results: integer columns arrive as digit strings.
+                $row = ['total_ips' => '65536', 'up_hosts' => '1234', 'snmp_hosts' => '0', 'threads' => '1', 'pending' => '1000', 'running' => '2', 'done' => '3', 'last_runtime' => '12.3456789'] + $row;
+            }
             $row['name'] = 'Router <img src=x onerror=alert(1)>';
             return array_fill(0, $filters->rows + 1, $row);
         });
-        $container->set(ViewAdministrationList::class, new ViewAdministrationList([$catalog], $access));
+        $pageSize = $this->createStub(ListPageSize::class);
+        $pageSize->method('defaultRows')->willReturn(40);
+        $container->set(ViewAdministrationList::class, new ViewAdministrationList([$catalog], $access, $pageSize));
         $configuration = $this->createStub(LegacyConfiguration::class);
         $configuration->method('values')->willReturn(['collector_id' => 1, 'url_path' => '/monitor/']);
         $container->set(LegacyConfiguration::class, $configuration);
@@ -132,7 +141,7 @@ final class AdministrationListRoutesTest extends TestCase
 
     public function testMalformedFiltersNeverReachACatalog(): void
     {
-        foreach (['filter[]=x', 'rows=0', 'rows=-1', 'rows=1000', 'page=0', 'page=1e2', 'page=1.5', 'page=100000', 'page=01', 'sort_column=password', 'sort_direction=desc', 'action=delete', 'filter=%00', 'filter=' . str_repeat('a', 256)] as $query) {
+        foreach (['filter[]=x', 'rows=0', 'rows=-2', 'rows=01', 'rows=1e2', 'rows=5001', 'page=0', 'page=1e2', 'page=1.5', 'page=100000', 'page=01', 'sort_column=password', 'sort_direction=desc', 'action=delete', 'filter=%00', 'filter=' . str_repeat('a', 256)] as $query) {
             foreach (ListScreen::cases() as $screen) {
                 self::assertSame(400, $this->get($screen, '?' . $query)->getStatusCode(), $screen->value . ': ' . $query);
             }
@@ -181,6 +190,43 @@ final class AdministrationListRoutesTest extends TestCase
                 self::assertStringNotContainsString('>Créer</a>', (string) $response->getContent());
             }
         }
+    }
+
+    public function testAbsentAndDefaultRowsUseTheConfiguredPageSize(): void
+    {
+        foreach (['', '?rows=-1'] as $query) {
+            $response = $this->get(ListScreen::DataQueries, $query);
+            self::assertSame(200, $response->getStatusCode());
+            self::assertSame(40, $this->lastFilters?->rows);
+            $dom = new \DOMDocument();
+            self::assertTrue(@$dom->loadHTML((string) $response->getContent()));
+            $xpath = new \DOMXPath($dom);
+            self::assertSame(40, $xpath->query('//table[@id="administration-list"]/tbody/tr')->length);
+            $selected = $xpath->query('//select[@name="rows"]/option[@selected]')->item(0);
+            self::assertSame('-1', $selected?->getAttribute('value'));
+            self::assertSame('Default (40)', trim((string) $selected?->textContent));
+            // Pagination and the legacy form both keep asking for the configured size.
+            self::assertStringContainsString('rows=-1', $xpath->query('//a[@rel="next"]')->item(0)->getAttribute('href'));
+            $links = array_map(static fn(\DOMElement $link): string => $link->getAttribute('href'), iterator_to_array($xpath->query('//a')));
+            self::assertContains('/monitor/data_queries.php?filter=&rows=-1', $links);
+        }
+        self::assertSame(200, $this->get(ListScreen::DataQueries, '?rows=5000')->getStatusCode());
+        self::assertSame(5000, $this->lastFilters?->rows);
+    }
+
+    public function testNetworkCountsAreGroupedAndRuntimeIsRounded(): void
+    {
+        $dom = new \DOMDocument();
+        self::assertTrue(@$dom->loadHTML((string) $this->get(ListScreen::Networks, '?rows=10')->getContent()));
+        $xpath = new \DOMXPath($dom);
+        $columns = array_keys(ListScreen::Networks->columns());
+        $cells = array_map(static fn(\DOMNode $cell): string => trim($cell->textContent), iterator_to_array($xpath->query('//table[@id="administration-list"]/tbody/tr[1]/td')));
+        $row = array_combine($columns, $cells);
+        self::assertSame('65,536', $row['total_ips']);
+        self::assertSame('1,234', $row['up_hosts']);
+        self::assertSame('1,000', $row['pending']);
+        self::assertSame('0', $row['snmp_hosts']);
+        self::assertSame('12.35', $row['last_runtime']);
     }
 
     private function get(ListScreen $screen, string $query = ''): Response

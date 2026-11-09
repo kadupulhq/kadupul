@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-08 23:20-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -16111,6 +16111,11 @@ msgstr "प्लगइन्स को अनइंस्टॉल करें
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "इस प्लगइन को अनइंस्टॉल करने से सभी प्लगइन डेटा और सेटिंग्स को हटा दिया जाएगा। यदि आप वास्तव में प्लगइन की स्थापना रद्द करना चाहते हैं, तो नीचे &#39;स्थापना रद्द करें&#39; पर क्लिक करें। अन्यथा &#39;रद्द करें&#39; पर क्लिक करें"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format
