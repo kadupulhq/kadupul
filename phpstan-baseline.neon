@@ -9217,12 +9217,6 @@ parameters:
 			path: src/Navigation/Application/Query/ViewManagementCatalog.php
 
 		-
-			message: '#^Method Kadupul\\Navigation\\Application\\Query\\ViewRelationships\:\:__invoke\(\) has parameter \$query with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Navigation/Application/Query/ViewRelationships.php
-
-		-
 			message: '#^Method Kadupul\\Navigation\\Application\\Query\\ViewRelationships\:\:__invoke\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -9239,12 +9233,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/Navigation/Application/Query/ViewRelationships.php
-
-		-
-			message: '#^Method Kadupul\\Navigation\\Contract\\Administration\\ListFilters\:\:fromColumns\(\) has parameter \$query with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Navigation/Contract/Administration/ListFilters.php
 
 		-
 			message: '#^Only booleans are allowed in \|\|, int\|false given on the right side\.$#'
