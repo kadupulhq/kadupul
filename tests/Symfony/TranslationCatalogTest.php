@@ -29,6 +29,10 @@ final class TranslationCatalogTest extends TestCase
      * a new gettext call in src/ fails this test.
      */
     private const GETTEXT_ALLOWLIST = [
+        // Password-policy messages that auth_changepassword.php shows stay in the legacy gettext catalogs.
+        'src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php' => 1,
+        'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php' => 2,
+        'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php' => 4,
         'src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php' => 7,
         // Installer adapters store the same translated defaults the legacy installer writes.
         'src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php' => 1,
