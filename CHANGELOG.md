@@ -6,6 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+- Restore legacy behaviour in the migrated administration and relationship lists: Graph Rules search matches graph type and data query names again, lists use the configured rows-per-page setting when no size or `rows=-1` is requested and accept sizes up to 5000, Networks counts and runtimes are formatted as on the legacy page, and System Utilities links to these lists open as full pages instead of a blank content area (#1425).
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
 
