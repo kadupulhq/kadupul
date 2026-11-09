@@ -145,6 +145,10 @@ try {
 		check($connection->query('SELECT next_start FROM automation_networks WHERE id=1')->fetchColumn()===$network['next_start'],'due time retained');
 		check($GLOBALS['reports']===0,'failed preparation does not report');
 		$connection->exec('ALTER TABLE automation_ips DROP CONSTRAINT reject_later_batch');
+		// The /21 queue holds about 2,046 addresses, which can take most of the seeded
+		// 10-second run limit on a slow runner. Give the retry a budget sized to its work,
+		// so it tests recovery rather than a deadline the deadline scenario covers.
+		automation_query($connection,'UPDATE automation_networks SET run_limit=120 WHERE id=1');
 		$GLOBALS['scenario']='success';
 		check(automation_run_network($connection,1,1,true,false,false),'full queue publishes on retry');
 	} elseif ($scenario==='schema') {
@@ -189,11 +193,31 @@ try {
 			check((int)automation_query($connection,'SELECT COUNT(*) FROM automation_ips')->fetchColumn()===6,'failed run retains queued work');
 			check($GLOBALS['reports']===0,'failed run does not report success');
 			if ($scenario==='deadline') { check(microtime(true)-$started<8,'parent enforces a real child deadline'); }
-			if ($scenario==='completion-write') { $connection->exec('ALTER TABLE automation_networks DROP CONSTRAINT reject_completion'); }
-			if ($scenario==='schedule-write') { $connection->exec('ALTER TABLE automation_networks DROP CONSTRAINT reject_schedule'); }
-			if ($scenario==='read-failure') { $connection->exec('ALTER TABLE automation_processes RENAME COLUMN unavailable_command TO command'); }
+			// Remove the injected fault before retrying, as an operator would. The run
+			// connection uses silent errors, so a failed repair must not pass unnoticed:
+			// it would leave the fault in place and be misreported as a failed retry.
+			$repair = array(
+				// Restore the seeded 10-second limit; the 1-second limit is the injected fault.
+				'deadline' => 'UPDATE automation_networks SET run_limit=10 WHERE id=1',
+				'completion-write' => 'ALTER TABLE automation_networks DROP CONSTRAINT reject_completion',
+				'schedule-write' => 'ALTER TABLE automation_networks DROP CONSTRAINT reject_schedule',
+				'read-failure' => 'ALTER TABLE automation_processes RENAME COLUMN unavailable_command TO command',
+			);
+			if (isset($repair[$scenario])) {
+				check($connection->exec($repair[$scenario]) !== false, 'injected fault is removed before retry: ' . json_encode($connection->errorInfo()));
+			}
 			$GLOBALS['scenario']='success';
-			check(automation_run_network($connection,1,1,true,false,false),'retained work succeeds on retry');
+			$retried = automation_run_network($connection,1,1,true,false,false);
+			if (!$retried) {
+				// Record why the retry failed for triage; the assertion itself is unchanged.
+				$evidence = array(
+					'network' => automation_query($connection,'SELECT enabled,run_limit,next_start,last_status FROM automation_networks WHERE id=1')->fetch(PDO::FETCH_ASSOC),
+					'processes' => automation_query($connection,'SELECT task,status,command FROM automation_processes')->fetchAll(PDO::FETCH_ASSOC),
+					'queue' => automation_query($connection,'SELECT status,COUNT(*) AS n FROM automation_ips GROUP BY status')->fetchAll(PDO::FETCH_ASSOC),
+				);
+				fwrite(STDERR, 'retry evidence: ' . json_encode($evidence) . "\n");
+			}
+			check($retried,'retained work succeeds on retry');
 		}
 	}
 	print json_encode(array('scenario'=>$scenario,'checks'=>$checks,'php'=>PHP_VERSION,'database'=>$connection->query('SELECT VERSION()')->fetchColumn()))."\n";
