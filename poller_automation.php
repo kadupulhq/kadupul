@@ -270,7 +270,7 @@ function discoverDevices($network_id, $thread) {
 				if ($dnsname != $device['ip_address'] && $dnsname != 'timed_out') {
 					automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Found '" . $dnsname . "'");
 
-					db_execute_prepared('UPDATE automation_ips
+					automation_execute('UPDATE automation_ips
 						SET hostname = ?
 						WHERE ip_address = ? AND network_id = ? AND run_id = ?',
 						array($dnsname, $device['ip_address'], $network_id, $run_id));
@@ -291,7 +291,7 @@ function discoverDevices($network_id, $thread) {
 					} else {
 						automation_debug(" Found: '" . $netbios . "'");
 
-						db_execute_prepared('UPDATE automation_ips
+						automation_execute('UPDATE automation_ips
 							SET hostname = ?
 							WHERE ip_address = ? AND network_id = ? AND run_id = ?',
 							array($device['hostname'], $device['ip_address'], $network_id, $run_id));
@@ -313,7 +313,7 @@ function discoverDevices($network_id, $thread) {
 				if ($dnsname != $device['ip_address']) {
 					automation_debug("Device: " . $device['ip_address'] . ", Checking DNS: Found '" . $dnsname . "'");
 
-					db_execute_prepared('UPDATE automation_ips
+					automation_execute('UPDATE automation_ips
 						SET hostname = ?
 						WHERE ip_address = ? AND network_id = ? AND run_id = ?',
 						array($dnsname, $device['ip_address'], $network_id, $run_id));
@@ -332,7 +332,7 @@ function discoverDevices($network_id, $thread) {
 					} else {
 						automation_debug(" Found: '" . $netbios . "'");
 
-						db_execute_prepared('UPDATE automation_ips
+						automation_execute('UPDATE automation_ips
 							SET hostname = ?
 							WHERE ip_address = ? AND network_id = ? AND run_id = ?',
 							array($device['hostname'], $device['ip_address'], $network_id, $run_id));
@@ -526,42 +526,42 @@ function discoverDevices($network_id, $thread) {
 
 									if (!empty($host_id)) {
 										if (isset($device['snmp_sysDescr']) && $device['snmp_sysDescr'] != '') {
-											db_execute_prepared('UPDATE host
+											automation_execute('UPDATE host
 												SET snmp_sysDescr = ?
 												WHERE id = ?',
 												array($device['snmp_sysDescr'], $host_id));
 										}
 
 										if (isset($device['snmp_sysObjectID']) && $device['snmp_sysObjectID'] != '') {
-											db_execute_prepared('UPDATE host
+											automation_execute('UPDATE host
 												SET snmp_sysObjectID = ?
 												WHERE id = ?',
 												array($device['snmp_sysObjectID'], $host_id));
 										}
 
 										if (isset($device['snmp_sysUptime']) && $device['snmp_sysUptime'] != '') {
-											db_execute_prepared('UPDATE host
+											automation_execute('UPDATE host
 												SET snmp_sysUptimeInstance = ?
 												WHERE id = ?',
 												array($device['snmp_sysUptime'], $host_id));
 										}
 
 										if (isset($device['snmp_sysContact']) && $device['snmp_sysContact'] != '') {
-											db_execute_prepared('UPDATE host
+											automation_execute('UPDATE host
 												SET snmp_sysContact = ?
 												WHERE id = ?',
 												array($device['snmp_sysContact'], $host_id));
 										}
 
 										if (isset($device['snmp_sysName']) && $device['snmp_sysName'] != '') {
-											db_execute_prepared('UPDATE host
+											automation_execute('UPDATE host
 												SET snmp_sysName = ?
 												WHERE id = ?',
 												array($device['snmp_sysName'], $host_id));
 										}
 
 										if (isset($device['snmp_sysLocation']) && $device['snmp_sysLocation'] != '') {
-											db_execute_prepared('UPDATE host
+											automation_execute('UPDATE host
 												SET snmp_sysLocation = ?
 												WHERE id = ?',
 												array($device['snmp_sysLocation'], $host_id));
@@ -582,7 +582,7 @@ function discoverDevices($network_id, $thread) {
 
 							// if the devices template is not discovered, add to found table
 							if ($host_id == 0) {
-								db_execute('REPLACE INTO automation_devices
+								automation_execute('REPLACE INTO automation_devices
 									(network_id, hostname, ip, snmp_community, snmp_version, snmp_port, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, sysName, sysLocation, sysContact, sysDescr, sysUptime, os, snmp, up, time) VALUES ('
 									. $network_id                              . ', '
 									. db_qstr($device['dnsname'])              . ', '
@@ -608,7 +608,7 @@ function discoverDevices($network_id, $thread) {
 							markIPDone($device['ip_address'], $network_id);
 						}
 					} elseif ($result) {
-						db_execute('REPLACE INTO automation_devices
+						automation_execute('REPLACE INTO automation_devices
 							(network_id, hostname, ip, snmp_community, snmp_version, snmp_port, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, sysName, sysLocation, sysContact, sysDescr, sysUptime, os, snmp, up, time) VALUES ('
 							. $network_id                              . ', '
 							. db_qstr($device['dnsname'])              . ', '
@@ -967,7 +967,7 @@ function updateDownDevice($network_id, $ip) {
 		array($ip, $network_id));
 
 	if ($exists) {
-		db_execute_prepared("UPDATE automation_devices
+		automation_execute("UPDATE automation_devices
 			SET up='0'
 			WHERE ip = ?
 			AND network_id = ?",

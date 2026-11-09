@@ -64,6 +64,16 @@ function automation_retry_deadlock(PDO $connection, array $error, int $attempt):
 	}
 }
 
+/**
+ * Discovery workers run with $database_fail_fast, which makes db_execute_prepared()
+ * throw on a deadlock without its legacy retry. Their autocommitted writes use this
+ * instead, so they get automation_query()'s bounded deadlock retry on the same
+ * primary connection. It throws on any other failure, as fail-fast mode does.
+ */
+function automation_execute(string $sql, array $parameters = array()): void {
+	automation_query(automation_default_connection(), $sql, $parameters);
+}
+
 function automation_lock_name(PDO $connection, int $network, int $thread = 0): string {
 	$database = automation_query($connection, 'SELECT DATABASE()')->fetchColumn();
 	if (!is_string($database) || $database === '') {

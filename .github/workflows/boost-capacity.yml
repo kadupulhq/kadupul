@@ -28,6 +28,8 @@ on:
       - 'tests/fixtures/automation-upgrade-native.php'
       - 'tests/fixtures/automation-1.2.32.sql'
       - 'tests/integration/AutomationRecoveryMariaDbTest.php'
+      - 'tests/fixtures/automation-worker-deadlock-native.php'
+      - 'tests/integration/AutomationWorkerDeadlockMariaDbTest.php'
       - 'lib/boost.php'
       - 'lib/poller.php'
       - 'lib/rrd.php'
