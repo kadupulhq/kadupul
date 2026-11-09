@@ -456,7 +456,7 @@ function update_reindex_cache($host_id, $data_query_id)
                     case DATA_INPUT_TYPE_SNMP_QUERY:
                         if (isset($data_query_xml['oid_num_indexes'])) { /* we have a specific OID for counting indexes */
                             $recache_stack[] = "($host_id, $data_query_id," . POLLER_ACTION_SNMP . ", '=', " . db_qstr($assert_value) . ", " . db_qstr($data_query_xml['oid_num_indexes']) . ", 1)";
-                        } else { /* count all indexes found */
+                        } elseif (!empty($data_query_xml['oid_index'])) { /* count all indexes found */
                             $recache_stack[] = "($host_id, $data_query_id, " . POLLER_ACTION_SNMP_COUNT . ", '=', " . db_qstr($assert_value) . ", " . db_qstr($data_query_xml['oid_index']) . ", 1)";
                         }
                         break;
@@ -1124,7 +1124,7 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
                         }
                     }
                 }
-            } elseif ($rrd_name != '') {
+            } elseif ($rrd_name != '' || trim($value) === 'U') { // a bare U is the collector's unknown for the whole MULTI sample
                 if ($data_template_id > 0) {
                     $unused_data_source_names = array_rekey(
                         db_fetch_assoc_prepared(
@@ -2226,15 +2226,8 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
                 return $fail();
             }
 
-            if (!db_execute_prepared(
-                "DELETE FROM poller_item
-				WHERE last_updated < ?
-				AND last_updated > 0
-				AND last_updated IS NOT NULL",
-                array(date('Y-m-d H:i:s', $time)),
-                false,
-                $rcnn_id
-            )) {
+            // The copy above succeeded, so $data lists every item the collector keeps
+            if (!replicate_out_remove_stale_items($rcnn_id, $data)) {
                 return $fail();
             }
         }
@@ -2375,6 +2368,57 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 }
 
 /**
+ * Remove the remote poller items that the main data collector no longer holds
+ * for this collector.
+ *
+ * The copy leaves last_updated alone on a row it did not change, so current
+ * items keep older times than new ones and a time cutoff would remove them too.
+ * Items are compared by key instead.
+ *
+ * @param PDO $conn The remote collector connection
+ * @param array<int, array<string, mixed>> $items The rows just copied from main
+ */
+function replicate_out_remove_stale_items($conn, array $items): bool
+{
+    $current = array();
+
+    foreach ($items as $item) {
+        $current[(int) $item['local_data_id'] . "\0" . $item['rrd_name']] = true;
+    }
+
+    $remote = db_fetch_assoc('SELECT local_data_id, rrd_name FROM poller_item', false, $conn);
+
+    if (!is_array($remote)) {
+        return false;
+    }
+
+    $stale = array();
+
+    foreach ($remote as $row) {
+        if (!isset($current[(int) $row['local_data_id'] . "\0" . $row['rrd_name']])) {
+            $stale[] = $row;
+        }
+    }
+
+    foreach (array_chunk($stale, 500) as $chunk) {
+        $clauses = array();
+        $params = array();
+
+        foreach ($chunk as $row) {
+            $clauses[] = '(local_data_id = ? AND rrd_name = ?)';
+            $params[] = $row['local_data_id'];
+            $params[] = $row['rrd_name'];
+        }
+
+        if (!db_execute_prepared('DELETE FROM poller_item WHERE ' . implode(' OR ', $clauses), $params, false, $conn)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * replicate_out_table - replicate out an entire table to
  *   remote database.  Optionally, performs update rather
  *   than a truncate and excluding columns from the on duplicate
@@ -2466,12 +2510,35 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
             }
         }
 
+        $replacing = false;
+
         if ($truncate) {
             $prefix = "REPLACE INTO $table (";
             $suffix = '';
 
-            if (!db_execute("TRUNCATE TABLE $table", true, $conn)) {
+            // TRUNCATE commits at once, so a failed insert after it left the
+            // collector table empty (#761). On a transactional table, delete and
+            // reload the rows in one transaction that is rolled back on failure.
+            $remote_create = db_fetch_row("SHOW CREATE TABLE `$table`", false, $conn);
+            if (!is_array($remote_create)) {
                 return false;
+            }
+
+            if ($conn instanceof \PDO && preg_match('/\bENGINE=InnoDB\b/i', (string) ($remote_create['Create Table'] ?? '')) === 1) {
+                if ($conn->inTransaction() || !$conn->beginTransaction()) {
+                    return false;
+                }
+                $replacing = true;
+
+                if (!db_execute("DELETE FROM `$table`", true, $conn)) {
+                    return replicate_out_rollback($conn, $table);
+                }
+            } else {
+                replicate_log('WARNING: Replicate Out Table ' . $table . ' on Remote Poller ' . $remote_poller_id . ' is not InnoDB. It is emptied before the replacement rows are written.', POLLER_VERBOSITY_LOW);
+
+                if (!db_execute("TRUNCATE TABLE $table", true, $conn)) {
+                    return false;
+                }
             }
         } else {
             $prefix = "INSERT INTO $table (";
@@ -2529,7 +2596,7 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 
             if ($rowcnt > 1000) {
                 if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
-                    return false;
+                    return $replacing ? replicate_out_rollback($conn, $table) : false;
                 }
                 $rows_affected = db_affected_rows($conn);
                 $rows_log      = ((($rows_done % 100000) + $rows_affected) > 100000);
@@ -2545,9 +2612,21 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
 
         if ($rowcnt > 0) {
             if (!db_execute($prefix . $sql . $suffix, true, $conn)) {
-                return false;
+                return $replacing ? replicate_out_rollback($conn, $table) : false;
             }
             $rows_done += db_affected_rows($conn);
+        }
+
+        if ($replacing) {
+            try {
+                $committed = $conn->commit();
+            } catch (\Throwable $e) {
+                $committed = false;
+            }
+
+            if (!$committed) {
+                return replicate_out_rollback($conn, $table);
+            }
         }
 
         replicate_log('INFO: Table ' . $table . ' Replicated to Remote Poller ' . $remote_poller_id . ' With ' . $rows_done . ' Rows Updated', $level);
@@ -2585,6 +2664,35 @@ function replicate_out_table($conn, &$data, $table, $remote_poller_id, $truncate
     }
 
     return true;
+}
+
+/**
+ * replicate_out_rollback - abandon a remote table replacement, keeping its previous rows
+ *
+ * @param  (object) $conn  - Connection to remote database
+ * @param  (string) $table - The remote table being replaced
+ *
+ * @return (bool) Always false, so callers can return it as the outcome
+ */
+function replicate_out_rollback($conn, $table)
+{
+    $kept = false;
+
+    try {
+        if ($conn->inTransaction()) {
+            $kept = $conn->rollBack();
+        }
+    } catch (\Throwable $e) {
+        $kept = false;
+    }
+
+    if ($kept) {
+        cacti_log('ERROR: Replicate Out failed for ' . $table . '. The remote rows were kept.', false, 'REPLICATE');
+    } else {
+        cacti_log('ERROR: Replicate Out failed for ' . $table . ' and the rollback of the remote rows was not confirmed.', false, 'REPLICATE');
+    }
+
+    return false;
 }
 
 function replicate_log($text, $level = POLLER_VERBOSITY_NONE)

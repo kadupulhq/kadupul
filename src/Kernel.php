@@ -7,14 +7,70 @@
 
 namespace Kadupul;
 
+use Kadupul\Platform\Infrastructure\Symfony\CacheDirectoryLock;
+use Kadupul\Platform\Infrastructure\Symfony\CacheRefreshInProgress;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
 final class Kernel extends BaseKernel implements CompilerPassInterface
 {
     use MicroKernelTrait;
+
+    private ?CacheDirectoryLock $cacheLock = null;
+    private bool $cacheLockChecked = false;
+
+    /**
+     * A refresh that outlasts the reader bound answers 503 instead of letting
+     * this request load services from a directory being replaced.
+     */
+    #[\Override]
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
+    {
+        try {
+            $this->lockCache();
+        } catch (CacheRefreshInProgress) {
+            return new Response('', Response::HTTP_SERVICE_UNAVAILABLE, ['Retry-After' => '5', 'Cache-Control' => 'no-store']);
+        }
+
+        return parent::handle($request, $type, $catch);
+    }
+
+    /** @throws CacheRefreshInProgress for direct boots while a refresh runs */
+    #[\Override]
+    public function boot(): void
+    {
+        $this->lockCache();
+        parent::boot();
+    }
+
+    #[\Override]
+    public function shutdown(): void
+    {
+        parent::shutdown();
+        $this->cacheLock?->release();
+        $this->cacheLock = null;
+        $this->cacheLockChecked = false;
+    }
+
+    /**
+     * Web requests keep the build directory from being swapped by cache:clear
+     * until shutdown, because the container loads service files lazily by path.
+     * Console processes are excluded: the installer worker boots a kernel and
+     * then runs cache:clear as its own child.
+     */
+    private function lockCache(): void
+    {
+        if ($this->booted || $this->cacheLockChecked || \in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
+            return;
+        }
+        $this->cacheLock = CacheDirectoryLock::shared($this->getBuildDir());
+        $this->cacheLockChecked = true;
+    }
 
     #[\Override]
     public function process(ContainerBuilder $container): void
