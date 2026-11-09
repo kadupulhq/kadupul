@@ -41,6 +41,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Submit the Data Source Troubleshooter's Apply Suggested Fixes and Rerun Analysis links as token-bearing POST requests, and refuse those actions by GET (#1038).
 
 - Web Basic authentication (auth method 2) now takes the user only from `REMOTE_USER` or `REDIRECT_REMOTE_USER` set by the web server and no longer from `PHP_AUTH_USER`, which PHP fills from the client's `Authorization` header; servers that pass only `PHP_AUTH_USER` must now pass `REMOTE_USER`.
+- Read Kadupul packages up to an expanded size of 32 MiB (`IMPORT_PACKAGE_MAX_EXPANDED_BYTES` in `include/config.php` changes it) before metadata, signature or XML processing, and refuse larger packages with an import log message (#110).
 
 - Add the missing English "Invalid location search." message to the inventory catalog and test that migrated translation catalogs, templates and sources stay free of untranslated visible text.
 - Read SNMP Hex-STRING values through the hex-string prefix (#1030), skip SNMP walks requested without an OID and do not queue a reindex count without one (#1031), and return no session for a host already marked down in cmd.php (#1056).
