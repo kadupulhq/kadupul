@@ -143,6 +143,13 @@ final class AdministrationCatalogNativeTest extends TestCase
         $filtered = $this->catalog($screen)->read($screen, ListFilters::fromQuery($screen, ['filter' => 'Subtree']));
         self::assertCount(1, $filtered);
         self::assertSame(2, (int) $filtered[0]['branches']);
+        // automation_graph_rules.php matches the rule, graph type and data query names.
+        $this->database->executeStatement("UPDATE snmp_query_graph SET name = 'Interface Traffic' WHERE id = 7");
+        $screen = ListScreen::GraphRules;
+        foreach (['Graph rule', 'Interface', 'Data query'] as $search) {
+            self::assertSame(['7'], array_map('strval', array_column($this->catalog($screen)->read($screen, ListFilters::fromQuery($screen, ['filter' => $search])), 'id')), $search);
+        }
+        self::assertSame([], $this->catalog($screen)->read($screen, ListFilters::fromQuery($screen, ['filter' => 'Tree rule'])));
         $collectors = array_column($this->read(ListScreen::Collectors), null, 'id');
         self::assertSame(1, (int) $collectors[7]['hosts']);
         self::assertSame(4, (int) $collectors[8]['collector_status']);

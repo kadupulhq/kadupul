@@ -3897,3 +3897,27 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe, $final = false, $
         }
     }
 }
+
+/**
+ * poller_collector_preflight - check the collector binary a poll will start
+ *
+ * poller.php used to find a wrong collector path only when it launched the
+ * collectors, after it had recorded the run; with cmd.php it then waited for
+ * processes that never started. Checking at startup, as Xu et al. recommend in
+ * "Early Detection of Configuration Errors to Reduce Failure Damage" (OSDI
+ * 2016), fails the run before it records anything.
+ *
+ * @param string $poller_type The poller_type setting; '2' selects spine, anything else cmd.php
+ * @param string $spine_path  The path_spine setting
+ * @param string $php_path    The path_php_binary setting
+ *
+ * @return array{0: string, 1: string}|null The unusable setting's name and value, or null
+ */
+function poller_collector_preflight($poller_type, $spine_path, $php_path)
+{
+    [$name, $path] = ((string) $poller_type === '2') ? array('path_spine', (string) $spine_path) : array('path_php_binary', (string) $php_path);
+
+    clearstatcache(true, $path);
+
+    return ($path !== '' && is_file($path) && is_executable($path)) ? null : array($name, $path);
+}

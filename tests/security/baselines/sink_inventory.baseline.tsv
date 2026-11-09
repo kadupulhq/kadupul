@@ -272,12 +272,12 @@ dynamic_include	./install/upgrades/0_8_6.php:8	include_once($config['base_path']
 dynamic_include	./install/upgrades/0_8_6.php:9	include_once($config["base_path"] . "/lib/import.php");
 dynamic_include	./install/upgrades/0_8_7h.php:10		require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./install/upgrades/1_2_20.php:11		include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./lib/aggregate.php:1118	    include_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./lib/aggregate.php:828	    include_once($config['base_path'] . '/lib/cdef.php');
-dynamic_include	./lib/aggregate.php:924	    include_once($config['base_path'] . '/lib/cdef.php');
-dynamic_include	./lib/api_aggregate.php:1141	        include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./lib/api_aggregate.php:2292	    include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/api_aggregate.php:484	        include_once($config['base_path'] . '/lib/api_aggregate.php');
+dynamic_include	./lib/aggregate.php:1117	    include_once($config['base_path'] . '/lib/api_graph.php');
+dynamic_include	./lib/aggregate.php:827	    include_once($config['base_path'] . '/lib/cdef.php');
+dynamic_include	./lib/aggregate.php:923	    include_once($config['base_path'] . '/lib/cdef.php');
+dynamic_include	./lib/api_aggregate.php:1142	        include_once($config['base_path'] . '/lib/api_aggregate.php');
+dynamic_include	./lib/api_aggregate.php:2296	    include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/api_aggregate.php:485	        include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./lib/api_automation.php:2602	    include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2603	    include_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./lib/api_automation.php:2604	    include_once($config['base_path'] . '/lib/utility.php');
@@ -376,8 +376,8 @@ dynamic_include	./lib/utility.php:190	    include_once($config['library_path'] .
 dynamic_include	./lib/utility.php:34	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:788	    include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:75	                include_once($file);
-dynamic_include	./poller.php:1171	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1350	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1188	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1367	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:19	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:20	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:21	require_once($config['base_path'] . '/lib/rrd.php');
@@ -510,7 +510,7 @@ fs_write	./lib/functions.php:953	            file_put_contents(sys_get_temp_dir(
 fs_write	./lib/functions.php:962	                file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/import.php:483	    $f   = fopen($filename, 'r');
 fs_write	./lib/import.php:721	                        $file = fopen($filename, 'wb');
-fs_write	./lib/input_whitelist.php:111	        $stream = @fopen($temporary, 'x+b');
+fs_write	./lib/input_whitelist.php:115	        $stream = @fopen($temporary, 'x+b');
 fs_write	./lib/input_whitelist.php:41	            $lock = @fopen($lockPath, 'x+b');
 fs_write	./lib/input_whitelist.php:49	            $lock = @fopen($lockPath, 'r+b');
 fs_write	./lib/installer.php:3127	            $file = fopen($cacheFile, "r");

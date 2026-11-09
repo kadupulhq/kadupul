@@ -61,7 +61,7 @@ final readonly class AdministrationListController
             return new Response($translator->trans('Unable to load this list. Reload before retrying.', [], 'administration'), 502, $headers);
         }
         return new Response($request->isMethod('HEAD') ? '' : $twig->render('administration/list.html.twig', [
-            'screen' => $screen, 'filters' => $result['filters']->query(), 'records' => $result['records'],
+            'screen' => $screen, 'filters' => $result['filters']->query(), 'defaultRows' => $result['defaultRows'], 'records' => $result['records'],
             'hasNext' => $result['hasNext'], 'route' => $request->attributes->get('_route'),
         ]), 200, $headers);
     }
