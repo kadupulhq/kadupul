@@ -71,6 +71,38 @@ function cacti_snmp_get(...$arguments)
     return array_key_exists('queryReturnOverride', $GLOBALS) ? $GLOBALS['queryReturnOverride'] : 'sample-' . substr($oid, strrpos($oid, '.') + 1);
 }
 
+/** PDO syntax port for SQLite; native database contracts test real engine guards. */
+final class QueryCacheConnection extends PDO
+{
+    public function __construct(private PDO $backend) {}
+    public function beginTransaction(): bool { return $this->backend->beginTransaction(); }
+    public function commit(): bool { return $this->backend->commit(); }
+    public function rollBack(): bool { return $this->backend->rollBack(); }
+    public function inTransaction(): bool { return $this->backend->inTransaction(); }
+    public function exec(string $statement): int|false { return $this->backend->exec($statement); }
+    public function prepare(string $query, array $options = []): PDOStatement|false
+    {
+        if (preg_match('/\A(?:UPDATE|INSERT|DELETE) /', $query)) {
+            $GLOBALS['querySql'][] = preg_replace('/\s+/', ' ', trim($query));
+        }
+        if ($this->backend->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            if (preg_match('/\ASHOW CREATE TABLE `([a-z_]+)`\z/', $query, $match)) {
+                $query = "SELECT name, sql FROM sqlite_master WHERE type='table' AND name=" . $this->backend->quote($match[1]);
+            } elseif (preg_match("/\ASHOW TABLE STATUS WHERE Name = '([a-z_]+)'\z/", $query, $match)) {
+                $query = "SELECT name AS Name, 'InnoDB' AS Engine FROM sqlite_master WHERE type='table' AND name=" . $this->backend->quote($match[1]);
+            } elseif (str_ends_with($query, ' FOR UPDATE')) {
+                $query = substr($query, 0, -strlen(' FOR UPDATE'));
+            } elseif (str_starts_with($query, 'INSERT INTO host_snmp_cache ')) {
+                $suffix = ' ON DUPLICATE KEY UPDATE field_value=VALUES(field_value), oid=VALUES(oid), present=VALUES(present)';
+                if (!str_ends_with($query, $suffix)) { throw new RuntimeException('Unknown cache insert dialect'); }
+                $query = substr($query, 0, -strlen($suffix)) . ' ON CONFLICT(host_id,snmp_query_id,field_name,snmp_index) DO UPDATE SET field_value=excluded.field_value, oid=excluded.oid, present=excluded.present';
+            }
+        }
+        return $this->backend->prepare($query, $options);
+    }
+}
+function cacti_log($message, ...$arguments) { throw new RuntimeException($message); }
+
 function native_query_snmp_get(string $root, string $directory, array $scenario, ?PDO $database = null): array
 {
     set_error_handler(static function ($severity, $message, $file, $line): never {
@@ -127,6 +159,10 @@ function native_query_snmp_get(string $root, string $directory, array $scenario,
         $database->exec("INSERT INTO host_snmp_query(host_id,snmp_query_id,sort_field) VALUES(4,10,'index')");
         $database->exec("INSERT INTO host_snmp_cache(host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES(4,10,'value','old','7','old-oid'),(4,10,'stale','old','99','old-oid'),(5,10,'adjacent','untouched','7','adjacent-oid')");
         $GLOBALS['queryDatabase'] = $database;
+        $GLOBALS['database_hostname'] = 'fixture';
+        $GLOBALS['database_port'] = '0';
+        $GLOBALS['database_default'] = 'query';
+        $GLOBALS['database_sessions'] = array('fixture:0:query' => new QueryCacheConnection($database));
         $GLOBALS['queryTransport'] = $GLOBALS['querySql'] = $GLOBALS['queryDebug'] = array();
         // Metadata enters through the existing parsed-XML cache, not a second
         // implementation of the query. The real XML parser supplies both fields.
