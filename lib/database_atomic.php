@@ -18,7 +18,11 @@ declare(strict_types=1);
  * The operation is atomic only when every table it names is InnoDB. When one
  * is not (MyISAM, or a MEMORY poller_output_boost), the statements still run
  * in order, as they did in 1.2.31, and a failure can leave earlier statements
- * applied to the non-transactional tables.
+ * applied to the non-transactional tables. They then run as autocommitted
+ * statements, as in 1.2.31: a server enforcing GTID consistency (the MySQL 9
+ * default) rejects a transaction that writes both kinds of table. Inside a
+ * caller-owned transaction that fallback is impossible, so such a server
+ * refuses the operation and nothing is confirmed.
  */
 function db_atomic(array $tables, callable $operation, $connection = false): bool {
 	global $database_sessions, $database_hostname, $database_port, $database_default;
@@ -50,6 +54,16 @@ function db_atomic(array $tables, callable $operation, $connection = false): boo
 		}
 		if ($nontransactional) {
 			db_atomic_note_nontransactional($nontransactional);
+			if ($owned) {
+				// Nothing has been written yet; release the inspection transaction.
+				if (!$connection->commit()) {
+					return false;
+				}
+				$started = false;
+				$complete = $operation($connection) === true && !$connection->inTransaction();
+
+				return $complete;
+			}
 		}
 		if ($operation($connection) === true && $connection->inTransaction()) {
 			$complete = $owned ? $connection->commit() : db_atomic_execute($connection, 'RELEASE SAVEPOINT ' . $savepoint);
