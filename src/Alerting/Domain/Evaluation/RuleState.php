@@ -12,9 +12,11 @@ namespace Kadupul\Alerting\Domain\Evaluation;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 
 /**
- * Per-rule counters and open/closed state. The caller advances it once per
- * new observation; deciding whether an observation is new belongs to the
- * evaluator, which compares observation times.
+ * Per-rule counters, open/closed state and the time of the last observation
+ * counted. advanceAt() counts an observation only when it is newer than that
+ * time (ADR 0011 decision 5), so two runs between polls cannot count one
+ * sample twice. advance() is for verdicts with no observation, which is
+ * unknown.
  */
 final class RuleState
 {
@@ -23,6 +25,7 @@ final class RuleState
         private int $consecutiveBreaches = 0,
         private int $consecutiveOks = 0,
         private bool $unknown = false,
+        private ?int $lastObservedAt = null,
     ) {}
 
     public function isOpen(): bool
@@ -44,6 +47,28 @@ final class RuleState
     public function isUnknown(): bool
     {
         return $this->unknown;
+    }
+
+    /** Unix seconds of the last observation counted, or null before the first. */
+    public function lastObservedAt(): ?int
+    {
+        return $this->lastObservedAt;
+    }
+
+    public function isNewer(int $observedAt): bool
+    {
+        return $this->lastObservedAt === null || $observedAt > $this->lastObservedAt;
+    }
+
+    /** Counts a verdict from an observation, unless that observation was already counted or is older. */
+    public function advanceAt(Verdict $verdict, ThresholdRule $rule, int $observedAt): Transition
+    {
+        if (!$this->isNewer($observedAt)) {
+            return Transition::None;
+        }
+        $this->lastObservedAt = $observedAt;
+
+        return $this->advance($verdict, $rule);
     }
 
     public function advance(Verdict $verdict, ThresholdRule $rule): Transition

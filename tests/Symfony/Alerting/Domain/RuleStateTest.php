@@ -155,4 +155,30 @@ final class RuleStateTest extends TestCase
         self::assertSame(Transition::None, $state->advance(Verdict::Hold, $rule));
         self::assertSame(Transition::BecameUnknown, $state->advance(Verdict::Unknown, $rule));
     }
+
+    public function testAnObservationNotNewerThanTheLastCountedIsIgnored(): void
+    {
+        $rule = new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, 2);
+        $state = new RuleState();
+
+        self::assertTrue($state->isNewer(100));
+        self::assertSame(Transition::None, $state->advanceAt(Verdict::Breach, $rule, 100));
+        self::assertSame(100, $state->lastObservedAt());
+        self::assertFalse($state->isNewer(100));
+        self::assertSame(Transition::None, $state->advanceAt(Verdict::Breach, $rule, 100));
+        self::assertSame(Transition::None, $state->advanceAt(Verdict::Breach, $rule, 99));
+        self::assertSame(1, $state->consecutiveBreaches());
+        self::assertSame(100, $state->lastObservedAt());
+        self::assertSame(Transition::Opened, $state->advanceAt(Verdict::Breach, $rule, 101));
+    }
+
+    public function testUnknownLeavesTheLastObservationTime(): void
+    {
+        $rule = new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, 1);
+        $state = new RuleState(lastObservedAt: 100);
+
+        $state->advance(Verdict::Unknown, $rule);
+
+        self::assertSame(100, $state->lastObservedAt());
+    }
 }
