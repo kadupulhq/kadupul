@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11429,10 +11429,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "नए सॉर्ट फ़ील्ड का पता लगाया: &#39; %s&#39; पुराना सॉर्ट फ़ील्ड &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "रेखांकन को उनके नए अनुक्रमितों में बदलना"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "डुप्लिकेट डेटा स्रोत प्रोफ़ाइल"
 
@@ -11530,11 +11526,6 @@ msgstr "&#39;Rewrite_index&#39; या &#39;oid_suffix&#39; के बाद स
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "%s तालिकाओं को परिवर्तित करने के लिए मिला"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "पाया गया%s और%s अनाथ स्थानीय डेटा ID का पुनः-मानचित्र पर।"
 
 #: lib/data_query.php
 #, php-format
@@ -11654,8 +11645,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "नए सॉर्ट फ़ील्ड को मान्य किया गया। सॉर्ट फील्ड अपडेट किया जाए।"
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "कोई इंडेक्स चेंज नहीं हुआ, स्किपिंग रि-इंडेक्स और पोलर कैश री-जनसंख्या"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -13368,6 +13359,11 @@ msgstr "लिखा हुआ"
 
 #: lib/installer.php
 #, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "%s - N/A"
 msgstr "के रूप में दाखिल%s"
 
@@ -13527,6 +13523,10 @@ msgid "Current"
 msgstr "वर्तमान"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "डाउनलोड किए गए विवरण"
 
@@ -13618,6 +13618,10 @@ msgstr "इंजन"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "प्रोफाइल का पता लगाने में त्रुटि"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -13829,6 +13833,10 @@ msgid "License Agreement"
 msgstr "लाइसेंस अनुबंध"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "स्थानीय डेटाबेस कनेक्शन जानकारी"
 
@@ -13951,6 +13959,10 @@ msgid "Optional Modules"
 msgstr "वैकल्पिक मॉड्यूल"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - मॉड्यूल समर्थन (वैकल्पिक)"
 
@@ -14037,6 +14049,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "&#39; %s&#39; दबाएं और फिर अपने डिवाइस टेम्पलेट का चयन करने के बाद स्थापना प्रक्रिया को पूरा करने के लिए &#39; %s&#39; पर क्लिक करें।"
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "सफारशशुदा"
 
@@ -14082,6 +14098,11 @@ msgstr "केवल समय स्थापित करने पर आव�
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को फिर से सेट किया जा रहा है"
 
@@ -14108,6 +14129,10 @@ msgstr "स्थानीय होस्ट के लिए पहली ब�
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "बारीकी से जांच करने की प्रणाली"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14179,6 +14204,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "Kadupul को डाउनलोड करने और स्थापित करने के लिए समय निकालने के लिए धन्यवाद, आपके नेटवर्क के लिए पूर्ण रेखांकन समाधान। इससे पहले कि आप शांत रेखांकन बनाना शुरू कर सकें, डेटा के कुछ टुकड़े हैं जिन्हें Kadupul को जानना होगा।"
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "इंस्टॉलर स्वतः एक $ poller_id असाइन करता है और इसे config.php फ़ाइल में जोड़ता है।"
 
@@ -14211,6 +14240,14 @@ msgstr "निम्न तालिकाओं को UTF8 और InnoDB म�
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "स्थापना जारी नहीं रह सकती क्योंकि कोई प्रोफ़ाइल नहीं मिली।"
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14467,6 +14504,11 @@ msgstr "आपका सर्वर टकराव UTF8 के अनुरू
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "आपका सर्वर टकराव पूरी तरह से UTF8 के अनुरूप प्रतीत नहीं होता है।"
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -16111,6 +16153,11 @@ msgstr "प्लगइन्स को अनइंस्टॉल करें
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "इस प्लगइन को अनइंस्टॉल करने से सभी प्लगइन डेटा और सेटिंग्स को हटा दिया जाएगा। यदि आप वास्तव में प्लगइन की स्थापना रद्द करना चाहते हैं, तो नीचे &#39;स्थापना रद्द करें&#39; पर क्लिक करें। अन्यथा &#39;रद्द करें&#39; पर क्लिक करें"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format

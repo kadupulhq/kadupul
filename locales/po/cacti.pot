@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.38)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.38\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -10971,6 +10971,44 @@ msgid "Unknown Type = '%s'."
 msgstr ""
 
 #: lib/data_query.php
+#, php-format
+msgid "Verification of %s Local Data ID's Complete"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Done updating Data Source Title Cache"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Done updating Graph Title Cache"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Index Association with Local Data complete"
+msgstr ""
+
+#: lib/data_query.php
+#, php-format
+msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
+msgstr ""
+
+#: lib/data_query.php
+msgid "Update Poller Cache for Query complete"
+msgstr ""
+
+#: lib/data_query.php
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Automation Executing for Data Query complete"
+msgstr ""
+
+#: lib/data_query.php
+msgid "Plugin hooks complete"
+msgstr ""
+
+#: lib/data_query.php
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
 msgstr ""
 
@@ -10996,53 +11034,6 @@ msgstr ""
 #: lib/data_query.php
 #, php-format
 msgid "Index Removal Detected! PreviousIndex: %s"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Verification of %s Local Data ID's Complete"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr ""
-
-#: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Done updating Data Source Title Cache"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Done updating Graph Title Cache"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Index Association with Local Data complete"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
-msgstr ""
-
-#: lib/data_query.php
-msgid "Update Poller Cache for Query complete"
-msgstr ""
-
-#: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Automation Executing for Data Query complete"
-msgstr ""
-
-#: lib/data_query.php
-msgid "Plugin hooks complete"
 msgstr ""
 
 #: lib/data_query.php
@@ -13475,6 +13466,44 @@ msgid "All folders are writable"
 msgstr ""
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
+
+#: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
+
+#: lib/installer.php
 msgid "Input Validation Whitelist Protection"
 msgstr ""
 
@@ -13775,6 +13804,19 @@ msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+#, php-format
+msgid "Required core database tables are missing: %s"
 msgstr ""
 
 #: lib/installer.php
@@ -15490,6 +15532,16 @@ msgstr ""
 
 #: poller.php
 #, php-format
+msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
+
+#: poller.php
+#, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr ""
 
@@ -15501,11 +15553,6 @@ msgstr ""
 #: poller.php
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
-msgstr ""
-
-#: poller.php
-#, php-format
-msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr ""
 
 #: poller.php

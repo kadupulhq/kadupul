@@ -15,8 +15,12 @@ if ($collect === '1') {
     if (($scenario['coverage_contract'] ?? null) === 'rrd-one-shot') {
         require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
         require $root . '/tests/Helpers/RrdOneShotCoverageRegistration.php';
-        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root,
-            RrdOneShotCoverageRegistration::PRODUCER, $encoded_scenario, RrdOneShotCoverageRegistration::SOURCES);
+        $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot(
+            $root,
+            RrdOneShotCoverageRegistration::PRODUCER,
+            $encoded_scenario,
+            RrdOneShotCoverageRegistration::SOURCES
+        );
         define('RRD_ONE_SHOT_TEST_COVERAGE', true);
     } elseif (($scenario['coverage_contract'] ?? null) === 'rrd-observed-window') {
         require $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
@@ -60,6 +64,7 @@ $resolve_fixture_dir = static function ($value) use (&$resolve_fixture_dir, $dir
     return is_string($value) ? str_replace('<fixture_dir>', $directory, $value) : $value;
 };
 $scenario['db'] = $resolve_fixture_dir($scenario['db'] ?? array());
+$scenario['calls'] = $resolve_fixture_dir($scenario['calls']);
 
 // Legends and business hours format dates in the process zone.
 date_default_timezone_set('UTC');
@@ -96,6 +101,10 @@ function fixture_query($kind, $sql, $params)
         if (array_key_exists('params', $entry) && array_map('strval', $entry['params']) !== array_map('strval', array_values($params))) {
             continue;
         }
+        // A failed query: the database layer records the error and returns an empty result.
+        if (array_key_exists('error', $entry)) {
+            $GLOBALS['database_last_error'] = $entry['error'];
+        }
         return $entry['result'];
     }
 
@@ -107,6 +116,11 @@ function fixture_query($kind, $sql, $params)
     }
 
     throw new RuntimeException('Unexpected ' . $kind . ' query: ' . $normalized . ' ' . json_encode($params));
+}
+
+function db_error()
+{
+    return $GLOBALS['database_last_error'] ?? '';
 }
 
 function db_fetch_cell($sql, $col_name = '', $log = true, $db_conn = false)

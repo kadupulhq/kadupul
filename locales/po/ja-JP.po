@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11366,10 +11366,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "新しい並べ替えフィールドが検出されました: '%s'古い並べ替えフィールド'%s'"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "グラフを新しいインデックスに再マッピングする"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "データソースプロファイルの重複"
 
@@ -11467,11 +11463,6 @@ msgstr "'rewrite_index'または'oid_suffix'が定義されているため、'%s
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "検証するローカルデータIDが%s個見つかりました"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "見つかりました。%sと%sの孤立したローカルデータIDを再マップするように変更しました。"
 
 #: lib/data_query.php
 #, php-format
@@ -11591,8 +11582,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "新しいソートフィールドが検証されました。ソートフィールドを更新します。"
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "インデックスの変更は検出されず、インデックスの再作成とポーラーキャッシュの再作成はスキップされます。"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -13299,6 +13290,11 @@ msgstr "書いた"
 
 #: lib/installer.php
 #, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "%s - N/A"
 msgstr "%s - N/A"
 
@@ -13457,6 +13453,10 @@ msgid "Current"
 msgstr "現在"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "ダウングレードが検出されました"
 
@@ -13547,6 +13547,10 @@ msgstr "エンジン"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "プロファイル検索エラー"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, php-format
@@ -13753,6 +13757,10 @@ msgid "License Agreement"
 msgstr "ライセンス契約"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "ローカルデータベース接続情報"
 
@@ -13873,6 +13881,10 @@ msgid "Optional Modules"
 msgstr "オプションモジュール"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP  - モジュールサポート（オプション）"
 
@@ -13958,6 +13970,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "'%s'を押し、'%s'をクリックして、デバイステンプレートを選択した後、インストールプロセスを完了します。"
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "推奨"
 
@@ -14003,6 +14019,11 @@ msgstr "インストール時にのみ書き込み可能"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "自動化オプションセット%sのシーケンス変更"
 
@@ -14029,6 +14050,10 @@ msgstr "ローカルホストの初回データクエリの実行"
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "スキャンモード"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14099,6 +14124,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "ネットワーク用の完全なグラフソリューションであるKadupulをダウンロードしてインストールしていただきありがとうございます。クールなグラフを作成する前に、Kadupulが知っておく必要があるデータがいくつかあります。"
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "インストーラは自動的に$ poller_idを割り当て、それをconfig.phpファイルに追加します。"
 
@@ -14129,6 +14158,14 @@ msgstr "以下のテーブルはUTF8とInnoDBに変換されるべきです。�
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "プロファイルが見つからなかったため、インストールを続行できません。"
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14376,6 +14413,11 @@ msgstr "サーバーの照合順序はUTF8に準拠しているようです"
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "サーバーの照合順序が完全にUTF8に準拠していないようです。"
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -16009,6 +16051,11 @@ msgstr "プラグインをアンインストールする"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "このプラグインをアンインストールすると、すべてのプラグインのデータと設定が削除されます。本当にプラグインをアンインストールする場合は、下の[アンインストール]をクリックしてください。それ以外の場合は[キャンセル]をクリックしてください。"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format

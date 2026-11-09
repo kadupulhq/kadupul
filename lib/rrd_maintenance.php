@@ -423,6 +423,7 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
     if (file_exists($rrd_file) && $metadata === false) {
         return false;
     }
+    rrd_maintenance_remove_stale_restores($directory, time() - 86400);
     $temporary = @tempnam($directory, '.rrd-restore-');
     if ($temporary === false) {
         cacti_log('ERROR: RRD restore could not create a temporary file; recovery XML retained at ' . $xml_file, false, 'UTIL');
@@ -469,6 +470,51 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
     }
 }
 
+
+/**
+ * Remove restore candidates that a killed restore left in the storage directory (#1357).
+ *
+ * tempnam() names candidates .rrd-restore-XXXXXX in the RRD's directory, and the
+ * finally block that removes them does not run when the process is killed. Restores
+ * of other files in the same directory may be running, so only candidates older than
+ * the cutoff are removed, and only regular files with that name.
+ *
+ * Bulk callers restore every RRD of one directory in turn, so each directory is read
+ * at most once an hour per process instead of once per restore.
+ *
+ * @param string $directory Trusted storage directory the restore is about to use.
+ * @param int    $cutoff    Modification time before which a candidate is abandoned.
+ *
+ * @return int Number of candidates removed.
+ */
+function rrd_maintenance_remove_stale_restores($directory, $cutoff)
+{
+    static $swept = array();
+    $now = time();
+    if (($swept[$directory] ?? 0) > $now - 3600) {
+        return 0;
+    }
+    $swept[$directory] = $now;
+    // Read the directory itself: glob() would expand metacharacters in its path.
+    $handle = @opendir($directory);
+    if ($handle === false) {
+        return 0;
+    }
+    $removed = 0;
+    while (($name = readdir($handle)) !== false) {
+        if (preg_match('/^\.rrd-restore-[A-Za-z0-9]+\z/', $name) !== 1) {
+            continue;
+        }
+        $candidate = $directory . '/' . $name;
+        $entry = @lstat($candidate);
+        if ($entry !== false && ($entry['mode'] & 0170000) === 0100000 && $entry['mtime'] < $cutoff && @unlink($candidate)) {
+            $removed++;
+        }
+    }
+    closedir($handle);
+
+    return $removed;
+}
 
 /** Run a bounded direct-argv command and stream or capture its output.
  *

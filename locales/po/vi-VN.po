@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11354,10 +11354,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Đã phát hiện trường sắp xếp mới: &#39; %s&#39; Trường sắp xếp cũ &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Ánh xạ ánh xạ tới các chỉ mục mới của họ"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Hồ sơ nguồn dữ liệu trùng lặp"
 
@@ -11455,11 +11451,6 @@ msgstr "Sửa trường &#39;phương thức&#39; sai cho &#39; %s&#39; vì &#39
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Đã tìm thấy bảng%s để chuyển đổi"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Đã tìm thấy Đã thay đổi%s và%s ID dữ liệu cục bộ mồ côi thành ánh xạ lại."
 
 #: lib/data_query.php
 #, php-format
@@ -11579,8 +11570,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Trường sắp xếp mới được xác thực. Trường sắp xếp được cập nhật."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Không có thay đổi chỉ mục nào được phát hiện, bỏ qua Re-Index và Pug Cache Dân số lại"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -13286,6 +13277,11 @@ msgid "written"
 msgstr "bằng văn bản"
 
 #: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "Phút"
@@ -13445,6 +13441,10 @@ msgid "Current"
 msgstr "Hiện hành"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE PHÁT HIỆN"
 
@@ -13535,6 +13535,10 @@ msgstr "Đông cơ"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "Lỗi định vị hồ sơ"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -13742,6 +13746,10 @@ msgid "License Agreement"
 msgstr "Äiá»u kiá»n giáº¥y phÃ©p"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "Thông tin kết nối cơ sở dữ liệu cục bộ"
 
@@ -13862,6 +13870,10 @@ msgid "Optional Modules"
 msgstr "Các module tùy chọn"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - Hỗ trợ mô-đun (Tùy chọn)"
 
@@ -13945,6 +13957,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "Nhấn &#39; %s&#39;, sau đó nhấp vào &#39; %s&#39; để hoàn tất quá trình cài đặt sau khi chọn Mẫu thiết bị của bạn."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "Đề nghị"
 
@@ -13989,6 +14005,11 @@ msgid "Required Writable at Install Time Only"
 msgstr "Yêu cầu có thể ghi tại thời gian cài đặt"
 
 #: lib/installer.php
+#, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Chạy tự động hóa trên thiết bị"
@@ -14016,6 +14037,10 @@ msgstr "Chạy truy vấn dữ liệu lần đầu cho máy chủ cục bộ"
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "Chế độ quét"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14086,6 +14111,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "Cảm ơn bạn đã dành thời gian để tải xuống và cài đặt Kadupul, giải pháp đồ họa hoàn chỉnh cho mạng của bạn. Trước khi bạn có thể bắt đầu tạo các biểu đồ thú vị, có một vài phần dữ liệu mà Kadupul cần biết."
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Trình cài đặt tự động gán một $ poller_id và thêm nó vào tệp config.php."
 
@@ -14116,6 +14145,14 @@ msgstr "Các bảng sau nên được chuyển đổi thành UTF8 và InnoDB. Vu
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Việc cài đặt không thể tiếp tục vì không thể tìm thấy hồ sơ."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14361,6 +14398,11 @@ msgstr "Đối chiếu máy chủ của bạn dường như tuân thủ UTF8"
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Đối chiếu máy chủ của bạn dường như KHÔNG tuân thủ đầy đủ UTF8."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -15993,6 +16035,11 @@ msgstr "Gỡ cài đặt Plugin"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Gỡ cài đặt Plugin này sẽ xóa tất cả Dữ liệu và Cài đặt của Plugin. Nếu bạn thực sự muốn Gỡ cài đặt Plugin, nhấp vào &#39;Gỡ cài đặt&#39; bên dưới. Nếu không, nhấp vào &#39;Hủy&#39;"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, fuzzy, php-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11433,10 +11433,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "שדה מיון חדש זוהה: &#39; %s&#39; שדה מיון ישן &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Remapping גרפים לאינדקסים החדשים שלהם"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "פרופיל מקור נתונים כפולים"
 
@@ -11534,11 +11530,6 @@ msgstr "תיקון שדה &#39;שיטה&#39; שגוי עבור &#39; %s&#39; מ�
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "נמצאו טבלאות%s להמרה"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "נמצא שהשתנו%s ו-%s מזהי נתונים מקומיים יתומים למפה מחדש."
 
 #: lib/data_query.php
 #, fuzzy, php-format
@@ -11658,8 +11649,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "שדה מיון חדש תוקן. שדה המיון יעודכן."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "לא נמצאו שינויים במדד, מדלגים מחדש אינדקס ומטמון פולר מחדש האוכלוסייה"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -13365,6 +13356,11 @@ msgid "written"
 msgstr "כתוב"
 
 #: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "אין"
@@ -13524,6 +13520,10 @@ msgid "Current"
 msgstr "נוכחי"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE זוהה"
 
@@ -13614,6 +13614,10 @@ msgstr "נפח מנוע"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "שגיאה איתור פרופילים"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -13822,6 +13826,10 @@ msgid "License Agreement"
 msgstr "הסכם רישיון"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "מידע על חיבור מסד נתונים מקומי"
 
@@ -13942,6 +13950,10 @@ msgid "Optional Modules"
 msgstr "מודולים אופציונליים"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - תמיכה מודולרית (אופציונלי)"
 
@@ -14025,6 +14037,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "לחץ על '{ 0 }' ולאחר מכן לחץ על '{ 1 }' כדי להשלים את תהליך ההתקנה לאחר בחירת תבניות המכשיר שלך."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "מומלץ"
 
@@ -14070,6 +14086,11 @@ msgstr "חובה לכתוב בזמן התקנה בלבד"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "ערכת אפשרויות לאוטומציה של Resequencing %s"
 
@@ -14096,6 +14117,10 @@ msgstr "הפעלת שאילתת נתונים ראשונה עבור המארח ה
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "מצב סריקה"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14166,6 +14191,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "תודה שהקדשת מזמנך להוריד ולהתקין את Kadupul, פתרון הגרפים המלא עבור הרשת שלך. לפני שאתה יכול להתחיל לעשות גרפים מגניב, יש כמה חתיכות של נתונים, כי Kadupul צריך לדעת."
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "תוכנית ההתקנה מקצה באופן אוטומטי $ poller_id ומוסיפה אותו לקובץ config.php."
 
@@ -14196,6 +14225,14 @@ msgstr "הטבלאות הבאות יש להמיר UTF8 ו InnoDB. בחר את ה
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "ההתקנה אינה יכולה להימשך כיוון שלא ניתן למצוא פרופילים."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14446,6 +14483,11 @@ msgstr "אוסף השרתים שלך נראה תואם ל- UTF8"
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "איסוף השרתים שלך אינו נראה תואם לחלוטין ל- UTF8."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -16088,6 +16130,11 @@ msgstr "הסרת התוסף"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "הסרת תוסף זה תסיר את כל נתוני הפלאגין וההגדרות. אם אתה באמת רוצה להסיר את תוסף, לחץ על &#39;הסר&#39; להלן. אחרת, לחץ על &#39;ביטול&#39;"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format

@@ -895,11 +895,59 @@ function rrd_resolve_missing_path($path, $windows)
 }
 
 /**
+ * The directories config.php names in $config['rrd_additional_paths'], where
+ * data source RRDfiles may live besides the RRA directory. Only absolute
+ * paths are kept. The list is read from config.php alone, not the settings
+ * table, so it cannot be widened from the web interface.
+ *
+ * @return list<string>
+ */
+function rrd_additional_roots()
+{
+    // Read, not declared global, so the global statement count in this file does not rise.
+    $configured = $GLOBALS['config']['rrd_additional_paths'] ?? array();
+    if (!is_array($configured)) {
+        return array();
+    }
+
+    $roots = array();
+    foreach ($configured as $root) {
+        if (is_string($root) && (str_starts_with($root, '/') || preg_match('~^[A-Za-z]:[\\\\/]~', $root) === 1)) {
+            $roots[] = $root;
+        }
+    }
+
+    return $roots;
+}
+
+/**
+ * Whether a local RRD path resolves inside one of rrd_additional_roots(),
+ * by the same rules rrd_path_is_contained() applies to the RRA directory. A
+ * root that resolves to the filesystem root contains nothing.
+ *
+ * @param mixed $path Expanded RRD file path.
+ *
+ * @return bool
+ */
+function rrd_path_in_additional_root($path)
+{
+    foreach (rrd_additional_roots() as $root) {
+        if (rrd_path_is_contained($path, $root)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Check a data source RRD path before it reaches RRDtool or the filesystem.
  * Every code path that takes a path from data_source_path, the poller cache or
  * a caller-supplied file list calls this first. With the RRDtool proxy the
  * proxy resolves paths under its own root, so only the text of the path is
- * checked and a path relative to that root stays valid.
+ * checked and a path relative to that root stays valid. Local paths are also
+ * accepted inside a directory listed in $config['rrd_additional_paths'],
+ * unless the caller names its own $rra_base.
  *
  * @param mixed       $path     Expanded RRD file path.
  * @param string|null $rra_base RRA directory; defaults to the rra_path setting.
@@ -911,13 +959,71 @@ function rrd_check_path($path, $rra_base = null, $logopt = null)
 {
     // Read, not declared global, so the global statement count in this file does not rise.
 
-    $allowed = rrd_path_is_contained($path, $rra_base ?? (string) ($GLOBALS['config']['rra_path'] ?? ''), rrdtool_uses_proxy());
+    $proxy   = rrdtool_uses_proxy();
+    $allowed = rrd_path_is_contained($path, $rra_base ?? (string) ($GLOBALS['config']['rra_path'] ?? ''), $proxy)
+        || ($rra_base === null && !$proxy && rrd_path_in_additional_root($path));
 
     if (!$allowed && $logopt !== null) {
         cacti_log('ERROR: RRD path is outside the RRA directory or cannot be used, and was not accessed: ' . (is_string($path) ? $path : gettype($path)), false, $logopt);
     }
 
     return $allowed;
+}
+
+/**
+ * List the Data Sources whose stored RRD path rrd_check_path() refuses, so an
+ * upgrade can report RRDfiles that will no longer be created or updated. The
+ * stored path is expanded as get_data_source_path() expands it, without
+ * saving anything. An empty stored path is skipped, since the poller then
+ * generates one inside the RRA directory. Rows are read in batches.
+ *
+ * @param int $limit Most Data Sources to return; 'total' still counts them all.
+ *
+ * @return array{total: int, items: list<array{local_data_id: int, path: string}>}|false
+ *         False when the database could not be read.
+ */
+function rrd_data_sources_outside_allowed_paths($limit = 25)
+{
+    $rra   = rtrim((string) ($GLOBALS['config']['rra_path'] ?? ''), '/\\');
+    $total = 0;
+    $items = array();
+    $last  = 0;
+
+    do {
+        // db_fetch_assoc_prepared() returns an empty list on failure too.
+        $GLOBALS['database_last_error'] = '';
+
+        $rows = db_fetch_assoc_prepared(
+            "SELECT local_data_id, data_source_path
+			FROM data_template_data
+			WHERE local_data_id > ?
+			AND data_source_path != ''
+			ORDER BY local_data_id
+			LIMIT 1000",
+            array($last)
+        );
+
+        if (!is_array($rows) || db_error() != '') {
+            return false;
+        }
+
+        foreach ($rows as $row) {
+            $last   = (int) $row['local_data_id'];
+            $stored = (string) $row['data_source_path'];
+            $path   = str_contains($stored, '/') ? $stored : '<path_rra>/' . $stored;
+            $path   = str_replace('<path_rra>/', $rra . '/', $path);
+
+            if (!rrd_check_path($path)) {
+                $total++;
+
+                if (count($items) < $limit) {
+                    $items[] = array('local_data_id' => $last, 'path' => $stored);
+                }
+            }
+        }
+    } while (count($rows) === 1000);
+
+    return array('total' => $total, 'items' => $items);
 }
 
 /**
@@ -2208,13 +2314,20 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
     return $failed ? false : $rrds_processed;
 }
 
+/**
+ * Tune a data source's RRDfile.
+ *
+ * @param array $rrd_tune_array Data source id, type and the options to change.
+ *
+ * @return bool True when every option was applied, or there was nothing to change.
+ */
 function rrdtool_function_tune($rrd_tune_array)
 {
     global $config, $data_source_types;
 
     if (getenv('RRDCACHED_ADDRESS')) {
         cacti_log('ERROR: Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.');
-        return;
+        return false;
     }
 
     include($config['include_path'] . '/global_arrays.php');
@@ -2277,17 +2390,136 @@ function rrdtool_function_tune($rrd_tune_array)
                     return false;
                 }
                 try {
-                    rrdtool_run_process($rrdtool_argv);
+                    $tuned = rrdtool_tune_apply($data_source_path, $rrdtool_argv);
                 } finally {
                     rrd_maintenance_release($lock);
                 }
 
                 cacti_log('CACTI2RRD: ' . $rrdtool_cmd, false, 'WEBLOG', POLLER_VERBOSITY_DEBUG);
+
+                return $tuned;
             } else {
                 cacti_log("ERROR: RRDtool executable not found, not executable or error in path '" . read_config_option('path_rrdtool') . "'.  No output written to RRDfile.");
+
+                return false;
             }
         }
+
+        return false;
     }
+
+    return true;
+}
+
+/**
+ * Run an `rrdtool tune` command so that it changes all of its options or none.
+ *
+ * RRDtool applies each option as it reaches it, so a rejected later option left
+ * the earlier ones stored (#777). The file is copied first and put back when the
+ * command fails. The caller holds the exclusive RRD maintenance lease.
+ *
+ * The copy is kept beside the RRDfile, not in the temporary directory: a web
+ * server unit with PrivateTmp discards that directory on restart, and the copy
+ * is the only one left when the restore fails. The restore writes a new file
+ * in the same directory and renames it over the RRDfile, so the RRDfile is
+ * never left empty or half written.
+ *
+ * @param string             $data_source_path The RRDfile being tuned.
+ * @param array<int, string> $rrdtool_argv     The complete tune command.
+ *
+ * @return bool True when the command succeeded.
+ */
+function rrdtool_tune_apply($data_source_path, array $rrdtool_argv)
+{
+    $backup = rrdtool_tune_backup($data_source_path);
+
+    if ($backup === false) {
+        cacti_log("ERROR: RRD tuning could not copy '$data_source_path' before tuning; no changes were made.");
+
+        return false;
+    }
+
+    if (rrdtool_run_process($rrdtool_argv)) {
+        @unlink($backup);
+
+        return true;
+    }
+
+    $hash = hash_file('sha256', $backup);
+
+    require_once __DIR__ . '/rrd_maintenance.php';
+    $restored = rrd_maintenance_restore_atomic($backup, $data_source_path, function ($temporary) use ($backup) {
+        return rrdtool_tune_copy($backup, $temporary);
+    });
+
+    clearstatcache();
+
+    if ($restored && $hash !== false && hash_file('sha256', $data_source_path) === $hash) {
+        @unlink($backup);
+        cacti_log("ERROR: RRDtool tune failed for '$data_source_path'; the RRDfile was restored unchanged.");
+    } else {
+        cacti_log("ERROR: RRDtool tune failed for '$data_source_path' and the RRDfile could not be restored; its previous contents are in '$backup'.");
+    }
+
+    return false;
+}
+
+/**
+ * Copy an RRDfile to a new file beside it before it is tuned.
+ *
+ * @param string $data_source_path The RRDfile about to be tuned.
+ *
+ * @return string|false The copy's path, or false when no complete copy was made.
+ */
+function rrdtool_tune_backup($data_source_path)
+{
+    // Not ending in .rrd, so the RRD Cleaner does not list a copy that is kept.
+    $backup = dirname($data_source_path) . '/kadupul-tune-' . bin2hex(random_bytes(8)) . '.bak';
+
+    if (!rrdtool_tune_copy($data_source_path, $backup)) {
+        // A partial copy is of no use, and nothing else has this random name.
+        @unlink($backup);
+
+        return false;
+    }
+
+    return $backup;
+}
+
+/**
+ * Copy one file to another, synced to disk and checked against the source.
+ *
+ * @param string $source      The file to copy.
+ * @param string $destination The new file; an existing one is not overwritten,
+ *                            unless it is empty, as rrd_maintenance_restore_atomic()
+ *                            hands it over.
+ *
+ * @return bool True when the destination holds exactly the source's contents.
+ */
+function rrdtool_tune_copy($source, $destination)
+{
+    if (!is_file($source)) {
+        return false;
+    }
+
+    $from = @fopen($source, 'rb');
+    $to   = @fopen($destination, is_file($destination) && filesize($destination) === 0 ? 'r+b' : 'xb');
+    $done = $from !== false && $to !== false
+        && stream_copy_to_stream($from, $to) === filesize($source)
+        && fflush($to)
+        && (!function_exists('fsync') || fsync($to));
+
+    if ($from !== false) {
+        fclose($from);
+    }
+
+    if ($to !== false) {
+        fclose($to);
+    }
+
+    clearstatcache();
+
+    return $done && hash_file('sha256', $source) === hash_file('sha256', $destination);
 }
 
 /** Fetch a data source's values, grouped by data source item and timestamp.
@@ -3632,6 +3864,8 @@ function rrdtool_pipe_quote($argument)
 /**
  * Run one RRDtool command to completion without a shell, discarding its
  * output. Its stderr is passed on to ours, where the shell pipe left it.
+ *
+ * @return bool True when the command started and exited with status 0.
  */
 function rrdtool_run_process(array $argv)
 {
@@ -3650,6 +3884,9 @@ function rrdtool_run_process(array $argv)
     } catch (\Symfony\Component\Process\Exception\RuntimeException $e) {
         // Failing to start the shell pipe was silent as well.
     }
+
+    // A process that did not start has no exit code, so it is not successful.
+    return $process->isSuccessful();
 }
 
 function rrdtool_pipe_encoder()

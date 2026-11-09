@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11402,10 +11402,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Yeni Sıralama Alanı Algılandı: &#39; %s&#39; Eski Sıralama Alanı &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Grafikleri Yeni Dizinlerine Yeniden Ekleme"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Yinelenen Veri Kaynağı Profili"
 
@@ -11503,11 +11499,6 @@ msgstr "&#39;Rewrite_index&#39; veya &#39;oid_suffix&#39; tanımlandığından y
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Dönüştürülecek%s tablo bulundu"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Bulunan%s ve%s Sahipsiz Yerel Veri Kimlikleri Yeniden Eşlenecek Şekilde Değiştirildi."
 
 #: lib/data_query.php
 #, php-format
@@ -11627,8 +11618,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Yeni Sıralama Alanı doğrulandı. Sıralama Alanı güncellenebilir."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Hiçbir Endeks Değişikliği Tespit Edilmedi, Yeniden Dizine Atlanma ve Poller Cache Re-popülasyonu"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -13339,6 +13330,11 @@ msgstr "yazılı"
 
 #: lib/installer.php
 #, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "%s - N/A"
 msgstr "%s saat"
 
@@ -13497,6 +13493,10 @@ msgid "Current"
 msgstr "Şimdiki"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "AŞAĞIDAKİ İNDİR"
 
@@ -13587,6 +13587,10 @@ msgstr "Motor"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "Profilleri Bulma Hatası"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -13797,6 +13801,10 @@ msgid "License Agreement"
 msgstr "Lisans anlaşması"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "Yerel Veri Tabanı Bağlantı Bilgisi"
 
@@ -13917,6 +13925,10 @@ msgid "Optional Modules"
 msgstr "İsteğe bağlı modüller"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - Modül Desteği (İsteğe bağlı)"
 
@@ -14001,6 +14013,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "&#39; %s&#39; düğmesine basın, ardından Cihaz Şablonlarınızı seçtikten sonra yükleme işlemini tamamlamak için &#39; %s&#39; düğmesini tıklayın."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "Tavsiye edilen"
 
@@ -14046,6 +14062,11 @@ msgstr "Yalnızca Yükleme Zamanında Gerekli Yazılabilir"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Otomasyon Seçenek Kümesini Yeniden Sıralama %s"
 
@@ -14072,6 +14093,10 @@ msgstr "Yerel ana bilgisayar için ilk kez veri sorgusu çalıştırma"
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "Tarama modu"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14142,6 +14167,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "Ağınız için eksiksiz bir grafik çözümü olan Kadupul&#39;yi indirmek ve yüklemek için zaman ayırdığınızdan dolayı teşekkür ederiz. Harika grafikler çizmeye başlamadan önce, Kadupul&#39;nin bilmesi gereken birkaç veri parçası var."
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Yükleyici otomatik olarak bir $ poller_id atar ve config.php dosyasına ekler."
 
@@ -14172,6 +14201,14 @@ msgstr "Aşağıdaki tablolar UTF8 ve InnoDB&#39;ye dönüştürülmelidir. Lüt
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Profil bulunamadığından yükleme devam edemiyor."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14422,6 +14459,11 @@ msgstr "Sunucu harmanlamanız UTF8 uyumlu görünüyor"
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Sunucu harmanlamanız tamamen UTF8 uyumlu görünmüyor."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -16061,6 +16103,11 @@ msgstr "Eklentiyi Kaldır"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Bu Eklentiyi kaldırmak, tüm Eklenti Verilerini ve Ayarlarını kaldırır. Eklentiyi gerçekten kaldırmak istiyorsanız, aşağıdaki &#39;Kaldır&#39;ı tıklayın. Aksi takdirde &#39;İptal&#39;i tıklayın"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format
