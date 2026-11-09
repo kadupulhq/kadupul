@@ -15,9 +15,6 @@ use Kadupul\Reporting\Contract\DeviceReportPlacement;
 use PDO;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
-/**
- * @phpstan-import-type PlacementRecord from DeviceReportPlacement
- */
 #[AsAlias(DeviceReportPlacement::class)]
 final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacement
 {
@@ -112,7 +109,7 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
 
     /**
      * @param non-empty-list<int> $deviceIds
-     * @return list<PlacementRecord>
+     * @return list<array<string, mixed>>
      */
     private function records(array $deviceIds, int $reportId, int $timespan): array
     {

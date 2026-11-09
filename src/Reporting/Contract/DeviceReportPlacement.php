@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Kadupul\Reporting\Contract;
 
-/**
- * @phpstan-type PlacementRecord array<string, mixed>
- */
 interface DeviceReportPlacement
 {
     public function defaultTimespan(int $actorId): int;
@@ -23,13 +20,13 @@ interface DeviceReportPlacement
      * Called inside an authenticated primary transaction with all devices locked.
      *
      * @param non-empty-list<int> $deviceIds
-     * @param list<PlacementRecord> $expected the receipt returned by place()
+     * @param list<array<string, mixed>> $expected the receipt returned by place()
      */
     public function verify(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment, array $expected): void;
 
     /**
      * @param non-empty-list<int> $deviceIds
-     * @return list<PlacementRecord> the stored placement rows, in id order
+     * @return list<array<string, mixed>> the stored placement rows, in id order
      */
     public function place(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment): array;
 }
