@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-08 23:53-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -691,6 +691,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "تم رفض الوصول!  معرف المستخدم الضيف %s غير موجود.  الرجاء الاتصال بالمسؤول."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "تم رفض الوصول!  فشل تسجيل الدخول."
 
@@ -11230,11 +11232,6 @@ msgid "Kadupul Login Failure"
 msgstr "فشل تسجيل الدخول إلى Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "يجب أن تتكون كلمة المرور من %d حرفا على الأقل!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "مصدر مقيد "
 
@@ -11256,24 +11253,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "تم تكوين مصادقة الويب الأساسية ، ولكن لم يتم تمرير أي اسم مستخدم من خادم الويب. يرجى التأكد من تمكين المصادقة على خادم الويب."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "فرض مسؤول Kadupul كلمات مرور معقدة لعمليات تسجيل الدخول وكلمة مرور Kadupul الحالية لا تطابق المتطلبات الجديدة. لذلك ، يجب عليك تغيير كلمة المرور الخاصة بك الآن."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "تم قفل حسابك.  الرجاء الاتصال بالمسؤول."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على مزيج من الأحرف الصغيرة والأحرف الصغيرة!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف عددي واحد على الأقل!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف خاص واحد على الأقل!"
 
 #: lib/boost.php
 #, php-format
@@ -11982,7 +11963,7 @@ msgstr "مسجل دخول كـ %s"
 msgid "Login as Regular User"
 msgstr "تسجيل الدخول كمستخدم عادي"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "تسجيل خروج"
 
@@ -17000,6 +16981,27 @@ msgstr "قاتل: قتل سبايك غير مسموح به"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "قاتل: طريقة قتل سبايك \"%s\" غير صالحة"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "فرض مسؤول Kadupul كلمات مرور معقدة لعمليات تسجيل الدخول وكلمة مرور Kadupul الحالية لا تطابق المتطلبات الجديدة. لذلك ، يجب عليك تغيير كلمة المرور الخاصة بك الآن."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "يجب أن تتكون كلمة المرور من %d حرفا على الأقل!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على مزيج من الأحرف الصغيرة والأحرف الصغيرة!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف عددي واحد على الأقل!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف خاص واحد على الأقل!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

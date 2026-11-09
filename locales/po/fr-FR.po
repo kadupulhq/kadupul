@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-08 23:53-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -686,6 +686,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Accès refusé ! L'ID d'utilisateur invité %s n'existe pas.  Veuillez contacter votre administrateur."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Accès refusé, compte d'utilisateur désactivé."
 
@@ -11105,11 +11107,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul Log Cleared"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Le mot de passe doit contenir au moins %d caractères !"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Limité"
 
@@ -11131,24 +11128,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "L'Authentification Web de base a été configurée, mais aucun nom d'utilisateur n'a été transmis au serveur Web. Veuillez vous assurer que l'authentification est activée sur le serveur Web."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Votre administrateur Kadupul a forcé des mots de passe complexes pour les connexions et votre mot de passe Kadupul actuel ne correspond pas aux nouvelles exigences. Par conséquent, vous devez changer votre mot de passe maintenant."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Accès refusé, veuillez contacter votre administrateur Kadupul."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Votre mot de passe doit contenir un mélange de minuscules et de majuscules !"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Votre mot de passe doit contenir au moins 1 caractère numérique !"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Votre mot de passe doit contenir au moins 1 caractère spécial !"
 
 #: lib/boost.php
 #, php-format
@@ -11852,7 +11833,7 @@ msgstr "Connecté en tant que %s"
 msgid "Login as Regular User"
 msgstr "Connexion en tant qu'utilisateur régulier"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Se déconnecter"
 
@@ -16790,6 +16771,27 @@ msgstr "FATAL : La mise à mort par piqûre n'est pas autorisée"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL : Méthode Spike Kill'%s' est invalide"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Votre administrateur Kadupul a forcé des mots de passe complexes pour les connexions et votre mot de passe Kadupul actuel ne correspond pas aux nouvelles exigences. Par conséquent, vous devez changer votre mot de passe maintenant."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Le mot de passe doit contenir au moins %d caractères !"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Votre mot de passe doit contenir un mélange de minuscules et de majuscules !"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Votre mot de passe doit contenir au moins 1 caractère numérique !"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Votre mot de passe doit contenir au moins 1 caractère spécial !"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"
