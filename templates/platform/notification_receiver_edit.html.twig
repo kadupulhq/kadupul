@@ -6,11 +6,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
 {% block title %}{{ (receiver ? 'Edit SNMP Notification Receiver' : 'Add SNMP Notification Receiver')|trans({}, 'notification_receiver') }} · Kadupul{% endblock %}
 {% block body %}
 <main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() of a fixed route without parameters. #}
     <p><a href="{{ path('admin_notification_receivers') }}">{{ 'Back to SNMP Notification Receivers'|trans({}, 'notification_receiver') }}</a></p>
     <h1>{% if receiver %}{{ 'SNMP Notification Receiver [edit: %name%]'|trans({'%name%': receiver.description}, 'notification_receiver') }}{% else %}{{ 'SNMP Notification Receiver [new]'|trans({}, 'notification_receiver') }}{% endif %}</h1>
     {% if receiver %}
     <nav aria-label="{{ 'Receiver sections'|trans({}, 'notification_receiver') }}">
         <ul>
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the numeric receiver ID. #}
             <li><a href="{{ path('notification_receiver_edit', {id: receiver.id}) }}" aria-current="page">{{ 'General'|trans({}, 'notification_receiver') }}</a></li>
             {% for tab, label in {notifications: 'Notifications', logs: 'Logs'} %}
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed legacy page with a URL encoded numeric ID and a fixed tab. #}
