@@ -103,7 +103,7 @@ SOURCE;
         if ($mode === 'tune') {
             // CR and LF leave the rename; the log keeps the old shell-quoted form.
             $path = realpath($dir) . '/it is.rrd';
-            expect($result)->toBeNull()
+            expect($result)->toBeTrue()
                 ->and($log)->toBe(array(array('tune', $path, '--heartbeat', 'value:600', '--data-source-type', 'value:GAUGE',
                     '--data-source-rename', "value:it's \$HOME \"x\""), 'exited'))
                 ->and($messages)->toBe(array('CACTI2RRD: ' . escapeshellcmd(realpath($bin) . '/rrdtool') . ' tune ' . escapeshellarg($path)
