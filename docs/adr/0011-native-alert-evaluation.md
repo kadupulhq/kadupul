@@ -61,6 +61,18 @@ behavior until an administrator opts in.
    `(local_data_id, rrd_name)` key, either a rate with its observation time or
    nothing. A `NULL` rate and a missing row are both "nothing".
 
+   The port returns `calculated` only. `value` holds the raw reading and is not
+   a rate. What `calculated` holds depends on the data source type
+   (`lib/dsstats.php`):
+   - COUNTER, DCOUNTER, DERIVE and DDERIVE: the difference from the previous
+     reading divided by the configured `rrd_step` (`:833`, `:858`), not by the
+     time that actually elapsed. DCOUNTER and DDERIVE are rounded to whole
+     numbers.
+   - GAUGE: the reading itself, copied unchanged (`:887-893`).
+   - ABSOLUTE: the absolute value of the reading, with no division by the step
+     (`:874-880`).
+   - Any type: `NULL` for `U`, `nan` or an invalid reading.
+
 2. **Evaluation runs in its own process.** The console command
    `kadupul:alerting:evaluate` evaluates rules. It is launched from the
    `poller_bottom` stage on the main poller through `exec_background()`, so the
@@ -83,13 +95,16 @@ behavior until an administrator opts in.
      the minimum samples for that hour of the week, the verdict is `unknown`.
    - Both kinds use the same verdicts, state machine and incident lifecycle.
 
-4. **Unknown is not zero.** Each evaluation of a rule yields one verdict:
-   `ok`, `breach` or `unknown`. A series with no fresh rate yields `unknown`. A
+4. **Unknown is not zero.** Each evaluation of a rule yields one verdict: `ok`,
+   `breach` or `unknown`. A series with no fresh rate yields `unknown`. A
    rate is fresh when its observation time is no older than two polling
-   intervals of the data source. The source of the observation time is an open
-   question. An `unknown` verdict neither opens nor closes an incident and does
-   not change the consecutive counters. It is shown as such and never counted as
-   `ok` or as `breach`.
+   intervals of the data source. The last-value table has no observation time
+   and the source of one is an open question. Until a source is established
+   and tested, evaluation treats every series as `unknown`. The presence of a
+   row never means fresh, and no adapter may default to that. An `unknown`
+   verdict neither opens nor closes an incident and does not change the
+   consecutive counters. It is shown as such and never counted as `ok` or as
+   `breach`.
 
 5. **State machine and counters.** Per rule, `alert_rule_state` keeps the
    consecutive breach count, the consecutive ok count, the last observation time
@@ -130,12 +145,14 @@ behavior until an administrator opts in.
    budget.
 
 9. **Inactive is not ok.** Before evaluating, the command checks that the rate
-   source can work: `dsstats_enable` is `on` and the last-value table exists. If
-   not, it evaluates nothing, writes no verdict, reports "inactive: rate source
-   unavailable" in the UI and exits with status 2. Exit status 0 means
-   evaluation completed or alerting is disabled; status 1 means an error. An
-   empty table on its own does not mean unavailable: after a restart it means
-   `unknown`.
+   source can work: `dsstats_enable` is `on` and the last-value table exists.
+   This check does not detect Boost-induced unavailability. Whether Boost
+   needs a check, and what it would be, stays open until Task 2 answers the
+   Boost question below. If the check fails, it evaluates nothing, writes no
+   verdict, reports "inactive: rate source unavailable" in the UI and exits
+   with status 2. Exit status 0 means evaluation completed or alerting is
+   disabled; status 1 means an error. An empty table on its own does not mean
+   unavailable: after a restart it means `unknown`.
 
 10. **Off by default.** A setting `alerting_enable` defaults to off. The
     upgrade creates tables and nothing else. No evaluator is launched and no
@@ -200,6 +217,12 @@ behavior until an administrator opts in.
   Operators control that by not defining both.
 - **Notification recipients are administrators only** until a later phase adds
   recipient selection.
+- **A skipped cycle inflates a counter rate.** Because `calculated` divides by
+  the configured step and not the elapsed time, a missed poll cycle makes the
+  next rate about twice the true one. The freshness check does not remove this:
+  it tests how old the observation is, not how long ago the previous reading
+  was. Threshold rules on counters can breach falsely after a missed cycle.
+  Phase 1 accepts this, and a `for_cycles` of 2 or more reduces its effect.
 - **The freshness rule adds a dependency** on a time source for observations,
   which the last-value table lacks.
 - **Mail failure is visible and bounded.** The queue and attempt counts make
@@ -211,7 +234,8 @@ behavior until an administrator opts in.
 
 | Condition | Expected behavior | Proved in |
 | --- | --- | --- |
-| dsstats off, or Boost prevents the table being filled | "inactive: rate source unavailable", exit status 2, no verdicts written | Task 2 |
+| dsstats off | "inactive: rate source unavailable", exit status 2, no verdicts written | Task 2 |
+| Boost enabled | Open item, no behavior promised until Task 2 resolves the Boost question | Task 2 |
 | Database restart empties the MEMORY table | Rules `unknown` for a cycle or two, no recoveries or breaches | Task 3 |
 | Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Task 1 |
 | Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |
@@ -243,7 +267,8 @@ behavior until an administrator opts in.
   a database contract test against the shipped schema. If the answer is no, this
   record is amended: the rate source decision is revisited, and the last
   alternative above is the likely replacement.
-- **Observation time.** The last-value table has no time column. Task 2 decides
+- **Observation time.** The last-value table has no time column. Until this is
+  resolved every series is `unknown` (decision 4). Task 2 decides
   whether the adapter takes the time from `data_source_stats_hourly_cache.time`
   (`cacti.sql:1430-1437`) or from another source, and amends decision 4 if the
   two-interval rule needs to change.
