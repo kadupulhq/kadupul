@@ -56,18 +56,19 @@ $connection = new PDO($dsn, getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_
 $connection->exec("SET SESSION sql_mode='STRICT_ALL_TABLES,NO_ENGINE_SUBSTITUTION'");
 $scenario = $argv[1] ?? '';
 if ($scenario === '--deadlock-holder') {
-	// Lock 192.0.2.1, wait until the parent's statement holds 192.0.2.2 and waits
-	// for 192.0.2.1, then request 192.0.2.2 to close the cycle. The rows changed in
-	// network 2 make this transaction heavier, so InnoDB chooses the parent as victim.
+	// Lock 192.0.2.2, wait until the parent's ascending primary-key scan holds
+	// 192.0.2.1 and waits for 192.0.2.2, then request 192.0.2.1 to close the cycle.
+	// Rows written to another table make this transaction heavier, so InnoDB chooses
+	// the parent as victim without adding locks to automation_ips.
 	$connection->beginTransaction();
-	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=2");
-	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=1 AND ip_address='192.0.2.1'");
+	$connection->exec("INSERT INTO automation_processes (pid,network_id,task) SELECT 100000 + seq.n, 99, 'weight' FROM (SELECT a.n * 20 + b.n + 1 AS n FROM (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a CROSS JOIN (SELECT 0 n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15 UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19) b) seq");
+	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=1 AND ip_address='192.0.2.2'");
 	print "ready\n";
 	$waiting = $connection->prepare("SELECT COUNT(*) FROM information_schema.PROCESSLIST WHERE ID=? AND INFO LIKE 'UPDATE automation_ips SET hostname=%'");
 	$until = microtime(true) + 10;
 	do { usleep(50000); $waiting->execute(array((int)$argv[2])); } while ((int)$waiting->fetchColumn() === 0 && microtime(true) < $until);
 	usleep(200000);
-	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=1 AND ip_address='192.0.2.2'");
+	$connection->exec("UPDATE automation_ips SET hostname='holder' WHERE network_id=1 AND ip_address='192.0.2.1'");
 	$connection->commit();
 	exit(0);
 }
@@ -159,8 +160,8 @@ try {
 		};
 		$deadlock = static function (callable $statement) use ($connection, $deadlocks): array {
 			automation_query($connection, "DELETE FROM automation_ips");
+			automation_query($connection, "DELETE FROM automation_processes WHERE network_id=99");
 			automation_query($connection, "INSERT INTO automation_ips (ip_address,network_id,pid,status,thread,run_id) VALUES ('192.0.2.1',1,0,0,0,''),('192.0.2.2',1,0,0,0,'')");
-			for ($i = 1; $i <= 200; $i++) { automation_query($connection, "INSERT INTO automation_ips (ip_address,network_id,pid,status,thread,run_id) VALUES (?,2,0,0,0,'')", array('198.51.100.' . $i)); }
 			$before = $deadlocks();
 			$holder = proc_open(array(PHP_BINARY, __FILE__, '--deadlock-holder', (string)$connection->query('SELECT CONNECTION_ID()')->fetchColumn()), array(0=>array('pipe','r'),1=>array('pipe','w'),2=>array('pipe','w')), $pipes);
 			check(is_resource($holder), 'deadlock holder started');
@@ -173,7 +174,7 @@ try {
 			check($deadlocks() > $before, 'the server rolled back the deadlock victim');
 			return array($outcome, automation_query($connection, "SELECT hostname FROM automation_ips WHERE network_id=1 ORDER BY ip_address")->fetchAll(PDO::FETCH_COLUMN));
 		};
-		$worker = "UPDATE automation_ips SET hostname='worker' WHERE network_id=1 ORDER BY ip_address DESC";
+		$worker = "UPDATE automation_ips SET hostname='worker' WHERE network_id=1";
 		$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 		list($outcome, $names) = $deadlock(static function () use ($connection, $worker) { automation_query($connection, $worker); });
 		check($outcome === null, 'autocommitted deadlock victim is retried: ' . ($outcome ? $outcome->getMessage() : ''));
