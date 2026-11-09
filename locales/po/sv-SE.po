@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 04:13-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13987,6 +13987,11 @@ msgstr "Obligatorisk skrivbar endast vid installationstillfället"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Alternativ för automatisk omsekvensering inställt %s"
 
@@ -14113,6 +14118,14 @@ msgstr "Följande tabeller bör konverteras till UTF8 och InnoDB med ett dynamis
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Installationen kan inte fortsätta eftersom inga profiler kunde hittas."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -15982,6 +15995,11 @@ msgstr "Avinstallera insticksmodul"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Avinstallation av det här pluginet tar bort alla plugindata och inställningar. Om du verkligen vill avinstallera pluggen klickar du på \"Avinstallera\" nedan. Annars klickar du på \"Avbryt\""
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format

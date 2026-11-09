@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 04:13-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13989,6 +13989,11 @@ msgid "Required Writable at Install Time Only"
 msgstr "Yêu cầu có thể ghi tại thời gian cài đặt"
 
 #: lib/installer.php
+#, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Chạy tự động hóa trên thiết bị"
@@ -14116,6 +14121,14 @@ msgstr "Các bảng sau nên được chuyển đổi thành UTF8 và InnoDB. Vu
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Việc cài đặt không thể tiếp tục vì không thể tìm thấy hồ sơ."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -15993,6 +16006,11 @@ msgstr "Gỡ cài đặt Plugin"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Gỡ cài đặt Plugin này sẽ xóa tất cả Dữ liệu và Cài đặt của Plugin. Nếu bạn thực sự muốn Gỡ cài đặt Plugin, nhấp vào &#39;Gỡ cài đặt&#39; bên dưới. Nếu không, nhấp vào &#39;Hủy&#39;"
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, fuzzy, php-format

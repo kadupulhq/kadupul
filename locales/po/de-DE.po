@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 13:37-0800\n"
+"POT-Creation-Date: 2026-11-09 04:13-0800\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -14067,6 +14067,11 @@ msgstr "Erforderlich Beschreibbar nur zur Installationszeit"
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Automatisierungsoption %s neu sequenzieren"
 
@@ -14193,6 +14198,14 @@ msgstr "Die folgenden Tabellen sollten in UTF8 und InnoDB umgewandelt werden.  B
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Die Installation kann nicht fortgesetzt werden, da keine Profile gefunden werden konnten."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -16080,6 +16093,11 @@ msgstr "Plugin deinstallieren"
 #: plugins.php
 msgid "Uninstalling this Plugin will remove all Plugin Data and Settings.  If you really want to Uninstall the Plugin, click 'Uninstall' below.  Otherwise click 'Cancel'"
 msgstr "Durch die Deinstallation dieses Plugins werden alle Daten und Einstellungen des Plugins entfernt.  Wenn Sie das Plugin wirklich deinstallieren möchten, klicken Sie unten auf \"Deinstallieren\".  Andernfalls klicken Sie auf'Abbrechen'."
+
+#: poller.php
+#, php-format
+msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
+msgstr ""
 
 #: poller.php
 #, php-format

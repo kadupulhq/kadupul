@@ -1,6 +1,6 @@
 [
     {
-        "returned": null,
+        "returned": true,
         "printed": "",
         "diagnostics": [],
         "commands": [
@@ -36,7 +36,7 @@
         ]
     },
     {
-        "returned": null,
+        "returned": true,
         "printed": "",
         "diagnostics": [],
         "commands": [
@@ -64,7 +64,7 @@
         ]
     },
     {
-        "returned": null,
+        "returned": true,
         "printed": "",
         "diagnostics": [],
         "commands": [],
@@ -80,7 +80,7 @@
         ]
     },
     {
-        "returned": null,
+        "returned": true,
         "printed": "",
         "diagnostics": [],
         "commands": [
@@ -108,7 +108,7 @@
         ]
     },
     {
-        "returned": null,
+        "returned": false,
         "printed": "",
         "diagnostics": [],
         "commands": [],
