@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 07:15-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11429,10 +11429,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "नए सॉर्ट फ़ील्ड का पता लगाया: &#39; %s&#39; पुराना सॉर्ट फ़ील्ड &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "रेखांकन को उनके नए अनुक्रमितों में बदलना"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "डुप्लिकेट डेटा स्रोत प्रोफ़ाइल"
 
@@ -11530,11 +11526,6 @@ msgstr "&#39;Rewrite_index&#39; या &#39;oid_suffix&#39; के बाद स
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "%s तालिकाओं को परिवर्तित करने के लिए मिला"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "पाया गया%s और%s अनाथ स्थानीय डेटा ID का पुनः-मानचित्र पर।"
 
 #: lib/data_query.php
 #, php-format
@@ -11654,8 +11645,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "नए सॉर्ट फ़ील्ड को मान्य किया गया। सॉर्ट फील्ड अपडेट किया जाए।"
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "कोई इंडेक्स चेंज नहीं हुआ, स्किपिंग रि-इंडेक्स और पोलर कैश री-जनसंख्या"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

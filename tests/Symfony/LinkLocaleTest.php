@@ -10,7 +10,7 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Contract\LocalePreference;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
-use Kadupul\Platform\Infrastructure\Symfony\InventoryLocaleSubscriber;
+use Kadupul\Platform\Infrastructure\Symfony\LocaleSubscriber;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -28,7 +28,7 @@ final class LinkLocaleTest extends TestCase
         $preference->method('preferredLocale')->willReturn('fr-FR');
         $configuration = $this->createMock(LegacyConfiguration::class);
         $configuration->method('values')->willReturn([]);
-        $subscriber = new InventoryLocaleSubscriber($preference, $database, $configuration);
+        $subscriber = new LocaleSubscriber($preference, $database, $configuration);
         foreach (['navigation_links', 'navigation_links_legacy', 'navigation_link_action', 'navigation_link_create', 'navigation_link_edit'] as $route) {
             $request = Request::create('/links', 'GET', ['language' => 'en', '_locale' => 'en'], ['Cacti' => 'fixture']);
             $request->attributes->set('_route', $route);
