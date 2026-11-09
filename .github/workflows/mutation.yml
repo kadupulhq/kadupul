@@ -1,0 +1,121 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+name: Mutation testing (advisory)
+
+# Mutates only the src/ lines a pull request adds or modifies and reports the
+# mutants no test detects. Advisory: it is not a required check, and escaped
+# mutants never fail it. The job fails only when the tool itself is broken
+# (no merge base, a failed or empty initial test run, a missing report).
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/Symfony/**'
+      - 'phpunit-symfony.xml'
+      - 'infection.json5'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'tests/tools/mutation_changed_lines.py'
+      - 'tests/tools/test_mutation_changed_lines.py'
+      - 'tests/tools/requirements.txt'
+      - '.github/workflows/mutation.yml'
+  workflow_dispatch:
+    inputs:
+      base:
+        description: Branch, tag or commit to compare the dispatched ref with
+        required: true
+        default: main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mutation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changed-lines:
+    name: Mutation testing on changed lines (advisory)
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Infection diffs against the merge base, which a shallow clone lacks.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # The same PHP, extensions and coverage driver as the PHP 8.4 job.
+      - uses: ./.github/actions/setup-php # zizmor: ignore[self-repository]
+        with:
+          php-version: '8.4'
+          extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
+          ini-values: opcache.jit=off, opcache.jit_buffer_size=0
+          coverage: pcov
+          tools: composer
+      - name: Preserve selected PHP for mise
+        run: |
+          mkdir -p "$RUNNER_TEMP/mutation-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/mutation-php/bin/php"
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
+        with:
+          install_args: python@3.12.12
+          add_shims_to_path: false
+      - name: Register and verify actual PHP patch version
+        run: bash tests/tools/register_ci_php.sh "$RUNNER_TEMP/mutation-php" 8.4
+
+      - name: Install the wrapper's hash-locked XML parser
+        run: mise exec python@3.12.12 -- python -m pip install --require-hashes -r tests/tools/requirements.txt
+      - name: Verify the mutation wrapper's outcome classification
+        run: mise exec python@3.12.12 -- python tests/tools/test_mutation_changed_lines.py
+
+      - name: Cache Composer downloads
+        uses: ./.github/actions/composer-cache # zizmor: ignore[self-repository]
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+      # Native composition tests in the Symfony suite execute both locked
+      # coverage libraries, as in the PHP 8.4 job.
+      - name: Install isolated test dependencies
+        run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
+
+      - uses: ./.github/actions/setup-node # zizmor: ignore[self-repository]
+        with:
+          node-version: '22.22.2'
+          cache: npm
+      - name: Build installed browser assets for compatibility tests
+        run: npm ci --ignore-scripts && npm run build
+      - name: Compile browser assets
+        run: php bin/console asset-map:compile
+
+      - name: Mutate changed lines
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || inputs.base }}
+        run: |
+          set -euo pipefail
+          case "$BASE_REF" in
+            ''|-*) echo "::error::No usable comparison base." >&2; exit 1 ;;
+          esac
+          # A branch name from workflow_dispatch resolves through the fetched remote.
+          if ! git rev-parse --verify --quiet "$BASE_REF^{commit}" >/dev/null; then
+            BASE_REF="origin/$BASE_REF"
+          fi
+          mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- \
+            python tests/tools/mutation_changed_lines.py \
+              --base "$BASE_REF" --summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mutation-changed-lines
+          retention-days: 14
+          path: |
+            var/infection/summary.md
+            var/infection/infection.json
+            var/infection/infection.log
+            var/infection/infection.html
+            var/infection/summary.log
+          if-no-files-found: error

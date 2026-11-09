@@ -22,7 +22,6 @@ use Kadupul\Platform\Infrastructure\Symfony\Console\ResultRenderer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\MapInput;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -49,18 +48,11 @@ final readonly class ReapplyDataSourceTitlesCommand
             return $early;
         }
         if ($input->hostId === null && $input->filter === null && !$input->debug && $mode === OutputMode::Legacy) {
-            return $this->renderer->render(new CommandResult([], [...$legacy->noInput(), $this->version->line(self::UTILITY), ...$legacy->help()], Command::FAILURE), $mode, $output);
+            return $this->renderer->render(new CommandResult([], $legacy->noInput($this->version->line(self::UTILITY)), Command::FAILURE), $mode, $output);
         }
         $selection = GraphSelection::parse($input->hostId ?? '', $input->filter ?? '');
         if ($selection === null) {
-            if ($mode === OutputMode::Legacy) {
-                // The original wrote this to stderr, then exited 1 without the help.
-                ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->writeln('ERROR: ' . self::BAD_HOSTS, OutputInterface::OUTPUT_RAW);
-
-                return Command::FAILURE;
-            }
-
-            return $this->renderer->failure($io, $output, $mode, self::BAD_HOSTS, new CommandResult(['status' => 'invalid', 'error' => self::BAD_HOSTS], [], Command::INVALID));
+            return $this->renderer->invalidSelection($io, $output, $mode, self::BAD_HOSTS);
         }
         try {
             $report = ($this->reapply)($selection, $input->local, $input->as, !$input->dryRun);

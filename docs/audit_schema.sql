@@ -891,7 +891,7 @@ INSERT INTO `table_columns` VALUES ('settings_tree',3,'status','tinyint(4)','NO'
 INSERT INTO `table_columns` VALUES ('settings_user',1,'user_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('settings_user',2,'name','varchar(255)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('settings_user',3,'value','varchar(4096)','NO','','','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('settings_user_group',1,'group_id','smallint(8) unsigned','NO','PRI','0','',NULL);
+INSERT INTO `table_columns` VALUES ('settings_user_group',1,'group_id','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('settings_user_group',2,'name','varchar(50)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('settings_user_group',3,'value','varchar(2048)','NO','','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('sites',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
@@ -1049,7 +1049,7 @@ INSERT INTO `table_columns` VALUES ('user_auth_group',12,'policy_graph_templates
 INSERT INTO `table_columns` VALUES ('user_auth_group',13,'enabled','char(2)','NO','','on','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_group_members',1,'group_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_members',2,'user_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
-INSERT INTO `table_columns` VALUES ('user_auth_group_perms',1,'group_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_group_perms',1,'group_id','int(10) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_perms',2,'item_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_perms',3,'type','tinyint(3) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_group_realm',1,'group_id','int(10) unsigned','NO','PRI',NULL,'',NULL);
@@ -1059,7 +1059,7 @@ INSERT INTO `table_columns` VALUES ('user_auth_perms',2,'item_id','mediumint(8) 
 INSERT INTO `table_columns` VALUES ('user_auth_perms',3,'type','tinyint(3) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_realm',1,'realm_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_realm',2,'user_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
-INSERT INTO `table_columns` VALUES ('user_auth_row_cache',1,'user_id','mediumint(8)','NO','PRI','0','',NULL);
+INSERT INTO `table_columns` VALUES ('user_auth_row_cache',1,'user_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',2,'class','varchar(20)','NO','PRI','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',3,'hash','varchar(32)','NO','PRI','0','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_auth_row_cache',4,'total_rows','int(10) unsigned','NO','','0','',NULL);
@@ -1090,7 +1090,7 @@ INSERT INTO `table_columns` VALUES ('user_domains_ldap',17,'specific_password','
 INSERT INTO `table_columns` VALUES ('user_domains_ldap',18,'cn_full_name','varchar(50)','YES','','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_domains_ldap',19,'cn_email','varchar(50)','YES','','','','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('user_log',1,'username','varchar(50)','NO','PRI','0','','utf8mb4_unicode_ci');
-INSERT INTO `table_columns` VALUES ('user_log',2,'user_id','mediumint(8)','NO','PRI','0','',NULL);
+INSERT INTO `table_columns` VALUES ('user_log',2,'user_id','mediumint(8) unsigned','NO','PRI','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_log',3,'time','timestamp','NO','PRI','0000-00-00 00:00:00','',NULL);
 INSERT INTO `table_columns` VALUES ('user_log',4,'result','tinyint(3) unsigned','NO','','0','',NULL);
 INSERT INTO `table_columns` VALUES ('user_log',5,'ip','varchar(40)','NO','','','','utf8mb4_unicode_ci');

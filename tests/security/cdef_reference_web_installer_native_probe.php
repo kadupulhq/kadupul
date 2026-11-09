@@ -149,18 +149,47 @@ function webInstallerStart(string $base, string $cookies, string $body, bool $re
 
 function webInstallerStatus(string $base, string $cookies): array
 {
+    $started = microtime(true);
     [$status, $body] = webRequest($base . 'install.php?view=status', $cookies);
+    $finished = microtime(true);
     $state = json_decode($body, true);
     if ($status !== 200 || !is_array($state) || !is_string($state['state'] ?? null)
         || !is_int($state['progress'] ?? null) || !is_string($state['schema'] ?? null)) {
+        require_once dirname(__DIR__) . '/Symfony/InstallerProbeDiagnostics.php';
+        $GLOBALS['nativeInstallerStatusFailure'] = \Kadupul\Tests\InstallerProbeDiagnostics::request($status, $body, $started, $finished);
         throw new RuntimeException('The actual readonly installer status did not return its JSON contract: HTTP ' . $status . '.');
     }
     return $state;
 }
 
 /** Retain only non-secret worker state before the exclusively owned schema is removed. */
-function webLifecycleDiagnostics(PDO $database, string $installerLogPath, int $initialInstallerLogBytes): void
+function webLifecycleDiagnostics(PDO $database, string $installerLogPath, int $initialInstallerLogBytes, ?string $serverLogPath = null): void
 {
+    if (isset($GLOBALS['nativeInstallerStatusFailure'])) {
+        try {
+            $root = dirname(__DIR__, 2);
+            require_once $root . '/include/vendor/autoload.php';
+            require_once dirname(__DIR__) . '/Symfony/InstallerProbeDiagnostics.php';
+            $diagnostic = ['request' => \Kadupul\Tests\InstallerProbeDiagnostics::savedRequest($GLOBALS['nativeInstallerStatusFailure']),
+                'captured_at_us' => (int) round(microtime(true) * 1000000), 'server' => ['kind' => 'unavailable']];
+            $size = is_string($serverLogPath) && is_file($serverLogPath) ? filesize($serverLogPath) : false;
+            if (is_int($size)) {
+                $limit = \Kadupul\Tests\InstallerProbeDiagnostics::MAX_LOG_BYTES;
+                $log = file_get_contents($serverLogPath, false, null, max(0, $size - $limit), $limit);
+                if (!is_string($log)) {
+                    throw new RuntimeException('Cannot read owned server diagnostics.');
+                }
+                $diagnostic['server'] = \Kadupul\Tests\InstallerProbeDiagnostics::server($log, $root);
+                $diagnostic['server']['total_bytes'] = $size;
+                $diagnostic['server']['truncated'] = $size > $limit;
+            }
+            // Request bodies, server lines, exception messages and arguments
+            // may contain credentials. Retain only timestamps, hashes and code frames.
+            echo 'WEB_STATUS_FAILURE ' . json_encode($diagnostic, JSON_THROW_ON_ERROR) . "\n";
+        } catch (Throwable) {
+            echo "WEB_STATUS_FAILURE {\"kind\":\"diagnostics_unavailable\"}\n";
+        }
+    }
     try {
         $keys = ['install_step', 'install_version', 'install_progress', 'install_started', 'install_updated', 'install_complete'];
         $statement = $database->prepare('SELECT name,value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($keys), '?')) . ') ORDER BY name');
@@ -348,7 +377,7 @@ try {
     );
 } finally {
     if ($created) {
-        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes);
+        webLifecycleDiagnostics($database, $installerLogPath, $initialInstallerLogBytes, $directory . '/server.log');
     }
     if (is_resource($server)) {
         proc_terminate($server);

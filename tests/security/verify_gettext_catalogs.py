@@ -19,6 +19,8 @@ import subprocess
 import tempfile
 
 COMPATIBILITY_CONTENT_SHA256 = "be9c11c6bb6387a19851598ec6e08a32b153c03036716b26f45dc3353810eaab"
+# Catalogs record file-only references so moving lines never rewrites them.
+LINE_REFERENCE = re.compile(r":\d+$")
 RETIRED_MESSAGES = frozenset(("Access Denied!  LDAP Error: %s",
                              "Access Denied!  LDAP Search Error: %s",
                              "LDAP Search Error: %s"))
@@ -64,6 +66,8 @@ def entries(text: str) -> dict[tuple[str, str, str], dict[str, str]]:
         for line in block.splitlines():
             if line.startswith("#: "):
                 references.update(item.removeprefix("./") for item in line[3:].split())
+                if any(LINE_REFERENCE.search(item) for item in line[3:].split()):
+                    raise ValueError("Gettext reference records a source line: " + line)
             if line.startswith("#, "):
                 flags.update(item.strip() for item in line[3:].split(","))
             if line.startswith("#"):
@@ -105,7 +109,7 @@ def verify(source: Path, catalogs: Path) -> None:
                 "__esc", "__esc_n:1,2", "__esc_x:1c,2", "__esc_xn:1c,2,3", "__date"]
     with tempfile.TemporaryDirectory(prefix="kadupul-gettext-check-") as temporary:
         pot = Path(temporary) / "source.pot"
-        subprocess.run(["xgettext", "--from-code=UTF-8", "--no-wrap", "-F",
+        subprocess.run(["xgettext", "--from-code=UTF-8", "--no-wrap", "--add-location=file", "-F",
                         *["-k" + key for key in keywords], "-o", str(pot), *files],
                        cwd=source, check=True, timeout=120)
         expected = entries(pot.read_text())
