@@ -20,7 +20,7 @@ SPDX-License-Identifier: GPL-2.0-or-later
 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated numeric parent. #}
 <form method="get" action="{{ path(screen.route, {id: parentId}) }}" class="filterTable" aria-label="{{ 'Relationship filters'|trans }}">
     <label for="relationship-filter">{{ 'Search'|trans }}</label><input id="relationship-filter" name="filter" maxlength="255" value="{{ filters.filter }}">
-    {{ lists.rows_per_page('relationship-rows', 'Rows', {10: '10', 25: '25', 50: '50', 100: '100'}, filters.rows, 'relationships') }}
+    {{ lists.rows_per_page('relationship-rows', 'Rows', {'-1': 'Default', '10': '10', '25': '25', '50': '50', '100': '100', '250': '250', '500': '500', '1000': '1000', '5000': '5000'}, filters.rows, 'relationships', defaultRows) }}
     <input type="hidden" name="sort_column" value="{{ filters.sort_column }}"><input type="hidden" name="sort_direction" value="{{ filters.sort_direction }}">
     <button type="submit">{{ 'Go'|trans }}</button>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed enum route and validated numeric parent. #}

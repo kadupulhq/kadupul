@@ -131,7 +131,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Application/Query/IsAccountLocked.php' => 'cdf547461024111a7f55f5613717404f916a53f0c8e613a755f6a764d1492eed',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
     'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php' => 'fda951991b7fa7e43deb90f51d3160cd51e43c5e7973cac9d4766223f73a9993',
-    'include/csrf.php' => '7b6c50f6f82345eaa910ee608b1258d92771480b0ab9a5ea644125e58bd4565c',
+    'include/csrf.php' => 'c1880ed0999e0a6d5b59c84b8b17efd99ce476ace40883ec4768a37178bcbe81',
     'config/services.yaml' => 'c4fab591a8a547d87bdd29768a5ccb05bd563b4fa01b7f9ac6668c2f54d0501e',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
@@ -2281,7 +2281,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'templates/platform/logout_message.html.twig' => 'f710aad05e2c4ec4aa73aa50d4c09556f0987389067d6d7c54f70fe23cec8b04',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'include/global.php' => 'd3b34a027c474472c32d95f4df1c0b30fe00a406daab99a24df1a65093618b48',
-    'include/csrf.php' => '7b6c50f6f82345eaa910ee608b1258d92771480b0ab9a5ea644125e58bd4565c',
+    'include/csrf.php' => 'c1880ed0999e0a6d5b59c84b8b17efd99ce476ace40883ec4768a37178bcbe81',
     'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
@@ -2295,7 +2295,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'src/IdentityAccess/Application/Port/AccountLockoutStatus.php' => '54d4a8d16b5df9320d99752c35e5173e96ceac8500eab86945115809e41c1e32',
     'src/IdentityAccess/Application/Query/IsAccountLocked.php' => 'cdf547461024111a7f55f5613717404f916a53f0c8e613a755f6a764d1492eed',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
-    'include/layout.js' => '8a70ecb2e10e20616cc4133456e9219ca9fe871138e1b1ae3a3e79cb23e47d9c',
+    'include/layout.js' => '3dee285268f2980d3b6f225f0a32e913241506a9d1094a1a7207b5328724f521',
     'include/vendor/csrf/csrf-magic.php' => '4159c4d545c18181fbda73c99d00722de5dc9138ad1e75830d45740ce09511f0',
     'include/vendor/csrf/csrf-conf.php' => '61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514',
 ];
@@ -2340,8 +2340,8 @@ function native_session_firewall_reviewed(string $root): bool
 const ADMINISTRATION_LIST_ACCESS_SOURCES = [
     'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
     'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
-    'src/Navigation/Application/Query/ViewAdministrationList.php' => 'a3cde50ce81aa19e6a47c155b04e0f6f2f0a1c4cc2fac41e7d4c2ed15936746f',
-    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '54dc1a7934059452acf4371fda223cb29718da6c9fddbb7198c54a4a858c54db',
+    'src/Navigation/Application/Query/ViewAdministrationList.php' => '2362d63d5e541163d5d4a1c888222116d4d42066f099e0dd2ecee6121eaf4644',
+    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '88d111f802cae85de5b7ef857337814f744daba9dbf3c5a7e27e94b82342a208',
 ];
 
 // Reviewed management route defaults, actor/realm admission and scoped inputs.
@@ -2361,7 +2361,7 @@ const RELATIONSHIP_ACCESS_SOURCES = [
     'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
     'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
     'src/Navigation/Contract/Relationships/RelationshipScreen.php' => 'a01c4c444f3e252d23b5a4510b24baecfe1c9b77ea39c2bdaea1903400c5153f',
-    'src/Navigation/Application/Query/ViewRelationships.php' => '3687d22d648ae1e246aae67644cdaa0f005db6e75ba7702c8b761f70c1212f61',
+    'src/Navigation/Application/Query/ViewRelationships.php' => 'e8b6b158f5dc9344766a75c9503f6a4a591ca1c584bc08aec857ed097a4e5e4f',
     'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '9923e1416a17e81bdc237e17256ae9f7aa1796966d4c1fbfd5df202c8fdc3d24',
 ];
 

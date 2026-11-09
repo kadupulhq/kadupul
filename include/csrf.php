@@ -298,7 +298,7 @@ function csrf_refuse_cross_site_actions()
         'logout_everywhere', 'clear_user_settings', 'reset_default',
         'ajax_dnd', 'lock', 'unlock', 'sortasc', 'sortdesc', 'set_branch_sort', 'set_host_sort',
         'ajax_reports', 'update_timespan',
-        'run_debug', 'run_repair', 'runall', 'ds_disable', 'ds_enable',
+        'runall', 'ds_disable', 'ds_enable',
         'query_reload', 'ajax_save', 'ajax_save_filter',
         'reindex', 'gt_add', 'query_add', 'query_change', 'query_verbose',
         'ping_host', 'enable_debug', 'disable_debug', 'repopulate',
