@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-08 23:20-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11377,10 +11377,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Открито ново поле за сортиране: &#39; %s&#39; Старо поле за сортиране &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Пренасочване на графиките към новите им индекси"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Профил на дублирания източник на данни"
 
@@ -11478,11 +11474,6 @@ msgstr "Поправяне на грешно поле „method“ за „ %s�
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Намерени са%s локални идентификационни данни за проверка"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Намерени променени%s и%s осиротели локални идентификационни данни за пренасочване."
 
 #: lib/data_query.php
 #, php-format
@@ -11602,8 +11593,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Новото поле за сортиране е потвърдено. Полето за сортиране се актуализира."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Не са открити промени в индекса, пропускане на повторно индексиране и повторно население на кеша"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -13307,6 +13298,11 @@ msgid "written"
 msgstr "писмен"
 
 #: lib/installer.php
+#, php-format
+msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
+msgstr ""
+
+#: lib/installer.php
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "N/A"
@@ -13466,6 +13462,10 @@ msgid "Current"
 msgstr "Текущ"
 
 #: lib/installer.php
+msgid "DATA SOURCES:"
+msgstr ""
+
+#: lib/installer.php
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE DETECTED"
 
@@ -13556,6 +13556,10 @@ msgstr "Двигател"
 #: lib/installer.php
 msgid "Error Locating Profiles"
 msgstr "Грешка при намирането на профили"
+
+#: lib/installer.php
+msgid "Every Data Source RRDfile path is inside an allowed directory"
+msgstr ""
 
 #: lib/installer.php
 #, fuzzy, php-format
@@ -13763,6 +13767,10 @@ msgid "License Agreement"
 msgstr "Лиценз"
 
 #: lib/installer.php
+msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
+msgstr ""
+
+#: lib/installer.php
 msgid "Local Database Connection Information"
 msgstr "Информация за връзка с локална база данни"
 
@@ -13883,6 +13891,10 @@ msgid "Optional Modules"
 msgstr "Допълнителни модули"
 
 #: lib/installer.php
+msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
+msgstr ""
+
+#: lib/installer.php
 msgid "PHP - Module Support (Optional)"
 msgstr "Поддръжка на PHP - модул (по избор)"
 
@@ -13966,6 +13978,10 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "Натиснете &#39; %s&#39; и след това &#39; %s&#39;, за да завършите инсталационния процес, след като изберете Шаблони за устройства."
 
 #: lib/installer.php
+msgid "RRDfile Locations"
+msgstr ""
+
+#: lib/installer.php
 msgid "Recommended"
 msgstr "Препоръчително"
 
@@ -14011,6 +14027,11 @@ msgstr "Задължително записване само при време �
 
 #: lib/installer.php
 #, php-format
+msgid "Required core database tables are missing: %s"
+msgstr ""
+
+#: lib/installer.php
+#, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Набор от опции за автоматизация за преоразмеряване %s"
 
@@ -14037,6 +14058,10 @@ msgstr "Изпълнява се първа заявка за данни за л�
 #: lib/installer.php
 msgid "Scan Mode"
 msgstr "Режим на сканиране"
+
+#: lib/installer.php
+msgid "See docs/rrd-path-containment.md for details."
+msgstr ""
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -14107,6 +14132,10 @@ msgid "Thanks for taking the time to download and install Kadupul, the complete 
 msgstr "Благодарим Ви, че отделихте време да изтеглите и инсталирате Kadupul, пълното решение за графики за вашата мрежа. Преди да започнете да правите хладни графики, има няколко парчета данни, които Kadupul трябва да знае."
 
 #: lib/installer.php
+msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
+msgstr ""
+
+#: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Инсталаторът автоматично присвоява $ poller_id и го добавя към файла config.php."
 
@@ -14137,6 +14166,14 @@ msgstr "Следващите таблици трябва да се преобр�
 #: lib/installer.php
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Инсталирането не може да продължи, тъй като не могат да бъдат намерени профили."
+
+#: lib/installer.php
+msgid "The installed database could not be checked because its table list could not be read."
+msgstr ""
+
+#: lib/installer.php
+msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
+msgstr ""
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -14385,6 +14422,11 @@ msgstr "Съпоставянето на сървъра ви изглежда с�
 #: lib/installer.php
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Съпоставянето на сървъра НЕ изглежда напълно съвместимо с UTF8."
+
+#: lib/installer.php
+#, php-format
+msgid "and %d more"
+msgstr ""
 
 #: lib/ldap.php
 msgid "Authentication Failure"

@@ -42,13 +42,17 @@ final readonly class LegacyCommandOutput
      * Run a command from individual arguments, without invoking a shell.
      *
      * @param list<string> $arguments Executable path followed by its arguments.
+     * @param int|null     $exitCode  Set to the exit code, or -1 when the command did not start.
+     * @param-out int      $exitCode
      *
      * @return list<string> Standard output lines.
      */
-    public function linesFromArguments(array $arguments): array
+    public function linesFromArguments(array $arguments, ?int &$exitCode = null): array
     {
+        $exitCode = -1;
+
         try {
-            return $this->readLines(new Process($arguments));
+            return $this->readLines(new Process($arguments), $exitCode);
         } catch (ProcessStartFailedException|\Symfony\Component\Process\Exception\LogicException) {
             // An argument-array command must never fall back to a shell.
             return [];
@@ -58,11 +62,13 @@ final readonly class LegacyCommandOutput
     /**
      * Collect standard output while forwarding standard error to the parent.
      *
-     * @param Process $process Process to run.
+     * @param Process  $process  Process to run.
+     * @param int|null $exitCode Set to the exit code; -1 if it is unknown.
+     * @param-out int  $exitCode
      *
      * @return list<string>
      */
-    private function readLines(Process $process): array
+    private function readLines(Process $process, ?int &$exitCode = null): array
     {
         $process->setTimeout(null);
         // Web SAPIs do not define the CLI STDERR constant. Keep diagnostics
@@ -87,6 +93,7 @@ final readonly class LegacyCommandOutput
                 fclose($stderr);
             }
         }
+        $exitCode = $process->getExitCode() ?? -1;
         $output = $process->getOutput();
 
         if ($output === '') {

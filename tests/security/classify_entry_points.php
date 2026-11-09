@@ -133,7 +133,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'bin/legacy-installer-verification.php' => '590649346f748a87b593da5eaa8aed20eacdb3b67c7aa890ff6222c120dc4fbd',
     'src/Platform/Application/Installer/VerifyInstallationOperation.php' => '61a12e8468fa852d35686b98c02a64efb5a3ecd2530abb75dd717faf02fc1510',
     'src/Platform/Infrastructure/Legacy/NativeOperationalEvidence.php' => '8f213f004b5ae9df6ed20d3436502918c5b9b6dcfc5c198beff5aa885e217a4e',
-    'lib/installer.php' => '31a8490e6edf911f5da4ee61c9cc548ef3dcf7683713b52b961c0b87cac40fb2',
+    'lib/installer.php' => 'c9dd553745916d356539e87f2f87aa7c3802d692348f927ba0a4aa7f477d7c45',
     'src/Platform/Application/Installer/InstallationActions.php' => '9b588cab6c2b1a94683dc99c92ad6d82941ade2e832ef923caa1e21809802472',
     'src/Platform/Application/Installer/InstallationExecution.php' => 'f9db102b39cff8bcca6d2bb9fb6100aa51fd78c211ec08081db6ab466ff7602f',
     'src/Platform/Domain/Installer/InstallationMode.php' => '71e56d248203b9c4f5b832795dc07c929cbdd7a74260602fb912ce198da4956c',
@@ -220,7 +220,8 @@ const REVIEWED_FRAGMENT_CALLS = [
         ['CactiSecureHeaders::getNonce()', 'returns the same per-request CSP nonce'],
     ],
     'include/global_languages.php' => [
-        ['get_list_of_locales()', 'declared in the same file; returns a literal locale map'],
+        ['get_list_of_locales()', 'declared in the same file; returns the KnownLocales class constant, a literal locale map'],
+        ["i18n_locale_input(read_config_option('i18n_language_support'), read_config_option('i18n_auto_detection'), read_config_option('i18n_default_language'))", 'declared in the same file; its arguments call read_config_option(), which only the bootstrap declares, so a direct request stops before it runs'],
     ],
     'include/csrf.php' => [
         ["csrf_token_is_well_formed(\$_POST['__csrf_magic'])", 'declared in the same file; splits the posted token string and returns whether its times are digits, writing nothing'],
