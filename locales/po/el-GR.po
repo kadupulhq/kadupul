@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:03-0800\n"
+"POT-Creation-Date: 2026-11-09 12:25-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11352,10 +11352,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Εντοπίστηκε νέο πεδίο ταξινόμησης: &#39; %s&#39; Παλιό πεδίο ταξινόμησης &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Επανατοποθέτηση γραφημάτων στους νέους τους δείκτες"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Διπλότυπο προφίλ προέλευσης δεδομένων"
 
@@ -11453,11 +11449,6 @@ msgstr "Προσδιορισμός λανθασμένου πεδίου &#39;με
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Βρέθηκαν%s Τοπικά αναγνωριστικά δεδομένων για επαλήθευση"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Βρέθηκαν Αλλαγή%s και%s Ορφανών τοπικών αναγνωριστικών δεδομένων για εκ νέου χάρτη."
 
 #: lib/data_query.php
 #, php-format
@@ -11577,8 +11568,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Το νέο πεδίο ταξινόμησης επικυρώθηκε. Το πεδίο Ταξινόμηση ενημερώνεται."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Δεν εντοπίστηκαν αλλαγές στο ευρετήριο, παρακάμπτοντας την επανάληψη ευρετηρίου και την επαναπληροφόρηση της προσωρινής μνήμης cache"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

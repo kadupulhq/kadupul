@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:03-0800\n"
+"POT-Creation-Date: 2026-11-09 12:25-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11382,10 +11382,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Yeni Sıralama Alanı Algılandı: &#39; %s&#39; Eski Sıralama Alanı &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Grafikleri Yeni Dizinlerine Yeniden Ekleme"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Yinelenen Veri Kaynağı Profili"
 
@@ -11483,11 +11479,6 @@ msgstr "&#39;Rewrite_index&#39; veya &#39;oid_suffix&#39; tanımlandığından y
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Dönüştürülecek%s tablo bulundu"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Bulunan%s ve%s Sahipsiz Yerel Veri Kimlikleri Yeniden Eşlenecek Şekilde Değiştirildi."
 
 #: lib/data_query.php
 #, php-format
@@ -11607,8 +11598,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Yeni Sıralama Alanı doğrulandı. Sıralama Alanı güncellenebilir."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Hiçbir Endeks Değişikliği Tespit Edilmedi, Yeniden Dizine Atlanma ve Poller Cache Re-popülasyonu"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

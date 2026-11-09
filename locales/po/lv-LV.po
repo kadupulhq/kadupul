@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:03-0800\n"
+"POT-Creation-Date: 2026-11-09 12:25-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11406,10 +11406,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Konstatēts jauns kārtošanas lauks: '%s' Vecais kārtošanas lauks '%s'"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Pabeigts Grafiku pārveidošana to jaunajiem indeksiem"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Datu avota nosaukumu kešatmiņas atjaunināšana ir pabeigta"
 
@@ -11507,11 +11503,6 @@ msgstr "Nepareiza lauka “method” labošana laukam “%s”, jo ir definēts 
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Atrasts %s vietējo datu ID, kas jāpārbauda"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Atrasts mainīts %s un %s bāreņu lokālo datu ID, lai atkārtoti kartētu."
 
 #: lib/data_query.php
 #, php-format
@@ -11631,8 +11622,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Jaunais kārtošanas lauks ir apstiprināts. Kārtošanas lauks tiks atjaunināts."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Nav konstatētas nekādas indeksa izmaiņas, tiek izlaista atkārtota indeksēšana un Poller kešatmiņas atkārtota aizpildīšana"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

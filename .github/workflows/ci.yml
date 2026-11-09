@@ -257,6 +257,10 @@ jobs:
       working-directory: tests
       run: composer install --no-interaction --no-progress --prefer-dist
 
+    - name: Allow failure-injection triggers in the disposable MySQL service
+      if: startsWith(matrix.database, 'mysql')
+      run: |
+        docker exec "${{ job.services.mysql.id }}" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -uroot -e "SET GLOBAL log_bin_trust_function_creators=1"'
     - name: Record database behavior and run contracts
       working-directory: tests
       env:

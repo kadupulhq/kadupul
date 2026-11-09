@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:03-0800\n"
+"POT-Creation-Date: 2026-11-09 12:25-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11357,10 +11357,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr ""
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr ""
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr ""
 
@@ -11457,11 +11453,6 @@ msgstr ""
 #: lib/data_query.php
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr ""
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
 msgstr ""
 
 #: lib/data_query.php
@@ -11582,7 +11573,7 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr ""
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
 msgstr ""
 
 #: lib/data_query.php

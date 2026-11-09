@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:03-0800\n"
+"POT-Creation-Date: 2026-11-09 12:25-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11413,10 +11413,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "שדה מיון חדש זוהה: &#39; %s&#39; שדה מיון ישן &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Remapping גרפים לאינדקסים החדשים שלהם"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "פרופיל מקור נתונים כפולים"
 
@@ -11514,11 +11510,6 @@ msgstr "תיקון שדה &#39;שיטה&#39; שגוי עבור &#39; %s&#39; מ�
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "נמצאו טבלאות%s להמרה"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "נמצא שהשתנו%s ו-%s מזהי נתונים מקומיים יתומים למפה מחדש."
 
 #: lib/data_query.php
 #, fuzzy, php-format
@@ -11638,8 +11629,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "שדה מיון חדש תוקן. שדה המיון יעודכן."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "לא נמצאו שינויים במדד, מדלגים מחדש אינדקס ומטמון פולר מחדש האוכלוסייה"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

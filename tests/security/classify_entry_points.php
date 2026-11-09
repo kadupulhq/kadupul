@@ -233,7 +233,8 @@ const REVIEWED_FRAGMENT_CALLS = [
         ['CactiSecureHeaders::getNonce()', 'returns the same per-request CSP nonce'],
     ],
     'include/global_languages.php' => [
-        ['get_list_of_locales()', 'declared in the same file; returns a literal locale map'],
+        ['get_list_of_locales()', 'declared in the same file; returns the KnownLocales class constant, a literal locale map'],
+        ["i18n_locale_input(read_config_option('i18n_language_support'), read_config_option('i18n_auto_detection'), read_config_option('i18n_default_language'))", 'declared in the same file; its arguments call read_config_option(), which only the bootstrap declares, so a direct request stops before it runs'],
     ],
     'include/csrf.php' => [
         ["csrf_token_is_well_formed(\$_POST['__csrf_magic'])", 'declared in the same file; splits the posted token string and returns whether its times are digits, writing nothing'],

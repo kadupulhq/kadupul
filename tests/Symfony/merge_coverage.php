@@ -889,7 +889,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Domain/NewDevice.php',
         'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
-        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'src/Platform/Infrastructure/Symfony/LocaleSubscriber.php',
         'script_server.php',
         'cli/analyze_database.php',
         'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
