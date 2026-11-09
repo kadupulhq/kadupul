@@ -57,6 +57,61 @@ body:
       options:
         - label: I checked whether this also happens on stock Cacti.
 
+  - type: markdown
+    attributes:
+      value: |
+        The fields below classify the defect with IBM's Orthogonal Defect Classification (Chillarege et al., 1992), so patterns across bugs can be counted with `tools/odc_summary.py`. Leave them empty if you are not sure; a maintainer fills them in when the fix is known.
+
+  - type: dropdown
+    id: odc-type
+    attributes:
+      label: Defect type
+      description: What the fix changes.
+      options:
+        - Assignment or initialization (a value set wrongly, or not at all)
+        - Checking (validation of data or conditions before use)
+        - Algorithm or method (a correct-looking computation that gives the wrong result)
+        - Function or class (a missing or wrong capability that needs design)
+        - Interface (the contract between components, hooks or callers)
+        - Timing or serialization (ordering, concurrency, locking, shared state)
+        - Build, package or merge (dependencies, packaging, a lost change in a merge or port)
+        - Documentation (what the docs or messages tell the operator)
+
+  - type: dropdown
+    id: odc-qualifier
+    attributes:
+      label: Defect qualifier
+      options: [Missing, Incorrect, Extraneous]
+
+  - type: dropdown
+    id: odc-trigger
+    attributes:
+      label: Trigger
+      description: The condition that made the defect show.
+      options:
+        - Normal operation
+        - Startup, restart or upgrade
+        - Recovery or error handling (an exit, retry or failed dependency)
+        - Workload or stress (volume, concurrency, timeouts)
+        - Software configuration (settings, options, an unusual but valid value)
+        - Hardware or platform (OS, filesystem, PHP or database version)
+        - Backward compatibility (data or behavior from an older release)
+        - Lateral compatibility (a plugin, collector, spine or external tool)
+        - Rare situation (an edge case such as empty, zero or boundary input)
+
+  - type: dropdown
+    id: odc-origin
+    attributes:
+      label: Origin
+      description: Where the defective code came from.
+      options:
+        - Inherited from Cacti, unchanged
+        - Ported from upstream Cacti
+        - Kadupul change on the 1.2 maintenance line
+        - Symfony migration
+        - New Kadupul feature
+        - Not sure
+
   - type: textarea
     id: logs
     attributes:
