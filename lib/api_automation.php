@@ -3991,11 +3991,13 @@ function automation_change_tree_rule_leaf_type($leaf_type, $rule_id) {
 				cacti_log($function . ' No invalid Tree Creation rule items found for TreeRule[' . $rule_id . ']', true, 'AUTOM8 TRACE', POLLER_VERBOSITY_DEBUG);
 			}
 
+			/* graph rules keep their match items in the same table, so a graph rule with the same id keeps its criteria */
 			$match_items = db_fetch_assoc_prepared('SELECT *
 				FROM automation_match_rule_items
 				WHERE rule_id = ?
+				AND rule_type = ?
 				AND (field like \'gtg.%\' or field like \'gt.%\')',
-				array($rule_id));
+				array($rule_id, AUTOMATION_RULE_TYPE_TREE_MATCH));
 
 			if (cacti_sizeof($match_items)) {
 				cacti_log($function . ' ' . cacti_sizeof($match_items) . ' invalid Object Selection rule items found for TreeRule[' . $rule_id . ']', true, 'AUTOM8 TRACE', POLLER_VERBOSITY_DEBUG);
