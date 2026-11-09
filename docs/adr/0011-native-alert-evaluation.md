@@ -43,8 +43,24 @@ facts below constrain where the evaluator takes its input and where it runs.
   `api_plugin_hook('poller_bottom')`, and `poller.php:981` and `poller.php:1071`
   call `dsstats_poller_bottom()` for the main poller. `exec_background()`
   (`lib/poller.php:148`) starts a program without waiting for it.
-- **Not known:** whether `dsstats_poller_output()` fills the last-value table
-  when Boost is enabled. See Open questions.
+- **Boost does not bypass dsstats.** `process_poller_output` asks
+  `boost_poller_on_demand()` (`lib/poller.php:1238`) whether to write RRD files
+  itself. With Boost on it gets `false` (`lib/boost.php:282-315`) and skips its
+  own `rrdtool_function_update()`, but it still passes every complete sample to
+  `dsstats_poller_output()` (`lib/poller.php:1287-1288`). That function reads no
+  Boost setting. With `boost_redirect` on, collectors write each sample to both
+  `poller_output` and `poller_output_boost` (`cmd.php:551-570`; Spine
+  `src/poller.c:1820-1932`), so the main poller still sees it. Boost's own run
+  (`poller_boost.php:305`) calls only `dsstats_boost_bottom()`, which computes
+  daily averages, so dsstats does not write a sample twice.
+- **Each sample's time is stored beside its rate.** In the same call,
+  `dsstats_poller_output()` inserts `(local_data_id, rrd_name, time, value)` into
+  `data_source_stats_hourly_cache` (`lib/dsstats.php:708`, `:924-929`), with
+  `time` set to the sample time (`:761`) and `value` set to the same computed
+  rate that goes to `calculated` (`:934-940`). The cache's key is
+  `(local_data_id, time, rrd_name)` (`cacti.sql:1430-1437`). `poller_dsstats.php`
+  deletes cache rows older than `dsstats_hourly_duration` minutes, at least 60
+  (`poller_dsstats.php:178-185`, `include/global_settings.php:2271`).
 
 The project constraints that apply: domain code imports no Symfony HTTP or
 session classes, no Doctrine `EntityManager` and no legacy globals; the web tier
@@ -60,6 +76,17 @@ behavior until an administrator opts in.
    rollover rules that ADR 0007 keeps in one place. The port returns, for a
    `(local_data_id, rrd_name)` key, either a rate with its observation time or
    nothing. A `NULL` rate and a missing row are both "nothing".
+
+   The observation time is the newest `time` in
+   `data_source_stats_hourly_cache` for the key, read as `UNIX_TIMESTAMP(time)`
+   so the reader's session time zone does not change it. The adapter uses it
+   only when the cache `value` at that time equals `calculated`. Otherwise the
+   two rows come from different samples, for example while the writer is
+   between its two inserts, and the key returns nothing. The stored instant is
+   right while the poller's PHP time zone matches its database session time
+   zone, which Cacti already requires. Proved by
+   `tests/integration/AlertRateSourceDatabaseTest.php`, which runs the real
+   writer on MariaDB.
 
    The port returns `calculated` only. `value` holds the raw reading and is not
    a rate. What `calculated` holds depends on the data source type
@@ -97,10 +124,12 @@ behavior until an administrator opts in.
 
 4. **Unknown is not zero.** Each evaluation of a rule yields one verdict: `ok`,
    `breach` or `unknown`. A series with no fresh rate yields `unknown`. A
-   rate is fresh when its observation time is no older than two polling
-   intervals of the data source. The last-value table has no observation time
-   and the source of one is an open question. Until a source is established
-   and tested, evaluation treats every series as `unknown`. The presence of a
+   rate is fresh when its observation time (decision 1) is no older than two
+   polling intervals of the data source, measured against the evaluator's
+   clock. The polling interval is the data source's
+   `data_template_data.rrd_step`, the value dsstats divides counter deltas by
+   (`lib/dsstats.php:780-790`). A data source with `rrd_step` 0 has no interval
+   and yields `unknown`. Two intervals allow one missed poll. The presence of a
    row never means fresh, and no adapter may default to that. An `unknown`
    verdict neither opens nor closes an incident and does not change the
    consecutive counters. It is shown as such and never counted as `ok` or as
@@ -116,7 +145,8 @@ behavior until an administrator opts in.
    consecutive breach count, the consecutive ok count, the last observation time
    and the current state. Counters advance only when the observation time is
    newer than the stored one, so two evaluator runs between polls do not count
-   one sample twice. An incident opens after `for_cycles` consecutive `breach`
+   one sample twice. An observation that is not newer, including an older one
+   written late, is skipped and leaves the state unchanged. An incident opens after `for_cycles` consecutive `breach`
    verdicts, where `breach` means the rate is past the trigger threshold. While
    an incident is open, `ok` means the rate has crossed the clear threshold, and
    the incident closes after `for_cycles` consecutive `ok` verdicts. A rate
@@ -151,11 +181,12 @@ behavior until an administrator opts in.
    budget.
 
 9. **Inactive is not ok.** Before evaluating, the command checks that the rate
-   source can work: `dsstats_enable` is `on` and the last-value table exists.
-   This check does not detect Boost-induced unavailability. Whether Boost
-   needs a check, and what it would be, stays open until Task 2 answers the
-   Boost question below. If the check fails, it evaluates nothing, writes no
-   verdict, reports "inactive: rate source unavailable" in the UI and exits
+   source can work: `dsstats_enable` is `on` (a missing setting is off, its
+   default) and both `data_source_stats_hourly_last` and
+   `data_source_stats_hourly_cache` exist. Boost needs no check, because dsstats
+   fills both tables with Boost on (Context). If the check fails, it evaluates
+   nothing, writes no verdict, reports the reason `rate_source_unavailable`,
+   shown as "inactive: rate source unavailable" in the UI, and exits
    with status 2. Exit status 0 means evaluation completed or alerting is
    disabled; status 1 means an error. An empty table on its own does not mean
    unavailable: after a restart it means `unknown`.
@@ -215,10 +246,17 @@ behavior until an administrator opts in.
   during a real outage delays detection by the same amount.
 - **Latency is one poll cycle plus launch time.** The evaluator starts after
   collection, so a breach is seen no sooner than the cycle that produced it.
-- **Remote pollers are not covered.** Each poller keeps its own MEMORY tables.
-  Phase 1 evaluates the main poller's database, so rules over data sources
-  polled by a remote poller yield `unknown`. This is inferred from the code
-  layout and Task 2 must confirm it.
+- **Remote pollers are covered only while online.** Only the main poller
+  drains `poller_output` and calls dsstats (`poller.php:864`, `:888`). An online
+  remote collector writes its samples into the main database (`cmd.php:124-126`,
+  `poller.php:29-31`), and the main poller's query takes rows from every
+  collector (`lib/poller.php:936-945`), so those series get rates on the main
+  database, up to one cycle late when they arrive after the main poller has
+  finished draining. A remote collector in offline or recovery mode writes to
+  its own database; its samples reach dsstats only when replayed, with their
+  original times, so its series are `unknown` while it is cut off and stale
+  replays do not count. This is read from the code; no multi-poller run tests
+  it.
 - **Duplicate notifications are possible** when THold and native rules overlap.
   Operators control that by not defining both.
 - **Notification recipients are administrators only** until a later phase adds
@@ -229,8 +267,13 @@ behavior until an administrator opts in.
   it tests how old the observation is, not how long ago the previous reading
   was. Threshold rules on counters can breach falsely after a missed cycle.
   Phase 1 accepts this, and a `for_cycles` of 2 or more reduces its effect.
-- **The freshness rule adds a dependency** on a time source for observations,
-  which the last-value table lacks.
+- **The freshness rule depends on the hourly cache table.** If a later change
+  stops dsstats writing `data_source_stats_hourly_cache`, every series becomes
+  `unknown`, not falsely fresh. Reading it means a grouped scan of that MEMORY
+  table for the batch's data sources. Task 5 measures the cost when it sets
+  the batch defaults. A clock step backwards on the poller can hold counters
+  until time passes the last observation. A clock step forwards makes
+  observations stale and `unknown`.
 - **Mail failure is visible and bounded.** The queue and attempt counts make
   failed delivery an operator-visible state.
 - **Compatibility.** No existing table, hook, URL or setting changes. The schema
@@ -241,7 +284,7 @@ behavior until an administrator opts in.
 | Condition | Expected behavior | Proved in |
 | --- | --- | --- |
 | dsstats off | "inactive: rate source unavailable", exit status 2, no verdicts written | Task 2 |
-| Boost enabled | Open item, no behavior promised until Task 2 resolves the Boost question | Task 2 |
+| Boost enabled | Evaluation works as without Boost; no separate inactive reason | Task 2 |
 | Database restart empties the MEMORY table | Rules `unknown` for a cycle or two, no recoveries or breaches | Task 3 |
 | Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Task 1 |
 | Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |
@@ -264,23 +307,24 @@ behavior until an administrator opts in.
   not wait for evaluation or mail.
 - **A new rate table owned by Kadupul.** It would remove the MEMORY and
   `dsstats_enable` dependency. It also means a second writer on the poll path.
-  It stays an option if the Boost question below is answered no.
+  Rejected while dsstats works under Boost.
 
 ## Open questions
 
-- **Boost.** It is not known whether `dsstats_poller_output()` populates
-  `data_source_stats_hourly_last` when Boost is enabled. Task 2 resolves it with
-  a database contract test against the shipped schema. If the answer is no, this
-  record is amended: the rate source decision is revisited, and the last
-  alternative above is the likely replacement.
-- **Observation time.** The last-value table has no time column. Until this is
-  resolved every series is `unknown` (decision 4). Task 2 decides
-  whether the adapter takes the time from `data_source_stats_hourly_cache.time`
-  (`cacti.sql:1430-1437`) or from another source, and amends decision 4 if the
-  two-interval rule needs to change.
+- **Boost.** Resolved in Task 2: dsstats fills both tables with Boost on (see
+  Context). `tests/Unit/Core/Poller/BoostDsstatsHandoffNativeTest.php` runs the
+  production `process_poller_output_batch()` with Boost on and off and sees the
+  sample reach dsstats in both.
+  `tests/integration/AlertRateSourceDatabaseTest.php`
+  (`testReadsCalculatedColumnWithBoostEnabled`) runs the real writer with the
+  Boost settings on and reads `calculated` back through the adapter.
+- **Observation time.** Resolved in Task 2: the time comes from
+  `data_source_stats_hourly_cache.time`, paired with `calculated` by equal
+  value (decision 1). The two-interval rule stands, measured in the data
+  source's `rrd_step` (decision 4).
 - **Baseline data.** Hour-of-week mean and standard deviation need a store. The
   existing dsstats aggregates are hourly, daily, weekly, monthly and yearly,
   not hour of the week. Task 6 decides whether `BaselineSource` is fed from the
   existing aggregates or from a Kadupul-owned table.
-- **Remote pollers.** See Consequences. Task 2 confirms how the last-value
-  table behaves on a remote poller.
+- **Remote pollers.** Task 2 answered this from the code (see Consequences).
+  A test with a real remote collector is still missing.
