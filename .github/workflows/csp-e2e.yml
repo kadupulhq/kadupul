@@ -55,6 +55,10 @@ jobs:
             tests/Unit/HelpLocalDocumentationTest.php
             tests/Unit/HelpSsrFTest.php
             help.php
+            include/global_languages.php
+            src/Platform/Application/Locale/*
+            src/Platform/Infrastructure/Symfony/LocaleSubscriber.php
+            src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php
             lib/html.php
             include/themes/classic/*
             tests/bootstrap-unit.php
@@ -219,6 +223,14 @@ jobs:
           E2E_BASE_URL: http://localhost:8080
           E2E_COMPOSE_PROJECT: e2e
         run: mise exec python@3.12.12 -- python tests/e2e/vdef_http_mariadb.py
+
+      # A legacy page and a Symfony route with one session, settings fixture
+      # and Accept-Language must render the same language.
+      - name: Run locale HTTP and MariaDB scenario
+        env:
+          E2E_BASE_URL: http://localhost:8080
+          E2E_COMPOSE_PROJECT: e2e
+        run: mise exec python@3.12.12 -- python tests/e2e/locale_http_mariadb.py
 
       - name: Dump Kadupul container logs (diagnostic)
         if: always()

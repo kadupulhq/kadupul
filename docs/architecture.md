@@ -211,9 +211,10 @@ which target gates have evidence and which remain transitional or planned.
 The Graphing plans are [Moving `lib/rrd.php` into Graphing](migrations/graphing-rrd.md)
 and the [graph rendering pipeline](migrations/graphing-render-pipeline.md).
 
-Symfony Translation is a presentation dependency. Platform resolves the Inventory HTML
-request locale using IdentityAccess's public LocalePreference contract and existing
-installation settings. Inventory's Twig/forms/controllers translate UI messages;
+Symfony Translation is a presentation dependency. Platform's LocaleResolver selects
+the request locale for legacy pages and Symfony routes alike; on Symfony routes it is
+fed by IdentityAccess's public LocalePreference contract and existing installation
+settings. Inventory's Twig/forms/controllers translate UI messages;
 domain/application errors and rules remain framework- and locale-independent.
 
 ## Asset management pilot
