@@ -84,6 +84,12 @@ function rrd_check_path($path, $rra_base = null, $logopt = null)
     return true;
 }
 
+// The form's additional-root branch; RrdPathContainmentTest checks the real one.
+function rrd_path_in_additional_root($path)
+{
+    return str_starts_with($path, '/data/rrd/') || str_starts_with($path, 'D:/rrd/');
+}
+
 function rrdtool_command_path($path)
 {
     return "'" . $path . "'";
@@ -270,6 +276,17 @@ test('a data source path with a line break is not accepted', function () {
     expect(data_source_path_is_allowed('<path_rra>/a.rrd'))->toBeTrue()
         ->and(data_source_path_is_allowed("<path_rra>/a.rrd\ninfo /x.rrd"))->toBeFalse()
         ->and(data_source_path_is_allowed("<path_rra>/a\r.rrd"))->toBeFalse();
+});
+
+test('an absolute data source path is accepted only below a listed directory', function () {
+    rrd_arguments_reset();
+
+    expect(data_source_path_is_allowed('/data/rrd/1.rrd'))->toBeTrue()
+        ->and(data_source_path_is_allowed('D:/rrd/1.rrd'))->toBeTrue()
+        ->and(data_source_path_is_allowed('/srv/other/1.rrd'))->toBeFalse()
+        ->and(data_source_path_is_allowed('E:/other/1.rrd'))->toBeFalse()
+        // backslashes stay refused, as before
+        ->and(data_source_path_is_allowed('D:\\rrd\\1.rrd'))->toBeFalse();
 });
 
 test('spike removal passes each RRD path as one shell argument', function () {
