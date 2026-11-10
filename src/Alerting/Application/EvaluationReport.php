@@ -18,6 +18,8 @@ final readonly class EvaluationReport
      * @param int     $orphaned       rules whose incident or state was ended because their rule or series is gone
      * @param int     $failed         rules skipped because a stored record of theirs cannot be used (UnusableRuleRecord)
      * @param bool    $pruneFailed    old baseline history could not be removed this run (BaselinePruneFailed)
+     * @param int     $changed        rules left for the next run because their rule row, series or state
+     *                                changed after their batch was read; nothing of theirs was written
      */
     public function __construct(
         public int $evaluated,
@@ -26,6 +28,7 @@ final readonly class EvaluationReport
         public int $orphaned = 0,
         public int $failed = 0,
         public bool $pruneFailed = false,
+        public int $changed = 0,
     ) {}
 
     public static function inactive(string $reason): self

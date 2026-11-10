@@ -52,6 +52,23 @@ final readonly class DbalRuleStateStore implements RuleStateStore
         return $states;
     }
 
+    public function lock(int $ruleId): RuleState|UnusableRuleRecord|null
+    {
+        $row = $this->database->fetchAssociative(
+            'SELECT rule_id, incident_open, consecutive_breaches, consecutive_oks, is_unknown, last_observed_at
+            FROM alert_rule_state WHERE rule_id = ?' . RowLock::forUpdate($this->database),
+            [$ruleId],
+        );
+        if ($row === false) {
+            return null;
+        }
+        try {
+            return self::state($ruleId, $row);
+        } catch (StoredAlertingRowUnreadable $e) {
+            return new UnusableRuleRecord($ruleId, $e->getMessage(), $e);
+        }
+    }
+
     public function save(int $ruleId, RuleState $state): void
     {
         $this->database->executeStatement(

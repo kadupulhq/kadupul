@@ -39,6 +39,14 @@ final readonly class ThresholdRule
         }
     }
 
+    public function equals(self $other): bool
+    {
+        return $this->comparator === $other->comparator
+            && $this->trigger === $other->trigger
+            && $this->clear === $other->clear
+            && $this->forCycles === $other->forCycles;
+    }
+
     /**
      * @param bool $incidentOpen whether an incident is open for this rule; it
      *                           decides how a value between the thresholds counts

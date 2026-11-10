@@ -26,13 +26,16 @@ interface RuleRepository
 
     /**
      * Inside the rule's transaction, before its state is written: locks the
-     * rule row until the transaction ends, so the rule cannot be deleted
-     * while its state, incident and notification are written. False when the
-     * rule is already gone, for example deleted after batchAfter() read it;
-     * the caller then writes nothing. Lock order is rule, then state, then
-     * incident, then notification.
+     * rule row until the transaction ends, so the rule cannot be edited or
+     * deleted while its state, incident and notification are written, and
+     * returns the locked row as batchAfter() reads it. Null when the rule is
+     * already gone or its series no longer exists, for example deleted after
+     * batchAfter() read it; the caller then writes nothing. The caller also
+     * writes nothing when the row returned differs from the one it
+     * evaluated. Lock order is rule, then state, then incident, then
+     * notification.
      */
-    public function lock(int $ruleId): bool;
+    public function lock(int $ruleId): AlertRule|UnusableRuleRecord|null;
 
     /**
      * Up to $limit rules that need orphan handling, in ascending id order: a rule whose

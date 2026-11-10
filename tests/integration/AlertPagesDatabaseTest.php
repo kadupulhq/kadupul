@@ -24,7 +24,11 @@ $applicationLoader->register(false);
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\LockWaitTimeoutException;
+use Kadupul\Alerting\Application\EvaluateRules;
+use Kadupul\Alerting\Application\EvaluationReport;
+use Kadupul\Alerting\Application\Port\RuleStateStore;
 use Kadupul\Alerting\Application\Port\RuleStore;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Application\Query\AcknowledgeOutcome;
 use Kadupul\Alerting\Application\Query\AlertingAccessDenied;
 use Kadupul\Alerting\Application\Rule\RuleDefinition;
@@ -32,11 +36,20 @@ use Kadupul\Alerting\Application\Rule\RuleSubmission;
 use Kadupul\Alerting\Application\Rule\RuleSubmissionRefused;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentAccess;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentCatalog;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentStore;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleAccess;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleCatalog;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStore;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
+use Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource;
+use Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource;
 use Kadupul\Alerting\Infrastructure\Dbal\SeriesVisibility;
+use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
@@ -46,11 +59,47 @@ use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
 use Kadupul\IdentityAccess\Infrastructure\Persistence\DbalManagementVisibility;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
+use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
-const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification', 'settings', 'host', 'data_local', 'data_template_rrd', 'graph_local',
-    'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_perms', 'user_auth_group_perms'];
+const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification', 'alert_baseline_sample', 'settings', 'host', 'data_local', 'data_template_rrd', 'graph_local',
+    'data_template_data', 'data_source_stats_hourly_cache', 'data_source_stats_hourly_last', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_members', 'user_auth_group_realm', 'user_auth_perms', 'user_auth_group_perms'];
+
+/**
+ * Runs $edit once, after the batch's rules and states were read and before
+ * any rule's transaction, as an edit another session commits would.
+ */
+final class RacingStates implements RuleStateStore
+{
+    public function __construct(private readonly RuleStateStore $inner, private ?\Closure $edit) {}
+
+    public function load(array $ruleIds): array
+    {
+        $states = $this->inner->load($ruleIds);
+        if ($this->edit !== null) {
+            ($this->edit)();
+            $this->edit = null;
+        }
+
+        return $states;
+    }
+
+    public function lock(int $ruleId): RuleState|UnusableRuleRecord|null
+    {
+        return $this->inner->lock($ruleId);
+    }
+
+    public function save(int $ruleId, RuleState $state): void
+    {
+        $this->inner->save($ruleId, $state);
+    }
+
+    public function delete(array $ruleIds): void
+    {
+        $this->inner->delete($ruleIds);
+    }
+}
 
 final class AlertPagesDatabaseTest extends TestCase
 {
@@ -320,6 +369,158 @@ final class AlertPagesDatabaseTest extends TestCase
         }
         self::assertSame(1, $this->rows('alert_rule'));
         self::assertSame('open', $this->database->fetchOne('SELECT status FROM alert_incident WHERE id = ?', [$incident]));
+    }
+
+    /**
+     * A rule edited through the rule page while the evaluator runs: the
+     * edit commits after the evaluator read its batch and before it locked
+     * the rule. Each case breaches on the old definition, so a run that
+     * evaluated the old row would write its state or open an incident.
+     */
+    public function testAnEditedSeriesWithAnOpenIncidentIsLeftForTheNextRunAndAlertsAgain(): void
+    {
+        $rule = $this->insertRule(101);
+        $incident = $this->openIncident($rule);
+        $this->database->insert('alert_rule_state', ['rule_id' => $rule, 'incident_open' => 1, 'consecutive_breaches' => 1, 'consecutive_oks' => 0, 'is_unknown' => 0, 'last_observed_at' => self::NOW - 300]);
+        $this->sample(101, self::NOW, 95.0);
+        $revision = $this->ruleCatalog->find(self::VIEWER, $rule)?->revision ?? '';
+
+        $report = $this->evaluate(self::NOW, function () use ($rule, $revision): void {
+            $this->rules->update(self::VIEWER, $rule, $revision, $this->threshold(301));
+        });
+
+        self::assertSame(0, $this->rows('alert_rule_state'), 'No state from the old series is written over the edit.');
+        self::assertSame(['status' => 'orphaned', 'active_rule_id' => null], $this->typed($this->database->fetchAssociative('SELECT status, active_rule_id FROM alert_incident WHERE id = ?', [$incident]) ?: []));
+        self::assertSame(0, $this->rows('alert_notification'));
+        self::assertSame([0, 1, 0], [$report->evaluated, $report->changed, $report->failed]);
+
+        $this->sample(301, self::NOW + 300, 96.0);
+        $next = $this->evaluate(self::NOW + 300);
+
+        self::assertSame([1, 0, 0], [$next->evaluated, $next->changed, $next->failed]);
+        self::assertSame([['open', 301]], array_map($this->typed(...), $this->database->fetchAllNumeric('SELECT status, local_data_id FROM alert_incident WHERE active_rule_id = ?', [$rule])), 'The moved rule opens an incident on its new series.');
+        self::assertSame([['opened', 96.0, 90.0]], $this->database->fetchAllNumeric('SELECT kind, observed_value, threshold FROM alert_notification'));
+    }
+
+    public function testAnEditedSeriesOneBreachShortOpensNothing(): void
+    {
+        $rule = $this->insertRule(101);
+        $this->database->update('alert_rule', ['for_cycles' => 2], ['id' => $rule]);
+        $this->database->insert('alert_rule_state', ['rule_id' => $rule, 'incident_open' => 0, 'consecutive_breaches' => 1, 'consecutive_oks' => 0, 'is_unknown' => 0, 'last_observed_at' => self::NOW - 300]);
+        $this->sample(101, self::NOW, 95.0);
+        $revision = $this->ruleCatalog->find(self::VIEWER, $rule)?->revision ?? '';
+
+        $report = $this->evaluate(self::NOW, function () use ($rule, $revision): void {
+            $this->rules->update(self::VIEWER, $rule, $revision, $this->threshold(301));
+        });
+
+        self::assertSame(0, $this->rows('alert_incident'), 'No incident is recorded on the new series with the old series\' rate.');
+        self::assertSame(0, $this->rows('alert_notification'), 'No opened mail is queued.');
+        self::assertSame(0, $this->rows('alert_rule_state'));
+        self::assertSame(1, $report->changed);
+    }
+
+    public function testAThresholdEditedDuringTheRunIsNotEvaluatedWithTheOldThreshold(): void
+    {
+        $rule = $this->insertRule(101);
+        $this->sample(101, self::NOW, 95.0);
+        $revision = $this->ruleCatalog->find(self::VIEWER, $rule)?->revision ?? '';
+        $raised = RuleSubmission::definition(['kind' => 'threshold', 'local_data_id' => '101', 'rrd_name' => 'traffic_in', 'for_cycles' => '1', 'comparator' => 'gt', 'trigger_threshold' => '99', 'clear_threshold' => '80']);
+
+        $report = $this->evaluate(self::NOW, function () use ($rule, $revision, $raised): void {
+            $this->rules->update(self::VIEWER, $rule, $revision, $raised);
+        });
+
+        self::assertSame(0, $this->rows('alert_incident'), '95 breached the old trigger of 90, not the new 99.');
+        self::assertSame(0, $this->rows('alert_rule_state'));
+        self::assertSame([0, 1], [$report->evaluated, $report->changed]);
+
+        self::assertSame(1, $this->evaluate(self::NOW)->evaluated);
+        self::assertSame(0, $this->rows('alert_incident'));
+        self::assertSame(['incident_open' => 0, 'consecutive_breaches' => 0], $this->typed($this->database->fetchAssociative('SELECT incident_open, consecutive_breaches FROM alert_rule_state WHERE rule_id = ?', [$rule]) ?: []));
+    }
+
+    public function testADataSourceDeletedDuringTheRunWritesNothing(): void
+    {
+        $rule = $this->insertRule(101);
+        $this->sample(101, self::NOW, 95.0);
+
+        $report = $this->evaluate(self::NOW, function (): void {
+            // As lib/api_data_source.php removes a data source, without touching alert_rule.
+            $this->database->executeStatement('DELETE FROM data_template_rrd WHERE local_data_id = 101');
+            $this->database->executeStatement('DELETE FROM data_local WHERE id = 101');
+        });
+
+        self::assertSame(0, $this->rows('alert_incident'), 'A rate still fresh after its data source was deleted opens nothing.');
+        self::assertSame(0, $this->rows('alert_notification'));
+        self::assertSame(0, $this->rows('alert_rule_state'));
+        self::assertSame(1, $this->rows('alert_rule'), 'The rule stays, for the operator to move or delete.');
+        self::assertSame(0, $this->evaluate(self::NOW)->orphaned, 'Nothing was left for the orphan sweep.');
+        self::assertSame($rule, (int) $this->database->fetchOne('SELECT id FROM alert_rule'));
+        self::assertSame([0, 1], [$report->evaluated, $report->changed]);
+    }
+
+    public function testAStateEndedDuringTheRunIsNotWrittenBack(): void
+    {
+        // Moved to another series and back: the rule row reads as it did, but its state and incident were ended.
+        $rule = $this->insertRule(101);
+        $incident = $this->openIncident($rule);
+        $this->database->insert('alert_rule_state', ['rule_id' => $rule, 'incident_open' => 1, 'consecutive_breaches' => 1, 'consecutive_oks' => 0, 'is_unknown' => 0, 'last_observed_at' => self::NOW - 300]);
+        $this->sample(101, self::NOW, 95.0);
+
+        $report = $this->evaluate(self::NOW, function () use ($rule): void {
+            $this->rules->update(self::VIEWER, $rule, $this->ruleCatalog->find(self::VIEWER, $rule)?->revision ?? '', $this->threshold(301));
+            $this->rules->update(self::VIEWER, $rule, $this->ruleCatalog->find(self::VIEWER, $rule)?->revision ?? '', $this->threshold(101));
+        });
+
+        self::assertSame(0, $this->rows('alert_rule_state'), 'An open state is not written back over the ended incident.');
+        self::assertSame('orphaned', $this->database->fetchOne('SELECT status FROM alert_incident WHERE id = ?', [$incident]));
+        self::assertSame([0, 1], [$report->evaluated, $report->changed]);
+
+        $this->sample(101, self::NOW + 300, 96.0);
+        self::assertSame(1, $this->evaluate(self::NOW + 300)->evaluated);
+        self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_incident WHERE active_rule_id = ?', [$rule]), 'The rule alerts again.');
+    }
+
+    /** One evaluator run at $now on this connection, with $edit committed between its batch reads and the rule's transaction. */
+    private function evaluate(int $now, ?\Closure $edit = null): EvaluationReport
+    {
+        if ($this->database->fetchOne("SELECT value FROM settings WHERE name = 'dsstats_enable'") === false) {
+            $this->database->insert('settings', ['name' => 'dsstats_enable', 'value' => 'on']);
+            foreach ([101, 201, 301] as $localDataId) {
+                $this->database->insert('data_template_data', ['local_data_id' => $localDataId, 'rrd_step' => 300, 'name' => 'ds ' . $localDataId]);
+            }
+        }
+        $this->database->executeStatement("SET time_zone = '+00:00'");
+        $evaluate = new EvaluateRules(
+            new DsstatsRateSource($this->database),
+            new DsstatsBaselineSource($this->database),
+            new DbalRuleRepository($this->database),
+            new RacingStates(new DbalRuleStateStore($this->database), $edit),
+            new DbalIncidentRepository($this->database),
+            new DbalNotificationQueue($this->database),
+            new DbalEvaluationCursor($this->database),
+            new MockClockAdapter(new MockClock('@' . $now)),
+            new DbalTransactionRunner($this->database),
+            new RecordingLogger(),
+        );
+
+        return $evaluate(100, 30.0);
+    }
+
+    /** One dsstats cycle for the series, written as dsstats_poller_output() writes it. */
+    private function sample(int $localDataId, int $time, float $rate): void
+    {
+        $this->database->executeStatement("SET time_zone = '+00:00'");
+        $this->database->executeStatement(
+            'INSERT INTO data_source_stats_hourly_cache (local_data_id, rrd_name, time, value) VALUES (?, ?, FROM_UNIXTIME(?), ?)',
+            [$localDataId, 'traffic_in', $time, $rate],
+        );
+        $this->database->executeStatement(
+            'INSERT INTO data_source_stats_hourly_last (local_data_id, rrd_name, value, calculated) VALUES (?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE value = VALUES(value), calculated = VALUES(calculated)',
+            [$localDataId, 'traffic_in', $rate, $rate],
+        );
     }
 
     private function connect(): Connection

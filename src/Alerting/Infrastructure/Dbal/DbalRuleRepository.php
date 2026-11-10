@@ -45,6 +45,8 @@ final readonly class DbalRuleRepository implements RuleRepository
         AND (dl.host_id = 0 OR (h.id IS NOT NULL AND h.deleted <> 'on'))
         AND EXISTS (SELECT 1 FROM data_template_rrd dtr WHERE dtr.local_data_id = r.local_data_id AND dtr.data_source_name = r.rrd_name)";
     public const string SERIES_JOINS = 'LEFT JOIN data_local dl ON dl.id = r.local_data_id LEFT JOIN host h ON h.id = dl.host_id';
+    private const string RULE_COLUMNS = 'r.id, r.local_data_id, r.rrd_name, r.kind, r.comparator, r.trigger_threshold, r.clear_threshold,
+        r.baseline_direction, r.baseline_deviations, r.baseline_clear_deviations, r.baseline_floor, r.baseline_min_samples, r.for_cycles';
     private const array THRESHOLD_COLUMNS = ['comparator', 'trigger_threshold', 'clear_threshold'];
     private const array BASELINE_COLUMNS = ['baseline_direction', 'baseline_deviations', 'baseline_clear_deviations', 'baseline_floor', 'baseline_min_samples'];
 
@@ -58,8 +60,7 @@ final readonly class DbalRuleRepository implements RuleRepository
     public function batchAfter(int $afterRuleId, int $limit): array
     {
         $rows = $this->database->fetchAllAssociative(
-            'SELECT r.id, r.local_data_id, r.rrd_name, r.kind, r.comparator, r.trigger_threshold, r.clear_threshold,
-                r.baseline_direction, r.baseline_deviations, r.baseline_clear_deviations, r.baseline_floor, r.baseline_min_samples, r.for_cycles
+            'SELECT ' . self::RULE_COLUMNS . '
             FROM alert_rule r ' . self::SERIES_JOINS . '
             WHERE r.id > ? AND ' . self::SERIES_EXISTS . '
             ORDER BY r.id LIMIT ?',
@@ -70,10 +71,24 @@ final readonly class DbalRuleRepository implements RuleRepository
         return array_map(self::fromRow(...), $rows);
     }
 
-    /** SELECT ... FOR UPDATE on the rule row, so a concurrent delete waits for this transaction. */
-    public function lock(int $ruleId): bool
+    /**
+     * SELECT ... FOR UPDATE on the rule row, so a concurrent edit or delete
+     * waits for this transaction; a locking read returns the latest committed
+     * row, not the batch's. The series is then checked with a plain read,
+     * which locks nothing outside the lock order. It sees the latest commits:
+     * at READ COMMITTED always, and at REPEATABLE READ because it is the
+     * first consistent read of the rule's own transaction. A data source
+     * deleted after this check is the next run's orphan sweep to end.
+     */
+    public function lock(int $ruleId): AlertRule|UnusableRuleRecord|null
     {
-        return $this->database->fetchOne('SELECT id FROM alert_rule WHERE id = ?' . RowLock::forUpdate($this->database), [$ruleId]) !== false;
+        $row = $this->database->fetchAssociative('SELECT ' . self::RULE_COLUMNS . ' FROM alert_rule r WHERE r.id = ?' . RowLock::forUpdate($this->database), [$ruleId]);
+        if ($row === false) {
+            return null;
+        }
+        $exists = $this->database->fetchOne('SELECT r.id FROM alert_rule r ' . self::SERIES_JOINS . ' WHERE r.id = ? AND ' . self::SERIES_EXISTS, [$ruleId]);
+
+        return $exists === false ? null : self::fromRow($row);
     }
 
     /**

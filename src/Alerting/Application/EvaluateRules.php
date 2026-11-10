@@ -37,11 +37,14 @@ use Kadupul\Alerting\Domain\Rule\HourBucket;
  * a stopped run resumes after the last rule it finished.
  *
  * Each rule's writes run in one transaction: the rule row is locked, its
- * state is saved, its incident change follows and an opened or recovered
- * incident queues its notification (decision 7), so a failed incident or
- * notification write also undoes the state. A rule deleted after its batch
- * was read writes nothing. A rule whose state did not change is not
- * written. Mail is sent by DeliverNotifications, never here. Before the
+ * state row is locked, its state is saved, its incident change follows and
+ * an opened or recovered incident queues its notification (decision 7), so
+ * a failed incident or notification write also undoes the state. The batch
+ * is read outside any transaction, so a rule whose row, series or state no
+ * longer reads as it did once locked was edited, deleted or ended after the
+ * batch was read: the verdict was for what it no longer is, so it writes
+ * nothing, is counted as changed (not failed) and is evaluated again by the
+ * next run. A rule whose state did not change is not written. Mail is sent by DeliverNotifications, never here. Before the
  * batches, up to one batch of rules whose series or rule row is gone end
  * their active incident as orphaned and lose their state (ADR 0011 decision
  * 6); that is never a recovery, and the rest wait for later runs.
@@ -97,6 +100,7 @@ final readonly class EvaluateRules
         $evaluated = 0;
         $skipped = 0;
         $failed = 0;
+        $changed = 0;
         $after = $this->cursor->position();
         do {
             $batch = $this->rules->batchAfter($after, $batchSize);
@@ -104,10 +108,11 @@ final readonly class EvaluateRules
                 $this->cursor->moveTo(0);
                 break;
             }
-            [$batchEvaluated, $batchSkipped, $batchFailed] = $this->evaluateBatch($batch);
+            [$batchEvaluated, $batchSkipped, $batchFailed, $batchChanged] = $this->evaluateBatch($batch);
             $evaluated += $batchEvaluated;
             $skipped += $batchSkipped;
             $failed += $batchFailed;
+            $changed += $batchChanged;
             // An unusable rule counts as passed, so the cursor never stops at it.
             $after = max(array_map(static fn(AlertRule|UnusableRuleRecord $rule): int => $rule instanceof AlertRule ? $rule->id : $rule->ruleId, $batch));
             if (count($batch) < $batchSize) {
@@ -117,7 +122,7 @@ final readonly class EvaluateRules
             $this->cursor->moveTo($after);
         } while (self::seconds($this->clock->now()) - $started < $budgetSeconds);
 
-        return new EvaluationReport($evaluated, $skipped, null, $orphaned, $failed, !$this->prune());
+        return new EvaluationReport($evaluated, $skipped, null, $orphaned, $failed, !$this->prune(), $changed);
     }
 
     /**
@@ -170,7 +175,7 @@ final readonly class EvaluateRules
     /**
      * @param list<AlertRule|UnusableRuleRecord> $batch
      *
-     * @return array{int, int, int} evaluated, skipped and failed counts
+     * @return array{int, int, int, int} evaluated, skipped, failed and changed counts
      */
     private function evaluateBatch(array $batch): array
     {
@@ -185,7 +190,7 @@ final readonly class EvaluateRules
             }
         }
         if ($rules === []) {
-            return [0, 0, $failed];
+            return [0, 0, $failed, 0];
         }
         $keys = [];
         foreach ($rules as $rule) {
@@ -200,6 +205,7 @@ final readonly class EvaluateRules
 
         $evaluated = 0;
         $skipped = 0;
+        $changed = 0;
         foreach ($rules as $rule) {
             $state = $states[$rule->id] ?? new RuleState();
             if ($state instanceof UnusableRuleRecord) {
@@ -239,12 +245,21 @@ final readonly class EvaluateRules
             }
 
             if (!$state->equals($before)) {
-                $gone = false;
+                $stale = false;
                 try {
-                    $this->transaction->run(function () use ($rule, $state, $transition, $observation, $trigger, $clear, $now, &$gone): void {
+                    $this->transaction->run(function () use ($rule, $before, $state, $transition, $observation, $trigger, $clear, $now, &$stale): void {
                         // Lock order: rule, state, incident, notification.
-                        if (!$this->rules->lock($rule->id)) {
-                            $gone = true;
+                        $stored = $this->rules->lock($rule->id);
+                        if (!$stored instanceof AlertRule || !$stored->equals($rule)) {
+                            // Deleted, its series deleted, edited or made unreadable since the batch was read.
+                            $stale = true;
+
+                            return;
+                        }
+                        $stored = $this->states->lock($rule->id) ?? new RuleState();
+                        if (!$stored instanceof RuleState || !$stored->equals($before)) {
+                            // Ended by an edit, even one undone since: an incident it counted may be gone.
+                            $stale = true;
 
                             return;
                         }
@@ -266,15 +281,16 @@ final readonly class EvaluateRules
                     ++$failed;
                     continue;
                 }
-                if ($gone) {
-                    // Deleted after this batch was read; the next run's orphan sweep ends whatever it left.
+                if ($stale) {
+                    // The next run reads the rule as it is now; its orphan sweep ends whatever a deletion left.
+                    ++$changed;
                     continue;
                 }
             }
             ++$evaluated;
         }
 
-        return [$evaluated, $skipped, $failed];
+        return [$evaluated, $skipped, $failed, $changed];
     }
 
     /**

@@ -24,4 +24,16 @@ final readonly class AlertRule
             throw new InvalidRule('A rule id must be at least 1.');
         }
     }
+
+    /** The same rule watching the same series with the same condition. */
+    public function equals(self $other): bool
+    {
+        return $this->id === $other->id
+            && $this->series->localDataId === $other->series->localDataId
+            && $this->series->rrdName === $other->series->rrdName
+            && match (true) {
+                $this->condition instanceof ThresholdRule => $other->condition instanceof ThresholdRule && $this->condition->equals($other->condition),
+                default => $other->condition instanceof BaselineRule && $this->condition->equals($other->condition),
+            };
+    }
 }

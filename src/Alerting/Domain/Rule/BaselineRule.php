@@ -63,6 +63,16 @@ final readonly class BaselineRule
         }
     }
 
+    public function equals(self $other): bool
+    {
+        return $this->deviations === $other->deviations
+            && $this->clearDeviations === $other->clearDeviations
+            && $this->deviationFloor === $other->deviationFloor
+            && $this->forCycles === $other->forCycles
+            && $this->direction === $other->direction
+            && $this->minSamples === $other->minSamples;
+    }
+
     /**
      * The band from the earlier weeks' buckets for this hour of the week, or
      * null with fewer than $minSamples usable buckets (weeks) or fewer than

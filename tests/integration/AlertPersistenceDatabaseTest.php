@@ -28,6 +28,7 @@ use Kadupul\Alerting\Application\EvaluateRules;
 use Kadupul\Alerting\Application\EvaluationReport;
 use Kadupul\Alerting\Application\Port\IncidentRepository;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
@@ -56,6 +57,11 @@ final class CountingStates implements RuleStateStore
     public function load(array $ruleIds): array
     {
         return $this->inner->load($ruleIds);
+    }
+
+    public function lock(int $ruleId): RuleState|UnusableRuleRecord|null
+    {
+        return $this->inner->lock($ruleId);
     }
 
     public function save(int $ruleId, RuleState $state): void

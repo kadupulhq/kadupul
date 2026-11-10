@@ -23,6 +23,8 @@ final class InMemoryRuleStateStore implements RuleStateStore
     public array $unreadable = [];
     /** @var list<list<int>> the ids of each delete() call */
     public array $deleted = [];
+    /** @var list<int> the rule id of each lock() call */
+    public array $lockedStates = [];
 
     public function load(array $ruleIds): array
     {
@@ -37,6 +39,13 @@ final class InMemoryRuleStateStore implements RuleStateStore
         }
 
         return $found;
+    }
+
+    public function lock(int $ruleId): RuleState|UnusableRuleRecord|null
+    {
+        $this->lockedStates[] = $ruleId;
+
+        return $this->load([$ruleId])[$ruleId] ?? null;
     }
 
     public function save(int $ruleId, RuleState $state): void

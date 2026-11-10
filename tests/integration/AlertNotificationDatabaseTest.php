@@ -33,9 +33,11 @@ use Kadupul\Alerting\Application\Port\ClaimedNotification;
 use Kadupul\Alerting\Application\Port\NotificationQueue;
 use Kadupul\Alerting\Application\Port\RuleRepository;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
+use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\AdministratorNotificationPolicy;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
+use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor;
@@ -113,7 +115,7 @@ final class RacingRules implements RuleRepository
         return $batch;
     }
 
-    public function lock(int $ruleId): bool
+    public function lock(int $ruleId): AlertRule|UnusableRuleRecord|null
     {
         return $this->inner->lock($ruleId);
     }
@@ -132,6 +134,11 @@ final class StatesWithAProbe implements RuleStateStore
     public function load(array $ruleIds): array
     {
         return $this->inner->load($ruleIds);
+    }
+
+    public function lock(int $ruleId): RuleState|UnusableRuleRecord|null
+    {
+        return $this->inner->lock($ruleId);
     }
 
     public function save(int $ruleId, RuleState $state): void

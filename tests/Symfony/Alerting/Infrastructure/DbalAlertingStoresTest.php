@@ -513,13 +513,38 @@ final class DbalAlertingStoresTest extends TestCase
         self::assertEquals([new Incident(2, 5, IncidentStatus::Closed, 100, 200)], $incidents->forRule(5));
     }
 
-    public function testLockTellsWhetherTheRuleStillExists(): void
+    public function testLockReturnsTheRuleAsTheBatchReadsItWhileItAndItsSeriesExist(): void
     {
         $this->addRule(3, 103);
+        $this->addSeries(103, 0);
+        $this->addRule(5, 105);
         $rules = new DbalRuleRepository($this->database);
 
-        self::assertTrue($rules->lock(3));
-        self::assertFalse($rules->lock(4));
+        $locked = $rules->lock(3);
+        self::assertInstanceOf(AlertRule::class, $locked);
+        self::assertTrue($locked->equals($rules->batchAfter(0, 10)[0]));
+        self::assertEquals(new AlertRule(3, new SeriesKey(103, 'traffic_in'), new ThresholdRule(Comparator::GreaterThan, 90.5, 80.0, 2)), $locked);
+        self::assertNull($rules->lock(4), 'No rule row.');
+        self::assertNull($rules->lock(5), 'No data source: the series is gone.');
+
+        $this->database->update('alert_rule', ['trigger_threshold' => 95], ['id' => 3]);
+        $edited = $rules->lock(3);
+        self::assertInstanceOf(AlertRule::class, $edited);
+        self::assertFalse($edited->equals($locked), 'The row is read again, not taken from the batch.');
+
+        $this->database->update('alert_rule', ['comparator' => 'nope'], ['id' => 3]);
+        self::assertInstanceOf(UnusableRuleRecord::class, $rules->lock(3));
+    }
+
+    public function testStateLockReadsTheStoredState(): void
+    {
+        $states = new DbalRuleStateStore($this->database);
+        $states->save(3, new RuleState(open: true, consecutiveBreaches: 2, lastObservedAt: 900));
+
+        self::assertEquals(new RuleState(open: true, consecutiveBreaches: 2, lastObservedAt: 900), $states->lock(3));
+        self::assertNull($states->lock(4));
+        $this->database->update('alert_rule_state', ['consecutive_breaches' => -1], ['rule_id' => 3]);
+        self::assertInstanceOf(UnusableRuleRecord::class, $states->lock(3));
     }
 
     public function testEachDueNotificationIsClaimedOnceAndSettledOnlyByItsHolder(): void

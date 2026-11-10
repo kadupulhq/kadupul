@@ -30,8 +30,18 @@ final class InMemoryRuleRepository implements RuleRepository
     public array $orphanLimits = [];
     /** @var array<int, true> rules deleted after batchAfter() read them, before their transaction */
     public array $deletedMidRun = [];
+    /** @var array<int, true> rules whose data source, device or RRD name was deleted after batchAfter() read them */
+    public array $seriesGoneMidRun = [];
     /** @var list<int> the rule id of each lock() call */
     public array $locked = [];
+    /**
+     * Runs once at the first lock() of each rule id it names, before the
+     * lock is taken, as an edit another session commits between batchAfter()
+     * and the rule's transaction would.
+     *
+     * @var array<int, \Closure(): void>
+     */
+    public array $beforeLock = [];
 
     public function __construct(
         private readonly ?InMemoryRuleStateStore $states = null,
@@ -63,11 +73,23 @@ final class InMemoryRuleRepository implements RuleRepository
         return $batch;
     }
 
-    public function lock(int $ruleId): bool
+    public function lock(int $ruleId): AlertRule|UnusableRuleRecord|null
     {
         $this->locked[] = $ruleId;
+        if (isset($this->beforeLock[$ruleId])) {
+            $edit = $this->beforeLock[$ruleId];
+            unset($this->beforeLock[$ruleId]);
+            $edit();
+        }
 
-        return isset($this->rules[$ruleId]) && !isset($this->deletedMidRun[$ruleId]);
+        if (isset($this->deletedMidRun[$ruleId]) || isset($this->seriesGoneMidRun[$ruleId])) {
+            return null;
+        }
+        if (isset($this->unusable[$ruleId])) {
+            return new UnusableRuleRecord($ruleId, $this->unusable[$ruleId]);
+        }
+
+        return $this->rules[$ruleId] ?? null;
     }
 
     public function orphanedRuleIds(int $limit): array

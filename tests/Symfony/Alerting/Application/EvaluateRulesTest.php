@@ -511,6 +511,111 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame(1, $report->evaluated);
     }
 
+    /** What DbalRuleStore::update() commits for another series or kind: the new row, no state, the incident orphaned. */
+    private function moveRuleMidRun(AlertRule $moved): void
+    {
+        $this->rules->beforeLock[$moved->id] = function () use ($moved): void {
+            $this->rules->add($moved);
+            unset($this->states->states[$moved->id]);
+            $this->incidents->orphan([$moved->id], self::NOW);
+        };
+    }
+
+    public function testASeriesChangeDuringTheRunLeavesTheRuleAbleToAlertAgain(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->states->states[1] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 300);
+        $this->incidents->active[1] = true;
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->moveRuleMidRun(new AlertRule(1, new SeriesKey(201, 'traffic_in'), new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, 1)));
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertArrayNotHasKey(1, $this->states->states, 'No state from the old series is written over the edit.');
+        self::assertSame([], $this->incidents->active);
+        self::assertSame([], $this->queued());
+        self::assertSame([0, 1, 0], [$report->evaluated, $report->changed, $report->failed], 'Left for the next run, not counted as unusable.');
+
+        // The next run evaluates the new series from a fresh state and opens its incident.
+        $this->clock->sleep(300);
+        $this->rates->put(new SeriesKey(201, 'traffic_in'), new Observation(96.0, self::NOW + 300, 300));
+        $next = $this->evaluator()(10, 30.0);
+
+        self::assertSame([1, 0, 0], [$next->evaluated, $next->changed, $next->failed]);
+        self::assertSame(['orphan', 'open'], array_column($this->incidents->events, 0));
+        self::assertSame([[2, Transition::Opened, 96.0, 90.0, 'queued', self::NOW + 300]], $this->queued());
+    }
+
+    public function testASeriesChangeOneBreachShortOpensNothing(): void
+    {
+        $this->rules->add(self::rule(1, forCycles: 2));
+        $this->states->states[1] = new RuleState(consecutiveBreaches: 1, lastObservedAt: self::NOW - 300);
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->moveRuleMidRun(new AlertRule(1, new SeriesKey(201, 'traffic_in'), new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, 2)));
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame([], $this->incidents->events, 'No incident is opened on the new series with the old series\' rate.');
+        self::assertSame([], $this->queued());
+        self::assertArrayNotHasKey(1, $this->states->states);
+        self::assertSame(1, $report->changed);
+    }
+
+    public function testAThresholdChangeDuringTheRunIsNotEvaluatedWithTheOldThreshold(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->rules->beforeLock[1] = function (): void {
+            $this->rules->add(self::rule(1, trigger: 99.0));
+        };
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame([], $this->incidents->events, '95 breached the old trigger of 90, not the new 99.');
+        self::assertSame([], $this->states->saved);
+        self::assertSame([0, 1], [$report->evaluated, $report->changed]);
+
+        $next = $this->evaluator()(10, 30.0);
+
+        self::assertSame(1, $next->evaluated);
+        self::assertSame([], $this->incidents->events);
+        self::assertFalse($this->states->states[1]->isOpen());
+        self::assertSame(0, $this->states->states[1]->consecutiveBreaches(), 'Counted against the new trigger.');
+    }
+
+    public function testADataSourceDeletedDuringTheRunWritesNothing(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->rules->beforeLock[1] = function (): void {
+            $this->rules->seriesGoneMidRun[1] = true;
+        };
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame([], $this->incidents->events, 'A rate still fresh after its data source was deleted opens nothing.');
+        self::assertSame([], $this->queued());
+        self::assertSame([], $this->states->saved);
+        self::assertSame([0, 1], [$report->evaluated, $report->changed]);
+    }
+
+    public function testAStateChangedDuringTheRunIsNotOverwritten(): void
+    {
+        // Moved to another series and back: the row reads as before, but the state and incident were ended.
+        $this->rules->add(self::rule(1));
+        $this->states->states[1] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 300);
+        $this->incidents->active[1] = true;
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->moveRuleMidRun(self::rule(1));
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertArrayNotHasKey(1, $this->states->states, 'An open state is not written back over the ended incident.');
+        self::assertSame([], $this->incidents->active);
+        self::assertSame([0, 1], [$report->evaluated, $report->changed]);
+        self::assertSame([1], $this->states->lockedStates, 'The state row is locked after the rule row.');
+    }
+
     public function testRecoveryAfterOrphanSendsNothing(): void
     {
         $this->rules->add(self::rule(1));

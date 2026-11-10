@@ -24,6 +24,14 @@ interface RuleStateStore
      */
     public function load(array $ruleIds): array;
 
+    /**
+     * Inside the rule's transaction, after RuleRepository::lock(): reads the
+     * rule's stored state with a row lock until the transaction ends. Null
+     * when the rule has no stored state; an unreadable row is returned as
+     * its UnusableRuleRecord.
+     */
+    public function lock(int $ruleId): RuleState|UnusableRuleRecord|null;
+
     public function save(int $ruleId, RuleState $state): void;
 
     /**

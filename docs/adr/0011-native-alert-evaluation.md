@@ -372,9 +372,12 @@ behavior until an administrator opts in.
      recovery). An incident that becomes `unknown` changes no incident row,
      so Phase 1 queues nothing for it. An orphaned incident queues nothing.
    - **One transaction, one lock order.** The rule's transaction locks its
-     `alert_rule` row (`SELECT ... FOR UPDATE`), then writes the state, the
-     incident and the notification, in that order. A rule deleted after its
-     batch was read is found missing under the lock and nothing is written.
+     `alert_rule` row (`SELECT ... FOR UPDATE`) and its state row, then
+     writes the state, the incident and the notification, in that order.
+     The batch is read outside any transaction, so a rule that was deleted
+     or edited, whose series was deleted, or whose state was ended after its
+     batch was read is found so under the locks and nothing is written; the
+     next run evaluates it as it is then.
      A failed notification insert rolls the state and the incident back with
      it, and the next run counts the same observation again.
    - **Claims.** Rows move `queued` to `sending` to `sent`, `suppressed` or
