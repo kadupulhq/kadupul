@@ -55,9 +55,9 @@ final class AlertingSchemaUpgradeTest extends TestCase
         $definitions = upgrade_alerting_tables();
         self::assertSame(self::TABLES, array_values(array_intersect(self::TABLES, array_keys($definitions))));
         self::assertCount(5, $definitions);
-        foreach ($definitions as $table => $definition) {
-            self::assertStringStartsWith('CREATE TABLE IF NOT EXISTS ' . $table . ' (', $definition['create']);
-            self::assertSame(self::normalized(self::freshInstall($sql, $table)), self::normalized($definition['create']), $table);
+        foreach ($definitions as $table => $create) {
+            self::assertStringStartsWith('CREATE TABLE IF NOT EXISTS ' . $table . ' (', $create);
+            self::assertSame(self::normalized(self::freshInstall($sql, $table)), self::normalized($create), $table);
         }
     }
 

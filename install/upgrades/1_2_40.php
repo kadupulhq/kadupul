@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 function upgrade_to_1_2_40(): void
 {
-    foreach (upgrade_alerting_tables() as $table => $definition) {
-        db_install_execute($definition['create']);
+    foreach (upgrade_alerting_tables() as $table => $create) {
+        db_install_execute($create);
 
         $found = db_install_fetch_cell(
             'SELECT CONCAT_WS(\'|\', t.ENGINE, t.TABLE_COLLATION,
@@ -28,7 +28,7 @@ function upgrade_to_1_2_40(): void
             FROM information_schema.TABLES t WHERE t.TABLE_SCHEMA = DATABASE() AND t.TABLE_NAME = ?',
             array($table)
         );
-        if ($found['data'] !== upgrade_alerting_signature($definition)) {
+        if ($found['data'] !== upgrade_alerting_signature($create)) {
             throw new RuntimeException('Table ' . $table . ' is missing or differs from the alerting definition. Review it and rerun the upgrade; existing rows are not changed.');
         }
     }
@@ -58,17 +58,29 @@ function upgrade_alerting_realms(): void
 
 /**
  * What upgrade_to_1_2_40() reads back from information_schema for a table
- * that matches its definition.
- *
- * @param array{columns: array<string, string>, indexes: list<string>} $definition
+ * created by $create: each column as name:data type:signedness:nullability in
+ * column order, then each indexed column as name:non_unique:column, ordered by
+ * the binary index name and then the column's place in the index.
  */
-function upgrade_alerting_signature(array $definition): string
+function upgrade_alerting_signature(string $create): string
 {
     $columns = array();
-    foreach ($definition['columns'] as $name => $shape) {
-        $columns[] = $name . ':' . $shape;
+    $indexes = array();
+    foreach (array_slice(preg_split('/\R/', trim($create)), 1, -1) as $line) {
+        $line = rtrim(trim($line), ',');
+        if (preg_match('/^(PRIMARY|UNIQUE)? ?KEY ?(\w*) \(([^)]+)\)$/', $line, $key)) {
+            $name = $key[1] === 'PRIMARY' ? 'PRIMARY' : $key[2];
+            foreach (array_map('trim', explode(',', $key[3])) as $column) {
+                $indexes[$name][] = $name . ':' . ($key[1] === '' ? '1' : '0') . ':' . $column;
+            }
+        } elseif (preg_match('/^(\w+) (tinyint|smallint|mediumint|int|bigint|double|char|varchar|varbinary)(?:\(\d+\))?( unsigned)?( NOT NULL)?(?: default \S+| auto_increment)?$/', $line, $column)) {
+            $columns[] = $column[1] . ':' . $column[2] . ':' . (($column[3] ?? '') !== '' ? 'unsigned' : 'signed') . ':' . (($column[4] ?? '') !== '' ? 'NO' : 'YES');
+        } else {
+            throw new RuntimeException('Unrecognised alerting table definition line: ' . $line);
+        }
     }
-    return 'InnoDB|utf8mb4_unicode_ci|' . implode(',', $columns) . '|' . implode(',', $definition['indexes']);
+    ksort($indexes, SORT_STRING);
+    return 'InnoDB|utf8mb4_unicode_ci|' . implode(',', $columns) . '|' . implode(',', array_merge(...array_values($indexes)));
 }
 
 /**
@@ -81,17 +93,15 @@ function upgrade_alerting_signature(array $definition): string
  * and NULL after it ends, so its unique key allows one active incident per
  * rule, and records the series (local_data_id, rrd_name) and the rule kind
  * the incident opened with: the series decides who may see it after its rule
- * changes, and both name it in its notification mail. Columns read data type:signedness:nullability; indexes read
- * name:non_unique:column per indexed column, ordered by the binary index name
- * and then the column's place in the index.
+ * changes, and both name it in its notification mail. upgrade_alerting_signature()
+ * derives what each table must read back from this text.
  *
- * @return array<string, array{create: string, columns: array<string, string>, indexes: list<string>}>
+ * @return array<string, string>
  */
 function upgrade_alerting_tables(): array
 {
     return array(
-        'alert_rule' => array(
-            'create' => 'CREATE TABLE IF NOT EXISTS alert_rule (
+        'alert_rule' => 'CREATE TABLE IF NOT EXISTS alert_rule (
   id int(10) unsigned NOT NULL auto_increment,
   local_data_id int(10) unsigned NOT NULL,
   rrd_name varbinary(19) NOT NULL,
@@ -109,26 +119,7 @@ function upgrade_alerting_tables(): array
   PRIMARY KEY (id),
   KEY series (local_data_id, rrd_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
-            'columns' => array(
-                'id' => 'int:unsigned:NO',
-                'local_data_id' => 'int:unsigned:NO',
-                'rrd_name' => 'varbinary:signed:NO',
-                'kind' => 'varchar:signed:NO',
-                'comparator' => 'char:signed:YES',
-                'trigger_threshold' => 'double:signed:YES',
-                'clear_threshold' => 'double:signed:YES',
-                'baseline_direction' => 'varchar:signed:YES',
-                'baseline_deviations' => 'double:signed:YES',
-                'baseline_clear_deviations' => 'double:signed:YES',
-                'baseline_floor' => 'double:signed:YES',
-                'baseline_min_samples' => 'tinyint:unsigned:YES',
-                'for_cycles' => 'smallint:unsigned:NO',
-                'owner_id' => 'mediumint:unsigned:NO',
-            ),
-            'indexes' => array('PRIMARY:0:id', 'series:1:local_data_id', 'series:1:rrd_name'),
-        ),
-        'alert_rule_state' => array(
-            'create' => 'CREATE TABLE IF NOT EXISTS alert_rule_state (
+        'alert_rule_state' => 'CREATE TABLE IF NOT EXISTS alert_rule_state (
   rule_id int(10) unsigned NOT NULL,
   incident_open tinyint(3) unsigned NOT NULL default 0,
   consecutive_breaches int(10) unsigned NOT NULL default 0,
@@ -137,18 +128,7 @@ function upgrade_alerting_tables(): array
   last_observed_at int(10) unsigned default NULL,
   PRIMARY KEY (rule_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
-            'columns' => array(
-                'rule_id' => 'int:unsigned:NO',
-                'incident_open' => 'tinyint:unsigned:NO',
-                'consecutive_breaches' => 'int:unsigned:NO',
-                'consecutive_oks' => 'int:unsigned:NO',
-                'is_unknown' => 'tinyint:unsigned:NO',
-                'last_observed_at' => 'int:unsigned:YES',
-            ),
-            'indexes' => array('PRIMARY:0:rule_id'),
-        ),
-        'alert_baseline_sample' => array(
-            'create' => 'CREATE TABLE IF NOT EXISTS alert_baseline_sample (
+        'alert_baseline_sample' => 'CREATE TABLE IF NOT EXISTS alert_baseline_sample (
   local_hour int(10) unsigned NOT NULL,
   local_data_id int(10) unsigned NOT NULL,
   rrd_name varbinary(19) NOT NULL,
@@ -158,19 +138,7 @@ function upgrade_alerting_tables(): array
   last_observed_at int(10) unsigned NOT NULL,
   PRIMARY KEY (local_hour, local_data_id, rrd_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
-            'columns' => array(
-                'local_hour' => 'int:unsigned:NO',
-                'local_data_id' => 'int:unsigned:NO',
-                'rrd_name' => 'varbinary:signed:NO',
-                'sample_count' => 'int:unsigned:NO',
-                'sample_sum' => 'double:signed:NO',
-                'sample_sum_squares' => 'double:signed:NO',
-                'last_observed_at' => 'int:unsigned:NO',
-            ),
-            'indexes' => array('PRIMARY:0:local_hour', 'PRIMARY:0:local_data_id', 'PRIMARY:0:rrd_name'),
-        ),
-        'alert_incident' => array(
-            'create' => 'CREATE TABLE IF NOT EXISTS alert_incident (
+        'alert_incident' => 'CREATE TABLE IF NOT EXISTS alert_incident (
   id int(10) unsigned NOT NULL auto_increment,
   rule_id int(10) unsigned NOT NULL,
   status varchar(16) NOT NULL,
@@ -186,23 +154,7 @@ function upgrade_alerting_tables(): array
   UNIQUE KEY active_rule_id (active_rule_id),
   KEY rule_id (rule_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
-            'columns' => array(
-                'id' => 'int:unsigned:NO',
-                'rule_id' => 'int:unsigned:NO',
-                'status' => 'varchar:signed:NO',
-                'active_rule_id' => 'int:unsigned:YES',
-                'opened_at' => 'int:unsigned:NO',
-                'acknowledged_at' => 'int:unsigned:YES',
-                'acknowledged_by' => 'mediumint:unsigned:YES',
-                'ended_at' => 'int:unsigned:YES',
-                'local_data_id' => 'int:unsigned:NO',
-                'rrd_name' => 'varbinary:signed:NO',
-                'rule_kind' => 'varchar:signed:NO',
-            ),
-            'indexes' => array('PRIMARY:0:id', 'active_rule_id:0:active_rule_id', 'rule_id:1:rule_id'),
-        ),
-        'alert_notification' => array(
-            'create' => 'CREATE TABLE IF NOT EXISTS alert_notification (
+        'alert_notification' => 'CREATE TABLE IF NOT EXISTS alert_notification (
   id bigint(20) unsigned NOT NULL auto_increment,
   incident_id int(10) unsigned NOT NULL,
   kind varchar(16) NOT NULL,
@@ -218,20 +170,5 @@ function upgrade_alerting_tables(): array
   KEY status_next_attempt (status, next_attempt_at),
   KEY incident_id (incident_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
-            'columns' => array(
-                'id' => 'bigint:unsigned:NO',
-                'incident_id' => 'int:unsigned:NO',
-                'kind' => 'varchar:signed:NO',
-                'status' => 'varchar:signed:NO',
-                'attempts' => 'smallint:unsigned:NO',
-                'queued_at' => 'int:unsigned:NO',
-                'next_attempt_at' => 'int:unsigned:NO',
-                'sent_at' => 'int:unsigned:YES',
-                'last_error' => 'varchar:signed:NO',
-                'observed_value' => 'double:signed:NO',
-                'threshold' => 'double:signed:NO',
-            ),
-            'indexes' => array('PRIMARY:0:id', 'incident_id:1:incident_id', 'status_next_attempt:1:status', 'status_next_attempt:1:next_attempt_at'),
-        ),
     );
 }
