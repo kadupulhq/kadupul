@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       full_analysis: ${{ steps.scope.outputs.full_analysis }}
+      legacy_coverage: ${{ steps.scope.outputs.legacy_coverage }}
       reason: ${{ steps.scope.outputs.reason }}
     steps:
       - name: Checkout
@@ -85,12 +86,13 @@ jobs:
     needs: scope
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
+    # Merge groups run the shards whatever SONAR_ALL_PRS says; see the scope job.
     if: >-
-      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.legacy_coverage == 'true' &&
       github.actor != 'dependabot[bot]' &&
       ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
        (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
-       (github.event_name == 'merge_group' && vars.SONAR_ALL_PRS == 'true') ||
+       github.event_name == 'merge_group' ||
        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
         (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     strategy:
@@ -243,12 +245,13 @@ jobs:
       artifact-id: ${{ steps.coverage-artifact.outputs.artifact-id }}
     runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
+    # Merge groups run the shards whatever SONAR_ALL_PRS says; see the scope job.
     if: >-
-      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.legacy_coverage == 'true' &&
       github.actor != 'dependabot[bot]' &&
       ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
        (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
-       (github.event_name == 'merge_group' && vars.SONAR_ALL_PRS == 'true') ||
+       github.event_name == 'merge_group' ||
        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
         (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     permissions:
@@ -691,7 +694,9 @@ jobs:
 
   quality-gate:
     name: Sonar Quality Gate
-    needs: [scope, analyze]
+    # The legacy coverage chain is also due on merge groups without analysis,
+    # and this is the only required check that can bind it.
+    needs: [scope, legacy-coverage, analyze]
     # Always reports, because a required check reads a skipped job as passing.
     # It fails whenever analysis was due and did not pass, and passes only
     # when the scope job says this run is intentionally outside Sonar.
@@ -707,10 +712,17 @@ jobs:
           SCOPE_RESULT: ${{ needs.scope.result }}
           FULL_ANALYSIS: ${{ needs.scope.outputs.full_analysis }}
           SCOPE_REASON: ${{ needs.scope.outputs.reason }}
+          LEGACY_COVERAGE: ${{ needs.scope.outputs.legacy_coverage }}
+          LEGACY_RESULT: ${{ needs.legacy-coverage.result }}
           ANALYSIS_RESULT: ${{ needs.analyze.result }}
         run: |
           if [ "$SCOPE_RESULT" != 'success' ]; then
             echo '::error::Sonar scheduling did not complete, so this run cannot claim a quality gate result.'
+            exit 1
+          fi
+          # A failed shard skips the merge, so only success counts.
+          if [ "$LEGACY_COVERAGE" = 'true' ] && [ "$LEGACY_RESULT" != 'success' ]; then
+            echo '::error::Legacy unit coverage was due and its shards or merge did not pass.'
             exit 1
           fi
           # SONAR_ALL_PRS keeps its strict meaning: every run must be analysed.

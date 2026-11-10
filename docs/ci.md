@@ -36,7 +36,7 @@ existing `fail-fast: false` so compatibility failures are fully observed.
 | `release.yml` | Version tags; reusable offline build then organization release, then archive attachment | Pinned organization workflow. Publishing, package, OIDC and attestation permissions remain scoped to publishing jobs. Attachment depends on both release and bundle. Every job runs on GitHub-hosted runners whatever `DO_RUNNERS_ENABLED` says. |
 | `claude-review.yml` | PR updates, authorized comments and manual review | `ANTHROPIC_API_KEY`; trusted-default-branch configuration; scoped review/comment write permissions. Existing review job concurrency retained. |
 | `digitalocean-runner-smoke.yml` | Manual; single-job ephemeral runner contract | Read-only; ten-minute timeout. Does not provision or delete droplets. |
-| `sonarcloud.yml` | Main/all PR/merge group/manual scheduling; selected complete multi-language coverage/analysis. The legacy unit suite runs in six `Legacy unit coverage (n/6)` shards; `Legacy coverage merge` joins them, adds poller coverage and seals `tests/coverage.xml`. This is the only workflow that runs the full Pest unit suite. | Only scanner and credential preflight receive `SONAR_TOKEN`; npm and Composer download caches, full history, no cached vendor tree. Analysis has read-only contents/PR permissions. |
+| `sonarcloud.yml` | Main/all PR/merge group/manual scheduling; selected complete multi-language coverage/analysis. The legacy unit suite runs in six `Legacy unit coverage (n/6)` shards; `Legacy coverage merge` joins them, adds poller coverage and seals `tests/coverage.xml`. This is the only workflow that runs the full Pest unit suite. The shards and merge also run on every merge group, where `Sonar Quality Gate` requires them. | Only scanner and credential preflight receive `SONAR_TOKEN`; npm and Composer download caches, full history, no cached vendor tree. Analysis has read-only contents/PR permissions. |
 | `cli-docker-integration.yml` | Main/`lts/1.2` pushes on CLI, library, schema and harness paths, all PRs to those branches, merge groups, manual; a `Relevant changes` job applies the PR path filter, then `09-cli-maintenance-integration.sh` runs in the Docker E2E harness; `CLI Docker integration result` aggregate | Read-only contents; `packages: read` with the job token for GHCR pulls. No other secrets. |
 | `container-mirrors.yml` | Container and workflow PR paths, main pushes to mirror tooling, manual; inventories `tools/containers/mirrors.json`, copies the images to GHCR on non-PR runs, then pulls them read-only and builds a two-platform fixture image through the mirrored BuildKit with SBOM and provenance attestations | Only the publish job, which never runs on a PR, gets `packages: write`; receipts and build artifacts retained. |
 | `fuzz.yml` | Main/PR/weekly/manual; fast-check property runs against the shipped asset synchronizer | Read-only; npm download cache; results log retained for 14 days. |
@@ -209,6 +209,8 @@ Sonar is disabled. No path filter suppresses the Sonar PR workflow.
 | `feature/*`, `fix/*`, `refactor/*`, `chore/*`, `docs/*`, `experiment/*`, consolidation stacks | Intentional skip |
 | Manual dispatch, `run_sonar=true` | Full analysis of the selected repository branch |
 | Manual dispatch, `run_sonar=false` | Intentional skip |
+| Merge group, `SONAR_ALL_PRS` absent/false | Legacy unit shards and `Legacy coverage merge` only; no application coverage or analysis |
+| Merge group, `SONAR_ALL_PRS=true` | Full analysis |
 | Fork PR or Dependabot actor (any event) | Secret-dependent analysis skipped; ordinary CI continues |
 | Any context with `ENABLE_SONAR` absent/false | Analysis skipped |
 
@@ -270,4 +272,16 @@ never reports skipped. It fails when `Sonar analysis scope` did not complete,
 or when the scope selected full analysis (main pushes, `sonar/*` and
 `release/*` branches, manual runs) and that analysis did not pass. When the
 scope leaves the run out, it passes and logs the reason. Merge groups follow
-`SONAR_ALL_PRS`: analysed when it is true, out of scope otherwise.
+`SONAR_ALL_PRS` for analysis: analysed when it is true, out of scope otherwise.
+
+Whatever `SONAR_ALL_PRS` says, a merge group runs the six `Legacy unit
+coverage (n/6)` shards and `Legacy coverage merge`, and `Sonar Quality Gate`
+fails unless the merge succeeds. Ordinary pull requests skip the shards, so the
+queue is the last point that stops a change breaking them on `main`; #1365,
+#1424 and #1439 each did, and #1454 repaired them. Scope reports this as
+`merge-queue-legacy-coverage`. Application coverage, the scan and the
+changed-line coverage gate stay out of the queue: application coverage alone
+takes 85–90 minutes, more than the queue's 90-minute check timeout leaves once
+scheduling and runner waits are counted. The one recent fully green chain
+(run 42710796482) took about 60 minutes from creation to the merge, set by
+shard 2 at about 47 minutes; the other shards took 11–22 minutes.
