@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:53-0800\n"
+"POT-Creation-Date: 2026-11-09 23:22-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -7799,11 +7799,6 @@ msgstr "如果要在用戶的此字段中允許NULL輸入，請在此處進行�
 
 #: include/global_form.php
 #, fuzzy
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "如果您暫時不想向此主機發送SNMP通知，請選中此框。"
-
-#: include/global_form.php
-#, fuzzy
 msgid "Check this box to disable all checks for this host."
 msgstr "選中此框可禁用此主機的所有檢查。"
 
@@ -7992,11 +7987,6 @@ msgstr "禁用設備"
 
 #: include/global_form.php
 #, fuzzy
-msgid "Disable SNMP Notification Receiver"
-msgstr "禁用SNMP通知接收器"
-
-#: include/global_form.php
-#, fuzzy
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "如果圖形包含有效範圍之外的值，請不要展開下限和上限。"
 
@@ -8143,16 +8133,6 @@ msgstr "GPRINT類型"
 #, fuzzy
 msgid "General Device Options"
 msgstr "常規設備選項"
-
-#: include/global_form.php
-#, fuzzy
-msgid "General SNMP Entity Options"
-msgstr "常規SNMP實體選項"
-
-#: include/global_form.php
-#, fuzzy
-msgid "Give this SNMP entity a meaningful description."
-msgstr "為此SNMP實體提供有意義的描述。"
 
 #: include/global_form.php
 #, fuzzy
@@ -8416,11 +8396,6 @@ msgstr "匹配模式"
 
 #: include/global_form.php
 #, fuzzy
-msgid "Maximum Log Size"
-msgstr "最大日誌大小"
-
-#: include/global_form.php
-#, fuzzy
 msgid "Maximum OIDs Per Get Request"
 msgstr "每次獲取請求的最大OID"
 
@@ -8428,11 +8403,6 @@ msgstr "每次獲取請求的最大OID"
 #, fuzzy
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "最大值（“U”表示無最大值）"
-
-#: include/global_form.php
-#, fuzzy
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "需要存儲此接收器的最大天數通知日誌條目。"
 
 #: include/global_form.php
 #, fuzzy
@@ -8683,11 +8653,6 @@ msgstr "SNMP引擎ID（v3）"
 
 #: include/global_form.php
 #, fuzzy
-msgid "SNMP Message Type"
-msgstr "SNMP消息類型"
-
-#: include/global_form.php
-#, fuzzy
 msgid "SNMP Password (v3)"
 msgstr "SNMP密碼（v3）"
 
@@ -8730,11 +8695,6 @@ msgstr "SNMP用戶名（v3）"
 #, fuzzy
 msgid "SNMP Version"
 msgstr "SNMP版本"
-
-#: include/global_form.php
-#, fuzzy
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP陷阱始終未被確認。要發送已確認的SNMP通知，正式稱為“INFORMS”，將需要SNMPv2或更高版本。"
 
 #: include/global_form.php
 #, fuzzy
@@ -18314,6 +18274,10 @@ msgstr "重要性"
 #, fuzzy
 msgid "Severity Level"
 msgstr "嚴重程度"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 #, fuzzy

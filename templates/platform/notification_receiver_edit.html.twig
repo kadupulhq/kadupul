@@ -1,0 +1,49 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (receiver ? 'Edit SNMP Notification Receiver' : 'Add SNMP Notification Receiver')|trans({}, 'notification_receiver') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() of a fixed route without parameters. #}
+    <p><a href="{{ path('admin_notification_receivers') }}">{{ 'Back to SNMP Notification Receivers'|trans({}, 'notification_receiver') }}</a></p>
+    <h1>{% if receiver %}{{ 'SNMP Notification Receiver [edit: %name%]'|trans({'%name%': receiver.description}, 'notification_receiver') }}{% else %}{{ 'SNMP Notification Receiver [new]'|trans({}, 'notification_receiver') }}{% endif %}</h1>
+    {% if receiver %}
+    <nav aria-label="{{ 'Receiver sections'|trans({}, 'notification_receiver') }}">
+        <ul>
+            {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the numeric receiver ID. #}
+            <li><a href="{{ path('notification_receiver_edit', {id: receiver.id}) }}" aria-current="page">{{ 'General'|trans({}, 'notification_receiver') }}</a></li>
+            {% for tab, label in {notifications: 'Notifications', logs: 'Logs'} %}
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed legacy page with a URL encoded numeric ID and a fixed tab. #}
+                <li><a href="{{ installation_path('managers.php') }}?{{ {action: 'edit', id: receiver.id, tab: tab}|url_encode }}">{{ label|trans({}, 'notification_receiver') }}</a></li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+    {% if saved %}<p role="status">{{ 'Notification receiver saved.'|trans({}, 'notification_receiver') }}</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.hostname) }}
+        {{ form_row(form.disabled) }}
+        {{ form_row(form.max_log_size) }}
+        {{ form_row(form.snmp_version) }}
+        {% if form.keep_credentials is defined %}{{ form_row(form.keep_credentials) }}{% endif %}
+        {{ form_row(form.snmp_community) }}
+        {{ form_row(form.snmp_username) }}
+        {{ form_row(form.snmp_auth_protocol) }}
+        {{ form_row(form.snmp_password) }}
+        {{ form_row(form.snmp_password_confirm) }}
+        {{ form_row(form.snmp_priv_protocol) }}
+        {{ form_row(form.snmp_priv_passphrase) }}
+        {{ form_row(form.snmp_priv_passphrase_confirm) }}
+        {{ form_row(form.snmp_engine_id) }}
+        {{ form_row(form.snmp_port) }}
+        {{ form_row(form.snmp_message_type) }}
+        {{ form_row(form.notes) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'notification_receiver') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
