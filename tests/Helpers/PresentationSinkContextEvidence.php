@@ -124,11 +124,17 @@ final class PresentationSinkContextEvidence
             'src/Platform/Contract/IconRegistry.php',
             'src/Platform/Infrastructure/Legacy/HostDataSubstitution.php',
             'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php',
+            'src/Platform/Infrastructure/Legacy/LegacyDatabaseFailureScope.php',
             'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php',
             'src/Platform/Infrastructure/Legacy/LegacyRequestContext.php',
             'src/Platform/Infrastructure/Legacy/LegacyLogText.php',
             // lib/functions.php loads the data input substitution scanner directly.
             'src/DataInput/Domain/InputStringSubstitution.php',
+            // include/global_languages.php selects the locale through these.
+            'src/Platform/Application/Locale/KnownLocales.php',
+            'src/Platform/Application/Locale/LocaleInput.php',
+            'src/Platform/Application/Locale/LocaleResolution.php',
+            'src/Platform/Application/Locale/LocaleResolver.php',
             // lib/functions.php reads and writes settings through these.
             'src/Platform/Application/Port/ConfigurationSettings.php',
             'src/Platform/Application/Port/UserSettings.php',

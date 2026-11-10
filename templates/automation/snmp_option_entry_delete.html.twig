@@ -1,0 +1,20 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Delete SNMP entry'|trans({}, 'automation') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Delete SNMP entry'|trans({}, 'automation') }}</h1>
+    <p>{{ 'Click Continue to delete the following SNMP Option item.'|trans({}, 'automation') }}</p>
+    <ul><li>{{ 'SNMP Option Set: %name%, Version %version%, Port %port%, Sequence %sequence%'|trans({'%name%': set.name, '%version%': entry.version, '%port%': entry.port, '%sequence%': entry.sequence}, 'automation') }}</li></ul>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Continue'|trans({}, 'automation') }}</button>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the numeric set ID. #}
+        <a href="{{ path('automation_snmp_option_edit', {id: set.id}) }}">{{ 'Cancel'|trans({}, 'automation') }}</a>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

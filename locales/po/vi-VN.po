@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 15:48-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -944,9 +944,9 @@ msgstr "Lần cuối kiểm tra vào"
 msgid "Location"
 msgstr "Vị trí"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "N/A"
 
@@ -1442,9 +1442,9 @@ msgstr "Hàng tháng vào ngày"
 msgid "Months of Year"
 msgstr "Tháng trong năm"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "Tên"
 
@@ -1760,22 +1760,6 @@ msgstr "mỗi X tuần."
 msgid "every X."
 msgstr "mỗi X."
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Hành động"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Mật khẩu xác thực"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Giao thức xác thực"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Tên người dùng xác thực"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "Mục Tự động hóa không tồn tại. Không thể trùng lặp."
@@ -1789,55 +1773,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Tùy chọn SNMP tự động hóa"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa Mục tùy chọn SNMP sau."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Tùy chọn SNMP sau."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để nhân đôi Tùy chọn SNMP sau. Bạn có thể tùy ý thay đổi định dạng tiêu đề cho Tùy chọn SNMP mới."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Cộng đồng"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Ngữ cảnh"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Xóa mục tùy chọn SNMP"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Điền vào tên của Bộ tùy chọn SNMP này."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Mục"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Mục #% d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Tối đa OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Chuyển xuống"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Chuyển lên"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1848,37 +1789,8 @@ msgid "Networks Using"
 msgstr "Mạng sử dụng"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Không có mục SNMP"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Không tìm thấy bộ tùy chọn SNMP"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Cổng"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Mật khẩu riêng"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Giao thức riêng"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Xóa mục SNMP"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Thử lại"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "Cộng đồng SNMP / Tên người dùng: <b> %s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1889,52 +1801,16 @@ msgid "SNMP Option Set"
 msgstr "Bộ tùy chọn SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "Tùy chọn SNMP Đặt [chỉnh sửa: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "Tùy chọn SNMP Đặt [mới]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "Bộ tùy chọn SNMP"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "Tùy chọn SNMP:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "Tùy chọn SNMP [chỉnh sửa: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "Tùy chọn SNMP [mới]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "Quy tắc SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "Phiên bản SNMP: <b> %s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Thứ tự"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Trình tự của vật phẩm."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Hết giờ"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1948,19 +1824,9 @@ msgstr "Bài dự thi V2"
 msgid "V3 Entries"
 msgstr "Bài dự thi V3"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Phiên bản"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "tên"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "trống"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2694,6 +2560,10 @@ msgstr "Xác minh danh sách trắng không thành công. Chạy tập lệnh CL
 msgid "White List Verification Succeeded."
 msgstr "Xác minh danh sách trắng thành công."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Hành động"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Thêm"
@@ -2818,6 +2688,16 @@ msgstr "Mẫu biểu đồ đã ánh xạ với biểu đồ chỉ được đ�
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "ID bản đồ"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Chuyển xuống"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Chuyển lên"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4350,6 +4230,11 @@ msgstr "Chỉ Quản trị viên Kadupul có đặc quyền Cài đặt / Nâng 
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Có một cài đặt hoặc nâng cấp trong tiến trình."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Phiên bản"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7521,6 +7406,10 @@ msgstr "Các Tùy Chọn về Tỷ Lệ Hóa"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Chọn Hồ sơ nguồn dữ liệu. Cấu hình nguồn dữ liệu kiểm soát khoảng thời gian bỏ phiếu, tổng hợp dữ liệu và chính sách lưu giữ cho các nguồn dữ liệu kết quả."
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Thứ tự"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "Thứ tự"
@@ -8343,6 +8232,10 @@ msgstr "MySQL - Hỗ trợ TimeZone"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr ""
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Cộng đồng"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9636,6 +9529,10 @@ msgid "Restrictive"
 msgstr "Hạn chế"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Thử lại"
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Xoay Nhật ký Kadupul"
@@ -10514,6 +10411,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - Hỗ trợ TimeZone"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Hết giờ"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Cài đặt phông chữ"
 
@@ -10838,6 +10739,15 @@ msgstr "Trường"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Quy tắc khớp đồ thị"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Mục"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Mục #% d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11874,6 +11784,10 @@ msgstr "Lớp thư của PHP"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Kết quả Ping:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Cổng"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12958,6 +12872,10 @@ msgstr "Chọn một trong các Loại đã cho cho Tệp đính kèm hình ản
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Gửi báo cáo"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Trình tự của vật phẩm."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
