@@ -22,8 +22,12 @@ use Kadupul\Alerting\Domain\Evaluation\Transition;
  */
 final class NotificationMail
 {
-    /** Where Task 7's incident view answers, relative to the application root. */
-    public const string INCIDENT_PATH = '/alerting/incidents/%d';
+    /**
+     * The incident view's path under the Kadupul site, through the app.php
+     * front controller. The mail path has no base URL, so the body names the
+     * page and this path instead of a link that might not resolve.
+     */
+    public const string INCIDENT_PATH = 'app.php/alerting/incidents/%d';
 
     public static function subject(NotificationContent $content): string
     {
@@ -41,7 +45,7 @@ final class NotificationMail
             'Value: ' . self::number($content->value),
             ($opened ? 'Trigger' : 'Clear') . ($content->ruleKind === 'baseline' ? ' band edge: ' : ' threshold: ') . self::number($content->threshold),
             'Time: ' . gmdate('Y-m-d H:i:s', $content->observedAt) . ' UTC',
-            'Incident: ' . sprintf(self::INCIDENT_PATH, $content->incidentId),
+            'Incident: ' . $content->incidentId . ', on the Alert Incidents page (' . sprintf(self::INCIDENT_PATH, $content->incidentId) . ' on the Kadupul site)',
         ];
 
         return implode("<br>\n", $lines);

@@ -240,7 +240,7 @@ final class DeliverNotificationsTest extends TestCase
             . 'Value: 95.5<br>' . "\n"
             . 'Trigger threshold: 90<br>' . "\n"
             . 'Time: 2027-01-15 08:00:00 UTC<br>' . "\n"
-            . 'Incident: /alerting/incidents/12',
+            . 'Incident: 12, on the Alert Incidents page (app.php/alerting/incidents/12 on the Kadupul site)',
             NotificationMail::html($opened),
             'Device text is escaped for the HTML mail path, so it cannot add markup or a legacy <SUBJECT> placeholder.',
         );

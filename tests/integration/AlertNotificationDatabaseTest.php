@@ -473,7 +473,7 @@ final class AlertNotificationDatabaseTest extends TestCase
         $body = $this->mail->sent[0]['html'];
         self::assertSame(
             "Alert rule 1 opened an incident.<br>\nRule: alert rule 1<br>\nSeries: device core &lt;b&gt;edge&lt;/b&gt;, data source 101, traffic_in<br>\n"
-            . "Transition: opened<br>\nValue: 95.5<br>\nTrigger threshold: 90<br>\nTime: 2027-01-15 08:00:00 UTC<br>\nIncident: /alerting/incidents/1",
+            . "Transition: opened<br>\nValue: 95.5<br>\nTrigger threshold: 90<br>\nTime: 2027-01-15 08:00:00 UTC<br>\nIncident: 1, on the Alert Incidents page (app.php/alerting/incidents/1 on the Kadupul site)",
             $body,
         );
         foreach (['s3cret', 'SELECT', 'alert_notification', 'mysql:', $this->schema] as $forbidden) {
