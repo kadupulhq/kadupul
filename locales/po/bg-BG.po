@@ -8564,7 +8564,7 @@ msgid "How frequent should RRD be checked ?"
 msgstr "Колко често трябва да се актуализира дневната статистика?"
 
 #: include/global_settings.php
-msgid "How long one evaluation run may start new batches, including sending queued notifications. Rules not reached are evaluated first by the next run."
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
 msgstr ""
 
 #: include/global_settings.php
