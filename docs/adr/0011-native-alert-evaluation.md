@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed. This record is the specification for Phase 1 of native alerting.
-No production code accompanies it.
+Accepted. The decisions are implemented in the Alerting module and are not
+released.
 
 ## Context
 
@@ -107,7 +107,7 @@ behavior until an administrator opts in.
    which holds the sample-to-RRD path. A named database lock allows one
    evaluator at a time. A second invocation exits at once without evaluating.
 
-   Task 5 settles the details:
+   The evaluate command sets these details:
    - **Launch.** A core call, not a plugin hook registration:
      `alerting_poller_bottom()` in `lib/alerting.php` is called after
      `dsstats_poller_bottom()` in both main-poller blocks of `poller.php`
@@ -151,7 +151,7 @@ behavior until an administrator opts in.
      `unknown`.
    - Both kinds use the same verdicts, state machine and incident lifecycle.
 
-   Task 6 settles the baseline details:
+   Baseline rules work as follows:
    - **Where the history comes from.** No dsstats table holds it.
      `data_source_stats_hourly` and `_daily` have one row per series, keyed
      `(local_data_id, rrd_name)` with no time column (`cacti.sql`), and each
@@ -343,7 +343,7 @@ behavior until an administrator opts in.
      its rules are `unknown`, and an open incident stays open and is reported
      `unknown` once. Enabling it again resumes evaluation.
    - **A rule deleted while its incident is open** orphans the incident on the
-     next run, whatever removed the rule. The rule-editing use case (Task 7)
+     next run, whatever removed the rule. The rule-editing use case
      orphans it in the same transaction as the delete; the evaluator's check
      covers any other path.
    - **A series that stays `unknown`** keeps its incident open indefinitely.
@@ -361,10 +361,11 @@ behavior until an administrator opts in.
    next-attempt time. After a bounded number of attempts the row is marked
    `failed` and stays visible. A row is marked `sent` only after the port
    reports success. The evaluator never reports delivery from the act of
-   queueing. Task 3 creates the `alert_notification` table; the row is written
-   through the same per-rule transaction as the state and incident change.
+   queueing. The schema step creates the `alert_notification` table; the row
+   is written through the same per-rule transaction as the state and incident
+   change.
 
-   Task 4 settles the details:
+   Notification queueing and delivery work as follows:
    - **What is queued.** An incident that opens or recovers queues one row
      with the incident id, the transition, and the rate and threshold that
      decided it (the trigger threshold on opening, the clear threshold on
@@ -429,7 +430,7 @@ behavior until an administrator opts in.
    - **Separate use case.** `DeliverNotifications` takes a batch size and a
      time budget, checked between batches as in decision 8. Evaluation never
      waits on mail.
-   - **Where it runs (Task 5).** The administrator mail adapters call
+   - **Where it runs.** The administrator mail adapters call
      `read_config_option()`, the legacy user lookup and `send_mail()`, which a
      console process does not load. The command therefore runs
      `DeliverNotifications` in the worker `bin/legacy-alerting-deliver.php`,
@@ -451,7 +452,7 @@ behavior until an administrator opts in.
    lowest id after the last rule. Delivery has its own bound inside the same
    budget.
 
-   Task 5 sets the defaults from a measurement. The settings are
+   The defaults come from a measurement. The settings are
    `alerting_batch_size` (100 to 5000 rules, default 500) and
    `alerting_time_budget` (10 s to 2 minutes, default 30 s), on the Data
    tab of the settings beside Data Source Statistics. A stored value that is
@@ -472,7 +473,7 @@ behavior until an administrator opts in.
    count before a run stops early. The cost is per changed rule, one
    transaction each, so it grows with rule count, not with batch size.
 
-   Task 6 measured baseline rules in the same setup with 5,000 baseline
+   Baseline rules were measured in the same setup with 5,000 baseline
    rules and 8 weeks of history for every hour (6,725,000 rows, about 370
    MB of data and index), two runs. Reading the history of all 5,000 series
    took 86 to 105 ms (9 to 10.5 ms per 500), and recording 5,000 new samples
@@ -516,7 +517,7 @@ behavior until an administrator opts in.
    disabled; status 1 means an error. An empty table on its own does not mean
    unavailable: after a restart it means `unknown`.
 
-   Task 5 settles the remaining statuses of `kadupul:alerting:evaluate`:
+   The remaining statuses of `kadupul:alerting:evaluate` are:
    - 0 when `alerting_enable` is off, printing
      `inactive: alerting is disabled (alerting_enable is off).`, with no lock
      taken and no mail sent.
@@ -621,7 +622,7 @@ behavior until an administrator opts in.
     version is recorded. The resume cursor of decision 8 is the settings row
     `alerting_evaluation_cursor`, written only when it moves.
     `replicate_out()` copies the `settings` table to remote collectors, so it
-    excludes that row by name (Task 5): it is the main evaluator's runtime
+    excludes that row by name: it is the main evaluator's runtime
     state, like the `%_lastrun%` rows already excluded. The alerting switch
     and bounds still replicate; a collector never starts the evaluator,
     because the launch checks the poller id.
@@ -684,8 +685,8 @@ behavior until an administrator opts in.
 - **The freshness rule depends on the hourly cache table.** If a later change
   stops dsstats writing `data_source_stats_hourly_cache`, every series becomes
   `unknown`, not falsely fresh. Reading it means a grouped scan of that MEMORY
-  table for the batch's data sources. Task 5 measured 8.2 to 8.4 ms per 500
-  data sources with 12 cache rows each (decision 8). A clock step backwards
+  table for the batch's data sources. The measurement in decision 8 found 8.2 to
+  8.4 ms per 500 data sources with 12 cache rows each. A clock step backwards
   on the poller can hold counters until time passes the last observation. A
   clock step forwards makes observations stale and `unknown`.
 - **Freshness compares Unix seconds.** The command's clock is
@@ -713,42 +714,42 @@ behavior until an administrator opts in.
 
 ### Failure behavior
 
-| Condition | Expected behavior | Proved in |
+| Condition | Expected behavior | Component |
 | --- | --- | --- |
-| dsstats off | "inactive: rate source unavailable", exit status 2, no verdicts written | Task 2 |
-| Boost enabled | Evaluation works as without Boost; no separate inactive reason | Task 2 |
-| Database restart empties the MEMORY table | Rules `unknown` for a cycle or two, no recoveries or breaches | Task 3 |
-| Rate source read fails | Error, exit status 1; no verdict written, nothing read as `unknown` | Task 3 |
-| Incident write fails after the state was saved | Both roll back; the next run counts the same observation again | Task 3 |
-| A rule's stored row is unreadable, or its incident disagrees with its state | That rule is rolled back, logged and counted as `failed`; the other rules are evaluated and the cursor moves past it, every run, until the row is fixed | Task 3 |
-| More orphans than one batch | One batch of orphans ended per run; the rest on later runs; rule batches still run | Task 3 |
-| Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Task 1 |
-| Baseline rule with fewer than its minimum weeks for this hour | `unknown`; an open incident stays open and is reported `unknown` once | Task 6 |
-| Baseline history row unreadable | That series has no history; its rules are `unknown` | Task 6 |
-| Baseline rule row unreadable or of a mixed kind | That rule is skipped as unusable, as above | Task 6 |
-| Baseline history read or write fails | Error, exit status 1; nothing read as `unknown`, cursor unchanged | Task 6 |
-| Baseline history prune fails | The run completes with its rules evaluated and its usual exit status; one ERROR in cacti.log naming the failure's class; the rows are retried next run | Task 6 |
-| Daylight saving change | The same wall-clock hour of the week is compared; the skipped hour has one sample fewer, the repeated hour shares a bucket | Task 6 |
-| Series that never varied | The deviation floor keeps the band open; no breach on the first small change | Task 6 |
-| Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |
-| Rule deleted with an incident open | Incident `orphaned` on the next run, state removed, no mail | Task 3 |
-| Device or data source disabled | Rules `unknown`; an open incident stays open | Task 3 |
-| Series `unknown` indefinitely | Incident stays open; no age-out | Task 3 |
-| Observation time over 60 s ahead of the clock | `unknown` | Task 3 |
-| Mail transport fails | Incident kept, notification stays queued, bounded retries, never marked sent | Task 4 |
-| Notification insert fails after the state and incident were written | All three roll back; the next run counts the same observation again | Task 4 |
-| Rule deleted after its batch was read | No state, incident or notification is written for it | Task 4 |
-| Two deliverers run at once | Each row is claimed and sent by one of them | Task 4 |
-| Deliverer dies holding a row | The row is due again after the 900 s lease, so the mail may be sent twice; on the last attempt it is marked `failed` | Task 4 |
-| Five attempts fail | Row `failed`, error logged, not retried | Task 4 |
-| `alerting_enable` off | Command exits 0 with "inactive: alerting is disabled"; the poller starts nothing | Task 5 |
-| A second evaluator starts while one runs | It exits 0 without evaluating or delivering | Task 5 |
-| An evaluation fails | Exit status 1, locks released, no delivery | Task 5 |
-| Database unreachable | Exit status 1; the exception class only, in the output and as an `ALERTING ERROR:` line in `log/cacti.log` | Task 5 |
-| A remote collector finishes its poll | Nothing is started | Task 5 |
-| The delivery worker fails or reports nothing | Exit status 1; the worker and the command each log the exception class to `cacti.log` | Task 5 |
-| Administrator notification disabled or unconfigured | Row `suppressed` on its first claim, never retried or sent; one warning per run with the count | Task 4 |
-| Administrator account or address missing | Each attempt fails and is recorded; after five the row is `failed` | Task 4 |
+| dsstats off | "inactive: rate source unavailable", exit status 2, no verdicts written | Rate source |
+| Boost enabled | Evaluation works as without Boost; no separate inactive reason | Rate source |
+| Database restart empties the MEMORY table | Rules `unknown` for a cycle or two, no recoveries or breaches | Stores and evaluator |
+| Rate source read fails | Error, exit status 1; no verdict written, nothing read as `unknown` | Stores and evaluator |
+| Incident write fails after the state was saved | Both roll back; the next run counts the same observation again | Stores and evaluator |
+| A rule's stored row is unreadable, or its incident disagrees with its state | That rule is rolled back, logged and counted as `failed`; the other rules are evaluated and the cursor moves past it, every run, until the row is fixed | Stores and evaluator |
+| More orphans than one batch | One batch of orphans ended per run; the rest on later runs; rule batches still run | Stores and evaluator |
+| Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Rule state machine |
+| Baseline rule with fewer than its minimum weeks for this hour | `unknown`; an open incident stays open and is reported `unknown` once | Baseline rules |
+| Baseline history row unreadable | That series has no history; its rules are `unknown` | Baseline rules |
+| Baseline rule row unreadable or of a mixed kind | That rule is skipped as unusable, as above | Baseline rules |
+| Baseline history read or write fails | Error, exit status 1; nothing read as `unknown`, cursor unchanged | Baseline rules |
+| Baseline history prune fails | The run completes with its rules evaluated and its usual exit status; one ERROR in cacti.log naming the failure's class; the rows are retried next run | Baseline rules |
+| Daylight saving change | The same wall-clock hour of the week is compared; the skipped hour has one sample fewer, the repeated hour shares a bucket | Baseline rules |
+| Series that never varied | The deviation floor keeps the band open; no breach on the first small change | Baseline rules |
+| Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Stores and evaluator |
+| Rule deleted with an incident open | Incident `orphaned` on the next run, state removed, no mail | Stores and evaluator |
+| Device or data source disabled | Rules `unknown`; an open incident stays open | Stores and evaluator |
+| Series `unknown` indefinitely | Incident stays open; no age-out | Stores and evaluator |
+| Observation time over 60 s ahead of the clock | `unknown` | Stores and evaluator |
+| Mail transport fails | Incident kept, notification stays queued, bounded retries, never marked sent | Notification delivery |
+| Notification insert fails after the state and incident were written | All three roll back; the next run counts the same observation again | Notification delivery |
+| Rule deleted after its batch was read | No state, incident or notification is written for it | Notification delivery |
+| Two deliverers run at once | Each row is claimed and sent by one of them | Notification delivery |
+| Deliverer dies holding a row | The row is due again after the 900 s lease, so the mail may be sent twice; on the last attempt it is marked `failed` | Notification delivery |
+| Five attempts fail | Row `failed`, error logged, not retried | Notification delivery |
+| `alerting_enable` off | Command exits 0 with "inactive: alerting is disabled"; the poller starts nothing | Evaluate command |
+| A second evaluator starts while one runs | It exits 0 without evaluating or delivering | Evaluate command |
+| An evaluation fails | Exit status 1, locks released, no delivery | Evaluate command |
+| Database unreachable | Exit status 1; the exception class only, in the output and as an `ALERTING ERROR:` line in `log/cacti.log` | Evaluate command |
+| A remote collector finishes its poll | Nothing is started | Evaluate command |
+| The delivery worker fails or reports nothing | Exit status 1; the worker and the command each log the exception class to `cacti.log` | Evaluate command |
+| Administrator notification disabled or unconfigured | Row `suppressed` on its first claim, never retried or sent; one warning per run with the count | Notification delivery |
+| Administrator account or address missing | Each attempt fails and is recorded; after five the row is `failed` | Notification delivery |
 
 ## Alternatives
 
@@ -771,20 +772,20 @@ behavior until an administrator opts in.
 
 ## Open questions
 
-- **Boost.** Resolved in Task 2: dsstats fills both tables with Boost on (see
+- **Boost.** Resolved: dsstats fills both tables with Boost on (see
   Context). `tests/Unit/Core/Poller/BoostDsstatsHandoffNativeTest.php` runs the
   production `process_poller_output_batch()` with Boost on and off and sees the
   sample reach dsstats in both.
   `tests/integration/AlertRateSourceDatabaseTest.php`
   (`testReadsCalculatedColumnWithBoostEnabled`) runs the real writer with the
   Boost settings on and reads `calculated` back through the adapter.
-- **Observation time.** Resolved in Task 2: the time comes from
+- **Observation time.** Resolved: the time comes from
   `data_source_stats_hourly_cache.time`, paired with `calculated` by equal
   value (decision 1). The two-interval rule stands, measured in the data
   source's `rrd_step` (decision 4).
-- **Baseline data.** Resolved in Task 6: the dsstats aggregates hold one
+- **Baseline data.** Resolved: the dsstats aggregates hold one
   rolling row per series and no history, so `BaselineSource` reads a
   Kadupul-owned table, `alert_baseline_sample`, that the evaluator fills
   from the rates it already reads (decision 3).
-- **Remote pollers.** Task 2 answered this from the code (see Consequences).
+- **Remote pollers.** The code answers this (see Consequences).
   A test with a real remote collector is still missing.
