@@ -295,7 +295,9 @@ final class AlertEvaluatorRunDatabaseTest extends TestCase
         $tester = $this->command($session, static fn(RateSource $source): RateSource => new FailingRates($source));
 
         self::assertSame(1, $tester->execute([]));
+        self::assertCount(1, $this->drain->calls, 'Notifications already queued are still delivered.');
         self::assertTrue($this->free(RunLock::EVALUATE), 'A failed run must not keep later runs out while its session lives on.');
+        self::assertTrue($this->free(RunLock::DELIVER));
         self::assertSame(1, (int) $session->fetchOne('SELECT 1'), 'The failed run kept its session.');
     }
 

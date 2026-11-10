@@ -11,14 +11,17 @@ namespace Kadupul\Tests\Alerting\Infrastructure;
 
 use Doctrine\DBAL\DriverManager;
 use Kadupul\Alerting\Application\AlertingConfiguration;
+use Kadupul\Alerting\Application\Command\NotifyAdministrator;
 use Kadupul\Alerting\Application\DeliverNotifications;
 use Kadupul\Alerting\Application\DeliveryReport;
 use Kadupul\Alerting\Application\EvaluateRules;
 use Kadupul\Alerting\Application\Port\AlertingLog;
 use Kadupul\Alerting\Application\Port\AlertingSettings;
+use Kadupul\Alerting\Application\Port\NotificationDrain;
 use Kadupul\Alerting\Application\Port\RunLock;
 use Kadupul\Alerting\Application\RunAlerting;
 use Kadupul\Alerting\Domain\Evaluation\Observation;
+use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
@@ -29,8 +32,9 @@ use Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand;
 use Kadupul\Kernel;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 use Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog;
-use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
+use Kadupul\Tests\Alerting\Fakes\FixedAdministrator;
 use Kadupul\Tests\Alerting\Fakes\FixedAlertingSettings;
+use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryNotificationQueue;
@@ -41,6 +45,7 @@ use Kadupul\Tests\Alerting\Fakes\InMemoryRunLock;
 use Kadupul\Tests\Alerting\Fakes\InMemoryTransactionRunner;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
 use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
+use Kadupul\Tests\Alerting\Fakes\RecordingMailDelivery;
 use Kadupul\Tests\Alerting\Fakes\RecordingNotificationDrain;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -79,15 +84,16 @@ final class EvaluateCommandTest extends TestCase
         }
     }
 
-    private function tester(?AlertingLog $log = null): CommandTester
+    private function tester(?AlertingLog $log = null, ?NotificationDrain $drain = null): CommandTester
     {
         $log ??= $this->logger;
+        $drain ??= $this->drain;
         $incidents = new InMemoryIncidentRepository();
         $notifications = new InMemoryNotificationQueue($incidents);
         $clock = new MockClockAdapter($this->clock);
         $evaluate = new EvaluateRules($this->rates, new InMemoryBaselineSource(), $this->rules, $this->states, $incidents, $notifications, new InMemoryEvaluationCursor(), $clock, new InMemoryTransactionRunner($this->states, $incidents, $notifications), $log);
 
-        return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $this->drain, $clock, $log), $log));
+        return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $drain, $clock, $log), $log));
     }
 
     /**
@@ -213,7 +219,33 @@ final class EvaluateCommandTest extends TestCase
 
         self::assertSame(1, $tester->execute([]));
         self::assertStringNotContainsString('SELECT', $tester->getDisplay());
-        self::assertSame(['acquire evaluate', 'release evaluate'], $this->lock->events);
+        self::assertSame(['acquire evaluate', 'release evaluate', 'acquire deliver', 'release deliver'], $this->lock->events);
+    }
+
+    public function testAQueuedRecoveryIsStillSentWhenEveryEvaluationFails(): void
+    {
+        // A recovery decided by an earlier run, then a failure that repeats on every run.
+        $incidents = new InMemoryIncidentRepository();
+        $queue = new InMemoryNotificationQueue($incidents);
+        $incident = $incidents->open(7, self::NOW - 900);
+        $incidents->close(7, self::NOW - 300);
+        $queue->enqueue($incident, Transition::Recovered, 70.0, 80.0, self::NOW - 300);
+        $mail = new RecordingMailDelivery();
+        $administrator = new FixedAdministrator();
+        $deliver = new DeliverNotifications($queue, new NotifyAdministrator($administrator, $administrator, $mail), new MockClockAdapter($this->clock), $this->logger);
+        $drain = new class ($deliver) implements NotificationDrain {
+            public function __construct(private readonly DeliverNotifications $deliver) {}
+
+            public function drain(int $batchSize, float $budgetSeconds): DeliveryReport
+            {
+                return ($this->deliver)($batchSize, $budgetSeconds);
+            }
+        };
+        $this->rates->failure = new \RuntimeException('Lost connection to server during query');
+
+        self::assertSame(1, $this->tester(drain: $drain)->execute([]), 'The run still fails.');
+        self::assertSame(['Alert rule 7 recovered'], array_column($mail->sent, 'subject'));
+        self::assertSame('sent', $queue->rows[array_key_first($queue->rows)]['status']);
     }
 
     public function testExitsOneWhenDeliveryFails(): void

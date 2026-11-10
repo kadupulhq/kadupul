@@ -24,8 +24,12 @@ use Kadupul\Alerting\Application\Port\RunLock;
  * The evaluation lock is released before delivery, so a slow mail server
  * never holds back the next cycle's evaluation; the delivery lock keeps a
  * second drain from piling up behind a slow one. Queued notifications are
- * drained even when the rate source is inactive: they report changes that
- * were already decided. A failed evaluation propagates without delivering.
+ * drained even when the rate source is inactive, and after a failed
+ * evaluation: they report changes that were already decided, so a rule or
+ * a connection problem that fails every evaluation must not hold back mail,
+ * including recoveries. The failed evaluation then propagates, so the run
+ * still fails; a delivery failure after it is logged and does not replace
+ * the evaluation's error.
  */
 final readonly class RunAlerting
 {
@@ -61,19 +65,37 @@ final readonly class RunAlerting
         if (!$this->lock->acquire(RunLock::EVALUATE)) {
             return new AlertingRun(AlertingRunOutcome::Busy);
         }
+        $evaluation = null;
+        $failure = null;
         try {
             $evaluation = ($this->evaluate)($batchSize, $budgetSeconds);
+        } catch (\Throwable $e) {
+            $failure = $e;
         } finally {
             $this->release(RunLock::EVALUATE);
         }
 
         if (!$this->lock->acquire(RunLock::DELIVER)) {
+            if ($failure !== null) {
+                throw $failure;
+            }
+
             return new AlertingRun(AlertingRunOutcome::Evaluated, $evaluation);
         }
+        $delivery = null;
         try {
             $delivery = $this->drain->drain($deliveryBatchSize, max(0.0, $budgetSeconds - ($this->seconds() - $started)));
+        } catch (\Throwable $e) {
+            if ($failure === null) {
+                throw $e;
+            }
+            // The class only: a driver message can carry SQL and stored values.
+            $this->logger->error('Queued alert notifications were not delivered after the failed evaluation: {error}', ['error' => $e::class]);
         } finally {
             $this->release(RunLock::DELIVER);
+        }
+        if ($failure !== null) {
+            throw $failure;
         }
 
         return new AlertingRun(AlertingRunOutcome::Evaluated, $evaluation, $delivery);

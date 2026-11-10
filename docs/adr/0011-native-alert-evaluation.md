@@ -534,7 +534,10 @@ behavior until an administrator opts in.
    - 1 for an invalid option, an unreachable database, a failed evaluation
      or a delivery worker that does not report success. The output names
      the exception class only: driver messages can name the server or hold
-     SQL. A failed evaluation is not followed by delivery.
+     SQL. A failed evaluation is still followed by delivery when the
+     delivery lock is free, so notifications already queued, recoveries
+     included, are not held back by a failure that repeats every run; the
+     run then exits 1 with the evaluation's error.
 
    Every warning and error of a run, from the command, the evaluator and
    delivery, is written to `cacti.log` as `ALERTING WARNING: ...` or
@@ -747,7 +750,7 @@ behavior until an administrator opts in.
 | Five attempts fail | Row `failed`, error logged, not retried | Notification delivery |
 | `alerting_enable` off | Command exits 0 with "inactive: alerting is disabled"; the poller starts nothing | Evaluate command |
 | A second evaluator starts while one runs | It exits 0 without evaluating or delivering | Evaluate command |
-| An evaluation fails | Exit status 1, locks released, no delivery | Evaluate command |
+| An evaluation fails | Queued notifications are still delivered if the delivery lock is free; exit status 1, locks released | Evaluate command |
 | Database unreachable | Exit status 1; the exception class only, in the output and as an `ALERTING ERROR:` line in `log/cacti.log` | Evaluate command |
 | A remote collector finishes its poll | Nothing is started | Evaluate command |
 | The delivery worker fails or reports nothing | Exit status 1; the worker and the command each log the exception class to `cacti.log` | Evaluate command |

@@ -144,9 +144,27 @@ final class RunAlertingTest extends TestCase
         self::assertSame(['busy evaluate'], $this->lock->events, 'A lock this run did not take is not released.');
     }
 
-    public function testTheEvaluationLockIsReleasedWhenEvaluationFails(): void
+    public function testAFailedEvaluationStillDrainsTheQueueAndThenPropagates(): void
     {
         $this->rates->failure = new \RuntimeException('lost connection');
+        $this->drain->report = new DeliveryReport(sent: 1);
+
+        try {
+            $this->runOnce(budgetSeconds: 30.0);
+            self::fail('The failed rate read was not reported.');
+        } catch (\RuntimeException $e) {
+            self::assertSame('lost connection', $e->getMessage());
+        }
+
+        self::assertSame(['acquire evaluate', 'release evaluate', 'acquire deliver', 'release deliver'], $this->lock->events);
+        self::assertSame([[RunAlerting::DELIVERY_BATCH_SIZE, 30.0]], $this->drain->calls, 'Notifications already decided are still sent.');
+        self::assertSame([], $this->logger->records);
+    }
+
+    public function testAFailedEvaluationDrainsNothingWhileAnotherDelivers(): void
+    {
+        $this->rates->failure = new \RuntimeException('lost connection');
+        $this->lock->elsewhere = [RunLock::DELIVER];
 
         try {
             $this->runOnce();
@@ -155,8 +173,28 @@ final class RunAlertingTest extends TestCase
             self::assertSame('lost connection', $e->getMessage());
         }
 
-        self::assertSame(['acquire evaluate', 'release evaluate'], $this->lock->events);
+        self::assertSame(['acquire evaluate', 'release evaluate', 'busy deliver'], $this->lock->events);
         self::assertSame([], $this->drain->calls);
+    }
+
+    public function testADeliveryFailureAfterAFailedEvaluationIsLoggedAndTheEvaluationErrorPropagates(): void
+    {
+        $this->rates->failure = new \RuntimeException('lost connection');
+        $this->drain->failure = new \LogicException('SELECT secret FROM worker');
+
+        try {
+            $this->runOnce();
+            self::fail('The failed rate read was not reported.');
+        } catch (\RuntimeException $e) {
+            self::assertSame('lost connection', $e->getMessage(), 'The evaluation error is the one reported.');
+        }
+
+        self::assertSame(['acquire evaluate', 'release evaluate', 'acquire deliver', 'release deliver'], $this->lock->events);
+        self::assertSame([[
+            'level' => 'error',
+            'message' => 'Queued alert notifications were not delivered after the failed evaluation: {error}',
+            'context' => ['error' => \LogicException::class],
+        ]], $this->logger->records, 'The class only: no message or SQL.');
     }
 
     public function testTheEvaluationLockIsReleasedBeforeDelivery(): void
