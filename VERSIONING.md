@@ -45,8 +45,18 @@ with a feature, so an operator can take the fix without taking anything else.
 
 ## Release target
 
-The first planned application release is **`v1.3.0`**. It carries the Kadupul
-rename and the new features from `main`.
+Kadupul numbers its own releases, starting at **`v0.1.0`**. The next release
+is `v0.1.0-alpha.1`, and it carries the Kadupul rename and the new features
+from `main`. A tag with a pre-release suffix such as `-alpha.1` is published
+as a GitHub pre-release.
+
+While the major version is 0, the interface above may still change: a release
+that breaks it raises the minor version, and everything else raises the patch.
+`v1.0.0` is the first release that promises the rules below.
+
+The earlier pre-release `v1.3.0-alpha.1` (2026-10-10) used Cacti's numbering
+and is superseded by the 0.x series. Semantic Versioning orders it above
+`v0.1.0`, so do not compare versions across that change.
 
 ## Long-term support
 
@@ -54,11 +64,12 @@ rename and the new features from `main`.
 starts at Cacti 1.2.31 and takes upstream 1.2.x bug fixes, security fixes and
 hardening, plus Kadupul's own security fixes where the same code exists. It takes
 no features and keeps the interface above identical, so an existing 1.2.31 install
-or script keeps working. The rename and new features ship in `v1.3.0` only.
+or script keeps working. The rename and new features ship only in the Kadupul
+releases from `main`.
 
 ## Commits and releases
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/).
 `feat:` implies a minor, `fix:` a patch, and a `!` or a `BREAKING CHANGE:`
-footer implies a major. The mapping is a guide for the maintainer cutting the
+footer implies a major (a minor while the major version is 0). The mapping is a guide for the maintainer cutting the
 release, not an automation that tags on its own. Releases are deliberate.
