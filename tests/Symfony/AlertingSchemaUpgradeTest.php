@@ -66,9 +66,53 @@ final class AlertingSchemaUpgradeTest extends TestCase
         $root = dirname(__DIR__, 2);
         self::assertSame('1.2.40', trim((string) file_get_contents($root . '/include/cacti_version')));
         self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.39'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.40'\\s*=>\\s*'0103',\\n\\);/m", (string) file_get_contents($root . '/include/global_arrays.php'));
-        // Off by default (decision 10): the step writes no setting, rule or row.
+        // Off by default (decision 10): the step writes no setting, rule or
+        // row; its only write is the realm grant of decision 12.
         $source = (string) file_get_contents($root . '/install/upgrades/1_2_40.php');
-        self::assertDoesNotMatchRegularExpression('/\b(INSERT|UPDATE|REPLACE|DELETE)\b/i', $source);
+        $writes = preg_replace("/'INSERT IGNORE INTO user_auth_realm \\(realm_id, user_id\\) VALUES \\(\\?, 1\\)'/", '', $source, 1, $grants);
+        self::assertSame(1, $grants);
+        self::assertDoesNotMatchRegularExpression('/\b(INSERT|UPDATE|REPLACE|DELETE)\b/i', (string) $writes);
+    }
+
+    public function testAFreshInstallGrantsTheAlertingRealmsToTheAdminAccount(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $sql = (string) file_get_contents($root . '/cacti.sql');
+        foreach ([29, 30] as $realm) {
+            self::assertStringContainsString('INSERT INTO user_auth_realm VALUES (' . $realm . ',1);', $sql);
+        }
+        $arrays = (string) file_get_contents($root . '/include/global_arrays.php');
+        self::assertStringContainsString("29   => __('Alert Rules'),", $arrays);
+        self::assertStringContainsString("30   => __('Alert Incidents'),", $arrays);
+    }
+
+    public function testUpgradeGrantsTheAlertingRealmsToTheAdminAccountOnce(): void
+    {
+        $db = $this->database();
+        $created = $this->realmTables();
+        try {
+            $db->exec('DELETE FROM user_auth_realm WHERE realm_id IN (29, 30)');
+            upgrade_to_1_2_40();
+            self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+            self::assertSame('29,30', $this->scalar('SELECT GROUP_CONCAT(realm_id ORDER BY realm_id) FROM user_auth_realm WHERE user_id = 1 AND realm_id IN (29, 30)'));
+            self::assertSame('0', $this->scalar('SELECT COUNT(*) FROM user_auth_realm WHERE user_id <> 1 AND realm_id IN (29, 30)'));
+
+            // A rerun keeps the grants and adds none.
+            upgrade_to_1_2_40();
+            self::assertSame('2', $this->scalar('SELECT COUNT(*) FROM user_auth_realm WHERE realm_id IN (29, 30)'));
+
+            // Without the admin account there is nobody to grant them to.
+            $db->exec('DELETE FROM user_auth_realm WHERE realm_id IN (29, 30)');
+            $db->exec('UPDATE user_auth SET id = 900 WHERE id = 1');
+            upgrade_to_1_2_40();
+            self::assertSame('0', $this->scalar('SELECT COUNT(*) FROM user_auth_realm WHERE realm_id IN (29, 30)'));
+            $db->exec('UPDATE user_auth SET id = 1 WHERE id = 900');
+        } finally {
+            $db->exec('DELETE FROM user_auth_realm WHERE realm_id IN (29, 30)');
+            foreach ($created as $table) {
+                $db->exec('DROP TABLE IF EXISTS ' . $table);
+            }
+        }
     }
 
     public function testUpgradeCreatesTheTablesAFreshInstallCreates(): void
@@ -167,6 +211,29 @@ final class AlertingSchemaUpgradeTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('alert_rule_state is missing or differs');
         upgrade_to_1_2_40();
+    }
+
+    /**
+     * user_auth with the admin row and user_auth_realm, as cacti.sql creates
+     * them, unless the database already has them.
+     *
+     * @return list<string> the tables this test created
+     */
+    private function realmTables(): array
+    {
+        $db = $this->database();
+        $created = [];
+        if ($this->scalar("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user_auth'") === '0') {
+            self::assertNotFalse($db->exec("CREATE TABLE user_auth (id mediumint(8) unsigned NOT NULL auto_increment, username varchar(50) NOT NULL default '0', PRIMARY KEY (id)) ENGINE=InnoDB"));
+            $created[] = 'user_auth';
+        }
+        $db->exec("INSERT IGNORE INTO user_auth (id, username) VALUES (1, 'admin')");
+        if ($this->scalar("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'user_auth_realm'") === '0') {
+            self::assertNotFalse($db->exec("CREATE TABLE user_auth_realm (realm_id mediumint(8) unsigned NOT NULL default '0', user_id mediumint(8) unsigned NOT NULL default '0', PRIMARY KEY (realm_id, user_id), KEY user_id (user_id)) ENGINE=InnoDB"));
+            $created[] = 'user_auth_realm';
+        }
+
+        return $created;
     }
 
     private function database(): PDO

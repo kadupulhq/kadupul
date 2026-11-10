@@ -6,13 +6,13 @@ declare(strict_types=1);
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 /**
- * Add the native alerting tables (ADR 0011 decision 13). The step creates
- * tables and nothing else: no setting, rule or schedule, so nothing is
- * evaluated or sent until an administrator turns alerting on (decision 10).
- * Each table is created only when missing and then confirmed. A table of
- * another shape, or one that could not be created, stops the upgrade before
- * the version is recorded and is left as it is, so a rerun starts from the
- * same place.
+ * Add the native alerting tables (ADR 0011 decision 13) and grant the two
+ * alerting realms to the admin account (decision 12). The step writes no
+ * setting, rule or schedule, so nothing is evaluated or sent until an
+ * administrator turns alerting on (decision 10). Each table is created only
+ * when missing and then confirmed. A table of another shape, or one that
+ * could not be created, stops the upgrade before the version is recorded and
+ * is left as it is, so a rerun starts from the same place.
  */
 function upgrade_to_1_2_40(): void
 {
@@ -30,6 +30,28 @@ function upgrade_to_1_2_40(): void
         );
         if ($found['data'] !== upgrade_alerting_signature($definition)) {
             throw new RuntimeException('Table ' . $table . ' is missing or differs from the alerting definition. Review it and rerun the upgrade; existing rows are not changed.');
+        }
+    }
+
+    upgrade_alerting_realms();
+}
+
+/**
+ * Alert Rules (29) and Alert Incidents (30) for user 1, the admin account
+ * cacti.sql creates, as the 1.0.0 step granted its new realms. Other users
+ * and groups get them through user administration. The grant ignores a
+ * row an administrator already made, so a rerun changes nothing; a failed
+ * grant stops the upgrade before the version is recorded.
+ */
+function upgrade_alerting_realms(): void
+{
+    $admin = db_install_fetch_cell('SELECT id FROM user_auth WHERE id = 1');
+    if (empty($admin['data'])) {
+        return;
+    }
+    foreach (array(29, 30) as $realm) {
+        if (db_install_execute('INSERT IGNORE INTO user_auth_realm (realm_id, user_id) VALUES (?, 1)', array($realm)) !== DB_STATUS_SUCCESS) {
+            throw new RuntimeException('The alerting realms could not be granted to the admin account. Review user_auth_realm and rerun the upgrade.');
         }
     }
 }

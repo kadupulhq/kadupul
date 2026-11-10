@@ -1238,6 +1238,8 @@ $user_auth_realms = array(
     5    => __('Graphs'),
     4    => __('Trees'),
     1043 => __('Spike Handling'),
+    29   => __('Alert Rules'),
+    30   => __('Alert Incidents'),
 
     9    => __('Data Source Profiles'),
     14   => __('Presets'),
@@ -1262,7 +1264,7 @@ $user_auth_realms = array(
 $user_auth_roles = array(
     __('Normal User')            => array(7, 19, 20, 22, 24, 25, 27, 28),
     __('Template Editor')        => array(8, 2, 9, 10, 11, 12, 13, 14, 16, 17),
-    __('General Administration') => array(8, 3, 4, 5, 23, 1043),
+    __('General Administration') => array(8, 3, 4, 5, 23, 1043, 29, 30),
     __('System Administration')  => array(8, 15, 26, 1, 18, 21, 101)
 );
 
