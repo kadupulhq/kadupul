@@ -5,6 +5,9 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Register the legacy database failure scope and the shared locale resolver classes in the presentation native fixtures' source registries, which refuse any project file they do not list, so the legacy coverage shards load the database and language bootstrap again.
+- Bind the data source repair and rerun method-refusal coverage evidence to the request guard that actually runs, requiring the exact 405 or 403 refusal line instead of library code the refused request never reaches.
+- Measure the data query runtime, the database failure scope and the connection registry in the native SNMP data query coverage child, which already requires them as executed sources, so its coverage evidence can be accepted again.
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
 - Type the report device-placement adapter and report catalog rows, prepare the placement statements once per request instead of once per device, and bind the adapter with `#[AsAlias]`; report placement and listing behaviour are unchanged.
