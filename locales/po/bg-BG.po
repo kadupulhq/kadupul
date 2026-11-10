@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 09:18-0800\n"
+"POT-Creation-Date: 2026-11-09 19:34-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -940,9 +940,9 @@ msgstr "Последна проверка"
 msgid "Location"
 msgstr "Местоположение"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "Няма"
 
@@ -1438,9 +1438,9 @@ msgstr "Месечно на ден"
 msgid "Months of Year"
 msgstr "Месеци на годината"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "Име"
 
@@ -1756,22 +1756,6 @@ msgstr "всеки X седмици."
 msgid "every X."
 msgstr "всеки X."
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Действие"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Автентична парола"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Auth Protocol"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Потребителско име за удостоверяване"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "Елементът за автоматизация не съществува. Не може да се дублира."
@@ -1785,55 +1769,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Автоматизация SNMP Опции"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Кликнете върху &quot;Продължи&quot;, за да изтриете следната SNMP опция."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Натиснете &#39;Продължи&#39;, за да изтриете следните SNMP опции."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Кликнете върху „Напред“, за да дублирате следните опции за SNMP. По желание можете да промените формата на заглавието за новите опции за SNMP."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Общност"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Контекст"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Изтриване на SNMP опция"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Попълнете името на този набор от опции за SNMP."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Артикул"
-
-#: automation_snmp.php lib/api_automation.php
-#, fuzzy, php-format
-msgid "Item#%d"
-msgstr "Артикул№{ 0}"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Макс OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Преместване нагоре"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Преместване Нагоре"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1844,37 +1785,8 @@ msgid "Networks Using"
 msgstr "Използване на мрежи"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Няма SNMP елементи"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Няма намерени опции за SNMP опции"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Порт"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv Passphrase"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Priv протокол"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Премахване на SNMP елемент"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Нов опит"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP общността / потребителско име: <b> %s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1885,52 +1797,16 @@ msgid "SNMP Option Set"
 msgstr "Набор опции за SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP Option Set [редактиране: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "Набор от опции за SNMP [new]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "Опции за SNMP опции"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "Опция SNMP:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "Опции на SNMP [редактиране: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "Опции на SNMP [new]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMP правила"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "Версия SNMP: <b> %s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Последователност"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Последователност от позиция."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Време за изчакване"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1944,19 +1820,9 @@ msgstr "V2 Записи"
 msgid "V3 Entries"
 msgstr "V3 Записи"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Версия"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "име"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "нищо"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2695,6 +2561,10 @@ msgstr "Проверката на белия списък не бе успешн
 msgid "White List Verification Succeeded."
 msgstr "Белият списък за потвърждаване на успеха."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Действие"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Добави"
@@ -2823,6 +2693,16 @@ msgstr "Картографираните шаблони с графики са �
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "Картографски идентификатор"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Преместване нагоре"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Преместване Нагоре"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4368,6 +4248,11 @@ msgstr "Само Kadupul Администратори с привилегия з
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "В процес на изпълнение е инсталация или надстройка."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Версия"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -6756,10 +6641,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Проверете тук, ако искате да разрешите NULL вход в това поле от потребителя."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Поставете отметка в това квадратче, ако временно не искате да изпращате SNMP известия до този хост."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Поставете отметка в това квадратче, за да забраните всички проверки за този хост."
 
@@ -6913,10 +6794,6 @@ msgid "Disable Device"
 msgstr "Деактивиране на устройството"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Изключете SNMP известяване"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Не разширявайте долната и горната граница, ако графиката съдържа стойност извън валидния диапазон."
 
@@ -7037,14 +6914,6 @@ msgstr "Тип GPRINT"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Общи опции на устройството"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "Общи опции за SNMP обекти"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Дайте на SNMP обективно описание."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7257,20 +7126,12 @@ msgid "Matching Pattern"
 msgstr "Съвпадащ шаблон"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Максимален размер на регистрационния файл"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Максимална OID на заявка за получаване"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Максимална стойност („U“ за максимум)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Трябва да се съхрани максималният брой записи на дневника за този приемник."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7473,10 +7334,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "Идентификатор на SNMP двигателя (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "Тип на съобщението SNMP"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP парола (v3)"
 
@@ -7513,10 +7370,6 @@ msgid "SNMP Version"
 msgstr "SNMP Версия"
 
 #: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP traps са винаги непотвърдени. За да изпратите потвърдени SNMP известия, официално наречени &quot;INFORMS&quot;, ще се изисква SNMPv2 или по-висока."
-
-#: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
 msgstr "Ниво на защита SNMP v3, което да се използва при запитване към устройството."
 
@@ -7535,6 +7388,10 @@ msgstr "Опции за Alpha"
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Изберете профила на източника на данни. Профилът на източниците на данни контролира интервала на анкетиране, политиката за натрупване на данни и политиката за запазване за получените източници на данни."
+
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Последователност"
 
 #: include/global_form.php
 msgid "Sequence."
@@ -8360,6 +8217,10 @@ msgstr "MySQL - Поддръжка на TimeZone"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Цвят, който да се използва за работно време"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Общност"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9656,6 +9517,10 @@ msgid "Restrictive"
 msgstr "ограничителен"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Нов опит"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Завъртете дневника Kadupul"
 
@@ -10535,6 +10400,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - Поддръжка на TimeZone"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Време за изчакване"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Настройка на шрифта на заглавието"
 
@@ -10861,6 +10730,15 @@ msgstr "Поле"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Правило за съответствие на графиката"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Артикул"
+
+#: lib/api_automation.php
+#, fuzzy, php-format
+msgid "Item#%d"
+msgstr "Артикул№{ 0}"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11896,6 +11774,10 @@ msgstr "Пощенски клас на PHP"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Резултати от Ping:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Порт"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12977,6 +12859,10 @@ msgstr "Изберете един от дадените типове за при
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Изпрати доклад"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Последователност от позиция."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
@@ -15724,6 +15610,10 @@ msgstr "Суровост"
 #: managers.php
 msgid "Severity Level"
 msgstr "Ниво на сериозност"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"
