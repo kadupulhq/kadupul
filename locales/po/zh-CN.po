@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:48-0800\n"
+"POT-Creation-Date: 2026-11-09 19:34-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -6621,10 +6621,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "如果您想允许用户将这个字段留空, 请检查这里."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "如果您暂时不想向此主机发送SNMP 通知,请选中此框."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "选中此复选框来禁用该设备的所有检查."
 
@@ -6778,10 +6774,6 @@ msgid "Disable Device"
 msgstr "禁用设备"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "禁用SNMP 通知接收器"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "如果图形包含超出有效范围的值,则不要展开下限和上限."
 
@@ -6902,14 +6894,6 @@ msgstr "GPRINT 类型"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "设备基本选项"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "常规SNMP 实体选项"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "请给SNMP 实体一个有意义的描述."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7122,20 +7106,12 @@ msgid "Matching Pattern"
 msgstr "匹配模式"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "日志大小最大值"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "每个获取请求的最大 OIDs"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "最大值(\"U\" 为最大值)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "需要存储此接收器的一天通知日志条目的最大数量."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7338,10 +7314,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP 引擎ID (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "SNMP 消息类型"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP 密码 (v3)"
 
@@ -7376,10 +7348,6 @@ msgstr "SNMP 用户名 (v3)"
 #: include/global_form.php
 msgid "SNMP Version"
 msgstr "SNMP 版本"
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP 陷阱始终未被确认. 要发送确认的SNMP 通知, 正式名为 \"INFORMS\",SNMPv2 或更高版本将是必需的."
 
 #: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -15609,6 +15577,10 @@ msgstr "严重"
 #: managers.php
 msgid "Severity Level"
 msgstr "严重级别"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

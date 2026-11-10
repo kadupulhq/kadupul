@@ -2819,6 +2819,45 @@ current-account, realm and device permissions. Maintenance actions, detailed
 legacy diagnostics and plugin entries keep their existing paths. The slice does
 not retire `utilities.php` or claim a reduction in its global statements.
 
+### SNMP notification receiver editor
+
+The General tab of an SNMP notification receiver (`managers.php?action=edit`)
+uses Symfony routes, Forms and Twig at `/utilities/notification-receivers/new`
+and `/utilities/notification-receivers/{id}/edit`. Both require console access
+and the Utilities realm (15), checked before any read through the same reviewed
+policy as the RRD check. Saves run through `AuditedPrimaryWrite`: they recheck
+the account and realm inside the transaction, need the primary collector, lock
+the receiver row, and are audited without credential values. The form carries a
+keyed revision of the whole row, credentials included, so an edit made after
+another administrator's change is refused with 409. The table is not replicated
+to remote collectors; `lib/snmpagent.php` reads it on the primary when it sends
+a notification.
+
+`managers.php` forwards General-tab edit links to the new routes and answers 409
+to a post of the old General form. The receiver list, its bulk actions and the
+Notifications and Logs tabs remain in `managers.php`; the Symfony page links to
+those tabs, and their General tab links back.
+
+Differences from legacy:
+
+- Stored credentials (community, username, authentication password and privacy
+  passphrase) are never sent to the browser. An edit either keeps them or
+  replaces all four, and a kept value containing a control character must be
+  replaced. Legacy stripped control characters on save; the new form rejects
+  them.
+- The description and hostname must be single-line text. The hostname is
+  limited to the 100 characters the column stores; legacy offered 250 and the
+  database truncated or refused the rest.
+- The maximum log size must be 1 to 31 (legacy did not check it) and the port
+  1 to 65535.
+- An SNMPv3 receiver needs a username and an engine ID. Each passphrase must be
+  set together with its protocol, privacy needs authentication, and a passphrase
+  needs at least 8 bytes, because `snmptrap` refuses shorter ones and derives the
+  security level from which passphrases are present. A confirmation that does
+  not match is refused.
+- The legacy script that hid fields for the selected SNMP version is not
+  carried over; every field is shown.
+
 ## Graph, data-source, report and template relationship catalogs
 
 The [ten management catalogs](migrations/management-catalogs-batch-10.md) add native
