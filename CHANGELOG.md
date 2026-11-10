@@ -5,6 +5,8 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Update the hash-locked CI Semgrep scanner from 1.182.1 to 1.183.0.
+
 - Base the presentation sink-context native test on a golden scenario that still exists and run its request-filter cases on the data template editor, after the SNMP Option Set editor moved to Symfony (#1441) and its legacy drag-and-drop table was retired.
 - Register the legacy database failure scope and the shared locale resolver classes in the presentation native fixtures' source registries, which refuse any project file they do not list, so the legacy coverage shards load the database and language bootstrap again.
 - Bind the data source repair and rerun method-refusal coverage evidence to the request guard that actually runs, requiring the exact 405 or 403 refusal line instead of library code the refused request never reaches.
