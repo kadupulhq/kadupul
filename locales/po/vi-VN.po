@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:48-0800\n"
+"POT-Creation-Date: 2026-11-09 19:34-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -6626,10 +6626,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Kiểm tra ở đây nếu bạn muốn cho phép đầu vào NULL trong trường này từ người dùng."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Chọn hộp này nếu bạn tạm thời không muốn gửi thông báo SNMP đến máy chủ này."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Chọn hộp này để vô hiệu hóa tất cả các kiểm tra cho máy chủ này."
 
@@ -6783,10 +6779,6 @@ msgid "Disable Device"
 msgstr "Vô hiệu hóa thiết bị"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Vô hiệu hóa nhận thông báo SNMP"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Không mở rộng giới hạn dưới và trên nếu biểu đồ chứa giá trị ngoài phạm vi hợp lệ."
 
@@ -6907,14 +6899,6 @@ msgstr "Loại GPRINT"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Tùy chọn thiết bị chung"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "Tùy chọn thực thể SNMP chung"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Cung cấp cho thực thể SNMP này một mô tả có ý nghĩa."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7127,20 +7111,12 @@ msgid "Matching Pattern"
 msgstr "Kết hợp mẫu"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Kích thước nhật ký tối đa"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Yêu cầu tối đa cho mỗi OID"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Giá trị tối đa (&quot;U&quot; cho Không tối đa)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Số lượng mục nhật ký thông báo tối đa trong ngày cho người nhận này cần được lưu trữ."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7343,10 +7319,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "ID động cơ SNMP (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "Loại tin nhắn SNMP"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "Mật khẩu SNMP (v3)"
 
@@ -7381,10 +7353,6 @@ msgstr "Tên người dùng SNMP (v3)"
 #: include/global_form.php
 msgid "SNMP Version"
 msgstr "Phiên bản SNMP"
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "Bẫy SNMP luôn không được kiểm chứng. Để gửi thông báo SNMP được thừa nhận, chính thức được gọi là &quot;INFORMS&quot;, SNMPv2 trở lên sẽ được yêu cầu."
 
 #: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -15615,6 +15583,10 @@ msgstr "Mức độ nghiêm trọng"
 #: managers.php
 msgid "Severity Level"
 msgstr "Mức độ nghiêm trọng"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

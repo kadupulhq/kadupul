@@ -34,7 +34,9 @@ final class ManagerNativeCoverageTest extends TestCase
             foreach (array(0, 2, 3, 4, 5) as $index => $column) {
                 self::assertSame($expected[$id][$index], trim($cells->item($column)->textContent));
             }
-            foreach (array(0 => '', 4 => '&tab=notifications', 5 => '&tab=logs') as $column => $tab) {
+            // The name opens the Symfony General tab; the counts open the legacy tabs.
+            self::assertSame('/app.php/utilities/notification-receivers/' . $id . '/edit', $xpath->query('./a', $cells->item(0))->item(0)->getAttribute('href'));
+            foreach (array(4 => '&tab=notifications', 5 => '&tab=logs') as $column => $tab) {
                 self::assertSame('/managers.php?action=edit' . $tab . '&id=' . $id, $xpath->query('./a', $cells->item($column))->item(0)->getAttribute('href'));
             }
             self::assertSame((string) $id, trim($cells->item(1)->textContent));
