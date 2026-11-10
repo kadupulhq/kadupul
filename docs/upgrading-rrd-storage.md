@@ -65,3 +65,59 @@ export file state before retrying a write.
 This does not change persistent acknowledged pipes, the Windows fallback or
 LTS (#782). No schema or credential migration is required. Reverting restores
 the former blocking path; it does not restore prior RRD or export file contents.
+
+## Tuning an RRDfile
+
+`rrdtool_function_tune()` in `lib/rrd.php` changes a data source's heartbeat,
+minimum, maximum, type or name with `rrdtool tune`. RRDtool applies each option
+as it reaches it, so a rejected later option used to leave the earlier ones
+stored without any report (#777). Core has no caller of this function;
+plugins do.
+
+The function now changes all requested options or none. Under the exclusive
+RRD maintenance lease it copies the RRDfile to
+`kadupul-tune-<16 hex digits>.bak` in the same directory and checks the copy
+by SHA-256. If `rrdtool tune` fails, the copy is restored through a new file
+in that directory that is renamed over the RRDfile, so the RRDfile is never
+left empty or half written. The account that tunes therefore needs write
+access to the RRDfile's directory, as RRD restores already do.
+
+It returns `true` when every option was applied or there was nothing to
+change, and `false` otherwise. Before #1393 it returned nothing. It refuses,
+without running RRDtool, when `RRDCACHED_ADDRESS` is set, when the RRDfile or
+the RRDtool binary is missing, when the maintenance lease is not free within
+5 seconds, or when the copy cannot be made. Most of these write an error log
+line:
+
+| Log message | Meaning |
+| --- | --- |
+| `RRDtool tune failed for '<file>'; the RRDfile was restored unchanged.` | The file is as it was before the call. Fix the rejected option and retry. |
+| `RRDtool tune failed for '<file>' and the RRDfile could not be restored; its previous contents are in '<copy>'.` | The RRDfile may hold some of the changes. The named `.bak` file is the only intact copy and is kept. |
+| `RRD tuning could not copy '<file>' before tuning; no changes were made.` | Check free space and permissions in the RRDfile's directory. |
+| `Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.` | The copy and restore cannot be coordinated with rrdcached. |
+
+To recover after the second message, stop the poller and other writers for
+that file, compare the RRDfile with the copy (`rrdtool info`), and move the
+copy over the RRDfile if the RRDfile is wrong. The copy's name does not end in
+`.rrd`, so the RRD Cleaner does not list it; delete it once it is no longer
+needed.
+
+## Abandoned temporary files
+
+RRD restores, including the restore after a failed tune and the restores in
+`cli/splice_rrd.php` and `cli/float_rrdfiles.php`, write a candidate named
+`.rrd-restore-<random>` beside the RRDfile and remove it in a `finally` block.
+A killed process cannot run that block, so the file stayed behind for good.
+Since #1362, a restore first removes candidates in the same directory that
+are more than a day old. Each process checks a directory at most once an hour.
+Only regular files whose name matches exactly are removed: directories,
+links, look-alike names and `.rrd` files are kept. A candidate less than a day
+old may belong to a restore that is still running and is left alone.
+
+The tune copies described above are not swept, because one that is kept may
+be the only intact copy of an RRDfile.
+
+The data input whitelist writer (`cli/input_whitelist.php`) does the same for
+its own replacements. After it takes the whitelist lock, it removes
+`.whitelist-<32 hex digits>` files in the whitelist's directory that are more
+than an hour old.

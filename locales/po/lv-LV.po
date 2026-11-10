@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:51-0800\n"
+"POT-Creation-Date: 2026-11-09 23:23-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -943,9 +943,9 @@ msgstr "Pēdējā pārbaude"
 msgid "Location"
 msgstr "Atrašanās vieta"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "Nav pieejams"
 
@@ -1317,22 +1317,6 @@ msgstr "Up/SNMP saimnieki"
 msgid "Weekly"
 msgstr "Katru nedēļu"
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Darbība"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Autentifikācijas parole"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Autentifikācijas protokols"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Autentifikācijas lietotājvārds"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "Automatizācijas vienums neeksistē. Nevar dublēt."
@@ -1346,61 +1330,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Automatizācijas SNMP opcijas ir dublētas."
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Noklikšķiniet 'Turpināt', lai dzēstu norādīto SNMP opcijas elementu."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Klikšķiniet 'Turpināt', lai izdzēstu šo(-īs) SNMP opciju(-as)."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Noklikšķiniet uz \"Turpināt\", lai dublētu tālāk norādītās SNMP opcijas. Varat pēc izvēles mainīt jauno SNMP opciju virsraksta formātu."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Kopiena"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Konteksts"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Dzēst SNMP opcijas elementu"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Ievadiet šīs SNMP opciju kopas nosaukumu."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Elements"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Elements#%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Maksimālais OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Pārvietot lejup"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Pārvietot augšup"
-
-#: automation_snmp.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "Nosaukums"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1411,37 +1346,8 @@ msgid "Networks Using"
 msgstr "Tīklus izmanto"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Nav SNMP vienumu"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Netika atrasta neviena SNMP opciju kopa"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Ports"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Privāta frāze"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Privāts protokols"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Noņemt SNMP elementu"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Atkārtoti mēģinājumi"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP kopiena/lietotājvārds: <b>%s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1452,52 +1358,16 @@ msgid "SNMP Option Set"
 msgstr "SNMP opciju kopa"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP opciju kopa [rediģēt: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMP opciju kopa [jauna]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "SNMP opciju kopas"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "SNMP opcija:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMP opcijas [labot: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "SNMP opcijas [jauns]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMP noteikumi"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP versija: <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Secība"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Elementa secība."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Nesasniedzams"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1511,19 +1381,9 @@ msgstr "V2 ieraksti"
 msgid "V3 Entries"
 msgstr "V3 ieraksti"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Versija"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "Nosaukums"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "Neviena"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2266,6 +2126,10 @@ msgstr "Baltā saraksta verifikācija neizdevās. Palaidiet CLI skriptu input_wh
 msgid "White List Verification Succeeded."
 msgstr "Baltā saraksta pārbaude ir sekmīga."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Darbība"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Pievienot"
@@ -2399,6 +2263,22 @@ msgstr "Kartētu grafiku veidnes ar grafikiem ir tikai lasāmas"
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "Kartēšanas ID"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Pārvietot lejup"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Pārvietot augšup"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "Nosaukums"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -3959,6 +3839,11 @@ msgstr "Pašlaik var pieteikties tikai Kadupul administratori ar instalēšanas/
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Pašlaik notiek uzstādīšana vai atjaunināšana."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Versija"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -6449,10 +6334,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Pārbaudiet šeit, ja vēlaties atļaut lietotājam šajā laukā ievadīt NULL."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Atzīmējiet šo izvēles rūtiņu, ja īslaicīgi nevēlaties šim resursdatoram sūtīt SNMP paziņojumus."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Atzīmējiet šo izvēles rūtiņu, lai atspējotu visas pārbaudes šim saimniekdatoram."
 
@@ -6610,10 +6491,6 @@ msgid "Disable Device"
 msgstr "Atspējot ierīci"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Atspējot SNMP paziņojumu uztvērēju"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Neizvērsiet apakšējo un augšējo robežu, ja diagrammā ir vērtība, kas ir ārpus derīgā diapazona."
 
@@ -6737,17 +6614,9 @@ msgstr "GPRINT tips"
 msgid "General Device Options"
 msgstr "Pamatierīces opcijas"
 
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "SNMP pamatobjekta opcijas"
-
 #: include/global_form.php include/global_settings.php lib/html_reports.php
 msgid "General Settings"
 msgstr "Pamatiestatījumi"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Sniedziet šai SNMP entītijai jēgpilnu aprakstu."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -6961,20 +6830,12 @@ msgid "Matching Pattern"
 msgstr "Atbilstošs raksts"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Maksimālais žurnāla izmērs"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Maksimālais OID vienā saņemšanas pieprasījumā"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Maksimālā vērtība (“U”, ja nav maksimālās vērtības)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Šim uztvērējam ir jāsaglabā maksimālais dienas paziņojumu žurnāla ierakstu skaits."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7193,10 +7054,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP dzinēja ID (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "SNMP ziņojuma veids"
-
-#: include/global_form.php
 msgid "SNMP Options"
 msgstr "SNMP opcijas"
 
@@ -7237,10 +7094,6 @@ msgid "SNMP Version"
 msgstr "SNMP versija"
 
 #: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP slazdi vienmēr netiek apstiprināti. Lai nosūtītu apstiprinātus SNMP paziņojumus, kurus formāli sauc par \"INFORMĒT\", būs nepieciešams SNMPv2 vai jaunāks."
-
-#: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
 msgstr "SNMP v3 drošības līmenis, kas jāizmanto, vaicājot ierīci."
 
@@ -7259,6 +7112,10 @@ msgstr "Mērogošanas opcijas"
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Atlasiet datu avota profilu. Datu avota profils kontrolē iegūto datu avotu aptaujas intervālu, datu apkopošanu un saglabāšanas politiku."
+
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Secība"
 
 #: include/global_form.php
 msgid "Sequence."
@@ -8092,6 +7949,10 @@ msgstr "Klienta laika josla atbalsts"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Krāsa, ko izmantot uzņēmējdarbības darba stundām"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Kopiena"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9390,6 +9251,10 @@ msgid "Restrictive"
 msgstr "Ierobežojošs"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Atkārtoti mēģinājumi"
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Pagrieziet Kadupul žurnālu"
@@ -10279,6 +10144,10 @@ msgid "TimeZone Support"
 msgstr "MySQL — laika joslas atbalsts"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Nesasniedzams"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Virsraksta fonta iestatījums"
 
@@ -10605,6 +10474,15 @@ msgstr "Lauks"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Grafika atbilstības kārtula"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Elements"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Elements#%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11642,6 +11520,10 @@ msgstr "PHP pasta klase"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Ping rezultāti:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Ports"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12729,6 +12611,10 @@ msgstr "Izvēlieties vienu no norādītajiem attēlu pielikumu veidiem"
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Nosūtīt ziņojumu"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Elementa secība."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
@@ -15487,6 +15373,10 @@ msgstr "Smaguma pakāpe"
 #: managers.php
 msgid "Severity Level"
 msgstr "Smaguma pakāpe"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

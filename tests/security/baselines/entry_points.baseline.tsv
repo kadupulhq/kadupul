@@ -16,6 +16,12 @@ app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAcce
 app.php/automation/networks/new	symfony:automation_network_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks/{id}/edit	symfony:automation_network_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/new	symfony:automation_snmp_option_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/edit	symfony:automation_snmp_option_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/new	symfony:automation_snmp_entry_create	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/{entry}/delete	symfony:automation_snmp_entry_delete	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9},entry=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/{entry}/edit	symfony:automation_snmp_entry_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9},entry=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/{entry}/move/{direction}	symfony:automation_snmp_entry_move	methods=POST requirements=id=[1-9][0-9]{0,9},entry=[1-9][0-9]{0,9},direction=up|down; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates	symfony:automation_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/delete	symfony:automation_template_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/legacy	symfony:automation_templates_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
@@ -179,6 +185,8 @@ app.php/templates/devices	symfony:admin_device_templates	methods=GET|HEAD; Conso
 app.php/templates/graphs	symfony:admin_graph_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 10
 app.php/utilities/login-history	symfony:admin_login_history	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/notification-receivers	symfony:admin_notification_receivers	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/notification-receivers/new	symfony:notification_receiver_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
+app.php/utilities/notification-receivers/{id}/edit	symfony:notification_receiver_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-candidates	symfony:admin_rrd_candidates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check	symfony:platform_rrd_checks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
@@ -254,7 +262,7 @@ include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25f
 include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at fd079835be4f; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at ecb0178c09d6; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 0dbdef660348; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at f53aac311243; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fd457ddb745; included by auth_changepassword.php, auth_login.php, graph_realtime.php
 include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at cb47ef8af36b; included by include/global.php

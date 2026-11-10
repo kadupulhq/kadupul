@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:51-0800\n"
+"POT-Creation-Date: 2026-11-09 23:23-0800\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -942,9 +942,9 @@ msgstr "Ultimo Controllo"
 msgid "Location"
 msgstr "Luogo"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "N/A"
 
@@ -1316,22 +1316,6 @@ msgstr "Ospiti Up/SNMP"
 msgid "Weekly"
 msgstr "Settimanale"
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Azione"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Autentica Password"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Protocollo d'autore"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Nome utente"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "L'elemento di automazione non esiste. Impossibile duplicare."
@@ -1345,61 +1329,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Opzioni SNMP di automazione"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Fare clic su 'Continua' per eliminare la seguente voce dell'opzione SNMP."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Fare clic su 'Continua' per eliminare le seguenti opzioni SNMP."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Fare clic su 'Continua' per duplicare le seguenti opzioni SNMP. È possibile modificare facoltativamente il formato del titolo per le nuove opzioni SNMP."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Comunità"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Contesto"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Eliminazione dell'opzione SNMP Voce"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Inserire il nome di questo set di opzioni SNMP."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Elemento"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Voce#%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Max OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Spostare verso il basso"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Sposta Su"
-
-#: automation_snmp.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "Nome"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1410,37 +1345,8 @@ msgid "Networks Using"
 msgstr "Reti che utilizzano"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Nessuna voce SNMP"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Nessun set di opzioni SNMP trovato"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Porta"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv Passphrase"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Protocollo privato"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Rimuovi elemento SNMP"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Tentativi"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "Comunità SNMP/nome utente: <b>%s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1451,52 +1357,16 @@ msgid "SNMP Option Set"
 msgstr "Set di opzioni SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "Set di opzioni SNMP [modifica: %s]."
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "Opzione SNMP Imposta [nuovo]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "Set di opzioni SNMP"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "Opzione SNMP:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "Opzioni SNMP [modifica: %s]."
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "Opzioni SNMP [nuovo]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "Regole SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "Versione SNMP: <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Sequenza"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Sequenza dell'elemento."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Timeout"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1510,19 +1380,9 @@ msgstr "V2 voci"
 msgid "V3 Entries"
 msgstr "V3 voci"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Versione"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "nome"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "nessuno"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2262,6 +2122,10 @@ msgstr "La verifica della lista bianca è fallita.  Eseguire lo script CLI input
 msgid "White List Verification Succeeded."
 msgstr "La verifica della White List (Lista Bianca) Ha avuto successo."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Azione"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Aggiungi"
@@ -2390,6 +2254,22 @@ msgstr "I modelli di grafici mappati con i grafici sono di sola lettura"
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "ID di mappatura"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Spostare verso il basso"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Sposta Su"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "Nome"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -3935,6 +3815,11 @@ msgstr "Solo gli amministratori Kadupul con privilegi di installazione/aggiornam
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "È in corso un'installazione o un aggiornamento."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Versione"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -6421,10 +6306,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Selezionare qui se si desidera consentire all'utente di inserire NULL in questo campo."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Selezionare questa casella se si desidera temporaneamente non inviare notifiche SNMP a questo host."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Spuntare questa casella per disabilitare tutti i controlli per questo host."
 
@@ -6582,10 +6463,6 @@ msgid "Disable Device"
 msgstr "Disattivare il dispositivo"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Disattivare il ricevitore di notifica SNMP"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Non espandere i limiti inferiore e superiore se il grafico contiene un valore al di fuori dell'intervallo valido."
 
@@ -6707,17 +6584,9 @@ msgstr "Tipo GPRINT"
 msgid "General Device Options"
 msgstr "Opzioni generali del dispositivo"
 
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "Opzioni generali SNMP Entità SNMP"
-
 #: include/global_form.php include/global_settings.php lib/html_reports.php
 msgid "General Settings"
 msgstr "Impostazioni generali"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Fornire a questa entità SNMP una descrizione significativa."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -6930,20 +6799,12 @@ msgid "Matching Pattern"
 msgstr "Modello corrispondente"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Dimensione massima del tronco"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Numero massimo di OID per ogni richiesta di prelievo"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Valore massimo (\"U\" per nessun massimo)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "È necessario memorizzare il numero massimo di voci del registro di notifica del giorno per questo destinatario."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7162,10 +7023,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP ID motore (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "Tipo di messaggio SNMP"
-
-#: include/global_form.php
 msgid "SNMP Options"
 msgstr "Opzioni SNMP"
 
@@ -7206,10 +7063,6 @@ msgid "SNMP Version"
 msgstr "Versione SNMP"
 
 #: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "Le trappole SNMP sono sempre non riconosciute. Per inviare notifiche SNMP riconosciute, formalmente chiamate \"INFORMAZIONI\", sarà richiesto SNMPv2 o superiore."
-
-#: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
 msgstr "SNMP v3 Livello di sicurezza da utilizzare quando si interroga il dispositivo."
 
@@ -7228,6 +7081,10 @@ msgstr "Seleziona con curve"
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Selezionare il profilo dell'origine dati.  Il Profilo dell'origine dati controlla l'intervallo di polling, l'aggregazione dei dati e la politica di conservazione delle fonti dati risultanti."
+
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Sequenza"
 
 #: include/global_form.php
 msgid "Sequence."
@@ -8060,6 +7917,10 @@ msgstr "MySQL - Supporto TimeZone"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Colore da utilizzare per l'orario di lavoro"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Comunità"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9356,6 +9217,10 @@ msgid "Restrictive"
 msgstr "Ricostruzione"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Tentativi"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Ruotare il Kadupul Log"
 
@@ -10236,6 +10101,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - Supporto TimeZone"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Timeout"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Titolo Impostazione dei caratteri"
 
@@ -10562,6 +10431,15 @@ msgstr "Campo"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Regola di corrispondenza del grafico"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Elemento"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Voce#%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11598,6 +11476,10 @@ msgstr "Classe Mailer di PHP"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Risultati Ping:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Porta"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12679,6 +12561,10 @@ msgstr "Selezionare uno dei tipi indicati per gli allegati di immagine"
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Invia Report"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Sequenza dell'elemento."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
@@ -15428,6 +15314,10 @@ msgstr "Gravità"
 #: managers.php
 msgid "Severity Level"
 msgstr "Livello di gravità"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

@@ -39,6 +39,13 @@ switch (get_request_var('action')) {
         form_actions();
         break;
     case 'edit':
+        if (!in_array(get_request_var('tab'), array('notifications', 'logs'), true)) {
+            // Symfony owns the General tab. Relative targets keep subdirectory installations working.
+            $id = get_filter_request_var('id');
+            header('Location: ' . (empty($id) ? 'app.php/utilities/notification-receivers/new' : 'app.php/utilities/notification-receivers/' . $id . '/edit'), true, 302);
+            exit;
+        }
+
         // The Logs tab purge deletes the notification log; the page posts it.
         if (isset_request_var('purge')) {
             cacti_require_post_request();
@@ -132,7 +139,7 @@ function manager()
 	</script>
 	<?php
 
-    html_start_box(__('SNMP Notification Receivers'), '100%', '', '3', 'center', 'managers.php?action=edit');
+    html_start_box(__('SNMP Notification Receivers'), '100%', '', '3', 'center', 'app.php/utilities/notification-receivers/new');
 
     ?>
 	<tr class='even noprint'>
@@ -236,7 +243,7 @@ function manager()
             $description = filter_value($item['description'], get_request_var('filter'));
             $hostname    = filter_value($item['hostname'], get_request_var('filter'));
             form_alternate_row('line' . $item['id'], false);
-            form_selectable_cell('<a class="linkEditMain" href="' . html_escape($config['url_path'] . 'managers.php?action=edit&id=' . $item['id']) . '">' . $description . '</a>', $item['id']);
+            form_selectable_cell('<a class="linkEditMain" href="' . html_escape($config['url_path'] . 'app.php/utilities/notification-receivers/' . $item['id'] . '/edit') . '">' . $description . '</a>', $item['id']);
             form_selectable_cell($item['id'], $item['id']);
             form_selectable_cell($item['disabled'] ? '<span class="deviceDown">' . __('Disabled') . '</span>' : '<span class="deviceUp">' . __('Enabled') . '</span>', $item['id']);
             form_selectable_cell($hostname, $item['id']);
@@ -264,15 +271,12 @@ function manager()
 
 function manager_edit()
 {
-    global $config, $tabs_manager_edit, $fields_manager_edit;
+    global $config, $tabs_manager_edit;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
     /* ==================================================== */
 
-    if (!isset_request_var('tab')) {
-        set_request_var('tab', 'general');
-    }
     $id	= (isset_request_var('id') ? get_request_var('id') : '0');
 
     if ($id) {
@@ -291,6 +295,9 @@ function manager_edit()
         foreach (array_keys($tabs_manager_edit) as $tab_short_name) {
             if (($id == 0 && $tab_short_name != 'general')) {
                 print "<li class='subTab'><a href='#' " . (($tab_short_name == get_request_var('tab')) ? "class='selected'" : '') . "'>" . $tabs_manager_edit[$tab_short_name] . '</a></li>';
+            } elseif ($tab_short_name == 'general') {
+                // The General tab is a Symfony page, so it is a full navigation rather than a partial load.
+                print "<li class='subTab'><a href='" . html_escape($config['url_path'] . 'app.php/utilities/notification-receivers/' . ($id ? $id . '/edit' : 'new')) . "'>" . $tabs_manager_edit[$tab_short_name] . '</a></li>';
             } else {
                 print "<li class='subTab'><a " . (($tab_short_name == get_request_var('tab')) ? "class='selected'" : '') .
                     " href='" . html_escape($config['url_path'] .
@@ -308,7 +315,7 @@ function manager_edit()
 		<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 		$(function() {
-			$('.subTab').find('a').on('click', function(event) {
+			$('.subTab').find('a[href*="managers.php"]').on('click', function(event) {
 				event.preventDefault();
 
 				strURL  = $(this).attr('href');
@@ -320,42 +327,10 @@ function manager_edit()
 		<?php }
         }
 
-    switch (get_request_var('tab')) {
-        case 'notifications':
-            manager_notifications($id, $header_label);
-
-            break;
-        case 'logs':
-            manager_logs($id, $header_label);
-
-            break;
-        default:
-            form_start('managers.php');
-
-            html_start_box($header_label, '100%', true, '3', 'center', '');
-
-            draw_edit_form(
-                array(
-                    'config' => array('no_form_tag' => true),
-                    'fields' => inject_form_variables($fields_manager_edit, (isset($manager) ? $manager : array()))
-                )
-            );
-
-            html_end_box(true, true);
-
-            form_save_button('managers.php', 'return');
-
-            ?>
-			<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-
-			// Need to set this for global snmpv3 functions to remain sane between edits
-			snmp_security_initialized = false;
-
-			$(function() {
-				setSNMP();
-			});
-			</script>
-			<?php
+    if (get_request_var('tab') == 'notifications') {
+        manager_notifications($id, $header_label);
+    } else {
+        manager_logs($id, $header_label);
     }
 
     ?>
@@ -894,76 +869,22 @@ function manager_logs($id, $header_label)
 
 function form_save()
 {
-    if (!isset_request_var('tab')) {
-        set_request_var('tab', 'general');
-    }
-
     /* ================= input validation ================= */
     get_filter_request_var('id');
-    get_filter_request_var('max_log_size');
+    /* ==================================================== */
 
-    if (!in_array(get_nfilter_request_var('max_log_size'), range(1, 31))) {
-        //	die_html_input_error();
-    }
-    /* ================= input validation ================= */
+    if (get_nfilter_request_var('tab') == 'notifications') {
+        header('Location: managers.php?action=edit&tab=notifications&id=' . get_request_var('id'));
 
-    switch (get_nfilter_request_var('tab')) {
-        case 'notifications':
-            header('Location: managers.php?action=edit&tab=notifications&id=' . get_request_var('id'));
-            break;
-        default:
-            $save['id']                       = get_request_var('id');
-            $save['description']              = form_input_validate(trim(get_nfilter_request_var('description')), 'description', '', false, 3);
-            $save['hostname']                 = form_input_validate(trim(get_nfilter_request_var('hostname')), 'hostname', '', false, 3);
-            $save['disabled']                 = form_input_validate(get_nfilter_request_var('disabled'), 'disabled', '^on$', true, 3);
-            $save['max_log_size']             = get_nfilter_request_var('max_log_size');
-
-            $save['snmp_version']             = form_input_validate(get_nfilter_request_var('snmp_version'), 'snmp_version', '^[1-3]$', false, 3);
-            $save['snmp_community']           = form_input_validate(get_nfilter_request_var('snmp_community'), 'snmp_community', '', true, 3);
-
-            if ($save['snmp_version'] == 3) {
-                $save['snmp_username']        = form_input_validate(get_nfilter_request_var('snmp_username'), 'snmp_username', '', true, 3);
-                $save['snmp_password']        = form_input_validate(get_nfilter_request_var('snmp_password'), 'snmp_password', '', true, 3);
-                $save['snmp_auth_protocol']   = form_input_validate(get_nfilter_request_var('snmp_auth_protocol'), 'snmp_auth_protocol', "^(?:\[None\]|MD5|SHA|SHA224|SHA256|SHA384|SHA512)$", true, 3);
-                $save['snmp_priv_passphrase'] = form_input_validate(get_nfilter_request_var('snmp_priv_passphrase'), 'snmp_priv_passphrase', '', true, 3);
-                $save['snmp_priv_protocol']   = form_input_validate(get_nfilter_request_var('snmp_priv_protocol'), 'snmp_priv_protocol', "^(?:\[None\]|DES|AES|AES128|AES192|AES192C|AES256|AES256C)$", true, 3);
-                $save['snmp_engine_id']       = form_input_validate(get_request_var_post('snmp_engine_id'), 'snmp_engine_id', '', false, 3);
-            } else {
-                $save['snmp_username']        = '';
-                $save['snmp_password']        = '';
-                $save['snmp_auth_protocol']   = '';
-                $save['snmp_priv_passphrase'] = '';
-                $save['snmp_priv_protocol']   = '';
-                $save['snmp_engine_id']       = '';
-            }
-
-            // SNMP credentials reach the snmptrap command line; control characters are never part of one.
-            foreach (array('snmp_community', 'snmp_username', 'snmp_password', 'snmp_priv_passphrase', 'snmp_engine_id') as $field) {
-                $save[$field] = preg_replace('/[\x00-\x1f\x7f]/', '', (string) $save[$field]);
-            }
-
-            $save['snmp_port']                = form_input_validate(get_nfilter_request_var('snmp_port'), 'snmp_port', '^[0-9]+$', false, 3);
-            $save['snmp_message_type']        = form_input_validate(get_nfilter_request_var('snmp_message_type'), 'snmp_message_type', '^[1-2]$', false, 3);
-            $save['notes']                    = form_input_validate(get_nfilter_request_var('notes'), 'notes', '', true, 3);
-
-
-            if ($save['snmp_version'] == 3 && ($save['snmp_password'] != get_nfilter_request_var('snmp_password_confirm'))) {
-                raise_message(4);
-            }
-
-            if ($save['snmp_version'] == 3 && ($save['snmp_priv_passphrase'] != get_nfilter_request_var('snmp_priv_passphrase_confirm'))) {
-                raise_message(4);
-            }
-
-            $manager_id = 0;
-            if (!is_error_message()) {
-                $manager_id = sql_save($save, 'snmpagent_managers');
-                raise_message(($manager_id) ? 1 : 2);
-            }
-            break;
+        exit;
     }
 
-    header('Location: managers.php?action=edit&header=false&id=' . (empty($manager_id) ? get_nfilter_request_var('id') : $manager_id));
+    // The General tab moved to Symfony; replaying an old submission must not write.
+    http_response_code(409);
+    header('Cache-Control: private, no-store');
+    print html_escape(__('This SNMP Notification Receiver form has expired. Open the receiver again and use its current form.'));
+
+    exit;
 }
 
 function form_actions()

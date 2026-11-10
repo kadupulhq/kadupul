@@ -2670,6 +2670,39 @@ template that no longer exists answers 404 instead of succeeding silently; the
 list search treats `%` and `_` literally. The old page's unused graph tree
 helpers are not carried over.
 
+### SNMP Option Set editor
+
+The SNMP Option Set editor (`automation_snmp.php?action=edit` and
+`action=item_edit`) uses Symfony routes, Forms and Twig under
+`/automation/snmp-options`: creating and renaming a set, and adding, editing,
+deleting and reordering its entries. Every route requires console access and
+the Automation realm (23), checked before any read. Writes run through
+`AuditedPrimaryWrite`: they recheck the account and realm inside the
+transaction, need the primary collector, lock the set row, and are audited
+without credential values. Remote collectors receive the tables through the
+existing full replication. Set and entry forms carry a revision, and a move
+carries a revision of the set's whole order, so a stale form is refused with
+409. A move swaps an entry with its neighbour and renumbers the set from 1.
+
+`automation_snmp.php` forwards the old edit links to the new routes and
+answers 409 to posts of the old set and entry forms. The set list and its bulk
+delete and duplicate actions remain in `automation_snmp.php` for now.
+
+Differences from legacy:
+
+- Stored credentials (community, username, authentication password and
+  privacy passphrase) are never sent to the browser. An edit either keeps them
+  or replaces all four.
+- An SNMPv1 or SNMPv2 entry needs a community, and an SNMPv3 entry needs a
+  username. A v3 passphrase in use needs at least 8 bytes, and privacy needs
+  authentication. Saving a non-v3 entry clears the v3 username, passphrases,
+  protocols, context and engine ID, which the legacy form hid but kept.
+- The port must be 1 to 65535, the timeout at most 99999999 ms and the retries
+  at most 255. Maximum OIDs and bulk walk size accept only the legacy choices.
+- An entry is found only within its own set; legacy did not check the pairing.
+- A new entry does not prefill the default community from settings.
+- There is no drag and drop; an entry moves one place at a time.
+
 ### Discovery network editor
 
 The discovery network editor (`automation_networks.php?action=edit`) uses
@@ -2828,6 +2861,45 @@ and the two device caches. These views receive explicit read models and retain
 current-account, realm and device permissions. Maintenance actions, detailed
 legacy diagnostics and plugin entries keep their existing paths. The slice does
 not retire `utilities.php` or claim a reduction in its global statements.
+
+### SNMP notification receiver editor
+
+The General tab of an SNMP notification receiver (`managers.php?action=edit`)
+uses Symfony routes, Forms and Twig at `/utilities/notification-receivers/new`
+and `/utilities/notification-receivers/{id}/edit`. Both require console access
+and the Utilities realm (15), checked before any read through the same reviewed
+policy as the RRD check. Saves run through `AuditedPrimaryWrite`: they recheck
+the account and realm inside the transaction, need the primary collector, lock
+the receiver row, and are audited without credential values. The form carries a
+keyed revision of the whole row, credentials included, so an edit made after
+another administrator's change is refused with 409. The table is not replicated
+to remote collectors; `lib/snmpagent.php` reads it on the primary when it sends
+a notification.
+
+`managers.php` forwards General-tab edit links to the new routes and answers 409
+to a post of the old General form. The receiver list, its bulk actions and the
+Notifications and Logs tabs remain in `managers.php`; the Symfony page links to
+those tabs, and their General tab links back.
+
+Differences from legacy:
+
+- Stored credentials (community, username, authentication password and privacy
+  passphrase) are never sent to the browser. An edit either keeps them or
+  replaces all four, and a kept value containing a control character must be
+  replaced. Legacy stripped control characters on save; the new form rejects
+  them.
+- The description and hostname must be single-line text. The hostname is
+  limited to the 100 characters the column stores; legacy offered 250 and the
+  database truncated or refused the rest.
+- The maximum log size must be 1 to 31 (legacy did not check it) and the port
+  1 to 65535.
+- An SNMPv3 receiver needs a username and an engine ID. Each passphrase must be
+  set together with its protocol, privacy needs authentication, and a passphrase
+  needs at least 8 bytes, because `snmptrap` refuses shorter ones and derives the
+  security level from which passphrases are present. A confirmation that does
+  not match is refused.
+- The legacy script that hid fields for the selected SNMP version is not
+  carried over; every field is shown.
 
 ## Graph, data-source, report and template relationship catalogs
 

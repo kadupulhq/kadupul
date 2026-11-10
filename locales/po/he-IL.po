@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:51-0800\n"
+"POT-Creation-Date: 2026-11-09 23:23-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -945,9 +945,9 @@ msgstr "בדיקה אחרונה"
 msgid "Location"
 msgstr "מיקום"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "לא זמין"
 
@@ -1319,22 +1319,6 @@ msgstr "למעלה / SNMP מארחים"
 msgid "Weekly"
 msgstr "שבועי"
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "פעולה"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "סיסמה סיסמה"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "פרוטוקול Auth"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "שם משתמש"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "פריט אוטומציה אינו קיים. לא ניתן לשכפל."
@@ -1348,61 +1332,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "אוטומציה של אפשרויות SNMP"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "לחץ על &#39;המשך&#39; כדי למחוק את פריט האפשרויות הבא של SNMP."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "לחץ על &#39;המשך&#39; כדי למחוק את האפשרויות הבאות של SNMP."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "לחץ על &#39;המשך&#39; כדי לשכפל את האפשרויות הבאות של SNMP. ניתן לשנות את פורמט הכותרת עבור אפשרויות SNMP החדשות."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "קהילה"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "ההקשר"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "מחק פריט אפשרות SNMP"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "מלא את השם של אפשרות זו של SNMP."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "פריט"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "פריט #% d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "מקס OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "עבור מטה"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "עבור מעלה"
-
-#: automation_snmp.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "שם"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1413,37 +1348,8 @@ msgid "Networks Using"
 msgstr "שימוש ברשתות"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "אין פריטים SNMP"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "לא נמצאו ערכות SNMP אופציות"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "פורט"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "ביטוי סיסמה של Priv"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "פרוטוקול Priv"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "הסר פריט SNMP"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "נסה שוב"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP קהילה / שם משתמש: <b> %s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1454,52 +1360,16 @@ msgid "SNMP Option Set"
 msgstr "הגדרת אפשרות SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP Option Set [עריכה: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMP Option Set [חדש]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "ערכות אופציות SNMP"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "אפשרות SNMP:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "אפשרויות SNMP [עריכה: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "אפשרויות SNMP [חדש]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "כללי SNMP"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "גרסת SNMP: <b> %s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "סדר פעולות"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "רצף של פריט."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "פסק זמן"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1513,19 +1383,9 @@ msgstr "V2 ערכים"
 msgid "V3 Entries"
 msgstr "רשומות V3"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "גרסה"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "שם"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "ללא"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2271,6 +2131,10 @@ msgstr "אימות רשימה לבנה נכשל. הפעל את סקריפט CLI 
 msgid "White List Verification Succeeded."
 msgstr "אימות רשימה לבנה עלה בהצלחה."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "פעולה"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "הוסף"
@@ -2407,6 +2271,22 @@ msgstr "תבניות גרפים ממופות עם גרפים נקראות בלב
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "מזהה מיפוי"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "עבור מטה"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "עבור מעלה"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "שם"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -3979,6 +3859,11 @@ msgstr "רק מנהלי מערכת של Kadupul בעלי הרשאת התקנה /
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "יש התקנה או שדרוג בתהליך."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "גרסה"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -6467,10 +6352,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "בדוק כאן אם ברצונך לאפשר קלט NULL בשדה זה מהמשתמש."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "סמן תיבה זו אם אינך מעוניין לשלוח הודעות SNMP למארח זה."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "סמן תיבה זו כדי להשבית את כל הבדיקות עבור מארח זה."
 
@@ -6629,10 +6510,6 @@ msgid "Disable Device"
 msgstr "השבת את המכשיר"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "השבת מקלט הודעות SNMP"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "אל תרחיב את הגבול התחתון והתחתון אם התרשים מכיל ערך מחוץ לטווח חוקי."
 
@@ -6754,17 +6631,9 @@ msgstr "סוג GPRINT"
 msgid "General Device Options"
 msgstr "אפשרויות התקן כלליות"
 
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "אפשרויות כלליות של SNMP"
-
 #: include/global_form.php include/global_settings.php lib/html_reports.php
 msgid "General Settings"
 msgstr "הגדרות כלליות"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "תן את זה ישות SNMP תיאור משמעותי."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -6977,20 +6846,12 @@ msgid "Matching Pattern"
 msgstr "תבנית התאמה"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "גודל יומן מרבי"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "מקסימום OID לכל לקבל בקשה"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "ערך מקסימלי (&quot;U&quot; ללא מקסימום)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "יש לשמור את המספר המרבי של רשומות יומן ההודעות עבור המקלט."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7209,10 +7070,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "מזהה מנוע SNMP (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "סוג הודעת SNMP"
-
-#: include/global_form.php
 msgid "SNMP Options"
 msgstr "אפשרויות SNMP"
 
@@ -7253,10 +7110,6 @@ msgid "SNMP Version"
 msgstr "גרסת SNMP"
 
 #: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "מלכודות SNMP אינן מוכרות תמיד. כדי לשלוח הודעות SNMP הודה, רשמית בשם &quot;INFORMS&quot;, SNMPv2 או מעל יידרש."
-
-#: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
 msgstr "רמת אבטחה של SNMP v3 לשימוש בעת ביצוע שאילתה על ההתקן."
 
@@ -7275,6 +7128,10 @@ msgstr "סובב & 90"
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "בחר את פרופיל מקור הנתונים. פרופיל Data Source קובע את משך הסקרים, את צבירת הנתונים ואת מדיניות השמירה עבור מקורות הנתונים שהתקבלו."
+
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "סדר פעולות"
 
 #: include/global_form.php
 msgid "Sequence."
@@ -8109,6 +7966,10 @@ msgstr "תמיכה ב - TimeZone"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "צבע לשימוש בשעות הפעילות"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "קהילה"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9407,6 +9268,10 @@ msgid "Restrictive"
 msgstr "מגבילה"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "נסה שוב"
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "סובב את יומן Kadupul"
@@ -10290,6 +10155,10 @@ msgid "TimeZone Support"
 msgstr "תמיכה ב - TimeZone"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "פסק זמן"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "הגדרת גופן כותרת"
 
@@ -10616,6 +10485,15 @@ msgstr "שדה"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "כלל התאמה של גרף"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "פריט"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "פריט #% d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11652,6 +11530,10 @@ msgstr "בכיתה מיילר של PHP"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "פינג תוצאות:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "פורט"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12734,6 +12616,10 @@ msgstr "בחר אחד מהסוגים הנתמכים עבור קבצים מצור
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "שלח דוח"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "רצף של פריט."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
@@ -15490,6 +15376,10 @@ msgstr "חומרת"
 #: managers.php
 msgid "Severity Level"
 msgstr "רמת החומרה"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

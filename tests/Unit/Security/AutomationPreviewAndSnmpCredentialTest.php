@@ -99,31 +99,28 @@ PHP;
         ->and($state['cells'])->toBe(array('<img src=x onerror=alert(1)>', "<b>first</b>---\u{a0}\"><script>second</script>"));
 });
 
-test('notification receiver SNMP credentials are saved without control characters', function () {
-    // The namespace lets the extracted page function call a recording header().
+test('a replayed notification receiver General save writes nothing', function () {
+    // The General tab moved to Symfony, which rejects control characters in credentials;
+    // an old legacy form posted again must neither save nor pass its values anywhere.
     $program = 'namespace Probe;' . automation_preview_source('managers.php', 'form_save')
         . <<<'PHP'
-$request = array('id' => 3, 'tab' => 'general', 'description' => 'Receiver', 'hostname' => 'trap.example', 'disabled' => '', 'max_log_size' => 10,
-    'snmp_version' => 3, 'snmp_community' => "pub\nlic", 'snmp_username' => "op\x01erator", 'snmp_password' => "pass\rword1", 'snmp_password_confirm' => "pass\rword1",
-    'snmp_auth_protocol' => 'SHA', 'snmp_priv_passphrase' => "priv\x7fphrase", 'snmp_priv_protocol' => 'AES', 'snmp_engine_id' => "800\x1b0", 'snmp_port' => 162, 'snmp_message_type' => 1, 'notes' => '');
-function isset_request_var($name) { return isset($GLOBALS['request'][$name]); }
-function set_request_var($name, $value) { $GLOBALS['request'][$name] = $value; }
+$request = array('id' => 3, 'description' => 'Receiver', 'hostname' => 'trap.example', 'snmp_version' => 3, 'snmp_community' => "pub\nlic", 'snmp_password' => "pass\rword1");
 function get_filter_request_var($name) { return $GLOBALS['request'][$name]; }
 function get_nfilter_request_var($name) { return $GLOBALS['request'][$name] ?? ''; }
 function get_request_var($name) { return $GLOBALS['request'][$name] ?? ''; }
-function get_request_var_post($name) { return $GLOBALS['request'][$name] ?? ''; }
-function form_input_validate($value, ...$args) { return $value; }
-function is_error_message() { return false; }
-function raise_message(...$args) {}
-function die_html_input_error(...$args) {}
-function header($value) {}
-function sql_save($save, $table) { $GLOBALS['saved'] = $save; return 3; }
+function __($text) { return $text; }
+function html_escape($text) { return ''; }
+function http_response_code($code) { $GLOBALS['status'] = $code; }
+function header($value) { $GLOBALS['headers'][] = $value; }
+function sql_save(...$args) { $GLOBALS['saved'] = true; }
+register_shutdown_function(static function (): void {
+    echo json_encode(array('status' => $GLOBALS['status'] ?? null, 'headers' => $GLOBALS['headers'] ?? array(), 'saved' => $GLOBALS['saved'] ?? false));
+});
 form_save();
-echo json_encode(array_intersect_key($GLOBALS['saved'], array_flip(array('snmp_community', 'snmp_username', 'snmp_password', 'snmp_priv_passphrase', 'snmp_engine_id'))));
 PHP;
-    $saved = automation_preview_run($program);
+    $state = automation_preview_run($program);
 
-    expect($saved)->toBe(array('snmp_community' => 'public', 'snmp_username' => 'operator', 'snmp_password' => 'password1', 'snmp_priv_passphrase' => 'privphrase', 'snmp_engine_id' => '8000'));
+    expect($state)->toBe(array('status' => 409, 'headers' => array('Cache-Control: private, no-store'), 'saved' => false));
 });
 
 test('a replayed discovery network save writes nothing', function () {

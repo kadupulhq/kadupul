@@ -2813,6 +2813,26 @@ const REVIEWED_FEATURE_ACCESS = [
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
     ],
+    // The SNMP Option Set editor checks the Automation realm itself; these
+    // keys precede the list page's prefix, which uses AdministrationListAccess.
+    '/automation/snmp-options/new' => [
+        'label' => 'SNMP option set',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/snmp-options/{id}' => [
+        'label' => 'SNMP option set',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
     '/automation/snmp-options' => [
         'label' => 'administration list',
         'realm' => 23,
@@ -2860,6 +2880,28 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    // The receiver editor delegates to the reviewed Utilities realm check; these
+    // keys precede the list page's prefix, which uses AdministrationListAccess.
+    '/utilities/notification-receivers/new' => [
+        'label' => 'notification receiver',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Platform\\Application\\Port\\NotificationReceiverAccess',
+        'adapter' => 'Kadupul\\Platform\\Infrastructure\\Persistence\\DbalNotificationReceiverAccess',
+        'sources' => [
+            'src/Platform/Infrastructure/Persistence/DbalNotificationReceiverAccess.php' => '5b2013e9eefbb9159906dcf43a9030dafa674da6ea964f9d9b65365ee4214ee3',
+            'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
+        ],
+    ],
+    '/utilities/notification-receivers/{id}' => [
+        'label' => 'notification receiver',
+        'realm' => 15,
+        'contract' => 'Kadupul\\Platform\\Application\\Port\\NotificationReceiverAccess',
+        'adapter' => 'Kadupul\\Platform\\Infrastructure\\Persistence\\DbalNotificationReceiverAccess',
+        'sources' => [
+            'src/Platform/Infrastructure/Persistence/DbalNotificationReceiverAccess.php' => '5b2013e9eefbb9159906dcf43a9030dafa674da6ea964f9d9b65365ee4214ee3',
+            'src/Platform/Infrastructure/Persistence/DbalRrdCheckAccess.php' => '6f0222557edd0c1b2f307aae6c309b7129e88c0bb0909a15999d27cdd3ebba89',
+        ],
     ],
     '/utilities/notification-receivers' => [
         'label' => 'administration list',
