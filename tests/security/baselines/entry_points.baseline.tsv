@@ -9,6 +9,7 @@ app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; Authen
 app.php/administration/domains	symfony:admin_user_domains	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/administration/user-groups	symfony:admin_user_groups	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/administration/users	symfony:admin_users	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
+app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at 93556da7dbc112374f5d5a126bc2e5c24d8e98f6fbc21089632624dc8f61faf5
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
@@ -80,7 +81,7 @@ app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET
 app.php/graphing/trees	symfony:admin_trees	methods=GET|HEAD; ConsoleAccess realm 8 + realm 4
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/help	symfony:platform_help	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
-app.php/installer	symfony:platform_installer	methods=GET|HEAD|POST; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at 9b6567e299b30966388fcd2bb3f6b177a485a9cd8a9446a56ba50cd28eb90d69
+app.php/installer	symfony:platform_installer	methods=GET|HEAD|POST; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at d5811dea371c25d98fbb2cc8e70c09d8d9514310bb60e649f8b0a4ba46011c2e
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -296,13 +297,13 @@ include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, revie
 include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 060d320b61c0; included by lib/functions.php
 include/vendor/	web-server-denied	nginx; apache .htaccess
 index.php	symfony:forward	forwards to app.php/console
-install/background.php	cli-only	native CLI guard; reserved installer token and current actor eligibility before execution; reviewed at 9b6567e299b30966388fcd2bb3f6b177a485a9cd8a9446a56ba50cd28eb90d69
+install/background.php	cli-only	native CLI guard; reserved installer token and current actor eligibility before execution; reviewed at d5811dea371c25d98fbb2cc8e70c09d8d9514310bb60e649f8b0a4ba46011c2e
 install/cli_check.php	cli-only	guard: include/cli_check.php
 install/cli_test.php	cli-only	guard: php_sapi_name() check
 install/functions.php	anonymous-allowed	inert: declarations and literal assignments only
 install/index.php	anonymous-allowed	redirect-only
-install/install.php	realm:26	native login/account policy and uncached realm 26 before workflow; CSRF before mutations; reviewed at 9b6567e299b30966388fcd2bb3f6b177a485a9cd8a9446a56ba50cd28eb90d69
-install/installer-bootstrap.php	guarded-fragment	direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability; reviewed at 9b6567e299b30966388fcd2bb3f6b177a485a9cd8a9446a56ba50cd28eb90d69
+install/install.php	realm:26	native login/account policy and uncached realm 26 before workflow; CSRF before mutations; reviewed at d5811dea371c25d98fbb2cc8e70c09d8d9514310bb60e649f8b0a4ba46011c2e
+install/installer-bootstrap.php	guarded-fragment	direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability; reviewed at d5811dea371c25d98fbb2cc8e70c09d8d9514310bb60e649f8b0a4ba46011c2e
 install/step_json.php	realm:26	include/auth.php; auth_json
 install/upgrades/0_8_1.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/0_8_2.php	anonymous-allowed	inert: declarations and literal assignments only
@@ -365,6 +366,7 @@ install/upgrades/1_2_35.php	anonymous-allowed	inert: declarations and literal as
 install/upgrades/1_2_36.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_37.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_38.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_39.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
