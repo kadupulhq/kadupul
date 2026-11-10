@@ -67,7 +67,7 @@ final class EvaluateCommand extends Command
             // Driver and query messages can name the server or hold SQL; report the class only.
             $class = (new \ReflectionClass($error))->getShortName();
             $this->logger->error('Alert evaluation failed: {error}', ['error' => $class]);
-            $output->writeln('<error>Alert evaluation failed (' . $class . '). Check the database connection and the Kadupul log.</error>');
+            $output->writeln('<error>Alert evaluation failed (' . $class . '). Check the database connection and cacti.log (ALERTING lines).</error>');
 
             return Command::FAILURE;
         }

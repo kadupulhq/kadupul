@@ -552,7 +552,7 @@ fs_write	./src/Platform/Infrastructure/Legacy/InstallerLogger.php:109	          
 fs_write	./src/Platform/Infrastructure/Legacy/InstallerLogger.php:112	        if (@file_put_contents($path, $bytes, $flags | LOCK_EX) !== strlen($bytes)) {
 fs_write	./src/Platform/Infrastructure/Legacy/InstallerMigrationProgress.php:64	        if (@file_put_contents($canonical, $line . PHP_EOL, FILE_APPEND | LOCK_EX) !== strlen($line . PHP_EOL)) {
 fs_write	./src/Platform/Infrastructure/Legacy/LegacyCommandOutput.php:76	        $stderr = fopen('php://stderr', 'wb');
-fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:70	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
+fs_write	./src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php:87	                    $this->filesystem->appendToFile($file, $this->clock->now()->format($format) . ' - ' . $environ . ' ' . $text . PHP_EOL, true);
 fs_write	./src/Platform/Infrastructure/Persistence/DbalAuditBaselineStore.php:276	            $this->filesystem->dumpFile($path, $process->getOutput());
 fs_write	./src/Platform/Infrastructure/Persistence/DbalSystemDiagnostics.php:142	        $handle = @fopen($this->projectDir . '/CHANGELOG.md', 'rb');
 fs_write	./src/Platform/Infrastructure/Profiling/RequestProfileLog.php:52	        file_put_contents($this->path, $line . "\n", FILE_APPEND | LOCK_EX);

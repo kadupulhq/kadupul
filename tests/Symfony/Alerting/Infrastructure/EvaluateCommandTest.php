@@ -14,6 +14,7 @@ use Kadupul\Alerting\Application\AlertingConfiguration;
 use Kadupul\Alerting\Application\DeliverNotifications;
 use Kadupul\Alerting\Application\DeliveryReport;
 use Kadupul\Alerting\Application\EvaluateRules;
+use Kadupul\Alerting\Application\Port\AlertingLog;
 use Kadupul\Alerting\Application\Port\AlertingSettings;
 use Kadupul\Alerting\Application\Port\RunLock;
 use Kadupul\Alerting\Application\RunAlerting;
@@ -23,8 +24,11 @@ use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings;
+use Kadupul\Alerting\Infrastructure\Logging\OperatorAlertingLog;
 use Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand;
 use Kadupul\Kernel;
+use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
+use Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog;
 use Kadupul\Tests\Alerting\Fakes\FixedAlertingSettings;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
@@ -43,6 +47,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
 
 final class EvaluateCommandTest extends TestCase
 {
@@ -73,14 +78,79 @@ final class EvaluateCommandTest extends TestCase
         }
     }
 
-    private function tester(): CommandTester
+    private function tester(?AlertingLog $log = null): CommandTester
     {
+        $log ??= $this->logger;
         $incidents = new InMemoryIncidentRepository();
         $notifications = new InMemoryNotificationQueue($incidents);
         $clock = new MockClockAdapter($this->clock);
-        $evaluate = new EvaluateRules($this->rates, $this->rules, $this->states, $incidents, $notifications, new InMemoryEvaluationCursor(), $clock, new InMemoryTransactionRunner($this->states, $incidents, $notifications), $this->logger);
+        $evaluate = new EvaluateRules($this->rates, $this->rules, $this->states, $incidents, $notifications, new InMemoryEvaluationCursor(), $clock, new InMemoryTransactionRunner($this->states, $incidents, $notifications), $log);
 
-        return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $this->drain, $clock, $this->logger), $this->logger));
+        return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $this->drain, $clock, $log), $log));
+    }
+
+    /**
+     * The production log chain into a temporary installation's log/cacti.log:
+     * a poller-started run's stdout and stderr go to /dev/null, so this file
+     * is the only place its warnings and errors survive.
+     *
+     * @return array{AlertingLog, string}
+     */
+    private function cactiLog(\Doctrine\DBAL\Connection $settings): array
+    {
+        $root = sys_get_temp_dir() . '/kadupul-alerting-log-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $this->roots[] = $root;
+        $log = new OperatorAlertingLog(new MainDatabaseOperatorLog($settings, new LegacyOperatorLog($root, new Filesystem(), new MockClock('2026-03-04 05:06:07'))));
+
+        return [$log, $root . '/log/cacti.log'];
+    }
+
+    /** @var list<string> */
+    private array $roots = [];
+
+    protected function tearDown(): void
+    {
+        (new Filesystem())->remove($this->roots);
+    }
+
+    private static function settingsDatabase(): \Doctrine\DBAL\Connection
+    {
+        $db = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $db->executeStatement('CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)');
+
+        return $db;
+    }
+
+    public function testARunsWarningAndErrorReachCactiLog(): void
+    {
+        [$log, $file] = $this->cactiLog(self::settingsDatabase());
+        $this->rules->unusable[3] = 'alert_rule.comparator is not a known comparator.';
+        $this->lock->releaseFails = true;
+        self::assertSame(0, $this->tester($log)->execute([]));
+
+        $this->rates->failure = new \RuntimeException('SELECT secret FROM somewhere');
+        self::assertSame(1, $this->tester($log)->execute([]));
+
+        $lines = file($file, FILE_IGNORE_NEW_LINES);
+        self::assertContains('03/04/2026 05:06:07 - ALERTING WARNING: The alerting evaluate lock was not held at release; it ends with the database session.', $lines);
+        self::assertContains('03/04/2026 05:06:07 - ALERTING ERROR: Alert evaluation failed: RuntimeException', $lines);
+        self::assertNotEmpty(preg_grep('/^03\/04\/2026 05:06:07 - ALERTING WARNING: .*\b3\b.*not a known comparator/', $lines), 'The unusable rule is named in the log.');
+        self::assertStringNotContainsString('SELECT secret', (string) file_get_contents($file));
+    }
+
+    public function testAnUnreachableDatabaseIsLoggedToCactiLog(): void
+    {
+        // The poller's run cannot read settings or log settings: the error must still land.
+        $database = DriverManager::getConnection(['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 1, 'user' => 'nobody', 'password' => 'not-a-real-secret', 'dbname' => 'cacti']);
+        $this->settings = new DbalAlertingSettings($database);
+        [$log, $file] = $this->cactiLog($database);
+
+        self::assertSame(1, $this->tester($log)->execute([]));
+        $text = (string) file_get_contents($file);
+        self::assertMatchesRegularExpression('/^03\/04\/2026 05:06:07 - ALERTING ERROR: Alert evaluation failed: [A-Za-z]+Exception\n$/D', $text);
+        self::assertStringNotContainsString('not-a-real-secret', $text);
+        self::assertStringNotContainsString('127.0.0.1', $text);
     }
 
     public function testExitsZeroAfterEvaluating(): void
@@ -240,6 +310,7 @@ final class EvaluateCommandTest extends TestCase
             $tester = new ApplicationTester($application);
             self::assertSame(0, $tester->run(['command' => 'kadupul:alerting:evaluate']));
             self::assertSame("inactive: alerting is disabled (alerting_enable is off).\n", $tester->getDisplay());
+            self::assertInstanceOf(OperatorAlertingLog::class, $kernel->getContainer()->get('test.service_container')->get(AlertingLog::class), 'Alerting logs to cacti.log, not the stderr logger.');
         } finally {
             $kernel->shutdown();
         }

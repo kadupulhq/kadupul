@@ -109,15 +109,20 @@ behavior until an administrator opts in.
 
    Task 5 settles the details:
    - **Launch.** A core call, not a plugin hook registration:
-     `alerting_poller_bottom()` in `lib/alerting.php` runs right after
+     `alerting_poller_bottom()` in `lib/alerting.php` is called after
      `dsstats_poller_bottom()` in both main-poller blocks of `poller.php`
-     (the end of the run and each sub-minute cycle). It starts nothing unless
+     (the end of the run and each sub-minute cycle). Call order is not data
+     order: `dsstats_poller_bottom()` only starts `poller_dsstats.php` in the
+     background (`lib/dsstats.php`), so the evaluator runs alongside that
+     cycle's rate update, not after it (see Consequences). It starts nothing unless
      the poller id is 1 and `alerting_enable` is `on`, and nothing when
      `path_php_binary` is not an absolute path to a file, which it logs. It
      passes `exec_background()` the argument array
      `[<base>/bin/console, kadupul:alerting:evaluate, --no-interaction]`, so
      each argument is quoted and the poller returns at once. The command's
-     output goes to `/dev/null`, as dsstats' does without its log setting.
+     stdout and stderr go to `/dev/null`, as dsstats' do without its log
+     setting, so its warnings and errors are written to `cacti.log` instead
+     (decision 9).
    - **Locks.** Two MariaDB/MySQL named locks (`GET_LOCK(name, 0)`) on the
      main connection that the stores use: one for evaluation and one for
      delivery. Each name ends in a hash of the schema name, so two
@@ -313,7 +318,7 @@ behavior until an administrator opts in.
      of the run's budget, and is stopped after that budget plus one 900 s
      lease, when every claim it holds has expired anyway. A worker that does
      not report a delivery makes the run exit 1; it logs its own failure to
-     the Kadupul log by exception class. Queued notifications are delivered
+     `cacti.log` under `ALERTING` by exception class. Queued notifications are delivered
      even while the rate source is unavailable: they report changes already
      decided.
 
@@ -390,6 +395,17 @@ behavior until an administrator opts in.
      the exception class only: driver messages can name the server or hold
      SQL. A failed evaluation is not followed by delivery.
 
+   Every warning and error of a run, from the command, the evaluator and
+   delivery, is written to `cacti.log` as `ALERTING WARNING: ...` or
+   `ALERTING ERROR: ...`, through the same writer that the console's other
+   cacti.log lines use, with the main database's log settings. A run started
+   by the poller has no other output, so this is how an operator sees an
+   unreachable database, an unusable rule or a lost lock. The lines carry ids,
+   counts, fixed reasons and exception class names, never exception messages
+   or stored values. When the database itself is unreachable, the log
+   settings read as their defaults, as `read_config_option()` reads them, and
+   the error goes to `log/cacti.log`.
+
 10. **Off by default.** A setting `alerting_enable` defaults to off. The
     upgrade creates tables and nothing else. No evaluator is launched and no
     mail is sent until an administrator turns it on and creates a rule.
@@ -456,8 +472,17 @@ behavior until an administrator opts in.
   `unknown` for one cycle (gauges) or two (counters) and then resume. Open
   incidents stay open through that gap and no recoveries are sent. A restart
   during a real outage delays detection by the same amount.
-- **Latency is one poll cycle plus launch time.** The evaluator starts after
-  collection, so a breach is seen no sooner than the cycle that produced it.
+- **Latency is up to two poll cycles plus launch time.** The evaluator starts
+  after collection, so a breach is seen no sooner than the cycle that
+  produced it, and usually one cycle later (next consequence).
+- **Evaluation races the dsstats update.** The poller starts
+  `poller_dsstats.php` and then the evaluator, both in the background, and
+  does not chain them. The evaluator usually reads the previous cycle's rates,
+  so a breach is typically detected about one cycle after the samples that
+  show it. The freshness window of two intervals absorbs that one cycle: the
+  previous cycle's sample is still fresh. A dsstats run slower than one
+  interval leaves the newest sample older than two intervals at the next
+  evaluation, and those series read as `unknown` until dsstats catches up.
 - **Remote pollers are covered only while online.** Only the main poller
   drains `poller_output` and calls dsstats (`poller.php:864`, `:888`). An online
   remote collector writes its samples into the main database (`cmd.php:124-126`,
@@ -524,9 +549,9 @@ behavior until an administrator opts in.
 | `alerting_enable` off | Command exits 0 with "inactive: alerting is disabled"; the poller starts nothing | Task 5 |
 | A second evaluator starts while one runs | It exits 0 without evaluating or delivering | Task 5 |
 | An evaluation fails | Exit status 1, locks released, no delivery | Task 5 |
-| Database unreachable | Exit status 1, the exception class only in the output | Task 5 |
+| Database unreachable | Exit status 1; the exception class only, in the output and as an `ALERTING ERROR:` line in `log/cacti.log` | Task 5 |
 | A remote collector finishes its poll | Nothing is started | Task 5 |
-| The delivery worker fails or reports nothing | Exit status 1; the worker logs the exception class | Task 5 |
+| The delivery worker fails or reports nothing | Exit status 1; the worker and the command each log the exception class to `cacti.log` | Task 5 |
 | Administrator notification disabled or unconfigured | Row `suppressed` on its first claim, never retried or sent; one warning per run with the count | Task 4 |
 | Administrator account or address missing | Each attempt fails and is recorded; after five the row is `failed` | Task 4 |
 

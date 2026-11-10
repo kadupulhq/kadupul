@@ -88,7 +88,10 @@ function alerting_poller_block_run(string $needle, int $pollerId): array
     return json_decode($run['out'], true, 4, JSON_THROW_ON_ERROR);
 }
 
-test('the end of a main poller run launches alerting after dsstats, before the plugin hook', function () {
+// These pin call order only. dsstats_poller_bottom() starts poller_dsstats.php in
+// the background, so being called after it does not mean the evaluator reads this
+// cycle's rates; it usually reads the previous cycle's (ADR 0011 consequences).
+test('the end of a main poller run calls the alerting launcher once, after the dsstats launcher and before the plugin hook', function () {
     $calls = alerting_poller_block_run("/* start post data processing */\nif (\$poller_id == 1)", 1);
 
     expect(array_values(array_filter($calls, static fn(string $call): bool => str_starts_with($call, 'alerting'))))->toBe(['alerting_poller_bottom:1:/srv/kadupul'])
@@ -100,7 +103,7 @@ test('the end of a remote poller run does not launch alerting', function () {
     expect(alerting_poller_block_run("/* start post data processing */\nif (\$poller_id == 1)", 3))->not->toContain('alerting_poller_bottom:3:/srv/kadupul');
 });
 
-test('each sub-minute cycle of the main poller launches alerting after dsstats', function () {
+test('each sub-minute cycle of the main poller calls the alerting launcher once, after the dsstats launcher', function () {
     $calls = alerting_poller_block_run("// all plugins moved to core\n            if (\$poller_id == 1)", 1);
 
     expect($calls)->toBe(['snmpagent_poller_bottom', 'dsstats_poller_bottom', 'alerting_poller_bottom:1:/srv/kadupul', 'dsdebug_poller_bottom', 'boost_poller_bottom']);

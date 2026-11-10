@@ -93,6 +93,12 @@ services:
 
     Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog: ~
 
+    Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+
+    Kadupul\Platform\Contract\OperatorLog:
+        alias: Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog
+
     Kadupul\Platform\Application\Port\DatabaseMaintenance:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
     Kadupul\Platform\Application\Port\TableConversion:
@@ -311,7 +317,7 @@ services:
         arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain: ~
     Kadupul\Alerting\Infrastructure\Clock\SymfonyClock: ~
-    Kadupul\Alerting\Infrastructure\Logging\PsrAlertingLog: ~
+    Kadupul\Alerting\Infrastructure\Logging\OperatorAlertingLog: ~
     Kadupul\Alerting\Application\EvaluateRules: ~
     Kadupul\Alerting\Application\DeliverNotifications:
         public: true
@@ -334,7 +340,7 @@ services:
     Kadupul\Alerting\Application\Port\Clock:
         alias: Kadupul\Alerting\Infrastructure\Clock\SymfonyClock
     Kadupul\Alerting\Application\Port\AlertingLog:
-        alias: Kadupul\Alerting\Infrastructure\Logging\PsrAlertingLog
+        alias: Kadupul\Alerting\Infrastructure\Logging\OperatorAlertingLog
     Kadupul\Alerting\Application\Port\AlertingSettings:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings
     Kadupul\Alerting\Application\Port\RunLock:

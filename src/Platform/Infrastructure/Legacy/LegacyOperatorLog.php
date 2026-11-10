@@ -8,6 +8,7 @@
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -46,8 +47,24 @@ final readonly class LegacyOperatorLog
         if (trim($message) === '') {
             return;
         }
-        $row = static function (string $name) use ($settings): ?string {
-            $found = $settings->fetchOne('SELECT value FROM settings WHERE name = ?', [$name]);
+        // While the database is down, read_config_option() reads every row
+        // as missing, so cacti_log() still writes with the declared defaults;
+        // a refused or failed connection does the same here. After one, the
+        // rest read as missing too, rather than reconnecting for each setting.
+        // Other read failures, such as a missing settings table, still mean
+        // the destination is unknown and nothing is written.
+        $unreadable = false;
+        $row = static function (string $name) use ($settings, &$unreadable): ?string {
+            if ($unreadable) {
+                return null;
+            }
+            try {
+                $found = $settings->fetchOne('SELECT value FROM settings WHERE name = ?', [$name]);
+            } catch (ConnectionException) {
+                $unreadable = true;
+
+                return null;
+            }
 
             return $found === false ? null : (string) $found;
         };
