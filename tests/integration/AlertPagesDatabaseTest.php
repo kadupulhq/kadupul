@@ -235,6 +235,77 @@ final class AlertPagesDatabaseTest extends TestCase
         self::assertSame([['failed', null], ['succeeded', self::VIEWER]], array_map(static fn(array $entry): array => [$entry['outcome'], $entry['outcome'] === 'succeeded' ? $entry['actor']['id'] : null], $entries));
     }
 
+    /**
+     * The read-path gate, DbalRuleAccess::authorize() and
+     * DbalIncidentAccess::authorize(), on the cacti.sql user, group and realm
+     * tables. The console actor is always present, so each denial comes from
+     * the account or realm check; each denied account differs from an
+     * admitted one in a single row. The same cases run on SQLite in
+     * tests/Symfony/Alerting/Infrastructure/AlertingRealmCheckTest.php.
+     */
+    public function testTheReadGateAdmitsOnlyAnEligibleAccountWithTheRealm(): void
+    {
+        $this->database->executeStatement("UPDATE settings SET value = '109' WHERE name = 'guest_user'");
+        $actor = 0;
+        $console = $this->createStub(ConsoleAccess::class);
+        $console->method('consoleActor')->willReturnCallback(static function () use (&$actor): Actor {
+            return new Actor($actor, 'user' . $actor);
+        });
+        $cases = [
+            'user grant' => [101, 'admitted', ['realm' => true]],
+            'group grant' => [102, 'admitted', ['group' => 'on']],
+            'console realm only' => [103, 'denied', []],
+            'other alerting realm only' => [104, 'denied', ['other' => true]],
+            'disabled group grant' => [105, 'denied', ['group' => '']],
+            'locked account' => [106, 'denied', ['realm' => true, 'locked' => 'on']],
+            'disabled account' => [107, 'denied', ['realm' => true, 'enabled' => '']],
+            'must change password' => [108, 'denied', ['realm' => true, 'must_change_password' => 'on']],
+            'guest account' => [109, 'denied', ['realm' => true]],
+        ];
+        foreach ([[29, 30], [30, 29]] as [$realm, $other]) {
+            $this->database->executeStatement('DELETE FROM user_auth_realm WHERE user_id > 100');
+            $this->database->executeStatement('DELETE FROM user_auth_group_realm');
+            $this->database->executeStatement('DELETE FROM user_auth_group_members');
+            $this->database->executeStatement('DELETE FROM user_auth_group');
+            $this->database->executeStatement('DELETE FROM user_auth WHERE id > 100');
+            $expected = [];
+            foreach ($cases as $name => [$id, $decision, $change]) {
+                $this->database->insert('user_auth', [
+                    'id' => $id, 'username' => 'user' . $id,
+                    'enabled' => $change['enabled'] ?? 'on',
+                    'locked' => $change['locked'] ?? '',
+                    'must_change_password' => $change['must_change_password'] ?? null,
+                ]);
+                $this->database->insert('user_auth_realm', ['realm_id' => 8, 'user_id' => $id]);
+                if (isset($change['realm'])) {
+                    $this->database->insert('user_auth_realm', ['realm_id' => $realm, 'user_id' => $id]);
+                }
+                if (isset($change['other'])) {
+                    $this->database->insert('user_auth_realm', ['realm_id' => $other, 'user_id' => $id]);
+                }
+                if (isset($change['group'])) {
+                    $this->database->insert('user_auth_group', ['id' => $id, 'name' => 'group' . $id, 'enabled' => $change['group']]);
+                    $this->database->insert('user_auth_group_members', ['group_id' => $id, 'user_id' => $id]);
+                    $this->database->insert('user_auth_group_realm', ['group_id' => $id, 'realm_id' => $realm]);
+                }
+                $expected[$name] = $decision;
+            }
+            $access = $realm === 29 ? new DbalRuleAccess($console, $this->database) : new DbalIncidentAccess($console, $this->database);
+            $seen = [];
+            foreach ($cases as $name => [$id]) {
+                $actor = $id;
+                try {
+                    self::assertSame($id, $access->authorize()->id);
+                    $seen[$name] = 'admitted';
+                } catch (AlertingAccessDenied $denied) {
+                    self::assertFalse($denied->unauthenticated, $name);
+                    $seen[$name] = 'denied';
+                }
+            }
+            self::assertSame($expected, $seen, 'realm ' . $realm);
+        }
+    }
+
     public function testARevokedRealmStopsTheWriteInsideItsTransaction(): void
     {
         $rule = $this->insertRule(101);
