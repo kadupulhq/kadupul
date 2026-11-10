@@ -13,7 +13,7 @@ require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
 if (getenv('PRESENTATION_SINK_CONTEXT_COVERAGE') === '1') {
     $testLoader = require $root . '/tests/vendor/autoload.php';
     $filter = new SebastianBergmann\CodeCoverage\Filter();
-    foreach (['automation_snmp.php','color_templates.php','data_queries.php','data_sources.php','data_templates.php','lib/html.php','lib/html_utility.php','lib/html_validate.php','lib/database.php','lib/auth.php','lib/html_form.php'] as $source) $filter->includeFile($root . '/' . $source);
+    foreach (['data_queries.php','data_sources.php','data_templates.php','lib/html.php','lib/html_utility.php','lib/html_validate.php','lib/database.php','lib/auth.php','lib/html_form.php'] as $source) $filter->includeFile($root . '/' . $source);
     $coverage = new SebastianBergmann\CodeCoverage\CodeCoverage((new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($filter), $filter);
     $snapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/presentation-sink-context-native.php', $input, PresentationSinkContextEvidence::sources());
     $coverage->start('native presentation sink contexts');
@@ -31,7 +31,7 @@ if (getenv('PRESENTATION_SINK_CONTEXT_COVERAGE') === '1') {
     });
 }
 $definitions = require $root . '/tests/Fixtures/legacy-form-golden-scenarios.php';
-$scenario = $definitions['pages']['automation_snmp-edit'];
+$scenario = $definitions['pages']['data_queries-item_edit'];
 $scenario['page'] = $case['page'];
 $scenario['request'] = $case['request'] + ['header'=>'false'];
 $scenario['settings']['drag_and_drop'] = 'on';
@@ -53,11 +53,6 @@ $insert('graph_templates_item',['id'=>10,'graph_template_id'=>9,'local_graph_id'
 $insert('snmp_query_graph_rrd',['snmp_query_graph_id'=>7,'data_template_id'=>4,'data_template_rrd_id'=>20,'snmp_field_name'=>'value']);
 foreach ([1,2] as $id) $insert('snmp_query_graph_sv',['id'=>$id,'snmp_query_graph_id'=>7,'sequence'=>$id,'field_name'=>$rich,'text'=>'Value <label>']);
 foreach ([3,4] as $id) $insert('snmp_query_graph_rrd_sv',['id'=>$id,'snmp_query_graph_id'=>7,'data_template_id'=>4,'sequence'=>$id-2,'field_name'=>$rich,'text'=>'DS Value <label>']);
-$insert('automation_snmp',['id'=>7,'name'=>'SNMP <label>']);
-$insert('automation_snmp_items',['id'=>1,'snmp_id'=>7,'sequence'=>1,'snmp_community'=>'fixture-community']);
-$insert('colors',['id'=>1,'hex'=>'123456']);
-$insert('color_templates',['color_template_id'=>7,'name'=>'Palette <label>']);
-$insert('color_template_items',['color_template_id'=>7,'color_template_item_id'=>1,'sequence'=>1,'color_id'=>1]);
 $insert('data_template_data',['id'=>40,'data_template_id'=>4,'local_data_id'=>0,'name'=>'Data <label>','name_cache'=>'Data <label>','active'=>'on']);
 $insert('data_template_data',['id'=>41,'data_template_id'=>4,'local_data_id'=>7,'name'=>'Local <label>','name_cache'=>'Local <label>','active'=>'on']);
 if ($case['page']!=='data_templates.php') $insert('data_local',['id'=>7,'host_id'=>0,'data_template_id'=>4]);

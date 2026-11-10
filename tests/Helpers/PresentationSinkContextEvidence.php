@@ -48,10 +48,8 @@ final class PresentationSinkContextEvidence
     public static function sources(): array
     {
         return [
-            'automation_snmp.php',
             'cacti.sql',
             'cli/refresh_csrf.php',
-            'color_templates.php',
             'composer.json',
             'composer.lock',
             'config/icons.json',
@@ -160,7 +158,7 @@ final class PresentationSinkContextEvidence
     }
     public static function extraTables(): array
     {
-        return ['color_templates', 'color_template_items', 'colors', 'automation_snmp', 'automation_snmp_items', 'data_template', 'data_input', 'data_input_fields', 'data_input_data', 'data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf', 'snmp_query_graph_rrd', 'snmp_query_graph_rrd_sv', 'snmp_query_graph_sv', 'user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_realm', 'user_auth_group_realm', 'user_auth_perms', 'user_auth_group_perms', 'settings', 'settings_user', 'graph_templates_graph'];
+        return ['data_template', 'data_input', 'data_input_fields', 'data_input_data', 'data_source_profiles', 'data_source_profiles_rra', 'data_source_profiles_cf', 'snmp_query_graph_rrd', 'snmp_query_graph_rrd_sv', 'snmp_query_graph_sv', 'user_auth', 'user_auth_group', 'user_auth_group_members', 'user_auth_realm', 'user_auth_group_realm', 'user_auth_perms', 'user_auth_group_perms', 'settings', 'settings_user', 'graph_templates_graph'];
     }
     public static function markers(): array
     {

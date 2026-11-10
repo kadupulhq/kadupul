@@ -5,6 +5,7 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Run the presentation sink-context native test's integer-filter and malformed-identifier cases on the still-legacy Data Source and Data Query editors, since the SNMP Option Set editor it rendered now forwards to Symfony (#1441) and its golden scenario was removed; the SNMP drag-and-drop URL cases are retired, as that URL no longer exists and `SnmpOptionRoutesTest` covers the Symfony editor's links.
 - Register the legacy database failure scope and the shared locale resolver classes in the presentation native fixtures' source registries, which refuse any project file they do not list, so the legacy coverage shards load the database and language bootstrap again.
 - Bind the data source repair and rerun method-refusal coverage evidence to the request guard that actually runs, requiring the exact 405 or 403 refusal line instead of library code the refused request never reaches.
 - Measure the data query runtime, the database failure scope and the connection registry in the native SNMP data query coverage child, which already requires them as executed sources, so its coverage evidence can be accepted again.
