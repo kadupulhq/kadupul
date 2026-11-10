@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 12:25-0800\n"
+"POT-Creation-Date: 2026-11-09 19:49-0800\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -944,9 +944,9 @@ msgstr "Laatst gecontroleerd"
 msgid "Location"
 msgstr "Locatie"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "N/B"
 
@@ -1442,9 +1442,9 @@ msgstr "Maandelijks op dag"
 msgid "Months of Year"
 msgstr "Maanden per jaar"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "Naam"
 
@@ -1761,22 +1761,6 @@ msgstr "iedere X weken."
 msgid "every X."
 msgstr "iedere X."
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Actie"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Auth wachtwoord"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Auth protocol"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Auth gebruikersnaam"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "Automation Item bestaat niet. Kan niet dupliceren."
@@ -1790,55 +1774,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Automatisering SNMP opties"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Klik op 'Volgende' om het volgende SNMP optie item te verwijderen."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Klik op 'Volgende' om de volgende SNMP optie(s) te verwijderen."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Klik op 'Volgende' om de volgende SNMP opties te kopiëren. U kunt optioneel het titelformaat voor de nieuwe SNMP opties wijzigen."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Community"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Context"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Verwijder SNMP optie item"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Voer de naam in van deze SNMP optie reeks."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Item"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Item#%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Max OID's"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Naar beneden"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Naar boven"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1849,37 +1790,8 @@ msgid "Networks Using"
 msgstr "Gebruikte netwerken"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Geen SNMP items"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Geen SNMP optiereeksen gevonden"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Poort"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv wachtwoord"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Priv protocol"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Verwijder SNMP item"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Pogingen"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP Community/Gebruikersnaam: <b>%s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1890,52 +1802,16 @@ msgid "SNMP Option Set"
 msgstr "SNMP optie reeks"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP opties [wijzig: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMP opties [nieuw]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "SNMP optie reeks"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "SNMP optie:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMP opties [wijzig: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "SNMP opties [nieuw]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMP regels"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP versie: <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Volgorde"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Volgorde van item."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Timeout"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1949,19 +1825,9 @@ msgstr "V2 Vermeldingen"
 msgid "V3 Entries"
 msgstr "V3 Vermeldingen"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Versie"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "Naam"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "geen"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2702,6 +2568,10 @@ msgstr "Verificatie van de witte lijst is mislukt.  Start CLI script input_white
 msgid "White List Verification Succeeded."
 msgstr "Verificatie van de witte lijst Geslaagd."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Actie"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Toevoegen"
@@ -2830,6 +2700,16 @@ msgstr "Als grafiektemplates aan grafieken zijn gekoppeld zijn deze niet wijzigb
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "Mapping ID"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Naar beneden"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Naar boven"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4375,6 +4255,11 @@ msgstr "Alleen Kadupul Beheerders met het recht om te installeren/upgrade te upg
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Er is een installatie of upgrade in uitvoering."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Versie"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7541,6 +7426,10 @@ msgstr "Schaalopties"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Selecteer het gegevensbronprofiel.  Het Data Source Profile regelt het pollinginterval, de data-aggregatie en het bewaarbeleid voor de resulterende Data Sources."
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Volgorde"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "Volgorde."
@@ -8364,6 +8253,10 @@ msgstr "MySQL - TimeZone ondersteuning"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Kleur om te gebruiken tijdens kantooruren"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Community"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9662,6 +9555,10 @@ msgid "Restrictive"
 msgstr "Beperkte toegang"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Pogingen"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Roteer de Kadupul log"
 
@@ -10545,6 +10442,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - TimeZone ondersteuning"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Timeout"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Titel lettertype instellingen"
 
@@ -10870,6 +10771,15 @@ msgstr "Veld"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Grafiek koppelregels"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Item"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Item#%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11883,6 +11793,10 @@ msgstr "PHP's Mailer Class"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Ping resultaten:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Poort"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12962,6 +12876,10 @@ msgstr "Selecteer een van de gegeven types voor de afbeelding bijlagen"
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Verstuur rapport"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Volgorde van item."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"

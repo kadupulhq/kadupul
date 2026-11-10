@@ -2281,7 +2281,7 @@ function authenticated_access_adapter(string $root): string
 // complete firewall, request reset and native authentication implementation.
 const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/bundles.php' => '0432519a4e3cd6030979a2b8b26e8660b46fae9fade5a80c1186a6508cfb920c',
-    'config/packages/framework.yaml' => '46a42ca8ec26cd57a240c56ac24639bf05192e2aa84ba3d3dfd5a4d870675449',
+    'config/packages/framework.yaml' => '4e4cf1195fc0b70faee9ec98a4e4c9084e24050729df86d512379f93b4122ff3',
     'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
     'config/routes.yaml' => 'b65024a9aa1315b7d99abf9a103bad532c394ee68bbd7af90466d3b5bdb9a1bc',
     'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
@@ -2924,6 +2924,26 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    // The SNMP Option Set editor checks the Automation realm itself; these
+    // keys precede the list page's prefix, which uses AdministrationListAccess.
+    '/automation/snmp-options/new' => [
+        'label' => 'SNMP option set',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/snmp-options/{id}' => [
+        'label' => 'SNMP option set',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
     ],
     '/automation/snmp-options' => [
         'label' => 'administration list',

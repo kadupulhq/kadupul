@@ -256,7 +256,7 @@ final class DataDebugNativeCoverageTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('repairMethodCases')]
     public function testRerunAndRepairRequireATokenBearingPost(string $action, array $method, int $status): void
     {
-        $state = $this->render(['action' => $action, 'id' => 101], ['debug_purge_policy' => ['exceptions' => [1]], 'debug_non_rendering' => true] + $method);
+        $state = $this->render(['action' => $action, 'id' => 101], ['debug_purge_policy' => ['exceptions' => [1]], 'debug_non_rendering' => true, 'debug_method_refused' => $status] + $method);
         self::assertSame($status, $state['status']);
         self::assertSame($state['before'], $state['after']);
         self::assertArrayNotHasKey('rerun', $state['session']['sess_messages'] ?? []);
@@ -558,16 +558,35 @@ final class DataDebugNativeCoverageTest extends TestCase
                     $markers[] = 'debug-icons-rendered';
                 }
                 $nonRendering = ($options['debug_non_rendering'] ?? false) || (isset($options['debug_purge_policy']) && ($request['action'] ?? '') === 'actions');
-                $hits = array(($options['view'] ?? 'debug') === 'cleaner' ? 'rrdcleaner.php' : 'data_debug.php', 'lib/functions.php');
+                $refusedStatus = $options['debug_method_refused'] ?? null;
+                if ($refusedStatus !== null) {
+                    // The method guard exits right after include/auth.php, before
+                    // the controller calls into lib/functions.php or lib/auth.php.
+                    $hits = array('data_debug.php', 'lib/html_utility.php');
+                } else {
+                    $hits = array(($options['view'] ?? 'debug') === 'cleaner' ? 'rrdcleaner.php' : 'data_debug.php', 'lib/functions.php');
+                }
                 if (!$nonRendering) $hits[] = 'lib/html.php';
                 else $markers[] = 'debug-controller-outcome-observed';
-                if (isset($options['debug_purge_policy']) && !($options['debug_rejects_before_policy'] ?? false)) {
+                if ($refusedStatus === null && isset($options['debug_purge_policy']) && !($options['debug_rejects_before_policy'] ?? false)) {
                     $hits[] = 'lib/auth.php';
                 }
                 $child = NativeChildCoverageEvidence::load($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits);
+                if ($refusedStatus !== null) {
+                    // File-level admission alone would accept any guard line;
+                    // require the exact refusal status line to have executed.
+                    $guard = file($root . '/lib/html_utility.php', FILE_IGNORE_NEW_LINES);
+                    self::assertIsArray($guard);
+                    $refusalLines = array_keys(array_filter($guard, static fn(string $line): bool => trim($line) === 'http_response_code(' . $refusedStatus . ');'));
+                    self::assertCount(1, $refusalLines);
+                    $guardHits = $child->getData(true)->lineCoverage()[realpath($root . '/lib/html_utility.php')] ?? [];
+                    self::assertNotEmpty($guardHits[$refusalLines[0] + 1] ?? [], 'Refusal status ' . $refusedStatus . ' was not executed');
+                }
                 static $omissionsVerified = array();
-                $mode = ($options['debug_rejects_before_policy'] ?? false) ? 'debug-early-denial' : ($nonRendering ? 'debug-controller-outcome' : (isset($options['debug_purge_policy']) ? 'debug-purge-policy' : ($options['view'] ?? 'debug')));
+                $mode = $refusedStatus !== null ? 'debug-method-refusal' : (($options['debug_rejects_before_policy'] ?? false) ? 'debug-early-denial' : ($nonRendering ? 'debug-controller-outcome' : (isset($options['debug_purge_policy']) ? 'debug-purge-policy' : ($options['view'] ?? 'debug'))));
                 if (!isset($omissionsVerified[$mode])) {
+                    // 4 identity fields + 39 sources + producer + 5 report controls,
+                    // plus one per marker; the required hits do not change the count.
                     self::assertSame(49 + count($markers), NativeChildCoverageEvidence::verifyRejections($reports[0], $root, 'tests/Fixtures/utility-view-native.php', $scenario, $sources, $markers, $hits, 'lib/boost.php'));
                     $omissionsVerified[$mode] = true;
                 }

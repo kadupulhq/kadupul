@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 12:25-0800\n"
+"POT-Creation-Date: 2026-11-09 19:49-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -941,9 +941,9 @@ msgstr "Senaste kontroll"
 msgid "Location"
 msgstr "Plats"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "Inte tillgänglig"
 
@@ -1439,9 +1439,9 @@ msgstr "Månadsvis per dag"
 msgid "Months of Year"
 msgstr "Månader under året"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "Namn"
 
@@ -1757,22 +1757,6 @@ msgstr "var X:e vecka."
 msgid "every X."
 msgstr "varje X."
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "Åtgärd"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "Auth Lösenord"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "Auth-protokoll"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "Användarnamn för autentisering"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "Automationsobjektet finns inte.  Kan inte dupliceras."
@@ -1786,55 +1770,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "Automation SNMP Options har duplicerats."
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "Klicka på \"Fortsätt\" för att ta bort följande SNMP Option Item."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "Klicka på \"Fortsätt\" för att ta bort följande SNMP-alternativ."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "Klicka på \"Fortsätt\" för att duplicera följande SNMP-alternativ. Du kan valfritt ändra titelformat för de nya SNMP-alternativen."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "Gemenskap"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "Sammanhang"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "Ta bort SNMP-alternativets objekt"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "Fyll i namnet på denna SNMP Option Set."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "Artikel"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "Artikel#%d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "Max OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "Flytta ner"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "Flytta upp"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1845,37 +1786,8 @@ msgid "Networks Using"
 msgstr "Nätverk som använder"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "Inga SNMP-objekt"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "Inga SNMP-alternativuppsättningar hittades"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "Port"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv lösenfras"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Priv Protokoll"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "Ta bort SNMP-objekt"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "Försök"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP gemenskap/användarnamn: <b>%s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1886,52 +1798,16 @@ msgid "SNMP Option Set"
 msgstr "SNMP-alternativinställning"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP-alternativinställning [redigera: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMP-alternativinställning [ny]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "SNMP-alternativuppsättningar"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "SNMP-alternativ:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMP-alternativ [redigera: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "SNMP-alternativ [ny]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMP-regler"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP-version: <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "Sekvens"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "Sekvens av objektet."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "Tidsgräns"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1945,19 +1821,9 @@ msgstr "V2 Inmatningar"
 msgid "V3 Entries"
 msgstr "V3-registreringar"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "Version"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "namn"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "ingen"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2695,6 +2561,10 @@ msgstr "Verifiering av vit lista misslyckades.  Kör CLI-skriptet input_whitelis
 msgid "White List Verification Succeeded."
 msgstr "Vitlistverifiering lyckades."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "Åtgärd"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "Lägg till"
@@ -2823,6 +2693,16 @@ msgstr "Mappade grafmallar med grafer är skrivskyddade"
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "Kartläggnings-ID"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "Flytta ner"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "Flytta upp"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4368,6 +4248,11 @@ msgstr "Endast Kadupul-administratörer med behörigheten Install/Upgrade kan lo
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Det pågår en installation eller uppgradering."
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "Version"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7532,6 +7417,10 @@ msgstr "Alternativ för skalning"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "Välj datakällans profil.  Datakällprofilen styr pollningsintervallet, dataaggregeringen och lagringspolicyn för de resulterande datakällorna."
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "Sekvens"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "Sekvens."
@@ -8353,6 +8242,10 @@ msgstr "Stöd för tidszoner för klienter"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "Färg att använda under kontorstid"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "Gemenskap"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9645,6 +9538,10 @@ msgid "Restrictive"
 msgstr "Begränsande"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "Försök"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Rotera Kadupul-loggen"
 
@@ -10522,6 +10419,10 @@ msgid "TimeZone Support"
 msgstr "Stöd för tidszoner"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "Tidsgräns"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "Inställning av teckensnitt för titel"
 
@@ -10846,6 +10747,15 @@ msgstr "Fält"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "Graf Matchningsregel"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "Artikel"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "Artikel#%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11859,6 +11769,10 @@ msgstr "PHP:s Mailer-klass"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "Ping resultat:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "Port"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12937,6 +12851,10 @@ msgstr "Välj en av de angivna typerna för bildbilagorna"
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "Skicka in rapport"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "Sekvens av objektet."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"

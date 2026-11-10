@@ -2732,6 +2732,39 @@ template that no longer exists answers 404 instead of succeeding silently; the
 list search treats `%` and `_` literally. The old page's unused graph tree
 helpers are not carried over.
 
+### SNMP Option Set editor
+
+The SNMP Option Set editor (`automation_snmp.php?action=edit` and
+`action=item_edit`) uses Symfony routes, Forms and Twig under
+`/automation/snmp-options`: creating and renaming a set, and adding, editing,
+deleting and reordering its entries. Every route requires console access and
+the Automation realm (23), checked before any read. Writes run through
+`AuditedPrimaryWrite`: they recheck the account and realm inside the
+transaction, need the primary collector, lock the set row, and are audited
+without credential values. Remote collectors receive the tables through the
+existing full replication. Set and entry forms carry a revision, and a move
+carries a revision of the set's whole order, so a stale form is refused with
+409. A move swaps an entry with its neighbour and renumbers the set from 1.
+
+`automation_snmp.php` forwards the old edit links to the new routes and
+answers 409 to posts of the old set and entry forms. The set list and its bulk
+delete and duplicate actions remain in `automation_snmp.php` for now.
+
+Differences from legacy:
+
+- Stored credentials (community, username, authentication password and
+  privacy passphrase) are never sent to the browser. An edit either keeps them
+  or replaces all four.
+- An SNMPv1 or SNMPv2 entry needs a community, and an SNMPv3 entry needs a
+  username. A v3 passphrase in use needs at least 8 bytes, and privacy needs
+  authentication. Saving a non-v3 entry clears the v3 username, passphrases,
+  protocols, context and engine ID, which the legacy form hid but kept.
+- The port must be 1 to 65535, the timeout at most 99999999 ms and the retries
+  at most 255. Maximum OIDs and bulk walk size accept only the legacy choices.
+- An entry is found only within its own set; legacy did not check the pairing.
+- A new entry does not prefill the default community from settings.
+- There is no drag and drop; an entry moves one place at a time.
+
 ### Data Source Profile administration
 
 The profile list, editor, RRA editor and the duplicate and delete confirmations

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 12:25-0800\n"
+"POT-Creation-Date: 2026-11-09 19:49-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -950,9 +950,9 @@ msgstr "अंतिम जांच"
 msgid "Location"
 msgstr "स्थान"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "लागू नहीं"
 
@@ -1452,9 +1452,9 @@ msgstr "मासिक दिवस पर"
 msgid "Months of Year"
 msgstr "साल का महीना"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr "नाम"
 
@@ -1770,22 +1770,6 @@ msgstr "हर एक्स वीक।"
 msgid "every X."
 msgstr "हर एक्स।"
 
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "कार्रवाई"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "प्रामाणिक पासवर्ड"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "प्रामाणिक प्रोटोकॉल"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "उपयोगकर्ता नाम"
-
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr "स्वचालन आइटम मौजूद नहीं है। डुप्लिकेट नहीं कर सकता।"
@@ -1799,55 +1783,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "स्वचालन SNMP विकल्प"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "निम्न SNMP विकल्प आइटम को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "निम्नलिखित SNMP विकल्प (s) को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "निम्नलिखित SNMP विकल्पों की नकल करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। आप वैकल्पिक रूप से नए SNMP विकल्प के लिए शीर्षक प्रारूप बदल सकते हैं।"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "कम्युनिटी"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "संदर्भ"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "SNMP विकल्प आइटम हटाएं"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "इस SNMP विकल्प सेट के नाम को भरें।"
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "मद"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "मद #% d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "मैक्स एड्स"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "नीचे ले जाएं"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "ऊपर ले जाएं"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1858,37 +1799,8 @@ msgid "Networks Using"
 msgstr "नेटवर्क का उपयोग करना"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "कोई SNMP आइटम नहीं"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "कोई SNMP विकल्प सेट नहीं मिला"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "पोर्ट"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv पासफ़्रेज़"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "प्रिवि प्रोटोकॉल"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "SNMP आइटम निकालें"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "पुनर्प्रयास"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP समुदाय / उपयोगकर्ता नाम: <b> %s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1899,52 +1811,16 @@ msgid "SNMP Option Set"
 msgstr "SNMP विकल्प सेट"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP विकल्प सेट [संपादित करें: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMP विकल्प सेट [नया]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "SNMP विकल्प सेट"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "SNMP विकल्प:"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMP विकल्प [संपादित करें: %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "SNMP विकल्प [नया]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMP नियम"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP संस्करण: <b> %s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "अनुक्रम"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "मद का अनुक्रम।"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "टाइमआउट"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1958,19 +1834,9 @@ msgstr "V2 प्रविष्टियां"
 msgid "V3 Entries"
 msgstr "V3 प्रविष्टियां"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "सरूप"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "नांऽ"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "कुछ भी नहीं"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2713,6 +2579,10 @@ msgstr "श्वेत सूची सत्यापन विफल। स�
 msgid "White List Verification Succeeded."
 msgstr "श्वेत सूची सत्यापन सफल हुआ।"
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "कार्रवाई"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "शामिल करें"
@@ -2841,6 +2711,16 @@ msgstr "ग्राफ़ के साथ मैप किए गए ग्र
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "मैपिंग आईडी"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "नीचे ले जाएं"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "ऊपर ले जाएं"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4389,6 +4269,11 @@ msgstr "इंस्टॉल / अपग्रेड विशेषाधि�
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
 msgstr "कोई स्थापना या नवीनीकरण प्रगति पर है।"
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "सरूप"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -7562,6 +7447,10 @@ msgstr "à¤à¤¦à¤¾à¤¹à¤°à¤£ à¤®à¤¿à¤²à¤¾à¤¯à¤�
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "डेटा स्रोत प्रोफ़ाइल का चयन करें। डेटा स्रोत प्रोफ़ाइल परिणामी डेटा स्रोतों के लिए मतदान अंतराल, डेटा एकत्रीकरण और अवधारण नीति को नियंत्रित करता है।"
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "अनुक्रम"
+
 #: include/global_form.php
 msgid "Sequence."
 msgstr "अनुक्रम"
@@ -8391,6 +8280,10 @@ msgstr "MySQL - टाइमजोन सपोर्ट"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "व्यावसायिक घंटों के लिए इस्तेमाल किया जाने वाला रंग"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "कम्युनिटी"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9695,6 +9588,10 @@ msgid "Restrictive"
 msgstr "प्रतिबंधक"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "पुनर्प्रयास"
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Kadupul लॉग को घुमाएं"
@@ -10588,6 +10485,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - टाइमजोन सपोर्ट"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "टाइमआउट"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "शीर्षक फ़ॉन्ट सेटिंग"
 
@@ -10915,6 +10816,15 @@ msgstr "क्षेत्र"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "ग्राफ मैच नियम"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "मद"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "मद #% d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11930,6 +11840,10 @@ msgstr "PHP का मेलर क्लास"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "पिंग परिणाम:"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "पोर्ट"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -13015,6 +12929,10 @@ msgstr "छवि अनुलग्नकों के लिए दिए ग�
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "रिपोर्ट भेजो"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "मद का अनुक्रम।"
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"

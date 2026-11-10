@@ -44,7 +44,8 @@ if (defined('PERMISSION_CLI_NATIVE_TEST_COVERAGE')) {
 }
 
 if (defined('SNMP_QUERY_NATIVE_TEST_COVERAGE')) {
-    foreach (array('lib/data_query.php', 'lib/xml.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
+    foreach (array('lib/data_query.php', 'lib/data_query_runtime.php', 'src/Platform/Infrastructure/Legacy/LegacyDatabaseFailureScope.php',
+        'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php', 'lib/xml.php') as $file) $coverageFilter->includeFile($coverageRoot . '/' . $file);
 }
 if (defined('UPGRADE_BOUNDARY_TEST_COVERAGE') || defined('INSTALLER_VERSION_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
