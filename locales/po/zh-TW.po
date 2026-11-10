@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:53-0800\n"
+"POT-Creation-Date: 2026-11-09 19:34-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1082,9 +1082,9 @@ msgstr "最後檢查"
 msgid "Location"
 msgstr "地點"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 #, fuzzy
 msgid "N/A"
 msgstr "不适用"
@@ -1662,9 +1662,9 @@ msgstr "每月一次"
 msgid "Months of Year"
 msgstr "一年中的幾個月"
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 #, fuzzy
 msgid "Name"
 msgstr "名稱"
@@ -2055,26 +2055,6 @@ msgstr "每X週一次。"
 msgid "every X."
 msgstr "每一個X."
 
-#: automation_snmp.php data_queries.php utilities.php
-#, fuzzy
-msgid "Action"
-msgstr "動作"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Auth Password"
-msgstr "驗證密碼"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Auth Protocol"
-msgstr "驗證協議"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Auth Username"
-msgstr "驗證用戶名"
-
 #: automation_snmp.php
 #, fuzzy
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -2089,64 +2069,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "自動化SNMP選項"
 
 #: automation_snmp.php
-#, fuzzy
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "單擊“繼續”以刪除以下SNMP選項。"
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "單擊“繼續”以刪除以下SNMP選項。"
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "單擊“繼續”以復制以下SNMP選項。您可以選擇更改新SNMP選項的標題格式。"
-
-#: automation_snmp.php include/global_settings.php
-#, fuzzy
-msgid "Community"
-msgstr "社群"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Context"
-msgstr "上下文"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Delete SNMP Option Item"
-msgstr "刪除SNMP選項"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "填寫此SNMP選項集的名稱。"
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-#, fuzzy
-msgid "Item"
-msgstr "項目"
-
-#: automation_snmp.php lib/api_automation.php
-#, fuzzy, php-format
-msgid "Item#%d"
-msgstr "項目＃％d"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Max OIDS"
-msgstr "最大的OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-#, fuzzy
-msgid "Move Down"
-msgstr "下移"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-#, fuzzy
-msgid "Move Up"
-msgstr "上移"
 
 #: automation_snmp.php
 #, fuzzy
@@ -2160,43 +2088,8 @@ msgstr "網絡使用"
 
 #: automation_snmp.php
 #, fuzzy
-msgid "No SNMP Items"
-msgstr "沒有SNMP項目"
-
-#: automation_snmp.php
-#, fuzzy
 msgid "No SNMP Option Sets Found"
 msgstr "找不到SNMP選項集"
-
-#: automation_snmp.php lib/functions.php
-#, fuzzy
-msgid "Port"
-msgstr "端口"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Priv Passphrase"
-msgstr "Priv Passphrase"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Priv Protocol"
-msgstr "特權協議"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "Remove SNMP Item"
-msgstr "刪除SNMP項目"
-
-#: automation_snmp.php include/global_settings.php
-#, fuzzy
-msgid "Retries"
-msgstr "重試"
-
-#: automation_snmp.php
-#, fuzzy, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP社區/用戶名： <b>%s</b>"
 
 #: automation_snmp.php
 #, fuzzy
@@ -2209,34 +2102,9 @@ msgid "SNMP Option Set"
 msgstr "SNMP選項集"
 
 #: automation_snmp.php
-#, fuzzy, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP選項集[編輯：%s]"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "SNMP Option Set [new]"
-msgstr "SNMP選項集[新]"
-
-#: automation_snmp.php
 #, fuzzy
 msgid "SNMP Option Sets"
 msgstr "SNMP選項集"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "SNMP Option:"
-msgstr "SNMP選項："
-
-#: automation_snmp.php
-#, fuzzy, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMP選項[編輯：%s]"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "SNMP Options [new]"
-msgstr "SNMP選項[新]"
 
 #: automation_snmp.php
 #, fuzzy
@@ -2244,25 +2112,8 @@ msgid "SNMP Rules"
 msgstr "SNMP規則"
 
 #: automation_snmp.php
-#, fuzzy, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP版本： <b>%s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-#, fuzzy
-msgid "Sequence"
-msgstr "序列"
-
-#: automation_snmp.php lib/html_reports.php
-#, fuzzy
-msgid "Sequence of Item."
-msgstr "項目順序。"
-
-#: automation_snmp.php include/global_settings.php
-#, fuzzy
-msgid "Timeout"
-msgstr "已逾時"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 #, fuzzy
@@ -2279,22 +2130,10 @@ msgstr "V2條目"
 msgid "V3 Entries"
 msgstr "V3條目"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-#, fuzzy
-msgid "Version"
-msgstr "版本"
-
 #: automation_snmp.php
 #, fuzzy
 msgid "name"
 msgstr "名稱"
-
-#: automation_snmp.php
-#, fuzzy
-msgid "none"
-msgstr "無"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -3169,6 +3008,11 @@ msgstr "白名單驗證失敗。運行CLI腳本input_whitelist.php進行更正�
 msgid "White List Verification Succeeded."
 msgstr "白名單驗證成功。"
 
+#: data_queries.php utilities.php
+#, fuzzy
+msgid "Action"
+msgstr "動作"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 #, fuzzy
 msgid "Add"
@@ -3314,6 +3158,18 @@ msgstr "帶圖表的映射圖模板是只讀的"
 #, fuzzy
 msgid "Mapping ID"
 msgstr "映射ID"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+#, fuzzy
+msgid "Move Down"
+msgstr "下移"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+#, fuzzy
+msgid "Move Up"
+msgstr "上移"
 
 #: data_queries.php lib/html_reports.php
 #, fuzzy
@@ -5081,6 +4937,12 @@ msgstr "此時只有具有安裝/升級權限的Kadupul管理員才能登錄"
 #, fuzzy
 msgid "There is an Installation or Upgrade in progress."
 msgstr "正在進行安裝或升級。"
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+#, fuzzy
+msgid "Version"
+msgstr "版本"
 
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
@@ -8883,6 +8745,11 @@ msgstr "縮放選項"
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "選擇數據源配置文件。數據源配置文件控制生成的數據源的輪詢間隔，數據聚合和保留策略。"
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+#, fuzzy
+msgid "Sequence"
+msgstr "序列"
+
 #: include/global_form.php
 #, fuzzy
 msgid "Sequence."
@@ -9868,6 +9735,11 @@ msgstr "MySQL  -  TimeZone支持"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr ""
+
+#: include/global_settings.php
+#, fuzzy
+msgid "Community"
+msgstr "社群"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -11419,6 +11291,11 @@ msgstr "限制性"
 
 #: include/global_settings.php
 #, fuzzy
+msgid "Retries"
+msgstr "重試"
+
+#: include/global_settings.php
+#, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "旋轉Kadupul日誌"
 
@@ -12470,6 +12347,11 @@ msgstr "MySQL  -  TimeZone支持"
 
 #: include/global_settings.php
 #, fuzzy
+msgid "Timeout"
+msgstr "已逾時"
+
+#: include/global_settings.php
+#, fuzzy
 msgid "Title Font Setting"
 msgstr "標題字體設置"
 
@@ -12861,6 +12743,16 @@ msgstr "欄位"
 #, fuzzy
 msgid "Graph Match Rule"
 msgstr "圖匹配規則"
+
+#: lib/api_automation.php lib/html_reports.php
+#, fuzzy
+msgid "Item"
+msgstr "項目"
+
+#: lib/api_automation.php
+#, fuzzy, php-format
+msgid "Item#%d"
+msgstr "項目＃％d"
 
 #: lib/api_automation.php
 #, fuzzy
@@ -14022,6 +13914,11 @@ msgstr "PHP的郵件程序類"
 #, fuzzy
 msgid "Ping Results:"
 msgstr "Ping結果"
+
+#: lib/functions.php
+#, fuzzy
+msgid "Port"
+msgstr "端口"
 
 #: lib/functions.php
 #, fuzzy
@@ -15301,6 +15198,11 @@ msgstr "為圖像附件選擇一種給定類型"
 #, fuzzy
 msgid "Send Report"
 msgstr "發送報告"
+
+#: lib/html_reports.php
+#, fuzzy
+msgid "Sequence of Item."
+msgstr "項目順序。"
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
