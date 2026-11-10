@@ -94,23 +94,43 @@ final class RuleController
     #[Route('/alerting/rules/{id}/edit', name: 'alerting_rule_edit', requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
     public function update(int $id, Request $request, ConsoleAccess $console, RuleAccess $access, RuleCatalog $rules, RuleStore $store, ViewAlertingStatus $status, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
-        $found = $this->visibleRule($id, $console, $access, $rules, $translator);
-        if ($found instanceof Response) {
-            return $found;
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'alerting'), 401, ['Cache-Control' => 'private, no-store']);
         }
-        [$actorId, $rule] = $found;
+        try {
+            $access->authorize();
+            $rule = $id <= self::MAX_ID ? $rules->find($actor->id, $id) : null;
+        } catch (AlertingAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'alerting'), $error->unauthenticated ? 401 : 403, self::HEADERS);
+        } catch (\Throwable) {
+            return new Response($translator->trans('Unable to load the alert rule. Reload before retrying.', [], 'alerting'), 502, self::HEADERS);
+        }
+        if ($rule === null) {
+            return new Response($translator->trans('Alert rule not found.', [], 'alerting'), 404, self::HEADERS);
+        }
 
-        return $this->edit($actorId, $rule, $request, $store, $status, $forms, $twig, $urls, $translator);
+        return $this->edit($actor->id, $rule, $request, $store, $status, $forms, $twig, $urls, $translator);
     }
 
     #[Route('/alerting/rules/{id}/delete', name: 'alerting_rule_delete', requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
     public function delete(int $id, Request $request, ConsoleAccess $console, RuleAccess $access, RuleCatalog $rules, RuleStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
-        $found = $this->visibleRule($id, $console, $access, $rules, $translator);
-        if ($found instanceof Response) {
-            return $found;
+        $actor = $console->consoleActor();
+        if ($actor === null) {
+            return new Response($translator->trans('Access denied.', [], 'alerting'), 401, ['Cache-Control' => 'private, no-store']);
         }
-        [$actorId, $rule] = $found;
+        try {
+            $access->authorize();
+            $rule = $id <= self::MAX_ID ? $rules->find($actor->id, $id) : null;
+        } catch (AlertingAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'alerting'), $error->unauthenticated ? 401 : 403, self::HEADERS);
+        } catch (\Throwable) {
+            return new Response($translator->trans('Unable to load the alert rule. Reload before retrying.', [], 'alerting'), 502, self::HEADERS);
+        }
+        if ($rule === null) {
+            return new Response($translator->trans('Alert rule not found.', [], 'alerting'), 404, self::HEADERS);
+        }
         $form = $forms->create(RuleDeletionType::class, ['revision' => $rule->revision], ['action' => $urls->generate('alerting_rule_delete', ['id' => $id])]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
@@ -119,7 +139,7 @@ final class RuleController
         }
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $store->delete($actorId, $id, self::revision($form));
+                $store->delete($actor->id, $id, self::revision($form));
 
                 return new RedirectResponse($urls->generate('alerting_rule_list', ['deleted' => 1]), 303, self::HEADERS);
             } catch (AlertingAccessDenied $error) {
@@ -138,34 +158,6 @@ final class RuleController
         }
 
         return new Response($request->isMethod('HEAD') ? '' : $twig->render('alerting/rule_delete.html.twig', ['rule' => $rule, 'form' => $form->createView()]), $status, self::HEADERS);
-    }
-
-    /**
-     * The edit and delete pages share their preamble: a console actor, the
-     * Alert Rules realm, then a rule that actor may see. A Response is the
-     * refusal to send as it is.
-     *
-     * @return array{int, RuleView}|Response
-     */
-    private function visibleRule(int $id, ConsoleAccess $console, RuleAccess $access, RuleCatalog $rules, TranslatorInterface $translator): array|Response
-    {
-        $actor = $console->consoleActor();
-        if ($actor === null) {
-            return new Response($translator->trans('Access denied.', [], 'alerting'), 401, ['Cache-Control' => 'private, no-store']);
-        }
-        try {
-            $access->authorize();
-            $rule = $id <= self::MAX_ID ? $rules->find($actor->id, $id) : null;
-        } catch (AlertingAccessDenied $error) {
-            return new Response($translator->trans('Access denied.', [], 'alerting'), $error->unauthenticated ? 401 : 403, self::HEADERS);
-        } catch (\Throwable) {
-            return new Response($translator->trans('Unable to load the alert rule. Reload before retrying.', [], 'alerting'), 502, self::HEADERS);
-        }
-        if ($rule === null) {
-            return new Response($translator->trans('Alert rule not found.', [], 'alerting'), 404, self::HEADERS);
-        }
-
-        return [$actor->id, $rule];
     }
 
     private function edit(int $actorId, ?RuleView $rule, Request $request, RuleStore $store, ViewAlertingStatus $status, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
