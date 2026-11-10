@@ -13,6 +13,8 @@ app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary col
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/networks/new	symfony:automation_network_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/networks/{id}/edit	symfony:automation_network_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options/new	symfony:automation_snmp_option_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options/{id}/edit	symfony:automation_snmp_option_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23

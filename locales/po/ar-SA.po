@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:34-0800\n"
+"POT-Creation-Date: 2026-11-09 23:23-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -341,12 +341,12 @@ msgstr "لا توجد رسوم بيانية مجمعة"
 msgid "No Graphs Found"
 msgstr "لا توجد الرسوم البيانية"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -1081,11 +1081,11 @@ msgstr "تكرار"
 msgid "Enable"
 msgstr "تفعيل"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr "مفعل"
 
@@ -1154,17 +1154,6 @@ msgstr "شكل العنوان"
 msgid "rule_name"
 msgstr "اسم القاعدة"
 
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr "%d ساعة"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, fuzzy, php-format
-msgid "%d Hours"
-msgstr "%d د ساعات"
-
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
@@ -1184,53 +1173,6 @@ msgstr "%d ثواني"
 
 #: automation_networks.php
 #, php-format
-msgid "%d Thread"
-msgstr "%d الموضوع"
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr "%d المواضيع"
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "قائمة محددة بمسافات من خوادم DNS البديلة لاستخدامها في حل DNS. إذا كانت فارغة ، فسيتم استخدام نظام التشغيل Poller لحل أسماء DNS."
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "بعد الفشل الأولي ، سيحاول عدد مرات إعادة اختبار ping Kadupul قبل الفشل."
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "بعد &quot;حد التشغيل&quot; المحدد ، سيتم إنهاء عملية الاكتشاف."
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr "اسمح لنفس sysName على مضيفين مختلفين"
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr "خوادم DNS البديلة"
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr "أبريل"
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr "الموقع المرتبط"
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr "أغسطس"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Automatically Add to Kadupul"
-msgstr "تلقائيا إضافة إلى Kadupul"
-
-#: automation_networks.php
-#, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "لا يمكن إجراء اكتشاف للشبكة المعطلة '%s'"
 
@@ -1242,14 +1184,6 @@ msgstr "لا يمكن إعادة تشغيل الاكتشاف للاكتشاف ق
 #: automation_networks.php
 msgid "Cancel Discovery"
 msgstr "إلغاء الاكتشاف"
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "اختر Kadupul Data Collector / Poller لاستخدامها لجمع البيانات من هذا الجهاز."
-
-#: automation_networks.php
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "اختر موقع Kadupul الذي ترغب في ربط الأجهزة المكتشفة به."
 
 #: automation_networks.php
 msgid "Clear Filtered"
@@ -1285,129 +1219,12 @@ msgid "Data Collector"
 msgstr "جامع البيانات"
 
 #: automation_networks.php
-msgid "Day(s) of Week"
-msgstr "ايام الاسبوع"
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr "ايام الشهر"
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr "أيام من الأسبوع"
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr "ديسمبر"
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr "تحديد تردد المجموعة."
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "حدد عدد مؤشرات الترابط التي سيتم استخدامها لاكتشاف نطاق الشبكة هذا."
-
-#: automation_networks.php
 msgid "Discover Now"
 msgstr "اكتشف الآن"
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr "خيوط الاكتشاف"
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr "اكتشاف التوقيت"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "خطأ: الشبكة '%s' غير صالح."
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "خطأ: يجب تحديد كل من الأشهر وأيام الشهر.  تعطيل %s الشبكة!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "خطأ: يجب تحديد الأشهر وأسابيع الأشهر وأيام الأسبوع.  تعطيل %s الشبكة!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "خطأ: يجب تحديد يوم الأسبوع.  تعطيل الشبكة %s!."
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr "تمكين NetBIOS"
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr "قم بتمكين نطاق الشبكة هذا."
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "أدخل عناوين IP أو FQDN الخاصة بخوادم DNS"
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "أدخل نطاقات الشبكة الصالحة مفصولة بفواصل. يمكنك استخدام عنوان IP ، أو نطاق شبكة ، مثل 192.168.1.0/24 أو 192.168.1.0/255.255.255.0 ، أو استخدام أحرف البدل مثل 192.168. *. *"
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr "فبراير"
-
-#: automation_networks.php
-msgid "First"
-msgstr "الاول"
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "بالنسبة إلى أي أجهزة تم اكتشافها حديثًا ويمكن الوصول إليها باستخدام SNMP وتطابقها مع Device Rule ، أضفها إلى Kadupul."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr "الجمعة"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr "الاعدادات العامة"
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr "امنح هذه الشبكة اسمًا ذا معنى."
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
 msgstr "عاطل"
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "إذا تم العثور على جهاز تم إضافته مسبقًا إلى Kadupul ، فأعد تشغيل استعلامات البيانات الخاصة به."
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "إذا تم تحديده ، عندما يتم فحص شبكة الأتمتة ، سيتم إرسال تقرير إلى حساب البريد الإلكتروني للإشعار .."
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr "يناير"
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr "يوليو"
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr "يونيو"
-
-#: automation_networks.php
-msgid "Last"
-msgstr "الاخير"
 
 #: automation_networks.php
 msgid "Last Runtime"
@@ -1422,18 +1239,6 @@ msgid "Manual"
 msgstr "دليل"
 
 #: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr "مارس"
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr "مايو"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr "الاثنين"
-
-#: automation_networks.php include/global_arrays.php
 msgid "Monthly"
 msgstr "شهري"
 
@@ -1442,36 +1247,12 @@ msgid "Monthly on Day"
 msgstr "شهريا في اليوم"
 
 #: automation_networks.php
-msgid "Months of Year"
-msgstr "أشهر من العام"
-
-#: automation_networks.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "الاسم"
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "نطاق اكتشاف الشبكة [عدل: %s]"
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr "نطاق اكتشاف الشبكة [جديد]"
-
-#: automation_networks.php
 msgid "Network Filters"
 msgstr "مرشحات الشبكة"
 
 #: automation_networks.php
 msgid "Network Name"
 msgstr "اسم الشبكة"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "الملف غير موجود"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Networks"
@@ -1483,10 +1264,6 @@ msgid "Never"
 msgstr "أبدا"
 
 #: automation_networks.php
-msgid "New Network Discovery Range"
-msgstr "نطاق اكتشاف الشبكة الجديدة"
-
-#: automation_networks.php
 msgid "Next Start"
 msgstr "البدء التالي"
 
@@ -1495,81 +1272,17 @@ msgid "No Networks Found"
 msgstr "لم يتم العثور على شبكات"
 
 #: automation_networks.php
-msgid "Notification Email"
-msgstr "إشعار بالبريد الإلكتروني"
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr "إعلام ممكن"
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr "الإخطار من عنوان البريد الإلكتروني"
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr "الإخطار من الاسم"
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr "إعدادات الإشعار"
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr "نوفمبر"
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr "أكتوبر"
-
-#: automation_networks.php
 msgid "Pending/Running/Done"
 msgstr "انتظار / العدو / تم"
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr "طريقة بينغ"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr "ميناء بينغ"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr "بينغ إعادة المحاولة الكونت"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr "قيمة المهلة بينغ"
 
 #: automation_networks.php
 msgid "Progress"
 msgstr "مؤشر التقدم"
 
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr "إعدادات قابلية الوصول"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 msgid "Refresh"
 msgstr "تحديث"
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr "إعادة تشغيل استعلامات البيانات"
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr "أعد تشغيل كل"
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr "أعد تشغيل اكتشاف نطاق الشبكة هذا كل X."
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr "تشغيل الحد"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1579,189 +1292,33 @@ msgstr "تشغيل اكتشاف في وضع التصحيح"
 msgid "Running"
 msgstr "مفتوح"
 
-#: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
-msgstr "SNMP"
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr "خيارات SNMP"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr "السبت"
-
 #: automation_networks.php
 msgid "Schedule"
 msgstr "الجدول"
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr "نوع الجدول"
-
-#: automation_networks.php
-msgid "Second"
-msgstr "ثانية"
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "حدد خيارات SNMP المراد استخدامها لاكتشاف نطاق الشبكة هذا."
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr "اختر يوم (أيام) الشهر"
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr "اختر اليوم (الأيام) من الأسبوع"
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr "حدد أيام (أيام) الأسبوع"
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr "اختر شهر (أشهر) السنة"
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr "حدد الأسبوع (الأسبوع) من الشهر"
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr "سبتمبر"
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr "تاريخ البدء / الوقت"
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr "نطاق الشبكة الفرعية"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr "الأحد"
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr "منفذ TCP أو UDP لمحاولة الاتصال."
 
 #: automation_networks.php
 msgid "The Current Status of this Networks Discovery"
 msgstr "الحالة الحالية لاكتشاف الشبكات هذه"
 
 #: automation_networks.php
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "عنوان البريد الإلكتروني لاستخدامه كجهاز إرسال البريد الإلكتروني للبريد الإلكتروني للإشعار. إذا تركت Kadupul فارغة ، فستستخدم عنوان البريد الإلكتروني الافتراضي للإعلام التلقائي إذا تم تحديده ، وإلا ، فستستخدم عنوان البريد الإلكتروني الافتراضي الخاص بنظام Kadupul"
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "اسم حساب البريد الإلكتروني الذي سيتم استخدامه كاسم المرسلين لبريد الإخطار الإلكتروني. إذا تركت Kadupul فارغة ، فستستخدم اسم إعلام التهيئة التلقائية إذا تم تحديدها ، وإلا ستستخدم اسم البريد الإلكتروني الافتراضي الخاص بـ Kadupul system"
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "حساب البريد الإلكتروني المراد استخدامه لإرسال بريد التنبيهات إلى."
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "قيمة المهلة لاستخدام المضيف ICMP و poding UDP. تنطبق قيمة مهلة SNMP للمضيف على أوامر SNMP."
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr "نوع حزمة ping لإرسالها."
-
-#: automation_networks.php
-msgid "Third"
-msgstr "﻿الأول"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 msgid "Threads"
 msgstr "مواضيع"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr "الخميس"
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr "مجموع عناوين IP"
 
 #: automation_networks.php
 msgid "Total IPs"
 msgstr "مجموع عناوين IP"
 
 #: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "إجمالي عناوين IP القابلة للعنونة في نطاق الشبكة هذا."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr "الثلاثاء"
-
-#: automation_networks.php
 msgid "Up/SNMP Hosts"
 msgstr "Up / SNMP Hosts"
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "استخدم NetBIOS لمحاولة حل اسم المضيف لأعلى المضيفين."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr "الأربعاء"
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr "أسبوع (أسابيع) الشهر"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "أسبوعي"
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "في أي يوم (أيام) من الشهر سيتم اكتشاف نطاق الشبكة هذا."
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "في أي يوم (أيام) من الأسبوع سيتم اكتشاف نطاق الشبكة هذا."
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "ما أشهر (أشهر) السنة سيتم اكتشاف نطاق الشبكة هذا."
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "أي أسبوع (أسابيع) من الشهر سيتم اكتشاف نطاق الشبكة هذا."
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr "في أي وقت ستبدأ هذه الشبكة في اكتشاف العنصر؟"
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "عند اكتشاف الأجهزة ، يسمح بإضافة sysnames مكررة على مضيفين مختلفين"
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr "كل X يوم"
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr "كل X يوم."
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr "كل X اسابيع"
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr "كل X اسابيع."
-
-#: automation_networks.php
-msgid "every X."
-msgstr "كل X."
 
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -2745,6 +2302,12 @@ msgstr "تحريك للأسفل"
 #: tree.php
 msgid "Move Up"
 msgstr "تحرك للأعلى"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "الاسم"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4398,6 +3961,16 @@ msgstr "%d جيجابايت"
 
 #: include/global_arrays.php
 #, php-format
+msgid "%d Hour"
+msgstr "%d ساعة"
+
+#: include/global_arrays.php include/global_settings.php
+#, fuzzy, php-format
+msgid "%d Hours"
+msgstr "%d د ساعات"
+
+#: include/global_arrays.php
+#, php-format
 msgid "%d Lines"
 msgstr "خطوط %d"
 
@@ -4425,6 +3998,11 @@ msgstr "%d شهر"
 #, php-format
 msgid "%d Months"
 msgstr "%d أشهر"
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
+msgstr "%d المواضيع"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -4653,6 +4231,10 @@ msgid "Apr"
 msgstr "ابريل"
 
 #: include/global_arrays.php
+msgid "April"
+msgstr "أبريل"
+
+#: include/global_arrays.php
 msgid "Arabic"
 msgstr "Arabic"
 
@@ -4672,6 +4254,10 @@ msgstr "صورة PNG مرفقة"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "اغسطس"
+
+#: include/global_arrays.php
+msgid "August"
+msgstr "أغسطس"
 
 #: include/global_arrays.php include/global_settings.php
 msgid "Automation"
@@ -4990,6 +4576,10 @@ msgid "Dec"
 msgstr "ديسمبر"
 
 #: include/global_arrays.php
+msgid "December"
+msgstr "ديسمبر"
+
+#: include/global_arrays.php
 msgid "Demand"
 msgstr "الكمية المطلوبة"
 
@@ -5116,6 +4706,10 @@ msgid "Feb"
 msgstr "فبراير"
 
 #: include/global_arrays.php
+msgid "February"
+msgstr "فبراير"
+
+#: include/global_arrays.php
 msgid "Fixed String"
 msgstr "سلسلة ثابتة"
 
@@ -5126,6 +4720,10 @@ msgstr "الفرنسية"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
+msgstr "الجمعة"
+
+#: include/global_arrays.php
+msgid "Friday"
 msgstr "الجمعة"
 
 #: include/global_arrays.php
@@ -5338,6 +4936,10 @@ msgid "Jan"
 msgstr "يناير"
 
 #: include/global_arrays.php
+msgid "January"
+msgstr "يناير"
+
+#: include/global_arrays.php
 msgid "Japanese"
 msgstr "Japanese"
 
@@ -5347,8 +4949,16 @@ msgid "Jul"
 msgstr "يوليو"
 
 #: include/global_arrays.php
+msgid "July"
+msgstr "يوليو"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
+msgstr "يونيو"
+
+#: include/global_arrays.php
+msgid "June"
 msgstr "يونيو"
 
 #: include/global_arrays.php
@@ -5533,6 +5143,14 @@ msgid "Mar"
 msgstr "مارس"
 
 #: include/global_arrays.php
+msgid "March"
+msgstr "مارس"
+
+#: include/global_arrays.php
+msgid "May"
+msgstr "مايو"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "مايو"
@@ -5548,6 +5166,10 @@ msgstr "حديث"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
+msgstr "الاثنين"
+
+#: include/global_arrays.php
+msgid "Monday"
 msgstr "الاثنين"
 
 #: include/global_arrays.php
@@ -5635,6 +5257,10 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "نوفمبر"
 
+#: include/global_arrays.php
+msgid "November"
+msgstr "نوفمبر"
+
 #: include/global_arrays.php tree.php
 msgid "Numeric"
 msgstr "رقمية"
@@ -5647,6 +5273,10 @@ msgstr "طلب رقمي"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "اوكتوبر"
+
+#: include/global_arrays.php
+msgid "October"
+msgstr "أكتوبر"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
 msgid "Operator"
@@ -5851,6 +5481,10 @@ msgid "SNMP Field Value (From User)"
 msgstr "قيمة حقل SNMP (من المستخدم)"
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr "SNMP"
+
+#: include/global_arrays.php
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP نوع المخرجات (المنسدلة)"
 
@@ -5873,6 +5507,10 @@ msgstr "يجب أن تكون عبارة مرور المصادقة SNMPv3 8 أح�
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
+msgstr "السبت"
+
+#: include/global_arrays.php
+msgid "Saturday"
 msgstr "السبت"
 
 #: include/global_arrays.php
@@ -5922,6 +5560,10 @@ msgstr "أرسل الآن"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
+msgstr "سبتمبر"
+
+#: include/global_arrays.php
+msgid "September"
 msgstr "سبتمبر"
 
 #: include/global_arrays.php lib/html.php
@@ -5992,6 +5634,10 @@ msgstr "لم يتم إدخال القيمة المقترحة. يرجى إدخا�
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "أح"
+
+#: include/global_arrays.php
+msgid "Sunday"
+msgstr "الأحد"
 
 #: include/global_arrays.php
 msgid "Sunrise"
@@ -6092,6 +5738,10 @@ msgid "Thu"
 msgstr "الخميس"
 
 #: include/global_arrays.php
+msgid "Thursday"
+msgstr "الخميس"
+
+#: include/global_arrays.php
 msgid "Timestamp"
 msgstr "الطابع الزمني"
 
@@ -6135,6 +5785,10 @@ msgstr "محاولة"
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "ث"
+
+#: include/global_arrays.php
+msgid "Tuesday"
+msgstr "الثلاثاء"
 
 #: include/global_arrays.php
 msgid "Turkish"
@@ -6325,6 +5979,10 @@ msgstr "خادم الويب ذات الصلة"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
+msgstr "الأربعاء"
+
+#: include/global_arrays.php
+msgid "Wednesday"
 msgstr "الأربعاء"
 
 #: include/global_arrays.php
@@ -6641,6 +6299,10 @@ msgid "Additional Options"
 msgstr "خيارات إضافية"
 
 #: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "بعد الفشل الأولي ، سيحاول عدد مرات إعادة اختبار ping Kadupul قبل الفشل."
+
+#: include/global_form.php
 msgid "Aggregate Graph Settings"
 msgstr "اعدادات الرسم الكلي"
 
@@ -6800,6 +6462,10 @@ msgstr "اختر قالب الجهاز المراد استخدامه لتحدي�
 #: include/global_form.php
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "اختر قالب الرسم البياني لاستخدامه في عنصر قالب الرسم البياني استعلام البيانات."
+
+#: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "اختر Kadupul Data Collector / Poller لاستخدامها لجمع البيانات من هذا الجهاز."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -7019,6 +6685,10 @@ msgstr "نوع GPRINT"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "خيارات الجهاز العامة"
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
+msgstr "الاعدادات العامة"
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7307,6 +6977,22 @@ msgid "Pad text so that legend and graph data always line up. Note: this could c
 msgstr "نص لوحة بحيث تصطف بيانات الأسطورة والرسم البياني دائمًا. ملاحظة: قد يتسبب هذا في أخذ الرسومات البيانية وقتًا أطول لتقديمها نظرًا إلى الحمل الأكبر. كذلك قد لا يكون الحشو التلقائي دقيقًا في جميع أنواع الرسوم البيانية ، وعادة ما يساعد وضع العلامات المتسق."
 
 #: include/global_form.php
+msgid "Ping Method"
+msgstr "طريقة بينغ"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr "ميناء بينغ"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr "بينغ إعادة المحاولة الكونت"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr "قيمة المهلة بينغ"
+
+#: include/global_form.php
 msgid "Place the legend at the given side of the graph."
 msgstr "ضع الأسطورة في جانب معين من الرسم البياني."
 
@@ -7439,6 +7125,10 @@ msgid "SNMP Engine ID (v3)"
 msgstr "معرف مشغل SNMP (الإصدار 3)"
 
 #: include/global_form.php
+msgid "SNMP Options"
+msgstr "خيارات SNMP"
+
+#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "كلمة مرور SNMP (الإصدار 3)"
 
@@ -7553,6 +7243,10 @@ msgstr "قالب الرسم البياني المصدر"
 #: include/global_form.php
 msgid "Special Type Code"
 msgstr "كود النوع الخاص"
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr "منفذ TCP أو UDP لمحاولة الاتصال."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7753,6 +7447,10 @@ msgstr "نتيجة التحقق من التحقق من Whitespace عن أسلو�
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
 msgstr "البرنامج النصي / المصدر المستخدم لجمع البيانات لمصدر البيانات هذا."
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "قيمة المهلة لاستخدام المضيف ICMP و poding UDP. تنطبق قيمة مهلة SNMP للمضيف على أوامر SNMP."
 
 #: include/global_form.php
 msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."
