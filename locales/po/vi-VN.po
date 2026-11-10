@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 07:15-0800\n"
+"POT-Creation-Date: 2026-11-09 09:18-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11354,10 +11354,6 @@ msgid "Detected New Sort Field: '%s' Old Sort Field '%s'"
 msgstr "Đã phát hiện trường sắp xếp mới: &#39; %s&#39; Trường sắp xếp cũ &#39; %s&#39;"
 
 #: lib/data_query.php
-msgid "Done remapping Graphs to their new Indexes"
-msgstr "Ánh xạ ánh xạ tới các chỉ mục mới của họ"
-
-#: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
 msgstr "Hồ sơ nguồn dữ liệu trùng lặp"
 
@@ -11455,11 +11451,6 @@ msgstr "Sửa trường &#39;phương thức&#39; sai cho &#39; %s&#39; vì &#39
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
 msgstr "Đã tìm thấy bảng%s để chuyển đổi"
-
-#: lib/data_query.php
-#, php-format
-msgid "Found Changed %s and %s Orphaned Local Data ID's to Re-map."
-msgstr "Đã tìm thấy Đã thay đổi%s và%s ID dữ liệu cục bộ mồ côi thành ánh xạ lại."
 
 #: lib/data_query.php
 #, php-format
@@ -11579,8 +11570,8 @@ msgid "New Sort Field validated.  Sort Field be updated."
 msgstr "Trường sắp xếp mới được xác thực. Trường sắp xếp được cập nhật."
 
 #: lib/data_query.php
-msgid "No Index Changes Detected, Skipping Re-Index and Poller Cache Re-population"
-msgstr "Không có thay đổi chỉ mục nào được phát hiện, bỏ qua Re-Index và Pug Cache Dân số lại"
+msgid "No Index Changes Detected, Poller Cache Refreshed"
+msgstr ""
 
 #: lib/data_query.php
 msgid "No SNMP data returned"

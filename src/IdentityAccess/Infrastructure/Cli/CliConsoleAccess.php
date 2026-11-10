@@ -24,6 +24,8 @@ use Kadupul\IdentityAccess\Contract\OperatorDatabase;
 final class CliConsoleAccess implements ConsoleOperator
 {
     private ?string $username = null;
+    private ?int $sessionId = null;
+    private ?string $sessionCredential = null;
     private ?Connection $database = null;
     private ?bool $groupTables = null;
 
@@ -33,11 +35,21 @@ final class CliConsoleAccess implements ConsoleOperator
     public function select(?string $username, OperatorDatabase $database): void
     {
         $this->username = $username === null || $username === '' ? null : $username;
+        $this->sessionId = null;
+        $this->sessionCredential = null;
         $this->database = match ($database) {
             OperatorDatabase::Local => $this->localConnection,
             OperatorDatabase::Main => $this->mainConnection,
         };
         $this->groupTables = null;
+    }
+
+    #[\Override]
+    public function selectSession(int $id, #[\SensitiveParameter] string $credential, OperatorDatabase $database): void
+    {
+        $this->select(null, $database);
+        $this->sessionId = $id;
+        $this->sessionCredential = $credential;
     }
 
     #[\Override]
@@ -49,7 +61,12 @@ final class CliConsoleAccess implements ConsoleOperator
             return null;
         }
         $columns = 'SELECT id, username, enabled, locked, must_change_password FROM user_auth';
-        if ($this->username === null) {
+        if ($this->sessionId !== null) {
+            if ($this->sessionId <= 0 || !is_string($this->sessionCredential) || preg_match('/\A[a-f0-9]{64}\z/D', $this->sessionCredential) !== 1) {
+                return null;
+            }
+            $users = $db->fetchAllAssociative('SELECT id, username, password, realm, enabled, locked, must_change_password, password_change FROM user_auth WHERE id = ?', [$this->sessionId]);
+        } elseif ($this->username === null) {
             // read_config_option() falls back to the declared default, '1', when
             // the row is absent. A stored value that is not a plain positive id,
             // such as '1abc', must not be truncated into one.
@@ -68,10 +85,13 @@ final class CliConsoleAccess implements ConsoleOperator
             return null;
         }
         $user = $users[0];
-        if ($user['enabled'] !== 'on' || $user['locked'] === 'on' || $user['must_change_password'] === 'on') {
+        if ($user['enabled'] !== 'on' || $user['locked'] === 'on' || $this->changePending($user)) {
             return null;
         }
         $id = (int) $user['id'];
+        if ($this->sessionId !== null && !$this->sessionCredentialMatches($id, $user['password'])) {
+            return null;
+        }
         $guest = $db->fetchOne("SELECT value FROM settings WHERE name = 'guest_user'");
         if ($id === (int) $guest || $user['username'] === $guest || !$this->hasRealm($id, 8)) {
             return null;
@@ -123,6 +143,35 @@ final class CliConsoleAccess implements ConsoleOperator
         // and writes nothing. Removing realm 26 from everyone therefore reopens
         // schema changes to every direct realm 15 holder, as it does on the web.
         return !$this->anyoneHoldsUpgradeRealm() && $this->hasDirectRealm($actor->id, 15);
+    }
+
+    /**
+     * A named command-line account with any pending change is refused. A web
+     * session's account is refused only when login forced the change, which is
+     * when the web session carries sess_change_password (auth_login.php,
+     * include/auth.php).
+     *
+     * @param array<string, mixed> $user
+     */
+    private function changePending(array $user): bool
+    {
+        if ($this->sessionId === null) {
+            return $user['must_change_password'] === 'on';
+        }
+
+        return in_array($user['realm'], [0, '0'], true) && $user['must_change_password'] === 'on' && $user['password_change'] === 'on';
+    }
+
+    /** The credential generation the web session was bound to, as LegacyAuthenticatedSession checks it. */
+    private function sessionCredentialMatches(int $id, mixed $password): bool
+    {
+        $native = $this->database()->getNativeConnection();
+        if (!$native instanceof \PDO || !is_string($password) || !is_string($this->sessionCredential)) {
+            return false;
+        }
+        require_once dirname(__DIR__, 4) . '/lib/auth.php';
+
+        return hash_equals(\auth_session_credential_generation($id, $password, $native), $this->sessionCredential);
     }
 
     private function hasDirectRealm(int $id, int $realm): bool

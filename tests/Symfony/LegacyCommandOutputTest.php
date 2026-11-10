@@ -87,6 +87,19 @@ final class LegacyCommandOutputTest extends TestCase
         self::assertSame($expected, (new LegacyCommandOutput())->linesFromArguments([PHP_BINARY, '-r', $payload]));
     }
 
+    public function testArgumentArrayReportsTheExitCodeWithItsOutput(): void
+    {
+        $exitCode = null;
+        self::assertSame(['partial'], (new LegacyCommandOutput())->linesFromArguments([PHP_BINARY, '-r', 'echo "partial\n"; exit(2);'], $exitCode));
+        self::assertSame(2, $exitCode);
+
+        self::assertSame(['whole'], (new LegacyCommandOutput())->linesFromArguments([PHP_BINARY, '-r', 'echo "whole\n";'], $exitCode));
+        self::assertSame(0, $exitCode);
+
+        self::assertSame([], (new LegacyCommandOutput())->linesFromArguments([sys_get_temp_dir() . '/command-missing-' . bin2hex(random_bytes(8))], $exitCode));
+        self::assertNotSame(0, $exitCode);
+    }
+
     public function testMissingArgumentExecutableDoesNotInvokeAShell(): void
     {
         $directory = sys_get_temp_dir() . '/command-no-shell-' . bin2hex(random_bytes(8));
