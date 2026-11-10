@@ -614,9 +614,9 @@ header_redirect	./automation_graph_rules.php:40	        header('Location: automa
 header_redirect	./automation_graph_rules.php:45	        header('Location: automation_graph_rules.php?action=edit&id=' . get_filter_request_var('id'));
 header_redirect	./automation_graph_rules.php:55	        header('Location: automation_graph_rules.php?header=false&action=edit&name=' . get_request_var('name') . '&id=' . get_filter_request_var('id') . '&snmp_query_id=' . get_request_var('snmp_query_id'));
 header_redirect	./automation_graph_rules.php:60	        header('Location: automation_graph_rules.php');
-header_redirect	./automation_networks.php:300			header('Location: automation_networks.php?header=false');
-header_redirect	./automation_networks.php:375			header('Location: automation_networks.php?header=false');
-header_redirect	./automation_networks.php:57			header('Location: automation_networks.php?header=false&action=edit&id=' . (empty($network_id) ? get_nfilter_request_var('id') : $network_id));
+header_redirect	./automation_networks.php:185			header('Location: automation_networks.php?header=false');
+header_redirect	./automation_networks.php:260			header('Location: automation_networks.php?header=false');
+header_redirect	./automation_networks.php:38		header('Location: ' . (empty($network_id) ? 'app.php/automation/networks/new' : 'app.php/automation/networks/' . $network_id . '/edit'), true, 302);
 header_redirect	./automation_snmp.php:127	        header('Location: automation_snmp.php?header=false');
 header_redirect	./automation_snmp.php:34	        header('Location: ' . (empty($id) ? 'app.php/automation/snmp-options/new' : 'app.php/automation/snmp-options/' . $id . '/edit'), true, 302);
 header_redirect	./automation_snmp.php:42	            header('Location: app.php/automation/snmp-options', true, 302);
