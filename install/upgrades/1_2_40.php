@@ -130,6 +130,7 @@ function upgrade_alerting_tables(): array
   rrd_name varbinary(19) NOT NULL,
   sample_count int(10) unsigned NOT NULL,
   sample_sum double NOT NULL,
+  sample_sum_squares double NOT NULL,
   last_observed_at int(10) unsigned NOT NULL,
   PRIMARY KEY (local_hour, local_data_id, rrd_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
@@ -139,6 +140,7 @@ function upgrade_alerting_tables(): array
                 'rrd_name' => 'varbinary:signed:NO',
                 'sample_count' => 'int:unsigned:NO',
                 'sample_sum' => 'double:signed:NO',
+                'sample_sum_squares' => 'double:signed:NO',
                 'last_observed_at' => 'int:unsigned:NO',
             ),
             'indexes' => array('PRIMARY:0:local_hour', 'PRIMARY:0:local_data_id', 'PRIMARY:0:rrd_name'),

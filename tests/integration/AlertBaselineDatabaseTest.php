@@ -27,6 +27,8 @@ use Kadupul\Alerting\Application\EvaluateRules;
 use Kadupul\Alerting\Application\EvaluationReport;
 use Kadupul\Alerting\Application\Port\SeriesObservation;
 use Kadupul\Alerting\Domain\Evaluation\Observation;
+use Kadupul\Alerting\Domain\Rule\BaselineCalendar;
+use Kadupul\Alerting\Domain\Rule\HourBucket;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository;
@@ -155,11 +157,11 @@ final class AlertBaselineDatabaseTest extends TestCase
             $source->record([new SeriesObservation($series, new Observation($rate, $nine + $offset, STEP))]);
         }
 
-        $row = $this->database->fetchAssociative('SELECT sample_count, sample_sum, last_observed_at FROM alert_baseline_sample');
+        $row = $this->database->fetchAssociative('SELECT sample_count, sample_sum, sample_sum_squares, last_observed_at FROM alert_baseline_sample');
         self::assertIsArray($row);
-        // A repeated or older sample adds nothing; the sum and count read last_observed_at before it moves.
-        self::assertSame([3, 60.0, $nine + 900], [(int) $row['sample_count'], (float) $row['sample_sum'], (int) $row['last_observed_at']]);
-        self::assertSame(['7:traffic_in' => [20.0]], $source->history([new SeriesObservation($series, new Observation(1.0, self::at('2026-11-16 09:30:00'), STEP))]));
+        // A repeated or older sample adds nothing; the sums and count read last_observed_at before it moves.
+        self::assertSame([3, 60.0, 1400.0, $nine + 900], [(int) $row['sample_count'], (float) $row['sample_sum'], (float) $row['sample_sum_squares'], (int) $row['last_observed_at']]);
+        self::assertEquals(['7:traffic_in' => [new HourBucket(3, 60.0, 1400.0)]], $source->history([new SeriesObservation($series, new Observation(1.0, self::at('2026-11-16 09:30:00'), STEP))]));
     }
 
     public function testTheEvaluatorBuildsHistoryAcrossADaylightSavingChangeAndThenBreaches(): void
@@ -190,7 +192,7 @@ final class AlertBaselineDatabaseTest extends TestCase
         self::assertIsArray($notification);
         self::assertSame('opened', $notification['kind']);
         self::assertEqualsWithDelta(110.0, (float) $notification['observed_value'], 1e-9);
-        // Mean 100.5; sample deviation 0.577 is under the floor of 1, so the edge is 100.5 + 3.
+        // Four observations 100, 101, 100, 101: mean 100.5; sample deviation 0.577 is under the floor of 1, so the edge is 100.5 + 3.
         self::assertEqualsWithDelta(103.5, (float) $notification['threshold'], 1e-9);
     }
 
@@ -213,5 +215,37 @@ final class AlertBaselineDatabaseTest extends TestCase
         self::assertSame(1, $logger->records[0]['context']['rule']);
         self::assertStringContainsString('alert_rule 1', (string) $logger->records[0]['context']['reason']);
         self::assertSame(['102'], array_map('strval', $this->database->fetchFirstColumn('SELECT local_data_id FROM alert_baseline_sample')), 'Only the usable rule records history.');
+    }
+
+    public function testHistoryAgesOutAfterTheLastBaselineRuleIsGoneWithinThePruneBound(): void
+    {
+        $this->watch(1, 101);
+        $now = self::at('2026-11-09 10:20:00');
+        $calendar = new BaselineCalendar(new \DateTimeZone(ZONE));
+        $oldest = $calendar->oldestKept($calendar->wallHour($now)) - DsstatsBaselineSource::GRACE_HOURS;
+        // 6,000 (hour, data source) pairs no band can read, and the oldest hour kept.
+        $rows = [];
+        foreach ([$oldest - 3, $oldest - 2, $oldest - 1, $oldest] as $hour) {
+            for ($id = 1; $id <= 2000; ++$id) {
+                $rows[] = [$hour, $id, 'traffic_in', 1, 1.0, 1.0, 1];
+            }
+        }
+        foreach (array_chunk($rows, 1000) as $chunk) {
+            $this->database->executeStatement(
+                'INSERT INTO alert_baseline_sample (local_hour, local_data_id, rrd_name, sample_count, sample_sum, sample_sum_squares, last_observed_at) VALUES '
+                . implode(', ', array_fill(0, count($chunk), '(?, ?, ?, ?, ?, ?, ?)')),
+                array_merge(...$chunk),
+            );
+        }
+        // The last baseline rule is deleted: nothing records any more.
+        $this->database->delete('alert_rule', ['id' => 1]);
+        $this->clock->sleep($now);
+        $old = fn(): int => (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_baseline_sample WHERE local_hour < ?', [$oldest]);
+
+        $this->evaluate();
+        self::assertSame(1000, $old(), 'One run removes at most 5,000 pairs.');
+        $this->evaluate();
+        self::assertSame(0, $old(), 'The next run removes the rest.');
+        self::assertSame(2000, (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_baseline_sample'), 'The oldest hour kept stays.');
     }
 }

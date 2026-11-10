@@ -26,6 +26,7 @@ use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Rule\BaselineRule;
+use Kadupul\Alerting\Domain\Rule\HourBucket;
 
 /**
  * One evaluation run (ADR 0011 decisions 4, 5, 8 and 9). Rules are read in
@@ -56,6 +57,9 @@ use Kadupul\Alerting\Domain\Rule\BaselineRule;
  * counted to the BaselineSource once, to record and then to read back, so
  * the lookup is per batch, never per rule, and its time counts against the
  * budget. Too little history for the hour is unknown, like a missing rate.
+ * Old history is pruned once per run, after the orphan sweep, bounded by
+ * BaselineSource::PRUNE_LIMIT; like that sweep it is a count, not a charge
+ * to the budget.
  */
 final readonly class EvaluateRules
 {
@@ -88,6 +92,8 @@ final readonly class EvaluateRules
 
         $started = self::seconds($this->clock->now());
         $orphaned = $this->endOrphans($batchSize);
+        // Once per run, with or without baseline rules, so history ages out after the last one is gone.
+        $this->baselines->prune($this->clock->now()->getTimestamp());
         $evaluated = 0;
         $skipped = 0;
         $failed = 0;
@@ -257,7 +263,7 @@ final readonly class EvaluateRules
      * @param array<string, Observation>               $observations
      * @param array<int, RuleState|UnusableRuleRecord> $states
      *
-     * @return array<string, list<float>>
+     * @return array<string, list<HourBucket>>
      */
     private function baselineHistory(array $rules, array $observations, array $states, int $now): array
     {

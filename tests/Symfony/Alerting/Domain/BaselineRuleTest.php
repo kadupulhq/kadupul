@@ -14,14 +14,32 @@ use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Evaluation\Verdict;
 use Kadupul\Alerting\Domain\Rule\BaselineDirection;
 use Kadupul\Alerting\Domain\Rule\BaselineRule;
+use Kadupul\Alerting\Domain\Rule\HourBucket;
 use Kadupul\Alerting\Domain\Rule\InvalidRule;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class BaselineRuleTest extends TestCase
 {
-    /** Four weeks of the same hour of the week: mean 100, sample standard deviation 10. */
+    /** Four weeks of the same hour of the week, one observation each: mean 100, variance 400 / 3. */
     private const array FOUR_WEEKS = [90.0, 110.0, 90.0, 110.0];
+
+    /**
+     * One bucket per week: a float is a week with that one observation, a
+     * list is a week with those observations.
+     *
+     * @param list<float|list<float>> $weeks
+     *
+     * @return list<HourBucket>
+     */
+    private static function weeks(array $weeks): array
+    {
+        return array_map(static function (float|array $week): HourBucket {
+            $values = is_array($week) ? $week : [$week];
+
+            return new HourBucket(count($values), array_sum($values), array_sum(array_map(static fn(float $v): float => $v * $v, $values)));
+        }, $weeks);
+    }
 
     public function test_baseline_unknown_until_min_samples(): void
     {
@@ -31,43 +49,51 @@ final class BaselineRuleTest extends TestCase
 
         // Three weeks of history is not enough, however far the rate is from them.
         $three = [100.0, 100.0, 100.0];
-        self::assertNull($rule->band($three));
-        self::assertSame(Verdict::Unknown, $rule->evaluate(1_000_000.0, $rule->band($three), false));
-        self::assertSame(Verdict::Unknown, $rule->evaluate(100.0, $rule->band($three), true));
-        self::assertSame(Verdict::Unknown, $rule->evaluate(100.0, $rule->band([]), false));
+        self::assertNull($rule->band(self::weeks($three)));
+        self::assertSame(Verdict::Unknown, $rule->evaluate(1_000_000.0, $rule->band(self::weeks($three)), false));
+        self::assertSame(Verdict::Unknown, $rule->evaluate(100.0, $rule->band(self::weeks($three)), true));
+        self::assertSame(Verdict::Unknown, $rule->evaluate(100.0, $rule->band(self::weeks([])), false));
 
         // A non-finite stored mean is not a sample.
-        self::assertNull($rule->band([...$three, \NAN]));
-        self::assertNull($rule->band([...$three, \INF]));
+        self::assertNull($rule->band(self::weeks([...$three, \NAN])));
+        self::assertNull($rule->band(self::weeks([...$three, \INF])));
 
         // The fourth week makes the band usable.
-        self::assertNotNull($rule->band([...$three, 100.0]));
-        self::assertSame(Verdict::Breach, $rule->evaluate(1_000_000.0, $rule->band([...$three, 100.0]), false));
+        self::assertNotNull($rule->band(self::weeks([...$three, 100.0])));
+        self::assertSame(Verdict::Breach, $rule->evaluate(1_000_000.0, $rule->band(self::weeks([...$three, 100.0])), false));
 
         // A rule may ask for more weeks, up to the history kept.
         $eight = new BaselineRule(3.0, 3.0, 1.0, minSamples: BaselineRule::HISTORY_WEEKS);
-        self::assertNull($eight->band(array_fill(0, 7, 100.0)));
-        self::assertNotNull($eight->band(array_fill(0, 8, 100.0)));
+        self::assertNull($eight->band(self::weeks(array_fill(0, 7, 100.0))));
+        self::assertNotNull($eight->band(self::weeks(array_fill(0, 8, 100.0))));
 
         // A missing rate is unknown even with a band.
-        self::assertSame(Verdict::Unknown, $rule->evaluate(null, $rule->band(self::FOUR_WEEKS), false));
-        self::assertSame(Verdict::Unknown, $rule->evaluate(\NAN, $rule->band(self::FOUR_WEEKS), false));
+        self::assertSame(Verdict::Unknown, $rule->evaluate(null, $rule->band(self::weeks(self::FOUR_WEEKS)), false));
+        self::assertSame(Verdict::Unknown, $rule->evaluate(\NAN, $rule->band(self::weeks(self::FOUR_WEEKS)), false));
     }
 
     public function test_band_is_mean_plus_k_stddev_and_clamps_zero_variance(): void
     {
         $rule = new BaselineRule(3.0, 2.0, 0.5);
 
-        $band = $rule->band(self::FOUR_WEEKS);
+        // Pooled over every observation: n = 4, sum = 400, sum of squares = 40400,
+        // so mean = 100 and variance = (40400 - 400^2 / 4) / 3 = 400 / 3.
+        $band = $rule->band(self::weeks(self::FOUR_WEEKS));
         self::assertNotNull($band);
-        self::assertEqualsWithDelta(100.0, $band->mean, 1e-9);
-        // Sample standard deviation (n - 1): sqrt(4 * 100 / 3).
-        self::assertEqualsWithDelta(sqrt(400.0 / 3.0), $band->deviation, 1e-9);
-        self::assertEqualsWithDelta(100.0 + 3.0 * sqrt(400.0 / 3.0), $band->upper(3.0), 1e-9);
-        self::assertEqualsWithDelta(100.0 - 3.0 * sqrt(400.0 / 3.0), $band->lower(3.0), 1e-9);
+        self::assertSame(100.0, $band->mean);
+        self::assertSame(sqrt(400.0 / 3.0), $band->deviation);
+        self::assertSame(100.0 + 3.0 * sqrt(400.0 / 3.0), $band->upper(3.0));
+        self::assertSame(100.0 - 3.0 * sqrt(400.0 / 3.0), $band->lower(3.0));
+
+        // Weeks of different sizes weigh by their observations: n = 6, sum = 600,
+        // sum of squares = 2 x 8100 + 2 x 12100 + 2 x 10000 = 60400, variance = 400 / 5 = 80.
+        $uneven = $rule->band(self::weeks([[90.0, 110.0], [90.0, 110.0], [100.0], [100.0]]));
+        self::assertNotNull($uneven);
+        self::assertSame(100.0, $uneven->mean);
+        self::assertSame(sqrt(80.0), $uneven->deviation);
 
         // A constant series has no variance: the floor keeps the band open.
-        $flat = $rule->band([100.0, 100.0, 100.0, 100.0]);
+        $flat = $rule->band(self::weeks([100.0, 100.0, 100.0, 100.0]));
         self::assertNotNull($flat);
         self::assertSame(100.0, $flat->mean);
         self::assertSame(0.5, $flat->deviation);
@@ -78,19 +104,66 @@ final class BaselineRuleTest extends TestCase
         self::assertSame(Verdict::Breach, $rule->evaluate(101.6, $flat, false));
 
         // A constant zero, such as an error counter, is the same: not every non-zero rate breaches by itself.
-        $zero = $rule->band([0.0, 0.0, 0.0, 0.0]);
+        $zero = $rule->band(self::weeks([0.0, 0.0, 0.0, 0.0]));
         self::assertNotNull($zero);
         self::assertSame(1.5, $zero->upper(3.0));
         self::assertSame(Verdict::Ok, $rule->evaluate(1.0, $zero, false));
         self::assertSame(Verdict::Breach, $rule->evaluate(2.0, $zero, false));
 
         // A tiny but non-zero deviation is also raised to the floor.
-        $nearlyFlat = $rule->band([100.0, 100.0, 100.0, 100.000001]);
+        $nearlyFlat = $rule->band(self::weeks([100.0, 100.0, 100.0, 100.000001]));
         self::assertNotNull($nearlyFlat);
         self::assertSame(0.5, $nearlyFlat->deviation);
+    }
 
-        // A larger deviation is kept as measured.
-        self::assertGreaterThan(0.5, $band->deviation);
+    public function testTheBandDescribesSingleObservationsNotHourlyMeans(): void
+    {
+        $rule = new BaselineRule(3.0, 3.0, 0.5);
+        // Every week's hourly mean is exactly 100, but within each hour the rate swings 80 to 120.
+        $bursty = self::weeks(array_fill(0, 4, [80.0, 120.0, 80.0, 120.0]));
+
+        $band = $rule->band($bursty);
+
+        self::assertNotNull($band);
+        self::assertSame(100.0, $band->mean);
+        // n = 16, sum of squares = 8 x 6400 + 8 x 14400 = 166400: variance = (166400 - 160000) / 15.
+        self::assertSame(sqrt(6400.0 / 15.0), $band->deviation, 'Week-to-week spread of the means would be 0, leaving only the floor.');
+        self::assertSame(Verdict::Ok, $rule->evaluate(120.0, $band, false), 'An ordinary burst stays inside.');
+        self::assertSame(Verdict::Breach, $rule->evaluate(170.0, $band, false));
+    }
+
+    public function testFloatCancellationOnALargeNearlyConstantSeriesClampsToTheFloor(): void
+    {
+        $rule = new BaselineRule(3.0, 3.0, 0.25);
+        // Twelve observations a week around 987654321.5, differing by 1e-7.
+        $week = [];
+        for ($i = 0; $i < 12; ++$i) {
+            $week[] = 987654321.5 + ($i % 2) * 1e-7;
+        }
+        $buckets = self::weeks(array_fill(0, 4, $week));
+        $n = 48;
+        $sum = array_sum(array_map(static fn(HourBucket $b): float => $b->sum, $buckets));
+        $squares = array_sum(array_map(static fn(HourBucket $b): float => $b->sumSquares, $buckets));
+        self::assertLessThan(0.0, ($squares - $sum * $sum / $n) / ($n - 1), 'The textbook formula cancels to a negative variance here.');
+
+        $band = $rule->band($buckets);
+
+        self::assertNotNull($band);
+        self::assertEqualsWithDelta(987654321.5, $band->mean, 1e-6);
+        self::assertSame(0.25, $band->deviation, 'A negative variance is 0, and the floor applies.');
+        self::assertNull($rule->band(self::weeks(array_fill(0, 4, [\INF]))), 'A non-finite week is not a sample.');
+    }
+
+    public function testMinimumSamplesCountWeeksNotObservations(): void
+    {
+        $rule = new BaselineRule(3.0, 3.0, 1.0);
+
+        // Three weeks of 12 observations each is still three weeks.
+        self::assertNull($rule->band(self::weeks(array_fill(0, 3, array_fill(0, 12, 100.0)))));
+        // An empty bucket is no week.
+        self::assertNull($rule->band([...self::weeks([100.0, 100.0, 100.0]), new HourBucket(0, 0.0, 0.0)]));
+        // n must reach 2 too, which any two usable weeks give.
+        self::assertNotNull((new BaselineRule(3.0, 3.0, 1.0, minSamples: 2))->band(self::weeks([100.0, 100.0])));
     }
 
     /** @return iterable<string, array{BaselineDirection, float, Verdict}> */
@@ -112,7 +185,7 @@ final class BaselineRuleTest extends TestCase
     {
         $rule = new BaselineRule(2.0, 2.0, 0.5, direction: $direction);
 
-        self::assertSame($expected, $rule->evaluate($value, $rule->band(self::FOUR_WEEKS), false));
+        self::assertSame($expected, $rule->evaluate($value, $rule->band(self::weeks(self::FOUR_WEEKS)), false));
     }
 
     public function testTwoSidedIsTheDefault(): void
@@ -126,7 +199,7 @@ final class BaselineRuleTest extends TestCase
     {
         // Trigger at 3 deviations, clear at 1: with the floor of 1 on a flat 100, breach above 103, clear below 101.
         $rule = new BaselineRule(3.0, 1.0, 1.0);
-        $band = $rule->band([100.0, 100.0, 100.0, 100.0]);
+        $band = $rule->band(self::weeks([100.0, 100.0, 100.0, 100.0]));
         self::assertNotNull($band);
 
         self::assertSame(Verdict::Breach, $rule->evaluate(103.5, $band, true));
@@ -149,7 +222,7 @@ final class BaselineRuleTest extends TestCase
     {
         // A rate oscillating between 102 and 104 around the 103 trigger edge opens one incident and never recovers.
         $rule = new BaselineRule(3.0, 1.0, 1.0, forCycles: 2);
-        $band = $rule->band([100.0, 100.0, 100.0, 100.0]);
+        $band = $rule->band(self::weeks([100.0, 100.0, 100.0, 100.0]));
         self::assertNotNull($band);
         $state = new RuleState();
         $transitions = [];
@@ -163,7 +236,7 @@ final class BaselineRuleTest extends TestCase
     public function testTheDecidingEdgeIsTheSideTheRateIsOn(): void
     {
         $rule = new BaselineRule(3.0, 1.0, 1.0);
-        $band = $rule->band([100.0, 100.0, 100.0, 100.0]);
+        $band = $rule->band(self::weeks([100.0, 100.0, 100.0, 100.0]));
         self::assertNotNull($band);
 
         self::assertSame(103.0, $rule->triggerEdge(110.0, $band));
@@ -209,7 +282,7 @@ final class BaselineRuleTest extends TestCase
     {
         // No gap: like a threshold rule whose clear threshold equals its trigger.
         $rule = new BaselineRule(2.0, 2.0, 1.0, minSamples: 2);
-        $band = $rule->band([100.0, 100.0]);
+        $band = $rule->band(self::weeks([100.0, 100.0]));
         self::assertNotNull($band);
 
         self::assertSame(Verdict::Hold, $rule->evaluate(102.0, $band, true));

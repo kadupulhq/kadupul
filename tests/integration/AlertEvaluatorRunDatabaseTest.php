@@ -45,7 +45,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\Console\Tester\CommandTester;
 
-const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification', 'settings', 'host', 'data_local', 'data_template_data', 'data_template_rrd', 'data_source_stats_hourly_cache', 'data_source_stats_hourly_last'];
+const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification', 'alert_baseline_sample', 'settings', 'host', 'data_local', 'data_template_data', 'data_template_rrd', 'data_source_stats_hourly_cache', 'data_source_stats_hourly_last'];
 
 /** Runs $during once, inside the first rate read: a second process starting while this one evaluates. */
 final class InterleavedRates implements RateSource

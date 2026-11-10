@@ -44,7 +44,7 @@ use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
-const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification', 'settings', 'host', 'data_local', 'data_template_data', 'data_template_rrd', 'data_source_stats_hourly_cache', 'data_source_stats_hourly_last'];
+const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification', 'alert_baseline_sample', 'settings', 'host', 'data_local', 'data_template_data', 'data_template_rrd', 'data_source_stats_hourly_cache', 'data_source_stats_hourly_last'];
 
 /** Counts saves, so a test can tell an unchanged state from a rewritten one. */
 final class CountingStates implements RuleStateStore

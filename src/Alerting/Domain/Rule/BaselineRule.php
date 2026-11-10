@@ -16,12 +16,13 @@ use Kadupul\Alerting\Domain\Evaluation\Verdict;
  *
  * The band for an observation comes from the same wall-clock hour of the
  * week in each of the previous HISTORY_WEEKS weeks (BaselineCalendar): each
- * week that has a recorded hourly mean is one sample. With fewer than
- * $minSamples samples the verdict is unknown. Otherwise the band is
- * mean +/- $deviations x deviation, where deviation is the samples' standard
- * deviation (n - 1) raised to $deviationFloor, an absolute amount in the
- * series' own unit, so a series that never varied still has a band of
- * width 2 x $deviations x $deviationFloor.
+ * week that has a bucket for that hour is one sample week. With fewer than
+ * $minSamples sample weeks the verdict is unknown. Otherwise the band is
+ * mean +/- $deviations x deviation over every observation in those buckets
+ * pooled, where deviation is their sample standard deviation (n - 1) raised
+ * to $deviationFloor, an absolute amount in the series' own unit, so a
+ * series that never varied still has a band of width
+ * 2 x $deviations x $deviationFloor.
  *
  * Like a threshold rule, the trigger side is strict outward: a rate exactly
  * on the trigger edge is inside. While an incident is open it clears only
@@ -33,7 +34,7 @@ final readonly class BaselineRule
 {
     public const int DEFAULT_MIN_SAMPLES = 4;
     public const int LOWEST_MIN_SAMPLES = 2;
-    /** Weeks of hourly means a band reads, and so the history kept. */
+    /** Weeks of hour buckets a band reads, and so the history kept. */
     public const int HISTORY_WEEKS = 8;
     public const BaselineDirection DEFAULT_DIRECTION = BaselineDirection::Both;
 
@@ -63,24 +64,40 @@ final readonly class BaselineRule
     }
 
     /**
-     * The band from the previous weeks' hourly means for this hour of the
-     * week, or null with fewer than $minSamples finite ones.
+     * The band from the earlier weeks' buckets for this hour of the week, or
+     * null with fewer than $minSamples usable buckets (weeks) or fewer than
+     * two observations. The observations of all those buckets are pooled:
+     * n = sum of counts, mean = sum / n and variance =
+     * (sum of squares - sum^2 / n) / (n - 1). Float cancellation can make
+     * that negative or non-finite for a large, nearly constant series; it is
+     * then 0 and the floor applies.
      *
-     * @param list<float> $hourlyMeans
+     * @param list<HourBucket> $buckets
      */
-    public function band(array $hourlyMeans): ?BaselineBand
+    public function band(array $buckets): ?BaselineBand
     {
-        $samples = array_values(array_filter($hourlyMeans, is_finite(...)));
-        $count = count($samples);
-        if ($count < $this->minSamples) {
+        $weeks = 0;
+        $count = 0;
+        $sum = 0.0;
+        $squares = 0.0;
+        foreach ($buckets as $bucket) {
+            if (!$bucket->isUsable()) {
+                continue;
+            }
+            ++$weeks;
+            $count += $bucket->count;
+            $sum += $bucket->sum;
+            $squares += $bucket->sumSquares;
+        }
+        if ($weeks < $this->minSamples || $count < 2) {
             return null;
         }
-        $mean = array_sum($samples) / $count;
-        $squares = 0.0;
-        foreach ($samples as $sample) {
-            $squares += ($sample - $mean) ** 2;
+        $mean = $sum / $count;
+        if (!is_finite($mean)) {
+            return null;
         }
-        $deviation = sqrt($squares / ($count - 1));
+        $variance = ($squares - $sum * $sum / $count) / ($count - 1);
+        $deviation = is_finite($variance) && $variance > 0.0 ? sqrt($variance) : 0.0;
 
         return new BaselineBand($mean, max($deviation, $this->deviationFloor));
     }

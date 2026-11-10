@@ -162,20 +162,29 @@ behavior until an administrator opts in.
      last period (`dsstats_write_buffer()` in `lib/dsstats.php`). The cache
      keeps only `dsstats_hourly_duration` minutes. So the evaluator keeps its
      own history in `alert_baseline_sample`: for each series and wall-clock
-     hour, the count and sum of the fresh rates (decision 1) it read in that
-     hour, and the newest observation time it counted, so a sample read by
-     two runs counts once. History starts when the first baseline rule on a
+     hour, the count, sum and sum of squares of the fresh rates (decision 1)
+     it read in that hour, and the newest observation time it counted, so a
+     sample read by two runs counts once. History starts when the first baseline rule on a
      series is evaluated; rules on the same series share it.
-   - **Sample.** One sample is the mean of one such hour bucket. The band for
+   - **Sample.** One sample is one week's bucket for the hour. The band for
      an observation reads the bucket of the same wall-clock hour of the week
      in each of the previous 8 weeks (`BaselineRule::HISTORY_WEEKS`), never
-     the observation's own week. A week without a bucket for that hour is
-     not a sample. The minimum sample count is 2 to 8 and defaults to 4: at
-     least 4 of those 8 weeks must have that hour.
-   - **Band.** Mean and sample standard deviation (n - 1) of the samples. The
-     deviation used is the larger of that standard deviation and the rule's
-     deviation floor, an absolute amount in the series' own unit that must
-     be greater than zero, so the band is never narrower than 2 x k x floor.
+     the observation's own week. A week without a bucket for that hour, or
+     with an empty one, is not a sample. The minimum sample count is 2 to 8
+     weeks and defaults to 4: at least 4 of those 8 weeks must have that
+     hour, and the buckets together must hold at least 2 observations.
+   - **Band.** The band describes the distribution of individual
+     observations, the quantity a rule compares, not the spread of hourly
+     means: a rate that swings within every hour but has the same hourly
+     mean each week still has a wide band. All observations in the sample
+     buckets are pooled: n is the sum of the counts, the mean is the sum of
+     the sums over n, and the variance is (sum of squares - sum^2 / n) /
+     (n - 1). For a large, nearly constant series that formula can cancel to
+     a small negative or non-finite value in floating point; such a variance
+     is 0. The deviation used is the larger of the square root of the
+     variance and the rule's deviation floor, an absolute amount in the
+     series' own unit that must be greater than zero, so the band is never
+     narrower than 2 x k x floor and the floor covers the clamped case.
      The floor is absolute, not a fraction of the mean, because the commonest
      zero-variance series, such as an error counter that is always 0, has a
      mean of 0, where a relative floor is zero again.
@@ -189,7 +198,7 @@ behavior until an administrator opts in.
      change, where the real gap is 167 or 169 hours. The consequence: the
      hour the clocks skip in spring has no bucket that year, so that hour of
      the week has one sample fewer for 8 weeks; the hour repeated in autumn
-     puts both real hours in one bucket, whose mean covers two hours.
+     puts both real hours in one bucket, whose observations cover two hours.
      Changing `date.timezone` shifts every later bucket against the stored
      ones until 8 weeks have passed.
    - **Direction.** `both` (the default) breaches on either side; `above` and
@@ -208,8 +217,26 @@ behavior until an administrator opts in.
    - **Batches.** Each batch hands the baseline source the fresh observations
      its baseline rules have not yet counted, once per series: one
      multi-row upsert and one read per 500 series of one wall-clock hour,
-     both inside the time budget. Buckets older than 8 weeks are deleted one
-     wall-clock hour per batch, at most one row per series.
+     both inside the time budget.
+   - **Retention.** Each evaluation run prunes once, after the orphan sweep
+     and before the first batch, whether or not any baseline rule remains,
+     so the history of a deleted or converted rule, or of a series that went
+     stale, still ages out. A prune removes buckets older than the oldest
+     week any band at the run's time reads (8 weeks), plus one day of grace
+     (`DsstatsBaselineSource::GRACE_HOURS`) because a rate observed in an
+     earlier hour can still be fresh (two polling intervals) and its band
+     reaches that far further back; a day covers polling intervals up to 12
+     hours. It removes them oldest first, at most 5,000 (wall-clock hour,
+     data source) pairs per run (`BaselineSource::PRUNE_LIMIT`), read and
+     deleted in chunks of 500. Like
+     the orphan sweep it is bounded by a count, not charged to the time
+     budget. At one run per 5-minute poll cycle that removes up to 60,000
+     pairs an hour, against one new pair per data source and hour, so the
+     bound keeps up with up to 60,000 data sources, and a backlog (a long
+     disabled period or a time zone change) drains over later runs. Pruning
+     runs only when the evaluator runs: with `alerting_enable` off nothing is
+     pruned or written, and rows left then stay until alerting is enabled
+     again. A run whose rate source is unavailable also prunes nothing.
    - **Unusable.** A baseline rule row the domain refuses (an unknown kind or
      direction, a missing or out-of-range parameter, or columns of the other
      kind set) is an `UnusableRuleRecord` (decision 8). A history bucket that
@@ -425,7 +452,10 @@ behavior until an administrator opts in.
    to 11.0 s on that host that day, so the per-rule state transaction still
    dominates and the baseline reads add about 150 ms per 5,000 rules. A run
    with no new samples does not call the baseline source and took 171 to 250
-   ms (one outlier of 1.8 s).
+   ms (one outlier of 1.8 s). The per-run prune, on the same 5,000 series
+   with 8 weeks, the day of grace and 3 hours beyond it (6,855,000 rows),
+   removed 5,000 rows in 32 to 48 ms per run over two measurements, and
+   took under 1 ms once nothing was left.
 
    The orphan sweep (decision 6) that starts each run is capped at the batch
    size: at most one batch of orphans, ended by one bounded `DELETE` and one
@@ -608,8 +638,9 @@ behavior until an administrator opts in.
   count), and history is recorded only while alerting runs. A gap in
   collection or a disabled evaluator costs those weeks' samples, not false
   alarms. The history costs one row per series and hour, about 1,500 rows
-  and 75 KB per series at 8 weeks; rows of a series whose rules are deleted
-  age out after 8 weeks.
+  and 75 KB per series at 8 weeks and a day; rows of a series whose rules are deleted
+  age out after 8 weeks of evaluator runs, bounded per run (decision 3,
+  Retention), and stay while alerting is disabled.
 - **A baseline learns slow drift and recurring outages.** The band is the
   last 8 weeks' behaviour, so a gradual change becomes normal, and an outage
   that recurs weekly widens the band for that hour.

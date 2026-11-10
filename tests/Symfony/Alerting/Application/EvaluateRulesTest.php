@@ -86,6 +86,7 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame([], $this->states->saved, 'An inactive source must write no rule state.');
         self::assertSame([], $this->incidents->events);
         self::assertSame([], $this->rates->requests, 'No rate is read while the source is unavailable.');
+        self::assertSame([], $this->baselines->prunes, 'An inactive run removes no history either.');
         self::assertSame(0, $this->cursor->position());
     }
 
@@ -664,5 +665,19 @@ final class EvaluateRulesTest extends TestCase
         }
         self::assertSame([], $this->states->saved);
         self::assertSame(0, $this->cursor->position());
+    }
+
+    public function testHistoryIsPrunedOncePerRunWithOrWithoutBaselineRules(): void
+    {
+        // No rule at all: the last baseline rule may have been deleted.
+        $this->evaluator()(10, 30.0);
+        self::assertSame([self::NOW], $this->baselines->prunes);
+
+        // Many batches still prune once.
+        foreach ([1, 2, 3, 4, 5] as $id) {
+            $this->rules->add(self::baselineRule($id));
+        }
+        $this->evaluator()(2, 30.0);
+        self::assertSame([self::NOW, self::NOW], $this->baselines->prunes);
     }
 }

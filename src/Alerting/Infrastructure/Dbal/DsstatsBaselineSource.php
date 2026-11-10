@@ -16,6 +16,7 @@ use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Kadupul\Alerting\Application\Port\BaselineSource;
 use Kadupul\Alerting\Application\Port\SeriesObservation;
 use Kadupul\Alerting\Domain\Rule\BaselineCalendar;
+use Kadupul\Alerting\Domain\Rule\HourBucket;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 
 /**
@@ -27,20 +28,29 @@ use Kadupul\Alerting\Domain\Rule\SeriesKey;
  * dsstats_hourly_duration minutes.
  *
  * Each row is one series in one wall-clock hour of the installation time
- * zone (BaselineCalendar), with the count and sum of the fresh rates the
- * evaluator read in that hour and the newest observation time counted. Its
- * mean is one sample of that hour of the week. The installation time zone is
- * PHP's default time zone in the evaluator, the CLI date.timezone that the
+ * zone (BaselineCalendar), with the count, sum and sum of squares of the
+ * fresh rates the evaluator read in that hour and the newest observation
+ * time counted. A band pools the buckets of one hour of the week. The
+ * installation time zone is PHP's default time zone in the evaluator, the CLI date.timezone that the
  * poller, which starts it with the same PHP binary, writes dsstats times in.
  *
  * Every statement takes a bounded list: at most CHUNK series, and the
- * HISTORY_WEEKS wall hours of one hour of the week. Rows a band can no longer
- * read are removed one wall hour per call, at most one row per series.
+ * HISTORY_WEEKS wall hours of one hour of the week. prune() removes rows a
+ * band can no longer read, at most PRUNE_LIMIT (wall hour, data source)
+ * pairs per call in chunks of CHUNK, keeping GRACE_HOURS more than a band at
+ * the prune time reads.
  */
 final readonly class DsstatsBaselineSource implements BaselineSource
 {
     /** Series per statement, bounding the IN lists and the multi-row insert. */
     private const int CHUNK = 500;
+    /**
+     * Wall hours kept beyond the oldest one a band at the prune time reads. An
+     * observation stays fresh for two polling intervals, so a run can still
+     * judge a rate from an earlier hour, whose band reaches that much further
+     * back; a day covers polling intervals up to 12 hours.
+     */
+    public const int GRACE_HOURS = 24;
 
     private BaselineCalendar $calendar;
 
@@ -54,7 +64,8 @@ final readonly class DsstatsBaselineSource implements BaselineSource
         $rows = [];
         foreach ($observations as $entry) {
             $hour = $this->calendar->wallHour($entry->observation->observedAt);
-            $rows[$hour . '|' . $entry->series->id()] = [$hour, $entry->series->localDataId, $entry->series->rrdName, $entry->observation->rate, $entry->observation->observedAt];
+            $rate = $entry->observation->rate;
+            $rows[$hour . '|' . $entry->series->id()] = [$hour, $entry->series->localDataId, $entry->series->rrdName, $rate, $rate * $rate, $entry->observation->observedAt];
         }
         if ($rows === []) {
             return;
@@ -62,7 +73,6 @@ final readonly class DsstatsBaselineSource implements BaselineSource
         foreach (array_chunk(array_values($rows), self::CHUNK) as $chunk) {
             $this->database->executeStatement($this->upsert(count($chunk)), array_merge(...$chunk));
         }
-        $this->prune(min(array_column($rows, 0)));
     }
 
     public function history(array $observations): array
@@ -79,7 +89,7 @@ final readonly class DsstatsBaselineSource implements BaselineSource
             $ids = array_values(array_unique(array_map(static fn(SeriesKey $key): int => $key->localDataId, $series)));
             foreach (array_chunk($ids, self::CHUNK) as $chunk) {
                 $rows = $this->database->fetchAllAssociative(
-                    'SELECT local_hour, local_data_id, rrd_name, sample_count, sample_sum
+                    'SELECT local_hour, local_data_id, rrd_name, sample_count, sample_sum, sample_sum_squares
                     FROM alert_baseline_sample
                     WHERE local_hour IN (?) AND local_data_id IN (?)',
                     [$this->calendar->priorWeeks($hour), $chunk],
@@ -91,24 +101,24 @@ final readonly class DsstatsBaselineSource implements BaselineSource
                     if ($key === null || !isset($series[$key])) {
                         continue;
                     }
-                    $mean = self::mean($row);
-                    if ($mean === null) {
+                    $bucket = self::bucket($row);
+                    if ($bucket === null) {
                         $unreadable[$key] = true;
                         continue;
                     }
-                    $found[$key][StoredValue::int($row['local_hour'], 'alert_baseline_sample', 'local_hour')] = $mean;
+                    $found[$key][StoredValue::int($row['local_hour'], 'alert_baseline_sample', 'local_hour')] = $bucket;
                 }
             }
         }
 
         $history = [];
-        foreach ($found as $key => $means) {
+        foreach ($found as $key => $buckets) {
             if (isset($unreadable[$key])) {
                 // A bucket that cannot be read leaves the band unknown rather than built from the rest.
                 continue;
             }
-            krsort($means);
-            $history[$key] = array_values($means);
+            krsort($buckets);
+            $history[$key] = array_values($buckets);
         }
 
         return $history;
@@ -122,33 +132,59 @@ final readonly class DsstatsBaselineSource implements BaselineSource
      */
     private function upsert(int $rows): string
     {
-        $sql = 'INSERT INTO alert_baseline_sample (local_hour, local_data_id, rrd_name, sample_sum, last_observed_at, sample_count) VALUES '
-            . implode(', ', array_fill(0, $rows, '(?, ?, ?, ?, ?, 1)'));
+        $sql = 'INSERT INTO alert_baseline_sample (local_hour, local_data_id, rrd_name, sample_sum, sample_sum_squares, last_observed_at, sample_count) VALUES '
+            . implode(', ', array_fill(0, $rows, '(?, ?, ?, ?, ?, ?, 1)'));
         if ($this->database->getDatabasePlatform() instanceof SQLitePlatform) {
             return $sql . ' ON CONFLICT (local_hour, local_data_id, rrd_name) DO UPDATE SET
                 sample_sum = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN alert_baseline_sample.sample_sum + excluded.sample_sum ELSE alert_baseline_sample.sample_sum END,
+                sample_sum_squares = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN alert_baseline_sample.sample_sum_squares + excluded.sample_sum_squares ELSE alert_baseline_sample.sample_sum_squares END,
                 sample_count = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN alert_baseline_sample.sample_count + 1 ELSE alert_baseline_sample.sample_count END,
                 last_observed_at = MAX(alert_baseline_sample.last_observed_at, excluded.last_observed_at)';
         }
 
         return $sql . ' ON DUPLICATE KEY UPDATE
             sample_sum = IF(VALUES(last_observed_at) > last_observed_at, sample_sum + VALUES(sample_sum), sample_sum),
+            sample_sum_squares = IF(VALUES(last_observed_at) > last_observed_at, sample_sum_squares + VALUES(sample_sum_squares), sample_sum_squares),
             sample_count = IF(VALUES(last_observed_at) > last_observed_at, sample_count + 1, sample_count),
             last_observed_at = GREATEST(last_observed_at, VALUES(last_observed_at))';
     }
 
-    /** Removes the oldest wall hour if no band from $hour on can read it. */
-    private function prune(int $hour): void
+    /**
+     * Up to PRUNE_LIMIT (wall hour, data source) pairs older than any band at
+     * $now reads, less GRACE_HOURS, oldest first: each chunk is one SELECT of
+     * at most CHUNK pairs and one DELETE per wall hour in it.
+     */
+    public function prune(int $now): int
     {
-        $oldest = $this->database->fetchOne('SELECT MIN(local_hour) FROM alert_baseline_sample');
-        if ($oldest === null || $oldest === false) {
-            return;
+        $before = $this->calendar->oldestKept($this->calendar->wallHour($now)) - self::GRACE_HOURS;
+        $removed = 0;
+        for ($pairs = 0; $pairs < self::PRUNE_LIMIT; $pairs += self::CHUNK) {
+            $rows = $this->database->fetchAllAssociative(
+                'SELECT DISTINCT local_hour, local_data_id FROM alert_baseline_sample
+                WHERE local_hour < ? ORDER BY local_hour, local_data_id LIMIT ?',
+                [$before, min(self::CHUNK, self::PRUNE_LIMIT - $pairs)],
+                [ParameterType::INTEGER, ParameterType::INTEGER],
+            );
+            if ($rows === []) {
+                break;
+            }
+            $byHour = [];
+            foreach ($rows as $row) {
+                $byHour[StoredValue::int($row['local_hour'], 'alert_baseline_sample', 'local_hour')][] = StoredValue::int($row['local_data_id'], 'alert_baseline_sample', 'local_data_id');
+            }
+            foreach ($byHour as $hour => $ids) {
+                $removed += (int) $this->database->executeStatement(
+                    'DELETE FROM alert_baseline_sample WHERE local_hour = ? AND local_data_id IN (?)',
+                    [$hour, $ids],
+                    [ParameterType::INTEGER, ArrayParameterType::INTEGER],
+                );
+            }
+            if (count($rows) < self::CHUNK) {
+                break;
+            }
         }
-        $oldest = StoredValue::int($oldest, 'alert_baseline_sample', 'local_hour');
-        if ($oldest >= $this->calendar->oldestKept($hour)) {
-            return;
-        }
-        $this->database->executeStatement('DELETE FROM alert_baseline_sample WHERE local_hour = ?', [$oldest], [ParameterType::INTEGER]);
+
+        return $removed;
     }
 
     private static function key(mixed $localDataId, string $rrdName): ?string
@@ -161,22 +197,22 @@ final readonly class DsstatsBaselineSource implements BaselineSource
     }
 
     /**
-     * The bucket's mean, or null when its count or sum cannot be used.
+     * The bucket, or null when its count or sums cannot be used.
      *
      * @param array<string, mixed> $row
      */
-    private static function mean(array $row): ?float
+    private static function bucket(array $row): ?HourBucket
     {
         try {
-            $count = StoredValue::int($row['sample_count'], 'alert_baseline_sample', 'sample_count');
-            $sum = StoredValue::float($row['sample_sum'], 'alert_baseline_sample', 'sample_sum');
+            $bucket = new HourBucket(
+                StoredValue::int($row['sample_count'], 'alert_baseline_sample', 'sample_count'),
+                StoredValue::float($row['sample_sum'], 'alert_baseline_sample', 'sample_sum'),
+                StoredValue::float($row['sample_sum_squares'], 'alert_baseline_sample', 'sample_sum_squares'),
+            );
         } catch (StoredAlertingRowUnreadable) {
             return null;
         }
-        if ($count < 1 || !is_finite($sum / $count)) {
-            return null;
-        }
 
-        return $sum / $count;
+        return $bucket->isUsable() ? $bucket : null;
     }
 }

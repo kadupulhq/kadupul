@@ -50,6 +50,7 @@ final class RunAlertingTest extends TestCase
     private InMemoryRunLock $lock;
     private RecordingNotificationDrain $drain;
     private RecordingLogger $logger;
+    private InMemoryBaselineSource $baselines;
 
     protected function setUp(): void
     {
@@ -63,6 +64,7 @@ final class RunAlertingTest extends TestCase
         $this->lock = new InMemoryRunLock();
         $this->drain = new RecordingNotificationDrain();
         $this->logger = new RecordingLogger();
+        $this->baselines = new InMemoryBaselineSource();
         foreach ([1, 2, 3] as $id) {
             $this->rules->add(new AlertRule($id, new SeriesKey(100 + $id, 'traffic_in'), new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, 1)));
             $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(50.0, self::NOW, 300));
@@ -75,7 +77,7 @@ final class RunAlertingTest extends TestCase
         $clock = new MockClockAdapter($this->clock);
         $evaluate = new EvaluateRules(
             $this->rates,
-            new InMemoryBaselineSource(),
+            $this->baselines,
             $this->rules,
             $this->states,
             $this->incidents,
@@ -98,6 +100,7 @@ final class RunAlertingTest extends TestCase
         self::assertSame(AlertingRunOutcome::Disabled, $run->outcome);
         self::assertNull($run->evaluation);
         self::assertNull($run->delivery);
+        self::assertSame([], $this->baselines->prunes, 'Disabled alerting removes no baseline history either.');
         self::assertSame([], $this->lock->events);
         self::assertSame([], $this->rates->requests);
         self::assertSame([], $this->drain->calls, 'No mail is sent while alerting is off (ADR 0011 decision 10).');

@@ -11,14 +11,17 @@ namespace Kadupul\Tests\Alerting\Fakes;
 
 use Kadupul\Alerting\Application\Port\BaselineSource;
 use Kadupul\Alerting\Application\Port\SeriesObservation;
+use Kadupul\Alerting\Domain\Rule\HourBucket;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Symfony\Component\Clock\MockClock;
 
-/** Hourly means set per series by the test; records what the evaluator hands it. */
+/** History set per series by the test; records what the evaluator hands it. */
 final class InMemoryBaselineSource implements BaselineSource
 {
-    /** @var array<string, list<float>> */
+    /** @var array<string, list<HourBucket>> */
     private array $history = [];
+    /** @var list<int> the time passed to each prune() call */
+    public array $prunes = [];
     /** @var list<list<string>> series ids per record() call */
     public array $recorded = [];
     /** @var list<list<string>> series ids per history() call */
@@ -32,10 +35,21 @@ final class InMemoryBaselineSource implements BaselineSource
         private float $secondsPerRead = 0.0,
     ) {}
 
-    /** @param list<float> $hourlyMeans */
-    public function put(SeriesKey $series, array $hourlyMeans): void
+    /**
+     * One bucket per week, each holding a single observation of that value.
+     *
+     * @param list<float> $weeklyValues
+     */
+    public function put(SeriesKey $series, array $weeklyValues): void
     {
-        $this->history[$series->id()] = $hourlyMeans;
+        $this->history[$series->id()] = array_map(static fn(float $v): HourBucket => new HourBucket(1, $v, $v * $v), $weeklyValues);
+    }
+
+    public function prune(int $now): int
+    {
+        $this->prunes[] = $now;
+
+        return 0;
     }
 
     public function record(array $observations): void
