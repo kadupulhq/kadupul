@@ -90,7 +90,7 @@ final readonly class DbalNotificationQueue implements NotificationQueue
         }
         $row = $this->database->fetchAssociative(
             'SELECT n.attempts, n.incident_id, n.kind, n.observed_value, n.threshold,
-                i.rule_id, i.opened_at, i.ended_at, r.local_data_id, r.rrd_name, dl.id AS data_local_id, dl.host_id, h.description
+                i.rule_id, i.opened_at, i.ended_at, r.kind AS rule_kind, r.local_data_id, r.rrd_name, dl.id AS data_local_id, dl.host_id, h.description
             FROM alert_notification n
             LEFT JOIN alert_incident i ON i.id = n.incident_id
             LEFT JOIN alert_rule r ON r.id = i.rule_id
@@ -163,6 +163,7 @@ final readonly class DbalNotificationQueue implements NotificationQueue
                 $series ? StoredValue::int($row['local_data_id'], $where, 'local_data_id') : null,
                 $series ? $row['rrd_name'] : null,
                 $device,
+                is_string($row['rule_kind']) ? $row['rule_kind'] : null,
             );
         } catch (StoredAlertingRowUnreadable) {
             return null;

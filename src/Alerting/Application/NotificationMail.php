@@ -39,7 +39,7 @@ final class NotificationMail
             'Series: ' . self::series($content),
             'Transition: ' . $content->kind->value,
             'Value: ' . self::number($content->value),
-            ($opened ? 'Trigger' : 'Clear') . ' threshold: ' . self::number($content->threshold),
+            ($opened ? 'Trigger' : 'Clear') . ($content->ruleKind === 'baseline' ? ' band edge: ' : ' threshold: ') . self::number($content->threshold),
             'Time: ' . gmdate('Y-m-d H:i:s', $content->observedAt) . ' UTC',
             'Incident: ' . sprintf(self::INCIDENT_PATH, $content->incidentId),
         ];

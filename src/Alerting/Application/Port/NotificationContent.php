@@ -16,6 +16,9 @@ use Kadupul\Alerting\Domain\Evaluation\Transition;
  * the incident changed; the series is read when the mail is sent, so its
  * fields are null once the rule, data source or device is gone. Only these
  * fields reach the mail: no device credential, setting or query does.
+ * $ruleKind is alert_rule.kind, null once the rule is gone: a baseline
+ * rule's stored threshold is the band edge it crossed, not a configured
+ * threshold, and the mail says so.
  */
 final readonly class NotificationContent
 {
@@ -32,5 +35,6 @@ final readonly class NotificationContent
         public ?int $localDataId = null,
         public ?string $rrdName = null,
         public ?string $deviceDescription = null,
+        public ?string $ruleKind = null,
     ) {}
 }

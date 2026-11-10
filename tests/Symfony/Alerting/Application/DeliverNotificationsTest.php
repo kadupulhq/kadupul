@@ -209,6 +209,24 @@ final class DeliverNotificationsTest extends TestCase
         self::assertSame(['queued', 'administrator notification: MissingAddress'], [$this->queue->rows[$other]['status'], $this->queue->rows[$other]['error']]);
     }
 
+    public function testABaselineMailNamesTheBandEdgeRatherThanAThreshold(): void
+    {
+        // A baseline rule stores the band edge on the rate's side of the mean
+        // (BaselineRule::triggerEdge() and clearEdge()), not a configured threshold.
+        $opened = new NotificationContent(12, 5, Transition::Opened, 140.0, 125.5, self::NOW, 101, 'traffic_in', null, 'baseline');
+        $html = NotificationMail::html($opened);
+        self::assertStringContainsString("Value: 140<br>\nTrigger band edge: 125.5<br>\n", $html);
+        self::assertStringNotContainsString('threshold', $html);
+
+        $recovered = new NotificationContent(12, 5, Transition::Recovered, 101.0, 110.25, self::NOW + 300, 101, 'traffic_in', null, 'baseline');
+        $html = NotificationMail::html($recovered);
+        self::assertStringContainsString("Value: 101<br>\nClear band edge: 110.25<br>\n", $html);
+        self::assertStringNotContainsString('threshold', $html);
+
+        $threshold = new NotificationContent(12, 5, Transition::Opened, 95.5, 90.0, self::NOW, 101, 'traffic_in', null, 'threshold');
+        self::assertStringContainsString('Trigger threshold: 90<br>', NotificationMail::html($threshold));
+    }
+
     public function testNotificationBodyContainsNoCredentialsOrRawSql(): void
     {
         $opened = new NotificationContent(12, 5, Transition::Opened, 95.5, 90.0, self::NOW, 101, 'traffic_in', 'core <b>&</b> "edge" <SUBJECT>');

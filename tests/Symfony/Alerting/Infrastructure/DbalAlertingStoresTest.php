@@ -514,7 +514,7 @@ final class DbalAlertingStoresTest extends TestCase
 
         $claim = $queue->claim(1, 1010, 5, 1910);
         self::assertNotNull($claim);
-        self::assertEquals(new NotificationContent($incident, 5, Transition::Opened, 95.5, 90.5, 900, 105, 'traffic_in', 'edge-1'), $claim->content);
+        self::assertEquals(new NotificationContent($incident, 5, Transition::Opened, 95.5, 90.5, 900, 105, 'traffic_in', 'edge-1', 'threshold'), $claim->content);
         self::assertSame([1, 1910], [$claim->attempts, $claim->leaseUntil]);
         self::assertNull($queue->claim(1, 1010, 5, 1910), 'A held row cannot be claimed again.');
         self::assertSame([2], $queue->due(1010, 5, 10));
@@ -557,7 +557,12 @@ final class DbalAlertingStoresTest extends TestCase
         $queue->enqueue($incident, Transition::Recovered, 10.0, 80.0, 1200);
 
         // Rule 5's data source row is missing.
-        self::assertEquals(new NotificationContent($incident, 5, Transition::Recovered, 10.0, 80.0, 1200), $queue->claim(1, 1200, 5, 2100)?->content);
+        self::assertEquals(new NotificationContent($incident, 5, Transition::Recovered, 10.0, 80.0, 1200, ruleKind: 'threshold'), $queue->claim(1, 1200, 5, 2100)?->content);
+
+        // A baseline rule's kind reaches the mail, which then names a band edge.
+        $this->database->update('alert_rule', ['kind' => 'baseline'], ['id' => 5]);
+        $queue->enqueue($incident, Transition::Recovered, 10.0, 12.5, 1200);
+        self::assertSame('baseline', $queue->claim(2, 1200, 5, 2100)?->content?->ruleKind);
     }
 
     public function testANotificationThatCannotBeReadIsClaimedWithNoContent(): void
