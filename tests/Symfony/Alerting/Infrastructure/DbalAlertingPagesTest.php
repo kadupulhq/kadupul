@@ -415,6 +415,57 @@ final class DbalAlertingPagesTest extends TestCase
         ], $shown);
     }
 
+    public function testAMissingRuleIsNotFoundForAnUpdateOrADelete(): void
+    {
+        $kept = $this->insertRule(101);
+        $revision = $this->revision($kept);
+        foreach (['update', 'delete'] as $operation) {
+            try {
+                $operation === 'update'
+                    ? $this->rules->update(self::VIEWER, $kept + 1, $revision, $this->threshold(101, 'traffic_in', '99'))
+                    : $this->rules->delete(self::VIEWER, $kept + 1, $revision);
+                self::fail('A ' . $operation . ' of a missing rule was applied.');
+            } catch (RuleSubmissionRefused $refused) {
+                self::assertSame(RuleStore::NOT_FOUND, $refused->getMessage());
+            }
+            self::assertSame(['alerting.rule.' . $operation, 'rule', (string) ($kept + 1), 'allowed', 'failed'], $this->lastAudit());
+        }
+        self::assertSame([[$kept, 90.0]], array_map(static fn(array $row): array => [(int) $row[0], (float) $row[1]], $this->database->fetchAllNumeric('SELECT id, trigger_threshold FROM alert_rule')));
+    }
+
+    public function testAnAcknowledgementTheDatabaseDidNotApplyIsAnErrorNotASuccess(): void
+    {
+        $incident = $this->openIncident($this->insertRule(101));
+        // Stands in for a writer the row lock does not hold back: the UPDATE matches no row.
+        $this->database->executeStatement('CREATE TRIGGER skip_acknowledgement BEFORE UPDATE ON alert_incident BEGIN SELECT RAISE(IGNORE); END');
+
+        try {
+            $this->incidents->acknowledge(self::VIEWER, $incident, self::NOW);
+            self::fail('An acknowledgement that changed no row was reported.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('The locked incident did not change.', $error->getMessage());
+        }
+        self::assertSame(['open', null, null], $this->incidentRow($incident));
+        self::assertFalse($this->database->isTransactionActive());
+        self::assertSame(['alerting.incident.acknowledge', 'alert_incident', (string) $incident, 'allowed', 'failed'], $this->lastAudit());
+    }
+
+    public function testAStoredIncidentTheLifecycleCannotReadIsShownByIdWithItsNotifications(): void
+    {
+        $rule = $this->insertRule(101);
+        $this->database->insert('alert_incident', ['rule_id' => $rule, 'status' => 'escalated', 'opened_at' => self::NOW - 600, 'local_data_id' => 101, 'rrd_name' => 'traffic_in', 'acknowledged_by' => self::VIEWER]);
+        $incident = (int) $this->database->lastInsertId();
+        $this->database->insert('alert_notification', ['incident_id' => $incident, 'kind' => 'opened', 'status' => 'delivered', 'attempts' => 1, 'queued_at' => self::NOW - 600, 'next_attempt_at' => self::NOW + 60, 'observed_value' => 1, 'threshold' => 1]);
+
+        $detail = $this->incidentCatalog->find(self::VIEWER, $incident, self::NOW);
+
+        self::assertNotNull($detail);
+        self::assertSame([$incident, null, $rule, null], [$detail->view->id, $detail->view->incident, $detail->view->ruleId, $detail->view->acknowledgedBy], 'No lifecycle and no acknowledging account are read from a row the domain refuses.');
+        self::assertSame([101, 'traffic_in', true, 'Core <router>'], [$detail->view->series->localDataId, $detail->view->series->rrdName, $detail->view->series->seriesExists, $detail->view->series->device]);
+        self::assertSame([[NotificationView::UNKNOWN, null]], array_map(static fn(NotificationView $n): array => [$n->status, $n->nextAttemptAt], $detail->notifications));
+        self::assertSame([$incident], array_map(static fn($view): int => $view->id, $this->incidentCatalog->page(self::VIEWER, false, 1)->incidents));
+    }
+
     private function addSeries(int $localDataId, int $hostId, string $rrdName = 'traffic_in'): void
     {
         $this->database->insert('data_local', ['id' => $localDataId, 'host_id' => $hostId]);

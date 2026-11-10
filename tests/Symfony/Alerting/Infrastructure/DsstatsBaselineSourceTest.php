@@ -160,6 +160,31 @@ final class DsstatsBaselineSourceTest extends TestCase
         self::assertEquals($good10, $source->history([self::seen($bad, 1.0, $now), self::seen($good, 1.0, $now)]));
     }
 
+    public function testARowNamingNoSeriesIsSkippedWithoutHidingTheSeriesBeside(): void
+    {
+        $series = new SeriesKey(7, 'traffic_in');
+        $now = self::at('2026-11-09 09:20:00');
+        $hour = (new BaselineCalendar(new \DateTimeZone(self::ZONE)))->wallHour(self::weeksBefore($now, 1));
+        $this->source()->record([self::seen($series, 10.0, self::weeksBefore($now, 1))]);
+        // Rows of the same data source and hour that no SeriesKey can name: not a data source name, and not text.
+        $this->insertBucket($hour, 7, 'traffic-in');
+        $this->insertBucket($hour, 7, '');
+        $this->database->executeStatement('INSERT INTO alert_baseline_sample VALUES (?, 7, 5, 1, 1.0, 1.0, 1)', [$hour]);
+        self::assertCount(4, $this->rows());
+
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 10.0, 100.0)]], $this->source()->history([self::seen($series, 1.0, $now)]));
+    }
+
+    public function testRecordingNothingWritesNothing(): void
+    {
+        $this->log->statements = [];
+
+        $this->source()->record([]);
+
+        self::assertSame([], $this->log->statements);
+        self::assertSame([], $this->rows());
+    }
+
     private function insertBucket(int $hour, int $localDataId, string $rrdName = 'traffic_in'): void
     {
         $this->database->insert('alert_baseline_sample', ['local_hour' => $hour, 'local_data_id' => $localDataId, 'rrd_name' => $rrdName, 'sample_count' => 1, 'sample_sum' => 1.0, 'sample_sum_squares' => 1.0, 'last_observed_at' => 1]);

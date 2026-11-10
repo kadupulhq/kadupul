@@ -26,10 +26,13 @@ use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
+use Kadupul\Alerting\Infrastructure\Dbal\RuleRevision;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredAlertingRowUnreadable;
 use Kadupul\Alerting\Application\NotificationMail;
 use Kadupul\Alerting\Application\Port\NotificationContent;
+use Kadupul\Alerting\Application\Port\RunLock;
 use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredValue;
 use Kadupul\Tests\Alerting\Fakes\StoredIncidents;
@@ -678,6 +681,84 @@ final class DbalAlertingStoresTest extends TestCase
             self::assertNotNull($claim);
             self::assertNull($claim->content, 'row ' . $id);
         }
+    }
+
+    public function testAClaimWhoseRowMovedBeforeItWasReadIsNotHeld(): void
+    {
+        $this->addRule(5, 105);
+        $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
+        $queue = new DbalNotificationQueue($this->database);
+        $queue->enqueue($incident, Transition::Opened, 95.5, 90.5, 1000);
+        // Another deliverer re-leases the row between this claim's UPDATE and its read.
+        $this->database->executeStatement("CREATE TRIGGER release_elsewhere AFTER UPDATE OF status ON alert_notification WHEN NEW.status = 'sending' BEGIN UPDATE alert_notification SET next_attempt_at = NEW.next_attempt_at + 900 WHERE id = NEW.id; END");
+
+        self::assertNull($queue->claim(1, 1000, 5, 1900));
+        self::assertSame(['sending', '1', '2800'], array_map('strval', $this->database->fetchNumeric('SELECT status, attempts, next_attempt_at FROM alert_notification WHERE id = 1') ?: []));
+    }
+
+    public function testALockFunctionThatAnswersNullIsAnErrorNotABusyLock(): void
+    {
+        // GET_LOCK and RELEASE_LOCK answer NULL on a server-side error. SQLite
+        // has neither, so these stand-ins return what such a server would.
+        $native = $this->database->getNativeConnection();
+        self::assertInstanceOf(\PDO::class, $native);
+        $calls = [];
+        $functions = [
+            'DATABASE' => static fn(): string => 'kadupul',
+            'GET_LOCK' => static function (string $name, int $timeout) use (&$calls): ?int {
+                $calls[] = ['GET_LOCK', $name, $timeout];
+
+                return null;
+            },
+            'RELEASE_LOCK' => static function (string $name) use (&$calls): ?int {
+                $calls[] = ['RELEASE_LOCK', $name];
+
+                return null;
+            },
+        ];
+        foreach ($functions as $name => $callback) {
+            method_exists($native, 'createFunction') ? $native->createFunction($name, $callback) : $native->sqliteCreateFunction($name, $callback);
+        }
+        $lock = new DbalRunLock($this->database);
+
+        try {
+            $lock->acquire(RunLock::EVALUATE);
+            self::fail('A NULL lock answer was read as busy or taken.');
+        } catch (\RuntimeException $error) {
+            self::assertSame('The alerting lock could not be requested.', $error->getMessage());
+        }
+        self::assertFalse($lock->release(RunLock::EVALUATE), 'NULL: nobody held it.');
+        $name = 'kadupul-alerting-evaluate-' . substr(hash('sha256', 'kadupul'), 0, 32);
+        self::assertSame([['GET_LOCK', $name, 0], ['RELEASE_LOCK', $name]], $calls);
+    }
+
+    public function testARuleRowWhoseDataSourceNameIsNotTextIsUnusable(): void
+    {
+        $this->addRule(3, 103);
+        // SQLite keeps an integer in the BLOB column as an integer, as a damaged row would hold one.
+        $this->database->executeStatement('UPDATE alert_rule SET rrd_name = 7 WHERE id = 3');
+        $row = $this->database->fetchAssociative('SELECT * FROM alert_rule WHERE id = 3');
+        self::assertIsArray($row);
+        self::assertSame(7, $row['rrd_name']);
+
+        $unusable = DbalRuleRepository::fromRow($row);
+
+        self::assertInstanceOf(UnusableRuleRecord::class, $unusable);
+        self::assertSame(3, $unusable->ruleId);
+        self::assertStringContainsString('alert_rule 3', $unusable->reason);
+        self::assertStringContainsString('rrd_name is not one the rule form writes.', $unusable->reason);
+    }
+
+    public function testARevisionIsRefusedForAColumnThatIsNotAStoredValue(): void
+    {
+        $this->addRule(3, 103);
+        $row = $this->database->fetchAssociative('SELECT ' . implode(', ', RuleRevision::COLUMNS) . ' FROM alert_rule WHERE id = 3');
+        self::assertIsArray($row);
+        self::assertSame(32, strlen(RuleRevision::of($row)));
+
+        $this->expectException(StoredAlertingRowUnreadable::class);
+        $this->expectExceptionMessage('trigger_threshold is not a stored value.');
+        RuleRevision::of(['trigger_threshold' => [90.5]] + $row);
     }
 
     public function testTheValueAndThresholdAreStoredWithoutLosingDigits(): void
