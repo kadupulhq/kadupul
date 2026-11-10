@@ -11,6 +11,7 @@ created, changed or deleted even when a gate is missing.
 """
 import argparse
 import http.cookiejar
+import os
 import re
 import sys
 import time
@@ -411,6 +412,8 @@ def main():
     args = parser.parse_args()
 
     started = time.monotonic()
+    # Exercise admission with the pilot enabled; its default 404 proves no gate.
+    os.environ['BEHAVIOR_TEST_ASSETS_ENABLED'] = '1'
     rig = harness.Harness(argparse.Namespace(target='entry-auth', project=args.project))
     failures, observed = [], {}
 
