@@ -25,6 +25,7 @@ final class PresentationPageEvidence
             'composer.json', 'composer.lock', 'tests/composer.json', 'tests/composer.lock', 'config/icons.json', 'cli/refresh_csrf.php',
             'include/vendor/composer/installed.json', 'tests/vendor/composer/installed.json',
             'include/runtime.php', 'lib/database.php', 'src/Platform/Infrastructure/Legacy/LegacyConnectionRegistry.php',
+            'src/Platform/Infrastructure/Legacy/LegacyDatabaseFailureScope.php',
             'lib/headers_secure.php', 'include/global_constants.php',
             'lib/html_validate.php', 'include/global_languages.php', 'lib/auth.php', 'lib/plugins.php',
             'include/plugins.php', 'include/global_arrays.php', 'lib/variables.php', 'lib/mib_cache.php',
@@ -42,6 +43,9 @@ final class PresentationPageEvidence
             'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoResult.php', 'src/Platform/Infrastructure/Legacy/Dbal/SharedPdoStatement.php',
             'src/Platform/Infrastructure/Persistence/DbalConfigurationSettings.php', 'src/Platform/Infrastructure/Persistence/DbalUserSettings.php',
             'src/Platform/Application/Port/ConfigurationSettings.php', 'src/Platform/Application/Port/UserSettings.php',
+            // include/global_languages.php selects the locale through these.
+            'src/Platform/Application/Locale/KnownLocales.php', 'src/Platform/Application/Locale/LocaleInput.php',
+            'src/Platform/Application/Locale/LocaleResolution.php', 'src/Platform/Application/Locale/LocaleResolver.php',
             // lib/functions.php loads the data input substitution scanner directly.
             'src/DataInput/Domain/InputStringSubstitution.php',
 

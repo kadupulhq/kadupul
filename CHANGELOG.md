@@ -6,6 +6,9 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 - Run the six legacy unit coverage shards and `Legacy coverage merge` in every merge group, and fail the required `Sonar Quality Gate` there unless they pass, so a pull request whose own CI skipped the shards can no longer merge while breaking them on `main`. Sonar analysis in merge groups still follows `SONAR_ALL_PRS`.
+- Register the legacy database failure scope and the shared locale resolver classes in the presentation native fixtures' source registries, which refuse any project file they do not list, so the legacy coverage shards load the database and language bootstrap again.
+- Bind the data source repair and rerun method-refusal coverage evidence to the request guard that actually runs, requiring the exact 405 or 403 refusal line instead of library code the refused request never reaches.
+- Measure the data query runtime, the database failure scope and the connection registry in the native SNMP data query coverage child, which already requires them as executed sources, so its coverage evidence can be accepted again.
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
 - Add a rendered translation corpus test: every catalog identity, plural count and fixed `sprintf`, `%%` and text-domain case is rendered through the legacy `__()` helpers and php-gettext over the shipped `.mo` files for en-US and all 23 shipped locales, with two German fixture plugins (`i18nprobe` and `folder`) for plugin domains. The harness fails on an empty corpus, a locale with no translated entry or a missing php-gettext reader. It is the oracle for moving legacy translation onto Symfony.
