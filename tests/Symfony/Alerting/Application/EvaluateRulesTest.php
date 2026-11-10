@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Tests\Alerting\Application;
 
 use Kadupul\Alerting\Application\EvaluateRules;
+use Kadupul\Alerting\Application\Port\BaselinePruneFailed;
 use Kadupul\Alerting\Domain\Evaluation\Observation;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
@@ -679,5 +680,55 @@ final class EvaluateRulesTest extends TestCase
         }
         $this->evaluator()(2, 30.0);
         self::assertSame([self::NOW, self::NOW], $this->baselines->prunes);
+    }
+
+    public function testHistoryIsPrunedAfterTheRules(): void
+    {
+        $this->rules->add(self::baselineRule(1), self::baselineRule(2), self::baselineRule(3));
+        foreach ([1, 2, 3] as $id) {
+            $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(100.0, self::NOW, 300));
+        }
+
+        $this->evaluator()(1, 30.0);
+
+        self::assertCount(3, $this->baselines->requests, 'One history read per batch of one.');
+        self::assertSame([3], $this->baselines->readsBeforePrune, 'The prune follows every batch.');
+    }
+
+    public function testAFailedPruneIsLoggedAndFlaggedAndDoesNotStopTheRules(): void
+    {
+        $this->rules->add(self::rule(1), self::baselineRule(2));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->rates->put(new SeriesKey(102, 'traffic_in'), new Observation(110.0, self::NOW, 300));
+        $this->baselines->put(new SeriesKey(102, 'traffic_in'), [100.0, 100.0, 100.0, 100.0]);
+        $this->baselines->pruneFailure = BaselinePruneFailed::because(new \RuntimeException('Lock wait timeout exceeded; DELETE FROM alert_baseline_sample WHERE local_hour = 1'));
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame(2, $report->evaluated);
+        self::assertTrue($report->pruneFailed);
+        self::assertSame([1, 2], $this->states->saved, 'Both the threshold and the baseline rule were saved.');
+        self::assertSame([['open', 1, self::NOW], ['open', 2, self::NOW]], $this->incidents->events);
+        self::assertSame(0, $this->cursor->position(), 'The run finished its rules.');
+        self::assertSame([[
+            'level' => 'error',
+            'message' => 'Baseline history was not pruned ({error}); its rows are retried next run.',
+            'context' => ['error' => \RuntimeException::class],
+        ]], $this->logger->records, 'One error, naming the class only: no message or SQL.');
+
+        $this->baselines->pruneFailure = null;
+        $next = $this->evaluator()(10, 30.0);
+
+        self::assertFalse($next->pruneFailed);
+        self::assertCount(2, $this->baselines->prunes, 'The next run prunes again.');
+        self::assertCount(1, $this->logger->records);
+    }
+
+    public function testAPruneFailureOutsideThePortContractStillPropagates(): void
+    {
+        $this->baselines->pruneFailure = new \LogicException('a bug');
+
+        $this->expectException(\LogicException::class);
+        $this->evaluator()(10, 30.0);
     }
 }

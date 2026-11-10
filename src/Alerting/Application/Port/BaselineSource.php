@@ -55,6 +55,8 @@ interface BaselineSource
      * whether or not any baseline rule remains, so history ages out after
      * the last rule on a series is gone.
      *
+     * @throws BaselinePruneFailed when the rows could not be removed; they stay for the next call
+     *
      * @param int $now Unix seconds
      */
     public function prune(int $now): int;

@@ -218,17 +218,18 @@ behavior until an administrator opts in.
      its baseline rules have not yet counted, once per series: one
      multi-row upsert and one read per 500 series of one wall-clock hour,
      both inside the time budget.
-   - **Retention.** Each evaluation run prunes once, after the orphan sweep
-     and before the first batch, whether or not any baseline rule remains,
-     so the history of a deleted or converted rule, or of a series that went
-     stale, still ages out. A prune removes buckets older than the oldest
-     week any band at the run's time reads (8 weeks), plus one day of grace
+   - **Retention.** Each evaluation run prunes once, after its last batch,
+     whether or not any baseline rule remains, so the history of a deleted or
+     converted rule, or of a series that went stale, still ages out. A prune
+     removes buckets older than the oldest week any band at the run's time
+     reads (8 weeks), plus one day of grace
      (`DsstatsBaselineSource::GRACE_HOURS`) because a rate observed in an
      earlier hour can still be fresh (two polling intervals) and its band
-     reaches that far further back; a day covers polling intervals up to 12
-     hours. It removes them oldest first, at most 5,000 (wall-clock hour,
-     data source) pairs per run (`BaselineSource::PRUNE_LIMIT`), read and
-     deleted in chunks of 500. Like
+     reaches that far further back; a day covers polling intervals of at most
+     12 hours (about 11.5 hours across a spring-forward night, when 24
+     wall-clock hours are 23 real ones). It removes them oldest first, at most
+     5,000 (wall-clock hour, data source) pairs per run
+     (`BaselineSource::PRUNE_LIMIT`), read and deleted in chunks of 500. Like
      the orphan sweep it is bounded by a count, not charged to the time
      budget. At one run per 5-minute poll cycle that removes up to 60,000
      pairs an hour, against one new pair per data source and hour, so the
@@ -237,6 +238,12 @@ behavior until an administrator opts in.
      runs only when the evaluator runs: with `alerting_enable` off nothing is
      pruned or written, and rows left then stay until alerting is enabled
      again. A run whose rate source is unavailable also prunes nothing.
+     Housekeeping never stops alerting: a failed prune (a lock wait timeout, a
+     deadlock or an unreadable row) is a `BaselinePruneFailed` from the port.
+     The run has already evaluated its rules; it logs one error naming the
+     failure's class, without its message or SQL, sets `pruneFailed` in its
+     report and completes with its usual exit status. The rows stay and the
+     next run retries them.
    - **Unusable.** A baseline rule row the domain refuses (an unknown kind or
      direction, a missing or out-of-range parameter, or columns of the other
      kind set) is an `UnusableRuleRecord` (decision 8). A history bucket that
@@ -665,6 +672,7 @@ behavior until an administrator opts in.
 | Baseline history row unreadable | That series has no history; its rules are `unknown` | Task 6 |
 | Baseline rule row unreadable or of a mixed kind | That rule is skipped as unusable, as above | Task 6 |
 | Baseline history read or write fails | Error, exit status 1; nothing read as `unknown`, cursor unchanged | Task 6 |
+| Baseline history prune fails | The run completes with its rules evaluated and its usual exit status; one ERROR in cacti.log naming the failure's class; the rows are retried next run | Task 6 |
 | Daylight saving change | The same wall-clock hour of the week is compared; the skipped hour has one sample fewer, the repeated hour shares a bucket | Task 6 |
 | Series that never varied | The deviation floor keeps the band open; no breach on the first small change | Task 6 |
 | Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |

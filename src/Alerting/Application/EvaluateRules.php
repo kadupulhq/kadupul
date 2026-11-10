@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Alerting\Application;
 
 use Kadupul\Alerting\Application\Port\AlertingLog;
+use Kadupul\Alerting\Application\Port\BaselinePruneFailed;
 use Kadupul\Alerting\Application\Port\BaselineSource;
 use Kadupul\Alerting\Application\Port\Clock;
 use Kadupul\Alerting\Application\Port\EvaluationCursor;
@@ -57,9 +58,10 @@ use Kadupul\Alerting\Domain\Rule\HourBucket;
  * counted to the BaselineSource once, to record and then to read back, so
  * the lookup is per batch, never per rule, and its time counts against the
  * budget. Too little history for the hour is unknown, like a missing rate.
- * Old history is pruned once per run, after the orphan sweep, bounded by
- * BaselineSource::PRUNE_LIMIT; like that sweep it is a count, not a charge
- * to the budget.
+ * Old history is pruned once per run, after the batches, bounded by
+ * BaselineSource::PRUNE_LIMIT; like the orphan sweep it is a count, not a
+ * charge to the budget. A failed prune (BaselinePruneFailed) is logged and
+ * flagged in the report, and the run completes.
  */
 final readonly class EvaluateRules
 {
@@ -92,8 +94,6 @@ final readonly class EvaluateRules
 
         $started = self::seconds($this->clock->now());
         $orphaned = $this->endOrphans($batchSize);
-        // Once per run, with or without baseline rules, so history ages out after the last one is gone.
-        $this->baselines->prune($this->clock->now()->getTimestamp());
         $evaluated = 0;
         $skipped = 0;
         $failed = 0;
@@ -117,7 +117,30 @@ final readonly class EvaluateRules
             $this->cursor->moveTo($after);
         } while (self::seconds($this->clock->now()) - $started < $budgetSeconds);
 
-        return new EvaluationReport($evaluated, $skipped, null, $orphaned, $failed);
+        return new EvaluationReport($evaluated, $skipped, null, $orphaned, $failed, !$this->prune());
+    }
+
+    /**
+     * Once per run, after the rules, with or without baseline rules, so
+     * history ages out after the last one is gone. Housekeeping must not stop
+     * alerting: a failed prune is logged and retried by the next run.
+     *
+     * @return bool whether the prune succeeded
+     */
+    private function prune(): bool
+    {
+        try {
+            $this->baselines->prune($this->clock->now()->getTimestamp());
+        } catch (BaselinePruneFailed $failure) {
+            // The class only: a driver message can carry SQL and stored values.
+            $this->logger->error('Baseline history was not pruned ({error}); its rows are retried next run.', [
+                'error' => ($failure->getPrevious() ?? $failure)::class,
+            ]);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

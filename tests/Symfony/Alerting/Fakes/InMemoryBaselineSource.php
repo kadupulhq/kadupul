@@ -22,6 +22,10 @@ final class InMemoryBaselineSource implements BaselineSource
     private array $history = [];
     /** @var list<int> the time passed to each prune() call */
     public array $prunes = [];
+    /** @var list<int> how many history() calls preceded each prune() call */
+    public array $readsBeforePrune = [];
+    /** Thrown by the next prune() calls while set, to model a failed prune. */
+    public ?\Throwable $pruneFailure = null;
     /** @var list<list<string>> series ids per record() call */
     public array $recorded = [];
     /** @var list<list<string>> series ids per history() call */
@@ -48,6 +52,10 @@ final class InMemoryBaselineSource implements BaselineSource
     public function prune(int $now): int
     {
         $this->prunes[] = $now;
+        $this->readsBeforePrune[] = count($this->requests);
+        if ($this->pruneFailure !== null) {
+            throw $this->pruneFailure;
+        }
 
         return 0;
     }

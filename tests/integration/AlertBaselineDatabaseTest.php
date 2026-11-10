@@ -52,6 +52,8 @@ final class AlertBaselineDatabaseTest extends TestCase
     private Connection $database;
     private string $schema = '';
     private MockClock $clock;
+    /** @var array{driver: 'pdo_mysql', host: string, port: int, user: string, password: string, charset: string} */
+    private array $connection;
 
     protected function setUp(): void
     {
@@ -62,14 +64,15 @@ final class AlertBaselineDatabaseTest extends TestCase
         parse_str(str_replace(';', '&', substr($dsn, strlen('mysql:'))), $target);
         $prefix = getenv('KADUPUL_TEST_MYSQL_ADMIN_USER') ? 'KADUPUL_TEST_MYSQL_ADMIN_' : 'KADUPUL_TEST_MYSQL_';
         $this->schema = 'alert_baseline_' . bin2hex(random_bytes(6));
-        $this->database = DriverManager::getConnection([
+        $this->connection = [
             'driver' => 'pdo_mysql',
             'host' => is_string($target['host'] ?? null) ? $target['host'] : '127.0.0.1',
             'port' => (int) ($target['port'] ?? 3306),
             'user' => (string) (getenv($prefix . 'USER') ?: 'root'),
             'password' => (string) (getenv($prefix . 'PASSWORD') ?: ''),
             'charset' => 'utf8mb4',
-        ]);
+        ];
+        $this->database = DriverManager::getConnection($this->connection);
         $this->database->executeStatement('CREATE DATABASE `' . $this->schema . '`');
         $this->database->executeStatement('USE `' . $this->schema . '`');
         // The legacy session modes (lib/database.php) so the shipped zero-date DDL loads on MySQL too.
@@ -247,5 +250,55 @@ final class AlertBaselineDatabaseTest extends TestCase
         $this->evaluate();
         self::assertSame(0, $old(), 'The next run removes the rest.');
         self::assertSame(2000, (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_baseline_sample'), 'The oldest hour kept stays.');
+    }
+
+    public function testAPruneBlockedByAnotherSessionsLockLeavesTheRunsRulesEvaluated(): void
+    {
+        $this->watch(1, 101);
+        $this->watch(2, 102);
+        $this->database->update('alert_rule', ['kind' => 'threshold', 'comparator' => 'gt', 'trigger_threshold' => 90, 'clear_threshold' => 80, 'baseline_direction' => null, 'baseline_deviations' => null, 'baseline_clear_deviations' => null, 'baseline_floor' => null, 'baseline_min_samples' => null], ['id' => 2]);
+        $now = self::at('2026-11-09 10:20:00');
+        $calendar = new BaselineCalendar(new \DateTimeZone(ZONE));
+        // Four earlier weeks of 100 for the baseline series, and old rows a prune must remove.
+        foreach (array_slice($calendar->priorWeeks($calendar->wallHour($now)), 0, 4) as $hour) {
+            $this->database->insert('alert_baseline_sample', ['local_hour' => $hour, 'local_data_id' => 101, 'rrd_name' => 'traffic_in', 'sample_count' => 1, 'sample_sum' => 100, 'sample_sum_squares' => 10000, 'last_observed_at' => $hour * 3600]);
+        }
+        $old = $calendar->oldestKept($calendar->wallHour($now)) - DsstatsBaselineSource::GRACE_HOURS - 1;
+        foreach ([500, 501, 502] as $id) {
+            $this->database->insert('alert_baseline_sample', ['local_hour' => $old, 'local_data_id' => $id, 'rrd_name' => 'traffic_in', 'sample_count' => 1, 'sample_sum' => 1, 'sample_sum_squares' => 1, 'last_observed_at' => 1]);
+        }
+        $this->clock->sleep($now);
+        $this->sample(101, $now, 110.0);
+        $this->sample(102, $now, 95.0);
+        // Another session holds the old rows, and the evaluator gives up waiting after a second.
+        $holder = DriverManager::getConnection($this->connection);
+        $holder->executeStatement('USE `' . $this->schema . '`');
+        $holder->beginTransaction();
+        $holder->fetchAllAssociative('SELECT local_data_id FROM alert_baseline_sample WHERE local_hour <= ? FOR UPDATE', [$old]);
+        $this->database->executeStatement('SET SESSION innodb_lock_wait_timeout = 1');
+        $logger = new RecordingLogger();
+
+        try {
+            $report = $this->evaluate($logger);
+        } finally {
+            $holder->rollBack();
+            $holder->close();
+        }
+
+        self::assertSame(2, $report->evaluated);
+        self::assertTrue($report->pruneFailed);
+        self::assertSame(['1', '2'], array_map('strval', $this->database->fetchFirstColumn("SELECT rule_id FROM alert_incident WHERE status = 'open' ORDER BY rule_id")), 'The baseline and the threshold rule both opened.');
+        self::assertSame('2', (string) $this->database->fetchOne('SELECT COUNT(*) FROM alert_rule_state'));
+        self::assertSame([[
+            'level' => 'error',
+            'message' => 'Baseline history was not pruned ({error}); its rows are retried next run.',
+            'context' => ['error' => \Doctrine\DBAL\Exception\LockWaitTimeoutException::class],
+        ]], $logger->records);
+        self::assertSame('3', (string) $this->database->fetchOne('SELECT COUNT(*) FROM alert_baseline_sample WHERE local_hour = ?', [$old]), 'The rows stay.');
+
+        $next = $this->evaluate();
+
+        self::assertFalse($next->pruneFailed);
+        self::assertSame('0', (string) $this->database->fetchOne('SELECT COUNT(*) FROM alert_baseline_sample WHERE local_hour = ?', [$old]), 'The next run removes them.');
     }
 }

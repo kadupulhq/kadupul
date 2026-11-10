@@ -11,8 +11,10 @@ namespace Kadupul\Alerting\Infrastructure\Dbal;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
+use Kadupul\Alerting\Application\Port\BaselinePruneFailed;
 use Kadupul\Alerting\Application\Port\BaselineSource;
 use Kadupul\Alerting\Application\Port\SeriesObservation;
 use Kadupul\Alerting\Domain\Rule\BaselineCalendar;
@@ -48,7 +50,9 @@ final readonly class DsstatsBaselineSource implements BaselineSource
      * Wall hours kept beyond the oldest one a band at the prune time reads. An
      * observation stays fresh for two polling intervals, so a run can still
      * judge a rate from an earlier hour, whose band reaches that much further
-     * back; a day covers polling intervals up to 12 hours.
+     * back. 24 wall hours are 24 real hours, or 23 across a spring-forward
+     * night, so this covers polling intervals up to 12 hours (about 11.5
+     * hours across that night).
      */
     public const int GRACE_HOURS = 24;
 
@@ -152,9 +156,20 @@ final readonly class DsstatsBaselineSource implements BaselineSource
     /**
      * Up to PRUNE_LIMIT (wall hour, data source) pairs older than any band at
      * $now reads, less GRACE_HOURS, oldest first: each chunk is one SELECT of
-     * at most CHUNK pairs and one DELETE per wall hour in it.
+     * at most CHUNK pairs and one DELETE per wall hour in it. A database
+     * failure or an unreadable row is a BaselinePruneFailed; chunks deleted
+     * before it stay deleted, which is harmless.
      */
     public function prune(int $now): int
+    {
+        try {
+            return $this->removeOldBuckets($now);
+        } catch (Exception | StoredAlertingRowUnreadable $failure) {
+            throw BaselinePruneFailed::because($failure);
+        }
+    }
+
+    private function removeOldBuckets(int $now): int
     {
         $before = $this->calendar->oldestKept($this->calendar->wallHour($now)) - self::GRACE_HOURS;
         $removed = 0;

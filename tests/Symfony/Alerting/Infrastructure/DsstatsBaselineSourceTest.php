@@ -13,6 +13,7 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Logging\Middleware;
+use Kadupul\Alerting\Application\Port\BaselinePruneFailed;
 use Kadupul\Alerting\Application\Port\BaselineSource;
 use Kadupul\Alerting\Application\Port\SeriesObservation;
 use Kadupul\Alerting\Domain\Evaluation\Observation;
@@ -21,6 +22,7 @@ use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\HourBucket;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource;
+use Kadupul\Alerting\Infrastructure\Dbal\StoredAlertingRowUnreadable;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 
@@ -214,6 +216,50 @@ final class DsstatsBaselineSourceTest extends TestCase
 
         self::assertSame(0, $source->prune($now));
         self::assertEquals(['7:traffic_in' => [new HourBucket(1, 40.0, 1600.0)]], $source->history([self::seen($series, 1.0, $observed)]));
+    }
+
+    public function testTheGraceEndsAtExactly24HoursOfObservationAge(): void
+    {
+        $series = new SeriesKey(7, 'traffic_in');
+        $now = self::at('2026-11-09 09:20:00');
+        $source = $this->source();
+        // A rate observed exactly 24 hours before the prune, and one observed in the hour before that.
+        $day = $now - 86400;
+        $older = $day - 3600;
+        $source->record([self::seen($series, 24.0, self::weeksBefore($day, BaselineRule::HISTORY_WEEKS))]);
+        $source->record([self::seen($series, 25.0, self::weeksBefore($older, BaselineRule::HISTORY_WEEKS))]);
+
+        self::assertSame(1, $source->prune($now), 'Only the bucket read by the older observation goes.');
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 24.0, 576.0)]], $source->history([self::seen($series, 1.0, $day)]), 'The oldest week of a 24-hour-old rate is kept.');
+        self::assertSame([], $source->history([self::seen($series, 1.0, $older)]));
+    }
+
+    public function testAPruneThatCannotReadARowFailsAsTheAlertingPortException(): void
+    {
+        $now = self::at('2026-11-09 09:20:00');
+        $calendar = new BaselineCalendar(new \DateTimeZone(self::ZONE));
+        $old = $calendar->oldestKept($calendar->wallHour($now)) - DsstatsBaselineSource::GRACE_HOURS - 1;
+        $this->database->insert('alert_baseline_sample', ['local_hour' => $old, 'local_data_id' => 'seven', 'rrd_name' => 'traffic_in', 'sample_count' => 1, 'sample_sum' => 1.0, 'sample_sum_squares' => 1.0, 'last_observed_at' => 1]);
+
+        try {
+            $this->source()->prune($now);
+            self::fail('An unreadable row must fail the prune.');
+        } catch (BaselinePruneFailed $failure) {
+            self::assertInstanceOf(StoredAlertingRowUnreadable::class, $failure->getPrevious());
+        }
+        self::assertCount(1, $this->rows(), 'The row stays for the next run.');
+    }
+
+    public function testAPruneDatabaseFailureFailsAsTheAlertingPortException(): void
+    {
+        $this->database->executeStatement('DROP TABLE alert_baseline_sample');
+
+        try {
+            $this->source()->prune(self::at('2026-11-09 09:20:00'));
+            self::fail('A failed statement must fail the prune.');
+        } catch (BaselinePruneFailed $failure) {
+            self::assertInstanceOf(\Doctrine\DBAL\Exception::class, $failure->getPrevious());
+        }
     }
 
     public function testABatchIsReadAndWrittenInBoundedStatements(): void
