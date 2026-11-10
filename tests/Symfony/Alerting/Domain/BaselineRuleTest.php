@@ -12,6 +12,7 @@ namespace Kadupul\Tests\Alerting\Domain;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Evaluation\Verdict;
+use Kadupul\Alerting\Domain\Rule\BaselineBand;
 use Kadupul\Alerting\Domain\Rule\BaselineDirection;
 use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\HourBucket;
@@ -152,6 +153,36 @@ final class BaselineRuleTest extends TestCase
         self::assertEqualsWithDelta(987654321.5, $band->mean, 1e-6);
         self::assertSame(0.25, $band->deviation, 'A negative variance is 0, and the floor applies.');
         self::assertNull($rule->band(self::weeks(array_fill(0, 4, [\INF]))), 'A non-finite week is not a sample.');
+    }
+
+    public function testWeeksWhosePooledSumOverflowsGiveNoBand(): void
+    {
+        $rule = new BaselineRule(3.0, 3.0, 1.0);
+        // Each week is finite and usable; their sum is not.
+        $week = new HourBucket(1, 1.0e308, 1.0e308);
+        self::assertTrue($week->isUsable());
+
+        self::assertNull($rule->band(array_fill(0, 4, $week)));
+        self::assertSame(Verdict::Unknown, $rule->evaluate(1.0e308, $rule->band(array_fill(0, 4, $week)), false));
+    }
+
+    /** @return iterable<string, array{float, float}> */
+    public static function bandsWithoutWidth(): iterable
+    {
+        yield 'zero deviation' => [100.0, 0.0];
+        yield 'negative deviation' => [100.0, -1.0];
+        yield 'infinite deviation' => [100.0, \INF];
+        yield 'not-a-number mean' => [\NAN, 1.0];
+        yield 'infinite mean' => [-\INF, 1.0];
+    }
+
+    #[DataProvider('bandsWithoutWidth')]
+    public function testABandNeedsAFiniteMeanAndAPositiveFiniteDeviation(float $mean, float $deviation): void
+    {
+        $this->expectException(InvalidRule::class);
+        $this->expectExceptionMessage('A baseline band needs a finite mean and a finite deviation greater than zero.');
+
+        new BaselineBand($mean, $deviation);
     }
 
     public function testMinimumSamplesCountWeeksNotObservations(): void

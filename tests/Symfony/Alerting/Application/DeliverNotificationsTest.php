@@ -14,6 +14,7 @@ use Kadupul\Alerting\Application\DeliverNotifications;
 use Kadupul\Alerting\Application\DeliveryReport;
 use Kadupul\Alerting\Application\MailDeliveryFailed;
 use Kadupul\Alerting\Application\NotificationMail;
+use Kadupul\Alerting\Application\Port\AdministratorNotificationPreferences;
 use Kadupul\Alerting\Application\Port\NotificationContent;
 use Kadupul\Alerting\Domain\AdministratorNotificationPolicy;
 use Kadupul\Alerting\Domain\AdministratorRecipient;
@@ -182,6 +183,32 @@ final class DeliverNotificationsTest extends TestCase
         self::assertSame([], $this->mail->sent);
         self::assertSame(['suppressed' => 3], $this->queue->statuses());
         self::assertCount(1, $this->logger->records);
+    }
+
+    public function testASuppressionRecordedAfterTheClaimWasLostIsReportedAsLost(): void
+    {
+        $id = $this->queueOpened();
+        // The policy read outlasts the lease and another deliverer takes the row.
+        $preferences = new class ($this->queue, $id, self::NOW + DeliverNotifications::LEASE_SECONDS) implements AdministratorNotificationPreferences {
+            public function __construct(private InMemoryNotificationQueue $queue, private int $id, private int $expiry) {}
+
+            public function policy(): AdministratorNotificationPolicy
+            {
+                if ($this->queue->claim($this->id, $this->expiry, DeliverNotifications::MAX_ATTEMPTS, $this->expiry + DeliverNotifications::LEASE_SECONDS) === null) {
+                    throw new \LogicException('The second deliverer could not take the row.');
+                }
+
+                return new AdministratorNotificationPolicy(1, false);
+            }
+        };
+        $deliverer = new DeliverNotifications($this->queue, new NotifyAdministrator($preferences, $this->administrator, $this->mail), new MockClockAdapter($this->clock), $this->logger);
+
+        self::assertEquals(new DeliveryReport(lost: 1), $deliverer(10, 30.0));
+
+        // The new holder's claim stands; the row was not ended as suppressed.
+        self::assertSame(['sending', 2, self::NOW + 2 * DeliverNotifications::LEASE_SECONDS, ''], [$this->queue->rows[$id]['status'], $this->queue->rows[$id]['attempts'], $this->queue->rows[$id]['next'], $this->queue->rows[$id]['error']]);
+        self::assertSame([], $this->mail->sent);
+        self::assertSame([['level' => LogLevel::WARNING, 'context' => ['notification' => $id]]], array_map(static fn(array $record): array => ['level' => $record['level'], 'context' => $record['context']], $this->logger->records));
     }
 
     public function testAnAdministratorWithNoAccountOrAddressStillRetriesToFailed(): void

@@ -368,6 +368,26 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame([['101:traffic_in'], ['103:traffic_in']], $this->rates->requests, 'An unusable rule asks for no rate.');
     }
 
+    public function testABatchOfOnlyUnreadableRulesReadsNoRateAndStillMovesTheCursor(): void
+    {
+        $this->rules->add(self::rule(3));
+        $this->rules->unusable[1] = 'comparator is not one the rule form writes.';
+        $this->rules->unusable[2] = 'for_cycles is not one the rule form writes.';
+        $this->rates->put(new SeriesKey(103, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+
+        // A zero budget stops after the first batch, which holds only the two unusable rules.
+        $first = $this->evaluator()(2, 0.0);
+        self::assertSame([0, 0, 2], [$first->evaluated, $first->skipped, $first->failed]);
+        self::assertSame([], $this->rates->requests, 'A batch with nothing to evaluate asks for no rate.');
+        self::assertSame(2, $this->cursor->position());
+        self::assertSame([1, 2], array_map(static fn(array $record): int => $record['context']['rule'], $this->logger->records));
+        self::assertSame([], $this->incidents->incidents);
+
+        $second = $this->evaluator()(2, 0.0);
+        self::assertSame([1, 0], [$second->evaluated, $second->failed]);
+        self::assertSame([['103:traffic_in']], $this->rates->requests);
+    }
+
     public function testAnIncidentThatDisagreesWithTheStateSkipsOnlyThatRule(): void
     {
         $this->rules->add(self::rule(1), self::rule(2));
