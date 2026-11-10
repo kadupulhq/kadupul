@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:48-0800\n"
+"POT-Creation-Date: 2026-11-09 19:50-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -339,8 +339,8 @@ msgid "No Graphs Found"
 msgstr "Inga grafer hittades"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates_items.php graphs.php graphs_items.php
 #: include/global_arrays.php include/global_form.php
 #: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
 #: lib/html_form.php lib/html_reports.php package_import.php settings.php
@@ -395,8 +395,9 @@ msgid "Report Name"
 msgstr "Rapportnamn"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php data_queries.php graphs.php
+#: include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Tillbaka"
@@ -881,8 +882,9 @@ msgstr "Ta bort enhet"
 msgid "Delete Device(s)"
 msgstr "Ta bort enhet (er)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -2630,10 +2632,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Datafrågor [redigera: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Datafrågor [ny]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Datafrågor som är i bruk kan inte raderas. Används definieras som att den refereras till av antingen en graf eller en grafmall."
 
@@ -2661,6 +2659,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Duplicera datafråga"
 msgstr[1] "Duplicera datafrågor"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2770,6 +2772,14 @@ msgstr "Antalet grafmallar som använder denna datafråga."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Antalet grafer som använder denna datafråga."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML sökväg"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7830,10 +7840,6 @@ msgstr "Bredd (--bredd)"
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
 msgstr "X-Files faktor"
-
-#: include/global_form.php
-msgid "XML Path"
-msgstr "XML sökväg"
 
 #: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
