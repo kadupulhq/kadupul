@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/pt-BR.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Itens de gráfico associados"
+"CDEF Function": "Função CDEF"
+"Cancel": "Cancelar"
+"Color": "Cor"
+"Consolidation Function": "Função de consolidação"
+"Continue": "Continuar"
+"Create": "Criar"
+"Dash Offset (dash-offset=offset)": "Offset do traço (offset do traço=offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Traços (traços[=on_s[,off_s[,off_s[,on_s,off_s]...]]])"
+"Data Source": "Origem dos dados"
+"Description": "Descrição"
+"Enter a description for this graph item input to describe what this input is used for.": "Insira uma descrição para este input de item de gráfico para descrever para que serve este input."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Digite um nome para este item do gráfico de entrada, certifique-se de que é algo que você reconhece."
+"Field Type": "Tipo de Campo"
+"GPRINT Type": "Tipo GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Graph Item Inputs [editar gráfico: %name%]"
+"Graph Item Type": "Tipo de item gráfico"
+"How data is to be represented on the graph.": "Como os dados devem ser representados no gráfico."
+"Insert Hard Return": "Inserir Retorno Rígido"
+"Item #%number%": "Item #%number%"
+"Name": "Nome"
+"No Items": "Sem itens"
+"Opacity/Alpha Channel": "Opacidade/Canal Alfa"
+"Save": "Salvar"
+"Sequence": "Sequência"
+"Shift Data": "Dados do turno"
+"Text Alignment (TEXTALIGN)": "Alinhamento de texto (TEXTALIGN)"
+"Text Format": "Text Format"
+"VDEF Function": "Função VDEF"
+"Value": "Valor"

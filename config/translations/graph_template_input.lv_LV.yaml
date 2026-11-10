@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/lv-LV.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Saistītie grafika vienumi"
+"CDEF Function": "CDEF funkcija"
+"Cancel": "Atcelt"
+"Color": "Krāsa"
+"Consolidation Function": "Konsolidācijas funkcija"
+"Continue": "Turpināt"
+"Create": "Izveidot"
+"Dash Offset (dash-offset=offset)": "Domuzīmes nobīde (dash-offset=nobīde)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Svītras (domuzīmes[=on_s[,off_s[,on_s,off_s]...]])"
+"Data Source": "Datu avots"
+"Description": "Apraksts"
+"Enter a description for this graph item input to describe what this input is used for.": "Ievadiet šīs grafikas elementa ievades aprakstu, lai aprakstītu, kam šī ievade tiek izmantota."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Ievadiet šī grafikas elementa ievades nosaukumu un pārliecinieties, vai to atpazīstat."
+"Field Type": "Lauka tips"
+"GPRINT Type": "GPRINT tips"
+"Graph Item Inputs [edit graph: %name%]": "Grafika elementu ievades [rediģēt grafiku: %name%]"
+"Graph Item Type": "Grafika elementa tips"
+"Graph Template not found.": "Grafika veidne nav atrasta."
+"How data is to be represented on the graph.": "Kā dati jāatspoguļo grafikā."
+"Insert Hard Return": "Ievietojiet cieto atgriešanos"
+"Item #%number%": "Elements #%number%"
+"Name": "Nosaukums"
+"No Items": "Nav vienumu"
+"Opacity/Alpha Channel": "Necaurredzamība/Alfa kanāls"
+"Save": "Saglabāt"
+"Sequence": "Secība"
+"Shift Data": "Shift Data"
+"Text Alignment (TEXTALIGN)": "Teksta līdzināšana (TEXTALIGN)"
+"Text Format": "Teksta formāts"
+"VDEF Function": "VDEF funkcija"
+"Value": "Vērtība"

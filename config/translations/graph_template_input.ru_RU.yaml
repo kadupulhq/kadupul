@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/ru-RU.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Связанные графические элементы"
+"CDEF Function": "Функция CDEF"
+"Cancel": "Отмена"
+"Color": "Цвет"
+"Consolidation Function": "Функция консолидации"
+"Continue": "Продолжить"
+"Create": "Создать"
+"Dash Offset (dash-offset=offset)": "Смещение тире (смещение тире = смещение тире)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Тире (тире [=on_s[,off_s[,on_s,off_s]...]]))))"
+"Data Source": "Источник Данных"
+"Description": "Описание"
+"Enter a description for this graph item input to describe what this input is used for.": "Введите описание для этого входа графического элемента, чтобы описать, для чего используется этот вход."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Введите имя для этого входа графического элемента, убедитесь, что он распознается."
+"Field Type": "Тип поля"
+"GPRINT Type": "GPRINT Тип"
+"Graph Item Inputs [edit graph: %name%]": "Графические входы элементов [Редактировать график: %name%]"
+"Graph Item Type": "Тип графического элемента"
+"How data is to be represented on the graph.": "Как данные должны быть представлены на графике."
+"Insert Hard Return": "Вставить жесткий возврат"
+"Item #%number%": "Элемент #%number%"
+"Name": "Имя"
+"No Items": "Нет элементов"
+"Opacity/Alpha Channel": "Непрозрачность/ Альфа-канал"
+"Save": "Сохранить"
+"Sequence": "*Sequence* (секвенция)"
+"Shift Data": "Данные сдвига"
+"Text Alignment (TEXTALIGN)": "Выравнивание текста (TEXTALIGN)"
+"Text Format": "Формат Текста"
+"VDEF Function": "Функция VDEF"
+"Value": "Значение"

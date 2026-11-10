@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/zh-TW.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Opacity/Alpha Channel": "不透明度/ Alpha通道"

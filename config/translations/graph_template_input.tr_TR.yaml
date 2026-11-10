@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/tr-TR.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "İlişkili Grafik Öğeleri"
+"CDEF Function": "CDEF İşlevi"
+"Cancel": "İptal"
+"Color": "Renk"
+"Consolidation Function": "Birleştirme İşlevi"
+"Continue": "Devam et"
+"Create": "Oluştur"
+"Dash Offset (dash-offset=offset)": "Çizgi Ofseti (çizgi ofset = ofset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Kısa çizgiler (kısa çizgiler [= on_s [, off_s [, on_s, off_s] ...]])"
+"Data Source": "Veri Kaynağı"
+"Description": "Açıklama"
+"Enter a description for this graph item input to describe what this input is used for.": "Bu girişin ne için kullanıldığını açıklamak için bu grafik öğesi girişi için bir açıklama girin."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Bu grafik öğesi girişi için bir ad girin, tanıdığınız bir şey olduğundan emin olun."
+"Field Type": "Alan Türü"
+"GPRINT Type": "GPRINT Türü"
+"Graph Item Inputs [edit graph: %name%]": "Grafik Öğesi Girdileri [grafiği düzenle: %name%]"
+"Graph Item Type": "Grafik Öğe Türü"
+"How data is to be represented on the graph.": "Verilerin grafikte nasıl temsil edileceği."
+"Insert Hard Return": "Sert Dönüş Ekle"
+"Item #%number%": "Öğe # %number%"
+"Name": "İsim"
+"No Items": "Öğe yok"
+"Opacity/Alpha Channel": "Opaklık / Alfa Kanalı"
+"Save": "Kaydet"
+"Sequence": "Sekans"
+"Shift Data": "Vardiya Verisi"
+"Text Alignment (TEXTALIGN)": "Metin Hizalama (METİN)"
+"Text Format": "Metin Biçimi"
+"VDEF Function": "VDEF İşlevi"
+"Value": "Değer"

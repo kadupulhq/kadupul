@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/bg-BG.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Свързани графични елементи"
+"CDEF Function": "Функция CDEF"
+"Cancel": "Отказ"
+"Color": "Цвят"
+"Consolidation Function": "Консолидационна функция"
+"Continue": "Продължи"
+"Create": "Създай"
+"Dash Offset (dash-offset=offset)": "Отместване на тире (тире-отместване = отместване)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Тирета (тирета [= on_s [, off_s [, on_s, off_s] ...]])"
+"Data Source": "Източник на данни"
+"Description": "Описание"
+"Enter a description for this graph item input to describe what this input is used for.": "Въведете описание за тази въведена графика, за да опишете за какво се използва този вход."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Въведете име за този елемент от графиката, уверете се, че го разпознавате."
+"Field Type": "Тип на полето"
+"GPRINT Type": "Тип GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Входни елементи на графиката [редактиране на графика: %name%]"
+"Graph Item Type": "Тип елемент на графиката"
+"How data is to be represented on the graph.": "Как да се представят данните в графиката."
+"Insert Hard Return": "Вмъкване на трудно връщане"
+"Item #%number%": "Елемент # %number%"
+"Name": "Име"
+"No Items": "Елементи"
+"Opacity/Alpha Channel": "Непрозрачност / Алфа канал"
+"Save": "Запази"
+"Sequence": "Последователност"
+"Shift Data": "Данни за преместване"
+"Text Alignment (TEXTALIGN)": "Подравняване на текст (TEXTALIGN)"
+"Text Format": "?¤???Ђ???°?‚ ???° ?‚?µ???Ѓ?‚?°"
+"VDEF Function": "Функция VDEF"
+"Value": "Стойност"

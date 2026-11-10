@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/ja-JP.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "関連グラフ項目"
+"CDEF Function": "CDEF機能"
+"Cancel": "取り消し"
+"Color": "色"
+"Consolidation Function": "連結機能"
+"Continue": "続ける"
+"Create": "作成"
+"Dash Offset (dash-offset=offset)": "ダッシュオフセット（ダッシュオフセット=オフセット）"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "ダッシュ（ダッシュ[= on_s [、off_s [、on_s、off_s] ...]]））"
+"Data Source": "データソース"
+"Description": "説明"
+"Enter a description for this graph item input to describe what this input is used for.": "このグラフ項目入力の説明を入力して、この入力の用途を説明します。"
+"Enter a name for this graph item input, make sure it is something you recognize.": "このグラフ項目入力の名前を入力し、それがあなたが認識できるものであることを確認してください。"
+"Field Type": "項目の種類"
+"GPRINT Type": "GPRINTタイプ"
+"Graph Item Inputs [edit graph: %name%]": "グラフ項目入力[グラフの編集：%name%]"
+"Graph Item Type": "グラフ項目の種類"
+"How data is to be represented on the graph.": "グラフ上でデータをどのように表現するか。"
+"Insert Hard Return": "ハードリターンを挿入"
+"Item #%number%": "アイテム #%number%"
+"Name": "名前"
+"No Items": "アイテム"
+"Opacity/Alpha Channel": "不透明度/アルファチャンネル"
+"Save": "保存"
+"Sequence": "配列"
+"Shift Data": "シフトデータ"
+"Text Alignment (TEXTALIGN)": "テキストの配置（TEXTALIGN）"
+"Text Format": "テキストの属性"
+"VDEF Function": "VDEF機能"
+"Value": "値"

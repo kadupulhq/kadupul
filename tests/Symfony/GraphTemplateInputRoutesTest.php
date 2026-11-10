@@ -318,6 +318,28 @@ final class GraphTemplateInputRoutesTest extends TestCase
         self::assertSame('Requête d\'entrée d\'élément de graphique non valide.', $this->kernel->handle($legacy)->getContent());
     }
 
+    public function testGermanKeepsTheLegacyTranslationsFromTheUserPreference(): void
+    {
+        $container = $this->kernel->getContainer()->get('test.service_container');
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+        $database = $this->createStub(DatabaseConnection::class);
+        $database->method('get')->willReturn($pdo);
+        $container->set(DatabaseConnection::class, $database);
+        $preference = $this->createStub(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn('de-DE');
+        $container->set(LocalePreference::class, $preference);
+        $request = Request::create('/graphing/graph-templates/1/inputs/5/edit', cookies: ['Cacti' => 'fixture']);
+        $html = html_entity_decode((string) $this->kernel->handle($request)->getContent(), ENT_QUOTES);
+
+        self::assertSame('de_DE', $request->getLocale());
+        // The legend's msgid is no longer in the shipped .po files, so only
+        // graph_template_input.de_DE.yaml can supply this legacy translation.
+        self::assertStringContainsString('<legend>Zugeordnete Diagramm Elemente</legend>', $html);
+        self::assertStringContainsString('Element #1: LINE1 (AVERAGE)', $html);
+        self::assertStringNotContainsString('Associated Graph Items', $html);
+    }
+
     private function get(string $uri): Response
     {
         return $this->kernel->handle(Request::create($uri));

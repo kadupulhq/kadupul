@@ -87,6 +87,35 @@ final class TranslationCatalogTest extends TestCase
         }
     }
 
+    public function testOtherLocaleCatalogsAreShippedLocalesWithKnownMessages(): void
+    {
+        $catalogs = json_decode((string) file_get_contents(self::ROOT . '/locales/catalogs.json'), true, flags: JSON_THROW_ON_ERROR);
+        self::assertIsArray($catalogs['translated_locales'] ?? null);
+        // The same names ConsoleTranslations gives the gettext fallback: fr-FR is fr, others use an underscore.
+        $shipped = array_map(static fn(string $locale): string => str_replace('-', '_', $locale), array_diff($catalogs['translated_locales'], ['fr-FR']));
+        $count = 0;
+        foreach (glob(self::ROOT . '/config/translations/*.*.yaml') ?: [] as $file) {
+            if (preg_match('/\A([a-z_]+)\.([A-Za-z_]+)\.yaml\z/D', basename($file), $match) !== 1) {
+                self::fail('Unexpected translation file name: ' . basename($file));
+            }
+            [, $domain, $locale] = $match;
+            if ($locale === 'en' || $locale === 'fr') {
+                continue;
+            }
+            ++$count;
+            self::assertContains($locale, $shipped, basename($file) . ' names no shipped locale');
+            $english = self::catalog($domain, 'en');
+            $messages = self::catalog($domain, $locale);
+            self::assertSame([], array_values(array_diff(array_keys($messages), array_keys($english))), basename($file) . ' has messages English lacks');
+            foreach ($messages as $id => $message) {
+                self::assertNotSame('', trim($message), basename($file) . ': ' . $id);
+                self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), basename($file) . ': ' . $id);
+                self::assertSame(1, preg_match('/\A[^\p{Cc}]*\z/u', $message), basename($file) . ' has a control character: ' . $id);
+            }
+        }
+        self::assertGreaterThan(0, $count, 'No other-locale catalogs were discovered.');
+    }
+
     /** @return list<string> */
     private static function placeholders(string $message): array
     {

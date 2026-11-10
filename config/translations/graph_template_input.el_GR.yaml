@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/el-GR.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Σχετικά στοιχεία γραφήματος"
+"CDEF Function": "Λειτουργία CDEF"
+"Cancel": "Ακύρωση"
+"Color": "Χρώμα"
+"Consolidation Function": "Λειτουργία ενοποίησης"
+"Continue": "Συνέχεια"
+"Create": "Δημιουργία"
+"Dash Offset (dash-offset=offset)": "Απόκλιση παύλα (offset = εξισορρόπηση)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Πινακίδες (παύλες [= on_s [, off_s [, on_s, off_s] ...]])"
+"Data Source": "Ανεπεξέργαστη πηγή"
+"Description": "Περιγραφή"
+"Enter a description for this graph item input to describe what this input is used for.": "Καταχωρίστε μια περιγραφή για αυτήν την είσοδο στοιχείου γραφήματος για να περιγράψετε τι χρησιμοποιείται αυτή η είσοδος."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Εισαγάγετε ένα όνομα για αυτήν την είσοδο στοιχείου γραφήματος, βεβαιωθείτε ότι είναι κάτι που αναγνωρίζετε."
+"Field Type": "Τύπος πεδίου"
+"GPRINT Type": "Τύπος GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Στοιχείο γραφήματος Είσοδοι [edit graph: %name%]"
+"Graph Item Type": "Τύπος στοιχείου γραφήματος"
+"How data is to be represented on the graph.": "Πώς θα απεικονίζονται τα δεδομένα στο γράφημα."
+"Insert Hard Return": "Εισαγωγή σκληρού επιστροφής"
+"Item #%number%": "Στοιχείο # %number%"
+"Name": "Όνομα"
+"No Items": "Κανένα στοιχείο"
+"Opacity/Alpha Channel": "Κανάλι αδιαφάνειας / άλφα"
+"Save": "Αποθήκευση"
+"Sequence": "Αλληλουχία"
+"Shift Data": "Μετατόπιση δεδομένων"
+"Text Alignment (TEXTALIGN)": "Ευθυγράμμιση κειμένου (TEXTALIGN)"
+"Text Format": "Μορφή κειμένου"
+"VDEF Function": "Λειτουργία VDEF"
+"Value": "Αξία"
