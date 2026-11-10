@@ -24,10 +24,10 @@ final readonly class NativeAuthenticationSession
         }
         $config = $this->configuration->values();
         $length = (int) ini_get('session.sid_length');
-        if ($length < 22 || $length > 256 || ($config['database_sessions'] && $length > 32)) {
+        if ($length < 22 || $length > 256 || ($config['database_sessions'] === true && $length > 32)) {
             throw new \RuntimeException('Configured authentication session ID exceeds storage capacity.');
         }
-        $handler = $config['database_sessions']
+        $handler = $config['database_sessions'] === true
             ? new AuthenticationDatabaseSessionHandler($this->database, $ip, (string) ($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'))
             : new AuthenticationFileSessionHandler();
         if (!session_set_save_handler($handler, true)) {
@@ -94,7 +94,7 @@ final readonly class NativeAuthenticationSession
     {
         $config = $this->configuration->values();
         try {
-            if ($config['database_sessions']) {
+            if ($config['database_sessions'] === true) {
                 BrowserAuthenticationSql::execute($this->database->get(), 'DELETE FROM sessions WHERE id = ?', [$id]);
             } else {
                 if (session_status() !== PHP_SESSION_NONE || session_id() !== $id) {
