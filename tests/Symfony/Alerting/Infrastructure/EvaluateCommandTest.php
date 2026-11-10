@@ -29,6 +29,7 @@ use Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand;
 use Kadupul\Kernel;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 use Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog;
+use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
 use Kadupul\Tests\Alerting\Fakes\FixedAlertingSettings;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
@@ -84,7 +85,7 @@ final class EvaluateCommandTest extends TestCase
         $incidents = new InMemoryIncidentRepository();
         $notifications = new InMemoryNotificationQueue($incidents);
         $clock = new MockClockAdapter($this->clock);
-        $evaluate = new EvaluateRules($this->rates, $this->rules, $this->states, $incidents, $notifications, new InMemoryEvaluationCursor(), $clock, new InMemoryTransactionRunner($this->states, $incidents, $notifications), $log);
+        $evaluate = new EvaluateRules($this->rates, new InMemoryBaselineSource(), $this->rules, $this->states, $incidents, $notifications, new InMemoryEvaluationCursor(), $clock, new InMemoryTransactionRunner($this->states, $incidents, $notifications), $log);
 
         return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $this->drain, $clock, $log), $log));
     }

@@ -51,7 +51,10 @@ function upgrade_alerting_signature(array $definition): string
 
 /**
  * The same definitions as cacti.sql; a test compares the two. Times are Unix
- * seconds, so no column depends on a session time zone. alert_incident keeps
+ * seconds, so no column depends on a session time zone. alert_rule.kind is
+ * threshold or baseline, and only that kind's columns are set.
+ * alert_baseline_sample holds one bucket per series and wall-clock hour of
+ * the installation time zone, the evaluator's history for baseline rules. alert_incident keeps
  * active_rule_id equal to rule_id while an incident is open or acknowledged
  * and NULL after it ends, so its unique key allows one active incident per
  * rule. Columns read data type:signedness:nullability; indexes read
@@ -68,9 +71,15 @@ function upgrade_alerting_tables(): array
   id int(10) unsigned NOT NULL auto_increment,
   local_data_id int(10) unsigned NOT NULL,
   rrd_name varbinary(19) NOT NULL,
-  comparator char(2) NOT NULL,
-  trigger_threshold double NOT NULL,
-  clear_threshold double NOT NULL,
+  kind varchar(16) NOT NULL default \'threshold\',
+  comparator char(2) default NULL,
+  trigger_threshold double default NULL,
+  clear_threshold double default NULL,
+  baseline_direction varchar(8) default NULL,
+  baseline_deviations double default NULL,
+  baseline_clear_deviations double default NULL,
+  baseline_floor double default NULL,
+  baseline_min_samples tinyint(3) unsigned default NULL,
   for_cycles smallint(5) unsigned NOT NULL default 1,
   owner_id mediumint(8) unsigned NOT NULL default 0,
   PRIMARY KEY (id),
@@ -80,9 +89,15 @@ function upgrade_alerting_tables(): array
                 'id' => 'int:unsigned:NO',
                 'local_data_id' => 'int:unsigned:NO',
                 'rrd_name' => 'varbinary:signed:NO',
-                'comparator' => 'char:signed:NO',
-                'trigger_threshold' => 'double:signed:NO',
-                'clear_threshold' => 'double:signed:NO',
+                'kind' => 'varchar:signed:NO',
+                'comparator' => 'char:signed:YES',
+                'trigger_threshold' => 'double:signed:YES',
+                'clear_threshold' => 'double:signed:YES',
+                'baseline_direction' => 'varchar:signed:YES',
+                'baseline_deviations' => 'double:signed:YES',
+                'baseline_clear_deviations' => 'double:signed:YES',
+                'baseline_floor' => 'double:signed:YES',
+                'baseline_min_samples' => 'tinyint:unsigned:YES',
                 'for_cycles' => 'smallint:unsigned:NO',
                 'owner_id' => 'mediumint:unsigned:NO',
             ),
@@ -107,6 +122,26 @@ function upgrade_alerting_tables(): array
                 'last_observed_at' => 'int:unsigned:YES',
             ),
             'indexes' => array('PRIMARY:0:rule_id'),
+        ),
+        'alert_baseline_sample' => array(
+            'create' => 'CREATE TABLE IF NOT EXISTS alert_baseline_sample (
+  local_hour int(10) unsigned NOT NULL,
+  local_data_id int(10) unsigned NOT NULL,
+  rrd_name varbinary(19) NOT NULL,
+  sample_count int(10) unsigned NOT NULL,
+  sample_sum double NOT NULL,
+  last_observed_at int(10) unsigned NOT NULL,
+  PRIMARY KEY (local_hour, local_data_id, rrd_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic',
+            'columns' => array(
+                'local_hour' => 'int:unsigned:NO',
+                'local_data_id' => 'int:unsigned:NO',
+                'rrd_name' => 'varbinary:signed:NO',
+                'sample_count' => 'int:unsigned:NO',
+                'sample_sum' => 'double:signed:NO',
+                'last_observed_at' => 'int:unsigned:NO',
+            ),
+            'indexes' => array('PRIMARY:0:local_hour', 'PRIMARY:0:local_data_id', 'PRIMARY:0:rrd_name'),
         ),
         'alert_incident' => array(
             'create' => 'CREATE TABLE IF NOT EXISTS alert_incident (

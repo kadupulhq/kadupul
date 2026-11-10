@@ -178,6 +178,20 @@ CREATE TABLE `aggregate_graphs_items` (
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic COMMENT='Aggregate Graph Items';
 
 --
+-- Table structure for table `alert_baseline_sample`
+--
+
+CREATE TABLE alert_baseline_sample (
+  local_hour int(10) unsigned NOT NULL,
+  local_data_id int(10) unsigned NOT NULL,
+  rrd_name varbinary(19) NOT NULL,
+  sample_count int(10) unsigned NOT NULL,
+  sample_sum double NOT NULL,
+  last_observed_at int(10) unsigned NOT NULL,
+  PRIMARY KEY (local_hour, local_data_id, rrd_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=Dynamic;
+
+--
 -- Table structure for table `alert_incident`
 --
 
@@ -224,9 +238,15 @@ CREATE TABLE alert_rule (
   id int(10) unsigned NOT NULL auto_increment,
   local_data_id int(10) unsigned NOT NULL,
   rrd_name varbinary(19) NOT NULL,
-  comparator char(2) NOT NULL,
-  trigger_threshold double NOT NULL,
-  clear_threshold double NOT NULL,
+  kind varchar(16) NOT NULL default 'threshold',
+  comparator char(2) default NULL,
+  trigger_threshold double default NULL,
+  clear_threshold double default NULL,
+  baseline_direction varchar(8) default NULL,
+  baseline_deviations double default NULL,
+  baseline_clear_deviations double default NULL,
+  baseline_floor double default NULL,
+  baseline_min_samples tinyint(3) unsigned default NULL,
   for_cycles smallint(5) unsigned NOT NULL default 1,
   owner_id mediumint(8) unsigned NOT NULL default 0,
   PRIMARY KEY (id),

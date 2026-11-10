@@ -44,6 +44,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
+use Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource;
 use Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource;
 use Kadupul\Tests\Alerting\Fakes\FixedAdministrator;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
@@ -234,6 +235,7 @@ final class AlertNotificationDatabaseTest extends TestCase
     {
         $evaluate = new EvaluateRules(
             new DsstatsRateSource($this->database),
+            new DsstatsBaselineSource($this->database),
             $rules ?? new DbalRuleRepository($this->database),
             $states ?? new DbalRuleStateStore($this->database),
             new DbalIncidentRepository($this->database),

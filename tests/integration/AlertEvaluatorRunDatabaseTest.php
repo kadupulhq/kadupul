@@ -35,6 +35,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
+use Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource;
 use Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource;
 use Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
@@ -177,6 +178,7 @@ final class AlertEvaluatorRunDatabaseTest extends TestCase
         $clock = new MockClockAdapter($this->clock);
         $evaluate = new EvaluateRules(
             $rates === null ? $source : $rates($source),
+            new DsstatsBaselineSource($session),
             new DbalRuleRepository($session),
             new DbalRuleStateStore($session),
             new DbalIncidentRepository($session),

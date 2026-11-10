@@ -143,11 +143,78 @@ behavior until an administrator opts in.
      The clear threshold must lie on the non-breaching side of the trigger
      threshold or equal it. A rule with a gap between the two thresholds has
      hysteresis.
-   - A baseline rule names a series, a deviation multiplier and a minimum sample
-     count. It breaches when the rate falls outside the hour-of-week mean
-     plus or minus the multiplier times the standard deviation. With fewer than
-     the minimum samples for that hour of the week, the verdict is `unknown`.
+   - A baseline rule names a series, a deviation multiplier k, a clear
+     multiplier, a deviation floor, a direction, a minimum sample count and a
+     `for_cycles` count. It breaches when the rate falls outside the
+     hour-of-week mean plus or minus k times the standard deviation. With
+     fewer than the minimum samples for that hour of the week, the verdict is
+     `unknown`.
    - Both kinds use the same verdicts, state machine and incident lifecycle.
+
+   Task 6 settles the baseline details:
+   - **Where the history comes from.** No dsstats table holds it.
+     `data_source_stats_hourly` and `_daily` have one row per series, keyed
+     `(local_data_id, rrd_name)` with no time column (`cacti.sql`), and each
+     run overwrites it: the hourly row is the average of whatever
+     `data_source_stats_hourly_cache` still holds
+     (`dsstats_insert_hourly_data_into_cache()` in `poller_dsstats.php`), and
+     the daily, weekly, monthly and yearly rows are RRDtool averages over the
+     last period (`dsstats_write_buffer()` in `lib/dsstats.php`). The cache
+     keeps only `dsstats_hourly_duration` minutes. So the evaluator keeps its
+     own history in `alert_baseline_sample`: for each series and wall-clock
+     hour, the count and sum of the fresh rates (decision 1) it read in that
+     hour, and the newest observation time it counted, so a sample read by
+     two runs counts once. History starts when the first baseline rule on a
+     series is evaluated; rules on the same series share it.
+   - **Sample.** One sample is the mean of one such hour bucket. The band for
+     an observation reads the bucket of the same wall-clock hour of the week
+     in each of the previous 8 weeks (`BaselineRule::HISTORY_WEEKS`), never
+     the observation's own week. A week without a bucket for that hour is
+     not a sample. The minimum sample count is 2 to 8 and defaults to 4: at
+     least 4 of those 8 weeks must have that hour.
+   - **Band.** Mean and sample standard deviation (n - 1) of the samples. The
+     deviation used is the larger of that standard deviation and the rule's
+     deviation floor, an absolute amount in the series' own unit that must
+     be greater than zero, so the band is never narrower than 2 x k x floor.
+     The floor is absolute, not a fraction of the mean, because the commonest
+     zero-variance series, such as an error counter that is always 0, has a
+     mean of 0, where a relative floor is zero again.
+   - **Time zone.** The hour of the week is taken in the installation time
+     zone: PHP's default time zone in the evaluator, which is the CLI
+     `date.timezone` of the PHP binary the poller starts it with
+     (`path_php_binary`). Traffic follows local working hours, so UTC would
+     put local 09:00 and 10:00 in one hour of the week for half the year.
+     Weeks are counted in wall-clock hours, so the same hour a week earlier
+     is exactly 168 wall-clock hours back even across a daylight saving
+     change, where the real gap is 167 or 169 hours. The consequence: the
+     hour the clocks skip in spring has no bucket that year, so that hour of
+     the week has one sample fewer for 8 weeks; the hour repeated in autumn
+     puts both real hours in one bucket, whose mean covers two hours.
+     Changing `date.timezone` shifts every later bucket against the stored
+     ones until 8 weeks have passed.
+   - **Direction.** `both` (the default) breaches on either side; `above` and
+     `below` breach and clear only on their side and treat the other side as
+     ok.
+   - **Hysteresis.** The clear multiplier is greater than zero and at most k.
+     While an incident is open, the rate is `ok` only strictly inside
+     mean +/- clear multiplier x deviation, and `hold` between that and the
+     trigger edge, as for a threshold rule. A clear multiplier equal to k has
+     no gap. The band moves every hour, so the edges an incident is judged
+     against move with it.
+   - **Edges.** The trigger edge is strict outward: a rate exactly on it is
+     inside. A notification reports the trigger edge (on opening) or clear
+     edge (on recovery) on the side of the mean the rate is on; a one-sided
+     rule reports its own side.
+   - **Batches.** Each batch hands the baseline source the fresh observations
+     its baseline rules have not yet counted, once per series: one
+     multi-row upsert and one read per 500 series of one wall-clock hour,
+     both inside the time budget. Buckets older than 8 weeks are deleted one
+     wall-clock hour per batch, at most one row per series.
+   - **Unusable.** A baseline rule row the domain refuses (an unknown kind or
+     direction, a missing or out-of-range parameter, or columns of the other
+     kind set) is an `UnusableRuleRecord` (decision 8). A history bucket that
+     cannot be read leaves its series without history, so its rules are
+     `unknown`, not built from the remaining weeks.
 
 4. **Unknown is not zero.** Each evaluation of a rule yields one verdict: `ok`,
    `breach` or `unknown`. A series with no fresh rate yields `unknown`. A
@@ -349,6 +416,17 @@ behavior until an administrator opts in.
    count before a run stops early. The cost is per changed rule, one
    transaction each, so it grows with rule count, not with batch size.
 
+   Task 6 measured baseline rules in the same setup with 5,000 baseline
+   rules and 8 weeks of history for every hour (6,725,000 rows, about 370
+   MB of data and index), two runs. Reading the history of all 5,000 series
+   took 86 to 105 ms (9 to 10.5 ms per 500), and recording 5,000 new samples
+   took 49 to 56 ms (about 5 ms per 500). A run in which every rule had a new
+   sample took 7.8 to 9.0 s; the same 5,000 rules as threshold rules took 7.1
+   to 11.0 s on that host that day, so the per-rule state transaction still
+   dominates and the baseline reads add about 150 ms per 5,000 rules. A run
+   with no new samples does not call the baseline source and took 171 to 250
+   ms (one outlier of 1.8 s).
+
    The orphan sweep (decision 6) that starts each run is capped at the batch
    size: at most one batch of orphans, ended by one bounded `DELETE` and one
    bounded `UPDATE` in one transaction. Handled orphans no longer qualify, so
@@ -427,10 +505,17 @@ behavior until an administrator opts in.
     with no user and does not re-authorize rules. Every entry point enforces
     this, not only the forms.
 
-13. **Schema.** Four InnoDB tables: `alert_rule` (definition and owner),
+13. **Schema.** Five InnoDB tables: `alert_rule` (definition and owner),
     `alert_rule_state` (counters and last observation), `alert_incident`
-    (lifecycle, timestamps, acknowledging user) and `alert_notification` (queue
-    with attempt state, and the rate and threshold of the change it reports). They are added to `cacti.sql` and
+    (lifecycle, timestamps, acknowledging user), `alert_notification` (queue
+    with attempt state, and the rate and threshold of the change it reports)
+    and `alert_baseline_sample` (hour-of-week history, decision 3).
+    `alert_rule.kind` is `threshold` or `baseline`; a threshold rule sets
+    `comparator`, `trigger_threshold` and `clear_threshold`, a baseline rule
+    sets the `baseline_` columns, and each leaves the other kind's columns
+    `NULL`. `alert_baseline_sample` is keyed by wall-clock hour, data source
+    and RRD data source name, so a band's read and the age-out are ranges on
+    its first column. They are added to `cacti.sql` and
     `docs/audit_schema.sql`, and created by a new `install/upgrades/1_2_40.php`.
     `include/cacti_version` moves from 1.2.39 to 1.2.40 the way PR #1136 moved
     it, and the version is written only after every step succeeds so a failed
@@ -518,6 +603,16 @@ behavior until an administrator opts in.
   its database session time zone stores every sample shifted by the
   difference: later than the clock by more than 60 s reads as `unknown`, and
   earlier by more than two intervals reads as stale and `unknown`.
+- **Baseline rules start `unknown`.** A new baseline rule on a series
+  without history is `unknown` for at least 4 weeks (its minimum sample
+  count), and history is recorded only while alerting runs. A gap in
+  collection or a disabled evaluator costs those weeks' samples, not false
+  alarms. The history costs one row per series and hour, about 1,500 rows
+  and 75 KB per series at 8 weeks; rows of a series whose rules are deleted
+  age out after 8 weeks.
+- **A baseline learns slow drift and recurring outages.** The band is the
+  last 8 weeks' behaviour, so a gradual change becomes normal, and an outage
+  that recurs weekly widens the band for that hour.
 - **Mail failure is visible and bounded.** The queue and attempt counts make
   failed delivery an operator-visible state.
 - **Compatibility.** No existing table, hook, URL or setting changes. The schema
@@ -535,6 +630,12 @@ behavior until an administrator opts in.
 | A rule's stored row is unreadable, or its incident disagrees with its state | That rule is rolled back, logged and counted as `failed`; the other rules are evaluated and the cursor moves past it, every run, until the row is fixed | Task 3 |
 | More orphans than one batch | One batch of orphans ended per run; the rest on later runs; rule batches still run | Task 3 |
 | Value oscillates around the threshold | Hysteresis and `for_cycles` give one incident | Task 1 |
+| Baseline rule with fewer than its minimum weeks for this hour | `unknown`; an open incident stays open and is reported `unknown` once | Task 6 |
+| Baseline history row unreadable | That series has no history; its rules are `unknown` | Task 6 |
+| Baseline rule row unreadable or of a mixed kind | That rule is skipped as unusable, as above | Task 6 |
+| Baseline history read or write fails | Error, exit status 1; nothing read as `unknown`, cursor unchanged | Task 6 |
+| Daylight saving change | The same wall-clock hour of the week is compared; the skipped hour has one sample fewer, the repeated hour shares a bucket | Task 6 |
+| Series that never varied | The deviation floor keeps the band open; no breach on the first small change | Task 6 |
 | Data source or device deleted with an incident open | Incident `orphaned`, no recovery mail | Task 3 |
 | Rule deleted with an incident open | Incident `orphaned` on the next run, state removed, no mail | Task 3 |
 | Device or data source disabled | Rules `unknown`; an open incident stays open | Task 3 |
@@ -587,9 +688,9 @@ behavior until an administrator opts in.
   `data_source_stats_hourly_cache.time`, paired with `calculated` by equal
   value (decision 1). The two-interval rule stands, measured in the data
   source's `rrd_step` (decision 4).
-- **Baseline data.** Hour-of-week mean and standard deviation need a store. The
-  existing dsstats aggregates are hourly, daily, weekly, monthly and yearly,
-  not hour of the week. Task 6 decides whether `BaselineSource` is fed from the
-  existing aggregates or from a Kadupul-owned table.
+- **Baseline data.** Resolved in Task 6: the dsstats aggregates hold one
+  rolling row per series and no history, so `BaselineSource` reads a
+  Kadupul-owned table, `alert_baseline_sample`, that the evaluator fills
+  from the rates it already reads (decision 3).
 - **Remote pollers.** Task 2 answered this from the code (see Consequences).
   A test with a real remote collector is still missing.

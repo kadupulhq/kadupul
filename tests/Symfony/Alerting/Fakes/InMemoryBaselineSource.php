@@ -1,0 +1,64 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+declare(strict_types=1);
+
+namespace Kadupul\Tests\Alerting\Fakes;
+
+use Kadupul\Alerting\Application\Port\BaselineSource;
+use Kadupul\Alerting\Application\Port\SeriesObservation;
+use Kadupul\Alerting\Domain\Rule\SeriesKey;
+use Symfony\Component\Clock\MockClock;
+
+/** Hourly means set per series by the test; records what the evaluator hands it. */
+final class InMemoryBaselineSource implements BaselineSource
+{
+    /** @var array<string, list<float>> */
+    private array $history = [];
+    /** @var list<list<string>> series ids per record() call */
+    public array $recorded = [];
+    /** @var list<list<string>> series ids per history() call */
+    public array $requests = [];
+    /** Thrown by history(), to model a failed read. */
+    public ?\Throwable $failure = null;
+
+    /** @param float $secondsPerRead how far each history() call advances $clock */
+    public function __construct(
+        private ?MockClock $clock = null,
+        private float $secondsPerRead = 0.0,
+    ) {}
+
+    /** @param list<float> $hourlyMeans */
+    public function put(SeriesKey $series, array $hourlyMeans): void
+    {
+        $this->history[$series->id()] = $hourlyMeans;
+    }
+
+    public function record(array $observations): void
+    {
+        $this->recorded[] = array_map(static fn(SeriesObservation $o): string => $o->series->id(), $observations);
+    }
+
+    public function history(array $observations): array
+    {
+        if ($this->failure !== null) {
+            throw $this->failure;
+        }
+        $this->requests[] = array_map(static fn(SeriesObservation $o): string => $o->series->id(), $observations);
+        if ($this->clock !== null && $this->secondsPerRead > 0.0) {
+            $this->clock->sleep($this->secondsPerRead);
+        }
+        $found = [];
+        foreach ($observations as $observation) {
+            if (isset($this->history[$observation->series->id()])) {
+                $found[$observation->series->id()] = $this->history[$observation->series->id()];
+            }
+        }
+
+        return $found;
+    }
+}

@@ -119,7 +119,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'include/csrf.php' => 'ec3c4549ce0e792544bf8f840a1c65d61809e48817f5e8ff91de6f856c9d9b1a',
-    'config/services.yaml' => '30df315948da3020ee7d23fbfd9c6310531c2751f38c37f1770da57ee9708c73',
+    'config/services.yaml' => 'd01e56bd06966291915b10afbf050db2526cd3d867538e6d1488cc7109967ae6',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -153,7 +153,7 @@ const ASSET_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
     'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
-    'config/services.yaml' => '30df315948da3020ee7d23fbfd9c6310531c2751f38c37f1770da57ee9708c73',
+    'config/services.yaml' => 'd01e56bd06966291915b10afbf050db2526cd3d867538e6d1488cc7109967ae6',
 ];
 
 function asset_authentication_review(string $root): ?string
@@ -299,7 +299,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '30df315948da3020ee7d23fbfd9c6310531c2751f38c37f1770da57ee9708c73',
+    'config/services.yaml' => 'd01e56bd06966291915b10afbf050db2526cd3d867538e6d1488cc7109967ae6',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter

@@ -11,14 +11,14 @@ namespace Kadupul\Alerting\Domain\Rule;
 
 /**
  * A stored rule: its id (the evaluation cursor orders by it), the series it
- * watches and its condition. Baseline conditions arrive with BaselineRule.
+ * watches and its condition, a fixed threshold or an hour-of-week baseline.
  */
 final readonly class AlertRule
 {
     public function __construct(
         public int $id,
         public SeriesKey $series,
-        public ThresholdRule $condition,
+        public ThresholdRule|BaselineRule $condition,
     ) {
         if ($id < 1) {
             throw new InvalidRule('A rule id must be at least 1.');

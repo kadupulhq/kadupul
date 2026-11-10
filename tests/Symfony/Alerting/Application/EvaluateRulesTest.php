@@ -14,9 +14,12 @@ use Kadupul\Alerting\Domain\Evaluation\Observation;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
+use Kadupul\Alerting\Domain\Rule\BaselineDirection;
+use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
+use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryNotificationQueue;
@@ -35,6 +38,7 @@ final class EvaluateRulesTest extends TestCase
 
     private MockClock $clock;
     private InMemoryRateSource $rates;
+    private InMemoryBaselineSource $baselines;
     private InMemoryRuleRepository $rules;
     private InMemoryRuleStateStore $states;
     private InMemoryIncidentRepository $incidents;
@@ -47,6 +51,7 @@ final class EvaluateRulesTest extends TestCase
     {
         $this->clock = new MockClock(new \DateTimeImmutable('@' . self::NOW));
         $this->rates = new InMemoryRateSource(clock: $this->clock);
+        $this->baselines = new InMemoryBaselineSource();
         $this->states = new InMemoryRuleStateStore();
         $this->incidents = new InMemoryIncidentRepository();
         $this->notifications = new InMemoryNotificationQueue($this->incidents);
@@ -58,7 +63,7 @@ final class EvaluateRulesTest extends TestCase
 
     private function evaluator(): EvaluateRules
     {
-        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->notifications, $this->cursor, new MockClockAdapter($this->clock), $this->transactions, $this->logger);
+        return new EvaluateRules($this->rates, $this->baselines, $this->rules, $this->states, $this->incidents, $this->notifications, $this->cursor, new MockClockAdapter($this->clock), $this->transactions, $this->logger);
     }
 
     private static function rule(int $id, Comparator $comparator = Comparator::GreaterThan, float $trigger = 90.0, float $clear = 80.0, int $forCycles = 1): AlertRule
@@ -520,5 +525,144 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame(1, $report->orphaned);
         self::assertSame(['open', 'orphan'], array_column($this->incidents->events, 0));
         self::assertSame([[1, Transition::Opened, 95.0, 90.0, 'queued', self::NOW]], $this->queued(), 'Neither the orphaning nor the later rate queues a recovery.');
+    }
+
+    private static function baselineRule(int $id, int $forCycles = 1, BaselineDirection $direction = BaselineDirection::Both, float $clear = 1.0): AlertRule
+    {
+        // Flat history of 100 with a floor of 1: breach outside 97 to 103, clear inside 99 to 101.
+        return new AlertRule($id, new SeriesKey(100 + $id, 'traffic_in'), new BaselineRule(3.0, $clear, 1.0, $forCycles, $direction));
+    }
+
+    public function testABaselineRuleIsUnknownUntilItsHourOfTheWeekHasEnoughWeeks(): void
+    {
+        $this->rules->add(self::baselineRule(1), self::baselineRule(2));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(1_000.0, self::NOW - 10, 300));
+        $this->rates->put(new SeriesKey(102, 'traffic_in'), new Observation(1_000.0, self::NOW - 10, 300));
+        // Three weeks: one short of the default. Rule 2 has an open incident.
+        $this->baselines->put(new SeriesKey(101, 'traffic_in'), [100.0, 100.0, 100.0]);
+        $this->baselines->put(new SeriesKey(102, 'traffic_in'), [100.0, 100.0, 100.0]);
+        $this->states->states[2] = new RuleState(open: true, consecutiveOks: 1, lastObservedAt: self::NOW - 900);
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame(2, $report->evaluated);
+        self::assertSame([], $this->incidents->events, 'Too little history neither opens nor closes an incident.');
+        self::assertArrayNotHasKey(1, $this->states->states, 'An unknown that changes nothing writes no state.');
+        self::assertTrue($this->states->states[2]->isUnknown());
+        self::assertSame(1, $this->states->states[2]->consecutiveOks(), 'Unknown leaves the counters alone.');
+        self::assertSame(self::NOW - 900, $this->states->states[2]->lastObservedAt(), 'An unknown verdict counts no observation.');
+        self::assertSame([], $this->notifications->rows);
+
+        // The fourth week arrives: the same sample now breaches.
+        $this->baselines->put(new SeriesKey(101, 'traffic_in'), [100.0, 100.0, 100.0, 100.0]);
+        $this->evaluator()(10, 30.0);
+        self::assertSame([['open', 1, self::NOW - 10]], $this->incidents->events);
+    }
+
+    public function testABaselineRuleOpensAndRecoversWithTheBandEdgeItCrossed(): void
+    {
+        $this->rules->add(self::baselineRule(1));
+        $series = new SeriesKey(101, 'traffic_in');
+        $this->baselines->put($series, [100.0, 100.0, 100.0, 100.0]);
+
+        $this->rates->put($series, new Observation(96.0, self::NOW - 300, 300));
+        $this->evaluator()(10, 30.0);
+        // Between the clear and trigger bands: held, not recovered.
+        $this->rates->put($series, new Observation(98.0, self::NOW - 200, 300));
+        $this->evaluator()(10, 30.0);
+        $this->rates->put($series, new Observation(99.5, self::NOW - 100, 300));
+        $this->evaluator()(10, 30.0);
+
+        self::assertSame([['open', 1, self::NOW - 300], ['close', 1, self::NOW - 100]], $this->incidents->events);
+        self::assertSame([[1, Transition::Opened, 96.0, 97.0, 'queued', self::NOW], [1, Transition::Recovered, 99.5, 99.0, 'queued', self::NOW]], $this->queued(), 'The lower trigger edge opened it; the lower clear edge closed it.');
+    }
+
+    public function testBaselineForCyclesCountsConsecutiveBreachesLikeAThreshold(): void
+    {
+        $this->rules->add(self::baselineRule(1, forCycles: 2, direction: BaselineDirection::Above));
+        $series = new SeriesKey(101, 'traffic_in');
+        $this->baselines->put($series, [100.0, 100.0, 100.0, 100.0]);
+
+        foreach ([[104.0, 400], [50.0, 300], [104.0, 200], [104.0, 100]] as [$rate, $age]) {
+            $this->rates->put($series, new Observation($rate, self::NOW - $age, 300));
+            $this->evaluator()(10, 30.0);
+        }
+
+        // A rate far below the band breaks the run of an above-only rule as ok.
+        self::assertSame([['open', 1, self::NOW - 100]], $this->incidents->events);
+        self::assertSame(103.0, $this->queued()[0][3]);
+    }
+
+    public function testBaselineHistoryIsRecordedAndReadOncePerBatch(): void
+    {
+        $shared = new SeriesKey(101, 'traffic_in');
+        $this->rules->add(
+            self::baselineRule(1),
+            new AlertRule(2, $shared, new BaselineRule(2.0, 2.0, 1.0)),
+            self::rule(3),
+            self::baselineRule(4),
+            self::baselineRule(5),
+        );
+        $this->rates->put($shared, new Observation(100.0, self::NOW - 10, 300));
+        $this->rates->put(new SeriesKey(103, 'traffic_in'), new Observation(100.0, self::NOW - 10, 300));
+        $this->rates->put(new SeriesKey(104, 'traffic_in'), new Observation(100.0, self::NOW - 10, 300));
+        // Rule 5's rate is stale: there is nothing to record or compare.
+        $this->rates->put(new SeriesKey(105, 'traffic_in'), new Observation(100.0, self::NOW - 601, 300));
+        $this->baselines->put($shared, [100.0, 100.0, 100.0, 100.0]);
+        $this->baselines->put(new SeriesKey(104, 'traffic_in'), [100.0, 100.0, 100.0, 100.0]);
+
+        $this->evaluator()(3, 30.0);
+
+        // Two batches: [1, 2, 3] and [4, 5]. A shared series is handed over once; a threshold rule's never.
+        self::assertSame([['101:traffic_in'], ['104:traffic_in']], $this->baselines->recorded);
+        self::assertSame([['101:traffic_in'], ['104:traffic_in']], $this->baselines->requests);
+
+        // Run again with no new sample: every rule counted it, so the source is not called.
+        $this->evaluator()(3, 30.0);
+        self::assertCount(2, $this->baselines->requests);
+        self::assertCount(2, $this->baselines->recorded);
+    }
+
+    public function testABatchOfThresholdRulesNeverCallsTheBaselineSource(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+
+        $this->evaluator()(10, 30.0);
+
+        self::assertSame([], $this->baselines->recorded);
+        self::assertSame([], $this->baselines->requests);
+        self::assertSame([['open', 1, self::NOW]], $this->incidents->events);
+    }
+
+    public function testTheBaselineLookupCountsAgainstTheBudget(): void
+    {
+        foreach ([1, 2, 3, 4] as $id) {
+            $this->rules->add(self::baselineRule($id));
+            $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(100.0, self::NOW - 10, 300));
+        }
+        // Each history read costs 0.6 s against a 1 s budget.
+        $this->baselines = new InMemoryBaselineSource($this->clock, 0.6);
+
+        $report = $this->evaluator()(1, 1.0);
+
+        self::assertSame(2, $report->evaluated, 'The slow lookup stops the run after two batches.');
+        self::assertSame(2, $this->cursor->position());
+    }
+
+    public function testABaselineReadFailurePropagatesWithoutMovingTheCursor(): void
+    {
+        $this->rules->add(self::baselineRule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(1_000.0, self::NOW - 10, 300));
+        $this->baselines->failure = new \RuntimeException('history read failed');
+
+        try {
+            $this->evaluator()(10, 30.0);
+            self::fail('A failed history read must not read as unknown.');
+        } catch (\RuntimeException $e) {
+            self::assertSame('history read failed', $e->getMessage());
+        }
+        self::assertSame([], $this->states->saved);
+        self::assertSame(0, $this->cursor->position());
     }
 }

@@ -14,6 +14,8 @@ use Doctrine\DBAL\ParameterType;
 use Kadupul\Alerting\Application\Port\RuleRepository;
 use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
+use Kadupul\Alerting\Domain\Rule\BaselineDirection;
+use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\InvalidRule;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
@@ -23,6 +25,10 @@ use Kadupul\Alerting\Domain\Rule\ThresholdRule;
  * Rules from alert_rule. rrd_name is varbinary, so a rule names one exact
  * data source name, and comparing it with data_template_rrd.data_source_name
  * is a byte comparison whatever that column's collation.
+ *
+ * kind is threshold or baseline. Each kind has its own columns, and a row
+ * must set those and leave the other kind's NULL; any other row is returned
+ * as that rule's UnusableRuleRecord, never guessed at or defaulted.
  */
 final readonly class DbalRuleRepository implements RuleRepository
 {
@@ -37,6 +43,8 @@ final readonly class DbalRuleRepository implements RuleRepository
         AND (dl.host_id = 0 OR (h.id IS NOT NULL AND h.deleted <> 'on'))
         AND EXISTS (SELECT 1 FROM data_template_rrd dtr WHERE dtr.local_data_id = r.local_data_id AND dtr.data_source_name = r.rrd_name)";
     private const string SERIES_JOINS = 'LEFT JOIN data_local dl ON dl.id = r.local_data_id LEFT JOIN host h ON h.id = dl.host_id';
+    private const array THRESHOLD_COLUMNS = ['comparator', 'trigger_threshold', 'clear_threshold'];
+    private const array BASELINE_COLUMNS = ['baseline_direction', 'baseline_deviations', 'baseline_clear_deviations', 'baseline_floor', 'baseline_min_samples'];
 
     public function __construct(private Connection $database) {}
 
@@ -48,7 +56,8 @@ final readonly class DbalRuleRepository implements RuleRepository
     public function batchAfter(int $afterRuleId, int $limit): array
     {
         $rows = $this->database->fetchAllAssociative(
-            'SELECT r.id, r.local_data_id, r.rrd_name, r.comparator, r.trigger_threshold, r.clear_threshold, r.for_cycles
+            'SELECT r.id, r.local_data_id, r.rrd_name, r.kind, r.comparator, r.trigger_threshold, r.clear_threshold,
+                r.baseline_direction, r.baseline_deviations, r.baseline_clear_deviations, r.baseline_floor, r.baseline_min_samples, r.for_cycles
             FROM alert_rule r ' . self::SERIES_JOINS . '
             WHERE r.id > ? AND ' . self::SERIES_EXISTS . '
             ORDER BY r.id LIMIT ?',
@@ -102,25 +111,72 @@ final readonly class DbalRuleRepository implements RuleRepository
     {
         $id = StoredValue::int($row['id'], 'alert_rule', 'id');
         $where = 'alert_rule ' . $id;
-        $comparator = is_string($row['comparator']) ? Comparator::tryFrom($row['comparator']) : null;
-        if ($comparator === null || !is_string($row['rrd_name'])) {
-            return new UnusableRuleRecord($id, StoredAlertingRowUnreadable::because($where, 'comparator or rrd_name is not one the rule form writes.')->getMessage());
+        if (!is_string($row['rrd_name'])) {
+            return new UnusableRuleRecord($id, StoredAlertingRowUnreadable::because($where, 'rrd_name is not one the rule form writes.')->getMessage());
         }
         try {
             return new AlertRule(
                 $id,
                 new SeriesKey(StoredValue::int($row['local_data_id'], $where, 'local_data_id'), $row['rrd_name']),
-                new ThresholdRule(
-                    $comparator,
-                    StoredValue::float($row['trigger_threshold'], $where, 'trigger_threshold'),
-                    StoredValue::float($row['clear_threshold'], $where, 'clear_threshold'),
-                    StoredValue::int($row['for_cycles'], $where, 'for_cycles'),
-                ),
+                match ($row['kind']) {
+                    'threshold' => self::threshold($row, $where),
+                    'baseline' => self::baseline($row, $where),
+                    default => throw StoredAlertingRowUnreadable::because($where, 'kind is not one the rule form writes.'),
+                },
             );
         } catch (InvalidRule $e) {
             return new UnusableRuleRecord($id, StoredAlertingRowUnreadable::because($where, $e->getMessage())->getMessage(), $e);
         } catch (StoredAlertingRowUnreadable $e) {
             return new UnusableRuleRecord($id, $e->getMessage(), $e);
+        }
+    }
+
+    /** @param array<string, mixed> $row */
+    private static function threshold(array $row, string $where): ThresholdRule
+    {
+        self::requireUnset($row, self::BASELINE_COLUMNS, $where, 'a threshold rule');
+        $comparator = is_string($row['comparator']) ? Comparator::tryFrom($row['comparator']) : null;
+        if ($comparator === null) {
+            throw StoredAlertingRowUnreadable::because($where, 'comparator is not one the rule form writes.');
+        }
+
+        return new ThresholdRule(
+            $comparator,
+            StoredValue::float($row['trigger_threshold'], $where, 'trigger_threshold'),
+            StoredValue::float($row['clear_threshold'], $where, 'clear_threshold'),
+            StoredValue::int($row['for_cycles'], $where, 'for_cycles'),
+        );
+    }
+
+    /** @param array<string, mixed> $row */
+    private static function baseline(array $row, string $where): BaselineRule
+    {
+        self::requireUnset($row, self::THRESHOLD_COLUMNS, $where, 'a baseline rule');
+        $direction = is_string($row['baseline_direction']) ? BaselineDirection::tryFrom($row['baseline_direction']) : null;
+        if ($direction === null) {
+            throw StoredAlertingRowUnreadable::because($where, 'baseline_direction is not one the rule form writes.');
+        }
+
+        return new BaselineRule(
+            StoredValue::float($row['baseline_deviations'], $where, 'baseline_deviations'),
+            StoredValue::float($row['baseline_clear_deviations'], $where, 'baseline_clear_deviations'),
+            StoredValue::float($row['baseline_floor'], $where, 'baseline_floor'),
+            StoredValue::int($row['for_cycles'], $where, 'for_cycles'),
+            $direction,
+            StoredValue::int($row['baseline_min_samples'], $where, 'baseline_min_samples'),
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $row
+     * @param list<string>         $columns
+     */
+    private static function requireUnset(array $row, array $columns, string $where, string $kind): void
+    {
+        foreach ($columns as $column) {
+            if ($row[$column] !== null) {
+                throw StoredAlertingRowUnreadable::because($where, $column . ' is set on ' . $kind . '.');
+            }
         }
     }
 }

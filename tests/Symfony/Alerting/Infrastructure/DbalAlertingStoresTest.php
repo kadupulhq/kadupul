@@ -16,6 +16,8 @@ use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
+use Kadupul\Alerting\Domain\Rule\BaselineDirection;
+use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
@@ -45,7 +47,7 @@ final class DbalAlertingStoresTest extends TestCase
     {
         $this->database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
         foreach ([
-            'CREATE TABLE alert_rule (id INTEGER PRIMARY KEY, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, comparator TEXT NOT NULL, trigger_threshold REAL NOT NULL, clear_threshold REAL NOT NULL, for_cycles INT NOT NULL DEFAULT 1, owner_id INT NOT NULL DEFAULT 0)',
+            "CREATE TABLE alert_rule (id INTEGER PRIMARY KEY, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, kind TEXT NOT NULL DEFAULT 'threshold', comparator TEXT NULL, trigger_threshold REAL NULL, clear_threshold REAL NULL, baseline_direction TEXT NULL, baseline_deviations REAL NULL, baseline_clear_deviations REAL NULL, baseline_floor REAL NULL, baseline_min_samples INT NULL, for_cycles INT NOT NULL DEFAULT 1, owner_id INT NOT NULL DEFAULT 0)",
             'CREATE TABLE alert_rule_state (rule_id INTEGER PRIMARY KEY, incident_open INT NOT NULL DEFAULT 0, consecutive_breaches INT NOT NULL DEFAULT 0, consecutive_oks INT NOT NULL DEFAULT 0, is_unknown INT NOT NULL DEFAULT 0, last_observed_at INT NULL)',
             'CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL)',
             'CREATE TABLE data_local (id INTEGER PRIMARY KEY, host_id INT NOT NULL DEFAULT 0)',
@@ -119,6 +121,64 @@ final class DbalAlertingStoresTest extends TestCase
         self::assertStringContainsString('alert_rule 3', $unusable->reason);
         self::assertInstanceOf(AlertRule::class, $next);
         self::assertSame(4, $next->id);
+    }
+
+    private function addBaselineRule(int $id, int $localDataId): void
+    {
+        $this->database->insert('alert_rule', ['id' => $id, 'local_data_id' => $localDataId, 'rrd_name' => 'traffic_in', 'kind' => 'baseline', 'baseline_direction' => 'above', 'baseline_deviations' => 3.0, 'baseline_clear_deviations' => 2.5, 'baseline_floor' => 0.25, 'baseline_min_samples' => 5, 'for_cycles' => 2]);
+    }
+
+    public function testABaselineRuleIsReadWithItsParameters(): void
+    {
+        $this->addBaselineRule(4, 104);
+        $this->addRule(5, 105);
+        $this->addSeries(104, 0);
+        $this->addSeries(105, 0);
+
+        self::assertEquals(
+            [
+                new AlertRule(4, new SeriesKey(104, 'traffic_in'), new BaselineRule(3.0, 2.5, 0.25, 2, BaselineDirection::Above, 5)),
+                new AlertRule(5, new SeriesKey(105, 'traffic_in'), new ThresholdRule(Comparator::GreaterThan, 90.5, 80.0, 2)),
+            ],
+            (new DbalRuleRepository($this->database))->batchAfter(0, 10),
+        );
+    }
+
+    /** @return iterable<string, array{array<string, mixed>}> */
+    public static function unreadableBaselineRules(): iterable
+    {
+        yield 'unknown kind' => [['kind' => 'Baseline']];
+        yield 'unknown direction' => [['baseline_direction' => 'up']];
+        yield 'missing direction' => [['baseline_direction' => null]];
+        yield 'missing multiplier' => [['baseline_deviations' => null]];
+        yield 'text multiplier' => [['baseline_deviations' => 'wide']];
+        yield 'clear wider than trigger' => [['baseline_clear_deviations' => 4.0]];
+        yield 'zero floor' => [['baseline_floor' => 0]];
+        yield 'missing minimum samples' => [['baseline_min_samples' => null]];
+        yield 'one sample' => [['baseline_min_samples' => 1]];
+        yield 'more samples than the history kept' => [['baseline_min_samples' => 9]];
+        yield 'a threshold column as well' => [['comparator' => 'gt']];
+        yield 'a threshold rule with a baseline column' => [['kind' => 'threshold', 'comparator' => 'gt', 'trigger_threshold' => 90, 'clear_threshold' => 80]];
+        yield 'a threshold rule without its thresholds' => [['kind' => 'threshold', 'baseline_direction' => null, 'baseline_deviations' => null, 'baseline_clear_deviations' => null, 'baseline_floor' => null, 'baseline_min_samples' => null]];
+    }
+
+    /** @param array<string, mixed> $columns */
+    #[DataProvider('unreadableBaselineRules')]
+    public function testAnUnreadableBaselineRuleIsQuarantinedNotFatal(array $columns): void
+    {
+        $this->addBaselineRule(3, 103);
+        $this->addSeries(103, 0);
+        $this->database->update('alert_rule', $columns, ['id' => 3]);
+        $this->addBaselineRule(4, 104);
+        $this->addSeries(104, 0);
+
+        [$unusable, $next] = (new DbalRuleRepository($this->database))->batchAfter(0, 10);
+
+        self::assertInstanceOf(UnusableRuleRecord::class, $unusable);
+        self::assertSame(3, $unusable->ruleId);
+        self::assertStringContainsString('alert_rule 3', $unusable->reason);
+        self::assertInstanceOf(AlertRule::class, $next);
+        self::assertInstanceOf(BaselineRule::class, $next->condition);
     }
 
     public function testOrphansAreRulesWithAGoneSeriesAndSomethingToEnd(): void

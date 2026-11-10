@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Alerting\Domain\Evaluation;
 
+use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 
 /**
@@ -21,6 +22,8 @@ use Kadupul\Alerting\Domain\Rule\ThresholdRule;
  * The constructor refuses any combination that no sequence of verdicts can
  * produce, so a stored row that was changed by hand is reported, not used.
  * Counters saturate at COUNTER_LIMIT, the largest value of their column.
+ * Threshold and baseline rules share this machine: only their for_cycles
+ * enters it, and each rule kind decides its own verdicts.
  */
 final class RuleState
 {
@@ -100,7 +103,7 @@ final class RuleState
      * Counts a verdict from an observation, unless that observation was
      * already counted or is older. Unknown has no observation: use markUnknown().
      */
-    public function advanceAt(Verdict $verdict, ThresholdRule $rule, int $observedAt): Transition
+    public function advanceAt(Verdict $verdict, ThresholdRule|BaselineRule $rule, int $observedAt): Transition
     {
         if ($verdict === Verdict::Unknown) {
             throw new \InvalidArgumentException('An unknown verdict has no observation time; use markUnknown().');
@@ -125,7 +128,7 @@ final class RuleState
         return Transition::None;
     }
 
-    private function advance(Verdict $verdict, ThresholdRule $rule): Transition
+    private function advance(Verdict $verdict, ThresholdRule|BaselineRule $rule): Transition
     {
         $this->unknown = false;
 

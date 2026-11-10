@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
 #[PreserveGlobalState(false)]
 final class AlertingSchemaUpgradeTest extends TestCase
 {
-    private const array TABLES = ['alert_incident', 'alert_notification', 'alert_rule', 'alert_rule_state'];
+    private const array TABLES = ['alert_baseline_sample', 'alert_incident', 'alert_notification', 'alert_rule', 'alert_rule_state'];
 
     private ?PDO $db = null;
 
@@ -54,7 +54,7 @@ final class AlertingSchemaUpgradeTest extends TestCase
         $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
         $definitions = upgrade_alerting_tables();
         self::assertSame(self::TABLES, array_values(array_intersect(self::TABLES, array_keys($definitions))));
-        self::assertCount(4, $definitions);
+        self::assertCount(5, $definitions);
         foreach ($definitions as $table => $definition) {
             self::assertStringStartsWith('CREATE TABLE IF NOT EXISTS ' . $table . ' (', $definition['create']);
             self::assertSame(self::normalized(self::freshInstall($sql, $table)), self::normalized($definition['create']), $table);

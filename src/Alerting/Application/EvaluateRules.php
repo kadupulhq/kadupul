@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Kadupul\Alerting\Application;
 
 use Kadupul\Alerting\Application\Port\AlertingLog;
+use Kadupul\Alerting\Application\Port\BaselineSource;
 use Kadupul\Alerting\Application\Port\Clock;
 use Kadupul\Alerting\Application\Port\EvaluationCursor;
 use Kadupul\Alerting\Application\Port\IncidentRepository;
@@ -17,11 +18,14 @@ use Kadupul\Alerting\Application\Port\NotificationQueue;
 use Kadupul\Alerting\Application\Port\RateSource;
 use Kadupul\Alerting\Application\Port\RuleRepository;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
+use Kadupul\Alerting\Application\Port\SeriesObservation;
 use Kadupul\Alerting\Application\Port\TransactionRunner;
 use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
+use Kadupul\Alerting\Domain\Evaluation\Observation;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
+use Kadupul\Alerting\Domain\Rule\BaselineRule;
 
 /**
  * One evaluation run (ADR 0011 decisions 4, 5, 8 and 9). Rules are read in
@@ -46,6 +50,12 @@ use Kadupul\Alerting\Domain\Rule\AlertRule;
  * rules after it, or before it once the cursor wraps. Every other exception,
  * such as a lost connection or a failed rate read, is not about one rule and
  * propagates without moving the cursor.
+ *
+ * Baseline rules (decision 3) need their hour-of-week history. Each batch
+ * hands the fresh observations of its baseline rules that are still to be
+ * counted to the BaselineSource once, to record and then to read back, so
+ * the lookup is per batch, never per rule, and its time counts against the
+ * budget. Too little history for the hour is unknown, like a missing rate.
  */
 final readonly class EvaluateRules
 {
@@ -53,6 +63,7 @@ final readonly class EvaluateRules
 
     public function __construct(
         private RateSource $rates,
+        private BaselineSource $baselines,
         private RuleRepository $rules,
         private RuleStateStore $states,
         private IncidentRepository $incidents,
@@ -156,6 +167,8 @@ final readonly class EvaluateRules
         $states = $this->states->load(array_map(static fn(AlertRule $rule): int => $rule->id, $rules));
         $now = $this->clock->now()->getTimestamp();
 
+        $history = $this->baselineHistory($rules, $observations, $states, $now);
+
         $evaluated = 0;
         $skipped = 0;
         foreach ($rules as $rule) {
@@ -167,6 +180,7 @@ final readonly class EvaluateRules
             }
             $before = clone $state;
             $observation = $observations[$rule->series->id()] ?? null;
+            $trigger = $clear = 0.0;
 
             if ($observation === null || !$observation->isFreshAt($now)) {
                 // No fresh rate is unknown: it never counts as ok or as breach.
@@ -176,15 +190,29 @@ final readonly class EvaluateRules
             } elseif (!$state->isNewer($observation->observedAt)) {
                 ++$skipped;
                 continue;
+            } elseif ($rule->condition instanceof BaselineRule) {
+                $band = $rule->condition->band($history[$rule->series->id()] ?? []);
+                if ($band === null) {
+                    // Too few weeks for this hour is unknown too, and counts no observation.
+                    $transition = $state->markUnknown();
+                    $observation = null;
+                } else {
+                    $verdict = $rule->condition->evaluate($observation->rate, $band, $state->isOpen());
+                    $transition = $state->advanceAt($verdict, $rule->condition, $observation->observedAt);
+                    $trigger = $rule->condition->triggerEdge($observation->rate, $band);
+                    $clear = $rule->condition->clearEdge($observation->rate, $band);
+                }
             } else {
                 $verdict = $rule->condition->evaluate($observation->rate, $state->isOpen());
                 $transition = $state->advanceAt($verdict, $rule->condition, $observation->observedAt);
+                $trigger = $rule->condition->trigger;
+                $clear = $rule->condition->clear;
             }
 
             if (!$state->equals($before)) {
                 $gone = false;
                 try {
-                    $this->transaction->run(function () use ($rule, $state, $transition, $observation, $now, &$gone): void {
+                    $this->transaction->run(function () use ($rule, $state, $transition, $observation, $trigger, $clear, $now, &$gone): void {
                         // Lock order: rule, state, incident, notification.
                         if (!$this->rules->lock($rule->id)) {
                             $gone = true;
@@ -197,10 +225,10 @@ final readonly class EvaluateRules
                         }
                         if ($transition === Transition::Opened) {
                             $incident = $this->incidents->open($rule->id, $observation->observedAt);
-                            $this->notifications->enqueue($incident, $transition, $observation->rate, $rule->condition->trigger, $now);
+                            $this->notifications->enqueue($incident, $transition, $observation->rate, $trigger, $now);
                         } elseif ($transition === Transition::Recovered) {
                             $incident = $this->incidents->close($rule->id, $observation->observedAt);
-                            $this->notifications->enqueue($incident, $transition, $observation->rate, $rule->condition->clear, $now);
+                            $this->notifications->enqueue($incident, $transition, $observation->rate, $clear, $now);
                         }
                     });
                 } catch (UnusableRuleRecord $mismatch) {
@@ -218,6 +246,39 @@ final readonly class EvaluateRules
         }
 
         return [$evaluated, $skipped, $failed];
+    }
+
+    /**
+     * Records and reads the history of the batch's baseline series that have
+     * a fresh observation some usable rule has not yet counted; a series
+     * shared by several rules is handed over once. No such series, no call.
+     *
+     * @param list<AlertRule>                          $rules
+     * @param array<string, Observation>               $observations
+     * @param array<int, RuleState|UnusableRuleRecord> $states
+     *
+     * @return array<string, list<float>>
+     */
+    private function baselineHistory(array $rules, array $observations, array $states, int $now): array
+    {
+        $wanted = [];
+        foreach ($rules as $rule) {
+            $observation = $observations[$rule->series->id()] ?? null;
+            $state = $states[$rule->id] ?? new RuleState();
+            if (!$rule->condition instanceof BaselineRule || $observation === null || $state instanceof UnusableRuleRecord
+                || !$observation->isFreshAt($now) || !$state->isNewer($observation->observedAt)) {
+                continue;
+            }
+            $wanted[$rule->series->id()] = new SeriesObservation($rule->series, $observation);
+        }
+        if ($wanted === []) {
+            return [];
+        }
+        $wanted = array_values($wanted);
+        // A failed write or read is not about one rule: it propagates.
+        $this->baselines->record($wanted);
+
+        return $this->baselines->history($wanted);
     }
 
     private function quarantine(UnusableRuleRecord $record): void

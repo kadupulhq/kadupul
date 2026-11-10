@@ -20,6 +20,7 @@ use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
+use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
 use Kadupul\Tests\Alerting\Fakes\FixedAlertingSettings;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
@@ -74,6 +75,7 @@ final class RunAlertingTest extends TestCase
         $clock = new MockClockAdapter($this->clock);
         $evaluate = new EvaluateRules(
             $this->rates,
+            new InMemoryBaselineSource(),
             $this->rules,
             $this->states,
             $this->incidents,

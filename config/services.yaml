@@ -299,6 +299,9 @@ services:
     # the legacy mail runtime and reads the use case from this container.
     Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource:
         arguments: { $database: '@doctrine.dbal.main_connection' }
+    # Baseline history uses PHP's default time zone (ADR 0011 decision 3).
+    Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository:
         arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore:
@@ -325,6 +328,8 @@ services:
     Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand: ~
     Kadupul\Alerting\Application\Port\RateSource:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource
+    Kadupul\Alerting\Application\Port\BaselineSource:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource
     Kadupul\Alerting\Application\Port\RuleRepository:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository
     Kadupul\Alerting\Application\Port\RuleStateStore:
