@@ -4057,6 +4057,14 @@ msgid "Aggregate"
 msgstr "Legacy)"
 
 #: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
+
+#: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "모든 데이터 소스 (중복되지 않음)"
 

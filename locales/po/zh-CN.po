@@ -4052,6 +4052,14 @@ msgid "Aggregate"
 msgstr "聚合"
 
 #: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
+
+#: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "所有数据源(不包括重复项)"
 

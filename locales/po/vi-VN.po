@@ -4053,6 +4053,14 @@ msgid "Aggregate"
 msgstr "cốt liệu"
 
 #: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
+
+#: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "Tất cả các nguồn dữ liệu (Không bao gồm các bản sao)"
 

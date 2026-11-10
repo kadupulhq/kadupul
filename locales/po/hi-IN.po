@@ -4086,6 +4086,14 @@ msgid "Aggregate"
 msgstr "कुल"
 
 #: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
+
+#: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "सभी डेटा स्रोत (डुप्लिकेट शामिल न करें)"
 

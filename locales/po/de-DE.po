@@ -4094,6 +4094,14 @@ msgid "Aggregate"
 msgstr "Zusammenfassen"
 
 #: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
+
+#: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
 msgstr "Alle Datenquellen (keine Duplikate einbeziehen)"
 
