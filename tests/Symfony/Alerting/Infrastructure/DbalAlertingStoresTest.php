@@ -32,6 +32,7 @@ use Kadupul\Alerting\Application\NotificationMail;
 use Kadupul\Alerting\Application\Port\NotificationContent;
 use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredValue;
+use Kadupul\Tests\Alerting\Fakes\StoredIncidents;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -317,7 +318,7 @@ final class DbalAlertingStoresTest extends TestCase
         self::assertEquals([
             new Incident(1, 1, IncidentStatus::Closed, 100, 200),
             new Incident(2, 1, IncidentStatus::Orphaned, 300, 400),
-        ], $incidents->forRule(1));
+        ], StoredIncidents::forRule($this->database, 1));
     }
 
     public function testASecondActiveIncidentOrACloseWithNoneFails(): void
@@ -351,9 +352,9 @@ final class DbalAlertingStoresTest extends TestCase
 
         self::assertSame(2, $incidents->orphan([1, 3, 3, 9], 400));
 
-        self::assertSame(IncidentStatus::Orphaned, $incidents->forRule(1)[0]->status);
-        self::assertSame(IncidentStatus::Open, $incidents->forRule(2)[0]->status);
-        self::assertSame(IncidentStatus::Orphaned, $incidents->forRule(3)[0]->status);
+        self::assertSame(IncidentStatus::Orphaned, StoredIncidents::forRule($this->database, 1)[0]->status);
+        self::assertSame(IncidentStatus::Open, StoredIncidents::forRule($this->database, 2)[0]->status);
+        self::assertSame(IncidentStatus::Orphaned, StoredIncidents::forRule($this->database, 3)[0]->status);
     }
 
     public function testAnAcknowledgedIncidentClosesAndKeepsItsAcknowledgement(): void
@@ -363,7 +364,7 @@ final class DbalAlertingStoresTest extends TestCase
 
         $incidents->close(4, 200);
 
-        self::assertEquals([new Incident(1, 4, IncidentStatus::Closed, 100, 200, 110, 3)], $incidents->forRule(4));
+        self::assertEquals([new Incident(1, 4, IncidentStatus::Closed, 100, 200, 110, 3)], StoredIncidents::forRule($this->database, 4));
     }
 
     /** @return iterable<string, array{array<string, mixed>}> */
@@ -383,7 +384,7 @@ final class DbalAlertingStoresTest extends TestCase
 
         $this->expectException(StoredAlertingRowUnreadable::class);
         $this->expectExceptionMessage('alert_incident 1');
-        (new DbalIncidentRepository($this->database))->forRule(5);
+        StoredIncidents::forRule($this->database, 5);
     }
 
     public function testTheCursorIsASettingWrittenOnlyWhenItMoves(): void
@@ -510,7 +511,7 @@ final class DbalAlertingStoresTest extends TestCase
         self::assertSame(3, $incidents->open(6, 100));
         self::assertSame(2, $incidents->close(5, 200));
         self::assertSame(3, $incidents->close(6, 300));
-        self::assertEquals([new Incident(2, 5, IncidentStatus::Closed, 100, 200)], $incidents->forRule(5));
+        self::assertEquals([new Incident(2, 5, IncidentStatus::Closed, 100, 200)], StoredIncidents::forRule($this->database, 5));
     }
 
     public function testLockReturnsTheRuleAsTheBatchReadsItWhileItAndItsSeriesExist(): void

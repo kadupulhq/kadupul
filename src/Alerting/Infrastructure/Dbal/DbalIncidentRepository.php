@@ -89,23 +89,8 @@ final readonly class DbalIncidentRepository implements IncidentRepository
     }
 
     /**
-     * Every incident of a rule, oldest first.
-     *
-     * @return list<Incident>
-     */
-    public function forRule(int $ruleId): array
-    {
-        $rows = $this->database->fetchAllAssociative(
-            'SELECT id, rule_id, status, active_rule_id, opened_at, ended_at, acknowledged_at, acknowledged_by
-            FROM alert_incident WHERE rule_id = ? ORDER BY id',
-            [$ruleId],
-        );
-
-        return array_map(self::fromRow(...), $rows);
-    }
-
-    /**
-     * The incident pages read rows through this too.
+     * The incident pages read rows through this too, and the tests read
+     * rows back through it (tests/Symfony/Alerting/Fakes/StoredIncidents.php).
      *
      * @param array<string, mixed> $row
      */

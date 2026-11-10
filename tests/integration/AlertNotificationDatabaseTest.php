@@ -51,6 +51,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource;
 use Kadupul\Tests\Alerting\Fakes\FixedAdministrator;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
 use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
+use Kadupul\Tests\Alerting\Fakes\StoredIncidents;
 use Kadupul\Tests\Alerting\Fakes\RecordingMailDelivery;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
@@ -320,7 +321,7 @@ final class AlertNotificationDatabaseTest extends TestCase
         $this->at(self::NOW + self::STEP + 5);
         $this->evaluate();
 
-        $incident = (new DbalIncidentRepository($this->database))->forRule(1);
+        $incident = StoredIncidents::forRule($this->database, 1);
         self::assertEquals([new Incident(1, 1, IncidentStatus::Closed, self::NOW, self::NOW + self::STEP)], $incident);
         self::assertSame([
             ['id' => '1', 'incident_id' => '1', 'kind' => 'opened', 'status' => 'queued', 'attempts' => '0', 'queued_at' => (string) self::NOW, 'next_attempt_at' => (string) self::NOW, 'sent_at' => null, 'last_error' => '', 'observed_value' => '95.5', 'threshold' => '90'],
@@ -342,13 +343,13 @@ final class AlertNotificationDatabaseTest extends TestCase
         }
 
         self::assertFalse($this->stateRow(1), 'The state saved first was rolled back.');
-        self::assertSame([], (new DbalIncidentRepository($this->database))->forRule(1), 'The incident insert was rolled back.');
+        self::assertSame([], StoredIncidents::forRule($this->database, 1), 'The incident insert was rolled back.');
         self::assertSame([], $this->rows(), 'The notification insert was rolled back.');
         self::assertFalse($this->database->isTransactionActive());
 
         $this->evaluate();
         self::assertCount(1, $this->rows(), 'The same observation opens and queues on the retry.');
-        self::assertSame(IncidentStatus::Open, (new DbalIncidentRepository($this->database))->forRule(1)[0]->status);
+        self::assertSame(IncidentStatus::Open, StoredIncidents::forRule($this->database, 1)[0]->status);
     }
 
     public function testARuleDeletedAfterItsBatchWasReadWritesNothing(): void
@@ -366,7 +367,7 @@ final class AlertNotificationDatabaseTest extends TestCase
 
         self::assertSame(1, $report->evaluated);
         self::assertFalse($this->stateRow(1), 'No state is recreated for the deleted rule.');
-        self::assertSame([], (new DbalIncidentRepository($this->database))->forRule(1));
+        self::assertSame([], StoredIncidents::forRule($this->database, 1));
         self::assertSame(['2'], array_map('strval', $this->database->fetchFirstColumn('SELECT i.rule_id FROM alert_notification n JOIN alert_incident i ON i.id = n.incident_id')), 'Only rule 2 is notified.');
         self::assertSame(0, $this->evaluate()->orphaned, 'Nothing was left for the orphan sweep.');
     }
@@ -406,7 +407,7 @@ final class AlertNotificationDatabaseTest extends TestCase
         $row = $this->rows()[0];
         self::assertSame(['queued', '1', (string) (self::NOW + 60), null], [$row['status'], $row['attempts'], $row['next_attempt_at'], $row['sent_at']]);
         self::assertSame('MailDeliveryFailed: Mail could not be confirmed. Check the installation mail settings and SMTP server logs before retrying.', $row['last_error']);
-        self::assertSame(IncidentStatus::Open, (new DbalIncidentRepository($this->database))->forRule(1)[0]->status, 'The incident is kept.');
+        self::assertSame(IncidentStatus::Open, StoredIncidents::forRule($this->database, 1)[0]->status, 'The incident is kept.');
 
         // Attempts 2 to 4 each schedule the next; the fifth is the last.
         $next = self::NOW + 60;
@@ -501,7 +502,7 @@ final class AlertNotificationDatabaseTest extends TestCase
         self::assertEquals(new DeliveryReport(), $this->deliver());
         self::assertCount(1, $this->mail->sent, 'Only the opening was mailed.');
         self::assertSame(['opened'], array_column($this->rows(), 'kind'));
-        self::assertSame(IncidentStatus::Orphaned, (new DbalIncidentRepository($this->database))->forRule(1)[0]->status);
+        self::assertSame(IncidentStatus::Orphaned, StoredIncidents::forRule($this->database, 1)[0]->status);
     }
 
     public function testTwoDeliverersOnSeparateSessionsNeverSendTheSameRow(): void

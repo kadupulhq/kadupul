@@ -42,6 +42,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource;
 use Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
 use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
+use Kadupul\Tests\Alerting\Fakes\StoredIncidents;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
@@ -235,13 +236,13 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame(['incident_open' => 0, 'consecutive_breaches' => 1, 'consecutive_oks' => 0, 'is_unknown' => 0, 'last_observed_at' => self::NOW - self::STEP], $before);
         self::assertSame($before, $this->stateRow(1), 'The state saved before the incident insert was rolled back with it.');
-        self::assertSame([], $this->incidents->forRule(1), 'The incident insert was rolled back.');
+        self::assertSame([], StoredIncidents::forRule($this->database, 1), 'The incident insert was rolled back.');
         self::assertFalse($this->database->isTransactionActive());
 
         // The same observation is still new, so the retry opens the incident.
         // InnoDB does not return the rolled-back insert's auto-increment id.
         $this->evaluate();
-        $incidents = $this->incidents->forRule(1);
+        $incidents = StoredIncidents::forRule($this->database, 1);
         self::assertCount(1, $incidents);
         self::assertSame([IncidentStatus::Open, self::NOW], [$incidents[0]->status, $incidents[0]->openedAt]);
         self::assertSame(['incident_open' => 1, 'consecutive_breaches' => 2, 'consecutive_oks' => 0, 'is_unknown' => 0, 'last_observed_at' => self::NOW], $this->stateRow(1));
@@ -263,7 +264,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
         }
 
         self::assertSame($open, $this->stateRow(1));
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], $this->incidents->forRule(1));
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], StoredIncidents::forRule($this->database, 1));
     }
 
     public function testTheRunnerLeavesACallersTransactionToTheCaller(): void
@@ -314,14 +315,14 @@ final class AlertPersistenceDatabaseTest extends TestCase
         $this->evaluate();
         $this->evaluate();
         self::assertSame(2, $this->states->saves, 'Staying unknown, also across reloads, writes nothing.');
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], $this->incidents->forRule(1), 'No recovery during the gap.');
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], StoredIncidents::forRule($this->database, 1), 'No recovery during the gap.');
         self::assertSame(['opened'], $this->notifications(), 'Nothing is queued during the gap.');
 
         // The second cycle has a rate again; only a real ok recovers.
         $this->sample(101, self::NOW + 3 * self::STEP, 50.0);
         $this->at(self::NOW + 3 * self::STEP);
         $this->evaluate();
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Closed, self::NOW, self::NOW + 3 * self::STEP)], $this->incidents->forRule(1));
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Closed, self::NOW, self::NOW + 3 * self::STEP)], StoredIncidents::forRule($this->database, 1));
         self::assertSame(['incident_open' => 0, 'consecutive_breaches' => 0, 'consecutive_oks' => 0, 'is_unknown' => 0, 'last_observed_at' => self::NOW + 3 * self::STEP], $this->stateRow(1));
     }
 
@@ -341,15 +342,15 @@ final class AlertPersistenceDatabaseTest extends TestCase
         $report = $this->evaluate();
 
         self::assertSame(1, $report->orphaned);
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Orphaned, self::NOW, self::NOW + 60)], $this->incidents->forRule(1));
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Orphaned, self::NOW, self::NOW + 60)], StoredIncidents::forRule($this->database, 1));
         self::assertFalse($this->stateRow(1), 'The orphaned rule starts again from no state.');
         self::assertSame(['opened', 'opened'], $this->notifications(), 'An orphaned incident queues no notification.');
-        self::assertEquals([new Incident(2, 2, IncidentStatus::Open, self::NOW)], $this->incidents->forRule(2), 'Other rules are untouched.');
+        self::assertEquals([new Incident(2, 2, IncidentStatus::Open, self::NOW)], StoredIncidents::forRule($this->database, 2), 'Other rules are untouched.');
 
         $this->at(self::NOW + self::STEP);
         $again = $this->evaluate();
         self::assertSame(0, $again->orphaned, 'An orphan is handled once.');
-        self::assertCount(1, $this->incidents->forRule(1));
+        self::assertCount(1, StoredIncidents::forRule($this->database, 1));
         self::assertFalse($this->stateRow(1));
     }
 
@@ -378,7 +379,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame(5, $report->orphaned);
         foreach ([1, 2, 3, 4, 6] as $rule) {
-            self::assertSame([IncidentStatus::Orphaned], array_map(static fn(Incident $incident): IncidentStatus => $incident->status, $this->incidents->forRule($rule)), 'rule ' . $rule);
+            self::assertSame([IncidentStatus::Orphaned], array_map(static fn(Incident $incident): IncidentStatus => $incident->status, StoredIncidents::forRule($this->database, $rule)), 'rule ' . $rule);
             self::assertFalse($this->stateRow($rule), 'rule ' . $rule);
         }
 
@@ -387,10 +388,10 @@ final class AlertPersistenceDatabaseTest extends TestCase
         $this->at(self::NOW + 120);
         self::assertSame(0, $this->evaluate()->orphaned);
         foreach ([1, 2, 3, 6] as $rule) {
-            self::assertCount(1, $this->incidents->forRule($rule), 'rule ' . $rule);
+            self::assertCount(1, StoredIncidents::forRule($this->database, $rule), 'rule ' . $rule);
             self::assertFalse($this->stateRow($rule), 'rule ' . $rule);
         }
-        self::assertSame(IncidentStatus::Open, $this->incidents->forRule(5)[0]->status, 'A data source with no device is not an orphan.');
+        self::assertSame(IncidentStatus::Open, StoredIncidents::forRule($this->database, 5)[0]->status, 'A data source with no device is not an orphan.');
         self::assertSame(array_fill(0, 6, 'opened'), $this->notifications(), 'Only the six openings were queued.');
     }
 
@@ -408,7 +409,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
             self::assertSame(0, $report->orphaned);
         }
 
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], $this->incidents->forRule(1));
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], StoredIncidents::forRule($this->database, 1));
         self::assertSame(1, $this->stateRow(1)['is_unknown']);
         self::assertSame(2, $this->states->saves, 'Opened once, became unknown once, then nothing.');
     }
@@ -447,9 +448,9 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame([[2, 0, 2], [1, 1, 4], [1, 0, 0], [0, 0, 2]], $runs, 'The cursor passes rule 3 and wraps to rules 1 and 2.');
         foreach ([1, 2, 4, 5] as $rule) {
-            self::assertEquals([new Incident($rule < 3 ? $rule : $rule - 1, $rule, IncidentStatus::Open, self::NOW)], $this->incidents->forRule($rule), 'rule ' . $rule);
+            self::assertEquals([new Incident($rule < 3 ? $rule : $rule - 1, $rule, IncidentStatus::Open, self::NOW)], StoredIncidents::forRule($this->database, $rule), 'rule ' . $rule);
         }
-        self::assertSame([], $this->incidents->forRule(3));
+        self::assertSame([], StoredIncidents::forRule($this->database, 3));
         self::assertSame($bad, $this->stateRow(3), 'The unreadable row is left for an operator.');
         self::assertCount(1, $logger->records);
         self::assertSame(3, $logger->records[0]['context']['rule']);
@@ -471,8 +472,8 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame([1, 1], [$report->evaluated, $report->failed]);
         self::assertFalse($this->stateRow(1), 'The state save was rolled back with the refused insert.');
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW - self::STEP)], $this->incidents->forRule(1));
-        self::assertSame(IncidentStatus::Open, $this->incidents->forRule(2)[0]->status);
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW - self::STEP)], StoredIncidents::forRule($this->database, 1));
+        self::assertSame(IncidentStatus::Open, StoredIncidents::forRule($this->database, 2)[0]->status);
         self::assertSame(1, $logger->records[0]['context']['rule']);
         self::assertSame(0, (new DbalEvaluationCursor($this->database))->position());
         self::assertFalse($this->database->isTransactionActive());
@@ -499,10 +500,10 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame([[2, 1], [2, 1], [1, 1], [0, 1]], $runs, 'At most a batch of orphans per run, and rule 9 is evaluated every run.');
         foreach ([1, 2, 3, 4, 5] as $rule) {
-            self::assertSame([IncidentStatus::Orphaned], array_map(static fn(Incident $incident): IncidentStatus => $incident->status, $this->incidents->forRule($rule)), 'rule ' . $rule);
+            self::assertSame([IncidentStatus::Orphaned], array_map(static fn(Incident $incident): IncidentStatus => $incident->status, StoredIncidents::forRule($this->database, $rule)), 'rule ' . $rule);
             self::assertFalse($this->stateRow($rule), 'rule ' . $rule);
         }
-        self::assertSame(IncidentStatus::Open, $this->incidents->forRule(9)[0]->status);
+        self::assertSame(IncidentStatus::Open, StoredIncidents::forRule($this->database, 9)[0]->status);
         self::assertSame(array_fill(0, 6, 'opened'), $this->notifications(), 'Only the six openings were queued.');
     }
 
@@ -517,7 +518,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
 
         self::assertSame([1, 0], [$report->orphaned, $report->failed]);
         self::assertFalse($this->stateRow(1));
-        self::assertEquals([new Incident(1, 1, IncidentStatus::Orphaned, self::NOW - self::STEP, self::NOW)], $this->incidents->forRule(1));
+        self::assertEquals([new Incident(1, 1, IncidentStatus::Orphaned, self::NOW - self::STEP, self::NOW)], StoredIncidents::forRule($this->database, 1));
         self::assertSame(0, $this->evaluate()->orphaned);
     }
 }
