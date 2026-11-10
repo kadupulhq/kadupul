@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 12:29-0800\n"
+"POT-Creation-Date: 2026-11-09 15:48-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -980,9 +980,9 @@ msgstr ""
 msgid "Purge Discovered Devices"
 msgstr ""
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr ""
 
@@ -1233,9 +1233,9 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
+#: automation_networks.php data_queries.php graph_templates.php
+#: include/global_form.php lib/installer.php lib/vdef.php managers.php
+#: pollers.php user_admin.php user_domains.php utilities.php
 msgid "Name"
 msgstr ""
 
@@ -1736,6 +1736,10 @@ msgid "Clear Filtered"
 msgstr ""
 
 #: automation_snmp.php
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
+
+#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr ""
 
@@ -1760,145 +1764,7 @@ msgid "Automation Item does not exist.  Can not Duplicate."
 msgstr ""
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr ""
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr ""
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr ""
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr ""
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr ""
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr ""
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr ""
-
-#: automation_snmp.php
 msgid "Automation SNMP Options"
-msgstr ""
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr ""
-
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr ""
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr ""
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr ""
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr ""
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Context"
-msgstr ""
-
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr ""
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr ""
-
-#: automation_snmp.php
-msgid "none"
-msgstr ""
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr ""
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr ""
-
-#: automation_snmp.php
-msgid "No SNMP Items"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
 msgstr ""
 
 #: automation_snmp.php
@@ -2472,6 +2338,16 @@ msgstr ""
 msgid "Equation"
 msgstr ""
 
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr ""
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr ""
+
 #: data_queries.php
 msgid "No Suggested Values Found"
 msgstr ""
@@ -2533,6 +2409,10 @@ msgstr ""
 
 #: data_queries.php
 msgid "Mapping ID"
+msgstr ""
+
+#: data_queries.php utilities.php
+msgid "Action"
 msgstr ""
 
 #: data_queries.php
@@ -4060,6 +3940,11 @@ msgstr ""
 
 #: include/auth.php
 msgid "There is an Installation or Upgrade in progress."
+msgstr ""
+
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
 msgstr ""
 
 #: include/global.php
@@ -7058,6 +6943,10 @@ msgstr ""
 msgid "The dash-offset parameter specifies an offset into the pattern at which the stroke begins."
 msgstr ""
 
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr ""
+
 #: include/global_form.php
 msgid "The name given to this graph template."
 msgstr ""
@@ -8434,6 +8323,10 @@ msgid "Default SNMP version for all new Devices."
 msgstr ""
 
 #: include/global_settings.php
+msgid "Community"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Default SNMP read community for all new Devices."
 msgstr ""
 
@@ -8502,7 +8395,15 @@ msgid "Default UDP Port for all new Devices.  Typically 161."
 msgstr ""
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Default SNMP timeout in milli-seconds for all new Devices."
+msgstr ""
+
+#: include/global_settings.php
+msgid "Retries"
 msgstr ""
 
 #: include/global_settings.php
@@ -10532,12 +10433,21 @@ msgstr ""
 msgid "No Items Found"
 msgstr ""
 
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr ""
+
 #: lib/api_automation.php
 msgid "Field"
 msgstr ""
 
 #: lib/api_automation.php
 msgid "Pattern"
+msgstr ""
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
 msgstr ""
 
 #: lib/api_automation.php
@@ -11521,6 +11431,10 @@ msgstr ""
 
 #: lib/functions.php
 msgid "Method: SMTP"
+msgstr ""
+
+#: lib/functions.php
+msgid "Port"
 msgstr ""
 
 #: lib/functions.php
@@ -12565,6 +12479,10 @@ msgstr ""
 
 #: lib/html_reports.php
 msgid "Font Size of the Item"
+msgstr ""
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
 msgstr ""
 
 #: lib/html_reports.php
