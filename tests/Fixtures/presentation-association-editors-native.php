@@ -80,7 +80,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
     $GLOBALS['database_sessions'][$key] = $db;
     $db->prepared = array();
     try {
-        $_REQUEST = array('id' => $case === 'query-new' || $case === 'query-association-new' ? '0' : ($case === 'color-confirm' ? '7' : (str_starts_with($case, 'query-association') ? '100' : '10')),
+        $_REQUEST = array('id' => $case === 'query-association-new' ? '0' : ($case === 'color-confirm' ? '7' : (str_starts_with($case, 'query-association') ? '100' : '10')),
             'snmp_query_id' => '10', 'color_template_id' => '7', 'color_template_item_id' => $case === 'color-new' ? '0' : '1', 'color_id' => '1');
         $GLOBALS['request'] = &$_REQUEST;
         $GLOBALS['_CACTI_REQUEST'] = array();
@@ -123,10 +123,12 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
                     throw new RuntimeException('Actual canonical template join or suggested values missing');
                 }
             }
-        } elseif ($case === 'query-new') {
-            if ($value('id') !== '0' || !str_contains($dom->textContent, 'Data Queries [new]')) throw new RuntimeException('Query creation defaults missing');
         } else {
-            if ($value('id') !== '10' || $value('name') !== 'Query <one>') throw new RuntimeException('Stored query identity/name missing: ' . json_encode(array($value('id'), $value('name'))));
+            // The settings are shown read-only and edited through the Symfony page.
+            if ($xpath->query('//input[@name="name" or @name="xml_path" or @name="save_component_snmp_query"]')->length !== 0
+                || $xpath->query('//select[@name="data_input_id"]')->length !== 0) throw new RuntimeException('Legacy page still renders the settings form');
+            if (!str_contains($dom->textContent, 'Query <one>') || !str_contains($dom->textContent, 'Stored description') || !str_contains($dom->textContent, 'Actual SNMP query input')
+                || $xpath->query('//a[contains(@href,"app.php/data-collection/queries/10/edit")]')->length !== 1) throw new RuntimeException('Stored query settings or the settings editor link missing');
             if ($case === 'query-edit-xml') {
                 if ($xpath->query('//a[contains(@class,"linkEditMain") and contains(@href,"id=100")]')->length !== 1 || $xpath->query('//a[contains(@class,"deleteMarkerDisabled")]')->length !== 1 || $xpath->query('//a[contains(@class,"deleteMarker") and contains(@href,"id=101")]')->length !== 1) {
                     throw new RuntimeException('Query association graph count did not preserve editable/delete-disabled controls');

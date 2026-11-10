@@ -5,6 +5,7 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Serve the data query settings (`data_queries.php?action=edit`: name, description, XML path and Data Input Method) through Symfony and Twig at `/data-collection/queries/new` and `/data-collection/queries/{id}/edit`. A worker saves the row, moves the query's data templates and data sources to a changed Data Input Method and updates the replication checksum in one primary-database transaction; saves are revision-checked, recheck the Data Queries realm, refuse XML files the data query loader would not read, and are audited. The legacy page keeps the Associated Graph Templates and shows the settings read-only with a link to the new editor; an old settings form posted again answers 409 without saving.
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
 - Add a rendered translation corpus test: every catalog identity, plural count and fixed `sprintf`, `%%` and text-domain case is rendered through the legacy `__()` helpers and php-gettext over the shipped `.mo` files for en-US and all 23 shipped locales, with two German fixture plugins (`i18nprobe` and `folder`) for plugin domains. The harness fails on an empty corpus, a locale with no translated entry or a missing php-gettext reader. It is the oracle for moving legacy translation onto Symfony.

@@ -260,6 +260,9 @@ def route_fixtures(rig, rows, ids):
         method = int(rig.sql("INSERT INTO data_input (name,hash,type_id,input_string) VALUES ('entry-sweep',MD5('entry-sweep'),1,'echo <value>'); SELECT LAST_INSERT_ID()").strip())
         field = int(rig.sql(f"INSERT INTO data_input_fields (data_input_id,name,data_name,input_output,sequence) VALUES ({method},'Value','value','in',1); SELECT LAST_INSERT_ID()").strip())
         ids['data-inputs'] = {'id': method, 'field': field}
+    if present('data-collection/queries/'):
+        query = int(rig.sql("INSERT INTO snmp_query (hash,xml_path,name,description,graph_template_id,data_input_id) VALUES (MD5('entry-sweep'),'<path_cacti>/resource/snmp_queries/interface.xml','entry-sweep','',0,2); SELECT LAST_INSERT_ID()").strip())
+        ids['data-collection/queries'] = {'id': query}
     if present('graphing/colors'):
         ids['graphing/colors'] = {'id': int(rig.sql('SELECT MIN(id) FROM colors').strip())}
     if present('links'):
