@@ -28,8 +28,11 @@ use Kadupul\Alerting\Application\ReadModel\RulePage;
 use Kadupul\Alerting\Application\ReadModel\RuleView;
 use Kadupul\Alerting\Application\ReadModel\SeriesView;
 use Kadupul\Alerting\Application\Rule\RuleDefinition;
+use Kadupul\Alerting\Application\Rule\RuleSubmissionRefused;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
+use Kadupul\Alerting\Domain\Rule\BaselineDirection;
+use Kadupul\Alerting\Domain\Rule\BaselineRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 use Kadupul\IdentityAccess\Contract\Actor;
@@ -52,10 +55,14 @@ use Symfony\Component\HttpFoundation\Response;
 final class AlertingPagesRoutesTest extends TestCase
 {
     private const int NOW = 1_800_000_000;
+    /** A valid threshold rule on the visible series, as the form posts it. */
+    private const array RULE = ['kind' => 'threshold', 'local_data_id' => '101', 'rrd_name' => 'traffic_in', 'for_cycles' => '1', 'comparator' => 'gt', 'trigger_threshold' => '90', 'clear_threshold' => '80', 'baseline_direction' => 'both', 'baseline_min_samples' => '4'];
 
     private Kernel $kernel;
     private ?Actor $actor;
-    private ?AlertingAccessDenied $denial = null;
+    private ?\Throwable $denial = null;
+    /** Thrown by the next catalog read, as a database failure would be. */
+    private ?\Throwable $readFailure = null;
     /** @var list<string> */
     private array $reads = [];
     /** @var list<array<int, mixed>> */
@@ -83,21 +90,31 @@ final class AlertingPagesRoutesTest extends TestCase
         $rules = $this->createStub(RuleCatalog::class);
         $rules->method('page')->willReturnCallback(function (int $actor, int $page) use ($rule): RulePage {
             $this->reads[] = 'rules.page';
+            $this->failRead();
             return new RulePage([$rule], 1, $page, 25);
         });
         $rules->method('find')->willReturnCallback(function (int $actor, int $id) use ($rule): ?RuleView {
             $this->reads[] = 'rules.find';
-            return $id === 7 ? $rule : null;
+            $this->failRead();
+            return match ($id) {
+                7 => $rule,
+                9 => new RuleView(9, 101, 'traffic_in', true, null, new BaselineRule(3.0, 2.5, 0.25, 2, BaselineDirection::Above, 6), null, 'rev-9', null),
+                // A stored row the domain refuses: it can still be opened, corrected or deleted.
+                10 => new RuleView(10, 101, 'traffic_in', true, null, null, 'alert_rule 10: comparator is not one the rule form writes.', 'rev-10', null),
+                default => null,
+            };
         });
         $container->set(RuleCatalog::class, $rules);
         $incident = new IncidentView(3, new Incident(3, 7, IncidentStatus::Open, self::NOW - 600), new SeriesView($rule->localDataId, $rule->rrdName, $rule->seriesExists, $rule->device), 7, $rule, null);
         $incidents = $this->createStub(IncidentCatalog::class);
         $incidents->method('page')->willReturnCallback(function (int $actor, bool $active, int $page) use ($incident): IncidentPage {
             $this->reads[] = 'incidents.page';
+            $this->failRead();
             return new IncidentPage([$incident], 1, $page, 25, $active);
         });
         $incidents->method('find')->willReturnCallback(function (int $actor, int $id, int $now) use ($incident): ?IncidentDetail {
             $this->reads[] = 'incidents.find';
+            $this->failRead();
             if ($id === 5) {
                 // Opened on data source 101 of a rule since moved where the actor cannot see.
                 return new IncidentDetail(new IncidentView(5, new Incident(5, 8, IncidentStatus::Orphaned, self::NOW - 900, self::NOW - 60), new SeriesView(101, 'traffic_in', false, null), 8, null, null), []);
@@ -345,6 +362,182 @@ final class AlertingPagesRoutesTest extends TestCase
         $delete = (string) $this->kernel->handle(Request::create('/alerting/rules/7/delete', 'GET', [], ['Cacti' => 'session']))->getContent();
         self::assertStringContainsString('>Continuer</button>', $delete);
         self::assertStringContainsString('>Annuler</a>', $delete);
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function malformedQueries(): iterable
+    {
+        yield 'rule list, unknown parameter' => ['/alerting/rules?sort=name'];
+        yield 'rule list, flag other than 1' => ['/alerting/rules?saved=2'];
+        yield 'rule list, page zero' => ['/alerting/rules?page=0'];
+        yield 'rule list, page as a list' => ['/alerting/rules?page[]=1'];
+        yield 'incident list, unknown filter' => ['/alerting/incidents?status=closed'];
+        yield 'incident list, filter as a list' => ['/alerting/incidents?status[]=all'];
+        yield 'incident list, unknown parameter' => ['/alerting/incidents?saved=1'];
+        yield 'incident detail, unknown parameter' => ['/alerting/incidents/3?page=1'];
+        yield 'incident detail, flag other than 1' => ['/alerting/incidents/3?acknowledged=yes'];
+    }
+
+    #[DataProvider('malformedQueries')]
+    public function testAMalformedQueryIsRefusedBeforeAnyRead(string $uri): void
+    {
+        $this->expectNoWrites();
+        $response = $this->request('GET', $uri);
+
+        self::assertSame(400, $response->getStatusCode());
+        self::assertSame('no-store, private', $response->headers->get('Cache-Control'));
+        self::assertMatchesRegularExpression('/\AInvalid alert (rule list|incident list|incident) request\.\z/', (string) $response->getContent());
+        self::assertSame([], $this->reads);
+    }
+
+    /** @return iterable<string, array{string, string, string}> */
+    public static function failedReads(): iterable
+    {
+        yield 'rule list' => ['GET', '/alerting/rules', 'Unable to load alert rules. Reload before retrying.'];
+        yield 'rule edit' => ['GET', '/alerting/rules/7/edit', 'Unable to load the alert rule. Reload before retrying.'];
+        yield 'rule edit submit' => ['POST', '/alerting/rules/7/edit', 'Unable to load the alert rule. Reload before retrying.'];
+        yield 'rule delete' => ['GET', '/alerting/rules/7/delete', 'Unable to load the alert rule. Reload before retrying.'];
+        yield 'incident list' => ['GET', '/alerting/incidents', 'Unable to load alert incidents. Reload before retrying.'];
+        yield 'incident detail' => ['GET', '/alerting/incidents/3', 'Unable to load the alert incident. Reload before retrying.'];
+        yield 'incident acknowledge' => ['POST', '/alerting/incidents/3/acknowledge', 'Unable to load the alert incident. Reload before retrying.'];
+    }
+
+    #[DataProvider('failedReads')]
+    public function testAFailedReadAnswers502WithoutTheErrorOrAWrite(string $method, string $uri, string $message): void
+    {
+        $this->expectNoWrites();
+        $this->readFailure = new \RuntimeException('SQLSTATE[HY000] mysql:host=db.example;password=hunter2');
+
+        $response = $this->request($method, $uri, ['_token' => 'csrf-token']);
+
+        self::assertSame(502, $response->getStatusCode());
+        self::assertSame($message, (string) $response->getContent());
+        self::assertSame('no-store, private', $response->headers->get('Cache-Control'));
+    }
+
+    public function testAFailedAuthorizationReadAnswers502BeforeTheRuleForm(): void
+    {
+        $this->expectNoWrites();
+        $this->denial = new \RuntimeException('SQLSTATE[HY000] mysql:host=db.example;password=hunter2');
+
+        foreach (['GET', 'POST'] as $method) {
+            $response = $this->request($method, '/alerting/rules/new', ['_token' => 'csrf-token']);
+            self::assertSame(502, $response->getStatusCode(), $method);
+            self::assertSame('Unable to authorize alert rule access.', (string) $response->getContent());
+        }
+        self::assertSame([], $this->reads);
+    }
+
+    public function testAPostWithoutAFormIsNotASubmission(): void
+    {
+        $this->expectNoWrites();
+        foreach (['/alerting/rules/7/edit', '/alerting/rules/7/delete', '/alerting/incidents/3/acknowledge'] as $uri) {
+            $response = $this->request('POST', $uri);
+            self::assertSame(422, $response->getStatusCode(), $uri);
+            self::assertStringContainsString('The form was not submitted. Reload before retrying.', (string) $response->getContent(), $uri);
+        }
+    }
+
+    public function testAValidEditIsSavedWithTheRevisionTheFormShowed(): void
+    {
+        $this->ruleStore->expects(self::once())->method('update')->with(42, 7, 'rev-7', self::callback(static fn(RuleDefinition $rule): bool => $rule->condition instanceof ThresholdRule && $rule->condition->trigger === 95.0));
+
+        $response = $this->request('POST', '/alerting/rules/7/edit', ['trigger_threshold' => '95', 'revision' => 'rev-7', '_token' => 'csrf-token'] + self::RULE);
+
+        self::assertSame(303, $response->getStatusCode(), (string) $response->getContent());
+        self::assertSame('/alerting/rules/7/edit?saved=1', $response->headers->get('Location'));
+    }
+
+    public function testAValidDeleteRemovesTheRevisionTheFormShowed(): void
+    {
+        $this->ruleStore->expects(self::once())->method('delete')->with(42, 7, 'rev-7');
+
+        $response = $this->request('POST', '/alerting/rules/7/delete', ['revision' => 'rev-7', '_token' => 'csrf-token']);
+
+        self::assertSame(303, $response->getStatusCode(), (string) $response->getContent());
+        self::assertSame('/alerting/rules?deleted=1', $response->headers->get('Location'));
+    }
+
+    /** @return iterable<string, array{\Throwable, int, ?string}> */
+    public static function storeOutcomes(): iterable
+    {
+        yield 'revoked while saving' => [new AlertingAccessDenied(false), 403, null];
+        yield 'signed out while saving' => [new AlertingAccessDenied(true), 401, null];
+        yield 'changed since the form was shown' => [new RuleSubmissionRefused(\Kadupul\Alerting\Application\Port\RuleStore::STALE), 409, \Kadupul\Alerting\Application\Port\RuleStore::STALE];
+        yield 'deleted since the form was shown' => [new RuleSubmissionRefused(\Kadupul\Alerting\Application\Port\RuleStore::NOT_FOUND), 404, \Kadupul\Alerting\Application\Port\RuleStore::NOT_FOUND];
+        yield 'series no longer available' => [new RuleSubmissionRefused(\Kadupul\Alerting\Application\Port\RuleStore::SERIES_UNAVAILABLE), 422, \Kadupul\Alerting\Application\Port\RuleStore::SERIES_UNAVAILABLE];
+        yield 'database failure' => [new \RuntimeException('SQLSTATE[40001] password=hunter2'), 502, null];
+    }
+
+    #[DataProvider('storeOutcomes')]
+    public function testARefusedOrFailedRuleWriteIsAnsweredWithItsOutcome(\Throwable $error, int $code, ?string $message): void
+    {
+        $this->ruleStore->method('update')->willThrowException($error);
+        $this->ruleStore->method('delete')->willThrowException($error);
+
+        foreach ([
+            '/alerting/rules/7/edit' => [self::RULE + ['revision' => 'rev-7', '_token' => 'csrf-token'], 'Save outcome is uncertain. Reload before retrying.'],
+            '/alerting/rules/7/delete' => [['revision' => 'rev-7', '_token' => 'csrf-token'], 'Delete outcome is uncertain. Check the alert rule list before retrying.'],
+        ] as $uri => [$fields, $uncertain]) {
+            $response = $this->request('POST', $uri, $fields);
+            $content = (string) $response->getContent();
+            self::assertSame($code, $response->getStatusCode(), $uri);
+            self::assertSame('no-store, private', $response->headers->get('Cache-Control'));
+            self::assertStringNotContainsString('hunter2', $content);
+            if ($error instanceof AlertingAccessDenied) {
+                self::assertSame('Access denied.', $content, $uri);
+            } else {
+                self::assertStringContainsString(htmlspecialchars($message ?? $uncertain, ENT_QUOTES), $content, $uri);
+            }
+        }
+    }
+
+    /** @return iterable<string, array{\Throwable|AcknowledgeOutcome, int, string}> */
+    public static function acknowledgementOutcomes(): iterable
+    {
+        yield 'gone since the page was shown' => [AcknowledgeOutcome::NotFound, 404, 'Alert incident not found.'];
+        yield 'already acknowledged by another' => [AcknowledgeOutcome::AlreadyAcknowledged, 303, ''];
+        yield 'revoked while saving' => [new AlertingAccessDenied(false), 403, 'Access denied.'];
+        yield 'database failure' => [new \RuntimeException('SQLSTATE[40001] password=hunter2'), 502, 'Acknowledgement outcome is uncertain. Reload the incident before retrying.'];
+    }
+
+    #[DataProvider('acknowledgementOutcomes')]
+    public function testEachAcknowledgementOutcomeIsAnsweredWithItsStatus(\Throwable|AcknowledgeOutcome $outcome, int $code, string $message): void
+    {
+        $call = $this->incidentStore->expects(self::once())->method('acknowledge')->with(42, 3, self::anything());
+        $outcome instanceof AcknowledgeOutcome ? $call->willReturn($outcome) : $call->willThrowException($outcome);
+
+        $response = $this->request('POST', '/alerting/incidents/3/acknowledge', ['_token' => 'csrf-token']);
+        $content = (string) $response->getContent();
+
+        self::assertSame($code, $response->getStatusCode());
+        self::assertStringNotContainsString('hunter2', $content);
+        if ($code === 303) {
+            self::assertSame('/alerting/incidents/3?acknowledged=1', $response->headers->get('Location'));
+        } else {
+            self::assertStringContainsString($message, $content);
+        }
+    }
+
+    public function testTheEditFormShowsABaselineRuleAndAnUnusableRowAsStored(): void
+    {
+        $this->expectNoWrites();
+        $baseline = $this->xpath($this->request('GET', '/alerting/rules/9/edit'));
+        $value = static fn(\DOMXPath $xpath, string $field): string => ($xpath->query('//input[@name="alert_rule[' . $field . ']"]')->item(0) ?? new \DOMElement('x'))->getAttribute('value');
+        self::assertSame(['3', '2.5', '0.25', '6', '2', 'rev-9'], array_map(static fn(string $field): string => $value($baseline, $field), ['baseline_deviations', 'baseline_clear_deviations', 'baseline_floor', 'baseline_min_samples', 'for_cycles', 'revision']));
+        self::assertSame('baseline', $baseline->query('//input[@name="alert_rule[kind]"][@checked]')->item(0)?->getAttribute('value'));
+        self::assertSame('above', $baseline->query('//select[@name="alert_rule[baseline_direction]"]/option[@selected]')->item(0)?->getAttribute('value'));
+
+        // An unusable row keeps its series and revision; the condition fields start from the defaults.
+        $unusable = $this->xpath($this->request('GET', '/alerting/rules/10/edit'));
+        self::assertSame(['101', 'traffic_in', '', '', 'rev-10'], array_map(static fn(string $field): string => $value($unusable, $field), ['local_data_id', 'rrd_name', 'trigger_threshold', 'clear_threshold', 'revision']));
+    }
+
+    private function failRead(): void
+    {
+        if ($this->readFailure !== null) {
+            throw $this->readFailure;
+        }
     }
 
     private function expectNoWrites(): void
