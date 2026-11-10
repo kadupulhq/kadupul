@@ -38,11 +38,13 @@ final readonly class DbalRuleRepository implements RuleRepository
      * name on that data source. A device a remote collector has only marked
      * deleted (lib/api_device.php) counts as gone. A disabled device or data
      * source still exists. Never NULL, so NOT (...) is its exact complement.
+     * The rule pages read it too, so they call a series gone exactly when the
+     * evaluator does.
      */
-    private const string SERIES_EXISTS = "dl.id IS NOT NULL
+    public const string SERIES_EXISTS = "dl.id IS NOT NULL
         AND (dl.host_id = 0 OR (h.id IS NOT NULL AND h.deleted <> 'on'))
         AND EXISTS (SELECT 1 FROM data_template_rrd dtr WHERE dtr.local_data_id = r.local_data_id AND dtr.data_source_name = r.rrd_name)";
-    private const string SERIES_JOINS = 'LEFT JOIN data_local dl ON dl.id = r.local_data_id LEFT JOIN host h ON h.id = dl.host_id';
+    public const string SERIES_JOINS = 'LEFT JOIN data_local dl ON dl.id = r.local_data_id LEFT JOIN host h ON h.id = dl.host_id';
     private const array THRESHOLD_COLUMNS = ['comparator', 'trigger_threshold', 'clear_threshold'];
     private const array BASELINE_COLUMNS = ['baseline_direction', 'baseline_deviations', 'baseline_clear_deviations', 'baseline_floor', 'baseline_min_samples'];
 
@@ -65,7 +67,7 @@ final readonly class DbalRuleRepository implements RuleRepository
             [ParameterType::INTEGER, ParameterType::INTEGER],
         );
 
-        return array_map(self::rule(...), $rows);
+        return array_map(self::fromRow(...), $rows);
     }
 
     /** SELECT ... FOR UPDATE on the rule row, so a concurrent delete waits for this transaction. */
@@ -103,11 +105,12 @@ final readonly class DbalRuleRepository implements RuleRepository
 
     /**
      * A row the domain refuses becomes that rule's UnusableRuleRecord. An
-     * unreadable primary key names no rule and is thrown.
+     * unreadable primary key names no rule and is thrown. The rule pages read
+     * rows through this too, so they refuse exactly what the evaluator does.
      *
      * @param array<string, mixed> $row
      */
-    private static function rule(array $row): AlertRule|UnusableRuleRecord
+    public static function fromRow(array $row): AlertRule|UnusableRuleRecord
     {
         $id = StoredValue::int($row['id'], 'alert_rule', 'id');
         $where = 'alert_rule ' . $id;

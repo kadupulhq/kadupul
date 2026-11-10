@@ -93,11 +93,15 @@ final readonly class DbalIncidentRepository implements IncidentRepository
             [$ruleId],
         );
 
-        return array_map(self::incident(...), $rows);
+        return array_map(self::fromRow(...), $rows);
     }
 
-    /** @param array<string, mixed> $row */
-    private static function incident(array $row): Incident
+    /**
+     * The incident pages read rows through this too.
+     *
+     * @param array<string, mixed> $row
+     */
+    public static function fromRow(array $row): Incident
     {
         $id = StoredValue::int($row['id'], 'alert_incident', 'id');
         $where = 'alert_incident ' . $id;

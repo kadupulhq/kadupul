@@ -1002,6 +1002,8 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
             'graphs.php'           => __('Graphs'),
             'data_sources.php'     => __('Data Sources'),
             'aggregate_graphs.php' => __('Aggregates'),
+            'app.php/alerting/rules'     => __('Alert Rules'),
+            'app.php/alerting/incidents' => __('Alert Incidents'),
         ),
         __('Data Collection') => array(
             'pollers.php' => __('Data Collectors'),
@@ -1297,6 +1299,8 @@ $user_auth_realm_filenames = array(
     'host.php' => 3,
     'app.php/inventory/devices' => 3,
     'app.php/inventory/devices/new' => 3,
+    'app.php/alerting/rules' => 29,
+    'app.php/alerting/incidents' => 30,
     'host_templates.php' => 12,
     'index.php' => 8,
     'install.php' => 26,

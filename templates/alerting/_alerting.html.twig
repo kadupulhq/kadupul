@@ -1,0 +1,47 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+
+Shared pieces of the rule and incident pages. Every value is autoescaped;
+nothing stored is marked raw.
+#}
+{% macro status_notice(status) %}
+{% if status.name == 'Disabled' %}
+<p role="status" class="notice">{{ 'Alerting is turned off (Settings > Alerting). Rules can be prepared, but none is evaluated and no notification is sent.'|trans({}, 'alerting') }}</p>
+{% elseif status.name == 'RateSourceUnavailable' %}
+<p role="status" class="notice">{{ 'Alerting is inactive: rate source unavailable. Turn on Data Source Statistics so rules can be evaluated.'|trans({}, 'alerting') }}</p>
+{% elseif status.name == 'Unknown' %}
+<p role="status" class="notice">{{ 'The alerting status could not be read.'|trans({}, 'alerting') }}</p>
+{% endif %}
+{% endmacro %}
+
+{% macro series(rule) %}
+{%- if rule.device is not null -%}
+{{ 'Data source %id% (%rrd%) on %device%'|trans({'%id%': rule.localDataId, '%rrd%': rule.rrdName, '%device%': rule.device}, 'alerting') }}
+{%- else -%}
+{{ 'Data source %id% (%rrd%)'|trans({'%id%': rule.localDataId, '%rrd%': rule.rrdName}, 'alerting') }}
+{%- endif -%}
+{%- if not rule.seriesExists %} <strong>{{ 'Series gone'|trans({}, 'alerting') }}</strong>{% endif -%}
+{% endmacro %}
+
+{% macro condition(rule) %}
+{%- set c = rule.condition -%}
+{%- if c is null -%}
+<strong>{{ 'Unusable rule'|trans({}, 'alerting') }}</strong>: {{ rule.unusable }}
+{%- elseif rule.kind == 'threshold' -%}
+{{ {gt: 'Rate greater than %trigger%, clears at or below %clear%', ge: 'Rate at or above %trigger%, clears below %clear%', lt: 'Rate less than %trigger%, clears at or above %clear%', le: 'Rate at or below %trigger%, clears above %clear%'}[c.comparator.value]|trans({'%trigger%': c.trigger, '%clear%': c.clear}, 'alerting') }};
+{{ 'for %cycles% cycles'|trans({'%cycles%': c.forCycles}, 'alerting') }}
+{%- else -%}
+{{ {both: 'Outside the band of mean ± %k% deviations', above: 'Above the band of mean + %k% deviations', below: 'Below the band of mean − %k% deviations'}[c.direction.value]|trans({'%k%': c.deviations}, 'alerting') }};
+{{ 'clears within %m% deviations, floor %floor%, at least %samples% sample weeks'|trans({'%m%': c.clearDeviations, '%floor%': c.deviationFloor, '%samples%': c.minSamples}, 'alerting') }};
+{{ 'for %cycles% cycles'|trans({'%cycles%': c.forCycles}, 'alerting') }}
+{%- endif -%}
+{% endmacro %}
+
+{% macro incident_status(view) %}
+{%- if view.incident is null -%}
+<strong>{{ 'Unreadable'|trans({}, 'alerting') }}</strong>
+{%- else -%}
+{{ {open: 'Open', acknowledged: 'Acknowledged', closed: 'Closed', orphaned: 'Orphaned'}[view.incident.status.value]|trans({}, 'alerting') }}
+{%- endif -%}
+{% endmacro %}

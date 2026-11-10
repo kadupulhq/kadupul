@@ -1660,6 +1660,12 @@ final class NullableQuery {
         'Automation template': ('/automation/templates', 23, 'Automation', 'AutomationTemplateAccess',
                                 ['src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php'],
                                 [('AUTOMATION_REALM = 23', 'AUTOMATION_REALM = 24')]),
+        'Alert rule': ('/alerting/rules', 29, 'Alerting', 'RuleAccess',
+                       ['src/Alerting/Infrastructure/Dbal/DbalRuleAccess.php', 'src/Alerting/Infrastructure/Dbal/AlertingRealmCheck.php'],
+                       [('RULES_REALM = 29', 'RULES_REALM = 30'), ("$user['locked'] === 'on'", "$user['locked'] === 'no'")]),
+        'Alert incident': ('/alerting/incidents', 30, 'Alerting', 'IncidentAccess',
+                           ['src/Alerting/Infrastructure/Dbal/DbalIncidentAccess.php', 'src/Alerting/Infrastructure/Dbal/AlertingRealmCheck.php'],
+                           [('INCIDENTS_REALM = 30', 'INCIDENTS_REALM = 29'), ('CONSOLE_REALM = 8', 'CONSOLE_REALM = 9')]),
     }
     for feature, (route, realm, module, contract, files, tampering) in feature_specs.items():
         for label, (body, admitted) in feature_cases.items():

@@ -1,0 +1,40 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as list %}
+{% import 'alerting/_alerting.html.twig' as alerting %}
+
+{% block title %}{{ 'Alert Incidents'|trans({}, 'alerting') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Alert Incidents'|trans({}, 'alerting') }}</h1>
+    {{ alerting.status_notice(status) }}
+    <form method="get" action="{{ path('alerting_incident_list') }}" role="search">
+        <label for="incident-status">{{ 'Show'|trans({}, 'alerting') }}</label>
+        <select id="incident-status" name="status">
+            <option value="active"{% if page.activeOnly %} selected{% endif %}>{{ 'Open and acknowledged incidents'|trans({}, 'alerting') }}</option>
+            <option value="all"{% if not page.activeOnly %} selected{% endif %}>{{ 'All incidents'|trans({}, 'alerting') }}</option>
+        </select>
+        <button type="submit">{{ 'Apply'|trans({}, 'alerting') }}</button>
+    </form>
+    <table class="cactiTable">
+        <caption>{{ 'Alert incidents on data sources you can view, newest first'|trans({}, 'alerting') }}</caption>
+        <thead><tr class="tableHeader"><th scope="col">{{ 'Incident'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Status'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Series'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Opened'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Ended'|trans({}, 'alerting') }}</th></tr></thead>
+        <tbody>
+        {% for view in page.incidents %}
+            <tr>
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                <td><a href="{{ path('alerting_incident_show', {id: view.id}) }}">{{ 'Incident %id%'|trans({'%id%': view.id}, 'alerting') }}</a></td>
+                <td>{{ alerting.incident_status(view) }}</td>
+                <td>{{ alerting.series(view.rule) }}</td>
+                <td>{% if view.incident %}<time datetime="{{ view.incident.openedAt|date('c') }}">{{ view.incident.openedAt|date('Y-m-d H:i:s') }}</time>{% endif %}</td>
+                <td>{% if view.incident and view.incident.endedAt is not null %}<time datetime="{{ view.incident.endedAt|date('c') }}">{{ view.incident.endedAt|date('Y-m-d H:i:s') }}</time>{% endif %}</td>
+            </tr>
+        {% else %}<tr><td colspan="5">{{ 'No alert incidents.'|trans({}, 'alerting') }}</td></tr>{% endfor %}
+        </tbody>
+    </table>
+    {{ list.pagination('alerting_incident_list', {status: page.activeOnly ? 'active' : 'all'}, page.page, page.hasPrevious, page.hasNext, 'Alert incident pages', 'Page %page%, %total% incidents', {'%page%': page.page, '%total%': page.total}, 'alerting') }}
+</main>
+{% endblock %}

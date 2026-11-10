@@ -20,6 +20,7 @@
       <file>integration/AlertNotificationDatabaseTest.php</file>
       <file>integration/AlertEvaluatorRunDatabaseTest.php</file>
       <file>integration/AlertBaselineDatabaseTest.php</file>
+      <file>integration/AlertPagesDatabaseTest.php</file>
       <file>Unit/Core/Rrd/BoostOnDemandInsertNativeTest.php</file>
       <file>Unit/SnmpEventDescriptionIdentityTest.php</file>
       <file>Unit/PollerCacheNullNativeTest.php</file>

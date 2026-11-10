@@ -350,6 +350,44 @@ services:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings
     Kadupul\Alerting\Application\Port\RunLock:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock
+    # The rule and incident pages (ADR 0011 decision 12) read and write on
+    # the evaluator's main connection too: a rule save takes the row lock the
+    # evaluator takes, and the actor recheck and the visibility predicate
+    # must read the session the write commits on. The device visibility
+    # policy is therefore projected on that connection as well.
+    kadupul.alerting.management_visibility:
+        class: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalManagementVisibility
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\SeriesVisibility:
+        arguments: { $visibility: '@kadupul.alerting.management_visibility' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleAccess:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentAccess:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleCatalog:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStore:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentCatalog:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentStore:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Application\Query\ViewAlertingStatus: ~
+    Kadupul\Alerting\Application\Port\RuleAccess:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleAccess
+    Kadupul\Alerting\Application\Port\IncidentAccess:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentAccess
+    Kadupul\Alerting\Application\Port\RuleCatalog:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleCatalog
+    Kadupul\Alerting\Application\Port\RuleStore:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStore
+    Kadupul\Alerting\Application\Port\IncidentCatalog:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentCatalog
+    Kadupul\Alerting\Application\Port\IncidentStore:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentStore
+    Kadupul\Alerting\Infrastructure\Symfony\Controller\:
+        resource: '../src/Alerting/Infrastructure/Symfony/Controller/'
+        tags: ['controller.service_arguments']
     Kadupul\Alerting\Application\Port\NotificationDrain:
         alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain
     Kadupul\IdentityAccess\Contract\UserContacts:

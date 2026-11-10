@@ -1,0 +1,70 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later
+
+   alert_incident keeps the opening, the acknowledgement and the end of an
+   incident, and alert_notification one row per notification. That is the
+   whole transition history the schema holds, and all of it is shown. #}
+
+{% extends 'base.html.twig' %}
+{% import 'alerting/_alerting.html.twig' as alerting %}
+
+{% block title %}{{ 'Incident %id%'|trans({'%id%': detail.view.id}, 'alerting') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Alert Incidents [%id%]'|trans({'%id%': detail.view.id}, 'alerting') }}</h1>
+    {{ alerting.status_notice(status) }}
+    {% if acknowledged %}<p role="status">{{ 'The incident is acknowledged.'|trans({}, 'alerting') }}</p>{% endif %}
+    <dl>
+        <dt>{{ 'Status'|trans({}, 'alerting') }}</dt><dd>{{ alerting.incident_status(detail.view) }}</dd>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+        <dt>{{ 'Rule'|trans({}, 'alerting') }}</dt><dd><a href="{{ path('alerting_rule_edit', {id: rule.id}) }}">{{ 'Rule %id%'|trans({'%id%': rule.id}, 'alerting') }}</a>: {{ alerting.condition(rule) }}</dd>
+        <dt>{{ 'Series'|trans({}, 'alerting') }}</dt><dd>{{ alerting.series(rule) }}</dd>
+    </dl>
+    {% if incident is null %}
+        <p role="alert">{{ 'This incident record is unreadable and cannot be shown or acknowledged.'|trans({}, 'alerting') }}</p>
+    {% else %}
+    <section aria-labelledby="incident-history">
+        <h2 id="incident-history">{{ 'History'|trans({}, 'alerting') }}</h2>
+        <ol>
+            <li>{{ 'Opened'|trans({}, 'alerting') }}: <time datetime="{{ incident.openedAt|date('c') }}">{{ incident.openedAt|date('Y-m-d H:i:s') }}</time></li>
+            {% if incident.acknowledgedAt is not null %}
+            <li>{{ 'Acknowledged by %user%'|trans({'%user%': detail.view.acknowledgedBy ?? ('deleted account %id%'|trans({'%id%': incident.acknowledgedBy}, 'alerting'))}, 'alerting') }}: <time datetime="{{ incident.acknowledgedAt|date('c') }}">{{ incident.acknowledgedAt|date('Y-m-d H:i:s') }}</time></li>
+            {% endif %}
+            {% if incident.endedAt is not null %}
+            <li>{{ (incident.status.value == 'orphaned' ? 'Orphaned' : 'Closed')|trans({}, 'alerting') }}: <time datetime="{{ incident.endedAt|date('c') }}">{{ incident.endedAt|date('Y-m-d H:i:s') }}</time></li>
+            {% endif %}
+        </ol>
+    </section>
+    {% if incident.status.value == 'open' %}
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <button type="submit">{{ 'Acknowledge'|trans({}, 'alerting') }}</button>
+        {{ form_end(form) }}
+    {% elseif form.vars.errors|length > 0 %}
+        {{ form_errors(form) }}
+    {% endif %}
+    {% endif %}
+    <section aria-labelledby="incident-notifications">
+        <h2 id="incident-notifications">{{ 'Notifications'|trans({}, 'alerting') }}</h2>
+        <table class="cactiTable">
+            <thead><tr class="tableHeader"><th scope="col">{{ 'Notification'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Status'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Attempts'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Queued'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Next attempt'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Sent'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Last error'|trans({}, 'alerting') }}</th></tr></thead>
+            <tbody>
+            {% for n in detail.notifications %}
+                <tr>
+                    <td>{{ n.kind == 'opened' ? 'Opened'|trans({}, 'alerting') : (n.kind == 'recovered' ? 'Recovered'|trans({}, 'alerting') : n.kind) }}</td>
+                    <td>{{ {queued: 'Queued', retrying: 'Retrying', sending: 'Sending', sent: 'Sent', suppressed: 'Suppressed', failed: 'Failed', unknown: 'Unknown'}[n.status]|trans({}, 'alerting') }}</td>
+                    <td>{{ n.attempts }}</td>
+                    <td><time datetime="{{ n.queuedAt|date('c') }}">{{ n.queuedAt|date('Y-m-d H:i:s') }}</time></td>
+                    <td>{% if n.nextAttemptAt is not null %}<time datetime="{{ n.nextAttemptAt|date('c') }}">{{ n.nextAttemptAt|date('Y-m-d H:i:s') }}</time>{% endif %}</td>
+                    <td>{% if n.sentAt is not null %}<time datetime="{{ n.sentAt|date('c') }}">{{ n.sentAt|date('Y-m-d H:i:s') }}</time>{% endif %}</td>
+                    <td>{{ n.lastError }}</td>
+                </tr>
+            {% else %}<tr><td colspan="7">{{ 'No notifications.'|trans({}, 'alerting') }}</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('alerting_incident_list') }}">{{ 'Back to alert incidents'|trans({}, 'alerting') }}</a></p>
+</main>
+{% endblock %}

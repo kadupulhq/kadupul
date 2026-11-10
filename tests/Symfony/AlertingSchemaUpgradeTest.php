@@ -84,6 +84,8 @@ final class AlertingSchemaUpgradeTest extends TestCase
         $arrays = (string) file_get_contents($root . '/include/global_arrays.php');
         self::assertStringContainsString("29   => __('Alert Rules'),", $arrays);
         self::assertStringContainsString("30   => __('Alert Incidents'),", $arrays);
+        self::assertStringContainsString("'app.php/alerting/rules' => 29,", $arrays);
+        self::assertStringContainsString("'app.php/alerting/incidents' => 30,", $arrays);
     }
 
     public function testUpgradeGrantsTheAlertingRealmsToTheAdminAccountOnce(): void

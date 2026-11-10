@@ -1,0 +1,14 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends '_item_delete.html.twig' %}
+{% import 'alerting/_alerting.html.twig' as alerting %}
+{% set domain = 'alerting' %}
+{% set heading = 'Delete alert rule'|trans({}, 'alerting') %}
+{% set intro = 'Deleting the rule deletes its evaluation state. An open or acknowledged incident ends as orphaned and no notification is sent for it; notifications already queued are still sent.'|trans({}, 'alerting') %}
+{% set cancel_url = path('alerting_rule_list') %}
+{% block details %}
+    <p>{{ 'Rule %id%'|trans({'%id%': rule.id}, 'alerting') }}: {{ alerting.series(rule) }}</p>
+    <p>{{ alerting.condition(rule) }}</p>
+    {% if rule.activeIncidentId is not null %}<p role="alert">{{ 'Incident %id% is active and will end as orphaned.'|trans({'%id%': rule.activeIncidentId}, 'alerting') }}</p>{% endif %}
+{% endblock %}

@@ -49,6 +49,8 @@ final class LegacyConsoleMenu
             'graphs.php' => ['Graphs', 5],
             'data_sources.php' => ['Data Sources', 3],
             'aggregate_graphs.php' => ['Aggregates', 5],
+            'app.php/alerting/rules' => ['Alert Rules', 29],
+            'app.php/alerting/incidents' => ['Alert Incidents', 30],
         ],
         'Data Collection' => [
             'pollers.php' => ['Data Collectors', 3],
