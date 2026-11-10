@@ -49,4 +49,24 @@ final readonly class Incident
     {
         return $this->status->isActive();
     }
+
+    /**
+     * Open moves to acknowledged by a user (ADR 0011 decision 6). An incident
+     * already acknowledged keeps its first acknowledgement, so repeating the
+     * action changes nothing. An ended incident cannot be acknowledged.
+     */
+    public function acknowledge(int $userId, int $at): self
+    {
+        if ($userId < 1 || $at < 0) {
+            throw new InvalidIncident('Acknowledging incident ' . $this->id . ' needs a user id of at least 1 and a time.');
+        }
+        if (!$this->isActive()) {
+            throw new InvalidIncident('Incident ' . $this->id . ' has ended and cannot be acknowledged.');
+        }
+        if ($this->status === IncidentStatus::Acknowledged) {
+            return $this;
+        }
+
+        return new self($this->id, $this->ruleId, IncidentStatus::Acknowledged, $this->openedAt, null, $at, $userId);
+    }
 }

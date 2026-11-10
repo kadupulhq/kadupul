@@ -55,4 +55,36 @@ final class IncidentTest extends TestCase
 
         self::assertSame([110, 3, 200], [$incident->acknowledgedAt, $incident->acknowledgedBy, $incident->endedAt]);
     }
+
+    public function testAcknowledgingAnOpenIncidentRecordsWhoAndWhen(): void
+    {
+        $acknowledged = (new Incident(1, 7, IncidentStatus::Open, 100))->acknowledge(3, 150);
+
+        self::assertSame([IncidentStatus::Acknowledged, 150, 3, null], [$acknowledged->status, $acknowledged->acknowledgedAt, $acknowledged->acknowledgedBy, $acknowledged->endedAt]);
+    }
+
+    public function testAcknowledgingTwiceKeepsTheFirstAcknowledgement(): void
+    {
+        $first = new Incident(1, 7, IncidentStatus::Acknowledged, 100, acknowledgedAt: 110, acknowledgedBy: 3);
+
+        self::assertSame($first, $first->acknowledge(4, 200));
+    }
+
+    public function testAnEndedIncidentCannotBeAcknowledged(): void
+    {
+        foreach ([IncidentStatus::Closed, IncidentStatus::Orphaned] as $status) {
+            try {
+                (new Incident(1, 7, $status, 100, endedAt: 200))->acknowledge(3, 250);
+                self::fail($status->value . ' was acknowledged.');
+            } catch (InvalidIncident $e) {
+                self::assertStringContainsString('has ended', $e->getMessage());
+            }
+        }
+    }
+
+    public function testAnAcknowledgementNeedsAUserAndATime(): void
+    {
+        $this->expectException(InvalidIncident::class);
+        (new Incident(1, 7, IncidentStatus::Open, 100))->acknowledge(0, 150);
+    }
 }
