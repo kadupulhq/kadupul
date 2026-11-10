@@ -27,6 +27,18 @@ deptrac:
       - function
       - function_superglobal
   layers:
+    - name: AssetManagement.Domain
+      collectors:
+        - type: directory
+          value: src/AssetManagement/Domain/.*
+    - name: AssetManagement.Application
+      collectors:
+        - type: directory
+          value: src/AssetManagement/Application/.*
+    - name: AssetManagement.Infrastructure
+      collectors:
+        - type: directory
+          value: src/AssetManagement/Infrastructure/.*
     - name: Alerting.Domain
       collectors:
         - type: directory
@@ -369,6 +381,9 @@ deptrac:
             - _FILES
             - GLOBALS
   ruleset:
+    AssetManagement.Domain: []
+    AssetManagement.Application: [AssetManagement.Domain, Contract]
+    AssetManagement.Infrastructure: [AssetManagement.Domain, AssetManagement.Application, Contract, PlatformContract, Vendor, Psr]
     Alerting.Domain:
       - Psr
       - Contract
