@@ -32,6 +32,7 @@ services:
     environment:
       ROLE: master
       APP_SECRET: ${INSTALLER_TEST_APP_SECRET:-}
+      KADUPUL_ASSETS_ENABLED: ${CACTI_E2E_ASSETS_BROWSER:-0}
       DB_HOST: cacti-db
       DB_NAME: cacti
       DB_USER: cactiuser
