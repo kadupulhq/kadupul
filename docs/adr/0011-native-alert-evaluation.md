@@ -200,7 +200,10 @@ behavior until an administrator opts in.
      the week has one sample fewer for 8 weeks; the hour repeated in autumn
      puts both real hours in one bucket, whose observations cover two hours.
      Changing `date.timezone` shifts every later bucket against the stored
-     ones until 8 weeks have passed.
+     ones until 8 weeks have passed. An unset `date.timezone` is not an
+     error: PHP then uses UTC, so hours of the week are UTC hours with no
+     warning. Operators set `date.timezone` in the php.ini of the CLI binary
+     named by `path_php_binary` before creating baseline rules.
    - **Direction.** `both` (the default) breaches on either side; `above` and
      `below` breach and clear only on their side and treat the other side as
      ok.
@@ -239,7 +242,11 @@ behavior until an administrator opts in.
      pruned or written, and rows left then stay until alerting is enabled
      again. A run whose rate source is unavailable also prunes nothing.
      Housekeeping never stops alerting: a failed prune (a lock wait timeout, a
-     deadlock or an unreadable row) is a `BaselinePruneFailed` from the port.
+     deadlock, a lost connection or an unreadable row) is a
+     `BaselinePruneFailed` from the port. The adapter wraps every DBAL
+     exception, so a connection-level failure during the prune is contained
+     like the others; the next step of the run, taking the delivery lock on the
+     same connection, fails on a dead connection and the run exits 1.
      The run has already evaluated its rules; it logs one error naming the
      failure's class, without its message or SQL, sets `pruneFailed` in its
      report and completes with its usual exit status. The rows stay and the
@@ -250,9 +257,10 @@ behavior until an administrator opts in.
      cannot be read leaves its series without history, so its rules are
      `unknown`, not built from the remaining weeks.
 
-4. **Unknown is not zero.** Each evaluation of a rule yields one verdict: `ok`,
-   `breach` or `unknown`. A series with no fresh rate yields `unknown`. A
-   rate is fresh when its observation time (decision 1) is no older than two
+4. **Unknown is not zero.** An evaluation of a rule yields `ok`, `breach` or
+   `unknown`, or `hold` while an incident is open (below). A series with no
+   fresh rate yields `unknown`. A rate is fresh when its observation time
+   (decision 1) is no older than two
    polling intervals of the data source, measured against the evaluator's
    clock. The polling interval is the data source's
    `data_template_data.rrd_step`, the value dsstats divides counter deltas by
@@ -268,10 +276,11 @@ behavior until an administrator opts in.
    `breach`.
    A fourth verdict, `hold`, is a rate that lies between the clear and trigger
    thresholds while an incident is open. It counts toward neither breach nor
-   recovery and leaves the counters and state unchanged. Later code must never
-   treat `hold` as `ok`. A `hold` is a usable observation, so it ends a run of
-   `unknown` verdicts: an incident reports `unknown` once per run, and an
-   `unknown` that follows a `hold` starts a new run.
+   recovery and leaves both consecutive counts and the open state unchanged.
+   Later code must never treat `hold` as `ok`. A `hold` is a usable
+   observation, so it does end a run of `unknown` verdicts: an incident reports
+   `unknown` once per run, and an `unknown` that follows a `hold` starts a new
+   run.
 
 5. **State machine and counters.** Per rule, `alert_rule_state` keeps the
    consecutive breach count, the consecutive ok count, the last observation time
@@ -374,8 +383,14 @@ behavior until an administrator opts in.
      `sending`, `next_attempt_at` is the end of the claim's lease, and the
      settling `UPDATE` matches that value, so a second deliverer can neither
      claim a held row nor settle another's claim. No statement needs
-     `SKIP LOCKED`. The lease is 900 seconds, longer than one SMTP send at the
-     largest timeout the mail settings accept (300 seconds per read). A row
+     `SKIP LOCKED`. The lease is 900 seconds. That is a chosen value, not a
+     bound on a send: the SMTP timeout of 300 seconds applies to each read, so
+     one send
+     can take longer, and the legacy `send_mail()` path is not bounded by it
+     at all. Lease ownership also compares the claim's expiry with the
+     application clocks of the hosts that deliver, so deliverers on hosts
+     whose clocks differ by a large part of the lease can take over a live
+     claim. A row
      whose lease expires is due again, so delivery is at least once: a
      deliverer that dies after the server accepted the mail, or a send that
      outlasts the lease, can send it twice. A claim that expires on the last
@@ -430,8 +445,10 @@ behavior until an administrator opts in.
 
 8. **Bounded work.** The command evaluates rules in batches. Both the batch size
    and the total time budget are settings, and the command checks the budget
-   between batches. Rules not reached are evaluated first in the next run,
-   ordered by oldest evaluation. Delivery has its own bound inside the same
+   between batches. Rules are read in rule-id order from a stored cursor,
+   and a run that stops early resumes after the last rule it completed; the
+   cursor wraps to the
+   lowest id after the last rule. Delivery has its own bound inside the same
    budget.
 
    Task 5 sets the defaults from a measurement. The settings are
@@ -554,7 +571,11 @@ behavior until an administrator opts in.
     viewing and acknowledging it require the realm and the visibility of that
     recorded series, not of the rule's current one, so moving a rule changes
     nothing about who sees its earlier incidents. The incident page shows the
-    rule only while it exists and its current series is visible too. A data
+    rule only while it exists and its current series is visible too; when it
+    does not, the page still shows the rule's id (and nothing else about
+    it), because the incident row records it. This is a known limitation: the
+    id of a rule the user cannot see is visible to a user who can see the
+    incident. A data
     source that is gone no longer names its device, so its visibility cannot
     be decided: a rule or incident on it fails closed and is visible only to
     a user with full device access, which is the legacy simple device policy
@@ -563,6 +584,8 @@ behavior until an administrator opts in.
     cannot see answers as not found. Evaluation
     itself runs with no user and does not re-authorize rules. Every entry point
     enforces this, not only the forms.
+    A request with no authenticated user gets 401 on every alerting page,
+    as on the other migrated Navigation pages, before any read.
     The pages live at `/alerting/rules` and `/alerting/incidents` and are
     reachable whatever `alerting_enable` says; they state when alerting is off
     or the rate source is unavailable. Rule writes and acknowledgements run on

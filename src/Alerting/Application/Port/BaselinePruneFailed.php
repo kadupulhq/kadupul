@@ -11,9 +11,11 @@ namespace Kadupul\Alerting\Application\Port;
 
 /**
  * BaselineSource::prune() could not remove old history, for example on a
- * lock wait timeout, a deadlock or an unreadable row. The rows stay and the
- * next run retries them. The adapter wraps its own failure as the previous
- * exception, so the evaluator needs no persistence types to contain it.
+ * lock wait timeout, a deadlock, a lost connection or an unreadable row. The
+ * rows stay and the next run retries them. The adapter wraps every database
+ * exception as the previous exception, so the evaluator needs no persistence
+ * types to contain it; a dead connection is contained here too and surfaces
+ * at the run's next database call.
  */
 final class BaselinePruneFailed extends \RuntimeException
 {

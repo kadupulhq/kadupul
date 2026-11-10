@@ -2317,7 +2317,7 @@ $settings = array(
         ),
         'alerting_time_budget' => array(
             'friendly_name' => __('Alert Evaluation Time Budget'),
-            'description' => __('How long one evaluation run may start new batches, including sending queued notifications. Rules not reached are evaluated first by the next run.'),
+            'description' => __('How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run.'),
             'method' => 'drop_array',
             'default' => '30',
             'array' => array(
