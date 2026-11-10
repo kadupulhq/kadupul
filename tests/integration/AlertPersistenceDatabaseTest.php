@@ -21,6 +21,8 @@ namespace AlertPersistenceDatabaseTest;
 $applicationLoader = require dirname(__DIR__, 2) . '/include/vendor/autoload.php';
 $applicationLoader->unregister();
 $applicationLoader->register(false);
+// CI installs the application with --no-dev, so autoload-dev does not map the shared test fakes.
+$applicationLoader->addPsr4('Kadupul\\Tests\\', dirname(__DIR__) . '/Symfony/');
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
