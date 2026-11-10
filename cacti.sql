@@ -205,6 +205,8 @@ CREATE TABLE alert_incident (
   acknowledged_at int(10) unsigned default NULL,
   acknowledged_by mediumint(8) unsigned default NULL,
   ended_at int(10) unsigned default NULL,
+  local_data_id int(10) unsigned NOT NULL,
+  rrd_name varbinary(19) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY active_rule_id (active_rule_id),
   KEY rule_id (rule_id)

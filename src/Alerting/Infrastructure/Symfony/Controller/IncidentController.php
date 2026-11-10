@@ -33,7 +33,7 @@ use Twig\Environment;
 /**
  * Alert incidents (ADR 0011 decision 12). Every route takes the console
  * actor, then IncidentAccess::authorize(), before it reads the request or
- * any incident. An incident whose rule's data source the actor cannot view
+ * any incident. An incident whose recorded series the actor cannot view
  * is not found, by id as in the list. The detail path is the one the
  * notification mail names (NotificationMail::INCIDENT_PATH).
  */

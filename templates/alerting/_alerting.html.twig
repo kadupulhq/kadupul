@@ -15,6 +15,7 @@ nothing stored is marked raw.
 {% endif %}
 {% endmacro %}
 
+{# A RuleView or SeriesView: localDataId, rrdName, seriesExists, device. #}
 {% macro series(rule) %}
 {%- if rule.device is not null -%}
 {{ 'Data source %id% (%rrd%) on %device%'|trans({'%id%': rule.localDataId, '%rrd%': rule.rrdName, '%device%': rule.device}, 'alerting') }}

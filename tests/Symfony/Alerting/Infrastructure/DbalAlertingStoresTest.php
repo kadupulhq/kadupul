@@ -49,7 +49,7 @@ final class DbalAlertingStoresTest extends TestCase
         foreach ([
             "CREATE TABLE alert_rule (id INTEGER PRIMARY KEY, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, kind TEXT NOT NULL DEFAULT 'threshold', comparator TEXT NULL, trigger_threshold REAL NULL, clear_threshold REAL NULL, baseline_direction TEXT NULL, baseline_deviations REAL NULL, baseline_clear_deviations REAL NULL, baseline_floor REAL NULL, baseline_min_samples INT NULL, for_cycles INT NOT NULL DEFAULT 1, owner_id INT NOT NULL DEFAULT 0)",
             'CREATE TABLE alert_rule_state (rule_id INTEGER PRIMARY KEY, incident_open INT NOT NULL DEFAULT 0, consecutive_breaches INT NOT NULL DEFAULT 0, consecutive_oks INT NOT NULL DEFAULT 0, is_unknown INT NOT NULL DEFAULT 0, last_observed_at INT NULL)',
-            'CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL)',
+            "CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL, local_data_id INT NOT NULL DEFAULT 0, rrd_name BLOB NOT NULL DEFAULT '')",
             'CREATE TABLE data_local (id INTEGER PRIMARY KEY, host_id INT NOT NULL DEFAULT 0)',
             "CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT NOT NULL DEFAULT '', snmp_community TEXT NULL, deleted TEXT NOT NULL DEFAULT '', disabled TEXT NOT NULL DEFAULT '')",
             "CREATE TABLE alert_notification (id INTEGER PRIMARY KEY AUTOINCREMENT, incident_id INT NOT NULL, kind TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'queued', attempts INT NOT NULL DEFAULT 0, queued_at INT NOT NULL, next_attempt_at INT NOT NULL, sent_at INT NULL, last_error TEXT NOT NULL DEFAULT '', observed_value REAL NOT NULL, threshold REAL NOT NULL)",
@@ -303,6 +303,7 @@ final class DbalAlertingStoresTest extends TestCase
     public function testIncidentsOpenCloseAndOrphanTheActiveIncidentOnly(): void
     {
         $incidents = new DbalIncidentRepository($this->database);
+        $this->addRule(1, 101);
 
         $incidents->open(1, 100);
         $incidents->close(1, 200);
@@ -321,6 +322,7 @@ final class DbalAlertingStoresTest extends TestCase
     public function testASecondActiveIncidentOrACloseWithNoneFails(): void
     {
         $incidents = new DbalIncidentRepository($this->database);
+        $this->addRule(1, 101);
         $incidents->open(1, 100);
 
         try {
@@ -342,6 +344,7 @@ final class DbalAlertingStoresTest extends TestCase
     {
         $incidents = new DbalIncidentRepository($this->database);
         foreach ([1, 2, 3] as $rule) {
+            $this->addRule($rule, 100 + $rule);
             $incidents->open($rule, 100);
         }
 
@@ -477,10 +480,30 @@ final class DbalAlertingStoresTest extends TestCase
         StoredValue::float('x', 'r', 'c');
     }
 
+    public function testAnIncidentRecordsTheSeriesItsRuleWatchedWhenItOpened(): void
+    {
+        $incidents = new DbalIncidentRepository($this->database);
+        $this->addRule(6, 106, 'traffic_out');
+        $opened = $incidents->open(6, 100);
+        // Moving the rule later does not move the incident.
+        $this->database->update('alert_rule', ['local_data_id' => 999, 'rrd_name' => 'other'], ['id' => 6]);
+        self::assertSame(['106', 'traffic_out'], array_map('strval', $this->database->fetchNumeric('SELECT local_data_id, rrd_name FROM alert_incident WHERE id = ?', [$opened]) ?: []));
+
+        try {
+            $incidents->open(77, 100);
+            self::fail('An incident opened for a rule that does not exist.');
+        } catch (\RuntimeException $refused) {
+            self::assertSame('Alert rule 77 disappeared while its incident was being opened.', $refused->getMessage());
+        }
+        self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_incident'));
+    }
+
     public function testOpenAndCloseReturnTheIncidentTheyChanged(): void
     {
         $incidents = new DbalIncidentRepository($this->database);
         $this->database->insert('alert_incident', ['rule_id' => 9, 'status' => 'closed', 'opened_at' => 10, 'ended_at' => 20]);
+        $this->addRule(5, 105);
+        $this->addRule(6, 106, 'traffic_out');
 
         self::assertSame(2, $incidents->open(5, 100));
         self::assertSame(3, $incidents->open(6, 100));
@@ -581,6 +604,7 @@ final class DbalAlertingStoresTest extends TestCase
 
     public function testTheValueAndThresholdAreStoredWithoutLosingDigits(): void
     {
+        $this->addRule(5, 105);
         $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
         $queue = new DbalNotificationQueue($this->database);
         $queue->enqueue($incident, Transition::Opened, 123456789.12345679, 0.1 + 0.2, 1000);
@@ -592,6 +616,7 @@ final class DbalAlertingStoresTest extends TestCase
 
     public function testOnlyTheHolderEndsARowAsSuppressedAndItIsNotDueAgain(): void
     {
+        $this->addRule(5, 105);
         $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
         $queue = new DbalNotificationQueue($this->database);
         $queue->enqueue($incident, Transition::Opened, 1.0, 0.5, 1000);

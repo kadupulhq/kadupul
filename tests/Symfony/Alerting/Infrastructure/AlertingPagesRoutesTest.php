@@ -26,6 +26,7 @@ use Kadupul\Alerting\Application\ReadModel\IncidentView;
 use Kadupul\Alerting\Application\ReadModel\NotificationView;
 use Kadupul\Alerting\Application\ReadModel\RulePage;
 use Kadupul\Alerting\Application\ReadModel\RuleView;
+use Kadupul\Alerting\Application\ReadModel\SeriesView;
 use Kadupul\Alerting\Application\Rule\RuleDefinition;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
@@ -89,7 +90,7 @@ final class AlertingPagesRoutesTest extends TestCase
             return $id === 7 ? $rule : null;
         });
         $container->set(RuleCatalog::class, $rules);
-        $incident = new IncidentView(3, new Incident(3, 7, IncidentStatus::Open, self::NOW - 600), $rule, null);
+        $incident = new IncidentView(3, new Incident(3, 7, IncidentStatus::Open, self::NOW - 600), new SeriesView($rule->localDataId, $rule->rrdName, $rule->seriesExists, $rule->device), 7, $rule, null);
         $incidents = $this->createStub(IncidentCatalog::class);
         $incidents->method('page')->willReturnCallback(function (int $actor, bool $active, int $page) use ($incident): IncidentPage {
             $this->reads[] = 'incidents.page';
@@ -97,6 +98,10 @@ final class AlertingPagesRoutesTest extends TestCase
         });
         $incidents->method('find')->willReturnCallback(function (int $actor, int $id, int $now) use ($incident): ?IncidentDetail {
             $this->reads[] = 'incidents.find';
+            if ($id === 5) {
+                // Opened on data source 101 of a rule since moved where the actor cannot see.
+                return new IncidentDetail(new IncidentView(5, new Incident(5, 8, IncidentStatus::Orphaned, self::NOW - 900, self::NOW - 60), new SeriesView(101, 'traffic_in', false, null), 8, null, null), []);
+            }
             return $id === 3 ? new IncidentDetail($incident, [NotificationView::fromStored(1, 'opened', 'sending', 2, self::NOW - 600, self::NOW - 1, null, 'Mail server <refused>', self::NOW)]) : null;
         });
         $container->set(IncidentCatalog::class, $incidents);
@@ -290,6 +295,18 @@ final class AlertingPagesRoutesTest extends TestCase
         $xpath = $this->xpath($this->request('GET', '/alerting/incidents/3'));
         self::assertSame('Retrying', trim($xpath->query('//section[@aria-labelledby="incident-notifications"]//tbody/tr/td[2]')->item(0)?->textContent ?? ''));
         self::assertSame(1, $xpath->query('//form[contains(@action, "/alerting/incidents/3/acknowledge")]//button')->length);
+    }
+
+    public function testTheIncidentPageNamesItsRecordedSeriesAndHidesAnInvisibleRule(): void
+    {
+        $response = $this->request('GET', '/alerting/incidents/5');
+        self::assertSame(200, $response->getStatusCode());
+        $xpath = $this->xpath($response);
+        $details = trim(preg_replace('/\s+/', ' ', $xpath->query('//main/dl')->item(0)?->textContent ?? '') ?? '');
+        self::assertStringContainsString('Rule 8', $details);
+        self::assertStringContainsString('Data source 101 (traffic_in) Series gone', $details);
+        self::assertSame(0, $xpath->query('//a[contains(@href, "/alerting/rules/8")]')->length, 'no link to a rule the viewer cannot see');
+        self::assertSame(0, $xpath->query('//form[contains(@action, "/acknowledge")]')->length);
     }
 
     public function testThePagesExplainWhyNothingIsEvaluatedWhenAlertingIsOff(): void

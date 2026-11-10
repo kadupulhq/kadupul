@@ -55,6 +55,7 @@ const TABLES = ['alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notif
 final class AlertPagesDatabaseTest extends TestCase
 {
     private const int VIEWER = 42;
+    private const int ADMIN = 1;
     private const int NOW = 1_800_000_000;
 
     private Connection $database;
@@ -166,6 +167,32 @@ final class AlertPagesDatabaseTest extends TestCase
         self::assertSame('open', $this->database->fetchOne('SELECT status FROM alert_incident WHERE id = ?', [$hidden]));
     }
 
+    public function testIncidentVisibilityFollowsTheRecordedSeriesAndFailsClosedWhenItIsGone(): void
+    {
+        // Full device access: device policy allow, no device exceptions.
+        $this->database->insert('user_auth', ['id' => self::ADMIN, 'username' => 'admin', 'policy_graphs' => 1, 'policy_hosts' => 1, 'policy_graph_templates' => 1]);
+        $moved = $this->insertRule(201);
+        $old = $this->openIncident($moved);
+        $this->database->executeStatement("UPDATE alert_incident SET status = 'orphaned', active_rule_id = NULL, ended_at = ? WHERE id = ?", [self::NOW - 30, $old]);
+        $this->database->update('alert_rule', ['local_data_id' => 101], ['id' => $moved]);
+        $gone = $this->openIncident($this->insertRule(301));
+        $this->database->executeStatement('DELETE FROM data_template_rrd WHERE local_data_id = 301');
+        $this->database->executeStatement('DELETE FROM data_local WHERE id = 301');
+
+        // The viewer sees device 1 only: not the incident opened on 201
+        // before its rule moved to 101, nor the one whose data source is gone.
+        self::assertSame([], array_map(static fn($view): int => $view->id, $this->incidentCatalog->page(self::VIEWER, false, 1)->incidents));
+        foreach ([$old, $gone] as $incident) {
+            self::assertNull($this->incidentCatalog->find(self::VIEWER, $incident, self::NOW));
+            self::assertSame(AcknowledgeOutcome::NotFound, $this->incidents->acknowledge(self::VIEWER, $incident, self::NOW));
+        }
+        self::assertSame([$gone, $old], array_map(static fn($view): int => $view->id, $this->incidentCatalog->page(self::ADMIN, false, 1)->incidents));
+        self::assertSame([201, false], [$this->incidentCatalog->find(self::ADMIN, $old, self::NOW)?->view->series->localDataId, $this->incidentCatalog->find(self::ADMIN, $gone, self::NOW)?->view->series->seriesExists]);
+
+        $this->database->insert('user_auth_perms', ['user_id' => self::ADMIN, 'item_id' => 2, 'type' => 3]);
+        self::assertNull($this->incidentCatalog->find(self::ADMIN, $gone, self::NOW), 'a device exception removes full access');
+    }
+
     public function testDeletingARuleWithAnOpenIncidentOrphansItOnInnoDb(): void
     {
         $rule = $this->insertRule(101);
@@ -255,9 +282,13 @@ final class AlertPagesDatabaseTest extends TestCase
         return (int) $this->database->lastInsertId();
     }
 
+    /** An open incident recording its rule's current series, as DbalIncidentRepository::open() writes it. */
     private function openIncident(int $rule): int
     {
-        $this->database->insert('alert_incident', ['rule_id' => $rule, 'status' => 'open', 'active_rule_id' => $rule, 'opened_at' => self::NOW - 600]);
+        $this->database->executeStatement(
+            'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name) SELECT id, ?, id, ?, local_data_id, rrd_name FROM alert_rule WHERE id = ?',
+            ['open', self::NOW - 600, $rule],
+        );
 
         return (int) $this->database->lastInsertId();
     }

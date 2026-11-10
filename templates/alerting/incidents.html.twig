@@ -28,7 +28,7 @@
                 {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
                 <td><a href="{{ path('alerting_incident_show', {id: view.id}) }}">{{ 'Incident %id%'|trans({'%id%': view.id}, 'alerting') }}</a></td>
                 <td>{{ alerting.incident_status(view) }}</td>
-                <td>{{ alerting.series(view.rule) }}</td>
+                <td>{{ alerting.series(view.series) }}</td>
                 <td>{% if view.incident %}<time datetime="{{ view.incident.openedAt|date('c') }}">{{ view.incident.openedAt|date('Y-m-d H:i:s') }}</time>{% endif %}</td>
                 <td>{% if view.incident and view.incident.endedAt is not null %}<time datetime="{{ view.incident.endedAt|date('c') }}">{{ view.incident.endedAt|date('Y-m-d H:i:s') }}</time>{% endif %}</td>
             </tr>

@@ -42,12 +42,14 @@ use Symfony\Component\Clock\MockClock;
 final class DbalAlertingPagesTest extends TestCase
 {
     private const int VIEWER = 42;
+    /** Full device access: device policy allow and no device exceptions. */
+    private const int ADMIN = 1;
     private const int NOW = 1_800_000_000;
 
     private Connection $database;
     private string $project;
     /** @var array<int, list<int>> devices each actor may see */
-    private array $devices = [self::VIEWER => [1]];
+    private array $devices = [self::VIEWER => [1], self::ADMIN => [1, 2]];
     private DbalRuleStore $rules;
     private DbalRuleCatalog $ruleCatalog;
     private DbalIncidentStore $incidents;
@@ -60,19 +62,23 @@ final class DbalAlertingPagesTest extends TestCase
         foreach ([
             "CREATE TABLE alert_rule (id INTEGER PRIMARY KEY AUTOINCREMENT, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, kind TEXT NOT NULL DEFAULT 'threshold', comparator TEXT NULL, trigger_threshold REAL NULL, clear_threshold REAL NULL, baseline_direction TEXT NULL, baseline_deviations REAL NULL, baseline_clear_deviations REAL NULL, baseline_floor REAL NULL, baseline_min_samples INT NULL, for_cycles INT NOT NULL DEFAULT 1, owner_id INT NOT NULL DEFAULT 0)",
             'CREATE TABLE alert_rule_state (rule_id INTEGER PRIMARY KEY, incident_open INT NOT NULL DEFAULT 0, consecutive_breaches INT NOT NULL DEFAULT 0, consecutive_oks INT NOT NULL DEFAULT 0, is_unknown INT NOT NULL DEFAULT 0, last_observed_at INT NULL)',
-            'CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL)',
+            "CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL, local_data_id INT NOT NULL DEFAULT 0, rrd_name BLOB NOT NULL DEFAULT '')",
             "CREATE TABLE alert_notification (id INTEGER PRIMARY KEY AUTOINCREMENT, incident_id INT NOT NULL, kind TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'queued', attempts INT NOT NULL DEFAULT 0, queued_at INT NOT NULL, next_attempt_at INT NOT NULL, sent_at INT NULL, last_error TEXT NOT NULL DEFAULT '', observed_value REAL NOT NULL, threshold REAL NOT NULL)",
             'CREATE TABLE data_local (id INTEGER PRIMARY KEY, host_id INT NOT NULL DEFAULT 0)',
             "CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT NOT NULL DEFAULT '', deleted TEXT NOT NULL DEFAULT '')",
             'CREATE TABLE data_template_rrd (id INTEGER PRIMARY KEY, local_data_id INT NOT NULL, data_source_name TEXT NOT NULL)',
             'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT NOT NULL)',
-            "CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT NOT NULL DEFAULT '')",
+            "CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT NOT NULL DEFAULT '', policy_hosts INT NOT NULL DEFAULT 1)",
+            'CREATE TABLE user_auth_perms (user_id INT NOT NULL, item_id INT NOT NULL, type INT NOT NULL)',
         ] as $ddl) {
             $this->database->executeStatement($ddl);
         }
         $this->database->insert('host', ['id' => 1, 'description' => 'Core <router>']);
         $this->database->insert('host', ['id' => 2, 'description' => 'Payroll server']);
-        $this->database->insert('user_auth', ['id' => self::VIEWER, 'username' => 'operator']);
+        // The viewer's device policy denies and lists device 1 as an exception.
+        $this->database->insert('user_auth', ['id' => self::VIEWER, 'username' => 'operator', 'policy_hosts' => 2]);
+        $this->database->insert('user_auth_perms', ['user_id' => self::VIEWER, 'item_id' => 1, 'type' => 3]);
+        $this->database->insert('user_auth', ['id' => self::ADMIN, 'username' => 'admin', 'policy_hosts' => 1]);
         $this->addSeries(101, 1);
         $this->addSeries(201, 2);
         $this->addSeries(301, 0);
@@ -154,25 +160,33 @@ final class DbalAlertingPagesTest extends TestCase
         $visible = $this->insertRule(101);
         $gone = $this->insertRule(555);
 
-        self::assertSame([$visible, $gone], array_map(static fn($rule): int => $rule->id, $this->ruleCatalog->page(self::VIEWER, 1)->rules));
-        self::assertSame(2, $this->ruleCatalog->page(self::VIEWER, 1)->total);
+        self::assertSame([$visible], array_map(static fn($rule): int => $rule->id, $this->ruleCatalog->page(self::VIEWER, 1)->rules));
+        self::assertSame(1, $this->ruleCatalog->page(self::VIEWER, 1)->total);
         self::assertNull($this->ruleCatalog->find(self::VIEWER, $hidden));
         $view = $this->ruleCatalog->find(self::VIEWER, $visible);
         self::assertSame('Core <router>', $view?->device);
         self::assertTrue($view->seriesExists);
-        self::assertFalse($this->ruleCatalog->find(self::VIEWER, $gone)?->seriesExists);
+        // A gone data source no longer names its device, so it fails closed:
+        // only full device access sees, corrects or deletes the rule.
+        self::assertNull($this->ruleCatalog->find(self::VIEWER, $gone));
+        self::assertFalse($this->ruleCatalog->find(self::ADMIN, $gone)?->seriesExists);
+        self::assertSame([$hidden, $visible, $gone], array_map(static fn($rule): int => $rule->id, $this->ruleCatalog->page(self::ADMIN, 1)->rules));
 
-        foreach (['update', 'delete'] as $operation) {
-            try {
-                $operation === 'update'
-                    ? $this->rules->update(self::VIEWER, $hidden, 'x', $this->threshold(101))
-                    : $this->rules->delete(self::VIEWER, $hidden, 'x');
-                self::fail($operation . ' changed a hidden rule.');
-            } catch (RuleSubmissionRefused $refused) {
-                self::assertSame(RuleStore::NOT_FOUND, $refused->getMessage());
+        foreach ([$hidden, $gone] as $rule) {
+            foreach (['update', 'delete'] as $operation) {
+                try {
+                    $operation === 'update'
+                        ? $this->rules->update(self::VIEWER, $rule, 'x', $this->threshold(101))
+                        : $this->rules->delete(self::VIEWER, $rule, 'x');
+                    self::fail($operation . ' changed hidden rule ' . $rule . '.');
+                } catch (RuleSubmissionRefused $refused) {
+                    self::assertSame(RuleStore::NOT_FOUND, $refused->getMessage());
+                }
             }
         }
         self::assertSame(3, $this->rows('alert_rule'));
+        $this->rules->delete(self::ADMIN, $gone, $this->ruleCatalog->find(self::ADMIN, $gone)->revision ?? '');
+        self::assertSame(2, $this->rows('alert_rule'));
     }
 
     public function testIncidentsOfHiddenRulesCannotBeListedViewedOrAcknowledged(): void
@@ -186,6 +200,75 @@ final class DbalAlertingPagesTest extends TestCase
         self::assertSame(AcknowledgeOutcome::NotFound, $this->incidents->acknowledge(self::VIEWER, $hidden, self::NOW));
         self::assertSame(AcknowledgeOutcome::NotFound, $this->incidents->acknowledge(self::VIEWER, 9999, self::NOW));
         self::assertSame(['open', null, null], $this->incidentRow($hidden));
+    }
+
+    public function testAnIncidentOfADeletedDataSourceIsVisibleOnlyWithFullDeviceAccess(): void
+    {
+        $rule = $this->insertRule(101);
+        $incident = $this->openIncident($rule);
+        $this->database->delete('data_template_rrd', ['local_data_id' => 101]);
+        $this->database->delete('data_local', ['id' => 101]);
+
+        // The viewer could see data source 101, but a gone data source no
+        // longer names its device; it fails closed and reads as missing.
+        self::assertSame([], $this->incidentCatalog->page(self::VIEWER, false, 1)->incidents);
+        self::assertSame(0, $this->incidentCatalog->page(self::VIEWER, false, 1)->total);
+        self::assertNull($this->incidentCatalog->find(self::VIEWER, $incident, self::NOW));
+        self::assertSame(AcknowledgeOutcome::NotFound, $this->incidents->acknowledge(self::VIEWER, $incident, self::NOW));
+        self::assertSame(['open', null, null], $this->incidentRow($incident));
+
+        $shown = $this->incidentCatalog->find(self::ADMIN, $incident, self::NOW);
+        self::assertSame([101, 'traffic_in', false], [$shown?->view->series->localDataId, $shown?->view->series->rrdName, $shown?->view->series->seriesExists]);
+        self::assertSame([$incident], array_map(static fn($view): int => $view->id, $this->incidentCatalog->page(self::ADMIN, false, 1)->incidents));
+        self::assertSame(AcknowledgeOutcome::Acknowledged, $this->incidents->acknowledge(self::ADMIN, $incident, self::NOW));
+
+        // One device exception removes full access.
+        $this->database->insert('user_auth_perms', ['user_id' => self::ADMIN, 'item_id' => 2, 'type' => 3]);
+        self::assertNull($this->incidentCatalog->find(self::ADMIN, $incident, self::NOW));
+
+        // A deny device policy without exceptions is not full access either.
+        $this->database->insert('user_auth', ['id' => 7, 'username' => 'nobody', 'policy_hosts' => 2]);
+        self::assertNull($this->incidentCatalog->find(7, $incident, self::NOW));
+    }
+
+    public function testAnIncidentIsVisibleThroughTheSeriesItOpenedOnNotItsRulesCurrentSeries(): void
+    {
+        // Opened on hidden data source 201; the rule is then moved to 101,
+        // which the viewer can see. The old incident stays hidden.
+        $rule = $this->insertRule(201);
+        $old = $this->openIncident($rule);
+        $this->database->update('alert_incident', ['status' => 'orphaned', 'active_rule_id' => null, 'ended_at' => self::NOW - 30], ['id' => $old]);
+        $this->database->update('alert_rule', ['local_data_id' => 101], ['id' => $rule]);
+        $new = $this->openIncident($rule);
+
+        self::assertSame([$new], array_map(static fn($view): int => $view->id, $this->incidentCatalog->page(self::VIEWER, false, 1)->incidents));
+        self::assertSame(1, $this->incidentCatalog->page(self::VIEWER, false, 1)->total);
+        self::assertNull($this->incidentCatalog->find(self::VIEWER, $old, self::NOW));
+        self::assertSame(AcknowledgeOutcome::NotFound, $this->incidents->acknowledge(self::VIEWER, $old, self::NOW));
+        self::assertSame(101, $this->incidentCatalog->find(self::VIEWER, $new, self::NOW)?->view->series->localDataId);
+
+        // The reverse: an incident opened on a visible series stays visible
+        // after its rule moves to a hidden one, but the rule is not shown.
+        $this->database->update('alert_rule', ['local_data_id' => 201], ['id' => $rule]);
+        $detail = $this->incidentCatalog->find(self::VIEWER, $new, self::NOW);
+        self::assertSame([101, 'Core <router>', $rule, null], [$detail?->view->series->localDataId, $detail?->view->series->device, $detail?->view->ruleId, $detail?->view->rule]);
+        self::assertSame(AcknowledgeOutcome::Acknowledged, $this->incidents->acknowledge(self::VIEWER, $new, self::NOW));
+
+        // Full device access sees both, with the rule.
+        self::assertSame([$new, $old], array_map(static fn($view): int => $view->id, $this->incidentCatalog->page(self::ADMIN, false, 1)->incidents));
+        self::assertSame($rule, $this->incidentCatalog->find(self::ADMIN, $old, self::NOW)?->view->rule?->id);
+    }
+
+    public function testAnIncidentOfADeletedRuleIsStillShownThroughItsSeries(): void
+    {
+        $rule = $this->insertRule(101);
+        $incident = $this->openIncident($rule);
+        $this->rules->delete(self::VIEWER, $rule, $this->revision($rule));
+
+        $detail = $this->incidentCatalog->find(self::VIEWER, $incident, self::NOW);
+        self::assertSame([$rule, null, 'orphaned'], [$detail?->view->ruleId, $detail?->view->rule, $detail?->view->incident?->status->value]);
+        self::assertSame(AcknowledgeOutcome::Ended, $this->incidents->acknowledge(self::VIEWER, $incident, self::NOW));
+        self::assertNull($this->incidentCatalog->find(7, $incident, self::NOW), 'an actor who sees no device');
     }
 
     public function testDeletingARuleWithAnOpenIncidentOrphansItAndKeepsItsQueuedNotification(): void
@@ -288,7 +371,7 @@ final class DbalAlertingPagesTest extends TestCase
     public function testEndedIncidentsAndRevokedActorsAreNotAcknowledged(): void
     {
         $rule = $this->insertRule(101);
-        $this->database->insert('alert_incident', ['rule_id' => $rule, 'status' => 'closed', 'opened_at' => self::NOW - 600, 'ended_at' => self::NOW - 60]);
+        $this->database->insert('alert_incident', ['rule_id' => $rule, 'status' => 'closed', 'opened_at' => self::NOW - 600, 'ended_at' => self::NOW - 60, 'local_data_id' => 101, 'rrd_name' => 'traffic_in']);
         $closed = (int) $this->database->lastInsertId();
         self::assertSame(AcknowledgeOutcome::Ended, $this->incidents->acknowledge(self::VIEWER, $closed, self::NOW));
         self::assertSame(['closed', null, null], $this->incidentRow($closed));
@@ -345,9 +428,11 @@ final class DbalAlertingPagesTest extends TestCase
         return (int) $this->database->lastInsertId();
     }
 
+    /** An open incident recording its rule's current series, as DbalIncidentRepository::open() writes it. */
     private function openIncident(int $rule): int
     {
-        $this->database->insert('alert_incident', ['rule_id' => $rule, 'status' => 'open', 'active_rule_id' => $rule, 'opened_at' => self::NOW - 600]);
+        $series = $this->database->fetchNumeric('SELECT local_data_id, rrd_name FROM alert_rule WHERE id = ?', [$rule]) ?: [0, ''];
+        $this->database->insert('alert_incident', ['rule_id' => $rule, 'status' => 'open', 'active_rule_id' => $rule, 'opened_at' => self::NOW - 600, 'local_data_id' => $series[0], 'rrd_name' => $series[1]]);
 
         return (int) $this->database->lastInsertId();
     }

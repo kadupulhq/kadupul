@@ -17,9 +17,16 @@
     {% if acknowledged %}<p role="status">{{ 'The incident is acknowledged.'|trans({}, 'alerting') }}</p>{% endif %}
     <dl>
         <dt>{{ 'Status'|trans({}, 'alerting') }}</dt><dd>{{ alerting.incident_status(detail.view) }}</dd>
+        {# The rule is shown only while it exists and its current series is
+           one the viewer can see; the incident's own series is the one it
+           opened on. #}
+        {% if rule is not null %}
         {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
         <dt>{{ 'Rule'|trans({}, 'alerting') }}</dt><dd><a href="{{ path('alerting_rule_edit', {id: rule.id}) }}">{{ 'Rule %id%'|trans({'%id%': rule.id}, 'alerting') }}</a>: {{ alerting.condition(rule) }}</dd>
-        <dt>{{ 'Series'|trans({}, 'alerting') }}</dt><dd>{{ alerting.series(rule) }}</dd>
+        {% else %}
+        <dt>{{ 'Rule'|trans({}, 'alerting') }}</dt><dd>{{ 'Rule %id%'|trans({'%id%': detail.view.ruleId}, 'alerting') }}</dd>
+        {% endif %}
+        <dt>{{ 'Series'|trans({}, 'alerting') }}</dt><dd>{{ alerting.series(detail.view.series) }}</dd>
     </dl>
     {% if incident is null %}
         <p role="alert">{{ 'This incident record is unreadable and cannot be shown or acknowledged.'|trans({}, 'alerting') }}</p>

@@ -263,6 +263,9 @@ final class AlertPersistenceDatabaseTest extends TestCase
     public function testTheRunnerLeavesACallersTransactionToTheCaller(): void
     {
         $runner = new DbalTransactionRunner($this->database);
+        foreach ([5, 6, 7] as $rule) {
+            $this->watch($rule, 100 + $rule, 10);
+        }
         $this->database->beginTransaction();
         $this->incidents->open(5, 100);
         try {
@@ -408,7 +411,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
     {
         $this->watch(1, 101, 10);
         $this->states->save(1, new RuleState(true, RuleState::COUNTER_LIMIT, 0, false, self::NOW - self::STEP));
-        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP]);
+        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP, 'local_data_id' => 101, 'rrd_name' => 'traffic_in']);
         $this->sample(101, self::NOW, 95.0);
 
         $this->evaluate();
@@ -453,7 +456,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
         $this->watch(1, 101, 10);
         $this->watch(2, 102, 10);
         // Rule 1 has an open incident, but no state row says so.
-        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP]);
+        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP, 'local_data_id' => 101, 'rrd_name' => 'traffic_in']);
         $this->sample(101, self::NOW, 95.0);
         $this->sample(102, self::NOW, 95.0);
         $logger = new RecordingLogger();
@@ -500,7 +503,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
     public function testAnOrphanWithAnUnreadableStateRowIsRemoved(): void
     {
         $this->watch(1, 101, 10);
-        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP]);
+        $this->database->insert('alert_incident', ['rule_id' => 1, 'status' => 'open', 'active_rule_id' => 1, 'opened_at' => self::NOW - self::STEP, 'local_data_id' => 101, 'rrd_name' => 'traffic_in']);
         $this->database->insert('alert_rule_state', ['rule_id' => 1, 'incident_open' => 2, 'last_observed_at' => self::NOW - self::STEP]);
         $this->database->executeStatement('DELETE FROM data_local WHERE id = 101');
 

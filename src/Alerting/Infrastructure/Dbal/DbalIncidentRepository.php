@@ -37,12 +37,20 @@ final readonly class DbalIncidentRepository implements IncidentRepository
     public function open(int $ruleId, int $observedAt): int
     {
         try {
-            $this->database->executeStatement(
-                'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at) VALUES (?, ?, ?, ?)',
-                [$ruleId, IncidentStatus::Open->value, $ruleId, $observedAt],
+            // The incident records the series its rule watches now. The
+            // evaluator holds the rule row's lock, so this is the series
+            // that was evaluated; who may see the incident is decided by it
+            // even after the rule moves to another series (ADR 0011 decision 12).
+            $inserted = $this->database->executeStatement(
+                'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name)
+                SELECT r.id, ?, r.id, ?, r.local_data_id, r.rrd_name FROM alert_rule r WHERE r.id = ?',
+                [IncidentStatus::Open->value, $observedAt, $ruleId],
             );
         } catch (UniqueConstraintViolationException $e) {
             throw new UnusableRuleRecord($ruleId, 'it already has an open or acknowledged incident; its stored state says it has none.', $e);
+        }
+        if ((int) $inserted !== 1) {
+            throw new \RuntimeException('Alert rule ' . $ruleId . ' disappeared while its incident was being opened.');
         }
 
         return StoredValue::int($this->database->lastInsertId(), 'alert_incident', 'id');

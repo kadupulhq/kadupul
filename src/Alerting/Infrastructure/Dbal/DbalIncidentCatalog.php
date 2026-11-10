@@ -16,19 +16,27 @@ use Kadupul\Alerting\Application\ReadModel\IncidentDetail;
 use Kadupul\Alerting\Application\ReadModel\IncidentPage;
 use Kadupul\Alerting\Application\ReadModel\IncidentView;
 use Kadupul\Alerting\Application\ReadModel\NotificationView;
+use Kadupul\Alerting\Application\ReadModel\SeriesView;
 
 /**
  * Incidents for the incident pages, on the evaluator's connection. An
- * incident is visible only through its rule (SeriesVisibility::ruleVisible),
- * so a rule's incidents are hidden exactly when the rule is. Rows are read
- * through DbalIncidentRepository::fromRow(); one the domain refuses is listed
- * by id as unreadable, never hidden or guessed at. From user_auth only the
- * acknowledging account's username is selected.
+ * incident is visible through the series it recorded when it opened
+ * (alert_incident.local_data_id and rrd_name), never through its rule's
+ * current series, so moving a rule does not change who sees its earlier
+ * incidents (ADR 0011 decision 12). An incident whose data source is gone
+ * is visible only with full device access (SeriesVisibility::seriesVisible).
+ * The rule is shown only when it still exists and its current series is
+ * visible too. Rows are read through DbalIncidentRepository::fromRow(); one
+ * the domain refuses is listed by id as unreadable, never hidden or guessed
+ * at. From user_auth only the acknowledging account's username is selected.
  */
 final readonly class DbalIncidentCatalog implements IncidentCatalog
 {
     /** Notifications listed per incident; Phase 1 queues at most one per transition. */
     public const int NOTIFICATION_LIMIT = 100;
+
+    /** The incident's recorded series, joined as idl and ih. */
+    public const string INCIDENT_SERIES_JOINS = 'LEFT JOIN data_local idl ON idl.id = i.local_data_id LEFT JOIN host ih ON ih.id = idl.host_id';
 
     public function __construct(private Connection $database, private SeriesVisibility $visibility) {}
 
@@ -40,10 +48,10 @@ final readonly class DbalIncidentCatalog implements IncidentCatalog
     public function page(int $actorId, bool $activeOnly, int $page): IncidentPage
     {
         $rows = $this->rowsPerPage();
-        $where = ' WHERE ' . $this->visibility->ruleVisible($actorId) . ($activeOnly ? ' AND i.active_rule_id IS NOT NULL' : '');
-        $total = StoredValue::int($this->database->fetchOne('SELECT COUNT(*) FROM alert_incident i INNER JOIN alert_rule r ON r.id = i.rule_id ' . DbalRuleRepository::SERIES_JOINS . $where), 'alert_incident', 'COUNT(*)');
+        $where = ' WHERE ' . $this->visibility->seriesVisible($actorId, 'idl') . ($activeOnly ? ' AND i.active_rule_id IS NOT NULL' : '');
+        $total = StoredValue::int($this->database->fetchOne('SELECT COUNT(*) FROM alert_incident i ' . self::INCIDENT_SERIES_JOINS . $where), 'alert_incident', 'COUNT(*)');
         $found = $this->database->fetchAllAssociative(
-            self::select() . $where . ' ORDER BY i.id DESC LIMIT ? OFFSET ?',
+            $this->select($actorId) . $where . ' ORDER BY i.id DESC LIMIT ? OFFSET ?',
             [$rows, ($page - 1) * $rows],
             [ParameterType::INTEGER, ParameterType::INTEGER],
         );
@@ -53,7 +61,7 @@ final readonly class DbalIncidentCatalog implements IncidentCatalog
 
     public function find(int $actorId, int $incidentId, int $now): ?IncidentDetail
     {
-        $row = $this->database->fetchAssociative(self::select() . ' WHERE i.id = ? AND ' . $this->visibility->ruleVisible($actorId), [$incidentId], [ParameterType::INTEGER]);
+        $row = $this->database->fetchAssociative($this->select($actorId) . ' WHERE i.id = ? AND ' . $this->visibility->seriesVisible($actorId, 'idl'), [$incidentId], [ParameterType::INTEGER]);
         if ($row === false) {
             return null;
         }
@@ -81,16 +89,20 @@ final readonly class DbalIncidentCatalog implements IncidentCatalog
         }, $notifications));
     }
 
-    private static function select(): string
+    private function select(int $actorId): string
     {
         return 'SELECT i.id AS incident_id, i.rule_id AS incident_rule_id, i.status, i.active_rule_id, i.opened_at, i.ended_at, i.acknowledged_at, i.acknowledged_by,
+                i.local_data_id AS incident_local_data_id, i.rrd_name AS incident_rrd_name, idl.host_id AS incident_host_id, ih.description AS incident_description,
+                CASE WHEN idl.id IS NOT NULL AND (idl.host_id = 0 OR (ih.id IS NOT NULL AND ih.deleted <> \'on\'))
+                    AND EXISTS (SELECT 1 FROM data_template_rrd idtr WHERE idtr.local_data_id = i.local_data_id AND idtr.data_source_name = i.rrd_name) THEN 1 ELSE 0 END AS incident_series_exists,
                 ua.username AS acknowledged_username,
+                CASE WHEN r.id IS NOT NULL AND ' . $this->visibility->ruleVisible($actorId) . ' THEN 1 ELSE 0 END AS rule_visible,
                 r.' . implode(', r.', RuleRevision::COLUMNS) . ',
                 dl.id AS data_local_id, dl.host_id, h.description,
                 CASE WHEN ' . DbalRuleRepository::SERIES_EXISTS . ' THEN 1 ELSE 0 END AS series_exists,
                 i2.id AS active_incident_id
-            FROM alert_incident i
-            INNER JOIN alert_rule r ON r.id = i.rule_id ' . DbalRuleRepository::SERIES_JOINS . '
+            FROM alert_incident i ' . self::INCIDENT_SERIES_JOINS . '
+            LEFT JOIN alert_rule r ON r.id = i.rule_id ' . DbalRuleRepository::SERIES_JOINS . '
             LEFT JOIN alert_incident i2 ON i2.active_rule_id = r.id
             LEFT JOIN user_auth ua ON ua.id = i.acknowledged_by';
     }
@@ -99,6 +111,7 @@ final readonly class DbalIncidentCatalog implements IncidentCatalog
     private static function view(array $row): IncidentView
     {
         $id = StoredValue::int($row['incident_id'], 'alert_incident', 'id');
+        $where = 'alert_incident ' . $id;
         try {
             $incident = DbalIncidentRepository::fromRow([
                 'id' => $row['incident_id'],
@@ -114,7 +127,15 @@ final readonly class DbalIncidentCatalog implements IncidentCatalog
             $incident = null;
         }
         $username = $incident?->acknowledgedBy !== null && is_string($row['acknowledged_username']) ? $row['acknowledged_username'] : null;
+        $hasDevice = $row['incident_host_id'] !== null && StoredValue::int($row['incident_host_id'], $where, 'host_id') > 0;
+        $series = new SeriesView(
+            StoredValue::int($row['incident_local_data_id'], $where, 'local_data_id'),
+            is_string($row['incident_rrd_name']) ? $row['incident_rrd_name'] : '',
+            StoredValue::int($row['incident_series_exists'], $where, 'series_exists') === 1,
+            $hasDevice && is_string($row['incident_description']) && $row['incident_description'] !== '' ? $row['incident_description'] : null,
+        );
+        $rule = StoredValue::int($row['rule_visible'], $where, 'rule_visible') === 1 ? DbalRuleCatalog::view($row) : null;
 
-        return new IncidentView($id, $incident, DbalRuleCatalog::view($row), $username);
+        return new IncidentView($id, $incident, $series, StoredValue::int($row['incident_rule_id'], $where, 'rule_id'), $rule, $username);
     }
 }

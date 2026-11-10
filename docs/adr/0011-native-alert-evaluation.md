@@ -544,10 +544,20 @@ behavior until an administrator opts in.
     source without a device is visible, and one with a device is visible when
     the device is (`ManagementVisibility`). The check runs when a rule is
     saved, in the write transaction, together with the evaluator's existence
-    check of the series. Listing, editing and deleting a rule, and viewing or
-    acknowledging an incident, require the realm and visibility of the rule's
-    data source; a rule whose data source is gone stays visible so it can be
-    deleted. Anything the actor cannot see answers as not found. Evaluation
+    check of the series. Listing, editing and deleting a rule require the
+    realm and the visibility of the rule's data source. An incident records
+    the series it opened on (`alert_incident.local_data_id` and `rrd_name`,
+    copied from the rule in the transaction that opens it), and listing,
+    viewing and acknowledging it require the realm and the visibility of that
+    recorded series, not of the rule's current one, so moving a rule changes
+    nothing about who sees its earlier incidents. The incident page shows the
+    rule only while it exists and its current series is visible too. A data
+    source that is gone no longer names its device, so its visibility cannot
+    be decided: a rule or incident on it fails closed and is visible only to
+    a user with full device access, which is the legacy simple device policy
+    (`get_simple_device_perms()`: device policy allow and no device
+    exceptions); such a user can still delete the rule. Anything the actor
+    cannot see answers as not found. Evaluation
     itself runs with no user and does not re-authorize rules. Every entry point
     enforces this, not only the forms.
     The pages live at `/alerting/rules` and `/alerting/incidents` and are
@@ -563,7 +573,7 @@ behavior until an administrator opts in.
 
 13. **Schema.** Five InnoDB tables: `alert_rule` (definition and owner),
     `alert_rule_state` (counters and last observation), `alert_incident`
-    (lifecycle, timestamps, acknowledging user), `alert_notification` (queue
+    (lifecycle, timestamps, acknowledging user and the series it opened on), `alert_notification` (queue
     with attempt state, and the rate and threshold of the change it reports)
     and `alert_baseline_sample` (hour-of-week history, decision 3).
     `alert_rule.kind` is `threshold` or `baseline`; a threshold rule sets
