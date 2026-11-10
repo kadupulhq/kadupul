@@ -87,6 +87,68 @@ final class WorkerIoCoverageTest extends TestCase
         );
     }
 
+    public function testAWebRefusalAdmitsOnlyTheWorkerAndNeverStandsInForAHelperRun(): void
+    {
+        // The worker answers 404 before it loads its helper, so the collector
+        // has no helper lines to map and the report must not satisfy a
+        // scenario that requires them.
+        $root = dirname(__DIR__, 2);
+        $socket = stream_socket_server('tcp://127.0.0.1:0', $error, $message);
+        self::assertIsResource($socket, $message);
+        $address = stream_socket_get_name($socket, false);
+        self::assertIsString($address);
+        fclose($socket);
+        [$options, $environment] = WorkerIoCoverage::configuration($root, $this->directory, self::WORKER, 'cli-server');
+        $server = new Process([PHP_BINARY, '-d', 'pcov.enabled=1', '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~',
+            ...$options, '-S', $address, '-t', $this->directory], null, $environment);
+        $server->start();
+        try {
+            $response = false;
+            $deadline = microtime(true) + 10;
+            do {
+                $connection = @stream_socket_client('tcp://' . $address, $error, $message, 0.1);
+                if (is_resource($connection)) {
+                    stream_set_timeout($connection, 5);
+                    fwrite($connection, 'GET /' . self::WORKER . " HTTP/1.0\r\nHost: localhost\r\n\r\n");
+                    $response = stream_get_contents($connection);
+                    fclose($connection);
+                    break;
+                }
+                usleep(10000);
+            } while ($server->isRunning() && microtime(true) < $deadline);
+        } finally {
+            $server->stop();
+        }
+        self::assertIsString($response, $server->getErrorOutput());
+        self::assertStringStartsWith('HTTP/1.0 404 Not Found', $response);
+        $reports = glob($this->directory . '/*.coverage');
+        self::assertIsArray($reports);
+        self::assertCount(1, $reports, $server->getErrorOutput());
+
+        $data = WorkerIoCoverage::load($reports[0], $root, self::WORKER, 'cli-server', false)->getData(true)->lineCoverage();
+        self::assertNotEmpty(array_filter($data[realpath($root . '/' . self::WORKER)], static fn(?array $hits): bool => $hits !== null && $hits !== []));
+        self::assertArrayNotHasKey(realpath($root . '/bin/worker-io.php'), $data);
+        try {
+            WorkerIoCoverage::load($reports[0], $root, self::WORKER, 'cli-server');
+            self::fail('A report that never ran the helper was admitted as a helper run.');
+        } catch (\RuntimeException $refused) {
+            self::assertSame('Required native source was not executed: bin/worker-io.php', $refused->getMessage());
+        }
+    }
+
+    public function testEveryWorkerBindsItsOwnTestAndFixtures(): void
+    {
+        self::assertContains('tests/Unit/Core/Cli/PollerDrainNativeTest.php', WorkerIoCoverage::sources(self::WORKER));
+        $alerting = WorkerIoCoverage::sources('bin/legacy-alerting-deliver.php');
+        foreach (['tests/Unit/Core/Cli/AlertingDeliveryWorkerNativeTest.php', 'tests/Fixtures/alerting-delivery-bootstrap.php',
+            'tests/Fixtures/alerting-delivery-kernel.php', 'bin/legacy-alerting-deliver.php', 'bin/worker-io.php'] as $source) {
+            self::assertContains($source, $alerting);
+        }
+        self::assertNotContains('tests/Unit/Core/Cli/PollerDrainNativeTest.php', $alerting);
+        $this->expectExceptionMessage('Unknown copied worker coverage producer.');
+        WorkerIoCoverage::sources('bin/legacy-unregistered.php');
+    }
+
     #[DataProvider('copyFaults')]
     public function testMissingStaleAndChangedHelperCopiesCannotPublishCoverage(string $fault): void
     {

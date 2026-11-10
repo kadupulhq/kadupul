@@ -7,59 +7,8 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-/**
- * Runs lib/alerting.php's launcher in a child with recording stubs for the
- * legacy helpers it calls.
- *
- * @param array<string, string> $settings
- * @return list<array<mixed>> the exec_background() and cacti_log() calls, in order
- */
-function alerting_poller_bottom_run(int $pollerId, array $settings): array
-{
-    $root = dirname(__DIR__, 4);
-    $program = '$settings=' . var_export($settings, true) . ';$calls=[];'
-        . 'function read_config_option($k){return $GLOBALS["settings"][$k]??"";}'
-        . 'function exec_background($f,$a="",$r=""){$GLOBALS["calls"][]=["exec",$f,$a,$r];}'
-        . 'function cacti_log($m,$o=false,$e="",$l=0){$GLOBALS["calls"][]=["log",$m,$e];}'
-        . 'require ' . var_export($root . '/lib/alerting.php', true) . ';'
-        . '$launched=alerting_poller_bottom(' . $pollerId . ', "/srv/kadupul");'
-        . 'echo json_encode(["launched"=>$launched,"calls"=>$calls]);';
-    $run = test_php_run($program);
-    expect($run['err'])->toBe('')->and($run['status'])->toBe(0);
-    $result = json_decode($run['out'], true, 8, JSON_THROW_ON_ERROR);
-    expect($result['launched'])->toBe(array_filter($result['calls'], static fn(array $call): bool => $call[0] === 'exec') !== []);
-
-    return $result['calls'];
-}
-
-test('a remote poller never launches the evaluator', function () {
-    expect(alerting_poller_bottom_run(2, ['alerting_enable' => 'on', 'path_php_binary' => PHP_BINARY]))->toBe([]);
-});
-
-test('the main poller launches nothing while alerting is off', function (array $settings) {
-    expect(alerting_poller_bottom_run(1, $settings + ['path_php_binary' => PHP_BINARY]))->toBe([]);
-})->with([
-    'missing' => [[]],
-    'empty' => [['alerting_enable' => '']],
-    'upper case' => [['alerting_enable' => 'ON']],
-]);
-
-test('the main poller launches the console command once in the background', function () {
-    expect(alerting_poller_bottom_run(1, ['alerting_enable' => 'on', 'path_php_binary' => PHP_BINARY]))->toBe([
-        ['exec', PHP_BINARY, ['/srv/kadupul/bin/console', 'kadupul:alerting:evaluate', '--no-interaction'], ''],
-    ]);
-});
-
-test('a PHP binary that is not an absolute path to a file launches nothing and says why', function (string $php) {
-    expect(alerting_poller_bottom_run(1, ['alerting_enable' => 'on', 'path_php_binary' => $php]))->toBe([
-        ['log', 'WARNING: Alert evaluation was not started: the PHP Binary Path setting is not an absolute path to a file.', 'ALERTING'],
-    ]);
-})->with([
-    'relative' => ['php'],
-    'empty' => [''],
-    'missing file' => ['/nonexistent/kadupul/php'],
-    'directory' => [sys_get_temp_dir()],
-]);
+// lib/alerting.php's launcher itself is tested in a process of its own by
+// tests/Symfony/Alerting/Infrastructure/AlertingPollerLauncherTest.php.
 
 /**
  * Runs one poller.php post-processing block with every helper it calls

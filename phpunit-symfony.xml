@@ -26,6 +26,7 @@
             <file>bin/legacy-device-collector.php</file>
             <file>bin/legacy-device-state.php</file>
             <file>lib/api_device.php</file>
+            <file>lib/alerting.php</file>
             <file>bin/legacy-device-remove.php</file>
             <file>bin/legacy-assignment-bootstrap.php</file>
             <file>bin/worker-io.php</file>

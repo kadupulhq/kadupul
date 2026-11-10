@@ -21,9 +21,12 @@ final class WorkerIoCoverage
 {
     public const string PRODUCER = 'tests/Fixtures/worker-io-coverage.php';
     public const string MARKER = 'copied-worker-io-terminated';
+    /** Each worker's producing test and the fixtures that stand in for its bootstrap. */
     private const array WORKERS = [
-        'bin/legacy-poller-output-empty.php' => 'tests/Unit/Core/Cli/PollerDrainNativeTest.php',
-        'bin/legacy-rejected-samples-replay.php' => 'tests/Unit/Core/Cli/ReplayRejectedSamplesCliTest.php',
+        'bin/legacy-poller-output-empty.php' => ['tests/Unit/Core/Cli/PollerDrainNativeTest.php'],
+        'bin/legacy-rejected-samples-replay.php' => ['tests/Unit/Core/Cli/ReplayRejectedSamplesCliTest.php'],
+        'bin/legacy-alerting-deliver.php' => ['tests/Unit/Core/Cli/AlertingDeliveryWorkerNativeTest.php',
+            'tests/Fixtures/alerting-delivery-bootstrap.php', 'tests/Fixtures/alerting-delivery-kernel.php'],
     ];
 
     /** @return list<string> */
@@ -35,7 +38,7 @@ final class WorkerIoCoverage
         return ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php',
             'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Symfony/NativeCoverageStack.php',
             'tests/Symfony/WorkerIoCoverage.php', 'tests/Symfony/WorkerIoCoverageTest.php',
-            'tests/Fixtures/drain-cli-bootstrap.php', self::WORKERS[$worker], $worker, 'bin/worker-io.php'];
+            'tests/Fixtures/drain-cli-bootstrap.php', ...self::WORKERS[$worker], $worker, 'bin/worker-io.php'];
     }
 
     /** @return array<string, string> Copy => canonical source. */
@@ -66,7 +69,11 @@ final class WorkerIoCoverage
         ]];
     }
 
-    public static function load(string $report, string $root, string $worker, string $scenario): CodeCoverage
+    /**
+     * @param bool $helperExecuted false for a request the worker refuses
+     *                             before it loads bin/worker-io.php
+     */
+    public static function load(string $report, string $root, string $worker, string $scenario, bool $helperExecuted = true): CodeCoverage
     {
         return NativeChildCoverageEvidence::load(
             $report,
@@ -75,7 +82,7 @@ final class WorkerIoCoverage
             $scenario,
             self::sources($worker),
             [self::MARKER],
-            [$worker, 'bin/worker-io.php'],
+            $helperExecuted ? [$worker, 'bin/worker-io.php'] : [$worker],
             NativeCoverageStack::capture($root)
         );
     }
