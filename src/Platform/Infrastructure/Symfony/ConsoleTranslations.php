@@ -92,21 +92,6 @@ final class ConsoleTranslations
     /** @return list<string> */
     private static function locales(string $projectDir): array
     {
-        $contents = file_get_contents($projectDir . '/locales/catalogs.json');
-        if ($contents === false) {
-            throw new \RuntimeException('Console language catalogue metadata is unavailable.');
-        }
-        $specification = json_decode($contents, true, 16, JSON_THROW_ON_ERROR);
-        $locales = $specification['translated_locales'] ?? null;
-        if (!is_array($locales) || !array_is_list($locales) || $locales === []) {
-            throw new \RuntimeException('Console language catalogue metadata is invalid.');
-        }
-        foreach ($locales as $locale) {
-            if (!is_string($locale) || preg_match('/\A[a-z]{2}-[A-Z]{2}\z/D', $locale) !== 1) {
-                throw new \RuntimeException('Console language catalogue identity is invalid.');
-            }
-        }
-
-        return $locales;
+        return TranslationResources::shippedLocales($projectDir);
     }
 }
