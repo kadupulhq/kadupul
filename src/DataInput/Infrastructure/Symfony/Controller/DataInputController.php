@@ -81,7 +81,7 @@ final class DataInputController
                 $data = $form->getData();
                 try {
                     $result = $methods->execute('save', $id, ['revision' => $data['revision'] ?? '', 'data' => $data]);
-                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $result['id'], 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $result['id'], 'saved' => $result['partial'] === true ? 'partial' : '1']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -137,7 +137,7 @@ final class DataInputController
                 try {
                     $data['input_output'] = $direction;
                     $result = $methods->execute('field_save', $id, ['field' => $field, 'revision' => $data['revision'], 'data' => $data]);
-                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $id, 'saved' => $result['partial'] ? 'partial' : '1']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate('data_input_edit', ['id' => $id, 'saved' => $result['partial'] === true ? 'partial' : '1']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -187,7 +187,7 @@ final class DataInputController
                 $data = $form->getData();
                 try {
                     $result = $methods->execute($operation, $id, $data + ['field' => $field]);
-                    return new RedirectResponse($urls->generate($operation === 'delete' ? 'data_inputs' : 'data_input_edit', $operation === 'delete' ? [] : ['id' => $result['id'], 'saved' => $result['partial'] ? 'partial' : '1', 'operation' => $operation]), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate($operation === 'delete' ? 'data_inputs' : 'data_input_edit', $operation === 'delete' ? [] : ['id' => $result['id'], 'saved' => $result['partial'] === true ? 'partial' : '1', 'operation' => $operation]), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));
@@ -238,7 +238,7 @@ final class DataInputController
                         throw new \InvalidArgumentException('Invalid selection.');
                     }
                     $result = $methods->execute('bulk_' . $operation, 0, ['selection' => $snapshot, 'title' => $data['title'] ?? '<input_title> (1)']);
-                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] ? 'partial' : '1', 'operation' => 'bulk_' . $operation, 'retry_ids' => $operation === 'duplicate' && $result['partial'] ? implode(',', $result['ids']) : '']), 303, self::HEADERS);
+                    return new RedirectResponse($urls->generate('data_inputs', ['saved' => $result['partial'] === true ? 'partial' : '1', 'operation' => 'bulk_' . $operation, 'retry_ids' => $operation === 'duplicate' && $result['partial'] === true ? implode(',', $result['ids']) : '']), 303, self::HEADERS);
                 } catch (DataInputConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'data_input')));

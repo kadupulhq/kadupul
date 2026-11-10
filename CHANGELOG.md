@@ -5,6 +5,8 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Update locked Doctrine, phpseclib, Symfony 7.4 and PHPStan dependencies. PHPStan strict rules 2.1.1 reject untyped values used as conditions, so the session-storage setting is read as a boolean once when the configuration loads, and the remaining checks compare booleans explicitly; behaviour is unchanged.
+
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
 - Add a rendered translation corpus test: every catalog identity, plural count and fixed `sprintf`, `%%` and text-domain case is rendered through the legacy `__()` helpers and php-gettext over the shipped `.mo` files for en-US and all 23 shipped locales, with two German fixture plugins (`i18nprobe` and `folder`) for plugin domains. The harness fails on an empty corpus, a locale with no translated entry or a missing php-gettext reader. It is the oracle for moving legacy translation onto Symfony.
