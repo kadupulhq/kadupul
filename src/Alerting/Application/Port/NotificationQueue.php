@@ -17,7 +17,8 @@ use Kadupul\Alerting\Domain\Evaluation\Transition;
  * settles rows in its own process.
  *
  * A row is `queued` until its next attempt time, `sending` while a deliverer
- * holds it, then `sent` or, with no attempts left, `failed`. A claim is a
+ * holds it, then `sent`, `suppressed` when no administrator is to be mailed,
+ * or, with no attempts left, `failed`. All three are final. A claim is a
  * lease: while a row is `sending` its next_attempt_at is the instant the
  * claim expires, and the claim's holder is whoever set that value. A claim
  * that expires (a deliverer that died) makes the row due again, so delivery
@@ -60,6 +61,15 @@ interface NotificationQueue
 
     /** @return bool false when the claim was lost: it expired and another deliverer holds the row */
     public function markSent(ClaimedNotification $claim, int $sentAt): bool;
+
+    /**
+     * Ends the row as `suppressed` with its reason: the administrator
+     * notification is turned off or has no administrator, so no retry could
+     * send it.
+     *
+     * @return bool false when the claim was lost
+     */
+    public function markSuppressed(ClaimedNotification $claim, string $reason): bool;
 
     /**
      * Records a failed attempt and its error, which must hold no secret: the

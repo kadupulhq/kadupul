@@ -239,7 +239,8 @@ behavior until an administrator opts in.
      batch was read is found missing under the lock and nothing is written.
      A failed notification insert rolls the state and the incident back with
      it, and the next run counts the same observation again.
-   - **Claims.** Rows move `queued` to `sending` to `sent`, or to `failed`.
+   - **Claims.** Rows move `queued` to `sending` to `sent`, `suppressed` or
+     `failed`, each final.
      A deliverer claims one row at a time with a single conditional `UPDATE`
      that only matches a due row and raises its attempt count. While a row is
      `sending`, `next_attempt_at` is the end of the claim's lease, and the
@@ -254,9 +255,16 @@ behavior until an administrator opts in.
    - **Retries.** At most 5 attempts. Attempts 2 to 5 wait 60, 300, 900 and
      1800 seconds after the previous failure. The fifth failure marks the row
      `failed`, logs an error with the row, incident, attempts and error, and
-     the row is not retried. An administrator notification that is not
-     configured, disabled, or whose account or address is missing counts as a
-     failed attempt, so it is visible and bounded instead of queued forever.
+     the row is not retried. An administrator account or address that is
+     missing counts as a failed attempt, because an operator can fix it while
+     the row still has attempts.
+   - **Suppressed.** When administrator notification is disabled
+     (`notify_admin` off, Cacti's default) or no primary administrator is set,
+     nothing is wrong with the transport and no retry could send the mail. The
+     row ends `suppressed` on its first claim with that reason in
+     `last_error`, and each delivery run logs one warning with the count of
+     rows it suppressed, not one line per row. Turning notification on later
+     does not resend suppressed rows.
    - **Errors.** `last_error` holds the exception's class name. Only the mail
      port's own `MailDeliveryFailed` adds its message, which is fixed text; any
      other exception's message could hold a DSN, query or credential and is
@@ -430,7 +438,8 @@ behavior until an administrator opts in.
 | Two deliverers run at once | Each row is claimed and sent by one of them | Task 4 |
 | Deliverer dies holding a row | The row is due again after the 900 s lease, so the mail may be sent twice; on the last attempt it is marked `failed` | Task 4 |
 | Five attempts fail | Row `failed`, error logged, not retried | Task 4 |
-| Administrator notification disabled or unconfigured | Each attempt fails and is recorded; after five the row is `failed` | Task 4 |
+| Administrator notification disabled or unconfigured | Row `suppressed` on its first claim, never retried or sent; one warning per run with the count | Task 4 |
+| Administrator account or address missing | Each attempt fails and is recorded; after five the row is `failed` | Task 4 |
 
 ## Alternatives
 

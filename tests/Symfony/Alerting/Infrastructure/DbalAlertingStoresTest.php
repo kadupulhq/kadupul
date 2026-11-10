@@ -525,6 +525,25 @@ final class DbalAlertingStoresTest extends TestCase
         self::assertSame([123456789.12345679, 0.1 + 0.2], [$content?->value, $content?->threshold]);
     }
 
+    public function testOnlyTheHolderEndsARowAsSuppressedAndItIsNotDueAgain(): void
+    {
+        $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
+        $queue = new DbalNotificationQueue($this->database);
+        $queue->enqueue($incident, Transition::Opened, 1.0, 0.5, 1000);
+        $first = $queue->claim(1, 1000, 5, 1900);
+        self::assertNotNull($first);
+        $second = $queue->claim(1, 1900, 5, 2800);
+        self::assertNotNull($second);
+
+        self::assertFalse($queue->markSuppressed($first, 'administrator notification: Disabled'), 'A lost claim cannot settle the row.');
+        self::assertTrue($queue->markSuppressed($second, 'administrator notification: Disabled'));
+
+        self::assertSame(['suppressed', '2', 'administrator notification: Disabled'], array_map('strval', $this->database->fetchNumeric('SELECT status, attempts, last_error FROM alert_notification WHERE id = 1') ?: []));
+        self::assertSame([], $queue->due(10_000, 5, 10));
+        self::assertNull($queue->claim(1, 10_000, 5, 10_900));
+        self::assertSame(0, $queue->failExpiredClaims(10_000, 1));
+    }
+
     public function testOnlyAnOpenedOrRecoveredIncidentIsQueued(): void
     {
         $this->expectException(\InvalidArgumentException::class);

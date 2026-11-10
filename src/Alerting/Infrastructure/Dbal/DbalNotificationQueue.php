@@ -35,6 +35,7 @@ final readonly class DbalNotificationQueue implements NotificationQueue
     public const string SENDING = 'sending';
     public const string SENT = 'sent';
     public const string FAILED = 'failed';
+    public const string SUPPRESSED = 'suppressed';
     public const string EXPIRED = 'its last attempt did not report back before its claim expired';
 
     public function __construct(private Connection $database) {}
@@ -111,6 +112,14 @@ final readonly class DbalNotificationQueue implements NotificationQueue
         return (int) $this->database->executeStatement(
             'UPDATE alert_notification SET status = ?, sent_at = ? WHERE id = ? AND status = ? AND next_attempt_at = ?',
             [self::SENT, $sentAt, $claim->id, self::SENDING, $claim->leaseUntil],
+        ) === 1;
+    }
+
+    public function markSuppressed(ClaimedNotification $claim, string $reason): bool
+    {
+        return (int) $this->database->executeStatement(
+            'UPDATE alert_notification SET status = ?, last_error = ? WHERE id = ? AND status = ? AND next_attempt_at = ?',
+            [self::SUPPRESSED, $reason, $claim->id, self::SENDING, $claim->leaseUntil],
         ) === 1;
     }
 

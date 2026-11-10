@@ -24,6 +24,7 @@ use Kadupul\Tests\Alerting\Fakes\InMemoryNotificationQueue;
 use Kadupul\Tests\Alerting\Fakes\MockClockAdapter;
 use Kadupul\Tests\Alerting\Fakes\RecordingLogger;
 use Kadupul\Tests\Alerting\Fakes\RecordingMailDelivery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
 use Symfony\Component\Clock\MockClock;
@@ -153,15 +154,59 @@ final class DeliverNotificationsTest extends TestCase
         self::assertSame('RuntimeException', $this->queue->rows[$id]['error']);
     }
 
-    public function testASuppressedAdministratorNotificationIsAFailedAttemptNotASend(): void
+    /** @return iterable<string, array{AdministratorNotificationPolicy, string}> */
+    public static function suppressedPolicies(): iterable
     {
-        $id = $this->queueOpened();
-        $this->policy = new AdministratorNotificationPolicy(1, false);
+        yield 'notifications disabled (the notify_admin default)' => [new AdministratorNotificationPolicy(1, false), 'Disabled'];
+        yield 'no primary administrator' => [new AdministratorNotificationPolicy(0, true), 'NotConfigured'];
+    }
 
-        self::assertEquals(new DeliveryReport(retrying: 1), $this->deliverer()(10, 30.0));
+    #[DataProvider('suppressedPolicies')]
+    public function testASuppressedAdministratorNotificationEndsAfterOneClaimWithOneSummaryLine(AdministratorNotificationPolicy $policy, string $status): void
+    {
+        $ids = [$this->queueOpened(), $this->queueOpened(96.0), $this->queueOpened(97.0)];
+        $this->policy = $policy;
+
+        self::assertEquals(new DeliveryReport(suppressed: 3), $this->deliverer()(10, 30.0));
 
         self::assertSame([], $this->mail->sent);
-        self::assertSame(['queued', 1, 'administrator notification: Disabled'], [$this->queue->rows[$id]['status'], $this->queue->rows[$id]['attempts'], $this->queue->rows[$id]['error']]);
+        foreach ($ids as $id) {
+            self::assertSame(['suppressed', 1, 'administrator notification: ' . $status, null], [$this->queue->rows[$id]['status'], $this->queue->rows[$id]['attempts'], $this->queue->rows[$id]['error'], $this->queue->rows[$id]['sent']]);
+        }
+        self::assertSame([['level' => 'warning', 'message' => '{count} alert notifications were not sent: administrator notification is {status}.', 'context' => ['count' => 3, 'status' => $status]]], $this->logger->records, 'One summary line for the run, not one per row, and no error.');
+
+        // Suppressed is final: no later run claims the rows again, even once notifications are on.
+        $this->policy = new AdministratorNotificationPolicy(1, true);
+        $this->at(self::NOW + 86_400);
+        self::assertEquals(new DeliveryReport(), $this->deliverer()(10, 30.0));
+        self::assertSame([], $this->mail->sent);
+        self::assertSame(['suppressed' => 3], $this->queue->statuses());
+        self::assertCount(1, $this->logger->records);
+    }
+
+    public function testAnAdministratorWithNoAccountOrAddressStillRetriesToFailed(): void
+    {
+        $id = $this->queueOpened();
+        $this->policy = new AdministratorNotificationPolicy(2, true);
+
+        $next = self::NOW;
+        foreach ([60, 300, 900, 1800] as $attempt => $delay) {
+            $this->at($next);
+            self::assertEquals(new DeliveryReport(retrying: 1), $this->deliverer()(10, 30.0), 'attempt ' . ($attempt + 1));
+            self::assertSame(['queued', 'administrator notification: InvalidAccount'], [$this->queue->rows[$id]['status'], $this->queue->rows[$id]['error']]);
+            $next += $delay;
+        }
+        $this->at($next);
+        self::assertEquals(new DeliveryReport(failed: 1), $this->deliverer()(10, 30.0));
+        self::assertSame(['failed', 5], [$this->queue->rows[$id]['status'], $this->queue->rows[$id]['attempts']]);
+
+        // A missing address takes the same retry path.
+        $other = $this->queueOpened(97.0);
+        $this->admin = new AdministratorRecipient('', 'Admin');
+        $this->administrator->recipient = $this->admin;
+        $this->policy = new AdministratorNotificationPolicy(1, true);
+        self::assertEquals(new DeliveryReport(retrying: 1), $this->deliverer()(10, 30.0));
+        self::assertSame(['queued', 'administrator notification: MissingAddress'], [$this->queue->rows[$other]['status'], $this->queue->rows[$other]['error']]);
     }
 
     public function testNotificationBodyContainsNoCredentialsOrRawSql(): void

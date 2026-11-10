@@ -15,12 +15,14 @@ final readonly class DeliveryReport
      * @param int $sent     rows the mail port accepted and that were then marked sent
      * @param int $retrying rows whose attempt failed and that are queued for a later one
      * @param int $failed   rows marked failed: out of attempts, unreadable, or a claim that expired on the last attempt
-     * @param int $lost     rows whose claim expired during the attempt and that another deliverer now holds
+     * @param int $lost       rows whose claim expired during the attempt and that another deliverer now holds
+     * @param int $suppressed rows ended unsent because administrator notification is off or has no administrator
      */
     public function __construct(
         public int $sent = 0,
         public int $retrying = 0,
         public int $failed = 0,
         public int $lost = 0,
+        public int $suppressed = 0,
     ) {}
 }

@@ -33,6 +33,7 @@ use Kadupul\Alerting\Application\Port\ClaimedNotification;
 use Kadupul\Alerting\Application\Port\NotificationQueue;
 use Kadupul\Alerting\Application\Port\RuleRepository;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
+use Kadupul\Alerting\Domain\AdministratorNotificationPolicy;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Incident\Incident;
@@ -82,6 +83,11 @@ final readonly class FailingNotifications implements NotificationQueue
     public function markSent(ClaimedNotification $claim, int $sentAt): bool
     {
         return $this->inner->markSent($claim, $sentAt);
+    }
+
+    public function markSuppressed(ClaimedNotification $claim, string $reason): bool
+    {
+        return $this->inner->markSuppressed($claim, $reason);
     }
 
     public function markAttemptFailed(ClaimedNotification $claim, string $error, ?int $retryAt): bool
@@ -411,6 +417,30 @@ final class AlertNotificationDatabaseTest extends TestCase
         self::assertEquals(new DeliveryReport(), $this->deliver(), 'A failed row is not retried.');
         self::assertSame([], $this->mail->failures);
         self::assertSame([], $this->mail->sent);
+    }
+
+    public function testADisabledAdministratorNotificationSuppressesEachRowOnce(): void
+    {
+        $this->watch(1, 101, 10);
+        $this->watch(2, 102, 11);
+        $this->sample(101, self::NOW, 95.0);
+        $this->sample(102, self::NOW, 96.0);
+        $this->evaluate();
+        // notify_admin off, Cacti's default.
+        $this->administrator->policy = new AdministratorNotificationPolicy(1, false);
+
+        self::assertEquals(new DeliveryReport(suppressed: 2), $this->deliver());
+
+        foreach ($this->rows() as $row) {
+            self::assertSame(['suppressed', '1', 'administrator notification: Disabled', null], [$row['status'], $row['attempts'], $row['last_error'], $row['sent_at']]);
+        }
+        self::assertSame([['level' => 'warning', 'message' => '{count} alert notifications were not sent: administrator notification is {status}.', 'context' => ['count' => 2, 'status' => 'Disabled']]], $this->logger->records);
+
+        $this->administrator->policy = new AdministratorNotificationPolicy(1, true);
+        $this->at(self::NOW + 86_400);
+        self::assertEquals(new DeliveryReport(), $this->deliver(), 'A suppressed row is final.');
+        self::assertSame([], $this->mail->sent);
+        self::assertCount(1, $this->logger->records);
     }
 
     public function testNotificationBodyContainsNoCredentialsOrRawSql(): void

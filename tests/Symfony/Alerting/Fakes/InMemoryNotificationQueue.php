@@ -88,6 +88,17 @@ final class InMemoryNotificationQueue implements NotificationQueue
         return true;
     }
 
+    public function markSuppressed(ClaimedNotification $claim, string $reason): bool
+    {
+        if (!$this->holds($claim)) {
+            return false;
+        }
+        $this->rows[$claim->id]['status'] = 'suppressed';
+        $this->rows[$claim->id]['error'] = $reason;
+
+        return true;
+    }
+
     public function markAttemptFailed(ClaimedNotification $claim, string $error, ?int $retryAt): bool
     {
         if (!$this->holds($claim)) {

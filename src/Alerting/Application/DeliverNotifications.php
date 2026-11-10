@@ -24,11 +24,14 @@ use Kadupul\Alerting\Domain\AdministratorNotificationStatus;
  * never hold it at once, and sent through NotifyAdministrator: Phase 1 mails
  * the administrator that use case selects.
  *
- * A row is marked sent only after the mail port returns. A failed attempt,
- * including an administrator notification that is not configured, disabled
- * or has no address, queues the row again after a growing delay and records
- * the error; the fifth failed attempt marks it failed and logs it, and it is
- * not retried. A claim held longer than LEASE_SECONDS, such as one whose
+ * A row is marked sent only after the mail port returns. When administrator
+ * notification is disabled (the notify_admin default) or no administrator is
+ * set, the row ends `suppressed` on its first claim: that is configuration,
+ * not a failure, and no retry could change it, so it is reported once per run
+ * as a warning with the count. A failed attempt, including an administrator
+ * account or address that is missing, queues the row again after a growing
+ * delay and records the error; the fifth failed attempt marks it failed and
+ * logs it, and it is not retried. A claim held longer than LEASE_SECONDS, such as one whose
  * deliverer died, makes the row due again: delivery is at least once.
  */
 final readonly class DeliverNotifications
@@ -62,7 +65,9 @@ final readonly class DeliverNotifications
         }
 
         $started = $this->seconds();
-        $tally = ['sent' => 0, 'retrying' => 0, 'failed' => 0, 'lost' => 0];
+        $tally = ['sent' => 0, 'retrying' => 0, 'failed' => 0, 'lost' => 0, 'suppressed' => 0];
+        /** @var array<string, true> $suppressedBy the status names that suppressed a row this run */
+        $suppressedBy = [];
         $abandoned = $this->queue->failExpiredClaims($this->now(), self::MAX_ATTEMPTS);
         if ($abandoned > 0) {
             $tally['failed'] += $abandoned;
@@ -78,22 +83,40 @@ final readonly class DeliverNotifications
                 $now = $this->now();
                 $claim = $this->queue->claim($id, $now, self::MAX_ATTEMPTS, $now + self::LEASE_SECONDS);
                 if ($claim !== null) {
-                    ++$tally[$this->deliver($claim)];
+                    ++$tally[$this->deliver($claim, $suppressedBy)];
                 }
             }
         } while ($ids !== [] && $this->seconds() - $started < $budgetSeconds);
+        if ($tally['suppressed'] > 0) {
+            $this->logger->warning('{count} alert notifications were not sent: administrator notification is {status}.', [
+                'count' => $tally['suppressed'],
+                'status' => implode(', ', array_keys($suppressedBy)),
+            ]);
+        }
 
-        return new DeliveryReport($tally['sent'], $tally['retrying'], $tally['failed'], $tally['lost']);
+        return new DeliveryReport($tally['sent'], $tally['retrying'], $tally['failed'], $tally['lost'], $tally['suppressed']);
     }
 
-    /** @return 'sent'|'retrying'|'failed'|'lost' */
-    private function deliver(ClaimedNotification $claim): string
+    /**
+     * @param array<string, true> $suppressedBy collects the status names that suppressed a row
+     *
+     * @return 'sent'|'retrying'|'failed'|'lost'|'suppressed'
+     */
+    private function deliver(ClaimedNotification $claim, array &$suppressedBy): string
     {
         if ($claim->content === null) {
             return $this->settle($claim, $this->queue->markAttemptFailed($claim, self::UNREADABLE, null), 'failed');
         }
         try {
             $status = ($this->notify)(NotificationMail::subject($claim->content), NotificationMail::html($claim->content));
+            if (in_array($status, [AdministratorNotificationStatus::Disabled, AdministratorNotificationStatus::NotConfigured], true)) {
+                if (!$this->queue->markSuppressed($claim, 'administrator notification: ' . $status->name)) {
+                    return $this->settle($claim, false, 'failed');
+                }
+                $suppressedBy[$status->name] = true;
+
+                return 'suppressed';
+            }
             $error = $status === AdministratorNotificationStatus::Sent ? null : 'administrator notification: ' . $status->name;
         } catch (\Throwable $e) {
             // Only the port's own failure has a message known to hold no credential or query.
