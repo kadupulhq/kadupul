@@ -140,9 +140,10 @@ foreach (['db_install_reset_error' => 'install/functions.php', 'db_install_add_c
     eval(test_php_function_source($functionSource, $function));
 }
 require $root . '/lib/installer.php';
-$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_input', 'settings'];
-// Created by the 1.2.37 upgrade step rather than the fixture, and dropped with it.
-$upgradeTables = ['kadupul_metric_binding', 'kadupul_writer_ownership'];
+$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_input', 'settings', 'user_auth', 'user_auth_realm'];
+// Created by the 1.2.37 and 1.2.40 upgrade steps rather than the fixture, and dropped with them.
+// The 1.2.40 step also reads user_auth for its admin realm grant, so both user tables are fixtures above.
+$upgradeTables = ['kadupul_metric_binding', 'kadupul_writer_ownership', 'alert_rule', 'alert_rule_state', 'alert_baseline_sample', 'alert_incident', 'alert_notification'];
 foreach ([...$tables, ...$upgradeTables] as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
