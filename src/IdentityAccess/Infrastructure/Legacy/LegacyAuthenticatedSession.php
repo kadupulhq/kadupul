@@ -9,13 +9,14 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 
 use Kadupul\IdentityAccess\Application\Port\AuthenticatedSession;
 use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Contract\AssetManagementPermission;
 use Kadupul\IdentityAccess\Contract\AuthenticatedAccess;
 use Kadupul\IdentityAccess\Contract\BindingApprovalPermission;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\IdentityAccess\Contract\RealmGrants;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
-final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess, RealmGrants, BindingApprovalPermission
+final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess, AuthenticatedAccess, RealmGrants, BindingApprovalPermission, AssetManagementPermission
 {
     public function __construct(private SharedSession $session, private DatabaseConnection $database) {}
 
@@ -67,6 +68,11 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
      * is a separate decision.
      */
     public function mayApproveBindings(Actor $actor): bool
+    {
+        return $actor->id > 0 && $this->hasRealm($actor->id, 15);
+    }
+
+    public function mayManageAssets(Actor $actor): bool
     {
         return $actor->id > 0 && $this->hasRealm($actor->id, 15);
     }
