@@ -90,11 +90,10 @@ final readonly class DbalNotificationQueue implements NotificationQueue
         }
         $row = $this->database->fetchAssociative(
             'SELECT n.attempts, n.incident_id, n.kind, n.observed_value, n.threshold,
-                i.rule_id, i.opened_at, i.ended_at, r.kind AS rule_kind, r.local_data_id, r.rrd_name, dl.id AS data_local_id, dl.host_id, h.description
+                i.rule_id, i.opened_at, i.ended_at, i.rule_kind, i.local_data_id, i.rrd_name, dl.id AS data_local_id, dl.host_id, h.description
             FROM alert_notification n
             LEFT JOIN alert_incident i ON i.id = n.incident_id
-            LEFT JOIN alert_rule r ON r.id = i.rule_id
-            LEFT JOIN data_local dl ON dl.id = r.local_data_id
+            LEFT JOIN data_local dl ON dl.id = i.local_data_id
             LEFT JOIN host h ON h.id = dl.host_id
             WHERE n.id = ? AND n.status = ? AND n.next_attempt_at = ?',
             [$id, self::SENDING, $leaseUntil],

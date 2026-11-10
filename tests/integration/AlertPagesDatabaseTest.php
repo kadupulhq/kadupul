@@ -357,7 +357,7 @@ final class AlertPagesDatabaseTest extends TestCase
     private function openIncident(int $rule): int
     {
         $this->database->executeStatement(
-            'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name) SELECT id, ?, id, ?, local_data_id, rrd_name FROM alert_rule WHERE id = ?',
+            'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name, rule_kind) SELECT id, ?, id, ?, local_data_id, rrd_name, kind FROM alert_rule WHERE id = ?',
             ['open', self::NOW - 600, $rule],
         );
 

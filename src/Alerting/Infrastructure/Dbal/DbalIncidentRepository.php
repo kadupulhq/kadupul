@@ -37,13 +37,13 @@ final readonly class DbalIncidentRepository implements IncidentRepository
     public function open(int $ruleId, int $observedAt): int
     {
         try {
-            // The incident records the series its rule watches now. The
-            // evaluator holds the rule row's lock, so this is the series
-            // that was evaluated; who may see the incident is decided by it
+            // The incident records the series and kind of its rule now. The
+            // evaluator holds the rule row's lock, so these are what was
+            // evaluated; its mail names them, and who may see the incident is decided by it
             // even after the rule moves to another series (ADR 0011 decision 12).
             $inserted = $this->database->executeStatement(
-                'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name)
-                SELECT r.id, ?, r.id, ?, r.local_data_id, r.rrd_name FROM alert_rule r WHERE r.id = ?',
+                'INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name, rule_kind)
+                SELECT r.id, ?, r.id, ?, r.local_data_id, r.rrd_name, r.kind FROM alert_rule r WHERE r.id = ?',
                 [IncidentStatus::Open->value, $observedAt, $ruleId],
             );
         } catch (UniqueConstraintViolationException $e) {

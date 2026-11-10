@@ -79,8 +79,9 @@ function upgrade_alerting_signature(array $definition): string
  * the installation time zone, the evaluator's history for baseline rules. alert_incident keeps
  * active_rule_id equal to rule_id while an incident is open or acknowledged
  * and NULL after it ends, so its unique key allows one active incident per
- * rule, and records the series (local_data_id, rrd_name) the incident opened
- * on, which decides who may see it after its rule changes. Columns read data type:signedness:nullability; indexes read
+ * rule, and records the series (local_data_id, rrd_name) and the rule kind
+ * the incident opened with: the series decides who may see it after its rule
+ * changes, and both name it in its notification mail. Columns read data type:signedness:nullability; indexes read
  * name:non_unique:column per indexed column, ordered by the binary index name
  * and then the column's place in the index.
  *
@@ -180,6 +181,7 @@ function upgrade_alerting_tables(): array
   ended_at int(10) unsigned default NULL,
   local_data_id int(10) unsigned NOT NULL,
   rrd_name varbinary(19) NOT NULL,
+  rule_kind varchar(16) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY active_rule_id (active_rule_id),
   KEY rule_id (rule_id)
@@ -195,6 +197,7 @@ function upgrade_alerting_tables(): array
                 'ended_at' => 'int:unsigned:YES',
                 'local_data_id' => 'int:unsigned:NO',
                 'rrd_name' => 'varbinary:signed:NO',
+                'rule_kind' => 'varchar:signed:NO',
             ),
             'indexes' => array('PRIMARY:0:id', 'active_rule_id:0:active_rule_id', 'rule_id:1:rule_id'),
         ),

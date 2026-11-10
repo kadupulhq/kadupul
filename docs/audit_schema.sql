@@ -184,6 +184,7 @@ INSERT INTO `table_columns` VALUES ('alert_incident',7,'acknowledged_by','medium
 INSERT INTO `table_columns` VALUES ('alert_incident',8,'ended_at','int(10) unsigned','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_incident',9,'local_data_id','int(10) unsigned','NO','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_incident',10,'rrd_name','varbinary(19)','NO','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('alert_incident',11,'rule_kind','varchar(16)','NO','',NULL,'','utf8mb4_unicode_ci');
 INSERT INTO `table_columns` VALUES ('alert_notification',1,'id','bigint(20) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('alert_notification',2,'incident_id','int(10) unsigned','NO','MUL',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_notification',3,'kind','varchar(16)','NO','',NULL,'','utf8mb4_unicode_ci');

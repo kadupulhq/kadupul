@@ -150,10 +150,10 @@ final class AlertingSchemaUpgradeTest extends TestCase
         $db = $this->database();
         upgrade_to_1_2_40();
 
-        self::assertNotFalse($db->exec("INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name) VALUES (7, 'open', 7, 100, 101, 'traffic_in')"));
-        self::assertFalse($db->exec("INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name) VALUES (7, 'open', 7, 200, 101, 'traffic_in')"), 'a second active incident for a rule');
+        self::assertNotFalse($db->exec("INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name, rule_kind) VALUES (7, 'open', 7, 100, 101, 'traffic_in', 'threshold')"));
+        self::assertFalse($db->exec("INSERT INTO alert_incident (rule_id, status, active_rule_id, opened_at, local_data_id, rrd_name, rule_kind) VALUES (7, 'open', 7, 200, 101, 'traffic_in', 'threshold')"), 'a second active incident for a rule');
         // Ended incidents leave active_rule_id NULL, and any number of them may coexist.
-        self::assertNotFalse($db->exec("INSERT INTO alert_incident (rule_id, status, opened_at, ended_at, local_data_id, rrd_name) VALUES (7, 'closed', 10, 20, 101, 'traffic_in'), (7, 'orphaned', 30, 40, 101, 'traffic_in')"));
+        self::assertNotFalse($db->exec("INSERT INTO alert_incident (rule_id, status, opened_at, ended_at, local_data_id, rrd_name, rule_kind) VALUES (7, 'closed', 10, 20, 101, 'traffic_in', 'threshold'), (7, 'orphaned', 30, 40, 101, 'traffic_in', 'threshold')"));
         self::assertSame('3', $this->scalar('SELECT COUNT(*) FROM alert_incident WHERE rule_id = 7'));
     }
 

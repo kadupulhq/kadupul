@@ -400,9 +400,12 @@ behavior until an administrator opts in.
    - **Content.** The subject names the rule id and the transition and holds
      no stored text. The HTML body (the administrative mail path is HTML)
      names the rule, the series as device description, data source id and RRD
-     data source name, the transition, the value, the threshold, the
+     data source name (the series the incident recorded when it opened, so a
+     notification queued before its rule changed still names that series),
+     the transition, the value, the threshold, the
      observation time in UTC and the path `/alerting/incidents/{id}`, which the
-     incident view serves. For a baseline rule the stored threshold is the band
+     incident view serves. For an incident opened by a baseline rule, as the
+     incident records its rule's kind, the stored threshold is the band
      edge on the rate's side of the mean, so its mail says "Trigger band edge"
      or "Clear band edge" instead of "threshold". Rules have no name column in Phase 1,
      so the rule is named by its id. Device text is HTML-escaped. Only those
@@ -573,7 +576,7 @@ behavior until an administrator opts in.
 
 13. **Schema.** Five InnoDB tables: `alert_rule` (definition and owner),
     `alert_rule_state` (counters and last observation), `alert_incident`
-    (lifecycle, timestamps, acknowledging user and the series it opened on), `alert_notification` (queue
+    (lifecycle, timestamps, acknowledging user and the series and rule kind it opened with), `alert_notification` (queue
     with attempt state, and the rate and threshold of the change it reports)
     and `alert_baseline_sample` (hour-of-week history, decision 3).
     `alert_rule.kind` is `threshold` or `baseline`; a threshold rule sets

@@ -207,6 +207,7 @@ CREATE TABLE alert_incident (
   ended_at int(10) unsigned default NULL,
   local_data_id int(10) unsigned NOT NULL,
   rrd_name varbinary(19) NOT NULL,
+  rule_kind varchar(16) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY active_rule_id (active_rule_id),
   KEY rule_id (rule_id)

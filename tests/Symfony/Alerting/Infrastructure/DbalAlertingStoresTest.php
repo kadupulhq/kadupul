@@ -28,6 +28,7 @@ use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredAlertingRowUnreadable;
+use Kadupul\Alerting\Application\NotificationMail;
 use Kadupul\Alerting\Application\Port\NotificationContent;
 use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredValue;
@@ -49,7 +50,7 @@ final class DbalAlertingStoresTest extends TestCase
         foreach ([
             "CREATE TABLE alert_rule (id INTEGER PRIMARY KEY, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, kind TEXT NOT NULL DEFAULT 'threshold', comparator TEXT NULL, trigger_threshold REAL NULL, clear_threshold REAL NULL, baseline_direction TEXT NULL, baseline_deviations REAL NULL, baseline_clear_deviations REAL NULL, baseline_floor REAL NULL, baseline_min_samples INT NULL, for_cycles INT NOT NULL DEFAULT 1, owner_id INT NOT NULL DEFAULT 0)",
             'CREATE TABLE alert_rule_state (rule_id INTEGER PRIMARY KEY, incident_open INT NOT NULL DEFAULT 0, consecutive_breaches INT NOT NULL DEFAULT 0, consecutive_oks INT NOT NULL DEFAULT 0, is_unknown INT NOT NULL DEFAULT 0, last_observed_at INT NULL)',
-            "CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL, local_data_id INT NOT NULL DEFAULT 0, rrd_name BLOB NOT NULL DEFAULT '')",
+            "CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL, local_data_id INT NOT NULL DEFAULT 0, rrd_name BLOB NOT NULL DEFAULT '', rule_kind TEXT NOT NULL DEFAULT 'threshold')",
             'CREATE TABLE data_local (id INTEGER PRIMARY KEY, host_id INT NOT NULL DEFAULT 0)',
             "CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT NOT NULL DEFAULT '', snmp_community TEXT NULL, deleted TEXT NOT NULL DEFAULT '', disabled TEXT NOT NULL DEFAULT '')",
             "CREATE TABLE alert_notification (id INTEGER PRIMARY KEY AUTOINCREMENT, incident_id INT NOT NULL, kind TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'queued', attempts INT NOT NULL DEFAULT 0, queued_at INT NOT NULL, next_attempt_at INT NOT NULL, sent_at INT NULL, last_error TEXT NOT NULL DEFAULT '', observed_value REAL NOT NULL, threshold REAL NOT NULL)",
@@ -582,10 +583,61 @@ final class DbalAlertingStoresTest extends TestCase
         // Rule 5's data source row is missing.
         self::assertEquals(new NotificationContent($incident, 5, Transition::Recovered, 10.0, 80.0, 1200, ruleKind: 'threshold'), $queue->claim(1, 1200, 5, 2100)?->content);
 
-        // A baseline rule's kind reaches the mail, which then names a band edge.
+        // The kind is the one the incident opened with, not the rule's now.
         $this->database->update('alert_rule', ['kind' => 'baseline'], ['id' => 5]);
         $queue->enqueue($incident, Transition::Recovered, 10.0, 12.5, 1200);
-        self::assertSame('baseline', $queue->claim(2, 1200, 5, 2100)?->content?->ruleKind);
+        self::assertSame('threshold', $queue->claim(2, 1200, 5, 2100)?->content?->ruleKind);
+    }
+
+    public function testAQueuedMailNamesTheSeriesAndKindTheIncidentOpenedWith(): void
+    {
+        // Opened on device edge-1's data source 105 by a threshold rule.
+        $this->addRule(5, 105);
+        $this->addSeries(105, 7);
+        $this->addSeries(106, 8, 'traffic_out');
+        $this->database->insert('host', ['id' => 7, 'description' => 'edge-1']);
+        $this->database->insert('host', ['id' => 8, 'description' => 'core-2']);
+        $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
+        $queue = new DbalNotificationQueue($this->database);
+        $queue->enqueue($incident, Transition::Opened, 95.5, 90.5, 1000);
+        $queue->enqueue($incident, Transition::Opened, 95.5, 90.5, 1000);
+        $queue->enqueue($incident, Transition::Opened, 95.5, 90.5, 1000);
+
+        // The rule then moves to core-2's traffic_out and becomes a baseline
+        // rule; the queued notifications survive that change.
+        $this->database->executeStatement("UPDATE alert_rule SET local_data_id = 106, rrd_name = 'traffic_out', kind = 'baseline', comparator = NULL, trigger_threshold = NULL, clear_threshold = NULL,
+            baseline_direction = 'above', baseline_deviations = 3, baseline_clear_deviations = 2, baseline_floor = 1, baseline_min_samples = 4 WHERE id = 5");
+        $content = $queue->claim(1, 1000, 5, 1900)?->content;
+        self::assertEquals(new NotificationContent($incident, 5, Transition::Opened, 95.5, 90.5, 900, 105, 'traffic_in', 'edge-1', 'threshold'), $content);
+        $body = NotificationMail::html($content);
+        self::assertStringContainsString('device edge-1, data source 105, traffic_in', $body);
+        self::assertStringContainsString('Trigger threshold: 90.5', $body);
+        self::assertStringNotContainsString('core-2', $body);
+        self::assertStringNotContainsString('traffic_out', $body);
+        self::assertStringNotContainsString('band edge', $body);
+
+        // An incident opened by a baseline rule keeps the band edge wording
+        // after the rule becomes a threshold rule.
+        $this->addBaselineRule(6, 106);
+        $baseline = (new DbalIncidentRepository($this->database))->open(6, 900);
+        $queue->enqueue($baseline, Transition::Opened, 40.0, 30.0, 1000);
+        $this->database->executeStatement("UPDATE alert_rule SET kind = 'threshold', comparator = 'gt', trigger_threshold = 90, clear_threshold = 80, baseline_direction = NULL,
+            baseline_deviations = NULL, baseline_clear_deviations = NULL, baseline_floor = NULL, baseline_min_samples = NULL WHERE id = 6");
+        $baselineContent = $queue->claim(4, 1000, 5, 1900)?->content;
+        self::assertNotNull($baselineContent);
+        self::assertStringContainsString('Trigger band edge: 30', NotificationMail::html($baselineContent));
+
+        // Once the recorded data source is gone the mail falls back to "no
+        // longer defined" and names nothing of the rule's new series.
+        $this->database->delete('data_template_rrd', ['local_data_id' => 105]);
+        $this->database->delete('data_local', ['id' => 105]);
+        $gone = $queue->claim(2, 1000, 5, 1900)?->content;
+        self::assertEquals(new NotificationContent($incident, 5, Transition::Opened, 95.5, 90.5, 900, ruleKind: 'threshold'), $gone);
+        $goneBody = NotificationMail::html($gone);
+        self::assertStringContainsString('no longer defined', $goneBody);
+        foreach (['edge-1', 'core-2', 'traffic_in', 'traffic_out', '105', '106'] as $leak) {
+            self::assertStringNotContainsString($leak, $goneBody);
+        }
     }
 
     public function testANotificationThatCannotBeReadIsClaimedWithNoContent(): void
