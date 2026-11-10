@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:49-0800\n"
+"POT-Creation-Date: 2026-11-09 23:24-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -6675,10 +6675,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Pārbaudiet šeit, ja vēlaties atļaut lietotājam šajā laukā ievadīt NULL."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Atzīmējiet šo izvēles rūtiņu, ja īslaicīgi nevēlaties šim resursdatoram sūtīt SNMP paziņojumus."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Atzīmējiet šo izvēles rūtiņu, lai atspējotu visas pārbaudes šim saimniekdatoram."
 
@@ -6832,10 +6828,6 @@ msgid "Disable Device"
 msgstr "Atspējot ierīci"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Atspējot SNMP paziņojumu uztvērēju"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Neizvērsiet apakšējo un augšējo robežu, ja diagrammā ir vērtība, kas ir ārpus derīgā diapazona."
 
@@ -6958,14 +6950,6 @@ msgstr "GPRINT tips"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Pamatierīces opcijas"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "SNMP pamatobjekta opcijas"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Sniedziet šai SNMP entītijai jēgpilnu aprakstu."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7179,20 +7163,12 @@ msgid "Matching Pattern"
 msgstr "Atbilstošs raksts"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Maksimālais žurnāla izmērs"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Maksimālais OID vienā saņemšanas pieprasījumā"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Maksimālā vērtība (“U”, ja nav maksimālās vērtības)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Šim uztvērējam ir jāsaglabā maksimālais dienas paziņojumu žurnāla ierakstu skaits."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7395,10 +7371,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP dzinēja ID (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "SNMP ziņojuma veids"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP parole (v3)"
 
@@ -7433,10 +7405,6 @@ msgstr "SNMP lietotājvārds (v3)"
 #: include/global_form.php
 msgid "SNMP Version"
 msgstr "SNMP versija"
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP slazdi vienmēr netiek apstiprināti. Lai nosūtītu apstiprinātus SNMP paziņojumus, kurus formāli sauc par \"INFORMĒT\", būs nepieciešams SNMPv2 vai jaunāks."
 
 #: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -15689,6 +15657,10 @@ msgstr "Smaguma pakāpe"
 #: managers.php
 msgid "Severity Level"
 msgstr "Smaguma pakāpe"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

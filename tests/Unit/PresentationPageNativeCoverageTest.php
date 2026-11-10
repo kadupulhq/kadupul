@@ -108,11 +108,7 @@ final class PresentationPageNativeCoverageTest extends TestCase
         $scenarios = require dirname(__DIR__) . '/Fixtures/legacy-form-golden-scenarios.php';
         $cases = array();
         foreach ($scenarios['pages'] as $name => $scenario) {
-            // The original manager edit scenario emits no form. Its invocation
-            // remains covered by LegacyFormGoldenTest, outside this DOM contract.
-            if ($name !== 'managers-edit') {
-                $cases[$name] = array($name, $scenario);
-            }
+            $cases[$name] = array($name, $scenario);
         }
         if ($cases === array()) {
             throw new RuntimeException('Native presentation page discovery is empty');

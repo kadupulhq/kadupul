@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:49-0800\n"
+"POT-Creation-Date: 2026-11-09 23:24-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -6645,10 +6645,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Ελέγξτε εδώ αν θέλετε να επιτρέψετε την είσοδο NULL σε αυτό το πεδίο από το χρήστη."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Επιλέξτε αυτό το πλαίσιο εάν προσωρινά δεν θέλετε να στείλετε ειδοποιήσεις SNMP σε αυτόν τον κεντρικό υπολογιστή."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Επιλέξτε αυτό το πλαίσιο για να απενεργοποιήσετε όλους τους ελέγχους για αυτόν τον κεντρικό υπολογιστή."
 
@@ -6802,10 +6798,6 @@ msgid "Disable Device"
 msgstr "Απενεργοποιήστε τη συσκευή"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Απενεργοποιήστε τον παραλήπτη ειδοποίησης SNMP"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Μην επεκτείνετε το κατώτερο και το ανώτερο όριο εάν το γράφημα περιέχει μια τιμή εκτός του έγκυρου εύρους."
 
@@ -6926,14 +6918,6 @@ msgstr "Τύπος GPRINT"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Γενικές επιλογές συσκευής"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "Γενικές επιλογές SNMP Entity"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Δώστε σε αυτήν την οντότητα SNMP μια σημαντική περιγραφή."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7146,20 +7130,12 @@ msgid "Matching Pattern"
 msgstr "Αντιστοίχιση μοτίβου"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Μέγιστο μέγεθος καταγραφής"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Μέγιστο ανά αίτηση λήψης OID"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Μέγιστη τιμή (&quot;U&quot; για μηδενική μέγιστη τιμή)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Ο μέγιστος αριθμός καταχωρήσεων ημερήσιας καταγραφής ειδοποιήσεων για αυτόν τον δέκτη πρέπει να αποθηκευτεί."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7362,10 +7338,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "Αναγνωριστικό μηχανής SNMP (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "Τύπος μηνύματος SNMP"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "Κωδικός SNMP (v3)"
 
@@ -7400,10 +7372,6 @@ msgstr "Όνομα χρήστη SNMP (v3)"
 #: include/global_form.php
 msgid "SNMP Version"
 msgstr "Έκδοση SNMP"
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "Οι παγίδες SNMP είναι πάντα μη αναγνωρισμένες. Για να στείλετε αναγνωρισμένες ειδοποιήσεις SNMP, ονομαζόμενες τυπικά &quot;INFORMS&quot;, απαιτείται SNMPv2 ή παραπάνω."
 
 #: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -15616,6 +15584,10 @@ msgstr "Σοβαρότητα"
 #: managers.php
 msgid "Severity Level"
 msgstr "Επίπεδο σοβαρότητας"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

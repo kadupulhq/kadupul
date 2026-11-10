@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:49-0800\n"
+"POT-Creation-Date: 2026-11-09 23:24-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -6637,10 +6637,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Markera här om du vill tillåta NULL-inmatning i detta fält från användaren."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Markera den här rutan om du tillfälligt inte vill skicka SNMP-meddelanden till den här värden."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Markera den här rutan om du vill inaktivera alla kontroller för den här värden."
 
@@ -6794,10 +6790,6 @@ msgid "Disable Device"
 msgstr "Inaktivera enhet"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Inaktivera SNMP-meddelandemottagare"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "Expandera inte den nedre och övre gränsen om grafen innehåller ett värde utanför det giltiga intervallet."
 
@@ -6918,14 +6910,6 @@ msgstr "GPRINT Typ"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Allmänna enhetsalternativ"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "Allmänna SNMP-entitetsalternativ"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Ge denna SNMP-enhet en meningsfull beskrivning."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7138,20 +7122,12 @@ msgid "Matching Pattern"
 msgstr "Matchande mönster"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Maximal loggstorlek"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Maximalt antal OID:ar per hämtningsbegäran"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Maximalt värde (\"U\" för inget maximalt värde)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Maximalt antal loggposter för dagens meddelanden för denna mottagare som behöver sparas."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7354,10 +7330,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP-motor-ID (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "SNMP-meddelandetyp"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP-lösenord (v3)"
 
@@ -7392,10 +7364,6 @@ msgstr "SNMP användarnamn (v3)"
 #: include/global_form.php
 msgid "SNMP Version"
 msgstr "SNMP-version"
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP-traps är alltid okvitterade. För att skicka ut bekräftade SNMP-meddelanden, formellt kallade \"INFORMS\", krävs SNMPv2 eller högre."
 
 #: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -15585,6 +15553,10 @@ msgstr "Allvarlighetsgrad"
 #: managers.php
 msgid "Severity Level"
 msgstr "Allvarlighetsgrad"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

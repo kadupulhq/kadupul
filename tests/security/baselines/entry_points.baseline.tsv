@@ -184,6 +184,8 @@ app.php/templates/devices	symfony:admin_device_templates	methods=GET|HEAD; Conso
 app.php/templates/graphs	symfony:admin_graph_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 10
 app.php/utilities/login-history	symfony:admin_login_history	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/notification-receivers	symfony:admin_notification_receivers	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
+app.php/utilities/notification-receivers/new	symfony:notification_receiver_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
+app.php/utilities/notification-receivers/{id}/edit	symfony:notification_receiver_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-candidates	symfony:admin_rrd_candidates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check	symfony:platform_rrd_checks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/rrd-check/legacy	symfony:platform_rrd_check_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 15
@@ -259,7 +261,7 @@ include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at bc25f
 include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at fd079835be4f; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at ecb0178c09d6; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 0dbdef660348; included by include/global.php
 include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at f53aac311243; included by include/global.php
 include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fd457ddb745; included by auth_changepassword.php, auth_login.php, graph_realtime.php
 include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at cb47ef8af36b; included by include/global.php

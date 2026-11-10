@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:49-0800\n"
+"POT-Creation-Date: 2026-11-09 23:24-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -6639,10 +6639,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "Cochez ici si vous voulez autoriser la saisie NULL dans ce champ par l'utilisateur."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "Cochez cette case si vous ne voulez pas temporairement envoyer de notifications SNMP à cet hôte."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "Cochez cette case pour désactiver toutes les vérifications pour cet hôte."
 
@@ -6796,10 +6792,6 @@ msgid "Disable Device"
 msgstr "Désactiver l'équipement"
 
 #: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "Désactiver le récepteur de notification SNMP"
-
-#: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
 msgstr "N'augmentez pas les limites inférieure et supérieure si le graphique contient une valeur en dehors de la plage valide."
 
@@ -6920,14 +6912,6 @@ msgstr "GPRINT Type"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Options générales de l'équipement"
-
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "Options générales des entités SNMP"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "Donnez à cette entité SNMP une description significative."
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7140,20 +7124,12 @@ msgid "Matching Pattern"
 msgstr "Matching Pattern"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "Taille maximum du log"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Nombre maximum d'OID par requête GET"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "Valeur maximale (\"U\" pour Pas de Maximum)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "Le nombre maximum d'entrées du journal d'avis pour ce récepteur doit être enregistré."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7356,10 +7332,6 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP Engine ID (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "Type de message SNMP"
-
-#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "Mot de passe SNMP (v3)"
 
@@ -7394,10 +7366,6 @@ msgstr "Nom d'utilisateur SNMP (v3)"
 #: include/global_form.php
 msgid "SNMP Version"
 msgstr "Version de SNMP"
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "Les pièges SNMP ne sont jamais reconnus. Pour envoyer des notifications SNMP accusées de réception, officiellement appelées \"INFORMS\", SNMPv2 ou supérieur sera nécessaire."
 
 #: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
@@ -15604,6 +15572,10 @@ msgstr "Sévérité"
 #: managers.php
 msgid "Severity Level"
 msgstr "Niveau de Gravité"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"
