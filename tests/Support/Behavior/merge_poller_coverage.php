@@ -27,7 +27,8 @@ if (!$coverage instanceof CodeCoverage) {
 }
 $manifest = json_decode(file_get_contents($argv[2] . '/observations.json'), true, 512, JSON_THROW_ON_ERROR);
 $expected = ['database/fresh-schema', 'upgrade/install', 'poller/run-reachable', 'graphs/definition',
-    'poller/rrd-failure', 'poller/device-unreachable', 'faults/missing-rrd-file', 'faults/database-unreachable'];
+    'poller/rrd-failure', 'poller/device-unreachable', 'faults/missing-rrd-file', 'faults/database-unreachable',
+    'poller/subminute-loop'];
 $actual = array_keys($manifest['scenarios'] ?? []);
 sort($expected);
 sort($actual);
