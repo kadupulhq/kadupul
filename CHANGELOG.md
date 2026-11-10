@@ -7,6 +7,8 @@ follows [Semantic Versioning](VERSIONING.md).
 ## [Unreleased]
 - Keep the advisory mutation check from aborting when native harnesses merge child-process coverage: covering-test ids the PHPUnit JUnit log does not name, such as `native RRD child <pid>-<nonce>`, are dropped before Infection reads the coverage, so lines only a child process covered are reported as uncovered.
 
+- Update locked Doctrine, phpseclib, Symfony 7.4 and PHPStan dependencies. PHPStan strict rules 2.1.1 reject untyped values used as conditions, so the session-storage setting is read as a boolean once when the configuration loads, and the remaining checks compare booleans explicitly; behaviour is unchanged.
+
 - Update the hash-locked CI Semgrep scanner from 1.182.1 to 1.183.0.
 
 - Base the presentation sink-context native test on a golden scenario that still exists and run its request-filter cases on the data template editor, after the SNMP Option Set editor moved to Symfony (#1441) and its legacy drag-and-drop table was retired.
