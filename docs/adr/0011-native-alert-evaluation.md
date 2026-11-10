@@ -402,7 +402,9 @@ behavior until an administrator opts in.
      names the rule, the series as device description, data source id and RRD
      data source name, the transition, the value, the threshold, the
      observation time in UTC and the path `/alerting/incidents/{id}`, which the
-     incident view in Task 7 must serve. Rules have no name column in Phase 1,
+     incident view serves. For a baseline rule the stored threshold is the band
+     edge on the rate's side of the mean, so its mail says "Trigger band edge"
+     or "Clear band edge" instead of "threshold". Rules have no name column in Phase 1,
      so the rule is named by its id. Device text is HTML-escaped. Only those
      columns are selected; SNMP credentials, data source titles (which can
      substitute device fields), settings and query text never reach the mail.
@@ -530,17 +532,34 @@ behavior until an administrator opts in.
     condition in both will receive both notifications. Importing THold rules is
     a later, separate command, and this record does not design it.
 
-12. **Authorization.** Two new realms are added: "Alert Rules" for creating,
-    editing and deleting rules, and "Alert Incidents" for viewing and
-    acknowledging incidents. Realm ids are taken from unused values in
-    `$user_auth_realms` (`include/global_arrays.php:1220`) when Task 7 adds
-    them.
+12. **Authorization.** Two new realms are added: "Alert Rules" (realm 29) for
+    creating, editing and deleting rules, and "Alert Incidents" (realm 30) for
+    viewing and acknowledging incidents. Both ids were unused in
+    `$user_auth_realms` and lie below the plugin realm range. A fresh install
+    grants both to the admin account (`cacti.sql`), and the 1.2.40 upgrade
+    grants them to user 1 when that account exists, idempotently; other
+    accounts and groups receive them through User Management.
     A rule may reference only a data source that the editing user can view, and
-    the check uses the same visibility policy as the data-source views. The
-    check runs when a rule is saved. Viewing or acknowledging an incident also
-    requires the realm and visibility of its data source. Evaluation itself runs
-    with no user and does not re-authorize rules. Every entry point enforces
-    this, not only the forms.
+    the check uses the same visibility policy as the data-source views: a data
+    source without a device is visible, and one with a device is visible when
+    the device is (`ManagementVisibility`). The check runs when a rule is
+    saved, in the write transaction, together with the evaluator's existence
+    check of the series. Listing, editing and deleting a rule, and viewing or
+    acknowledging an incident, require the realm and visibility of the rule's
+    data source; a rule whose data source is gone stays visible so it can be
+    deleted. Anything the actor cannot see answers as not found. Evaluation
+    itself runs with no user and does not re-authorize rules. Every entry point
+    enforces this, not only the forms.
+    The pages live at `/alerting/rules` and `/alerting/incidents` and are
+    reachable whatever `alerting_enable` says; they state when alerting is off
+    or the rate source is unavailable. Rule writes and acknowledgements run on
+    the evaluator's connection in audited transactions that take the
+    evaluator's lock order (rule, state, incident). Deleting a rule, or saving
+    it with another series or kind, ends its state and orphans its active
+    incident as decision 6 describes, with no notification; notifications
+    already queued are still sent. An acknowledgement records the user and
+    time on the incident and in the audit log (`alerting.incident.acknowledge`),
+    and repeating it keeps the first one.
 
 13. **Schema.** Five InnoDB tables: `alert_rule` (definition and owner),
     `alert_rule_state` (counters and last observation), `alert_incident`
