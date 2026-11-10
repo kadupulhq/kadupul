@@ -227,6 +227,53 @@ behavior until an administrator opts in.
    queueing. Task 3 creates the `alert_notification` table; the row is written
    through the same per-rule transaction as the state and incident change.
 
+   Task 4 settles the details:
+   - **What is queued.** An incident that opens or recovers queues one row
+     with the incident id, the transition, and the rate and threshold that
+     decided it (the trigger threshold on opening, the clear threshold on
+     recovery). An incident that becomes `unknown` changes no incident row,
+     so Phase 1 queues nothing for it. An orphaned incident queues nothing.
+   - **One transaction, one lock order.** The rule's transaction locks its
+     `alert_rule` row (`SELECT ... FOR UPDATE`), then writes the state, the
+     incident and the notification, in that order. A rule deleted after its
+     batch was read is found missing under the lock and nothing is written.
+     A failed notification insert rolls the state and the incident back with
+     it, and the next run counts the same observation again.
+   - **Claims.** Rows move `queued` to `sending` to `sent`, or to `failed`.
+     A deliverer claims one row at a time with a single conditional `UPDATE`
+     that only matches a due row and raises its attempt count. While a row is
+     `sending`, `next_attempt_at` is the end of the claim's lease, and the
+     settling `UPDATE` matches that value, so a second deliverer can neither
+     claim a held row nor settle another's claim. No statement needs
+     `SKIP LOCKED`. The lease is 900 seconds, longer than one SMTP send at the
+     largest timeout the mail settings accept (300 seconds per read). A row
+     whose lease expires is due again, so delivery is at least once: a
+     deliverer that dies after the server accepted the mail, or a send that
+     outlasts the lease, can send it twice. A claim that expires on the last
+     attempt marks the row `failed`.
+   - **Retries.** At most 5 attempts. Attempts 2 to 5 wait 60, 300, 900 and
+     1800 seconds after the previous failure. The fifth failure marks the row
+     `failed`, logs an error with the row, incident, attempts and error, and
+     the row is not retried. An administrator notification that is not
+     configured, disabled, or whose account or address is missing counts as a
+     failed attempt, so it is visible and bounded instead of queued forever.
+   - **Errors.** `last_error` holds the exception's class name. Only the mail
+     port's own `MailDeliveryFailed` adds its message, which is fixed text; any
+     other exception's message could hold a DSN, query or credential and is
+     not stored.
+   - **Content.** The subject names the rule id and the transition and holds
+     no stored text. The HTML body (the administrative mail path is HTML)
+     names the rule, the series as device description, data source id and RRD
+     data source name, the transition, the value, the threshold, the
+     observation time in UTC and the path `/alerting/incidents/{id}`, which the
+     incident view in Task 7 must serve. Rules have no name column in Phase 1,
+     so the rule is named by its id. Device text is HTML-escaped. Only those
+     columns are selected; SNMP credentials, data source titles (which can
+     substitute device fields), settings and query text never reach the mail.
+   - **Separate use case.** `DeliverNotifications` takes a batch size and a
+     time budget, checked between batches as in decision 8. Evaluation never
+     waits on mail.
+
 8. **Bounded work.** The command evaluates rules in batches. Both the batch size
    and the total time budget are settings, and the command checks the budget
    between batches. Rules not reached are evaluated first in the next run,
@@ -288,7 +335,7 @@ behavior until an administrator opts in.
 13. **Schema.** Four InnoDB tables: `alert_rule` (definition and owner),
     `alert_rule_state` (counters and last observation), `alert_incident`
     (lifecycle, timestamps, acknowledging user) and `alert_notification` (queue
-    with attempt state). They are added to `cacti.sql` and
+    with attempt state, and the rate and threshold of the change it reports). They are added to `cacti.sql` and
     `docs/audit_schema.sql`, and created by a new `install/upgrades/1_2_40.php`.
     `include/cacti_version` moves from 1.2.39 to 1.2.40 the way PR #1136 moved
     it, and the version is written only after every step succeeds so a failed
@@ -306,7 +353,8 @@ behavior until an administrator opts in.
     `Verdict`, `RuleState` and `Incident`. It imports nothing from Symfony, DBAL
     or legacy code. `Application` holds the use cases and the ports
     `RateSource`, `BaselineSource`, `RuleRepository`, `IncidentRepository` and
-    `NotificationQueue`. DBAL adapters and the console command live in
+    `NotificationQueue`, and `AlertingLog`, through which the use cases log,
+    because Application code imports no external implementation. DBAL adapters and the console command live in
     `Infrastructure`. Deptrac must pass with `--fail-on-uncovered` and no
     baseline growth. New files carry `declare(strict_types=1);` and the
     GPL-3.0-or-later header.
@@ -377,6 +425,12 @@ behavior until an administrator opts in.
 | Series `unknown` indefinitely | Incident stays open; no age-out | Task 3 |
 | Observation time over 60 s ahead of the clock | `unknown` | Task 3 |
 | Mail transport fails | Incident kept, notification stays queued, bounded retries, never marked sent | Task 4 |
+| Notification insert fails after the state and incident were written | All three roll back; the next run counts the same observation again | Task 4 |
+| Rule deleted after its batch was read | No state, incident or notification is written for it | Task 4 |
+| Two deliverers run at once | Each row is claimed and sent by one of them | Task 4 |
+| Deliverer dies holding a row | The row is due again after the 900 s lease, so the mail may be sent twice; on the last attempt it is marked `failed` | Task 4 |
+| Five attempts fail | Row `failed`, error logged, not retried | Task 4 |
+| Administrator notification disabled or unconfigured | Each attempt fails and is recorded; after five the row is `failed` | Task 4 |
 
 ## Alternatives
 

@@ -33,6 +33,7 @@ use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
@@ -73,13 +74,13 @@ final readonly class FailingIncidents implements IncidentRepository
 {
     public function __construct(private IncidentRepository $inner) {}
 
-    public function open(int $ruleId, int $observedAt): void
+    public function open(int $ruleId, int $observedAt): int
     {
         $this->inner->open($ruleId, $observedAt);
         throw new \RuntimeException('injected failure after the incident insert');
     }
 
-    public function close(int $ruleId, int $observedAt): void
+    public function close(int $ruleId, int $observedAt): int
     {
         $this->inner->close($ruleId, $observedAt);
         throw new \RuntimeException('injected failure after the incident update');
@@ -155,6 +156,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
             new DbalRuleRepository($this->database),
             $this->states,
             $incidents ?? $this->incidents,
+            new DbalNotificationQueue($this->database),
             new DbalEvaluationCursor($this->database),
             new MockClockAdapter($this->clock),
             new DbalTransactionRunner($this->database),
@@ -203,9 +205,10 @@ final class AlertPersistenceDatabaseTest extends TestCase
         return $row === false ? false : array_map(static fn(mixed $value): ?int => $value === null ? null : (int) $value, $row);
     }
 
-    private function notifications(): int
+    /** @return list<string> the kind of each queued notification, oldest first */
+    private function notifications(): array
     {
-        return (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_notification');
+        return array_map('strval', $this->database->fetchFirstColumn('SELECT kind FROM alert_notification ORDER BY id'));
     }
 
     public function testStateAndIncidentWrittenInOneTransaction(): void
@@ -301,7 +304,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
         $this->evaluate();
         self::assertSame(2, $this->states->saves, 'Staying unknown, also across reloads, writes nothing.');
         self::assertEquals([new Incident(1, 1, IncidentStatus::Open, self::NOW)], $this->incidents->forRule(1), 'No recovery during the gap.');
-        self::assertSame(0, $this->notifications());
+        self::assertSame(['opened'], $this->notifications(), 'Nothing is queued during the gap.');
 
         // The second cycle has a rate again; only a real ok recovers.
         $this->sample(101, self::NOW + 3 * self::STEP, 50.0);
@@ -329,7 +332,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
         self::assertSame(1, $report->orphaned);
         self::assertEquals([new Incident(1, 1, IncidentStatus::Orphaned, self::NOW, self::NOW + 60)], $this->incidents->forRule(1));
         self::assertFalse($this->stateRow(1), 'The orphaned rule starts again from no state.');
-        self::assertSame(0, $this->notifications(), 'An orphaned incident queues no notification.');
+        self::assertSame(['opened', 'opened'], $this->notifications(), 'An orphaned incident queues no notification.');
         self::assertEquals([new Incident(2, 2, IncidentStatus::Open, self::NOW)], $this->incidents->forRule(2), 'Other rules are untouched.');
 
         $this->at(self::NOW + self::STEP);
@@ -377,7 +380,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
             self::assertFalse($this->stateRow($rule), 'rule ' . $rule);
         }
         self::assertSame(IncidentStatus::Open, $this->incidents->forRule(5)[0]->status, 'A data source with no device is not an orphan.');
-        self::assertSame(0, $this->notifications());
+        self::assertSame(array_fill(0, 6, 'opened'), $this->notifications(), 'Only the six openings were queued.');
     }
 
     public function testADisabledDeviceKeepsItsIncidentOpenAndUnknownForAsLongAsItLasts(): void
@@ -489,7 +492,7 @@ final class AlertPersistenceDatabaseTest extends TestCase
             self::assertFalse($this->stateRow($rule), 'rule ' . $rule);
         }
         self::assertSame(IncidentStatus::Open, $this->incidents->forRule(9)[0]->status);
-        self::assertSame(0, $this->notifications());
+        self::assertSame(array_fill(0, 6, 'opened'), $this->notifications(), 'Only the six openings were queued.');
     }
 
     public function testAnOrphanWithAnUnreadableStateRowIsRemoved(): void

@@ -59,6 +59,12 @@ final readonly class DbalRuleRepository implements RuleRepository
         return array_map(self::rule(...), $rows);
     }
 
+    /** SELECT ... FOR UPDATE on the rule row, so a concurrent delete waits for this transaction. */
+    public function lock(int $ruleId): bool
+    {
+        return $this->database->fetchOne('SELECT id FROM alert_rule WHERE id = ?' . RowLock::forUpdate($this->database), [$ruleId]) !== false;
+    }
+
     /**
      * Rules whose series is gone (the complement of SERIES_EXISTS), plus
      * deleted rules, that still have a state or an active incident to end.

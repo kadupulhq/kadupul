@@ -301,6 +301,12 @@ services:
         arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner:
         arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Clock\SymfonyClock: ~
+    Kadupul\Alerting\Infrastructure\Logging\PsrAlertingLog: ~
+    Kadupul\Alerting\Application\EvaluateRules: ~
+    Kadupul\Alerting\Application\DeliverNotifications: ~
     Kadupul\Alerting\Application\Port\RateSource:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource
     Kadupul\Alerting\Application\Port\RuleRepository:
@@ -313,6 +319,12 @@ services:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor
     Kadupul\Alerting\Application\Port\TransactionRunner:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner
+    Kadupul\Alerting\Application\Port\NotificationQueue:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue
+    Kadupul\Alerting\Application\Port\Clock:
+        alias: Kadupul\Alerting\Infrastructure\Clock\SymfonyClock
+    Kadupul\Alerting\Application\Port\AlertingLog:
+        alias: Kadupul\Alerting\Infrastructure\Logging\PsrAlertingLog
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
 

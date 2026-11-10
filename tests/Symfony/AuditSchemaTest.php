@@ -354,7 +354,7 @@ final class AuditSchemaTest extends TestCase
     {
         $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
 
-        self::assertCount(1093, $baseline->columnRows);
+        self::assertCount(1095, $baseline->columnRows);
         self::assertCount(409, $baseline->indexRows);
         self::assertSame(['data_source_profile_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_data', 'data_source_profile_id')));
         self::assertSame(['data_input_field_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_rrd', 'data_input_field_id')));

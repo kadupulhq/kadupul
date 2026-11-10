@@ -25,6 +25,16 @@ interface RuleRepository
     public function batchAfter(int $afterRuleId, int $limit): array;
 
     /**
+     * Inside the rule's transaction, before its state is written: locks the
+     * rule row until the transaction ends, so the rule cannot be deleted
+     * while its state, incident and notification are written. False when the
+     * rule is already gone, for example deleted after batchAfter() read it;
+     * the caller then writes nothing. Lock order is rule, then state, then
+     * incident, then notification.
+     */
+    public function lock(int $ruleId): bool;
+
+    /**
      * Up to $limit rules that need orphan handling, in ascending id order: a rule whose
      * data source, device or RRD data source no longer exists and that still
      * has a stored state or an active incident, and the id of a deleted rule

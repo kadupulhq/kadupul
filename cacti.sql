@@ -209,6 +209,8 @@ CREATE TABLE alert_notification (
   next_attempt_at int(10) unsigned NOT NULL,
   sent_at int(10) unsigned default NULL,
   last_error varchar(255) NOT NULL default '',
+  observed_value double NOT NULL,
+  threshold double NOT NULL,
   PRIMARY KEY (id),
   KEY status_next_attempt (status, next_attempt_at),
   KEY incident_id (incident_id)

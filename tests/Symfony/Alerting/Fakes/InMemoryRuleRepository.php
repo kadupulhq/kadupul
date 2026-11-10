@@ -28,6 +28,10 @@ final class InMemoryRuleRepository implements RuleRepository
     public array $unusable = [];
     /** @var list<int> the limit of each orphanedRuleIds() call */
     public array $orphanLimits = [];
+    /** @var array<int, true> rules deleted after batchAfter() read them, before their transaction */
+    public array $deletedMidRun = [];
+    /** @var list<int> the rule id of each lock() call */
+    public array $locked = [];
 
     public function __construct(
         private readonly ?InMemoryRuleStateStore $states = null,
@@ -57,6 +61,13 @@ final class InMemoryRuleRepository implements RuleRepository
         }
 
         return $batch;
+    }
+
+    public function lock(int $ruleId): bool
+    {
+        $this->locked[] = $ruleId;
+
+        return isset($this->rules[$ruleId]) && !isset($this->deletedMidRun[$ruleId]);
     }
 
     public function orphanedRuleIds(int $limit): array

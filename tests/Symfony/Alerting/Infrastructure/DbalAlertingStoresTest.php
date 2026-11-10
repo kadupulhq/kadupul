@@ -12,6 +12,7 @@ namespace Kadupul\Tests\Alerting\Infrastructure;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
+use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Incident\Incident;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
@@ -20,10 +21,12 @@ use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredAlertingRowUnreadable;
+use Kadupul\Alerting\Application\Port\NotificationContent;
 use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Infrastructure\Dbal\StoredValue;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -46,7 +49,8 @@ final class DbalAlertingStoresTest extends TestCase
             'CREATE TABLE alert_rule_state (rule_id INTEGER PRIMARY KEY, incident_open INT NOT NULL DEFAULT 0, consecutive_breaches INT NOT NULL DEFAULT 0, consecutive_oks INT NOT NULL DEFAULT 0, is_unknown INT NOT NULL DEFAULT 0, last_observed_at INT NULL)',
             'CREATE TABLE alert_incident (id INTEGER PRIMARY KEY AUTOINCREMENT, rule_id INT NOT NULL, status TEXT NOT NULL, active_rule_id INT NULL UNIQUE, opened_at INT NOT NULL, acknowledged_at INT NULL, acknowledged_by INT NULL, ended_at INT NULL)',
             'CREATE TABLE data_local (id INTEGER PRIMARY KEY, host_id INT NOT NULL DEFAULT 0)',
-            "CREATE TABLE host (id INTEGER PRIMARY KEY, deleted TEXT NOT NULL DEFAULT '', disabled TEXT NOT NULL DEFAULT '')",
+            "CREATE TABLE host (id INTEGER PRIMARY KEY, description TEXT NOT NULL DEFAULT '', snmp_community TEXT NULL, deleted TEXT NOT NULL DEFAULT '', disabled TEXT NOT NULL DEFAULT '')",
+            "CREATE TABLE alert_notification (id INTEGER PRIMARY KEY AUTOINCREMENT, incident_id INT NOT NULL, kind TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'queued', attempts INT NOT NULL DEFAULT 0, queued_at INT NOT NULL, next_attempt_at INT NOT NULL, sent_at INT NULL, last_error TEXT NOT NULL DEFAULT '', observed_value REAL NOT NULL, threshold REAL NOT NULL)",
             'CREATE TABLE data_template_rrd (id INTEGER PRIMARY KEY, local_data_id INT NOT NULL, data_source_name TEXT NOT NULL)',
             'CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT NOT NULL)',
         ] as $ddl) {
@@ -411,5 +415,119 @@ final class DbalAlertingStoresTest extends TestCase
         }
         $this->expectException(StoredAlertingRowUnreadable::class);
         StoredValue::float('x', 'r', 'c');
+    }
+
+    public function testOpenAndCloseReturnTheIncidentTheyChanged(): void
+    {
+        $incidents = new DbalIncidentRepository($this->database);
+        $this->database->insert('alert_incident', ['rule_id' => 9, 'status' => 'closed', 'opened_at' => 10, 'ended_at' => 20]);
+
+        self::assertSame(2, $incidents->open(5, 100));
+        self::assertSame(3, $incidents->open(6, 100));
+        self::assertSame(2, $incidents->close(5, 200));
+        self::assertSame(3, $incidents->close(6, 300));
+        self::assertEquals([new Incident(2, 5, IncidentStatus::Closed, 100, 200)], $incidents->forRule(5));
+    }
+
+    public function testLockTellsWhetherTheRuleStillExists(): void
+    {
+        $this->addRule(3, 103);
+        $rules = new DbalRuleRepository($this->database);
+
+        self::assertTrue($rules->lock(3));
+        self::assertFalse($rules->lock(4));
+    }
+
+    public function testEachDueNotificationIsClaimedOnceAndSettledOnlyByItsHolder(): void
+    {
+        $this->addRule(5, 105);
+        $this->addSeries(105, 7);
+        $this->database->insert('host', ['id' => 7, 'description' => 'edge-1', 'snmp_community' => 'never-in-mail']);
+        $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
+        $queue = new DbalNotificationQueue($this->database);
+        $queue->enqueue($incident, Transition::Opened, 95.5, 90.5, 1000);
+        $queue->enqueue($incident, Transition::Opened, 96.0, 90.5, 1010);
+
+        self::assertSame([], $queue->due(999, 5, 10), 'Not due before its queue time.');
+        self::assertSame([1, 2], $queue->due(1010, 5, 10));
+        self::assertSame([1], $queue->due(1010, 5, 1));
+
+        $claim = $queue->claim(1, 1010, 5, 1910);
+        self::assertNotNull($claim);
+        self::assertEquals(new NotificationContent($incident, 5, Transition::Opened, 95.5, 90.5, 900, 105, 'traffic_in', 'edge-1'), $claim->content);
+        self::assertSame([1, 1910], [$claim->attempts, $claim->leaseUntil]);
+        self::assertNull($queue->claim(1, 1010, 5, 1910), 'A held row cannot be claimed again.');
+        self::assertSame([2], $queue->due(1010, 5, 10));
+
+        self::assertTrue($queue->markSent($claim, 1020));
+        self::assertFalse($queue->markSent($claim, 1030), 'A settled claim is no longer held.');
+        self::assertSame(['sent', '1', '1020'], array_map('strval', $this->database->fetchNumeric('SELECT status, attempts, sent_at FROM alert_notification WHERE id = 1') ?: []));
+
+        // Row 2's claim expires; a second deliverer takes it and the first holder loses it.
+        $first = $queue->claim(2, 1010, 5, 1910);
+        self::assertNotNull($first);
+        self::assertSame([], $queue->due(1909, 5, 10));
+        self::assertSame([2], $queue->due(1910, 5, 10));
+        $second = $queue->claim(2, 1910, 5, 2810);
+        self::assertNotNull($second);
+        self::assertSame(2, $second->attempts);
+        self::assertFalse($queue->markSent($first, 1950), 'The first holder lost its claim and cannot mark it sent.');
+        self::assertFalse($queue->markAttemptFailed($first, 'late', 2000));
+        self::assertTrue($queue->markAttemptFailed($second, 'MailDeliveryFailed: x', 3000));
+        self::assertSame(['queued', '2', '3000', 'MailDeliveryFailed: x'], array_map('strval', $this->database->fetchNumeric('SELECT status, attempts, next_attempt_at, last_error FROM alert_notification WHERE id = 2') ?: []));
+
+        // Out of attempts: not due, not claimable, and an expired last claim fails.
+        $this->database->executeStatement("UPDATE alert_notification SET attempts = 4 WHERE id = 2");
+        $last = $queue->claim(2, 3000, 5, 3900);
+        self::assertNotNull($last);
+        self::assertSame([], $queue->due(3900, 5, 10));
+        self::assertNull($queue->claim(2, 3900, 5, 4800));
+        self::assertSame(0, $queue->failExpiredClaims(3899, 5), 'A live claim is not failed.');
+        self::assertSame(1, $queue->failExpiredClaims(3900, 5));
+        self::assertSame(['failed', DbalNotificationQueue::EXPIRED], array_map('strval', $this->database->fetchNumeric('SELECT status, last_error FROM alert_notification WHERE id = 2') ?: []));
+    }
+
+    public function testARecoveryReadsItsEndTimeAndAGoneSeriesIsNotNamed(): void
+    {
+        $this->addRule(5, 105);
+        $incidents = new DbalIncidentRepository($this->database);
+        $incidents->open(5, 900);
+        $incident = $incidents->close(5, 1200);
+        $queue = new DbalNotificationQueue($this->database);
+        $queue->enqueue($incident, Transition::Recovered, 10.0, 80.0, 1200);
+
+        // Rule 5's data source row is missing.
+        self::assertEquals(new NotificationContent($incident, 5, Transition::Recovered, 10.0, 80.0, 1200), $queue->claim(1, 1200, 5, 2100)?->content);
+    }
+
+    public function testANotificationThatCannotBeReadIsClaimedWithNoContent(): void
+    {
+        $queue = new DbalNotificationQueue($this->database);
+        // Incident 99 does not exist.
+        $queue->enqueue(99, Transition::Opened, 1.0, 0.5, 100);
+        $this->database->insert('alert_notification', ['incident_id' => 99, 'kind' => 'became_unknown', 'queued_at' => 100, 'next_attempt_at' => 100, 'observed_value' => 1, 'threshold' => 1]);
+
+        foreach ([1, 2] as $id) {
+            $claim = $queue->claim($id, 100, 5, 1000);
+            self::assertNotNull($claim);
+            self::assertNull($claim->content, 'row ' . $id);
+        }
+    }
+
+    public function testTheValueAndThresholdAreStoredWithoutLosingDigits(): void
+    {
+        $incident = (new DbalIncidentRepository($this->database))->open(5, 900);
+        $queue = new DbalNotificationQueue($this->database);
+        $queue->enqueue($incident, Transition::Opened, 123456789.12345679, 0.1 + 0.2, 1000);
+
+        $content = $queue->claim(1, 1000, 5, 1900)?->content;
+
+        self::assertSame([123456789.12345679, 0.1 + 0.2], [$content?->value, $content?->threshold]);
+    }
+
+    public function testOnlyAnOpenedOrRecoveredIncidentIsQueued(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new DbalNotificationQueue($this->database))->enqueue(1, Transition::BecameUnknown, 1.0, 1.0, 100);
     }
 }

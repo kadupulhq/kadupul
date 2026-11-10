@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace Kadupul\Alerting\Application;
 
+use Kadupul\Alerting\Application\Port\AlertingLog;
 use Kadupul\Alerting\Application\Port\Clock;
 use Kadupul\Alerting\Application\Port\EvaluationCursor;
 use Kadupul\Alerting\Application\Port\IncidentRepository;
+use Kadupul\Alerting\Application\Port\NotificationQueue;
 use Kadupul\Alerting\Application\Port\RateSource;
 use Kadupul\Alerting\Application\Port\RuleRepository;
 use Kadupul\Alerting\Application\Port\RuleStateStore;
@@ -20,8 +22,6 @@ use Kadupul\Alerting\Application\Port\UnusableRuleRecord;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
 use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 /**
  * One evaluation run (ADR 0011 decisions 4, 5, 8 and 9). Rules are read in
@@ -30,9 +30,12 @@ use Psr\Log\NullLogger;
  * rule resets the cursor and stops, so no rule is evaluated twice in a run and
  * a stopped run resumes after the last rule it finished.
  *
- * Each rule's writes run in one transaction: its state is saved first and
- * its incident change follows, so a failed incident write also undoes the
- * state. A rule whose state did not change is not written. Before the
+ * Each rule's writes run in one transaction: the rule row is locked, its
+ * state is saved, its incident change follows and an opened or recovered
+ * incident queues its notification (decision 7), so a failed incident or
+ * notification write also undoes the state. A rule deleted after its batch
+ * was read writes nothing. A rule whose state did not change is not
+ * written. Mail is sent by DeliverNotifications, never here. Before the
  * batches, up to one batch of rules whose series or rule row is gone end
  * their active incident as orphaned and lose their state (ADR 0011 decision
  * 6); that is never a recovery, and the rest wait for later runs.
@@ -53,10 +56,11 @@ final readonly class EvaluateRules
         private RuleRepository $rules,
         private RuleStateStore $states,
         private IncidentRepository $incidents,
+        private NotificationQueue $notifications,
         private EvaluationCursor $cursor,
         private Clock $clock,
         private TransactionRunner $transaction,
-        private LoggerInterface $logger = new NullLogger(),
+        private AlertingLog $logger,
     ) {}
 
     public function __invoke(int $batchSize, float $budgetSeconds): EvaluationReport
@@ -166,32 +170,47 @@ final readonly class EvaluateRules
 
             if ($observation === null || !$observation->isFreshAt($now)) {
                 // No fresh rate is unknown: it never counts as ok or as breach.
-                // Notifying an incident that became unknown is Task 4's queue.
+                // It changes no incident, so it queues no notification.
                 $transition = $state->markUnknown();
-                $observedAt = null;
+                $observation = null;
             } elseif (!$state->isNewer($observation->observedAt)) {
                 ++$skipped;
                 continue;
             } else {
-                $observedAt = $observation->observedAt;
                 $verdict = $rule->condition->evaluate($observation->rate, $state->isOpen());
-                $transition = $state->advanceAt($verdict, $rule->condition, $observedAt);
+                $transition = $state->advanceAt($verdict, $rule->condition, $observation->observedAt);
             }
 
             if (!$state->equals($before)) {
+                $gone = false;
                 try {
-                    $this->transaction->run(function () use ($rule, $state, $transition, $observedAt): void {
+                    $this->transaction->run(function () use ($rule, $state, $transition, $observation, $now, &$gone): void {
+                        // Lock order: rule, state, incident, notification.
+                        if (!$this->rules->lock($rule->id)) {
+                            $gone = true;
+
+                            return;
+                        }
                         $this->states->save($rule->id, $state);
-                        if ($observedAt !== null && $transition === Transition::Opened) {
-                            $this->incidents->open($rule->id, $observedAt);
-                        } elseif ($observedAt !== null && $transition === Transition::Recovered) {
-                            $this->incidents->close($rule->id, $observedAt);
+                        if ($observation === null) {
+                            return;
+                        }
+                        if ($transition === Transition::Opened) {
+                            $incident = $this->incidents->open($rule->id, $observation->observedAt);
+                            $this->notifications->enqueue($incident, $transition, $observation->rate, $rule->condition->trigger, $now);
+                        } elseif ($transition === Transition::Recovered) {
+                            $incident = $this->incidents->close($rule->id, $observation->observedAt);
+                            $this->notifications->enqueue($incident, $transition, $observation->rate, $rule->condition->clear, $now);
                         }
                     });
                 } catch (UnusableRuleRecord $mismatch) {
                     // Rolled back: the incident rows disagree with this rule's state.
                     $this->quarantine($mismatch);
                     ++$failed;
+                    continue;
+                }
+                if ($gone) {
+                    // Deleted after this batch was read; the next run's orphan sweep ends whatever it left.
                     continue;
                 }
             }

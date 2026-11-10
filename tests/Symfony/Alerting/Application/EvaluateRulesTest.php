@@ -12,12 +12,14 @@ namespace Kadupul\Tests\Alerting\Application;
 use Kadupul\Alerting\Application\EvaluateRules;
 use Kadupul\Alerting\Domain\Evaluation\Observation;
 use Kadupul\Alerting\Domain\Evaluation\RuleState;
+use Kadupul\Alerting\Domain\Evaluation\Transition;
 use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Rule\Comparator;
 use Kadupul\Alerting\Domain\Rule\SeriesKey;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
+use Kadupul\Tests\Alerting\Fakes\InMemoryNotificationQueue;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRateSource;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRuleRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRuleStateStore;
@@ -36,6 +38,7 @@ final class EvaluateRulesTest extends TestCase
     private InMemoryRuleRepository $rules;
     private InMemoryRuleStateStore $states;
     private InMemoryIncidentRepository $incidents;
+    private InMemoryNotificationQueue $notifications;
     private InMemoryEvaluationCursor $cursor;
     private InMemoryTransactionRunner $transactions;
     private RecordingLogger $logger;
@@ -46,15 +49,16 @@ final class EvaluateRulesTest extends TestCase
         $this->rates = new InMemoryRateSource(clock: $this->clock);
         $this->states = new InMemoryRuleStateStore();
         $this->incidents = new InMemoryIncidentRepository();
+        $this->notifications = new InMemoryNotificationQueue($this->incidents);
         $this->rules = new InMemoryRuleRepository($this->states, $this->incidents);
         $this->logger = new RecordingLogger();
         $this->cursor = new InMemoryEvaluationCursor();
-        $this->transactions = new InMemoryTransactionRunner($this->states, $this->incidents);
+        $this->transactions = new InMemoryTransactionRunner($this->states, $this->incidents, $this->notifications);
     }
 
     private function evaluator(): EvaluateRules
     {
-        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->cursor, new MockClockAdapter($this->clock), $this->transactions, $this->logger);
+        return new EvaluateRules($this->rates, $this->rules, $this->states, $this->incidents, $this->notifications, $this->cursor, new MockClockAdapter($this->clock), $this->transactions, $this->logger);
     }
 
     private static function rule(int $id, Comparator $comparator = Comparator::GreaterThan, float $trigger = 90.0, float $clear = 80.0, int $forCycles = 1): AlertRule
@@ -414,5 +418,107 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame([], $this->states->unreadable);
         self::assertSame([['orphan', 7, self::NOW]], $this->incidents->events);
         self::assertSame(0, $this->evaluator()(10, 30.0)->orphaned);
+    }
+
+    /** @return list<array{int, Transition, float, float, string, int}> incident, kind, value, threshold, status, queued at */
+    private function queued(): array
+    {
+        return array_values(array_map(static fn(array $row): array => [$row['incident'], $row['kind'], $row['value'], $row['threshold'], $row['status'], $row['queued']], $this->notifications->rows));
+    }
+
+    public function testAnOpenedIncidentQueuesItsNotificationInTheSameTransaction(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.5, self::NOW - 10, 300));
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame(1, $report->evaluated);
+        self::assertSame([[1, Transition::Opened, 95.5, 90.0, 'queued', self::NOW]], $this->queued(), 'The trigger threshold decided it; queued at the clock.');
+        self::assertSame(1, $this->transactions->committed, 'State, incident and notification share one transaction.');
+        self::assertSame([1], $this->rules->locked, 'The rule is locked before its writes.');
+    }
+
+    public function testARecoveryQueuesARecoveredNotificationWithTheClearThreshold(): void
+    {
+        $this->rules->add(self::rule(1));
+        $series = new SeriesKey(101, 'traffic_in');
+        $this->rates->put($series, new Observation(95.0, self::NOW - 300, 300));
+        $this->evaluator()(10, 30.0);
+        $this->rates->put($series, new Observation(70.0, self::NOW - 100, 300));
+        $this->evaluator()(10, 30.0);
+
+        self::assertSame([[1, Transition::Opened, 95.0, 90.0, 'queued', self::NOW], [1, Transition::Recovered, 70.0, 80.0, 'queued', self::NOW]], $this->queued());
+    }
+
+    public function testAFailedNotificationInsertRollsBackTheStateAndTheIncident(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->notifications->failure = new \RuntimeException('notification insert failed');
+
+        try {
+            $this->evaluator()(10, 30.0);
+            self::fail('A failed notification insert was not reported.');
+        } catch (\RuntimeException $e) {
+            self::assertSame('notification insert failed', $e->getMessage());
+        }
+        self::assertArrayNotHasKey(1, $this->states->states);
+        self::assertSame([], $this->incidents->events);
+        self::assertSame([], $this->incidents->active);
+        self::assertSame([], $this->queued());
+        self::assertSame(0, $this->transactions->committed);
+
+        $this->notifications->failure = null;
+        $this->evaluator()(10, 30.0);
+        self::assertSame([['open', 1, self::NOW]], $this->incidents->events, 'The same observation opens and notifies on the retry.');
+        self::assertCount(1, $this->queued());
+    }
+
+    public function testBecomingUnknownQueuesNoNotification(): void
+    {
+        $this->rules->add(self::rule(1));
+        $this->states->states[1] = new RuleState(open: true, consecutiveBreaches: 1, lastObservedAt: self::NOW - 900);
+        $this->incidents->active[1] = true;
+
+        $this->evaluator()(10, 30.0);
+
+        self::assertTrue($this->states->states[1]->isUnknown());
+        self::assertSame([], $this->queued(), 'An unknown series changes no incident, so nothing is queued.');
+    }
+
+    public function testARuleDeletedDuringTheRunWritesNothing(): void
+    {
+        $this->rules->add(self::rule(1), self::rule(2));
+        $this->rates->put(new SeriesKey(101, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        $this->rates->put(new SeriesKey(102, 'traffic_in'), new Observation(95.0, self::NOW, 300));
+        // Read by the batch, then deleted before its transaction began.
+        $this->rules->deletedMidRun[1] = true;
+
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame([1, 2], $this->rules->locked);
+        self::assertArrayNotHasKey(1, $this->states->states, 'No state is recreated for a deleted rule.');
+        self::assertSame([['open', 2, self::NOW]], $this->incidents->events);
+        self::assertSame([[1, Transition::Opened, 95.0, 90.0, 'queued', self::NOW]], $this->queued(), 'Only rule 2\'s incident 1 is notified.');
+        self::assertSame(1, $report->evaluated);
+    }
+
+    public function testRecoveryAfterOrphanSendsNothing(): void
+    {
+        $this->rules->add(self::rule(1));
+        $series = new SeriesKey(101, 'traffic_in');
+        $this->rates->put($series, new Observation(95.0, self::NOW - 300, 300));
+        $this->evaluator()(10, 30.0);
+        self::assertCount(1, $this->queued());
+
+        // The data source is deleted: the incident is orphaned, then its last rate recovers.
+        $this->rules->orphaned = [1];
+        $this->rates->put($series, new Observation(50.0, self::NOW - 100, 300));
+        $report = $this->evaluator()(10, 30.0);
+
+        self::assertSame(1, $report->orphaned);
+        self::assertSame(['open', 'orphan'], array_column($this->incidents->events, 0));
+        self::assertSame([[1, Transition::Opened, 95.0, 90.0, 'queued', self::NOW]], $this->queued(), 'Neither the orphaning nor the later rate queues a recovery.');
     }
 }

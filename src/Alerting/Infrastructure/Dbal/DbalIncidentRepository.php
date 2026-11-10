@@ -34,7 +34,7 @@ final readonly class DbalIncidentRepository implements IncidentRepository
 
     public function __construct(private Connection $database) {}
 
-    public function open(int $ruleId, int $observedAt): void
+    public function open(int $ruleId, int $observedAt): int
     {
         try {
             $this->database->executeStatement(
@@ -44,17 +44,26 @@ final readonly class DbalIncidentRepository implements IncidentRepository
         } catch (UniqueConstraintViolationException $e) {
             throw new UnusableRuleRecord($ruleId, 'it already has an open or acknowledged incident; its stored state says it has none.', $e);
         }
+
+        return StoredValue::int($this->database->lastInsertId(), 'alert_incident', 'id');
     }
 
-    public function close(int $ruleId, int $observedAt): void
+    /**
+     * The active incident is read with a row lock and then ended by its id
+     * and rule, so the id returned is the incident this call closed.
+     */
+    public function close(int $ruleId, int $observedAt): int
     {
-        $changed = $this->database->executeStatement(
-            'UPDATE alert_incident SET status = ?, active_rule_id = NULL, ended_at = ? WHERE active_rule_id = ?',
-            [IncidentStatus::Closed->value, $observedAt, $ruleId],
+        $id = $this->database->fetchOne('SELECT id FROM alert_incident WHERE active_rule_id = ?' . RowLock::forUpdate($this->database), [$ruleId]);
+        $changed = $id === false ? 0 : $this->database->executeStatement(
+            'UPDATE alert_incident SET status = ?, active_rule_id = NULL, ended_at = ? WHERE id = ? AND active_rule_id = ?',
+            [IncidentStatus::Closed->value, $observedAt, $id, $ruleId],
         );
         if ($changed !== 1) {
             throw new UnusableRuleRecord($ruleId, 'it recovered, but it has no open or acknowledged incident to close.');
         }
+
+        return StoredValue::int($id, 'alert_incident', 'id');
     }
 
     public function orphan(array $ruleIds, int $at): int

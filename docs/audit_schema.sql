@@ -184,6 +184,8 @@ INSERT INTO `table_columns` VALUES ('alert_notification',6,'queued_at','int(10) 
 INSERT INTO `table_columns` VALUES ('alert_notification',7,'next_attempt_at','int(10) unsigned','NO','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_notification',8,'sent_at','int(10) unsigned','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_notification',9,'last_error','varchar(255)','NO','','','','utf8mb4_unicode_ci');
+INSERT INTO `table_columns` VALUES ('alert_notification',10,'observed_value','double','NO','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('alert_notification',11,'threshold','double','NO','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_rule',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('alert_rule',2,'local_data_id','int(10) unsigned','NO','MUL',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_rule',3,'rrd_name','varbinary(19)','NO','',NULL,'',NULL);
