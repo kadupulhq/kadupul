@@ -40,9 +40,10 @@ final readonly class DeliverNotifications
     /** Seconds before attempt 2, 3, 4 and 5. */
     public const array RETRY_DELAYS = [60, 300, 900, 1800];
     /**
-     * How long a claim holds a row. Longer than one SMTP send at the largest
-     * timeout the mail settings accept (300 s per read), so a slow send is
-     * not taken over while it is still running.
+     * How long a claim holds a row: a chosen value, not a bound on a send
+     * (ADR 0011 decision 7). The SMTP timeout of 300 s applies to each read,
+     * so one send can take longer, and the legacy send_mail() path is not
+     * bounded by it at all; a send that outlasts the lease can be sent twice.
      */
     public const int LEASE_SECONDS = 900;
     public const string UNREADABLE = 'the notification or its incident cannot be read';

@@ -2,15 +2,15 @@
 
 ## Status
 
-Accepted. The decisions are implemented in the Alerting module and are not
-released.
+Proposed. The decisions are implemented on the feat/native-alerting branch
+and are not released.
 
 ## Context
 
 Kadupul has no alerting of its own. The `Alerting` module in
 [the architecture document](../architecture.md) owns "alert rules, evaluation,
-incidents and notification intent", but `src/Alerting` today only sends
-administrator mail through `Application/Port/AdministrativeMailDelivery.php`.
+incidents and notification intent", but before this ADR `src/Alerting` only
+sent administrator mail through `Application/Port/AdministrativeMailDelivery.php`.
 Threshold alerting is provided by the THold plugin, which keeps its own tables
 and runs inside the poller.
 
@@ -422,8 +422,10 @@ behavior until an administrator opts in.
      data source name (the series the incident recorded when it opened, so a
      notification queued before its rule changed still names that series),
      the transition, the value, the threshold, the
-     observation time in UTC and the path `/alerting/incidents/{id}`, which the
-     incident view serves. For an incident opened by a baseline rule, as the
+     observation time in UTC and the incident id with the Alert Incidents
+     page and its path under the site, `app.php/alerting/incidents/{id}`,
+     which the incident view serves; the mail path has no base URL, so it is
+     not a link. For an incident opened by a baseline rule, as the
      incident records its rule's kind, the stored threshold is the band
      edge on the rate's side of the mean, so its mail says "Trigger band edge"
      or "Clear band edge" instead of "threshold". Rules have no name column in Phase 1,
@@ -516,7 +518,10 @@ behavior until an administrator opts in.
    fills both tables with Boost on (Context). If the check fails, it evaluates
    nothing, writes no verdict, reports the reason `rate_source_unavailable`,
    shown as "inactive: rate source unavailable" in the UI, and exits
-   with status 2. Exit status 0 means evaluation completed or alerting is
+   with status 2. The poller discards the command's output and status, so
+   such a run also logs an `ALERTING WARNING` at most once an hour, recorded
+   in the `alerting_inactive_warning_lastrun` setting, which is not copied to
+   remote collectors. Exit status 0 means evaluation completed or alerting is
    disabled; status 1 means an error. An empty table on its own does not mean
    unavailable: after a restart it means `unknown`.
 

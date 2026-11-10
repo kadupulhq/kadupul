@@ -172,6 +172,11 @@ deliver, so keep them in sync.
 
 Only the incident opening and recovery queue mail. Going `unknown` does not.
 
+Turning `alerting_enable` off stops delivery as well as evaluation, but keeps
+the queue. When you turn it back on, the first run sends every notification
+still queued, opened and recovered, even for incidents that ended long ago.
+Each mail gives the time of the observation that decided it.
+
 ## Running the command
 
 The poller runs `kadupul:alerting:evaluate` for you. You can run it by hand with
@@ -184,7 +189,7 @@ for one run.
 | Exit | Meaning |
 | --- | --- |
 | 0 | Evaluated; alerting is off; another evaluation holds the lock; or some rules were skipped as unusable |
-| 1 | Invalid option, unreachable database, failed evaluation, or a delivery worker that did not report success |
+| 1 | Invalid option, unreachable database, failed evaluation, or a delivery worker that did not report success. Queued notifications are still sent after a failed evaluation |
 | 2 | dsstats is off or its tables are missing |
 
 A run started by the poller prints nothing. Every warning and error goes to
@@ -197,6 +202,7 @@ values.
 | Symptom | Cause | What to do |
 | --- | --- | --- |
 | Pages say "inactive: rate source unavailable"; command exits 2 | dsstats is off or its tables are missing | Turn on Data Source Statistics |
+| `ALERTING WARNING: Alert rules are not being evaluated: the rate source is unavailable`, at most once an hour | The poller starts the evaluator, but dsstats is off or its tables are missing, so no rule is evaluated. Queued mail is still sent | Turn on Data Source Statistics, or turn alerting off |
 | `ALERTING WARNING` naming a rule id and column names | The rule row is unusable (unknown kind, out-of-range value, mixed columns) | Correct or delete the rule. The evaluator skips it every run and the run still exits 0 |
 | `ALERTING ERROR: Baseline history was not pruned` | A lock wait, deadlock, lost connection or unreadable row during pruning | None unless it repeats. The rules were evaluated and the next run retries. A repeating error means history is growing |
 | Command exits 1 with the database unreachable | Database down | Fix the database. The error is in `log/cacti.log` |
