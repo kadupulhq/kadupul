@@ -3811,18 +3811,6 @@ parameters:
 			path: src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php
 
 		-
-			message: '#^Function auth_session_credential_generation not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php
-
-		-
-			message: '#^Parameter \#1 \$known_string of function hash_equals expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php
-
-		-
 			message: '#^Cannot cast mixed to string\.$#'
 			identifier: cast.string
 			count: 1
