@@ -131,7 +131,8 @@ final class AlertingSchemaUpgradeTest extends TestCase
             } catch (RuntimeException $e) {
                 self::assertSame('The alerting realms could not be granted to the admin account. Review user_auth_realm and rerun the upgrade.', $e->getMessage());
             }
-            self::assertContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+            // MariaDB fails the refused row, so a DB error is logged; MySQL only warns
+            // under IGNORE. The exception is what stops the step on both engines.
             self::assertNotFalse($db->exec('DROP TEMPORARY TABLE user_auth_realm'));
 
             $GLOBALS['forward_schema_status'] = [];

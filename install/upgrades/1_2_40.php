@@ -49,10 +49,17 @@ function upgrade_alerting_realms(): void
     if (empty($admin['data'])) {
         return;
     }
+    $failure = 'The alerting realms could not be granted to the admin account. Review user_auth_realm and rerun the upgrade.';
     foreach (array(29, 30) as $realm) {
         if (db_install_execute('INSERT IGNORE INTO user_auth_realm (realm_id, user_id) VALUES (?, 1)', array($realm)) !== DB_STATUS_SUCCESS) {
-            throw new RuntimeException('The alerting realms could not be granted to the admin account. Review user_auth_realm and rerun the upgrade.');
+            throw new RuntimeException($failure);
         }
+    }
+    // The IGNORE modifier also skips a row the table refuses (MySQL turns a
+    // CHECK or conversion failure into a warning), so confirm both grants exist.
+    $granted = db_install_fetch_cell('SELECT COUNT(*) FROM user_auth_realm WHERE user_id = 1 AND realm_id IN (29, 30)');
+    if ((int) ($granted['data'] ?? 0) !== 2) {
+        throw new RuntimeException($failure);
     }
 }
 
