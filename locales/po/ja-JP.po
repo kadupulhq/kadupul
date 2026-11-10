@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:23-0800\n"
+"POT-Creation-Date: 2026-11-10 08:39-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1150,7 +1150,7 @@ msgstr "タイトルフォーマット"
 msgid "rule_name"
 msgstr "ルール名"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, fuzzy, php-format
 msgid "%d Minute"
 msgstr "%d分"
@@ -7546,6 +7546,11 @@ msgstr "%d プロセス"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d スパイク"
 
@@ -7661,6 +7666,14 @@ msgstr "高度な設定"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "この日数が経過すると、営業時間はグラフに追加されません。<br/>オススメ： 62日"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8247,6 +8260,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes（R）調整を有効にする"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "オンデマンドRRD更新を有効にする"
 
@@ -8526,6 +8543,10 @@ msgstr "Daily Statsはどのくらいの頻度で更新されるべきですか�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Daily Statsはどのくらいの頻度で更新されるべきですか？"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches, including sending queued notifications. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8855,6 +8876,10 @@ msgstr "マイブラウザのタイムゾーン"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN&#39;s"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9373,6 +9398,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "[グラフあり]と[データソースあり]がデフォルトでチェックされるべきか"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "集合体"
 
@@ -9800,6 +9829,10 @@ msgstr "Kadupulシステムに問題が発生したときに自動的にEメー�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupulが新しいWeb BasicおよびLDAPユーザーのテンプレートとして使用するユーザーの名前。デフォルトでは &#39;guest&#39;です。このユーザーアカウントは選択されるとログインできなくなります。"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
