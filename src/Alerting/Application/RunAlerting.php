@@ -12,6 +12,7 @@ namespace Kadupul\Alerting\Application;
 use Kadupul\Alerting\Application\Port\AlertingLog;
 use Kadupul\Alerting\Application\Port\AlertingSettings;
 use Kadupul\Alerting\Application\Port\Clock;
+use Kadupul\Alerting\Application\Port\InactiveWarningRecord;
 use Kadupul\Alerting\Application\Port\NotificationDrain;
 use Kadupul\Alerting\Application\Port\RunLock;
 
@@ -30,6 +31,11 @@ use Kadupul\Alerting\Application\Port\RunLock;
  * including recoveries. The failed evaluation then propagates, so the run
  * still fails; a delivery failure after it is logged and does not replace
  * the evaluation's error.
+ *
+ * A run that evaluated nothing because the rate source is unavailable logs a
+ * warning at most once per INACTIVE_WARNING_INTERVAL, after delivery: the
+ * poller discards the command's output and exit status, so without it such
+ * runs leave no trace in cacti.log.
  */
 final readonly class RunAlerting
 {
@@ -38,6 +44,7 @@ final readonly class RunAlerting
      * mail server, so the first batch, which always runs, stays small.
      */
     public const int DELIVERY_BATCH_SIZE = 20;
+    public const int INACTIVE_WARNING_INTERVAL = 3600;
 
     public function __construct(
         private AlertingSettings $settings,
@@ -46,6 +53,7 @@ final readonly class RunAlerting
         private NotificationDrain $drain,
         private Clock $clock,
         private AlertingLog $logger,
+        private InactiveWarningRecord $inactiveWarnings,
     ) {}
 
     /**
@@ -80,6 +88,8 @@ final readonly class RunAlerting
                 throw $failure;
             }
 
+            $this->warnIfInactive($evaluation);
+
             return new AlertingRun(AlertingRunOutcome::Evaluated, $evaluation);
         }
         $delivery = null;
@@ -97,8 +107,24 @@ final readonly class RunAlerting
         if ($failure !== null) {
             throw $failure;
         }
+        $this->warnIfInactive($evaluation);
 
         return new AlertingRun(AlertingRunOutcome::Evaluated, $evaluation, $delivery);
+    }
+
+    /** A clock set back past the last warning logs it again rather than staying silent until then. */
+    private function warnIfInactive(?EvaluationReport $evaluation): void
+    {
+        if ($evaluation?->inactiveReason !== EvaluateRules::RATE_SOURCE_UNAVAILABLE) {
+            return;
+        }
+        $now = $this->clock->now()->getTimestamp();
+        $last = $this->inactiveWarnings->lastWarnedAt();
+        if ($last !== null && $last <= $now && $now - $last < self::INACTIVE_WARNING_INTERVAL) {
+            return;
+        }
+        $this->logger->warning('Alert rules are not being evaluated: the rate source is unavailable (dsstats_enable must be on). Logged at most once an hour while it lasts.');
+        $this->inactiveWarnings->warnedAt($now);
     }
 
     private function release(string $purpose): void

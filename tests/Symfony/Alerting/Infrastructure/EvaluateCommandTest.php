@@ -36,6 +36,7 @@ use Kadupul\Tests\Alerting\Fakes\FixedAdministrator;
 use Kadupul\Tests\Alerting\Fakes\FixedAlertingSettings;
 use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
+use Kadupul\Tests\Alerting\Fakes\InMemoryInactiveWarningRecord;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryNotificationQueue;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRateSource;
@@ -93,7 +94,7 @@ final class EvaluateCommandTest extends TestCase
         $clock = new MockClockAdapter($this->clock);
         $evaluate = new EvaluateRules($this->rates, new InMemoryBaselineSource(), $this->rules, $this->states, $incidents, $notifications, new InMemoryEvaluationCursor(), $clock, new InMemoryTransactionRunner($this->states, $incidents, $notifications), $log);
 
-        return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $drain, $clock, $log), $log));
+        return new CommandTester(new EvaluateCommand(new RunAlerting($this->settings, $this->lock, $evaluate, $drain, $clock, $log, new InMemoryInactiveWarningRecord()), $log));
     }
 
     /**

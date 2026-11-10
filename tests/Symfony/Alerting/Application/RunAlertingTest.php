@@ -23,6 +23,7 @@ use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 use Kadupul\Tests\Alerting\Fakes\InMemoryBaselineSource;
 use Kadupul\Tests\Alerting\Fakes\FixedAlertingSettings;
 use Kadupul\Tests\Alerting\Fakes\InMemoryEvaluationCursor;
+use Kadupul\Tests\Alerting\Fakes\InMemoryInactiveWarningRecord;
 use Kadupul\Tests\Alerting\Fakes\InMemoryIncidentRepository;
 use Kadupul\Tests\Alerting\Fakes\InMemoryNotificationQueue;
 use Kadupul\Tests\Alerting\Fakes\InMemoryRateSource;
@@ -51,6 +52,7 @@ final class RunAlertingTest extends TestCase
     private RecordingNotificationDrain $drain;
     private RecordingLogger $logger;
     private InMemoryBaselineSource $baselines;
+    private InMemoryInactiveWarningRecord $inactiveWarnings;
 
     protected function setUp(): void
     {
@@ -65,6 +67,7 @@ final class RunAlertingTest extends TestCase
         $this->drain = new RecordingNotificationDrain();
         $this->logger = new RecordingLogger();
         $this->baselines = new InMemoryBaselineSource();
+        $this->inactiveWarnings = new InMemoryInactiveWarningRecord();
         foreach ([1, 2, 3] as $id) {
             $this->rules->add(new AlertRule($id, new SeriesKey(100 + $id, 'traffic_in'), new ThresholdRule(Comparator::GreaterThan, 90.0, 80.0, 1)));
             $this->rates->put(new SeriesKey(100 + $id, 'traffic_in'), new Observation(50.0, self::NOW, 300));
@@ -88,7 +91,7 @@ final class RunAlertingTest extends TestCase
             $this->logger,
         );
 
-        return (new RunAlerting($this->settings, $this->lock, $evaluate, $this->drain, $clock, $this->logger))($batchSize, $budgetSeconds, $deliveryBatchSize);
+        return (new RunAlerting($this->settings, $this->lock, $evaluate, $this->drain, $clock, $this->logger, $this->inactiveWarnings))($batchSize, $budgetSeconds, $deliveryBatchSize);
     }
 
     public function testDisabledAlertingEvaluatesNothingSendsNothingAndTakesNoLock(): void
@@ -223,6 +226,39 @@ final class RunAlertingTest extends TestCase
         }
 
         self::assertSame(['acquire evaluate', 'release evaluate', 'acquire deliver', 'release deliver'], $this->lock->events);
+    }
+
+    public function testAnInactiveRunWarnsAtMostOnceAnHourAndStillDelivers(): void
+    {
+        $this->rates->available = false;
+        $warning = [
+            'level' => 'warning',
+            'message' => 'Alert rules are not being evaluated: the rate source is unavailable (dsstats_enable must be on). Logged at most once an hour while it lasts.',
+            'context' => [],
+        ];
+
+        $first = $this->runOnce();
+        $this->clock->sleep(RunAlerting::INACTIVE_WARNING_INTERVAL - 1);
+        $this->runOnce();
+
+        self::assertSame(EvaluateRules::RATE_SOURCE_UNAVAILABLE, $first->evaluation?->inactiveReason);
+        self::assertSame([$warning], $this->logger->records, 'One warning within the hour.');
+        self::assertSame(self::NOW, $this->inactiveWarnings->at);
+        self::assertCount(2, $this->drain->calls, 'Queued notifications are delivered either way.');
+
+        $this->clock->sleep(1);
+        $this->runOnce();
+        self::assertSame([$warning, $warning], $this->logger->records, 'Again once the hour has passed.');
+
+        // A clock set back before the last warning does not silence it until then.
+        $this->inactiveWarnings->at = self::NOW + 86_400;
+        $this->runOnce();
+        self::assertCount(3, $this->logger->records);
+
+        $this->rates->available = true;
+        $this->clock->sleep(RunAlerting::INACTIVE_WARNING_INTERVAL);
+        $this->runOnce();
+        self::assertCount(3, $this->logger->records, 'An active run logs nothing.');
     }
 
     public function testDeliveryGetsWhatIsLeftOfTheBudget(): void

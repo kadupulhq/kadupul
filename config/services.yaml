@@ -318,6 +318,8 @@ services:
         arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock:
         arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalInactiveWarningRecord:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain: ~
     Kadupul\Alerting\Infrastructure\Clock\SymfonyClock: ~
     Kadupul\Alerting\Infrastructure\Logging\OperatorAlertingLog: ~
@@ -350,6 +352,8 @@ services:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings
     Kadupul\Alerting\Application\Port\RunLock:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock
+    Kadupul\Alerting\Application\Port\InactiveWarningRecord:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalInactiveWarningRecord
     # The rule and incident pages (ADR 0011 decision 12) read and write on
     # the evaluator's main connection too: a rule save takes the row lock the
     # evaluator takes, and the actor recheck and the visibility predicate

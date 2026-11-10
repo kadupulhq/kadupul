@@ -29,6 +29,7 @@ use Kadupul\Alerting\Application\Port\RunLock;
 use Kadupul\Alerting\Application\RunAlerting;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalInactiveWarningRecord;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository;
@@ -189,7 +190,7 @@ final class AlertEvaluatorRunDatabaseTest extends TestCase
             $this->logger,
         );
 
-        return new CommandTester(new EvaluateCommand(new RunAlerting(new DbalAlertingSettings($session), new DbalRunLock($session), $evaluate, $this->drain, $clock, $this->logger), $this->logger));
+        return new CommandTester(new EvaluateCommand(new RunAlerting(new DbalAlertingSettings($session), new DbalRunLock($session), $evaluate, $this->drain, $clock, $this->logger, new DbalInactiveWarningRecord($session)), $this->logger));
     }
 
     private function watch(int $ruleId, int $localDataId): void
@@ -265,6 +266,11 @@ final class AlertEvaluatorRunDatabaseTest extends TestCase
         self::assertSame(2, $tester->execute([]));
         self::assertSame(0, $this->stateRows());
         self::assertTrue($this->free(RunLock::EVALUATE));
+        self::assertSame(['warning'], array_column($this->logger->records, 'level'), 'The run leaves a trace in the log.');
+        self::assertSame((string) self::NOW, $this->database->fetchOne("SELECT value FROM settings WHERE name = 'alerting_inactive_warning_lastrun'"));
+
+        self::assertSame(2, $this->command($this->session())->execute([]));
+        self::assertCount(1, $this->logger->records, 'Not again within the hour.');
     }
 
     public function testASecondConcurrentRunExitsZeroWithoutEvaluating(): void
@@ -351,11 +357,13 @@ final class AlertEvaluatorRunDatabaseTest extends TestCase
         $query = $fixture['sql'][1];
         self::assertStringStartsWith("SELECT *\n\t\t\tFROM settings", $query);
         $this->database->insert('settings', ['name' => 'alerting_evaluation_cursor', 'value' => '42']);
+        $this->database->insert('settings', ['name' => 'alerting_inactive_warning_lastrun', 'value' => '1800000000']);
         $this->database->insert('settings', ['name' => 'alerting_batch_size', 'value' => '250']);
 
         $names = array_map('strval', array_column($this->database->fetchAllAssociative($query), 'name'));
 
         self::assertNotContains('alerting_evaluation_cursor', $names);
+        self::assertNotContains('alerting_inactive_warning_lastrun', $names);
         self::assertContains('alerting_enable', $names);
         self::assertContains('alerting_batch_size', $names);
     }

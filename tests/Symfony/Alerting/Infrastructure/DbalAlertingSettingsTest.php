@@ -13,6 +13,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Kadupul\Alerting\Application\AlertingConfiguration;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalInactiveWarningRecord;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -29,6 +30,23 @@ final class DbalAlertingSettingsTest extends TestCase
     private function set(string $name, string $value): void
     {
         $this->database->executeStatement('REPLACE INTO settings (name, value) VALUES (?, ?)', [$name, $value]);
+    }
+
+    public function testTheInactiveWarningTimeIsStoredAndAnUnreadableOneIsNoRecord(): void
+    {
+        $record = new DbalInactiveWarningRecord($this->database);
+        self::assertNull($record->lastWarnedAt());
+
+        $record->warnedAt(1_800_000_000);
+        self::assertSame(1_800_000_000, $record->lastWarnedAt());
+        $record->warnedAt(1_800_003_600);
+        self::assertSame(1_800_003_600, $record->lastWarnedAt());
+        self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM settings'));
+
+        foreach (['', ' 1', '1.5', '-1', '01', 'never'] as $value) {
+            $this->set(DbalInactiveWarningRecord::SETTING, $value);
+            self::assertNull($record->lastWarnedAt(), var_export($value, true));
+        }
     }
 
     public function testMissingSettingsAreOffWithTheDefaults(): void
