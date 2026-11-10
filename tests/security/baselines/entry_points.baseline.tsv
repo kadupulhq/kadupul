@@ -14,6 +14,12 @@ app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=G
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/new	symfony:automation_snmp_option_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/edit	symfony:automation_snmp_option_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/new	symfony:automation_snmp_entry_create	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/{entry}/delete	symfony:automation_snmp_entry_delete	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9},entry=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/{entry}/edit	symfony:automation_snmp_entry_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9},entry=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
+app.php/automation/snmp-options/{id}/entries/{entry}/move/{direction}	symfony:automation_snmp_entry_move	methods=POST requirements=id=[1-9][0-9]{0,9},entry=[1-9][0-9]{0,9},direction=up|down; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates	symfony:automation_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/delete	symfony:automation_template_delete	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/legacy	symfony:automation_templates_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
