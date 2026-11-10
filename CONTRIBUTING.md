@@ -138,6 +138,30 @@ the wrapper.
 
 ## Commits
 
+## Changelog
+
+A pull request that changes behaviour describes it in a changelog fragment, a
+new file `changelog.d/<slug>.<category>.md`, rather than in `CHANGELOG.md`.
+Every pull request used to append to the same `[Unreleased]` list, so each merge
+made the others conflict; separate files do not. The slug is lower-case letters,
+digits and hyphens, such as the issue number or a short name for the change. The
+category is `added`, `changed`, `deprecated`, `removed`, `fixed`, `security` or
+`tests`. The file holds one or more Markdown list items written as they should read
+in the release notes, with continuation lines indented by two spaces and no
+headings. [changelog.d/README.md](changelog.d/README.md) has an example.
+
+The `Changelog` check fails a pull request that changes anything other than
+documentation, CI or contributor hooks without adding or editing a fragment.
+Editing `CHANGELOG.md` directly still passes, so an existing entry need not be
+converted, but it will conflict again whenever another pull request edits the
+same lines. Apply the `no-changelog` label to a change with nothing to report. The
+check reads labels from the event, so after adding the label push again or close and
+reopen the pull request; rerunning the job replays the unlabelled event. Run
+`python3 tools/changelog.py check` to validate fragments locally and
+`python3 tools/changelog.py preview` to see the pending entries.
+
+Describe an undisclosed vulnerability only as [SECURITY.md](SECURITY.md) allows;
+a fragment is public as soon as the pull request is.
 
 Use Conventional Commits and sign off every commit with `git commit -s` under the
 [Developer Certificate of Origin](https://developercertificate.org/).

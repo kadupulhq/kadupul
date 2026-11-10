@@ -62,3 +62,28 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org/).
 `feat:` implies a minor, `fix:` a patch, and a `!` or a `BREAKING CHANGE:`
 footer implies a major. The mapping is a guide for the maintainer cutting the
 release, not an automation that tags on its own. Releases are deliberate.
+
+## Release notes
+
+The release workflow publishes the `## [<version>]` section of `CHANGELOG.md`
+at the tagged commit as the release notes, and refuses a tag that has none.
+Pull requests record their changes as fragments in `changelog.d/` (see
+[CONTRIBUTING.md](CONTRIBUTING.md#changelog)), so the release preparation pull
+request assembles them first:
+
+```sh
+python3 tools/changelog.py preview          # review the pending fragments
+python3 tools/changelog.py release 1.3.0    # date defaults to today (UTC)
+git add CHANGELOG.md changelog.d
+```
+
+`release` moves the existing `[Unreleased]` entries and the fragments, grouped
+by category, into a new `## [1.3.0] - <date>` section below an empty
+`[Unreleased]` heading, and deletes the fragments it used. It refuses a version
+that already has a section, an invalid fragment and an empty release, and then
+changes nothing. Merge that pull request, then tag its merge commit.
+
+The workflow takes every line after the first heading that matches the version
+up to the next `## ` heading it does not match. A version that is a prefix of an
+older heading, such as `1.3.0` ahead of `1.3.0-alpha.1`, also matches that heading
+and gains its notes, so check the draft release before publishing it.

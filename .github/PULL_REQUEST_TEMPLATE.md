@@ -22,3 +22,4 @@
 - [ ] Commits are signed off (`git commit -s`)
 - [ ] Tests cover the changed behaviour, including the failure paths
 - [ ] No security boundary is widened
+- [ ] A user-visible change adds `changelog.d/<slug>.<category>.md` (see CONTRIBUTING.md), or the PR has the `no-changelog` label
