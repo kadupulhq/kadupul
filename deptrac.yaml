@@ -645,6 +645,7 @@ deptrac:
       - PlatformContract
       - Platform.Legacy
       - ConsoleSupport
+      - PersistenceSupport
     PersistenceSupport:
       - Vendor
       - Contract
