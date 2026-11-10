@@ -5,6 +5,8 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Update the hash-locked CI Semgrep scanner from 1.182.1 to 1.183.0.
+
 - Preserve failed reindex work, atomically replace host caches and local mappings, repair poller publication on retry, and honor configured index types.
 
 - Add a rendered translation corpus test: every catalog identity, plural count and fixed `sprintf`, `%%` and text-domain case is rendered through the legacy `__()` helpers and php-gettext over the shipped `.mo` files for en-US and all 23 shipped locales, with two German fixture plugins (`i18nprobe` and `folder`) for plugin domains. The harness fails on an empty corpus, a locale with no translated entry or a missing php-gettext reader. It is the oracle for moving legacy translation onto Symfony.
