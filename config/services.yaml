@@ -287,8 +287,10 @@ services:
     # Native alert evaluation (ADR 0011). Every store uses the main connection:
     # rules and incidents are central, dsstats fills its tables on the main
     # poller, and a rule's state and incident change commit in one
-    # transaction, which needs one connection. Nothing invokes EvaluateRules
-    # yet; the console command and its clock arrive with the poller wiring.
+    # transaction, which needs one connection. The run locks are named locks
+    # on that same session. kadupul:alerting:evaluate runs EvaluateRules here
+    # and DeliverNotifications in bin/legacy-alerting-deliver.php, which needs
+    # the legacy mail runtime and reads the use case from this container.
     Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource:
         arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository:
@@ -303,10 +305,18 @@ services:
         arguments: { $database: '@doctrine.dbal.main_connection' }
     Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue:
         arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain: ~
     Kadupul\Alerting\Infrastructure\Clock\SymfonyClock: ~
     Kadupul\Alerting\Infrastructure\Logging\PsrAlertingLog: ~
     Kadupul\Alerting\Application\EvaluateRules: ~
-    Kadupul\Alerting\Application\DeliverNotifications: ~
+    Kadupul\Alerting\Application\DeliverNotifications:
+        public: true
+    Kadupul\Alerting\Application\RunAlerting: ~
+    Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand: ~
     Kadupul\Alerting\Application\Port\RateSource:
         alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource
     Kadupul\Alerting\Application\Port\RuleRepository:
@@ -325,6 +335,12 @@ services:
         alias: Kadupul\Alerting\Infrastructure\Clock\SymfonyClock
     Kadupul\Alerting\Application\Port\AlertingLog:
         alias: Kadupul\Alerting\Infrastructure\Logging\PsrAlertingLog
+    Kadupul\Alerting\Application\Port\AlertingSettings:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings
+    Kadupul\Alerting\Application\Port\RunLock:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock
+    Kadupul\Alerting\Application\Port\NotificationDrain:
+        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
 

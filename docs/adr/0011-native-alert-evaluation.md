@@ -106,8 +106,30 @@ behavior until an administrator opts in.
    poller does not wait for it. It never runs inside `process_poller_output`,
    which holds the sample-to-RRD path. A named database lock allows one
    evaluator at a time. A second invocation exits at once without evaluating.
-   Task 5 chooses between a core call beside `dsstats_poller_bottom()` and a
-   hook registration. Either way it launches the command and does not wait.
+
+   Task 5 settles the details:
+   - **Launch.** A core call, not a plugin hook registration:
+     `alerting_poller_bottom()` in `lib/alerting.php` runs right after
+     `dsstats_poller_bottom()` in both main-poller blocks of `poller.php`
+     (the end of the run and each sub-minute cycle). It starts nothing unless
+     the poller id is 1 and `alerting_enable` is `on`, and nothing when
+     `path_php_binary` is not an absolute path to a file, which it logs. It
+     passes `exec_background()` the argument array
+     `[<base>/bin/console, kadupul:alerting:evaluate, --no-interaction]`, so
+     each argument is quoted and the poller returns at once. The command's
+     output goes to `/dev/null`, as dsstats' does without its log setting.
+   - **Locks.** Two MariaDB/MySQL named locks (`GET_LOCK(name, 0)`) on the
+     main connection that the stores use: one for evaluation and one for
+     delivery. Each name ends in a hash of the schema name, so two
+     installations on one server do not share one. The run releases each in
+     a `finally`, and the server drops a lock with its session, so a killed
+     run never blocks the next one. The evaluation lock is released before
+     delivery starts, so a slow mail server never holds back the next
+     cycle's evaluation; a run that finds the delivery lock held evaluates
+     and leaves the queue to the other deliverer. A run that finds the
+     evaluation lock held exits 0 without evaluating or delivering.
+     `AlertEvaluatorRunDatabaseTest` proves this with separate sessions on
+     MariaDB 10.11.
 
 3. **Rule kinds.**
    - A threshold rule names a series, a comparator (`gt`, `ge`, `lt`, `le`), a
@@ -281,13 +303,46 @@ behavior until an administrator opts in.
    - **Separate use case.** `DeliverNotifications` takes a batch size and a
      time budget, checked between batches as in decision 8. Evaluation never
      waits on mail.
+   - **Where it runs (Task 5).** The administrator mail adapters call
+     `read_config_option()`, the legacy user lookup and `send_mail()`, which a
+     console process does not load. The command therefore runs
+     `DeliverNotifications` in the worker `bin/legacy-alerting-deliver.php`,
+     which loads the legacy runtime, boots the kernel and takes the use case
+     from the container, the way `admin_email()` already reaches the same
+     mail path. The worker gets 20 notifications per batch and what is left
+     of the run's budget, and is stopped after that budget plus one 900 s
+     lease, when every claim it holds has expired anyway. A worker that does
+     not report a delivery makes the run exit 1; it logs its own failure to
+     the Kadupul log by exception class. Queued notifications are delivered
+     even while the rate source is unavailable: they report changes already
+     decided.
 
 8. **Bounded work.** The command evaluates rules in batches. Both the batch size
    and the total time budget are settings, and the command checks the budget
    between batches. Rules not reached are evaluated first in the next run,
-   ordered by oldest evaluation. Task 5 sets defaults from a measurement; this
-   record does not fix numbers. Delivery has its own bound inside the same
+   ordered by oldest evaluation. Delivery has its own bound inside the same
    budget.
+
+   Task 5 sets the defaults from a measurement. The settings are
+   `alerting_batch_size` (100 to 5000 rules, default 500) and
+   `alerting_time_budget` (10 s to 2 minutes, default 30 s), on the Data
+   tab of the settings beside Data Source Statistics. A stored value that is
+   not a whole number within the caps (10000 rules, 3600 s) reads as its
+   default. The command's `--batch-size`, `--budget` and
+   `--delivery-batch-size` options override them for one run.
+
+   The measurement used 5,000 threshold rules on 5,000 data sources, 12
+   hourly cache rows per series (60,000 rows), MariaDB 10.11.19 in Docker on
+   an Apple M3 Max, reached through a forwarded TCP port, PHP 8.4.25, two
+   runs. Reading all 5,000 rates with the freshness join took 80 to 82 ms
+   (8.2 to 8.4 ms per 500 keys). A run where every series had a new sample,
+   so every rule wrote its state in its own transaction, took 4.5 to 5.1 s at
+   batch sizes 250 to 5000 (one warm-up outlier of 7.8 s at 100). A run with
+   no new samples, where every rule is skipped, took 145 to 148 ms at 500 or
+   more and 348 to 354 ms at 100. Batch 500 is where the read cost stops
+   falling, and a 30 s budget leaves room for about six times that rule
+   count before a run stops early. The cost is per changed rule, one
+   transaction each, so it grows with rule count, not with batch size.
 
    The orphan sweep (decision 6) that starts each run is capped at the batch
    size: at most one batch of orphans, ended by one bounded `DELETE` and one
@@ -318,6 +373,22 @@ behavior until an administrator opts in.
    with status 2. Exit status 0 means evaluation completed or alerting is
    disabled; status 1 means an error. An empty table on its own does not mean
    unavailable: after a restart it means `unknown`.
+
+   Task 5 settles the remaining statuses of `kadupul:alerting:evaluate`:
+   - 0 when `alerting_enable` is off, printing
+     `inactive: alerting is disabled (alerting_enable is off).`, with no lock
+     taken and no mail sent.
+   - 0 when another evaluation holds the lock (decision 2), printing
+     `skipped: another alert evaluation is running.`
+   - 0 when rules were skipped as unusable (decision 8). The run completed
+     and moved past them; each is logged as a warning and the count is
+     printed. Exiting non-zero for them would report every later run as
+     failed until an operator fixed the rows, and nothing waits on the
+     status when the poller starts the command.
+   - 1 for an invalid option, an unreachable database, a failed evaluation
+     or a delivery worker that does not report success. The output names
+     the exception class only: driver messages can name the server or hold
+     SQL. A failed evaluation is not followed by delivery.
 
 10. **Off by default.** A setting `alerting_enable` defaults to off. The
     upgrade creates tables and nothing else. No evaluator is launched and no
@@ -356,6 +427,11 @@ behavior until an administrator opts in.
     shape, or one it could not create, stops the upgrade unchanged before the
     version is recorded. The resume cursor of decision 8 is the settings row
     `alerting_evaluation_cursor`, written only when it moves.
+    `replicate_out()` copies the `settings` table to remote collectors, so it
+    excludes that row by name (Task 5): it is the main evaluator's runtime
+    state, like the `%_lastrun%` rows already excluded. The alerting switch
+    and bounds still replicate; a collector never starts the evaluator,
+    because the launch checks the poller id.
 
 14. **Boundaries.** `src/Alerting/Domain` holds `ThresholdRule`, `BaselineRule`,
     `Verdict`, `RuleState` and `Incident`. It imports nothing from Symfony, DBAL
@@ -406,10 +482,17 @@ behavior until an administrator opts in.
 - **The freshness rule depends on the hourly cache table.** If a later change
   stops dsstats writing `data_source_stats_hourly_cache`, every series becomes
   `unknown`, not falsely fresh. Reading it means a grouped scan of that MEMORY
-  table for the batch's data sources. Task 5 measures the cost when it sets
-  the batch defaults. A clock step backwards on the poller can hold counters
-  until time passes the last observation. A clock step forwards makes
-  observations stale and `unknown`.
+  table for the batch's data sources. Task 5 measured 8.2 to 8.4 ms per 500
+  data sources with 12 cache rows each (decision 8). A clock step backwards
+  on the poller can hold counters until time passes the last observation. A
+  clock step forwards makes observations stale and `unknown`.
+- **Freshness compares Unix seconds.** The command's clock is
+  `SymfonyClock` over Symfony's native clock, read as a Unix timestamp, and
+  the observation time is `UNIX_TIMESTAMP()` of the stored sample time, so
+  daylight saving changes nothing. A poller whose PHP time zone differs from
+  its database session time zone stores every sample shifted by the
+  difference: later than the clock by more than 60 s reads as `unknown`, and
+  earlier by more than two intervals reads as stale and `unknown`.
 - **Mail failure is visible and bounded.** The queue and attempt counts make
   failed delivery an operator-visible state.
 - **Compatibility.** No existing table, hook, URL or setting changes. The schema
@@ -438,6 +521,12 @@ behavior until an administrator opts in.
 | Two deliverers run at once | Each row is claimed and sent by one of them | Task 4 |
 | Deliverer dies holding a row | The row is due again after the 900 s lease, so the mail may be sent twice; on the last attempt it is marked `failed` | Task 4 |
 | Five attempts fail | Row `failed`, error logged, not retried | Task 4 |
+| `alerting_enable` off | Command exits 0 with "inactive: alerting is disabled"; the poller starts nothing | Task 5 |
+| A second evaluator starts while one runs | It exits 0 without evaluating or delivering | Task 5 |
+| An evaluation fails | Exit status 1, locks released, no delivery | Task 5 |
+| Database unreachable | Exit status 1, the exception class only in the output | Task 5 |
+| A remote collector finishes its poll | Nothing is started | Task 5 |
+| The delivery worker fails or reports nothing | Exit status 1; the worker logs the exception class | Task 5 |
 | Administrator notification disabled or unconfigured | Row `suppressed` on its first claim, never retried or sent; one warning per run with the count | Task 4 |
 | Administrator account or address missing | Each attempt fails and is recorded; after five the row is `failed` | Task 4 |
 
