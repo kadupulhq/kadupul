@@ -77,7 +77,6 @@ const notMigrated = 'legacy page, not yet drawn from config/icons.json';
 const hardCoded = new Map([
   ['auth_changepassword.php', notMigrated],
   ['auth_profile.php', notMigrated],
-  ['automation_snmp.php', notMigrated],
   ['data_debug.php', notMigrated],
   ['data_queries.php', notMigrated],
   ['data_sources.php', notMigrated],

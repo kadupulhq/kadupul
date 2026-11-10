@@ -11755,12 +11755,6 @@ parameters:
 			path: src/Platform/Infrastructure/Symfony/ConsoleTranslations.php
 
 		-
-			message: '#^Cannot access offset ''translated_locales'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Platform/Infrastructure/Symfony/ConsoleTranslations.php
-
-		-
 			message: '#^Only booleans are allowed in a ternary operator condition, bool\|null given\.$#'
 			identifier: ternary.condNotBoolean
 			count: 1
