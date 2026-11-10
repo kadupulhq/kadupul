@@ -23,6 +23,15 @@ interface ConsoleOperator
      */
     public function select(?string $username, OperatorDatabase $database): void;
 
+    /**
+     * The account an authenticated web session handed to a command worker, by
+     * id, because usernames repeat across auth realms. The account must still
+     * match the session credential. As on the web, a pending password change
+     * refuses it only when login forces that change: a local (realm 0) account
+     * with both must_change_password and password_change set.
+     */
+    public function selectSession(int $id, #[\SensitiveParameter] string $credential, OperatorDatabase $database): void;
+
     /** Null when the selected account may not use the console at all. */
     public function actor(): ?Actor;
 

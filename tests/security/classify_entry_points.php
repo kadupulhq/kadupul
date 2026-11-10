@@ -119,7 +119,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'include/csrf.php' => 'ec3c4549ce0e792544bf8f840a1c65d61809e48817f5e8ff91de6f856c9d9b1a',
-    'config/services.yaml' => '9d5b3ec3a9fe9083c6779b058c8ce6c11bda2b8186ac2ee23b05bb03c885c61d',
+    'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -139,6 +139,32 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/Platform/Domain/Installer/InstallationMode.php' => '71e56d248203b9c4f5b832795dc07c929cbdd7a74260602fb912ce198da4956c',
     'src/Platform/Infrastructure/Persistence/InstallerVersionWriter.php' => '36cd2dfb4f20fba829a26b274b107e77ee21c8313cf8a4e5602f77c6b54daf40',
 ];
+
+// Asset admission precedes locale loading, then runs again in the controller
+// and command worker. Changes to the reviewed handoff must fail closed.
+const ASSET_AUTHENTICATION_SOURCES = [
+    'src/AssetManagement/Infrastructure/Symfony/AssetRequestAccess.php' => '1ca4e0220e9062188ea8c04b8c342f142e146ca97ce479b3338bcafa04edc665',
+    'src/AssetManagement/Infrastructure/Symfony/WebAssetAccess.php' => '921efb26ab25e09cbdfa91a1d0370a9707635a20a40b1efc9032f6fbbb02b8dd',
+    'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php' => '2023416800b66e74cc63ec175be56f051b1bae2d045d0b9cc9fcde24c7ba45fa',
+    'src/AssetManagement/Infrastructure/Symfony/AssetWorker.php' => '65932412758cd19efcdc3752a735afa078ad24b10826fc50ffa9379927e568cd',
+    'src/AssetManagement/Infrastructure/Console/CliAssetAccess.php' => '7a0f4d0dbc8a4495c47471f9f2c5d1703bd90eb543e1e5c9b789370bd9cf6175',
+    'src/AssetManagement/Infrastructure/Console/AssetCommand.php' => 'c252e68648263ae90442a2085956e05826e311676bc3c7b5b4944c6924f7cebb',
+    'src/AssetManagement/Application/AssetRegistry.php' => '18910ebe9d1ea0d57502fcf618bded185026e3b242fe757e4c76a5ce7da2beb9',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
+    'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
+    'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
+    'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
+];
+
+function asset_authentication_review(string $root): ?string
+{
+    foreach (ASSET_AUTHENTICATION_SOURCES as $relative => $expected) {
+        if (!is_file($root . '/' . $relative) || hash_file('sha256', $root . '/' . $relative) !== $expected) {
+            return null;
+        }
+    }
+    return hash('sha256', json_encode(ASSET_AUTHENTICATION_SOURCES, JSON_THROW_ON_ERROR));
+}
 
 function installer_authentication_review(string $root): ?string
 {
@@ -220,7 +246,8 @@ const REVIEWED_FRAGMENT_CALLS = [
         ['CactiSecureHeaders::getNonce()', 'returns the same per-request CSP nonce'],
     ],
     'include/global_languages.php' => [
-        ['get_list_of_locales()', 'declared in the same file; returns a literal locale map'],
+        ['get_list_of_locales()', 'declared in the same file; returns the KnownLocales class constant, a literal locale map'],
+        ["i18n_locale_input(read_config_option('i18n_language_support'), read_config_option('i18n_auto_detection'), read_config_option('i18n_default_language'))", 'declared in the same file; its arguments call read_config_option(), which only the bootstrap declares, so a direct request stops before it runs'],
     ],
     'include/csrf.php' => [
         ["csrf_token_is_well_formed(\$_POST['__csrf_magic'])", 'declared in the same file; splits the posted token string and returns whether its times are digits, writing nothing'],
@@ -272,7 +299,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '9d5b3ec3a9fe9083c6779b058c8ce6c11bda2b8186ac2ee23b05bb03c885c61d',
+    'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -3176,6 +3203,16 @@ function symfony_routes(string $root, array $files): array
                         }
                         $seen = [];
                         $name = $class->namespacedName?->toString() ?? '';
+                        if ($route['name'] === 'asset_register') {
+                            $review = asset_authentication_review($root);
+                            $valid = $review !== null && $path === 'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php'
+                                && $name === 'Kadupul\\AssetManagement\\Infrastructure\\Symfony\\Controller\\AssetController'
+                                && $route['path'] === '/assets' && $method->name->toString() === '__invoke';
+                            $rows[] = ['app.php' . $route['path'], $valid ? 'symfony:asset_register' : 'unknown',
+                                $valid ? $route['detail'] . '; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at ' . $review
+                                    : 'asset authentication handoff changed or is incomplete'];
+                            continue;
+                        }
                         if ($route['name'] === 'platform_installer') {
                             $review = installer_authentication_review($root);
                             $valid = $review !== null && $path === 'src/Platform/Infrastructure/Symfony/Controller/InstallerController.php'

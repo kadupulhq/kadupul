@@ -32,7 +32,7 @@ function load(): void
     }
     $root = dirname(__DIR__, 2);
     $import = file_get_contents($root . '/lib/import.php');
-    foreach (['import_package', 'import_read_package_data', 'import_package_get_public_key', 'import_package_get_details', 'is_cacti_public_key', 'get_public_key', 'get_public_key_sha1', 'get_public_key_sha256', 'xml_to_array'] as $name) {
+    foreach (['import_package', 'import_package_read', 'import_read_package_data', 'import_package_get_public_key', 'import_package_get_details', 'is_cacti_public_key', 'get_public_key', 'get_public_key_sha1', 'get_public_key_sha256', 'xml_to_array'] as $name) {
         eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source($import, $name)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
     // Renamed so a test can put its own key in the Kadupul slot.
