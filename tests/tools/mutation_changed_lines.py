@@ -25,6 +25,7 @@ suite evaluates extracted source (tests/Helpers/PhpSource.php), so its coverage
 cannot be attributed to files and legacy code is not mutated.
 """
 import argparse
+import html
 import json
 import os
 from pathlib import Path
@@ -49,6 +50,8 @@ STAT_KEYS = (
 )
 RESULT_KEYS = ("escaped", "uncovered", "timeouted", "errored", "syntaxErrors")
 HUNK = re.compile(r"^@@ -\d+(?:,\d+)? \+\d+(?:,(\d+))? @@")
+# One covering test in a PHPUnit XML coverage file, as php-code-coverage writes it.
+COVERED_BY = re.compile(r'<covered by="([^"]*)"\s*/>')
 
 
 class ToolFailure(Exception):
@@ -215,6 +218,45 @@ def run_initial_tests(arguments, root, coverage):
     return tests
 
 
+def drop_unmapped_covering_tests(coverage):
+    """Remove covering-test ids the JUnit log cannot resolve; return how many.
+
+    Native harnesses merge child-process coverage into the run under ids such
+    as "native RRD child <pid>-<nonce>". PHPUnit never ran a test by that
+    name, so Infection's JUnit lookup (testsuite name, or testcase class with
+    the ::method part removed) fails and it aborts. Infection cannot rerun a
+    child process by id either, so lines only a child covered are left as
+    uncovered instead.
+    """
+    try:
+        log = ElementTree.parse(coverage / "junit.xml").getroot()
+    except (OSError, ElementTree.ParseError, DefusedXmlException) as error:
+        raise ToolFailure(f"cannot read the initial JUnit log: {error}") from error
+    known = {element.get("name") for element in log.iter("testsuite")}
+    known |= {element.get("class") for element in log.iter("testcase")}
+    known.discard(None)
+
+    def resolvable(test):
+        # Infection looks the test up by the text before the first colon.
+        return test.split(":", 1)[0] in known
+
+    dropped = 0
+
+    def keep(match):
+        nonlocal dropped
+        if resolvable(html.unescape(match.group(1))):
+            return match.group(0)
+        dropped += 1
+        return ""
+
+    for path in sorted((coverage / "coverage-xml").rglob("*.xml")):
+        text = path.read_text(encoding="utf-8")
+        updated = COVERED_BY.sub(keep, text)
+        if updated != text:
+            path.write_text(updated, encoding="utf-8")
+    return dropped
+
+
 def run_infection(command, root):
     """Stream Infection's output while keeping it for outcome classification."""
     print("+ " + " ".join(command), flush=True)
@@ -359,6 +401,9 @@ def main(argv=None):
         if report_path.exists():
             report_path.unlink()
         tests = run_initial_tests(arguments, root, coverage)
+        dropped = drop_unmapped_covering_tests(coverage)
+        if dropped:
+            print(f"Dropped {dropped} child-process coverage entries Infection cannot map to a test.")
         command = [arguments.php, str(root / "include/vendor/bin/infection"),
                    f"--configuration={root / CONFIG}", "--git-diff-lines",
                    f"--git-diff-base={merge_base}", f"--coverage={coverage}",

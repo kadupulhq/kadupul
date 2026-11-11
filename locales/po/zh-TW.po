@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:22-0800\n"
+"POT-Creation-Date: 2026-11-10 16:46-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -378,12 +378,12 @@ msgstr "找不到聚合圖"
 msgid "No Graphs Found"
 msgstr "找不到圖表"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 #, fuzzy
@@ -1238,11 +1238,11 @@ msgstr "複製"
 msgid "Enable"
 msgstr "啟用"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 #, fuzzy
 msgid "Enabled"
 msgstr "啟用"
@@ -1321,17 +1321,6 @@ msgstr "標題格式:"
 msgid "rule_name"
 msgstr "規則名稱"
 
-#: automation_networks.php include/global_arrays.php
-#, fuzzy, php-format
-msgid "%d Hour"
-msgstr "%d 小時"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, fuzzy, php-format
-msgid "%d Hours"
-msgstr "%d 小時"
-
 #: automation_networks.php pollers.php
 #, fuzzy, php-format
 msgid "%d Minute"
@@ -1351,61 +1340,6 @@ msgstr "%d 秒"
 
 #: automation_networks.php
 #, fuzzy, php-format
-msgid "%d Thread"
-msgstr "%d線程"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy, php-format
-msgid "%d Threads"
-msgstr "%d個主題"
-
-#: automation_networks.php
-#, fuzzy
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "用於DNS解析的備用DNS服務器的空格分隔列表。如果為空，則輪詢器操作系統將用於解析DNS名稱。"
-
-#: automation_networks.php include/global_form.php
-#, fuzzy
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "在初始失敗之後，Kadupul將在失敗之前嘗試ping重試次數。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "在選定的運行限制之後，將終止發現過程。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Allow same sysName on different hosts"
-msgstr "在不同的主機上允許相同的sysName"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Alternate DNS Servers"
-msgstr "備用DNS服務器"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "April"
-msgstr "四月"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Associated Site"
-msgstr "相關網站"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "August"
-msgstr "八月"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Automatically Add to Kadupul"
-msgstr "自動添加到Kadupul"
-
-#: automation_networks.php
-#, fuzzy, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "無法為禁用的網絡&#39;%s&#39;執行發現"
 
@@ -1418,16 +1352,6 @@ msgstr "無法為網絡&#39;%s&#39;正在進行的發現重新啟動發現"
 #, fuzzy
 msgid "Cancel Discovery"
 msgstr "取消發現"
-
-#: automation_networks.php include/global_form.php
-#, fuzzy
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "選擇用於從此設備收集數據的Kadupul Data Collector / Poller。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "選擇您希望將發現的設備與之關聯的Kadupul網站。"
 
 #: automation_networks.php
 #, fuzzy
@@ -1468,154 +1392,13 @@ msgstr "數據收集器"
 
 #: automation_networks.php
 #, fuzzy
-msgid "Day(s) of Week"
-msgstr "一周的一天"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Days of Month"
-msgstr "幾個月的日子"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Days of Week"
-msgstr "星期中的數日"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "December"
-msgstr "十二月"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Define the collection frequency."
-msgstr "定義收集頻率。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "定義用於發現此網絡範圍的線程數。"
-
-#: automation_networks.php
-#, fuzzy
 msgid "Discover Now"
 msgstr "立即發現"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Discovery Threads"
-msgstr "發現主題"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Discovery Timing"
-msgstr "發現時間"
-
-#: automation_networks.php
-#, fuzzy, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "錯誤：網絡&#39;%s&#39;無效。"
-
-#: automation_networks.php
-#, fuzzy, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "錯誤：您必須同時指定月份和月份。禁用網絡%s！"
-
-#: automation_networks.php
-#, fuzzy, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "錯誤：您必須指定月份，月份周和星期幾。禁用網絡%s！"
-
-#: automation_networks.php
-#, fuzzy, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "錯誤：您必須指定星期幾。禁用網絡%s！。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Enable NetBIOS"
-msgstr "啟用NetBIOS"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Enable this Network Range."
-msgstr "啟用此網絡範圍。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "輸入DNS服務器的IP或FQDN"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "輸入以逗號分隔的有效網絡範圍。您可以使用IP地址，網絡範圍（如192.168.1.0/24或192.168.1.0/255.255.255.0），或使用通配符（如192.168。*。*）"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "February"
-msgstr "二月"
-
-#: automation_networks.php
-#, fuzzy
-msgid "First"
-msgstr "第一個"
-
-#: automation_networks.php
-#, fuzzy
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "對於使用SNMP可訪問且與設備規則匹配的任何新發現的設備，請將它們添加到Kadupul。"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Friday"
-msgstr "星期五"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-#, fuzzy
-msgid "General Settings"
-msgstr "一般設定"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Give this Network a meaningful name."
-msgstr "為此網絡提供有意義的名稱。"
 
 #: automation_networks.php pollers.php utilities.php
 #, fuzzy
 msgid "Idle"
 msgstr "閒置"
-
-#: automation_networks.php
-#, fuzzy
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "如果找到先前添加到Kadupul的設備，請重新運行其數據查詢。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "如果選中，則掃描自動化網絡時，報告將發送到通知電子郵件帳戶。"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "January"
-msgstr "一月"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "July"
-msgstr "七月"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "June"
-msgstr "六月"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Last"
-msgstr "最後一個"
 
 #: automation_networks.php
 #, fuzzy
@@ -1634,21 +1417,6 @@ msgstr "手動"
 
 #: automation_networks.php include/global_arrays.php
 #, fuzzy
-msgid "March"
-msgstr "三月"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "May"
-msgstr "五月"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Monday"
-msgstr "星期一"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
 msgid "Monthly"
 msgstr "每月"
 
@@ -1659,28 +1427,6 @@ msgstr "每月一次"
 
 #: automation_networks.php
 #, fuzzy
-msgid "Months of Year"
-msgstr "一年中的幾個月"
-
-#: automation_networks.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-#, fuzzy
-msgid "Name"
-msgstr "名稱"
-
-#: automation_networks.php
-#, fuzzy, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "網絡發現範圍[編輯：%s]"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network Discovery Range [new]"
-msgstr "網絡發現範圍[新]"
-
-#: automation_networks.php
-#, fuzzy
 msgid "Network Filters"
 msgstr "網絡過濾器"
 
@@ -1688,11 +1434,6 @@ msgstr "網絡過濾器"
 #, fuzzy
 msgid "Network Name"
 msgstr "網路名稱"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "找不到檔案"
 
 #: automation_networks.php include/global_arrays.php
 #, fuzzy
@@ -1707,11 +1448,6 @@ msgstr "從不"
 
 #: automation_networks.php
 #, fuzzy
-msgid "New Network Discovery Range"
-msgstr "新的網絡發現範圍"
-
-#: automation_networks.php
-#, fuzzy
 msgid "Next Start"
 msgstr "下一步開始"
 
@@ -1722,99 +1458,19 @@ msgstr "找不到網絡"
 
 #: automation_networks.php
 #, fuzzy
-msgid "Notification Email"
-msgstr "通知電郵"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Notification Enabled"
-msgstr "通知已啟用"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Notification From Email Address"
-msgstr "來自電子郵件地址的通知"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Notification From Name"
-msgstr "來自姓名的通知"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Notification Settings"
-msgstr "通知設定"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "November"
-msgstr "十一月"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "October"
-msgstr "十月"
-
-#: automation_networks.php
-#, fuzzy
 msgid "Pending/Running/Done"
 msgstr "待/運行/完成"
-
-#: automation_networks.php include/global_form.php
-#, fuzzy
-msgid "Ping Method"
-msgstr "Ping方法"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#, fuzzy
-msgid "Ping Port"
-msgstr "平港"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#, fuzzy
-msgid "Ping Retry Count"
-msgstr "Ping重試計數"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#, fuzzy
-msgid "Ping Timeout Value"
-msgstr "Ping超時值"
 
 #: automation_networks.php
 #, fuzzy
 msgid "Progress"
 msgstr "進度"
 
-#: automation_networks.php
-#, fuzzy
-msgid "Reachability Settings"
-msgstr "可達性設置"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 #, fuzzy
 msgid "Refresh"
 msgstr "重新整理"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Rerun Data Queries"
-msgstr "重新運行數據查詢"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Rerun Every"
-msgstr "每次都重新運行"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Rerun discovery for this Network Range every X."
-msgstr "每X重新運行此網絡範圍。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Run Limit"
-msgstr "運行限制"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1825,21 +1481,6 @@ msgstr "在調試模式下運行discover"
 msgid "Running"
 msgstr "運行"
 
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "SNMP Get"
-msgstr "SNMP獲取"
-
-#: automation_networks.php include/global_form.php
-#, fuzzy
-msgid "SNMP Options"
-msgstr "SNMP選項"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Saturday"
-msgstr "星期六"
-
 #: automation_networks.php
 #, fuzzy
 msgid "Schedule"
@@ -1847,118 +1488,17 @@ msgstr "排程"
 
 #: automation_networks.php
 #, fuzzy
-msgid "Schedule Type"
-msgstr "計劃類型"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Second"
-msgstr "秒"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "選擇用於發現此網絡範圍的SNMP選項。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Select the day(s) of the month"
-msgstr "選擇當月的日期"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Select the day(s) of the week"
-msgstr "選擇一周的日期"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Select the days(s) of the week"
-msgstr "選擇一周的天數"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Select the month(s) of the year"
-msgstr "選擇一年中的月份"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Select the week(s) of the month"
-msgstr "選擇一個月的周"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "September"
-msgstr "九月"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Starting Date/Time"
-msgstr "開始日期/時間"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Subnet Range"
-msgstr "子網範圍"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Sunday"
-msgstr "星期日"
-
-#: automation_networks.php include/global_form.php
-#, fuzzy
-msgid "TCP or UDP port to attempt connection."
-msgstr "TCP或UDP端口嘗試連接。"
-
-#: automation_networks.php
-#, fuzzy
 msgid "The Current Status of this Networks Discovery"
 msgstr "此網絡發現的當前狀態"
 
 #: automation_networks.php
-#, fuzzy
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "電子郵件地址將用作發件人電子郵件通知電子郵件。如果留空，Kadupul將使用默認的自動化通知電子郵件地址（如果已指定），否則，它將使用Kadupul系統默認電子郵件地址"
-
-#: automation_networks.php
-#, fuzzy
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "電子郵件帳戶名稱，用作通知電子郵件的發件人名稱。如果留空，Kadupul將使用默認的自動化通知名稱（如果已指定），否則，它將使用Kadupul系統默認的電子郵件名稱"
-
-#: automation_networks.php
-#, fuzzy
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "用於向其發送通知電子郵件的電子郵件帳戶。"
-
-#: automation_networks.php include/global_form.php
-#, fuzzy
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "用於主機ICMP和UDP ping的超時值。此主機SNMP超時值適用於SNMP ping。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "The type of ping packet to send."
-msgstr "要發送的ping數據包的類型。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Third"
-msgstr "協力廠商集成"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 #, fuzzy
 msgid "Threads"
 msgstr "線程"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Thursday"
-msgstr "星期四"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Total IP Addresses"
-msgstr "IP地址總數"
 
 #: automation_networks.php
 #, fuzzy
@@ -1967,93 +1507,13 @@ msgstr "總IP數"
 
 #: automation_networks.php
 #, fuzzy
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "此網絡範圍中的可尋址IP地址總數。"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Tuesday"
-msgstr "星期二"
-
-#: automation_networks.php
-#, fuzzy
 msgid "Up/SNMP Hosts"
 msgstr "Up / SNMP主機"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "使用NetBIOS嘗試解析主機的主機名。"
-
-#: automation_networks.php include/global_arrays.php
-#, fuzzy
-msgid "Wednesday"
-msgstr "星期三"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Week(s) of Month"
-msgstr "每月一周"
 
 #: automation_networks.php include/global_arrays.php
 #, fuzzy
 msgid "Weekly"
 msgstr "每週"
-
-#: automation_networks.php
-#, fuzzy
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "本月的哪一天將發現此網絡範圍。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "本週的哪一天將發現此網絡範圍。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "將發現此網絡範圍的年度幾個月。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "本月的哪個週將發現此網絡範圍。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "What time will this Network discover item start?"
-msgstr "這個網絡發現項目什麼時候開始？"
-
-#: automation_networks.php
-#, fuzzy
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "發現設備時，允許在不同主機上添加重複的系統名稱"
-
-#: automation_networks.php
-#, fuzzy
-msgid "every X Days"
-msgstr "每隔X天"
-
-#: automation_networks.php
-#, fuzzy
-msgid "every X Days."
-msgstr "每隔X天。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "every X Weeks"
-msgstr "每X週一次"
-
-#: automation_networks.php
-#, fuzzy
-msgid "every X Weeks."
-msgstr "每X週一次。"
-
-#: automation_networks.php
-#, fuzzy
-msgid "every X."
-msgstr "每一個X."
 
 #: automation_snmp.php
 #, fuzzy
@@ -3170,6 +2630,13 @@ msgstr "下移"
 #, fuzzy
 msgid "Move Up"
 msgstr "上移"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+#, fuzzy
+msgid "Name"
+msgstr "名稱"
 
 #: data_queries.php lib/html_reports.php
 #, fuzzy
@@ -4966,6 +4433,16 @@ msgstr "%d GBytes"
 
 #: include/global_arrays.php
 #, fuzzy, php-format
+msgid "%d Hour"
+msgstr "%d 小時"
+
+#: include/global_arrays.php include/global_settings.php
+#, fuzzy, php-format
+msgid "%d Hours"
+msgstr "%d 小時"
+
+#: include/global_arrays.php
+#, fuzzy, php-format
 msgid "%d Lines"
 msgstr "%d行"
 
@@ -4993,6 +4470,11 @@ msgstr "%d月"
 #, fuzzy, php-format
 msgid "%d Months"
 msgstr "%d個月"
+
+#: include/global_arrays.php
+#, fuzzy, php-format
+msgid "%d Threads"
+msgstr "%d個主題"
 
 #: include/global_arrays.php rrdcleaner.php
 #, fuzzy, php-format
@@ -5261,6 +4743,11 @@ msgstr "四月"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "April"
+msgstr "四月"
+
+#: include/global_arrays.php
+#, fuzzy
 msgid "Arabic"
 msgstr "阿拉伯語"
 
@@ -5283,6 +4770,11 @@ msgstr "附PNG圖片"
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
+msgstr "八月"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "August"
 msgstr "八月"
 
 #: include/global_arrays.php include/global_settings.php
@@ -5674,6 +5166,11 @@ msgstr "十二月"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "December"
+msgstr "十二月"
+
+#: include/global_arrays.php
+#, fuzzy
 msgid "Demand"
 msgstr "提出需求"
 
@@ -5824,6 +5321,11 @@ msgstr "二月"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "February"
+msgstr "二月"
+
+#: include/global_arrays.php
+#, fuzzy
 msgid "Fixed String"
 msgstr "固定字符串"
 
@@ -5836,6 +5338,11 @@ msgstr "法語"
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
+msgstr "星期五"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "Friday"
 msgstr "星期五"
 
 #: include/global_arrays.php
@@ -6096,6 +5603,11 @@ msgstr "一月"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "January"
+msgstr "一月"
+
+#: include/global_arrays.php
+#, fuzzy
 msgid "Japanese"
 msgstr "日語"
 
@@ -6107,8 +5619,18 @@ msgstr "七月"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "July"
+msgstr "七月"
+
+#: include/global_arrays.php
+#, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
+msgstr "六月"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "June"
 msgstr "六月"
 
 #: include/global_arrays.php
@@ -6324,6 +5846,16 @@ msgstr "三月"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "March"
+msgstr "三月"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "May"
+msgstr "五月"
+
+#: include/global_arrays.php
+#, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "五月"
@@ -6342,6 +5874,11 @@ msgstr "現代"
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
+msgstr "星期一"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "Monday"
 msgstr "星期一"
 
 #: include/global_arrays.php
@@ -6445,6 +5982,11 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "十一月"
 
+#: include/global_arrays.php
+#, fuzzy
+msgid "November"
+msgstr "十一月"
+
 #: include/global_arrays.php tree.php
 #, fuzzy
 msgid "Numeric"
@@ -6459,6 +6001,11 @@ msgstr "數字訂購"
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
+msgstr "十月"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "October"
 msgstr "十月"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
@@ -6708,6 +6255,11 @@ msgstr "SNMP字段值（來自用戶）"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "SNMP Get"
+msgstr "SNMP獲取"
+
+#: include/global_arrays.php
+#, fuzzy
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP輸出類型（下拉列表）"
 
@@ -6735,6 +6287,11 @@ msgstr "SNMPv3 Auth Passphrases必須為8個字符或更大。"
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
+msgstr "星期六"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "Saturday"
 msgstr "星期六"
 
 #: include/global_arrays.php
@@ -6796,6 +6353,11 @@ msgstr "立刻寄出"
 #, fuzzy
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
+msgstr "九月"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "September"
 msgstr "九月"
 
 #: include/global_arrays.php lib/html.php
@@ -6880,6 +6442,11 @@ msgstr "未輸入建議值。請輸入建議值，然後重試。"
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
+msgstr "星期日"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "Sunday"
 msgstr "星期日"
 
 #: include/global_arrays.php
@@ -7004,6 +6571,11 @@ msgstr "星期四"
 
 #: include/global_arrays.php
 #, fuzzy
+msgid "Thursday"
+msgstr "星期四"
+
+#: include/global_arrays.php
+#, fuzzy
 msgid "Timestamp"
 msgstr "時間戳記"
 
@@ -7056,6 +6628,11 @@ msgstr "嘗試"
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
+msgstr "星期二"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "Tuesday"
 msgstr "星期二"
 
 #: include/global_arrays.php
@@ -7286,6 +6863,11 @@ msgstr ""
 #, fuzzy
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
+msgstr "星期三"
+
+#: include/global_arrays.php
+#, fuzzy
+msgid "Wednesday"
 msgstr "星期三"
 
 #: include/global_arrays.php
@@ -7672,6 +7254,11 @@ msgstr "附加功能"
 
 #: include/global_form.php
 #, fuzzy
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "在初始失敗之後，Kadupul將在失敗之前嘗試ping重試次數。"
+
+#: include/global_form.php
+#, fuzzy
 msgid "Aggregate Graph Settings"
 msgstr "聚合圖設置"
 
@@ -7865,6 +7452,11 @@ msgstr "選擇用於定義與此設備關聯的默認圖表模板和數據查詢
 #, fuzzy
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "選擇要用於此數據查詢圖表模板項的圖表模板。"
+
+#: include/global_form.php
+#, fuzzy
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "選擇用於從此設備收集數據的Kadupul Data Collector / Poller。"
 
 #: include/global_form.php
 #, fuzzy
@@ -8133,6 +7725,11 @@ msgstr "GPRINT類型"
 #, fuzzy
 msgid "General Device Options"
 msgstr "常規設備選項"
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+#, fuzzy
+msgid "General Settings"
+msgstr "一般設定"
 
 #: include/global_form.php
 #, fuzzy
@@ -8490,6 +8087,26 @@ msgstr "填充文本，以便圖例和圖形數據始終排列。注意：由於
 
 #: include/global_form.php
 #, fuzzy
+msgid "Ping Method"
+msgstr "Ping方法"
+
+#: include/global_form.php include/global_settings.php
+#, fuzzy
+msgid "Ping Port"
+msgstr "平港"
+
+#: include/global_form.php include/global_settings.php
+#, fuzzy
+msgid "Ping Retry Count"
+msgstr "Ping重試計數"
+
+#: include/global_form.php include/global_settings.php
+#, fuzzy
+msgid "Ping Timeout Value"
+msgstr "Ping超時值"
+
+#: include/global_form.php
+#, fuzzy
 msgid "Place the legend at the given side of the graph."
 msgstr "將圖例放在圖表的給定側。"
 
@@ -8653,6 +8270,11 @@ msgstr "SNMP引擎ID（v3）"
 
 #: include/global_form.php
 #, fuzzy
+msgid "SNMP Options"
+msgstr "SNMP選項"
+
+#: include/global_form.php
+#, fuzzy
 msgid "SNMP Password (v3)"
 msgstr "SNMP密碼（v3）"
 
@@ -8795,6 +8417,11 @@ msgstr "源圖模板"
 #, fuzzy
 msgid "Special Type Code"
 msgstr "特殊類型代碼"
+
+#: include/global_form.php
+#, fuzzy
+msgid "TCP or UDP port to attempt connection."
+msgstr "TCP或UDP端口嘗試連接。"
 
 #: include/global_form.php
 #, fuzzy
@@ -9040,6 +8667,11 @@ msgstr "對特定輸入法進行空白驗證檢查的結果。如果輸入字符
 #, fuzzy
 msgid "The script/source used to gather data for this data source."
 msgstr "用於收集此數據源的數據的腳本/源。"
+
+#: include/global_form.php
+#, fuzzy
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "用於主機ICMP和UDP ping的超時值。此主機SNMP超時值適用於SNMP ping。"
 
 #: include/global_form.php
 #, fuzzy

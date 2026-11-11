@@ -292,12 +292,12 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
     'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '54b0ce28240fac51fb0faa0df442b85610fdfbe87fb4dbc84fc484d09370eade',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '8b3e73aaf5a3ca081c74cfe8228dfe7daa7ddf9c982af7d3289ace04695d83f6',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
-    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '99fc9466a26a1acbdd3063dc16193cf7020c885eab30be97c962e17b59f9b2bf',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
-    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'c2b1a492167bb5e73b4b23ceb9869574f21393f6d6369a662e40d50f2f749944',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
     'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
 ];
@@ -2853,6 +2853,26 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    // The network editor shares the reviewed automation realm check; these keys
+    // precede the list page's prefix, which uses AdministrationListAccess.
+    '/automation/networks/new' => [
+        'label' => 'discovery network',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/networks/{id}' => [
+        'label' => 'discovery network',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
     ],
     '/automation/networks' => [
         'label' => 'administration list',

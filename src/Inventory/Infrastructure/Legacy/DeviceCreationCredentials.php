@@ -15,7 +15,7 @@ final class DeviceCreationCredentials
     public function resolve(NewDevice $device, callable $readSetting): NewDevice
     {
         $fields = $device->fields;
-        if (!$fields['use_default_credentials']) {
+        if ($fields['use_default_credentials'] === false) {
             return $device;
         }
         foreach (['snmp_community', 'snmp_password', 'snmp_priv_passphrase'] as $key) {

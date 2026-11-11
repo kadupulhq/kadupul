@@ -13,6 +13,8 @@ app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary col
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/networks/new	symfony:automation_network_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/networks/{id}/edit	symfony:automation_network_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options	symfony:admin_snmp_options	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options/new	symfony:automation_snmp_option_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/snmp-options/{id}/edit	symfony:automation_snmp_option_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
@@ -31,13 +33,13 @@ app.php/console	symfony:platform_console	methods=GET|HEAD; ConsoleAccess realm 8
 app.php/console	symfony:platform_console_login_post	methods=POST; anonymous-allowed: compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination; reviewed at 3f7cb40d65c0
 app.php/data-collection/collectors	symfony:admin_collectors	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/data-collection/queries	symfony:admin_data_queries	methods=GET|HEAD; ConsoleAccess realm 8 + realm 13
-app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
-app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 1f46fb124365 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs	symfony:data_inputs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 55539f0a80ef and controller 66a22835b84f and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/actions/{operation}	symfony:data_input_bulk	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 9476a4e7c18d and controller 66a22835b84f and workflow b0abc0295d4c: feature realm 2
 app.php/data-inputs/legacy	symfony:data_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action af73f4343625 and controller e011435a3fdf and workflow b0abc0295d4c: feature realm 2
-app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 815bd496666c and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
-app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action f5da79ca881e and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
-app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 74a56be92e80 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
-app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 0326117ba140 and controller 366fb74122dc and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/new	symfony:data_input_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 815bd496666c and controller 66a22835b84f and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/edit	symfony:data_input_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action f5da79ca881e and controller 66a22835b84f and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/fields/{field}	symfony:data_input_field	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},field=[0-9]{1,8}; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action 3aa289802227 and controller 66a22835b84f and workflow b0abc0295d4c: feature realm 2
+app.php/data-inputs/{id}/{operation}	symfony:data_input_action	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7},operation=delete|duplicate|field_delete|propagate|whitelist; ConsoleAccess realm 8 + realm 2; reviewed DataInputAccess at c853eaf9db25 and action a702b2b7d9a2 and controller 66a22835b84f and workflow b0abc0295d4c: feature realm 2
 app.php/graph-definitions/cdefs	symfony:graph_cdefs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 14
 app.php/graph-definitions/cdefs/actions/{operation}	symfony:graph_cdef_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 14
 app.php/graph-definitions/cdefs/legacy	symfony:graph_cdef_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 14

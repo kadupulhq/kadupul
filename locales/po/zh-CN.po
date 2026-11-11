@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:22-0800\n"
+"POT-Creation-Date: 2026-11-10 16:46-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -341,12 +341,12 @@ msgstr "未找到聚合图形"
 msgid "No Graphs Found"
 msgstr "未找到图形"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -1077,11 +1077,11 @@ msgstr "复制"
 msgid "Enable"
 msgstr "启用"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr "已启用"
 
@@ -1150,17 +1150,6 @@ msgstr "标题格式"
 msgid "rule_name"
 msgstr "规则_名"
 
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr "%d小时"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, php-format
-msgid "%d Hours"
-msgstr "%d 时"
-
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
@@ -1180,52 +1169,6 @@ msgstr "%d秒"
 
 #: automation_networks.php
 #, php-format
-msgid "%d Thread"
-msgstr "%d 线程"
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr "%d 线程"
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "用于DNS 解析的备用DNS服务器列表,用空格分隔. 如果为空,则使用poller 所在的操作系统来解析DNS名称."
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "首次失败之后,Kadupul 重试多少次之后才确定为真的失败."
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "在选定的运行限制之后,发现过程将被终止."
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr "允许不同的主机拥有相同的主机名"
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr "备用DNS服务器"
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr "四月"
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr "相关站点"
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr "八月"
-
-#: automation_networks.php
-msgid "Automatically Add to Kadupul"
-msgstr "自动添加到Kadupul"
-
-#: automation_networks.php
-#, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "无法为禁用的网络 %s 执行发现"
 
@@ -1237,14 +1180,6 @@ msgstr "无法为网络 %s 正在进行的发现重启发现"
 #: automation_networks.php
 msgid "Cancel Discovery"
 msgstr "取消发现"
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "选择用于从设备收集数据的收集数据器或采集器."
-
-#: automation_networks.php
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "选择您想要将已发现的设备与之关联的Cact 站点."
 
 #: automation_networks.php
 msgid "Clear Filtered"
@@ -1280,129 +1215,12 @@ msgid "Data Collector"
 msgstr "数据收集器"
 
 #: automation_networks.php
-msgid "Day(s) of Week"
-msgstr "工作日"
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr "每月的几号"
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr "工作日"
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr "十二月"
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr "定义采集频率."
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "定义用于发现此网络范围的线程数."
-
-#: automation_networks.php
 msgid "Discover Now"
 msgstr "立即发现"
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr "发现线程"
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr "发现耗时"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "ERROR: 网络 '%s' 无效."
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "ERROR: 您必须同时指定月份和月份的天数. 禁用网络 %s!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "ERROR: 您必须指定月份,几个月和几周. 禁用网络 %s!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "ERROR: 您必须指定工作日. 禁用网络 %s!."
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr "启用NetBIOS"
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr "启用此网络范围."
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "请输入DNS 服务器的IP 或FQDN"
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "请输入以逗号分隔的有效网络范围. 您可以使用IP地址,网络范围(比如 192.168.1.0/24或192.168.1.0/255.255.255.0),或使用通配符(比如 192.168.*.*)"
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr "二月"
-
-#: automation_networks.php
-msgid "First"
-msgstr "第一"
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "对于任何可以使用SNMP 访问且匹配设备规则的新发现设备,请将其添加到Kadupul."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr "周五"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr "通用设置"
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr "给这个网络取个有意义的名字."
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
 msgstr "空闲"
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "如果找到先前添加到Kadupul 的设备,请重新运行其数据查询."
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "如果选中,则扫描自动化网络时,报告将发送到通知电子邮件帐户."
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr "一月"
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr "七月"
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr "六月"
-
-#: automation_networks.php
-msgid "Last"
-msgstr "当前"
 
 #: automation_networks.php
 msgid "Last Runtime"
@@ -1417,18 +1235,6 @@ msgid "Manual"
 msgstr "手动"
 
 #: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr "三月"
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr "五月"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr "周一"
-
-#: automation_networks.php include/global_arrays.php
 msgid "Monthly"
 msgstr "每月"
 
@@ -1437,36 +1243,12 @@ msgid "Monthly on Day"
 msgstr "每月的某一天"
 
 #: automation_networks.php
-msgid "Months of Year"
-msgstr "一年中的月份"
-
-#: automation_networks.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "名称"
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "网络发现范围 [编辑: %s]"
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr "网络发现范围[新建]"
-
-#: automation_networks.php
 msgid "Network Filters"
 msgstr "网络过滤器"
 
 #: automation_networks.php
 msgid "Network Name"
 msgstr "网络名字"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "文件未找到"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Networks"
@@ -1478,10 +1260,6 @@ msgid "Never"
 msgstr "从不"
 
 #: automation_networks.php
-msgid "New Network Discovery Range"
-msgstr "新的网络发现范围"
-
-#: automation_networks.php
 msgid "Next Start"
 msgstr "下次开始时间"
 
@@ -1490,81 +1268,17 @@ msgid "No Networks Found"
 msgstr "未找到网络"
 
 #: automation_networks.php
-msgid "Notification Email"
-msgstr "通知电子邮件"
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr "启用通知"
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr "来自电子邮件地址的通知"
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr "自动通知的发件人"
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr "通知设置"
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr "十一月"
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr "十月"
-
-#: automation_networks.php
 msgid "Pending/Running/Done"
 msgstr "等待/运行/完成"
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr "Ping 模式"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr "Ping 端口"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr "Ping 重试次数"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr "Ping 超时时间"
 
 #: automation_networks.php
 msgid "Progress"
 msgstr "进度"
 
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr "可达性设置"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 msgid "Refresh"
 msgstr "刷新"
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr "重新运行数据查询"
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr "多久重新运行"
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr "每X 重新运行此网络范围的发现."
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr "运行限制"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1574,189 +1288,33 @@ msgstr "在调试模式下运行发现"
 msgid "Running"
 msgstr "运行中"
 
-#: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
-msgstr "SNMP 获取"
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr "SNMP 选项"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr "周六"
-
 #: automation_networks.php
 msgid "Schedule"
 msgstr "计划表"
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr "计划类型"
-
-#: automation_networks.php
-msgid "Second"
-msgstr "第二个"
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "选择用于发现此网络范围的SNMP 选项."
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr "选择月中的一天"
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr "选择一周中的某一天"
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr "选择一周中的天数"
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr "选择一年中的月份"
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr "选择月中的周"
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr "九月"
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr "开始日期/时间"
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr "子网范围"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr "周日"
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr "尝试连接的TCP or UDP端口."
 
 #: automation_networks.php
 msgid "The Current Status of this Networks Discovery"
 msgstr "这个网络发现的状态"
 
 #: automation_networks.php
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "电子邮件地址将用作发件人电子邮件通知电子邮件.如果留空,Kadupul 将使用默认的自动化通知电子邮件地址(如果已指定),否则,它将使用Kadupul 系统默认电子邮件地址"
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "电子邮件帐户名称,用作通知电子邮件的发件人名称.如果留空,Kadupul 将使用默认的自动化通知名称(如果已指定),否则,它将使用Kadupul 系统默认的电子邮件名称"
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "用于向其发送通知电子邮件的电子邮件帐户."
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "用于主机ICMP 和UDP ping 的超时值.此主机SNMP 超时值适用于SNMP ping."
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr "要发送的ping 包的类型."
-
-#: automation_networks.php
-msgid "Third"
-msgstr "第三"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 msgid "Threads"
 msgstr "线程"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr "周四"
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr "所有IP地址"
 
 #: automation_networks.php
 msgid "Total IPs"
 msgstr "IP 数"
 
 #: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "此网络范围内的所有可寻址IP地址."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr "周二"
-
-#: automation_networks.php
 msgid "Up/SNMP Hosts"
 msgstr "Up/SNMP 主机"
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "使用NetBIOS尝试解析主机的主机名."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr "周三"
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr "每月的第几周"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "每周"
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "本月的哪些天将会发现这个网络范围."
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "这个网络范围将在一周中的哪一天被发现."
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "哪几个月将会对这个网络范围进行发现."
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "本月的第几周将会发现这个网络范围."
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr "这个网络发现项目什么时候开始?"
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "发现设备时,允许在不同主机上添加重复的系统名称"
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr "每 X 天"
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr "每 X 天."
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr "每 X 周"
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr "每 X 周."
-
-#: automation_networks.php
-msgid "every X."
-msgstr "每 X."
 
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -2698,6 +2256,12 @@ msgstr "下移"
 #: tree.php
 msgid "Move Up"
 msgstr "上移"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "名称"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4258,6 +3822,16 @@ msgstr "%d 千兆字节"
 
 #: include/global_arrays.php
 #, php-format
+msgid "%d Hour"
+msgstr "%d小时"
+
+#: include/global_arrays.php include/global_settings.php
+#, php-format
+msgid "%d Hours"
+msgstr "%d 时"
+
+#: include/global_arrays.php
+#, php-format
 msgid "%d Lines"
 msgstr "%d 行"
 
@@ -4285,6 +3859,11 @@ msgstr "%d 月"
 #, php-format
 msgid "%d Months"
 msgstr "%d 月"
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
+msgstr "%d 线程"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -4512,6 +4091,10 @@ msgid "Apr"
 msgstr "四月"
 
 #: include/global_arrays.php
+msgid "April"
+msgstr "四月"
+
+#: include/global_arrays.php
 msgid "Arabic"
 msgstr "阿拉伯"
 
@@ -4530,6 +4113,10 @@ msgstr "附加PNG 图像"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
+msgstr "八月"
+
+#: include/global_arrays.php
+msgid "August"
 msgstr "八月"
 
 #: include/global_arrays.php include/global_settings.php
@@ -4847,6 +4434,10 @@ msgid "Dec"
 msgstr "十二月"
 
 #: include/global_arrays.php
+msgid "December"
+msgstr "十二月"
+
+#: include/global_arrays.php
 msgid "Demand"
 msgstr "需求"
 
@@ -4973,6 +4564,10 @@ msgid "Feb"
 msgstr "二月"
 
 #: include/global_arrays.php
+msgid "February"
+msgstr "二月"
+
+#: include/global_arrays.php
 msgid "Fixed String"
 msgstr "固定字符串"
 
@@ -4983,6 +4578,10 @@ msgstr "法语"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
+msgstr "周五"
+
+#: include/global_arrays.php
+msgid "Friday"
 msgstr "周五"
 
 #: include/global_arrays.php
@@ -5195,6 +4794,10 @@ msgid "Jan"
 msgstr "一月"
 
 #: include/global_arrays.php
+msgid "January"
+msgstr "一月"
+
+#: include/global_arrays.php
 msgid "Japanese"
 msgstr "日语"
 
@@ -5204,8 +4807,16 @@ msgid "Jul"
 msgstr "七月"
 
 #: include/global_arrays.php
+msgid "July"
+msgstr "七月"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
+msgstr "六月"
+
+#: include/global_arrays.php
+msgid "June"
 msgstr "六月"
 
 #: include/global_arrays.php
@@ -5387,6 +4998,14 @@ msgid "Mar"
 msgstr "三月"
 
 #: include/global_arrays.php
+msgid "March"
+msgstr "三月"
+
+#: include/global_arrays.php
+msgid "May"
+msgstr "五月"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "五月"
@@ -5402,6 +5021,10 @@ msgstr "现代"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
+msgstr "周一"
+
+#: include/global_arrays.php
+msgid "Monday"
 msgstr "周一"
 
 #: include/global_arrays.php
@@ -5489,6 +5112,10 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "十一月"
 
+#: include/global_arrays.php
+msgid "November"
+msgstr "十一月"
+
 #: include/global_arrays.php tree.php
 msgid "Numeric"
 msgstr "Numeric"
@@ -5500,6 +5127,10 @@ msgstr "数字排序"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
+msgstr "十月"
+
+#: include/global_arrays.php
+msgid "October"
 msgstr "十月"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
@@ -5705,6 +5336,10 @@ msgid "SNMP Field Value (From User)"
 msgstr "SNMP 的字段值(用户)"
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr "SNMP 获取"
+
+#: include/global_arrays.php
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP 的输出类型(下拉)"
 
@@ -5727,6 +5362,10 @@ msgstr "SNMPv3 身份认证密码必须是8个字符或更大."
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
+msgstr "周六"
+
+#: include/global_arrays.php
+msgid "Saturday"
 msgstr "周六"
 
 #: include/global_arrays.php
@@ -5776,6 +5415,10 @@ msgstr "现在发送"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
+msgstr "九月"
+
+#: include/global_arrays.php
+msgid "September"
 msgstr "九月"
 
 #: include/global_arrays.php lib/html.php
@@ -5845,6 +5488,10 @@ msgstr "建议的值未输入.  请输入一个值名称,然后重试."
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
+msgstr "周日"
+
+#: include/global_arrays.php
+msgid "Sunday"
 msgstr "周日"
 
 #: include/global_arrays.php
@@ -5946,6 +5593,10 @@ msgid "Thu"
 msgstr "周四"
 
 #: include/global_arrays.php
+msgid "Thursday"
+msgstr "周四"
+
+#: include/global_arrays.php
 msgid "Timestamp"
 msgstr "时间戳"
 
@@ -5988,6 +5639,10 @@ msgstr "尝试"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
+msgstr "周二"
+
+#: include/global_arrays.php
+msgid "Tuesday"
 msgstr "周二"
 
 #: include/global_arrays.php
@@ -6179,6 +5834,10 @@ msgstr "Web 服务器相关"
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
+msgstr "周三"
+
+#: include/global_arrays.php
+msgid "Wednesday"
 msgstr "周三"
 
 #: include/global_arrays.php
@@ -6494,6 +6153,10 @@ msgid "Additional Options"
 msgstr "其他选项"
 
 #: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "首次失败之后,Kadupul 重试多少次之后才确定为真的失败."
+
+#: include/global_form.php
 msgid "Aggregate Graph Settings"
 msgstr "聚合图形设置"
 
@@ -6653,6 +6316,10 @@ msgstr "选择设备模板用于定义与该设备关联的默认图形模板和
 #: include/global_form.php
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "选择用于此数据查询图形模板项目的图形模板."
+
+#: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "选择用于从设备收集数据的收集数据器或采集器."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -6872,6 +6539,10 @@ msgstr "GPRINT 类型"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "设备基本选项"
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
+msgstr "通用设置"
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7160,6 +6831,22 @@ msgid "Pad text so that legend and graph data always line up. Note: this could c
 msgstr "填充文本,以便图例和图形数据始终排列. 注意: 由于较大的开销,这可能会导致图形渲染时间较长. 在所有类型的图形上,自动填充可能不准确,一致的标签通常有帮助."
 
 #: include/global_form.php
+msgid "Ping Method"
+msgstr "Ping 模式"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr "Ping 端口"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr "Ping 重试次数"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr "Ping 超时时间"
+
+#: include/global_form.php
 msgid "Place the legend at the given side of the graph."
 msgstr "将图例放在图形的给定侧."
 
@@ -7292,6 +6979,10 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP 引擎ID (v3)"
 
 #: include/global_form.php
+msgid "SNMP Options"
+msgstr "SNMP 选项"
+
+#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP 密码 (v3)"
 
@@ -7406,6 +7097,10 @@ msgstr "源图模板"
 #: include/global_form.php
 msgid "Special Type Code"
 msgstr "Special Type Code"
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr "尝试连接的TCP or UDP端口."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7606,6 +7301,10 @@ msgstr "对特定输入法进行空白验证检查的结果.如果输入字符�
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
 msgstr "用于为数据源收集数据的脚本/来源."
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "用于主机ICMP 和UDP ping 的超时值.此主机SNMP 超时值适用于SNMP ping."
 
 #: include/global_form.php
 msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."

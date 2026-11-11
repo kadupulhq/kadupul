@@ -18,6 +18,7 @@ final class DeviceCollectorTransfer
 {
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
+    /** @param array<int, PDO> $connections */
     public function apply(PDO $connection, array $connections, int $deviceId, int $previous, int $target, bool $deferPreviousCleanup = false): void
     {
         if ($previous === $target) {

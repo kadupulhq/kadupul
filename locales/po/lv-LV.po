@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:22-0800\n"
+"POT-Creation-Date: 2026-11-10 16:46-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -341,12 +341,12 @@ msgstr "Nav atrasts neviens apkopots grafiks"
 msgid "No Graphs Found"
 msgstr "Nav atrasts neviens grafiks"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -1078,11 +1078,11 @@ msgstr "Dublēt"
 msgid "Enable"
 msgstr "Iespējot"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr "Iespējots"
 
@@ -1151,17 +1151,6 @@ msgstr "Virsraksta formāts"
 msgid "rule_name"
 msgstr "kārtulas_nosaukums"
 
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr "%d stunda"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, php-format
-msgid "%d Hours"
-msgstr "%d stundas"
-
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
@@ -1181,53 +1170,6 @@ msgstr "%d sekundes"
 
 #: automation_networks.php
 #, php-format
-msgid "%d Thread"
-msgstr "%d pavediens"
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr "%d pavedieni"
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "Alternatīvais DNS serveru saraksts ar atstarpi, ko izmantot DNS noteikšanai. Ja lauku atstāsiet tukšus, DNS nosaukumu noteikšanai tiks izmantota aptaujātaja (poller) operētājsistēmas iestatījumi."
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "Pēc sākotnējās kļūmes Kadupul mēģinās veikt tik daudz ping atkārtojumu, pirms neizdosies."
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "Pēc atlasītā izpildes ierobežojuma noteikšanas process tiks pārtraukts."
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr "Atļaut vienu un to pašu sysName dažādos saimniekdatoros"
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr "Alternatīvie DNS serveri"
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr "Aprīlis"
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr "Saistītā vietne"
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr "Augusts"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Automatically Add to Kadupul"
-msgstr "Automātiski pievienot Kadupul"
-
-#: automation_networks.php
-#, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "Nevar veikt atspējotā tīkla “%s” atklāšanu"
 
@@ -1239,15 +1181,6 @@ msgstr "Nevar atsākt atklāšanu '%s' tīklam, kas jau ir atklāšanas procesā
 #: automation_networks.php
 msgid "Cancel Discovery"
 msgstr "Atcelt Discovery"
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "Izvēlieties Kadupul datu apkopotāju/aptaujātaju, kas tiks izmantots šīs ierīces datu vākšanai."
-
-#: automation_networks.php
-#, fuzzy
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "Izvēlieties Kadupul vietni, ar kuru vēlaties saistīt atklātās ierīces."
 
 #: automation_networks.php
 msgid "Clear Filtered"
@@ -1283,129 +1216,12 @@ msgid "Data Collector"
 msgstr "Datu apkopotājs"
 
 #: automation_networks.php
-msgid "Day(s) of Week"
-msgstr "Nedēļas diena(s)"
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr "Mēneša dienas"
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr "Nedēļas dienas"
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr "Decembris"
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr "Definējiet savākšanas biežumu."
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "Definējiet pavedienu skaitu, kas jāizmanto šī tīkla diapazona noteikšanai."
-
-#: automation_networks.php
 msgid "Discover Now"
 msgstr "Atklājiet tūlīt"
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr "Atklāšanas pavedieni"
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr "Atklāšanas laiks"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "KĻŪDA: tīkls '%s' ir nederīgs."
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "KĻŪDA: jānorāda gan mēneši, gan mēneša dienas. Tiek atspējots tīkls %s!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "KĻŪDA: jānorāda mēneši, mēneša nedēļas un nedēļas dienas. Tiek atspējots tīkls %s!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "KĻŪDA: jānorāda nedēļas diena. Tīkla %s atspējošana!."
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr "Iespējot NetBIOS"
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr "Iespējot šo tīkla diapazonu."
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "Ievadiet DNS serveru IP vai FQDN"
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "Ievadiet derīgus tīkla diapazonus, atdalot tos ar komatiem. Varat izmantot IP adresi, tīkla diapazonu, piemēram, 192.168.1.0/24 vai 192.168.1.0/255.255.255.0, vai aizstājējzīmes, piemēram, 192.168.*.*"
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr "Februāris"
-
-#: automation_networks.php
-msgid "First"
-msgstr "Pirmais"
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "Ikvienu jaunatklātu ierīci, kura ir sasniedzama, izmantojot SNMP, un kura atbilst ierīces kārtulai, pievienot Kadupul."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr "Piektdiena"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr "Pamatiestatījumi"
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr "Piešķiriet šim tīklam jēgpilnu nosaukumu."
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
 msgstr "Dīkstāvē"
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "Ja atrod ierīci, kas iepriekš bijusi pievienota Kadupul, atkārtoti palaidiet tās datu vaicājumus."
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "Ja atzīmēta, kad automatizācijas tīkls tiek skenēts, ziņojums tiks nosūtīts uz paziņojumu e-pasta kontu."
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr "Janvāris"
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr "Jūlijs"
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr "Jūnijs"
-
-#: automation_networks.php
-msgid "Last"
-msgstr "Pēdējais"
 
 #: automation_networks.php
 msgid "Last Runtime"
@@ -1420,18 +1236,6 @@ msgid "Manual"
 msgstr "Manuāli"
 
 #: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr "Marts"
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr "Maijs"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr "Pirmdiena"
-
-#: automation_networks.php include/global_arrays.php
 msgid "Monthly"
 msgstr "Ikmēneša"
 
@@ -1440,36 +1244,12 @@ msgid "Monthly on Day"
 msgstr "Katru mēnesi dienā"
 
 #: automation_networks.php
-msgid "Months of Year"
-msgstr "Gada mēneši"
-
-#: automation_networks.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "Nosaukums"
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "Tīkla atklāšanas diapazons [rediģēt: %s]"
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr "Tīkla atklāšanas diapazons [jauns]"
-
-#: automation_networks.php
 msgid "Network Filters"
 msgstr "Tīkla filtri"
 
 #: automation_networks.php
 msgid "Network Name"
 msgstr "Tīkla nosaukums"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "Fails nav atrasts"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Networks"
@@ -1481,10 +1261,6 @@ msgid "Never"
 msgstr "Nekad"
 
 #: automation_networks.php
-msgid "New Network Discovery Range"
-msgstr "Jauns tīkla atklāšanas diapazons"
-
-#: automation_networks.php
 msgid "Next Start"
 msgstr "Nākamā reize"
 
@@ -1493,81 +1269,17 @@ msgid "No Networks Found"
 msgstr "Nav atrasts neviens tīkls"
 
 #: automation_networks.php
-msgid "Notification Email"
-msgstr "Paziņojuma e-pasts"
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr "Paziņošana iespējota"
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr "Paziņojums no e-pasta adreses"
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr "Paziņojums no vārda"
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr "Paziņojuma iestatījumi"
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr "Novembris"
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr "Oktobris"
-
-#: automation_networks.php
 msgid "Pending/Running/Done"
 msgstr "Gaida/Darbojas/Gatavs"
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr "Ping metode"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr "Ping osta"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr "Ping atkārtotu mēģinājumu skaits"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr "Ping noildzes vērtība"
 
 #: automation_networks.php
 msgid "Progress"
 msgstr "Progress"
 
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr "Sasniedzamības iestatījumi"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 msgid "Refresh"
 msgstr "Atsvaidzināt"
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr "Atkārtoti palaist datu vaicājumus"
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr "Atkārtoti katru"
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr "Atkārtoti palaist atklāšanu šim tīkla diapazonam ik pēc X."
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr "Izpildes ierobežojums"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1577,189 +1289,33 @@ msgstr "Palaidiet atklāšanu atkļūdošanas režīmā"
 msgid "Running"
 msgstr "Procesā"
 
-#: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
-msgstr "SNMP Get"
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr "SNMP opcijas"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr "Sestdiena"
-
 #: automation_networks.php
 msgid "Schedule"
 msgstr "Izpildes saraksts"
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr "Izpildes saraksta tips"
-
-#: automation_networks.php
-msgid "Second"
-msgstr "Sekunde"
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "Atlasiet SNMP opcijas, ko izmantot šī tīkla diapazona noteikšanai."
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr "Atlasiet mēneša dienu(-as)"
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr "Atlasiet nedēļas dienu(-as)"
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr "Atlasiet nedēļas dienu(-as)"
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr "Atlasiet gada mēnesi(-šus)"
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr "Atlasiet mēneša nedēļu(-as)"
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr "Septembris"
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr "Sākuma datums/laiks"
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr "Apakštīkla diapazons"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr "Svētdiena"
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr "TCP vai UDP ports, lai mēģinātu izveidot savienojumu."
 
 #: automation_networks.php
 msgid "The Current Status of this Networks Discovery"
 msgstr "Šī tīkla atklāšanas pašreizējais statuss"
 
 #: automation_networks.php
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "E-pasta adrese, kas jāizmanto kā paziņojuma e-pasta sūtītāja e-pasts. Ja lauks atstāts tukšs, Kadupul izmantos noklusējuma automatizācijas paziņojumu e-pasta adresi, ja tā būs norādīta, pretējā gadījumā tā izmantos Kadupul sistēmas noklusējuma e-pasta adresi."
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "E-pasta konta nosaukums, kas tiks izmantots kā paziņojuma e-pasta sūtītāja vārds.  Ja tiek atstāts tukšs, Kadupul izmantos noklusējuma automatizācijas paziņojumu nosaukumu, ja tas ir norādīts. Pretējā gadījumā tas izmantos Kadupul sistēmas noklusējuma e-pasta nosaukumu"
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "E-pasta konts, kas jāizmanto, lai nosūtītu paziņojumu e-pasta ziņojumu."
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "Taimauta vērtība, kas jāizmanto saimniekdatora ICMP un UDP ehotestēšanai. Šī saimniekdatora SNMP taimauta vērtība attiecas uz SNMP ehotestiem."
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr "Nosūtāmās ping pakotnes veids."
-
-#: automation_networks.php
-msgid "Third"
-msgstr "Trešais"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 msgid "Threads"
 msgstr "Diegi"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr "Ceturtdiena"
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr "Kopējās IP adreses"
 
 #: automation_networks.php
 msgid "Total IPs"
 msgstr "Kopējais IP skaits"
 
 #: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "Kopējais adresējamo IP adrešu skaits šajā tīkla diapazonā."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr "Otrdiena"
-
-#: automation_networks.php
 msgid "Up/SNMP Hosts"
 msgstr "Up/SNMP saimnieki"
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "Izmantojiet NetBIOS, lai mēģinātu atrisināt augšējo saimniekdatoru resursdatora nosaukumu."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr "Trešdiena"
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr "Mēneša nedēļa(s)"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "Katru nedēļu"
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "Kurā(-ās) mēneša dienā(-ās) tiks atklāts šis tīkla diapazons."
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "Kurā(-ās) nedēļas dienā(-ās) tiks atklāts šis tīkla diapazons."
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "Kuros gada mēnešos šis tīkla diapazons tiks atklāts."
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "Kurā(-ās) mēneša nedēļā(-ās) tiks atklāts šis tīkla diapazons."
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr "Cikos šis tīkls atklās elementus?"
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "Atklājot ierīces, ļaujiet dažādiem resursdatoriem pievienot dublētus sistēmu nosaukumus"
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr "katru X dienu"
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr "katru X dienu."
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr "ik pēc X nedēļām"
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr "ik pēc X nedēļām."
-
-#: automation_networks.php
-msgid "every X."
-msgstr "katrs X."
 
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -2717,6 +2273,12 @@ msgstr "Pārvietot lejup"
 #: tree.php
 msgid "Move Up"
 msgstr "Pārvietot augšup"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "Nosaukums"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4306,6 +3868,16 @@ msgstr "%d GBaiti"
 
 #: include/global_arrays.php
 #, php-format
+msgid "%d Hour"
+msgstr "%d stunda"
+
+#: include/global_arrays.php include/global_settings.php
+#, php-format
+msgid "%d Hours"
+msgstr "%d stundas"
+
+#: include/global_arrays.php
+#, php-format
 msgid "%d Lines"
 msgstr "%d rindas"
 
@@ -4333,6 +3905,11 @@ msgstr "%d mēnesis"
 #, php-format
 msgid "%d Months"
 msgstr "%d mēneši"
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
+msgstr "%d pavedieni"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -4560,6 +4137,10 @@ msgid "Apr"
 msgstr "Apr"
 
 #: include/global_arrays.php
+msgid "April"
+msgstr "Aprīlis"
+
+#: include/global_arrays.php
 msgid "Arabic"
 msgstr "Arābu"
 
@@ -4579,6 +4160,10 @@ msgstr "Pievienots PNG attēls"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
 msgstr "Aug"
+
+#: include/global_arrays.php
+msgid "August"
+msgstr "Augusts"
 
 #: include/global_arrays.php include/global_settings.php
 msgid "Automation"
@@ -4895,6 +4480,10 @@ msgid "Dec"
 msgstr "Dec"
 
 #: include/global_arrays.php
+msgid "December"
+msgstr "Decembris"
+
+#: include/global_arrays.php
 msgid "Demand"
 msgstr "Pieprasījums"
 
@@ -5021,6 +4610,10 @@ msgid "Feb"
 msgstr "Feb"
 
 #: include/global_arrays.php
+msgid "February"
+msgstr "Februāris"
+
+#: include/global_arrays.php
 msgid "Fixed String"
 msgstr "Fiksēta virkne"
 
@@ -5032,6 +4625,10 @@ msgstr "Franču"
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "P"
+
+#: include/global_arrays.php
+msgid "Friday"
+msgstr "Piektdiena"
 
 #: include/global_arrays.php
 msgid "Function"
@@ -5243,6 +4840,10 @@ msgid "Jan"
 msgstr "Jan"
 
 #: include/global_arrays.php
+msgid "January"
+msgstr "Janvāris"
+
+#: include/global_arrays.php
 msgid "Japanese"
 msgstr "Japāņu"
 
@@ -5252,9 +4853,17 @@ msgid "Jul"
 msgstr "Jūl"
 
 #: include/global_arrays.php
+msgid "July"
+msgstr "Jūlijs"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
 msgstr "Jūn"
+
+#: include/global_arrays.php
+msgid "June"
+msgstr "Jūnijs"
 
 #: include/global_arrays.php
 msgid "Justified"
@@ -5438,6 +5047,14 @@ msgid "Mar"
 msgstr "Mar"
 
 #: include/global_arrays.php
+msgid "March"
+msgstr "Marts"
+
+#: include/global_arrays.php
+msgid "May"
+msgstr "Maijs"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "Maijs"
@@ -5454,6 +5071,10 @@ msgstr "Mūsdienīgs"
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "P"
+
+#: include/global_arrays.php
+msgid "Monday"
+msgstr "Pirmdiena"
 
 #: include/global_arrays.php
 msgid "Mono"
@@ -5540,6 +5161,10 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "Nov"
 
+#: include/global_arrays.php
+msgid "November"
+msgstr "Novembris"
+
 #: include/global_arrays.php tree.php
 msgid "Numeric"
 msgstr "Skaitlis"
@@ -5552,6 +5177,10 @@ msgstr "Ciparu secība"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
 msgstr "Okt"
+
+#: include/global_arrays.php
+msgid "October"
+msgstr "Oktobris"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
 msgid "Operator"
@@ -5756,6 +5385,10 @@ msgid "SNMP Field Value (From User)"
 msgstr "SNMP lauka vērtība (no lietotāja)"
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr "SNMP Get"
+
+#: include/global_arrays.php
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP izvades veids (nolaižamā izvēlne)"
 
@@ -5779,6 +5412,10 @@ msgstr "SNMPv3 autentifikācijas piekļuves frāzēm ir jābūt 8 vai vairāk ra
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "S"
+
+#: include/global_arrays.php
+msgid "Saturday"
+msgstr "Sestdiena"
 
 #: include/global_arrays.php
 msgid "Save Failed due to field input errors (Check red fields)."
@@ -5828,6 +5465,10 @@ msgstr "Sūtīt tagad"
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
 msgstr "Sep"
+
+#: include/global_arrays.php
+msgid "September"
+msgstr "Septembris"
 
 #: include/global_arrays.php lib/html.php
 msgid "Settings"
@@ -5897,6 +5538,10 @@ msgstr "Ieteiktā vērtība netika ievadīta. Lūdzu, ievadiet ieteikto vērtīb
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "Sv"
+
+#: include/global_arrays.php
+msgid "Sunday"
+msgstr "Svētdiena"
 
 #: include/global_arrays.php
 msgid "Sunrise"
@@ -5998,6 +5643,10 @@ msgid "Thu"
 msgstr "Cet"
 
 #: include/global_arrays.php
+msgid "Thursday"
+msgstr "Ceturtdiena"
+
+#: include/global_arrays.php
 msgid "Timestamp"
 msgstr "Laika zīmogs"
 
@@ -6041,6 +5690,10 @@ msgstr "Izmēģiniet"
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "O"
+
+#: include/global_arrays.php
+msgid "Tuesday"
+msgstr "Otrdiena"
 
 #: include/global_arrays.php
 msgid "Turkish"
@@ -6232,6 +5885,10 @@ msgstr "Tīmekļa (Web) servera saistīta"
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "T"
+
+#: include/global_arrays.php
+msgid "Wednesday"
+msgstr "Trešdiena"
 
 #: include/global_arrays.php
 msgid "Week(s)"
@@ -6546,6 +6203,10 @@ msgid "Additional Options"
 msgstr "Papildu opcijas"
 
 #: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "Pēc sākotnējās kļūmes Kadupul mēģinās veikt tik daudz ping atkārtojumu, pirms neizdosies."
+
+#: include/global_form.php
 msgid "Aggregate Graph Settings"
 msgstr "Apkopoto diagrammu iestatījumi"
 
@@ -6705,6 +6366,10 @@ msgstr "Izvēlieties ierīces veidni, ko izmantot, lai definētu ar šo ierīci 
 #: include/global_form.php
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "Izvēlieties grafikas veidni, ko izmantot šim datu vaicājuma grafikas veidnes elementam."
+
+#: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "Izvēlieties Kadupul datu apkopotāju/aptaujātaju, kas tiks izmantots šīs ierīces datu vākšanai."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -6926,6 +6591,10 @@ msgstr "GPRINT tips"
 #: include/global_form.php
 msgid "General Device Options"
 msgstr "Pamatierīces opcijas"
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
+msgstr "Pamatiestatījumi"
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7215,6 +6884,22 @@ msgid "Pad text so that legend and graph data always line up. Note: this could c
 msgstr "Iestatiet tekstu tā, lai leģendas un diagrammas dati vienmēr sakristu. Piezīme. Tādējādi diagrammu renderēšana var aizņemt ilgāku laiku, jo ir lielākas izmaksas. Arī automātiskais polsterējums var nebūt precīzs visu veidu diagrammās, konsekventa marķēšana parasti palīdz."
 
 #: include/global_form.php
+msgid "Ping Method"
+msgstr "Ping metode"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr "Ping osta"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr "Ping atkārtotu mēģinājumu skaits"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr "Ping noildzes vērtība"
+
+#: include/global_form.php
 msgid "Place the legend at the given side of the graph."
 msgstr "Novietojiet leģendu diagrammas norādītajā pusē."
 
@@ -7347,6 +7032,10 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP dzinēja ID (v3)"
 
 #: include/global_form.php
+msgid "SNMP Options"
+msgstr "SNMP opcijas"
+
+#: include/global_form.php
 msgid "SNMP Password (v3)"
 msgstr "SNMP parole (v3)"
 
@@ -7461,6 +7150,10 @@ msgstr "Avota diagrammas veidne"
 #: include/global_form.php
 msgid "Special Type Code"
 msgstr "Īpašs tipa kods"
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr "TCP vai UDP ports, lai mēģinātu izveidot savienojumu."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7661,6 +7354,10 @@ msgstr "Atstarpju pārbaudes rezultāts konkrētajai ievades metodei. Ja mainās
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
 msgstr "Skripts/avots, kas tiek izmantots datu vākšanai šim datu avotam."
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "Taimauta vērtība, kas jāizmanto saimniekdatora ICMP un UDP ehotestēšanai. Šī saimniekdatora SNMP taimauta vērtība attiecas uz SNMP ehotestiem."
 
 #: include/global_form.php
 msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."
