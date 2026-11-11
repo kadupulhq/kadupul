@@ -59,7 +59,7 @@ final class SharedSession
         if (session_id() !== '' && !hash_equals($id, session_id())) {
             throw new \RuntimeException('Unexpected native session identifier.');
         }
-        if ($config['database_sessions']) {
+        if ($config['database_sessions'] === true) {
             session_set_save_handler($this->databaseHandler, true);
         }
         session_name($config['session_name']);
@@ -119,7 +119,7 @@ final class SharedSession
         require_once dirname(__DIR__, 4) . '/lib/auth.php';
         $pending = $this->pendingRevocation;
         \clear_auth_cookie($this->database->get(), static function (): void {}, $pending);
-        if ($this->configuration->values()['database_sessions']) {
+        if ($this->configuration->values()['database_sessions'] === true) {
             if (!$this->databaseHandler->destroy($pending['id'])) {
                 throw new \RuntimeException('Persisted session could not be revoked.');
             }

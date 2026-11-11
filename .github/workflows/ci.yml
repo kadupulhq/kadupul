@@ -102,6 +102,10 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
       - name: Verify defect classification fields match the bug form
         run: mise exec python@3.12.12 -- python tests/tools/test_odc_summary.py
+      - name: Verify changelog fragments, the entry gate and release assembly
+        run: |
+          mise exec python@3.12.12 -- python tools/changelog.py check
+          mise exec python@3.12.12 -- python tests/tools/test_changelog.py
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
       - name: Install hash-locked Python test-tool dependencies
@@ -959,35 +963,18 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
+        with:
+          install_args: python@3.12.12
+          add_shims_to_path: false
+
+      # A pull request adds changelog.d/<slug>.<category>.md rather than
+      # editing the shared [Unreleased] list, so merges do not make every open
+      # pull request conflict. An edit to CHANGELOG.md is still accepted.
       - name: Require an entry
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          set -euo pipefail
-          changed=$(git diff --name-only "$BASE_SHA" HEAD)
-
-          # A branch that only moves CI, contributor hooks, docs or the
-          # changelog itself needs no entry.
-          substantive=false
-          while IFS= read -r f; do
-            [ -z "$f" ] && continue
-            case "$f" in
-              CHANGELOG.md|.github/*|.githooks/*|docs/*|*.md) ;;
-              *) substantive=true ;;
-            esac
-          done <<< "$changed"
-
-          if [ "$substantive" = false ]; then
-            echo "No user-visible change in this branch; no entry needed."
-            exit 0
-          fi
-
-          # A here-string avoids SIGPIPE from grep -q exiting early on large PRs.
-          if ! grep -qx 'CHANGELOG.md' <<< "$changed"; then
-            echo "::error file=CHANGELOG.md::This branch changes behaviour but does not touch CHANGELOG.md. Add an entry under Unreleased, or apply the no-changelog label." >&2
-            exit 1
-          fi
-          echo "Changelog updated."
+        run: mise exec python@3.12.12 -- python tools/changelog.py require --base "$BASE_SHA"
 
   ci-result:
     name: CI result
