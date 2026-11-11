@@ -148,6 +148,44 @@ final class AlertingSchemaUpgradeTest extends TestCase
         }
     }
 
+    public function testARefusedGrantStatementStopsTheStepAndARetryCompletesIt(): void
+    {
+        $db = $this->database();
+        $created = $this->realmTables();
+        try {
+            $db->exec('DELETE FROM user_auth_realm WHERE realm_id IN (29, 30)');
+            // A shadow without user_id makes the grant statement itself fail, on every engine.
+            self::assertNotFalse($db->exec('CREATE TEMPORARY TABLE user_auth_realm (realm_id mediumint(8) unsigned NOT NULL, PRIMARY KEY (realm_id))'));
+            try {
+                upgrade_to_1_2_40();
+                self::fail('The step completed without the realm grant.');
+            } catch (RuntimeException $e) {
+                self::assertSame('The alerting realms could not be granted to the admin account. Review user_auth_realm and rerun the upgrade.', $e->getMessage());
+            }
+            self::assertContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+            self::assertSame('0', $this->scalar('SELECT COUNT(*) FROM user_auth_realm'));
+            self::assertNotFalse($db->exec('DROP TEMPORARY TABLE user_auth_realm'));
+
+            $GLOBALS['forward_schema_status'] = [];
+            upgrade_to_1_2_40();
+            self::assertSame('29,30', $this->scalar('SELECT GROUP_CONCAT(realm_id ORDER BY realm_id) FROM user_auth_realm WHERE user_id = 1 AND realm_id IN (29, 30)'));
+        } finally {
+            $db->exec('DROP TEMPORARY TABLE IF EXISTS user_auth_realm');
+            $db->exec('DELETE FROM user_auth_realm WHERE realm_id IN (29, 30)');
+            foreach ($created as $table) {
+                $db->exec('DROP TABLE IF EXISTS ' . $table);
+            }
+        }
+    }
+
+    public function testTheSignatureRefusesADefinitionLineItCannotRead(): void
+    {
+        $create = "CREATE TABLE IF NOT EXISTS t (\n  id int(10) unsigned NOT NULL,\n  FULLTEXT KEY body (id)\n) ENGINE=InnoDB";
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unrecognised alerting table definition line: FULLTEXT KEY body (id)');
+        upgrade_alerting_signature($create);
+    }
+
     public function testUpgradeCreatesTheTablesAFreshInstallCreates(): void
     {
         $db = $this->database();
