@@ -2703,6 +2703,49 @@ Differences from legacy:
 - A new entry does not prefill the default community from settings.
 - There is no drag and drop; an entry moves one place at a time.
 
+### Discovery network editor
+
+The discovery network editor (`automation_networks.php?action=edit`) uses
+Symfony routes, Forms and Twig at `/automation/networks/new` and
+`/automation/networks/{id}/edit`. The network list, its bulk actions and
+discovery runs stay legacy. Both routes require console access and the
+Automation realm (23) through the reviewed `AutomationTemplateAccess` check
+before anything is read. Saves recheck the account and both realms inside their
+transaction, need the primary collector, lock the network row, take shared locks
+on the referenced collector, site and SNMP Option Set, and are audited.
+
+The form carries a revision of the columns it edits. `poller_automation.php`
+writes the run state (`next_start`, `last_*`, host counts) while a discovery
+runs, so those columns are not part of the revision and a save never writes
+them, except that a new start time or schedule type resets `next_start` as
+legacy did. `total_ips` is recomputed from the ranges on every save.
+
+`Kadupul\Automation\Domain\DiscoveryRange` counts addresses as
+`automation_get_network_info()` does for single addresses, prefixes, dotted
+netmasks and wildcards; `DiscoveryRangeTest` runs the legacy function as the
+oracle. `automation_networks.php` redirects the old edit links and answers 409
+to an old form posted again; the unused `network_edit()` and
+`api_networks_save()` are removed.
+
+Differences from legacy:
+- IPv6 ranges, `a/b/c`, and prefix lengths written as `24.5`, `2e1` or with
+  spaces are refused; legacy turned an IPv6 prefix into `0.0.0.0` and truncated
+  or ignored the others. A total above the `total_ips` column's 4294967295 is
+  refused.
+- An enabled network with an incomplete Weekly, Monthly or Monthly on Day
+  schedule is refused; legacy saved it disabled with a warning. A disabled one
+  is saved as before.
+- The collector, site and SNMP Option Set must exist. Name, DNS servers and the
+  notification fields must be single-line text within their column widths
+  (legacy offered 250 characters for a 128-character name). DNS servers are IP
+  addresses or host names separated by single spaces, the sender address must
+  be an email address, and the start must be `YYYY-MM-DD HH:MM[:SS]` (the seeded
+  network's zero date is kept). Ping retries are limited to 0–100.
+- Ranges may be separated by commas and line breaks; they are stored
+  comma-separated without spaces, and multi-selections in ascending order.
+- The script that hid fields for the chosen schedule and ping method and the
+  date picker are not carried over; every field is shown.
+
 ### Data Source Profile administration
 
 The profile list, editor, RRA editor and the duplicate and delete confirmations
