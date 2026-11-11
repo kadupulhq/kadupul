@@ -181,7 +181,7 @@ final readonly class LegacyDatabaseCall
 
     private static function throwIfStrict(): void
     {
-        if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+        if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS === true) {
             throw new \Error('Database operation failed.');
         }
     }
