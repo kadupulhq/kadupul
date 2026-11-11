@@ -5,6 +5,10 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Keep the advisory mutation check from aborting when native harnesses merge child-process coverage: covering-test ids the PHPUnit JUnit log does not name, such as `native RRD child <pid>-<nonce>`, are dropped before Infection reads the coverage, so lines only a child process covered are reported as uncovered.
+
+- Update locked Doctrine, phpseclib, Symfony 7.4 and PHPStan dependencies. PHPStan strict rules 2.1.1 reject untyped values used as conditions, so the session-storage setting is read as a boolean once when the configuration loads, and the remaining checks compare booleans explicitly; behaviour is unchanged.
+
 - Update the hash-locked CI Semgrep scanner from 1.182.1 to 1.183.0.
 
 - Base the presentation sink-context native test on a golden scenario that still exists and run its request-filter cases on the data template editor, after the SNMP Option Set editor moved to Symfony (#1441) and its legacy drag-and-drop table was retired.
@@ -23,6 +27,7 @@ follows [Semantic Versioning](VERSIONING.md).
 - Serve the SNMP Option Set editor through Symfony and Twig. Set and entry edits, deletes and moves are revision-checked, recheck the Automation realm in their transaction and are audited; stored SNMP credentials are no longer displayed, and an edit keeps or replaces them. Old `automation_snmp.php` edit links navigate; posts of its old forms no longer change data. The set list and its bulk actions are unchanged.
 - Bring an existing plugin table that the plugin created up to its current definition when the plugin is installed or upgraded, without removing columns; tables the plugin did not create are left alone (#1067).
 - Reset handled native database errors before installer automation repair, while continuing to reject new lookup and update failures.
+- Add an explicit-connection administrative actor policy for native mutation workers, with transactional credential, account and realm revalidation; existing entry points remain unchanged.
 
 - Move installer helpers into typed services and installation sequencing into an application use case, preserving native entry points and retry boundaries while checking file, collector and version-persistence outcomes. Table conversion discovery permits tables created by later upgrade steps while refusing failed metadata reads. Automation repair preserves rules for templates that were not selected.
 - Retain sanitized installer HTTP probe failure evidence with bounded exception and code-frame diagnostics, preserving original errors and owned cleanup without emitting response bodies or credentials.
