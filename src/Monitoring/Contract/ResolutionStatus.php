@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Contract;
 
+/** Why a series lookup did or did not produce a usable binding. */
 enum ResolutionStatus: string
 {
     case Resolved = 'resolved';

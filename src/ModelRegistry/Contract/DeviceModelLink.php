@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Contract;
 
+/**
+ * A device's association with a model revision, expressed as plain values for other modules.
+ */
 final class DeviceModelLink
 {
     /**

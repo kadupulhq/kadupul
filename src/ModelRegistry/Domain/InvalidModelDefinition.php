@@ -9,4 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * Raised when a model, identity, revision or related value is malformed.
+ */
 final class InvalidModelDefinition extends \InvalidArgumentException {}

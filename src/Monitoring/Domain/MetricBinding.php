@@ -16,6 +16,14 @@ namespace Kadupul\Monitoring\Domain;
  */
 final readonly class MetricBinding
 {
+    /**
+     * Builds a binding after checking the pack name and version.
+     *
+     * @param string $packName pack that declared the metric
+     * @param string $packVersion semantic version of that pack
+     * @param \DateTimeImmutable|null $lastVerifiedAt null until the binding has been verified
+     * @throws InvalidBinding when the pack name or version is malformed
+     */
     public function __construct(
         public BindingKey $key,
         public string $packName,
@@ -72,6 +80,11 @@ final readonly class MetricBinding
         }
     }
 
+    /**
+     * A copy of the binding in the next status.
+     *
+     * @throws BindingTransitionRejected when the binding cannot move from its current status to $next
+     */
     public function withStatus(BindingStatus $next): self
     {
         if (!$this->status->canMoveTo($next)) {

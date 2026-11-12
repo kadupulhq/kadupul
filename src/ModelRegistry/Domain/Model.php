@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * A model revision as registered: identity, dependencies, capabilities, provenance and content checksum.
+ */
 final class Model
 {
     /**
@@ -44,11 +47,17 @@ final class Model
         }
     }
 
+    /**
+     * Returns the model identity.
+     */
     public function identity(): ModelIdentity
     {
         return $this->identity;
     }
 
+    /**
+     * Returns the revision.
+     */
     public function revision(): ModelRevision
     {
         return $this->revision;
@@ -66,11 +75,17 @@ final class Model
         return $this->capabilities;
     }
 
+    /**
+     * Returns where and when the model was obtained.
+     */
     public function provenance(): Provenance
     {
         return $this->provenance;
     }
 
+    /**
+     * Returns the checksum of the model content.
+     */
     public function checksum(): Checksum
     {
         return $this->checksum;

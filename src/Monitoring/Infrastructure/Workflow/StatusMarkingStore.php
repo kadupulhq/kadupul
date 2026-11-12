@@ -19,6 +19,11 @@ use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
  */
 final class StatusMarkingStore implements MarkingStoreInterface
 {
+    /**
+     * Reads the marking from the subject's place.
+     *
+     * @throws \InvalidArgumentException when the subject is not a StatusSubject
+     */
     #[\Override]
     public function getMarking(object $subject): Marking
     {

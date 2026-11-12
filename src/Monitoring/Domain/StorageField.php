@@ -16,6 +16,11 @@ namespace Kadupul\Monitoring\Domain;
  */
 final readonly class StorageField
 {
+    /**
+     * Builds a field reference after checking the local data id.
+     *
+     * @throws InvalidBinding when the local data id is below 1
+     */
     public function __construct(public int $localDataId, public RrdDataSourceName $name)
     {
         if ($localDataId < 1) {
@@ -23,11 +28,13 @@ final readonly class StorageField
         }
     }
 
+    /** Compares two fields by local data id and name. */
     public function equals(self $other): bool
     {
         return $this->localDataId === $other->localDataId && $this->name->equals($other->name);
     }
 
+    /** The field as "localDataId:name". */
     public function toString(): string
     {
         return $this->localDataId . ':' . $this->name->value;
