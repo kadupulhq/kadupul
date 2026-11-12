@@ -1351,7 +1351,8 @@ function data_query()
         $rows = get_request_var('rows');
     }
 
-    html_start_box(__('Data Queries'), '100%', '', '3', 'center', 'data_queries.php?action=edit');
+    // The page loader fetches legacy links by XHR; a Symfony URL makes it navigate.
+    html_start_box(__('Data Queries'), '100%', '', '3', 'center', 'app.php/data-collection/queries/new');
 
     ?>
 	<tr class='even noprint'>

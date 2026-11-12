@@ -212,4 +212,11 @@ final class DataQueryRoutesTest extends TestCase
     {
         return $this->kernel->handle(Request::create($uri, 'POST', ['data_query' => $fields], server: ['HTTP_ORIGIN' => 'http://localhost']));
     }
+
+    public function testLegacyListAddsThroughTheSymfonyCreatePage(): void
+    {
+        // An XHR-loaded legacy link would follow the redirect into a page without #main.
+        $source = (string) file_get_contents(dirname(__DIR__, 2) . '/data_queries.php');
+        self::assertStringContainsString("html_start_box(__('Data Queries'), '100%', '', '3', 'center', 'app.php/data-collection/queries/new');", $source);
+    }
 }
