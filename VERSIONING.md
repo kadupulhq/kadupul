@@ -84,17 +84,17 @@ request assembles them first:
 
 ```sh
 python3 tools/changelog.py preview          # review the pending fragments
-python3 tools/changelog.py release 1.3.0    # date defaults to today (UTC)
+python3 tools/changelog.py release 0.1.0-alpha.1    # date defaults to today (UTC)
 git add CHANGELOG.md changelog.d
 ```
 
 `release` moves the existing `[Unreleased]` entries and the fragments, grouped
-by category, into a new `## [1.3.0] - <date>` section below an empty
+by category, into a new `## [0.1.0-alpha.1] - <date>` section below an empty
 `[Unreleased]` heading, and deletes the fragments it used. It refuses a version
 that already has a section, an invalid fragment and an empty release, and then
 changes nothing. Merge that pull request, then tag its merge commit.
 
 The workflow takes every line after the first heading that matches the version
 up to the next `## ` heading it does not match. A version that is a prefix of an
-older heading, such as `1.3.0` ahead of `1.3.0-alpha.1`, also matches that heading
+older heading, such as `0.1.0` ahead of `0.1.0-alpha.1`, also matches that heading
 and gains its notes, so check the draft release before publishing it.

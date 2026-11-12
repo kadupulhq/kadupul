@@ -15,7 +15,7 @@ This main-only slice moves ten list views into Symfony and Twig. It migrates bro
 | Discovery networks | `/automation/networks` | 23 | `automation_networks.php` |
 | SNMP notification receivers | `/utilities/notification-receivers` | 15 | `managers.php` |
 
-The Symfony console menu opens the new lists. System Utilities links to the new receiver list. Legacy PHP URLs remain available, including bookmarked filters and POST forms. The legacy console's own menu continues to use those URLs.
+The Symfony console menu opens the new lists. System Utilities links to the new receiver list. Legacy PHP URLs remain available, including bookmarked filters and POST forms. The legacy console's own menu continues to use those URLs. Since this slice, the edit pages for SNMP option sets, graph rules, tree rules, discovery networks and the General tab of notification receivers are Symfony routes, and the legacy pages forward their edit links; see [Symfony migration](../symfony-migration.md).
 
 Navigation owns the shared list contract and presentation. Graphing, DataInput, Automation and Platform supply their own catalog adapters through dependency injection. Each adapter reads only displayed fields through the configured web connection. SNMP credentials, receiver credentials and network notification settings are not selected. Console realm 8 and the feature realm are required before filter validation or catalog reads. The admission check revalidates the account, guest policy and enabled group grants. Responses use `private, no-store`; the new routes accept only GET and HEAD.
 

@@ -5,6 +5,7 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Update the documentation to match recent changes on main: the 0.1.0-alpha.1 release steps and `VERSIONING.md` examples, the `ci.md` workflow table, the administration list notes and two stale `1.3` series references.
 - Restart Kadupul's release numbering at 0.1.0; the next release is `v0.1.0-alpha.1`, and `v1.3.0-alpha.1` is superseded. The schema compatibility marker (`include/cacti_version`) is unchanged. See `VERSIONING.md`.
 - Keep the advisory mutation check from aborting when native harnesses merge child-process coverage: covering-test ids the PHPUnit JUnit log does not name, such as `native RRD child <pid>-<nonce>`, are dropped before Infection reads the coverage, so lines only a child process covered are reported as uncovered.
 
