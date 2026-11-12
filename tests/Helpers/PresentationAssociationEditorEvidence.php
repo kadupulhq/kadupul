@@ -26,7 +26,8 @@ final class PresentationAssociationEditorEvidence
 
     public static function cases(): array
     {
-        return array('query-edit-xml', 'query-edit-missing-xml', 'query-new',
+        // data_queries.php sends a new data query to the Symfony editor before rendering.
+        return array('query-edit-xml', 'query-edit-missing-xml',
             'query-association-edit', 'query-association-new');
     }
 
