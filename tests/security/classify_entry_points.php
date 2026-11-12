@@ -117,7 +117,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'install/background.php' => 'e5f6566d90a88eae13d0fa05c7d818a876f968bb75a37083f570d86642bbf237',
     'install/installer-bootstrap.php' => '1dc2ba4f219239ebf06e6f1da1d0423ef1203314244cec3a27b21a013b596793',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
-    'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
+    'lib/auth.php' => 'ddaff16afea2031d739a806b1269b4851c2b4392ecec46021014c62a2a5f3e88',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -132,7 +132,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
     'src/IdentityAccess/Infrastructure/Legacy/NativeSessionRevocation.php' => 'fda951991b7fa7e43deb90f51d3160cd51e43c5e7973cac9d4766223f73a9993',
     'include/csrf.php' => 'c1880ed0999e0a6d5b59c84b8b17efd99ce476ace40883ec4768a37178bcbe81',
-    'config/services.yaml' => 'e150c61380070728603407a9640db5c3ba727dbf1262290d21b424a5293eb46c',
+    'config/services.yaml' => 'bb7d9251805a80139d1a970e56c01eeb9896ae001dd685ad9029f8bb63599540',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -166,7 +166,7 @@ const ASSET_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
     'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
-    'config/services.yaml' => 'e150c61380070728603407a9640db5c3ba727dbf1262290d21b424a5293eb46c',
+    'config/services.yaml' => 'bb7d9251805a80139d1a970e56c01eeb9896ae001dd685ad9029f8bb63599540',
 ];
 
 function asset_authentication_review(string $root): ?string
@@ -303,7 +303,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
-    'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
+    'lib/auth.php' => 'ddaff16afea2031d739a806b1269b4851c2b4392ecec46021014c62a2a5f3e88',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -325,7 +325,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'c2b1a492167bb5e73b4b23ceb9869574f21393f6d6369a662e40d50f2f749944',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'e150c61380070728603407a9640db5c3ba727dbf1262290d21b424a5293eb46c',
+    'config/services.yaml' => 'bb7d9251805a80139d1a970e56c01eeb9896ae001dd685ad9029f8bb63599540',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2309,7 +2309,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'include/global.php' => 'd3b34a027c474472c32d95f4df1c0b30fe00a406daab99a24df1a65093618b48',
     'include/csrf.php' => 'c1880ed0999e0a6d5b59c84b8b17efd99ce476ace40883ec4768a37178bcbe81',
-    'lib/auth.php' => '6b593f70d7e23a46aca8dfdbf6ca95efa9cada71d69f1099860e8fe26c86f2ed',
+    'lib/auth.php' => 'ddaff16afea2031d739a806b1269b4851c2b4392ecec46021014c62a2a5f3e88',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',

@@ -130,6 +130,8 @@ services:
 
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
+        # Native workers construct this policy with their exact mutation PDO.
+        exclude: '../src/IdentityAccess/Infrastructure/Legacy/NativeAdministrativeActorPolicy.php'
 
     Kadupul\IdentityAccess\Domain\PasswordComplexity: ~
 
@@ -295,27 +297,19 @@ services:
     Kadupul\IdentityAccess\Contract\LocalePreference:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyLocalePreference
 
-    Kadupul\Alerting\Application\Command\SendTestMail: ~
-    Kadupul\Alerting\Infrastructure\Symfony\TestMailCommand: ~
-    Kadupul\Alerting\Infrastructure\Mail\InstallationTestMailDelivery: ~
-
-    Kadupul\Alerting\Application\Port\TestMailDelivery:
-        alias: Kadupul\Alerting\Infrastructure\Mail\InstallationTestMailDelivery
-
-    Kadupul\Alerting\Infrastructure\Mail\SmtpMessageSender: ~
-    Kadupul\Alerting\Application\Command\NotifyAdministrator: ~
-    Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorPreferences: ~
-    Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorRecipients: ~
-    Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministrativeMailDelivery: ~
+    # Adapters bind their ports with #[AsAlias]. Value objects, the enum and
+    # the per-message transport are constructed in code, never by the container.
+    Kadupul\Alerting\:
+        resource: '../src/Alerting/'
+        exclude:
+            - '../src/Alerting/Domain/'
+            - '../src/Alerting/Application/MailDeliveryFailed.php'
+            - '../src/Alerting/Infrastructure/Mail/EsmtpOnlyTransport.php'
+            - '../src/Alerting/Infrastructure/Mail/SmtpSecurity.php'
+            - '../src/Alerting/Infrastructure/Mail/SmtpSettings.php'
+    # Fetched by include/admin_notifications.php.
     Kadupul\Alerting\Infrastructure\Legacy\AdministratorNotificationBridge:
         public: true
-
-    Kadupul\Alerting\Application\Port\AdministratorNotificationPreferences:
-        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorPreferences
-    Kadupul\Alerting\Application\Port\AdministratorRecipients:
-        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorRecipients
-    Kadupul\Alerting\Application\Port\AdministrativeMailDelivery:
-        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministrativeMailDelivery
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
 
