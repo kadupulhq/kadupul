@@ -18,6 +18,10 @@ The close helper treats native handler write warnings as failure, delegates unre
 `outcome: denied` envelope. A mismatch or unconfirmed session close remains a
 fixed failed transport result; no actor is authenticated by the marker alone.
 
+The runner never returns that envelope as a result. It throws
+`BrowserWorkerDenied`, which a gateway of an opted-in worker must catch to render
+the access error.
+
 A reskin or hook-owned exit retains its original output and session behavior.
 The private transport refuses that non-JSON result; it does not infer denial from
 HTML or synthesize plugin HTTP behavior. Features requiring such behavior use the

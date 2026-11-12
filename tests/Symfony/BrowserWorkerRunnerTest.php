@@ -12,6 +12,7 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Contract\BrowserSession;
 use Kadupul\Platform\Contract\BrowserWorkerMode;
 use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerDenied;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorkerRunner;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -158,6 +159,13 @@ WORKER);
         }
         self::assertCount(1, $logger->records);
         self::assertSame($phase, $logger->records[0]['phase']);
+    }
+
+    public function testADeniedEnvelopeIsNeverReturnedAsAnAdmittedResult(): void
+    {
+        file_put_contents($this->directory . '/bin/legacy-probe.php', '<?php echo json_encode(["status" => "ok", "actor" => 7, "outcome" => "denied"]);');
+        $this->expectException(BrowserWorkerDenied::class);
+        $this->runner('POST')->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
     }
 
     public function testTimeoutStopsTheChildBeforeItCanFinish(): void

@@ -138,6 +138,10 @@ final readonly class LegacyBrowserWorkerRunner implements BrowserWorkerRunner
             throw new \RuntimeException('Console compatibility could not be confirmed.');
         }
 
+        if (($result['outcome'] ?? null) === 'denied') {
+            throw new BrowserWorkerDenied();
+        }
+
         $response = [];
         foreach ($result as $key => $value) {
             if (!is_string($key)) {
