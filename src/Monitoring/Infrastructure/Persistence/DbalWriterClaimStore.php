@@ -29,8 +29,14 @@ final readonly class DbalWriterClaimStore implements WriterClaimStore
     private const string SELECT = 'SELECT local_data_id, data_source_name, writer FROM kadupul_writer_ownership';
     private const string INSERT = 'INSERT INTO kadupul_writer_ownership (local_data_id, data_source_name, writer, claimed_at) VALUES (?, ?, ?, ?)';
 
+    /** Binds the store to the database connection and the clock that stamps each claim. */
     public function __construct(private Connection $database, private ClockInterface $clock) {}
 
+    /**
+     * True when a model-driven claim row exists for the field.
+     *
+     * @throws StoredBindingUnreadable when a stored row is not a valid model-driven claim
+     */
     public function holds(StorageField $field): bool
     {
         $rows = $this->database->fetchAllAssociative(self::SELECT . ' WHERE local_data_id = ? AND data_source_name = ?', [$field->localDataId, $field->name->value]);
@@ -41,6 +47,7 @@ final readonly class DbalWriterClaimStore implements WriterClaimStore
         return $rows !== [];
     }
 
+    /** Inserts the claim; false when the field already has one. */
     public function record(StorageField $field): bool
     {
         try {
@@ -57,6 +64,11 @@ final readonly class DbalWriterClaimStore implements WriterClaimStore
         return true;
     }
 
+    /**
+     * All claimed fields, ordered by local data id and name.
+     *
+     * @throws StoredBindingUnreadable when a stored row is not a valid model-driven claim
+     */
     public function all(): array
     {
         return array_map(self::field(...), $this->database->fetchAllAssociative(self::SELECT . ' ORDER BY local_data_id, data_source_name'));

@@ -44,11 +44,16 @@ final class MonitoringPlanner
     /** Protocols whose paths select list entries with [key=value], so a wildcard can be narrowed. */
     private const PATH_BASED = ['gnmi', 'netconf', 'restconf'];
 
+    /** Wires the read-only view of existing monitoring; the binding catalog is optional and leaves metrics unbound when absent. */
     public function __construct(
         private readonly ExistingMonitoring $existing,
         private readonly ?BindingCatalog $bindings = null,
     ) {}
 
+    /**
+     * Proposes one plan per applicable pack and reports why other packs were not selected, plus any overlap with existing monitoring.
+     * Nothing is stored or changed.
+     */
     public function plan(PlanningRequest $request): PlanningProposal
     {
         $existing = $this->existing->monitoredSeries($request->deviceId);
@@ -248,6 +253,7 @@ final class MonitoringPlanner
         return [$match, $targets === [] ? null : CollectionPlan::propose($request->deviceId, $pack, $targets, $request->generatedAt), $overlaps];
     }
 
+    /** The plan binding for a metric source that yields one resource, or null when there is no catalog, no single resource or no resolved binding. */
     private function binding(int $deviceId, MetricId $metric, ?ResourceId $resource, string $protocol): ?PlanBinding
     {
         if ($this->bindings === null || $resource === null) {

@@ -23,11 +23,13 @@ use Kadupul\Monitoring\Domain\WriterOwnership;
  */
 final class WriterOwnershipRegistry implements WriterOwnershipProbe
 {
+    /** Combines the legacy probe with a claim store, which defaults to one held in memory. */
     public function __construct(
         private readonly WriterOwnershipProbe $legacy,
         private readonly WriterClaimStore $claims = new InMemoryWriterClaimStore(),
     ) {}
 
+    /** The legacy answer when the field is unclaimed; model-driven when claimed and the legacy poller does not write it; otherwise a conflict. */
     public function ownership(StorageField $field): WriterOwnership
     {
         $legacy = $this->legacy->ownership($field);
@@ -38,6 +40,11 @@ final class WriterOwnershipRegistry implements WriterOwnershipProbe
         return $this->legacyHolds($legacy) ? WriterOwnership::Conflict : WriterOwnership::ModelDriven;
     }
 
+    /**
+     * Claims the field for model-driven collection and returns the resulting ownership.
+     *
+     * @throws OwnershipClaimRefused when the legacy poller writes the field or it is already in conflict
+     */
     public function claim(StorageField $field): WriterOwnership
     {
         if ($this->claims->holds($field)) {
@@ -60,6 +67,7 @@ final class WriterOwnershipRegistry implements WriterOwnershipProbe
         return $this->claims->all();
     }
 
+    /** True when the legacy poller writes the field, alone or in conflict. */
     private function legacyHolds(WriterOwnership $legacy): bool
     {
         return $legacy === WriterOwnership::LegacyPoller || $legacy === WriterOwnership::Conflict;

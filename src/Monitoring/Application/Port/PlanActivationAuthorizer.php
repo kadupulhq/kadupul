@@ -19,5 +19,6 @@ use Kadupul\Monitoring\Domain\PlanStatus;
  */
 interface PlanActivationAuthorizer
 {
+    /** True when the actor may move the plan to the target status. */
     public function isAuthorized(string $actorId, CollectionPlan $plan, PlanStatus $target): bool;
 }

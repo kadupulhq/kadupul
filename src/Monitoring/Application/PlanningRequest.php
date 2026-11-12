@@ -16,6 +16,7 @@ use Kadupul\Monitoring\Domain\InstalledPack;
 use Kadupul\Monitoring\Domain\PlanningPolicy;
 use Kadupul\Telemetry\Contract\ResourceId;
 
+/** Everything the planner needs for one device: discovered capabilities, installed packs, resources, endpoints and policy. */
 final readonly class PlanningRequest
 {
     /**

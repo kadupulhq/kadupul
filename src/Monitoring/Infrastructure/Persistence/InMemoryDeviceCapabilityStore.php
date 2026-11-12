@@ -12,16 +12,19 @@ namespace Kadupul\Monitoring\Infrastructure\Persistence;
 use Kadupul\Monitoring\Application\Port\DeviceCapabilityStore;
 use Kadupul\Monitoring\Domain\Capability;
 
+/** Holds device capabilities for one process; lost when it ends. */
 final class InMemoryDeviceCapabilityStore implements DeviceCapabilityStore
 {
     /** @var array<int, array<string, Capability>> */
     private array $byDevice = [];
 
+    /** The device's capabilities, ordered by key. */
     public function capabilitiesFor(int $deviceId): array
     {
         return array_values($this->byDevice[$deviceId] ?? []);
     }
 
+    /** Replaces the device's whole capability set. */
     public function replace(int $deviceId, array $capabilities): void
     {
         $keyed = [];
