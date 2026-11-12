@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** How much is known about a model on a device, from a bare claim to a verified reading. */
 enum CapabilityStatus: string
 {
     case Advertised = 'advertised';

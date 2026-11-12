@@ -18,5 +18,6 @@ use Kadupul\Monitoring\Domain\BindingKey;
  */
 interface BindingApprovalAuthorizer
 {
+    /** True when the actor may approve the binding with this key. */
     public function isAuthorized(string $actorId, BindingKey $key): bool;
 }

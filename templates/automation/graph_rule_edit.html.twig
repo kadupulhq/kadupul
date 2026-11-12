@@ -1,0 +1,29 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (rule ? 'Edit Graph Rule' : 'Add Graph Rule')|trans({}, 'graph_rule') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() of a fixed route without parameters. #}
+    <p><a href="{{ path('admin_graph_rules') }}">{{ 'Back to Graph Rules'|trans({}, 'graph_rule') }}</a></p>
+    <h1>{% if rule %}{{ 'Rule Selection [edit: %name%]'|trans({'%name%': rule.name}, 'graph_rule') }}{% else %}{{ 'Rule Selection [new]'|trans({}, 'graph_rule') }}{% endif %}</h1>
+    {% if saved %}<p role="status">{{ 'Graph rule saved.'|trans({}, 'graph_rule') }}</p>{% endif %}
+    {% if rule %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed legacy page with a URL encoded numeric ID. #}
+        <p><a href="{{ installation_path('automation_graph_rules.php') }}?{{ {action: 'edit', id: rule.id}|url_encode }}">{{ 'Device Selection and Graph Creation Criteria'|trans({}, 'graph_rule') }}</a></p>
+    {% else %}
+        <p>{{ 'Save the rule first; its Device Selection and Graph Creation Criteria are added afterwards.'|trans({}, 'graph_rule') }}</p>
+    {% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.snmp_query_id) }}
+        {{ form_row(form.graph_type_id) }}
+        {{ form_row(form.enabled) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'graph_rule') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

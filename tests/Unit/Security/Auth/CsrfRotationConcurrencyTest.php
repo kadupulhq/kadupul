@@ -319,7 +319,10 @@ test('supervisor timeout prevents a late remote SQL write from overtaking the ne
         expect(proc_close($process))->toBe(1)->and($error)->toBe('')
             ->and($output)->toContain('worker failed or exceeded its deadline')
             ->and($output)->not->toContain('New CSRF secret stored in the database.');
-        expect(microtime(true) - $started)->toBeGreaterThan(29)->toBeLessThan(33);
+        // The supervisor stops its worker after 30 s; the delayed remote write
+        // would finish after 35 s. Child start-up under coverage counts too, so
+        // only the write's own delay is a reliable upper bound.
+        expect(microtime(true) - $started)->toBeGreaterThan(29)->toBeLessThan(35);
         child_coverage_collect($coverage);
         $first = $connections['primary']->query('SELECT value FROM settings')->fetchColumn();
         expect(strlen($first))->toBe(64);

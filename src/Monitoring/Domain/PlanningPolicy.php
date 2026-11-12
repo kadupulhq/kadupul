@@ -9,8 +9,10 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Settings that decide which capabilities count for planning and whether new sources win over existing ones. */
 final readonly class PlanningPolicy
 {
+    /** Sets the two policy switches; callers use the named factories. */
     private function __construct(public bool $acceptAdvertised, public bool $preferNew) {}
 
     /** The pack schema's reading: only capabilities read back from the device count. */
@@ -31,6 +33,7 @@ final readonly class PlanningPolicy
         return new self($this->acceptAdvertised, true);
     }
 
+    /** True when the capability is verified, or advertised and the policy accepts advertised ones. */
     public function counts(Capability $capability): bool
     {
         return $capability->status === CapabilityStatus::Verified
