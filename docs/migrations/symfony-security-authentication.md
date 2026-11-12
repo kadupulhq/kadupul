@@ -280,10 +280,13 @@ bridge; the planned Symfony stateless CSRF manager is not yet in use.
 `include/layout.js` submits timeout, suspension and collector-state events using
 POST and the current token. Its target is an absolute same-origin URL, independent
 of a document's base element, and carries the reason in its query string. Without
-a token it navigates to confirmation. An expired session fails CSRF, and the
-native callback redirects to that URL by GET; with no authenticated session left,
-`logout.php?action=timeout` shows the timeout message instead of confirmation,
-because there is nothing to end. The Midwinter logout icon submits the same POST.
+a token it navigates to that URL by GET. A stale token fails CSRF, and the native
+callback redirects to the same URL by GET. `logout.php?action=timeout` then ends a
+live session when `csrf_request_is_same_origin()` shows the GET came from this
+site, as the collector pages do, and redirects to the timeout message; otherwise
+it shows confirmation. With no authenticated session left it shows the timeout
+message, because there is nothing to end. A GET with no action and no session
+redirects to `index.php`. The Midwinter logout icon submits the same POST.
 
 Server-side logouts end the session in the code path that decided to log out,
 which already holds the authenticated session: a completed password change (a

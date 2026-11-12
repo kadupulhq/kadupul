@@ -4,6 +4,9 @@
 import copy
 import hashlib
 import secrets
+from urllib.error import HTTPError
+from urllib.parse import urlencode
+from urllib.request import Request
 
 from harness import Session
 
@@ -43,6 +46,18 @@ def verify_local_authentication(harness, database_sessions, check):
 
     def actor(session):
         return session.request('/app.php/session')
+
+    def browser(session, path, site, fields=None):
+        # Sec-Fetch-Site is what a browser reports for the whole redirect
+        # chain; urllib carries it to the redirected GET as well.
+        data = None if fields is None else urlencode(fields).encode()
+        try:
+            response = session.opener.open(Request(harness.base + path, data=data, headers={'Sec-Fetch-Site': site}), timeout=30)
+        except HTTPError as error:
+            response = error
+        with response:
+            response.read()
+            return response.url.replace(harness.base, '<BASE>')
 
     def submit(session, supplied=password, name=username, remember=False, csrf=True):
         form = session.request('/index.php')
@@ -170,6 +185,22 @@ def verify_local_authentication(harness, database_sessions, check):
         jar(replay).set_cookie(remembered_after)
         replay.request('/index.php')
         check(actor(replay)['status'] == 401, 'confirmed logout revokes remembered restoration')
+
+        # The idle timer posts with the page's token, which may be stale.
+        stale_timeout = {'action': 'timeout', '__csrf_magic': 'expired'}
+        idle = admitted(changed_password)
+        browser(idle, '/logout.php?action=timeout', 'cross-site', stale_timeout)
+        check(actor(idle).get('json', {}).get('id') == user_id, 'cross-site timeout logout with a stale token retains the session')
+        browser(idle, '/logout.php?action=timeout', 'cross-site')
+        check(actor(idle).get('json', {}).get('id') == user_id, 'cross-site timeout GET only confirms and retains the session')
+        landed = browser(idle, '/logout.php?action=timeout', 'same-origin', stale_timeout)
+        check(actor(idle)['status'] == 401 and landed == '<BASE>/logout.php',
+              'idle timeout logout with a stale token ends the session and reports it')
+        tokenless = admitted(changed_password)
+        browser(tokenless, '/logout.php?action=timeout', 'same-origin')
+        check(actor(tokenless)['status'] == 401, 'idle timeout logout without a token ends the session')
+        anonymous = Session(harness.base)
+        check('logout.php' not in anonymous.request('/logout.php')['url'], 'logout without a session redirects instead of confirming')
 
         setting('secpass_forceold', 'on')
         setting('secpass_minlen', '24')

@@ -2298,7 +2298,7 @@ const NATIVE_SESSION_FIREWALL_SOURCES = [
 
 // This route renders only an in-process native logout presentation object.
 const LOGOUT_PRESENTATION_SOURCES = [
-    'logout.php' => '3aece22245c571449f8dfb9aabe1f134839527b61c7dc3c3055f8ec77921a0f7',
+    'logout.php' => 'e997ddbedfbe14e815051195f9a0514f3602dbdca1637a9751ae4613befd4285',
     'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => '49a1a9f5ca2b68442eaa237b24964a11093b40ee1c9cebbc1e88e562719e2cb7',
     'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php' => '2cc6ef8df06898926492ec80ac06f103f630e44ba7db763547ff1dfd2e6e0823',
     'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php' => '20a13f081e47d27cad5832203b3acfcd75930167b2d21a6547ca6f63a9675eba',
@@ -2322,7 +2322,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'src/IdentityAccess/Application/Port/AccountLockoutStatus.php' => '54d4a8d16b5df9320d99752c35e5173e96ceac8500eab86945115809e41c1e32',
     'src/IdentityAccess/Application/Query/IsAccountLocked.php' => 'cdf547461024111a7f55f5613717404f916a53f0c8e613a755f6a764d1492eed',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
-    'include/layout.js' => '3dee285268f2980d3b6f225f0a32e913241506a9d1094a1a7207b5328724f521',
+    'include/layout.js' => '87453b45fe458b9362dc4a4d14753ec2aea2ab0b3b77027bc516b9b30b6e1919',
     'include/vendor/csrf/csrf-magic.php' => '4159c4d545c18181fbda73c99d00722de5dc9138ad1e75830d45740ce09511f0',
     'include/vendor/csrf/csrf-conf.php' => '61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514',
 ];

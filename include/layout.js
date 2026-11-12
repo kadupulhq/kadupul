@@ -3237,7 +3237,8 @@ function submitLogout(action) {
 		target.searchParams.set('action', action);
 	}
 	if (typeof csrfMagicToken !== 'string' || csrfMagicToken === '') {
-		// Missing tokens require a fresh confirmation page, never a bare POST.
+		// Never send a bare POST. logout.php ends a timed-out session on this
+		// same-origin GET; other actions get a fresh confirmation page.
 		document.location.assign(target.href);
 		return false;
 	}
