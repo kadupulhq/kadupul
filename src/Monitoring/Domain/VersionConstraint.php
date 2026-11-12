@@ -25,6 +25,11 @@ final readonly class VersionConstraint
     /** @param list<list<array{string, list<int>}>> $alternatives */
     private function __construct(private array $alternatives) {}
 
+    /**
+     * Parses a range such as ^1.0, >=1.2 <2.0 or 1.2.*.
+     *
+     * @throws InvalidVersionConstraint when the text is empty or any part is not a version, wildcard or operator with a version
+     */
     public static function parse(string $text): self
     {
         $trimmed = trim($text);
@@ -39,11 +44,17 @@ final readonly class VersionConstraint
         return new self($alternatives);
     }
 
+    /** True when the text is a plain version number this class can compare. */
     public static function isVersion(string $version): bool
     {
         return self::operand($version, self::STABLE) !== null;
     }
 
+    /**
+     * True when the version meets every condition of at least one alternative.
+     *
+     * @throws \InvalidArgumentException when $version is not a version number
+     */
     public function isSatisfiedBy(string $version): bool
     {
         $candidate = self::operand($version, self::STABLE)
@@ -155,6 +166,7 @@ final readonly class VersionConstraint
         return $next;
     }
 
+    /** Applies a comparison operator to the result of a three-way comparison. */
     private static function holds(int $comparison, string $operator): bool
     {
         return match ($operator) {
@@ -167,6 +179,11 @@ final readonly class VersionConstraint
         };
     }
 
+    /**
+     * Reports an unparsable term.
+     *
+     * @throws InvalidVersionConstraint always
+     */
     private static function fail(string $term, string $text): never
     {
         throw new InvalidVersionConstraint(sprintf('"%s" in "%s" is not a version, a wildcard such as 1.2.*, or an operator followed by a version.', $term, $text));

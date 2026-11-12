@@ -15,5 +15,6 @@ use Kadupul\Monitoring\Domain\WriterOwnership;
 /** Answers who writes a storage field today. It never changes the answer. */
 interface WriterOwnershipProbe
 {
+    /** The writer that owns the field now. */
     public function ownership(StorageField $field): WriterOwnership;
 }

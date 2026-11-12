@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** The review state of a binding. Only approved and verified bindings may be used for storage. */
 enum BindingStatus: string
 {
     case Proposed = 'proposed';
@@ -17,6 +18,7 @@ enum BindingStatus: string
     case Rejected = 'rejected';
     case Stale = 'stale';
 
+    /** Whether a binding in this status may move to $next; rejected is final. */
     public function canMoveTo(self $next): bool
     {
         return match ($this) {

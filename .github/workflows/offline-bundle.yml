@@ -61,7 +61,7 @@ jobs:
         backend: [files, database]
         # Each shard starts its own stack and runs part of session_bridge.py;
         # SHARDS there must list exactly these numbers.
-        shard: [1, 2, 3]
+        shard: [1, 2, 3, 4, 5]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -93,7 +93,7 @@ jobs:
       - name: Verify complete shared authentication backend over HTTP
         env:
           SESSION_BACKEND: ${{ matrix.backend }}
-          AUTH_SHARD: ${{ matrix.shard }}/3
+          AUTH_SHARD: ${{ matrix.shard }}/5
           AUTH_PROJECT: kadupul-offline-auth-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.backend }}-${{ matrix.shard }}
         run: |
           case "$SESSION_BACKEND" in

@@ -23,6 +23,11 @@ final readonly class SemanticVersion
         private string $text,
     ) {}
 
+    /**
+     * Parses a version string such as 1.4.0 or 2.0.0-rc.1+build.5.
+     *
+     * @throws \InvalidArgumentException when the text is not a semantic version or a numeric part exceeds nine digits
+     */
     public static function parse(string $text): self
     {
         if (preg_match(self::PATTERN, $text, $m) !== 1 || strlen($m[1]) > 9 || strlen($m[2]) > 9 || strlen($m[3]) > 9) {
@@ -33,11 +38,17 @@ final readonly class SemanticVersion
         return new self((int) $m[1], (int) $m[2], (int) $m[3], $preRelease, $text);
     }
 
+    /** The version text as it was parsed. */
     public function toString(): string
     {
         return $this->text;
     }
 
+    /**
+     * Orders two versions by SemVer precedence; build metadata is ignored.
+     *
+     * @return int negative when this version is lower, zero when equal in precedence, positive when higher
+     */
     public function compare(self $other): int
     {
         $core = [$this->major, $this->minor, $this->patch] <=> [$other->major, $other->minor, $other->patch];
@@ -61,6 +72,7 @@ final readonly class SemanticVersion
         return count($this->preRelease) < count($other->preRelease) ? -1 : 0;
     }
 
+    /** Orders two pre-release identifiers: numeric ones numerically and below alphanumeric ones, the rest as strings. */
     private static function compareIdentifier(string $a, string $b): int
     {
         $aNumeric = ctype_digit($a);

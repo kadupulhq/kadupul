@@ -20,6 +20,15 @@ use Kadupul\Telemetry\Contract\ResourceId;
  */
 final readonly class BindingResolution
 {
+    /**
+     * Builds a resolution; the storage details must be present exactly when the status is resolved.
+     *
+     * @param string $reason why the status is what it is, for logs and operators
+     * @param string|null $bindingId opaque binding id; set only when resolved
+     * @param WriterOwnership|null $ownership who writes the field; set only when resolved
+     * @param string|null $rrdDataSourceName field name inside the stored series; set only when resolved
+     * @throws \InvalidArgumentException when the storage details are present without a resolved status, or missing from a resolved one
+     */
     public function __construct(
         public ResolutionStatus $status,
         public int $deviceId,
@@ -41,11 +50,13 @@ final readonly class BindingResolution
         }
     }
 
+    /** True when exactly one approved binding was found. */
     public function isResolved(): bool
     {
         return $this->status === ResolutionStatus::Resolved;
     }
 
+    /** True only for a resolved binding whose field is owned by model-driven collection. */
     public function permitsModelDrivenWrites(): bool
     {
         return $this->isResolved() && $this->ownership === WriterOwnership::ModelDriven;

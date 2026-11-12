@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** What one collector connection gathers over one protocol: where, how often, and which metrics. */
 final readonly class PlanTarget
 {
     /**

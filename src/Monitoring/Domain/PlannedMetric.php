@@ -12,6 +12,7 @@ namespace Kadupul\Monitoring\Domain;
 use Kadupul\Telemetry\Contract\MetricId;
 use Kadupul\Telemetry\Contract\MetricType;
 
+/** One metric a collector is asked to gather, with where its value comes from. */
 final readonly class PlannedMetric
 {
     /**

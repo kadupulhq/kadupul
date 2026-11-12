@@ -28,6 +28,7 @@ use Kadupul\Monitoring\Domain\PlanTransitionRejected;
  */
 final class ActivateCollectionPlan
 {
+    /** Wires the plan store, pack repository and activation policy; without an authorizer every step is denied. */
     public function __construct(
         private readonly CollectionPlanStore $plans,
         private readonly PackRepository $packs,
@@ -35,6 +36,12 @@ final class ActivateCollectionPlan
         private readonly ?PlanActivationAuthorizer $authorizer = null,
     ) {}
 
+    /**
+     * Stores a proposed plan as approved.
+     *
+     * @throws PlanActivationDenied when the policy or the authorizer refuses the actor
+     * @throws PlanTransitionRejected when the plan is not proposed
+     */
     public function approve(CollectionPlan $proposed, string $actorId): CollectionPlan
     {
         $this->authorize($proposed, $actorId, PlanStatus::Approved);
@@ -44,6 +51,13 @@ final class ActivateCollectionPlan
         return $approved;
     }
 
+    /**
+     * Makes a stored, approved plan active and supersedes the device's other active plan for the same pack.
+     * The pack moves from installed to active on its first activated plan.
+     *
+     * @throws PlanActivationDenied when the policy or the authorizer refuses the actor
+     * @throws PlanTransitionRejected when the plan is not stored or is not approved
+     */
     public function activate(string $planId, string $actorId): CollectionPlan
     {
         $plan = $this->plans->find($planId)
@@ -64,6 +78,11 @@ final class ActivateCollectionPlan
         return $active;
     }
 
+    /**
+     * Checks the policy first, then that an authorizer is configured and accepts the actor.
+     *
+     * @throws PlanActivationDenied when any of those checks fails
+     */
     private function authorize(CollectionPlan $plan, string $actorId, PlanStatus $target): void
     {
         $this->policy->assertPermits($plan, $target);

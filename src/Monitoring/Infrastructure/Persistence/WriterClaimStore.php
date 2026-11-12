@@ -18,6 +18,7 @@ use Kadupul\Monitoring\Domain\StorageField;
  */
 interface WriterClaimStore
 {
+    /** True when the field has a model-driven claim. */
     public function holds(StorageField $field): bool;
 
     /** False when the field was already claimed, whether by this caller or a concurrent one. */

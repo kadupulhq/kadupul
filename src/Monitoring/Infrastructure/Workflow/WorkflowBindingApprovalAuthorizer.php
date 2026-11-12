@@ -21,8 +21,10 @@ use Symfony\Component\Workflow\WorkflowInterface;
  */
 final readonly class WorkflowBindingApprovalAuthorizer implements BindingApprovalAuthorizer
 {
+    /** Binds the authorizer to the binding workflow. */
     public function __construct(private WorkflowInterface $bindingWorkflow) {}
 
+    /** True when the workflow enables the approve transition for this actor and key. */
     #[\Override]
     public function isAuthorized(string $actorId, BindingKey $key): bool
     {

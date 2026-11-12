@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when the activation policy refuses a plan status change. */
 final class PlanActivationDenied extends \DomainException {}
