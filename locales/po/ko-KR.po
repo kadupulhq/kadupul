@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "그래프가 없습니다"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "이름 보고"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "반환"
@@ -888,8 +888,9 @@ msgstr "기기 삭제"
 msgid "Delete Device(s)"
 msgstr "기기 삭제"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "설명"
 
@@ -1162,7 +1163,7 @@ msgstr "제목 형식"
 msgid "rule_name"
 msgstr "규칙 이름"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d 분"
@@ -2197,10 +2198,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "데이터 쿼리 [편집 :  %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "데이터 쿼리 [신규]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "사용중인 데이터 쿼리는 삭제할 수 없습니다. In은 Graph 또는 Graph Template에 의해 참조되는 것으로 정의됩니다."
 
@@ -2226,6 +2223,10 @@ msgstr[0] "데이터 쿼리 삭제"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "데이터 쿼리 삭제"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2341,6 +2342,14 @@ msgstr "이 데이터 쿼리를 사용하는 그래프 템플릿 수입니다."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "이 데이터 쿼리를 사용하는 그래프의 수입니다."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML 경로"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4061,14 +4070,6 @@ msgstr "부스트 후"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Legacy)"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7492,10 +7493,6 @@ msgid "X-Files Factor"
 msgstr "X 파일 요소"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML 경로"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE] : 그래프 항목의 값. <br/> [TICK] : 눈금 선의 분율. <br/> [SHIFT] : 시간 오프셋 (초)입니다."
 
@@ -7539,11 +7536,6 @@ msgstr "% d 높음 / 낮음 샘플"
 #, php-format
 msgid "%d Processes"
 msgstr "프로세스 % d 개"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7662,14 +7654,6 @@ msgstr "고급"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "이 일수 이후에는 영업 시간이 그래프에 추가되지 않습니다. <br/>추천: 62일"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8257,10 +8241,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) 비틀기 사용 설정"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "주문형 RRD 업데이트 활성화"
 
@@ -8539,10 +8519,6 @@ msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8873,10 +8849,6 @@ msgstr "내 브라우저 시간대"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9393,10 +9365,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "그래프가 있고 데이터 원본이 기본적으로 선택되어 있어야합니다."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "집합"
 
@@ -9824,10 +9792,6 @@ msgstr "Kadupul 시스템에 문제가 발생할 때 전자 메일을 자동으�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul가 새로운 Web Basic 및 LDAP 사용자를위한 템플릿으로 사용할 사용자의 이름. 기본적으로 &#39;손님&#39;입니다. 이 사용자 계정은 선택시 로그인 할 수 없게됩니다."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

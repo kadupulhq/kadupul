@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Графіків не знайдено"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Ім'я Звіту"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Повернутись"
@@ -886,8 +886,9 @@ msgstr "Видалити Пристрій"
 msgid "Delete Device(s)"
 msgstr "Видалити Пристрій(ої)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Опис"
 
@@ -1160,7 +1161,7 @@ msgstr "Формат Заголовку"
 msgid "rule_name"
 msgstr "ім'я_правила"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Хвилина"
@@ -2202,10 +2203,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Запити Даних [редагування: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Запити Даних [новий]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Запити Даних котрі використовуються не можуть бути Видаленими. Використовуються означає, що на них посилаються Графік чи Шаблон Графіків."
 
@@ -2235,6 +2232,10 @@ msgid_plural "Duplicate Data Queries"
 msgstr[0] "Видалити Запит Даних"
 msgstr[1] "Видалити Запити Даних"
 msgstr[2] "Видалити Запити Даних"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2350,6 +2351,14 @@ msgstr "Кількість Шаблонів Графіків, що викори�
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Кількість Графіків, що використовують цей Запит Даних."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr ""
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4095,14 +4104,6 @@ msgstr ""
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Агреговане"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7519,10 +7520,6 @@ msgid "X-Files Factor"
 msgstr ""
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr ""
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr ""
 
@@ -7565,11 +7562,6 @@ msgstr ""
 #: include/global_settings.php
 #, php-format
 msgid "%d Processes"
-msgstr ""
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
 msgstr ""
 
 #: include/global_settings.php
@@ -7688,14 +7680,6 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
 msgstr ""
 
 #: include/global_settings.php
@@ -8280,10 +8264,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr ""
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr ""
 
@@ -8561,10 +8541,6 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
-msgstr ""
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
 msgstr ""
 
 #: include/global_settings.php
@@ -8893,10 +8869,6 @@ msgstr ""
 
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Native Alerting"
 msgstr ""
 
 #: include/global_settings.php
@@ -9412,10 +9384,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr ""
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr ""
 
@@ -9841,10 +9809,6 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
-msgstr ""
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
 msgstr ""
 
 #: include/global_settings.php

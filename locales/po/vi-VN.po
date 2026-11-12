@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Không tìm thấy đồ thị"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Tên report"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Trở về trang cài đặt bắt buộc Plugins"
@@ -888,8 +888,9 @@ msgstr "Xóa thiết bị"
 msgid "Delete Device(s)"
 msgstr "Xóa thiết bị"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Mô tả"
 
@@ -1162,7 +1163,7 @@ msgstr "Định dạng tiêu đề:"
 msgid "rule_name"
 msgstr "Tên quy tắc"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d phút"
@@ -2193,10 +2194,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Truy vấn dữ liệu [chỉnh sửa: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Truy vấn dữ liệu [mới]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Truy vấn dữ liệu đang sử dụng không thể bị xóa. Đang sử dụng được định nghĩa là được tham chiếu bởi Biểu đồ hoặc Mẫu biểu đồ."
 
@@ -2222,6 +2219,10 @@ msgstr[0] "Xóa truy vấn dữ liệu"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Xóa truy vấn dữ liệu"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2337,6 +2338,14 @@ msgstr "Số lượng mẫu biểu đồ sử dụng truy vấn dữ liệu này
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Số lượng biểu đồ sử dụng truy vấn dữ liệu này."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "Đường dẫn XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4057,14 +4066,6 @@ msgstr "Sau khi tăng"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "cốt liệu"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7489,10 +7490,6 @@ msgid "X-Files Factor"
 msgstr "Yếu tố X-Files"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "Đường dẫn XML"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: Giá trị của mục biểu đồ. <br/> [TICK]: Phân số cho dòng đánh dấu. <br/> [SHIFT]: Thời gian bù tính bằng giây."
 
@@ -7536,11 +7533,6 @@ msgstr "% d Mẫu cao / thấp"
 #, php-format
 msgid "%d Processes"
 msgstr "% d Quá trình"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7658,14 +7650,6 @@ msgstr "Nâng cao"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
 msgstr ""
 
 #: include/global_settings.php
@@ -8253,10 +8237,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Kích hoạt tinh chỉnh Lotus Notes (R)"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Kích hoạt cập nhật RRD theo yêu cầu"
 
@@ -8535,10 +8515,6 @@ msgstr "Số liệu thống kê hàng ngày nên được cập nhật thường
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Số liệu thống kê hàng ngày nên được cập nhật thường xuyên như thế nào?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8868,10 +8844,6 @@ msgstr ""
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9388,10 +9360,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Theo mặc định các đồ thị có và nguồn dữ liệu có được kiểm tra."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Cốt liệu"
 
@@ -9818,10 +9786,6 @@ msgstr "Tên của tài khoản quản trị chính sẽ tự động nhận Ema
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Tên người dùng mà Kadupul sẽ sử dụng làm mẫu cho người dùng Web Basic và LDAP mới; là &#39;khách&#39; theo mặc định. Tài khoản người dùng này sẽ bị vô hiệu hóa khi đăng nhập khi được chọn."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Grafik Bulunamadı"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Rapor Adı"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Dönüş"
@@ -888,8 +888,9 @@ msgstr "Aygıtları Sil"
 msgid "Delete Device(s)"
 msgstr "Aygıtları Sil"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Açıklama"
 
@@ -1162,7 +1163,7 @@ msgstr "Başlık Formatı"
 msgid "rule_name"
 msgstr "Kural Adı"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "% d dakika"
@@ -2201,10 +2202,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Veri Sorguları [değiştir: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Veri Sorguları [yeni]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Kullanımdaki Veri Sorguları Silinemez. Kullanımda, bir Grafik veya Grafik Şablonu tarafından referans olarak tanımlanır."
 
@@ -2232,6 +2229,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Veri Sorgusunu Sil"
 msgstr[1] "Veri Sorgusunu Sil"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2347,6 +2348,14 @@ msgstr "Bu Veri Sorgusunu kullanan Grafik Şablonları sayısı."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Bu Veri Sorgusunu kullanan Grafiklerin sayısı."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML Yolu"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4083,14 +4092,6 @@ msgstr "Arttırdıktan Sonra"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Toplam"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7520,10 +7521,6 @@ msgid "X-Files Factor"
 msgstr "X Dosyaları Faktörü"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML Yolu"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: Grafik öğesinin değeri. <br/> [TICK]: Onay çizgisinin kesri. <br/> [SHIFT]: Zaman saniye cinsinden mahsup edilir."
 
@@ -7567,11 +7564,6 @@ msgstr "% d Yüksek / Düşük Örnekler"
 #, php-format
 msgid "%d Processes"
 msgstr "% d İşlemler"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7690,14 +7682,6 @@ msgstr "Gelişmiş"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Bu gün sayısından sonra çalışma saatleri grafiğe eklenmeyecektir. <br/>Önerilen: 62 gün"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8286,10 +8270,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) ayarını etkinleştirme"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "İsteğe Bağlı RRD Güncellemesini Etkinleştir"
 
@@ -8569,10 +8549,6 @@ msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8906,10 +8882,6 @@ msgstr "Tarayıcımın Saat Dilimi"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN en"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9427,10 +9399,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Grafikleri ve Veri Kaynakları Varsa Varsayılan Olarak Kontrol Edilmeli."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Agregalar"
 
@@ -9861,10 +9829,6 @@ msgstr "Kadupul sisteminde sorun yaşandığında otomatik olarak E-posta alacak
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul&#39;nin yeni Web Basic ve LDAP kullanıcıları için şablon olarak kullanacağı kullanıcının adı; varsayılan olarak &#39;konuk&#39; şeklindedir. Bu kullanıcı hesabı seçildikten sonra giriş yapamaz."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

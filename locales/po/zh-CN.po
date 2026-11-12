@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "未找到图形"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "报告名称"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "返回"
@@ -886,8 +886,9 @@ msgstr "删除设备"
 msgid "Delete Device(s)"
 msgstr "删除图形(s)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "描述"
 
@@ -1160,7 +1161,7 @@ msgstr "标题格式"
 msgid "rule_name"
 msgstr "规则_名"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d分钟"
@@ -2193,10 +2194,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "数据查询 [编辑: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "数据查询[新建]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "正在使用的数据查询不能被删除. 在使用中被定义为被图形或图形模板引用."
 
@@ -2222,6 +2219,10 @@ msgstr[0] "删除数据查询"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "删除数据查询"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2337,6 +2338,14 @@ msgstr "使用此数据查询的图形模板的数量."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "使用此数据查询的图的数量."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML 路径"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4056,14 +4065,6 @@ msgstr "Boost 之后"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "聚合"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7484,10 +7485,6 @@ msgid "X-Files Factor"
 msgstr "X Files 因子"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML 路径"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE|VRULE]:图形项目的值.<br/> [TICK]:刻度线的分数.<br/>[SHIFT]:以秒为单位的时间偏移量."
 
@@ -7531,11 +7528,6 @@ msgstr "%d 高/低 样本"
 #, php-format
 msgid "%d Processes"
 msgstr "%d进程"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7654,14 +7646,6 @@ msgstr "高级"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "在此天数之后，营业时间将不会添加到图表中。 <br/>建议：62天"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8250,10 +8234,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "开启Lotus Notes (R) 优化"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "开启RRD 按需更新"
 
@@ -8532,10 +8512,6 @@ msgstr "每天统计应该多频繁一次更新?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "每天统计应该多频繁一次更新?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8866,10 +8842,6 @@ msgstr "我的浏览器时区"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9385,10 +9357,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "如果有图和数据源,默认情况下会被检查."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "聚合"
 
@@ -9818,10 +9786,6 @@ msgstr "当Kadupul 系统遇到问题时将自动接收电子邮件的主管理�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul 将用作新Web Basic 和LDAP 用户模板的用户名; 默认为 'guest', 被选中时,将禁止此用户帐户登录."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

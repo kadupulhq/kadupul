@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -340,11 +340,11 @@ msgid "No Graphs Found"
 msgstr "Ningún gráfico encontrado"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -397,8 +397,8 @@ msgstr "Nombre de Reporte"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Regresar"
@@ -883,8 +883,9 @@ msgstr "Eliminar Dispositivo"
 msgid "Delete Device(s)"
 msgstr "Eliminar Dispositivo(s)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Descripción"
 
@@ -1157,7 +1158,7 @@ msgstr "Formato de título"
 msgid "rule_name"
 msgstr "nombre_regla"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Minuto"
@@ -2196,10 +2197,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Consulta de datos [editar: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Consulta de datos [Nuevo]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Consultas de datos que están en uso no pueden ser borradas. En uso significa que están siendo referenciadas por un gráfico o una plantilla de gráficos."
 
@@ -2227,6 +2224,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Eliminar consulta de datos"
 msgstr[1] "Eliminar consultas de datos"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2342,6 +2343,14 @@ msgstr "El número de plantillas de gráficos usando esta consulta de datos."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "El número de gráficos usando esta consulta de datos."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "Ubicación de XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4074,14 +4083,6 @@ msgstr "Después de Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Aggregate"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7502,10 +7503,6 @@ msgid "X-Files Factor"
 msgstr "Factor Archivos-X"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "Ubicación de XML"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE|VRULE]: El valor del item de gráfico.<br/> [TICK]: La fracción de la línea de tilde.<br/> [SHIFT]: El desplazamiento de tiempo en segundos."
 
@@ -7549,11 +7546,6 @@ msgstr "%d Muestras Altas/Bajas"
 #, php-format
 msgid "%d Processes"
 msgstr "Procesos %d"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7672,14 +7664,6 @@ msgstr "Avanzado"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Después de este número de días, el horario comercial no se añadirá al gráfico. <br/>Recomendado: 62 días"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8266,10 +8250,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Habilitar tweak para Lotus Notes (R)"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Habilitar actualización RRD bajo demanda"
 
@@ -8549,10 +8529,6 @@ msgstr "Cuan frecuente se deberían actualizar las estadísticas diarias?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Cuan frecuente se deberían actualizar las estadísticas diarias?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8881,10 +8857,6 @@ msgstr "Zona horaria de mis navegadores"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN's"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9400,10 +9372,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Debería el Contiene gráficos y Data Sources estar activado por defecto."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Mostrar detalles de dispositivo"
 
@@ -9830,10 +9798,6 @@ msgstr "El nombre de la cuenta administrativa primaria que recibirá automática
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "El nombre de usuario que Kadupul usará como Plantilla para nuevos usuarios web básicos y LDAP; es 'invitado' por defecto. Esta cuenta de usuario será deshabilitada para iniciar sesión al ser seleccionada."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

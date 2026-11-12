@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "कोई रेखांकन नहीं मिला"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "रिपोर्ट का नाम"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "वापसी"
@@ -891,8 +891,9 @@ msgstr "उपकरण हटाएं"
 msgid "Delete Device(s)"
 msgstr "उपकरण हटाएं"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "विवरण"
 
@@ -1166,7 +1167,7 @@ msgstr "शीर्षक प्रारूप"
 msgid "rule_name"
 msgstr "नियम का नाम"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "% d मिनट"
@@ -2208,10 +2209,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "डेटा क्वेरी [संपादित करें: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "डेटा क्वेरी [नया]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "उपयोग में आने वाली डेटा क्वेरीज़ को हटाया नहीं जा सकता। उपयोग में परिभाषित किया जा रहा है या तो एक ग्राफ या एक ग्राफ टेम्पलेट द्वारा संदर्भित किया जा रहा है।"
 
@@ -2239,6 +2236,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "डेटा क्वेरी हटाएं"
 msgstr[1] "डेटा क्वेरी हटाएं"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2354,6 +2355,14 @@ msgstr "इस डेटा क्वेरी का उपयोग करक�
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "इस डेटा क्वेरी का उपयोग करके ग्राफ़ की संख्या।"
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML पथ"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4090,14 +4099,6 @@ msgstr "बूस्ट के बाद"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "कुल"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,10 +7528,6 @@ msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML पथ"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: ग्राफ़ आइटम का मूल्य। <br/> [टिक]: टिक लाइन के लिए अंश। <br/> [SHIFT]: समय सेकंड में ऑफसेट होता है।"
 
@@ -7574,11 +7571,6 @@ msgstr "% d उच्च / निम्न नमूने"
 #, php-format
 msgid "%d Processes"
 msgstr "% d प्रक्रियाएं"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7700,14 +7692,6 @@ msgstr "उन्नत"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "दिनों की इस संख्या के बाद, ग्राफ़ में व्यावसायिक घंटे नहीं जोड़े जाएँगे। <br/>सुझाया गया: 62 दिन"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8299,10 +8283,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "लोटस नोट्स (आर) को सक्षम करें"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "ऑन-डिमांड आरआरडी अपडेट करना सक्षम करें"
 
@@ -8583,10 +8563,6 @@ msgstr "डेली स्टैट्स को कितनी बार अ�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "डेली स्टैट्स को कितनी बार अपडेट किया जाना चाहिए?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8922,10 +8898,6 @@ msgstr "मेरे ब्राउज़र का टाइमज़ोन"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN के"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9443,10 +9415,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "क्या डिफ़ॉल्ट रूप से रेखांकन और डेटा स्रोत होना चाहिए।"
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "समुच्चय"
 
@@ -9886,10 +9854,6 @@ msgstr "प्राथमिक प्रशासनिक खाते का
 #, fuzzy
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "उपयोगकर्ता का नाम जिसे Kadupul नए वेब बेसिक और एलडीएपी उपयोगकर्ताओं के लिए टेम्पलेट के रूप में उपयोग करेगा; डिफ़ॉल्ट रूप से &#39;अतिथि&#39; है। यह उपयोगकर्ता खाता चयनित होने पर लॉगिंग से अक्षम हो जाएगा।"
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

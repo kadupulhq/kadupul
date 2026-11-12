@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:38-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "לא נמצאו גרפים"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "שם הדוח"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "חזרה אל עריכת פוסט"
@@ -889,8 +889,9 @@ msgstr "מחק מכשירים"
 msgid "Delete Device(s)"
 msgstr "מחק מכשירים"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "תיאור"
 
@@ -1163,7 +1164,7 @@ msgstr "פורמט כותרת"
 msgid "rule_name"
 msgstr "שם החוק"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "‫%d דקה"
@@ -2212,10 +2213,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "שאילתות נתונים [עריכה: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "שאילתות נתונים [חדש]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "לא ניתן למחוק שאילתות נתונים שנמצאות בשימוש. בשימוש מוגדר להיות מופנים על ידי גרף או תבנית גרף."
 
@@ -2247,6 +2244,10 @@ msgstr[0] "שאילתת נתונים כפולה"
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2362,6 +2363,14 @@ msgstr "מספר תבניות הגרפים באמצעות שאילתת הנתו�
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "מספר הגרפים באמצעות שאילתת נתונים זו."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "נתיב XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -4122,14 +4131,6 @@ msgstr "לאחר Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "מצטבר"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7553,10 +7554,6 @@ msgid "X-Files Factor"
 msgstr "X- קבצים פקטור"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "נתיב XML"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE: VRULE]: הערך של פריט התרשים. <br/> [TICK]: את השבר עבור קו תווית. <br/> [SHIFT]: הזמן מקזז בשניות."
 
@@ -7600,11 +7597,6 @@ msgstr "% d גבוה / נמוך דוגמאות"
 #, php-format
 msgid "%d Processes"
 msgstr "% d תהליכים"
-
-#: include/global_settings.php
-#, php-format
-msgid "%d Rules"
-msgstr ""
 
 #: include/global_settings.php
 #, php-format
@@ -7724,14 +7716,6 @@ msgstr "מתקדם"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "לאחר מספר ימים זה, שעות הפעילות לא יתווספו לגרף. <br/>מומלץ: 62 ימים"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8321,10 +8305,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "אפשר לצבוט Lotus Notes (R)"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "אפשר על פי דרישה RRD מעדכן"
 
@@ -8603,10 +8583,6 @@ msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יו
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "כמה תכופים יש לעדכן נתונים סטטיסטיים יומיים?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8939,10 +8915,6 @@ msgstr "אזור הזמן של הדפדפנים שלי"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "של נאן"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9460,10 +9432,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "האם יש לבדוק את הגרפים ואת מקורות הנתונים על פי ברירת המחדל."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "אגרגטים"
 
@@ -9895,10 +9863,6 @@ msgstr "השם של חשבון הניהול הראשי שיקבל הודעות �
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "שם המשתמש ש- Kadupul ישמש כתבנית עבור משתמשי Web Basic ו- LDAP חדשים; הוא &#39;אורח&#39; כברירת מחדל. חשבון משתמש זה יושבת מפני כניסה עם בחירתו."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
