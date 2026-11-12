@@ -42,6 +42,7 @@ final readonly class Capability
         $this->provides = array_values(array_unique($provides));
     }
 
+    /** A key unique per model and reporting protocol. */
     public function key(): string
     {
         return $this->model->key() . '#' . $this->source;

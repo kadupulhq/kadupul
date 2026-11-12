@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Where a binding came from and when it was recorded, so it can be traced back. */
 final readonly class BindingProvenance
 {
     public \DateTimeImmutable $recordedAt;

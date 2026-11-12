@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** The capability names a pack needs from a device: all of one list and at least one of another. */
 final readonly class CapabilityRequirement
 {
     /**

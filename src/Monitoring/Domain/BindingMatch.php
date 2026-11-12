@@ -31,6 +31,7 @@ final readonly class BindingMatch
         }
     }
 
+    /** True only for a confirmed match. */
     public function canBind(): bool
     {
         return $this->confidence === MatchConfidence::Confirmed;
