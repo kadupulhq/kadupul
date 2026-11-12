@@ -280,6 +280,9 @@ def route_fixtures(rig, rows, ids):
         method = int(rig.sql("INSERT INTO data_input (name,hash,type_id,input_string) VALUES ('entry-sweep',MD5('entry-sweep'),1,'echo <value>'); SELECT LAST_INSERT_ID()").strip())
         field = int(rig.sql(f"INSERT INTO data_input_fields (data_input_id,name,data_name,input_output,sequence) VALUES ({method},'Value','value','in',1); SELECT LAST_INSERT_ID()").strip())
         ids['data-inputs'] = {'id': method, 'field': field}
+    if present('data-collection/queries/'):
+        query = int(rig.sql("INSERT INTO snmp_query (hash,xml_path,name,description,graph_template_id,data_input_id) VALUES (MD5('entry-sweep'),'<path_cacti>/resource/snmp_queries/interface.xml','entry-sweep','',0,2); SELECT LAST_INSERT_ID()").strip())
+        ids['data-collection/queries'] = {'id': query}
     if present('utilities/notification-receivers/'):
         receiver = int(rig.sql("INSERT INTO snmpagent_managers (hostname,description,disabled,max_log_size,snmp_username,snmp_password,snmp_auth_protocol,snmp_priv_passphrase,snmp_priv_protocol,snmp_message_type) VALUES ('127.0.0.1','entry-sweep','on',10,'','','','','',1); SELECT LAST_INSERT_ID()").strip())
         ids['utilities/notification-receivers'] = {'id': receiver}

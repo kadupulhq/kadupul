@@ -83,9 +83,7 @@ $GLOBALS['nativePresentationObserver'] = static function (array $rendered) use (
         } elseif ($case === 'association-empty-name') {
             $request += array('save_component_snmp_query_item' => '1', 'name' => '');
         } else {
-            $request['id'] = '10';
-            $request += array('save_component_snmp_query' => '1', 'name' => $case === 'query-empty-name' ? '' : 'Query <one>', 'description' => 'Stored description',
-                'data_input_id' => '2', 'xml_path' => $case === 'query-empty-xml' ? '' : $root . '/resource/snmp_queries/interface.xml');
+            throw new RuntimeException('Unknown query save case: ' . $case);
         }
         $_REQUEST = $request;
         $_POST = $request;

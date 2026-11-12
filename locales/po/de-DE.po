@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:44-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -352,11 +352,11 @@ msgid "No Graphs Found"
 msgstr "Kein Graph gefunden"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -409,8 +409,8 @@ msgstr "Name des Berichts"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Zurück"
@@ -898,8 +898,9 @@ msgstr "Gerät löschen"
 msgid "Delete Device(s)"
 msgstr "Gerät(e) löschen"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -2213,10 +2214,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Datenabfragen[Bearbeiten: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Datenabfragen[neu]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Datenabfragen, die verwendet werden, können nicht gelöscht werden. Bei der Verwendung wird definiert, dass sie entweder durch ein Diagramm oder eine Diagrammvorlage referenziert wird."
 
@@ -2244,6 +2241,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Datenabfrage löschen"
 msgstr[1] "Datenabfrage löschen"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2359,6 +2360,14 @@ msgstr "Die Anzahl der Grafikvorlagen, die diese Datenabfrage verwenden."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Die Anzahl der Diagramme, die diese Datenabfrage verwenden."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML Pfad"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -3056,6 +3065,28 @@ msgstr "Die vertikale Bezeichnung für die resultierenden Diagramme."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "Vertikale Beschriftung"
+
+#: graph_templates_inputs.php
+msgid "Associated Graph Items"
+msgstr "Zugeordnete Diagramm Elemente"
+
+#: graph_templates_inputs.php
+#, php-format
+msgid "Graph Item Inputs [edit graph: %s]"
+msgstr "Grafik Element Eingaben[Grafik bearbeiten: %s]"
+
+#: graph_templates_inputs.php
+#, php-format
+msgid "Item #%s"
+msgstr "Element #%s"
+
+#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "Eine Einträge"
+
+#: graph_templates_inputs.php
+msgid "The Graph Item Input relationship is invalid."
+msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -7506,10 +7537,6 @@ msgid "X-Files Factor"
 msgstr "X-Files Faktor"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML Pfad"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "(HRULE|VRULE): Der Wert des Grafikelements.<br/>[TICK]: Der Bruchteil für die Tick-Linie.<br/>[SHIFT]: Der Zeitversatz in Sekunden."
 
@@ -10375,10 +10402,6 @@ msgstr "Element # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "Farbe"
-
-#: lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "Eine Einträge"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:44-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "그래프가 없습니다"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "이름 보고"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "반환"
@@ -888,8 +888,9 @@ msgstr "기기 삭제"
 msgid "Delete Device(s)"
 msgstr "기기 삭제"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "설명"
 
@@ -2197,10 +2198,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "데이터 쿼리 [편집 :  %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "데이터 쿼리 [신규]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "사용중인 데이터 쿼리는 삭제할 수 없습니다. In은 Graph 또는 Graph Template에 의해 참조되는 것으로 정의됩니다."
 
@@ -2226,6 +2223,10 @@ msgstr[0] "데이터 쿼리 삭제"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "데이터 쿼리 삭제"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2341,6 +2342,14 @@ msgstr "이 데이터 쿼리를 사용하는 그래프 템플릿 수입니다."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "이 데이터 쿼리를 사용하는 그래프의 수입니다."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML 경로"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -3024,6 +3033,28 @@ msgstr "결과 그래프의 세로 레이블입니다."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "세로 레이블"
+
+#: graph_templates_inputs.php
+msgid "Associated Graph Items"
+msgstr "연결된 그래프 항목"
+
+#: graph_templates_inputs.php
+#, php-format
+msgid "Graph Item Inputs [edit graph: %s]"
+msgstr "그래프 항목 입력 [그래프 편집 :  %s]"
+
+#: graph_templates_inputs.php
+#, php-format
+msgid "Item #%s"
+msgstr "항목 #  %s"
+
+#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "항목"
+
+#: graph_templates_inputs.php
+msgid "The Graph Item Input relationship is invalid."
+msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -7462,10 +7493,6 @@ msgid "X-Files Factor"
 msgstr "X 파일 요소"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML 경로"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE] : 그래프 항목의 값. <br/> [TICK] : 눈금 선의 분율. <br/> [SHIFT] : 시간 오프셋 (초)입니다."
 
@@ -10314,10 +10341,6 @@ msgstr "항목 # % d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "이이템 색상"
-
-#: lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "항목"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

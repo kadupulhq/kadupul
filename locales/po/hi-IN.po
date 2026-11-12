@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:44-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "कोई रेखांकन नहीं मिला"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "रिपोर्ट का नाम"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "वापसी"
@@ -891,8 +891,9 @@ msgstr "उपकरण हटाएं"
 msgid "Delete Device(s)"
 msgstr "उपकरण हटाएं"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "विवरण"
 
@@ -2208,10 +2209,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "डेटा क्वेरी [संपादित करें: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "डेटा क्वेरी [नया]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "उपयोग में आने वाली डेटा क्वेरीज़ को हटाया नहीं जा सकता। उपयोग में परिभाषित किया जा रहा है या तो एक ग्राफ या एक ग्राफ टेम्पलेट द्वारा संदर्भित किया जा रहा है।"
 
@@ -2239,6 +2236,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "डेटा क्वेरी हटाएं"
 msgstr[1] "डेटा क्वेरी हटाएं"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2354,6 +2355,14 @@ msgstr "इस डेटा क्वेरी का उपयोग करक�
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "इस डेटा क्वेरी का उपयोग करके ग्राफ़ की संख्या।"
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML पथ"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -3051,6 +3060,28 @@ msgstr "परिणामी रेखांकन के लिए लंब�
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "वर्टिकल लेबल"
+
+#: graph_templates_inputs.php
+msgid "Associated Graph Items"
+msgstr "एसोसिएटेड ग्राफ़ आइटम"
+
+#: graph_templates_inputs.php
+#, php-format
+msgid "Graph Item Inputs [edit graph: %s]"
+msgstr "ग्राफ़ आइटम इनपुट [संपादित करें ग्राफ़: %s]"
+
+#: graph_templates_inputs.php
+#, php-format
+msgid "Item #%s"
+msgstr "आइटम # %s"
+
+#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "वस्तुएं"
+
+#: graph_templates_inputs.php
+msgid "The Graph Item Input relationship is invalid."
+msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -7497,10 +7528,6 @@ msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML पथ"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: ग्राफ़ आइटम का मूल्य। <br/> [टिक]: टिक लाइन के लिए अंश। <br/> [SHIFT]: समय सेकंड में ऑफसेट होता है।"
 
@@ -10379,10 +10406,6 @@ msgstr "आइटम #% d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "आइटम रंग"
-
-#: lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "वस्तुएं"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"
