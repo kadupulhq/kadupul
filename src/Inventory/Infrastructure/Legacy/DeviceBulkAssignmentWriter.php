@@ -20,6 +20,7 @@ final class DeviceBulkAssignmentWriter
 {
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
+    /** @param array<int, PDO> $connections */
     public function apply(PDO $connection, array $connections, DeviceState $device, DeviceBulkAssignment $change): void
     {
         $target = $change->targetId;
@@ -49,6 +50,7 @@ final class DeviceBulkAssignmentWriter
         api_plugin_hook_function('host_save', ['host_id' => $device->id]);
     }
 
+    /** @param array<int, PDO> $connections */
     public function verify(PDO $connection, array $connections, DeviceState $device, DeviceBulkAssignment $change, ?bool $remoteEnabled = null): void
     {
         $poller = $change->kind === 'collector' ? $change->targetId : $device->pollerId;
@@ -60,7 +62,7 @@ final class DeviceBulkAssignmentWriter
             $query = $database->prepare("SELECT poller_id, host_template_id, site_id, disabled FROM host WHERE id = ? AND deleted = ''");
             $query->execute([$device->id]);
             $row = $query->fetch(PDO::FETCH_ASSOC);
-            if (!$row || (int) $row['poller_id'] !== $poller || (int) $row['host_template_id'] !== $template
+            if (!is_array($row) || (int) $row['poller_id'] !== $poller || (int) $row['host_template_id'] !== $template
                 || (int) $row['site_id'] !== $site || ($row['disabled'] !== 'on') !== $enabled) {
                 throw new RuntimeException('Assignment could not be confirmed');
             }

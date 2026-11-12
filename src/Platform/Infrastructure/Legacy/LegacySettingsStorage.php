@@ -217,7 +217,7 @@ final readonly class LegacySettingsStorage
     {
         static $loadable = false;
         // Once Composer's autoloader is in, it stays in.
-        $loadable = $loadable || class_exists(Connection::class);
+        $loadable = $loadable === true || class_exists(Connection::class);
 
         return $loadable ? LegacyDatabaseConnection::select() : null;
     }
@@ -229,7 +229,7 @@ final readonly class LegacySettingsStorage
      */
     private static function helperWouldLog(\PDO $pdo, bool $log): bool
     {
-        return $log && !$pdo->inTransaction() && !(defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS);
+        return $log && !$pdo->inTransaction() && !(defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS === true);
     }
 
     /**

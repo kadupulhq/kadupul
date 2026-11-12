@@ -105,6 +105,10 @@ if ($mode === 'display') {
     echo json_encode(array('html' => ob_get_clean(), 'logout_count' => $GLOBALS['logout_count']), JSON_THROW_ON_ERROR);
 } else {
     $_SERVER[$input['source']] = $input['url'];
+    if (isset($input['current_action'])) {
+        $_REQUEST['action'] = $input['current_action'];
+        $GLOBALS['_CACTI_REQUEST']['action'] = $input['current_action'];
+    }
     register_shutdown_function(static function () {
         echo json_encode(array('redirect' => $GLOBALS['redirect'] ?? null), JSON_THROW_ON_ERROR);
     });
@@ -164,6 +168,20 @@ test('login redirects preserve destination graph actions despite a source action
     array('REDIRECT_URL', '/app/graph_view.php?id=2'),
     array('HTTP_REFERER', '/app/graph_view.php?id=2&action=tree'),
     array('REDIRECT_URL', '/app/graph_view.php?id=2&action=tree'),
+));
+
+test('login destinations keep their own graph action while the current URI retains its context', function (string $source, string $url, string $currentAction, string $expected) {
+    $result = auth_hardening_contract_run('redirect', array('source' => $source, 'url' => $url, 'current_action' => $currentAction));
+    expect($result['redirect'])->toBe('Location: ' . $expected);
+})->with(array(
+    array('HTTP_REFERER', '/app/graph_view.php?id=2', 'login', '/app/graph_view.php?id=2'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2', 'login', '/app/graph_view.php?id=2'),
+    array('HTTP_REFERER', '/app/graph_view.php?id=2&action=preview', 'edit', '/app/graph_view.php?id=2&action=preview'),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2&action=preview', 'edit', '/app/graph_view.php?id=2&action=preview'),
+    array('HTTP_REFERER', '/app/graph_view.php?id=2&action=', 'preview', '/app/graph_view.php?id=2&action='),
+    array('REDIRECT_URL', '/app/graph_view.php?id=2&action=', 'preview', '/app/graph_view.php?id=2&action='),
+    array('REQUEST_URI', '/app/graph_view.php?id=2', 'tree', '/app/graph_view.php?id=2&action=tree'),
+    array('REQUEST_URI', '/app/graph_view.php?id=2&action=preview', 'tree', '/app/graph_view.php?id=2&action=preview'),
 ));
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {

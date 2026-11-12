@@ -117,9 +117,9 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'install/background.php' => 'e5f6566d90a88eae13d0fa05c7d818a876f968bb75a37083f570d86642bbf237',
     'install/installer-bootstrap.php' => '1dc2ba4f219239ebf06e6f1da1d0423ef1203314244cec3a27b21a013b596793',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
-    'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
+    'lib/auth.php' => 'b433c35e4fa373396566d01e9549fc3ddac2369c1617bde596dc45af4b993d89',
     'include/csrf.php' => 'ec3c4549ce0e792544bf8f840a1c65d61809e48817f5e8ff91de6f856c9d9b1a',
-    'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
+    'config/services.yaml' => '4a95b31f726c73b93ae20b7f95c2a230683a65eff7d9e0d2e047ef97a1fad380',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -153,7 +153,7 @@ const ASSET_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
     'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
-    'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
+    'config/services.yaml' => '4a95b31f726c73b93ae20b7f95c2a230683a65eff7d9e0d2e047ef97a1fad380',
 ];
 
 function asset_authentication_review(string $root): ?string
@@ -290,16 +290,16 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
-    'lib/auth.php' => '03963db0d33349e4a0405c7e8c9eb01ae0440826e8b706cfa2813431e9737519',
+    'lib/auth.php' => 'b433c35e4fa373396566d01e9549fc3ddac2369c1617bde596dc45af4b993d89',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAboutAccess.php' => 'b405b4eabee2e7caf495e64710711eb152a2b6b4cffb60821f1fdd7fe17096c8',
-    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '54b0ce28240fac51fb0faa0df442b85610fdfbe87fb4dbc84fc484d09370eade',
+    'src/IdentityAccess/Infrastructure/Legacy/LegacyBrowserAuthentication.php' => '8b3e73aaf5a3ca081c74cfe8228dfe7daa7ddf9c982af7d3289ace04695d83f6',
     'src/IdentityAccess/Infrastructure/Legacy/BrowserAuthenticationSql.php' => '4efc747fdc6521ee882efe65f4f98b90bf1649039348f3762548c1e45cdbe0a0',
-    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '0d9d146c13a1229cbb85593760bbb7ad62faeab4db3dd71b1d14dedbb3901199',
+    'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationSession.php' => '99fc9466a26a1acbdd3063dc16193cf7020c885eab30be97c962e17b59f9b2bf',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationFileSessionHandler.php' => '941e8b6a6673a9a6956a1c6bf15397428f66a515c6b12fe812a31b1419b33a2a',
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
-    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => '4743883f8c2b1dc9b07c91a66bccdfa39f92531b6acafc0474bed5f92824513c',
+    'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'c2b1a492167bb5e73b4b23ceb9869574f21393f6d6369a662e40d50f2f749944',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => '9137872bb53be81009614b7f0adc46a14f5c7670e39ceacca81abbeb8f043ae8',
+    'config/services.yaml' => '4a95b31f726c73b93ae20b7f95c2a230683a65eff7d9e0d2e047ef97a1fad380',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2853,6 +2853,26 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    // The network editor shares the reviewed automation realm check; these keys
+    // precede the list page's prefix, which uses AdministrationListAccess.
+    '/automation/networks/new' => [
+        'label' => 'discovery network',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/networks/{id}' => [
+        'label' => 'discovery network',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
     ],
     '/automation/networks' => [
         'label' => 'administration list',
