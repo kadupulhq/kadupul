@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** A graph a pack suggests: a named set of its metrics sharing one unit. */
 final readonly class PackGraph
 {
     /** @param list<string> $metrics metric ids */

@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when an install, state change or upgrade breaks the pack lifecycle rules. */
 final class PackLifecycleViolation extends \DomainException {}

@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * How far a device's support for a model revision is established.
+ */
 enum AssociationState: string
 {
     case Unknown = 'unknown';

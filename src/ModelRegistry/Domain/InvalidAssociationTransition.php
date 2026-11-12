@@ -9,4 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * Raised when a device association cannot change as requested.
+ */
 final class InvalidAssociationTransition extends \DomainException {}

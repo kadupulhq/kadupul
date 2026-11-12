@@ -16,6 +16,11 @@ namespace Kadupul\Monitoring\Domain;
  */
 final readonly class RrdDataSourceName
 {
+    /**
+     * Wraps a field name after checking it fits RRDtool's limits.
+     *
+     * @throws InvalidBinding when the name is not 1 to 19 characters of letters, digits, underscore or hyphen
+     */
     public function __construct(public string $value)
     {
         if (preg_match('/\A[A-Za-z0-9_-]{1,19}\z/', $value) !== 1) {
@@ -23,6 +28,7 @@ final readonly class RrdDataSourceName
         }
     }
 
+    /** Compares two names, case-sensitively. */
     public function equals(self $other): bool
     {
         return $this->value === $other->value;

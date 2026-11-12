@@ -18,6 +18,11 @@ use Kadupul\Telemetry\Contract\ResourceId;
  */
 final readonly class PlanBinding
 {
+    /**
+     * Builds a plan binding after checking the id's shape.
+     *
+     * @throws InvalidCollectionPlan when the binding id is not an opaque id
+     */
     public function __construct(public string $bindingId, public ResourceId $resource)
     {
         if (preg_match('/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/D', $bindingId) !== 1) {
