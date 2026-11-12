@@ -81,6 +81,12 @@ switch (get_request_var('action')) {
         header('Location: data_queries.php');
         break;
     case 'edit':
+        if (isempty_request_var('id')) {
+            // Symfony creates data queries. Relative targets keep subdirectory installations working.
+            header('Location: app.php/data-collection/queries/new', true, 302);
+            exit;
+        }
+
         top_header();
 
         data_query_edit();
@@ -100,46 +106,24 @@ switch (get_request_var('action')) {
     The Save Function
    -------------------------- */
 
+/**
+ * Answer an old data query settings form, which Symfony now handles, without
+ * writing.
+ */
+function data_query_settings_expired()
+{
+    http_response_code(409);
+    header('Cache-Control: private, no-store');
+    print html_escape(__('This Data Query form has expired. Open the data query again and use its current form.'));
+
+    exit;
+}
+
 function form_save()
 {
     if (isset_request_var('save_component_snmp_query')) {
-        get_filter_request_var('id');
-        get_filter_request_var('data_input_id');
-
-        $save['id']            = get_request_var('id');
-        $save['hash']          = get_hash_data_query(get_nfilter_request_var('id'));
-        $save['name']          = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
-        $save['description']   = form_input_validate(get_nfilter_request_var('description'), 'description', '', true, 3);
-        $save['xml_path']      = form_input_validate(trim(get_nfilter_request_var('xml_path')), 'xml_path', '', false, 3);
-        $save['data_input_id'] = get_request_var('data_input_id');
-
-        // Detect changing input id
-        if (!empty($save['id'])) {
-            $previous_input_id = db_fetch_cell_prepared(
-                'SELECT data_input_id
-				FROM snmp_query
-				WHERE id = ?',
-                array($save['id'])
-            );
-        }
-
-        if (!is_error_message()) {
-            $snmp_query_id = sql_save($save, 'snmp_query');
-
-            if ($snmp_query_id) {
-                raise_message(1);
-
-                if (isset($previous_input_id) && $previous_input_id > 0) {
-                    data_query_update_input_method($snmp_query_id, $previous_input_id, $save['data_input_id']);
-                }
-
-                update_replication_crc(0, 'poller_replicate_snmp_query_crc');
-            } else {
-                raise_message(2);
-            }
-        }
-
-        header('Location: data_queries.php?header=false&action=edit&id=' . (empty($snmp_query_id) ? get_request_var('id') : $snmp_query_id));
+        // Data query settings moved to Symfony; an old settings form must not write.
+        data_query_settings_expired();
     } elseif (isset_request_var('save_component_snmp_query_item')) {
         /* ================= input validation ================= */
         get_filter_request_var('id');
@@ -1148,7 +1132,7 @@ function data_query_remove($id)
 
 function data_query_edit()
 {
-    global $fields_data_query_edit, $config;
+    global $config;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
@@ -1170,21 +1154,27 @@ function data_query_edit()
 
         $header_label = __esc('Data Queries [edit: %s]', $snmp_query['name']);
     } else {
-        $header_label = __('Data Queries [new]');
+        // The dispatcher sends a request without an id to the Symfony create page.
+        header('Location: app.php/data-collection/queries/new', true, 302);
+        exit;
     }
 
-    form_start('data_queries.php', 'data_queries');
-
+    // The settings are edited in Symfony; this page keeps the Graph Template associations.
     html_start_box($header_label, '100%', true, '3', 'center', '');
-
-    draw_edit_form(
-        array(
-            'config' => array('no_form_tag' => true),
-            'fields' => inject_form_variables($fields_data_query_edit, (isset($snmp_query) ? $snmp_query : array()))
-        )
-    );
-
-    html_end_box(false, true);
+    $input_name = db_fetch_cell_prepared('SELECT name FROM data_input WHERE id = ?', array($snmp_query['data_input_id']));
+    foreach (array(
+        __('Name')              => $snmp_query['name'],
+        __('Description')       => (string) $snmp_query['description'],
+        __('XML Path')          => $snmp_query['xml_path'],
+        __('Data Input Method') => ($input_name == '' ? __('None') : $input_name),
+    ) as $label => $value) {
+        form_alternate_row();
+        print '<td>' . html_escape($label) . '</td><td>' . html_escape($value) . '</td></tr>';
+    }
+    form_alternate_row();
+    // A Symfony page is a full navigation, not a partial load.
+    print "<td colspan='2'><a class='linkEditMain' href='" . html_escape($config['url_path'] . 'app.php/data-collection/queries/' . $snmp_query['id'] . '/edit') . "'>" . __esc('Edit Data Query Settings') . '</a></td></tr>';
+    html_end_box(true, true);
 
     if (!empty($snmp_query['id'])) {
         $search       = array('<path_cacti>', '<path_snmpget>', '<path_php_binary>');
@@ -1268,7 +1258,7 @@ function data_query_edit()
         html_end_box();
     }
 
-    form_save_button('data_queries.php', 'return');
+    print "<table style='width:100%;text-align:center;'><tr><td class='saveRow'><input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='" . html_escape(sanitize_uri('data_queries.php', false)) . "' value='" . __esc('Return') . "'></td></tr></table>";
 
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -1361,7 +1351,8 @@ function data_query()
         $rows = get_request_var('rows');
     }
 
-    html_start_box(__('Data Queries'), '100%', '', '3', 'center', 'data_queries.php?action=edit');
+    // The page loader fetches legacy links by XHR; a Symfony URL makes it navigate.
+    html_start_box(__('Data Queries'), '100%', '', '3', 'center', 'app.php/data-collection/queries/new');
 
     ?>
 	<tr class='even noprint'>
