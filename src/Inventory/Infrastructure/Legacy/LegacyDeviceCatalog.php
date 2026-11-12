@@ -12,10 +12,20 @@ use Kadupul\Inventory\Application\ReadModel\DevicePage;
 use Kadupul\Inventory\Domain\DeviceListCriteria;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/**
+ * Lists devices from the legacy tables, limited to those the user may see.
+ */
 final readonly class LegacyDeviceCatalog implements DeviceCatalog
 {
+    /**
+     * Binds the catalog to the database and the visibility rules.
+     */
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility) {}
 
+    /**
+     * Returns one page of visible devices that match the criteria, with hasNext set when more rows follow.
+     * The search matches the description, hostname, location and external id, and a numeric search also matches the device id.
+     */
     public function visibleTo(int $userId, DeviceListCriteria $criteria): DevicePage
     {
         $db = $this->database->get();

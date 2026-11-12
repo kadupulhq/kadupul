@@ -10,8 +10,10 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Management;
 
+/** A validated management list request: filter text, page size, page number and sort order. Anything outside the allowed parameters is refused. */
 final readonly class CatalogFilters
 {
+    /** Holds already validated values; use fromQuery(). */
     private function __construct(public string $filter, public int $rows, public int $page, public string $sortColumn, public string $sortDirection) {}
 
     /** @param array<string, mixed> $query */
@@ -39,11 +41,13 @@ final readonly class CatalogFilters
         return new self($filter, (int) $rows, (int) $page, $column, $direction);
     }
 
+    /** The number of records to fetch: one more than a page, so the caller can tell whether a next page exists. */
     public function fetchLimit(): int
     {
         return $this->rows + 1;
     }
 
+    /** The number of records to skip before this page. */
     public function offset(): int
     {
         return ($this->page - 1) * $this->rows;

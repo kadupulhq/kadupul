@@ -14,9 +14,18 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
+/**
+ * Reads devices from the legacy tables for editing and saves them through the edit worker process.
+ */
 final readonly class LegacyDeviceEditor implements DeviceEditor
 {
+    /**
+     * Binds the adapter to the database, the visibility rules and the project directory that holds the worker script.
+     */
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
+    /**
+     * Returns the device, or null when it does not exist, is deleted or is not visible to the user.
+     */
     public function findVisible(int $userId, int $id): ?Device
     {
         $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.notes, h.disabled, h.location, h.external_id, h.site_id, h.device_threads, h.snmp_port, h.snmp_timeout, h.max_oids, h.bulk_walk_size, h.availability_method, h.ping_method, h.ping_port, h.ping_timeout, h.ping_retries, h.snmp_version, h.snmp_auth_protocol, h.snmp_priv_protocol, h.snmp_context, h.snmp_engine_id
@@ -26,6 +35,14 @@ final readonly class LegacyDeviceEditor implements DeviceEditor
         $row = $query->fetch();
         return $row ? new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on', (string) $row['location'], (string) $row['external_id'], (int) $row['site_id'], array_intersect_key($row, \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS), array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS)) : null;
     }
+    /**
+     * Saves the device in the edit worker, which rechecks the revision.
+     *
+     * @throws DeviceEditConflict When the device changed since $expectedRevision was issued.
+     * @throws InventoryAccessDenied When the worker denies the user.
+     * @throws \InvalidArgumentException When the SNMP settings are incompatible with the stored credentials.
+     * @throws \RuntimeException When the outcome is unknown or the save could not be completed.
+     */
     public function save(int $userId, Device $device, string $expectedRevision): void
     {
         // Fixed executable and script, argument array, stdin payload: no shell.

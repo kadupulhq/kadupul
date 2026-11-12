@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 19:42-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -360,10 +360,11 @@ msgstr "遷移聚合以使用模板"
 msgid "New Aggregate"
 msgstr "新聚合"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 #, fuzzy
 msgid "No"
 msgstr "否"
@@ -379,11 +380,11 @@ msgid "No Graphs Found"
 msgstr "找不到圖表"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 #, fuzzy
@@ -444,9 +445,9 @@ msgid "Report Name"
 msgstr "報告名稱"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "Return"
@@ -550,11 +551,11 @@ msgstr "關閉圖形調試模式"
 msgid "Turn On Graph Debug Mode"
 msgstr "打開圖形調試模式"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 #, fuzzy
 msgid "Yes"
 msgstr "是"
@@ -1015,8 +1016,9 @@ msgstr "刪除設備"
 msgid "Delete Device(s)"
 msgstr "刪除設備"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 #, fuzzy
 msgid "Description"
 msgstr "描述"
@@ -1231,6 +1233,10 @@ msgstr "不顯示"
 msgid "Duplicate"
 msgstr "複製"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1298,10 +1304,9 @@ msgstr "規則名稱"
 msgid "Rule Selection [edit: %s]"
 msgstr "規則選擇[編輯：%s]"
 
-#: automation_graph_rules.php
-#, fuzzy
-msgid "Rule Selection [new]"
-msgstr "規則選擇[新]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 #, fuzzy
@@ -1312,6 +1317,10 @@ msgstr "此規則的內部數據庫ID。在執行調試和自動化時很有用�
 #, fuzzy
 msgid "The name of this rule."
 msgstr "此規則的名稱。"
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 #, fuzzy
@@ -1624,10 +1633,6 @@ msgid "Created Trees"
 msgstr "創建樹木"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "符合條件的物品"
 
@@ -1670,10 +1675,6 @@ msgstr "可選：子樹項"
 #, fuzzy
 msgid "ROOT"
 msgstr "根部"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
@@ -2553,11 +2554,6 @@ msgstr "數據查詢[編輯：%s]"
 
 #: data_queries.php
 #, fuzzy
-msgid "Data Queries [new]"
-msgstr "數據查詢[新]"
-
-#: data_queries.php
-#, fuzzy
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "正在使用的數據查詢無法刪除。使用中定義為由圖形或圖形模板引用。"
 
@@ -2585,6 +2581,10 @@ msgstr[0] "刪除數據查詢"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "刪除數據查詢"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 #, fuzzy
@@ -2725,6 +2725,15 @@ msgstr "使用此數據查詢的圖表模板數。"
 #, fuzzy
 msgid "The number of Graphs using this Data Query."
 msgstr "使用此數據查詢的圖表數量。"
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+#, fuzzy
+msgid "XML Path"
+msgstr "XML路徑"
 
 #: data_sources.php
 #, fuzzy
@@ -8873,11 +8882,6 @@ msgstr "寬度（ - 寬度）"
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
-
-#: include/global_form.php
-#, fuzzy
-msgid "XML Path"
-msgstr "XML路徑"
 
 #: include/global_form.php
 #, fuzzy

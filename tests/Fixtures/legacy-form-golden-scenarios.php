@@ -325,7 +325,6 @@ $pages = array(
     'auth_profile-stale-change-handlers' => $page('auth_profile.php', array(), array(), array('session' => array('form_change_actions' => array(
         'snmp_version' => 'setSNMP()', 'snmp_security_level' => 'setSNMP()', 'snmp_auth_protocol' => 'setSNMP()', 'snmp_priv_protocol' => 'setSNMP()',
     )))),
-    'automation_graph_rules-edit' => $page('automation_graph_rules.php', array('action' => 'edit')),
     'automation_graph_rules-item_edit' => $page('automation_graph_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '1'), array_merge($columns, array(
         array('sql' => 'FROM automation_graph_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
             'id' => '1', 'name' => 'Traffic <rule>', 'snmp_query_id' => '1', 'graph_type_id' => '2', 'enabled' => 'on',
@@ -336,7 +335,15 @@ $pages = array(
             'id' => '1', 'name' => 'Devices <rule>', 'tree_id' => '1', 'tree_item_id' => '0', 'leaf_type' => '3', 'host_grouping_type' => '1', 'enabled' => 'on',
         ))),
     ))),
-    'data_queries-edit' => $page('data_queries.php', array('action' => 'edit')),
+    // A new data query is created in Symfony; the legacy page edits a stored one
+    // and shows its settings read-only above the Graph Template associations.
+    'data_queries-edit' => $page('data_queries.php', array('action' => 'edit', 'id' => '1'), array(
+        array('sql' => 'FROM snmp_query WHERE id = ?', 'params' => array(1), 'rows' => array(array(
+            'id' => '1', 'hash' => str_repeat('a', 32), 'name' => 'Interfaces <query>', 'description' => 'Stored', 'graph_template_id' => '0',
+            'xml_path' => '<path_cacti>/resource/snmp_queries/interface.xml', 'data_input_id' => '2',
+        ))),
+        array('sql' => 'SELECT name FROM data_input WHERE id = ?', 'params' => array(2), 'rows' => array(array('name' => 'Get SNMP Data (Indexed)'))),
+    )),
     'data_queries-item_edit' => $page('data_queries.php', array('action' => 'item_edit', 'snmp_query_id' => '1')),
     // Match the rendered Add link: Any listing scope opens a new None/device-less source.
     'data_sources-ds_edit' => $page('data_sources.php', array('action' => 'ds_edit', 'host_id' => '0'), array(

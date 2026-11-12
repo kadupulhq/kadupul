@@ -15,8 +15,10 @@ namespace Kadupul\Monitoring\Domain;
  */
 final readonly class InstalledPack
 {
+    /** Binds a validated pack to its stored state. */
     public function __construct(public MonitoringPack $pack, public PackState $state) {}
 
+    /** A copy of the pack in another state. */
     public function withState(PackState $state): self
     {
         return new self($this->pack, $state);

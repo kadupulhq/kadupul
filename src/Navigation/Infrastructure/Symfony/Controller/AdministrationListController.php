@@ -21,8 +21,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the read-only administration lists for every ListScreen. */
 final readonly class AdministrationListController
 {
+    /** Renders the list, or a plain response with status 401, 403, 400 or 502; HEAD requests get no body. */
     #[Route('/templates/devices', name: 'admin_device_templates', defaults: ['screen' => 'device-templates'], methods: ['GET', 'HEAD'])]
     #[Route('/templates/graphs', name: 'admin_graph_templates', defaults: ['screen' => 'graph-templates'], methods: ['GET', 'HEAD'])]
     #[Route('/templates/data-sources', name: 'admin_data_templates', defaults: ['screen' => 'data-templates'], methods: ['GET', 'HEAD'])]

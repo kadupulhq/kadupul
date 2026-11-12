@@ -16,13 +16,32 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
+/**
+ * Reads device state from the legacy tables and applies bulk device operations by running the state worker script in a separate PHP process.
+ * The bulk operations are enabling or disabling, clearing statistics, template synchronization, option and SNMP changes, assignment and automation rules.
+ */
 final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceAutomation, \Kadupul\Inventory\Application\Port\DeviceSnmpSettings, \Kadupul\Inventory\Application\Port\DeviceBulkAssignments, \Kadupul\Inventory\Application\Port\DeviceOptions, \Kadupul\Inventory\Application\Port\DeviceStatistics, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization
 {
+    /**
+     * Binds the adapter to the database, the visibility rules and the project directory that holds the worker script.
+     */
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
+    /**
+     * Builds a device state snapshot from a device row.
+     *
+     * @param array $row Map from string to mixed.
+     */
     public static function state(array $row): DeviceState
     {
         return new DeviceState((int) $row['id'], (string) $row['description'], (string) $row['hostname'], $row['disabled'] !== 'on', (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], array_map(static fn($value): string => (string) $value, array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS)), array_map(static fn($value): string => (string) $value, array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS)));
     }
+    /**
+     * Returns the state of every selected device.
+     *
+     * @param array $ids List of int|string.
+     * @throws DevicesNotFound When a selected device does not exist, is deleted or is not visible to the actor.
+     * @throws \InvalidArgumentException When the ids are not 1 to 100 valid, unique ids.
+     */
     public function findVisible(int $actorId, array $ids): array
     {
         $ids = DeviceSelection::validateIds($ids);
@@ -35,34 +54,65 @@ final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Invent
         }
         return array_map(self::state(...), $rows);
     }
+    /**
+     * Enables or disables every device in the selection.
+     */
     public function setEnabled(int $actorId, DeviceSelection $selection, bool $enabled): void
     {
         $this->run($actorId, $selection, ['enabled' => $enabled]);
     }
+    /**
+     * Clears the statistics of every device in the selection.
+     */
     public function clearStatistics(int $actorId, DeviceSelection $selection): void
     {
         $this->run($actorId, $selection, ['operation' => 'clear-statistics']);
     }
+    /**
+     * Synchronizes every device in the selection with its template.
+     */
     public function synchronizeTemplates(int $actorId, DeviceSelection $selection): void
     {
         $this->run($actorId, $selection, ['operation' => 'sync-template']);
     }
+    /**
+     * Applies the option change to every device in the selection.
+     */
     public function changeOptions(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceOptionsChange $change): void
     {
         $this->run($actorId, $selection, ['operation' => 'options', 'changes' => $change->fields]);
     }
+    /**
+     * Applies the site, template or collector assignment to every device in the selection.
+     */
     public function assign(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkAssignment $assignment): void
     {
         $this->run($actorId, $selection, ['operation' => 'assign', 'kind' => $assignment->kind, 'target' => $assignment->targetId]);
     }
+    /**
+     * Applies the SNMP change to every device in the selection.
+     */
     public function changeSnmp(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkSnmpChange $change): void
     {
         $this->run($actorId, $selection, ['operation' => 'snmp', 'changes' => $change->fields]);
     }
+    /**
+     * Applies the automation rules to every device in the selection.
+     */
     public function applyRules(int $actorId, DeviceSelection $selection): void
     {
         $this->run($actorId, $selection, ['operation' => 'automation']);
     }
+    /**
+     * Sends the operation to the state worker and checks its reported outcome.
+     *
+     * @param array $operation The operation name and its parameters, added to the actor and selection.
+     * @throws \InvalidArgumentException When the SNMP settings are incompatible with the stored credentials.
+     * @throws DeviceEditConflict When the selected devices changed since the confirmation page was shown.
+     * @throws InventoryAccessDenied When the worker denies the actor.
+     * @throws DevicesNotFound When a selected device is missing.
+     * @throws \RuntimeException When the outcome is unknown or could not be confirmed.
+     */
     private function run(int $actorId, DeviceSelection $selection, array $operation): void
     {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();

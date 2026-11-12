@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Management;
 
+/** One page of management catalog records, with the parent's name and any parameters for row operations. */
 final readonly class CatalogPage
 {
     /**

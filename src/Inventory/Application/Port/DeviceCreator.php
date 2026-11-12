@@ -9,7 +9,13 @@ namespace Kadupul\Inventory\Application\Port;
 
 use Kadupul\Inventory\Domain\NewDevice;
 
+/**
+ * Stores new devices.
+ */
 interface DeviceCreator
 {
+    /**
+     * Creates the device and returns its id.
+     */
     public function create(int $userId, NewDevice $device): int;
 }

@@ -15,6 +15,9 @@ namespace Kadupul\ModelRegistry\Domain;
  */
 final class ModelChecksumConflict extends \DomainException
 {
+    /**
+     * Names the model and both checksums.
+     */
     public function __construct(ModelIdentity $identity, ModelRevision $revision, Checksum $registered, Checksum $offered)
     {
         parent::__construct(sprintf(

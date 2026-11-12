@@ -15,6 +15,9 @@ namespace Kadupul\ModelRegistry\Contract;
  */
 interface ModelCatalog
 {
+    /**
+     * Returns the summary of the model revision, or null when it is not registered or the arguments cannot name a model.
+     */
     public function find(string $family, string $namespace, string $name, string $revision): ?ModelSummary;
 
     /** @return list<string> empty when the model is not registered */

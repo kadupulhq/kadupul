@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Domain;
 
+/** One item of a CDEF: a function, operator, special data source, another CDEF or a custom string. */
 final readonly class CdefItem
 {
     /** @param string $label Display text: the function, operator or CDEF name, or the stored value. */

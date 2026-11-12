@@ -43,6 +43,12 @@ final class DiscoverDeviceCapabilities
         }
     }
 
+    /**
+     * Runs discovery for the device and stores the merged result.
+     * A provider that fails or answers for another device adds an error and leaves its earlier capabilities in place.
+     *
+     * @return CapabilityDiscoveryResult capabilities assessed against the registry; the stored set is the unassessed one
+     */
     public function __invoke(int $deviceId): CapabilityDiscoveryResult
     {
         $stored = [];
@@ -112,6 +118,7 @@ final class DiscoverDeviceCapabilities
         );
     }
 
+    /** Keeps a stored verification outcome unless the new observation is one too. */
     private function merge(Capability $stored, Capability $observed): Capability
     {
         if ($observed->status->isVerificationOutcome() || !$stored->status->isVerificationOutcome()) {

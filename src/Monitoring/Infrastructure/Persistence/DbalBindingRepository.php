@@ -49,23 +49,33 @@ final readonly class DbalBindingRepository implements BindingRepository
     private const array WIDTHS = ['metric' => 255, 'resource kind' => 64, 'resource identity' => 255, 'pack name' => 64, 'pack version' => 64, 'source detail' => 65535];
     private const string TIME = 'Y-m-d H:i:s.u';
 
+    /** Binds the repository to the database connection. */
     public function __construct(private Connection $database) {}
 
+    /** Bindings stored under the key. */
     public function matching(BindingKey $key): array
     {
         return $this->select(self::BY_KEY, self::key($key));
     }
 
+    /** Bindings that point at the storage field. */
     public function writingTo(StorageField $field): array
     {
         return $this->select(' WHERE local_data_id = ? AND data_source_name = ?', [$field->localDataId, $field->name->value]);
     }
 
+    /** Bindings of one device. */
     public function forDevice(int $deviceId): array
     {
         return $this->select(' WHERE device_id = ?', [$deviceId]);
     }
 
+    /**
+     * Inserts the binding, or replaces the stored one inside a row lock if the replacement rules allow it.
+     *
+     * @throws \Kadupul\Monitoring\Domain\BindingConflict when the stored binding cannot be replaced, or another caller inserted the key first
+     * @throws \Kadupul\Monitoring\Domain\InvalidBinding when a value is too long for its column
+     */
     public function save(MetricBinding $binding): void
     {
         $values = [...self::definition($binding), ...self::key($binding->key)];
@@ -131,6 +141,7 @@ final readonly class DbalBindingRepository implements BindingRepository
         ];
     }
 
+    /** Formats a time in UTC for storage. */
     private static function time(\DateTimeImmutable $at): string
     {
         return $at->setTimezone(new \DateTimeZone('UTC'))->format(self::TIME);
@@ -155,6 +166,11 @@ final readonly class DbalBindingRepository implements BindingRepository
         }
     }
 
+    /**
+     * Parses a stored UTC time.
+     *
+     * @throws \InvalidArgumentException when the value is not in the stored format
+     */
     private static function stored(string $value): \DateTimeImmutable
     {
         return \DateTimeImmutable::createFromFormat('!' . self::TIME, $value, new \DateTimeZone('UTC'))

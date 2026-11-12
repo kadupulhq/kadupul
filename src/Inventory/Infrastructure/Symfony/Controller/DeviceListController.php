@@ -18,8 +18,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 
+/**
+ * The device list, served as an HTML page, a JSON page or a CSV download of one page.
+ */
 final class DeviceListController
 {
+    /**
+     * Parses the filters and returns the matching page of devices in the requested format.
+     * Errors are returned as JSON: 401 or 403 when access is denied and 400 for invalid filters. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices', name: 'inventory_devices', methods: ['GET', 'HEAD'])]
     #[Route('/inventory/devices.json', name: 'inventory_devices_json', defaults: ['_format' => 'json'], methods: ['GET', 'HEAD'])]
     #[Route('/inventory/devices.csv', name: 'inventory_devices_csv', defaults: ['_format' => 'csv'], methods: ['GET', 'HEAD'])]

@@ -7,10 +7,21 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * Validated search, paging and ordering for the site list.
+ */
 final readonly class SiteListCriteria
 {
     public string $search;
 
+    /**
+     * Validates and trims the criteria.
+     * Page size must be 25, 50 or 100.
+     *
+     * @param string $sort One of "name", "id", "devices", "city", "state" or "country".
+     * @param string $direction Either "asc" or "desc".
+     * @throws \InvalidArgumentException When any value is outside its allowed set or range.
+     */
     public function __construct(string $search = '', public int $page = 1, public int $pageSize = 25, public string $direction = 'asc', public string $sort = 'name')
     {
         $this->search = trim($search);
@@ -22,6 +33,9 @@ final readonly class SiteListCriteria
         }
     }
 
+    /**
+     * Returns the zero-based row offset of the first row on the requested page.
+     */
     public function offset(): int
     {
         return ($this->page - 1) * $this->pageSize;

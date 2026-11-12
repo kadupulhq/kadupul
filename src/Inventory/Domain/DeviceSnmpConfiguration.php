@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * A complete, validated set of SNMP settings for one device, including credentials.
+ */
 final readonly class DeviceSnmpConfiguration
 {
     public const PUBLIC_DEFAULTS = ['snmp_version' => '2', 'snmp_auth_protocol' => '[None]', 'snmp_priv_protocol' => '[None]', 'snmp_context' => '', 'snmp_engine_id' => ''];
@@ -15,6 +18,14 @@ final readonly class DeviceSnmpConfiguration
     public const PRIVACY_PROTOCOLS = ['[None]', 'DES', 'AES', 'AES128', 'AES192', 'AES192C', 'AES256', 'AES256C'];
     public array $fields;
 
+    /**
+     * Validates the settings.
+     * Every key in PUBLIC_DEFAULTS and CREDENTIAL_DEFAULTS must be present, and all values must be strings.
+     *
+     * @param array $fields Map from string to string.
+     * @param bool $deferCredentials Skip the SNMPv3 credential requirements (username and passphrase length) when the stored credentials will be used.
+     * @throws \InvalidArgumentException When a field is missing, unknown, too long or unsupported.
+     */
     public function __construct(#[\SensitiveParameter] array $fields, bool $deferCredentials = false)
     {
         $defaults = self::PUBLIC_DEFAULTS + self::CREDENTIAL_DEFAULTS;

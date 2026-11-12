@@ -12,6 +12,12 @@ use Kadupul\Inventory\Domain\NewDevice;
 /** Resolve configured credentials only inside the authorized CLI worker. */
 final class DeviceCreationCredentials
 {
+    /**
+     * Fills a new device's SNMP credentials from the configured defaults when it asks to use them.
+     * A device that supplies its own credentials is returned unchanged. A blank SNMP username also takes the configured one.
+     *
+     * @param callable(string): mixed $readSetting Returns the configured value for a setting name.
+     */
     public function resolve(NewDevice $device, callable $readSetting): NewDevice
     {
         $fields = $device->fields;

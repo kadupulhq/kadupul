@@ -18,8 +18,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/** Redirects the old External Links page and its action URLs to the Symfony link pages. */
 final class LegacyLinksController
 {
+    /** Redirects a legacy GET to the matching link page; a legacy POST is answered with 409 because its form has expired. */
     #[Route('/links/legacy', name: 'navigation_links_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $console, LinkAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {

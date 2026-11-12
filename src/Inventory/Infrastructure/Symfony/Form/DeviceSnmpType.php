@@ -19,10 +19,20 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Sub-form for a device's SNMP settings.
+ */
 final class DeviceSnmpType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
 
+    /**
+     * Adds the version, protocol, context, engine id and credential fields.
+     * In bulk mode each setting has an "apply" checkbox, so that only the selected settings change. Credential fields are never refilled when the form is shown again.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $invalid = $this->translator->trans('Select a valid device option.', [], 'inventory');
@@ -45,6 +55,9 @@ final class DeviceSnmpType extends AbstractType
         }
     }
 
+    /**
+     * Accepts the "bulk" option, which adds the per-setting "apply" checkboxes.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory', 'bulk' => false]);

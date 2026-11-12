@@ -23,6 +23,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class CdefItemType extends AbstractType
 {
+    /** Adds a text field for a custom string, otherwise a choice field, plus the hidden revision. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $text = $options['item_type'] === CdefFunctions::CUSTOM_STRING;
@@ -33,6 +34,7 @@ final class CdefItemType extends AbstractType
             ->add('revision', HiddenType::class);
     }
 
+    /** Requires the "item_type" option, which must be a CDEF item type, and takes the "value_choices" option. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -48,6 +50,7 @@ final class CdefItemType extends AbstractType
         $resolver->setAllowedTypes('value_choices', 'array');
     }
 
+    /** The form's field name prefix. */
     public function getBlockPrefix(): string
     {
         return 'cdef_item';

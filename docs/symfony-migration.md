@@ -2634,6 +2634,39 @@ The page no longer loads the legacy header bundle, so `page_head` and the
 `custom_denied` hook prints without asking to reskin is dropped. A failed
 worker answers 503, and a schema mismatch keeps the installer redirect.
 
+### Graph rule settings
+
+The settings of a graph rule (`automation_graph_rules.php?action=edit`: name,
+Data Query, Graph Type and Enable Rule) use Symfony routes, Forms and Twig at
+`/automation/graph-rules/new` and `/automation/graph-rules/{id}/edit`. The
+rule list, its bulk actions, the Device Selection and Graph Creation Criteria
+items and the matching device and graph previews stay on the legacy page, which
+now shows the settings read-only and links to the new editor. Both routes
+require console access and the Automation realm (23) through the reviewed
+`AutomationTemplateAccess` check before anything is read. Saves recheck the
+account and both realms inside their transaction, need the primary collector,
+lock the rule row, take shared locks on the Data Query and Graph Type, and are
+audited. The form carries a revision of the rule's columns; criteria items are
+not part of it and are never written by the new editor.
+
+`lib/api_automation.php` creates graphs from enabled rules using
+`graph_type_id` as an `snmp_query_graph` row of the rule's Data Query, so the
+store refuses a Graph Type that does not belong to the chosen Data Query.
+
+Differences from legacy:
+- A rule is created in one step with its Data Query and Graph Type; legacy
+  created it with Graph Type 0 and asked for the type afterwards. A rule must
+  name an existing Data Query and one of its Graph Types.
+- Changing the Data Query or Graph Type no longer saves immediately through
+  `?action=qedit`; the choice is saved with the form. Graph Types are grouped
+  by Data Query, so the form needs no script. `qedit` and an old settings form
+  posted again answer 409 with `Cache-Control: private, no-store` without
+  saving; `automation_change_query_type()` is removed.
+- The name must be single-line text of at most 255 characters and is trimmed.
+- `automation_graph_rules.php?action=edit` without an ID redirects to the new
+  editor, and an unknown ID returns to the list with "Rule not found." instead
+  of rendering an empty form.
+
 ### Tree rule settings
 
 The settings of a tree rule (`automation_tree_rules.php?action=edit`: name,
@@ -2890,6 +2923,48 @@ they do not run legacy pages or capture their HTML. Editors and operational
 actions still use the existing PHP forms. Login identity joins, tree counts,
 read-only navigation, collector routing and diagnostic limitations are documented
 with the verification evidence. LTS is unchanged.
+
+### Data query settings
+
+The settings of a data query (`data_queries.php?action=edit`: name,
+description, XML path and Data Input Method) use Symfony routes, Forms and Twig
+at `/data-collection/queries/new` and `/data-collection/queries/{id}/edit`. The
+list, its bulk actions and the Associated Graph Templates stay on the legacy
+page, which now shows the settings read-only and links to the new editor. Both
+routes require console access and the Data Queries realm (13) through
+`DataQueryAccess`, which applies the reviewed data input account and realm
+rules, before anything is read.
+
+Saving changes more than the `snmp_query` row: when the data query already had
+a Data Input Method, `data_query_update_input_method()` moves its data
+templates and data sources to the new method and rebuilds their poller cache
+through `push_out_data_input_method()`. That logic stays in `lib/`, so the save
+runs in `bin/legacy-data-query.php`, a worker that executes the legacy code in
+one transaction on the primary database: it rechecks the account and both
+realms with shared locks, locks the row, compares the form's revision, checks
+the Data Input Method and the XML file, saves, runs the push-out and updates
+`poller_replicate_snmp_query_crc`, and commits only when every step succeeded.
+The gateway accepts the worker's answer only when it echoes the request's actor,
+action, id and nonce, and audits each save as `data-query.save`.
+
+The poller cache rows of a data source on a Remote Data Collector are written
+on that collector's own database connection and commit there; a rollback of the
+primary does not undo them, which was already the case, and a Full Sync repairs
+them. A collector that is down makes the save report as partial with that
+advice instead of a plain success.
+
+Differences from legacy:
+- The XML path must name a readable file under the `resource` directory after
+  `<path_cacti>`, `<path_snmpget>` and `<path_php_binary>` are replaced, which
+  is what `get_data_query_array()` accepts. Legacy saved any path and only
+  reported later that the file could not be found.
+- The Data Input Method must exist and be a Script Query, SNMP Query or Script
+  Server Query method, the types the legacy drop-down offered.
+- Name and description must be single-line text of at most 100 and 255
+  characters and are trimmed; legacy trimmed only the XML path.
+- `data_queries.php?action=edit` without an ID redirects to the new editor, and
+  an old settings form posted again answers 409 with
+  `Cache-Control: private, no-store` without saving.
 
 ## System Utilities diagnostic views
 

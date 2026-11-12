@@ -119,7 +119,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'lib/auth.php' => 'b433c35e4fa373396566d01e9549fc3ddac2369c1617bde596dc45af4b993d89',
     'include/csrf.php' => 'ec3c4549ce0e792544bf8f840a1c65d61809e48817f5e8ff91de6f856c9d9b1a',
-    'config/services.yaml' => 'b63055c63719779cc4861a73cc9a508747f330168e70f2f2f7f9795b62aa0cf0',
+    'config/services.yaml' => '433fd9c96e67f62caf4c6eb6acc6a526f77c50094b9bffb3765dfd1d24653235',
     'bin/legacy-installer.php' => 'b03baf05027f35662531c1f08721352bfcd81247c560496fbed633672d8680bf',
     'src/Platform/Application/Installer/InstallerWorkflow.php' => 'ab3dfe5d24d3299fa812959cedbae0371f7fa5091ad45dd607f23b27bd378f78',
     'src/Platform/Application/Installer/InstallerBackend.php' => 'a970bf951de3274bb1953d55aa177c9793990f0a1b7baa35a539187aa0f0133b',
@@ -153,7 +153,7 @@ const ASSET_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
     'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',
-    'config/services.yaml' => 'b63055c63719779cc4861a73cc9a508747f330168e70f2f2f7f9795b62aa0cf0',
+    'config/services.yaml' => '433fd9c96e67f62caf4c6eb6acc6a526f77c50094b9bffb3765dfd1d24653235',
 ];
 
 function asset_authentication_review(string $root): ?string
@@ -299,7 +299,7 @@ const ABOUT_AUTHENTICATION_SOURCES = [
     'src/IdentityAccess/Infrastructure/Legacy/AuthenticationDatabaseSessionHandler.php' => 'a6f2d8cc9639566f3eb43b026f32773f4def5bec13149c06429ac74a56aef882',
     'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php' => 'c2b1a492167bb5e73b4b23ceb9869574f21393f6d6369a662e40d50f2f749944',
     'src/IdentityAccess/Infrastructure/Legacy/ReadOnlyDatabaseSessionHandler.php' => '04472201d4ead638c0cccc1bbcb12f588bcabc0b108b0da126429f3662720d4c',
-    'config/services.yaml' => 'b63055c63719779cc4861a73cc9a508747f330168e70f2f2f7f9795b62aa0cf0',
+    'config/services.yaml' => '433fd9c96e67f62caf4c6eb6acc6a526f77c50094b9bffb3765dfd1d24653235',
 ];
 
 // The IdentityAccess types whose check methods count as a gate. The adapter
@@ -2253,31 +2253,31 @@ function authenticated_access_adapter(string $root): string
 
 // Reviewed list admission includes the route-to-screen-to-realm mapping.
 const ADMINISTRATION_LIST_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
-    'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
-    'src/Navigation/Application/Query/ViewAdministrationList.php' => '2362d63d5e541163d5d4a1c888222116d4d42066f099e0dd2ecee6121eaf4644',
-    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '88d111f802cae85de5b7ef857337814f744daba9dbf3c5a7e27e94b82342a208',
+    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => '8fa9666a3623ecd8eedccd075da1edee7fbd0dd420057bf0f22304ec41769b5a',
+    'src/Navigation/Contract/Administration/ListScreen.php' => '6350d1b9aba91f396b95e67adaa9f9f19c1e19c86dc0bed0cb6d6b4822f4bce9',
+    'src/Navigation/Application/Query/ViewAdministrationList.php' => 'c0c6a2cfc47d9912e5149b6d6073d9682b1c9c143fd229974cddb6aec3c20d16',
+    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => 'd6d97d003e9758a382ec76f25c454188a42277bc1f29594dd4ff4d7c494c5cf9',
 ];
 
 // Reviewed management route defaults, actor/realm admission and scoped inputs.
 const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '271bdf0f87d037c6f8863d7c89bda1a34dad7de41e690b0b3a930a65dbf86cae',
-    'src/Navigation/Contract/Management/CatalogScreen.php' => 'fc48e051d8e33b70e0aa7623cd9f85c55cd9027aadb3d63379012e74ee857f32',
-    'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd33928dadc140353aad969ce74626e21b79c772d1f546bf93cca6a12f53fbc0a',
-    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => 'b910f1953547da9d654f80d0844ec1e6ab086e09f1075320a0aeda9c52f21f89',
-    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => '0e08209565d610b81cb2bbf7451bce78926b4b607d9984fa5796420b9b9fd803',
+    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => 'fbbf289cd99a459a124a0f966da391f23ee8137a83719afaf002d2c64cb496b0',
+    'src/Navigation/Contract/Management/CatalogScreen.php' => '679111a16bfa50907970c54fa205d8915a2ce1464589c09bf0059ad5df363010',
+    'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd961b98782ca4e5948b1b2fda2f2957eaf2418c9d5c934057fdfbb03c6d58ed8',
+    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => 'b34d6c6aae7dc955ac1b25b9b0e68869ccd62a9e21f20d8e0797856335433e1e',
+    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => '39471dce6f92fba80018c87e7325081a03b945071d09c687cc23147c44aac4f6',
 ];
 
 // Route prefix => feature realm, its access contract, the contract's only
 // adapter and the reviewed bytes of the files that decide it. A changed file
 // needs a fresh review.
 const RELATIONSHIP_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php' => 'b4f98da46da26f6f9eed2b6b9fe2761b256c1a0c7b7b3f54905407db3a407cac',
-    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
-    'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
-    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => 'a01c4c444f3e252d23b5a4510b24baecfe1c9b77ea39c2bdaea1903400c5153f',
-    'src/Navigation/Application/Query/ViewRelationships.php' => 'e8b6b158f5dc9344766a75c9503f6a4a591ca1c584bc08aec857ed097a4e5e4f',
-    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '9923e1416a17e81bdc237e17256ae9f7aa1796966d4c1fbfd5df202c8fdc3d24',
+    'src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php' => '5f8cea5579e4b0a18842f324f54565fe2fe0e804d923db97fbde29d2e7d3449d',
+    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => '8fa9666a3623ecd8eedccd075da1edee7fbd0dd420057bf0f22304ec41769b5a',
+    'src/Navigation/Contract/Administration/ListScreen.php' => '6350d1b9aba91f396b95e67adaa9f9f19c1e19c86dc0bed0cb6d6b4822f4bce9',
+    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => '5763fc6bd26566b5af5697879b44768181aec5a65c23459439fd5535a377c1bd',
+    'src/Navigation/Application/Query/ViewRelationships.php' => '042101dd27f1a5b623fce8ed03d13377bdaa4a52a0c63d55f572ba8ba735840f',
+    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '52fba10445f01c6127c6e9148c7cebcfb58152563171003ed102e57e98e0dfcd',
 ];
 
 const REVIEWED_FEATURE_ACCESS = [
@@ -2806,6 +2806,29 @@ const REVIEWED_FEATURE_ACCESS = [
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
     ],
+    // The data query settings editor checks the Data Queries realm through the
+    // reviewed data input account rules; these keys precede the list page's prefix,
+    // which uses AdministrationListAccess.
+    '/data-collection/queries/new' => [
+        'label' => 'data query',
+        'realm' => 13,
+        'contract' => 'Kadupul\\DataInput\\Application\\Port\\DataQueryAccess',
+        'adapter' => 'Kadupul\\DataInput\\Infrastructure\\Legacy\\LegacyDataQueryAccess',
+        'sources' => [
+            'src/DataInput/Infrastructure/Legacy/LegacyDataQueryAccess.php' => '84e4617a6b4cd77bd4c74afb0886ef9f383c0d35fd93d3cf945b6f2c80f75ade',
+            'src/DataInput/Infrastructure/Legacy/LegacyDataInputAccess.php' => '9000bc4ffb8d904ed981d9791824140d9dd303311e8f42a8c01f946bcc5ef3a6',
+        ],
+    ],
+    '/data-collection/queries/{id}' => [
+        'label' => 'data query',
+        'realm' => 13,
+        'contract' => 'Kadupul\\DataInput\\Application\\Port\\DataQueryAccess',
+        'adapter' => 'Kadupul\\DataInput\\Infrastructure\\Legacy\\LegacyDataQueryAccess',
+        'sources' => [
+            'src/DataInput/Infrastructure/Legacy/LegacyDataQueryAccess.php' => '84e4617a6b4cd77bd4c74afb0886ef9f383c0d35fd93d3cf945b6f2c80f75ade',
+            'src/DataInput/Infrastructure/Legacy/LegacyDataInputAccess.php' => '9000bc4ffb8d904ed981d9791824140d9dd303311e8f42a8c01f946bcc5ef3a6',
+        ],
+    ],
     '/data-collection/queries' => [
         'label' => 'administration list',
         'realm' => 13,
@@ -2839,6 +2862,26 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    // The graph rule editor shares the reviewed automation realm check; these keys
+    // precede the list page's prefix, which uses AdministrationListAccess.
+    '/automation/graph-rules/new' => [
+        'label' => 'graph rule',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/graph-rules/{id}' => [
+        'label' => 'graph rule',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
     ],
     '/automation/graph-rules' => [
         'label' => 'administration list',
@@ -2993,7 +3036,7 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\GraphDefinition\\Application\\Port\\CdefAccess',
         'adapter' => 'Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefAccess',
         'sources' => [
-            'src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php' => 'e11ea939a76da0dcb0db1041d95907f5524d5bfb79d2bbf3ea415406ce934612',
+            'src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php' => 'ad213730d75148baea58377b402778de88a6bfba47e5e533aa337cb48e4671a9',
         ],
     ],    '/automation/templates' => [
         'label' => 'automation template',

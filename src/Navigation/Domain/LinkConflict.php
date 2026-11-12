@@ -7,4 +7,5 @@
 
 namespace Kadupul\Navigation\Domain;
 
+/** Thrown when a change is based on an out-of-date view of the links, or on a link that is gone. */
 final class LinkConflict extends \RuntimeException {}

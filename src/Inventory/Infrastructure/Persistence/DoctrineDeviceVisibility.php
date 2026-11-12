@@ -16,8 +16,17 @@ use Doctrine\DBAL\Connection;
  */
 final readonly class DoctrineDeviceVisibility
 {
+    /**
+     * Binds the builder to the connection that will run the resulting query.
+     */
     public function __construct(private Connection $database) {}
 
+    /**
+     * Returns the SQL condition limiting devices to those the user may see.
+     * The condition refers to the host table as "h" and the local graph table as "gl".
+     *
+     * @throws \RuntimeException When the stored visibility mode is unsupported.
+     */
     public function predicate(int $userId): string
     {
         $mode = DeviceVisibilityRules::mode($this->database->fetchOne(DeviceVisibilityRules::MODE));

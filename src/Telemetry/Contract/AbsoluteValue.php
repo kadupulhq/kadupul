@@ -14,8 +14,16 @@ final readonly class AbsoluteValue implements SampleValue
 {
     private const MAXIMUM = '18446744073709551615';
 
+    /**
+     * Keeps the validated decimal text.
+     */
     private function __construct(private string $decimal) {}
 
+    /**
+     * Parses a non-negative decimal integer up to 18446744073709551615.
+     *
+     * @throws InvalidTelemetryValue when the text is not such an integer
+     */
     public static function fromString(string $text): self
     {
         if (preg_match('/\A[0-9]{1,30}\z/', $text) !== 1) {
@@ -29,6 +37,11 @@ final readonly class AbsoluteValue implements SampleValue
         return new self(gmp_strval($number));
     }
 
+    /**
+     * Builds a value from a non-negative integer.
+     *
+     * @throws InvalidTelemetryValue when the integer is negative
+     */
     public static function fromInt(int $value): self
     {
         if ($value < 0) {
@@ -38,6 +51,9 @@ final readonly class AbsoluteValue implements SampleValue
         return new self((string) $value);
     }
 
+    /**
+     * Returns the decimal text.
+     */
     public function toWire(): string
     {
         return $this->decimal;

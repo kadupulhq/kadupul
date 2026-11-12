@@ -18,6 +18,9 @@ use RuntimeException;
 /** Keeps buffered cache replacement within the current device assignment. */
 final class PollerCacheBufferWrite
 {
+    /**
+     * Binds the writer to the transaction runner.
+     */
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
     /** @param list<int> $ids @param list<string|null|false> $items */
@@ -101,6 +104,12 @@ final class PollerCacheBufferWrite
         }, ['host', 'data_local', 'poller_item', 'settings']);
     }
 
+    /**
+     * Records the current time as the last polling cache change and confirms the stored value.
+     *
+     * @return int The timestamp that was stored.
+     * @throws RuntimeException When the stored value cannot be confirmed.
+     */
     private function changed(PDO $primary): int
     {
         $changed = time();
@@ -205,6 +214,12 @@ final class PollerCacheBufferWrite
         return $statements;
     }
 
+    /**
+     * Prepares and runs a statement, and fails when any step cannot be confirmed.
+     *
+     * @param array $parameters Map from int|string to mixed.
+     * @throws RuntimeException When preparing or running the statement fails.
+     */
     private function execute(PDO $database, string $sql, array $parameters): PDOStatement
     {
         $query = $database->prepare($sql);

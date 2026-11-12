@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 19:42-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -326,10 +326,11 @@ msgstr "הגדל צבירה כדי להשתמש בתבנית"
 msgid "New Aggregate"
 msgstr "צבירה חדשה"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr "לא"
 
@@ -342,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "לא נמצאו גרפים"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -398,9 +399,9 @@ msgid "Report Name"
 msgstr "שם הדוח"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "חזרה אל עריכת פוסט"
@@ -487,11 +488,11 @@ msgstr "כיבוי גרף מצב באגים"
 msgid "Turn On Graph Debug Mode"
 msgstr "הפעל מצב גרף Debug"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr "כן"
 
@@ -888,8 +889,9 @@ msgstr "מחק מכשירים"
 msgid "Delete Device(s)"
 msgstr "מחק מכשירים"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "תיאור"
 
@@ -1074,6 +1076,10 @@ msgstr "אל תציג"
 msgid "Duplicate"
 msgstr "שכפל"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1134,9 +1140,9 @@ msgstr "שם החוק"
 msgid "Rule Selection [edit: %s]"
 msgstr "בחירת כלל [עריכה: %s]"
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr "בחירת כלל [חדש]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1145,6 +1151,10 @@ msgstr "מזהה מסד הנתונים הפנימי עבור כלל זה. שימ
 #: automation_graph_rules.php
 msgid "The name of this rule."
 msgstr "שם הכלל הזה."
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1414,10 +1424,6 @@ msgid "Created Trees"
 msgstr "עצים שנוצרו"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "אובייקטים כשירים"
 
@@ -1453,10 +1459,6 @@ msgstr "אופציונלי: פריט משנה"
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "‫Root"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
@@ -2211,10 +2213,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "שאילתות נתונים [עריכה: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "שאילתות נתונים [חדש]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "לא ניתן למחוק שאילתות נתונים שנמצאות בשימוש. בשימוש מוגדר להיות מופנים על ידי גרף או תבנית גרף."
 
@@ -2246,6 +2244,10 @@ msgstr[0] "שאילתת נתונים כפולה"
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2361,6 +2363,14 @@ msgstr "מספר תבניות הגרפים באמצעות שאילתת הנתו�
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "מספר הגרפים באמצעות שאילתת נתונים זו."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "נתיב XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7542,10 +7552,6 @@ msgstr "רוחב (- רוחב)"
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
 msgstr "X- קבצים פקטור"
-
-#: include/global_form.php
-msgid "XML Path"
-msgstr "נתיב XML"
 
 #: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."

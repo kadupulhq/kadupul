@@ -17,8 +17,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/** The form for one VDEF item; the "item_type" option decides whether the value is a function, a special data source or a custom string. */
 final class VdefItemType extends AbstractType
 {
+    /** Adds the hidden ids and revision, the item type, and a value field suited to the type. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $type = (string) ($options['item_type'] ?? '1');
@@ -34,6 +36,7 @@ final class VdefItemType extends AbstractType
                 : ['label' => 'Value', 'choices' => $valueChoices, 'choice_translation_domain' => $type === '4' ? 'graph_definition' : false]);
     }
 
+    /** Turns on CSRF protection and takes the "item_type" option, a string that defaults to the function type. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'graph_definition', 'csrf_protection' => true, 'csrf_token_id' => 'graph_vdef_edit', 'method' => 'POST', 'item_type' => '1']);

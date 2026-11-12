@@ -22,10 +22,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the signed-in user's own reports and their items. */
 final readonly class PersonalReportCatalogController
 {
     private const array HEADERS = ['Cache-Control' => 'private, no-store'];
 
+    /** Renders the list for the parent record in $id, or a plain response with status 401, 403, 404, 400 or 502; HEAD requests get no body. */
     #[Route('/management/my-reports', name: 'management_my_reports', defaults: ['screen' => 'my-reports', 'id' => '0'], methods: ['GET', 'HEAD'])]
     #[Route('/management/my-report-items/{id}', name: 'management_my_report_items', defaults: ['screen' => 'my-report-items'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     public function __invoke(CatalogScreen $screen, string $id, Request $request, AuthenticatedAccess $identity, ManagementCatalogAccess $access, ViewManagementCatalog $view, Environment $twig, TranslatorInterface $translator): Response

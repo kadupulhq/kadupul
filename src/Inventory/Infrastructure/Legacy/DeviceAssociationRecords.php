@@ -10,8 +10,20 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Domain\DeviceAssociations;
 use PDO;
 
+/**
+ * Reads a device's current associations and the list of targets that can be associated.
+ */
 final class DeviceAssociationRecords
 {
+    /**
+     * Builds the association snapshot for one device row.
+     *
+     * @param array $row The device's id, description, site, collector, template and SNMP version.
+     * @param string $kind Either "graph" or "query".
+     * @param bool $lock Whether to lock the association rows for update.
+     * @throws \InvalidArgumentException When $kind is unknown.
+     * @throws \RuntimeException When the rows cannot be read.
+     */
     public function snapshot(PDO $db, array $row, string $kind, bool $lock = false): DeviceAssociations
     {
         if ($kind === 'query') {
@@ -31,6 +43,14 @@ final class DeviceAssociationRecords
         $items = $this->read($db, $sql, [(int) $row['id']], PDO::FETCH_KEY_PAIR);
         return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $items, [], 'graph', (int) $row['snmp_version']);
     }
+    /**
+     * Lists the graph templates or data queries that can be associated, with names keyed by id.
+     * Graph templates owned by data queries are left out because they are attached through the query. Data queries that need SNMP are left out when $snmpVersion is 0.
+     *
+     * @param bool $lock Whether to lock the rows in share mode.
+     * @return array Map from int to string.
+     * @throws \InvalidArgumentException When $kind is unknown.
+     */
     public function available(PDO $db, string $kind, bool $lock = false, int $snmpVersion = 0): array
     {
         if ($kind === 'query') {
@@ -42,6 +62,14 @@ final class DeviceAssociationRecords
         // Preserve the legacy catalog: query-owned templates are attached via data queries.
         return $this->read($db, "SELECT DISTINCT gt.id, gt.name FROM graph_templates gt LEFT JOIN snmp_query_graph sqg ON sqg.graph_template_id = gt.id INNER JOIN graph_templates_item gti ON gti.graph_template_id = gt.id INNER JOIN data_template_rrd dtr ON gti.task_item_id = dtr.id INNER JOIN data_template_data dtd ON dtd.data_template_id = dtr.data_template_id WHERE sqg.name IS NULL AND gti.local_graph_id = 0 AND dtr.local_data_id = 0 ORDER BY gt.id" . ($lock ? ' LOCK IN SHARE MODE' : ''), [], PDO::FETCH_KEY_PAIR);
     }
+    /**
+     * Runs a read query and fails closed when it cannot be completed.
+     *
+     * @param array $parameters Map from int|string to mixed.
+     * @param int $mode A PDO fetch mode.
+     * @return array Map from int|string to mixed.
+     * @throws \RuntimeException When the query fails.
+     */
     private function read(PDO $db, string $sql, array $parameters, int $mode): array
     {
         $query = $db->prepare($sql);

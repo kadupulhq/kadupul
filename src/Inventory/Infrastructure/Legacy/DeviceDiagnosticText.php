@@ -10,6 +10,12 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 /** Only bounded plain text crosses the worker boundary. */
 final class DeviceDiagnosticText
 {
+    /**
+     * Turns diagnostic output into plain text that is safe to show.
+     * Replaces the given devices' SNMP credentials (including shell- and HTML-escaped forms) with "[redacted]", strips markup and control characters, and limits the result to 65536 bytes of valid UTF-8.
+     *
+     * @param array ...$hosts Device rows whose credential fields must be redacted.
+     */
     public static function clean(string $output, #[\SensitiveParameter] array ...$hosts): string
     {
         $replacements = [];

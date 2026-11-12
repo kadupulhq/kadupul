@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 19:42-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,9 +115,9 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr ""
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr ""
@@ -415,18 +415,19 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr ""
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr ""
 
@@ -458,11 +459,12 @@ msgid "Any"
 msgstr ""
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php templates_import.php utilities.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: templates_import.php utilities.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 msgid "None"
 msgstr ""
@@ -915,8 +917,9 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr ""
 
@@ -1005,8 +1008,16 @@ msgstr ""
 msgid "Disable"
 msgstr ""
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
 #: automation_graph_rules.php
 msgid "An attempt was made to perform a SQL injection in Graph automation"
+msgstr ""
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
 msgstr ""
 
 #: automation_graph_rules.php
@@ -1055,10 +1066,6 @@ msgstr ""
 msgid "Rule Selection [edit: %s]"
 msgstr ""
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr ""
-
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Don't Show"
 msgstr ""
@@ -1075,6 +1082,27 @@ msgstr ""
 msgid "Matching Objects."
 msgstr ""
 
+#: automation_graph_rules.php graphs.php include/global_arrays.php
+#: include/global_form.php
+msgid "Data Query"
+msgstr ""
+
+#: automation_graph_rules.php include/global_form.php
+msgid "Graph Type"
+msgstr ""
+
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
+msgid "Enabled"
+msgstr ""
+
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php
 msgid "Device Selection Criteria"
 msgstr ""
@@ -1085,19 +1113,6 @@ msgstr ""
 
 #: automation_graph_rules.php include/global_arrays.php
 msgid "Graph Rules"
-msgstr ""
-
-#: automation_graph_rules.php graphs.php include/global_arrays.php
-#: include/global_form.php
-msgid "Data Query"
-msgstr ""
-
-#: automation_graph_rules.php automation_tree_rules.php data_debug.php
-#: data_sources.php include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/html_reports.php
-#: managers.php user_admin.php user_domains.php user_group_admin.php
-#: utilities.php
-msgid "Enabled"
 msgstr ""
 
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
@@ -1118,10 +1133,6 @@ msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
-msgstr ""
-
-#: automation_graph_rules.php include/global_form.php
-msgid "Graph Type"
 msgstr ""
 
 #: automation_graph_rules.php
@@ -1363,10 +1374,6 @@ msgid "No SNMP Option Sets Found"
 msgstr ""
 
 #: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr ""
 
@@ -1418,10 +1425,6 @@ msgstr ""
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Graph Grouping Style"
-msgstr ""
-
-#: automation_tree_rules.php
-msgid "Edit Rule Settings"
 msgstr ""
 
 #: automation_tree_rules.php
@@ -1827,6 +1830,10 @@ msgid "Debugging"
 msgstr ""
 
 #: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php
 msgid "Click 'Continue' to Delete the following Data Query."
 msgid_plural "Click 'Continue' to Delete following Data Queries."
 msgstr[0] ""
@@ -1956,8 +1963,16 @@ msgstr ""
 msgid "Data Queries [edit: %s]"
 msgstr ""
 
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr ""
+
+#: data_queries.php include/global_arrays.php include/global_form.php
+msgid "Data Input Method"
+msgstr ""
+
 #: data_queries.php
-msgid "Data Queries [new]"
+msgid "Edit Data Query Settings"
 msgstr ""
 
 #: data_queries.php
@@ -2030,10 +2045,6 @@ msgstr ""
 
 #: data_queries.php
 msgid "The number of Graphs Templates using this Data Query."
-msgstr ""
-
-#: data_queries.php include/global_arrays.php include/global_form.php
-msgid "Data Input Method"
 msgstr ""
 
 #: data_queries.php
@@ -6782,10 +6793,6 @@ msgstr ""
 
 #: include/global_form.php
 msgid "A description for this data query."
-msgstr ""
-
-#: include/global_form.php
-msgid "XML Path"
 msgstr ""
 
 #: include/global_form.php

@@ -15,16 +15,23 @@ use Kadupul\GraphDefinition\Domain\CdefFilters;
 use Kadupul\Platform\Contract\JsonFilterPreferences;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
+/** Keeps a user's CDEF list filters in the per-user settings table. */
 #[AsAlias(CdefPreferences::class)]
 final readonly class DbalCdefPreferences implements CdefPreferences
 {
     private const string NAME = 'cdef_filters';
 
+    /** Wires the access check and the shared filter preference storage. */
     public function __construct(
         private CdefAccess $access,
         private JsonFilterPreferences $preferences,
     ) {}
 
+    /**
+     * Returns the stored filters, or null when none are stored or they no longer validate.
+     *
+     * @throws \Kadupul\GraphDefinition\Application\Query\CdefAccessDenied when the user may not manage CDEFs
+     */
     public function load(): ?array
     {
         return $this->preferences->load(
@@ -35,6 +42,7 @@ final readonly class DbalCdefPreferences implements CdefPreferences
         );
     }
 
+    /** Stores the filters after rechecking access inside the write. */
     public function save(array $filters): void
     {
         $this->preferences->save(self::NAME, $filters, CdefFilters::KEYS, 'Invalid CDEF filters.', function (): int {

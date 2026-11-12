@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 19:42-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -323,10 +323,11 @@ msgstr "Мигрирайте Aggregate, за да използвате шабл�
 msgid "New Aggregate"
 msgstr "Нов сбор"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr "Не"
 
@@ -339,11 +340,11 @@ msgid "No Graphs Found"
 msgstr "Няма намерени графики"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -395,9 +396,9 @@ msgid "Report Name"
 msgstr "Име на отчета"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Връщане"
@@ -484,11 +485,11 @@ msgstr "Изключете режима за отстраняване на гр�
 msgid "Turn On Graph Debug Mode"
 msgstr "Включете режима за отстраняване на грешки в графиката"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr "Да"
 
@@ -883,8 +884,9 @@ msgstr "Изтриване на устройствата"
 msgid "Delete Device(s)"
 msgstr "Изтриване на устройствата"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Описание"
 
@@ -1069,6 +1071,10 @@ msgstr "Не показвай"
 msgid "Duplicate"
 msgstr "Дублирай"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1129,9 +1135,9 @@ msgstr "Име на правило"
 msgid "Rule Selection [edit: %s]"
 msgstr "Избор на правило [редактиране: %s]"
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr "Избор на правило [ново]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1140,6 +1146,10 @@ msgstr "Вътрешният идентификатор на базата дан
 #: automation_graph_rules.php
 msgid "The name of this rule."
 msgstr "Името на това правило."
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1409,10 +1419,6 @@ msgid "Created Trees"
 msgstr "Създадени дървета"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Допустими обекти"
 
@@ -1448,10 +1454,6 @@ msgstr "Незадължително: Под-дърво"
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "Constellation name (optional)"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
@@ -2195,10 +2197,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Заявки за данни [редактиране: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Заявки за данни [нови]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Заявките за данни, които се използват, не могат да бъдат изтрити. В употреба се дефинира като рефериран от графичен или графичен шаблон."
 
@@ -2226,6 +2224,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Изтриване на заявка за данни"
 msgstr[1] "Изтриване на заявка за данни"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2341,6 +2343,14 @@ msgstr "Броят на шаблоните с графики, използващ
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Броят графики, използващи това запитване за данни."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML Path"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7493,10 +7503,6 @@ msgstr "Ширина (- ширина)"
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
 msgstr "Фактор на Х-Файлове"
-
-#: include/global_form.php
-msgid "XML Path"
-msgstr "XML Path"
 
 #: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."

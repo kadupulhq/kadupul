@@ -18,8 +18,15 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Compatibility endpoint that maps links and requests from the former site page to the current site routes.
+ */
 final class LegacySitesController
 {
+    /**
+     * Redirects supported legacy actions and filters (list, edit) to the current pages, and answers the time zone autocomplete request directly.
+     * No legacy mutation is replayed: POST gives 409 and other unsupported actions give 405. Responds 401 or 403 when access is denied and 400 for invalid filters.
+     */
     #[Route('/inventory/sites/legacy', name: 'inventory_sites_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {

@@ -9,8 +9,15 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Domain;
 
+/** A CDEF as the list shows it, with how many graphs, templates, other CDEFs and aggregates use it. */
 final readonly class CdefSummary
 {
+    /**
+     * @param int $graphs graphs that use the CDEF
+     * @param int $templates graph templates that use it
+     * @param int $referencingCdefs other CDEFs that include it
+     * @param int $aggregates aggregate graph items and templates that use it
+     */
     public function __construct(
         public int $id,
         public string $name,

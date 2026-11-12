@@ -26,6 +26,7 @@ final class PlanSerializer
     public const PLAN_SCHEMA_VERSION = 1;
     public const BOUND_PLAN_SCHEMA_VERSION = 2;
 
+    /** The plan as a JSON string. */
     public function toJson(CollectionPlan $plan): string
     {
         return json_encode($this->toDocument($plan), JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION);
@@ -46,6 +47,7 @@ final class PlanSerializer
         ];
     }
 
+    /** True when any metric in the plan carries a binding, which selects schema version 2. */
     private function bound(CollectionPlan $plan): bool
     {
         foreach ($plan->targets as $target) {

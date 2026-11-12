@@ -19,8 +19,19 @@ use Throwable;
 /** Serialize queued cleanup with returning device assignments on both servers. */
 final class QueuedCollectorPurge
 {
+    /**
+     * Binds the purge to the transaction runner.
+     */
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
+    /**
+     * Returns the connection to the authoritative primary database for the current collector configuration.
+     * The primary itself uses its own session; an online collector uses the connection supplied for the primary.
+     *
+     * @param array $configuration Collector id ("poller_id") and connection state.
+     * @param array $sessions Open connections keyed by $key.
+     * @throws RuntimeException When no usable connection exists.
+     */
     public static function primary(array $configuration, array $sessions, string $key, mixed $onlinePrimary): PDO
     {
         if (($configuration['poller_id'] ?? null) == 1) {
@@ -36,6 +47,16 @@ final class QueuedCollectorPurge
         return $connection;
     }
 
+    /**
+     * Runs one queued purge command for a collector, unless it is stale.
+     * Returns "changed" when the command is no longer queued as given, "obsolete" when the device has returned to that collector (the command is acknowledged without purging), and "purged" after the collector's data was removed and the command acknowledged. Both servers are locked so a returning device assignment cannot interleave.
+     *
+     * @param int $collector Collector id, 2 to 65535.
+     * @param array $command The queued command row; its action must be the purge action and its command the device id.
+     * @param Closure $connect Returns the collector's connection.
+     * @param Closure $purge Removes the device from the collector; must return true.
+     * @throws RuntimeException When the command or an identity is invalid, or a step cannot be confirmed.
+     */
     public function run(PDO $primary, int $collector, array $command, Closure $connect, Closure $purge): string
     {
         if ($collector < 2 || $collector > 65535 || !is_string($command['command'] ?? null)
@@ -106,6 +127,12 @@ final class QueuedCollectorPurge
         }
     }
 
+    /**
+     * Checks that a queued command row has a valid action and valid timestamps.
+     *
+     * @param array $command Map from string to mixed.
+     * @throws RuntimeException When it does not.
+     */
     private function command(array $command): void
     {
         if (!is_string($command['command'] ?? null) || !(is_int($command['action'] ?? null) || is_string($command['action'] ?? null))
@@ -119,12 +146,25 @@ final class QueuedCollectorPurge
         }
     }
 
+    /**
+     * Returns whether the current queued row matches the expected command in action, command and both timestamps.
+     *
+     * @param array $current Map from string to mixed.
+     * @param array $expected Map from string to mixed.
+     */
     private function sameCommand(array $current, array $expected): bool
     {
         return (string) $current['action'] === (string) $expected['action'] && $current['command'] === $expected['command']
             && $current['time'] === $expected['time'] && $current['last_updated'] === $expected['last_updated'];
     }
 
+    /**
+     * Runs the operation with repeatable-read isolation and 30-second lock waits on the connection, then restores the previous settings.
+     * The connection must be MySQL with no open transaction.
+     *
+     * @return mixed The operation's result.
+     * @throws RuntimeException When the session options cannot be set, confirmed or restored.
+     */
     private function session(PDO $connection, Closure $operation): mixed
     {
         if ($connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'mysql' || $connection->inTransaction()) {
@@ -186,6 +226,12 @@ final class QueuedCollectorPurge
         }
     }
 
+    /**
+     * Prepares and runs a statement, and fails when any step cannot be confirmed.
+     *
+     * @param array $parameters Map from int|string to mixed.
+     * @throws RuntimeException When preparing or running the statement fails.
+     */
     private function execute(PDO $connection, string $sql, array $parameters): PDOStatement
     {
         $query = $connection->prepare($sql);
@@ -195,6 +241,13 @@ final class QueuedCollectorPurge
         return $query;
     }
 
+    /**
+     * Runs a query and returns all rows, failing when the read cannot be confirmed.
+     *
+     * @param array $parameters Map from int|string to mixed.
+     * @return array The rows, each an array keyed by column name.
+     * @throws RuntimeException When the query fails.
+     */
     private function rows(PDO $connection, string $sql, array $parameters): array
     {
         $query = $this->execute($connection, $sql, $parameters);
