@@ -26,6 +26,7 @@ final class LegacyCdefController
 {
     private const string ID = '/\A(?:0|[1-9][0-9]{0,7})\z/D';
 
+    /** Redirects a legacy cdef.php GET to the matching page. A legacy POST or write action is refused (409 or 405) because its form has expired. */
     #[Route('/graph-definitions/cdefs/legacy', name: 'graph_cdef_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -94,6 +95,11 @@ final class LegacyCdefController
         }
     }
 
+    /**
+     * Parses a legacy id parameter; an empty string is 0.
+     *
+     * @throws \InvalidArgumentException when it is not a valid id
+     */
     private static function id(mixed $raw): int
     {
         if ($raw === '') {
@@ -105,6 +111,7 @@ final class LegacyCdefController
         return (int) $raw;
     }
 
+    /** A 302 redirect that is not cached. */
     private static function redirect(string $url): RedirectResponse
     {
         return new RedirectResponse($url, 302, ['Cache-Control' => 'private, no-store']);

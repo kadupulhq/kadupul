@@ -3036,7 +3036,7 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\GraphDefinition\\Application\\Port\\CdefAccess',
         'adapter' => 'Kadupul\\GraphDefinition\\Infrastructure\\Persistence\\DbalCdefAccess',
         'sources' => [
-            'src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php' => 'e11ea939a76da0dcb0db1041d95907f5524d5bfb79d2bbf3ea415406ce934612',
+            'src/GraphDefinition/Infrastructure/Persistence/DbalCdefAccess.php' => 'ad213730d75148baea58377b402778de88a6bfba47e5e533aa337cb48e4671a9',
         ],
     ],    '/automation/templates' => [
         'label' => 'automation template',

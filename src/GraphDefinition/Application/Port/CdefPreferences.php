@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Application\Port;
 
+/** The signed-in user's remembered CDEF list filters. */
 interface CdefPreferences
 {
     /** @return array<string, string>|null */

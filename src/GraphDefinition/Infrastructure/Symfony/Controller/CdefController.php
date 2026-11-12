@@ -22,8 +22,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the CDEF list, restoring and storing each user's filters. */
 final class CdefController
 {
+    /** Renders one page of the CDEF list, or a plain response with status 401, 403, 400 or 502. */
     #[Route('/graph-definitions/cdefs', name: 'graph_cdefs', methods: ['GET', 'HEAD'])]
     public function __invoke(Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, CdefPreferences $preferences, LegacyConfiguration $configuration, Environment $twig, TranslatorInterface $translator): Response
     {

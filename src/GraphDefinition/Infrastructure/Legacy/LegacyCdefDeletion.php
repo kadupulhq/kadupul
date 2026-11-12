@@ -14,6 +14,10 @@ use Kadupul\Platform\Contract\CdefReferenceReadiness;
 /** The legacy page retains its existing authorization and CSRF boundary. */
 final class LegacyCdefDeletion
 {
+    /**
+     * @param mixed $collectorId the configured collector id; deletion is allowed only on the primary collector, 1
+     * @param CdefReferenceReadiness|null $readiness extra check that CDEF references are safe to read; null skips it
+     */
     public function __construct(private readonly \PDO $database, private readonly mixed $collectorId, private readonly ?CdefReferenceReadiness $readiness = null) {}
 
     /**
@@ -148,6 +152,11 @@ final class LegacyCdefDeletion
         return $statement;
     }
 
+    /**
+     * Runs a statement that returns no rows, such as a transaction setting.
+     *
+     * @throws \RuntimeException when the statement fails
+     */
     private function execute(string $sql): void
     {
         if ($this->database->exec($sql) === false || $this->database->errorCode() !== '00000') {
