@@ -17,9 +17,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Form for confirming device removal and choosing what happens to the devices' graphs and data sources.
+ */
 final class DeviceRemovalType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
+    /**
+     * Adds the hidden selection and the removal policy choice.
+     * Submitting without a policy is an error.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class)->add('policy', ChoiceType::class, ['label' => 'Graphs and data sources', 'choices' => ['Retain graphs and disable data sources' => 'retain', 'Remove graphs and data sources' => 'purge'], 'expanded' => true, 'invalid_message' => $this->translator->trans('Select a removal policy.', [], 'inventory')]);
@@ -29,6 +39,9 @@ final class DeviceRemovalType extends AbstractType
             }
         });
     }
+    /**
+     * Enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_remove', 'method' => 'POST']);

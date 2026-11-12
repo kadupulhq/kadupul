@@ -15,9 +15,22 @@ use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
+/**
+ * Places devices in graph trees or reports by running the placement worker script in a separate PHP process.
+ */
 final readonly class LegacyDevicePlacements implements DevicePlacements
 {
+    /**
+     * Binds the adapter to the database and the project directory that holds the worker script.
+     */
     public function __construct(private DatabaseConnection $database, private string $projectDir) {}
+    /**
+     * Places the selected devices in the worker.
+     *
+     * @throws DeviceEditConflict When the selected devices changed since the confirmation page was shown.
+     * @throws InventoryAccessDenied When the worker denies the actor.
+     * @throws \RuntimeException When the outcome is unknown or could not be confirmed.
+     */
     public function place(int $actorId, DeviceSelection $selection, DevicePlacement $placement): void
     {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();

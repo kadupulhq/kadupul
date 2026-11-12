@@ -13,10 +13,21 @@ use Kadupul\Inventory\Application\Port\DeviceCreationCatalog;
 use Kadupul\Inventory\Application\Query\DeviceCreationChoices;
 use Kadupul\Inventory\Domain\NewDevice;
 
+/**
+ * Builds the device creation form choices from the stored settings and reference tables.
+ * Only an allow-list of settings is read, so stored credentials never reach the form.
+ */
 final readonly class DoctrineDeviceCreationCatalog implements DeviceCreationCatalog
 {
+    /**
+     * Binds the catalog to the main connection.
+     */
     public function __construct(private Connection $database) {}
 
+    /**
+     * Returns the default field values and the available templates, sites and collectors.
+     * A default template, site or collector that no longer exists falls back to none (or to the first collector).
+     */
     public function choices(): DeviceCreationChoices
     {
         $defaults = array_replace(NewDevice::DEFAULTS, [

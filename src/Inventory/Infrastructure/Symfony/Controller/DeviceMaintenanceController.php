@@ -25,8 +25,15 @@ use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 
+/**
+ * Page for running a maintenance action on one device, such as reindexing or a connectivity check.
+ */
 final class DeviceMaintenanceController
 {
+    /**
+     * Shows the maintenance form on GET and runs the requested action on POST, rendering its result.
+     * Responds 404 for an unknown device, 400 for invalid list filters, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{id}/maintenance', name: 'inventory_device_maintenance', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, Request $request, PrepareDeviceMaintenance $prepare, MaintainDevice $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation, DeviceFormFailure $failures): Response
     {

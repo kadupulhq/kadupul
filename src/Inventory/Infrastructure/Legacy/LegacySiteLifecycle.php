@@ -18,15 +18,35 @@ use Kadupul\Inventory\Domain\SiteSelection;
 use Kadupul\Inventory\Domain\SiteEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/**
+ * Looks up sites and deletes or duplicates them in batches, with an audit record.
+ */
 final readonly class LegacySiteLifecycle implements SiteLifecycle
 {
+    /**
+     * Binds the adapter to the database, console access and the site write audit.
+     */
     public function __construct(private DatabaseConnection $database, private ConsoleAccess $access, private SiteWriteAudit $audit) {}
 
+    /**
+     * Returns the selected sites in id order.
+     *
+     * @param array $ids List of int|string.
+     * @throws SiteNotFound When a selected site does not exist.
+     * @throws \InvalidArgumentException When the ids are not 1 to 100 valid, unique ids.
+     */
     public function find(array $ids): array
     {
         return $this->load(SiteSelection::validateIds($ids), false);
     }
 
+    /**
+     * Reads sites by id in id order, locking them when $lock is set.
+     *
+     * @param array $ids List of int.
+     * @return array List of Site.
+     * @throws SiteNotFound When a site does not exist.
+     */
     private function load(array $ids, bool $lock): array
     {
         $query = $this->database->get()->prepare('SELECT ' . SiteRecord::COLUMNS . ' FROM sites WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') ORDER BY id' . ($lock ? ' FOR UPDATE' : ''));
@@ -38,16 +58,40 @@ final readonly class LegacySiteLifecycle implements SiteLifecycle
         return array_map(SiteRecord::hydrate(...), $rows);
     }
 
+    /**
+     * Deletes every site in the selection.
+     * Active devices at those sites are left without a site.
+     *
+     * @throws InventoryAccessDenied When nobody is signed in, the user is not $userId, or the user may not manage devices.
+     * @throws SiteNotFound When a selected site does not exist.
+     * @throws SiteEditConflict When a site changed since the confirmation page was shown.
+     */
     public function delete(int $userId, SiteSelection $selection): void
     {
         $this->change($userId, $selection, null);
     }
 
+    /**
+     * Creates a copy of every site in the selection and returns the new ids.
+     * Every copy is validated before any is inserted.
+     *
+     * @param string $pattern Name for each copy, where "<site>" stands for the original name.
+     * @throws InventoryAccessDenied When nobody is signed in, the user is not $userId, or the user may not manage devices.
+     * @throws SiteNotFound When a selected site does not exist.
+     * @throws SiteEditConflict When a site changed since the confirmation page was shown.
+     * @throws \InvalidArgumentException When a copy would be invalid.
+     */
     public function duplicate(int $userId, SiteSelection $selection, string $pattern): array
     {
         return $this->change($userId, $selection, $pattern);
     }
 
+    /**
+     * Deletes the selected sites, or duplicates them when $pattern is given, in one transaction with an audit record.
+     * The actor is rechecked inside the transaction, and each site's revision must match the one the user saw.
+     *
+     * @return array Ids of the new sites; empty for a delete.
+     */
     private function change(int $userId, SiteSelection $selection, ?string $pattern): array
     {
         $db = $this->database->get();

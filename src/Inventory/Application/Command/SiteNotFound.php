@@ -7,4 +7,7 @@
 
 namespace Kadupul\Inventory\Application\Command;
 
+/**
+ * Thrown when a requested site does not exist.
+ */
 final class SiteNotFound extends \RuntimeException {}

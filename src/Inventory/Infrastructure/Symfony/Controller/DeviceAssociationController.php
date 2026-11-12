@@ -25,8 +25,15 @@ use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 
+/**
+ * Page for adding, removing or changing a device's graph or data query associations.
+ */
 final class DeviceAssociationController
 {
+    /**
+     * Shows the association form on GET and applies the change on POST, then redirects back with a saved flag.
+     * Responds 401 or 403 when access is denied, 404 for an unknown device, 400 for invalid list filters, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{id}/associations/{kind}', name: 'inventory_device_associations', requirements: ['id' => '[1-9][0-9]{0,7}', 'kind' => 'graph|query'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, string $kind, Request $request, PrepareDeviceAssociations $prepare, ChangeDeviceAssociation $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation, DeviceFormFailure $failures): Response
     {

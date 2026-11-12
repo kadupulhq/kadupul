@@ -7,6 +7,10 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * What happens to a removed device's graphs and data sources.
+ * Retain keeps the graphs and disables the data sources; Purge removes both.
+ */
 enum DeviceRemovalPolicy: string
 {
     case Retain = 'retain';

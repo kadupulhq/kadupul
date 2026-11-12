@@ -16,8 +16,14 @@ use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Read-only page showing one device's details.
+ */
 final class DeviceDetailsController
 {
+    /**
+     * Renders the details, or responds 404 when the device is missing or not visible and 400 for invalid list filters. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{id}', name: 'inventory_device_details', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD'])]
     public function __invoke(int $id, Request $request, FindDeviceDetails $find, Environment $twig, TranslatorInterface $translator): Response
     {

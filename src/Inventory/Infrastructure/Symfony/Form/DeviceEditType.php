@@ -16,10 +16,19 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Form for editing a device.
+ */
 final class DeviceEditType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
 
+    /**
+     * Adds the identity fields, notes, polling switch, site choice, the polling and SNMP sub-forms, and the hidden revision.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('description', TextType::class, ['label' => 'Name', 'attr' => ['maxlength' => 150]])
@@ -40,6 +49,9 @@ final class DeviceEditType extends AbstractType
             ->add('snmp', DeviceSnmpType::class, ['label' => 'SNMP settings'])
             ->add('revision', HiddenType::class);
     }
+    /**
+     * Requires the "sites" option (names keyed by id), and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('sites');

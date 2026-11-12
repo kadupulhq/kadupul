@@ -26,8 +26,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * Confirmation page for deleting or duplicating selected sites.
+ */
 final class SiteActionController
 {
+    /**
+     * Shows the selected sites on GET and applies the operation named in the route on POST, then redirects to the site list.
+     * Responds 404 when a selected site is missing, 400 for an invalid selection, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/sites/{operation}', name: 'inventory_site_action', requirements: ['operation' => 'delete|duplicate'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(string $operation, Request $request, PrepareSiteAction $prepare, DeleteSites $delete, DuplicateSites $duplicate, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
