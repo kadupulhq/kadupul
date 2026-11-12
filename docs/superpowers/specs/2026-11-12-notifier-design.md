@@ -230,11 +230,13 @@ A provider plugin is a Composer package. Discovery:
 
 - Two levels, so #1474's rows keep their meaning:
   - #1474's `alert_notification` row stays the **event**: one per incident
-    transition. #1474 queues only opened and resolved transitions. Phase 1
-    adds `acknowledged` as a third transition kind, queued when a Kadupul
-    user acknowledges an incident, so incident platforms and other
-    destinations learn about it. This is the one change to #1474's
-    contract.
+    transition. #1474 queues `opened`, `recovered` and `became_unknown`.
+    Phase 1 adds `acknowledged`, queued when a Kadupul user acknowledges an
+    incident, so incident platforms and other destinations learn about it.
+    "Resolve" in this document means `recovered` or `became_unknown`.
+  - The changes to #1474's contract are a `NotificationKind` enum that adds
+    `acknowledged` to its transitions, and a `markExpanded` method on its
+    event queue.
   - A new `notification_delivery` table holds one row per event and
     `Destination`, with its own attempts, claim, lease, outcome, redacted
     last error and provider message id.
