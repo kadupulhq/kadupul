@@ -224,7 +224,7 @@ dynamic_include	./graph_realtime.php:495	    <?php include($config['base_path'] 
 dynamic_include	./include/auth.php:135	                require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:202	            require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:44	require_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');
-dynamic_include	./include/csrf.php:442	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
+dynamic_include	./include/csrf.php:443	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/global.php:275	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:276	include_once($config['library_path'] . '/functions.php');
 dynamic_include	./include/global.php:277	include_once($config['library_path'] . '/headers_secure.php');

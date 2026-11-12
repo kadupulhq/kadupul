@@ -253,8 +253,9 @@ function cacti_csrf_external_path_is_safe($path)
 
 function csrf_error_callback(): never
 {
-    //Resolve session fixation for PHP 5.4
-    session_regenerate_id();
+    // Move the visitor to a new session identifier and discard the stored
+    // session under the old one. The session data carries over.
+    session_regenerate_id(true);
     if (defined('KADUPUL_INSTALLER_WEB') && ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
         while (ob_get_level() > 0) {
             ob_end_clean();

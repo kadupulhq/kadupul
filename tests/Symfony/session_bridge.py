@@ -290,6 +290,41 @@ def automation_templates(fixture):
     verify_automation_templates(fixture.harness, fixture.session, fixture.user_id, check)
 
 
+def session_cookie(session):
+    cookies = next(handler.cookiejar for handler in session.opener.handlers if hasattr(handler, 'cookiejar'))
+    return next(cookie.value for cookie in cookies if cookie.name == 'Cacti')
+
+
+def expired_token_logout(fixture, expected):
+    """A logout POST whose token no longer matches the session falls back to
+    the confirmation page under a new identifier. The identifier it arrived
+    with must not stay stored or signed in."""
+    harness = fixture.harness
+    session = Session(harness.base)
+    session.request('/index.php')
+    expired = session.token
+    check(not session.login('behavior-admin')['login_form'], 'login before an expired-token logout succeeds')
+    previous = session_cookie(session)
+    session.request('/logout.php', {'action': '', '__csrf_magic': expired})
+    check(session_cookie(session) != previous, 'expired logout token moves the browser to a new session')
+    check(fixture.actor(session).get('json') == expected, 'expired logout token keeps the confirming browser signed in')
+    request = Request(harness.base + '/app.php/session', headers={'Cookie': 'Cacti=' + previous})
+    try:
+        response = Session(harness.base).opener.open(request)
+    except HTTPError as error:
+        response = error
+    with response:
+        check(response.status == 401, 'expired logout token leaves the previous session signed out')
+    if fixture.database_sessions:
+        check(harness.sql(f"SELECT COUNT(*) FROM sessions WHERE id='{previous}'").strip() == '0',
+              'expired logout token leaves no database session under the previous ID')
+    else:
+        probe = harness.php('-r', '$path = ini_get("session.save_path") ?: sys_get_temp_dir(); echo is_file($path . "/sess_' + previous + '") ? "exists" : "absent";')
+        check(probe['exit'] == 0 and probe['stdout'] == 'absent', 'expired logout token leaves no file session under the previous ID')
+    session.request('/logout.php', {'action': '', '__csrf_magic': session.token})
+    check(fixture.actor(session)['status'] == 401, 'confirmed logout after an expired token ends the new session')
+
+
 def account_lifecycle(fixture):
     harness = fixture.harness
     session = fixture.session
@@ -323,6 +358,7 @@ def account_lifecycle(fixture):
         check(fixture.actor(session)['status'] == 401, 're-enabling does not resurrect rejected session')
         session = fixture.login()
 
+    expired_token_logout(fixture, expected)
     session.request('/logout.php')
     check(fixture.actor(session).get('json') == expected, 'logout confirmation preserves Symfony access')
     session.request('/logout.php', {'action': '', '__csrf_magic': session.token})

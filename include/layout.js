@@ -3237,9 +3237,8 @@ function submitLogout(action) {
 		target.searchParams.set('action', action);
 	}
 	if (action === 'timeout' || typeof csrfMagicToken !== 'string' || csrfMagicToken === '') {
-		// logout.php ends a timed-out session on this same-origin GET. A POST
-		// with a stale token would instead go through the CSRF callback, which
-		// replaces the session identifier and leaves the old session stored.
+		// logout.php ends a timed-out session on this same-origin GET, which
+		// needs no token; an idle page's token has usually expired by then.
 		// Other actions without a token get a fresh confirmation page.
 		document.location.assign(target.href);
 		return false;

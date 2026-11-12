@@ -279,8 +279,8 @@ bridge; the planned Symfony stateless CSRF manager is not yet in use.
 
 `include/layout.js` submits suspension and collector-state events using POST and
 the current token; the idle timer navigates to `logout.php?action=timeout` by GET.
-With database sessions a stale-token POST would pass through the CSRF callback,
-which replaces the session identifier and leaves the old session stored. Its target is an absolute same-origin URL, independent
+A stale-token POST passes through the CSRF callback, which moves the session to a
+new identifier and discards the stored session under the old one. Its target is an absolute same-origin URL, independent
 of a document's base element, and carries the reason in its query string. Without
 a token it navigates to that URL by GET. A stale token fails CSRF, and the native
 callback redirects to the same URL by GET. `logout.php?action=timeout` then ends a
