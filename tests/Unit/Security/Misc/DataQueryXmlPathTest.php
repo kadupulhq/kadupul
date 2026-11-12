@@ -88,21 +88,21 @@ function dq_path_edit_page(string $base, string $xml_path): string
 {
     $program = '$GLOBALS["input"] = json_decode(stream_get_contents(STDIN), true);'
         . '$config = array("base_path" => $GLOBALS["input"]["base"]);'
-        . '$fields_data_query_edit = array();'
         . 'function get_filter_request_var($name) { return 7; }'
         . 'function isempty_request_var($name) { return false; }'
         . 'function get_request_var($name) { return 7; }'
-        . 'function db_fetch_row_prepared($sql, $params = array()) { return array("id" => 7, "name" => "Interfaces", "xml_path" => $GLOBALS["input"]["xml_path"]); }'
+        . 'function db_fetch_row_prepared($sql, $params = array()) { return array("id" => 7, "name" => "Interfaces", "description" => "", "xml_path" => $GLOBALS["input"]["xml_path"], "data_input_id" => 2); }'
+        . 'function db_fetch_cell_prepared($sql, $params = array()) { return "SNMP Query"; }'
+        . 'function form_alternate_row(...$args) {}'
+        . 'function html_escape($text) { return htmlspecialchars((string) $text, ENT_QUOTES); }'
+        . 'function sanitize_uri($uri, $strict = true) { return $uri; }'
         . 'function db_fetch_assoc_prepared($sql, $params = array()) { return array(); }'
         . 'function read_config_option($name) { return ""; }'
+        . '$config["url_path"] = "/";'
         . 'function __($text, ...$args) { return vsprintf($text, $args); }'
         . 'function __esc($text, ...$args) { return vsprintf($text, $args); }'
-        . 'function form_start(...$args) {}'
         . 'function html_start_box(...$args) {}'
         . 'function html_end_box(...$args) {}'
-        . 'function draw_edit_form(...$args) {}'
-        . 'function inject_form_variables(...$args) { return array(); }'
-        . 'function form_save_button(...$args) {}'
         . 'class CactiSecureHeaders { public static function getNonceAttribute() { return ""; } }'
         . 'function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }'
         . dq_path_functions('lib/functions.php', array('cacti_path_is_within', 'cacti_normalize_windows_path'))
@@ -168,4 +168,42 @@ test('path containment refuses a NUL byte instead of throwing', function () {
         . 'print json_encode(array(cacti_path_is_within(__FILE__ . "\0", "/"), cacti_path_is_within("/", "/\0"), cacti_path_is_within("/usr/bin", "/usr")));';
 
     expect(dq_path_child($program))->toBe(array(false, false, true));
+});
+
+test('a replayed data query settings form writes nothing', function () {
+    // The settings moved to Symfony; associations still save on data_queries.php.
+    // The namespace lets the extracted page functions call recording builtins.
+    $program = 'namespace Probe;'
+        . dq_path_functions('data_queries.php', array('data_query_settings_expired', 'form_save'))
+        . '$GLOBALS["request"] = array("save_component_snmp_query" => "1", "id" => "7", "name" => "Replayed", "description" => "", "xml_path" => "/etc/hosts", "data_input_id" => "2");'
+        . 'function isset_request_var($name) { return isset($GLOBALS["request"][$name]); }'
+        . 'function get_filter_request_var($name) { return $GLOBALS["request"][$name] ?? ""; }'
+        . 'function get_nfilter_request_var($name) { return $GLOBALS["request"][$name] ?? ""; }'
+        . 'function get_request_var($name) { return $GLOBALS["request"][$name] ?? ""; }'
+        . 'function form_input_validate($value, ...$args) { return $value; }'
+        . 'function get_hash_data_query(...$args) { return str_repeat("a", 32); }'
+        . 'function __($text) { return $text; }'
+        . 'function html_escape($text) { return htmlspecialchars($text); }'
+        . 'function http_response_code($code) { $GLOBALS["status"] = $code; }'
+        . 'function header($value) { $GLOBALS["headers"][] = $value; }'
+        . 'function sql_save(...$args) { $GLOBALS["saved"] = true; return 7; }'
+        . 'function db_fetch_cell_prepared(...$args) { return 2; }'
+        . 'function data_query_update_input_method(...$args) { $GLOBALS["saved"] = true; }'
+        . 'function update_replication_crc(...$args) { $GLOBALS["saved"] = true; }'
+        . 'register_shutdown_function(static function (): void { ob_end_clean(); echo json_encode(array("status" => $GLOBALS["status"] ?? null, "headers" => $GLOBALS["headers"] ?? array(), "saved" => $GLOBALS["saved"] ?? false)); });'
+        . 'ob_start(); form_save();';
+
+    expect(dq_path_child($program))->toBe(array('status' => 409, 'headers' => array('Cache-Control: private, no-store'), 'saved' => false));
+});
+
+test('the legacy editor sends a new data query to the Symfony editor', function () {
+    $source = (string) file_get_contents(dirname(__DIR__, 4) . '/data_queries.php');
+    $dispatch = (string) strstr((string) strstr($source, "    case 'edit':"), 'data_query_edit();', true);
+    $editor = test_php_function_source($source, 'data_query_edit');
+
+    expect($dispatch)->toContain("if (isempty_request_var('id')) {")
+        ->and($dispatch)->toContain("header('Location: app.php/data-collection/queries/new', true, 302);")
+        ->and($editor)->not->toContain('draw_edit_form(')
+        ->and($editor)->not->toContain('form_save_button(')
+        ->and($editor)->toContain("'app.php/data-collection/queries/' . \$snmp_query['id'] . '/edit'");
 });
