@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Contract;
 
+/**
+ * One reading of a metric on a device resource at an instant, with its protocol, unit, quality and labels.
+ * Labels are sorted by name and the timestamp is held in UTC.
+ */
 final readonly class Sample
 {
     public \DateTimeImmutable $timestamp;

@@ -9,4 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Application;
 
+/**
+ * Raised when the samples given for normalization are not one series of counter readings.
+ */
 final class UnusableSeries extends \InvalidArgumentException {}

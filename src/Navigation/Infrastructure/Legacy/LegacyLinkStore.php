@@ -17,8 +17,10 @@ use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Contract\PlatformConfiguration;
 
+/** External links in the legacy external_links table. Every write runs in one audited transaction, is checked against the list revision and keeps the per-link permission realm (10000 plus the link id) in step. */
 final readonly class LegacyLinkStore implements LinkStore
 {
+    /** Wires the database, access check, audit trail and configuration. */
     public function __construct(
         private DatabaseConnection $database,
         private LinkAccess $access,
@@ -26,6 +28,7 @@ final readonly class LegacyLinkStore implements LinkStore
         private LegacyConfiguration $configuration,
         private PlatformConfiguration $platform
     ) {}
+    /** Lists the regular files in include/content, sorted by name, skipping links, README and index.php. */
     public function files(): array
     {
         $directory = $this->platform->basePath . '/include/content';
@@ -40,6 +43,7 @@ final readonly class LegacyLinkStore implements LinkStore
         sort($files, SORT_STRING);
         return $files;
     }
+    /** The num_rows_table setting, or 25 when it is unset or outside 1 to 5000. */
     public function defaultRows(): int
     {
         $rows = filter_var(
@@ -49,6 +53,11 @@ final readonly class LegacyLinkStore implements LinkStore
         );
         return $rows === false ? 25 : $rows;
     }
+    /**
+     * Queries one page of links with the filter, sort and paging in $filters.
+     *
+     * @throws \InvalidArgumentException when the sort column or direction is not allowed
+     */
     public function list(array $filters): array
     {
         $sort = $filters['sort_column'];
@@ -65,11 +74,20 @@ final readonly class LegacyLinkStore implements LinkStore
         $links = array_map(static fn(array $row): ExternalLink => new ExternalLink((int) $row['id'], (int) $row['sortorder'], (string) $row['title'], (string) $row['contentfile'], (string) $row['style'], (string) $row['extendedstyle'], $row['enabled'] === 'on', (int) $row['refresh']), $query->fetchAll(\PDO::FETCH_ASSOC));
         return ['links' => $links, 'total' => (int) $count->fetchColumn()];
     }
+    /** Reads every link and computes the revision from the rows. */
     public function snapshot(): array
     {
         $rows = $this->rows(false);
         return ['links' => array_map($this->hydrate(...), $rows), 'revision' => $this->revision($rows)];
     }
+    /**
+     * Validates the fields, then inserts or updates the link inside a locked transaction and gives the actor the link's realm.
+     * A saved link always moves to the end of the order, as the legacy editor does.
+     *
+     * @throws \InvalidArgumentException when the fields or the console section are invalid
+     * @throws \Kadupul\Navigation\Domain\LinkConflict when the revision is stale or the link no longer exists
+     * @throws \RuntimeException when a write or the commit cannot be confirmed
+     */
     public function save(int $actorId, ?int $id, array $fields, string $revision): int
     {
         $values = ExternalLink::validate($fields, $this->files());
@@ -122,6 +140,12 @@ final readonly class LegacyLinkStore implements LinkStore
             return $id;
         });
     }
+    /**
+     * Applies the operation inside a locked transaction; up and down move one link and renumber the order, and delete also removes the link's realm grants.
+     *
+     * @throws \InvalidArgumentException when the operation or selection is invalid
+     * @throws \Kadupul\Navigation\Domain\LinkConflict when the revision is stale or a link no longer exists
+     */
     public function mutate(int $actorId, array $ids, string $operation, string $revision): void
     {
         if (!in_array($operation, ['delete', 'enable', 'disable', 'up', 'down'], true) || $ids === [] || count($ids) > 100
@@ -160,6 +184,7 @@ final readonly class LegacyLinkStore implements LinkStore
             // Bulk deletion intentionally keeps surviving legacy sort values.
         });
     }
+    /** Runs $operation in a transaction after rechecking access, then records an audit event; an audit failure does not change the result. */
     private function write(int $actorId, string $action, callable $operation): mixed
     {
         $db = $this->database->get();
@@ -204,6 +229,11 @@ final readonly class LegacyLinkStore implements LinkStore
             }
         }
     }
+    /**
+     * On MySQL, requires the primary collector and InnoDB tables so the transaction is real.
+     *
+     * @throws \RuntimeException when either is not the case
+     */
     private function assertTransactional(\PDO $db): void
     {
         if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) !== 'mysql') {
@@ -220,12 +250,18 @@ final readonly class LegacyLinkStore implements LinkStore
             }
         }
     }
+    /** Reads every link row in id order; $lock adds FOR UPDATE on MySQL. */
     private function rows(bool $lock): array
     {
         $suffix = $lock && $this->database->get()->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' FOR UPDATE' : '';
         $rows = $this->database->get()->query('SELECT id, sortorder, title, contentfile, style, extendedstyle, enabled, refresh FROM external_links ORDER BY id' . $suffix)->fetchAll(\PDO::FETCH_ASSOC);
         return array_map(static fn(array $row): array => ['id' => (int) $row['id'], 'sortorder' => (int) $row['sortorder'], 'title' => (string) $row['title'], 'contentfile' => (string) $row['contentfile'], 'style' => (string) $row['style'], 'extendedstyle' => (string) $row['extendedstyle'], 'enabled' => (string) $row['enabled'], 'refresh' => (int) $row['refresh']], $rows);
     }
+    /**
+     * Reads the rows with a lock and compares their revision with the one the caller holds.
+     *
+     * @throws \Kadupul\Navigation\Domain\LinkConflict when the links changed since $revision
+     */
     private function checkedRows(string $revision): array
     {
         $rows = $this->rows(true);
@@ -234,10 +270,12 @@ final readonly class LegacyLinkStore implements LinkStore
         }
         return $rows;
     }
+    /** A SHA-256 over the rows, so any change to any link changes the revision. */
     private function revision(array $rows): string
     {
         return hash('sha256', json_encode($rows, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
     }
+    /** Builds a link from a row. */
     private function hydrate(array $row): ExternalLink
     {
         return new ExternalLink($row['id'], $row['sortorder'], $row['title'], $row['contentfile'], $row['style'], $row['extendedstyle'], $row['enabled'] === 'on', $row['refresh']);

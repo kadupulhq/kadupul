@@ -11,6 +11,9 @@ namespace Kadupul\Telemetry\Application;
 
 use Kadupul\Telemetry\Contract\CounterWidth;
 
+/**
+ * Thresholds and per-metric counter widths that govern how counter readings are normalized.
+ */
 final readonly class CounterNormalizationPolicy
 {
     /**
@@ -33,6 +36,9 @@ final readonly class CounterNormalizationPolicy
         }
     }
 
+    /**
+     * Returns the configured counter width for the metric, or null when none is configured.
+     */
     public function widthFor(string $metric): ?CounterWidth
     {
         return $this->widthsByMetric[$metric] ?? null;

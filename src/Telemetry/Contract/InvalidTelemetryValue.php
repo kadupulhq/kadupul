@@ -9,4 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Contract;
 
+/**
+ * Raised when a telemetry value object is given input it does not accept.
+ */
 final class InvalidTelemetryValue extends \InvalidArgumentException {}

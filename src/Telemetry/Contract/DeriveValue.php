@@ -15,8 +15,16 @@ final readonly class DeriveValue implements SampleValue
     private const MINIMUM = '-9223372036854775808';
     private const MAXIMUM = '9223372036854775807';
 
+    /**
+     * Keeps the validated decimal text.
+     */
     private function __construct(private string $decimal) {}
 
+    /**
+     * Parses a decimal integer within the signed 64-bit range.
+     *
+     * @throws InvalidTelemetryValue when the text is not such an integer
+     */
     public static function fromString(string $text): self
     {
         if (preg_match('/\A-?[0-9]{1,30}\z/', $text) !== 1) {
@@ -30,11 +38,17 @@ final readonly class DeriveValue implements SampleValue
         return new self(gmp_strval($number));
     }
 
+    /**
+     * Builds a value from an integer.
+     */
     public static function fromInt(int $value): self
     {
         return new self((string) $value);
     }
 
+    /**
+     * Returns the decimal text.
+     */
     public function toWire(): string
     {
         return $this->decimal;

@@ -12,6 +12,7 @@ namespace Kadupul\Navigation\Contract\Relationships;
 
 use Kadupul\Navigation\Contract\Administration\ListScreen;
 
+/** The lists of records related to one parent record, such as a user's permissions or a rule's criteria; each value is the URL segment. */
 enum RelationshipScreen: string
 {
     case DeviceQueries = 'device-template-queries';
@@ -47,6 +48,7 @@ enum RelationshipScreen: string
     case GroupTime = 'group-time-preferences';
     case GroupLogin = 'group-login-options';
 
+    /** The administration list the parent record comes from, which also decides who may view this one. */
     public function parentScreen(): ListScreen
     {
         return match ($this) {
@@ -80,6 +82,7 @@ enum RelationshipScreen: string
         };
     }
 
+    /** The heading shown for the list. */
     public function title(): string
     {
         return match ($this) {
@@ -113,21 +116,25 @@ enum RelationshipScreen: string
         };
     }
 
+    /** The Symfony route name. */
     public function route(): string
     {
         return 'relationships_' . str_replace('-', '_', $this->value);
     }
 
+    /** The list's path relative to the web root. */
     public function path(): string
     {
         return 'app.php/relationships/' . $this->value;
     }
 
+    /** The column the list is sorted by when the request names none. */
     public function defaultSort(): string
     {
         return $this === self::ReceiverHistory ? 'id' : (in_array($this, [self::AggregateItems, self::GraphDeviceCriteria, self::GraphQueryCriteria, self::TreeDeviceCriteria, self::TreeSteps], true) ? 'sequence' : 'name');
     }
 
+    /** The columns the list shows. */
     public function columns(): array
     {
         return match ($this) {
@@ -149,6 +156,7 @@ enum RelationshipScreen: string
         };
     }
 
+    /** The query for the parent record's legacy editor page showing this relationship. */
     public function legacyQuery(int $parentId): array
     {
         if ($this->identityView()) {
@@ -183,11 +191,13 @@ enum RelationshipScreen: string
         return $query;
     }
 
+    /** True when the parent is a user or a user group. */
     public function identityView(): bool
     {
         return in_array($this->parentScreen(), [ListScreen::Users, ListScreen::UserGroups], true);
     }
 
+    /** True when the list shows a user's or group's settings or realm grants rather than related records. */
     public function identitySettingsView(): bool
     {
         return in_array($this, [self::UserRealms, self::GroupRealms, self::UserDisplay, self::GroupDisplay,
@@ -223,16 +233,19 @@ enum RelationshipScreen: string
         };
     }
 
+    /** True when each record links to an editor. */
     public function editableEntry(): bool
     {
         return in_array($this, [self::DeviceQueries, self::DataDefinitions, self::SnmpEntries, self::GraphDeviceCriteria, self::GraphQueryCriteria, self::TreeDeviceCriteria, self::TreeSteps], true);
     }
 
+    /** The legacy script that edits a record of this list. */
     public function entryScript(): string
     {
         return $this === self::DeviceQueries ? 'data_queries.php' : $this->parentScreen()->legacyScript();
     }
 
+    /** The query for one record's legacy editor page. */
     public function entryQuery(int $parentId, int $recordId): array
     {
         return match ($this) {

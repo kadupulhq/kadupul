@@ -22,6 +22,11 @@ enum CollectionProtocol: string
     case Netconf = 'netconf';
     case Restconf = 'restconf';
 
+    /**
+     * Returns the protocol with the given name.
+     *
+     * @throws InvalidTelemetryValue when the name is not a known protocol
+     */
     public static function fromName(string $name): self
     {
         return self::tryFrom($name) ?? throw new InvalidTelemetryValue(sprintf(

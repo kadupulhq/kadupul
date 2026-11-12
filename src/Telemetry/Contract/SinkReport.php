@@ -36,11 +36,17 @@ final readonly class SinkReport implements \Countable
         return $this->outcomes;
     }
 
+    /**
+     * Returns the number of outcomes.
+     */
     public function count(): int
     {
         return count($this->outcomes);
     }
 
+    /**
+     * Tells whether every sample was stored.
+     */
     public function allAccepted(): bool
     {
         return $this->rejected() === [];

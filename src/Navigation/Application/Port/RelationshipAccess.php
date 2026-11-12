@@ -12,7 +12,13 @@ namespace Kadupul\Navigation\Application\Port;
 
 use Kadupul\Navigation\Contract\Relationships\RelationshipScreen;
 
+/** Decides whether the signed-in user may view a relationship list. */
 interface RelationshipAccess
 {
+    /**
+     * Checks access to the screen's parent list.
+     *
+     * @throws \Kadupul\Navigation\Application\Query\AdministrationListDenied when there is no user or the user lacks access
+     */
     public function authorize(RelationshipScreen $screen): void;
 }

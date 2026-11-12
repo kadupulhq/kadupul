@@ -20,8 +20,14 @@ use Symfony\Component\Clock\ClockInterface;
  */
 final readonly class SymfonyClock implements Clock
 {
+    /**
+     * Binds the clock to the Symfony clock.
+     */
     public function __construct(private ClockInterface $clock) {}
 
+    /**
+     * Returns the current instant in UTC.
+     */
     public function now(): \DateTimeImmutable
     {
         return \DateTimeImmutable::createFromInterface($this->clock->now())->setTimezone(new \DateTimeZone('UTC'));

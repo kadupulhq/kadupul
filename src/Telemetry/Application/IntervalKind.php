@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Application;
 
+/**
+ * What a span between two counter readings represents: a usable increase, a counter restart, or too long a gap.
+ */
 enum IntervalKind: string
 {
     case Delta = 'delta';
