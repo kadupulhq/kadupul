@@ -9,8 +9,12 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Application\Query;
 
+/** Thrown when the user may not manage VDEFs; $unauthenticated tells a missing sign-in (401) from missing rights (403). */
 final class VdefAccessDenied extends \RuntimeException
 {
+    /**
+     * @param bool $unauthenticated true when nobody is signed in
+     */
     public function __construct(public readonly bool $unauthenticated = false)
     {
         parent::__construct('Access denied.');

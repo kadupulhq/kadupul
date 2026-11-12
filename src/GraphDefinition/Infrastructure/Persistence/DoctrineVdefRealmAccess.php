@@ -12,10 +12,13 @@ namespace Kadupul\GraphDefinition\Infrastructure\Persistence;
 use Doctrine\DBAL\Connection;
 use Kadupul\GraphDefinition\Application\Port\VdefRealmAccess;
 
+/** Checks the definitions realm (14) in the legacy permission tables. */
 final readonly class DoctrineVdefRealmAccess implements VdefRealmAccess
 {
+    /** Binds the check to the database connection. */
     public function __construct(private Connection $database) {}
 
+    /** True when the user holds realm 14 directly or through an enabled group. */
     public function canManageDefinitions(int $actorId): bool
     {
         if ($this->database->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = 14', [$actorId]) !== false) {

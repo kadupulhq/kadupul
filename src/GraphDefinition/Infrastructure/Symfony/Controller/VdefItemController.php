@@ -28,8 +28,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the forms that add, change, delete and reorder the items of a VDEF. */
 final class VdefItemController
 {
+    /** Shows the item form and saves the item on a valid POST; $itemId 0 adds a new item. */
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}', name: 'graph_vdef_item_edit', requirements: ['vdefId' => '[1-9][0-9]{0,7}', 'itemId' => '0|[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function edit(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess, LegacyConfiguration $configuration): Response
     {
@@ -126,6 +128,11 @@ final class VdefItemController
         }
     }
 
+    /**
+     * The URL of the item form's script under the configured installation path.
+     *
+     * @throws \RuntimeException when the configured path is not a safe absolute path
+     */
     private static function typeHandlerUrl(LegacyConfiguration $configuration): string
     {
         $path = $configuration->values()['url_path'] ?? '/';
@@ -136,6 +143,7 @@ final class VdefItemController
         return rtrim($path, '/') . '/public/js/vdef-item.js';
     }
 
+    /** Shows the removal confirmation and removes the item on a valid POST. */
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/{itemId<\d+>}/delete', name: 'graph_vdef_item_delete', requirements: ['vdefId' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function delete(int $vdefId, int $itemId, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
@@ -175,6 +183,7 @@ final class VdefItemController
         }
     }
 
+    /** Applies a new item order from the drag-and-drop form, or a one-step move up or down, on a valid POST. */
     #[Route('/graph-definitions/vdefs/{vdefId<\d+>}/items/reorder', name: 'graph_vdef_item_reorder', requirements: ['vdefId' => '[1-9][0-9]{0,7}'], methods: ['POST'])]
     public function reorder(int $vdefId, Request $request, VdefAuthorization $authorization, VdefEditor $editor, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {

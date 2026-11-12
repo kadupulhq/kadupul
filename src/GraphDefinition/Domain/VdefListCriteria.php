@@ -9,8 +9,15 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Domain;
 
+/** A validated VDEF list request: search text, page, page size, sort and the graph-usage switch. */
 final readonly class VdefListCriteria
 {
+    /**
+     * @param string $sort name, graphs or templates
+     * @param string $direction asc or desc
+     * @param bool $hasGraphs true to list only VDEFs used by a graph
+     * @throws \InvalidArgumentException when a value is outside its allowed range or set
+     */
     public function __construct(
         public string $search = '',
         public int $page = 1,
@@ -27,6 +34,7 @@ final readonly class VdefListCriteria
         }
     }
 
+    /** The number of rows to skip before this page. */
     public function offset(): int
     {
         return ($this->page - 1) * $this->pageSize;

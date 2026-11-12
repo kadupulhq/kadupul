@@ -20,8 +20,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the VDEF list. */
 final class VdefListController
 {
+    /** Renders one page of the VDEF list, or a plain response with status 401, 403 or 400. */
     #[Route('/graph-definitions/vdefs', name: 'graph_vdefs', methods: ['GET', 'HEAD'])]
     public function __invoke(Request $request, ListVdefs $list, VdefAuthorization $authorization, Environment $twig, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {
@@ -64,6 +66,11 @@ final class VdefListController
         }
     }
 
+    /**
+     * Reads a query value as an integer.
+     *
+     * @throws \InvalidArgumentException when it is not an integer of at most nine digits
+     */
     private static function int(mixed $value, string $field): int
     {
         if (is_int($value)) {
