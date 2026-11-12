@@ -117,7 +117,7 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
     'install/background.php' => 'e5f6566d90a88eae13d0fa05c7d818a876f968bb75a37083f570d86642bbf237',
     'install/installer-bootstrap.php' => '1dc2ba4f219239ebf06e6f1da1d0423ef1203314244cec3a27b21a013b596793',
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
-    'lib/auth.php' => 'ddaff16afea2031d739a806b1269b4851c2b4392ecec46021014c62a2a5f3e88',
+    'lib/auth.php' => '7f87cd4524ea7b68e75eaaab9692f8bf470cb2d851b62bdc236bed1f0a568ef7',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -303,7 +303,7 @@ const ABOUT_ACCESS_ADAPTER = 'Kadupul\IdentityAccess\Infrastructure\Legacy\Legac
 // service binding. A changed helper or binding must be reviewed again.
 const ABOUT_AUTHENTICATION_SOURCES = [
     'lib/session_metadata.php' => '5f6dbc41496610da1404620d84494c3833485be60ab4ec90091540d29230c5e3',
-    'lib/auth.php' => 'ddaff16afea2031d739a806b1269b4851c2b4392ecec46021014c62a2a5f3e88',
+    'lib/auth.php' => '7f87cd4524ea7b68e75eaaab9692f8bf470cb2d851b62bdc236bed1f0a568ef7',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',
@@ -2298,7 +2298,7 @@ const NATIVE_SESSION_FIREWALL_SOURCES = [
 
 // This route renders only an in-process native logout presentation object.
 const LOGOUT_PRESENTATION_SOURCES = [
-    'logout.php' => 'e997ddbedfbe14e815051195f9a0514f3602dbdca1637a9751ae4613befd4285',
+    'logout.php' => '59dacd1bbbd21808a6a2fc576b3d9252613f67c14f481b20eb754269c68c9e61',
     'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php' => '49a1a9f5ca2b68442eaa237b24964a11093b40ee1c9cebbc1e88e562719e2cb7',
     'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php' => '2cc6ef8df06898926492ec80ac06f103f630e44ba7db763547ff1dfd2e6e0823',
     'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php' => '20a13f081e47d27cad5832203b3acfcd75930167b2d21a6547ca6f63a9675eba',
@@ -2309,7 +2309,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'include/auth.php' => '94265e8da36ad15599ddc8d152801638c67cd0e31922ae36b0b6f22fba3a2ef1',
     'include/global.php' => 'd3b34a027c474472c32d95f4df1c0b30fe00a406daab99a24df1a65093618b48',
     'include/csrf.php' => 'c1880ed0999e0a6d5b59c84b8b17efd99ce476ace40883ec4768a37178bcbe81',
-    'lib/auth.php' => 'ddaff16afea2031d739a806b1269b4851c2b4392ecec46021014c62a2a5f3e88',
+    'lib/auth.php' => '7f87cd4524ea7b68e75eaaab9692f8bf470cb2d851b62bdc236bed1f0a568ef7',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php' => 'b22d6e89f46d464025af19df88131ec7c7ab3537a7541f9f75b43e697b504602',
     'src/IdentityAccess/Application/Port/LocalCredentials.php' => '432479473a433f8d56f87ff25d7b5fe371bcbf550c566301a48de2beeb2149dd',
     'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php' => '4ff595b598d8abb098fa79f115510ac3c274f15a51a5cbded312b28307f5200f',

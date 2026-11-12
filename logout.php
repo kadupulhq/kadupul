@@ -47,22 +47,18 @@ if ($logoutConfirmed) {
 // A GET may report a logout that already happened; it never performs one.
 $logoutEnded = $logoutConfirmed;
 if ($logoutRequest->isMethod('GET')) {
-    // auth_end_session() leaves this one-time notice after its own teardown.
-    $logoutNotice = $_SESSION['sess_logout_notice'] ?? null;
-    unset($_SESSION['sess_logout_notice']);
-    if (in_array($logoutNotice, ['timeout', 'disabled', 'remote'], true)) {
-        $logoutAction = $logoutNotice;
-        $logoutEnded = true;
-    } elseif ($logoutAction === 'timeout' && !isset($_SESSION['sess_user_id'])) {
-        // The session has already expired, so there is nothing left to confirm.
+    if (in_array($logoutAction, ['timeout', 'remote'], true) && !isset($_SESSION['sess_user_id'])) {
+        // The session has already ended, by expiry or by a server-side logout
+        // that redirected here with its reason, so there is nothing to confirm.
+        // No server-side logout redirects with 'disabled', so that claim confirms.
         $logoutEnded = true;
     } elseif ($logoutAction === 'timeout' && csrf_request_is_same_origin()) {
         // The idle timer of an open page lands here when its token went stale
         // or was missing. That page can no longer confirm, and leaving the
         // session alive would defeat the timeout. A cross-site GET still only
         // gets the confirmation form.
-        auth_end_session('timeout');
-        header('Location: logout.php', true, 303);
+        auth_end_session();
+        header('Location: logout.php?action=timeout', true, 303);
         return;
     } elseif ($logoutAction === '' && !isset($_SESSION['sess_user_id'])) {
         // Nobody is signed in, so there is no logout to confirm.

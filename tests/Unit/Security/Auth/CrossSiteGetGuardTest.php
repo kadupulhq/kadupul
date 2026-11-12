@@ -245,8 +245,8 @@ test('a remote collector page ends the session only for a same-site request', fu
 
     if ($ended) {
         expect($result['status'])->toBe(303)
-            ->and($result['events'])->toBe(array('logout_pre_session_destroy', 'clear_auth_cookie', 'cookie_logout', 'session_destroy', 'logout_post_session_destroy', 'session_start'))
-            ->and($result['session'])->toBe(array('sess_logout_notice' => 'remote'));
+            ->and($result['events'])->toBe(array('logout_pre_session_destroy', 'clear_auth_cookie', 'cookie_logout', 'session_destroy', 'logout_post_session_destroy'))
+            ->and($result['session'])->toBe(array());
     } else {
         // Redirected to the confirmation page; the session survives untouched.
         expect($result['status'])->toBe(302)

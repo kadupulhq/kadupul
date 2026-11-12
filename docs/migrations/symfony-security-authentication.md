@@ -300,8 +300,11 @@ cross-site GET, or one without that evidence, is redirected to the confirmation
 page and the session survives. `auth_end_session()` in
 `lib/auth.php` runs the logout hooks, remembered-token revocation and
 cookie/session teardown for these paths and for a confirmed `logout.php` POST, in
-the same order. A known reason is stored in a new session and shown once by the
-following GET of `logout.php`; that GET performs no teardown.
+the same order. The caller then redirects to `logout.php` with the reason
+(`?action=remote` or `?action=timeout`); that GET performs no teardown and shows
+the reason only when no session is signed in and only for those two reasons, so a link carrying a reason
+cannot end or misreport a live session. The reason is not kept in a new session
+because database sessions never store an anonymous one.
 
 This deliberately changes GET logout compatibility: menu and plugin links to
 `logout.php`, and any GET from another site, receive confirmation. Integrations

@@ -138,14 +138,13 @@ function clear_auth_cookie($db = false, $expire = null, $remembered = null)
  *
  * Only code that already holds the session and decided to log it out may call
  * this, so it opens no cross-site GET logout. It runs the hooks and teardown of
- * a confirmed logout.php POST, in the same order. A known reason is kept in
- * the replacement session so that logout.php can show it once.
- *
- * @param  (string) $reason '', 'timeout', 'disabled' or 'remote'
+ * a confirmed logout.php POST, in the same order. Callers report the reason by
+ * redirecting to logout.php with it; no session survives to carry it, since
+ * database sessions never store an anonymous one.
  *
  * @return (void)
  */
-function auth_end_session($reason = '')
+function auth_end_session()
 {
     api_plugin_hook('logout_pre_session_destroy');
 
@@ -154,13 +153,6 @@ function auth_end_session($reason = '')
     cacti_cookie_logout();
     cacti_session_destroy();
     api_plugin_hook('logout_post_session_destroy');
-
-    if (in_array($reason, array('timeout', 'disabled', 'remote'), true)) {
-        // A new identifier, never the destroyed one, carries only the notice.
-        session_id(session_create_id());
-        cacti_session_start();
-        $_SESSION['sess_logout_notice'] = $reason;
-    }
 }
 
 /**

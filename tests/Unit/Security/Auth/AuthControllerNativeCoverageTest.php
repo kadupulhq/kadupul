@@ -269,25 +269,13 @@ final class AuthControllerNativeCoverageTest extends TestCase
         yield 'array action' => ['POST', 'valid', ['timeout'], 400, false];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('serverLogoutReasons')]
-    public function testServerInitiatedLogoutEndsTheSessionAndKeepsOnlyItsReason(string $reason): void
+    public function testServerInitiatedLogoutEndsTheSessionWithoutStartingAnother(): void
     {
-        $state = $this->runController(['mode' => 'end_session', 'reason' => $reason]);
-        $teardown = ['logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy'];
-        $known = in_array($reason, ['timeout', 'disabled', 'remote'], true);
-        self::assertSame($known ? [...$teardown, 'START_SESSION'] : $teardown, $state['events']);
-        self::assertSame($known ? ['sess_logout_notice' => $reason] : [], $state['session']);
-        if ($known) {
-            self::assertTrue($state['session_replaced'], 'The notice must not reuse the destroyed session identifier.');
-        }
-    }
-
-    public static function serverLogoutReasons(): iterable
-    {
-        foreach (['', 'timeout', 'disabled', 'remote'] as $reason) {
-            yield 'reason ' . ($reason === '' ? 'none' : $reason) => [$reason];
-        }
-        yield 'unknown reason leaves no notice' => ['bogus'];
+        // Database sessions never store an anonymous session, so a replacement
+        // could not carry anything; callers pass the reason in the redirect.
+        $state = $this->runController(['mode' => 'end_session']);
+        self::assertSame(['logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy'], $state['events']);
+        self::assertSame([], $state['session']);
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('completedLogoutPages')]
@@ -296,7 +284,6 @@ final class AuthControllerNativeCoverageTest extends TestCase
         $state = $this->runController($scenario + ['mode' => 'logout', 'method' => 'GET', 'csrf' => 'missing', 'request' => []]);
         self::assertSame(200, $state['status']);
         self::assertSame([], $state['events'], 'A GET must never run logout hooks or teardown.');
-        self::assertArrayNotHasKey('sess_logout_notice', $state['session'], 'A notice is shown at most once.');
         $document = new \DOMDocument();
         self::assertTrue($document->loadHTML($state['html'], LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING));
         $xpath = new \DOMXPath($document);
@@ -313,8 +300,8 @@ final class AuthControllerNativeCoverageTest extends TestCase
         // The idle timer lands here by GET when its token is stale or missing.
         $state = $this->runController(['mode' => 'logout', 'method' => 'GET', 'csrf' => 'missing', 'site' => 'same-origin', 'request' => ['action' => 'timeout']]);
         self::assertSame(303, $state['status']);
-        self::assertSame(['logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy', 'START_SESSION'], $state['events']);
-        self::assertSame(['sess_logout_notice' => 'timeout'], $state['session']);
+        self::assertSame(['logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy'], $state['events']);
+        self::assertSame([], $state['session']);
     }
 
     public function testLogoutWithoutASessionOrReasonRedirectsHome(): void
@@ -327,11 +314,10 @@ final class AuthControllerNativeCoverageTest extends TestCase
 
     public static function completedLogoutPages(): iterable
     {
-        yield 'server remote notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'remote']], 'Remote Data Collector'];
-        yield 'server disabled notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'disabled']], 'account suspension'];
-        yield 'server timeout notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'timeout']], 'session timeout'];
+        yield 'server remote logout' => [['anonymous' => true, 'request' => ['action' => 'remote']], 'Remote Data Collector'];
         yield 'expired session timeout' => [['anonymous' => true, 'request' => ['action' => 'timeout']], 'session timeout'];
-        yield 'unknown notice still confirms' => [['session' => ['sess_logout_notice' => 'bogus']], null];
+        yield 'live session remote still confirms' => [['request' => ['action' => 'remote']], null];
+        yield 'live session disabled still confirms' => [['request' => ['action' => 'disabled']], null];
         yield 'live session timeout still confirms' => [['request' => ['action' => 'timeout']], null];
         yield 'cross-site live session timeout still confirms' => [['site' => 'cross-site', 'request' => ['action' => 'timeout']], null];
         yield 'expired session suspension claim still confirms' => [['anonymous' => true, 'request' => ['action' => 'disabled']], null];

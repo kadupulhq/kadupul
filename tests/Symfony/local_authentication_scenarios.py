@@ -201,7 +201,7 @@ def verify_local_authentication(harness, database_sessions, check):
         timed_out = admitted(changed_password)
         before_timeout = copy.copy(next(item for item in jar(timed_out) if item.name == 'Cacti'))
         landed = browser(timed_out, '/logout.php?action=timeout', 'same-origin')
-        check(actor(timed_out)['status'] == 401 and landed == '<BASE>/logout.php',
+        check(actor(timed_out)['status'] == 401 and landed == '<BASE>/logout.php?action=timeout',
               'idle timeout GET ends the session and reports it')
         replayed = Session(harness.base)
         jar(replayed).set_cookie(before_timeout)

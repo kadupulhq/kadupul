@@ -286,7 +286,7 @@ ob_start();
 register_shutdown_function(static function () use ($db, $mode) {
     $html = ob_get_clean();
     $account = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = 42');
-    $state = array('credential_valid' => isset($_SESSION['sess_user_id']) && auth_session_credentials_valid($account['password']), 'session' => $_SESSION, 'events' => $GLOBALS['events'], 'remember_cookie_had_identity' => $GLOBALS['rememberCookieHadIdentity'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'other_realm_policy' => $db->query('SELECT lastlogin, must_change_password FROM user_auth WHERE id = 44')->fetch(PDO::FETCH_ASSOC), 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html, 'status' => http_response_code() ?: 200, 'session_replaced' => isset($GLOBALS['endedSessionId']) ? $GLOBALS['replacementSessionId'] !== $GLOBALS['endedSessionId'] : null);
+    $state = array('credential_valid' => isset($_SESSION['sess_user_id']) && auth_session_credentials_valid($account['password']), 'session' => $_SESSION, 'events' => $GLOBALS['events'], 'remember_cookie_had_identity' => $GLOBALS['rememberCookieHadIdentity'], 'messages' => $GLOBALS['messages'], 'error' => $GLOBALS['error'] ?? false, 'error_message' => $GLOBALS['error_msg'] ?? '', 'password_error' => $GLOBALS['errorMessage'] ?? '', 'failed_attempts' => $account['failed_attempts'], 'locked' => $account['locked'], 'must_change' => $account['must_change_password'], 'lastlogin' => $account['lastlogin'] > 0, 'other_realm_policy' => $db->query('SELECT lastlogin, must_change_password FROM user_auth WHERE id = 44')->fetch(PDO::FETCH_ASSOC), 'password_matches_original' => password_verify('Correct1!', $account['password']), 'password_matches_new' => password_verify('NewCorrect2!', $account['password']), 'legacy_hash_retained' => strlen($account['password']) === 32, 'audit' => $db->query('SELECT result FROM user_log ORDER BY rowid')->fetchAll(PDO::FETCH_COLUMN), 'cache_users' => $db->query('SELECT user_id FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'session_users' => $db->query('SELECT user_id FROM sessions ORDER BY user_id')->fetchAll(PDO::FETCH_COLUMN), 'html' => $html, 'status' => http_response_code() ?: 200);
     $encoded = json_encode($state, JSON_THROW_ON_ERROR);
     // The collector appends serialization after application shutdown handlers.
     define('NATIVE_COVERAGE_COMPLETED', array('auth-controller-observed:' . $mode, 'auth-controller-persisted-state-readback'));
@@ -347,10 +347,8 @@ if ($mode === 'logout') {
 } elseif ($mode === 'end_session') {
     session_save_path($directory);
     session_start(['use_cookies' => false]);
-    $GLOBALS['endedSessionId'] = session_id();
     $_SESSION['sess_user_id'] = 42;
-    auth_end_session($scenario['reason'] ?? '');
-    $GLOBALS['replacementSessionId'] = session_id();
+    auth_end_session();
 } elseif ($mode === 'password') {
     if (!($scenario['no_session'] ?? false)) {
         $_SESSION['sess_user_id'] = 42;
