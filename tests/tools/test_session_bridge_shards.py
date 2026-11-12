@@ -25,7 +25,7 @@ class ShardPartitionTest(unittest.TestCase):
         self.assertEqual(STEPS, selected_steps(None))
 
     def test_plugin_menu_scenario_runs_in_the_assigned_shard(self):
-        selected = [step for step in selected_steps('3/3') if step.__name__ == 'plugin_menu']
+        selected = [step for step in selected_steps('3/5') if step.__name__ == 'plugin_menu']
         self.assertEqual(1, len(selected))
         fixture = SimpleNamespace(harness=object())
         with patch('plugin_menu_scenarios.verify_plugin_menu') as verify:

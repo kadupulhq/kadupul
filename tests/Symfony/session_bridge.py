@@ -397,16 +397,22 @@ LASTING_STATE = {
 
 # CI runs one stack per shard. The split follows measured hosted-runner step
 # times: the schema and audit parity CLIs take about seven minutes together,
-# device creation about four. A shard creates the session and account ID it
-# needs through Fixture and mirrors LASTING_STATE for the steps it skips.
+# device creation about four, the general CLI parity about fifteen, the tree
+# CLI about seven, and the user and graph CLIs about eleven together. The
+# self-hosted runners take roughly twice as long, so keep each shard well under
+# half of the job's 60-minute limit on hosted time. A shard creates the session
+# and account ID it needs through Fixture and mirrors LASTING_STATE for the
+# steps it skips.
 SHARDS = (
     ('schema_parity', 'audit_parity'),
     ('cdef_legacy_pages', 'inventory', 'device_create'),
     ('console_home', 'console_collectors', 'console_prefix', 'permission_denied', 'plugin_menu', 'anonymous_entry',
-     'script_server', 'cli_parity', 'tree_cli', 'user_parity', 'graph_parity', 'forged_session', 'basic_authentication', 'local_authentication', 'login_policy', 'data_inputs',
+     'script_server', 'tree_cli', 'forged_session', 'basic_authentication', 'local_authentication', 'login_policy', 'data_inputs',
      'about_authentication', 'about', 'data_source_profile_deletion', 'data_source_profile_heartbeat',
      'site_edit', 'links', 'site_create', 'site_lifecycle', 'palette_colors', 'gprint_presets',
      'color_templates', 'vdefs', 'rrdcheck', 'cdefs', 'automation_templates', 'account_lifecycle'),
+    ('cli_parity',),
+    ('user_parity', 'graph_parity'),
 )
 
 
