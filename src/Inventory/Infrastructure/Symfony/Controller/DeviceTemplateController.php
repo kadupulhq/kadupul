@@ -22,8 +22,15 @@ use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormPage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 
+/**
+ * Page for assigning one device to a device template.
+ */
 final class DeviceTemplateController
 {
+    /**
+     * Shows the template form on GET and saves the choice on POST, then redirects back with a saved flag.
+     * Responds 401 or 403 when access is denied, 404 for an unknown device, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{id}/template', name: 'inventory_device_template', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, Request $request, PrepareDeviceTemplateAssignment $prepare, AssignDeviceTemplate $assign, FormFactoryInterface $forms, DeviceFormPage $page, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation, DeviceFormFailure $failures): Response
     {

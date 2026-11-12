@@ -7,11 +7,21 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * Validated input for creating a site, with defaults filled in.
+ */
 final readonly class NewSite
 {
     public const DEFAULTS = ['name' => '', 'address1' => '', 'address2' => '', 'city' => '', 'state' => '', 'postal_code' => '', 'country' => '', 'timezone' => '', 'latitude' => '', 'longitude' => '', 'zoom' => '12', 'alternate_id' => '', 'notes' => ''];
     public array $fields;
 
+    /**
+     * Validates the submitted fields and fills in DEFAULTS for the rest.
+     * Empty latitude and longitude become "0"; empty zoom becomes "12".
+     *
+     * @param array $values Map from string to string.
+     * @throws \InvalidArgumentException When a field is unknown, too long or malformed.
+     */
     public function __construct(array $values)
     {
         if (array_diff_key($values, self::DEFAULTS) !== []) {

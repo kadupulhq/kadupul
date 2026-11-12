@@ -7,10 +7,21 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * Validated filters, paging and ordering for the device list.
+ */
 final readonly class DeviceListCriteria
 {
     public string $search;
 
+    /**
+     * Validates and trims the filters.
+     * A null site, template, collector or location filter means no filtering on that field. Page size must be 25, 50 or 100.
+     *
+     * @param string $state One of "all", "enabled" or "disabled".
+     * @param string $status One of "all", "unknown", "down", "recovering", "up", "error", "disabled" or "not-up".
+     * @throws \InvalidArgumentException When any value is outside its allowed set or range.
+     */
     public function __construct(string $search = '', public string $state = 'all', public int $page = 1, public int $pageSize = 25, public string $status = 'all', public DeviceOrder $order = new DeviceOrder(), public ?int $siteId = null, public ?int $templateId = null, public ?int $collectorId = null, public ?string $location = null)
     {
         $this->search = trim($search);
@@ -25,6 +36,9 @@ final readonly class DeviceListCriteria
         }
     }
 
+    /**
+     * Returns the zero-based row offset of the first row on the requested page.
+     */
     public function offset(): int
     {
         return ($this->page - 1) * $this->pageSize;

@@ -11,7 +11,13 @@ namespace Kadupul\Inventory\Application\Port;
 
 use Kadupul\Inventory\Domain\DeviceSelection;
 
+/**
+ * Changes SNMP settings on many devices at once.
+ */
 interface DeviceSnmpSettings
 {
+    /**
+     * Applies the change to every device in the selection.
+     */
     public function changeSnmp(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkSnmpChange $change): void;
 }

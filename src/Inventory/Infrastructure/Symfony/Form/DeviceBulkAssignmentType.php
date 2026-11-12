@@ -14,9 +14,19 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Form for choosing the site, template or collector to assign to the selected devices.
+ */
 final class DeviceBulkAssignmentType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
+    /**
+     * Adds the hidden selection and the target choice.
+     * A "None" target is offered for every kind except collectors.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $targets = $options['targets'];
@@ -33,6 +43,9 @@ final class DeviceBulkAssignmentType extends AbstractType
             'invalid_message' => $this->translator->trans('Select a valid assignment target.', [], 'inventory'),
         ]);
     }
+    /**
+     * Requires the "targets" option (names keyed by id) and "kind" ("site", "template" or "collector"), and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired(['targets', 'kind']);

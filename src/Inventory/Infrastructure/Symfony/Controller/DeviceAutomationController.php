@@ -27,8 +27,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * Confirmation page for applying the automation rules to selected devices.
+ */
 final class DeviceAutomationController
 {
+    /**
+     * Shows the selected devices on GET and applies the rules on POST, then redirects to the device list.
+     * Responds 401 or 403 when access is denied, 404 when a selected device is missing, 400 for an invalid selection, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/automation', name: 'inventory_device_automation', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, PrepareDeviceStateChange $prepare, \Kadupul\Inventory\Application\Command\ApplyDeviceRules $applyRules, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceFormFailure $failures): Response
     {

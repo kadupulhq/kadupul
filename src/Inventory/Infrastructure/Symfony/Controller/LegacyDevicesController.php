@@ -17,6 +17,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Compatibility endpoint that maps links and requests from the former device page to the current device routes.
+ */
 final class LegacyDevicesController
 {
     // Frozen legacy gettext aliases keep saved links valid across locale changes.
@@ -45,6 +48,10 @@ final class LegacyDevicesController
         '정의되지 않음',
     ];
 
+    /**
+     * Redirects supported legacy actions and filters (list, export, edit, associations, maintenance) to the current pages, and answers the location autocomplete request directly.
+     * No legacy mutation is replayed: POST gives 409 and other unsupported actions give 405. Responds 401 or 403 when access is denied and 400 for invalid filters.
+     */
     #[Route('/inventory/devices/legacy', name: 'inventory_devices_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $access, \Kadupul\Inventory\Application\Query\SuggestDeviceLocations $locations, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -117,6 +124,9 @@ final class LegacyDevicesController
             return new Response($translator->trans($message, [], 'inventory'), 400, $headers);
         }
     }
+    /**
+     * Maps a legacy rows-per-page value to the nearest supported page size, as a string.
+     */
     private static function pageSize(string $rows): string
     {
         if ($rows === '-1') {
