@@ -152,7 +152,9 @@ test('automation controllers render real SQL records and preserve declared mutat
     'persisted SNMP counts' => [['page' => 'automation_snmp.php', 'heading' => 'SNMP Option Set', 'labels' => ['Edge SNMP'], 'ids' => [7], 'rowCount' => 1,
         'rows' => ['automation_snmp' => [['id' => 7, 'name' => 'Edge SNMP']],
             'automation_snmp_items' => [['id' => 1, 'snmp_id' => 7, 'snmp_version' => 1, 'snmp_community' => ''], ['id' => 2, 'snmp_id' => 7, 'snmp_version' => 2, 'snmp_community' => ''], ['id' => 3, 'snmp_id' => 7, 'snmp_version' => 3, 'snmp_community' => '']]]]],
-    'graph rule editor with persisted children' => [['page' => 'automation_graph_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Graph Creation Criteria', 'labels' => ['Edge graphs'],
+    'graph rule editor with persisted children' => [['page' => 'automation_graph_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Graph Creation Criteria',
+        // The settings are edited through Symfony; the legacy page shows them read-only.
+        'form' => false, 'labels' => ['Edge graphs', 'Edit Rule Settings'],
         'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Edge graphs', 'snmp_query_id' => 0, 'enabled' => 'on']]]]],
     'tree rule editor with persisted children' => [['page' => 'automation_tree_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Device Selection Criteria',
         // The settings are edited through Symfony; the legacy page shows them read-only.
