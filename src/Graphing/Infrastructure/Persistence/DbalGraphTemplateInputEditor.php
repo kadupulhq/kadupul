@@ -38,6 +38,8 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
     private const array WRITE_TABLES = ['graph_templates', 'graph_template_input', 'graph_template_input_defs', 'graph_templates_item', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'];
     /** More items than any template holds; it bounds the IN list a forged form can send. */
     public const int MAX_ITEMS = 1000;
+    /** Entries per IN list in the push-out UPDATE. */
+    private const int IN_CHUNK = 500;
 
     private AuditedPrimaryWrite $writes;
 
@@ -125,12 +127,20 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
         if ($previous === [] || $added === []) {
             return;
         }
+        // One row per graph: the previous member with the lowest template item
+        // ID. Only those rows are read and locked; the added items are locked
+        // by the UPDATE below.
         $rows = $this->database->fetchAllAssociative(
-            'SELECT local_graph_id, `' . $column . '` AS value FROM graph_templates_item
-            WHERE graph_template_id = ? AND local_graph_id > 0 AND local_graph_template_item_id IN (?)
-            ORDER BY local_graph_id, local_graph_template_item_id, id' . $this->forUpdate(),
-            [$templateId, $previous],
-            [ParameterType::INTEGER, ArrayParameterType::INTEGER],
+            'SELECT item.local_graph_id, item.`' . $column . '` AS value FROM graph_templates_item item
+            INNER JOIN (
+                SELECT local_graph_id, MIN(local_graph_template_item_id) AS lowest FROM graph_templates_item
+                WHERE graph_template_id = ? AND local_graph_id > 0 AND local_graph_template_item_id IN (?)
+                GROUP BY local_graph_id
+            ) first ON first.local_graph_id = item.local_graph_id AND first.lowest = item.local_graph_template_item_id
+            WHERE item.graph_template_id = ?
+            ORDER BY item.local_graph_id, item.id' . $this->forUpdate(),
+            [$templateId, $previous, $templateId],
+            [ParameterType::INTEGER, ArrayParameterType::INTEGER, ParameterType::INTEGER],
         );
         $values = [];
         foreach ($rows as $row) {
@@ -138,7 +148,10 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
             if (!is_int($graphId) && !(is_string($graphId) && ctype_digit($graphId))) {
                 throw new \UnexpectedValueException('The graph template tables returned an unexpected row.');
             }
-            $values[(int) $graphId] ??= $row['value'];
+            // array_key_exists, not ??=: a NULL on the lowest member is its value and must not be replaced by a later row.
+            if (!array_key_exists((int) $graphId, $values)) {
+                $values[(int) $graphId] = $row['value'];
+            }
         }
         // A stored value comes from earlier saves and imports; refuse the
         // whole push-out if any is malformed, and keep the save, as legacy did.
@@ -148,16 +161,28 @@ final readonly class DbalGraphTemplateInputEditor implements GraphTemplateInputE
                 return;
             }
         }
+        // One UPDATE per distinct value and chunk of graphs, not one per graph.
+        $groups = [];
         foreach ($values as $graphId => $value) {
             // An empty data source would detach the graph item from its data.
             if ($field === GraphTemplateInputColumn::DataSource && in_array($value, [null, '', '0', 0], true)) {
                 continue;
             }
-            $this->database->executeStatement(
-                'UPDATE graph_templates_item SET `' . $column . '` = ? WHERE local_graph_id = ? AND local_graph_template_item_id IN (?)',
-                [$value, $graphId, $added],
-                [ParameterType::STRING, ParameterType::INTEGER, ArrayParameterType::INTEGER],
-            );
+            // var_export keeps NULL, '' and '0' apart.
+            $key = var_export($value, true);
+            $groups[$key]['value'] = $value;
+            $groups[$key]['graphs'][] = $graphId;
+        }
+        foreach ($groups as $group) {
+            foreach (array_chunk($group['graphs'], self::IN_CHUNK) as $graphs) {
+                foreach (array_chunk($added, self::IN_CHUNK) as $items) {
+                    $this->database->executeStatement(
+                        'UPDATE graph_templates_item SET `' . $column . '` = ? WHERE local_graph_id IN (?) AND local_graph_template_item_id IN (?)',
+                        [$group['value'], $graphs, $items],
+                        [ParameterType::STRING, ArrayParameterType::INTEGER, ArrayParameterType::INTEGER],
+                    );
+                }
+            }
         }
     }
 

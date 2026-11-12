@@ -131,6 +131,46 @@ final class GraphTemplateInputEditorDatabaseTest extends TestCase
         self::assertSame(0, (int) $this->database->fetchOne('SELECT COUNT(*) FROM graph_template_input_defs WHERE graph_template_input_id = ?', [$created]));
     }
 
+    public function testANullValueOnTheLowestMemberIsPushedNotReplacedByALaterMembersText(): void
+    {
+        // Graph 101: the lowest member (11) holds NULL, a later member (12) holds text.
+        foreach ([
+            'INSERT INTO graph_templates_item (id, hash, local_graph_template_item_id, local_graph_id, graph_template_id, text_format) VALUES
+                (2011, \'\', 11, 101, 1, NULL), (2012, \'\', 12, 101, 1, \'Later text\'), (2013, \'\', 13, 101, 1, \'Old 13\')',
+            'INSERT INTO graph_template_input_defs (graph_template_input_id, graph_template_item_id) VALUES (5, 12)',
+        ] as $statement) {
+            $this->database->executeStatement($statement);
+        }
+        $this->editor->save(7, 1, 5, 'Legend', 'Text', 'text_format', [11, 12, 13], $this->revision());
+        self::assertNull($this->database->fetchOne('SELECT text_format FROM graph_templates_item WHERE id = 2013'));
+        self::assertSame('Later text', $this->database->fetchOne('SELECT text_format FROM graph_templates_item WHERE id = 2012'));
+        self::assertSame('Inbound', $this->database->fetchOne('SELECT text_format FROM graph_templates_item WHERE id = 1013'));
+    }
+
+    public function testGraphsAreUpdatedPerDistinctValueAcrossChunkedLists(): void
+    {
+        // More graphs than one IN list holds, with two distinct values, one of them NULL.
+        $this->database->executeStatement('INSERT INTO graph_template_input_defs (graph_template_input_id, graph_template_item_id) VALUES (5, 12)');
+        $id = 5000;
+        for ($graph = 200; $graph < 1300; $graph++) {
+            $text = $graph % 2 === 0 ? 'Even' : null;
+            $this->database->executeStatement(
+                'INSERT INTO graph_templates_item (id, hash, local_graph_template_item_id, local_graph_id, graph_template_id, text_format) VALUES (?, \'\', 11, ?, 1, ?), (?, \'\', 12, ?, 1, ?), (?, \'\', 13, ?, 1, \'Old\')',
+                [$id, $graph, $text, $id + 1, $graph, 'Higher', $id + 2, $graph],
+            );
+            $id += 3;
+        }
+        $this->editor->save(7, 1, 5, 'Legend', 'Text', 'text_format', [11, 12, 13], $this->revision());
+        self::assertSame(
+            [['Even', 550], [null, 550]],
+            [
+                ['Even', (int) $this->database->fetchOne("SELECT COUNT(*) FROM graph_templates_item WHERE local_graph_template_item_id = 13 AND local_graph_id >= 200 AND text_format = 'Even'")],
+                [null, (int) $this->database->fetchOne('SELECT COUNT(*) FROM graph_templates_item WHERE local_graph_template_item_id = 13 AND local_graph_id >= 200 AND text_format IS NULL')],
+            ],
+        );
+        self::assertSame(['Inbound', 'Old 12', 'Inbound'], $this->texts());
+    }
+
     public function testAFailurePartwayThroughTheRewriteRollsEverythingBack(): void
     {
         // The input row is updated and values are pushed out before the
