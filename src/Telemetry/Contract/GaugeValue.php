@@ -19,8 +19,16 @@ final readonly class GaugeValue implements SampleValue
 {
     private const MAX_LENGTH = 64;
 
+    /**
+     * Keeps the validated text.
+     */
     private function __construct(private string $decimal) {}
 
+    /**
+     * Accepts a plain decimal number, optionally negative, of at most 64 characters.
+     *
+     * @throws InvalidTelemetryValue when the text is not such a number
+     */
     public static function fromString(string $text): self
     {
         // \z, not $, so a trailing newline is not accepted.
@@ -31,6 +39,9 @@ final readonly class GaugeValue implements SampleValue
         return new self($text);
     }
 
+    /**
+     * Returns the decimal text as given.
+     */
     public function toWire(): string
     {
         return $this->decimal;

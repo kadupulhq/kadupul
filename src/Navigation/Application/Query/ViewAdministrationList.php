@@ -16,6 +16,7 @@ use Kadupul\Navigation\Application\Port\ListPageSize;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
 use Kadupul\Navigation\Contract\Administration\ListScreen;
 
+/** Reads one page of an administration list after checking access. */
 final readonly class ViewAdministrationList
 {
     /** @param iterable<AdministrationCatalog> $catalogs */

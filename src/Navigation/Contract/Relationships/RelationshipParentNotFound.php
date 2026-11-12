@@ -10,4 +10,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Relationships;
 
+/** Thrown when a relationship screen names a parent record that does not exist. */
 final class RelationshipParentNotFound extends \RuntimeException {}

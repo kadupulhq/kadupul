@@ -17,17 +17,24 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/** Allows a list when the user has an active account, console access (realm 8) and the screen's realm. */
 #[AsAlias(AdministrationListAccess::class)]
 final readonly class DbalAdministrationListAccess implements AdministrationListAccess
 {
     private const int CONSOLE_REALM = 8;
 
+    /** Wires the console actor lookup and the web database connection. */
     public function __construct(
         private ConsoleAccess $console,
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
     ) {}
 
+    /**
+     * Checks the account and the console and screen realms.
+     *
+     * @throws \Kadupul\Navigation\Application\Query\AdministrationListDenied when nobody is signed in or a check fails
+     */
     public function authorize(ListScreen $screen): void
     {
         $actor = $this->console->consoleActor();
@@ -39,6 +46,7 @@ final readonly class DbalAdministrationListAccess implements AdministrationListA
         }
     }
 
+    /** True when the account is enabled, unlocked, not awaiting a password change, not the guest, and the authentication method is a known one. */
     private function accountAllows(int $actorId): bool
     {
         $user = $this->database->fetchAssociative('SELECT username, enabled, locked, must_change_password FROM user_auth WHERE id = ?', [$actorId]);
@@ -53,6 +61,7 @@ final readonly class DbalAdministrationListAccess implements AdministrationListA
         return $actorId !== (int) $guest && $user['username'] !== $guest;
     }
 
+    /** True when the user holds the realm directly or through an enabled group. */
     private function hasRealm(int $actorId, int $realmId): bool
     {
         if ($this->database->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?', [$actorId, $realmId]) !== false) {

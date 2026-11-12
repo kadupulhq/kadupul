@@ -13,8 +13,10 @@ namespace Kadupul\Navigation\Contract;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
 use Kadupul\Navigation\Contract\Administration\ListScreen;
 
+/** Supplies the records of the administration lists it supports. */
 interface AdministrationCatalog
 {
+    /** True when this catalog can serve the screen. */
     public function supports(ListScreen $screen): bool;
 
     /** @return list<array<string, int|float|string|null>> At most rows + 1 public-data records, never credentials. */

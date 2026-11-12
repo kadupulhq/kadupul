@@ -10,4 +10,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Management;
 
+/** Thrown when a scoped catalog screen names a parent record that does not exist. */
 final class CatalogParentNotFound extends \RuntimeException {}
