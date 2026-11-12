@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:20-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -693,6 +693,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Erişim Reddedildi!  Misafir kullanıcı kimliği %s mevcut değil.  Lütfen Yöneticinizle iletişime geçin."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
@@ -10713,11 +10715,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul Günlüğü Temizlendi"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Şifre en az% d karakter olmalı!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Kısıtlı"
 
@@ -10739,25 +10736,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Temel Kimlik Doğrulaması yapılandırıldı, ancak web sunucusundan kullanıcı adı geçilmedi. Lütfen web sunucusunda kimlik doğrulamanın etkin olduğundan emin olun."
 
 #: lib/auth.php
-#, fuzzy
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
 #: lib/boost.php
 #, php-format
@@ -11453,7 +11433,7 @@ msgstr "%s olarak giriş yaptınız"
 msgid "Login as Regular User"
 msgstr "Düzenli Kullanıcı Olarak Giriş Yapın"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Çıkış"
 
@@ -16487,6 +16467,28 @@ msgstr "FATAL: Spike Kill İzin verilmez"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Spike Kill yöntemi &#39; %s&#39; geçersiz"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+#, fuzzy
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Şifre en az% d karakter olmalı!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

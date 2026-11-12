@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:20-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -673,6 +673,8 @@ msgid "Unable to determine user Login Realm or Domain. Please contact your Syste
 msgstr ""
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr ""
 
@@ -10354,27 +10356,6 @@ msgid "Access Denied!  Domain template is not configured.  Please contact your A
 msgstr ""
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr ""
-
-#: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr ""
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr ""
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr ""
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr ""
-
-#: lib/auth.php
 msgid "Kadupul Login Failure"
 msgstr ""
 
@@ -11038,7 +11019,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr ""
 
@@ -14662,12 +14643,12 @@ msgid "Logout of Kadupul"
 msgstr ""
 
 #: logout.php
-msgid "Automatic Logout"
+#, php-format
+msgid "Please close your browser or %sLogin Again%s"
 msgstr ""
 
 #: logout.php
-#, php-format
-msgid "Please close your browser or %sLogin Again%s"
+msgid "Automatic Logout"
 msgstr ""
 
 #: logout.php utilities.php
@@ -17591,6 +17572,27 @@ msgstr ""
 #: utilities.php
 #, php-format
 msgid "Severity Level: %s"
+msgstr ""
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr ""
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr ""
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr ""
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr ""
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
 msgstr ""
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:20-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Åtkomst nekad!  Gästanvändar-ID %s finns inte.  Vänligen kontakta din administratör."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Åtkomst nekad!  Inloggning misslyckades."
 
@@ -10673,11 +10675,6 @@ msgid "Kadupul Login Failure"
 msgstr "Felaktig inloggning för Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Lösenordet måste innehålla minst %d tecken!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Begränsat"
 
@@ -10699,24 +10696,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Basic Authentication konfigurerad, men inget användarnamn skickades från webbservern. Kontrollera att du har aktiverat autentisering på webbservern."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Din Kadupul-administratör har tvingat fram komplexa lösenord för inloggningar och ditt nuvarande Kadupul-lösenord uppfyller inte de nya kraven.  Därför måste du ändra ditt lösenord nu."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Ditt konto har blivit låst.  Vänligen kontakta din administratör."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Ditt lösenord måste innehålla en blandning av små och stora bokstäver!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Ditt lösenord måste innehålla minst 1 numeriskt tecken!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Ditt lösenord måste innehålla minst 1 specialtecken!"
 
 #: lib/boost.php
 #, php-format
@@ -11411,7 +11392,7 @@ msgstr "Inloggad som %s"
 msgid "Login as Regular User"
 msgstr "Logga in som vanlig användare"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Logga ut"
 
@@ -16405,6 +16386,27 @@ msgstr "FATAL: Spike Kill inte tillåtet"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Spike Kill-metoden '%s' är ogiltig"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Din Kadupul-administratör har tvingat fram komplexa lösenord för inloggningar och ditt nuvarande Kadupul-lösenord uppfyller inte de nya kraven.  Därför måste du ändra ditt lösenord nu."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Lösenordet måste innehålla minst %d tecken!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Ditt lösenord måste innehålla en blandning av små och stora bokstäver!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Ditt lösenord måste innehålla minst 1 numeriskt tecken!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Ditt lösenord måste innehålla minst 1 specialtecken!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

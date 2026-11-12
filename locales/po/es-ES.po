@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:20-0800\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Acceso denegado, usuario invitado de id %s no existe. Por favor contacte a su administrador."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Acceso denegado, cuenta de usuario deshabilitada."
 
@@ -10679,11 +10681,6 @@ msgid "Kadupul Login Failure"
 msgstr "Log de Kadupul vaciado"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "La contraseña debe ser al menos %d caracteres!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Restringido"
 
@@ -10705,24 +10702,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Se ha configurado autenticación web básica, pero no se ha recibido ningún usuario desde el servidor web. Asegúrate de que la autenticación este habilitada en el servidor web."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Su administrador de Kadupul ha forzado contraseñas complejas para los inicios de sesión y su contraseña actual de Kadupul no coincide con los nuevos requisitos. Por lo tanto, debe cambiar su contraseña ahora."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Acceso denegado, póngase en contacto con su administrador de Kadupul."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Tu contraseña debe contener una combinación de minúsculas y mayúsculas!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Tu contraseña debe contener al menos un carácter numérico!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Tu contraseña debe contener al menos un carácter especial!"
 
 #: lib/boost.php
 #, php-format
@@ -11417,7 +11398,7 @@ msgstr "Conectado como %s"
 msgid "Login as Regular User"
 msgstr "Ingresar como un Usuario regular"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Salir"
 
@@ -16428,6 +16409,27 @@ msgstr "FATAL: eliminación de pico no permitida"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: método de eliminación de picos '%s' es inválido"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Su administrador de Kadupul ha forzado contraseñas complejas para los inicios de sesión y su contraseña actual de Kadupul no coincide con los nuevos requisitos. Por lo tanto, debe cambiar su contraseña ahora."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "La contraseña debe ser al menos %d caracteres!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Tu contraseña debe contener una combinación de minúsculas y mayúsculas!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Tu contraseña debe contener al menos un carácter numérico!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Tu contraseña debe contener al menos un carácter especial!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"
