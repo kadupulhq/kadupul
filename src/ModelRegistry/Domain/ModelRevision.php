@@ -9,12 +9,23 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * A revision of a model: a calendar date for YANG-style families, a free-form version otherwise.
+ */
 final class ModelRevision
 {
     private const FREE_FORM_PATTERN = '/\A[0-9A-Za-z][0-9A-Za-z._+-]{0,63}\z/';
 
+    /**
+     * Keeps the already validated family and value.
+     */
     private function __construct(private readonly ModelFamily $family, private readonly string $value) {}
 
+    /**
+     * Validates the value against the format its family uses.
+     *
+     * @throws InvalidModelDefinition when the value is not a valid revision for the family
+     */
     public static function parse(ModelFamily $family, string $value): self
     {
         if ($family->usesDateRevisions()) {
@@ -28,16 +39,27 @@ final class ModelRevision
         return new self($family, $value);
     }
 
+    /**
+     * Returns the family the revision belongs to.
+     */
     public function family(): ModelFamily
     {
         return $this->family;
     }
 
+    /**
+     * Returns the revision string.
+     */
     public function value(): string
     {
         return $this->value;
     }
 
+    /**
+     * Orders revisions of one family; returns a negative, zero or positive integer.
+     *
+     * @throws InvalidModelDefinition when the revisions belong to different families
+     */
     public function compareTo(self $other): int
     {
         if ($this->family !== $other->family) {
@@ -51,6 +73,9 @@ final class ModelRevision
             : version_compare($this->value, $other->value);
     }
 
+    /**
+     * Tells whether both revisions have the same family and value.
+     */
     public function equals(self $other): bool
     {
         return $this->family === $other->family && $this->value === $other->value;

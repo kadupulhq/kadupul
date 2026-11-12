@@ -15,8 +15,14 @@ use Kadupul\ModelRegistry\Domain\ModelIdentity;
 use Kadupul\ModelRegistry\Domain\ModelRevision;
 use Kadupul\ModelRegistry\Domain\UnsupportedModelRevision;
 
+/**
+ * Finds a registered model revision or fails with the revisions that do exist.
+ */
 final class LookupModel
 {
+    /**
+     * Binds the query to the model store.
+     */
     public function __construct(private readonly ModelRepository $models) {}
 
     /**
