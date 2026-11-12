@@ -12,5 +12,8 @@ namespace Kadupul\Telemetry\Application\Contract;
 /** Telemetry owns this so staleness is decided against an injected instant, never the system clock. */
 interface Clock
 {
+    /**
+     * Returns the current instant.
+     */
     public function now(): \DateTimeImmutable;
 }

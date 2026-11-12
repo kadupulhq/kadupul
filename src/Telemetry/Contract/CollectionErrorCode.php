@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Contract;
 
+/**
+ * Why readings were excluded from a collection result.
+ */
 enum CollectionErrorCode: string
 {
     case Conflict = 'conflict';
