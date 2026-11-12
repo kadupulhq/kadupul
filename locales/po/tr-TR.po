@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 23:37-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Grafik Bulunamadı"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Rapor Adı"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Dönüş"
@@ -693,8 +693,6 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Erişim Reddedildi!  Misafir kullanıcı kimliği %s mevcut değil.  Lütfen Yöneticinizle iletişime geçin."
 
 #: auth_login.php lib/auth.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Erişim Reddedildi, kullanıcı hesabı devre dışı bırakıldı."
 
@@ -890,8 +888,9 @@ msgstr "Aygıtları Sil"
 msgid "Delete Device(s)"
 msgstr "Aygıtları Sil"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Açıklama"
 
@@ -2203,10 +2202,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Veri Sorguları [değiştir: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Veri Sorguları [yeni]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Kullanımdaki Veri Sorguları Silinemez. Kullanımda, bir Grafik veya Grafik Şablonu tarafından referans olarak tanımlanır."
 
@@ -2234,6 +2229,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Veri Sorgusunu Sil"
 msgstr[1] "Veri Sorgusunu Sil"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2349,6 +2348,14 @@ msgstr "Bu Veri Sorgusunu kullanan Grafik Şablonları sayısı."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Bu Veri Sorgusunu kullanan Grafiklerin sayısı."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML Yolu"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7514,10 +7521,6 @@ msgid "X-Files Factor"
 msgstr "X Dosyaları Faktörü"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML Yolu"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: Grafik öğesinin değeri. <br/> [TICK]: Onay çizgisinin kesri. <br/> [SHIFT]: Zaman saniye cinsinden mahsup edilir."
 
@@ -10710,6 +10713,11 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul Günlüğü Temizlendi"
 
 #: lib/auth.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Şifre en az% d karakter olmalı!"
+
+#: lib/auth.php
 msgid "Restricted"
 msgstr "Kısıtlı"
 
@@ -10731,8 +10739,25 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Temel Kimlik Doğrulaması yapılandırıldı, ancak web sunucusundan kullanıcı adı geçilmedi. Lütfen web sunucusunda kimlik doğrulamanın etkin olduğundan emin olun."
 
 #: lib/auth.php
+#, fuzzy
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
+
+#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Erişim Engellendi, lütfen Kadupul Yönetici ile iletişime geçin."
+
+#: lib/auth.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
 #: lib/boost.php
 #, php-format
@@ -11428,7 +11453,7 @@ msgstr "%s olarak giriş yaptınız"
 msgid "Login as Regular User"
 msgstr "Düzenli Kullanıcı Olarak Giriş Yapın"
 
-#: lib/functions.php lib/html.php logout.php
+#: lib/functions.php lib/html.php
 msgid "Logout"
 msgstr "Çıkış"
 
@@ -16462,28 +16487,6 @@ msgstr "FATAL: Spike Kill İzin verilmez"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Spike Kill yöntemi &#39; %s&#39; geçersiz"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
-#, fuzzy
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Şifre en az% d karakter olmalı!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım içermelidir!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Şifreniz en az 1 sayısal karakter içermelidir!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

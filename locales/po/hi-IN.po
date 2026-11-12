@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 23:37-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "कोई रेखांकन नहीं मिला"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "रिपोर्ट का नाम"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "वापसी"
@@ -694,8 +694,6 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "पहुंच अस्वीकृत!  अतिथि उपयोगकर्ता आईडी %s मौजूद नहीं है।  कृपया अपने एडमिनिस्ट्रेटर से संपर्क करें।"
 
 #: auth_login.php lib/auth.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "प्रवेश निषेध, उपयोगकर्ता खाता अक्षम।"
 
@@ -893,8 +891,9 @@ msgstr "उपकरण हटाएं"
 msgid "Delete Device(s)"
 msgstr "उपकरण हटाएं"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "विवरण"
 
@@ -2210,10 +2209,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "डेटा क्वेरी [संपादित करें: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "डेटा क्वेरी [नया]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "उपयोग में आने वाली डेटा क्वेरीज़ को हटाया नहीं जा सकता। उपयोग में परिभाषित किया जा रहा है या तो एक ग्राफ या एक ग्राफ टेम्पलेट द्वारा संदर्भित किया जा रहा है।"
 
@@ -2241,6 +2236,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "डेटा क्वेरी हटाएं"
 msgstr[1] "डेटा क्वेरी हटाएं"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2356,6 +2355,14 @@ msgstr "इस डेटा क्वेरी का उपयोग करक�
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "इस डेटा क्वेरी का उपयोग करके ग्राफ़ की संख्या।"
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML पथ"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7521,10 +7528,6 @@ msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML पथ"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: ग्राफ़ आइटम का मूल्य। <br/> [टिक]: टिक लाइन के लिए अंश। <br/> [SHIFT]: समय सेकंड में ऑफसेट होता है।"
 
@@ -10738,6 +10741,11 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul लॉग क्लीयर"
 
 #: lib/auth.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "पासवर्ड कम से कम% d वर्ण का होना चाहिए!"
+
+#: lib/auth.php
 msgid "Restricted"
 msgstr "प्रतिबंधत"
 
@@ -10759,8 +10767,24 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "वेब बेसिक प्रमाणीकरण कॉन्फ़िगर किया गया है, लेकिन वेब सर्वर से कोई उपयोगकर्ता नाम पारित नहीं किया गया था। कृपया सुनिश्चित करें कि आपके पास वेब सर्वर पर प्रमाणीकरण सक्षम है।"
 
 #: lib/auth.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "आपके Kadupul व्यवस्थापक ने लॉगिन के लिए जटिल पासवर्ड को मजबूर कर दिया है और आपका वर्तमान Kadupul पासवर्ड नई आवश्यकताओं से मेल नहीं खाता है। इसलिए, आपको अब अपना पासवर्ड बदलना होगा।"
+
+#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "पहुँच निषेध, कृपया आप कैक्टि प्रशासक से संपर्क करें।"
+
+#: lib/auth.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "आपके पासवर्ड में लोअर केस और अपर केस कैरेक्टर का मिश्रण होना चाहिए!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "आपके पासवर्ड में कम से कम 1 संख्यात्मक चरित्र होना चाहिए!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "आपके पासवर्ड में कम से कम 1 विशेष वर्ण होना चाहिए!"
 
 #: lib/boost.php
 #, php-format
@@ -11456,7 +11480,7 @@ msgstr "के रूप में दाखिल%s"
 msgid "Login as Regular User"
 msgstr "नियमित उपयोगकर्ता के रूप में लॉगिन करें"
 
-#: lib/functions.php lib/html.php logout.php
+#: lib/functions.php lib/html.php
 msgid "Logout"
 msgstr "लॉगआउट"
 
@@ -16515,27 +16539,6 @@ msgstr "FATAL: स्पाइक किल नॉट अलाइड"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: स्पाइक किल विधि &#39; %s&#39; अमान्य है"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "आपके Kadupul व्यवस्थापक ने लॉगिन के लिए जटिल पासवर्ड को मजबूर कर दिया है और आपका वर्तमान Kadupul पासवर्ड नई आवश्यकताओं से मेल नहीं खाता है। इसलिए, आपको अब अपना पासवर्ड बदलना होगा।"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "पासवर्ड कम से कम% d वर्ण का होना चाहिए!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "आपके पासवर्ड में लोअर केस और अपर केस कैरेक्टर का मिश्रण होना चाहिए!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "आपके पासवर्ड में कम से कम 1 संख्यात्मक चरित्र होना चाहिए!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "आपके पासवर्ड में कम से कम 1 विशेष वर्ण होना चाहिए!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

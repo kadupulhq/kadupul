@@ -411,6 +411,11 @@ services:
         alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputAccess
     Kadupul\DataInput\Application\Port\DataInputGateway:
         alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataInputGateway
+    Kadupul\DataInput\Application\DataQueries: ~
+    Kadupul\DataInput\Application\Port\DataQueryAccess:
+        alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataQueryAccess
+    Kadupul\DataInput\Application\Port\DataQueryGateway:
+        alias: Kadupul\DataInput\Infrastructure\Legacy\LegacyDataQueryGateway
     Kadupul\Graphing\Infrastructure\:
         resource: '../src/Graphing/Infrastructure/'
         exclude: ['../src/Graphing/Infrastructure/Rrd/', '../src/Graphing/Infrastructure/Legacy/LegacyRrdWebContext.php']

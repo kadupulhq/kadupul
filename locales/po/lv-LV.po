@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 23:37-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Nav atrasts neviens grafiks"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Pārskata nosaukums"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Atgriezties"
@@ -692,8 +692,6 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Piekļuve liegta!  Viesu lietotāja ID %s neeksistē.  Lūdzu, sazinieties ar savu Kadupul administratoru."
 
 #: auth_login.php lib/auth.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Pieeja noliegta! Pieslēgšanās neizdevās."
 
@@ -889,8 +887,9 @@ msgstr "Dzēst ierīci"
 msgid "Delete Device(s)"
 msgstr "Dzēst ierīci(-es)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Apraksts"
 
@@ -2208,10 +2207,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Datu vaicājumi [rediģēt: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Datu vaicājumi [jauns]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Izmantotos datu vaicājumus nevar izdzēst. Izmantošana tiek definēta kā atsauce vai nu diagrammā, vai diagrammas veidnē."
 
@@ -2241,6 +2236,10 @@ msgid_plural "Duplicate Data Queries"
 msgstr[0] "Datu vaicājuma dublikāts"
 msgstr[1] ""
 msgstr[2] ""
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2356,6 +2355,14 @@ msgstr "Grafiku veidņu skaits, kas izmanto šo datu vaicājumu."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Diagrammu skaits, kas izmanto šo datu vaicājumu."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML ceļš"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7533,10 +7540,6 @@ msgid "X-Files Factor"
 msgstr "X-failu faktors"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML ceļš"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE|VRULE]: grafikas elementa vērtība.<br/> [TICK]: atzīmes līnijas daļa.<br/> [SHIFT]: laika nobīde sekundēs."
 
@@ -10733,6 +10736,11 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul pieteikšanās kļūme"
 
 #: lib/auth.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Parolei ir jābūt vismaz %d rakstzīmēm!"
+
+#: lib/auth.php
 msgid "Restricted"
 msgstr "Ierobežots"
 
@@ -10754,8 +10762,24 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Tīmekļa pamata autentifikācija ir konfigurēta, taču no tīmekļa servera netika nodots neviens lietotājvārds. Lūdzu, pārbaudiet, vai tīmekļa serverī ir iespējota autentifikācija."
 
 #: lib/auth.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Jūsu Kadupul administrators ir piespiedis lietot sarežģītas paroles, un jūsu pašreizējā Kadupul parole neatbilst jaunajām prasībām. Tāpēc jums tagad ir jāmaina parole."
+
+#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Jūsu konts ir bloķēts. Lūdzu, sazinieties ar savu administratoru."
+
+#: lib/auth.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Jūsu parolei jāsastāv gan no mazajiem, gan lielajiem burtiem!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Jūsu parolei jāsatur vismaz 1 ciparu rakstzīme!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Jūsu parolei jāsatur vismaz 1 speciālā rakstzīme!"
 
 #: lib/boost.php
 #, php-format
@@ -11452,7 +11476,7 @@ msgstr "Autorizējies kā %s"
 msgid "Login as Regular User"
 msgstr "Piesakieties kā parasts lietotājs"
 
-#: lib/functions.php lib/html.php logout.php
+#: lib/functions.php lib/html.php
 msgid "Logout"
 msgstr "Iziet"
 
@@ -16502,27 +16526,6 @@ msgstr "FATAL: Spike Kill nav atļauts"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Spike Kill metode '%s' ir nederīga"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Jūsu Kadupul administrators ir piespiedis lietot sarežģītas paroles, un jūsu pašreizējā Kadupul parole neatbilst jaunajām prasībām. Tāpēc jums tagad ir jāmaina parole."
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Parolei ir jābūt vismaz %d rakstzīmēm!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Jūsu parolei jāsastāv gan no mazajiem, gan lielajiem burtiem!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Jūsu parolei jāsatur vismaz 1 ciparu rakstzīme!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Jūsu parolei jāsatur vismaz 1 speciālā rakstzīme!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

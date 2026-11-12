@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 23:37-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -340,11 +340,11 @@ msgid "No Graphs Found"
 msgstr "Pas de graphique trouvé"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -397,8 +397,8 @@ msgstr "Nom du rapport"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Retour"
@@ -688,8 +688,6 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Accès refusé ! L'ID d'utilisateur invité %s n'existe pas.  Veuillez contacter votre administrateur."
 
 #: auth_login.php lib/auth.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Accès refusé, compte d'utilisateur désactivé."
 
@@ -885,8 +883,9 @@ msgstr "Supprimer l'appareil"
 msgid "Delete Device(s)"
 msgstr "Supprimer le(s) appareil(s)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Description"
 
@@ -2196,10 +2195,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Requêtes [éditer : %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Requêtes [nouveau]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Les requêtes en cours d'utilisation ne peuvent pas être supprimées. En cours d'utilisation signifie comme étant référencé soit par un graphique, soit par un modèle de graphique."
 
@@ -2227,6 +2222,10 @@ msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Supprimer une requête de données"
 msgstr[1] "Supprimer une requête de données"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2342,6 +2341,14 @@ msgstr "Le nombre de modèles de graphiques utilisant cette requête."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Le nombre de graphiques utilisant cette requête."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "Chemin XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7494,10 +7501,6 @@ msgid "X-Files Factor"
 msgstr "Facteur X-Files"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "Chemin XML"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE|VRULE] : La valeur de l'élément du graphique.<br/>[TICK] : La fraction pour la ligne à cocher.<br/>[SHIFT] : Le décalage temporel en secondes."
 
@@ -10674,6 +10677,11 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul Log Cleared"
 
 #: lib/auth.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Le mot de passe doit contenir au moins %d caractères !"
+
+#: lib/auth.php
 msgid "Restricted"
 msgstr "Limité"
 
@@ -10695,8 +10703,24 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "L'Authentification Web de base a été configurée, mais aucun nom d'utilisateur n'a été transmis au serveur Web. Veuillez vous assurer que l'authentification est activée sur le serveur Web."
 
 #: lib/auth.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Votre administrateur Kadupul a forcé des mots de passe complexes pour les connexions et votre mot de passe Kadupul actuel ne correspond pas aux nouvelles exigences. Par conséquent, vous devez changer votre mot de passe maintenant."
+
+#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Accès refusé, veuillez contacter votre administrateur Kadupul."
+
+#: lib/auth.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Votre mot de passe doit contenir un mélange de minuscules et de majuscules !"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Votre mot de passe doit contenir au moins 1 caractère numérique !"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Votre mot de passe doit contenir au moins 1 caractère spécial !"
 
 #: lib/boost.php
 #, php-format
@@ -11391,7 +11415,7 @@ msgstr "Connecté en tant que %s"
 msgid "Login as Regular User"
 msgstr "Connexion en tant qu'utilisateur régulier"
 
-#: lib/functions.php lib/html.php logout.php
+#: lib/functions.php lib/html.php
 msgid "Logout"
 msgstr "Se déconnecter"
 
@@ -16401,27 +16425,6 @@ msgstr "FATAL : La mise à mort par piqûre n'est pas autorisée"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL : Méthode Spike Kill'%s' est invalide"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Votre administrateur Kadupul a forcé des mots de passe complexes pour les connexions et votre mot de passe Kadupul actuel ne correspond pas aux nouvelles exigences. Par conséquent, vous devez changer votre mot de passe maintenant."
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Le mot de passe doit contenir au moins %d caractères !"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Votre mot de passe doit contenir un mélange de minuscules et de majuscules !"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Votre mot de passe doit contenir au moins 1 caractère numérique !"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Votre mot de passe doit contenir au moins 1 caractère spécial !"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 23:37-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "未找到图形"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "报告名称"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "返回"
@@ -691,8 +691,6 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "访问被拒绝！来宾用户id %s不存在。请与管理员联系。"
 
 #: auth_login.php lib/auth.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "拒绝访问,用户帐号被禁用."
 
@@ -888,8 +886,9 @@ msgstr "删除设备"
 msgid "Delete Device(s)"
 msgstr "删除图形(s)"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "描述"
 
@@ -2195,10 +2194,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "数据查询 [编辑: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "数据查询[新建]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "正在使用的数据查询不能被删除. 在使用中被定义为被图形或图形模板引用."
 
@@ -2224,6 +2219,10 @@ msgstr[0] "删除数据查询"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "删除数据查询"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2339,6 +2338,14 @@ msgstr "使用此数据查询的图形模板的数量."
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "使用此数据查询的图的数量."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XML 路径"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7478,10 +7485,6 @@ msgid "X-Files Factor"
 msgstr "X Files 因子"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "XML 路径"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE|VRULE]:图形项目的值.<br/> [TICK]:刻度线的分数.<br/>[SHIFT]:以秒为单位的时间偏移量."
 
@@ -10664,6 +10667,11 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul 日志已清除"
 
 #: lib/auth.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "密码必须至少包含 %d 个字符!"
+
+#: lib/auth.php
 msgid "Restricted"
 msgstr "受限的"
 
@@ -10685,8 +10693,24 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "已配置Web 基本身份认证,但没有从Web 服务器传递用户名. 请确保您在Web服务器上启用了身份认证."
 
 #: lib/auth.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "您的Kadupul管理员已强制使用复杂的密码登录，而您当前的Kadupul密码不符合新要求。因此，您必须立即更改密码。"
+
+#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "访问被拒绝,请联系Kadupul 管理员."
+
+#: lib/auth.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "您的密码必须包含小写字母和大写字母的混合形式!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "您的密码必须至少包含1个数字字符!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "您的密码必须至少包含1个特殊字符!"
 
 #: lib/boost.php
 #, php-format
@@ -11381,7 +11405,7 @@ msgstr "登入为 %s"
 msgid "Login as Regular User"
 msgstr "以普通用户身份登录"
 
-#: lib/functions.php lib/html.php logout.php
+#: lib/functions.php lib/html.php
 msgid "Logout"
 msgstr "退出"
 
@@ -16375,27 +16399,6 @@ msgstr "FATAL: 不允许尖峰消除"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: 尖峰消除方法 '%s' 无效"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "您的Kadupul管理员已强制使用复杂的密码登录，而您当前的Kadupul密码不符合新要求。因此，您必须立即更改密码。"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "密码必须至少包含 %d 个字符!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "您的密码必须包含小写字母和大写字母的混合形式!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "您的密码必须至少包含1个数字字符!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "您的密码必须至少包含1个特殊字符!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

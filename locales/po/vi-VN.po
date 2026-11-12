@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 23:37-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Không tìm thấy đồ thị"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Tên report"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Trở về trang cài đặt bắt buộc Plugins"
@@ -693,8 +693,6 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
 
 #: auth_login.php lib/auth.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
@@ -890,8 +888,9 @@ msgstr "Xóa thiết bị"
 msgid "Delete Device(s)"
 msgstr "Xóa thiết bị"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Mô tả"
 
@@ -2195,10 +2194,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Truy vấn dữ liệu [chỉnh sửa: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Truy vấn dữ liệu [mới]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Truy vấn dữ liệu đang sử dụng không thể bị xóa. Đang sử dụng được định nghĩa là được tham chiếu bởi Biểu đồ hoặc Mẫu biểu đồ."
 
@@ -2224,6 +2219,10 @@ msgstr[0] "Xóa truy vấn dữ liệu"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Xóa truy vấn dữ liệu"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2339,6 +2338,14 @@ msgstr "Số lượng mẫu biểu đồ sử dụng truy vấn dữ liệu này
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Số lượng biểu đồ sử dụng truy vấn dữ liệu này."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "Đường dẫn XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7483,10 +7490,6 @@ msgid "X-Files Factor"
 msgstr "Yếu tố X-Files"
 
 #: include/global_form.php
-msgid "XML Path"
-msgstr "Đường dẫn XML"
-
-#: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
 msgstr "[HRULE | VRULE]: Giá trị của mục biểu đồ. <br/> [TICK]: Phân số cho dòng đánh dấu. <br/> [SHIFT]: Thời gian bù tính bằng giây."
 
@@ -10665,6 +10668,11 @@ msgid "Kadupul Login Failure"
 msgstr "Nhật ký Kadupul đã bị xóa"
 
 #: lib/auth.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Mật khẩu phải có ít nhất% d ký tự!"
+
+#: lib/auth.php
 msgid "Restricted"
 msgstr "Hạn chế"
 
@@ -10686,8 +10694,24 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Xác thực cơ bản Web được định cấu hình, nhưng không có tên người dùng nào được chuyển từ máy chủ web. Vui lòng đảm bảo rằng bạn đã bật xác thực trên máy chủ web."
 
 #: lib/auth.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Quản trị viên Kadupul của bạn đã buộc mật khẩu phức tạp để đăng nhập và mật khẩu Kadupul hiện tại của bạn không phù hợp với yêu cầu mới. Do đó, bạn phải thay đổi mật khẩu của bạn bây giờ."
+
+#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
+
+#: lib/auth.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Mật khẩu của bạn phải chứa hỗn hợp các ký tự chữ thường và chữ hoa!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự số!"
+
+#: lib/auth.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
 #: lib/boost.php
 #, php-format
@@ -11383,7 +11407,7 @@ msgstr "Đăng nhập như %s"
 msgid "Login as Regular User"
 msgstr "Đăng nhập như người dùng thông thường"
 
-#: lib/functions.php lib/html.php logout.php
+#: lib/functions.php lib/html.php
 msgid "Logout"
 msgstr "Đăng xuất"
 
@@ -16380,27 +16404,6 @@ msgstr "FATAL: Spike Kill Không được phép"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Phương pháp Spike Kill &#39; %s&#39; không hợp lệ"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Quản trị viên Kadupul của bạn đã buộc mật khẩu phức tạp để đăng nhập và mật khẩu Kadupul hiện tại của bạn không phù hợp với yêu cầu mới. Do đó, bạn phải thay đổi mật khẩu của bạn bây giờ."
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Mật khẩu phải có ít nhất% d ký tự!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Mật khẩu của bạn phải chứa hỗn hợp các ký tự chữ thường và chữ hoa!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự số!"
-
-#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"
