@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Domain;
 
+/** The VDEF item vocabularies; array keys are the stored values. */
 final class VdefFunctions
 {
     public const FUNCTIONS = [
@@ -30,6 +31,7 @@ final class VdefFunctions
 
     public const DATA_SOURCES = ['CURRENT_DATA_SOURCE' => 'Current Graph Item Data Source'];
 
+    /** The text shown for a stored item: the function or data source name, otherwise the value as stored. */
     public static function itemLabel(int $type, string $value): string
     {
         return match ($type) {
@@ -39,6 +41,7 @@ final class VdefFunctions
         };
     }
 
+    /** The text sent to RRDtool for a stored item: the function name for a function, otherwise the value as stored. */
     public static function rrdValue(int $type, string $value): string
     {
         return $type === 1 ? (self::FUNCTIONS[$value] ?? $value) : $value;

@@ -9,8 +9,15 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Export;
 
 use Kadupul\Inventory\Application\ReadModel\DevicePage;
 
+/**
+ * Encodes one page of the device list as CSV.
+ */
 final class DevicePageCsv
 {
+    /**
+     * Returns the page as UTF-8 CSV with a byte order mark and CRLF line endings.
+     * Text columns are prefixed with an apostrophe so spreadsheet programs treat them as literal text rather than formulas. Nothing is written to disk.
+     */
     public function encode(DevicePage $page): string
     {
         // The query bounds the page to 100 rows. No export files are persisted.

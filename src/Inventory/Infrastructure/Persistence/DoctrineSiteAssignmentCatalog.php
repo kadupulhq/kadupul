@@ -10,10 +10,19 @@ namespace Kadupul\Inventory\Infrastructure\Persistence;
 use Doctrine\DBAL\Connection;
 use Kadupul\Inventory\Application\Port\SiteAssignmentCatalog;
 
+/**
+ * Lists every site as a target for device assignment.
+ */
 final readonly class DoctrineSiteAssignmentCatalog implements SiteAssignmentCatalog
 {
+    /**
+     * Binds the catalog to the main connection.
+     */
     public function __construct(private Connection $database) {}
 
+    /**
+     * Returns the site names keyed by id, ordered by name.
+     */
     public function sites(): array
     {
         /** @var array<int, string> $sites */

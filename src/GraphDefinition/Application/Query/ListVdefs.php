@@ -12,8 +12,10 @@ namespace Kadupul\GraphDefinition\Application\Query;
 use Kadupul\GraphDefinition\Application\Port\VdefCatalog;
 use Kadupul\GraphDefinition\Domain\VdefListCriteria;
 
+/** Lists VDEFs for a user who may manage them. */
 final readonly class ListVdefs
 {
+    /** Wires the authorization check and the VDEF catalog. */
     public function __construct(private VdefAuthorization $authorization, private VdefCatalog $catalog) {}
 
     /** @return array{rows:list<\Kadupul\GraphDefinition\Domain\VdefSummary>,total:int} */

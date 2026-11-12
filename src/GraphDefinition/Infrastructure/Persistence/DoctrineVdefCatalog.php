@@ -16,10 +16,13 @@ use Kadupul\GraphDefinition\Domain\VdefListCriteria;
 use Kadupul\GraphDefinition\Domain\VdefRevision;
 use Kadupul\GraphDefinition\Domain\VdefSummary;
 
+/** Reads VDEFs from the legacy vdef and vdef_items tables. */
 final readonly class DoctrineVdefCatalog implements VdefCatalog
 {
+    /** Binds the catalog to the database connection. */
     public function __construct(private Connection $database) {}
 
+    /** One page of VDEF summaries with graph, template and referencing-VDEF counts. */
     public function list(VdefListCriteria $criteria): array
     {
         $where = '1=1';
@@ -59,6 +62,7 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
         ), $rows);
     }
 
+    /** The number of VDEFs that match the criteria, ignoring paging. */
     public function count(VdefListCriteria $criteria): int
     {
         $where = '1=1';
@@ -73,6 +77,7 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
         return (int) $this->database->fetchOne("SELECT COUNT(*) FROM vdef v WHERE $where", $parameters);
     }
 
+    /** The VDEF with its revision and labelled items, or null when it does not exist. */
     public function find(int $id): ?array
     {
         $vdef = $this->database->fetchAssociative('SELECT id, name FROM vdef WHERE id = ?', [$id]);
@@ -98,6 +103,11 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
         ];
     }
 
+    /**
+     * The name and revision of each selected VDEF, keyed by id; ids that do not exist are left out.
+     *
+     * @throws \InvalidArgumentException when the selection is empty, over 500, repeated or holds an invalid id
+     */
     public function selected(array $ids): array
     {
         if ($ids === [] || count($ids) > 500 || count(array_unique($ids)) !== count($ids)
@@ -122,11 +132,13 @@ final readonly class DoctrineVdefCatalog implements VdefCatalog
         return $selected;
     }
 
+    /** The VDEF's expression as the text RRDtool receives, with nested VDEFs expanded. */
     public function preview(int $id): string
     {
         return self::resolvePreview($this->database, $id);
     }
 
+    /** Expands nested VDEFs recursively; a VDEF that includes itself is shown as "[recursive VDEF]". */
     private static function resolvePreview(Connection $database, int $id, array $visited = []): string
     {
         if (isset($visited[$id])) {

@@ -12,6 +12,11 @@ use Kadupul\Inventory\Domain\DeviceState;
 /** Atomic reset of live observations; a poller may immediately start new samples. */
 final class DeviceStatisticsReset
 {
+    /**
+     * Resets the device's response time and poll counters and sets availability to 100, then confirms the stored values.
+     *
+     * @throws \RuntimeException When exactly one device row was not updated or the reset cannot be confirmed.
+     */
     public function apply(\PDO $connection, DeviceState $device): void
     {
         $query = $connection->prepare("UPDATE host SET min_time = '9.99999', max_time = 0, cur_time = 0, avg_time = 0, total_polls = 0, failed_polls = 0, availability = 100 WHERE id = ? AND poller_id = ? AND deleted = ''");

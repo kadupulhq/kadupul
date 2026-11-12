@@ -15,14 +15,25 @@ use Kadupul\Reporting\Contract\DeviceReportPlacement;
 use PDO;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
+/**
+ * Places devices into reports using the legacy reports and reports_items tables.
+ */
 #[AsAlias(DeviceReportPlacement::class)]
 final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacement
 {
     /** Device items (reports_items.item_type) added by the bulk device action. */
     private const DEVICE_ITEM = 5;
 
+    /**
+     * Binds the placement service to the main connection and the report access check.
+     */
     public function __construct(private DatabaseConnection $database, private ResourceAccess $access) {}
 
+    /**
+     * Reads the actor's saved default_timespan setting.
+     *
+     * A missing or out-of-range value (outside 1 to 28 days) falls back to 7.
+     */
     public function defaultTimespan(int $actorId): int
     {
         $query = $this->database->get()->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'default_timespan'");
@@ -32,6 +43,11 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
         return $value === false ? 7 : $value;
     }
 
+    /**
+     * Lists the reports the actor may manage, keyed by report ID, as "name (#id)" labels.
+     *
+     * @throws \RuntimeException when the report list cannot be read
+     */
     public function destinations(int $actorId): array
     {
         $reports = $this->database->get()->query('SELECT id, name, user_id FROM reports ORDER BY name, id');
@@ -51,6 +67,14 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
         return $result;
     }
 
+    /**
+     * Adds each device to the report as a device item, skipping devices already placed for the timespan.
+     *
+     * Existing placements keep their alignment and sequence. The caller must have an open transaction.
+     *
+     * @throws \RuntimeException when no transaction is open, the actor may not manage the report,
+     *                           or a placement cannot be inserted or confirmed
+     */
     public function place(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment): array
     {
         $db = $this->database->get();
@@ -86,6 +110,11 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
         return $this->records($deviceIds, $reportId, $timespan);
     }
 
+    /**
+     * Checks that the placement still matches the receipt and that the actor may still manage the report.
+     *
+     * @throws \RuntimeException when the rows changed, the destination changed, or a device is no longer placed
+     */
     public function verify(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment, array $expected): void
     {
         if ($this->records($deviceIds, $reportId, $timespan) !== $expected) {

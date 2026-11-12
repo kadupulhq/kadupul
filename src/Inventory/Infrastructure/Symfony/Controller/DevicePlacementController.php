@@ -23,8 +23,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * Confirmation page for placing selected devices in a graph tree or report.
+ */
 final class DevicePlacementController
 {
+    /**
+     * Shows the selected devices and destinations on GET and places the devices on POST, then redirects to the device list.
+     * Responds 401 or 403 when access is denied, 404 when a selected device is missing, 400 for an invalid selection and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/place/{kind}', name: 'inventory_device_placement', requirements: ['kind' => 'tree|report'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(string $kind, Request $request, PrepareDeviceStateChange $prepare, \Kadupul\Inventory\Application\Query\ListDevicePlacementDestinations $targets, \Kadupul\Inventory\Application\Command\PlaceDevices $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, \Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm $validation): Response
     {

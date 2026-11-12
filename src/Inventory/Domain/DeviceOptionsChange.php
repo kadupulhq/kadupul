@@ -7,11 +7,21 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * A partial change to the location and polling options, applied to many devices at once.
+ * Only the fields present are changed.
+ */
 final readonly class DeviceOptionsChange
 {
     public const DEFAULTS = ['location' => ''] + DevicePolling::DEFAULTS;
     public array $fields;
 
+    /**
+     * Validates the selected fields.
+     *
+     * @param array $fields Any subset of the keys in DEFAULTS.
+     * @throws \InvalidArgumentException When no supported field is given or a value is invalid.
+     */
     public function __construct(array $fields)
     {
         if ($fields === [] || array_diff_key($fields, self::DEFAULTS) !== []) {

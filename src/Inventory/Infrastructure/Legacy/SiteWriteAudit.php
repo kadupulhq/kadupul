@@ -13,6 +13,9 @@ use Kadupul\IdentityAccess\Contract\AuditTrail;
 /** Records one event per affected site after the site transaction resolves. */
 final readonly class SiteWriteAudit
 {
+    /**
+     * Binds the recorder to the audit trail.
+     */
     public function __construct(private AuditTrail $trail) {}
 
     /** @param list<int|string> $siteIds */

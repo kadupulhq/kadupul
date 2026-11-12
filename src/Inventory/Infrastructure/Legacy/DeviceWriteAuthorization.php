@@ -12,6 +12,10 @@ use PDO;
 /** Lock every grant and policy input used by a device-management write. */
 final class DeviceWriteAuthorization
 {
+    /**
+     * Checks that the actor may manage devices, locking the rows it reads.
+     * The actor must exist, be enabled and unlocked, not be the guest user, hold the realms for device management (3 and 8), and the authentication method must be a supported one.
+     */
     public function allows(PDO $connection, int $actorId): bool
     {
         $policy = $connection->query("SELECT name, value FROM settings WHERE name IN ('auth_method', 'guest_user') LOCK IN SHARE MODE")->fetchAll(PDO::FETCH_KEY_PAIR);

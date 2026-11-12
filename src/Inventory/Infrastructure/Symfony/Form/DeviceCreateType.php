@@ -18,10 +18,20 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Form for creating a device.
+ */
 final class DeviceCreateType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
 
+    /**
+     * Adds the identity, polling and SNMP fields, the template, site and collector choices, and the credential fields.
+     * Credential fields are never refilled when the form is shown again.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach (['description' => 'Description', 'hostname' => 'Hostname or IP address', 'location' => 'Location', 'external_id' => 'External ID', 'device_threads' => 'Device threads', 'snmp_username' => 'SNMP username', 'snmp_context' => 'SNMP context', 'snmp_engine_id' => 'SNMP engine ID', 'snmp_port' => 'SNMP port', 'snmp_timeout' => 'SNMP timeout (ms)', 'max_oids' => 'Maximum OIDs', 'bulk_walk_size' => 'Bulk walk size', 'ping_port' => 'Ping port', 'ping_timeout' => 'Ping timeout (ms)', 'ping_retries' => 'Ping retries'] as $field => $label) {
@@ -48,6 +58,9 @@ final class DeviceCreateType extends AbstractType
         }
     }
 
+    /**
+     * Accepts the "host_template_id", "site_id" and "poller_id" options (names keyed by id) for the choice lists, and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_create', 'method' => 'POST', 'host_template_id' => [], 'site_id' => [], 'poller_id' => []]);

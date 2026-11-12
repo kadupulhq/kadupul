@@ -11,10 +11,25 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Inventory\Application\Port\DeviceRemovals;
 use Kadupul\Inventory\Domain\DeviceSelection;
 
+/**
+ * Query that loads the devices selected for removal with their graphs and data sources.
+ */
 final readonly class PrepareDeviceRemoval
 {
+    /**
+     * Binds the query to console access and the device removal port.
+     */
     public function __construct(private ConsoleAccess $access, private DeviceRemovals $devices) {}
 
+    /**
+     * Returns the devices for the confirmation step.
+     *
+     * @param array $ids Devices selected for removal.
+     * @return array List of DeviceRemoval.
+     * @throws \Kadupul\Inventory\Application\Command\DevicesNotFound When a selected device does not exist or is not visible.
+     * @throws \InvalidArgumentException When the ids are not 1 to 100 valid, unique ids.
+     * @throws InventoryAccessDenied When nobody is signed in or the user may not manage devices.
+     */
     public function __invoke(array $ids): array
     {
         $actor = $this->access->consoleActor();

@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * Validated input for creating a device, with defaults filled in.
+ */
 final readonly class NewDevice
 {
     public const DEFAULTS = ['description' => '', 'hostname' => '', 'notes' => '', 'location' => '', 'external_id' => '', 'enabled' => true,
@@ -19,6 +22,13 @@ final readonly class NewDevice
     public const PRIVACY_PROTOCOLS = ['[None]', 'DES', 'AES', 'AES128', 'AES192', 'AES192C', 'AES256', 'AES256C'];
     public array $fields;
 
+    /**
+     * Validates the submitted fields and fills in DEFAULTS for the rest.
+     * When "use_default_credentials" is true, device-specific SNMP secrets must be empty.
+     *
+     * @param array $values Map from string to mixed.
+     * @throws \InvalidArgumentException When a field is unknown, malformed or out of range.
+     */
     public function __construct(#[\SensitiveParameter] array $values)
     {
         if (array_diff_key($values, self::DEFAULTS) !== []) {

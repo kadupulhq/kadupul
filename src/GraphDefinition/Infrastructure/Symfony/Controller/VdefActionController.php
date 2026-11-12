@@ -26,8 +26,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Confirms and applies deleting or duplicating selected VDEFs. */
 final class VdefActionController
 {
+    /** Shows the confirmation form on GET and applies the operation on a valid POST. */
     #[Route('/graph-definitions/vdefs/actions/{operation}', name: 'graph_vdef_action', requirements: ['operation' => 'delete|duplicate'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(string $operation, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {

@@ -16,9 +16,18 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
+/**
+ * Reads device maintenance state from the legacy tables and runs actions through the maintenance worker process.
+ */
 final readonly class LegacyDeviceMaintenance implements DeviceMaintenance
 {
+    /**
+     * Binds the adapter to the database, the visibility rules, the state reader and the project directory that holds the worker script.
+     */
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private DeviceMaintenanceRecords $records, private string $projectDir) {}
+    /**
+     * Returns the device's maintenance state, or null when it does not exist, is deleted or is not visible to the actor.
+     */
     public function findVisible(int $actorId, int $id): ?DeviceMaintenanceState
     {
         $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.site_id, h.poller_id, h.host_template_id, h.location, h.device_threads, h.snmp_port, h.snmp_timeout, h.max_oids, h.bulk_walk_size, h.availability_method, h.ping_method, h.ping_port, h.ping_timeout, h.ping_retries, h.snmp_version, h.snmp_auth_protocol, h.snmp_priv_protocol, h.snmp_context, h.snmp_engine_id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND h.deleted = '' AND (" . $this->visibility->predicate($actorId) . ')');
@@ -26,6 +35,14 @@ final readonly class LegacyDeviceMaintenance implements DeviceMaintenance
         $row = $query->fetch(\PDO::FETCH_ASSOC);
         return $row ? $this->records->snapshot($this->database->get(), $row) : null;
     }
+    /**
+     * Runs the action in the maintenance worker after rechecking it against $state.
+     *
+     * @throws \InvalidArgumentException When $state belongs to another device, the action does not fit it, or the worker rejects the action.
+     * @throws DeviceEditConflict When the device changed since $revision was issued.
+     * @throws InventoryAccessDenied When the worker denies the actor.
+     * @throws \RuntimeException When the outcome is unknown or could not be confirmed.
+     */
     public function execute(int $actorId, int $id, DeviceMaintenanceRequest $request, string $revision, DeviceMaintenanceState $state): DeviceMaintenanceResult
     {
         if ($state->device->id !== $id) {

@@ -9,12 +9,14 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Domain;
 
+/** A validated CDEF list request: filter text, page, page size, sort order and the graph-usage switch. Anything outside the allowed parameters is refused. */
 final readonly class CdefFilters
 {
     public const array KEYS = ['filter', 'rows', 'page', 'sort_column', 'sort_direction', 'has_graphs'];
 
     private const array SORTS = ['name', 'graphs', 'templates'];
 
+    /** Holds already validated values; use fromQuery(). */
     private function __construct(
         public string $filter,
         public int $page,
@@ -52,6 +54,11 @@ final readonly class CdefFilters
         return new self($filter, $page, $rows, $rowsText, $sort, $direction, $hasGraphs === 'true');
     }
 
+    /**
+     * Parses a decimal string within the inclusive range.
+     *
+     * @throws \InvalidArgumentException when the text is not a number in range
+     */
     private static function integer(string $value, int $minimum, int $maximum): int
     {
         if (preg_match('/\A[0-9]{1,7}\z/D', $value) !== 1) {

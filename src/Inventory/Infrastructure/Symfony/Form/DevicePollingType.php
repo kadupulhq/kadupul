@@ -14,10 +14,19 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Sub-form for a device's polling settings.
+ */
 final class DevicePollingType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
 
+    /**
+     * Adds the numeric polling fields and the availability and ping method choices.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach (['device_threads' => 'Device threads', 'snmp_port' => 'SNMP port', 'snmp_timeout' => 'SNMP timeout (ms)', 'max_oids' => 'Maximum OIDs', 'bulk_walk_size' => 'Bulk walk size', 'ping_port' => 'Ping port', 'ping_timeout' => 'Ping timeout (ms)', 'ping_retries' => 'Ping retries'] as $field => $label) {
@@ -26,6 +35,9 @@ final class DevicePollingType extends AbstractType
         $builder->add('availability_method', ChoiceType::class, ['label' => 'Availability method', 'choices' => ['None' => '0', 'SNMP and ping' => '1', 'SNMP' => '2', 'Ping' => '3', 'SNMP or ping' => '4', 'SNMP system description' => '5', 'SNMP GETNEXT' => '6'], 'invalid_message' => $this->translator->trans('Select a valid device option.', [], 'inventory')]);
         $builder->add('ping_method', ChoiceType::class, ['label' => 'Ping method', 'choices' => ['Not configured (legacy)' => '0', 'ICMP' => '1', 'UDP' => '2', 'TCP' => '3', 'TCP closed' => '5'], 'invalid_message' => $this->translator->trans('Select a valid device option.', [], 'inventory')]);
     }
+    /**
+     * Sets the translation domain.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory']);

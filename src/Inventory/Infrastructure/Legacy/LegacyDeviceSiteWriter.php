@@ -10,6 +10,13 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 /** Keep the legacy device-save bridge in the same locking protocol as site deletion. */
 final class LegacyDeviceSiteWriter
 {
+    /**
+     * Saves a device row after locking its site, so a concurrent site deletion cannot leave the device pointing at a missing site.
+     * Runs in its own transaction unless the connection already has one. When the row is saved as disabled, the device is also disabled through the legacy API first.
+     *
+     * @param array $fields The device columns to save.
+     * @return int|false The device id, or false when the save failed and was rolled back.
+     */
     public static function save(\PDO $db, array $fields): int|false
     {
         $ownsTransaction = !$db->inTransaction();
@@ -44,6 +51,12 @@ final class LegacyDeviceSiteWriter
         }
     }
 
+    /**
+     * Locks the site row until the surrounding transaction ends. Site 0 (no site) needs no lock.
+     *
+     * @throws \LogicException When no transaction is active.
+     * @throws \RuntimeException When the site id is invalid or the site no longer exists.
+     */
     public static function lockSite(\PDO $db, mixed $siteId): void
     {
         if (!$db->inTransaction()) {

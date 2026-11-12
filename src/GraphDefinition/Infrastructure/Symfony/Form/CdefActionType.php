@@ -15,8 +15,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/** The confirmation form for deleting or duplicating CDEFs; the "duplicate" option adds the title format field. */
 final class CdefActionType extends AbstractType
 {
+    /** Adds the hidden selection and revisions, and the title format when duplicating. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class)->add('revisions', HiddenType::class);
@@ -26,6 +28,7 @@ final class CdefActionType extends AbstractType
         }
     }
 
+    /** Turns on CSRF protection and refuses extra fields. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -39,6 +42,7 @@ final class CdefActionType extends AbstractType
         $resolver->setAllowedTypes('duplicate', 'bool');
     }
 
+    /** The form's field name prefix. */
     public function getBlockPrefix(): string
     {
         return 'cdef_action';

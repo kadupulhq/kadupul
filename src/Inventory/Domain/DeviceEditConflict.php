@@ -7,4 +7,7 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * Thrown when a device changed after the caller loaded it, so the edit must be reloaded.
+ */
 final class DeviceEditConflict extends \RuntimeException {}

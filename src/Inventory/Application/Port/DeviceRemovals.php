@@ -11,9 +11,15 @@ use Kadupul\Inventory\Domain\DeviceSelection;
 use Kadupul\Inventory\Domain\DeviceRemoval;
 use Kadupul\Inventory\Domain\DeviceRemovalPolicy;
 
+/**
+ * Looks up devices for removal and removes them.
+ */
 interface DeviceRemovals
 {
     /** @return list<DeviceRemoval> All selected visible devices, or DevicesNotFound. */
     public function findVisible(int $actorId, array $ids): array;
+    /**
+     * Removes every device in the selection, handling their graphs and data sources as the policy says.
+     */
     public function remove(int $actorId, DeviceSelection $selection, DeviceRemovalPolicy $policy): void;
 }

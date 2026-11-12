@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\GraphDefinition\Domain;
 
+/** An opaque digest of a VDEF's name and items; any change makes an open form stale. */
 final class VdefRevision
 {
     /** @param list<array{id:int, sequence:int, type:int, value:string}> $items */

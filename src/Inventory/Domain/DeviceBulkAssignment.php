@@ -7,8 +7,18 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * A validated target for assigning many devices to a site, template or collector at once.
+ */
 final readonly class DeviceBulkAssignment
 {
+    /**
+     * Validates the target.
+     *
+     * @param string $kind One of "site", "template" or "collector".
+     * @param int $targetId Target id; 0 is allowed except for collectors.
+     * @throws \InvalidArgumentException When the kind is unknown or the id is out of range.
+     */
     public function __construct(public string $kind, public int $targetId)
     {
         $maximum = match ($kind) {

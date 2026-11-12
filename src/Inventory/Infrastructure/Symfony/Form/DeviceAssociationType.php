@@ -14,9 +14,19 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Form for adding, removing or changing one graph or data query association on a device.
+ */
 final class DeviceAssociationType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
+    /**
+     * Adds the hidden revision, the operation and target choices, and for data queries the reindex method.
+     * The uptime reindex method is offered only when the device uses SNMP.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $targets = $options['targets'];
@@ -39,6 +49,9 @@ final class DeviceAssociationType extends AbstractType
             'invalid_message' => $this->translator->trans('Select a valid assignment target.', [], 'inventory'),
         ]);
     }
+    /**
+     * Requires the "targets" option (names keyed by id). Accepts "kind" ("graph" or "query") and "snmp_enabled", and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired(['targets']);
