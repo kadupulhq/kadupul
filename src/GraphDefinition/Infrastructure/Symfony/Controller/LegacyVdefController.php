@@ -19,8 +19,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/** Redirects the old VDEF page and its edit URLs to the Symfony pages; it changes no data. */
 final class LegacyVdefController
 {
+    /** Redirects a legacy GET to the matching VDEF page, carrying over the list filters it understands. */
     #[Route('/graph-definitions/vdefs/legacy', name: 'graph_vdef_legacy', methods: ['GET', 'HEAD'])]
     public function __invoke(Request $request, VdefAuthorization $authorization, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response
     {

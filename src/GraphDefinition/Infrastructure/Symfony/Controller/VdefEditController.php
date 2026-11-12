@@ -25,8 +25,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the form that creates a VDEF or edits one and its items. */
 final class VdefEditController
 {
+    /**
+     * Shows the VDEF form and saves it on a valid POST.
+     *
+     * @param int|null $id the VDEF to edit, or null to create one
+     */
     #[Route('/graph-definitions/vdefs/new', name: 'graph_vdef_create', methods: ['GET', 'HEAD', 'POST'])]
     #[Route('/graph-definitions/vdefs/{id<\d+>}/edit', name: 'graph_vdef_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(?int $id, Request $request, VdefAuthorization $authorization, VdefCatalog $catalog, VdefEditor $editor, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, ConsoleAccess $consoleAccess): Response

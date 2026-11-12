@@ -30,6 +30,7 @@ use Kadupul\Platform\Infrastructure\Persistence\AuditedPrimaryWrite;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/** CDEFs in the legacy cdef and cdef_items tables. Writes are audited, run on the primary collector, and require the revision the caller read. */
 #[AsAlias(CdefStore::class)]
 final readonly class DbalCdefStore implements CdefStore
 {
@@ -47,6 +48,7 @@ final readonly class DbalCdefStore implements CdefStore
 
     private AuditedPrimaryWrite $writes;
 
+    /** Wires the database, access check, audit trail, configuration and the CDEF reference readiness check. */
     public function __construct(
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
@@ -58,17 +60,20 @@ final readonly class DbalCdefStore implements CdefStore
         $this->writes = new AuditedPrimaryWrite($database, $audit, $configuration, $access->assertCurrent(...), self::WRITE_TABLES, 'CDEF', 'CDEFs', 'graph_definition.cdef', 'cdef');
     }
 
+    /** The num_rows_table setting, or 25 when it is unset or outside 1 to 5000. */
     public function defaultRows(): int
     {
         $rows = filter_var($this->database->fetchOne("SELECT value FROM settings WHERE name = 'num_rows_table'"), FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 5000]]);
         return $rows === false ? 25 : $rows;
     }
 
+    /** True when the default_has setting is on. */
     public function defaultHasGraphs(): bool
     {
         return $this->database->fetchOne("SELECT value FROM settings WHERE name = 'default_has'") === 'on';
     }
 
+    /** One page of user CDEFs, counting the graphs and templates that use each. */
     public function list(CdefFilters $filters): CdefPage
     {
         $where = ' WHERE c.`system` = 0';
@@ -90,6 +95,7 @@ final readonly class DbalCdefStore implements CdefStore
         return new CdefPage($this->summaries($rows, ''), $total, $filters);
     }
 
+    /** The user CDEF with labelled items and its expanded preview, or null. */
     public function find(int $id): ?Cdef
     {
         $parent = $this->database->fetchAssociative('SELECT id, hash, `system`, name FROM cdef WHERE id = ? AND `system` = 0', [$id]);
@@ -113,6 +119,7 @@ final readonly class DbalCdefStore implements CdefStore
         return new Cdef($id, (string) $parent['name'], CdefRevision::of($parent, $rows), $items, $this->preview($id, $expanded, [], $version));
     }
 
+    /** Summaries and revisions for the user CDEFs among $ids, keyed by id; ids that do not exist are left out. */
     public function findMany(array $ids): array
     {
         if ($ids === []) {
@@ -129,11 +136,13 @@ final readonly class DbalCdefStore implements CdefStore
         return $result;
     }
 
+    /** Function names RRDtool supports at the configured version, keyed by stored value. */
     public function functions(): array
     {
         return CdefFunctions::functions($this->rrdtoolVersion());
     }
 
+    /** Other user CDEFs that an item may reference, keyed by id and sorted by name. */
     public function references(int $excludeId): array
     {
         $choices = [];
@@ -143,6 +152,11 @@ final readonly class DbalCdefStore implements CdefStore
         return $choices;
     }
 
+    /**
+     * Creates a CDEF, or renames it after checking the revision, in an audited write.
+     *
+     * @throws \InvalidArgumentException when the name is invalid, the CDEF is missing or it changed since $revision
+     */
     public function save(int $actorId, ?int $id, string $name, ?string $revision): int
     {
         self::validateName($name);
@@ -162,6 +176,12 @@ final readonly class DbalCdefStore implements CdefStore
         });
     }
 
+    /**
+     * Appends an item, or changes the item in $itemId, in an audited write.
+     * A CDEF-type item locks every CDEF and is refused if it would make a CDEF include itself.
+     *
+     * @throws \InvalidArgumentException when the type or value is invalid, the item is missing, or the CDEF changed since $revision
+     */
     public function saveItem(int $actorId, int $cdefId, ?int $itemId, int $type, string $value, string $revision): void
     {
         if (!isset(CdefFunctions::TYPES[$type])) {
@@ -187,6 +207,11 @@ final readonly class DbalCdefStore implements CdefStore
         });
     }
 
+    /**
+     * Removes an item in an audited write.
+     *
+     * @throws \InvalidArgumentException when the item is missing or the CDEF changed since $revision
+     */
     public function deleteItem(int $actorId, int $cdefId, int $itemId, string $revision): void
     {
         $this->writes->run($actorId, 'item', 'cdef', function () use ($cdefId, $itemId, $revision): void {
@@ -197,6 +222,12 @@ final readonly class DbalCdefStore implements CdefStore
         });
     }
 
+    /**
+     * Swaps an item with its neighbour and renumbers the sequence in an audited write.
+     *
+     * @param int $offset -1 to move toward the start, 1 toward the end
+     * @throws \InvalidArgumentException when the offset is invalid, the item cannot move that way, or the CDEF changed since $revision
+     */
     public function moveItem(int $actorId, int $cdefId, int $itemId, int $offset, string $revision): void
     {
         if (!in_array($offset, [-1, 1], true)) {
@@ -215,6 +246,11 @@ final readonly class DbalCdefStore implements CdefStore
         });
     }
 
+    /**
+     * Copies the selected CDEFs and their items; each copy's name is $titleFormat with <cdef_title> replaced by the original name.
+     *
+     * @throws \InvalidArgumentException when the selection, a revision or the title is invalid
+     */
     public function duplicate(int $actorId, array $ids, array $revisions, string $titleFormat): void
     {
         AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 16777215, 'Invalid CDEF selection.', self::STALE);
@@ -235,6 +271,13 @@ final readonly class DbalCdefStore implements CdefStore
         });
     }
 
+    /**
+     * Deletes the selected CDEFs and their items after checking the revisions and that none is in use.
+     * The deletion runs inside LegacyCdefDeletion's transaction on the primary collector, and an audit event is recorded whatever the outcome.
+     *
+     * @throws \InvalidArgumentException when the selection or a revision is invalid, or a CDEF is in use
+     * @throws \RuntimeException when the deletion cannot be confirmed
+     */
     public function delete(int $actorId, array $ids, array $revisions): void
     {
         AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, 16777215, 'Invalid CDEF selection.', self::STALE);
@@ -369,6 +412,9 @@ final readonly class DbalCdefStore implements CdefStore
         return $items;
     }
 
+    /**
+     * @throws \InvalidArgumentException when the value does not suit the type, or a CDEF item would include its own CDEF
+     */
     private function validateItem(int $cdefId, int $type, string $value): void
     {
         $valid = match ($type) {
@@ -387,6 +433,7 @@ final readonly class DbalCdefStore implements CdefStore
         }
     }
 
+    /** True when following CDEF references from $from leads to $target. */
     private function reaches(int $from, int $target): bool
     {
         $edges = [];
@@ -410,6 +457,9 @@ final readonly class DbalCdefStore implements CdefStore
         return false;
     }
 
+    /**
+     * @throws \InvalidArgumentException when the name is blank, over 255 characters, not UTF-8 or holds control characters
+     */
     private static function validateName(string $name): void
     {
         if (trim($name) === '' || mb_strlen($name) > 255 || preg_match('//u', $name) !== 1 || preg_match('/[\x00\r\n]/', $name) === 1) {
@@ -417,11 +467,13 @@ final readonly class DbalCdefStore implements CdefStore
         }
     }
 
+    /** The row-lock suffix for MySQL queries, or an empty string. */
     private function forUpdate(): string
     {
         return $this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform ? ' FOR UPDATE' : '';
     }
 
+    /** The configured RRDtool version, or an empty string when unset. */
     private function rrdtoolVersion(): string
     {
         $version = $this->database->fetchOne("SELECT value FROM settings WHERE name = 'rrdtool_version'");

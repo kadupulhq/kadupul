@@ -24,8 +24,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Confirms and applies deleting or duplicating selected CDEFs. */
 final class CdefActionController
 {
+    /**
+     * Shows the confirmation form on GET and applies the operation on a valid POST.
+     * Answers with a plain response for status 401, 403, 400, 404 or 502 on access, selection or load failures.
+     */
     #[Route('/graph-definitions/cdefs/actions/{operation}', name: 'graph_cdef_action', requirements: ['operation' => 'delete|duplicate'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(string $operation, Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
