@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-10 08:39-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,8 +398,9 @@ msgid "Report Name"
 msgstr "Rapor Adı"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Dönüş"
@@ -1396,20 +1397,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "%s kuralını silmek istediğinize emin misiniz?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Devam etmek istediğinize emin misiniz?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Subtree&#39;de"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Yaprak tipini değiştirerek, tüm geçersiz kurallar otomatik olarak kaldırılacak ve kurtarılamaz."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Yaprak Tipini Değiştir"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1424,8 +1413,16 @@ msgid "Created Trees"
 msgstr "Oluşturulan Ağaçlar"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Uygun Nesneler"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Grafik Gruplama Stili"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1436,6 +1433,10 @@ msgstr "Ağacın içine kanca"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Bu Kural Öğesi için kullanılacak Alan Adı."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Yaprak Öğe Türü"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Ağaç Kuralı Bulunamadı"
@@ -1444,13 +1445,29 @@ msgstr "Ağaç Kuralı Bulunamadı"
 msgid "Object Selection Criteria"
 msgstr "Nesne Seçme Kriterleri"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "İsteğe bağlı: Alt Ağaç Öğesi"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "KÖK"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Bu tip"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Ağaç"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1466,20 +1483,8 @@ msgid "Tree Rules"
 msgstr "Ağaç kuralları"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Ağaç Kuralları Seçimi [yeni]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Gruplandırmayı Kullanma"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "UYARI:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Yaprak tipini, Grafik tabanlı nesne eşleştirme / yaratmayı desteklemeyen &quot;Aygıt&quot; olarak değiştiriyorsunuz."
 
 #: cactid.php
 #, fuzzy
@@ -5676,10 +5681,6 @@ msgstr "Toplam Tüm Veri Kaynakları"
 msgid "Total Similar Data Sources"
 msgstr "Toplam Benzer Veri Kaynakları"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Ağaç"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Ağaç modu"
@@ -6613,10 +6614,6 @@ msgstr "Genel Ayarlar"
 msgid "Give this host a meaningful description."
 msgstr "Bu ev sahibine anlamlı bir açıklama verin."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Grafik Gruplama Stili"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Grafik Öğe Türü"
@@ -6768,10 +6765,6 @@ msgid "Is this to carry the template?"
 msgstr "Bu şablonu taşımak mı?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Yaprak Öğe Türü"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Sol Eksen Formatlayıcı (--ft eksen ekseni formatlayıcı &lt;formatname&gt;)"
 
@@ -6882,10 +6875,6 @@ msgstr "Operasyon"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Operatör."
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "İsteğe bağlı: Alt Ağaç Öğesi"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13984,6 +13973,10 @@ msgstr "<strong>{0 }'</strong> dan <strong>{1 }'</strong> e yükselt"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V%s'den (DB%s) v%s'ye yükseltme"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "UYARI:"
 
 #: lib/installer.php
 #, fuzzy

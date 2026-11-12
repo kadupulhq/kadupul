@@ -30,9 +30,9 @@ switch (get_request_var('action')) {
 
         break;
     case 'change_leaf':
-        automation_tree_rules_change_leaf();
+        // Rule settings moved to Symfony; the old leaf type change must not write.
+        tree_rule_settings_expired();
 
-        header('Location: automation_tree_rules.php?header=false&action=edit&id=' . get_request_var('id'));
         break;
     case 'item_movedown':
         automation_tree_rules_item_movedown();
@@ -60,6 +60,18 @@ switch (get_request_var('action')) {
         header('Location: automation_tree_rules.php');
         break;
     case 'edit':
+        if (isempty_request_var('id')) {
+            // Symfony creates rules. Relative targets keep subdirectory installations working.
+            header('Location: app.php/automation/tree-rules/new', true, 302);
+            exit;
+        }
+        // Redirect before top_header() prints anything, or the header is lost.
+        if (!db_fetch_cell_prepared('SELECT id FROM automation_tree_rules WHERE id = ?', array(get_filter_request_var('id')))) {
+            raise_message('rule_not_found', __('Rule not found.'), MESSAGE_LEVEL_ERROR);
+            header('Location: automation_tree_rules.php', true, 302);
+            exit;
+        }
+
         top_header();
         automation_tree_rules_edit();
         bottom_footer();
@@ -79,30 +91,7 @@ function automation_tree_rules_form_save()
 {
 
     if (isset_request_var('save_component_automation_tree_rule')) {
-
-        /* ================= input validation ================= */
-        get_filter_request_var('id');
-        /* ==================================================== */
-
-        $save['id']                 = get_request_var('id');
-        $save['name']               = form_input_validate(get_nfilter_request_var('name'), 'name', '', true, 3);
-        $save['tree_id']            = form_input_validate(get_nfilter_request_var('tree_id'), 'tree_id', '^[0-9]+$', false, 3);
-        $save['tree_item_id']       = isset_request_var('tree_item_id') ? form_input_validate(get_nfilter_request_var('tree_item_id'), 'tree_item_id', '^[0-9]+$', false, 3) : 0;
-        $save['leaf_type']          = (isset_request_var('leaf_type')) ? form_input_validate(get_nfilter_request_var('leaf_type'), 'leaf_type', '^[0-9]+$', false, 3) : 0;
-        $save['host_grouping_type'] = isset_request_var('host_grouping_type') ? form_input_validate(get_nfilter_request_var('host_grouping_type'), 'host_grouping_type', '^[0-9]+$', false, 3) : 0;
-        $save['enabled']            = (isset_request_var('enabled') ? 'on' : '');
-        if (!is_error_message()) {
-            $rule_id = sql_save($save, 'automation_tree_rules');
-
-            if ($rule_id) {
-                raise_message(1);
-            } else {
-                raise_message(2);
-            }
-        }
-
-        header('Location: automation_tree_rules.php?header=false&action=edit&id=' . (empty($rule_id) ? get_request_var('id') : $rule_id));
-
+        tree_rule_settings_expired();
     } elseif (isset_request_var('save_component_automation_match_item')) {
         /* ================= input validation ================= */
         get_filter_request_var('id');
@@ -324,14 +313,17 @@ function automation_tree_rules_form_actions()
     bottom_footer();
 }
 
-function automation_tree_rules_change_leaf()
+/**
+ * Answer an old rule settings form or leaf type change, which Symfony now
+ * handles, without writing.
+ */
+function tree_rule_settings_expired()
 {
-    /* ================= input validation ================= */
-    get_filter_request_var('id');
-    get_filter_request_var('leaf_type');
-    /* ==================================================== */
+    http_response_code(409);
+    header('Cache-Control: private, no-store');
+    print html_escape(__('This Tree Rule form has expired. Open the rule again and use its current form.'));
 
-    automation_change_tree_rule_leaf_type(get_request_var('leaf_type'), get_request_var('id'));
+    exit;
 }
 
 /* --------------------------
@@ -533,25 +525,13 @@ function automation_tree_rules_remove()
 
 function automation_tree_rules_edit()
 {
-    global $config;
-    global $fields_automation_tree_rules_edit1, $fields_automation_tree_rules_edit2, $fields_automation_tree_rules_edit3;
-
-    include_once($config['base_path'] . '/lib/html_tree.php');
+    global $config, $automation_tree_item_types, $host_group_types;
 
     /* ================= input validation ================= */
     get_filter_request_var('id');
     get_filter_request_var('rows');
-    get_filter_request_var('tree_id');
-    get_filter_request_var('leaf_type');
-    get_filter_request_var('host_grouping_type');
-    get_filter_request_var('tree_item_id');
     get_filter_request_var('show_hosts');
     /* ==================================================== */
-
-    /* clean up rule name */
-    if (isset_request_var('name')) {
-        set_request_var('name', sanitize_search_string(get_request_var('name')));
-    }
 
     /* remember these search fields in session vars so we don't have to keep passing them around */
     load_current_session_value('rows', 'sess_default_rows', read_config_option('num_rows_table'));
@@ -579,54 +559,35 @@ function automation_tree_rules_edit()
     /*
      * display the rule -------------------------------------------------------------------------------------
      */
-    $rule = array();
-    if (!isempty_request_var('id')) {
-        $rule = db_fetch_row_prepared('SELECT * FROM automation_tree_rules WHERE id = ?', array(get_request_var('id')));
-        $header_label = __esc('Tree Rule Selection [edit: %s]', $rule['name']);
-    } else {
-        $header_label = __('Tree Rules Selection [new]');
-    }
-    /* if creating a new rule, use all fields that have already been entered on page reload */
-    if (isset_request_var('name')) {
-        $rule['name'] = get_request_var('name');
+    $rule = db_fetch_row_prepared('SELECT * FROM automation_tree_rules WHERE id = ?', array(get_request_var('id')));
+
+    if (!cacti_sizeof($rule)) {
+        // Deleted after the dispatcher's check; output has already started.
+        print '<p>' . __esc('Rule not found.') . '</p>';
+
+        return;
     }
 
-    if (isset_request_var('tree_id')) {
-        $rule['tree_id'] = get_request_var('tree_id');
+    // The settings are edited in Symfony; this page keeps the criteria and previews.
+    html_start_box(__esc('Tree Rule Selection [edit: %s]', $rule['name']), '100%', true, '3', 'center', '');
+
+    $tree   = db_fetch_cell_prepared('SELECT name FROM graph_tree WHERE id = ?', array($rule['tree_id']));
+    $header = ($rule['tree_item_id'] > 0 ? db_fetch_cell_prepared('SELECT title FROM graph_tree_items WHERE id = ?', array($rule['tree_item_id'])) : '[root]');
+
+    foreach (array(
+        __('Tree') => ($tree == '' ? __('None') : $tree),
+        __('Optional: Sub-Tree Item') => ($header == '' ? __('None') : $header),
+        __('Leaf Item Type') => ($automation_tree_item_types[$rule['leaf_type']] ?? __('None')),
+        __('Graph Grouping Style') => ($host_group_types[$rule['host_grouping_type']] ?? __('None')),
+        __('Enabled') => ($rule['enabled'] == 'on' ? __('Yes') : __('No')),
+    ) as $label => $value) {
+        form_alternate_row();
+        print '<td>' . html_escape($label) . '</td><td>' . html_escape($value) . '</td></tr>';
     }
 
-    if (isset_request_var('leaf_type')) {
-        $rule['leaf_type'] = get_request_var('leaf_type');
-    }
-
-    if (isset_request_var('host_grouping_type')) {
-        $rule['host_grouping_type'] = get_request_var('host_grouping_type');
-    }
-
-    if (isset_request_var('tree_item_id')) {
-        $rule['tree_item_id'] = get_request_var('tree_item_id');
-    }
-
-    form_start('automation_tree_rules.php', 'form_automation_tree_rule_edit');
-
-    html_start_box($header_label, '100%', true, '3', 'center', '');
-
-    if (!isempty_request_var('id')) {
-        /* display whole rule */
-        $form_array = $fields_automation_tree_rules_edit1 + $fields_automation_tree_rules_edit2 + $fields_automation_tree_rules_edit3;
-    } else {
-        /* display first part of rule only and request user to proceed */
-        $form_array = $fields_automation_tree_rules_edit1;
-    }
-
-    draw_edit_form(array(
-        'config' => array('no_form_tag' => true),
-        'fields' => inject_form_variables($form_array, (isset($rule) ? $rule : array()))
-    ));
-
-    form_hidden_box('id', (isset($rule['id']) ? $rule['id'] : '0'), '');
-    form_hidden_box('item_id', (isset($rule['item_id']) ? $rule['item_id'] : '0'), '');
-    form_hidden_box('save_component_automation_tree_rule', '1', '');
+    form_alternate_row();
+    // A Symfony page is a full navigation, not a partial load.
+    print "<td colspan='2'><a class='linkEditMain' href='" . html_escape($config['url_path'] . 'app.php/automation/tree-rules/' . $rule['id'] . '/edit') . "'>" . __esc('Edit Rule Settings') . '</a></td></tr>';
 
     html_end_box(true, true);
 
@@ -652,9 +613,7 @@ function automation_tree_rules_edit()
         );
     }
 
-    form_save_button('automation_tree_rules.php', 'return');
-
-    print '<br>';
+    print "<table style='width:100%;text-align:center;'><tr><td class='saveRow'><input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='automation_tree_rules.php' value='" . __esc('Return') . "'></td></tr></table><br>";
 
     if (!empty($rule['id'])) {
         /* display list of matching hosts */
@@ -669,113 +628,6 @@ function automation_tree_rules_edit()
         }
     }
 
-    ?>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var automationLeafTypeOriginal = $('#leaf_type').val();
-
-	<?php
-    if (!empty($rule['id'])) {
-        print 'var isNew = false;';
-    } else {
-        print 'var isNew = true;';
-    }
-    ?>
-
-	$(function() {
-		applyItemTypeChange();
-	});
-
-	function applyTreeChange(action,force) {
-		if (force == undefined) {
-			force = false;
-		}
-
-		if (action == undefined) {
-			action = 'edit';
-		}
-
-		strURL  = 'automation_tree_rules.php?header=false&action=' + action;
-		strURL += '&id=' + $('#id').val();
-		strURL += '&name=' + $('#name').val();
-		strURL += '&tree_id=' + $('#tree_id').val();
-		strURL += '&tree_item_id=' + $('#tree_item_id').val();
-		strURL += '&leaf_type=' + $('#leaf_type').val();
-		strURL += '&enabled=' + $('#enabled').val();
-
-		loadPageNoHeader(strURL,undefined,force);
-	}
-
-	function applyItemTypeChange() {
-		var automationLeafTypeNew = $('#leaf_type').val();
-		if (automationLeafTypeOriginal != automationLeafTypeNew && !isNew) {
-			if (automationLeafTypeNew == 3) {
-				var automationLeafTypeButtons = {
-					'Yes': {
-						text: '<?php print __('Yes'); ?>',
-						id: 'btnAutomationLeafTypeYes',
-						click: function() {
-							applyTreeChange('change_leaf',true);
-						}
-					},
-					'No': {
-						text: '<?php print __('No'); ?>',
-						id: 'btnAutomationLeafTypeNo',
-						click: function() {
-							$(this).dialog('close');
-							var leaf = $('#leaf_type');
-							if (leaf != null) {
-								leaf.val(automationLeafTypeOriginal);
-								leaf.selectmenu("refresh");
-								leaf.change();
-							}
-						}
-					}
-				};
-
-				var automationLeafTypeTitle = '<?php print __('Change Leaf Type'); ?>';
-				var automationLeafTypeContainer = '<div id="automationLeafTypeContainer" style="display:none">' +
-					'<p style="display:table-cell;overflow:auto"> ' +
-					'<b><?php print __('WARNING:'); ?></b>' +
-					'<?php print __('You are changing the leaf type to "Device" which does not support Graph-based object matching/creation.');?>' +
-					'<?php print __('By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable.');?> <br/><br/>' +
-					'<?php print __('Are you sure you wish to continue?');?>' +
-					'</p>' +
-					'</div>';
-
-				$('#automationLeafTypeContainer').remove();
-				$('body').append(automationLeafTypeContainer);
-
-				var automationLeafTypeWidth = $(window).width();
-				if (automationLeafTypeWidth > 600) {
-					automationLeafTypeWidth = 600;
-				} else {
-					automationLeafTypeWidth -= 50;
-				}
-
-				$('#automationLeafTypeContainer').dialog({
-					draggable: true,
-					resizable: false,
-					height: 'auto',
-					minWidth: automationLeafTypeWidth,
-					maxWidth: 800,
-					maxHeight: 600,
-					title: automationLeafTypeTitle,
-					buttons: automationLeafTypeButtons
-				});
-			} else {
-				applyTreeChange('change_leaf',true);
-			}
-		} else {
-			if ($('#leaf_type').val() == '<?php print TREE_ITEM_TYPE_HOST;?>') {
-				$('#row_host_grouping_type').show();
-			} else if ($('#leaf_type').val() == '<?php print TREE_ITEM_TYPE_GRAPH;?>') {
-				$('#row_host_grouping_type').hide();
-			}
-			$('#leaf_type').selectmenu("refresh");
-		}
-	}
-	</script>
-	<?php
 }
 
 function automation_tree_rules()
@@ -831,7 +683,7 @@ function automation_tree_rules()
         $rows = get_request_var('rows');
     }
 
-    html_start_box(__('Tree Rules'), '100%', '', '3', 'center', 'automation_tree_rules.php?action=edit');
+    html_start_box(__('Tree Rules'), '100%', '', '3', 'center', 'app.php/automation/tree-rules/new');
 
     ?>
 	<tr class='even'>

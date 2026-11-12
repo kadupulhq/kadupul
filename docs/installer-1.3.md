@@ -1,4 +1,4 @@
-# Installer workflow for 1.3
+# Installer workflow
 
 The web installer and `kadupul:install` share a Symfony application workflow.
 The existing native installer remains responsible for schema migrations,

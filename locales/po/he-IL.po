@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-10 08:39-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,8 +398,9 @@ msgid "Report Name"
 msgstr "שם הדוח"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "חזרה אל עריכת פוסט"
@@ -1397,20 +1398,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "האם אתה בטוח שברצונך למחוק את הכלל &#39; %s&#39;?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "האם אתה בטוח שברצונך להמשיך?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "ב Subtree"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "על ידי שינוי סוג העלה, כל הכללים הלא חוקיים יוסרו באופן אוטומטי ולא יהיו ניתנים להשבה."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "שינוי סוג העלה"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1425,8 +1414,16 @@ msgid "Created Trees"
 msgstr "עצים שנוצרו"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "אובייקטים כשירים"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "סגנון קיבוץ גרפים"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1437,6 +1434,10 @@ msgstr "הוק לעץ"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "שם השדה שישמש לפריט זה."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "סוג פריט עלה"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "לא נמצאו כללי עץ"
@@ -1445,13 +1446,29 @@ msgstr "לא נמצאו כללי עץ"
 msgid "Object Selection Criteria"
 msgstr "קריטריונים לבחירת אובייקט"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "אופציונלי: פריט משנה"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "‫Root"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "הסוג הזה"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "עץ"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1467,20 +1484,8 @@ msgid "Tree Rules"
 msgstr "חוקי עץ"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "בחירת כללי עץ [חדש]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "באמצעות קיבוץ"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "<strong>אזהרה:</strong>"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "אתה משנה את סוג העלה ל &quot;התקן&quot; אשר אינו תומך התאמת אובייקט מבוסס אובייקט / יצירה."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5710,10 +5715,6 @@ msgstr "סך הכל"
 msgid "Total Similar Data Sources"
 msgstr "סך הכל מקורות נתונים דומים"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "עץ"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "מצב עץ"
@@ -6647,10 +6648,6 @@ msgstr "הגדרות כלליות"
 msgid "Give this host a meaningful description."
 msgstr "תן למארח זה תיאור משמעותי."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "סגנון קיבוץ גרפים"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "סוג פריט גרף"
@@ -6802,10 +6799,6 @@ msgid "Is this to carry the template?"
 msgstr "האם זה נושא את התבנית?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "סוג פריט עלה"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "שמאל ציר מעצב (- ציר ציר, פורמט&gt;&gt;)"
 
@@ -6916,10 +6909,6 @@ msgstr "פעולה"
 #: include/global_form.php
 msgid "Operator."
 msgstr "נציג"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "אופציונלי: פריט משנה"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -14011,6 +14000,10 @@ msgstr "שדרג מ <strong> %s</strong> ל - <strong> %s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "שדרוג מ- v%s (DB%s) ל- v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "<strong>אזהרה:</strong>"
 
 #: lib/installer.php
 #, fuzzy

@@ -422,7 +422,8 @@ if ($scenario['mode'] === 'matches') {
 } elseif ($scenario['mode'] === 'leaf') {
     $db->exec("INSERT INTO automation_tree_rules VALUES (8,2,'Selected'),(9,2,'Unrelated')");
     $db->exec("INSERT INTO automation_tree_rule_items VALUES (1,8,'gtg.title_cache','x','y',1),(2,8,'gt.name','x','y',2),(3,8,'h.description','x','y',3),(4,9,'gt.name','x','y',1)");
-    $db->exec("INSERT INTO automation_match_rule_items VALUES (1,8,1,1,0,'gtg.title_cache',1,'x'),(2,8,1,2,0,'gt.name',1,'x'),(3,8,1,3,0,'h.description',1,'x'),(4,9,1,1,0,'gt.name',1,'x')");
+    // Items 5 and 6 belong to graph rule 8, which shares the tree rule's id.
+    $db->exec("INSERT INTO automation_match_rule_items VALUES (1,8," . AUTOMATION_RULE_TYPE_TREE_MATCH . ",1,0,'gtg.title_cache',1,'x'),(2,8," . AUTOMATION_RULE_TYPE_TREE_MATCH . ",2,0,'gt.name',1,'x'),(3,8," . AUTOMATION_RULE_TYPE_TREE_MATCH . ",3,0,'h.description',1,'x'),(4,9," . AUTOMATION_RULE_TYPE_TREE_MATCH . ",1,0,'gt.name',1,'x'),(5,8," . AUTOMATION_RULE_TYPE_GRAPH_MATCH . ",1,0,'gt.name',1,'x'),(6,8," . AUTOMATION_RULE_TYPE_GRAPH_MATCH . ",2,0,'gtg.title_cache',1,'x')");
     automation_change_tree_rule_leaf_type($scenario['leaf'], 8);
     automation_change_tree_rule_leaf_type($scenario['leaf'], 8);
     $GLOBALS['contracts'] = array('rules' => $db->query('SELECT * FROM automation_tree_rules ORDER BY id')->fetchAll(PDO::FETCH_ASSOC), 'items' => $db->query('SELECT id FROM automation_tree_rule_items ORDER BY id')->fetchAll(PDO::FETCH_COLUMN), 'matches' => $db->query('SELECT id FROM automation_match_rule_items ORDER BY id')->fetchAll(PDO::FETCH_COLUMN));
