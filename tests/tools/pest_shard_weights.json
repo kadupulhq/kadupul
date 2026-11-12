@@ -1,0 +1,23 @@
+{
+ "HandOff\\PluginCspHandOffTest": 105,
+ "Mutation\\LoopStateResetMutationTest": 81,
+ "Mutation\\PollerCacheIntegrityMutationTest": 78,
+ "Unit\\Ui\\Aggregate\\AggregateTotalLegendNativeTest": 78,
+ "UtilityViewNativeCoverageTest": 69,
+ "HandOff\\SecurityHardening12xHandOffTest": 41,
+ "AuthPolicyNativeCoverageTest": 22,
+ "Unit\\Security\\Auth\\ItemActionMutationCsrfTest": 22,
+ "Unit\\Security\\Shell\\DataInputQuotedPlaceholderTest": 18,
+ "AdminPermissionPersistenceNativeCoverageTest": 16,
+ "Unit\\Security\\Auth\\AdminMutationCsrfTest": 12,
+ "DataDebugNativeCoverageTest": 10,
+ "PermissionRequestNativeTest": 10,
+ "Unit\\Security\\Auth\\BulkMutationCsrfTest": 9,
+ "Unit\\GraphItemNativeEditorTest": 8,
+ "PermissionFilterRendererTest": 7,
+ "Unit\\Core\\Rrd\\RrdMaintenanceLockTest": 7,
+ "Unit\\Security\\Auth\\PageFlagCrossSiteGuardTest": 7,
+ "Unit\\Security\\Auth\\RealtimeGraphPermissionTest": 7,
+ "DeviceRouteNativeTest": 6,
+ "Unit\\Installer\\InstallerRrdStoragePreflightTest": 6
+}

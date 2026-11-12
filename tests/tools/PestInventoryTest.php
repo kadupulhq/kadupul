@@ -249,6 +249,52 @@ final class PestInventoryTest extends TestCase
         self::assertStringContainsString('Only 0 test classes were listed', $invalid->getErrorOutput());
     }
 
+    public function testShardsAreBalancedByWeightDeterministicallyAndCoverEveryClassOnce(): void
+    {
+        $weights = json_decode((string) file_get_contents(dirname(__DIR__) . '/tools/pest_shard_weights.json'), true, 4, JSON_THROW_ON_ERROR);
+        self::assertIsArray($weights);
+        foreach ($weights as $class => $weight) {
+            self::assertIsString($class);
+            self::assertIsInt($weight);
+            self::assertGreaterThan(0, $weight, $class);
+        }
+
+        // The checked-in heavy classes plus many unlisted ones, as in CI.
+        $classes = array_keys($weights);
+        for ($number = 1; $number <= 120; ++$number) {
+            $classes[] = sprintf('Unit\\Filler%03dTest', $number);
+        }
+        $listing = "Available tests:\n";
+        foreach (array_reverse($classes) as $class) {
+            $listing .= ' - P\\' . $class . '::testCase"one"' . "\n";
+        }
+        $total = 6;
+        $filters = [];
+        $loads = [];
+        foreach (range(1, $total) as $shard) {
+            $process = new Process([PHP_BINARY, dirname(__DIR__) . '/tools/pest_shard_filter.php', (string) $shard, (string) $total]);
+            $process->setInput($listing);
+            $process->mustRun();
+            $filters[$shard] = trim($process->getOutput());
+            self::assertSame(1, preg_match('/weight (\d+)/', $process->getErrorOutput(), $load));
+            $loads[$shard] = (int) $load[1];
+
+            $again = new Process([PHP_BINARY, dirname(__DIR__) . '/tools/pest_shard_filter.php', (string) $shard, (string) $total]);
+            $again->setInput(implode("\n", array_reverse(explode("\n", $listing))));
+            $again->mustRun();
+            self::assertSame($filters[$shard], trim($again->getOutput()), 'The split must not depend on listing order.');
+        }
+        foreach ($classes as $class) {
+            $matches = 0;
+            foreach ($filters as $filter) {
+                $matches += (int) preg_match($filter, $class . '::testCase');
+            }
+            self::assertSame(1, $matches, $class . ' must be selected by exactly one shard.');
+        }
+        // Longest-first assignment keeps the spread within the heaviest class.
+        self::assertLessThanOrEqual(max($weights), max($loads) - min($loads));
+    }
+
     /** @return iterable<string, array{bool}> */
     public static function selections(): iterable
     {

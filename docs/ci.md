@@ -285,4 +285,21 @@ changed-line coverage gate stay out of the queue: application coverage alone
 takes 85–90 minutes, more than the queue's 90-minute check timeout leaves once
 scheduling and runner waits are counted. The one recent fully green chain
 (run 42710796482) took about 60 minutes from creation to the merge, set by
-shard 2 at about 47 minutes; the other shards took 11–22 minutes.
+shard 2 at about 47 minutes; the other shards took 11–22 minutes. That split
+was by class count. `tests/tools/pest_shard_filter.php` now assigns classes
+longest-first using the measured weights in
+`tests/tools/pest_shard_weights.json` (units of about ten seconds; unlisted
+classes weigh 1), which puts every shard at roughly 22–27 minutes of tests,
+so the chain is bounded by about 40 minutes of setup, tests and merge.
+Refresh the weights from a shard log when a class becomes slow. Merge-group
+jobs use the self-hosted `kadupul-do` runners like same-repo pull requests;
+the queue never builds fork refs, and fork pull requests stay on hosted runners.
+
+Queue cost: queue entries used to finish in about a minute and now take about
+half an hour or more. A failing or flaky shard ejects that entry and rebuilds
+every entry behind it, and a failed group cannot re-run just one shard. The
+workflow has no retry or `continue-on-error` for tests by design, since a
+retry would mask a real failure in a gate. On a flake, re-enqueue the pull
+request and fix or quarantine the flaky test rather than retrying around it.
+A missing `SONAR_TOKEN` no longer blocks the queue: the shards check it only
+when analysis is requested.

@@ -5,7 +5,7 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
-- Run the six legacy unit coverage shards and `Legacy coverage merge` in every merge group, and fail the required `Sonar Quality Gate` there unless they pass, so a pull request whose own CI skipped the shards can no longer merge while breaking them on `main`. Sonar analysis in merge groups still follows `SONAR_ALL_PRS`.
+- Run the six legacy unit coverage shards and `Legacy coverage merge` in every merge group, and fail the required `Sonar Quality Gate` there unless they pass, so a pull request whose own CI skipped the shards can no longer merge while breaking them on `main`. Sonar analysis in merge groups still follows `SONAR_ALL_PRS`. Merge groups use the self-hosted runners, the shards are balanced by measured class weights (`tests/tools/pest_shard_weights.json`) rather than class count, and the shards no longer require `SONAR_TOKEN` unless analysis is requested.
 - Split the shared authentication CI checks into five shards. The third shard had collected every new scenario, including the CLI parity suites, and took about 35 minutes on hosted runners and more than the 60-minute limit on the self-hosted runners; the longest shard now takes about 15 minutes on hosted runners.
 - Bound the CSRF rotation supervisor timeout test by the delayed remote write (35 s) rather than 33 s, which child start-up under coverage exceeded on CI.
 - Expect the read-only graph and tree rule settings on the legacy editors in the automation presentation test: since the settings moved to Symfony, each page shows an Edit Rule Settings link and no form posting back to itself.
