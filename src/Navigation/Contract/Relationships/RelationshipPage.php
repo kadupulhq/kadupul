@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Relationships;
 
+/** One page of relationship records with the parent's name. */
 final readonly class RelationshipPage
 {
     /** @param list<array<string, string|int|float|null>> $records */

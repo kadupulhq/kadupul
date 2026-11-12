@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Contract;
 
+/**
+ * Overall outcome of a collection: everything used, some of it used, or none of it.
+ */
 enum CollectionStatus: string
 {
     case Succeeded = 'succeeded';

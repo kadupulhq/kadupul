@@ -25,8 +25,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the form that creates a link or edits an existing one. */
 final class LinkEditController
 {
+    /**
+     * Shows the link form and saves it on a valid POST, then redirects to the link list.
+     *
+     * @param int|null $id the link to edit, or null to create one
+     */
     #[Route('/links/new', name: 'navigation_link_create', methods: ['GET', 'HEAD', 'POST'])]
     #[Route('/links/{id}/edit', name: 'navigation_link_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(

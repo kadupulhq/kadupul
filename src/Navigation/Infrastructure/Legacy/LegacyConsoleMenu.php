@@ -121,6 +121,7 @@ final class LegacyConsoleMenu
     /** @var list<array{label: string, items: list<array{label: string, path: string}>}>|null */
     private ?array $sections = null;
 
+    /** Wires the console access, configuration, database, translator, plugin menu entries and logger the menu is built from. */
     public function __construct(
         private readonly ConsoleAccess $console,
         private readonly LegacyConfiguration $configuration,

@@ -12,6 +12,9 @@ namespace Kadupul\Telemetry\Application;
 use Kadupul\Telemetry\Contract\CollectionError;
 use Kadupul\Telemetry\Contract\CollectionStatus;
 
+/**
+ * Result of normalizing one counter series: its intervals, the errors that excluded readings, and the count of duplicate readings dropped.
+ */
 final readonly class NormalizationReport
 {
     /**
@@ -24,6 +27,9 @@ final readonly class NormalizationReport
         public int $duplicatesDropped,
     ) {}
 
+    /**
+     * Returns succeeded without errors, failed when errors left no interval, and partial otherwise.
+     */
     public function status(): CollectionStatus
     {
         if ($this->errors === []) {

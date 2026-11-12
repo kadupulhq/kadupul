@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Contract;
 
+/**
+ * Unit of a metric's value.
+ */
 enum Unit: string
 {
     case Count = 'count';
