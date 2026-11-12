@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:54-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -340,11 +340,11 @@ msgid "No Graphs Found"
 msgstr "グラフが見つかりません"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -397,8 +397,8 @@ msgstr "レポート名"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "帰還"
@@ -886,8 +886,9 @@ msgstr "デバイスを削除"
 msgid "Delete Device(s)"
 msgstr "デバイスを削除"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "説明"
 
@@ -2195,10 +2196,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "データクエリ[編集：%s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "データクエリ[new]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "使用中のデータクエリは削除できません。使用中は、グラフまたはグラフテンプレートのいずれかによって参照されていると定義されます。"
 
@@ -2224,6 +2221,10 @@ msgstr[0] "データ削除クエリ"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "データ削除クエリ"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2339,6 +2340,14 @@ msgstr "このデータクエリを使用しているグラフテンプレート
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "このデータクエリを使用しているグラフの数。"
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "XMLパス"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7484,10 +7493,6 @@ msgstr "幅（ - 幅）"
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
 msgstr "Xファイル係数"
-
-#: include/global_form.php
-msgid "XML Path"
-msgstr "XMLパス"
 
 #: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
