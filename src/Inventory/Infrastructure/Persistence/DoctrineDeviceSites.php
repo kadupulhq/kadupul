@@ -11,10 +11,19 @@ use Doctrine\DBAL\Connection;
 use Kadupul\Inventory\Application\Port\DeviceSites;
 use Kadupul\Inventory\Application\ReadModel\DeviceSite;
 
+/**
+ * Lists the sites that have at least one device visible to the user.
+ */
 final readonly class DoctrineDeviceSites implements DeviceSites
 {
+    /**
+     * Binds the reader to the main connection and the visibility rules.
+     */
     public function __construct(private Connection $database, private DoctrineDeviceVisibility $visibility) {}
 
+    /**
+     * Returns the sites with a visible device, ordered by name.
+     */
     public function visibleTo(int $userId): array
     {
         $predicate = $this->visibility->predicate($userId);

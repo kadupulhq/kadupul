@@ -13,6 +13,14 @@ use PDO;
 /** Verifies the legacy transfer inside the isolated worker; never exports row data. */
 final class DeviceCollectorReplication
 {
+    /**
+     * Checks that the target collector holds the same rows for the device as the primary.
+     * Only columns present on both ends are compared, and values that pollers update continuously (status and timing observations) are ignored.
+     *
+     * @param PDO $primary The primary database connection.
+     * @param PDO $target The collector's connection.
+     * @throws \RuntimeException When a required identity column is missing or the rows differ.
+     */
     public function verifyTarget(PDO $primary, PDO $target, int $deviceId): void
     {
         $queries = [
@@ -86,6 +94,12 @@ final class DeviceCollectorReplication
         }
     }
 
+    /**
+     * Locks and checks that the device still has exactly the graphs and data sources that were reviewed for removal.
+     *
+     * @throws \LogicException When no transaction is active.
+     * @throws \RuntimeException When the set of graphs or data sources changed.
+     */
     public function assertRemovalScope(PDO $source, DeviceRemoval $snapshot): void
     {
         if (!$source->inTransaction()) {
@@ -100,6 +114,11 @@ final class DeviceCollectorReplication
         }
     }
 
+    /**
+     * Deletes the device's dependent rows (data input values, data template rows and graph items) from a collector and checks that none remain.
+     *
+     * @throws \RuntimeException When a delete fails or rows remain.
+     */
     public function purgeDependents(PDO $source, int $deviceId): void
     {
         foreach ([
@@ -235,6 +254,13 @@ final class DeviceCollectorReplication
         return ['templates' => $templateIds, 'rrds' => $rrdIds, 'graph_items' => $graphItemIds] + $placements;
     }
 
+    /**
+     * Checks that a collector no longer holds the device or any data reviewed for it.
+     *
+     * @param ?DeviceRemoval $snapshot The reviewed graphs and data sources that must also be gone; null checks only the device's own rows.
+     * @param array $reviewedDependents Reviewed dependent ids, such as "templates" for data input rows.
+     * @throws \RuntimeException When anything remains or its absence cannot be confirmed.
+     */
     public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null, array $reviewedDependents = []): void
     {
         $lock = $source->inTransaction() && $source->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'sqlite' ? ' FOR UPDATE' : '';
@@ -303,6 +329,11 @@ final class DeviceCollectorReplication
             throw new \RuntimeException('Previous collector commands remain');
         }
     }
+    /**
+     * Runs a count query and returns true only when it succeeds and counts zero rows.
+     *
+     * @param array $parameters Map from int|string to mixed.
+     */
     private function confirmedAbsent(\PDOStatement|false $query, array $parameters): bool
     {
         if ($query === false || !$query->execute($parameters) || $query->errorCode() !== "00000") {
@@ -312,6 +343,13 @@ final class DeviceCollectorReplication
         return ($count === 0 || $count === "0") && $query->errorCode() === "00000";
     }
 
+    /**
+     * Checks that no graph outside the reviewed set uses the given data source items.
+     *
+     * @param array $graphIds Reviewed graph ids.
+     * @param array $rrdIds Data source item ids to check.
+     * @throws \RuntimeException When an unreviewed graph references them.
+     */
     private function assertNoOutsideReferences(PDO $source, array $graphIds, array $rrdIds): void
     {
         if ($rrdIds === []) {

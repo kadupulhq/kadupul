@@ -10,8 +10,19 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Domain\DeviceState;
 use Kadupul\Inventory\Domain\DeviceRemoval;
 
+/**
+ * Reads the graphs and data sources a device removal would affect.
+ */
 final class DeviceRemovalSnapshot
 {
+    /**
+     * Returns the device with the ids of its graphs and data sources.
+     * With $lock, the range locks also block concurrent inserts and reassignments for the device, even when it has none.
+     *
+     * @param bool $lock Whether to lock the rows for update; requires a transaction.
+     * @throws \LogicException When locking is requested outside a transaction.
+     * @throws \RuntimeException When the rows cannot be read.
+     */
     public static function read(\PDO $db, DeviceState $device, bool $lock = false): DeviceRemoval
     {
         if ($lock && !$db->inTransaction()) {

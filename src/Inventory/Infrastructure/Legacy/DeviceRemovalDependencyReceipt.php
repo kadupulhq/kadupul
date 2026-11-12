@@ -13,8 +13,19 @@ use RuntimeException;
 /** Keeps dependency identities observable after the legacy lifecycle deletes parents. */
 final readonly class DeviceRemovalDependencyReceipt
 {
+    /**
+     * Holds the captured ids and rows; use capture() to build one.
+     */
     private function __construct(private array $checks, private array $rrds, private array $graphs, private array $templates, private array $scopeRows, private array $inputFields) {}
 
+    /**
+     * Locks and records the dependent rows of the reviewed graphs and data sources, so the removal can later prove it deleted exactly those.
+     *
+     * @param array $graphs Reviewed graph ids.
+     * @param array $data Reviewed data source ids.
+     * @throws \LogicException When no transaction is active.
+     * @throws RuntimeException When a dependent cannot be read.
+     */
     public static function capture(PDO $db, array $graphs, array $data): self
     {
         $checks = [];
@@ -41,6 +52,12 @@ final readonly class DeviceRemovalDependencyReceipt
         return new self($checks, $rrds, $graphs, $templates, $scopeRows, self::readPairs($db, $templates));
     }
 
+    /**
+     * Checks that the dependents have not changed since capture: no rows added or lost, and no outside graph references the reviewed data.
+     * Rows whose owner has already been deleted are allowed to be gone.
+     *
+     * @throws RuntimeException When the reviewed scope changed.
+     */
     public function assertExclusive(PDO $db): void
     {
         foreach ($this->scopeRows as [$table, $parentColumn, $ownerTable, $ownerIds, $identityColumns, $capturedRows]) {
@@ -62,6 +79,11 @@ final readonly class DeviceRemovalDependencyReceipt
         }
     }
 
+    /**
+     * Checks that every captured dependent row has been deleted.
+     *
+     * @throws RuntimeException When any remains.
+     */
     public function assertPurged(PDO $db): void
     {
         foreach ($this->checks as [$table, $column, $ids]) {
@@ -77,6 +99,14 @@ final readonly class DeviceRemovalDependencyReceipt
         }
     }
 
+    /**
+     * Locks rows matching the given parent ids and returns one column as integers.
+     *
+     * @param array $ids Parent ids; empty returns nothing.
+     * @return array List of int.
+     * @throws \LogicException When no transaction is active.
+     * @throws RuntimeException When the rows cannot be read.
+     */
     private static function read(PDO $db, string $table, string $select, string $column, array $ids): array
     {
         if (!$db->inTransaction()) {
@@ -96,6 +126,14 @@ final readonly class DeviceRemovalDependencyReceipt
         return array_map('intval', $rows);
     }
 
+    /**
+     * Locks and returns the data input values of the given data templates as pairs of data template and input field ids.
+     *
+     * @param array $templateIds List of int.
+     * @return array The pairs, each an array with "data_template_data_id" and "data_input_field_id".
+     * @throws \LogicException When no transaction is active.
+     * @throws RuntimeException When the rows cannot be read.
+     */
     private static function readPairs(PDO $db, array $templateIds): array
     {
         if (!$db->inTransaction()) {
@@ -119,6 +157,15 @@ final readonly class DeviceRemovalDependencyReceipt
         return $rows;
     }
 
+    /**
+     * Locks and returns the identity columns of the rows under the given parents, as integers, ordered by parent and id.
+     *
+     * @param array $columns Columns to select.
+     * @param array $parentIds List of int.
+     * @return array The rows, each an array of integers keyed by column name.
+     * @throws \LogicException When no transaction is active.
+     * @throws RuntimeException When the rows cannot be read.
+     */
     private static function readRows(PDO $db, string $table, array $columns, string $parentColumn, array $parentIds): array
     {
         if (!$db->inTransaction()) {

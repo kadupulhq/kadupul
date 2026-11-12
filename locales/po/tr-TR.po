@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 08:50-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1163,7 +1163,7 @@ msgstr "Başlık Formatı"
 msgid "rule_name"
 msgstr "Kural Adı"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "% d dakika"
@@ -4092,14 +4092,6 @@ msgstr "Arttırdıktan Sonra"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Toplam"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7575,11 +7567,6 @@ msgstr "% d İşlemler"
 
 #: include/global_settings.php
 #, php-format
-msgid "%d Rules"
-msgstr ""
-
-#: include/global_settings.php
-#, php-format
 msgid "%d Spikes"
 msgstr "% d Spike"
 
@@ -7695,14 +7682,6 @@ msgstr "Gelişmiş"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Bu gün sayısından sonra çalışma saatleri grafiğe eklenmeyecektir. <br/>Önerilen: 62 gün"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8291,10 +8270,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) ayarını etkinleştirme"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "İsteğe Bağlı RRD Güncellemesini Etkinleştir"
 
@@ -8574,10 +8549,6 @@ msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Günlük İstatistikler ne sıklıkla güncellenmelidir?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8911,10 +8882,6 @@ msgstr "Tarayıcımın Saat Dilimi"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN en"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9432,10 +9399,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Grafikleri ve Veri Kaynakları Varsa Varsayılan Olarak Kontrol Edilmeli."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Agregalar"
 
@@ -9866,10 +9829,6 @@ msgstr "Kadupul sisteminde sorun yaşandığında otomatik olarak E-posta alacak
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul&#39;nin yeni Web Basic ve LDAP kullanıcıları için şablon olarak kullanacağı kullanıcının adı; varsayılan olarak &#39;konuk&#39; şeklindedir. Bu kullanıcı hesabı seçildikten sonra giriş yapamaz."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

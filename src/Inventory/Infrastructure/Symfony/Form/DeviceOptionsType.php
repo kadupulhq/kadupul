@@ -20,10 +20,20 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Sub-form for changing the location and polling options of many devices at once.
+ */
 final class DeviceOptionsType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly \Symfony\Contracts\Translation\TranslatorInterface $translator) {}
 
+    /**
+     * Adds an "apply" checkbox for each option, with its value field.
+     * A value whose checkbox is cleared is ignored, and the checked values are validated together as a DeviceOptionsChange.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (PreSubmitEvent $event): void {
@@ -74,6 +84,9 @@ final class DeviceOptionsType extends AbstractType
             }
         }
     }
+    /**
+     * Sets the translation domain.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory']);

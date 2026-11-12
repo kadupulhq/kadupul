@@ -10,8 +10,17 @@ namespace Kadupul\Inventory\Infrastructure\Symfony;
 use Kadupul\Inventory\Domain\DeviceListCriteria;
 use Kadupul\Inventory\Domain\DeviceOrder;
 
+/**
+ * Converts the device list's query string to validated criteria and back.
+ */
 final class DeviceListParameters
 {
+    /**
+     * Builds the list criteria from query parameters, applying defaults for absent ones.
+     *
+     * @param array $query Query parameters; every filter value must be a string.
+     * @throws \InvalidArgumentException When a value is malformed or out of range.
+     */
     public static function parse(array $query): DeviceListCriteria
     {
         foreach (['q', 'state', 'status', 'sort', 'direction', 'page', 'size', 'site', 'template', 'collector', 'location', 'location_mode'] as $key) {
@@ -42,6 +51,13 @@ final class DeviceListParameters
         return new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all', new DeviceOrder($query['sort'] ?? 'name', $query['direction'] ?? 'asc'), $site === '' ? null : (int) $site, $ids['template'], $ids['collector'], ($query['location_mode'] ?? 'all') === 'exact' ? ($query['location'] ?? '') : null);
     }
 
+    /**
+     * Reads the list filters carried in a form request's "list" parameter and returns them in normalized form.
+     *
+     * @param array $query Map from string to mixed.
+     * @return array Map from string to int|string.
+     * @throws \InvalidArgumentException When "list" is not an array or its filters are invalid.
+     */
     public static function context(array $query): array
     {
         $list = $query['list'] ?? [];
@@ -51,6 +67,11 @@ final class DeviceListParameters
         return self::encode(self::parse($list));
     }
 
+    /**
+     * Returns the criteria as query parameters, leaving out template, collector and location filters that are not set.
+     *
+     * @return array Map from string to int|string.
+     */
     public static function encode(DeviceListCriteria $criteria): array
     {
         return ['q' => $criteria->search, 'state' => $criteria->state, 'status' => $criteria->status,

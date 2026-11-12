@@ -14,6 +14,17 @@ use RuntimeException;
 /** Read and lock the common device scope before a legacy mutation worker acts. */
 final class DeviceMutationSelection
 {
+    /**
+     * Authorizes the actor and locks the sites, devices and collectors an operation will touch.
+     * Sites are locked in id order, then devices are re-read and checked for visibility, then collectors in id order, so concurrent workers lock in the same order. Reports "denied" or "missing" through $markStatus before throwing.
+     *
+     * @param array $ids The devices to lock.
+     * @param callable(string): mixed $markStatus Records the worker status ("denied" or "missing") on failure.
+     * @param array $additionalSiteIds Extra sites to lock, such as an assignment target.
+     * @param array $additionalPollerIds Extra collectors to lock; each must exist and be enabled.
+     * @param array $cleanupPollers Collectors with pending cleanup; each must exist and be enabled.
+     * @throws RuntimeException When access is denied, a device is missing or invisible, or a collector is unavailable.
+     */
     public function lock(PDO $connection, int $actorId, array $ids, callable $markStatus, array $additionalSiteIds = [], array $additionalPollerIds = [], array $cleanupPollers = []): array
     {
         if (!(new DeviceWriteAuthorization())->allows($connection, $actorId)) {
@@ -47,7 +58,13 @@ final class DeviceMutationSelection
             throw new RuntimeException('Devices unavailable');
         }
         $provider = new class ($connection) implements DatabaseConnection {
+            /**
+             * Wraps an existing connection.
+             */
             public function __construct(private PDO $connection) {}
+            /**
+             * Returns the wrapped connection.
+             */
             public function get(): PDO
             {
                 return $this->connection;

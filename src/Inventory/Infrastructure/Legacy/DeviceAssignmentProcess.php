@@ -15,6 +15,17 @@ use Symfony\Component\Process\Process;
 /** Configured executable and fail-closed protocol shared by assignment adapters. */
 final class DeviceAssignmentProcess
 {
+    /**
+     * Runs the assignment worker for $kind in a separate PHP process and checks its reported outcome.
+     * The command is passed as JSON on standard input. Anything other than an explicit "ok" result is treated as a failure, and a missing or malformed result as an unknown outcome.
+     *
+     * @param string $kind One of "collector", "template" or "associations".
+     * @param array $command The request for the worker.
+     * @throws \InvalidArgumentException When $kind is unknown or the worker rejects the request as invalid.
+     * @throws DeviceEditConflict When the worker reports that the device changed.
+     * @throws InventoryAccessDenied When the worker reports that the actor may not make the change.
+     * @throws \RuntimeException When the outcome is unknown or could not be confirmed.
+     */
     public static function run(PDO $database, string $projectDir, string $kind, array $command): void
     {
         if (!in_array($kind, ['collector', 'template', 'associations'], true)) {

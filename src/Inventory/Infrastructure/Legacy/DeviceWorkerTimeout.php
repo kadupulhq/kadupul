@@ -20,6 +20,12 @@ final class DeviceWorkerTimeout
     // Budget against that cap so a concurrent configuration increase is safe.
     public const REMOTE_CALL_SECONDS = 300;
 
+    /**
+     * Returns the worker timeout in seconds for a job that makes up to $calls remote calls.
+     * The result is the fixed local-work allowance plus the longest time each remote call may take.
+     *
+     * @throws \InvalidArgumentException When $calls is negative or large enough to overflow.
+     */
     public static function forRemoteCalls(int $calls): int
     {
         if ($calls < 0 || $calls > intdiv(PHP_INT_MAX - self::LOCAL_WORK_SECONDS, self::REMOTE_CALL_SECONDS)) {

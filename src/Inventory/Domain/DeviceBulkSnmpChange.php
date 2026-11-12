@@ -15,6 +15,13 @@ final readonly class DeviceBulkSnmpChange
     /** @var array<string, string|bool> */
     public array $fields;
 
+    /**
+     * Validates a partial SNMP change to apply to many devices.
+     * Credential fields must be empty unless $fields['keep_credentials'] is false.
+     *
+     * @param array $fields Selected SNMP settings plus a boolean "keep_credentials".
+     * @throws \InvalidArgumentException When no supported setting is selected or a value is invalid.
+     */
     public function __construct(#[\SensitiveParameter] array $fields)
     {
         if (!is_bool($fields['keep_credentials'] ?? null)) {

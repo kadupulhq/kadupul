@@ -25,8 +25,15 @@ use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 
+/**
+ * Page for moving one device to another collector.
+ */
 final class DeviceCollectorController
 {
+    /**
+     * Shows the collector form on GET and saves the choice on POST, then redirects back with a saved flag.
+     * Responds 401 or 403 when access is denied, 404 for an unknown device, 400 for invalid list filters, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{id}/collector', name: 'inventory_device_collector', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, Request $request, PrepareDeviceCollectorAssignment $prepare, AssignDeviceCollector $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation, DeviceFormFailure $failures): Response
     {

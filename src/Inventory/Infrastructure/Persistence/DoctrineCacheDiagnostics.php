@@ -15,14 +15,30 @@ use Kadupul\Inventory\Contract\CacheDiagnostics;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * Reads the recorded poller items and SNMP cache rows for the devices an actor may manage.
+ * It only reads stored rows. Command arguments and SNMP credentials are never selected, because arguments can embed secrets.
+ */
 #[AsAlias(CacheDiagnostics::class)]
 final readonly class DoctrineCacheDiagnostics implements CacheDiagnostics
 {
+    /**
+     * Binds the reader to the web database connection.
+     */
     public function __construct(
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
     ) {}
 
+    /**
+     * Returns one page of cache rows within the actor's management scope.
+     * Reads poller items when $poller is true and the SNMP query cache otherwise. Both lists are limited to the actor's management-device scope. Returns up to $rows + 1 rows; the extra row lets the caller tell whether another page exists.
+     *
+     * @param int $rows Page size, 1 to 100.
+     * @param int $offset Zero-based row offset, at most 9999800.
+     * @throws \InvalidArgumentException When the actor id, page size or offset is out of range.
+     * @throws \RuntimeException When the actor's policy cannot be loaded.
+     */
     public function read(bool $poller, int $actorId, array $filters, int $rows, int $offset): array
     {
         if ($actorId < 1 || $rows < 1 || $rows > 100 || $offset < 0 || $offset > 9999800) {
@@ -76,6 +92,11 @@ final readonly class DoctrineCacheDiagnostics implements CacheDiagnostics
         return $this->database->fetchAllNumeric($select . $from . " WHERE $where ORDER BY $order LIMIT " . ($rows + 1) . " OFFSET $offset", $parameters);
     }
 
+    /**
+     * Returns a SQL subquery selecting the ids of the devices the actor may manage.
+     *
+     * @throws \RuntimeException When the actor's policy cannot be loaded.
+     */
     private function scope(int $actorId): string
     {
         // Match get_allowed_management_device_ids_sql(): no graph-view hide-

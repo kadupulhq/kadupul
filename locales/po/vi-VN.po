@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 08:50-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1163,7 +1163,7 @@ msgstr "Định dạng tiêu đề:"
 msgid "rule_name"
 msgstr "Tên quy tắc"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d phút"
@@ -4066,14 +4066,6 @@ msgstr "Sau khi tăng"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "cốt liệu"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7544,11 +7536,6 @@ msgstr "% d Quá trình"
 
 #: include/global_settings.php
 #, php-format
-msgid "%d Rules"
-msgstr ""
-
-#: include/global_settings.php
-#, php-format
 msgid "%d Spikes"
 msgstr "% d gai"
 
@@ -7663,14 +7650,6 @@ msgstr "Nâng cao"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
 msgstr ""
 
 #: include/global_settings.php
@@ -8258,10 +8237,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Kích hoạt tinh chỉnh Lotus Notes (R)"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Kích hoạt cập nhật RRD theo yêu cầu"
 
@@ -8540,10 +8515,6 @@ msgstr "Số liệu thống kê hàng ngày nên được cập nhật thường
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Số liệu thống kê hàng ngày nên được cập nhật thường xuyên như thế nào?"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8873,10 +8844,6 @@ msgstr ""
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9393,10 +9360,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Theo mặc định các đồ thị có và nguồn dữ liệu có được kiểm tra."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Cốt liệu"
 
@@ -9823,10 +9786,6 @@ msgstr "Tên của tài khoản quản trị chính sẽ tự động nhận Ema
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Tên người dùng mà Kadupul sẽ sử dụng làm mẫu cho người dùng Web Basic và LDAP mới; là &#39;khách&#39; theo mặc định. Tài khoản người dùng này sẽ bị vô hiệu hóa khi đăng nhập khi được chọn."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

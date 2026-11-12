@@ -11,7 +11,13 @@ namespace Kadupul\Inventory\Application\Port;
 
 use Kadupul\Inventory\Domain\DeviceSelection;
 
+/**
+ * Synchronizes devices with their templates.
+ */
 interface DeviceTemplateSynchronization
 {
+    /**
+     * Synchronizes every device in the selection.
+     */
     public function synchronizeTemplates(int $actorId, DeviceSelection $selection): void;
 }

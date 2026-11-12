@@ -10,9 +10,18 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Domain\DeviceMaintenanceState;
 use PDO;
 
+/**
+ * Builds the maintenance state of a device from its stored row, data query associations and debug setting.
+ */
 final class DeviceMaintenanceRecords
 {
     public const PUBLIC_FIELDS = ['id', 'description', 'hostname', 'disabled', 'site_id', 'poller_id', 'host_template_id', 'location', 'device_threads', 'snmp_port', 'snmp_timeout', 'max_oids', 'bulk_walk_size', 'availability_method', 'ping_method', 'ping_port', 'ping_timeout', 'ping_retries', 'snmp_version', 'snmp_auth_protocol', 'snmp_priv_protocol', 'snmp_context', 'snmp_engine_id'];
+    /**
+     * Reads the device's data queries and debug flag and combines them with the row.
+     *
+     * @param array $row The device row; only PUBLIC_FIELDS are used.
+     * @param bool $lock Whether to lock the rows read for update.
+     */
     public function snapshot(PDO $db, array $row, bool $lock = false): DeviceMaintenanceState
     {
         $associations = (new DeviceAssociationRecords())->snapshot($db, $row, 'query', $lock);

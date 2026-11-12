@@ -14,10 +14,22 @@ use Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\DeviceSelection;
 
+/**
+ * Command that synchronizes a batch of devices with their templates.
+ */
 final readonly class SynchronizeDeviceTemplates
 {
+    /**
+     * Binds the command to console access and the template synchronization port.
+     */
     public function __construct(private ConsoleAccess $access, private DeviceTemplateSynchronization $devices) {}
 
+    /**
+     * Synchronizes every device in the selection.
+     *
+     * @param DeviceSelection $selection Devices to synchronize.
+     * @throws InventoryAccessDenied When nobody is signed in or the user may not manage devices.
+     */
     public function __invoke(DeviceSelection $selection): void
     {
         $actor = $this->access->consoleActor();

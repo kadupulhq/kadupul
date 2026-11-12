@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+/**
+ * Transaction-bound checks that the graphs and data sources reviewed for device removal belong only to the devices being removed.
+ */
 final class DeviceRemovalDependencies
 {
     /** Deleted parents are allowed; surviving reviewed parents must retain ownership. */

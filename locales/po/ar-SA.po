@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 08:50-0800\n"
+"POT-Creation-Date: 2026-11-12 08:46-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1165,7 +1165,7 @@ msgstr "شكل العنوان"
 msgid "rule_name"
 msgstr "اسم القاعدة"
 
-#: automation_networks.php include/global_settings.php pollers.php
+#: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "دقيقة %d"
@@ -4183,14 +4183,6 @@ msgstr "بعد التعزيز"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "يكدس. مكدس، كداسة"
-
-#: include/global_arrays.php
-msgid "Alert Incidents"
-msgstr ""
-
-#: include/global_arrays.php
-msgid "Alert Rules"
-msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7663,11 +7655,6 @@ msgstr "العمليات %d"
 
 #: include/global_settings.php
 #, php-format
-msgid "%d Rules"
-msgstr ""
-
-#: include/global_settings.php
-#, php-format
 msgid "%d Spikes"
 msgstr "%d المسامير"
 
@@ -7783,14 +7770,6 @@ msgstr "المتقدمة"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "بعد هذا العدد من الأيام ، لن تتم إضافة ساعات العمل إلى الرسم البياني. <br/>أوصى: 62 يوما"
-
-#: include/global_settings.php
-msgid "Alert Evaluation Time Budget"
-msgstr ""
-
-#: include/global_settings.php
-msgid "Alert Rules per Batch"
-msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8379,10 +8358,6 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "تمكين قرص Lotus Notes (R)"
 
 #: include/global_settings.php
-msgid "Enable Native Alert Evaluation"
-msgstr ""
-
-#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "تمكين تحديث RRD عند الطلب"
 
@@ -8662,10 +8637,6 @@ msgstr "ما مدى تكرار تحديث الإحصاءات اليومية؟"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "كم مرة يجب فحص RRD؟"
-
-#: include/global_settings.php
-msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8998,10 +8969,6 @@ msgstr "المنطقة الزمنية لمتصفحاتي"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "ونان"
-
-#: include/global_settings.php
-msgid "Native Alerting"
-msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9521,10 +9488,6 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "يجب أن يكون تم فحص الرسوم البيانية و Has Data Sources بشكل افتراضي."
 
 #: include/global_settings.php
-msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
-
-#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "تجمعات"
 
@@ -9955,10 +9918,6 @@ msgstr "اسم الحساب الإداري الأساسي الذي سيتلقى 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "اسم المستخدم الذي سيستخدمه Kadupul كقالب لمستخدمي Web Basic و LDAP الجدد ؛ هو &quot;ضيف&quot; بشكل افتراضي. سيتم تعطيل حساب المستخدم هذا من تسجيل الدخول عند تحديده."
-
-#: include/global_settings.php
-msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

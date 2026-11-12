@@ -33,8 +33,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * Confirmation page for a bulk device operation: enable, disable, clear statistics, synchronize templates, change options or change SNMP settings.
+ */
 final class DeviceStateController
 {
+    /**
+     * Shows the selected devices on GET and applies the operation named in the route on POST, then redirects to the device list.
+     * For the options and SNMP operations, only the fields the user marked to apply are changed. Responds 401 or 403 when access is denied, 404 when a selected device is missing, 400 for an invalid selection, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template|options|snmp'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(
         string $operation,

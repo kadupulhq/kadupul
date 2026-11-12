@@ -23,8 +23,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormPage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Page for editing one device.
+ */
 final class DeviceEditController
 {
+    /**
+     * Shows the edit form on GET and saves the device on POST, then redirects back with a saved flag.
+     * Responds 404 for an unknown device, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/{id}/edit', name: 'inventory_device_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, Request $request, FindEditableDevice $find, ListAssignableSites $sites, EditDevice $edit, FormFactoryInterface $forms, DeviceFormPage $page, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceFormFailure $failures): Response
     {
