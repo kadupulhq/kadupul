@@ -172,3 +172,12 @@ PHP;
 
     expect($state)->toBe(array('status' => 409, 'headers' => array('Cache-Control: private, no-store'), 'saved' => false));
 });
+
+test('an unknown graph rule id redirects to the list before any page output', function () {
+    $source = (string) file_get_contents(dirname(__DIR__, 3) . '/automation_graph_rules.php');
+    $edit = (string) strstr((string) strstr($source, "case 'edit':"), 'break;', true);
+    $redirect = strpos($edit, "header('Location: automation_graph_rules.php', true, 302);");
+    expect($redirect)->toBeInt()
+        ->and($redirect)->toBeLessThan((int) strpos($edit, 'top_header();'))
+        ->and(strpos($edit, "raise_message('rule_not_found'"))->toBeLessThan($redirect);
+});

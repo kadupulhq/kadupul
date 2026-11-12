@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 17:21-0800\n"
+"POT-Creation-Date: 2026-11-11 17:31-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1007,6 +1007,10 @@ msgid "Disable"
 msgstr ""
 
 #: automation_graph_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_graph_rules.php
 msgid "An attempt was made to perform a SQL injection in Graph automation"
 msgstr ""
 
@@ -1053,10 +1057,6 @@ msgstr ""
 #: automation_graph_rules.php
 #, php-format
 msgid "Are you sure you want to delete the Rule '%s'?"
-msgstr ""
-
-#: automation_graph_rules.php
-msgid "Rule not found."
 msgstr ""
 
 #: automation_graph_rules.php
