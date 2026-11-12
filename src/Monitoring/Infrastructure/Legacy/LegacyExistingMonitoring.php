@@ -69,8 +69,10 @@ final class LegacyExistingMonitoring implements ExistingMonitoring
         'discards_out' => 'interface.out_discards',
     ];
 
+    /** Binds the adapter to the legacy data source reader. */
     public function __construct(private readonly LegacyDataSourceDiscovery $discovery) {}
 
+    /** Reports interface series that legacy data sources with a reviewed field name already collect. */
     public function monitoredSeries(int $deviceId): array
     {
         $series = [];
@@ -90,6 +92,7 @@ final class LegacyExistingMonitoring implements ExistingMonitoring
         return $series;
     }
 
+    /** Classifies how well the device's legacy fields match the key's metric and resource. */
     public function match(BindingKey $key): BindingMatch
     {
         $resource = $key->resource;

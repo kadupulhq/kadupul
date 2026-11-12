@@ -25,11 +25,18 @@ use Kadupul\Monitoring\Domain\MetricBinding;
  */
 final class ApproveBinding
 {
+    /** Wires the binding repository; without an authorizer every approval is denied. */
     public function __construct(
         private readonly BindingRepository $bindings,
         private readonly ?BindingApprovalAuthorizer $authorizer = null,
     ) {}
 
+    /**
+     * Approves the one stored binding for the key and returns it.
+     *
+     * @throws BindingApprovalDenied when no authorizer is configured, the actor id is blank, or the actor is not authorized
+     * @throws BindingTransitionRejected when the binding is missing, stored more than once, or cannot move to approved
+     */
     public function approve(BindingKey $key, string $actorId): MetricBinding
     {
         if ($this->authorizer === null) {

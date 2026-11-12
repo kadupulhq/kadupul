@@ -17,6 +17,10 @@ final readonly class IdentityConcern
     public const NO_POLLER_ITEM = 'no_poller_item';
     public const MULTIPLE_FIELDS_PER_RRD = 'multiple_fields_per_rrd';
 
+    /**
+     * @param string $kind one of the class constants
+     * @param string $detail what was observed, for an operator
+     */
     public function __construct(
         public int $localDataId,
         public string $kind,

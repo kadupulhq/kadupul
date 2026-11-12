@@ -17,8 +17,15 @@ use Kadupul\ModelRegistry\Domain\Model;
 use Kadupul\ModelRegistry\Domain\ModelChecksumConflict;
 use Kadupul\ModelRegistry\Domain\UnsupportedModelRevision;
 
+/**
+ * Adds a model revision to the registry after checking its dependencies.
+ * Registering identical content again is a no-op.
+ */
 final class RegisterModel
 {
+    /**
+     * Binds the command to the model store.
+     */
     public function __construct(private readonly ModelRepository $models) {}
 
     /**
