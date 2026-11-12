@@ -1,8 +1,9 @@
 # Native browser-worker realm denials
 
-Feature workers whose Symfony parent renders access errors may add a final
-`'realm_denial' => true` entry to their trusted `$consoleHandoff` descriptor,
-after `input_limit` when present. The boolean defaults to false and is never
+Feature workers whose Symfony parent renders access errors may add a
+`'realm_denial' => true` entry to their trusted `$consoleHandoff` descriptor.
+The descriptor keys keep this order: `input_limit` when present, then
+`realm_denial`, then `query` when present. The boolean defaults to false and is never
 accepted from command input. Existing console and menu descriptors stay unchanged.
 
 Only the native core realm-denied branch opts into this result. It still invokes
