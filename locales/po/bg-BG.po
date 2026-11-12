@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:18-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3046,28 +3046,6 @@ msgstr "Вертикалният етикет за получените граф
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "Вертикален етикет"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "Свързани графични елементи"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "Входни елементи на графиката [редактиране на графика: %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "Елемент # %s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "Елементи"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10356,6 +10334,10 @@ msgstr "Елемент #% d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "Цвят на артикула"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "Елементи"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

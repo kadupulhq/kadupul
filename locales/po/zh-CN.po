@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:18-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3028,28 +3028,6 @@ msgstr "生成的图形的垂直标签."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "垂直标签"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "关联相关图形"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "图形项目输入[编辑图: %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "项目 #%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "无项目"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10333,6 +10311,10 @@ msgstr "项 # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "项目颜色"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "无项目"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:18-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3033,28 +3033,6 @@ msgstr "결과 그래프의 세로 레이블입니다."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "세로 레이블"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "연결된 그래프 항목"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "그래프 항목 입력 [그래프 편집 :  %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "항목 #  %s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "항목"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10341,6 +10319,10 @@ msgstr "항목 # % d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "이이템 색상"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "항목"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"
