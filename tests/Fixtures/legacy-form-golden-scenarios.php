@@ -320,8 +320,8 @@ $pages = array(
         ))),
     )),
     'auth_profile' => $page('auth_profile.php', array()),
-    // managers.php queues these and nothing prints them; the next form the
-    // user opens inherits them.
+    // The former managers.php editor queued these and nothing printed them; the
+    // next form the user opened inherited them. Stale sessions can still carry them.
     'auth_profile-stale-change-handlers' => $page('auth_profile.php', array(), array(), array('session' => array('form_change_actions' => array(
         'snmp_version' => 'setSNMP()', 'snmp_security_level' => 'setSNMP()', 'snmp_auth_protocol' => 'setSNMP()', 'snmp_priv_protocol' => 'setSNMP()',
     )))),
@@ -331,7 +331,6 @@ $pages = array(
             'id' => '1', 'name' => 'Traffic <rule>', 'snmp_query_id' => '1', 'graph_type_id' => '2', 'enabled' => 'on',
         ))),
     ))),
-    'automation_networks-edit' => $page('automation_networks.php', array('action' => 'edit')),
     'automation_tree_rules-edit' => $page('automation_tree_rules.php', array('action' => 'edit')),
     'automation_tree_rules-item_edit' => $page('automation_tree_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '3'), array_merge($columns, array(
         array('sql' => 'FROM automation_tree_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
@@ -376,7 +375,6 @@ $pages = array(
             'lastsent' => '0', 'enabled' => 'on',
         ))),
     )),
-    'managers-edit' => $page('managers.php', array('action' => 'edit')),
     'package_import' => $page('package_import.php', array()),
     'templates_export' => $page('templates_export.php', array()),
     'templates_import' => $page('templates_import.php', array()),

@@ -102,6 +102,10 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/tools/test_installer_usability.py
       - name: Verify defect classification fields match the bug form
         run: mise exec python@3.12.12 -- python tests/tools/test_odc_summary.py
+      - name: Verify changelog fragments, the entry gate and release assembly
+        run: |
+          mise exec python@3.12.12 -- python tools/changelog.py check
+          mise exec python@3.12.12 -- python tests/tools/test_changelog.py
       - name: Verify catalog rejection and historical compatibility boundaries
         run: mise exec "php@$KADUPUL_CI_PHP_VERSION" python@3.12.12 -- python tests/security/test_gettext_catalogs.py
       - name: Install hash-locked Python test-tool dependencies
@@ -306,7 +310,7 @@ jobs:
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/native-recovery-probe-phpunit.cache" Symfony/NativeCollectorRecoveryProbeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/poller-buffer-phpunit.cache" Symfony/PollerCacheBufferWriteTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/profile-store-phpunit.cache" Symfony/DataSourceProfileStoreDatabaseTest.php
-        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php Symfony/RelationshipCatalogNativeTest.php Symfony/IdentityRelationshipsNativeTest.php Symfony/IdentitySettingsNativeTest.php
+        php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/administration-list-phpunit.cache" Symfony/AdministrationCatalogNativeTest.php Symfony/RelationshipCatalogNativeTest.php Symfony/IdentityRelationshipsNativeTest.php Symfony/IdentitySettingsNativeTest.php Symfony/NativeAdministrativeActorPolicyTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/system-diagnostics-phpunit.cache" Symfony/SystemDiagnosticsDatabaseTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/management-catalog-phpunit.cache" Symfony/ManagementCatalogNativeTest.php Symfony/MappingMetadataNativeTest.php Symfony/InstanceCatalogNativeTest.php
         php -d zend.exception_ignore_args=1 vendor/bin/phpunit --no-configuration --fail-on-empty-test-suite --bootstrap ../include/vendor/autoload.php --cache-directory="$RUNNER_TEMP/group-settings-presence-phpunit.cache" Symfony/GroupSettingsPresenceNativeTest.php
@@ -850,7 +854,7 @@ jobs:
         run: |
           sudo apt-get update -o Acquire::Retries=3
           sudo apt-get install -y --no-install-recommends autoconf bison build-essential curl gettext git libgd-dev libcurl4-openssl-dev libedit-dev libicu-dev libjpeg-dev libonig-dev libpng-dev libpq-dev libreadline-dev libsqlite3-dev libssl-dev libxml2-dev libzip-dev openssl pkg-config re2c zlib1g-dev
-      - uses: jdx/mise-action@82a612c5ab8bcda7cc5db6b7e81a8e7584c3dc6e # v5.2.3
+      - uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
           install_args: php@8.4.25
           plugins: php https://github.com/mise-plugins/asdf-php.git#e361a2c912a431393b7deb3ecf44b877900d889c
@@ -962,35 +966,18 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - uses: ./.github/actions/setup-mise # zizmor: ignore[self-repository]
+        with:
+          install_args: python@3.12.12
+          add_shims_to_path: false
+
+      # A pull request adds changelog.d/<slug>.<category>.md rather than
+      # editing the shared [Unreleased] list, so merges do not make every open
+      # pull request conflict. An edit to CHANGELOG.md is still accepted.
       - name: Require an entry
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        run: |
-          set -euo pipefail
-          changed=$(git diff --name-only "$BASE_SHA" HEAD)
-
-          # A branch that only moves CI, contributor hooks, docs or the
-          # changelog itself needs no entry.
-          substantive=false
-          while IFS= read -r f; do
-            [ -z "$f" ] && continue
-            case "$f" in
-              CHANGELOG.md|.github/*|.githooks/*|docs/*|*.md) ;;
-              *) substantive=true ;;
-            esac
-          done <<< "$changed"
-
-          if [ "$substantive" = false ]; then
-            echo "No user-visible change in this branch; no entry needed."
-            exit 0
-          fi
-
-          # A here-string avoids SIGPIPE from grep -q exiting early on large PRs.
-          if ! grep -qx 'CHANGELOG.md' <<< "$changed"; then
-            echo "::error file=CHANGELOG.md::This branch changes behaviour but does not touch CHANGELOG.md. Add an entry under Unreleased, or apply the no-changelog label." >&2
-            exit 1
-          fi
-          echo "Changelog updated."
+        run: mise exec python@3.12.12 -- python tools/changelog.py require --base "$BASE_SHA"
 
   ci-result:
     name: CI result

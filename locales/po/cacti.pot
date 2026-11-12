@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 19:50-0800\n"
+"POT-Creation-Date: 2026-11-11 17:41-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -457,9 +457,9 @@ msgstr ""
 msgid "Any"
 msgstr ""
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates_items.php graphs.php graphs_items.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
 #: include/global_arrays.php include/global_form.php
 #: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
 #: lib/html_form.php lib/html_reports.php package_import.php settings.php
@@ -1094,11 +1094,11 @@ msgstr ""
 msgid "Data Query"
 msgstr ""
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr ""
 
@@ -1139,6 +1139,10 @@ msgid "Cancel Discovery"
 msgstr ""
 
 #: automation_networks.php
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
+
+#: automation_networks.php
 #, php-format
 msgid "Can Not Restart Discovery for Discovery in Progress for Network '%s'"
 msgstr ""
@@ -1146,26 +1150,6 @@ msgstr ""
 #: automation_networks.php
 #, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
-msgstr ""
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr ""
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr ""
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr ""
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
 msgstr ""
 
 #: automation_networks.php
@@ -1192,8 +1176,12 @@ msgstr ""
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr ""
 
+#: automation_networks.php
+msgid "Network Filters"
+msgstr ""
+
 #: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
+msgid "Networks"
 msgstr ""
 
 #: automation_networks.php tree.php
@@ -1218,451 +1206,11 @@ msgid "Monthly on Day"
 msgstr ""
 
 #: automation_networks.php
-msgid "Network not found."
-msgstr ""
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr ""
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr ""
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr ""
-
-#: automation_networks.php data_queries.php graph_templates.php
-#: include/global_form.php lib/installer.php lib/vdef.php managers.php
-#: pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr ""
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr ""
-
-#: automation_networks.php
-msgid "New Network Discovery Range"
+msgid "Network Name"
 msgstr ""
 
 #: automation_networks.php
 msgid "Data Collector"
-msgstr ""
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr ""
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr ""
-
-#: automation_networks.php
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr ""
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr ""
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr ""
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr ""
-
-#: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr ""
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr ""
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr ""
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr ""
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr ""
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr ""
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr ""
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr ""
-
-#: automation_networks.php
-#, php-format
-msgid "%d Thread"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr ""
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr ""
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr ""
-
-#: automation_networks.php pollers.php
-#, php-format
-msgid "%d Minute"
-msgstr ""
-
-#: automation_networks.php data_sources.php include/global_arrays.php
-#: include/global_settings.php pollers.php
-#, php-format
-msgid "%d Minutes"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, php-format
-msgid "%d Hours"
-msgstr ""
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr ""
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr ""
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr ""
-
-#: automation_networks.php
-msgid "Automatically Add to Kadupul"
-msgstr ""
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr ""
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr ""
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr ""
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr ""
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr ""
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr ""
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr ""
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr ""
-
-#: automation_networks.php
-msgid "Notification Email"
-msgstr ""
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr ""
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr ""
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr ""
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr ""
-
-#: automation_networks.php
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr ""
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr ""
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr ""
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr ""
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr ""
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr ""
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr ""
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr ""
-
-#: automation_networks.php
-msgid "Months of Year"
-msgstr ""
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr ""
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr ""
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr ""
-
-#: automation_networks.php
-msgid "Last"
-msgstr ""
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr ""
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr ""
-
-#: automation_networks.php
-msgid "First"
-msgstr ""
-
-#: automation_networks.php
-msgid "Second"
-msgstr ""
-
-#: automation_networks.php
-msgid "Third"
-msgstr ""
-
-#: automation_networks.php
-msgid "Day(s) of Week"
-msgstr ""
-
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr ""
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr ""
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr ""
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr ""
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr ""
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr ""
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr ""
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr ""
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr ""
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr ""
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr ""
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr ""
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr ""
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr ""
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr ""
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr ""
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr ""
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr ""
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr ""
-
-#: automation_networks.php
-msgid "every X."
-msgstr ""
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr ""
-
-#: automation_networks.php
-msgid "Network Filters"
-msgstr ""
-
-#: automation_networks.php include/global_arrays.php
-msgid "Networks"
-msgstr ""
-
-#: automation_networks.php
-msgid "Network Name"
 msgstr ""
 
 #: automation_networks.php
@@ -1731,6 +1279,17 @@ msgstr ""
 #: include/global_settings.php pollers.php
 #, php-format
 msgid "%d Seconds"
+msgstr ""
+
+#: automation_networks.php pollers.php
+#, php-format
+msgid "%d Minute"
+msgstr ""
+
+#: automation_networks.php data_sources.php include/global_arrays.php
+#: include/global_settings.php pollers.php
+#, php-format
+msgid "%d Minutes"
 msgstr ""
 
 #: automation_networks.php
@@ -2334,6 +1893,12 @@ msgstr ""
 
 #: data_queries.php
 msgid "Suggested Values - Graphs"
+msgstr ""
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
 msgstr ""
 
 #: data_queries.php tree.php
@@ -4318,6 +3883,10 @@ msgid "Current Graph Item Data Source"
 msgstr ""
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr ""
+
+#: include/global_arrays.php
 msgid "SNMP Query"
 msgstr ""
 
@@ -4586,6 +4155,11 @@ msgstr ""
 msgid "1 Hour"
 msgstr ""
 
+#: include/global_arrays.php include/global_settings.php
+#, php-format
+msgid "%d Hours"
+msgstr ""
+
 #: include/global_arrays.php
 #, php-format
 msgid "%d Day"
@@ -4629,6 +4203,11 @@ msgstr ""
 msgid "%0.1f Minutes"
 msgstr ""
 
+#: include/global_arrays.php
+#, php-format
+msgid "%d Hour"
+msgstr ""
+
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "%d Days"
@@ -4669,6 +4248,11 @@ msgstr ""
 
 #: include/global_arrays.php
 msgid "1 Thread"
+msgstr ""
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
 msgstr ""
 
 #: include/global_arrays.php
@@ -5664,6 +5248,54 @@ msgid "Every %d Weeks"
 msgstr ""
 
 #: include/global_arrays.php
+msgid "January"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "February"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "March"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "April"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "May"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "June"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "July"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "August"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "September"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "October"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "November"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "December"
+msgstr ""
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jan"
 msgstr ""
@@ -5737,6 +5369,34 @@ msgstr ""
 
 #: include/global_arrays.php
 msgid "Use the MonoTranslator GetText Handler"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Sunday"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Monday"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Tuesday"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Wednesday"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Thursday"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Friday"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Saturday"
 msgstr ""
 
 #: include/global_arrays.php
@@ -7019,6 +6679,10 @@ msgid "Poller Association"
 msgstr ""
 
 #: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr ""
+
+#: include/global_form.php
 msgid "Device Site Association"
 msgstr ""
 
@@ -7047,6 +6711,10 @@ msgid "Check this box to disable all checks for this host."
 msgstr ""
 
 #: include/global_form.php
+msgid "SNMP Options"
+msgstr ""
+
+#: include/global_form.php
 msgid "Availability/Reachability Options"
 msgstr ""
 
@@ -7059,7 +6727,35 @@ msgid "The method Kadupul will use to determine if a host is available for polli
 msgstr ""
 
 #: include/global_form.php
+msgid "Ping Method"
+msgstr ""
+
+#: include/global_form.php
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
+msgstr ""
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr ""
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr ""
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr ""
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr ""
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr ""
+
+#: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
 msgstr ""
 
 #: include/global_form.php
@@ -7279,38 +6975,6 @@ msgid "The Width to be used when importing or updating Graph Templates."
 msgstr ""
 
 #: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr ""
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr ""
-
-#: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr ""
-
-#: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr ""
-
-#: include/global_form.php
-msgid "Maximum Log Size"
-msgstr ""
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr ""
-
-#: include/global_form.php
-msgid "SNMP Message Type"
-msgstr ""
-
-#: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr ""
-
-#: include/global_form.php
 msgid "The new Title of the aggregated Graph."
 msgstr ""
 
@@ -7364,6 +7028,10 @@ msgstr ""
 
 #: include/global_form.php
 msgid "Reordering of Graphs."
+msgstr ""
+
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
 msgstr ""
 
 #: include/global_form.php
@@ -15093,6 +14761,10 @@ msgstr ""
 
 #: managers.php utilities.php
 msgid "No SNMP Notification Log Entries"
+msgstr ""
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
 msgstr ""
 
 #: managers.php

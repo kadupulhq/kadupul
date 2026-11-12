@@ -64,7 +64,7 @@ final readonly class LegacyBrowserAuthentication
         }
         $config = $this->configuration->values();
         $tables = ['settings', 'user_auth', 'settings_user', 'user_log'];
-        if ($config['database_sessions']) {
+        if ($config['database_sessions'] === true) {
             $tables[] = 'sessions';
         }
         $this->requireEngines($database, $tables);

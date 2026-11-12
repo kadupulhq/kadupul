@@ -43,7 +43,7 @@ final class InstallationConfiguration implements LegacyConfiguration
             'read_username' => $settings['database_read_username'] ?? '', 'read_password' => $settings['database_read_password'] ?? '',
             'ssl' => $settings['database_ssl'] ?? false, 'ssl_key' => $settings['database_ssl_key'] ?? '',
             'ssl_cert' => $settings['database_ssl_cert'] ?? '', 'ssl_ca' => $settings['database_ssl_ca'] ?? '',
-            'session_name' => $settings['cacti_session_name'] ?? 'Cacti', 'database_sessions' => $settings['cacti_db_session'] ?? false,
+            'session_name' => $settings['cacti_session_name'] ?? 'Cacti', 'database_sessions' => (bool) ($settings['cacti_db_session'] ?? false),
             'cookie_domain' => $settings['cacti_cookie_domain'] ?? '', 'url_path' => $settings['url_path'] ?? '/',
             'proxy_headers' => $settings['proxy_headers'] ?? [],
             'proxy_trusted_addresses' => $settings['proxy_trusted_addresses'] ?? [],

@@ -209,7 +209,8 @@ test('SNMP protocol fields accept only the listed protocols', function (string $
 
     expect(json_decode($out))->toBe($valid);
 })->with(function () {
-    foreach (array('lib/api_device.php', 'managers.php') as $file) {
+    // Notification receivers validate these in NotificationReceiverChange (NotificationReceiverStoreTest).
+    foreach (array('lib/api_device.php') as $file) {
         foreach (array('[None]' => true, 'MD5' => true, 'SHA' => true, 'SHA384' => true, 'SHA512' => true, 'SHA392' => false, 'SHA256 -X x' => false, 'xMD5' => false) as $value => $valid) {
             yield $file . ' auth ' . $value => array($file, 'snmp_auth_protocol', $value, $valid);
         }
