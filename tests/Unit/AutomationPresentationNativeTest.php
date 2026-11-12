@@ -53,7 +53,12 @@ test('automation controllers render real SQL records and preserve declared mutat
                 libxml_use_internal_errors($prior);
             }
             $xpath = new \DOMXPath($document);
-            expect($xpath->query('//form[@action="' . $case['page'] . '"]')->length)->toBeGreaterThan(0);
+            $forms = $xpath->query('//form[@action="' . $case['page'] . '"]')->length;
+            if ($case['form'] ?? true) {
+                expect($forms)->toBeGreaterThan(0);
+            } else {
+                expect($forms)->toBe(0);
+            }
             expect($document->textContent)->toContain($case['heading']);
             foreach ($case['labels'] ?? [] as $label) {
                 expect($document->textContent)->toContain($label);
@@ -158,6 +163,8 @@ test('automation controllers render real SQL records and preserve declared mutat
     'graph rule editor with persisted children' => [['page' => 'automation_graph_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Graph Creation Criteria', 'labels' => ['Edge graphs'],
         'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Edge graphs', 'snmp_query_id' => 0, 'enabled' => 'on']]]]],
     'tree rule editor with persisted children' => [['page' => 'automation_tree_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Device Selection Criteria',
+        // The settings are edited through Symfony; the legacy page shows them read-only.
+        'form' => false, 'labels' => ['Edit Rule Settings'],
         'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Edge trees', 'leaf_type' => 3]]]]],
     'persisted tree and subtree joins' => [['page' => 'automation_tree_rules.php', 'heading' => 'Rule Name', 'labels' => ['Edge trees', 'Network tree', 'Routing branch'], 'ids' => [7], 'rowCount' => 1,
         'rows' => ['graph_tree' => [['id' => 2, 'name' => 'Network tree']], 'graph_tree_items' => [['id' => 9, 'graph_tree_id' => 2, 'title' => 'Routing branch']],
