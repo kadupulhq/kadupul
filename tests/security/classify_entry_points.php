@@ -2281,7 +2281,7 @@ function authenticated_access_adapter(string $root): string
 // complete firewall, request reset and native authentication implementation.
 const NATIVE_SESSION_FIREWALL_SOURCES = [
     'config/bundles.php' => '0432519a4e3cd6030979a2b8b26e8660b46fae9fade5a80c1186a6508cfb920c',
-    'config/packages/framework.yaml' => '1323e5b28755aebde3630f165e85ce0ab474972e2ba540d1848b97e9e90ca06a',
+    'config/packages/framework.yaml' => '78006259be28354fa2b81fd37c0ba9e46d6ebf908c81b4051266a6a6176c7b24',
     'config/packages/security.yaml' => '089678fa4801a6efa5872f256b282415d9c1bd9fbf99908948b9dae5eabea914',
     'config/routes.yaml' => 'b65024a9aa1315b7d99abf9a103bad532c394ee68bbd7af90466d3b5bdb9a1bc',
     'src/Kernel.php' => '030b9f7a8b0bbd936cde923d58a1a652faeebedb4541de9116f89917325eb14b',
@@ -2951,6 +2951,26 @@ const REVIEWED_FEATURE_ACCESS = [
         'contract' => 'Kadupul\\Navigation\\Application\\Port\\AdministrationListAccess',
         'adapter' => 'Kadupul\\Navigation\\Infrastructure\\Persistence\\DbalAdministrationListAccess',
         'sources' => ADMINISTRATION_LIST_ACCESS_SOURCES,
+    ],
+    // The graph rule editor shares the reviewed automation realm check; these keys
+    // precede the list page's prefix, which uses AdministrationListAccess.
+    '/automation/graph-rules/new' => [
+        'label' => 'graph rule',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
+    ],
+    '/automation/graph-rules/{id}' => [
+        'label' => 'graph rule',
+        'realm' => 23,
+        'contract' => 'Kadupul\\Automation\\Application\\Port\\AutomationTemplateAccess',
+        'adapter' => 'Kadupul\\Automation\\Infrastructure\\Persistence\\DbalAutomationTemplateAccess',
+        'sources' => [
+            'src/Automation/Infrastructure/Persistence/DbalAutomationTemplateAccess.php' => 'c6197adc65aa98d6b9419ebc4a33f6aded49874f27e9d20b9e631dc95df9f6dc',
+        ],
     ],
     '/automation/graph-rules' => [
         'label' => 'administration list',

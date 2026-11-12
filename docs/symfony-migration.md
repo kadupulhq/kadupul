@@ -2696,6 +2696,39 @@ The page no longer loads the legacy header bundle, so `page_head` and the
 `custom_denied` hook prints without asking to reskin is dropped. A failed
 worker answers 503, and a schema mismatch keeps the installer redirect.
 
+### Graph rule settings
+
+The settings of a graph rule (`automation_graph_rules.php?action=edit`: name,
+Data Query, Graph Type and Enable Rule) use Symfony routes, Forms and Twig at
+`/automation/graph-rules/new` and `/automation/graph-rules/{id}/edit`. The
+rule list, its bulk actions, the Device Selection and Graph Creation Criteria
+items and the matching device and graph previews stay on the legacy page, which
+now shows the settings read-only and links to the new editor. Both routes
+require console access and the Automation realm (23) through the reviewed
+`AutomationTemplateAccess` check before anything is read. Saves recheck the
+account and both realms inside their transaction, need the primary collector,
+lock the rule row, take shared locks on the Data Query and Graph Type, and are
+audited. The form carries a revision of the rule's columns; criteria items are
+not part of it and are never written by the new editor.
+
+`lib/api_automation.php` creates graphs from enabled rules using
+`graph_type_id` as an `snmp_query_graph` row of the rule's Data Query, so the
+store refuses a Graph Type that does not belong to the chosen Data Query.
+
+Differences from legacy:
+- A rule is created in one step with its Data Query and Graph Type; legacy
+  created it with Graph Type 0 and asked for the type afterwards. A rule must
+  name an existing Data Query and one of its Graph Types.
+- Changing the Data Query or Graph Type no longer saves immediately through
+  `?action=qedit`; the choice is saved with the form. Graph Types are grouped
+  by Data Query, so the form needs no script. `qedit` and an old settings form
+  posted again answer 409 with `Cache-Control: private, no-store` without
+  saving; `automation_change_query_type()` is removed.
+- The name must be single-line text of at most 255 characters and is trimmed.
+- `automation_graph_rules.php?action=edit` without an ID redirects to the new
+  editor, and an unknown ID returns to the list with "Rule not found." instead
+  of rendering an empty form.
+
 ### Tree rule settings
 
 The settings of a tree rule (`automation_tree_rules.php?action=edit`: name,

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 21:08-0800\n"
+"POT-Creation-Date: 2026-11-11 23:28-0800\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -323,10 +323,11 @@ msgstr "Migrera Aggregate för att använda en mall"
 msgid "New Aggregate"
 msgstr "Nytt aggregat"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr "Nej"
 
@@ -395,9 +396,9 @@ msgid "Report Name"
 msgstr "Rapportnamn"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Tillbaka"
@@ -484,11 +485,11 @@ msgstr "Stäng av grafens felsökningsläge"
 msgid "Turn On Graph Debug Mode"
 msgstr "Slå på Graph Debug Mode"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr "Ja"
 
@@ -1070,6 +1071,10 @@ msgstr "Visa inte"
 msgid "Duplicate"
 msgstr "Duplicera"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1130,9 +1135,9 @@ msgstr "Regelnamn"
 msgid "Rule Selection [edit: %s]"
 msgstr "Regelval [redigera: %s]"
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr "Regelval [ny]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1141,6 +1146,10 @@ msgstr "Det interna databas-ID:t för den här regeln.  Användbart vid felsökn
 #: automation_graph_rules.php
 msgid "The name of this rule."
 msgstr "Namnet på denna regel."
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1410,10 +1419,6 @@ msgid "Created Trees"
 msgstr "Skapade träd"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Stödberättigade objekt"
 
@@ -1449,10 +1454,6 @@ msgstr "Valfritt: Underträdspost"
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROT"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."

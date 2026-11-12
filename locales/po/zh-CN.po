@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 21:08-0800\n"
+"POT-Creation-Date: 2026-11-11 23:28-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -326,10 +326,11 @@ msgstr "迁移聚合以使用模板"
 msgid "New Aggregate"
 msgstr "新建聚合"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr "否"
 
@@ -398,9 +399,9 @@ msgid "Report Name"
 msgstr "报告名称"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "返回"
@@ -487,11 +488,11 @@ msgstr "关闭图形调试模式"
 msgid "Turn On Graph Debug Mode"
 msgstr "打开图形调试模式"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr "是"
 
@@ -1073,6 +1074,10 @@ msgstr "不显示"
 msgid "Duplicate"
 msgstr "复制"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1133,9 +1138,9 @@ msgstr "规则名称"
 msgid "Rule Selection [edit: %s]"
 msgstr "规则选择 [编辑: %s]"
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr "规则选择[新建]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1144,6 +1149,10 @@ msgstr "此规则的内部数据库标识. 用于执行调试和自动化."
 #: automation_graph_rules.php
 msgid "The name of this rule."
 msgstr "这个规则的名字."
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1413,10 +1422,6 @@ msgid "Created Trees"
 msgstr "创建树"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "合格的对象"
 
@@ -1452,10 +1457,6 @@ msgstr "可选: 子树项目"
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROOT"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."

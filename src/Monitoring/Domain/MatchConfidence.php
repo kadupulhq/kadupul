@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** How sure a legacy field match is; only confirmed matches may be bound. */
 enum MatchConfidence: string
 {
     case Confirmed = 'confirmed';

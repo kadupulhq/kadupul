@@ -22,6 +22,7 @@ use Kadupul\Monitoring\Domain\PackValidator;
  */
 final class PackLifecycle
 {
+    /** Wires the pack repository and the validator. */
     public function __construct(private readonly PackRepository $packs, private readonly PackValidator $validator) {}
 
     /**
@@ -41,6 +42,12 @@ final class PackLifecycle
         return $installed;
     }
 
+    /**
+     * Replaces an installed pack with a newer validated version of it.
+     *
+     * @throws \Kadupul\Monitoring\Domain\InvalidPack when the document is not a valid pack
+     * @throws PackLifecycleViolation when the pack is not installed, the version is not newer, or the change is breaking without a new major version
+     */
     public function upgrade(mixed $document, string $source): PackUpgrade
     {
         $pack = $this->validator->parse($document, $source);
@@ -52,6 +59,11 @@ final class PackLifecycle
         return $upgrade;
     }
 
+    /**
+     * Marks an installed pack as deprecated.
+     *
+     * @throws PackLifecycleViolation when no pack has that name
+     */
     public function deprecate(string $name): InstalledPack
     {
         $existing = $this->packs->find($name)

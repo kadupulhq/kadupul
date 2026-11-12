@@ -19,5 +19,10 @@ use Kadupul\Telemetry\Contract\ResourceId;
  */
 interface BindingCatalog
 {
+    /**
+     * Looks up the binding for one series on one device and protocol.
+     *
+     * @return BindingResolution the outcome, with a reason; never throws for a missing or unapproved binding
+     */
     public function resolve(int $deviceId, MetricId $metric, ResourceId $resource, string $protocol): BindingResolution;
 }
