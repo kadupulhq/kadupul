@@ -163,7 +163,7 @@ final readonly class LegacyBrowserWorkerRunner implements BrowserWorkerRunner
     {
         $diagnostic = json_decode($stderr, true, 8);
         $context = ['phase' => 'unknown', 'class' => 'unknown', 'file' => 'unknown', 'line' => 0];
-        if (is_array($diagnostic) && in_array($diagnostic['phase'] ?? null, ['handoff', 'bootstrap', 'identity', 'extensions', 'session'], true)
+        if (is_array($diagnostic) && in_array($diagnostic['phase'] ?? null, ['handoff', 'bootstrap', 'identity', 'extensions', 'session', 'denial-identity', 'denial-session'], true)
             && is_string($diagnostic['class'] ?? null) && preg_match('/\\A[a-zA-Z0-9_\\\\]{1,200}\\z/D', $diagnostic['class']) === 1
             && is_string($diagnostic['file'] ?? null) && preg_match('/\\A[a-zA-Z0-9_.-]{1,100}\\z/D', $diagnostic['file']) === 1
             && is_int($diagnostic['line'] ?? null) && $diagnostic['line'] > 0 && $diagnostic['line'] < 1000000) {

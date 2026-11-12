@@ -16,6 +16,8 @@ use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorkerRunner;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -128,6 +130,36 @@ WORKER);
         $this->runner('POST')->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
     }
 
+    /** @return iterable<string, array{string}> */
+    public static function deniedPhases(): iterable
+    {
+        yield 'handoff' => ['handoff'];
+        yield 'denial identity' => ['denial-identity'];
+        yield 'denial session' => ['denial-session'];
+    }
+
+    #[DataProvider('deniedPhases')]
+    public function testAFailedWorkerLogsItsReportedPhase(string $phase): void
+    {
+        file_put_contents($this->directory . '/bin/legacy-probe.php', '<?php fwrite(STDERR, json_encode(["phase" => ' . var_export($phase, true) . ', "class" => "RuntimeException", "file" => "probe.php", "line" => 3])); exit(1);');
+        $logger = new class extends AbstractLogger {
+            /** @var list<array<string, mixed>> */
+            public array $records = [];
+
+            public function log($level, string|\Stringable $message, array $context = []): void
+            {
+                $this->records[] = $context;
+            }
+        };
+        try {
+            $this->runner('POST', logger: $logger)->run('legacy-probe.php', [], 7, mode: BrowserWorkerMode::Mutation);
+            self::fail('A failed worker must not succeed.');
+        } catch (\RuntimeException) {
+        }
+        self::assertCount(1, $logger->records);
+        self::assertSame($phase, $logger->records[0]['phase']);
+    }
+
     public function testTimeoutStopsTheChildBeforeItCanFinish(): void
     {
         file_put_contents($this->directory . '/bin/legacy-probe.php', '<?php usleep(1000000); file_put_contents(__DIR__ . "/finished", "unexpected");');
@@ -176,7 +208,7 @@ WORKER);
         self::assertFileDoesNotExist($this->directory . '/bin/started');
     }
 
-    private function runner(string $method, string $schema = '1.3.0', string $binary = PHP_BINARY, ?\PDO $pdo = null): LegacyBrowserWorkerRunner
+    private function runner(string $method, string $schema = '1.3.0', string $binary = PHP_BINARY, ?\PDO $pdo = null, ?LoggerInterface $logger = null): LegacyBrowserWorkerRunner
     {
         $pdo ??= new \PDO('sqlite::memory:');
         $pdo->exec("CREATE TABLE version (cacti TEXT); INSERT INTO version VALUES ('1.3.0'); CREATE TABLE settings (name TEXT, value TEXT)");
@@ -190,6 +222,6 @@ WORKER);
         $requests = new RequestStack();
         $requests->push(Request::create('/nested/managers.php?client=ignored', $method));
 
-        return new LegacyBrowserWorkerRunner($this->directory, $requests, $session, $database, new InstallationConfiguration($this->directory), new NullLogger());
+        return new LegacyBrowserWorkerRunner($this->directory, $requests, $session, $database, new InstallationConfiguration($this->directory), $logger ?? new NullLogger());
     }
 }
