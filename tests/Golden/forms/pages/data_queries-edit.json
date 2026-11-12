@@ -2,9 +2,14 @@
     "session": [],
     "diagnostics": [],
     "log": [],
-    "elements_outside_forms": [],
-    "script_ids": [
-        "data_queries"
+    "elements_outside_forms": [
+        "div id=\"data_queries_edit1\"",
+        "div id=\"data_queries_edit1_child\"",
+        "div id=\"data_queries_edit2\"",
+        "table id=\"data_queries_edit2_child\"",
+        "div id=\"data_queries_edit3\"",
+        "table id=\"data_queries_edit3_child\""
     ],
+    "script_ids": [],
     "script_names": []
 }

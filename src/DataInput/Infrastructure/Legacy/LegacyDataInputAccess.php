@@ -17,7 +17,8 @@ final readonly class LegacyDataInputAccess implements DataInputAccess
 {
     private const int REALM_ID = 2;
 
-    public function __construct(private ConsoleAccess $console, private DatabaseConnection $database) {}
+    /** @param int $realmId the feature realm: 2 for Data Input Methods, 13 for Data Queries through LegacyDataQueryAccess */
+    public function __construct(private ConsoleAccess $console, private DatabaseConnection $database, private int $realmId = self::REALM_ID) {}
 
     public function authorize(): Actor
     {
@@ -25,7 +26,7 @@ final readonly class LegacyDataInputAccess implements DataInputAccess
         if ($actor === null) {
             throw new DataInputDenied(true);
         }
-        if (!$this->accountAllows($actor->id) || !$this->hasRealm($actor->id, 8, false) || !$this->hasRealm($actor->id, self::REALM_ID, false)) {
+        if (!$this->accountAllows($actor->id) || !$this->hasRealm($actor->id, 8, false) || !$this->hasRealm($actor->id, $this->realmId, false)) {
             throw new DataInputDenied(false);
         }
         return $actor;
@@ -39,7 +40,7 @@ final readonly class LegacyDataInputAccess implements DataInputAccess
         }
         $actor = $this->console->consoleActor();
         if ($actor === null || $actor->id !== $actorId || !$this->accountAllows($actorId)
-            || !$this->hasRealm($actorId, 8, true) || !$this->hasRealm($actorId, self::REALM_ID, true)) {
+            || !$this->hasRealm($actorId, 8, true) || !$this->hasRealm($actorId, $this->realmId, true)) {
             throw new DataInputDenied($actor === null);
         }
     }
