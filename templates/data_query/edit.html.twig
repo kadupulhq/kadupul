@@ -1,0 +1,31 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (query ? 'Edit Data Query' : 'Add Data Query')|trans({}, 'data_query') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() of a fixed route without parameters. #}
+    <p><a href="{{ path('admin_data_queries') }}">{{ 'Back to Data Queries'|trans({}, 'data_query') }}</a></p>
+    <h1>{% if query %}{{ 'Data Queries [edit: %name%]'|trans({'%name%': query.name}, 'data_query') }}{% else %}{{ 'Data Queries [new]'|trans({}, 'data_query') }}{% endif %}</h1>
+    {% if saved == '1' %}<p role="status">{{ 'Data query saved.'|trans({}, 'data_query') }}</p>{% endif %}
+    {% if saved == 'partial' %}<p role="alert">{{ 'Data query saved, but a Remote Data Collector was down and did not receive the poller cache change. Perform a Full Sync once it is up again.'|trans({}, 'data_query') }}</p>{% endif %}
+    {% if query %}
+        <p>{{ (xml == 'found' ? 'Successfully located XML file' : 'Could not locate XML file.')|trans({}, 'data_query') }}</p>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed legacy page with a URL encoded numeric ID. #}
+        <p><a href="{{ installation_path('data_queries.php') }}?{{ {action: 'edit', id: query.id}|url_encode }}">{{ 'Associated Graph Templates'|trans({}, 'data_query') }}</a></p>
+    {% else %}
+        <p>{{ 'Save the data query first; its Graph Templates are associated afterwards.'|trans({}, 'data_query') }}</p>
+    {% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.xml_path) }}
+        {{ form_row(form.data_input_id) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'data_query') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

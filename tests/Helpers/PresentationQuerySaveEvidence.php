@@ -26,7 +26,8 @@ final class PresentationQuerySaveEvidence
 
     public static function cases(): array
     {
-        return array('query-empty-name', 'query-empty-xml', 'association-empty-name',
+        // Data query settings are saved by the Symfony editor; data_queries.php answers its old form with 409.
+        return array('association-empty-name',
             'graph-suggestion-save', 'graph-suggestion-empty-text', 'graph-suggestion-empty-field',
             'data-suggestion-save', 'data-suggestion-empty-text', 'data-suggestion-empty-field');
     }
