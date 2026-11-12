@@ -29,5 +29,6 @@ interface BindingRepository
     /** @return list<MetricBinding> */
     public function forDevice(int $deviceId): array;
 
+    /** Stores the binding, replacing the one with the same key when the replacement rules allow. */
     public function save(MetricBinding $binding): void;
 }

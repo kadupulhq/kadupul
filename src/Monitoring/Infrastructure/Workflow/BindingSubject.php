@@ -18,18 +18,28 @@ use Kadupul\Monitoring\Domain\BindingStatus;
  */
 final class BindingSubject implements StatusSubject
 {
+    /**
+     * @param string $actorId the actor the caller claims to be
+     * @param BindingStatus $status where the move starts; a new request starts as proposed
+     */
     public function __construct(
         public readonly BindingKey $key,
         public readonly string $actorId,
         private BindingStatus $status = BindingStatus::Proposed,
     ) {}
 
+    /** The binding status as the workflow place name. */
     #[\Override]
     public function place(): string
     {
         return $this->status->value;
     }
 
+    /**
+     * Sets the status from a workflow place name.
+     *
+     * @throws \ValueError when the name is not a binding status
+     */
     #[\Override]
     public function moveTo(string $place): void
     {

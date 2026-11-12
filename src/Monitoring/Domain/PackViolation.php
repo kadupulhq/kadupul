@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** One reason a pack document is invalid, with the JSON pointer of the failing location. */
 final readonly class PackViolation
 {
     /**
@@ -16,6 +17,7 @@ final readonly class PackViolation
      */
     public function __construct(public string $pointer, public string $message) {}
 
+    /** The pointer and message on one line. */
     public function toString(): string
     {
         return $this->pointer . ': ' . $this->message;

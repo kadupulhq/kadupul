@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * Raised when model dependencies lead back to a model already on the path.
+ */
 final class CircularDependency extends \DomainException
 {
     /**

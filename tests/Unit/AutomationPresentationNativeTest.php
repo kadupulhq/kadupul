@@ -53,7 +53,12 @@ test('automation controllers render real SQL records and preserve declared mutat
                 libxml_use_internal_errors($prior);
             }
             $xpath = new \DOMXPath($document);
-            expect($xpath->query('//form[@action="' . $case['page'] . '"]')->length)->toBeGreaterThan(0);
+            $forms = $xpath->query('//form[@action="' . $case['page'] . '"]')->length;
+            if ($case['form'] ?? true) {
+                expect($forms)->toBeGreaterThan(0);
+            } else {
+                expect($forms)->toBe(0);
+            }
             expect($document->textContent)->toContain($case['heading']);
             foreach ($case['labels'] ?? [] as $label) {
                 expect($document->textContent)->toContain($label);
@@ -102,10 +107,6 @@ test('automation controllers render real SQL records and preserve declared mutat
             'automation_tree_rule_items' => [['id' => 71, 'rule_id' => 7], ['id' => 81, 'rule_id' => 8]],
             'automation_match_rule_items' => [['id' => 72, 'rule_id' => 7, 'rule_type' => \AUTOMATION_RULE_TYPE_TREE_MATCH], ['id' => 73, 'rule_id' => 7, 'rule_type' => \AUTOMATION_RULE_TYPE_GRAPH_MATCH]]],
         'deleted' => ['automation_tree_rules' => [['id' => 7]], 'automation_tree_rule_items' => [['id' => 71]], 'automation_match_rule_items' => [['id' => 72]]]]],
-    'graph query change updates selected row only' => [['page' => 'automation_graph_rules.php', 'post' => ['action' => 'qedit', 'id' => '7', 'snmp_query_id' => '3', 'name' => 'Updated query rule'],
-        'writes' => ['automation_graph_rules'], 'maxQueries' => 8,
-        'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Selected graph rule'], ['id' => 8, 'name' => 'Adjacent graph rule']], 'snmp_query' => [['id' => 3, 'name' => 'Interface query']], 'snmp_query_graph' => [['id' => 4, 'snmp_query_id' => 3, 'name' => 'Traffic graph']]],
-        'updated' => ['automation_graph_rules' => [['id' => 7, 'values' => ['name' => 'Updated query rule', 'snmp_query_id' => 3, 'graph_type_id' => 4]]]]]],
     'graph enable submission with selected record' => [['page' => 'automation_graph_rules.php', 'post' => ['action' => 'actions', 'drp_action' => (string) \AUTOMATION_ACTION_GRAPH_ENABLE, 'selected_items' => serialize(['7'])],
         'writes' => ['automation_graph_rules'], 'maxQueries' => 12,
         'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Selected graph rule'], ['id' => 8, 'name' => 'Adjacent graph rule']]],
@@ -129,10 +130,6 @@ test('automation controllers render real SQL records and preserve declared mutat
         'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Selected tree rule']]]]],
     'tree duplicate confirmation' => [['page' => 'automation_tree_rules.php', 'post' => ['action' => 'actions', 'drp_action' => (string) \AUTOMATION_ACTION_TREE_DUPLICATE, 'chk_7' => 'on'], 'heading' => 'Selected tree rule', 'maxQueries' => 15,
         'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Selected tree rule']]]]],
-    'graph type selection preserves query id' => [['page' => 'automation_graph_rules.php', 'post' => ['action' => 'qedit', 'id' => '7', 'graph_type_id' => '4', 'name' => 'Updated graph type'],
-        'writes' => ['automation_graph_rules'], 'maxQueries' => 8,
-        'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Selected graph rule', 'snmp_query_id' => 3], ['id' => 8, 'name' => 'Adjacent graph rule']], 'snmp_query' => [['id' => 3, 'name' => 'Interface query']], 'snmp_query_graph' => [['id' => 4, 'snmp_query_id' => 3, 'name' => 'Traffic graph']]],
-        'updated' => ['automation_graph_rules' => [['id' => 7, 'values' => ['name' => 'Updated graph type', 'graph_type_id' => 4]]]]]],
     'graph item save reads real supported field and updates owned row' => [['page' => 'automation_graph_rules.php', 'post' => ['action' => 'save', 'id' => '7', 'item_id' => '77', 'sequence' => '1', 'operation' => '0', 'field' => 'ifName', 'operator' => '0', 'pattern' => 'eth0', 'save_component_automation_graph_rule_item' => '1'],
         'writes' => ['automation_graph_rule_items'], 'maxQueries' => 12,
         'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Selected graph rule']], 'automation_graph_rule_items' => [['id' => 77, 'rule_id' => 7, 'sequence' => 1]], 'host_snmp_cache' => [['host_id' => 7, 'snmp_query_id' => 3, 'snmp_index' => '1', 'field_name' => 'ifName', 'field_value' => 'eth0', 'oid' => '.1.3.6.1.2.1.31.1.1.1.1.1']]],
@@ -155,9 +152,13 @@ test('automation controllers render real SQL records and preserve declared mutat
     'persisted SNMP counts' => [['page' => 'automation_snmp.php', 'heading' => 'SNMP Option Set', 'labels' => ['Edge SNMP'], 'ids' => [7], 'rowCount' => 1,
         'rows' => ['automation_snmp' => [['id' => 7, 'name' => 'Edge SNMP']],
             'automation_snmp_items' => [['id' => 1, 'snmp_id' => 7, 'snmp_version' => 1, 'snmp_community' => ''], ['id' => 2, 'snmp_id' => 7, 'snmp_version' => 2, 'snmp_community' => ''], ['id' => 3, 'snmp_id' => 7, 'snmp_version' => 3, 'snmp_community' => '']]]]],
-    'graph rule editor with persisted children' => [['page' => 'automation_graph_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Graph Creation Criteria', 'labels' => ['Edge graphs'],
+    'graph rule editor with persisted children' => [['page' => 'automation_graph_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Graph Creation Criteria',
+        // The settings are edited through Symfony; the legacy page shows them read-only.
+        'form' => false, 'labels' => ['Edge graphs', 'Edit Rule Settings'],
         'rows' => ['automation_graph_rules' => [['id' => 7, 'name' => 'Edge graphs', 'snmp_query_id' => 0, 'enabled' => 'on']]]]],
     'tree rule editor with persisted children' => [['page' => 'automation_tree_rules.php', 'request' => ['action' => 'edit', 'id' => 7], 'heading' => 'Device Selection Criteria',
+        // The settings are edited through Symfony; the legacy page shows them read-only.
+        'form' => false, 'labels' => ['Edit Rule Settings'],
         'rows' => ['automation_tree_rules' => [['id' => 7, 'name' => 'Edge trees', 'leaf_type' => 3]]]]],
     'persisted tree and subtree joins' => [['page' => 'automation_tree_rules.php', 'heading' => 'Rule Name', 'labels' => ['Edge trees', 'Network tree', 'Routing branch'], 'ids' => [7], 'rowCount' => 1,
         'rows' => ['graph_tree' => [['id' => 2, 'name' => 'Network tree']], 'graph_tree_items' => [['id' => 9, 'graph_tree_id' => 2, 'title' => 'Routing branch']],
