@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Application\Command;
 
+/**
+ * Outcome of registering a model revision.
+ */
 enum Registration
 {
     case Created;

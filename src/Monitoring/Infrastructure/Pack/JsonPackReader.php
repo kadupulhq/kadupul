@@ -47,6 +47,13 @@ final class JsonPackReader
         return $documents;
     }
 
+    /**
+     * Decodes one pack file.
+     *
+     * @return mixed the decoded document; it is not validated here
+     * @throws PackDirectoryUnreadable when the file cannot be read
+     * @throws \Kadupul\Monitoring\Domain\InvalidPack when the file is not valid JSON
+     */
     public function readFile(string $path): mixed
     {
         $content = @file_get_contents($path);

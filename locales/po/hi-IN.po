@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 19:42-0800\n"
+"POT-Creation-Date: 2026-11-11 22:38-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -326,10 +326,11 @@ msgstr "टेम्पलेट का उपयोग करने के ल�
 msgid "New Aggregate"
 msgstr "न्यू एग्रीगेट"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr "नहीं"
 
@@ -398,9 +399,9 @@ msgid "Report Name"
 msgstr "रिपोर्ट का नाम"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: data_queries.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "वापसी"
@@ -487,11 +488,11 @@ msgstr "ग्राफ़ डीबग मोड को बंद करें"
 msgid "Turn On Graph Debug Mode"
 msgstr "ग्राफ़ डीबग मोड चालू करें"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr "हाँ"
 
@@ -1078,6 +1079,10 @@ msgstr "दिखाना मत"
 msgid "Duplicate"
 msgstr "डुप्लीकेट"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1138,9 +1143,9 @@ msgstr "नियम का नाम"
 msgid "Rule Selection [edit: %s]"
 msgstr "नियम चयन [संपादित करें: %s]"
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr "नियम चयन [नया]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1149,6 +1154,10 @@ msgstr "इस नियम के लिए आंतरिक डेटाब�
 #: automation_graph_rules.php
 msgid "The name of this rule."
 msgstr "इस नियम का नाम।"
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1418,10 +1427,6 @@ msgid "Created Trees"
 msgstr "बनाए गए पेड़"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "योग्य वस्तु"
 
@@ -1457,10 +1462,6 @@ msgstr "वैकल्पिक: उप-ट्री आइटम"
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "बूट्सConstellation name (optional)"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."

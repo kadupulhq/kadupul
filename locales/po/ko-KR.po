@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 19:42-0800\n"
+"POT-Creation-Date: 2026-11-11 22:38-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -326,10 +326,11 @@ msgstr "템플릿을 사용하도록 집계 마이그레이션"
 msgid "New Aggregate"
 msgstr "새 집계"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: host_templates.php include/global_settings.php lib/api_automation.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "No"
 msgstr "아니오"
 
@@ -398,9 +399,9 @@ msgid "Report Name"
 msgstr "이름 보고"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: data_queries.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_snmp.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "반환"
@@ -487,11 +488,11 @@ msgstr "그래프 디버그 모드 끄기"
 msgid "Turn On Graph Debug Mode"
 msgstr "그래프 디버그 모드 켜기"
 
-#: aggregate_graphs.php aggregate_templates.php automation_tree_rules.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php host_templates.php include/global_settings.php
-#: lib/api_automation.php lib/installer.php tree.php user_admin.php
-#: user_domains.php user_group_admin.php
+#: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
+#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php host_templates.php
+#: include/global_settings.php lib/api_automation.php lib/installer.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Yes"
 msgstr "예"
 
@@ -1074,6 +1075,10 @@ msgstr "보이지 않기"
 msgid "Duplicate"
 msgstr "복사"
 
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
 #: managers.php plugins.php pollers.php user_admin.php user_domains.php
@@ -1134,9 +1139,9 @@ msgstr "규칙 이름"
 msgid "Rule Selection [edit: %s]"
 msgstr "규칙 선택 [편집 :  %s]"
 
-#: automation_graph_rules.php
-msgid "Rule Selection [new]"
-msgstr "규칙 선택 [신규]"
+#: automation_graph_rules.php automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1145,6 +1150,10 @@ msgstr "이 규칙의 내부 데이터베이스 ID입니다. 디버깅 및 자�
 #: automation_graph_rules.php
 msgid "The name of this rule."
 msgstr "이 규칙의 이름"
+
+#: automation_graph_rules.php
+msgid "This Graph Rule form has expired. Open the rule again and use its current form."
+msgstr ""
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1414,10 +1423,6 @@ msgid "Created Trees"
 msgstr "창조 된 나무들"
 
 #: automation_tree_rules.php
-msgid "Edit Rule Settings"
-msgstr ""
-
-#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "적격 대상"
 
@@ -1453,10 +1458,6 @@ msgstr "선택 사항 : 하위 트리 항목"
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROOTConstellation name (optional)"
-
-#: automation_tree_rules.php
-msgid "Rule not found."
-msgstr ""
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."

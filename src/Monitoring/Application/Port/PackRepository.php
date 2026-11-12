@@ -14,8 +14,10 @@ use Kadupul\Monitoring\Domain\InstalledPack;
 /** One stored version per pack name; an upgrade replaces it. */
 interface PackRepository
 {
+    /** The installed pack with this name, or null when none is installed. */
     public function find(string $name): ?InstalledPack;
 
+    /** Stores the pack, replacing the one with the same name. */
     public function save(InstalledPack $pack): void;
 
     /** @return list<InstalledPack> ordered by name */

@@ -15,6 +15,11 @@ use Kadupul\Telemetry\Contract\ResourceId;
 /** What a binding is for: at most one binding exists per key. */
 final readonly class BindingKey
 {
+    /**
+     * Builds a key after checking the device id and protocol.
+     *
+     * @throws InvalidBinding when the device id is below 1 or the protocol is not a known one
+     */
     public function __construct(
         public int $deviceId,
         public MetricId $metric,
@@ -29,6 +34,7 @@ final readonly class BindingKey
         }
     }
 
+    /** Compares two keys by device, metric, resource and protocol. */
     public function equals(self $other): bool
     {
         return $this->canonical() === $other->canonical();
@@ -43,6 +49,7 @@ final readonly class BindingKey
         return 'bnd-' . substr(hash('sha256', $this->canonical()), 0, 32);
     }
 
+    /** A stable JSON string of the key's parts, used for comparison and for the binding id. */
     public function canonical(): string
     {
         // JSON keeps an identity containing a separator from colliding with another.

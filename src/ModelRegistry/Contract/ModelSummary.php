@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Contract;
 
+/**
+ * Plain-value description of a registered model revision for other modules.
+ */
 final class ModelSummary
 {
     /**

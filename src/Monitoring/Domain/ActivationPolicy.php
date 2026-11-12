@@ -16,13 +16,20 @@ namespace Kadupul\Monitoring\Domain;
  */
 final readonly class ActivationPolicy
 {
+    /** Starts denying activation unless $allowApproved is true. */
     public function __construct(private bool $allowApproved = false) {}
 
+    /** Creates a policy that lets plans be approved and activated. */
     public static function allowApproved(): self
     {
         return new self(true);
     }
 
+    /**
+     * Refuses a plan status change while activation is disabled.
+     *
+     * @throws PlanActivationDenied when the policy does not allow plan activation
+     */
     public function assertPermits(CollectionPlan $plan, PlanStatus $target): void
     {
         if (!$this->allowApproved) {

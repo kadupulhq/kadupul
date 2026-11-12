@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when a plan status change is not allowed from the current status. */
 final class PlanTransitionRejected extends \DomainException {}

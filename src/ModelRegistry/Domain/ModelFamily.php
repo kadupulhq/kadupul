@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * Kind of model definition the registry holds.
+ */
 enum ModelFamily: string
 {
     case Yang = 'yang';
@@ -16,6 +19,11 @@ enum ModelFamily: string
     case Redfish = 'redfish';
     case SnmpMib = 'snmp-mib';
 
+    /**
+     * Returns the family with the given value.
+     *
+     * @throws InvalidModelDefinition when the value names no family
+     */
     public static function fromString(string $value): self
     {
         return self::tryFrom($value) ?? throw new InvalidModelDefinition(sprintf(

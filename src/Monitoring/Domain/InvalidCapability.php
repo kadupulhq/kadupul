@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when capability or model data is malformed. */
 final class InvalidCapability extends \InvalidArgumentException {}

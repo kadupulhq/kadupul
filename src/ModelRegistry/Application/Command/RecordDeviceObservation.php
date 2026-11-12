@@ -18,8 +18,15 @@ use Kadupul\ModelRegistry\Domain\ModelRevision;
 use Kadupul\ModelRegistry\Domain\UnsupportedModelRevision;
 use Kadupul\ModelRegistry\Domain\VerificationRecord;
 
+/**
+ * Records how a device relates to a model revision: advertised, verified or unsupported.
+ * Each call loads the current association, applies the transition and saves the result.
+ */
 final class RecordDeviceObservation
 {
+    /**
+     * Binds the command to the model and device association stores.
+     */
     public function __construct(private readonly ModelRepository $models, private readonly DeviceAssociationRepository $associations) {}
 
     /**
@@ -41,11 +48,18 @@ final class RecordDeviceObservation
         $this->associations->save($this->current($deviceId, $identity, $revision)->verify($record));
     }
 
+    /**
+     * Records that the device does not support the revision.
+     * The model need not be registered.
+     */
     public function unsupported(int $deviceId, ModelIdentity $identity, ModelRevision $revision): void
     {
         $this->associations->save($this->current($deviceId, $identity, $revision)->markUnsupported());
     }
 
+    /**
+     * Returns the stored association, or an unknown one when the device has not been seen with this revision.
+     */
     private function current(int $deviceId, ModelIdentity $identity, ModelRevision $revision): DeviceModelAssociation
     {
         return $this->associations->find($deviceId, $identity, $revision) ?? DeviceModelAssociation::unknown($deviceId, $identity, $revision);

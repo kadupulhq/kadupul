@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** A pack's current plan beside the proposed replacement and the routes that differ. */
 final readonly class PlanChange
 {
     /**
