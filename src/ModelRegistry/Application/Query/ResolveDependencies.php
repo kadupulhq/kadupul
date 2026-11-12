@@ -24,6 +24,9 @@ use Kadupul\ModelRegistry\Domain\UnsupportedModelRevision;
  */
 final class ResolveDependencies
 {
+    /**
+     * Binds the resolver to the model store.
+     */
     public function __construct(private readonly ModelRepository $models) {}
 
     /**
@@ -73,6 +76,10 @@ final class ResolveDependencies
         }
     }
 
+    /**
+     * Picks the newest revision of the dependency, counting the root when it has the same identity.
+     * Fails when nothing is registered or the newest revision is below the stated minimum.
+     */
     private function select(Model $root, ModelDependency $dependency, Model $requiredBy): Model
     {
         $candidates = $this->models->revisionsOf($dependency->identity);
@@ -94,6 +101,9 @@ final class ResolveDependencies
         return $newest;
     }
 
+    /**
+     * Returns the name part of a model key.
+     */
     private function label(string $key): string
     {
         return explode('|', $key)[2];

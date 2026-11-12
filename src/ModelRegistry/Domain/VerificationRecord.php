@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * Result of checking a device against a model: which paths it supports and which it does not.
+ */
 final class VerificationRecord
 {
     /**
@@ -22,6 +25,9 @@ final class VerificationRecord
         }
     }
 
+    /**
+     * Returns when the device was checked.
+     */
     public function observedAt(): \DateTimeImmutable
     {
         return $this->observedAt;
@@ -39,6 +45,9 @@ final class VerificationRecord
         return $this->unsupportedPaths;
     }
 
+    /**
+     * Returns verified when no path is unsupported, partial otherwise.
+     */
     public function resultingState(): AssociationState
     {
         return $this->unsupportedPaths === [] ? AssociationState::Verified : AssociationState::Partial;
