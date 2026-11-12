@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -9,9 +11,9 @@ namespace Kadupul\Alerting\Application\Command;
 
 use Kadupul\Alerting\Application\Port\TestMailDelivery;
 
-final class SendTestMail
+final readonly class SendTestMail
 {
-    public function __construct(private readonly TestMailDelivery $delivery) {}
+    public function __construct(private TestMailDelivery $delivery) {}
 
     public function __invoke(): void
     {
