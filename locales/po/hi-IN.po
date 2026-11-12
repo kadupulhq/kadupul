@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:23-0800\n"
+"POT-Creation-Date: 2026-11-11 17:38-0800\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,8 +398,9 @@ msgid "Report Name"
 msgstr "रिपोर्ट का नाम"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "वापसी"
@@ -1400,20 +1401,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "क्या आप वाकई &#39; %s&#39; नियम को हटाना चाहते हैं?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "पुष्टि करें कि आप आगे जारी रखना चाहते हैं?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "सबट्री पर"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "पत्ती के प्रकार को बदलने से, सभी अमान्य नियम स्वचालित रूप से हटा दिए जाएंगे और पुनर्प्राप्त करने योग्य नहीं होंगे।"
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "पत्ता प्रकार बदलें"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1428,8 +1417,16 @@ msgid "Created Trees"
 msgstr "बनाए गए पेड़"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "योग्य वस्तु"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "ग्राफ ग्रुपिंग स्टाइल"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1440,6 +1437,10 @@ msgstr "पेड़ में हुक"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "फ़ील्ड नाम जो इस नियम आइटम के लिए उपयोग किया जाएगा।"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "पत्ती आइटम प्रकार"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
@@ -1448,13 +1449,29 @@ msgstr "कोई ट्री नियम नहीं मिला"
 msgid "Object Selection Criteria"
 msgstr "वस्तु चयन मानदंड"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "वैकल्पिक: उप-ट्री आइटम"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "बूट्सConstellation name (optional)"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "इस तरह"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "वृक्षugiou"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1470,20 +1487,8 @@ msgid "Tree Rules"
 msgstr "वृक्ष नियम"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "ट्री रूल्स चयन [नया]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "ग्रुपिंग का उपयोग करना"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "चेतावनी:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "आप पत्ती के प्रकार को &quot;डिवाइस&quot; में बदल रहे हैं जो ग्राफ़-आधारित ऑब्जेक्ट मिलान / निर्माण का समर्थन नहीं करता है।"
 
 #: cactid.php
 #, fuzzy
@@ -5673,10 +5678,6 @@ msgstr "कुल डेटा स्रोत"
 msgid "Total Similar Data Sources"
 msgstr "कुल समान डेटा स्रोत"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "वृक्षugiou"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "ट्री मोड"
@@ -6612,10 +6613,6 @@ msgstr "सामान्य सेटिंग्स"
 msgid "Give this host a meaningful description."
 msgstr "इस मेजबान को एक सार्थक विवरण दें।"
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "ग्राफ ग्रुपिंग स्टाइल"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "ग्राफ आइटम प्रकार"
@@ -6767,10 +6764,6 @@ msgid "Is this to carry the template?"
 msgstr "क्या यह टेम्पलेट ले जाने के लिए है?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "पत्ती आइटम प्रकार"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "वाम अक्ष प्रारूप (- तल-अक्ष-स्वरूप &lt;&lt;namename&gt;)"
 
@@ -6881,10 +6874,6 @@ msgstr "ऑपरेशन"
 #: include/global_form.php
 msgid "Operator."
 msgstr "ऑपरेटर।"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "वैकल्पिक: उप-ट्री आइटम"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13986,6 +13975,10 @@ msgstr "<strong> %s</strong> <strong>से %s</strong> से अपग्र�
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V%s (DB%s) से v%s में अपग्रेड करना"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "चेतावनी:"
 
 #: lib/installer.php
 #, fuzzy

@@ -29,6 +29,8 @@ app.php/automation/templates/new	symfony:automation_template_create	methods=GET|
 app.php/automation/templates/{id}/edit	symfony:automation_template_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 23
 app.php/automation/templates/{id}/move/{direction}	symfony:automation_template_move	methods=POST requirements=id=[1-9][0-9]{0,7},direction=up|down; ConsoleAccess realm 8 + realm 23
 app.php/automation/tree-rules	symfony:admin_tree_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/tree-rules/new	symfony:automation_tree_rule_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/tree-rules/{id}/edit	symfony:automation_tree_rule_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/console	symfony:platform_console	methods=GET|HEAD; ConsoleAccess realm 8
 app.php/console	symfony:platform_console_login_post	methods=POST; anonymous-allowed: compatibility POST uses a fixed installation login URL and preserves the body with 307; no request-selected destination; reviewed at 3f7cb40d65c0
 app.php/data-collection/collectors	symfony:admin_collectors	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3

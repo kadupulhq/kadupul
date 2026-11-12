@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:23-0800\n"
+"POT-Creation-Date: 2026-11-11 17:38-0800\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,8 +398,9 @@ msgid "Report Name"
 msgstr "Rapportagenaam"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Terug"
@@ -1394,20 +1395,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Weet u zeker dat u regel '%s' wilt verwijderen?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Weet u zeker dat u wilt verdergaan?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Op deelboom"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Door het wijzigen van het bladtype worden alle ongeldige regels automatisch verwijderd en zijn ze niet meer te herstellen."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Verander Bladtype"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1422,8 +1411,16 @@ msgid "Created Trees"
 msgstr "Gemaakte boomstructuur"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "In aanmerking komende objecten"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Grafiekgroepering Stijl"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1434,6 +1431,10 @@ msgstr "Invoeren in boomstructuur"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "De veldnaam die voor dit regelitem zal worden gebruikt."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Het Type van bladpunt"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Geen boomstructuur regels gevonden"
@@ -1442,13 +1443,29 @@ msgstr "Geen boomstructuur regels gevonden"
 msgid "Object Selection Criteria"
 msgstr "Object selectiecriteria"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Optioneel: Sub-Boompunt"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROOT"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Dit type"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Menu"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1464,20 +1481,8 @@ msgid "Tree Rules"
 msgstr "Boomstructuur"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Boomstructuur regel selectie [nieuw]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Gebruik groepering"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "WAARSCHUWING:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "U wijzigt het bladtype in \"Apparaat\", dat geen ondersteuning biedt voor grafische object matching/creatie."
 
 #: cactid.php
 #, fuzzy
@@ -5656,10 +5661,6 @@ msgstr "Totaal alle gegevensbronnen"
 msgid "Total Similar Data Sources"
 msgstr "Totaal Soortgelijke gegevensbronnen"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Menu"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Boomwijze"
@@ -6592,10 +6593,6 @@ msgstr "Algemene Instellingen"
 msgid "Give this host a meaningful description."
 msgstr "Geef deze host een zinvolle beschrijving."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Grafiekgroepering Stijl"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Grafiek item type"
@@ -6747,10 +6744,6 @@ msgid "Is this to carry the template?"
 msgstr "Is dit om het sjabloon bij zich te dragen?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Het Type van bladpunt"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Linkerasformatter (--linker-asformatter &lt;formatname&gt;)"
 
@@ -6861,10 +6854,6 @@ msgstr "Atie"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Operator"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Optioneel: Sub-Boompunt"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13915,6 +13904,10 @@ msgstr "Upgrade van <strong>%s</strong> naar <strong>%s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Upgraden van v%s (DB%s) naar v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "WAARSCHUWING:"
 
 #: lib/installer.php
 #, fuzzy
