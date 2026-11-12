@@ -93,7 +93,7 @@ final class PresentationQuerySaveNativeCoverageTest extends TestCase
         $root = dirname(__DIR__, 2);
         $source = file_get_contents($root . '/tests/Fixtures/presentation-query-save-native.php');
         self::assertNotFalse($source);
-        foreach (array('graph-suggestion-save' => 'form_save();', 'query-empty-name' => 'form_save();') as $case => $call) {
+        foreach (array('graph-suggestion-save' => 'form_save();', 'association-empty-name' => 'form_save();') as $case => $call) {
             $directory = sys_get_temp_dir() . '/presentation-mutation-control-' . bin2hex(random_bytes(8));
             self::assertTrue(mkdir($directory, 0700));
             try {

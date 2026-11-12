@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 01:41-0800\n"
+"POT-Creation-Date: 2026-11-11 22:41-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -343,11 +343,11 @@ msgid "No Graphs Found"
 msgstr "Không tìm thấy đồ thị"
 
 #: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
-#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
-#: graphs.php graphs_items.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
-#: package_import.php settings.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates_items.php graphs.php graphs_items.php
+#: include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
+#: lib/html_form.php lib/html_reports.php package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -400,8 +400,8 @@ msgstr "Tên report"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
-#: lib/html_form.php lib/html_reports.php managers.php
+#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
+#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Trở về trang cài đặt bắt buộc Plugins"
@@ -888,8 +888,9 @@ msgstr "Xóa thiết bị"
 msgid "Delete Device(s)"
 msgstr "Xóa thiết bị"
 
-#: automation_devices.php include/global_form.php lib/api_automation.php
-#: lib/installer.php managers.php user_admin.php user_group_admin.php
+#: automation_devices.php data_queries.php include/global_form.php
+#: lib/api_automation.php lib/installer.php managers.php user_admin.php
+#: user_group_admin.php
 msgid "Description"
 msgstr "Mô tả"
 
@@ -2193,10 +2194,6 @@ msgid "Data Queries [edit: %s]"
 msgstr "Truy vấn dữ liệu [chỉnh sửa: %s]"
 
 #: data_queries.php
-msgid "Data Queries [new]"
-msgstr "Truy vấn dữ liệu [mới]"
-
-#: data_queries.php
 msgid "Data Queries that are in use cannot be Deleted. In use is defined as being referenced by either a Graph or a Graph Template."
 msgstr "Truy vấn dữ liệu đang sử dụng không thể bị xóa. Đang sử dụng được định nghĩa là được tham chiếu bởi Biểu đồ hoặc Mẫu biểu đồ."
 
@@ -2222,6 +2219,10 @@ msgstr[0] "Xóa truy vấn dữ liệu"
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
 msgstr[0] "Xóa truy vấn dữ liệu"
+
+#: data_queries.php
+msgid "Edit Data Query Settings"
+msgstr ""
 
 #: data_queries.php
 msgid "Equation"
@@ -2337,6 +2338,14 @@ msgstr "Số lượng mẫu biểu đồ sử dụng truy vấn dữ liệu này
 #: data_queries.php
 msgid "The number of Graphs using this Data Query."
 msgstr "Số lượng biểu đồ sử dụng truy vấn dữ liệu này."
+
+#: data_queries.php
+msgid "This Data Query form has expired. Open the data query again and use its current form."
+msgstr ""
+
+#: data_queries.php include/global_form.php
+msgid "XML Path"
+msgstr "Đường dẫn XML"
 
 #: data_sources.php
 msgid "(From Data Template)"
@@ -7479,10 +7488,6 @@ msgstr "Chiều rộng (- Băng thông)"
 #: include/global_form.php lib/rrd.php
 msgid "X-Files Factor"
 msgstr "Yếu tố X-Files"
-
-#: include/global_form.php
-msgid "XML Path"
-msgstr "Đường dẫn XML"
 
 #: include/global_form.php
 msgid "[HRULE|VRULE]: The value of the graph item.<br/> [TICK]: The fraction for the tick line.<br/> [SHIFT]: The time offset in seconds."
