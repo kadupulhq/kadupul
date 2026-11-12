@@ -28,12 +28,17 @@ screenshot and do not come from real equipment.
 | `main` | 8.4 or later | 4.x | Incremental Symfony 7.4 migration |
 | `lts/1.2` | 8.1 or later | 4.x | Tracks the 1.2 series |
 
+[VERSIONING.md](VERSIONING.md) describes the release and long-term support
+policy. [SECURITY.md](SECURITY.md) lists supported versions.
+
 ## Running from source
 
 Generated vendor directories are not tracked, so a checkout installs its own
+dependencies. Install the runtimes that `mise.toml` selects, then the
 dependencies:
 
 ```sh
+mise install
 mise exec -- php "$(command -v composer)" install
 mise exec -- npm ci --ignore-scripts
 mise exec -- npm run build
@@ -45,6 +50,15 @@ Composer generates `include/vendor/`; npm supplies the browser packages.
 Release archives ship those dependencies so a target host needs neither
 Composer nor Node. See
 [migration and installation instructions](docs/symfony-migration.md).
+
+## Running the tests
+
+`mise exec -- php "$(command -v composer)" test` runs the Symfony PHPUnit
+suite in `phpunit-symfony.xml`. The legacy Pest suites have their own
+dependencies, installed with
+`mise exec -- php "$(command -v composer)" install --working-dir=tests`.
+[tests/README.md](tests/README.md) lists each suite with its `make` target and
+prerequisites. CI runs further checks that no single local command reproduces.
 
 ## Platform requirements
 

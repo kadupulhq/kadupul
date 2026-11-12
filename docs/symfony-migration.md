@@ -2696,6 +2696,51 @@ The page no longer loads the legacy header bundle, so `page_head` and the
 `custom_denied` hook prints without asking to reskin is dropped. A failed
 worker answers 503, and a schema mismatch keeps the installer redirect.
 
+### Tree rule settings
+
+The settings of a tree rule (`automation_tree_rules.php?action=edit`: name,
+tree, sub-tree item, leaf type, graph grouping style and Enable Rule) use
+Symfony routes, Forms and Twig at `/automation/tree-rules/new` and
+`/automation/tree-rules/{id}/edit`. The rule list, its bulk actions, the Object
+Selection and Tree Creation Criteria items and the matching object previews stay
+on the legacy page, which now shows the settings read-only and links to the new
+editor. Both routes require console access and the Automation realm (23)
+through the reviewed `AutomationTemplateAccess` check before anything is read.
+Saves recheck the account and both realms inside their transaction, need the
+primary collector, lock the rule row, take shared locks on the tree and the
+sub-tree header, and are audited. The form carries a revision of the rule's
+columns.
+
+The sub-tree item must be `[root]` or a header (no device, no graph) of the
+chosen tree, the items `grow_dropdown_tree()` offered. The form groups the
+headers by tree, so it needs no script.
+
+Changing an existing rule's leaf type to Device removes its criteria on graph
+(`gtg.`) and graph template (`gt.`) columns, as
+`automation_change_tree_rule_leaf_type()` did, in the same audited transaction
+as the settings. The form asks for this with a "Remove graph-based criteria"
+checkbox; without it a save that would remove criteria is refused with their
+count.
+
+Differences from legacy:
+- The leaf type was saved immediately through `?action=change_leaf` after a
+  browser dialog; it is now saved with the form, and `change_leaf` and an old
+  settings form posted again answer 409 with `Cache-Control: private,
+  no-store` without saving. `automation_tree_rules_change_leaf()` is removed;
+  the shared `automation_change_tree_rule_leaf_type()` in `lib/api_automation.php`
+  is kept for plugin callers.
+- Legacy removed `automation_match_rule_items` rows by rule ID without their
+  `rule_type`, so a graph rule with the same ID lost its graph-based Device
+  Selection Criteria too. The new editor removes only the tree rule's own
+  (`rule_type` 3) match items. The shared legacy function is unchanged.
+- A rule is created in one step with all its settings. The tree and the
+  sub-tree header must exist and match, the leaf type must be Graph or Device
+  and the grouping style Graph Template or Data Query Index, and the name must
+  be single-line text of at most 255 characters and is trimmed.
+- `automation_tree_rules.php?action=edit` without an ID redirects to the new
+  editor, and an unknown ID returns to the list with "Rule not found." The page
+  no longer loads `lib/html_tree.php`.
+
 ### Automation template administration
 
 Device Rules (`automation_templates.php`) use Symfony routes, Forms and Twig

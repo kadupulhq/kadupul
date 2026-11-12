@@ -1,0 +1,32 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (rule ? 'Edit Tree Rule' : 'Add Tree Rule')|trans({}, 'tree_rule') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() of a fixed route without parameters. #}
+    <p><a href="{{ path('admin_tree_rules') }}">{{ 'Back to Tree Rules'|trans({}, 'tree_rule') }}</a></p>
+    <h1>{% if rule %}{{ 'Tree Rule Selection [edit: %name%]'|trans({'%name%': rule.name}, 'tree_rule') }}{% else %}{{ 'Tree Rules Selection [new]'|trans({}, 'tree_rule') }}{% endif %}</h1>
+    {% if saved %}<p role="status">{{ 'Tree rule saved.'|trans({}, 'tree_rule') }}</p>{% endif %}
+    {% if rule %}
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed legacy page with a URL encoded numeric ID. #}
+        <p><a href="{{ installation_path('automation_tree_rules.php') }}?{{ {action: 'edit', id: rule.id}|url_encode }}">{{ 'Object Selection and Tree Creation Criteria'|trans({}, 'tree_rule') }}</a></p>
+    {% else %}
+        <p>{{ 'Save the rule first; its Object Selection and Tree Creation Criteria are added afterwards.'|trans({}, 'tree_rule') }}</p>
+    {% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.tree_id) }}
+        {{ form_row(form.tree_item_id) }}
+        {{ form_row(form.leaf_type) }}
+        {{ form_row(form.host_grouping_type) }}
+        {{ form_row(form.enabled) }}
+        {% if form.remove_graph_criteria is defined %}{{ form_row(form.remove_graph_criteria) }}{% endif %}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'tree_rule') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

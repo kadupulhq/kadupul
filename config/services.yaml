@@ -577,12 +577,11 @@ services:
 
     Kadupul\IdentityAccess\Contract\ResourceAccess:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyResourceAccess
+    # Reporting adapters bind their contracts with #[AsAlias].
     Kadupul\Reporting\Infrastructure\:
         resource: '../src/Reporting/Infrastructure/'
     Kadupul\Graphing\Contract\DeviceTreePlacement:
         alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDeviceTreePlacement
-    Kadupul\Reporting\Contract\DeviceReportPlacement:
-        alias: Kadupul\Reporting\Infrastructure\Legacy\LegacyDeviceReportPlacement
     Kadupul\Inventory\Application\Port\DevicePlacements:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDevicePlacements
     Kadupul\Inventory\Infrastructure\Legacy\LegacyDevicePlacements:

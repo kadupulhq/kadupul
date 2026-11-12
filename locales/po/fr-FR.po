@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-10 16:37-0800\n"
+"POT-Creation-Date: 2026-11-11 19:34-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -395,8 +395,9 @@ msgid "Report Name"
 msgstr "Nom du rapport"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Retour"
@@ -1393,20 +1394,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Êtes-vous sûr de vouloir EFFACER la règle'%s' ?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Souhaitez-vous vraiment continuer ?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Au sous-arbre"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "En changeant le type de feuille, toutes les règles invalides seront automatiquement supprimées et ne seront pas récupérables."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Changer le type de feuille"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1421,8 +1410,16 @@ msgid "Created Trees"
 msgstr "Arbres créés"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Objets admissibles"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Style de regroupement de graphiques"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1433,6 +1430,10 @@ msgstr "S'accrocher à l'arbre"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Le nom du champ qui doit être utilisé pour cet élément de règle."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Type d'article en feuille"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Aucune règle d'arbre trouvée"
@@ -1441,13 +1442,29 @@ msgstr "Aucune règle d'arbre trouvée"
 msgid "Object Selection Criteria"
 msgstr "Critères de sélection d'objet"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Facultatif : Élément de sous-arbre"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "Racines de végétal"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Ce type"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Arbre"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1463,20 +1480,8 @@ msgid "Tree Rules"
 msgstr "Règles des arbres"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Sélection des règles de l'arbre[new][Tree Rules Selection"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Utilisation du regroupement"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "ATTENTION :"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Vous changez le type de feuille en \"Périphérique\" qui ne prend pas en charge la création/correspondance d'objets basée sur un graphique."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5652,10 +5657,6 @@ msgstr "Total de toutes les sources de données"
 msgid "Total Similar Data Sources"
 msgstr "Total des sources de données similaires"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Arbre"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Mode arbre"
@@ -6588,10 +6589,6 @@ msgstr "Réglages généraux"
 msgid "Give this host a meaningful description."
 msgstr "Donnez à cet hôte une description significative."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Style de regroupement de graphiques"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Type de l'élément graphique"
@@ -6743,10 +6740,6 @@ msgid "Is this to carry the template?"
 msgstr "Est-ce pour porter le gabarit ?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Type d'article en feuille"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Formatter de l'axe gauche (--formatter de l'axe gauche &lt;formatname&gt ;)"
 
@@ -6857,10 +6850,6 @@ msgstr "Opération"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Opérateur."
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Facultatif : Élément de sous-arbre"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13873,6 +13862,10 @@ msgstr "Mise à niveau de <strong>%s</strong> à <strong>%s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Mise à niveau de v%s (DB%s) vers v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "ATTENTION :"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
