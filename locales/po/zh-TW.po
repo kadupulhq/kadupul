@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 17:46-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -444,9 +444,9 @@ msgid "Report Name"
 msgstr "報告名稱"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php data_queries.php graphs.php
-#: include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: data_queries.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 #, fuzzy
 msgid "Return"
@@ -1608,23 +1608,8 @@ msgstr "您確定要刪除規則&#39;％s&#39;嗎？"
 
 #: automation_tree_rules.php
 #, fuzzy
-msgid "Are you sure you wish to continue?"
-msgstr "你確定要繼續嗎？"
-
-#: automation_tree_rules.php
-#, fuzzy
 msgid "At Subtree"
 msgstr "在Subtree"
-
-#: automation_tree_rules.php
-#, fuzzy
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "通過更改葉類型，將自動刪除所有無效規則，並且無法恢復。"
-
-#: automation_tree_rules.php
-#, fuzzy
-msgid "Change Leaf Type"
-msgstr "改變葉子類型"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1640,8 +1625,17 @@ msgid "Created Trees"
 msgstr "創建樹木"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "符合條件的物品"
+
+#: automation_tree_rules.php include/global_form.php
+#, fuzzy
+msgid "Graph Grouping Style"
+msgstr "圖表分組樣式"
 
 #: automation_tree_rules.php
 #, fuzzy
@@ -1653,6 +1647,11 @@ msgstr "鉤到樹上"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "應用於此規則項的字段名稱。"
 
+#: automation_tree_rules.php include/global_form.php
+#, fuzzy
+msgid "Leaf Item Type"
+msgstr "葉子項目類型"
+
 #: automation_tree_rules.php
 #, fuzzy
 msgid "No Tree Rules Found"
@@ -1663,15 +1662,33 @@ msgstr "找不到樹規則"
 msgid "Object Selection Criteria"
 msgstr "對象選擇標準"
 
+#: automation_tree_rules.php include/global_form.php
+#, fuzzy
+msgid "Optional: Sub-Tree Item"
+msgstr "可選：子樹項"
+
 #: automation_tree_rules.php
 #, fuzzy
 msgid "ROOT"
 msgstr "根部"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 #, fuzzy
 msgid "This Type"
 msgstr "這個類型"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+#, fuzzy
+msgid "Tree"
+msgstr "樹"
 
 #: automation_tree_rules.php
 #, fuzzy
@@ -1690,23 +1707,8 @@ msgstr "樹規則"
 
 #: automation_tree_rules.php
 #, fuzzy
-msgid "Tree Rules Selection [new]"
-msgstr "樹規則選擇[新]"
-
-#: automation_tree_rules.php
-#, fuzzy
 msgid "Using Grouping"
 msgstr "使用分組"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-#, fuzzy
-msgid "WARNING:"
-msgstr "警告："
-
-#: automation_tree_rules.php
-#, fuzzy
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "您正在將葉類型更改為“設備”，它不支持基於圖形的對象匹配/創建。"
 
 #: cactid.php
 #, fuzzy
@@ -6628,11 +6630,6 @@ msgstr "所有數據源總數"
 msgid "Total Similar Data Sources"
 msgstr "總類似數據源"
 
-#: include/global_arrays.php include/global_form.php
-#, fuzzy
-msgid "Tree"
-msgstr "樹"
-
 #: include/global_arrays.php
 #, fuzzy
 msgid "Tree Mode"
@@ -7770,11 +7767,6 @@ msgstr "一般設定"
 msgid "Give this host a meaningful description."
 msgstr "為此主機提供有意義的描述。"
 
-#: include/global_form.php
-#, fuzzy
-msgid "Graph Grouping Style"
-msgstr "圖表分組樣式"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 #, fuzzy
 msgid "Graph Item Type"
@@ -7962,11 +7954,6 @@ msgstr "這是攜帶模板嗎？"
 
 #: include/global_form.php
 #, fuzzy
-msgid "Leaf Item Type"
-msgstr "葉子項目類型"
-
-#: include/global_form.php
-#, fuzzy
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "左軸格式化程序（ -  left-axis-formatter &lt;formatname&gt;）"
 
@@ -8103,11 +8090,6 @@ msgstr "手術"
 #, fuzzy
 msgid "Operator."
 msgstr "客服人員"
-
-#: include/global_form.php
-#, fuzzy
-msgid "Optional: Sub-Tree Item"
-msgstr "可選：子樹項"
 
 #: include/global_form.php
 #, fuzzy
@@ -16399,6 +16381,11 @@ msgstr "從<strong>%s</strong>升級到<strong>%s</strong>"
 #, fuzzy, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "從v%s（數據庫%s）升級到v%s"
+
+#: lib/installer.php utilities.php
+#, fuzzy
+msgid "WARNING:"
+msgstr "警告："
 
 #: lib/installer.php
 #, fuzzy

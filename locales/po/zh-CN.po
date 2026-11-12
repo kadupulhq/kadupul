@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 17:46-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,9 +398,9 @@ msgid "Report Name"
 msgstr "报告名称"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php data_queries.php graphs.php
-#: include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: data_queries.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "返回"
@@ -1396,20 +1396,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "您确定要删除规则 '%s'吗?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "您确定要继续吗?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "子树"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "通过更改叶类型,将自动删除所有无效规则,并且无法恢复."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "改变叶子类型"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1424,8 +1412,16 @@ msgid "Created Trees"
 msgstr "创建树"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "合格的对象"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "图形分组风格"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1436,6 +1432,10 @@ msgstr "关联树"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "应该用于此规则项目的字段名称."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Leaf 子项目类型"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "未找到树规则"
@@ -1444,13 +1444,29 @@ msgstr "未找到树规则"
 msgid "Object Selection Criteria"
 msgstr "对象选择标准"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "可选: 子树项目"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROOT"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "类型"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "树"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1466,20 +1482,8 @@ msgid "Tree Rules"
 msgstr "树规则"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "树规则选择[新建]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "使用分组"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "WARNING:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "您正在将叶类型更改为 \"设备\",它不支持基于图形的对象匹配/创建."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5644,10 +5648,6 @@ msgstr "总计所有数据源"
 msgid "Total Similar Data Sources"
 msgstr "总计相似的数据源"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "树"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "树形模式"
@@ -6580,10 +6580,6 @@ msgstr "通用设置"
 msgid "Give this host a meaningful description."
 msgstr "请给主机一个有意义的描述."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "图形分组风格"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "图形项类型"
@@ -6735,10 +6731,6 @@ msgid "Is this to carry the template?"
 msgstr "这是模板吗?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Leaf 子项目类型"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "左轴格式器 (--left-axis-formatter &lt;formatname&gt;)"
 
@@ -6849,10 +6841,6 @@ msgstr "操作"
 #: include/global_form.php
 msgid "Operator."
 msgstr "操作员."
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "可选: 子树项目"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13887,6 +13875,10 @@ msgstr "从 <strong>%s</strong> 到 <strong>%s</strong> 升级"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "从v%s（数据库%s）升级到v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "WARNING:"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
