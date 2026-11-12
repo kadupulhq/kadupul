@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 17:31-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -400,8 +400,8 @@ msgstr "Όνομα αναφοράς"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Επιστροφή"
@@ -1072,7 +1072,7 @@ msgstr "Μην εμφανίζεται"
 msgid "Duplicate"
 msgstr "Αντιγραφή"
 
-#: automation_graph_rules.php
+#: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr ""
 
@@ -1136,7 +1136,7 @@ msgstr "Όνομα Κανόνα"
 msgid "Rule Selection [edit: %s]"
 msgstr "Επιλογή κανόνων [επεξεργασία: %s]"
 
-#: automation_graph_rules.php
+#: automation_graph_rules.php automation_tree_rules.php
 msgid "Rule not found."
 msgstr ""
 
@@ -1404,20 +1404,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Είστε βέβαιοι ότι θέλετε να DELETE τον κανόνα &#39; %s&#39;;"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Είστε σίγουροι ότι επιθυμείτε να συνεχίσετε;"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Στο Subtree"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Με την αλλαγή του τύπου των φύλλων, όλοι οι άκυροι κανόνες θα καταργηθούν αυτόματα και δεν θα είναι ανακτήσιμοι."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Αλλαγή τύπου φύλλων"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1435,6 +1423,10 @@ msgstr "Δημιουργία δέντρων"
 msgid "Eligible Objects"
 msgstr "Επιλέξιμα αντικείμενα"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Στυλ ομάδας ομαδοποίησης"
+
 #: automation_tree_rules.php
 msgid "Hook into Tree"
 msgstr "Γαντζώστε στο δέντρο"
@@ -1444,6 +1436,10 @@ msgstr "Γαντζώστε στο δέντρο"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Το όνομα πεδίου που θα χρησιμοποιηθεί για αυτό το στοιχείο του κανόνα."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Τύπος στοιχείου φύλλων"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Δεν βρέθηκαν κανάλια δέντρων"
@@ -1452,13 +1448,25 @@ msgstr "Δεν βρέθηκαν κανάλια δέντρων"
 msgid "Object Selection Criteria"
 msgstr "Κριτήρια επιλογής αντικειμένου"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Προαιρετικό: Στοιχείο υπο-δέντρου"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "Ρίζα"
 
 #: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Αυτός ο τύπος"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Δέντρο"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1474,20 +1482,8 @@ msgid "Tree Rules"
 msgstr "Κανόνες δέντρων"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Επιλογή κανόνων για τα δέντρα [new]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Χρησιμοποιώντας Ομαδοποίηση"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Αλλάζετε τον τύπο φύλλου στη &quot;Συσκευή&quot;, η οποία δεν υποστηρίζει αντιστοίχιση / δημιουργία αντικειμένων βασισμένη σε γραφήματα."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5665,10 +5661,6 @@ msgstr "Σύνολο όλων των πηγών δεδομένων"
 msgid "Total Similar Data Sources"
 msgstr "Σύνολο παρόμοιων πηγών δεδομένων"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Δέντρο"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Δέντρο Mode"
@@ -6601,10 +6593,6 @@ msgstr "Γενικές Ρυθμίσεις"
 msgid "Give this host a meaningful description."
 msgstr "Δώστε στον οικοδεσπότη μια ουσιαστική περιγραφή."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Στυλ ομάδας ομαδοποίησης"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Τύπος στοιχείου γραφήματος"
@@ -6756,10 +6744,6 @@ msgid "Is this to carry the template?"
 msgstr "Είναι αυτό να φέρει το πρότυπο;"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Τύπος στοιχείου φύλλων"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Διαμορφωτής αριστερού άξονα (μορφοποιητής άξονα-άξονα &lt;formatname&gt;)"
 
@@ -6870,10 +6854,6 @@ msgstr "Λειτουργία"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Χειριστής"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Προαιρετικό: Στοιχείο υπο-δέντρου"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13913,6 +13893,10 @@ msgstr "Αναβάθμιση από <strong> %s</strong> σε <strong> %s</stron
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Αναβάθμιση από v%s (DB%s) σε v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."

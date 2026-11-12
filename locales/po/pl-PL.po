@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 17:31-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -400,8 +400,8 @@ msgstr "Nazwa raportu"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Powróć"
@@ -1072,7 +1072,7 @@ msgstr "Nie pokazuj"
 msgid "Duplicate"
 msgstr "Duplikuj"
 
-#: automation_graph_rules.php
+#: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr ""
 
@@ -1136,7 +1136,7 @@ msgstr "Nazwa reguły"
 msgid "Rule Selection [edit: %s]"
 msgstr "Wybór reguły [edytuj: %s]"
 
-#: automation_graph_rules.php
+#: automation_graph_rules.php automation_tree_rules.php
 msgid "Rule not found."
 msgstr ""
 
@@ -1404,20 +1404,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Czy na pewno chcesz usunąć regułę \"%s\"?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Czy chcesz kontynuować?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Na drzewie subtrewnym"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Poprzez zmianę typu liścia, wszystkie nieprawidłowe reguły zostaną automatycznie usunięte i nie będzie można ich odzyskać."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Zmień typ skrzydła"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1435,6 +1423,10 @@ msgstr "Utworzone drzewa"
 msgid "Eligible Objects"
 msgstr "Kwalifikujące się obiekty"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Styl grupowania wykresów"
+
 #: automation_tree_rules.php
 msgid "Hook into Tree"
 msgstr "Zaczep do drzewa"
@@ -1444,6 +1436,10 @@ msgstr "Zaczep do drzewa"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Nazwa pola, która ma być użyta dla niniejszego punktu Reguły."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Typ elementu na kartce"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Nie znaleziono zasad dotyczących drzew"
@@ -1452,13 +1448,25 @@ msgstr "Nie znaleziono zasad dotyczących drzew"
 msgid "Object Selection Criteria"
 msgstr "Kryteria wyboru obiektu"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Nieobowiązkowe: Pozycja poddrzewa"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "DNO BRUZDY"
 
 #: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Ten typ"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Drzewo"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1474,20 +1482,8 @@ msgid "Tree Rules"
 msgstr "Przepisy dotyczące drzew"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Wybór reguł drzewa [nowe]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Używanie grupowania"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "OSTRZEŻENIE:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Zmieniasz typ liścia na \"Device\", który nie obsługuje dopasowywania/tworzenia obiektów na podstawie wykresu."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5691,10 +5687,6 @@ msgstr "Wszystkie źródła danych ogółem"
 msgid "Total Similar Data Sources"
 msgstr "Ogółem podobne źródła danych"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Drzewo"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Tryb drzewa"
@@ -6627,10 +6619,6 @@ msgstr "Ustawienia główne"
 msgid "Give this host a meaningful description."
 msgstr "Podaj temu gospodarzowi znaczący opis."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Styl grupowania wykresów"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Typ elementu wykresu"
@@ -6782,10 +6770,6 @@ msgid "Is this to carry the template?"
 msgstr "Czy jest to przenoszenie szablonu?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Typ elementu na kartce"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Format osi lewej (- format lewa oś - format lewa-oś lewa &lt;formatname&gt;)"
 
@@ -6896,10 +6880,6 @@ msgstr "Operacja "
 #: include/global_form.php
 msgid "Operator."
 msgstr "Operator"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Nieobowiązkowe: Pozycja poddrzewa"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13942,6 +13922,10 @@ msgstr "Podwyższenie z <strong>%s</strong> do <strong>%s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Aktualizacja z v%s (DB%s) do v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "OSTRZEŻENIE:"
 
 #: lib/installer.php
 #, fuzzy

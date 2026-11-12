@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 17:31-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -397,8 +397,8 @@ msgstr "Название отчета"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
-#: lib/html_reports.php managers.php
+#: automation_tree_rules.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Вернуть"
@@ -1069,7 +1069,7 @@ msgstr "Не показывать"
 msgid "Duplicate"
 msgstr "Дублировать"
 
-#: automation_graph_rules.php
+#: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
 msgstr ""
 
@@ -1133,7 +1133,7 @@ msgstr "Имя правила"
 msgid "Rule Selection [edit: %s]"
 msgstr "Выбор правила [редактирование: %s]"
 
-#: automation_graph_rules.php
+#: automation_graph_rules.php automation_tree_rules.php
 msgid "Rule not found."
 msgstr ""
 
@@ -1401,20 +1401,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Вы уверены, что хотите Удалить правило '%s'?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Ты уверен, что хочешь продолжить?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "В поддереве"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "При изменении типа листа, все недействительные правила будут автоматически удалены и не подлежат восстановлению."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Изменить тип листа"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1432,6 +1420,10 @@ msgstr "Созданные деревья"
 msgid "Eligible Objects"
 msgstr "Допустимые объекты"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Стиль группировки графиков"
+
 #: automation_tree_rules.php
 msgid "Hook into Tree"
 msgstr "Hook в Дереве"
@@ -1441,6 +1433,10 @@ msgstr "Hook в Дереве"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Имя поля, которое должно использоваться для данного пункта Правил."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Тип изделия листа"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Правила для деревьев не найдены"
@@ -1449,13 +1445,25 @@ msgstr "Правила для деревьев не найдены"
 msgid "Object Selection Criteria"
 msgstr "Критерии выбора объекта"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Необязательно: Пункт поддерева"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROOT"
 
 #: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Тип"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Дерево"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1471,20 +1479,8 @@ msgid "Tree Rules"
 msgstr "Правила Дерева"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Дерево Выбор правил [новые]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Использование группировки"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "ВНИМАНИЕ:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Вы изменяете тип листа на \"Устройство\", которое не поддерживает сопоставление/создание объекта на основе Графика."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5711,10 +5707,6 @@ msgstr "Всего Всего Все источники данных"
 msgid "Total Similar Data Sources"
 msgstr "Итого аналогичные источники данных"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Дерево"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Режим дерева"
@@ -6648,10 +6640,6 @@ msgstr "Общие Настройки"
 msgid "Give this host a meaningful description."
 msgstr "Дайте этому хосту содержательное описание."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Стиль группировки графиков"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Тип графического элемента"
@@ -6803,10 +6791,6 @@ msgid "Is this to carry the template?"
 msgstr "Это для того, чтобы носить шаблон?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Тип изделия листа"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Левый осевой форматер (--левый осевой форматер; &lt;formatname&gt;;)"
 
@@ -6917,10 +6901,6 @@ msgstr "Операция"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Оператор"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Необязательно: Пункт поддерева"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13979,6 +13959,10 @@ msgstr "Переход с <strong>%s</strong> на <strong>%s</strong>s</strong>
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Обновление с v%s (DB%s) до v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "ВНИМАНИЕ:"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."

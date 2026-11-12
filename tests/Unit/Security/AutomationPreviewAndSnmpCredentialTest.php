@@ -181,3 +181,43 @@ test('an unknown graph rule id redirects to the list before any page output', fu
         ->and($redirect)->toBeLessThan((int) strpos($edit, 'top_header();'))
         ->and(strpos($edit, "raise_message('rule_not_found'"))->toBeLessThan($redirect);
 });
+
+test('replayed tree rule settings saves and leaf type changes write nothing', function () {
+    // Rule settings moved to Symfony; the old settings form and change_leaf must not write. Criteria items still save here.
+    $source = (string) file_get_contents(dirname(__DIR__, 3) . '/automation_tree_rules.php');
+    expect($source)->not->toContain('function automation_tree_rules_change_leaf')
+        ->and(strstr((string) strstr($source, "case 'change_leaf':"), 'break;', true))->toContain('tree_rule_settings_expired();');
+    $program = 'namespace Probe;' . automation_preview_source('automation_tree_rules.php', 'tree_rule_settings_expired')
+        . automation_preview_source('automation_tree_rules.php', 'automation_tree_rules_form_save')
+        . <<<'PHP'
+$request = array('save_component_automation_tree_rule' => '1', 'id' => '7', 'name' => 'Replayed', 'tree_id' => '1', 'leaf_type' => '3', 'enabled' => 'on');
+function isset_request_var($name) { return isset($GLOBALS['request'][$name]); }
+function get_request_var($name) { return $GLOBALS['request'][$name] ?? ''; }
+function get_filter_request_var($name) { return $GLOBALS['request'][$name] ?? ''; }
+function get_nfilter_request_var($name) { return $GLOBALS['request'][$name] ?? ''; }
+function form_input_validate($value, ...$args) { return $value; }
+function __($text) { return $text; }
+function html_escape($text) { return ''; }
+function http_response_code($code) { $GLOBALS['status'] = $code; }
+function header($value) { $GLOBALS['headers'][] = $value; }
+function sql_save(...$args) { $GLOBALS['saved'] = true; }
+function db_execute_prepared(...$args) { $GLOBALS['saved'] = true; }
+function automation_change_tree_rule_leaf_type(...$args) { $GLOBALS['saved'] = true; }
+register_shutdown_function(static function (): void {
+    echo json_encode(array('status' => $GLOBALS['status'] ?? null, 'headers' => $GLOBALS['headers'] ?? array(), 'saved' => $GLOBALS['saved'] ?? false));
+});
+automation_tree_rules_form_save();
+PHP;
+    $state = automation_preview_run($program);
+
+    expect($state)->toBe(array('status' => 409, 'headers' => array('Cache-Control: private, no-store'), 'saved' => false));
+});
+
+test('an unknown tree rule id redirects to the list before any page output', function () {
+    $source = (string) file_get_contents(dirname(__DIR__, 3) . '/automation_tree_rules.php');
+    $edit = (string) strstr((string) strstr($source, "case 'edit':"), 'break;', true);
+    $redirect = strpos($edit, "header('Location: automation_tree_rules.php', true, 302);");
+    expect($redirect)->toBeInt()
+        ->and($redirect)->toBeLessThan((int) strpos($edit, 'top_header();'))
+        ->and(strpos($edit, "raise_message('rule_not_found'"))->toBeLessThan($redirect);
+});
