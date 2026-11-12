@@ -3,7 +3,7 @@
 Kadupul creates, updates, reads and maintains a Data Source RRDfile only when
 its path resolves inside the RRA directory, `<path_cacti>/rra`, or inside a
 directory that `include/config.php` lists in `$config['rrd_additional_paths']`
-(see below). This is the default on `main` (1.3) and cannot be turned off. Cacti 1.2 and Kadupul 1.2
+(see below). This is the default on `main` and cannot be turned off. Cacti 1.2 and Kadupul 1.2
 accept any absolute path an administrator enters as a Data Source Path.
 Kadupul 1.2.32 offers the same check as the opt-in setting *Restrict RRDfiles
 to the RRA Directory*, off by default.
