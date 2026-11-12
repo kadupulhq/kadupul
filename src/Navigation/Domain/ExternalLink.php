@@ -7,12 +7,19 @@
 
 namespace Kadupul\Navigation\Domain;
 
+/** A link shown in the console as a tab, a menu entry or an embedded page. */
 final readonly class ExternalLink
 {
     // Longer than both the 50-character legacy and 20-character new-name limits.
     public const string NEW_SECTION_SELECTION = '__CREATE_NEW_CONSOLE_SECTION_NOT_A_PERSISTED_SECTION_NAME__';
     public const array STYLES = ['TAB', 'CONSOLE', 'FRONT', 'FRONTTOP'];
     public const array REFRESHES = [0, 10, 15, 20, 30, 60, 300];
+    /**
+     * @param int $sortorder position in the link list, counted from 1
+     * @param string $contentfile an installed content file name, or an http, https, ftp or ftps URL
+     * @param string $extendedstyle console menu section; used only by the CONSOLE style
+     * @param int $refresh automatic page refresh in seconds; 0 disables it
+     */
     public function __construct(
         public int $id,
         public int $sortorder,
@@ -23,6 +30,11 @@ final readonly class ExternalLink
         public bool $enabled,
         public int $refresh
     ) {}
+    /**
+     * Checks submitted form values against the installed content files and converts them to the stored column values.
+     *
+     * @throws \InvalidArgumentException when a value is malformed, too long or not allowed
+     */
     public static function validate(array $fields, array $files): array
     {
         foreach (['title', 'style', 'filename', 'fileurl', 'consolesection', 'consolenewsection'] as $key) {
@@ -57,6 +69,7 @@ final readonly class ExternalLink
         return ['title' => $title, 'contentfile' => $content, 'style' => $fields['style'], 'extendedstyle' => $section,
             'enabled' => $fields['enabled'] ? 'on' : '', 'refresh' => $fields['refresh']];
     }
+    /** The link as form values; a content file that is no longer installed is shown as a web URL. */
     public function fields(array $files): array
     {
         return ['title' => $this->title, 'style' => $this->style, 'filename' => in_array($this->contentfile, $files, true) ? $this->contentfile : '0',

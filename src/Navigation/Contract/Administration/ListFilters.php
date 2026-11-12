@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Administration;
 
+/** A validated list request: filter text, page size, page number and sort order. Anything outside the allowed parameters is refused. */
 final readonly class ListFilters
 {
     /** Legacy's own fallback when num_rows_table is unset or invalid. */

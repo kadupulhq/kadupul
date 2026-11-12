@@ -19,11 +19,13 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/** Allows a management list when the user has an active account, the screen's realm, every related realm, and console access unless the screen is a personal report. */
 #[AsAlias(ManagementCatalogAccess::class)]
 final readonly class DbalManagementCatalogAccess implements ManagementCatalogAccess
 {
     private const int CONSOLE_REALM = 8;
 
+    /** Wires the console and authenticated actor lookups and the web database connection. */
     public function __construct(
         private ConsoleAccess $console,
         #[Autowire(service: 'doctrine.dbal.web_connection')]
@@ -31,6 +33,11 @@ final readonly class DbalManagementCatalogAccess implements ManagementCatalogAcc
         private AuthenticatedAccess $identity,
     ) {}
 
+    /**
+     * Returns the user when every required check passes.
+     *
+     * @throws \Kadupul\Navigation\Application\Query\AdministrationListDenied when nobody is signed in or a check fails
+     */
     public function authorize(CatalogScreen $screen): Actor
     {
         $actor = $screen->personalReport() ? $this->identity->authenticatedActor() : $this->console->consoleActor();
@@ -48,6 +55,7 @@ final readonly class DbalManagementCatalogAccess implements ManagementCatalogAcc
         return $actor;
     }
 
+    /** True when the account is enabled, unlocked, not awaiting a password change, not the guest, and the authentication method is a known one. */
     private function accountAllows(int $actorId): bool
     {
         $user = $this->database->fetchAssociative('SELECT username, enabled, locked, must_change_password FROM user_auth WHERE id = ?', [$actorId]);
@@ -62,6 +70,7 @@ final readonly class DbalManagementCatalogAccess implements ManagementCatalogAcc
         return $actorId !== (int) $guest && $user['username'] !== $guest;
     }
 
+    /** True when the user holds the realm directly or through an enabled group. */
     private function hasRealm(int $actorId, int $realmId): bool
     {
         if ($this->database->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?', [$actorId, $realmId]) !== false) {

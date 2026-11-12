@@ -25,6 +25,9 @@ use Kadupul\Telemetry\Domain\CardinalityGuard;
  */
 final class CounterNormalizer
 {
+    /**
+     * Binds the normalizer to the clock and the series cardinality guard.
+     */
     public function __construct(private readonly Clock $clock, private readonly CardinalityGuard $cardinality) {}
 
     /**
@@ -99,6 +102,9 @@ final class CounterNormalizer
         return [$kept, $errors, $duplicates];
     }
 
+    /**
+     * Classifies the step between two readings as a delta, reset or gap, marking quality stale when the newer reading is older than the policy allows.
+     */
     private function interval(Sample $from, Sample $to, CounterNormalizationPolicy $policy): CounterInterval
     {
         $elapsed = $this->microsBetween($from->timestamp, $to->timestamp);
@@ -128,11 +134,17 @@ final class CounterNormalizer
         return new CounterInterval(IntervalKind::Reset, $from->timestamp, $to->timestamp, $elapsed, null, $quality);
     }
 
+    /**
+     * Summarizes a sample's metric, resource, device and protocol for error messages.
+     */
     private static function describe(Sample $sample): string
     {
         return sprintf('%s %s on device %d over %s', $sample->metric->toString(), $sample->resource->toString(), $sample->deviceId, $sample->protocol->value);
     }
 
+    /**
+     * Returns the microseconds from the earlier instant to the later one.
+     */
     private function microsBetween(\DateTimeImmutable $earlier, \DateTimeImmutable $later): int
     {
         return ($later->getTimestamp() - $earlier->getTimestamp()) * 1_000_000 + ((int) $later->format('u') - (int) $earlier->format('u'));

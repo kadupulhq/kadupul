@@ -18,8 +18,16 @@ final readonly class CounterValue implements SampleValue
 {
     private const MAXIMUM = '18446744073709551615';
 
+    /**
+     * Keeps the validated decimal text.
+     */
     private function __construct(private string $decimal) {}
 
+    /**
+     * Parses a non-negative decimal integer up to 18446744073709551615.
+     *
+     * @throws InvalidTelemetryValue when the text is not such an integer
+     */
     public static function fromString(string $text): self
     {
         // \z, not $, so a trailing newline is not accepted as a digit string.
@@ -34,6 +42,11 @@ final readonly class CounterValue implements SampleValue
         return new self(gmp_strval($number));
     }
 
+    /**
+     * Builds a value from a non-negative integer.
+     *
+     * @throws InvalidTelemetryValue when the integer is negative
+     */
     public static function fromInt(int $value): self
     {
         if ($value < 0) {
@@ -43,26 +56,43 @@ final readonly class CounterValue implements SampleValue
         return new self((string) $value);
     }
 
+    /**
+     * Returns the decimal text.
+     */
     public function toString(): string
     {
         return $this->decimal;
     }
 
+    /**
+     * Returns the decimal text, which is the form an RRD update accepts.
+     */
     public function toWire(): string
     {
         return $this->decimal;
     }
 
+    /**
+     * Tells whether both readings are the same number.
+     */
     public function equals(self $other): bool
     {
         return $this->decimal === $other->decimal;
     }
 
+    /**
+     * Returns -1, 0 or 1 as this reading is less than, equal to or greater than the other.
+     */
     public function compare(self $other): int
     {
         return gmp_cmp($this->decimal, $other->decimal) <=> 0;
     }
 
+    /**
+     * Returns this reading less the other.
+     *
+     * @throws InvalidTelemetryValue when the other reading is larger
+     */
     public function minus(self $other): self
     {
         $difference = gmp_sub($this->decimal, $other->decimal);
@@ -73,6 +103,9 @@ final readonly class CounterValue implements SampleValue
         return new self(gmp_strval($difference));
     }
 
+    /**
+     * Tells whether the reading can be held by a counter of the given width.
+     */
     public function fitsWidth(CounterWidth $width): bool
     {
         return $this->compare($width->maximum()) <= 0;

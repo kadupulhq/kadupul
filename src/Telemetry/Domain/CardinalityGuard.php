@@ -19,6 +19,11 @@ final class CardinalityGuard
     /** @var array<string, array<string, true>> */
     private array $admitted = [];
 
+    /**
+     * Sets the maximum number of series per metric.
+     *
+     * @throws \InvalidArgumentException when the limit is below 1
+     */
     public function __construct(private readonly int $limitPerMetric)
     {
         if ($limitPerMetric < 1) {
@@ -26,6 +31,11 @@ final class CardinalityGuard
         }
     }
 
+    /**
+     * Registers the series, which is a no-op when it was already admitted.
+     *
+     * @throws CardinalityLimitExceeded when the metric is at its series limit
+     */
     public function admit(string $metric, string $seriesKey): void
     {
         if (isset($this->admitted[$metric][$seriesKey])) {
@@ -37,6 +47,9 @@ final class CardinalityGuard
         $this->admitted[$metric][$seriesKey] = true;
     }
 
+    /**
+     * Returns how many series have been admitted for the metric.
+     */
     public function count(string $metric): int
     {
         return count($this->admitted[$metric] ?? []);

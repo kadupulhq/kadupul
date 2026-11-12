@@ -21,8 +21,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the External Links list, restoring and storing each user's filters. */
 final class LinkListController
 {
+    /** Renders one page of links; remembered filters are used unless the request carries "clear", and are saved only on the primary collector. */
     #[Route('/links', name: 'navigation_links', methods: ['GET', 'HEAD'])]
     public function __invoke(Request $request, ConsoleAccess $console, LinkAccess $access, LinkStore $store, LinkPreferences $preferences, LegacyConfiguration $configuration, ListLinks $list, Environment $twig, TranslatorInterface $translator): Response
     {
