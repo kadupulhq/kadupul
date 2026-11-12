@@ -16,6 +16,7 @@ use Kadupul\Navigation\Contract\RelationshipCatalog;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
 use Kadupul\Navigation\Contract\Relationships\RelationshipScreen;
 
+/** Reads one page of a relationship list after checking access and the parent id. */
 final readonly class ViewRelationships
 {
     /** @param iterable<RelationshipCatalog> $catalogs */

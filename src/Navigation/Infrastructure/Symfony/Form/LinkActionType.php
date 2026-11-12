@@ -12,12 +12,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/** The confirmation form for a bulk link operation; it carries only the list revision and a CSRF token. */
 final class LinkActionType extends AbstractType
 {
+    /** Adds the hidden revision field. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('revision', HiddenType::class, []);
     }
+    /** Turns on CSRF protection and posts in the navigation translation domain. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'navigation', 'csrf_protection' => true, 'csrf_token_id' => 'navigation_link_action', 'method' => 'POST']);

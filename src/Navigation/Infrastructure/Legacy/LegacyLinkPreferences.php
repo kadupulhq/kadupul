@@ -12,10 +12,17 @@ use Kadupul\Navigation\Application\Port\LinkAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 
+/** Keeps a user's link list filters in the legacy per-user settings table. */
 final readonly class LegacyLinkPreferences implements LinkPreferences
 {
+    /** Wires the access check, the database and the legacy configuration. */
     public function __construct(private LinkAccess $access, private DatabaseConnection $database, private LegacyConfiguration $configuration) {}
 
+    /**
+     * Returns the stored filters as strings, or null when none are stored or the stored value is not valid.
+     *
+     * @throws \Kadupul\Navigation\Application\Query\LinkAccessDenied when the user may not manage links
+     */
     public function load(): ?array
     {
         $actor = $this->access->authorize();
@@ -38,6 +45,12 @@ final readonly class LegacyLinkPreferences implements LinkPreferences
         return array_map(static fn(int|string $value): string => (string) $value, $filters);
     }
 
+    /**
+     * Stores the filters in one transaction after rechecking access.
+     *
+     * @throws \InvalidArgumentException when a key or value is not allowed
+     * @throws \RuntimeException when this is not the primary collector, the tables are not transactional, or the commit is not confirmed
+     */
     public function save(array $filters): void
     {
         $allowed = ['rows', 'page', 'filter', 'sort_column', 'sort_direction'];

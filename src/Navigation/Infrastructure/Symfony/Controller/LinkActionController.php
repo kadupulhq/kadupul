@@ -26,8 +26,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Confirms and applies delete, enable, disable, up and down to selected links. */
 final class LinkActionController
 {
+    /** Shows the confirmation form on GET and applies the operation on a valid POST, then redirects to the link list. */
     #[Route('/links/action/{operation}', name: 'navigation_link_action', requirements: ['operation' => 'delete|enable|disable|up|down'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(
         string $operation,
