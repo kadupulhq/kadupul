@@ -26,10 +26,12 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the forms that add, change, delete and reorder the items of a CDEF. */
 final class CdefItemController
 {
     private const array HEADERS = ['Cache-Control' => 'private, no-store'];
 
+    /** Shows the item form and saves the item on a valid POST; $itemId 0 adds a new item. */
     #[Route('/graph-definitions/cdefs/{cdefId}/items/{itemId}', name: 'graph_cdef_item_edit', requirements: ['cdefId' => '[1-9][0-9]{0,7}', 'itemId' => '0|[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function edit(int $cdefId, int $itemId, Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -96,6 +98,7 @@ final class CdefItemController
         }
     }
 
+    /** Shows the removal confirmation and removes the item on a valid POST. */
     #[Route('/graph-definitions/cdefs/{cdefId}/items/{itemId}/delete', name: 'graph_cdef_item_delete', requirements: ['cdefId' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function delete(int $cdefId, int $itemId, Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -142,6 +145,7 @@ final class CdefItemController
         }
     }
 
+    /** Moves the item one place up or down on a valid POST. */
     #[Route('/graph-definitions/cdefs/{cdefId}/items/{itemId}/move/{direction}', name: 'graph_cdef_item_move', requirements: ['cdefId' => '[1-9][0-9]{0,7}', 'itemId' => '[1-9][0-9]{0,7}', 'direction' => 'up|down'], methods: ['POST'])]
     public function move(int $cdefId, int $itemId, string $direction, Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, FormFactoryInterface $forms, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -167,6 +171,11 @@ final class CdefItemController
         }
     }
 
+    /**
+     * Reads the requested item type, or $default when none is given.
+     *
+     * @throws \InvalidArgumentException when it is not a known item type
+     */
     private static function type(mixed $raw, int $default): int
     {
         if ($raw === null) {

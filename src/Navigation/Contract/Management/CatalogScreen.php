@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Navigation\Contract\Management;
 
+/** The management lists served here; each value is the URL segment and the screen's identifier. */
 enum CatalogScreen: string
 {
     case LocalGraphItems = 'graph-items';
@@ -45,6 +46,7 @@ enum CatalogScreen: string
     case MibConventions = 'mib-conventions';
     case MibAttributes = 'mib-notification-attributes';
 
+    /** The heading shown for the list. */
     public function title(): string
     {
         return match ($this) {
@@ -71,6 +73,7 @@ enum CatalogScreen: string
         };
     }
 
+    /** The permission realm a user must hold to view the list. */
     public function realm(): int
     {
         return match ($this) {
@@ -106,6 +109,7 @@ enum CatalogScreen: string
         return in_array($this, [self::QueryDeviceTemplates, self::GraphDeviceTemplates], true) ? [12] : [];
     }
 
+    /** True when the list belongs to a parent record, whose id is then required in the URL. */
     public function scoped(): bool
     {
         if ($this->instanceView()) {
@@ -114,6 +118,7 @@ enum CatalogScreen: string
         return in_array($this, [self::InputItems, self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates, self::GraphDeviceTemplates, self::MibObjects, self::MibConventions, self::MibAttributes, self::GraphItems, self::GraphInputs, self::DeviceGraphs, self::QueryGraphs], true);
     }
 
+    /** The column the list is sorted by when the request names none. */
     public function defaultSort(): string
     {
         return match ($this) {
@@ -123,16 +128,19 @@ enum CatalogScreen: string
         };
     }
 
+    /** The Symfony route name. */
     public function route(): string
     {
         return 'management_' . str_replace('-', '_', $this->value);
     }
 
+    /** The list's path relative to the web root. */
     public function path(): string
     {
         return 'app.php/management/' . $this->value;
     }
 
+    /** The legacy script that still owns this screen's editors. */
     public function legacyScript(): string
     {
         return match ($this) {
@@ -226,27 +234,32 @@ enum CatalogScreen: string
         };
     }
 
+    /** True for the lists of a template's supporting data, such as input items, query sources and MIB details, which have no editor of their own. */
     public function metadataView(): bool
     {
         return in_array($this, [self::InputItems, self::QuerySources, self::QueryGraphSuggestions, self::QueryDataSuggestions, self::QueryDeviceTemplates, self::GraphDeviceTemplates, self::Mibs, self::MibObjects, self::MibConventions, self::MibAttributes], true);
     }
 
+    /** True when each record links to a legacy editor. */
     public function editableRecord(): bool
     {
         return !$this->metadataView() && !$this->instanceView() && $this !== self::Plugins;
     }
 
+    /** True when the list shows the records that belong to one parent object, such as the items of a graph, report or tree. */
     public function instanceView(): bool
     {
         return in_array($this, [self::LocalGraphItems, self::GraphSources, self::AggregateMembers, self::SourceDefinitions,
             self::SourceGraphs, self::ReportItems, self::MyReportItems, self::TreeItems, self::CollectorDevices, self::NetworkDevices], true);
     }
 
+    /** True for the signed-in user's own reports, which need no console access. */
     public function personalReport(): bool
     {
         return in_array($this, [self::MyReports, self::MyReportItems], true);
     }
 
+    /** The largest parent id the screen accepts, matching the width of the legacy id column. */
     public function maximumParentId(): int
     {
         if ($this->instanceView()) {
@@ -259,6 +272,7 @@ enum CatalogScreen: string
         return in_array($this, [self::MibObjects, self::MibConventions, self::MibAttributes], true) ? 4294967295 : 16777215;
     }
 
+    /** The legacy script that edits a record of this list. */
     public function recordScript(): string
     {
         return match ($this) {

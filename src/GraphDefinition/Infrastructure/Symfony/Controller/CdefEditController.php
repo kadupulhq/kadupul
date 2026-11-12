@@ -26,8 +26,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the form that creates a CDEF or edits its name, with its items. */
 final class CdefEditController
 {
+    /** Shows the new CDEF form and saves it on a valid POST. */
     #[Route('/graph-definitions/cdefs/new', name: 'graph_cdef_create', methods: ['GET', 'HEAD', 'POST'])]
     public function create(Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -45,6 +47,7 @@ final class CdefEditController
         return $this->edit($actor->id, null, $request, $store, $forms, $twig, $urls, $translator);
     }
 
+    /** Shows the edit form for the CDEF and saves it on a valid POST. */
     #[Route('/graph-definitions/cdefs/{id}/edit', name: 'graph_cdef_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
     public function update(int $id, Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -66,6 +69,7 @@ final class CdefEditController
         return $this->edit($actor->id, $cdef, $request, $store, $forms, $twig, $urls, $translator);
     }
 
+    /** Builds, handles and renders the CDEF form for a new or existing CDEF; a stale revision gives status 409, invalid input 422 and an unconfirmed save 502. */
     private function edit(int $actorId, ?Cdef $cdef, Request $request, CdefStore $store, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
@@ -108,6 +112,7 @@ final class CdefEditController
         ]), $status, $headers);
     }
 
+    /** The plain 401 or 403 response for a denied user. */
     private function denied(CdefAccessDenied $error, TranslatorInterface $translator): Response
     {
         return new Response($translator->trans('Access denied.', [], 'cdef'), $error->unauthenticated ? 401 : 403, ['Cache-Control' => 'private, no-store']);

@@ -35,6 +35,7 @@ enum ListScreen: string
     case SnmpNotifications = 'snmp-notifications';
     case LoginHistory = 'login-history';
 
+    /** The heading shown for the list. */
     public function title(): string
     {
         return match ($this) {
@@ -57,6 +58,7 @@ enum ListScreen: string
         };
     }
 
+    /** The permission realm a user must hold, besides console access, to view the list. */
     public function realm(): int
     {
         return match ($this) {
@@ -77,6 +79,7 @@ enum ListScreen: string
         };
     }
 
+    /** The legacy script that still owns this screen's editors. */
     public function legacyScript(): string
     {
         return match ($this) {
@@ -99,6 +102,7 @@ enum ListScreen: string
         };
     }
 
+    /** The list's path relative to the web root. */
     public function path(): string
     {
         return 'app.php' . match ($this) {
@@ -121,6 +125,7 @@ enum ListScreen: string
         };
     }
 
+    /** The legacy action value that opens a record's editor. */
     public function editAction(): string
     {
         return match ($this) {
@@ -130,6 +135,7 @@ enum ListScreen: string
         };
     }
 
+    /** The column the list is sorted by when the request names none. */
     public function defaultSortColumn(): string
     {
         return match ($this) {
@@ -138,16 +144,19 @@ enum ListScreen: string
         };
     }
 
+    /** ASC or DESC; the logs sort newest first. */
     public function defaultSortDirection(): string
     {
         return in_array($this, [self::LoginHistory, self::SnmpNotifications], true) ? 'DESC' : 'ASC';
     }
 
+    /** True when records link to an editor. */
     public function editable(): bool
     {
         return !in_array($this, [self::DiscoveredDevices, self::RrdCandidates, self::SnmpObjects, self::SnmpNotifications, self::LoginHistory], true);
     }
 
+    /** True when the screen offers a way to add a record. */
     public function creatable(): bool
     {
         return $this->editable() && $this !== self::Collectors;

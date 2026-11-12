@@ -19,11 +19,13 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 #[AsAlias(ListPageSize::class)]
 final readonly class DbalListPageSize implements ListPageSize
 {
+    /** Wires the web database connection. */
     public function __construct(
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
     ) {}
 
+    /** The num_rows_table setting, or the fallback when it is unset or outside 1 to 5000. */
     public function defaultRows(): int
     {
         $rows = filter_var(

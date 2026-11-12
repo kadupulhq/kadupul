@@ -15,8 +15,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/** The form for creating a CDEF or renaming one. */
 final class CdefType extends AbstractType
 {
+    /** Adds the name and the hidden revision. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -24,6 +26,7 @@ final class CdefType extends AbstractType
             ->add('revision', HiddenType::class, ['required' => false]);
     }
 
+    /** Turns on CSRF protection and refuses extra fields. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -35,6 +38,7 @@ final class CdefType extends AbstractType
         ]);
     }
 
+    /** The form's field name prefix. */
     public function getBlockPrefix(): string
     {
         return 'cdef';

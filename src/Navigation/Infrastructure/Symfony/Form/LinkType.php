@@ -17,10 +17,13 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/** The form for creating or editing a link. */
 final class LinkType extends AbstractType
 {
+    /** Wires the translator used for the choice labels. */
     public function __construct(private readonly TranslatorInterface $translator) {}
 
+    /** Adds the link fields; the "files" and "sections" options supply the content file and console section choices. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $files = array_unique(['0', ...$options['files']]);
@@ -41,6 +44,7 @@ final class LinkType extends AbstractType
             ->add('refresh', ChoiceType::class, ['label' => 'Automatic Page Refresh', 'choices' => ['Disabled' => 0, 'Every 10 Seconds' => 10, 'Every 15 Seconds' => 15, 'Every 20 Seconds' => 20, 'Every 30 Seconds' => 30, 'Every Minute' => 60, 'Every 5 Minutes' => 300]])
             ->add('revision', HiddenType::class, []);
     }
+    /** Requires the "files" and "sections" options and turns on CSRF protection. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired(['files', 'sections']);

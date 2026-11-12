@@ -18,18 +18,25 @@ use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/** Allows CDEF management to an active account that holds the console realm (8) and the CDEF realm (14). */
 #[AsAlias(CdefAccess::class)]
 final readonly class DbalCdefAccess implements CdefAccess
 {
     private const int CONSOLE_REALM = 8;
     private const int CDEF_REALM = 14;
 
+    /** Wires the console actor lookup and the web database connection. */
     public function __construct(
         private ConsoleAccess $console,
         #[Autowire(service: 'doctrine.dbal.web_connection')]
         private Connection $database,
     ) {}
 
+    /**
+     * Checks the account and the CDEF realm for the signed-in console user.
+     *
+     * @throws \Kadupul\GraphDefinition\Application\Query\CdefAccessDenied when nobody is signed in or a check fails
+     */
     public function authorize(): Actor
     {
         $actor = $this->console->consoleActor();
@@ -42,6 +49,12 @@ final readonly class DbalCdefAccess implements CdefAccess
         return $actor;
     }
 
+    /**
+     * Rechecks the account and both realms with shared locks, so a revocation waits for the write.
+     *
+     * @throws \Kadupul\GraphDefinition\Application\Query\CdefAccessDenied when the user is not this actor or lacks a grant
+     * @throws \LogicException when no transaction is active
+     */
     public function assertCurrent(int $actorId): void
     {
         // Deletion runs inside the reference contract's own PDO transaction,
@@ -60,6 +73,7 @@ final readonly class DbalCdefAccess implements CdefAccess
         }
     }
 
+    /** True when the account is enabled, unlocked, not awaiting a password change, not the guest, and the authentication method is a known one; $lock is a locking-read suffix. */
     private function accountAllows(int $actorId, string $lock): bool
     {
         $user = $this->database->fetchAssociative('SELECT username, enabled, locked, must_change_password FROM user_auth WHERE id = ?' . $lock, [$actorId]);
@@ -74,6 +88,7 @@ final readonly class DbalCdefAccess implements CdefAccess
         return $actorId !== (int) $guest && $user['username'] !== $guest;
     }
 
+    /** True when the user holds the realm directly or through an enabled group; $lock is a locking-read suffix. */
     private function hasRealm(int $actorId, int $realmId, string $lock): bool
     {
         if ($this->database->fetchOne('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?' . $lock, [$actorId, $realmId]) !== false) {
