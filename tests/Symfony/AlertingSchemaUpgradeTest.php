@@ -226,6 +226,43 @@ final class AlertingSchemaUpgradeTest extends TestCase
         self::assertSame('3', $this->scalar('SELECT COUNT(*) FROM alert_incident WHERE rule_id = 7'));
     }
 
+    public function testFreshInstallIndexesTheDsstatsCacheByDataSourceSeriesAndTime(): void
+    {
+        $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+        self::assertSame(1, preg_match('/^CREATE TABLE `data_source_stats_hourly_cache` \(.*?\) ENGINE=MEMORY;/ms', $sql, $found));
+        self::assertMatchesRegularExpression('/KEY `local_data_id` USING BTREE \(`local_data_id`,`rrd_name`,`time`\)/', $found[0]);
+        self::assertStringContainsString('PRIMARY KEY (`local_data_id`,`time`,`rrd_name`)', $found[0]);
+    }
+
+    public function testUpgradeAddsTheDsstatsCacheIndexOnceAndKeepsItsRows(): void
+    {
+        $db = $this->database();
+        $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+        self::assertSame(1, preg_match('/^CREATE TABLE `data_source_stats_hourly_cache` \(.*?\) ENGINE=MEMORY;/ms', $sql, $found));
+        $fresh = rtrim($found[0], ';');
+        $db->exec('DROP TABLE IF EXISTS data_source_stats_hourly_cache');
+        // The table as the previous release created it: no key on the data source alone.
+        self::assertNotFalse($db->exec(str_replace(",\n  KEY `local_data_id` USING BTREE (`local_data_id`,`rrd_name`,`time`)", '', $fresh)));
+        self::assertNotFalse($db->exec("INSERT INTO data_source_stats_hourly_cache (local_data_id, rrd_name, time, value) VALUES (5, 'traffic_in', '2026-11-12 00:00:00', 1.5)"));
+        self::assertSame('0', $this->scalar("SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'data_source_stats_hourly_cache' AND INDEX_NAME = 'local_data_id'"));
+
+        try {
+            upgrade_to_1_2_40();
+            $columns = "SELECT GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'data_source_stats_hourly_cache' AND INDEX_NAME = 'local_data_id' AND INDEX_TYPE = 'BTREE'";
+            self::assertSame('local_data_id,rrd_name,time', $this->scalar($columns));
+            self::assertSame('1', $this->scalar('SELECT COUNT(*) FROM data_source_stats_hourly_cache'));
+
+            // A rerun finds the key and changes nothing.
+            $GLOBALS['forward_schema_status'] = [];
+            upgrade_to_1_2_40();
+            self::assertNotContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+            self::assertSame('local_data_id,rrd_name,time', $this->scalar($columns));
+            self::assertSame('1', $this->scalar('SELECT COUNT(*) FROM data_source_stats_hourly_cache'));
+        } finally {
+            $db->exec('DROP TABLE IF EXISTS data_source_stats_hourly_cache');
+        }
+    }
+
     public function testARetryAfterAPartialAttemptCompletesTheStep(): void
     {
         $db = $this->database();

@@ -478,6 +478,19 @@ behavior until an administrator opts in.
    count before a run stops early. The cost is per changed rule, one
    transaction each, so it grows with rule count, not with batch size.
 
+   The rate read was measured again after review on MariaDB 11.8.9 in Docker,
+   against a cache of 100,000 data sources with 12 rows each (1.2 million
+   rows) and the same 500-key batch. The first form of the freshness read
+   grouped the cache by data source. Its primary key is a HASH key that serves
+   only a lookup on all three of its columns, so `EXPLAIN` showed `type ALL`
+   over 1.2 million rows with a temporary table and a filesort, and the read
+   took 98 to 112 ms per 500 keys, growing with the size of the cache. The
+   read now looks up each series' newest time through a BTREE key on
+   `(local_data_id, rrd_name, time)`, which 1.2.40 adds to the cache. `EXPLAIN`
+   shows a `range` on `data_template_data`, a `ref` on the new key and an
+   `eq_ref` on `data_source_stats_hourly_last`, the read took 6.1 to 6.7 ms
+   per 500 keys on the same table, and the rows returned are identical.
+
    Baseline rules were measured in the same setup with 5,000 baseline
    rules and 8 weeks of history for every hour (6,725,000 rows, about 370
    MB of data and index), two runs. Reading the history of all 5,000 series
@@ -695,9 +708,11 @@ behavior until an administrator opts in.
   Phase 1 accepts this, and a `for_cycles` of 2 or more reduces its effect.
 - **The freshness rule depends on the hourly cache table.** If a later change
   stops dsstats writing `data_source_stats_hourly_cache`, every series becomes
-  `unknown`, not falsely fresh. Reading it means a grouped scan of that MEMORY
-  table for the batch's data sources. The measurement in decision 8 found 8.2 to
-  8.4 ms per 500 data sources with 12 cache rows each. A clock step backwards
+  `unknown`, not falsely fresh. Reading it means one index seek per series on a
+  BTREE key that 1.2.40 adds to that MEMORY table. The measurement in decision 8
+  found 6.1 to 6.7 ms per 500 data sources on a cache of 1.2 million rows (12
+  rows for each of 100,000 data sources); the table's own primary key is a HASH
+  key and could not serve the lookup. A clock step backwards
   on the poller can hold counters until time passes the last observation. A
   clock step forwards makes observations stale and `unknown`.
 - **Freshness compares Unix seconds.** The command's clock is

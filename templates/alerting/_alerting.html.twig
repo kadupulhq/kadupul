@@ -30,7 +30,7 @@ nothing stored is marked raw.
 {%- if c is null -%}
 <strong>{{ 'Unusable rule'|trans({}, 'alerting') }}</strong>: {{ rule.unusable }}
 {%- elseif rule.kind == 'threshold' -%}
-{{ {gt: 'Rate greater than %trigger%, clears at or below %clear%', ge: 'Rate at or above %trigger%, clears below %clear%', lt: 'Rate less than %trigger%, clears at or above %clear%', le: 'Rate at or below %trigger%, clears above %clear%'}[c.comparator.value]|trans({'%trigger%': c.trigger, '%clear%': c.clear}, 'alerting') }};
+{{ {gt: 'Rate greater than %trigger%, clears below %clear%', ge: 'Rate at or above %trigger%, clears below %clear%', lt: 'Rate less than %trigger%, clears above %clear%', le: 'Rate at or below %trigger%, clears above %clear%'}[c.comparator.value]|trans({'%trigger%': c.trigger, '%clear%': c.clear}, 'alerting') }};
 {{ 'for %cycles% cycles'|trans({'%cycles%': c.forCycles}, 'alerting') }}
 {%- else -%}
 {{ {both: 'Outside the band of mean ± %k% deviations', above: 'Above the band of mean + %k% deviations', below: 'Below the band of mean − %k% deviations'}[c.direction.value]|trans({'%k%': c.deviations}, 'alerting') }};

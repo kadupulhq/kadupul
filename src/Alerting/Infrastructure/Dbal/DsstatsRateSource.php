@@ -27,6 +27,9 @@ use Kadupul\Alerting\Domain\Rule\SeriesKey;
  * counts only when the cache value at that time equals `calculated`; a pair
  * that differs (the writer is between its two inserts, or an older sample was
  * written later) has no known time and is left out, which reads as unknown.
+ * The newest time is read per series through the BTREE key added to the cache
+ * by install/upgrades/1_2_40.php, not by scanning the table: its primary key is
+ * a HASH key and cannot serve a lookup on the data source alone.
  * The polling interval is the data source's rrd_step, which dsstats also
  * divides counter deltas by.
  *
@@ -70,27 +73,24 @@ final readonly class DsstatsRateSource implements RateSource
         foreach (array_chunk(array_keys($wanted), self::CHUNK) as $ids) {
             $rows = $this->database->fetchAllAssociative(
                 'SELECT l.local_data_id, l.rrd_name, l.calculated, UNIX_TIMESTAMP(c.time) AS observed_at, d.rrd_step
-				FROM data_source_stats_hourly_last AS l
-				INNER JOIN (
-					SELECT local_data_id, rrd_name, MAX(time) AS time
-					FROM data_source_stats_hourly_cache
-					WHERE local_data_id IN (?)
-					GROUP BY local_data_id, rrd_name
-				) AS latest
-				ON latest.local_data_id = l.local_data_id
-				AND latest.rrd_name = l.rrd_name
+				FROM data_template_data AS d
 				INNER JOIN data_source_stats_hourly_cache AS c
-				ON c.local_data_id = latest.local_data_id
-				AND c.rrd_name = latest.rrd_name
-				AND c.time = latest.time
-				INNER JOIN data_template_data AS d
-				ON d.local_data_id = l.local_data_id
-				WHERE l.local_data_id IN (?)
+				ON c.local_data_id = d.local_data_id
+				INNER JOIN data_source_stats_hourly_last AS l
+				ON l.local_data_id = c.local_data_id
+				AND l.rrd_name = c.rrd_name
+				WHERE d.local_data_id IN (?)
+				AND d.rrd_step > 0
 				AND l.calculated IS NOT NULL
 				AND c.value = l.calculated
-				AND d.rrd_step > 0',
-                [$ids, $ids],
-                [ArrayParameterType::INTEGER, ArrayParameterType::INTEGER],
+				AND c.time = (
+					SELECT MAX(m.time)
+					FROM data_source_stats_hourly_cache AS m
+					WHERE m.local_data_id = c.local_data_id
+					AND m.rrd_name = c.rrd_name
+				)',
+                [$ids],
+                [ArrayParameterType::INTEGER],
             );
             foreach ($rows as $row) {
                 $id = self::int($row['local_data_id']);

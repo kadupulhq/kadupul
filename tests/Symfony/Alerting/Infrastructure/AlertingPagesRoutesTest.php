@@ -336,6 +336,15 @@ final class AlertingPagesRoutesTest extends TestCase
         }
     }
 
+    public function testTheRuleListStatesThatARateAtTheClearValueDoesNotClear(): void
+    {
+        // ThresholdRule clears only strictly past the clear value, so the label
+        // must not say "at or below".
+        $content = (string) $this->request('GET', '/alerting/rules')->getContent();
+        self::assertStringContainsString('Rate greater than 90, clears below 80', $content);
+        self::assertStringNotContainsString('at or below 80', $content);
+    }
+
     public function testTheRuleListIsRenderedInTheUsersSavedFrenchLocale(): void
     {
         $container = $this->kernel->getContainer()->get('test.service_container');
@@ -355,7 +364,7 @@ final class AlertingPagesRoutesTest extends TestCase
         $content = (string) $response->getContent();
         self::assertStringContainsString('<html lang="fr">', $content);
         self::assertStringContainsString('<h1>Règles d’alerte</h1>', $content);
-        self::assertStringContainsString('Débit supérieur à 90, rétabli à 80 ou moins', $content);
+        self::assertStringContainsString('Débit supérieur à 90, rétabli sous 80', $content);
         self::assertStringContainsString('Source de données 101 (traffic_in) sur Core &lt;router&gt;', $content);
 
         // The shared confirmation template's buttons come from this domain too.

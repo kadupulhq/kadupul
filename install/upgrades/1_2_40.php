@@ -13,6 +13,9 @@ declare(strict_types=1);
  * when missing and then confirmed. A table of another shape, or one that
  * could not be created, stops the upgrade before the version is recorded and
  * is left as it is, so a rerun starts from the same place.
+ *
+ * It also adds one BTREE index to the dsstats hourly cache, which the alert
+ * rate read needs (upgrade_dsstats_cache_index()).
  */
 function upgrade_to_1_2_40(): void
 {
@@ -33,7 +36,31 @@ function upgrade_to_1_2_40(): void
         }
     }
 
+    upgrade_dsstats_cache_index();
     upgrade_alerting_realms();
+}
+
+/**
+ * Index data_source_stats_hourly_cache by data source, series and time. The
+ * table's primary key is a HASH key on (local_data_id, time, rrd_name), which
+ * serves only a lookup on all three columns, so the alert rate read, which
+ * knows the data source and wants the newest time, scanned the whole table.
+ * The BTREE key lets it seek. The table is a MEMORY cache that dsstats
+ * refills every cycle; adding the key keeps its rows. The key is added only
+ * when missing and then confirmed, so a rerun changes nothing, and a table
+ * that is missing (dsstats not installed) is left alone.
+ */
+function upgrade_dsstats_cache_index(): void
+{
+    $table = db_install_fetch_cell('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = \'data_source_stats_hourly_cache\'');
+    if ((int) ($table['data'] ?? 0) === 0 || db_index_exists('data_source_stats_hourly_cache', 'local_data_id')) {
+        return;
+    }
+    $failure = 'The index local_data_id could not be added to data_source_stats_hourly_cache. Check max_heap_table_size and rerun the upgrade.';
+    if (db_install_execute('ALTER TABLE data_source_stats_hourly_cache ADD INDEX local_data_id USING BTREE (local_data_id, rrd_name, time)') !== DB_STATUS_SUCCESS
+        || !db_index_exists('data_source_stats_hourly_cache', 'local_data_id')) {
+        throw new RuntimeException($failure);
+    }
 }
 
 /**

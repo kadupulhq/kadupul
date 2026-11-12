@@ -1528,7 +1528,8 @@ CREATE TABLE `data_source_stats_hourly_cache` (
   `time` timestamp NOT NULL default '0000-00-00 00:00:00',
   `value` DOUBLE DEFAULT NULL,
   PRIMARY KEY (`local_data_id`,`time`,`rrd_name`),
-  KEY `time` USING BTREE (`time`)
+  KEY `time` USING BTREE (`time`),
+  KEY `local_data_id` USING BTREE (`local_data_id`,`rrd_name`,`time`)
   ) ENGINE=MEMORY;
 
 --

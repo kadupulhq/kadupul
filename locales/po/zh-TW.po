@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 08:46-0800\n"
+"POT-Creation-Date: 2026-11-12 14:58-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1331,7 +1331,7 @@ msgstr "標題格式:"
 msgid "rule_name"
 msgstr "規則名稱"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, fuzzy, php-format
 msgid "%d Minute"
 msgstr "%d 分鐘"
@@ -4701,6 +4701,14 @@ msgstr "升壓之後"
 #, fuzzy
 msgid "Aggregate"
 msgstr "聚合"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 #, fuzzy
@@ -8934,6 +8942,11 @@ msgid "%d Processes"
 msgstr "%d進程"
 
 #: include/global_settings.php
+#, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
 #, fuzzy, php-format
 msgid "%d Spikes"
 msgstr "%d尖峰"
@@ -9068,6 +9081,14 @@ msgstr "進階"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
 msgstr ""
 
 #: include/global_settings.php
@@ -9769,6 +9790,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "啟用Lotus Notes（R）調整"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Enable On-demand RRD Updating"
 msgstr "啟用按需RRD更新"
@@ -10101,6 +10126,10 @@ msgstr "Daily Stats應該多久更新一次？"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Daily Stats應該多久更新一次？"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 #, fuzzy
@@ -10493,6 +10522,10 @@ msgstr ""
 #, fuzzy
 msgid "NaN's"
 msgstr "NaN的"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 #, fuzzy
@@ -11115,6 +11148,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "是否應該默認選中具有圖表並具有數據源。"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 #, fuzzy
 msgid "Show Device Aggregates"
 msgstr "骨料"
@@ -11618,6 +11655,10 @@ msgstr "當Kadupul系統遇到問題時將自動接收電子郵件的主管理�
 #, fuzzy
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul將用作新Web Basic和LDAP用戶模板的用戶名;默認為&#39;來賓&#39;。被選中時，將禁止此用戶帳戶登錄。"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 #, fuzzy
