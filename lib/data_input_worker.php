@@ -105,7 +105,8 @@ function dataInputWorkerStorage(PDO $db, bool $preferences = false): void
     }
 }
 
-function dataInputWorkerAuthorize(PDO $connection, int $actorId): void
+/** @param list<int> $realms console access and the feature realm: 2 for data_input.php, 13 for data_queries.php */
+function dataInputWorkerAuthorize(PDO $connection, int $actorId, array $realms = [8, 2]): void
 {
     $read = static function (string $sql, array $params = []) use ($connection): array {
         $query = $connection->prepare($sql);
@@ -127,7 +128,7 @@ function dataInputWorkerAuthorize(PDO $connection, int $actorId): void
     if ((int) ($guest[0]['value'] ?? 0) === $actorId || (string) ($guest[0]['value'] ?? '') === (string) $users[0]['username']) {
         throw new DataInputWorkerDenied();
     }
-    foreach ([8, 2] as $realm) {
+    foreach ($realms as $realm) {
         $direct = $read('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ? LOCK IN SHARE MODE', [$actorId, $realm]);
         if ($direct !== []) {
             continue;
