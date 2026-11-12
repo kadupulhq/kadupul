@@ -12,6 +12,7 @@ namespace Kadupul\Monitoring\Domain;
 use Kadupul\Telemetry\Contract\CollectionError;
 use Kadupul\Telemetry\Contract\CollectionStatus;
 
+/** What a discovery run found for one device, plus the errors it met along the way. */
 final readonly class CapabilityDiscoveryResult
 {
     /** @var list<Capability> */
@@ -45,6 +46,7 @@ final readonly class CapabilityDiscoveryResult
         $this->capabilities = array_values($byKey);
     }
 
+    /** Succeeded without errors, failed when errors left no capability, partial otherwise. */
     public function status(): CollectionStatus
     {
         if ($this->errors === []) {

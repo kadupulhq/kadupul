@@ -30,11 +30,13 @@ use Kadupul\Telemetry\Contract\ResourceId;
  */
 final class ResolveBinding implements BindingCatalog
 {
+    /** Wires the binding repository and the ownership probe. */
     public function __construct(
         private readonly BindingRepository $bindings,
         private readonly WriterOwnershipProbe $owners,
     ) {}
 
+    /** Resolves the series to its approved or verified binding, or reports why none applies. */
     public function resolve(int $deviceId, MetricId $metric, ResourceId $resource, string $protocol): BindingResolution
     {
         $unresolved = static fn(ResolutionStatus $status, string $reason, ?string $bindingId = null): BindingResolution

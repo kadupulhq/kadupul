@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** The state of a stored pack: installed, active once a plan uses it, or deprecated. */
 enum PackState: string
 {
     case Installed = 'installed';

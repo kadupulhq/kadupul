@@ -17,6 +17,11 @@ namespace Kadupul\Monitoring\Contract;
  */
 final readonly class StorageReference
 {
+    /**
+     * Wraps a reference token after checking its shape.
+     *
+     * @throws \InvalidArgumentException when the value is not a lowercase scheme, a colon and a token
+     */
     public function __construct(private string $value)
     {
         if (preg_match('/\A[a-z][a-z0-9-]*:[A-Za-z0-9._-]+\z/', $value) !== 1) {
@@ -24,11 +29,13 @@ final readonly class StorageReference
         }
     }
 
+    /** The reference token as stored. */
     public function toString(): string
     {
         return $this->value;
     }
 
+    /** Compares two references by their token. */
     public function equals(self $other): bool
     {
         return $this->value === $other->value;

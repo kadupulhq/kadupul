@@ -4,7 +4,7 @@ aggregate_templates.php	3	4
 auth_login.php	1	2
 auth_profile.php	5	8
 automation_devices.php	4	16
-automation_graph_rules.php	3	6
+automation_graph_rules.php	3	4
 automation_networks.php	4	4
 automation_snmp.php	2	3
 automation_tree_rules.php	4	8
