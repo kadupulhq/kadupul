@@ -14,10 +14,23 @@ use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\NewSite;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/**
+ * Creates sites in the legacy tables and records the attempt in the audit trail.
+ */
 final readonly class LegacySiteCreator implements SiteCreator
 {
+    /**
+     * Binds the creator to the database, console access and the site write audit.
+     */
     public function __construct(private DatabaseConnection $database, private ConsoleAccess $access, private SiteWriteAudit $audit) {}
 
+    /**
+     * Inserts the site in one transaction and returns its id.
+     * The actor is rechecked inside the transaction and must be the signed-in user. The site-change cache markers are committed with the site. An audit event is recorded whether or not the write succeeds.
+     *
+     * @throws InventoryAccessDenied When nobody is signed in, the user is not $userId, or the user may not manage devices.
+     * @throws \RuntimeException When the insert or commit cannot be confirmed.
+     */
     public function create(int $userId, NewSite $site): int
     {
         $db = $this->database->get();

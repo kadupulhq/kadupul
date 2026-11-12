@@ -13,10 +13,27 @@ use Kadupul\Inventory\Application\ReadModel\DeviceMaintenanceResult;
 use Kadupul\Platform\Contract\CollectorAddress;
 use PDO;
 
+/**
+ * Runs maintenance actions for a device against the primary database and, for a remote device, its collector.
+ * Diagnostic output is cleaned of SNMP credentials before it is returned.
+ */
 final class DeviceMaintenanceExecutor
 {
+    /**
+     * Sets the web path of the installation, used to address remote collectors.
+     *
+     * @param string $basePath Absolute URL path without a scheme or host.
+     */
     public function __construct(private readonly string $basePath = '/') {}
 
+    /**
+     * Performs the requested action and reports the outcome.
+     * Supports toggling selective device debug, connectivity checks, refreshing the poller cache (verified against the collector), and reloading or diagnosing data queries.
+     *
+     * @param ?PDO $remote The collector's connection, or null when the device is on the primary.
+     * @param array $host The device's row, including SNMP credentials to redact from output.
+     * @throws \RuntimeException When a remote step or a confirmation fails.
+     */
     public function execute(PDO $primary, ?PDO $remote, DeviceMaintenanceState $state, DeviceMaintenanceRequest $request, #[\SensitiveParameter] array $host): DeviceMaintenanceResult
     {
         $id = $state->device->id;
@@ -85,6 +102,12 @@ final class DeviceMaintenanceExecutor
         return new DeviceMaintenanceResult($completed, 'Data queries reindexed.', $output);
     }
 
+    /**
+     * Asks a remote collector to ping the device and returns its sanitized output.
+     * The collector address and path are validated, and the collector must report that its output was sanitized.
+     *
+     * @throws \RuntimeException When the address is refused, the probe fails or the reply is not in the expected form.
+     */
     private function remoteProbe(PDO $primary, int $pollerId, int $deviceId): string
     {
         $query = $primary->prepare('SELECT hostname FROM poller WHERE id = ?');
@@ -115,6 +138,12 @@ final class DeviceMaintenanceExecutor
         return $payload['output'];
     }
 
+    /**
+     * Adds or removes the device in the selective debug list, confirming the stored value.
+     * Runs in its own transaction unless the connection already has one.
+     *
+     * @throws \RuntimeException When the update cannot be saved or confirmed.
+     */
     private function setDebug(PDO $db, int $id, bool $enabled): void
     {
         $ownsTransaction = !$db->inTransaction();

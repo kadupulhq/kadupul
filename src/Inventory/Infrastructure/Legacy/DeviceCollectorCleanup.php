@@ -16,6 +16,9 @@ use RuntimeException;
 /** Primary-owned cleanup receipts survive a committed collector transfer. */
 final class DeviceCollectorCleanup
 {
+    /**
+     * Binds the receipts to the transaction runner.
+     */
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
     // Existing settings replication excludes poller_replicate* names.
@@ -129,6 +132,12 @@ final class DeviceCollectorCleanup
         }
     }
 
+    /**
+     * Prepares and runs a statement against the receipts.
+     *
+     * @param array $parameters Map from int|string to mixed.
+     * @throws RuntimeException When preparing or running the statement fails.
+     */
     private function execute(PDO $connection, string $sql, array $parameters): \PDOStatement
     {
         $query = $connection->prepare($sql);
@@ -138,6 +147,11 @@ final class DeviceCollectorCleanup
         return $query;
     }
 
+    /**
+     * Returns the id after checking it is in range: 1 to 16777215 for a device, 1 to 65535 for a collector.
+     *
+     * @throws RuntimeException When the id is out of range.
+     */
     private function identity(int $value, bool $device = false): int
     {
         if ($value < 1 || $value > ($device ? 16777215 : 65535)) {
@@ -146,6 +160,11 @@ final class DeviceCollectorCleanup
         return $value;
     }
 
+    /**
+     * Converts a stored id string to an integer, accepting only canonical decimal digits within the range allowed by identity().
+     *
+     * @throws RuntimeException When the string is not a canonical id in range.
+     */
     private function parseIdentity(string $value, bool $device = false): int
     {
         if (strlen($value) > ($device ? 8 : 5) || (string) (int) $value !== $value) {

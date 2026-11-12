@@ -12,10 +12,19 @@ use Kadupul\Inventory\Application\Port\DeviceDetailsReader;
 use Kadupul\Inventory\Application\ReadModel\DeviceDetails;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceProjection;
 
+/**
+ * Reads one device's details, limited to devices the user may see.
+ */
 final readonly class DoctrineDeviceDetailsReader implements DeviceDetailsReader
 {
+    /**
+     * Binds the reader to the main connection and the visibility rules.
+     */
     public function __construct(private Connection $database, private DoctrineDeviceVisibility $visibility) {}
 
+    /**
+     * Returns the device's details, or null when it is missing, deleted or not visible to the user.
+     */
     public function findVisible(int $userId, int $id): ?DeviceDetails
     {
         $row = $this->database->fetchAssociative("SELECT DISTINCT h.id, h.description, h.hostname,

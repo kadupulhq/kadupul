@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Application\Query;
 
+/**
+ * The reference data and defaults offered on the device creation form.
+ */
 final readonly class DeviceCreationChoices
 {
     /** Reference choices map positive IDs to display names. Defaults contain no credentials. */

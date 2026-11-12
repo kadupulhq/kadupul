@@ -13,10 +13,24 @@ use Kadupul\Inventory\Domain\NewDevice;
 use Symfony\Component\Process\Process;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/**
+ * Creates devices by running the creation worker script in a separate PHP process.
+ */
 final readonly class LegacyDeviceCreator implements DeviceCreator
 {
+    /**
+     * Binds the creator to the project directory that holds the worker script and to the database.
+     */
     public function __construct(private string $projectDir, private DatabaseConnection $database) {}
 
+    /**
+     * Creates the device in the worker and returns its id.
+     * Any failure to read a clear result is reported as an uncertain outcome, because the device may or may not exist.
+     *
+     * @throws InventoryAccessDenied When the worker denies the user.
+     * @throws \InvalidArgumentException When the worker rejects the settings or referenced items as no longer valid.
+     * @throws \RuntimeException When the outcome is uncertain.
+     */
     public function create(int $userId, NewDevice $device): int
     {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();

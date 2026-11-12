@@ -15,10 +15,19 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Form for creating a site.
+ */
 final class SiteCreateType extends AbstractType
 {
+    /**
+     * Binds the form to the translator used for validation messages.
+     */
     public function __construct(private readonly TranslatorInterface $translator) {}
 
+    /**
+     * Adds the name, address, map, time zone and notes fields.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach (['name' => 'Name', 'address1' => 'Address line 1', 'address2' => 'Address line 2', 'city' => 'City', 'state' => 'State', 'postal_code' => 'Postal code', 'country' => 'Country', 'latitude' => 'Latitude', 'longitude' => 'Longitude', 'zoom' => 'Map zoom', 'alternate_id' => 'Alternate name'] as $field => $label) {
@@ -29,6 +38,9 @@ final class SiteCreateType extends AbstractType
         $builder->add('notes', TextareaType::class, ['label' => 'Notes', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['rows' => 5]]);
     }
 
+    /**
+     * Enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_site_create', 'method' => 'POST']);

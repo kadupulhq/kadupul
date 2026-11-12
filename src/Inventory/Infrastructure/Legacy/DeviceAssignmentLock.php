@@ -15,6 +15,15 @@ use RuntimeException;
 /** Site-before-device locking and visibility checks shared by assignment workers. */
 final class DeviceAssignmentLock
 {
+    /**
+     * Locks a device (and its site, first) and returns its assignment row if the actor may see it.
+     * The site is locked before the device to match the lock order of site deletion and device saves.
+     *
+     * @param PDO $connection The transaction connection that holds the locks.
+     * @return ?array The device's id, description, template, collector, site and SNMP version; null when the device does not exist or is not visible.
+     * @throws DeviceEditConflict When the device moved to another site while the locks were taken.
+     * @throws RuntimeException When the site lock cannot be taken.
+     */
     public static function findVisible(PDO $connection, int $actorId, int $deviceId): ?array
     {
         // Match the site-before-host lock order used by site deletion and device saves.
@@ -31,7 +40,13 @@ final class DeviceAssignmentLock
         }
         $row = db_fetch_row_prepared("SELECT id, description, host_template_id, poller_id, site_id, snmp_version FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$deviceId]);
         $provider = new class ($connection) implements DatabaseConnection {
+            /**
+             * Wraps an existing connection.
+             */
             public function __construct(private PDO $connection) {}
+            /**
+             * Returns the wrapped connection.
+             */
             public function get(): PDO
             {
                 return $this->connection;

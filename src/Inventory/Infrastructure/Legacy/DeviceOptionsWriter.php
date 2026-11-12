@@ -10,8 +10,16 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Domain\DeviceOptionsChange;
 use Kadupul\Inventory\Domain\DeviceState;
 
+/**
+ * Writes and confirms location and polling option changes on one device row.
+ */
 final class DeviceOptionsWriter
 {
+    /**
+     * Updates the changed columns of the device row.
+     *
+     * @throws \RuntimeException When exactly one row was not updated.
+     */
     public function apply(\PDO $connection, DeviceState $device, DeviceOptionsChange $change): void
     {
         $assignments = implode(', ', array_map(static fn($field) => $field . ' = ?', array_keys($change->fields)));
@@ -20,6 +28,11 @@ final class DeviceOptionsWriter
             throw new \RuntimeException('Device options could not be saved.');
         }
     }
+    /**
+     * Re-reads the device row and checks that every changed column holds its new value.
+     *
+     * @throws \RuntimeException When the row or a value cannot be confirmed.
+     */
     public function verify(\PDO $connection, DeviceState $device, DeviceOptionsChange $change): void
     {
         $columns = implode(', ', array_keys($change->fields));

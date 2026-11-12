@@ -16,13 +16,33 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
+/**
+ * Looks up devices for removal and removes them by running the removal worker script in a separate PHP process.
+ */
 final readonly class LegacyDeviceRemovals implements DeviceRemovals
 {
+    /**
+     * Binds the adapter to the database, the device state reader and the project directory that holds the worker script.
+     */
     public function __construct(private DatabaseConnection $database, private LegacyDeviceStates $states, private string $projectDir) {}
+    /**
+     * Returns the visible devices with the graphs and data sources that removal would affect.
+     *
+     * @param array $ids List of int.
+     * @throws DevicesNotFound When a selected device does not exist or is not visible.
+     */
     public function findVisible(int $actorId, array $ids): array
     {
         return array_map(fn($device) => DeviceRemovalSnapshot::read($this->database->get(), $device), $this->states->findVisible($actorId, $ids));
     }
+    /**
+     * Removes the selected devices in the worker.
+     *
+     * @throws DeviceEditConflict When the devices or their graphs and data sources changed, or shared data sources or aggregate graphs block removing them.
+     * @throws InventoryAccessDenied When the worker denies the actor.
+     * @throws DevicesNotFound When a selected device is missing.
+     * @throws \RuntimeException When the outcome is unknown or could not be confirmed.
+     */
     public function remove(int $actorId, DeviceSelection $selection, DeviceRemovalPolicy $policy): void
     {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();

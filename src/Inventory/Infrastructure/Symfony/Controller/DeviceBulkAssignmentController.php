@@ -23,8 +23,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * Confirmation page for assigning selected devices to a site, template or collector.
+ */
 final class DeviceBulkAssignmentController
 {
+    /**
+     * Shows the selected devices and the available targets on GET and applies the assignment on POST, then redirects to the device list.
+     * Responds 401 or 403 when access is denied, 404 when a selected device is missing, 400 for an invalid selection, 409 on an edit conflict and 422 for invalid input. A failure with an unknown outcome gives 502. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/assign/{kind}', name: 'inventory_device_bulk_assignment', requirements: ['kind' => 'site|template|collector'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(string $kind, Request $request, PrepareDeviceStateChange $prepare, \Kadupul\Inventory\Application\Query\ListDeviceAssignmentTargets $targets, \Kadupul\Inventory\Application\Command\AssignDevices $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, \Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm $validation): Response
     {

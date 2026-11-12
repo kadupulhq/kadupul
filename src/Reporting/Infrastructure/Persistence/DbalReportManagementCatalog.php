@@ -18,16 +18,32 @@ use Kadupul\Navigation\Contract\Management\CatalogScreen;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * Reads the report list for the admin and personal report management screens.
+ */
 #[AutoconfigureTag('kadupul.management_catalog')]
 final readonly class DbalReportManagementCatalog implements ManagementCatalog
 {
+    /**
+     * Binds the catalog to the web connection.
+     */
     public function __construct(#[Autowire(service: 'doctrine.dbal.web_connection')] private Connection $database) {}
 
+    /**
+     * Tells whether this catalog serves the screen (the admin and personal report lists).
+     */
     public function supports(CatalogScreen $screen): bool
     {
         return in_array($screen, [CatalogScreen::AdminReports, CatalogScreen::MyReports], true);
     }
 
+    /**
+     * Returns one page of reports matching the filter, sorted as requested.
+     *
+     * The personal screen lists only the actor's reports.
+     *
+     * @throws \InvalidArgumentException when the screen or sort column is unsupported, or the actor ID is below 1
+     */
     public function read(CatalogScreen $screen, CatalogFilters $filters, int $actorId, int $parentId): CatalogPage
     {
         if (!$this->supports($screen) || !array_key_exists($filters->sortColumn, $screen->columns()) || $actorId < 1) {

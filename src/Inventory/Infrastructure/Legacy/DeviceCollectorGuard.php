@@ -49,6 +49,14 @@ final readonly class DeviceCollectorGuard
         }
     }
 
+    /**
+     * Records the collector's current configuration after checking that it is available.
+     * Call it inside the worker transaction; assertCurrent() later compares against this snapshot.
+     *
+     * @param ?int $maximumHeartbeatAge Largest accepted age of the collector's last status, in seconds; null skips the heartbeat check.
+     * @throws RuntimeException When the collector is unavailable.
+     * @throws \LogicException When no transaction is active.
+     */
     public static function capture(PDO $connection, int $pollerId, ?int $maximumHeartbeatAge = null): self
     {
         $row = self::read($connection, $pollerId, false);

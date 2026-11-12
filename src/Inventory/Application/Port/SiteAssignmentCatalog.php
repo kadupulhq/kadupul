@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Application\Port;
 
+/**
+ * Lists the sites a device can be assigned to.
+ */
 interface SiteAssignmentCatalog
 {
     /** @return array<int, string> */

@@ -16,6 +16,9 @@ use RuntimeException;
 /** Shared collector move effects; callers own locks, authorization and transactions. */
 final class DeviceCollectorTransfer
 {
+    /**
+     * Binds the transfer to the transaction runner.
+     */
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
     /** @param array<int, PDO> $connections */

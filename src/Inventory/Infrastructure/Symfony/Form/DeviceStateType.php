@@ -12,8 +12,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Form for confirming a bulk device operation.
+ */
 final class DeviceStateType extends AbstractType
 {
+    /**
+     * Adds the hidden selection, and the SNMP or options sub-form when the operation edits them.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class);
@@ -24,6 +30,9 @@ final class DeviceStateType extends AbstractType
             $builder->add('options', DeviceOptionsType::class, ['label' => 'Device options']);
         }
     }
+    /**
+     * Accepts the "edit_snmp" and "edit_options" flags, and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['edit_snmp' => false, 'edit_options' => false, 'translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_state', 'method' => 'POST']);

@@ -22,6 +22,17 @@ final class SelectionIds
         return $revisions;
     }
 
+    /**
+     * Validates a batch of 1 to 100 ids and returns them as a sorted list of unique integers.
+     *
+     * @param array $ids List of int|string.
+     * @param int $digits Maximum number of decimal digits per id.
+     * @param int $maximum Largest allowed id.
+     * @param string $cardinalityError Message used when the batch size is wrong.
+     * @param string $identityError Message used when an id is malformed, repeated or the input is not a list.
+     * @return array List of int.
+     * @throws \InvalidArgumentException
+     */
     public static function normalize(array $ids, int $digits, int $maximum, string $cardinalityError, string $identityError): array
     {
         if ($ids === [] || count($ids) > 100) {

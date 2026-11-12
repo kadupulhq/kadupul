@@ -13,10 +13,20 @@ use Kadupul\Inventory\Application\ReadModel\SitePage;
 use Kadupul\Inventory\Application\ReadModel\SiteSummary;
 use Kadupul\Inventory\Domain\SiteListCriteria;
 
+/**
+ * Reads the site list with a count of the devices visible to the user.
+ */
 final readonly class DoctrineSiteCatalog implements SiteCatalog
 {
+    /**
+     * Binds the catalog to the main connection and the visibility rules.
+     */
     public function __construct(private Connection $database, private DoctrineDeviceVisibility $visibility) {}
 
+    /**
+     * Returns one page of sites matching the search, with hasNext set when more rows follow.
+     * The search matches the name, city, state and country. Every site is listed; only the device count depends on what the user may see.
+     */
     public function listFor(int $userId, SiteListCriteria $criteria): SitePage
     {
         $predicate = $this->visibility->predicate($userId);

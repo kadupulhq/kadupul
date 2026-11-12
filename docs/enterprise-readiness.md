@@ -283,7 +283,7 @@ the old serialization and cannot repair previously stored values.
 | Native database identity and caller-owned work remain explicit | Platform installer persistence | verified | Real shipped DDL, bound native queries, exact table identity, distinct local/remote collector IDs and caller-owned rollback are exercised on isolated database engines. This does not promise atomic DDL or distributed collector rollback. |
 | Safe mixed-version deployment and full legacy retirement | Platform installer operations | planned | Stop/drain workers and deploy the whole slice before cache rebuild. Native engine retirement, full production upgrade/restoration rehearsals, Windows and collector recovery remain release gates. No deployment or release is claimed. |
 
-This is main/1.3 architectural work. LTS is unchanged and requires separate
+This is `main` architectural work. LTS is unchanged and requires separate
 maintenance verification for shared native reliability corrections; the new
 Symfony architecture is not a backport.
 

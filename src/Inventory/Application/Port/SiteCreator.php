@@ -9,7 +9,13 @@ namespace Kadupul\Inventory\Application\Port;
 
 use Kadupul\Inventory\Domain\NewSite;
 
+/**
+ * Stores new sites.
+ */
 interface SiteCreator
 {
+    /**
+     * Creates the site and returns its id.
+     */
     public function create(int $userId, NewSite $site): int;
 }
