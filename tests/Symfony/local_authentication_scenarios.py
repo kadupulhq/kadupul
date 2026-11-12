@@ -193,12 +193,19 @@ def verify_local_authentication(harness, database_sessions, check):
         check(actor(idle).get('json', {}).get('id') == user_id, 'cross-site timeout logout with a stale token retains the session')
         browser(idle, '/logout.php?action=timeout', 'cross-site')
         check(actor(idle).get('json', {}).get('id') == user_id, 'cross-site timeout GET only confirms and retains the session')
-        landed = browser(idle, '/logout.php?action=timeout', 'same-origin', stale_timeout)
-        check(actor(idle)['status'] == 401 and landed == '<BASE>/logout.php',
-              'idle timeout logout with a stale token ends the session and reports it')
-        tokenless = admitted(changed_password)
-        browser(tokenless, '/logout.php?action=timeout', 'same-origin')
-        check(actor(tokenless)['status'] == 401, 'idle timeout logout without a token ends the session')
+        # Older pages may still post with a stale token; the CSRF callback then
+        # replaces the session identifier, so this browser is signed out.
+        browser(idle, '/logout.php?action=timeout', 'same-origin', stale_timeout)
+        check(actor(idle)['status'] == 401, 'idle timeout POST with a stale token leaves the browser signed out')
+        # The idle timer navigates by same-origin GET, which ends the stored session itself.
+        timed_out = admitted(changed_password)
+        before_timeout = copy.copy(next(item for item in jar(timed_out) if item.name == 'Cacti'))
+        landed = browser(timed_out, '/logout.php?action=timeout', 'same-origin')
+        check(actor(timed_out)['status'] == 401 and landed == '<BASE>/logout.php',
+              'idle timeout GET ends the session and reports it')
+        replayed = Session(harness.base)
+        jar(replayed).set_cookie(before_timeout)
+        check(actor(replayed)['status'] == 401, 'idle timeout GET removes the stored session, not only the cookie')
         anonymous = Session(harness.base)
         check('logout.php' not in anonymous.request('/logout.php')['url'], 'logout without a session redirects instead of confirming')
 

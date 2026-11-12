@@ -382,7 +382,7 @@ for (const nativeApi of [true, false]) {
   });
 }
 
-for (const [action, marker] of [['timeout', null], ['disabled', 'cactiLoginSuspend'], ['remote', 'cactiRemoteState']]) {
+for (const [action, marker] of [['disabled', 'cactiLoginSuspend'], ['remote', 'cactiRemoteState']]) {
   test(`automatic ${action} logout submits CSRF by POST under CSP and a foreign base`, async ({ page, baseURL }) => {
     await loadLayout(page);
     await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
@@ -399,15 +399,7 @@ for (const [action, marker] of [['timeout', null], ['disabled', 'cactiLoginSuspe
       $.ajaxQ = { abortAll() {} };
     });
     const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
-    await page.evaluate(marker => {
-      if (marker === null) {
-        window.refreshIsLogout = true;
-        window.refreshMSeconds = 1;
-        setupPageTimeout();
-      } else {
-        checkForRedirects(marker, null);
-      }
-    }, marker);
+    await page.evaluate(marker => checkForRedirects(marker, null), marker);
     const sent = await request;
     expect(sent.method()).toBe('POST');
     expect(Object.fromEntries(new URLSearchParams(sent.postData()))).toEqual({ action, __csrf_magic: 'sid:fixture-token,123456' });
@@ -416,6 +408,27 @@ for (const [action, marker] of [['timeout', null], ['disabled', 'cactiLoginSuspe
     expect(new URL(sent.url()).searchParams.get('action')).toBe(action);
   });
 }
+
+test('the idle timer ends the session by same-origin GET even with a token', async ({ page, baseURL }) => {
+  await loadLayout(page);
+  await page.route('**/monitoring/logout.php*', route => route.fulfill({ body: 'Logout request received' }));
+  await page.evaluate(() => {
+    window.urlPath = '/monitoring/';
+    window.csrfMagicToken = 'sid:fixture-token,123456';
+    $.ajaxQ = { abortAll() {} };
+  });
+  const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');
+  await page.evaluate(() => {
+    window.refreshIsLogout = true;
+    window.refreshMSeconds = 1;
+    setupPageTimeout();
+  });
+  const sent = await request;
+  // A stale token must not route the logout through the CSRF callback.
+  expect(sent.method()).toBe('GET');
+  expect(new URL(sent.url()).origin).toBe(new URL(baseURL).origin);
+  expect(new URL(sent.url()).searchParams.get('action')).toBe('timeout');
+});
 
 test('a user logout submits CSRF by POST without an automatic reason', async ({ page, baseURL }) => {
   await loadLayout(page);
@@ -429,7 +442,7 @@ test('a user logout submits CSRF by POST without an automatic reason', async ({ 
   expect(new URL(sent.url()).origin).toBe(new URL(baseURL).origin);
 });
 
-test('automatic logout without a CSRF token opens confirmation by GET', async ({ page }) => {
+test('automatic logout without a CSRF token navigates by GET', async ({ page }) => {
   await loadLayout(page);
   await page.route('**/logout.php?*', route => route.fulfill({ body: 'Confirm logout' }));
   const request = page.waitForRequest(request => new URL(request.url()).pathname === '/monitoring/logout.php');

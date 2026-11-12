@@ -3236,9 +3236,11 @@ function submitLogout(action) {
 		// so the reason must survive in the query to keep its message.
 		target.searchParams.set('action', action);
 	}
-	if (typeof csrfMagicToken !== 'string' || csrfMagicToken === '') {
-		// Never send a bare POST. logout.php ends a timed-out session on this
-		// same-origin GET; other actions get a fresh confirmation page.
+	if (action === 'timeout' || typeof csrfMagicToken !== 'string' || csrfMagicToken === '') {
+		// logout.php ends a timed-out session on this same-origin GET. A POST
+		// with a stale token would instead go through the CSRF callback, which
+		// replaces the session identifier and leaves the old session stored.
+		// Other actions without a token get a fresh confirmation page.
 		document.location.assign(target.href);
 		return false;
 	}

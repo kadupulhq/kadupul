@@ -2322,7 +2322,7 @@ const LOGOUT_PRESENTATION_SOURCES = [
     'src/IdentityAccess/Application/Port/AccountLockoutStatus.php' => '54d4a8d16b5df9320d99752c35e5173e96ceac8500eab86945115809e41c1e32',
     'src/IdentityAccess/Application/Query/IsAccountLocked.php' => 'cdf547461024111a7f55f5613717404f916a53f0c8e613a755f6a764d1492eed',
     'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php' => 'e81e2186bc6ccebf82a2af65a1a15528485a134651ec8c5507a314dfd426f469',
-    'include/layout.js' => '87453b45fe458b9362dc4a4d14753ec2aea2ab0b3b77027bc516b9b30b6e1919',
+    'include/layout.js' => '27b86b7e9643634934f0dd19d1fc06792b667ca1b20d66a72667f479959413d5',
     'include/vendor/csrf/csrf-magic.php' => '4159c4d545c18181fbda73c99d00722de5dc9138ad1e75830d45740ce09511f0',
     'include/vendor/csrf/csrf-conf.php' => '61034f42285445bda52e24bb14d53697909553c96eec7f6a9d93247b28689514',
 ];
