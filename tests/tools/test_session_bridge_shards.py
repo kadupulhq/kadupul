@@ -38,7 +38,7 @@ class ShardPartitionTest(unittest.TestCase):
                 self.assertEqual('account_lifecycle', shard[-1])
 
     def test_local_authentication_runs_in_its_shard_for_both_session_backends(self):
-        selected = [step for step in selected_steps('3/3') if step.__name__ == 'local_authentication']
+        selected = [step for step in selected_steps('3/5') if step.__name__ == 'local_authentication']
         self.assertEqual(1, len(selected))
         for backend in (False, True):
             fixture = SimpleNamespace(harness=object(), database_sessions=backend)
@@ -47,7 +47,7 @@ class ShardPartitionTest(unittest.TestCase):
             verify.assert_called_once_with(fixture.harness, backend, session_bridge.check)
 
     def test_basic_authentication_runs_in_its_http_shard(self):
-        selected = [step for step in selected_steps('3/3') if step.__name__ == 'basic_authentication']
+        selected = [step for step in selected_steps('3/5') if step.__name__ == 'basic_authentication']
         self.assertEqual(1, len(selected))
         fixture = SimpleNamespace(harness=object())
         with patch('basic_auth_scenarios.verify_basic_authentication') as verify:
