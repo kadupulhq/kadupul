@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:23-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -395,8 +395,9 @@ msgid "Report Name"
 msgstr "レポート名"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "帰還"
@@ -1394,20 +1395,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "ルールを削除してもよろしいですか '%s'？"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "本当に続行してもよろしいですか ?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "サブツリーで"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "リーフタイプを変更すると、無効なルールはすべて自動的に削除され、回復できなくなります。"
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "葉の種類を変更"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1422,8 +1411,16 @@ msgid "Created Trees"
 msgstr "作成された木"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "対象となるオブジェクト"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "グラフのグループスタイル"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1434,6 +1431,10 @@ msgstr "木に引っ掛ける"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "この規則項目に使用されるフィールド名。"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "葉アイテムの種類"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "ツリールールが見つかりません"
@@ -1442,13 +1443,29 @@ msgstr "ツリールールが見つかりません"
 msgid "Object Selection Criteria"
 msgstr "オブジェクト選択基準"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "オプション：サブツリー項目"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "根(植物)"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "タイプ"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "ツリー"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1464,20 +1481,8 @@ msgid "Tree Rules"
 msgstr "ツリールール"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "ツリールールの選択[new]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "グループ化を使用する"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "警告:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "グラフベースのオブジェクトのマッチング/作成をサポートしていないリーフタイプを &quot;Device&quot;に変更しています。"
 
 #: cactid.php
 #, fuzzy
@@ -5644,10 +5649,6 @@ msgstr "全データソースの合計"
 msgid "Total Similar Data Sources"
 msgstr "合計類似データソース"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "ツリー"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "ツリーモード"
@@ -6580,10 +6581,6 @@ msgstr "一般設定"
 msgid "Give this host a meaningful description."
 msgstr "このホストにわかりやすい説明を付けます。"
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "グラフのグループスタイル"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "グラフ項目の種類"
@@ -6735,10 +6732,6 @@ msgid "Is this to carry the template?"
 msgstr "これはテンプレートを運ぶためのものですか？"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "葉アイテムの種類"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "左軸フォーマッタ（--left-axis-formatter &lt;フォーマット名&gt;）"
 
@@ -6849,10 +6842,6 @@ msgstr "操作"
 #: include/global_form.php
 msgid "Operator."
 msgstr "- オペレーター - タンク"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "オプション：サブツリー項目"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13899,6 +13888,10 @@ msgstr "<strong>%s</strong>から</strong>%s<strong>にアップグレード"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V %s（ DB %s）からv %sにアップグレード中"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "警告:"
 
 #: lib/installer.php
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
