@@ -20,14 +20,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Console entry point for the asset register: shows it, applies one JSON command from stdin, or serves the web adapter's worker request.
+ * It prints a single JSON line with status ok or failed.
+ */
 #[AsCommand(name: 'assets:register', description: 'Inspect the asset pilot or apply one bounded JSON command from stdin.')]
 final class AssetCommand extends Command
 {
+    /**
+     * Binds the command to the registry, the view, the operator selector and the console access check.
+     */
     public function __construct(private readonly AssetRegistry $registry, private readonly ViewAssets $view, private readonly ConsoleOperator $operator, private readonly CliAssetAccess $access)
     {
         parent::__construct();
     }
 
+    /**
+     * Declares the operator, apply and worker options.
+     */
     protected function configure(): void
     {
         $this->addOption('operator', null, InputOption::VALUE_REQUIRED, 'Account used for authorization and attribution.')
@@ -35,6 +45,10 @@ final class AssetCommand extends Command
             ->addOption('worker', null, InputOption::VALUE_NONE, 'Receive an authenticated web adapter envelope on stdin.');
     }
 
+    /**
+     * Reads any stdin command, selects the operator and runs the view or the command.
+     * Failures are reported as a JSON reason code, never as an exception.
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {

@@ -11,6 +11,9 @@ use Kadupul\AssetManagement\Domain\AssetError;
 use Kadupul\AssetManagement\Domain\AssetData;
 use Kadupul\AssetManagement\Domain\AssetFields;
 
+/**
+ * Validates a submitted asset register form and turns it into a register command.
+ */
 final class AssetFormInput
 {
     /**
@@ -66,6 +69,11 @@ final class AssetFormInput
         return $words;
     }
 
+    /**
+     * Parses a non-negative decimal integer string below 2147483647.
+     *
+     * @throws AssetError when the value is not one
+     */
     private static function integer(mixed $value): int
     {
         if (!is_string($value) || preg_match('/\A(?:0|[1-9][0-9]{0,9})\z/D', $value) !== 1 || (int) $value > 2147483646) {

@@ -13,10 +13,23 @@ use Kadupul\AssetManagement\Application\Port\AssetStore;
 use Kadupul\AssetManagement\Domain\AssetError;
 use Kadupul\AssetManagement\Domain\AssetData;
 
+/**
+ * Stores the asset register in the database as one registry row plus record, event and observation tables.
+ * Writes are confirmed by reading them back.
+ */
 final readonly class DoctrineAssetStore implements AssetStore
 {
+    /**
+     * Binds the store to the database connection.
+     */
     public function __construct(private Connection $database) {}
 
+    /**
+     * Runs the operation in a transaction that locks the registry row.
+     * On MySQL it first requires utf8mb4, strict mode and InnoDB tables.
+     *
+     * @throws AssetError when the caller already holds a transaction, storage is unsafe or missing, or the commit outcome is unknown (uncertain)
+     */
     public function atomic(\Closure $operation): mixed
     {
         if ($this->database->getTransactionNestingLevel() !== 0) {
@@ -62,6 +75,11 @@ final readonly class DoctrineAssetStore implements AssetStore
         }
     }
 
+    /**
+     * Reads the whole register at one revision.
+     *
+     * @throws AssetError when the schema is missing, stored data is invalid, there are more than 4500 records, or the revision changed during the read
+     */
     public function snapshot(): array
     {
         $row = $this->database->fetchAssociative('SELECT revision, policy, sources FROM asset_registry WHERE id = 1');
@@ -95,6 +113,11 @@ final readonly class DoctrineAssetStore implements AssetStore
         return $state;
     }
 
+    /**
+     * Writes the differences between the two snapshots, then reads the register back and compares it.
+     *
+     * @throws AssetError when the stored revision no longer matches the before snapshot or a write cannot be confirmed
+     */
     public function save(array $before, array $after): void
     {
         foreach (['assets', 'identities', 'dependencies'] as $kind) {
@@ -130,6 +153,9 @@ final readonly class DoctrineAssetStore implements AssetStore
         }
     }
 
+    /**
+     * Returns the actor, command hash and result recorded for the request id, or null when the request was never applied.
+     */
     public function receipt(string $requestId): ?array
     {
         $data = $this->database->fetchOne('SELECT data FROM asset_event WHERE request_id = ?', [$requestId]);
@@ -140,6 +166,11 @@ final readonly class DoctrineAssetStore implements AssetStore
         return ['actor_id' => AssetData::number($event['actor_id'] ?? null), 'command_hash' => AssetData::string($event['command_hash'] ?? null), 'result' => AssetData::result(AssetData::object($event['result'] ?? null))];
     }
 
+    /**
+     * Appends the event to the audit journal and confirms it was stored.
+     *
+     * @throws AssetError when the stored event differs from the one written
+     */
     public function journal(array $event): void
     {
         $data = json_encode($event, JSON_THROW_ON_ERROR);
@@ -149,6 +180,11 @@ final readonly class DoctrineAssetStore implements AssetStore
         }
     }
 
+    /**
+     * Records each observation under its run and confirms it was stored.
+     *
+     * @throws AssetError when a stored observation differs from the one written
+     */
     public function observe(array $observations): void
     {
         foreach ($observations as $observation) {
@@ -160,6 +196,11 @@ final readonly class DoctrineAssetStore implements AssetStore
         }
     }
 
+    /**
+     * Returns up to $limit events older than the sequence number $before, newest first.
+     *
+     * @throws AssetError when $before is below 1 or $limit is outside 1 to 50
+     */
     public function history(int $before, int $limit): array
     {
         if ($before < 1 || $limit < 1 || $limit > 50) {

@@ -14,13 +14,27 @@ use Kadupul\AssetManagement\Domain\AssetError;
 use Kadupul\IdentityAccess\Contract\BrowserSession;
 use Symfony\Component\Process\Process;
 
+/**
+ * Applies a register command for a web request by running the console command in a separate PHP process, authenticated with the visitor's session.
+ * The command id must be echoed back in the result.
+ */
 final readonly class AssetWorker implements AssetWriter
 {
     /** Worker stdout and stderr together; a larger reply is not a receipt. */
     private const int OUTPUT_LIMIT = 8388608;
 
+    /**
+     * Binds the worker to access checks, the browser session, the database and the project directory.
+     */
     public function __construct(private WebAssetAccess $access, private BrowserSession $session, private Connection $database, private string $projectDir) {}
 
+    /**
+     * Runs the command in the worker process and returns its result.
+     *
+     * @param array<string, mixed> $command
+     * @return array{request_id: string, revision: int, asset_id?: string, observations?: int}
+     * @throws AssetError with reason uncertain when the worker's outcome cannot be established, because the command may still have been applied
+     */
     public function apply(array $command): array
     {
         $actor = $this->access->requireActor();

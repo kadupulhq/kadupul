@@ -29,6 +29,9 @@ final readonly class AssetRegistry implements AssetWriter
     public const int MAX_IDENTITIES = 2000;
     public const int MAX_BATCH = 100;
 
+    /**
+     * Binds the registry to actor access, the asset store, the monitoring inventory and the audit trail.
+     */
     public function __construct(private AssetAccess $access, private AssetStore $store, private MonitoringInventory $monitoring, private AuditTrail $audit) {}
 
     /**
