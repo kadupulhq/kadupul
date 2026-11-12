@@ -17,11 +17,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /** Confirms an item removal or move against the displayed definition. */
 final class CdefRevisionType extends AbstractType
 {
+    /** Adds the hidden revision. */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('revision', HiddenType::class);
     }
 
+    /** Turns on CSRF protection and refuses extra fields. */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -33,6 +35,7 @@ final class CdefRevisionType extends AbstractType
         ]);
     }
 
+    /** The form's field name prefix. */
     public function getBlockPrefix(): string
     {
         return 'cdef_item_change';
