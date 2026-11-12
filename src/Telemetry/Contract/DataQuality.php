@@ -19,11 +19,17 @@ enum DataQuality: string
     case Stale = 'stale';
     case Bad = 'bad';
 
+    /**
+     * Returns the lower-quality of the two.
+     */
     public function worst(self $other): self
     {
         return $this->severity() >= $other->severity() ? $this : $other;
     }
 
+    /**
+     * Ranks the quality, with higher numbers worse.
+     */
     private function severity(): int
     {
         return match ($this) {

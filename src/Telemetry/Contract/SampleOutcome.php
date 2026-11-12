@@ -14,11 +14,17 @@ final readonly class SampleOutcome
 {
     private const MAX_DETAIL = 500;
 
+    /**
+     * Keeps the rejection reason, which is null for an accepted sample.
+     */
     private function __construct(
         public ?RejectionReason $reason,
         public string $detail,
     ) {}
 
+    /**
+     * Builds the outcome for a stored sample.
+     */
     public static function accepted(): self
     {
         return new self(null, '');
@@ -43,6 +49,9 @@ final readonly class SampleOutcome
         return new self($reason, $detail);
     }
 
+    /**
+     * Tells whether the sample was stored.
+     */
     public function isAccepted(): bool
     {
         return $this->reason === null;
