@@ -65,6 +65,12 @@ switch (get_request_var('action')) {
             header('Location: app.php/automation/tree-rules/new', true, 302);
             exit;
         }
+        // Redirect before top_header() prints anything, or the header is lost.
+        if (!db_fetch_cell_prepared('SELECT id FROM automation_tree_rules WHERE id = ?', array(get_filter_request_var('id')))) {
+            raise_message('rule_not_found', __('Rule not found.'), MESSAGE_LEVEL_ERROR);
+            header('Location: automation_tree_rules.php', true, 302);
+            exit;
+        }
 
         top_header();
         automation_tree_rules_edit();
@@ -556,10 +562,10 @@ function automation_tree_rules_edit()
     $rule = db_fetch_row_prepared('SELECT * FROM automation_tree_rules WHERE id = ?', array(get_request_var('id')));
 
     if (!cacti_sizeof($rule)) {
-        raise_message('rule_not_found', __('Rule not found.'), MESSAGE_LEVEL_ERROR);
-        cacti_header('automation_tree_rules.php');
+        // Deleted after the dispatcher's check; output has already started.
+        print '<p>' . __esc('Rule not found.') . '</p>';
 
-        exit;
+        return;
     }
 
     // The settings are edited in Symfony; this page keeps the criteria and previews.
