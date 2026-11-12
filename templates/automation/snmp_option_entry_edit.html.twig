@@ -1,0 +1,34 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% block title %}{{ (entry ? 'Edit SNMP entry' : 'Add SNMP entry')|trans({}, 'automation') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the numeric set ID. #}
+    <p><a href="{{ path('automation_snmp_option_edit', {id: set.id}) }}">{{ 'Back to %name%'|trans({'%name%': set.name}, 'automation') }}</a></p>
+    <h1>{% if entry %}{{ 'SNMP Options [edit: %name%]'|trans({'%name%': set.name}, 'automation') }}{% else %}{{ 'SNMP Options [new]'|trans({}, 'automation') }}{% endif %}</h1>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.snmp_version) }}
+        {% if form.keep_credentials is defined %}{{ form_row(form.keep_credentials) }}{% endif %}
+        {{ form_row(form.snmp_community) }}
+        {{ form_row(form.snmp_username) }}
+        {{ form_row(form.snmp_auth_protocol) }}
+        {{ form_row(form.snmp_password) }}
+        {{ form_row(form.snmp_priv_protocol) }}
+        {{ form_row(form.snmp_priv_passphrase) }}
+        {{ form_row(form.snmp_context) }}
+        {{ form_row(form.snmp_engine_id) }}
+        {{ form_row(form.snmp_port) }}
+        {{ form_row(form.snmp_timeout) }}
+        {{ form_row(form.max_oids) }}
+        {{ form_row(form.bulk_walk_size) }}
+        {{ form_row(form.snmp_retries) }}
+        {{ form_widget(form.revision) }}
+        {% if entry %}<p>{{ 'Sequence'|trans({}, 'automation') }}: {{ entry.sequence }}</p>{% endif %}
+        <button type="submit">{{ 'Save'|trans({}, 'automation') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

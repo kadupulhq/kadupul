@@ -78,6 +78,8 @@ final class AdministratorNotificationTest extends TestCase
         yield 'missing email' => [[], ['recipient' => ['email_address' => '', 'full_name' => 'Admin']], false, 'does not have an email'];
         yield 'lookup failure' => [[], ['lookup_error' => true], false, 'could not be confirmed'];
         yield 'legacy failure' => [['settings_how' => '0'], ['legacy_error' => 'private-smtp-secret'], true, 'could not be confirmed'];
+        // Nothing listens on loopback port 1: the SMTP attempt fails and must not fall back to the legacy mailer.
+        yield 'refused SMTP connection' => [['settings_smtp_port' => '1'], [], false, 'could not be confirmed'];
     }
 
     #[DataProvider('compatibility')]

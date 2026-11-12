@@ -82,7 +82,7 @@ for b in $BRANCHES; do
 
 		commit_count="$(git log "$branch_ref" --oneline --grep "$advisory_key" | wc -l | tr -d ' ')"
 		test_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- tests 2>/dev/null || true) | wc -l | tr -d ' ' )"
-		changelog_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- CHANGELOG CHANGELOG.md 2>/dev/null || true) | wc -l | tr -d ' ' )"
+		changelog_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- CHANGELOG CHANGELOG.md changelog.d 2>/dev/null || true) | wc -l | tr -d ' ' )"
 		security_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- SECURITY.md 2>/dev/null || true) | wc -l | tr -d ' ' )"
 		code_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- lib include cli api 2>/dev/null || true) | wc -l | tr -d ' ' )"
 
