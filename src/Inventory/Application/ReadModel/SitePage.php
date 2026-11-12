@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Application\ReadModel;
 
+/**
+ * One page of site summaries from the site list.
+ */
 final readonly class SitePage
 {
     /** @param list<SiteSummary> $sites */

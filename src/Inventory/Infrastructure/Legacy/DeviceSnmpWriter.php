@@ -12,8 +12,17 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Domain\DeviceSnmpConfiguration;
 use Kadupul\Inventory\Domain\DeviceState;
 
+/**
+ * Writes and confirms SNMP setting changes on one device row.
+ */
 final class DeviceSnmpWriter
 {
+    /**
+     * Saves the SNMP settings and verifies them.
+     * Setting the version to 0 (SNMP disabled) also clears the device's reindex methods and pending reindex entries. Runs in its own transaction unless the connection already has one, and rolls back that transaction on failure.
+     *
+     * @throws \RuntimeException When the write, the cleanup or the confirmation fails.
+     */
     public function apply(\PDO $connection, DeviceState $device, #[\SensitiveParameter] DeviceSnmpConfiguration $change): void
     {
         $ownsTransaction = !$connection->inTransaction();
@@ -51,6 +60,11 @@ final class DeviceSnmpWriter
         }
     }
 
+    /**
+     * Re-reads the device row and checks that every setting holds its new value and, for version 0, that no reindex data remains.
+     *
+     * @throws \RuntimeException When anything cannot be confirmed.
+     */
     public function verify(\PDO $connection, DeviceState $device, #[\SensitiveParameter] DeviceSnmpConfiguration $change): void
     {
         $columns = implode(', ', array_keys($change->fields));

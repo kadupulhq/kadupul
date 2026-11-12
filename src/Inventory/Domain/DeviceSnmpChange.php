@@ -11,6 +11,13 @@ namespace Kadupul\Inventory\Domain;
 final readonly class DeviceSnmpChange
 {
     public array $fields;
+    /**
+     * Validates an SNMP change for one device.
+     * Stored credentials may be kept only when the credential fields are empty.
+     *
+     * @param array $fields All SNMP fields plus a boolean "keep_credentials".
+     * @throws \InvalidArgumentException When a field is invalid or credentials are both kept and replaced.
+     */
     public function __construct(#[\SensitiveParameter] array $fields)
     {
         if (!is_bool($fields['keep_credentials'] ?? null)) {
@@ -28,6 +35,11 @@ final readonly class DeviceSnmpChange
         }
         $this->fields = ['keep_credentials' => $keep] + $configuration->fields;
     }
+    /**
+     * Returns the non-secret SNMP fields; for versions other than 3, the v3-only fields are reset.
+     *
+     * @return array Map from string to string.
+     */
     public function publicSettings(): array
     {
         $fields = array_intersect_key($this->fields, DeviceSnmpConfiguration::PUBLIC_DEFAULTS);
@@ -36,6 +48,12 @@ final readonly class DeviceSnmpChange
         }
         return $fields;
     }
+    /**
+     * Merges the stored credentials into this change when it keeps them, and validates the result.
+     *
+     * @param array $stored The device's stored SNMP settings, including credentials.
+     * @return array The complete settings to save.
+     */
     public function resolve(#[\SensitiveParameter] array $stored): array
     {
         $fields = $this->fields;

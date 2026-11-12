@@ -7,6 +7,9 @@
 
 namespace Kadupul\Inventory\Application\ReadModel;
 
+/**
+ * One page of device summaries from the device list.
+ */
 final readonly class DevicePage
 {
     /** @param list<DeviceSummary> $devices */

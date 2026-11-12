@@ -10,9 +10,22 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Infrastructure\Persistence\DeviceVisibilityRules;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/**
+ * Builds the SQL condition that limits devices to those a user may see, using the legacy connection.
+ * Unlike DoctrineDeviceVisibility, it can read the policies with locks, for use inside write transactions.
+ */
 final readonly class LegacyDeviceVisibility
 {
+    /**
+     * Binds the builder to the connection used to read the policies.
+     */
     public function __construct(private DatabaseConnection $database) {}
+    /**
+     * Returns the SQL condition limiting devices to those the user may see.
+     * The condition refers to the host table as "h" and the local graph table as "gl". With $lock, the policy rows and their exceptions are read in share mode so the condition reflects current committed state.
+     *
+     * @throws \LogicException When locking is requested outside a transaction.
+     */
     public function predicate(int $userId, bool $lock = false): string
     {
         $db = $this->database->get();

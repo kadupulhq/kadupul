@@ -13,8 +13,14 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Form for confirming a bulk site action.
+ */
 final class SiteActionType extends AbstractType
 {
+    /**
+     * Adds the hidden selection, and for duplication the name pattern for the copies.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class);
@@ -23,6 +29,9 @@ final class SiteActionType extends AbstractType
         }
     }
 
+    /**
+     * Accepts the "duplicate" flag, and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_site_action', 'method' => 'POST', 'duplicate' => false]);

@@ -17,10 +17,17 @@ use Kadupul\GraphDefinition\Application\Port\VdefEditor;
 use Kadupul\GraphDefinition\Domain\VdefFunctions;
 use Kadupul\GraphDefinition\Domain\VdefRevision;
 
+/** Writes VDEFs to the legacy tables. Each change runs in one transaction, locks the VDEF and checks its revision. */
 final readonly class LegacyVdefEditor implements VdefEditor
 {
+    /** Wires the database connection and the legacy configuration. */
     public function __construct(private Connection $database, private LegacyConfiguration $configuration) {}
 
+    /**
+     * Creates a VDEF, or renames it and checks the revision when $id is positive.
+     *
+     * @throws \InvalidArgumentException when the name or id is invalid, or the VDEF changed since $revision
+     */
     public function save(int $actorId, int $id, string $name, string $revision = ''): int
     {
         if ($id < 0) {
@@ -38,6 +45,11 @@ final readonly class LegacyVdefEditor implements VdefEditor
         });
     }
 
+    /**
+     * Adds an item at the end, or changes the item in $itemId when it is positive.
+     *
+     * @throws \InvalidArgumentException when the item is invalid or missing, or the VDEF changed since $revision
+     */
     public function saveItem(int $actorId, int $vdefId, int $itemId, int $type, string $value, string $revision): void
     {
         if ($vdefId < 1 || $itemId < 0) {
@@ -59,6 +71,11 @@ final readonly class LegacyVdefEditor implements VdefEditor
         });
     }
 
+    /**
+     * Removes the item after checking the revision.
+     *
+     * @throws \InvalidArgumentException when the item is missing or the VDEF changed since $revision
+     */
     public function deleteItem(int $actorId, int $vdefId, int $itemId, string $revision): void
     {
         if ($vdefId < 1 || $itemId < 1) {
@@ -73,6 +90,11 @@ final readonly class LegacyVdefEditor implements VdefEditor
         });
     }
 
+    /**
+     * Renumbers the items to match $orderedItemIds, which must name every item exactly once.
+     *
+     * @throws \InvalidArgumentException when the order is invalid or stale, or the VDEF changed since $revision
+     */
     public function reorder(int $actorId, int $vdefId, array $orderedItemIds, string $revision): void
     {
         if ($vdefId < 1 || count($orderedItemIds) > 500 || array_any($orderedItemIds, static fn(mixed $id): bool => !is_int($id) || $id < 1 || $id > 2147483647)) {
@@ -96,6 +118,13 @@ final readonly class LegacyVdefEditor implements VdefEditor
         });
     }
 
+    /**
+     * Deletes or duplicates the selected VDEFs in one transaction.
+     * Deleting is refused for a VDEF used by a graph template or referenced by another VDEF outside the selection. A copy's name is $titleFormat with <vdef_title> replaced by the original name.
+     *
+     * @param string $action delete or duplicate
+     * @throws \InvalidArgumentException when the action, selection, title or a revision is invalid, or a VDEF is in use
+     */
     public function act(int $actorId, string $action, array $ids, string $titleFormat = '<vdef_title> (1)', array $revisions = []): void
     {
         if (!in_array($action, ['delete', 'duplicate'], true) || $ids === [] || count($ids) > 500
@@ -133,6 +162,9 @@ final readonly class LegacyVdefEditor implements VdefEditor
         });
     }
 
+    /**
+     * @throws \InvalidArgumentException when the name is blank, over 255 characters or holds control characters
+     */
     private function validateName(string $name): void
     {
         if (trim($name) === '' || mb_strlen($name) > 255 || preg_match('/[\x00\r\n]/', $name)) {
@@ -140,6 +172,11 @@ final readonly class LegacyVdefEditor implements VdefEditor
         }
     }
 
+    /**
+     * Checks the value against the item type: a known function or data source, or a custom string of at most 150 characters.
+     *
+     * @throws \InvalidArgumentException when the type or value is not allowed
+     */
     private function validateItem(int $type, string $value): void
     {
         if ($type === 1 && !isset(VdefFunctions::FUNCTIONS[$value])) {
@@ -175,6 +212,9 @@ final readonly class LegacyVdefEditor implements VdefEditor
         ];
     }
 
+    /**
+     * @throws \InvalidArgumentException when the revision is empty or differs from the locked state's
+     */
     private function assertRevision(array $state, string $revision): void
     {
         if ($revision === '' || !hash_equals($state['revision'], $revision)) {
@@ -182,6 +222,13 @@ final readonly class LegacyVdefEditor implements VdefEditor
         }
     }
 
+    /**
+     * Runs $operation in its own transaction after rechecking that the actor may still change VDEFs.
+     * On MySQL it also requires the primary collector and InnoDB tables.
+     *
+     * @throws \RuntimeException when a transaction is already open or the database cannot give a safe one
+     * @throws \Kadupul\GraphDefinition\Application\Query\VdefAccessDenied when the actor lost access
+     */
     private function transaction(int $actorId, callable $operation): mixed
     {
         if ($this->database->isTransactionActive()) {
@@ -221,6 +268,11 @@ final readonly class LegacyVdefEditor implements VdefEditor
         }
     }
 
+    /**
+     * Rechecks the actor's account and the console and definitions realms with locking reads.
+     *
+     * @throws \Kadupul\GraphDefinition\Application\Query\VdefAccessDenied when any check fails
+     */
     private function assertCanMutate(int $actorId): void
     {
         if ($actorId < 1) {
@@ -239,6 +291,7 @@ final readonly class LegacyVdefEditor implements VdefEditor
         }
     }
 
+    /** True when the user holds the realm directly or through an enabled group; uses locking reads on MySQL. */
     private function hasRealm(int $actorId, int $realm): bool
     {
         $lock = $this->forUpdate();
@@ -251,6 +304,7 @@ final readonly class LegacyVdefEditor implements VdefEditor
             WHERE m.user_id = ? AND r.realm_id = ? AND g.enabled = 'on' LIMIT 1" . $lock, [$actorId, $realm]) !== false;
     }
 
+    /** The row-lock suffix for MySQL queries, or an empty string. */
     private function forUpdate(): string
     {
         return $this->database->getDatabasePlatform() instanceof AbstractMySQLPlatform ? ' FOR UPDATE' : '';

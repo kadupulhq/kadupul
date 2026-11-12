@@ -13,9 +13,16 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Form for choosing where to place the selected devices.
+ */
 final class DevicePlacementType extends AbstractType
 {
     public const TIMESPANS = ['Last Half Hour', 'Last Hour', 'Last 2 Hours', 'Last 4 Hours', 'Last 6 Hours', 'Last 12 Hours', 'Last Day', 'Last 2 Days', 'Last 3 Days', 'Last 4 Days', 'Last Week', 'Last 2 Weeks', 'Last Month', 'Last 2 Months', 'Last 3 Months', 'Last 4 Months', 'Last 6 Months', 'Last Year', 'Last 2 Years', 'Day Shift', 'This Day', 'This Week', 'This Month', 'This Year', 'Previous Day', 'Previous Week', 'Previous Month', 'Previous Year'];
+    /**
+     * Adds the hidden selection and the destination choice.
+     * For reports it also adds the timespan and alignment choices.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $targets = $options['targets'];
@@ -32,6 +39,9 @@ final class DevicePlacementType extends AbstractType
             $builder->add('alignment', ChoiceType::class, ['label' => 'Report alignment', 'choices' => ['Left' => 1, 'Center' => 2, 'Right' => 3]]);
         }
     }
+    /**
+     * Requires the "targets" option (labels keyed by destination) and "kind" ("tree" or "report"), and enables CSRF protection and POST.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired(['targets', 'kind']);
