@@ -12,7 +12,13 @@ namespace Kadupul\Navigation\Application\Port;
 
 use Kadupul\Navigation\Contract\Administration\ListScreen;
 
+/** Decides whether the signed-in user may view an administration list. */
 interface AdministrationListAccess
 {
+    /**
+     * Checks the console and screen permissions for the current user.
+     *
+     * @throws \Kadupul\Navigation\Application\Query\AdministrationListDenied when there is no user or the user lacks access
+     */
     public function authorize(ListScreen $screen): void;
 }

@@ -22,8 +22,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the management lists for every CatalogScreen except the personal reports. */
 final readonly class ManagementCatalogController
 {
+    /** Renders the list for the parent record in $id, or a plain response with status 401, 403, 404, 400 or 502; HEAD requests get no body. */
     #[Route('/management/graphs', name: 'management_graphs', defaults: ['screen' => 'graphs', 'id' => '0'], methods: ['GET', 'HEAD'])]
     #[Route('/management/data-sources', name: 'management_data_sources', defaults: ['screen' => 'data-sources', 'id' => '0'], methods: ['GET', 'HEAD'])]
     #[Route('/management/aggregate-graphs', name: 'management_aggregate_graphs', defaults: ['screen' => 'aggregate-graphs', 'id' => '0'], methods: ['GET', 'HEAD'])]
