@@ -2365,31 +2365,31 @@ function native_session_firewall_reviewed(string $root): bool
 
 // Reviewed list admission includes the route-to-screen-to-realm mapping.
 const ADMINISTRATION_LIST_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
-    'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
-    'src/Navigation/Application/Query/ViewAdministrationList.php' => '2362d63d5e541163d5d4a1c888222116d4d42066f099e0dd2ecee6121eaf4644',
-    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => '88d111f802cae85de5b7ef857337814f744daba9dbf3c5a7e27e94b82342a208',
+    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => '8fa9666a3623ecd8eedccd075da1edee7fbd0dd420057bf0f22304ec41769b5a',
+    'src/Navigation/Contract/Administration/ListScreen.php' => '6350d1b9aba91f396b95e67adaa9f9f19c1e19c86dc0bed0cb6d6b4822f4bce9',
+    'src/Navigation/Application/Query/ViewAdministrationList.php' => 'c0c6a2cfc47d9912e5149b6d6073d9682b1c9c143fd229974cddb6aec3c20d16',
+    'src/Navigation/Infrastructure/Symfony/Controller/AdministrationListController.php' => 'd6d97d003e9758a382ec76f25c454188a42277bc1f29594dd4ff4d7c494c5cf9',
 ];
 
 // Reviewed management route defaults, actor/realm admission and scoped inputs.
 const MANAGEMENT_CATALOG_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => '271bdf0f87d037c6f8863d7c89bda1a34dad7de41e690b0b3a930a65dbf86cae',
-    'src/Navigation/Contract/Management/CatalogScreen.php' => 'fc48e051d8e33b70e0aa7623cd9f85c55cd9027aadb3d63379012e74ee857f32',
-    'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd33928dadc140353aad969ce74626e21b79c772d1f546bf93cca6a12f53fbc0a',
-    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => 'b910f1953547da9d654f80d0844ec1e6ab086e09f1075320a0aeda9c52f21f89',
-    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => '0e08209565d610b81cb2bbf7451bce78926b4b607d9984fa5796420b9b9fd803',
+    'src/Navigation/Infrastructure/Persistence/DbalManagementCatalogAccess.php' => 'fbbf289cd99a459a124a0f966da391f23ee8137a83719afaf002d2c64cb496b0',
+    'src/Navigation/Contract/Management/CatalogScreen.php' => '679111a16bfa50907970c54fa205d8915a2ce1464589c09bf0059ad5df363010',
+    'src/Navigation/Application/Query/ViewManagementCatalog.php' => 'd961b98782ca4e5948b1b2fda2f2957eaf2418c9d5c934057fdfbb03c6d58ed8',
+    'src/Navigation/Infrastructure/Symfony/Controller/ManagementCatalogController.php' => 'b34d6c6aae7dc955ac1b25b9b0e68869ccd62a9e21f20d8e0797856335433e1e',
+    'src/Navigation/Infrastructure/Symfony/Controller/PersonalReportCatalogController.php' => '39471dce6f92fba80018c87e7325081a03b945071d09c687cc23147c44aac4f6',
 ];
 
 // Route prefix => feature realm, its access contract, the contract's only
 // adapter and the reviewed bytes of the files that decide it. A changed file
 // needs a fresh review.
 const RELATIONSHIP_ACCESS_SOURCES = [
-    'src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php' => 'b4f98da46da26f6f9eed2b6b9fe2761b256c1a0c7b7b3f54905407db3a407cac',
-    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => 'f839c850fdaacc0d81ff9955968e26f7700c312e2aec243b7ce71c317af2509a',
-    'src/Navigation/Contract/Administration/ListScreen.php' => 'e533a5e479a85c3ef1e6ebbdf534d4907e4830fcd679419c848f26a051d83762',
-    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => 'a01c4c444f3e252d23b5a4510b24baecfe1c9b77ea39c2bdaea1903400c5153f',
-    'src/Navigation/Application/Query/ViewRelationships.php' => 'e8b6b158f5dc9344766a75c9503f6a4a591ca1c584bc08aec857ed097a4e5e4f',
-    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '9923e1416a17e81bdc237e17256ae9f7aa1796966d4c1fbfd5df202c8fdc3d24',
+    'src/Navigation/Infrastructure/Persistence/ParentRelationshipAccess.php' => '5f8cea5579e4b0a18842f324f54565fe2fe0e804d923db97fbde29d2e7d3449d',
+    'src/Navigation/Infrastructure/Persistence/DbalAdministrationListAccess.php' => '8fa9666a3623ecd8eedccd075da1edee7fbd0dd420057bf0f22304ec41769b5a',
+    'src/Navigation/Contract/Administration/ListScreen.php' => '6350d1b9aba91f396b95e67adaa9f9f19c1e19c86dc0bed0cb6d6b4822f4bce9',
+    'src/Navigation/Contract/Relationships/RelationshipScreen.php' => '5763fc6bd26566b5af5697879b44768181aec5a65c23459439fd5535a377c1bd',
+    'src/Navigation/Application/Query/ViewRelationships.php' => '042101dd27f1a5b623fce8ed03d13377bdaa4a52a0c63d55f572ba8ba735840f',
+    'src/Navigation/Infrastructure/Symfony/Controller/RelationshipController.php' => '52fba10445f01c6127c6e9148c7cebcfb58152563171003ed102e57e98e0dfcd',
 ];
 
 const REVIEWED_FEATURE_ACCESS = [

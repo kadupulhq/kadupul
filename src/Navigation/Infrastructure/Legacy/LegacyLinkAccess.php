@@ -13,12 +13,19 @@ use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/** Link access rules over the legacy user, realm and group tables. Managing links needs realm 15; writes also need realm 8 and are rechecked inside the transaction. */
 final readonly class LegacyLinkAccess implements LinkAccess
 {
     private const int REALM_ID = 15;
 
+    /** Wires the console actor lookup and the legacy database. */
     public function __construct(private ConsoleAccess $console, private DatabaseConnection $database) {}
 
+    /**
+     * Returns the signed-in console user when their account is usable and holds the links realm.
+     *
+     * @throws LinkAccessDenied when nobody is signed in (unauthenticated) or the account or realm check fails
+     */
     public function authorize(): Actor
     {
         $actor = $this->console->consoleActor();
@@ -31,6 +38,12 @@ final readonly class LegacyLinkAccess implements LinkAccess
         return $actor;
     }
 
+    /**
+     * Rechecks the account and both realms with locking reads inside the active transaction.
+     *
+     * @throws LinkAccessDenied when the console user is not this actor or lacks a required grant
+     * @throws \LogicException when no transaction is active
+     */
     public function assertCurrent(int $actorId): void
     {
         $db = $this->database->get();
@@ -44,6 +57,7 @@ final readonly class LegacyLinkAccess implements LinkAccess
         }
     }
 
+    /** True when the account is enabled, unlocked, not awaiting a password change, not the guest, and the authentication method is a known one. */
     private function accountAllows(int $actorId): bool
     {
         $db = $this->database->get();
@@ -64,6 +78,7 @@ final readonly class LegacyLinkAccess implements LinkAccess
         return $actorId !== (int) $guest && $user['username'] !== $guest;
     }
 
+    /** True when the user holds the realm directly or through an enabled group; $lock adds a share lock on MySQL. */
     private function hasRealm(int $actorId, int $realmId, bool $lock): bool
     {
         if ($actorId < 1) {
@@ -87,11 +102,13 @@ final readonly class LegacyLinkAccess implements LinkAccess
         return $query->fetchColumn() !== false;
     }
 
+    /** The share-lock suffix for MySQL reads, or an empty string. */
     private function readLock(bool $lock): string
     {
         return $lock && $this->database->get()->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql' ? ' LOCK IN SHARE MODE' : '';
     }
 
+    /** True when the user group tables are installed; older schemas have none. */
     private function groupTablesExist(\PDO $db): bool
     {
         if ($db->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {

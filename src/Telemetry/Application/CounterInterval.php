@@ -18,6 +18,12 @@ use Kadupul\Telemetry\Contract\DataQuality;
  */
 final readonly class CounterInterval
 {
+    /**
+     * Holds the interval fields as given.
+     *
+     * @param int $elapsedMicros microseconds between the two readings
+     * @param bool $rolledOver true when the delta was computed across a 32-bit counter wrap
+     */
     public function __construct(
         public IntervalKind $kind,
         public \DateTimeImmutable $from,

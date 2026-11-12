@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Telemetry\Contract;
 
+/**
+ * Whether a metric is a monotonically increasing counter or an instantaneous gauge.
+ */
 enum MetricType: string
 {
     case Counter = 'counter';

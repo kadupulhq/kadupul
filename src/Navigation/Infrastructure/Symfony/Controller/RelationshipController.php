@@ -22,8 +22,10 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/** Serves the relationship lists for every RelationshipScreen. */
 final readonly class RelationshipController
 {
+    /** Renders the records related to the parent in $id, or a plain response with status 401, 403, 404, 400 or 502; HEAD requests get no body. */
     #[Route('/relationships/device-template-queries/{id}', name: 'relationships_device_template_queries', defaults: ['screen' => 'device-template-queries'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     #[Route('/relationships/data-template-definitions/{id}', name: 'relationships_data_template_definitions', defaults: ['screen' => 'data-template-definitions'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]
     #[Route('/relationships/aggregate-template-items/{id}', name: 'relationships_aggregate_template_items', defaults: ['screen' => 'aggregate-template-items'], requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD'])]

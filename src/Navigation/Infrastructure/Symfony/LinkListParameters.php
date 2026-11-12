@@ -7,11 +7,19 @@
 
 namespace Kadupul\Navigation\Infrastructure\Symfony;
 
+/** Validates the link list query string against the legacy row-size choices. */
 final class LinkListParameters
 {
     // Complete legacy item_rows choices plus the remembered-default sentinel.
     public const ROW_CHOICES = [-1, 10, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 40, 44, 45, 50, 100, 250, 500, 750, 1000, 2000, 3000, 4000, 5000];
 
+    /**
+     * Validates the filter, rows, page and sort parameters and fills in defaults.
+     * The result adds a limit, the number of rows to fetch; $defaultRows applies when rows is -1.
+     *
+     * @param int $defaultRows page size used when rows is -1
+     * @throws \InvalidArgumentException when any parameter is malformed or not allowed
+     */
     public static function parse(array $query, int $defaultRows = 25): array
     {
         $q = $query['filter'] ?? '';
@@ -35,6 +43,11 @@ final class LinkListParameters
         }
         return ['filter' => $q, 'rows' => $rows, 'page' => $page, 'sort_column' => $sort, 'sort_direction' => $sort === 'sortorder' ? 'ASC' : strtoupper($direction), 'limit' => $rows === '-1' ? $defaultRows : (int) $rows];
     }
+    /**
+     * Validates a list of selected link ids.
+     *
+     * @throws \InvalidArgumentException when empty, more than 100, malformed, above 16767215 or repeated
+     */
     public static function ids(mixed $values): array
     {
         if (!is_array($values) || $values === [] || count($values) > 100) {

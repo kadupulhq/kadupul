@@ -17,8 +17,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /** Maps expected command failures to a denial response or a form error status. */
 final readonly class LinkFormFailure
 {
+    /** Wires the translator used for messages. */
     public function __construct(private TranslatorInterface $translator) {}
 
+    /**
+     * Adds the error to the form and returns the HTTP status to render it with: 409 for a conflict, 422 for invalid input, 502 for an unconfirmed write.
+     *
+     * @return Response|int a ready 401 or 403 response when access was denied, otherwise the status
+     */
     public function __invoke(\RuntimeException|\InvalidArgumentException $error, FormInterface $form): Response|int
     {
         if ($error instanceof LinkAccessDenied) {

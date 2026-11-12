@@ -13,7 +13,13 @@ namespace Kadupul\Navigation\Application\Port;
 use Kadupul\IdentityAccess\Contract\Actor;
 use Kadupul\Navigation\Contract\Management\CatalogScreen;
 
+/** Decides whether the signed-in user may view a management catalog screen. */
 interface ManagementCatalogAccess
 {
+    /**
+     * Returns the user when they hold every permission the screen needs.
+     *
+     * @throws \Kadupul\Navigation\Application\Query\AdministrationListDenied when there is no user or the user lacks access
+     */
     public function authorize(CatalogScreen $screen): Actor;
 }
