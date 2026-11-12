@@ -35,6 +35,7 @@ final class LegacyDataSourceDiscovery implements WriterOwnershipProbe
     /** Cache fields whose value names an interface; the same name on two indexes is not an identity. */
     public const IDENTITY_FIELDS = ['interface' => ['ifName', 'ifDescr', 'ifIndex']];
 
+    /** Binds the discovery to the database connection it reads from. */
     public function __construct(private readonly Connection $database) {}
 
     /** @return list<LegacyDataSource> ordered by local data id */
@@ -154,6 +155,7 @@ final class LegacyDataSourceDiscovery implements WriterOwnershipProbe
         return $concerns;
     }
 
+    /** Legacy poller when a data_template_rrd row defines the field, otherwise unassigned. */
     public function ownership(StorageField $field): WriterOwnership
     {
         $defined = $this->database->fetchOne(

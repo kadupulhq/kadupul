@@ -17,11 +17,13 @@ final class InMemoryWriterClaimStore implements WriterClaimStore
     /** @var array<string, StorageField> */
     private array $claims = [];
 
+    /** True when the field has been claimed. */
     public function holds(StorageField $field): bool
     {
         return isset($this->claims[$field->toString()]);
     }
 
+    /** Claims the field; false when it was already claimed. */
     public function record(StorageField $field): bool
     {
         if ($this->holds($field)) {
@@ -32,6 +34,7 @@ final class InMemoryWriterClaimStore implements WriterClaimStore
         return true;
     }
 
+    /** All claimed fields, in the order claimed. */
     public function all(): array
     {
         return array_values($this->claims);

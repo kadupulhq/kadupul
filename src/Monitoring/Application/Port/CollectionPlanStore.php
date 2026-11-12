@@ -14,10 +14,12 @@ use Kadupul\Monitoring\Domain\CollectionPlan;
 /** Approved, active and superseded plans. Proposals are not stored until approved. */
 interface CollectionPlanStore
 {
+    /** The plan with this id, or null when it is not stored. */
     public function find(string $planId): ?CollectionPlan;
 
     /** @return list<CollectionPlan> ordered by generation time, then plan id */
     public function forDevice(int $deviceId): array;
 
+    /** Stores the plan, replacing any plan with the same id. */
     public function save(CollectionPlan $plan): void;
 }

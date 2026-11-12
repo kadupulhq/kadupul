@@ -19,6 +19,8 @@ app.php/alerting/rules/{id}/edit	symfony:alerting_rule_edit	methods=GET|HEAD|POS
 app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at f963c1c34dbc557e61d18f97ee4b0f5c714fa58054ab3d190eecf04524934502
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
+app.php/automation/graph-rules/new	symfony:automation_graph_rule_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
+app.php/automation/graph-rules/{id}/edit	symfony:automation_graph_rule_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks	symfony:admin_networks	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks/new	symfony:automation_network_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
 app.php/automation/networks/{id}/edit	symfony:automation_network_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 23

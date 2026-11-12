@@ -28,6 +28,7 @@ final readonly class BindingApprovalGuard
 {
     public const string ACTION = 'monitoring.binding.authorize';
 
+    /** Wires the console actor lookup, the approval permission and the audit trail. */
     public function __construct(
         private ConsoleAccess $access,
         private BindingApprovalPermission $permission,

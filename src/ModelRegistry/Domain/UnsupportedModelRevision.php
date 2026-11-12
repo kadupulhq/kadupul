@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace Kadupul\ModelRegistry\Domain;
 
+/**
+ * Raised when a requested model revision is not registered or is older than a dependent model allows.
+ * It carries the revisions that are registered.
+ */
 final class UnsupportedModelRevision extends \DomainException
 {
     /**

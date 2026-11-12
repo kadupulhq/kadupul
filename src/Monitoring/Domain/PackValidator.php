@@ -38,6 +38,12 @@ final class PackValidator
     /** @var list<PackViolation> */
     private array $violations = [];
 
+    /**
+     * Creates a validator for packs checked against one Kadupul version.
+     *
+     * @param string $runningVersion the Kadupul version a pack's compatibility range is checked against
+     * @throws \InvalidArgumentException when the version is not a version number
+     */
     public function __construct(private readonly string $runningVersion)
     {
         if (!VersionConstraint::isVersion($runningVersion)) {
@@ -72,6 +78,7 @@ final class PackValidator
         return $found;
     }
 
+    /** Checks field presence, types and formats across the whole pack. */
     private function structure(\stdClass $pack): void
     {
         if ($this->has($pack, 'schema_version') && !$this->equalsNumber($pack->schema_version, 1)) {
@@ -155,6 +162,7 @@ final class PackValidator
         }
     }
 
+    /** Checks the discovery block and the per-protocol identity mappings. */
     private function discovery(mixed $value): void
     {
         $discovery = $this->object($value, '/discovery', ['resource', 'identity'], ['mappings']);
@@ -201,6 +209,7 @@ final class PackValidator
         }
     }
 
+    /** Checks one metric and its per-protocol mappings. */
     private function metric(mixed $value, string $p): void
     {
         $metric = $this->object($value, $p, ['id', 'type', 'unit', 'mappings'], ['counter_bits', 'labels', 'description']);
@@ -259,6 +268,7 @@ final class PackValidator
         }
     }
 
+    /** Checks that a value map is a non-empty object of integers. */
     private function valueMap(mixed $value, string $p): void
     {
         if (!$value instanceof \stdClass) {
@@ -275,6 +285,7 @@ final class PackValidator
         }
     }
 
+    /** Checks one alert definition and its condition. */
     private function alert(mixed $value, string $p): void
     {
         $alert = $this->object($value, $p, ['name', 'metric', 'condition'], ['severity']);
@@ -304,6 +315,7 @@ final class PackValidator
         }
     }
 
+    /** Checks cross-field rules: unique metric ids, graph and alert metrics that exist, interval order, preferred protocols some metric maps, and the compatibility range against the running version. */
     private function semantics(\stdClass $pack): void
     {
         $ids = [];
@@ -361,6 +373,7 @@ final class PackValidator
         }
     }
 
+    /** Turns a document that already passed validation into a pack. */
     private function build(\stdClass $pack): MonitoringPack
     {
         $metrics = [];
@@ -458,6 +471,7 @@ final class PackValidator
         return $value;
     }
 
+    /** Checks that a value is a unique list of strings that each pass the string rules. */
     private function stringList(mixed $value, string $p, int $minLength, ?int $maxLength, ?string $pattern, ?string $expected, int $minItems): void
     {
         foreach ($this->array($value, $p, $minItems, true) ?? [] as $i => $item) {
@@ -473,6 +487,7 @@ final class PackValidator
         }
     }
 
+    /** Checks a value's type, length and pattern; $expected describes the pattern in the violation message. */
     private function checkString(mixed $value, string $p, int $minLength, ?int $maxLength, ?string $pattern, ?string $expected): void
     {
         if (!is_string($value)) {
@@ -492,6 +507,7 @@ final class PackValidator
         }
     }
 
+    /** Checks for an integer at or above $minimum, accepting whole floats as JSON Schema does. */
     private function integer(mixed $value, string $p, ?int $minimum): void
     {
         // JSON Schema counts 60.0 as an integer. A number too large for PHP
@@ -507,6 +523,7 @@ final class PackValidator
         }
     }
 
+    /** Checks for a finite number, recording a violation and returning false when it is not. */
     private function number(mixed $value, string $p): bool
     {
         if (is_int($value) || (is_float($value) && is_finite($value))) {
@@ -528,21 +545,25 @@ final class PackValidator
         $this->violation($p, 'must be one of ' . implode(', ', $allowed));
     }
 
+    /** True when the value is a number equal to $expected, whether it decoded as an int or a float. */
     private function equalsNumber(mixed $value, int $expected): bool
     {
         return (is_int($value) || is_float($value)) && $value == $expected;
     }
 
+    /** True when the field exists, even if its value is null. */
     private function has(\stdClass $object, string $field): bool
     {
         return property_exists($object, $field);
     }
 
+    /** Appends a key to a JSON pointer, escaping "~" and "/". */
     private function child(string $p, string $key): string
     {
         return $p . '/' . str_replace(['~', '/'], ['~0', '~1'], $key);
     }
 
+    /** Records a violation; an empty pointer is reported as the document root. */
     private function violation(string $p, string $message): void
     {
         $this->violations[] = new PackViolation($p === '' ? '(document)' : $p, $message);

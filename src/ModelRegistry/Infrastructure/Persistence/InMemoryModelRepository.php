@@ -20,11 +20,19 @@ final class InMemoryModelRepository implements ModelRepository
     /** @var array<string, array<string, Model>> identity key => revision value => model */
     private array $models = [];
 
+    /**
+     * Returns the registered model for the identity and revision, or null when it is not registered.
+     */
     public function find(ModelIdentity $identity, ModelRevision $revision): ?Model
     {
         return $this->models[$identity->key()][$revision->value()] ?? null;
     }
 
+    /**
+     * Lists every registered revision of the identity, oldest first.
+     *
+     * @return list<Model>
+     */
     public function revisionsOf(ModelIdentity $identity): array
     {
         $revisions = array_values($this->models[$identity->key()] ?? []);
@@ -33,6 +41,9 @@ final class InMemoryModelRepository implements ModelRepository
         return $revisions;
     }
 
+    /**
+     * Stores the model, replacing any earlier one with the same identity and revision.
+     */
     public function save(Model $model): void
     {
         $this->models[$model->identity()->key()][$model->revision()->value()] = $model;

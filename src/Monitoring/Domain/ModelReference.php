@@ -17,6 +17,11 @@ final readonly class ModelReference
 {
     public const FAMILIES = ['yang', 'openconfig', 'redfish', 'snmp-mib'];
 
+    /**
+     * Builds a reference after checking the family and each part.
+     *
+     * @throws InvalidCapability when the family is unknown or a part is empty or holds a separator, space or control character
+     */
     public function __construct(
         public string $family,
         public string $namespace,
@@ -40,6 +45,7 @@ final readonly class ModelReference
         return $this->family . '|' . $this->namespace . '|' . $this->name;
     }
 
+    /** The identity key plus the revision. */
     public function key(): string
     {
         return $this->identityKey() . '@' . $this->revision;

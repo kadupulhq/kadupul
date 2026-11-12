@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when a version constraint cannot be parsed. */
 final class InvalidVersionConstraint extends \InvalidArgumentException {}

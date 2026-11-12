@@ -325,7 +325,6 @@ $pages = array(
     'auth_profile-stale-change-handlers' => $page('auth_profile.php', array(), array(), array('session' => array('form_change_actions' => array(
         'snmp_version' => 'setSNMP()', 'snmp_security_level' => 'setSNMP()', 'snmp_auth_protocol' => 'setSNMP()', 'snmp_priv_protocol' => 'setSNMP()',
     )))),
-    'automation_graph_rules-edit' => $page('automation_graph_rules.php', array('action' => 'edit')),
     'automation_graph_rules-item_edit' => $page('automation_graph_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '1'), array_merge($columns, array(
         array('sql' => 'FROM automation_graph_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
             'id' => '1', 'name' => 'Traffic <rule>', 'snmp_query_id' => '1', 'graph_type_id' => '2', 'enabled' => 'on',

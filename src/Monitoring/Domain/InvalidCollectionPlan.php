@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when collection plan data is malformed. */
 final class InvalidCollectionPlan extends \InvalidArgumentException {}
