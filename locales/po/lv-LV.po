@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 23:23-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -398,8 +398,9 @@ msgid "Report Name"
 msgstr "Pārskata nosaukums"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Atgriezties"
@@ -1395,20 +1396,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Vai tiešām vēlaties dzēst '%s' kārtulu?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Vai tiešām vēlaties turpināt?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "Apakškokā"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "Mainot lapas veidu, visi nederīgie noteikumi tiks automātiski noņemti un nebūs atkopjami."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Mainīt koka lapu tipu"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1423,8 +1412,16 @@ msgid "Created Trees"
 msgstr "Izveidotie koki"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Piemēroti objekti"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Grafiku grupēšanas stils"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1435,6 +1432,10 @@ msgstr "Ievietot kokā"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Lauka nosaukums, kas jāizmanto šim kārtulas elementam."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Lapas elementa tips"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Koku noteikumi netika atrasti"
@@ -1443,13 +1444,29 @@ msgstr "Koku noteikumi netika atrasti"
 msgid "Object Selection Criteria"
 msgstr "Objekta atlases kritērijs"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Pēc izvēles: Apakškoka elements"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Šis tips"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "Koks"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1465,20 +1482,8 @@ msgid "Tree Rules"
 msgstr "Koku noteikumi"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Koka noteikumu atlase [jauns]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Grupēšanas izmantošana"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "BRĪDINĀJUMS:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Jūs maināt lapas veidu uz “Ierīce”, kas neatbalsta uz diagrammu balstītu objektu saskaņošanu/izveidošanu."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5684,10 +5689,6 @@ msgstr "Visi datu avoti kopā"
 msgid "Total Similar Data Sources"
 msgstr "Līdzīgu datu avotu kopskaits"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "Koks"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Koka režīms"
@@ -6622,10 +6623,6 @@ msgstr "Pamatiestatījumi"
 msgid "Give this host a meaningful description."
 msgstr "Sniedziet šim saimniekam jēgpilnu aprakstu."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Grafiku grupēšanas stils"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Grafika elementa tips"
@@ -6777,10 +6774,6 @@ msgid "Is this to carry the template?"
 msgstr "Vai tas ir paredzēts veidnes pārnēsāšanai?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Lapas elementa tips"
-
-#: include/global_form.php
 #, fuzzy
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
@@ -6892,10 +6885,6 @@ msgstr "Darbība"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Operators."
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Pēc izvēles: Apakškoka elements"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13970,6 +13959,10 @@ msgstr "Jaunināt no <strong>%s</strong> uz <strong>%s</strong>"
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Jaunināšana no v%s (DB %s) uz v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "BRĪDINĀJUMS:"
 
 #: lib/installer.php
 #, fuzzy
