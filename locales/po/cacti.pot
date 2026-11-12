@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-10 16:46-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,8 +115,9 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr ""
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr ""
@@ -1362,6 +1363,10 @@ msgid "No SNMP Option Sets Found"
 msgstr ""
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
 msgstr ""
 
@@ -1375,6 +1380,10 @@ msgstr ""
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to duplicate the following Rule(s). You can optionally change the title format for the new Rules."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
 msgstr ""
 
 #: automation_tree_rules.php
@@ -1395,8 +1404,24 @@ msgstr ""
 msgid "Tree Rule Selection [edit: %s]"
 msgstr ""
 
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr ""
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr ""
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr ""
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr ""
+
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
+msgid "Edit Rule Settings"
 msgstr ""
 
 #: automation_tree_rules.php
@@ -1405,26 +1430,6 @@ msgstr ""
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
-msgstr ""
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr ""
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr ""
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr ""
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr ""
-
-#: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
 msgstr ""
 
 #: automation_tree_rules.php include/global_arrays.php
@@ -5001,10 +5006,6 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr ""
-
 #: include/global_arrays.php
 msgid "Horizontal Rule"
 msgstr ""
@@ -7110,23 +7111,11 @@ msgid "Choose a Tree for the new Tree Items."
 msgstr ""
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr ""
-
-#: include/global_form.php
 msgid "The Item Type that shall be dynamically added to the tree."
 msgstr ""
 
 #: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr ""
-
-#: include/global_form.php
 msgid "Choose how graphs are grouped when drawn for this particular host on the tree."
-msgstr ""
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
 msgstr ""
 
 #: include/global_form.php
@@ -13628,6 +13617,10 @@ msgstr ""
 
 #: lib/installer.php
 msgid "No Remote Data Collectors found for full synchronization"
+msgstr ""
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
 msgstr ""
 
 #: lib/ldap.php

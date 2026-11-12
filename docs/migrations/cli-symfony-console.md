@@ -1,7 +1,8 @@
 # Command-line tools on Symfony Console
 
-Status: foundation implemented. Scope: `main` only. `lts/1.2` keeps its
-`cli/` scripts unchanged.
+Status: foundation implemented. 20 of the 46 scripts in `cli/` forward to
+Symfony Console commands; the device pilot below has not started. Scope:
+`main` only. `lts/1.2` keeps its `cli/` scripts unchanged.
 
 ## Goal
 
@@ -368,9 +369,9 @@ selection goes through `ListDevices`, so the command removes only devices the
 actor can see. Without `--confirm` it only lists what would be removed, as
 the original does.
 
-The pilot starts after the open device stack (#276 to #316) and the
-`change_device` fix (#320) have merged. The shared foundation can land before
-them.
+The pilot waited for the device stack (#276 to #316) and the `change_device`
+fix (#320). The stack has merged and #320 is closed as completed, so the pilot
+is no longer blocked. None of its commands exists yet.
 
 ## Order of work
 

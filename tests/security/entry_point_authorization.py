@@ -253,6 +253,10 @@ def route_fixtures(rig, rows, ids):
     if present('automation/templates'):
         template = int(rig.sql("INSERT INTO automation_templates (host_template,availability_method,sysDescr,sequence) SELECT MIN(id),2,'entry-sweep',1 FROM host_template; SELECT LAST_INSERT_ID()").strip())
         ids['automation/templates'] = {'id': template}
+    if present('automation/tree-rules/'):
+        # Disabled, so the sweep never adds items to a tree from it.
+        rule = int(rig.sql("INSERT INTO automation_tree_rules (name,tree_id,tree_item_id,leaf_type,host_grouping_type,enabled) SELECT 'entry-sweep',MIN(id),0,2,1,'' FROM graph_tree; SELECT LAST_INSERT_ID()").strip())
+        ids['automation/tree-rules'] = {'id': rule}
     if present('automation/snmp-options/'):
         snmp = int(rig.sql("INSERT INTO automation_snmp (name) VALUES ('entry-sweep'); SELECT LAST_INSERT_ID()").strip())
         entry = int(rig.sql("INSERT INTO automation_snmp_items (snmp_id,sequence,snmp_version,snmp_community) VALUES (%d,1,2,'entry-sweep'); SELECT LAST_INSERT_ID()" % snmp).strip())

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-10 16:46-0800\n"
+"POT-Creation-Date: 2026-11-11 19:42-0800\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -395,8 +395,9 @@ msgid "Report Name"
 msgstr "Име на отчета"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_networks.php automation_snmp.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_networks.php automation_snmp.php automation_tree_rules.php
+#: graphs.php include/auth.php lib/api_aggregate.php lib/html_form.php
+#: lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "Връщане"
@@ -1392,20 +1393,8 @@ msgid "Are you sure you want to DELETE the Rule '%s'?"
 msgstr "Наистина ли искате да изтриете правилото „ %s“?"
 
 #: automation_tree_rules.php
-msgid "Are you sure you wish to continue?"
-msgstr "Наистина ли искате да продължите?"
-
-#: automation_tree_rules.php
 msgid "At Subtree"
 msgstr "В поддърво"
-
-#: automation_tree_rules.php
-msgid "By changing the leaf type, all invalid rules will be automatically removed and will not be recoverable."
-msgstr "С промяната на типа листа всички невалидни правила ще бъдат автоматично премахнати и няма да могат да бъдат възстановявани."
-
-#: automation_tree_rules.php
-msgid "Change Leaf Type"
-msgstr "Промяна на вида на листа"
 
 #: automation_tree_rules.php
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -1420,8 +1409,16 @@ msgid "Created Trees"
 msgstr "Създадени дървета"
 
 #: automation_tree_rules.php
+msgid "Edit Rule Settings"
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "Eligible Objects"
 msgstr "Допустими обекти"
+
+#: automation_tree_rules.php include/global_form.php
+msgid "Graph Grouping Style"
+msgstr "Стил на групиране на графики"
 
 #: automation_tree_rules.php
 msgid "Hook into Tree"
@@ -1432,6 +1429,10 @@ msgstr "Върни се в дървото"
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Името на полето, което ще се използва за това правило."
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Leaf Item Type"
+msgstr "Тип на листа"
+
 #: automation_tree_rules.php
 msgid "No Tree Rules Found"
 msgstr "Не са намерени правила за дърво"
@@ -1440,13 +1441,29 @@ msgstr "Не са намерени правила за дърво"
 msgid "Object Selection Criteria"
 msgstr "Критерии за избор на обекти"
 
+#: automation_tree_rules.php include/global_form.php
+msgid "Optional: Sub-Tree Item"
+msgstr "Незадължително: Под-дърво"
+
 #: automation_tree_rules.php
 msgid "ROOT"
 msgstr "Constellation name (optional)"
 
 #: automation_tree_rules.php
+msgid "Rule not found."
+msgstr ""
+
+#: automation_tree_rules.php
+msgid "This Tree Rule form has expired. Open the rule again and use its current form."
+msgstr ""
+
+#: automation_tree_rules.php
 msgid "This Type"
 msgstr "Този вид"
+
+#: automation_tree_rules.php include/global_arrays.php include/global_form.php
+msgid "Tree"
+msgstr "‎درخت"
 
 #: automation_tree_rules.php
 msgid "Tree Creation Criteria"
@@ -1462,20 +1479,8 @@ msgid "Tree Rules"
 msgstr "Правила на дървото"
 
 #: automation_tree_rules.php
-msgid "Tree Rules Selection [new]"
-msgstr "Избор на дървови правила [нов]"
-
-#: automation_tree_rules.php
 msgid "Using Grouping"
 msgstr "Използване на групиране"
-
-#: automation_tree_rules.php lib/installer.php utilities.php
-msgid "WARNING:"
-msgstr "ПРЕДУПРЕЖДЕНИЕ:"
-
-#: automation_tree_rules.php
-msgid "You are changing the leaf type to \"Device\" which does not support Graph-based object matching/creation."
-msgstr "Променяте типа листа на „Устройство“, което не поддържа съвпадение / създаване на обекти, базирани на графики."
 
 #: cactid.php
 msgid "Kadupul System Notice"
@@ -5632,10 +5637,6 @@ msgstr "Общо всички източници на данни"
 msgid "Total Similar Data Sources"
 msgstr "Общо подобни източници на данни"
 
-#: include/global_arrays.php include/global_form.php
-msgid "Tree"
-msgstr "‎درخت"
-
 #: include/global_arrays.php
 msgid "Tree Mode"
 msgstr "Дървовиден изглед"
@@ -6568,10 +6569,6 @@ msgstr "Основни настройки"
 msgid "Give this host a meaningful description."
 msgstr "Дайте на този хост смислено описание."
 
-#: include/global_form.php
-msgid "Graph Grouping Style"
-msgstr "Стил на групиране на графики"
-
 #: include/global_form.php lib/api_aggregate.php lib/html.php
 msgid "Graph Item Type"
 msgstr "Тип елемент на графиката"
@@ -6723,10 +6720,6 @@ msgid "Is this to carry the template?"
 msgstr "Това ли трябва да носи шаблона?"
 
 #: include/global_form.php
-msgid "Leaf Item Type"
-msgstr "Тип на листа"
-
-#: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
 msgstr "Форматиране на лявата ос (-left-axis-formatter &lt;formatname&gt;)"
 
@@ -6837,10 +6830,6 @@ msgstr "Операция"
 #: include/global_form.php
 msgid "Operator."
 msgstr "Оператор"
-
-#: include/global_form.php
-msgid "Optional: Sub-Tree Item"
-msgstr "Незадължително: Под-дърво"
 
 #: include/global_form.php
 msgid "Output Field"
@@ -13892,6 +13881,10 @@ msgstr "Надстройка от <strong> %s</strong> на <strong> %s</strong>
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Надстройка от v%s (DB%s) до v%s"
+
+#: lib/installer.php utilities.php
+msgid "WARNING:"
+msgstr "ПРЕДУПРЕЖДЕНИЕ:"
 
 #: lib/installer.php
 #, fuzzy

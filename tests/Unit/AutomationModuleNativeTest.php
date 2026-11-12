@@ -132,7 +132,8 @@ final class AutomationModuleNativeTest extends TestCase
     {
         $state = $this->runNative(array('mode' => 'leaf', 'leaf' => $leaf));
         self::assertSame($expected, array_map('intval', $state['contracts']['items']));
-        self::assertSame($expected, array_map('intval', $state['contracts']['matches']));
+        // Graph rule 8's criteria (items 5 and 6) share the id and must survive.
+        self::assertSame(array_merge($expected, array(5, 6)), array_map('intval', $state['contracts']['matches']));
         self::assertSame($leaf, (int) $state['contracts']['rules'][0]['leaf_type']);
         self::assertSame(2, (int) $state['contracts']['rules'][1]['leaf_type']);
     }

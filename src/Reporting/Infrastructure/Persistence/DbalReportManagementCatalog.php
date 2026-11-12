@@ -45,8 +45,9 @@ final readonly class DbalReportManagementCatalog implements ManagementCatalog
             CASE WHEN u.id IS NULL THEN '' ELSE r.enabled END AS enabled,
             r.intrvl AS `interval`, r.count AS `count`, r.offset AS `offset`, r.lastsent, r.mailtime, r.attachment_type
             FROM reports r LEFT JOIN user_auth u ON u.id = r.user_id WHERE r.name LIKE ?" . $where
-            . ' ORDER BY `' . $filters->sortColumn . '` ' . $filters->sortDirection . ', r.id ASC LIMIT ' . ($filters->rows + 1)
-            . ' OFFSET ' . (($filters->page - 1) * $filters->rows), $params);
-        return new CatalogPage($records);
+            . ' ORDER BY `' . $filters->sortColumn . '` ' . $filters->sortDirection . ', r.id ASC LIMIT ' . $filters->fetchLimit()
+            . ' OFFSET ' . $filters->offset(), $params);
+        // A top-level list has no parent heading, so the page keeps a null parent name.
+        return new CatalogPage(CatalogPage::fromRows($records, null)->records);
     }
 }

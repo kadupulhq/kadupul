@@ -331,7 +331,6 @@ $pages = array(
             'id' => '1', 'name' => 'Traffic <rule>', 'snmp_query_id' => '1', 'graph_type_id' => '2', 'enabled' => 'on',
         ))),
     ))),
-    'automation_tree_rules-edit' => $page('automation_tree_rules.php', array('action' => 'edit')),
     'automation_tree_rules-item_edit' => $page('automation_tree_rules.php', array('action' => 'item_edit', 'id' => '1', 'rule_type' => '3'), array_merge($columns, array(
         array('sql' => 'FROM automation_tree_rules WHERE id = ?', 'params' => array(1), 'rows' => array(array(
             'id' => '1', 'name' => 'Devices <rule>', 'tree_id' => '1', 'tree_item_id' => '0', 'leaf_type' => '3', 'host_grouping_type' => '1', 'enabled' => 'on',
