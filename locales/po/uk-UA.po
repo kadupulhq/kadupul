@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:16-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1161,7 +1161,7 @@ msgstr "Формат Заголовку"
 msgid "rule_name"
 msgstr "ім'я_правила"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d Хвилина"
@@ -4104,6 +4104,14 @@ msgstr ""
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Агреговане"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7566,6 +7574,11 @@ msgstr ""
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr ""
 
@@ -7680,6 +7693,14 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
 msgstr ""
 
 #: include/global_settings.php
@@ -8264,6 +8285,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr ""
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr ""
 
@@ -8541,6 +8566,10 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
+msgstr ""
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
 msgstr ""
 
 #: include/global_settings.php
@@ -8869,6 +8898,10 @@ msgstr ""
 
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Native Alerting"
 msgstr ""
 
 #: include/global_settings.php
@@ -9384,6 +9417,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr ""
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr ""
 
@@ -9809,6 +9846,10 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
+msgstr ""
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
 msgstr ""
 
 #: include/global_settings.php

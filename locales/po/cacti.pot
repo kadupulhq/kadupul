@@ -1,4 +1,4 @@
-# #-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#
+# #-#-#-#-#  cacti.pot (Kadupul 1.2.40)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR The Cacti Group
 # This file is distributed under the same license as the Kadupul package.
@@ -7,10 +7,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
-"Project-Id-Version: Kadupul 1.2.39\n"
+"#-#-#-#-#  cacti.pot (Kadupul 1.2.40)  #-#-#-#-#\n"
+"Project-Id-Version: Kadupul 1.2.40\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-11 22:41-0800\n"
+"POT-Creation-Date: 2026-11-12 05:16-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1290,7 +1290,7 @@ msgstr ""
 msgid "%d Seconds"
 msgstr ""
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr ""
@@ -4438,6 +4438,14 @@ msgstr ""
 
 #: include/global_arrays.php tree.php user_admin.php user_group_admin.php
 msgid "Trees"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
 msgstr ""
 
 #: include/global_arrays.php
@@ -9440,6 +9448,39 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
 msgstr ""
 
 #: include/global_settings.php
