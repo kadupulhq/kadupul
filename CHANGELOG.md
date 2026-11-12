@@ -5,6 +5,7 @@ All notable changes to this project are documented here. The format follows
 follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
+- Split the shared authentication CI checks into five shards. The third shard had collected every new scenario, including the CLI parity suites, and took about 35 minutes on hosted runners and more than the 60-minute limit on the self-hosted runners; the longest shard now takes about 15 minutes on hosted runners.
 - Bound the CSRF rotation supervisor timeout test by the delayed remote write (35 s) rather than 33 s, which child start-up under coverage exceeded on CI.
 - Expect the read-only graph and tree rule settings on the legacy editors in the automation presentation test: since the settings moved to Symfony, each page shows an Edit Rule Settings link and no form posting back to itself.
 - Restart Kadupul's release numbering at 0.1.0; the next release is `v0.1.0-alpha.1`, and `v1.3.0-alpha.1` is superseded. The schema compatibility marker (`include/cacti_version`) is unchanged. See `VERSIONING.md`.
