@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,9 +13,9 @@ use Kadupul\Alerting\Application\Command\NotifyAdministrator;
 use Kadupul\Alerting\Domain\AdministratorNotificationStatus;
 
 /** Public Symfony service used only by the legacy admin_email entry point. */
-final class AdministratorNotificationBridge
+final readonly class AdministratorNotificationBridge
 {
-    public function __construct(private readonly NotifyAdministrator $notify) {}
+    public function __construct(private NotifyAdministrator $notify) {}
 
     public function send(string $subject, string $html): void
     {

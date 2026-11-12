@@ -90,6 +90,77 @@ final class TranslationTest extends TestCase
         self::assertSame('fr', $request->attributes->get('_locale'));
     }
 
+    #[DataProvider('snmpOptionRoutes')]
+    public function testSnmpOptionRoutesUseConfiguredLocale(string $route): void
+    {
+        $preference = $this->createMock(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn(null);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+        $subscriber = new LocaleSubscriber($preference, $this->database([]), $configuration);
+        $request = Request::create('/automation/snmp-options/new', 'GET', [], ['Cacti' => 'fixture']);
+        $request->attributes->set('_route', $route);
+        $request->headers->set('Accept-Language', 'en');
+
+        $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+
+        self::assertSame('fr', $request->attributes->get('_locale'));
+    }
+
+    public static function snmpOptionRoutes(): iterable
+    {
+        foreach (['automation_snmp_option_create', 'automation_snmp_option_edit', 'automation_snmp_entry_create', 'automation_snmp_entry_edit', 'automation_snmp_entry_delete', 'automation_snmp_entry_move'] as $route) {
+            yield $route => [$route];
+        }
+    }
+
+    #[DataProvider('notificationReceiverRoutes')]
+    public function testNotificationReceiverRoutesUseConfiguredLocale(string $route): void
+    {
+        $preference = $this->createMock(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn(null);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+        $subscriber = new LocaleSubscriber($preference, $this->database([]), $configuration);
+        $request = Request::create('/utilities/notification-receivers/new', 'GET', [], ['Cacti' => 'fixture']);
+        $request->attributes->set('_route', $route);
+        $request->headers->set('Accept-Language', 'en');
+
+        $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+
+        self::assertSame('fr', $request->attributes->get('_locale'));
+    }
+
+    public static function notificationReceiverRoutes(): iterable
+    {
+        yield 'create' => ['notification_receiver_create'];
+        yield 'edit' => ['notification_receiver_edit'];
+    }
+
+    #[DataProvider('discoveryNetworkRoutes')]
+    public function testDiscoveryNetworkRoutesUseConfiguredLocale(string $route): void
+    {
+        $preference = $this->createMock(LocalePreference::class);
+        $preference->method('preferredLocale')->willReturn(null);
+        $configuration = $this->createMock(LegacyConfiguration::class);
+        $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+        $subscriber = new LocaleSubscriber($preference, $this->database([]), $configuration);
+        $request = Request::create('/automation/networks/new', 'GET', [], ['Cacti' => 'fixture']);
+        $request->attributes->set('_route', $route);
+        $request->headers->set('Accept-Language', 'en');
+
+        $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+
+        self::assertSame('fr', $request->attributes->get('_locale'));
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function discoveryNetworkRoutes(): iterable
+    {
+        yield 'create' => ['automation_network_create'];
+        yield 'edit' => ['automation_network_edit'];
+    }
+
     #[DataProvider('installationLocales')]
     public function testActualInstallationConfigurationSelectsLocale(string $source, string $expected): void
     {

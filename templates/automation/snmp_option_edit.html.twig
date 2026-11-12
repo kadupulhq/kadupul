@@ -1,0 +1,68 @@
+{#
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-3.0-or-later
+#}
+{% extends 'base.html.twig' %}
+{% set notices = {saved: 'SNMP Option Set saved.', entry_saved: 'SNMP entry saved.', entry_deleted: 'SNMP entry deleted.', entry_moved: 'SNMP entry moved.'} %}
+{% block title %}{{ (set ? 'Edit SNMP Option Set' : 'Add SNMP Option Set')|trans({}, 'automation') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route. #}
+    <p><a href="{{ path('admin_snmp_options') }}">{{ 'Back to SNMP Option Sets'|trans({}, 'automation') }}</a></p>
+    <h1>{% if set %}{{ 'SNMP Option Set [edit: %name%]'|trans({'%name%': set.name}, 'automation') }}{% else %}{{ 'SNMP Option Set [new]'|trans({}, 'automation') }}{% endif %}</h1>
+    {% if notice %}<output>{{ notices[notice]|trans({}, 'automation') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'automation') }}</button>
+    {{ form_end(form) }}
+    {% if set %}
+        {% for entry in entries.entries %}
+            {{ form_start(moves[entry.id], {attr: {id: 'automation-snmp-entry-move-' ~ entry.id}}) }}
+            {{ form_widget(moves[entry.id]) }}
+            {{ form_end(moves[entry.id]) }}
+        {% endfor %}
+        <table class="cactiTable">
+            <caption>{{ 'SNMP Options'|trans({}, 'automation') }}</caption>
+            <thead><tr class="tableHeader">
+                <th scope="col">{{ 'Item'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Version'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Port'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Timeout'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Retries'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Max OIDS'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Auth Protocol'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Priv Protocol'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Order'|trans({}, 'automation') }}</th>
+                <th scope="col">{{ 'Actions'|trans({}, 'automation') }}</th>
+            </tr></thead>
+            <tbody>
+            {% for entry in entries.entries %}
+                <tr>
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes numeric parameters. #}
+                    <td><a href="{{ path('automation_snmp_entry_edit', {id: set.id, entry: entry.id}) }}">{{ 'Item # %number%'|trans({'%number%': loop.index}, 'automation') }}</a></td>
+                    <td>{{ entry.version }}</td>
+                    <td>{{ entry.port }}</td>
+                    <td>{{ entry.timeout }}</td>
+                    <td>{{ entry.retries }}</td>
+                    <td>{{ entry.maxOids }}</td>
+                    <td>{{ entry.version == 3 ? entry.authProtocol : 'N/A'|trans({}, 'automation') }}</td>
+                    <td>{{ entry.version == 3 ? entry.privProtocol : 'N/A'|trans({}, 'automation') }}</td>
+                    <td>
+                        {% if entry.id != entries.last %}<button type="submit" form="automation-snmp-entry-move-{{ entry.id }}" formaction="{{ path('automation_snmp_entry_move', {id: set.id, entry: entry.id, direction: 'down'}) }}">{{ 'Move Down'|trans({}, 'automation') }}</button>{% endif %}
+                        {% if entry.id != entries.first %}<button type="submit" form="automation-snmp-entry-move-{{ entry.id }}" formaction="{{ path('automation_snmp_entry_move', {id: set.id, entry: entry.id, direction: 'up'}) }}">{{ 'Move Up'|trans({}, 'automation') }}</button>{% endif %}
+                    </td>
+                    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes numeric parameters. #}
+                    <td><a href="{{ path('automation_snmp_entry_delete', {id: set.id, entry: entry.id}) }}">{{ 'Delete'|trans({}, 'automation') }}</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="10"><em>{{ 'No SNMP Items'|trans({}, 'automation') }}</em></td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes the numeric set ID. #}
+        <p><a href="{{ path('automation_snmp_entry_create', {id: set.id}) }}">{{ 'Add SNMP entry'|trans({}, 'automation') }}</a></p>
+    {% endif %}
+</main>
+{% endblock %}

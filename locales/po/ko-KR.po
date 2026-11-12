@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-09 15:55-0800\n"
+"POT-Creation-Date: 2026-11-11 17:21-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -342,12 +342,12 @@ msgstr "누적 된 그래프 없음"
 msgid "No Graphs Found"
 msgstr "그래프가 없습니다"
 
-#: aggregate_graphs.php automation_graph_rules.php automation_networks.php
-#: automation_tree_rules.php data_debug.php data_sources.php data_templates.php
-#: graph_templates_items.php graphs.php graphs_items.php
-#: include/global_arrays.php include/global_form.php
-#: include/global_settings.php lib/api_automation.php lib/auth.php lib/html.php
-#: lib/html_form.php lib/html_reports.php package_import.php settings.php
+#: aggregate_graphs.php automation_graph_rules.php automation_tree_rules.php
+#: data_debug.php data_sources.php data_templates.php graph_templates_items.php
+#: graphs.php graphs_items.php include/global_arrays.php
+#: include/global_form.php include/global_settings.php lib/api_automation.php
+#: lib/auth.php lib/html.php lib/html_form.php lib/html_reports.php
+#: package_import.php settings.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: templates_import.php utilities.php
 msgid "None"
@@ -946,9 +946,9 @@ msgstr "마지막 확인"
 msgid "Location"
 msgstr "위치"
 
-#: automation_devices.php automation_networks.php automation_snmp.php
-#: data_debug.php lib/functions.php lib/html.php lib/html_reports.php
-#: lib/spikekill.php plugins.php pollers.php user_admin.php utilities.php
+#: automation_devices.php automation_networks.php data_debug.php
+#: lib/functions.php lib/html.php lib/html_reports.php lib/spikekill.php
+#: plugins.php pollers.php user_admin.php utilities.php
 msgid "N/A"
 msgstr "N/A"
 
@@ -1085,11 +1085,11 @@ msgstr ""
 msgid "Enable"
 msgstr "활성화"
 
-#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
-#: data_debug.php data_sources.php include/global_arrays.php
-#: include/global_form.php include/global_settings.php lib/api_automation.php
-#: lib/html_reports.php managers.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_tree_rules.php data_debug.php
+#: data_sources.php include/global_arrays.php include/global_form.php
+#: include/global_settings.php lib/api_automation.php lib/html_reports.php
+#: managers.php user_admin.php user_domains.php user_group_admin.php
+#: utilities.php
 msgid "Enabled"
 msgstr "활성화"
 
@@ -1162,17 +1162,6 @@ msgstr "제목 형식"
 msgid "rule_name"
 msgstr "규칙 이름"
 
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Hour"
-msgstr "%d 시간"
-
-#: automation_networks.php include/global_arrays.php
-#: include/global_settings.php
-#, php-format
-msgid "%d Hours"
-msgstr "%d 시간"
-
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
@@ -1192,52 +1181,6 @@ msgstr "%d 초"
 
 #: automation_networks.php
 #, php-format
-msgid "%d Thread"
-msgstr "스레드 % d 개"
-
-#: automation_networks.php include/global_arrays.php
-#, php-format
-msgid "%d Threads"
-msgstr "스레드 % d 개"
-
-#: automation_networks.php
-msgid "A space delimited list of alternate DNS Servers to use for DNS resolution. If blank, the poller OS will be used to resolve DNS names."
-msgstr "DNS 확인에 사용할 대체 DNS 서버의 공백으로 구분 된 목록입니다. 비워두면 poller OS가 DNS 이름을 확인하는 데 사용됩니다."
-
-#: automation_networks.php include/global_form.php
-msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "초기 실패 후 Kadupul가 실패하기 전에 시도 할 Ping 재시도 횟수."
-
-#: automation_networks.php
-msgid "After the selected Run Limit, the discovery process will be terminated."
-msgstr "선택한 실행 제한 후 검색 프로세스가 종료됩니다."
-
-#: automation_networks.php
-msgid "Allow same sysName on different hosts"
-msgstr "다른 호스트에서 동일한 sysName 허용"
-
-#: automation_networks.php
-msgid "Alternate DNS Servers"
-msgstr "대체 DNS 서버"
-
-#: automation_networks.php include/global_arrays.php
-msgid "April"
-msgstr "4월"
-
-#: automation_networks.php
-msgid "Associated Site"
-msgstr "관련 사이트"
-
-#: automation_networks.php include/global_arrays.php
-msgid "August"
-msgstr "8월"
-
-#: automation_networks.php
-msgid "Automatically Add to Kadupul"
-msgstr "Kadupul에 자동으로 추가"
-
-#: automation_networks.php
-#, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
 msgstr "사용할 수없는 네트워크 &#39; %s&#39;에 대한 검색을 수행 할 수 없음"
 
@@ -1249,14 +1192,6 @@ msgstr "네트워크 &#39; %s&#39;에 대한 검색 진행률 검색을 다시 �
 #: automation_networks.php
 msgid "Cancel Discovery"
 msgstr "검색 취소"
-
-#: automation_networks.php include/global_form.php
-msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "이 장치에서 데이터를 수집하는 데 사용할 Kadupul Data Collector / Poller를 선택하십시오."
-
-#: automation_networks.php
-msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "발견 된 장치를 연결할 Kadupul 사이트를 선택하십시오."
 
 #: automation_networks.php
 msgid "Clear Filtered"
@@ -1292,129 +1227,12 @@ msgid "Data Collector"
 msgstr "데이터 수집기"
 
 #: automation_networks.php
-msgid "Day(s) of Week"
-msgstr "요일"
-
-#: automation_networks.php
-msgid "Days of Month"
-msgstr "날짜"
-
-#: automation_networks.php
-msgid "Days of Week"
-msgstr "요일"
-
-#: automation_networks.php include/global_arrays.php
-msgid "December"
-msgstr "12월"
-
-#: automation_networks.php
-msgid "Define the collection frequency."
-msgstr "수집 빈도를 정의하십시오."
-
-#: automation_networks.php
-msgid "Define the number of threads to use for discovering this Network Range."
-msgstr "이 네트워크 범위를 검색하는 데 사용할 스레드 수를 정의하십시오."
-
-#: automation_networks.php
 msgid "Discover Now"
 msgstr "지금 발견하십시오"
-
-#: automation_networks.php
-msgid "Discovery Threads"
-msgstr "발견 스레드"
-
-#: automation_networks.php
-msgid "Discovery Timing"
-msgstr "발견 타이밍"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: Network '%s' is Invalid."
-msgstr "오류 : &#39; %s&#39;네트워크가 잘못되었습니다."
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify both the Months and Days of Month.  Disabling Network %s!"
-msgstr "오류 : 월과 일을 모두 지정해야합니다. 네트워크  %s 비활성화!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the Months, Weeks of Months, and Days of Week.  Disabling Network %s!"
-msgstr "오류 : 월, 주 및 요일을 지정해야합니다. 네트워크  %s 비활성화!"
-
-#: automation_networks.php
-#, php-format
-msgid "ERROR: You must specify the day of the week.  Disabling Network %s!."
-msgstr "오류 : 요일을 지정해야합니다. 네트워크  %s!을 (를) 비활성화하는 중입니다."
-
-#: automation_networks.php
-msgid "Enable NetBIOS"
-msgstr "NetBIOS 사용"
-
-#: automation_networks.php
-msgid "Enable this Network Range."
-msgstr "이 네트워크 범위를 활성화하십시오."
-
-#: automation_networks.php
-msgid "Enter IPs or FQDNs of DNS Servers"
-msgstr "DNS 서버의 IP 또는 FQDN 입력"
-
-#: automation_networks.php
-msgid "Enter valid Network Ranges separated by commas.  You may use an IP address, a Network range such as 192.168.1.0/24 or 192.168.1.0/255.255.255.0, or using wildcards such as 192.168.*.*"
-msgstr "유효한 네트워크 범위를 쉼표로 구분하여 입력하십시오. 192.168.1.0/24 또는 192.168.1.0/255.255.255.0과 같은 네트워크 범위 또는 192.168. *. *와 같은 와일드 카드를 사용하여 IP 주소를 사용할 수 있습니다."
-
-#: automation_networks.php include/global_arrays.php
-msgid "February"
-msgstr "2월"
-
-#: automation_networks.php
-msgid "First"
-msgstr "처음"
-
-#: automation_networks.php
-msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
-msgstr "SNMP를 사용하여 연결할 수 있고 장치 규칙과 일치하는 새로 발견 된 장치의 경우 Kadupul에 추가하십시오."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Friday"
-msgstr "금요일"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-#: lib/html_reports.php
-msgid "General Settings"
-msgstr "일반 설정"
-
-#: automation_networks.php
-msgid "Give this Network a meaningful name."
-msgstr "이 네트워크에 의미있는 이름을 지정하십시오."
 
 #: automation_networks.php pollers.php utilities.php
 msgid "Idle"
 msgstr "게으른"
-
-#: automation_networks.php
-msgid "If a device previously added to Kadupul is found, rerun its data queries."
-msgstr "이전에 Kadupul에 추가 된 장치가 발견되면 데이터 쿼리를 다시 실행하십시오."
-
-#: automation_networks.php
-msgid "If checked, when the Automation Network is scanned, a report will be sent to the Notification Email account.."
-msgstr "이 옵션을 선택하면 자동화 네트워크를 검사 할 때 알림 전자 메일 계정으로 보고서가 전송됩니다."
-
-#: automation_networks.php include/global_arrays.php
-msgid "January"
-msgstr "1월"
-
-#: automation_networks.php include/global_arrays.php
-msgid "July"
-msgstr "7월"
-
-#: automation_networks.php include/global_arrays.php
-msgid "June"
-msgstr "6월"
-
-#: automation_networks.php
-msgid "Last"
-msgstr "마지막"
 
 #: automation_networks.php
 msgid "Last Runtime"
@@ -1429,18 +1247,6 @@ msgid "Manual"
 msgstr "수동"
 
 #: automation_networks.php include/global_arrays.php
-msgid "March"
-msgstr "3월"
-
-#: automation_networks.php include/global_arrays.php
-msgid "May"
-msgstr "5월"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Monday"
-msgstr "월요일"
-
-#: automation_networks.php include/global_arrays.php
 msgid "Monthly"
 msgstr "매월"
 
@@ -1449,36 +1255,12 @@ msgid "Monthly on Day"
 msgstr "매월 매일"
 
 #: automation_networks.php
-msgid "Months of Year"
-msgstr "달의 달"
-
-#: automation_networks.php automation_snmp.php data_queries.php
-#: graph_templates.php include/global_form.php lib/installer.php lib/vdef.php
-#: managers.php pollers.php user_admin.php user_domains.php utilities.php
-msgid "Name"
-msgstr "이름"
-
-#: automation_networks.php
-#, php-format
-msgid "Network Discovery Range [edit: %s]"
-msgstr "네트워크 검색 범위 [편집 :  %s]"
-
-#: automation_networks.php
-msgid "Network Discovery Range [new]"
-msgstr "네트워크 검색 범위 [신규]"
-
-#: automation_networks.php
 msgid "Network Filters"
 msgstr "네트워크 필터"
 
 #: automation_networks.php
 msgid "Network Name"
 msgstr "네트워크 이름"
-
-#: automation_networks.php
-#, fuzzy
-msgid "Network not found."
-msgstr "파일을 찾을 수 없습니다."
 
 #: automation_networks.php include/global_arrays.php
 msgid "Networks"
@@ -1490,10 +1272,6 @@ msgid "Never"
 msgstr "안함"
 
 #: automation_networks.php
-msgid "New Network Discovery Range"
-msgstr "새로운 네트워크 발견 범위"
-
-#: automation_networks.php
 msgid "Next Start"
 msgstr "다음 시작"
 
@@ -1502,81 +1280,17 @@ msgid "No Networks Found"
 msgstr "네트워크를 찾을 수 없음"
 
 #: automation_networks.php
-msgid "Notification Email"
-msgstr "알림 이메일"
-
-#: automation_networks.php
-msgid "Notification Enabled"
-msgstr "알림 사용"
-
-#: automation_networks.php
-msgid "Notification From Email Address"
-msgstr "이메일 주소 알림"
-
-#: automation_networks.php
-msgid "Notification From Name"
-msgstr "이름에서 알림"
-
-#: automation_networks.php
-msgid "Notification Settings"
-msgstr "알림 설정"
-
-#: automation_networks.php include/global_arrays.php
-msgid "November"
-msgstr "11월"
-
-#: automation_networks.php include/global_arrays.php
-msgid "October"
-msgstr "10월"
-
-#: automation_networks.php
 msgid "Pending/Running/Done"
 msgstr "보류 / 실행 / 완료"
-
-#: automation_networks.php include/global_form.php
-msgid "Ping Method"
-msgstr "핑 방법"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Port"
-msgstr "핑 포트"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Retry Count"
-msgstr "핑 재시도 횟수"
-
-#: automation_networks.php include/global_form.php include/global_settings.php
-msgid "Ping Timeout Value"
-msgstr "핑 시간 제한 값"
 
 #: automation_networks.php
 msgid "Progress"
 msgstr "진행"
 
-#: automation_networks.php
-msgid "Reachability Settings"
-msgstr "도달 범위 설정"
-
 #: automation_networks.php data_debug.php lib/clog_webapi.php
 #: lib/html_graph.php lib/html_tree.php pollers.php utilities.php
 msgid "Refresh"
 msgstr "새로고침"
-
-#: automation_networks.php
-msgid "Rerun Data Queries"
-msgstr "데이터 쿼리 다시 실행"
-
-#: automation_networks.php
-msgid "Rerun Every"
-msgstr "모두 다시 실행"
-
-#: automation_networks.php
-msgid "Rerun discovery for this Network Range every X."
-msgstr "X마다이 네트워크 범위에 대한 검색을 다시 실행하십시오."
-
-#: automation_networks.php
-msgid "Run Limit"
-msgstr "런 한도"
 
 #: automation_networks.php
 msgid "Run discover in debug mode"
@@ -1586,205 +1300,33 @@ msgstr "디버그 모드에서 검색 실행"
 msgid "Running"
 msgstr "실행 중"
 
-#: automation_networks.php include/global_arrays.php
-msgid "SNMP Get"
-msgstr "SNMP Get"
-
-#: automation_networks.php include/global_form.php
-msgid "SNMP Options"
-msgstr "SNMP 옵션"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Saturday"
-msgstr "토요일"
-
 #: automation_networks.php
 msgid "Schedule"
 msgstr "일정"
-
-#: automation_networks.php
-msgid "Schedule Type"
-msgstr "일정 유형"
-
-#: automation_networks.php
-msgid "Second"
-msgstr "초"
-
-#: automation_networks.php
-msgid "Select the SNMP Options to use for discovery of this Network Range."
-msgstr "이 네트워크 범위 검색에 사용할 SNMP 옵션을 선택하십시오."
-
-#: automation_networks.php
-msgid "Select the day(s) of the month"
-msgstr "해당 월의 요일 선택"
-
-#: automation_networks.php
-msgid "Select the day(s) of the week"
-msgstr "주의 요일 선택"
-
-#: automation_networks.php
-msgid "Select the days(s) of the week"
-msgstr "요일 선택"
-
-#: automation_networks.php
-msgid "Select the month(s) of the year"
-msgstr "연도를 선택하십시오."
-
-#: automation_networks.php
-msgid "Select the week(s) of the month"
-msgstr "해당 월의 주 선택"
-
-#: automation_networks.php include/global_arrays.php
-msgid "September"
-msgstr "9월"
-
-#: automation_networks.php
-msgid "Starting Date/Time"
-msgstr "시작 날짜 / 시간"
-
-#: automation_networks.php
-msgid "Subnet Range"
-msgstr "서브넷 범위"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Sunday"
-msgstr "일요일"
-
-#: automation_networks.php include/global_form.php
-msgid "TCP or UDP port to attempt connection."
-msgstr "TCP 또는 UDP 포트가 연결을 시도합니다."
 
 #: automation_networks.php
 msgid "The Current Status of this Networks Discovery"
 msgstr "이 네트워크 발견의 현재 상태"
 
 #: automation_networks.php
-msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "보낸 사람으로 사용할 전자 메일 주소 알림 전자 메일의 전자 메일입니다. 공백으로 남겨두면 Kadupul는 지정된 경우 기본 자동화 알림 전자 메일 주소를 사용하고, 그렇지 않으면 Kadupul 시스템 기본 전자 메일 주소를 사용합니다"
-
-#: automation_networks.php
-msgid "The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name"
-msgstr "알림 전자 메일의 보낸 사람 이름으로 사용할 전자 메일 계정 이름입니다. 비워두면 Kadupul는 지정된 경우 기본 자동화 알림 이름을 사용하고, 그렇지 않으면 Kadupul 시스템 기본 전자 메일 이름을 사용합니다"
-
-#: automation_networks.php
-msgid "The Email account to be used to send the Notification Email to."
-msgstr "알림 전자 메일을 보내는 데 사용할 전자 메일 계정입니다."
-
-#: automation_networks.php include/global_form.php
-msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
-msgstr "호스트 ICMP 및 UDP 핑 (ping)에 사용할 시간 초과 값입니다. 이 호스트 SNMP 시간 초과 값은 SNMP ping에 적용됩니다."
-
-#: automation_networks.php
-msgid "The type of ping packet to send."
-msgstr "전송할 ping 패킷 유형입니다."
-
-#: automation_networks.php
-msgid "Third"
-msgstr "세 번째"
+msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
+msgstr ""
 
 #: automation_networks.php pollers.php
 msgid "Threads"
 msgstr "참여글"
-
-#: automation_networks.php include/global_arrays.php
-msgid "Thursday"
-msgstr "목요일"
-
-#: automation_networks.php
-msgid "Total IP Addresses"
-msgstr "총 IP 주소"
 
 #: automation_networks.php
 msgid "Total IPs"
 msgstr "총 IP 수"
 
 #: automation_networks.php
-msgid "Total addressable IP Addresses in this Network Range."
-msgstr "이 네트워크 범위에있는 총 주소 지정 가능한 IP 주소."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Tuesday"
-msgstr "화요일"
-
-#: automation_networks.php
 msgid "Up/SNMP Hosts"
 msgstr "Up / SNMP 호스트"
-
-#: automation_networks.php
-msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
-msgstr "NetBIOS를 사용하여 위로 호스트의 호스트 이름을 확인하십시오."
-
-#: automation_networks.php include/global_arrays.php
-msgid "Wednesday"
-msgstr "수요일"
-
-#: automation_networks.php
-msgid "Week(s) of Month"
-msgstr "이달의 주"
 
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "매주"
-
-#: automation_networks.php
-msgid "What Day(s) of the Month will this Network Range be discovered."
-msgstr "이번 달의 어떤 날 (들)은이 네트워크 범위가 발견 될 것입니다."
-
-#: automation_networks.php
-msgid "What Day(s) of the week will this Network Range be discovered."
-msgstr "이번 주 네트워크의 어떤 날 (일)이 발견 될 것입니다."
-
-#: automation_networks.php
-msgid "What Months(s) of the Year will this Network Range be discovered."
-msgstr "이 네트워크 범위는 몇 달 (몇 개월)에 발견 될 것입니다."
-
-#: automation_networks.php
-msgid "What Week(s) of the Month will this Network Range be discovered."
-msgstr "이번 달의 몇 주 (주)에이 네트워크 범위가 발견 될 것입니다."
-
-#: automation_networks.php
-msgid "What time will this Network discover item start?"
-msgstr "이 네트워크는 몇시에 항목 시작을 발견합니까?"
-
-#: automation_networks.php
-msgid "When discovering devices, allow duplicate sysnames to be added on different hosts"
-msgstr "장치를 발견 할 때 중복 된 sysnames를 다른 호스트에 추가 할 수 있습니다."
-
-#: automation_networks.php
-msgid "every X Days"
-msgstr "매 X 일"
-
-#: automation_networks.php
-msgid "every X Days."
-msgstr "매 X 일."
-
-#: automation_networks.php
-msgid "every X Weeks"
-msgstr "매주 X 주"
-
-#: automation_networks.php
-msgid "every X Weeks."
-msgstr "매주 X 주."
-
-#: automation_networks.php
-msgid "every X."
-msgstr "모든 X."
-
-#: automation_snmp.php data_queries.php utilities.php
-msgid "Action"
-msgstr "실행"
-
-#: automation_snmp.php
-msgid "Auth Password"
-msgstr "인증 비밀번호"
-
-#: automation_snmp.php
-msgid "Auth Protocol"
-msgstr "인증 프로토콜"
-
-#: automation_snmp.php
-msgid "Auth Username"
-msgstr "인증 사용자 이름"
 
 #: automation_snmp.php
 msgid "Automation Item does not exist.  Can not Duplicate."
@@ -1799,55 +1341,12 @@ msgid "Automation SNMP Options has been Duplicated."
 msgstr "자동화 SNMP 옵션"
 
 #: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option Item."
-msgstr "다음 SNMP 옵션 항목을 삭제하려면 &#39;계속&#39;을 클릭하십시오."
-
-#: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
 msgstr "다음 SNMP 옵션을 삭제하려면 &#39;계속&#39;을 클릭하십시오."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
 msgstr "다음 SNMP 옵션을 복제하려면 &#39;계속&#39;을 클릭하십시오. 선택적으로 새 SNMP 옵션의 제목 형식을 변경할 수 있습니다."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Community"
-msgstr "커뮤니티"
-
-#: automation_snmp.php
-msgid "Context"
-msgstr "문맥"
-
-#: automation_snmp.php
-msgid "Delete SNMP Option Item"
-msgstr "SNMP 옵션 항목 삭제"
-
-#: automation_snmp.php
-msgid "Fill in the name of this SNMP Option Set."
-msgstr "이 SNMP 옵션 세트의 이름을 입력하십시오."
-
-#: automation_snmp.php lib/api_automation.php lib/html_reports.php
-msgid "Item"
-msgstr "아이템"
-
-#: automation_snmp.php lib/api_automation.php
-#, php-format
-msgid "Item#%d"
-msgstr "항목 # % d"
-
-#: automation_snmp.php
-msgid "Max OIDS"
-msgstr "최대 OIDS"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Down"
-msgstr "아래로 이동"
-
-#: automation_snmp.php data_queries.php lib/api_automation.php lib/html.php
-#: lib/html_reports.php tree.php
-msgid "Move Up"
-msgstr "위로 이동"
 
 #: automation_snmp.php
 msgid "Name Format"
@@ -1858,37 +1357,8 @@ msgid "Networks Using"
 msgstr "네트워크 사용"
 
 #: automation_snmp.php
-msgid "No SNMP Items"
-msgstr "SNMP 항목 없음"
-
-#: automation_snmp.php
 msgid "No SNMP Option Sets Found"
 msgstr "SNMP 옵션 세트를 찾을 수 없음"
-
-#: automation_snmp.php lib/functions.php
-msgid "Port"
-msgstr "포트"
-
-#: automation_snmp.php
-msgid "Priv Passphrase"
-msgstr "Priv Passphrase"
-
-#: automation_snmp.php
-msgid "Priv Protocol"
-msgstr "Priv 프로토콜"
-
-#: automation_snmp.php
-msgid "Remove SNMP Item"
-msgstr "SNMP 항목 제거"
-
-#: automation_snmp.php include/global_settings.php
-msgid "Retries"
-msgstr "재시도"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Community/Username: <b>%s</b>"
-msgstr "SNMP 커뮤니티 / 사용자 이름 : <b> %s</b>"
 
 #: automation_snmp.php
 msgid "SNMP Entries"
@@ -1899,52 +1369,16 @@ msgid "SNMP Option Set"
 msgstr "SNMP 옵션 세트"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Option Set [edit: %s]"
-msgstr "SNMP 옵션 설정 [편집 :  %s]"
-
-#: automation_snmp.php
-msgid "SNMP Option Set [new]"
-msgstr "SNMP 옵션 세트 [new]"
-
-#: automation_snmp.php
 msgid "SNMP Option Sets"
 msgstr "SNMP 옵션 세트"
-
-#: automation_snmp.php
-msgid "SNMP Option:"
-msgstr "SNMP 옵션 :"
-
-#: automation_snmp.php
-#, php-format
-msgid "SNMP Options [edit: %s]"
-msgstr "SNMP 옵션 [편집 :  %s]"
-
-#: automation_snmp.php
-msgid "SNMP Options [new]"
-msgstr "SNMP 옵션 [신규]"
 
 #: automation_snmp.php
 msgid "SNMP Rules"
 msgstr "SNMP 규칙"
 
 #: automation_snmp.php
-#, php-format
-msgid "SNMP Version: <b>%s</b>"
-msgstr "SNMP 버전 : <b> %s</b>"
-
-#: automation_snmp.php include/global_form.php lib/api_automation.php
-#: lib/html_reports.php
-msgid "Sequence"
-msgstr "순서"
-
-#: automation_snmp.php lib/html_reports.php
-msgid "Sequence of Item."
-msgstr "항목의 순서."
-
-#: automation_snmp.php include/global_settings.php
-msgid "Timeout"
-msgstr "타임아웃"
+msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
+msgstr ""
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1958,19 +1392,9 @@ msgstr "V2 항목"
 msgid "V3 Entries"
 msgstr "V3 입장"
 
-#: automation_snmp.php include/auth.php include/global_settings.php
-#: package_import.php plugins.php
-#: templates/platform/permission_denied.html.twig
-msgid "Version"
-msgstr "버전"
-
 #: automation_snmp.php
 msgid "name"
 msgstr "이름"
-
-#: automation_snmp.php
-msgid "none"
-msgstr "없음"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
@@ -2708,6 +2132,10 @@ msgstr "화이트리스트 확인에 실패했습니다. CLI 스크립트 input_
 msgid "White List Verification Succeeded."
 msgstr "화이트리스트 확인이 성공했습니다."
 
+#: data_queries.php utilities.php
+msgid "Action"
+msgstr "실행"
+
 #: data_queries.php host_templates.php lib/html.php lib/html_filter.php
 msgid "Add"
 msgstr "추가"
@@ -2832,6 +2260,22 @@ msgstr "그래프가있는 매핑 된 그래프 템플릿은 읽기 전용입니
 #: data_queries.php
 msgid "Mapping ID"
 msgstr "매핑 ID"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Down"
+msgstr "아래로 이동"
+
+#: data_queries.php lib/api_automation.php lib/html.php lib/html_reports.php
+#: tree.php
+msgid "Move Up"
+msgstr "위로 이동"
+
+#: data_queries.php graph_templates.php include/global_form.php
+#: lib/installer.php lib/vdef.php managers.php pollers.php user_admin.php
+#: user_domains.php utilities.php
+msgid "Name"
+msgstr "이름"
 
 #: data_queries.php lib/html_reports.php
 msgid "Name Format:"
@@ -4366,6 +3810,11 @@ msgstr "현재 설치 / 업그레이드 권한이있는 Kadupul 관리자 만 �
 msgid "There is an Installation or Upgrade in progress."
 msgstr "진행중인 설치 또는 업그레이드가 있습니다."
 
+#: include/auth.php include/global_settings.php package_import.php plugins.php
+#: templates/platform/permission_denied.html.twig
+msgid "Version"
+msgstr "버전"
+
 #: include/auth.php lib/functions.php
 #: templates/platform/permission_denied.html.twig
 msgid "You are not permitted to access this section of Kadupul."
@@ -4410,6 +3859,16 @@ msgstr "% d GBytes"
 
 #: include/global_arrays.php
 #, php-format
+msgid "%d Hour"
+msgstr "%d 시간"
+
+#: include/global_arrays.php include/global_settings.php
+#, php-format
+msgid "%d Hours"
+msgstr "%d 시간"
+
+#: include/global_arrays.php
+#, php-format
 msgid "%d Lines"
 msgstr "% d 개 라인"
 
@@ -4437,6 +3896,11 @@ msgstr "% d 개월"
 #, php-format
 msgid "%d Months"
 msgstr "개월 % d 개월"
+
+#: include/global_arrays.php
+#, php-format
+msgid "%d Threads"
+msgstr "스레드 % d 개"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -4664,6 +4128,10 @@ msgid "Apr"
 msgstr "4월"
 
 #: include/global_arrays.php
+msgid "April"
+msgstr "4월"
+
+#: include/global_arrays.php
 msgid "Arabic"
 msgstr "아랍어"
 
@@ -4682,6 +4150,10 @@ msgstr "첨부 된 PNG 이미지"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Aug"
+msgstr "8월"
+
+#: include/global_arrays.php
+msgid "August"
 msgstr "8월"
 
 #: include/global_arrays.php include/global_settings.php
@@ -4999,6 +4471,10 @@ msgid "Dec"
 msgstr "12월"
 
 #: include/global_arrays.php
+msgid "December"
+msgstr "12월"
+
+#: include/global_arrays.php
 msgid "Demand"
 msgstr "명령어"
 
@@ -5125,6 +4601,10 @@ msgid "Feb"
 msgstr "2월"
 
 #: include/global_arrays.php
+msgid "February"
+msgstr "2월"
+
+#: include/global_arrays.php
 msgid "Fixed String"
 msgstr "고정 문자열"
 
@@ -5136,6 +4616,10 @@ msgstr "프랑스어"
 msgctxt "A textual representation of a day, three letters"
 msgid "Fri"
 msgstr "금"
+
+#: include/global_arrays.php
+msgid "Friday"
+msgstr "금요일"
 
 #: include/global_arrays.php
 msgid "Function"
@@ -5347,6 +4831,10 @@ msgid "Jan"
 msgstr "1월"
 
 #: include/global_arrays.php
+msgid "January"
+msgstr "1월"
+
+#: include/global_arrays.php
 msgid "Japanese"
 msgstr "일본어"
 
@@ -5356,8 +4844,16 @@ msgid "Jul"
 msgstr "7월"
 
 #: include/global_arrays.php
+msgid "July"
+msgstr "7월"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Jun"
+msgstr "6월"
+
+#: include/global_arrays.php
+msgid "June"
 msgstr "6월"
 
 #: include/global_arrays.php
@@ -5542,6 +5038,14 @@ msgid "Mar"
 msgstr "3월"
 
 #: include/global_arrays.php
+msgid "March"
+msgstr "3월"
+
+#: include/global_arrays.php
+msgid "May"
+msgstr "5월"
+
+#: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "May"
 msgstr "5월"
@@ -5558,6 +5062,10 @@ msgstr "모던"
 msgctxt "A textual representation of a day, three letters"
 msgid "Mon"
 msgstr "월"
+
+#: include/global_arrays.php
+msgid "Monday"
+msgstr "월요일"
 
 #: include/global_arrays.php
 msgid "Mono"
@@ -5644,6 +5152,10 @@ msgctxt "A short textual representation of a month, three letters"
 msgid "Nov"
 msgstr "11월"
 
+#: include/global_arrays.php
+msgid "November"
+msgstr "11월"
+
 #: include/global_arrays.php tree.php
 msgid "Numeric"
 msgstr "숫자"
@@ -5655,6 +5167,10 @@ msgstr "숫자 순서 지정"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Oct"
+msgstr "10월"
+
+#: include/global_arrays.php
+msgid "October"
 msgstr "10월"
 
 #: include/global_arrays.php include/global_form.php lib/api_automation.php
@@ -5860,6 +5376,10 @@ msgid "SNMP Field Value (From User)"
 msgstr "SNMP 필드 값 (사용자로부터)"
 
 #: include/global_arrays.php
+msgid "SNMP Get"
+msgstr "SNMP Get"
+
+#: include/global_arrays.php
 msgid "SNMP Output Type (Dropdown)"
 msgstr "SNMP 출력 유형 (드롭 다운)"
 
@@ -5883,6 +5403,10 @@ msgstr "SNMPv3 Auth Passphrases는 8 자 이상이어야합니다."
 msgctxt "A textual representation of a day, three letters"
 msgid "Sat"
 msgstr "토"
+
+#: include/global_arrays.php
+msgid "Saturday"
+msgstr "토요일"
 
 #: include/global_arrays.php
 msgid "Save Failed due to field input errors (Check red fields)."
@@ -5931,6 +5455,10 @@ msgstr "보내기"
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
 msgid "Sep"
+msgstr "9월"
+
+#: include/global_arrays.php
+msgid "September"
 msgstr "9월"
 
 #: include/global_arrays.php lib/html.php
@@ -6001,6 +5529,10 @@ msgstr "제안 값을 입력하지 않았습니다. 제안 된 값을 입력하�
 msgctxt "A textual representation of a day, three letters"
 msgid "Sun"
 msgstr "일"
+
+#: include/global_arrays.php
+msgid "Sunday"
+msgstr "일요일"
 
 #: include/global_arrays.php
 msgid "Sunrise"
@@ -6101,6 +5633,10 @@ msgid "Thu"
 msgstr "목"
 
 #: include/global_arrays.php
+msgid "Thursday"
+msgstr "목요일"
+
+#: include/global_arrays.php
 msgid "Timestamp"
 msgstr "타임스탬프"
 
@@ -6144,6 +5680,10 @@ msgstr "노력하다"
 msgctxt "A textual representation of a day, three letters"
 msgid "Tue"
 msgstr "화"
+
+#: include/global_arrays.php
+msgid "Tuesday"
+msgstr "화요일"
 
 #: include/global_arrays.php
 msgid "Turkish"
@@ -6335,6 +5875,10 @@ msgstr "웹서버 관련"
 msgctxt "A textual representation of a day, three letters"
 msgid "Wed"
 msgstr "수"
+
+#: include/global_arrays.php
+msgid "Wednesday"
+msgstr "수요일"
 
 #: include/global_arrays.php
 msgid "Week(s)"
@@ -6649,6 +6193,10 @@ msgid "Additional Options"
 msgstr "추가 옵션"
 
 #: include/global_form.php
+msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
+msgstr "초기 실패 후 Kadupul가 실패하기 전에 시도 할 Ping 재시도 횟수."
+
+#: include/global_form.php
 msgid "Aggregate Graph Settings"
 msgstr "그래프 설정 집계"
 
@@ -6754,10 +6302,6 @@ msgid "Check here if you want to allow NULL input in this field from the user."
 msgstr "사용자가이 필드에 NULL 입력을 허용하려면 여기를 선택하십시오."
 
 #: include/global_form.php
-msgid "Check this box if you temporary do not want to send SNMP notifications to this host."
-msgstr "임시로이 호스트에 SNMP 통지를 보내지 않으려면이 상자를 선택하십시오."
-
-#: include/global_form.php
 msgid "Check this box to disable all checks for this host."
 msgstr "이 호스트의 모든 검사를 비활성화하려면이 상자를 선택하십시오."
 
@@ -6812,6 +6356,10 @@ msgstr "이 장치와 연관된 기본 그래프 템플릿 및 데이터 쿼리�
 #: include/global_form.php
 msgid "Choose the Graph Template to use for this Data Query Graph Template item."
 msgstr "이 데이터 쿼리 그래프 템플릿 항목에 사용할 그래프 템플릿을 선택하십시오."
+
+#: include/global_form.php
+msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
+msgstr "이 장치에서 데이터를 수집하는 데 사용할 Kadupul Data Collector / Poller를 선택하십시오."
 
 #: include/global_form.php
 msgid "Choose the SNMP version for this host."
@@ -6909,10 +6457,6 @@ msgstr "장치 사이트 연결"
 #: include/global_form.php
 msgid "Disable Device"
 msgstr "기기 사용 중지"
-
-#: include/global_form.php
-msgid "Disable SNMP Notification Receiver"
-msgstr "SNMP 알림 수신자 사용 안 함"
 
 #: include/global_form.php
 msgid "Do not expand the lower and upper limit if the graph contains a value outside the valid range."
@@ -7036,13 +6580,9 @@ msgstr "GPRINT 유형"
 msgid "General Device Options"
 msgstr "일반 장치 옵션"
 
-#: include/global_form.php
-msgid "General SNMP Entity Options"
-msgstr "일반 SNMP 엔티티 옵션"
-
-#: include/global_form.php
-msgid "Give this SNMP entity a meaningful description."
-msgstr "이 SNMP 엔티티에 의미있는 설명을 제공하십시오."
+#: include/global_form.php include/global_settings.php lib/html_reports.php
+msgid "General Settings"
+msgstr "일반 설정"
 
 #: include/global_form.php
 msgid "Give this host a meaningful description."
@@ -7255,20 +6795,12 @@ msgid "Matching Pattern"
 msgstr "패턴 매칭"
 
 #: include/global_form.php
-msgid "Maximum Log Size"
-msgstr "최대 로그 크기"
-
-#: include/global_form.php
 msgid "Maximum OIDs Per Get Request"
 msgstr "Get OID 당 최대 OID"
 
 #: include/global_form.php
 msgid "Maximum Value (\"U\" for No Maximum)"
 msgstr "최대 값 (최대 값이없는 경우 &quot;U&quot;)"
-
-#: include/global_form.php
-msgid "Maximum number of day's notification log entries for this receiver need to be stored."
-msgstr "이 수신기의 최대 통보 일 수를 저장해야합니다."
 
 #: include/global_form.php
 msgid "Minimum Value (\"U\" for No Minimum)"
@@ -7337,6 +6869,22 @@ msgstr "출력 필드"
 #: include/global_form.php
 msgid "Pad text so that legend and graph data always line up. Note: this could cause graphs to take longer to render because of the larger overhead. Also Auto Padding may not be accurate on all types of graphs, consistent labeling usually helps."
 msgstr "범례 및 그래프 데이터가 항상 정렬되도록 텍스트를 채 웁니다. 참고 : 이로 인해 오버 헤드가 커지기 때문에 그래프 렌더링 시간이 오래 걸릴 수 있습니다. 또한 자동 채우기는 모든 유형의 그래프에서 정확하지 않을 수 있으며, 일관된 라벨링이 일반적으로 도움이됩니다."
+
+#: include/global_form.php
+msgid "Ping Method"
+msgstr "핑 방법"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Port"
+msgstr "핑 포트"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Retry Count"
+msgstr "핑 재시도 횟수"
+
+#: include/global_form.php include/global_settings.php
+msgid "Ping Timeout Value"
+msgstr "핑 시간 제한 값"
 
 #: include/global_form.php
 msgid "Place the legend at the given side of the graph."
@@ -7471,8 +7019,8 @@ msgid "SNMP Engine ID (v3)"
 msgstr "SNMP 엔진 ID (v3)"
 
 #: include/global_form.php
-msgid "SNMP Message Type"
-msgstr "SNMP 메시지 유형"
+msgid "SNMP Options"
+msgstr "SNMP 옵션"
 
 #: include/global_form.php
 msgid "SNMP Password (v3)"
@@ -7511,10 +7059,6 @@ msgid "SNMP Version"
 msgstr "SNMP 버전"
 
 #: include/global_form.php
-msgid "SNMP traps are always unacknowledged. To send out acknowledged SNMP notifications, formally called \"INFORMS\", SNMPv2 or above will be required."
-msgstr "SNMP 트랩은 항상 승인되지 않습니다. 정식으로 &quot;INFORMS&quot;라고하는 승인 된 SNMP 알림을 보내려면 SNMPv2 이상이 필요합니다."
-
-#: include/global_form.php
 msgid "SNMP v3 Security Level to use when querying the device."
 msgstr "SNMP v3 장치를 쿼리 할 때 사용할 보안 수준입니다."
 
@@ -7533,6 +7077,10 @@ msgstr "크기 조정 옵션"
 #: include/global_form.php package_import.php
 msgid "Select the Data Source Profile.  The Data Source Profile controls polling interval, the data aggregation, and retention policy for the resulting Data Sources."
 msgstr "데이터 원본 프로필을 선택하십시오. 데이터 원본 프로필은 결과 데이터 원본에 대한 폴링 간격, 데이터 집계 및 보유 정책을 제어합니다."
+
+#: include/global_form.php lib/api_automation.php lib/html_reports.php
+msgid "Sequence"
+msgstr "순서"
 
 #: include/global_form.php
 msgid "Sequence."
@@ -7589,6 +7137,10 @@ msgstr "소스 그래프 템플릿"
 #: include/global_form.php
 msgid "Special Type Code"
 msgstr "특수 유형 코드"
+
+#: include/global_form.php
+msgid "TCP or UDP port to attempt connection."
+msgstr "TCP 또는 UDP 포트가 연결을 시도합니다."
 
 #: include/global_form.php
 msgid "Tab Width (--tabwidth &lt;pixels&gt;)"
@@ -7789,6 +7341,10 @@ msgstr "특정 입력 방법에 대한 공백 확인 검사의 결과입니다. 
 #: include/global_form.php
 msgid "The script/source used to gather data for this data source."
 msgstr "이 데이터 소스에 대한 데이터를 수집하는 데 사용 된 스크립트 / 소스."
+
+#: include/global_form.php
+msgid "The timeout value to use for host ICMP and UDP pinging.  This host SNMP timeout value applies for SNMP pings."
+msgstr "호스트 ICMP 및 UDP 핑 (ping)에 사용할 시간 초과 값입니다. 이 호스트 SNMP 시간 초과 값은 SNMP ping에 적용됩니다."
 
 #: include/global_form.php
 msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of graph image type is very RRDtool dependent."
@@ -8357,6 +7913,10 @@ msgstr "MySQL - TimeZone 지원"
 #: include/global_settings.php
 msgid "Color to use for business hours"
 msgstr "업무 시간에 사용할 색상"
+
+#: include/global_settings.php
+msgid "Community"
+msgstr "커뮤니티"
 
 #: include/global_settings.php
 msgid "Connect Timeout"
@@ -9652,6 +9212,10 @@ msgid "Restrictive"
 msgstr "제한적"
 
 #: include/global_settings.php
+msgid "Retries"
+msgstr "재시도"
+
+#: include/global_settings.php
 msgid "Rotate the Kadupul Log"
 msgstr "Kadupul 로그 회전"
 
@@ -10530,6 +10094,10 @@ msgid "TimeZone Support"
 msgstr "MySQL - TimeZone 지원"
 
 #: include/global_settings.php
+msgid "Timeout"
+msgstr "타임아웃"
+
+#: include/global_settings.php
 msgid "Title Font Setting"
 msgstr "제목 글꼴 설정"
 
@@ -10856,6 +10424,15 @@ msgstr "필드"
 #: lib/api_automation.php
 msgid "Graph Match Rule"
 msgstr "그래프 일치 규칙"
+
+#: lib/api_automation.php lib/html_reports.php
+msgid "Item"
+msgstr "아이템"
+
+#: lib/api_automation.php
+#, php-format
+msgid "Item#%d"
+msgstr "항목 # % d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -11892,6 +11469,10 @@ msgstr "PHP 메일러 클래스"
 #: lib/functions.php
 msgid "Ping Results:"
 msgstr "핑 결과 :"
+
+#: lib/functions.php
+msgid "Port"
+msgstr "포트"
 
 #: lib/functions.php
 msgid "SMTP error: "
@@ -12975,6 +12556,10 @@ msgstr "Image Attachments에 대해 지정된 유형 중 하나를 선택하십�
 #: lib/html_reports.php
 msgid "Send Report"
 msgstr "보고 내용 발송"
+
+#: lib/html_reports.php
+msgid "Sequence of Item."
+msgstr "항목의 순서."
 
 #: lib/html_reports.php
 msgid "Should all Branch Graphs be rendered?"
@@ -15720,6 +15305,10 @@ msgstr "중요도"
 #: managers.php
 msgid "Severity Level"
 msgstr "심각도 수준"
+
+#: managers.php
+msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
+msgstr ""
 
 #: managers.php utilities.php
 msgid "Time"

@@ -25,7 +25,7 @@ jobs:
   # every scope the reusable jobs need has to be granted here.
   release:
     needs: offline-bundle
-    uses: kadupulhq/.github/.github/workflows/release.yml@990088520c59eba7a7349f422261accfab732dc7 # hosted-only authenticated builder inputs
+    uses: kadupulhq/.github/.github/workflows/release.yml@f1b6366e6c1a18eafb994e88ada44680b9e1b80e # hosted-only authenticated builder inputs
     permissions:
       contents: write     # create the release and upload its assets
       packages: write     # push the image, its signature and its attestation
