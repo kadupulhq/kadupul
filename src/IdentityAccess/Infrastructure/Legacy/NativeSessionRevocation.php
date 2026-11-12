@@ -113,9 +113,6 @@ final readonly class NativeSessionRevocation
             throw new RuntimeException('Native credential helper is unavailable.');
         }
         $generation = \auth_session_credential_generation($userId, $password, $db);
-        if (!is_string($generation)) {
-            throw new RuntimeException('Native credential generation is invalid.');
-        }
         return $generation;
     }
 

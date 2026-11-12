@@ -308,6 +308,23 @@ final class AuthControllerNativeCoverageTest extends TestCase
         }
     }
 
+    public function testSameOriginTimeoutEndsALiveSessionAndShowsTheNotice(): void
+    {
+        // The idle timer lands here by GET when its token is stale or missing.
+        $state = $this->runController(['mode' => 'logout', 'method' => 'GET', 'csrf' => 'missing', 'site' => 'same-origin', 'request' => ['action' => 'timeout']]);
+        self::assertSame(303, $state['status']);
+        self::assertSame(['logout_pre_session_destroy', 'CLEAR_COOKIES', 'DESTROY_SESSION', 'logout_post_session_destroy', 'START_SESSION'], $state['events']);
+        self::assertSame(['sess_logout_notice' => 'timeout'], $state['session']);
+    }
+
+    public function testLogoutWithoutASessionOrReasonRedirectsHome(): void
+    {
+        $state = $this->runController(['mode' => 'logout', 'method' => 'GET', 'csrf' => 'missing', 'anonymous' => true, 'request' => []]);
+        self::assertSame(303, $state['status']);
+        self::assertSame([], $state['events']);
+        self::assertSame('', $state['html']);
+    }
+
     public static function completedLogoutPages(): iterable
     {
         yield 'server remote notice' => [['anonymous' => true, 'session' => ['sess_logout_notice' => 'remote']], 'Remote Data Collector'];
@@ -316,7 +333,7 @@ final class AuthControllerNativeCoverageTest extends TestCase
         yield 'expired session timeout' => [['anonymous' => true, 'request' => ['action' => 'timeout']], 'session timeout'];
         yield 'unknown notice still confirms' => [['session' => ['sess_logout_notice' => 'bogus']], null];
         yield 'live session timeout still confirms' => [['request' => ['action' => 'timeout']], null];
-        yield 'expired session without a reason still confirms' => [['anonymous' => true], null];
+        yield 'cross-site live session timeout still confirms' => [['site' => 'cross-site', 'request' => ['action' => 'timeout']], null];
         yield 'expired session suspension claim still confirms' => [['anonymous' => true, 'request' => ['action' => 'disabled']], null];
     }
 

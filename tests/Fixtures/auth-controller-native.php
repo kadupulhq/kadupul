@@ -309,6 +309,15 @@ if ($mode === 'logout') {
     session_start(['use_cookies' => false]);
     $_SESSION = $savedSession;
     $_COOKIE['Cacti'] = session_id();
+    if (isset($scenario['site'])) {
+        $_SERVER['HTTP_SEC_FETCH_SITE'] = $scenario['site'];
+    }
+    // include/csrf.php is not loaded here; mirror its Sec-Fetch-Site rule.
+    // Without the header the fixture has no Origin or Referer, so it is false.
+    function csrf_request_is_same_origin()
+    {
+        return strtolower(trim($_SERVER['HTTP_SEC_FETCH_SITE'] ?? '')) === 'same-origin';
+    }
     function csrf_startup()
     {
         csrf_conf('secret', bin2hex(random_bytes(32)));

@@ -46,9 +46,6 @@ final readonly class NativeAuthenticationTransitionAccounts implements Authentic
             throw new RuntimeException('Native credential binding is unavailable.');
         }
         $generation = \auth_session_credential_generation($userId, $password);
-        if (!is_string($generation)) {
-            throw new RuntimeException('Native credential binding is invalid.');
-        }
 
         return $generation;
     }
