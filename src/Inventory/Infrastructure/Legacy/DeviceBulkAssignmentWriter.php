@@ -18,6 +18,9 @@ use RuntimeException;
 /** Legacy effects; authorization, locks and the primary transaction belong to the worker. */
 final class DeviceBulkAssignmentWriter
 {
+    /**
+     * Binds the writer to the transaction runner used for collector transfers.
+     */
     public function __construct(private readonly ReferenceWriteTransactionRunner $transactions) {}
 
     /** @param array<int, PDO> $connections */

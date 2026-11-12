@@ -16,7 +16,9 @@ use Symfony\Component\Process\Process;
 
 /**
  * Applies a register command for a web request by running the console command in a separate PHP process, authenticated with the visitor's session.
- * The command id must be echoed back in the result.
+ * The request_id must be echoed back in the result.
+ *
+ * @phpstan-import-type Result from AssetData
  */
 final readonly class AssetWorker implements AssetWriter
 {
@@ -32,8 +34,8 @@ final readonly class AssetWorker implements AssetWriter
      * Runs the command in the worker process and returns its result.
      *
      * @param array<string, mixed> $command
-     * @return array{request_id: string, revision: int, asset_id?: string, observations?: int}
-     * @throws AssetError with reason uncertain when the worker's outcome cannot be established, because the command may still have been applied
+     * @phpstan-return Result
+     * @throws AssetError with reason unauthenticated, unavailable or invalid_command when the request cannot be sent, uncertain when the worker's outcome cannot be established because the command may still have been applied, or the worker's own reason code when it refuses the command
      */
     public function apply(array $command): array
     {

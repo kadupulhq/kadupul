@@ -9,6 +9,9 @@ namespace Kadupul\Inventory\Application\Port;
 
 use Kadupul\Inventory\Application\ReadModel\DeviceSite;
 
+/**
+ * Lists the sites that have a device visible to a user.
+ */
 interface DeviceSites
 {
     /** @return list<DeviceSite> */

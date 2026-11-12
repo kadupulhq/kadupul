@@ -9,8 +9,14 @@ declare(strict_types=1);
 
 namespace Kadupul\Reporting\Contract;
 
+/**
+ * Places devices into scheduled reports on behalf of an acting user.
+ */
 interface DeviceReportPlacement
 {
+    /**
+     * Returns the timespan, in days, to preselect for the actor when adding devices to a report.
+     */
     public function defaultTimespan(int $actorId): int;
 
     /** @return array<string, string> Accessible destination IDs and labels. */

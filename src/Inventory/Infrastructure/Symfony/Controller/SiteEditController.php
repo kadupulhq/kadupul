@@ -24,8 +24,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Page for editing one site.
+ */
 final class SiteEditController
 {
+    /**
+     * Shows the edit form on GET and saves the site on POST, then redirects back with a saved flag.
+     * Responds 404 for an unknown site, 400 for invalid list filters, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/sites/{id}/edit', name: 'inventory_site_edit', requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(int $id, Request $request, FindEditableSite $find, EditSite $edit, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {

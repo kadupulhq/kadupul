@@ -47,7 +47,7 @@ final class AssetCommand extends Command
 
     /**
      * Reads any stdin command, selects the operator and runs the view or the command.
-     * Failures are reported as a JSON reason code, never as an exception.
+     * Failures are reported as a JSON reason code, never as an exception; the exit status is non-zero on failure.
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

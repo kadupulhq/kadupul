@@ -19,8 +19,15 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
+/**
+ * Confirmation page for removing selected devices.
+ */
 final class DeviceRemovalController
 {
+    /**
+     * Shows the selected devices and the removal policy choice on GET and removes the devices on POST, then redirects to the device list.
+     * Responds 401 or 403 when access is denied, 404 when a selected device is missing, 400 for an invalid selection, 409 on an edit conflict and 422 for invalid input. Responses are private and not cacheable.
+     */
     #[Route('/inventory/devices/remove', name: 'inventory_device_remove', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, PrepareDeviceRemoval $prepare, RemoveDevices $remove, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, \Kadupul\Inventory\Infrastructure\Symfony\DeviceSelectionForm $selectionForm): Response
     {

@@ -17,8 +17,15 @@ use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 
+/**
+ * The site list, served as an HTML page or a JSON page.
+ */
 final class SiteListController
 {
+    /**
+     * Parses the filters and returns the matching page of sites in the requested format.
+     * Errors are returned as JSON: 401 or 403 when access is denied and 400 for invalid filters. Responses are private and not cacheable.
+     */
     #[Route('/inventory/sites', name: 'inventory_sites', methods: ['GET', 'HEAD'])]
     #[Route('/inventory/sites.json', name: 'inventory_sites_json', defaults: ['_format' => 'json'], methods: ['GET', 'HEAD'])]
     public function __invoke(Request $request, ListSites $list, Environment $twig, LegacyConfiguration $configuration): Response

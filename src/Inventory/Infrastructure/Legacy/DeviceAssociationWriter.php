@@ -13,6 +13,9 @@ use Kadupul\Inventory\Domain\DeviceAssociations;
 use Kadupul\Inventory\Domain\DeviceAssociationChange;
 use PDO;
 
+/**
+ * Applies one association change to the primary database and, when the device is on a remote collector, to that collector's database, and then confirms the result.
+ */
 final class DeviceAssociationWriter
 {
     /** Publish authoritative primary state before attempting collector commit. */
@@ -31,6 +34,13 @@ final class DeviceAssociationWriter
         }
     }
 
+    /**
+     * Writes the change.
+     * Data query changes go through the legacy API; graph template changes are written directly and then trigger automation and plugin hooks.
+     *
+     * @param ?PDO $remote The collector's connection, or null when the device is on the primary.
+     * @throws \RuntimeException When a write or a referenced target check fails.
+     */
     public function apply(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
         if ($change->kind === 'query') {
@@ -68,6 +78,12 @@ final class DeviceAssociationWriter
             api_plugin_hook_function('add_graph_template_to_host', ['host_id' => $device->id, 'graph_template_id' => $change->targetId]);
         }
     }
+    /**
+     * Re-reads the device and its associations on each database and checks that the change took effect and the device identity is unchanged.
+     *
+     * @param ?PDO $remote The collector's connection, or null when the device is on the primary.
+     * @throws \RuntimeException When the change or the device identity cannot be confirmed.
+     */
     public function verify(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
         foreach (array_filter([$primary, $remote]) as $database) {
@@ -112,6 +128,11 @@ final class DeviceAssociationWriter
             }
         }
     }
+    /**
+     * Checks that the data query exists.
+     *
+     * @throws \RuntimeException When it does not.
+     */
     private function requireQuery(PDO $database, int $targetId): void
     {
         $query = $database->prepare('SELECT COUNT(*) FROM snmp_query WHERE id = ?');

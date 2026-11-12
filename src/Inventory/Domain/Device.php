@@ -7,43 +7,82 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * A device's editable settings, identified by a fixed id.
+ * Changes go through revise(), which rejects stale edits and invalid values.
+ */
 final class Device
 {
     private ?DeviceSnmpChange $snmpChange = null;
 
+    /**
+     * Loads a device from stored values; no validation runs until revise() is called.
+     */
     public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled, private string $location, private string $externalId, private int $siteId = 0, private array $polling = [], private array $snmp = []) {}
+    /**
+     * Returns the device name shown in lists.
+     */
     public function description(): string
     {
         return $this->description;
     }
+    /**
+     * Returns the host name or IP address used to reach the device.
+     */
     public function hostname(): string
     {
         return $this->hostname;
     }
+    /**
+     * Returns the free-text notes for the device.
+     */
     public function notes(): string
     {
         return $this->notes;
     }
+    /**
+     * Returns whether polling of the device is enabled.
+     */
     public function enabled(): bool
     {
         return $this->enabled;
     }
+    /**
+     * Returns the free-text location (at most 40 characters).
+     */
     public function location(): string
     {
         return $this->location;
     }
+    /**
+     * Returns the identifier that an outside inventory uses for the device, at most 40 characters.
+     */
     public function externalId(): string
     {
         return $this->externalId;
     }
+    /**
+     * Returns the id of the site the device belongs to, where 0 means no site.
+     */
     public function siteId(): int
     {
         return $this->siteId;
     }
+    /**
+     * Returns the polling fields merged over the defaults, with every value cast to a string.
+     *
+     * @return array Map from string to string.
+     */
     public function polling(): array
     {
         return array_map(static fn($value): string => (string) $value, array_replace(DevicePolling::DEFAULTS, $this->polling));
     }
+    /**
+     * Returns the non-secret SNMP fields merged over the defaults, with every value cast to a string.
+     * An empty authentication or privacy protocol is reported as "[None]". Credentials are never included.
+     *
+     * @return array Map from string to string.
+     */
     public function snmp(): array
     {
         $fields = array_replace(DeviceSnmpConfiguration::PUBLIC_DEFAULTS, array_intersect_key($this->snmp, DeviceSnmpConfiguration::PUBLIC_DEFAULTS));
@@ -54,14 +93,31 @@ final class Device
         }
         return array_map(static fn($value): string => (string) $value, $fields);
     }
+    /**
+     * Returns the pending SNMP change from the last revise() call.
+     * When none is pending, returns a change that keeps the stored credentials.
+     */
     public function snmpChange(): DeviceSnmpChange
     {
         return $this->snmpChange ?? new DeviceSnmpChange(['keep_credentials' => true] + $this->snmp() + DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS);
     }
+    /**
+     * Returns a SHA-256 token over the current values, used to detect concurrent edits.
+     */
     public function revision(): string
     {
         return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled, $this->location, $this->externalId, $this->siteId, $this->polling(), $this->snmp()], JSON_THROW_ON_ERROR));
     }
+    /**
+     * Applies an edit after checking that the caller saw the current revision and that every value is valid.
+     * A null $siteId, $polling or $snmp leaves that part unchanged. Nothing is modified when a check fails.
+     *
+     * @param string $expectedRevision Token from revision() at the time the form was loaded.
+     * @param array|null $polling Polling fields to replace; null keeps the current ones.
+     * @param array|null $snmp SNMP fields, including credentials; null keeps the current ones.
+     * @throws DeviceEditConflict When the device changed since $expectedRevision was issued.
+     * @throws \InvalidArgumentException When a value is out of range, malformed or not valid UTF-8.
+     */
     public function revise(string $description, string $hostname, string $notes, bool $enabled, string $location, string $externalId, string $expectedRevision, ?int $siteId = null, ?array $polling = null, #[\SensitiveParameter] ?array $snmp = null): void
     {
         if (!hash_equals($this->revision(), $expectedRevision)) {

@@ -1,0 +1,1 @@
+- Update the documentation to match recent changes on main: the 0.1.0-alpha.1 release steps and `VERSIONING.md` examples, the `ci.md` workflow table, the administration list notes and two stale `1.3` series references.

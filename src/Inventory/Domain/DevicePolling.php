@@ -7,12 +7,22 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * A complete, validated set of polling settings for one device.
+ */
 final readonly class DevicePolling
 {
     public const DEFAULTS = ['device_threads' => '1', 'snmp_port' => '161', 'snmp_timeout' => '500', 'max_oids' => '10', 'bulk_walk_size' => '0', 'availability_method' => '2', 'ping_method' => '1', 'ping_port' => '23', 'ping_timeout' => '500', 'ping_retries' => '2'];
     public const RANGES = ['device_threads' => [1, 255], 'snmp_port' => [0, 65535], 'snmp_timeout' => [1, 16777215], 'max_oids' => [0, 60], 'ping_port' => [0, 65535], 'ping_timeout' => [0, 4294967295], 'ping_retries' => [0, 100]];
     public array $fields;
 
+    /**
+     * Validates and normalizes every polling setting to a canonical numeric string.
+     * Every key in DEFAULTS must be present; "bulk_walk_size" also accepts "-1".
+     *
+     * @param array $fields Map from string to string|int.
+     * @throws \InvalidArgumentException When a key is missing or unknown, or a value is outside its range.
+     */
     public function __construct(array $fields)
     {
         if (array_diff_key($fields, self::DEFAULTS) !== [] || array_diff_key(self::DEFAULTS, $fields) !== []) {

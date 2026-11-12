@@ -25,10 +25,11 @@ final readonly class DoctrineAssetStore implements AssetStore
     public function __construct(private Connection $database) {}
 
     /**
-     * Runs the operation in a transaction that locks the registry row.
+     * Runs the operation in a transaction that locks the registry row on MySQL.
      * On MySQL it first requires utf8mb4, strict mode and InnoDB tables.
      *
-     * @throws AssetError when the caller already holds a transaction, storage is unsafe or missing, or the commit outcome is unknown (uncertain)
+     * @throws AssetError when the caller already holds a transaction, the registry row is missing, storage is unsafe, or the commit outcome is unknown (uncertain)
+     * @throws \Doctrine\DBAL\Exception when a database statement fails, for example because the registry table is missing
      */
     public function atomic(\Closure $operation): mixed
     {
@@ -78,7 +79,9 @@ final readonly class DoctrineAssetStore implements AssetStore
     /**
      * Reads the whole register at one revision.
      *
-     * @throws AssetError when the schema is missing, stored data is invalid, there are more than 4500 records, or the revision changed during the read
+     * @throws AssetError when the registry row is missing, stored records have an invalid shape, there are more than 4500 records, or the revision changed during the read
+     * @throws \Doctrine\DBAL\Exception when a database statement fails, for example because the registry table is missing
+     * @throws \JsonException when stored data is not valid JSON
      */
     public function snapshot(): array
     {

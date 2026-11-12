@@ -9,8 +9,17 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 
 use Kadupul\Inventory\Application\ReadModel\DeviceSummary;
 
+/**
+ * Converts legacy device rows to read models.
+ */
 final class LegacyDeviceProjection
 {
+    /**
+     * Builds a list row from a device row.
+     * The numeric status is shown as "Down", "Recovering", "Up" or "Error", and any other value as "Unknown".
+     *
+     * @param array $row Map from string to mixed.
+     */
     public static function summary(array $row): DeviceSummary
     {
         return new DeviceSummary(

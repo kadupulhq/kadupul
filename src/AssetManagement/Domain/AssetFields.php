@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Kadupul\AssetManagement\Domain;
 
 /**
- * Validation rules and defaults for asset register fields. Every check throws an AssetError instead of coercing bad input.
+ * Validation rules and defaults for asset register fields. Checks throw an AssetError for bad input; text is trimmed and missing optional values take defaults.
  */
 final class AssetFields
 {
@@ -69,7 +69,7 @@ final class AssetFields
     }
 
     /**
-     * Returns the trimmed text after checking that it is valid UTF-8, free of control characters and at most $max characters long.
+     * Returns the trimmed text after checking that it is valid UTF-8, free of control characters other than tab, line feed and carriage return, and at most $max characters long.
      *
      * @throws AssetError when the value is not acceptable text, or is blank and $required is set
      */

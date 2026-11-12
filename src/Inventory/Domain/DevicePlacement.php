@@ -7,10 +7,22 @@
 
 namespace Kadupul\Inventory\Domain;
 
+/**
+ * A destination for placing a device's graphs: a position in a graph tree, or a report.
+ */
 final readonly class DevicePlacement
 {
     public int $targetId;
     public int $parentId;
+    /**
+     * Validates the destination and, for reports, the display settings.
+     *
+     * @param string $kind Either "tree" or "report".
+     * @param string $destination "<tree id>:<parent id>" for a tree (parent 0 means the root), or the report id.
+     * @param int $timespan Report timespan, 1 to 28; must be 0 for a tree.
+     * @param int $alignment Report alignment, 1 to 3; must be 0 for a tree.
+     * @throws \InvalidArgumentException When the destination or display settings are invalid.
+     */
     public function __construct(public string $kind, public string $destination, public int $timespan = 0, public int $alignment = 0)
     {
         if (!in_array($kind, ['tree', 'report'], true) || !preg_match($kind === 'tree' ? '/^[1-9][0-9]{0,9}:(0|[1-9][0-9]{0,9})$/' : '/^[1-9][0-9]{0,9}$/', $destination)) {

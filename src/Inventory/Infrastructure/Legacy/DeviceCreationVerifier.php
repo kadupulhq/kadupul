@@ -10,6 +10,14 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 /** Verify required legacy writes even when procedural helpers swallow SQL errors. */
 final class DeviceCreationVerifier
 {
+    /**
+     * Checks that a device has the graph and data query associations its template requires and, for a collector, that the collector's copy matches the primary.
+     *
+     * @param ?\PDO $remote The collector's connection, or null when the device is on the primary.
+     * @param bool $lockPrimary Whether to read the primary in share mode; requires an active transaction.
+     * @throws \LogicException When locking is requested outside a transaction.
+     * @throws \RuntimeException When an association is missing or differs on the collector.
+     */
     public function verify(\PDO $primary, ?\PDO $remote, int $deviceId, int $templateId, bool $lockPrimary = false): void
     {
         if ($lockPrimary && !$primary->inTransaction()) {
@@ -37,6 +45,12 @@ final class DeviceCreationVerifier
         }
     }
 
+    /**
+     * Runs a query that takes one id and returns all rows.
+     *
+     * @return array The rows, each an array keyed by column name.
+     * @throws \RuntimeException When the query fails.
+     */
     private function rows(\PDO $connection, string $sql, int $id): array
     {
         $statement = $connection->prepare($sql);

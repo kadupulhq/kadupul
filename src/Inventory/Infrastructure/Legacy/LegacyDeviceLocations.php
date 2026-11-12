@@ -10,9 +10,20 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 use Kadupul\Inventory\Application\Port\DeviceLocations;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
+/**
+ * Looks up device locations in the legacy tables, limited to devices the actor may see.
+ */
 final readonly class LegacyDeviceLocations implements DeviceLocations
 {
+    /**
+     * Binds the adapter to the database and the visibility rules.
+     */
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility) {}
+    /**
+     * Returns the distinct, non-empty locations that contain the term.
+     *
+     * @return array List of string.
+     */
     public function matching(int $actorId, string $term): array
     {
         $where = $this->visibility->predicate($actorId);

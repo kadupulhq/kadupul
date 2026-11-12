@@ -10,9 +10,23 @@ namespace Kadupul\Inventory\Application\Query;
 use Kadupul\Inventory\Application\Port\DeviceLocations;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 
+/**
+ * Query that suggests device locations matching a search term.
+ */
 final readonly class SuggestDeviceLocations
 {
+    /**
+     * Binds the query to console access and the device locations port.
+     */
     public function __construct(private ConsoleAccess $access, private DeviceLocations $locations) {}
+    /**
+     * Returns the locations that contain the term.
+     *
+     * @param string $term Text to look for, at most 200 bytes of valid UTF-8.
+     * @return array List of string.
+     * @throws \InvalidArgumentException When the term is too long or not valid text.
+     * @throws InventoryAccessDenied When nobody is signed in or the user may not manage devices.
+     */
     public function __invoke(string $term): array
     {
         $actor = $this->access->consoleActor();
