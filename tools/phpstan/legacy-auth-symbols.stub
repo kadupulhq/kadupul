@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+/**
+ * Symbol discovery only: PHPStan scans this file without executing it.
+ * lib/auth.php owns the implementation. Its parameters retain legacy coercion;
+ * every successful generation read returns a string, including the empty denial.
+ */
+function auth_session_credential_generation(mixed $user_id, mixed $password, mixed $db = false): string
+{
+    throw new LogicException('Static analysis symbols must not be executed.');
+}

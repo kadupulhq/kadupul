@@ -21,8 +21,9 @@ Authorization precedes request parsing and parent lookup. Online collectors use
 the established primary connection boundary; offline collectors remain refused.
 
 Parent IDs must be positive unsigned 32-bit integers. GET filters use the
-existing list contract: search up to 255 UTF-8 characters, 10/25/50/100 rows,
-pages 1–99999, and allowlisted sort columns and directions. Each reader uses one
+existing list contract: search up to 255 UTF-8 characters, 1–5000 rows with
+an absent `rows` or `rows=-1` meaning the configured Rows Per Page
+(`num_rows_table`), pages 1–99999, and allowlisted sort columns and directions. Each reader uses one
 parent lookup and one bounded child query with a lookahead row. Links retain
 parent identity, installation subdirectory and front-controller paths.
 

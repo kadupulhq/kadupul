@@ -31,7 +31,9 @@ if (getenv('PRESENTATION_SINK_CONTEXT_COVERAGE') === '1') {
     });
 }
 $definitions = require $root . '/tests/Fixtures/legacy-form-golden-scenarios.php';
-$scenario = $definitions['pages']['automation_snmp-edit'];
+// Only the scenario's database rows are reused; page and request are replaced below.
+// auth_profile carries the same rows as the retired automation_snmp-edit scenario.
+$scenario = $definitions['pages']['auth_profile'];
 $scenario['page'] = $case['page'];
 $scenario['request'] = $case['request'] + ['header'=>'false'];
 $scenario['settings']['drag_and_drop'] = 'on';

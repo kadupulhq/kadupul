@@ -62,14 +62,14 @@ final readonly class NewDevice
                 throw new \InvalidArgumentException('An SNMP field exceeds its maximum length.');
             }
         }
-        if ($fields['use_default_credentials'] && ($fields['snmp_community'] !== '' || $fields['snmp_password'] !== '' || $fields['snmp_priv_passphrase'] !== '')) {
+        if ($fields['use_default_credentials'] === true && ($fields['snmp_community'] !== '' || $fields['snmp_password'] !== '' || $fields['snmp_priv_passphrase'] !== '')) {
             throw new \InvalidArgumentException('Clear Use configured credentials to enter device-specific credentials.');
         }
         if ($fields['snmp_version'] === '3') {
-            if ((!$fields['use_default_credentials'] && $fields['snmp_username'] === '') || ($fields['snmp_priv_protocol'] !== '[None]' && $fields['snmp_auth_protocol'] === '[None]')) {
+            if (($fields['use_default_credentials'] === false && $fields['snmp_username'] === '') || ($fields['snmp_priv_protocol'] !== '[None]' && $fields['snmp_auth_protocol'] === '[None]')) {
                 throw new \InvalidArgumentException('SNMPv3 requires a username; privacy also requires authentication.');
             }
-            if (!$fields['use_default_credentials'] && (($fields['snmp_auth_protocol'] !== '[None]' && strlen($fields['snmp_password']) < 8) || ($fields['snmp_priv_protocol'] !== '[None]' && strlen($fields['snmp_priv_passphrase']) < 8))) {
+            if ($fields['use_default_credentials'] === false && (($fields['snmp_auth_protocol'] !== '[None]' && strlen($fields['snmp_password']) < 8) || ($fields['snmp_priv_protocol'] !== '[None]' && strlen($fields['snmp_priv_passphrase']) < 8))) {
                 throw new \InvalidArgumentException('SNMPv3 authentication and privacy passphrases require at least 8 bytes.');
             }
         }
