@@ -28,8 +28,15 @@ use Kadupul\Monitoring\Domain\MetricBinding;
  */
 final class RegisterBinding
 {
+    /** Wires the binding repository. */
     public function __construct(private readonly BindingRepository $bindings) {}
 
+    /**
+     * Stores a proposed binding, or returns the identical one already stored.
+     *
+     * @throws InvalidBinding when the binding is not proposed
+     * @throws BindingConflict when the key or the storage field is already bound with a different definition
+     */
     public function register(MetricBinding $binding): MetricBinding
     {
         if ($binding->status !== BindingStatus::Proposed) {

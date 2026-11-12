@@ -9,4 +9,5 @@ declare(strict_types=1);
 
 namespace Kadupul\Monitoring\Domain;
 
+/** Thrown when binding data is malformed. */
 final class InvalidBinding extends \InvalidArgumentException {}

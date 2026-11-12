@@ -12,6 +12,7 @@ namespace Kadupul\Monitoring\Domain;
 use Kadupul\Telemetry\Contract\MetricId;
 use Kadupul\Telemetry\Contract\MetricType;
 
+/** One metric a pack defines, with how each protocol yields it. */
 final readonly class PackMetric
 {
     /**
@@ -28,6 +29,7 @@ final readonly class PackMetric
         public array $mappings,
     ) {}
 
+    /** The mapping for the protocol, or null when the metric has none. */
     public function mapping(string $protocol): ?PackMapping
     {
         return $this->mappings[$protocol] ?? null;

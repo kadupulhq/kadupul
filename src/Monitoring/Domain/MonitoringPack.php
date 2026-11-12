@@ -42,6 +42,7 @@ final readonly class MonitoringPack
         return array_map(static fn(PackMetric $m): string => $m->id->toString(), $this->metrics);
     }
 
+    /** The metric with the given id, or null when the pack has none. */
     public function metric(string $id): ?PackMetric
     {
         foreach ($this->metrics as $metric) {

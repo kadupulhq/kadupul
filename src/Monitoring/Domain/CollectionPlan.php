@@ -66,6 +66,11 @@ final readonly class CollectionPlan
         return new self($planId, $utc, $deviceId, PlanStatus::Proposed, $pack->name, $pack->version->toString(), $targets, $dedupKey);
     }
 
+    /**
+     * A copy of the plan in the next status.
+     *
+     * @throws PlanTransitionRejected when the plan cannot move from its current status to $next
+     */
     public function withStatus(PlanStatus $next): self
     {
         if (!$this->status->canMoveTo($next)) {
