@@ -191,6 +191,8 @@ def reset(harness, state, tables, version):
         statements.append(MISSING_COLUMN)
     if state == 'behind':
         statements.append(BEHIND_PLUGINS)
+        # Do not seed a historical release with the later centered moments.
+        statements.append('ALTER TABLE alert_baseline_sample DROP COLUMN sample_mean, DROP COLUMN sample_m2')
     if state == 'create denied':
         statements.append(f'REVOKE CREATE ON cacti.* FROM {user}')
     if state == 'dump denied':
@@ -341,7 +343,7 @@ def verify_audit(harness, check, admin):
     as_root(harness, f'rm -rf {DOCS_ASIDE}; if [ -e {DOCS} ]; then mv {DOCS} {DOCS_ASIDE}; fi; '
                      f"printf '[client]\\nhost=db\\nskip-ssl\\n' > {CLIENT_CONFIG}")
     # The tables the cases change, and the rows, are saved before any case runs.
-    tables = [DRIFTED, FAILING, 'host', MISSING_TABLE]
+    tables = [DRIFTED, FAILING, 'host', MISSING_TABLE, 'alert_baseline_sample']
     harness.sql(f'DROP DATABASE IF EXISTS {BACKUP}')
     backup(harness, tables + ROW_TABLES)
     try:

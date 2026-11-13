@@ -253,6 +253,8 @@ try {
     $database->exec("USE `$schema`");
     installerSeed($database, $root);
     if ($failureUpgrade) {
+        // Restore pre-1.2.41 history before exercising the historical upgrade chain.
+        $database->exec('ALTER TABLE alert_baseline_sample DROP COLUMN sample_mean, DROP COLUMN sample_m2');
         $database->exec("UPDATE version SET cacti='1.2.33'");
         $database->exec("INSERT INTO cdef_items (hash,cdef_id,sequence,type,value) VALUES('" . str_repeat('f', 32) . "',15000001,1,1,'1')");
     }

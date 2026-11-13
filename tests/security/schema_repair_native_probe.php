@@ -145,6 +145,8 @@ try {
         $seedDatabase->exec("USE `$schema`");
     }
     installerSeed($seedDatabase, $root);
+    // The historical marker must not start with future baseline-moment columns.
+    $seedDatabase->exec('ALTER TABLE alert_baseline_sample DROP COLUMN sample_mean, DROP COLUMN sample_m2');
     // Preserve the actual earlier CDEF guards under the same installer actor.
     require_once $root . '/lib/cdef_reference.php';
     (new \Kadupul\Platform\Infrastructure\Legacy\CdefReferenceContract($seedDatabase, 1))->install();
