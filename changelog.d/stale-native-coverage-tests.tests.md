@@ -1,0 +1,1 @@
+- Native coverage tests no longer require `lib/html_form.php` for automation editor cases that render read-only (`'form' => false`), and the presentation page oracle skips `data_queries-edit`, whose form moved to Symfony. A new test fails if that page regains a native control.

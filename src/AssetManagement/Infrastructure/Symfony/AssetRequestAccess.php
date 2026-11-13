@@ -15,17 +15,27 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Refuses requests to the asset register route early, before the page runs, unless the visitor may use it.
+ * The response status follows the reason: 404 disabled, 401 unauthenticated, 403 denied, 503 otherwise.
+ */
 final readonly class AssetRequestAccess implements EventSubscriberInterface
 {
     /** @param \Closure(): WebAssetAccess $access */
     public function __construct(#[AutowireServiceClosure(WebAssetAccess::class)] private \Closure $access, private TranslatorInterface $translator) {}
 
+    /**
+     * Subscribes to the request event.
+     */
     public static function getSubscribedEvents(): array
     {
         // After routing, before locale selection can read installation settings.
         return [KernelEvents::REQUEST => ['onRequest', 24]];
     }
 
+    /**
+     * Sets an error response for the asset register route when access is refused; other routes are untouched.
+     */
     public function onRequest(RequestEvent $event): void
     {
         if ($event->getRequest()->attributes->get('_route') !== 'asset_register') {
