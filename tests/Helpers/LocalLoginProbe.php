@@ -24,6 +24,7 @@ define('MESSAGE_LEVEL_INFO', 1);
 $GLOBALS['scenario'] = $scenario;
 $GLOBALS['executed'] = array();
 $GLOBALS['messages'] = array();
+$GLOBALS['setting_reads'] = array();
 $error = false;
 $error_msg = '';
 register_shutdown_function(function () {
@@ -33,6 +34,7 @@ register_shutdown_function(function () {
         'error_msg' => $GLOBALS['error_msg'],
         'executed' => $GLOBALS['executed'],
         'messages' => $GLOBALS['messages'],
+        'setting_reads' => $GLOBALS['setting_reads'],
         'headers' => $GLOBALS['sent_headers'] ?? array(),
     ));
 });
@@ -42,7 +44,7 @@ function __($text, ...$args) { return vsprintf($text, $args); }
 function cacti_log(...$args) {}
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function cacti_count($array) { return is_array($array) ? count($array) : 0; }
-function read_config_option($name, $force = false) { return $GLOBALS['scenario']['config'][$name] ?? ''; }
+function read_config_option($name, $force = false) { $GLOBALS['setting_reads'][] = $name; return $GLOBALS['scenario']['config'][$name] ?? ''; }
 function api_plugin_hook_function($name, $parm = null) { return $parm; }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['messages'][] = $id; }
 function auth_checkclear_lockout($username, $realm) {}
@@ -76,7 +78,7 @@ PHP;
 
     foreach (array('secpass_login_process', 'secpass_check_pass', 'local_auth_login_process', 'auth_local_login_timing_floor') as $function) {
         // header() is built in, so the copied source calls a recorder instead.
-        $program .= "\n" . preg_replace('/\bheader\(/', 'probe_header(', test_php_function_source($auth, $function)) . "\n";
+        $program .= "\n" . preg_replace('/\bheader\(/', 'probe_header(', str_replace('__DIR__', var_export(dirname(__DIR__, 2) . '/lib', true), test_php_function_source($auth, $function))) . "\n";
     }
 
     $program .= '$GLOBALS[\'returned\'] = local_auth_login_process($scenario[\'username\']);';
@@ -90,11 +92,11 @@ PHP;
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    proc_close($process);
+    expect(proc_close($process))->toBe(0);
 
     expect($stderr)->toBe('');
 
-    return json_decode($stdout, true);
+    return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
 }
 
 function local_login_policy_scenario(string $username, string $password, array $extra = array()): array

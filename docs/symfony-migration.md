@@ -31,18 +31,80 @@ execution before loading dependencies or configuration.
 
 ## Shared identity compatibility
 
+The native account-lockout check now uses `IsAccountLocked` and its native
+persistence port. It preserves the disabled-policy lookup bypass, exact identity,
+caller errors and the ordering before directory binds or remembered-token rotation.
+Deploy its facade, query, port, adapter and configuration together and rebuild caches;
+rollback restores the bundle without a data migration. Failure counting and timed
+unlocking remain native operations.
+
+Password-complexity checks now live in `PasswordComplexity`. Its native adapter
+preserves settings and translated first-error results for login, password changes
+and administrator check/save paths. Native scalar/byte/comparison behavior stays
+compatible; the POT/PO references move while compiled translation catalogs remain
+byte-identical. Deploy the facade, domain class, adapter and service wiring together
+and rebuild caches. Rollback restores that bundle without reversing password writes.
+
+After native password verification, `ApplyLocalLoginPolicy` now coordinates
+forced-change handoff and login activity through a native adapter. Settings-read
+order, local-realm writes, messages and the existing password-change session
+handoff remain intact. Deploy its command, port, adapter, native facade and service
+wiring together. Rollback restores that bundle without undoing persisted policy
+flags or activity. Complexity and lockout checks use their shared services through
+native compatibility helpers.
+
+Local password verification now passes through `VerifyLocalCredentials`, which
+confirms the fresh account hash and coordinates optional rehashing through a
+native persistence port. The native facade retains plugin ownership and timing;
+password policy, credential-generation writes and session issuance keep their
+existing implementations. Deploy the facade, command, port, adapter and service
+configuration together and rebuild caches. Rollback restores that bundle without
+changing persisted formats or undoing credential mutations.
+
+The native login entry now renders Twig sections through an injected
+`LoginPageRenderer`. Rendering remains interleaved with native hooks so plugins
+observe preceding output and can change later values or stop rendering. The
+existing native POST path, CSRF rewriting, credential operations, header/footer
+and form selectors remain active. This presentation slice adds no HTTP route,
+schema change or dependency upgrade. Deploy entry, service, template and service
+wiring together and rebuild the environment cache; rollback restores those four
+files together and rebuilds the cache without reversing credential changes.
+
+
+Logout Everywhere persistence now lives in the injectable IdentityAccess
+`NativeSessionRevocation` adapter. The native POST profile action uses its thin
+facade and retains authorization, CSRF, audit and post-commit browser teardown.
+The transaction and credential-generation format are shared with future Symfony
+use cases; a Symfony mutation form remains planned.
+
+Symfony Security now authenticates `/session`, `/about` and `/about/legacy`
+through the native session adapters. This first slice retains each route's
+existing admission policy and response contract; credential issuance, logout
+and password changes retain native credential mutations. Logout GET/HEAD requests
+now render Symfony/Twig confirmation; only a native-CSRF-validated POST runs
+teardown and plugin hooks. Automatic browser logout callers submit POST, and
+reason messages render through Symfony/Twig. See the
+[authentication migration record](migrations/symfony-security-authentication.md)
+for verification, remaining stages and deployment/rollback instructions.
+
 Logout Everywhere rotates the existing credential generation and removes stored
 sessions and remembered-login tokens in one transaction. Existing file sessions
 are rejected by the same generation check on their next request. A failure returns
 HTTP 503 and preserves the transaction's previous state. The current browser is
 logged out only after a confirmed commit.
 
+Native password helpers share a Symfony-compatible `LegacyPasswordHasher`,
+preserving PHP algorithms, costs, byte semantics and existing MD5 verification.
+The login HTTP operation remains native; the hasher performs no account or session
+writes.
+
 Legacy remembered login rotation binds the token to its admitted generation with
 a message authentication code (MAC). The generation stays on the server. Both
 adapters reject tokens bound to an older generation, even if an in-flight request
 stores a replacement after revocation. The legacy transition keeps the generation
-that admitted the original token. Existing unversioned cookies remain compatible
-and are converted when restored. Passwords and unrelated preferences are unchanged.
+that admitted the original token. A password login binds its new token to the
+generation of the session it creates. Existing unversioned cookies remain
+compatible and are converted when restored. Passwords and unrelated preferences are unchanged.
 
 Deploy these authentication changes to all application instances together. Older
 versions do not validate the marker in rotated remembered tokens, so mixed-version

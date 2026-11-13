@@ -51,7 +51,10 @@ function get_nfilter_request_var($name, $default = '') { return $GLOBALS['scenar
 function validate_redirect_url($url = '', $default = 'index.php') { return $default; }
 function kill_session_var($name) { unset($_SESSION[$name]); }
 function cacti_header($location) { $GLOBALS['calls']['redirect'] = $location; }
-function cacti_cookie_logout() {}
+function cacti_cookie_logout() { $GLOBALS['calls']['teardown'][] = 'cookie_logout'; }
+function clear_auth_cookie() { $GLOBALS['calls']['teardown'][] = 'clear_auth_cookie'; }
+function cacti_session_destroy() { $_SESSION = array(); $GLOBALS['calls']['teardown'][] = 'session_destroy'; }
+function api_plugin_hook($name) { $GLOBALS['calls']['teardown'][] = $name; }
 function raise_message($id, $message = '', $level = 0) { $GLOBALS['calls']['messages'][] = $id; }
 function get_cacti_version() { return '1.2.31'; }
 function get_guest_account() { return 0; }
@@ -81,8 +84,8 @@ function db_execute_prepared($sql, $params = array()) {
 }
 PHP;
 
-    foreach (array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid', 'auth_process_lockout', 'secpass_check_pass', 'secpass_check_history') as $name) {
-        $global .= "\n" . test_php_function_source($auth, $name) . "\n";
+    foreach (array('auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid', 'auth_process_lockout', 'secpass_check_pass', 'secpass_check_history', 'auth_end_session') as $name) {
+        $global .= "\n" . str_replace('__DIR__', var_export($root . '/lib', true), test_php_function_source($auth, $name)) . "\n";
     }
 
     file_put_contents($work . '/include/global.php', $global);
@@ -179,7 +182,10 @@ test('the right current password changes the password without counting a failure
     )));
 
     expect(change_password_lockout_changed($result))->toBeTrue()
-        ->and(change_password_lockout_counted($result))->toBeFalse();
+        ->and(change_password_lockout_counted($result))->toBeFalse()
+        // The page ends the session itself instead of redirecting to the logout confirmation.
+        ->and($result['calls']['teardown'] ?? null)->toBe(array('logout_pre_session_destroy', 'clear_auth_cookie', 'cookie_logout', 'session_destroy', 'logout_post_session_destroy'))
+        ->and($result['session'])->toBe(array());
 });
 
 

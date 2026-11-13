@@ -108,7 +108,11 @@ if (!function_exists('child_coverage_command')) {
         $sources = array(
             'tests/Helpers/ChildProcessCoverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
             'tests/Fixtures/rrd-process-coverage.php', 'include/csrf.php', 'include/auth.php',
-            'include/global_session.php', 'lib/auth.php', 'lib/functions.php', 'lib/clog_webapi.php',
+            'include/global_session.php', 'lib/auth.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Application/Port/LocalCredentials.php', 'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'lib/functions.php', 'lib/clog_webapi.php',
+            'src/Platform/Infrastructure/Symfony/LegacyLogoutPage.php',
+            'src/Platform/Infrastructure/Symfony/NativeLogoutPage.php',
+            'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php',
+            'templates/platform/logout_message.html.twig', 'config/services.yaml',
             'logout.php', 'data_debug.php', 'managers.php', 'utilities.php', 'rrdcleaner.php',
             'cli/refresh_csrf.php', 'lib/csrf_rotation.php', 'lib/html_utility.php',
             'auth_changepassword.php', 'lib/ldap.php', 'install/functions.php', 'install/upgrades/1_2_31.php', 'install/upgrades/1_2_35.php', 'install/upgrades/1_2_36.php', 'install/upgrades/1_2_37.php', 'lib/schema_repair_integrity.php', 'include/vendor/csrf/csrf-magic.php',

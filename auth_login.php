@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -15,6 +18,15 @@ set_default_action();
 $auth_method = read_config_option('auth_method');
 if ($auth_method != 2) {
     cacti_require_post_actions(array('login'));
+
+    // Reject request shapes before normalization, plugins or typed credentials.
+    // The generic input-error renderer logs the request, including passwords.
+    foreach (array('login_username', 'login_password') as $login_field) {
+        if (!is_string(get_nfilter_request_var($login_field, ''))) {
+            http_response_code(400);
+            exit;
+        }
+    }
 }
 
 /**
@@ -33,7 +45,8 @@ $guest_user    = false;                               // Indicates the Guest acc
 $realm         = 0;                                   // The compensated realm used for template and user validation
 $frv_realm     = auth_resource_id(get_nfilter_request_var('realm', 0)); // The dropdown value for realm
 if ($frv_realm === null) {
-    die_html_input_error('realm');
+    http_response_code(400);
+    exit;
 }
 $error         = false;                               // Global variable, will be true if any errors occur
 $error_msg     = '';                                  // The errors message in case there was a login error
@@ -204,19 +217,9 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
             }
         }
 
-        /* remember me support.  Not for guest of basic auth */
-        if ($auth_method != 2 && $user['id'] !== get_guest_account()) {
-            if (!$error && isset_request_var('remember_me') && read_config_option('auth_cache_enabled') == 'on') {
-                set_auth_cookie($user);
-            }
-        }
-
         if (!$error) {
             /* avoid session fixation */
             cacti_session_start(true);
-
-            /* set the php session */
-            $_SESSION['sess_user_id'] = $user['id'];
 
             /* enforce post-auth session/cookie transition hardening */
             if (!cacti_auth_transition((int) $user['id'], 'login')) {
@@ -224,6 +227,20 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
                 $error_msg = __('Access Denied! User account locked.');
                 cacti_session_destroy();
                 cacti_session_start(true);
+            }
+
+            if (!$error) {
+                /* set the php session only after the transition admits the account */
+                $_SESSION['sess_user_id'] = $user['id'];
+
+                /* Publish remembered credentials only after the session transition succeeds. */
+                if ($auth_method != 2 && $user['id'] !== get_guest_account()
+                    && isset_request_var('remember_me') && read_config_option('auth_cache_enabled') == 'on') {
+                    // Bind the token to the generation this session was bound to,
+                    // so a Logout Everywhere committed meanwhile also revokes it.
+                    // A missing binding is refused by set_auth_cookie(), not left unversioned.
+                    set_auth_cookie($user, $_SESSION['sess_user_credential'] ?? '');
+                }
             }
 
             if ($error) {
@@ -305,165 +322,73 @@ if (api_plugin_hook_function('custom_login', OPER_MODE_NATIVE) == OPER_MODE_RESK
 
 $selectedTheme = get_selected_theme();
 
-?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html lang='<?php print html_escape(CACTI_LOCALE);?>'>
-<head>
-	<?php html_common_header(api_plugin_hook_function('login_title', __('Login to Kadupul')));?>
-</head>
-<body class='loginBody'>
-	<div class='loginLeft'></div>
-	<div class='loginCenter'>
-	<div class='loginArea'>
-		<div class='cactiLoginLogo'></div>
-			<h1 class='loginHeading'><?php print __('User Login');?></h1>
-			<form id='login' name='login' method='post' action='<?php print get_current_page();?>'>
-				<input type='hidden' name='action' value='login'>
-				<?php api_plugin_hook_function('login_before',
-				    array(
-				        'error'        => $error,
-				        'error_msg'    => $error_msg,
-				        'username'     => $username,
-				        'user_enabled' => $user_enabled,
-				        'action'       => get_nfilter_request_var('action')
-				    )
-				);
-?>
-				<div class='loginTitle'>
-					<p><?php print __('Enter your Username and Password below');?></p>
-				</div>
-				<div class='cactiLogin'>
-					<table class='cactiLoginTable'>
-						<tr>
-							<td>
-								<label for='login_username'><?php print __('Username');?></label>
-							</td>
-							<td>
-								<input type='text' class='ui-state-default ui-corner-all' id='login_username' name='login_username' value='<?php print html_escape($username); ?>' placeholder='<?php print __esc('Username');?>'>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<label for='login_password'><?php print __('Password');?></label>
-							</td>
-							<td>
-								<input type='password' autocomplete='current-password' class='ui-state-default ui-corner-all' id='login_password' name='login_password' placeholder='********'>
-							</td>
-						</tr>
-						<?php
-        if (read_config_option('auth_method') == '3' || read_config_option('auth_method') == '4') {
-            if (read_config_option('auth_method') == '3') {
-                $realms = api_plugin_hook_function(
-                    'login_realms',
-                    array(
-                        '1' => array(
-                            'name'     => __('Local'),
-                            'selected' => false
-                        ),
-                        '2' => array(
-                            'name'     => __('LDAP'),
-                            'selected' => true
-                        )
-                    )
-                );
-            } else {
-                // Nothing comes back when no domain is enabled.
-                $realms = get_auth_realms(true) ?? array();
-            }
-
-            // try and remember previously selected realm
-            if ($frv_realm && array_key_exists($frv_realm, $realms)) {
-                foreach ($realms as $key => $realm) {
-                    $realms[$key]['selected'] = ($frv_realm == $key);
-                }
-            }
-            ?>
-						<tr>
-							<td>
-								<label for='realm'><?php print __('Realm');?></label>
-							</td>
-							<td>
-								<select id='realm' name='realm' class='ui-state-default ui-corner-all'><?php
-                        if (cacti_sizeof($realms)) {
-                            foreach ($realms as $index => $realm) {
-                                print "\t\t\t\t\t<option value='" . $index . "'" . ($realm['selected'] ? ' selected="selected"' : '') . '>' . html_escape($realm['name']) . "</option>\n";
-                            }
-                        }
-            ?>
-								</select>
-							</td>
-						</tr>
-					<?php } if (read_config_option('auth_cache_enabled') == 'on') { ?>
-						<tr>
-							<td colspan='2'>
-								<input style='vertical-align:-3px;' type='checkbox' id='remember_me' name='remember_me' <?php print(isset($_COOKIE['cacti_remembers']) || !isempty_request_var('remember_me') ? 'checked' : '');?>>
-								<label for='remember_me'><?php print __('Keep me signed in');?></label>
-							</td>
-						</tr>
-					<?php } ?>
-						<tr>
-							<td colspan='2'>
-								<input type='submit' class='ui-button ui-corner-all ui-widget' value='<?php print __esc('Login');?>'>
-							</td>
-						</tr>
-					</table>
-				</div>
-			<?php api_plugin_hook('login_after'); ?>
-			</form>
-			<div class='loginErrors'>
-				<?php
-                if ($error) {
-                    print html_escape($error_msg);
-                }
-?>
-			</div>
-		</div>
-		<div class='versionInfo'><?php print __('Version %s | %s', $version, COPYRIGHT_YEARS_SHORT);?></div>
-	</div>
-	<div class='loginRight'></div>
-	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var storage = Storages.localStorage;
-
-	$(function() {
-		if (storage.isSet('user_realm')) {
-			var preferredRealm = storage.get('user_realm');
-		} else {
-			var preferredRealm = null;
-		}
-
-		if (preferredRealm == null) {
-			preferredRealm = $('#realm option:selected').val();
-		}
-
-		// Restore the preferred realm
-		if ($('#realm').length) {
-			if (preferredRealm !== null) {
-				$('#realm').val(preferredRealm);
-				if ($('#realm').selectmenu('instance') !== undefined) {
-					$('#realm').selectmenu('refresh');
-				}
-			}
-		}
-
-		// Control submit in order to store preferred realm
-		$('#login').on('submit', function(event) {
-			event.preventDefault();
-			if ($('#realm').length) {
-				storage.set('user_realm', $('#realm').val());
-			}
-			$('#login').off('submit').trigger('submit');
-		});
-
-		$('body').css('height', $(window).height());
-		$('.loginLeft').css('width',parseInt($(window).width()*0.33)+'px');
-		$('.loginRight').css('width',parseInt($(window).width()*0.33)+'px');
-<?php if (empty($username)) { ?>
-		$('#login_username').focus();
-<?php } else { ?>
-		$('#login_password').focus();
-<?php } ?>
-	});
-	</script>
-	<?php include_once(__DIR__ . '/include/global_session.php');?>
-</body>
-</html>
+// Resolve the injected presentation service at the native composition boundary.
+// Render sections in place so hooks see the same globals and preceding output,
+// including when a plugin deliberately stops the response before the footer.
+$loginKernel = (static fn(): \Kadupul\Kernel => require __DIR__ . '/config/bootstrap.php')();
+$loginKernel->boot();
+$loginRenderer = $loginKernel->getContainer()->get(\Kadupul\IdentityAccess\Infrastructure\Symfony\LoginPageRenderer::class);
+$loginCharset = html_escape_charset();
+print $loginRenderer->begin(new \Twig\Markup((string) html_escape(CACTI_LOCALE), $loginCharset));
+html_common_header(api_plugin_hook_function('login_title', __('Login to Kadupul')));
+print $loginRenderer->formStart(__('User Login'), (string) get_current_page());
+api_plugin_hook_function(
+    'login_before',
+    array(
+        'error'        => $error,
+        'error_msg'    => $error_msg,
+        'username'     => $username,
+        'user_enabled' => $user_enabled,
+        'action'       => get_nfilter_request_var('action')
+    )
+);
+print $loginRenderer->credentials(
+    __('Enter your Username and Password below'),
+    __('Username'),
+    __('Password'),
+    new \Twig\Markup((string) html_escape($username), $loginCharset),
+);
+if (read_config_option('auth_method') == '3' || read_config_option('auth_method') == '4') {
+    if (read_config_option('auth_method') == '3') {
+        $realms = api_plugin_hook_function(
+            'login_realms',
+            array(
+                '1' => array('name' => __('Local'), 'selected' => false),
+                '2' => array('name' => __('LDAP'), 'selected' => true)
+            )
+        );
+    } else {
+        // Nothing comes back when no domain is enabled.
+        $realms = get_auth_realms(true) ?? array();
+    }
+    if ($frv_realm && array_key_exists($frv_realm, $realms)) {
+        foreach ($realms as $key => $realm) {
+            $realms[$key]['selected'] = ($frv_realm == $key);
+        }
+    }
+    $loginRealmLabel = __('Realm');
+    $loginRealmChoices = array();
+    if (cacti_sizeof($realms)) {
+        foreach ($realms as $index => $realm) {
+            $loginRealmChoices[] = array(
+                'value' => (string) $index,
+                'name' => new \Twig\Markup((string) html_escape($realm['name']), $loginCharset),
+                'selected' => (bool) $realm['selected'],
+            );
+        }
+    }
+    print $loginRenderer->realms($loginRealmLabel, $loginRealmChoices);
+}
+if (read_config_option('auth_cache_enabled') == 'on') {
+    print $loginRenderer->remember(__('Keep me signed in'), isset($_COOKIE['cacti_remembers']) || !isempty_request_var('remember_me'));
+}
+print $loginRenderer->submit(__('Login'));
+api_plugin_hook('login_after');
+print $loginRenderer->result(
+    new \Twig\Markup($error ? (string) html_escape($error_msg) : '', $loginCharset),
+    __('Version %s | %s', $version, COPYRIGHT_YEARS_SHORT),
+    (string) CactiSecureHeaders::getNonce(),
+    empty($username),
+);
+include_once(__DIR__ . '/include/global_session.php');
+print $loginRenderer->end();

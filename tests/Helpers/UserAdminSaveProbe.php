@@ -86,7 +86,7 @@ function reset_user_perms($user_id) { $GLOBALS['executed'][] = array('sql' => 'r
 PHP;
 
         foreach ($scenario['auth_functions'] ?? array() as $function) {
-            $program .= "\n" . test_php_function_source($auth, $function) . "\n";
+            $program .= "\n" . str_replace('__DIR__', var_export($root . '/lib', true), test_php_function_source($auth, $function)) . "\n";
         }
 
         $program .= "\n" . test_php_function_source(file_get_contents($root . '/user_admin.php'), 'form_save') . "\n";

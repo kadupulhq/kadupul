@@ -1110,6 +1110,88 @@ def verify_installer_authentication_pins():
     return failures, count
 
 
+def verify_native_session_firewall_pins():
+    project = Path(__file__).resolve().parents[2]
+    classifier = inventory.CLASSIFIER.read_text()
+    paths = []
+    for name in ('NATIVE_SESSION_FIREWALL_SOURCES', 'ABOUT_AUTHENTICATION_SOURCES'):
+        block = re.search(r'const ' + name + r' = \[(.*?)\n\];', classifier, re.S)
+        if block is None:
+            return [name + ' source pins are missing'], 1
+        paths.extend(re.findall(r"'([^']+)' => '[a-f0-9]{64}'", block[1]))
+    paths = sorted(set(paths))
+    failures = []
+    count = 0
+    with tempfile.TemporaryDirectory(prefix='native-firewall-pins-') as directory:
+        root = tree(directory)
+        for path in paths:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(project / path, root / path)
+        entries = {'app.php/session': 'symfony:session',
+                   'app.php/about': 'symfony:platform_about',
+                   'app.php/about/legacy': 'symfony:platform_about_legacy'}
+        rows = run(root, [])
+        count += 1
+        if any(rows.get(path, ('missing',))[0] != gate for path, gate in entries.items()):
+            failures.append('reviewed native session firewall was not admitted: ' + repr(rows))
+        for path in paths:
+            original = (root / path).read_bytes()
+            (root / path).write_bytes(original + b'\n# Unreviewed authentication change.\n')
+            count += 1
+            try:
+                rows = run(root, [])
+                if any(rows.get(entry, ('missing',))[0] != 'unknown' for entry in entries):
+                    failures.append('changed firewall source retained admission: ' + path)
+            except SystemExit:
+                pass  # Existing native adapter pins may reject the whole tree.
+            finally:
+                (root / path).write_bytes(original)
+        for override in ('config/services_test.yaml', 'config/packages/test/security.yaml'):
+            target = root / override
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text('security: {}\n')
+            count += 1
+            try:
+                rows = run(root, [])
+                if any(rows.get(entry, ('missing',))[0] != 'unknown' for entry in entries):
+                    failures.append('unreviewed firewall override retained admission: ' + override)
+            except SystemExit:
+                pass
+            target.unlink()
+    return failures, count
+
+
+def verify_logout_presentation_pins():
+    project = Path(__file__).resolve().parents[2]
+    classifier = inventory.CLASSIFIER.read_text()
+    block = re.search(r'const LOGOUT_PRESENTATION_SOURCES = \[(.*?)\n\];', classifier, re.S)
+    if block is None:
+        return ['logout presentation source pins are missing'], 1
+    paths = re.findall(r"'([^']+)' => '[a-f0-9]{64}'", block[1])
+    failures = []
+    count = 0
+    with tempfile.TemporaryDirectory(prefix='logout-presentation-pins-') as directory:
+        root = tree(directory)
+        for path in paths:
+            (root / path).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(project / path, root / path)
+        rows = run(root, [])
+        count += 1
+        entry = 'app.php/logout/message'
+        if rows.get(entry, ('missing',))[0] != 'symfony:platform_logout_message':
+            failures.append('reviewed logout presentation was not admitted')
+        for path in paths:
+            original = (root / path).read_bytes()
+            (root / path).write_bytes(original + b'\n# Unreviewed presentation change.\n')
+            count += 1
+            try:
+                if run(root, []).get(entry, ('missing',))[0] != 'unknown':
+                    failures.append('changed logout presentation retained admission: ' + path)
+            finally:
+                (root / path).write_bytes(original)
+    return failures, count
+
+
 def verify_asset_authentication_pins():
     project = Path(__file__).resolve().parents[2]
     block = re.search(r'const ASSET_AUTHENTICATION_SOURCES = \[(.*?)\n\];', inventory.CLASSIFIER.read_text(), re.S)
@@ -1151,6 +1233,12 @@ def main():
     installer_failures, installer_count = verify_installer_authentication_pins()
     failures.extend(installer_failures)
     count += installer_count
+    logout_failures, logout_count = verify_logout_presentation_pins()
+    failures.extend(logout_failures)
+    count += logout_count
+    firewall_failures, firewall_count = verify_native_session_firewall_pins()
+    failures.extend(firewall_failures)
+    count += firewall_count
     asset_failures, asset_count = verify_asset_authentication_pins()
     failures.extend(asset_failures)
     count += asset_count
@@ -1534,8 +1622,16 @@ final class NullableQuery {
                          'BrowserAuthenticationSql', 'NativeAuthenticationSession',
                          'AuthenticationFileSessionHandler',
                          'AuthenticationDatabaseSessionHandler', 'SharedSession',
-                         'ReadOnlyDatabaseSessionHandler')
-        ] + ['config/services.yaml', 'lib/auth.php', 'lib/session_metadata.php']
+                         'ReadOnlyDatabaseSessionHandler', 'NativeSessionRevocation',
+                         'LegacyPasswordHasher', 'NativeLocalCredentials', 'NativeLocalLoginPolicy', 'NativePasswordComplexity', 'NativeAccountLockoutStatus')
+        ] + ['config/services.yaml', 'lib/auth.php', 'lib/session_metadata.php',
+             'src/IdentityAccess/Application/Port/LocalCredentials.php',
+             'src/IdentityAccess/Application/Command/VerifyLocalCredentials.php',
+             'src/IdentityAccess/Application/Port/LocalLoginPolicy.php',
+             'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php',
+             'src/IdentityAccess/Domain/PasswordComplexity.php',
+             'src/IdentityAccess/Application/Port/AccountLockoutStatus.php',
+             'src/IdentityAccess/Application/Query/IsAccountLocked.php']
         originals = {}
         for relative in about_bundle:
             target = root / relative

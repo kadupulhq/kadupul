@@ -9,21 +9,21 @@ declare(strict_types=1);
 
 namespace Kadupul\Platform\Infrastructure\Symfony\Controller;
 
-use Kadupul\IdentityAccess\Contract\AuthenticatedAccess;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class LegacyAboutController
 {
     #[Route('/about/legacy', name: 'platform_about_legacy', methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(Request $request, AuthenticatedAccess $access, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(Request $request, #[CurrentUser] ?UserInterface $user, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
-        $actor = $access->authenticatedActor();
-        if ($actor === null) {
+        if ($user === null) {
             return new Response($translator->trans('Access denied.', [], 'about'), 401, ['Cache-Control' => 'private, no-store']);
         }
         if ($request->isMethod('POST')) {

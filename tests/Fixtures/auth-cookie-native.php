@@ -13,7 +13,7 @@ $root = dirname(__DIR__, 2);
 $scenario = json_decode($argv[1], true, 512, JSON_THROW_ON_ERROR);
 if (isset($argv[3])) {
     require_once $root . '/tests/Helpers/NativeChildCoverageEvidence.php';
-    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-cookie-native.php', $argv[1], array('lib/auth.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
+    $nativeChildCoverageSnapshot = NativeChildCoverageEvidence::snapshot($root, 'tests/Fixtures/auth-cookie-native.php', $argv[1], array('lib/auth.php', 'src/IdentityAccess/Application/Port/LocalLoginPolicy.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'lib/graph_item_choices.php', 'include/global_constants.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'));
 }
 $config = array();
 $db = new PDO('sqlite::memory:', options: array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -94,11 +94,26 @@ $events = array();
 $issued = null;
 $identity_queries = array();
 $directory_calls = array();
+$lockout_queries = array();
+$recovery_queries = array();
 function db_fetch_row_prepared($sql, $params = array())
 {
+    if (str_contains($sql, "AND locked = 'on'")) {
+        $GLOBALS['lockout_queries'][] = $params;
+    }
     $q = $GLOBALS['db']->prepare($sql);
     $q->execute($params);
-    return $q->fetch(PDO::FETCH_ASSOC) ?: array();
+    $row = $q->fetch(PDO::FETCH_ASSOC) ?: array();
+    if (($GLOBALS['scenario']['operation'] ?? '') === 'recover-lockout' && str_contains($sql, 'SELECT id, username, lastfail')) {
+        $GLOBALS['recovery_queries'][] = $params;
+        if ($GLOBALS['scenario']['failure_after_read'] ?? false) {
+            $GLOBALS['db']->exec('UPDATE user_auth SET lastfail = ' . time() . ', failed_attempts = failed_attempts + 1 WHERE id=42');
+        }
+        if ($GLOBALS['scenario']['disable_after_read'] ?? false) {
+            $GLOBALS['db']->exec("UPDATE user_auth SET enabled='' WHERE id=42");
+        }
+    }
+    return $row;
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
@@ -106,6 +121,9 @@ function db_fetch_cell_prepared($sql, $params = array())
         $GLOBALS['identity_queries'][] = array('sql' => $sql, 'params' => $params);
     }
     $row = db_fetch_row_prepared($sql, $params);
+    if (($GLOBALS['scenario']['lock_during_restore'] ?? false) && str_contains($sql, 'AND hostname = ?')) {
+        $GLOBALS['db']->exec("UPDATE user_auth SET locked='on' WHERE id=42");
+    }
     return $row ? reset($row) : false;
 }
 function db_fetch_assoc($sql)
@@ -118,6 +136,9 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params = array())
 {
+    if (($GLOBALS['scenario']['reject_recovery'] ?? false) && str_contains($sql, 'SET lastfail = 0')) {
+        return false;
+    }
     $q = $GLOBALS['db']->prepare(str_replace('INSERT IGNORE', 'INSERT OR IGNORE', $sql));
     return $q->execute($params);
 }
@@ -170,7 +191,14 @@ if (isset($argv[3])) {
 }
 require $root . '/include/global_constants.php';
 require $root . '/lib/auth.php';
-if (($scenario['operation'] ?? '') === 'basic') {
+if (($scenario['operation'] ?? '') === 'recover-lockout') {
+    $db->prepare('UPDATE user_auth SET lastfail=?, failed_attempts=? WHERE id=?')->execute(array(time() - ($scenario['age'] ?? 120), $scenario['failures'] ?? 3, $scenario['principal'] ?? 42));
+    $result = auth_checkclear_lockout($scenario['username'] ?? 'alice', $scenario['account_realm'] ?? 0);
+} elseif (($scenario['operation'] ?? '') === 'lockout-check') {
+    $error = $scenario['prior_error'] ?? false;
+    $error_msg = $scenario['prior_message'] ?? '';
+    $result = auth_process_lockout_check($scenario['username'] ?? 'alice', $scenario['account_realm'] ?? 0);
+} elseif (($scenario['operation'] ?? '') === 'basic') {
     $db->exec('UPDATE user_auth SET realm=2 WHERE id=43');
     $result = basic_auth_login_process('alice');
 } elseif (($scenario['operation'] ?? '') === 'domain-cn') {
@@ -199,4 +227,9 @@ if (($scenario['operation'] ?? '') === 'basic') {
 $rows = db_table_exists('user_auth_cache') ? $db->query('SELECT user_id,token FROM user_auth_cache ORDER BY user_id')->fetchAll(PDO::FETCH_ASSOC) : array();
 $state = array('directory_calls' => $directory_calls, 'identity_queries' => $identity_queries, 'result' => $result, 'rows' => $rows, 'events' => $events, 'issued' => $issued, 'old_hash' => $hash, 'error' => $error ?? false, 'failed_attempts' => $db->query('SELECT id,failed_attempts FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_KEY_PAIR), 'audit' => $db->query('SELECT user_id,result FROM user_log')->fetchAll(PDO::FETCH_ASSOC));
 $nativeChildCoverageMarkers = array('native-auth-operation-returned', 'credential-and-audit-readback');
+$state['lockout_queries'] = $lockout_queries;
+$state['error_message'] = $error_msg ?? '';
+$state['recovery_queries'] = $recovery_queries;
+// The legacy-schema scenario drops lastfail; read back only the columns that remain.
+$state['accounts'] = $db->query('SELECT id,locked,' . (db_column_exists('user_auth', 'lastfail') ? 'lastfail,' : '') . 'failed_attempts,enabled FROM user_auth ORDER BY id')->fetchAll(PDO::FETCH_ASSOC);
 fwrite(STDOUT, json_encode($state, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT));

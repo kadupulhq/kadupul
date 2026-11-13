@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -11,77 +13,110 @@ include('./include/auth.php');
 
 global $config;
 
-set_default_action();
+require_once __DIR__ . '/include/vendor/autoload.php';
+$logoutRequest = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+try {
+    $logoutAction = \Kadupul\Platform\Infrastructure\Symfony\LegacyLogoutPage::action($logoutRequest);
+} catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $error) {
+    (new \Symfony\Component\HttpFoundation\Response('', $error->getStatusCode(), $error->getHeaders()))->send(false);
+    return;
+}
+$logoutConfirmed = $logoutRequest->isMethod('POST');
+if ($logoutConfirmed) {
+    // The native bootstrap checks CSRF too. Retain an explicit mutation guard
+    // here so a customized bootstrap cannot accidentally authorize a bare POST.
+    if (csrf_check(false) !== true) {
+        http_response_code(403);
+        return;
+    }
+    set_default_action();
+    // Read before teardown so the post-destroy hook may still change it.
+    $version = get_cacti_version();
+    // Shared with server-side logouts: hooks, token revocation and teardown in order.
+    auth_end_session();
 
-api_plugin_hook('logout_pre_session_destroy');
-
-// Revoke the server-side remember-me token on every logout path, before the browser cookies go.
-clear_auth_cookie();
-
-/* Note: logout is reachable via GET without CSRF token. Impact is limited
- * to forced-logout (annoyance, no privilege escalation). SameSite=Strict
- * on the session cookie prevents cross-site exploitation on modern browsers.
- * Tracked in issue #7051 (csrf-magic evaluation). */
-
-
-/* Clear session */
-cacti_cookie_logout();
-cacti_session_destroy();
-
-$version = get_cacti_version();
-
-api_plugin_hook('logout_post_session_destroy');
-
-/* allow for plugin based logout page */
-if (api_plugin_hook_function('custom_logout_message', OPER_MODE_NATIVE) === OPER_MODE_RESKIN) {
-    exit;
+    if (api_plugin_hook_function('custom_logout_message', OPER_MODE_NATIVE) === OPER_MODE_RESKIN) {
+        exit;
+    }
+    // Trusted hooks may change the native action as well as presentation state.
+    $logoutAction = get_request_var('action');
+} else {
+    $version = get_cacti_version();
 }
 
-/* Check to see if we are using Web Basic Auth */
-if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disabled' || get_request_var('action') == 'remote') {
-    if (get_request_var('action') == 'timeout') {
+// A GET may report a logout that already happened; it never performs one.
+$logoutEnded = $logoutConfirmed;
+if ($logoutRequest->isMethod('GET')) {
+    if (in_array($logoutAction, ['timeout', 'remote'], true) && !isset($_SESSION['sess_user_id'])) {
+        // The session has already ended, by expiry or by a server-side logout
+        // that redirected here with its reason, so there is nothing to confirm.
+        // No server-side logout redirects with 'disabled', so that claim confirms.
+        $logoutEnded = true;
+    } elseif ($logoutAction === 'timeout' && csrf_request_is_same_origin()) {
+        // The idle timer of an open page lands here when its token went stale
+        // or was missing. That page can no longer confirm, and leaving the
+        // session alive would defeat the timeout. A cross-site GET still only
+        // gets the confirmation form.
+        auth_end_session();
+        header('Location: logout.php?action=timeout', true, 303);
+        return;
+    } elseif ($logoutAction === '' && !isset($_SESSION['sess_user_id'])) {
+        // Nobody is signed in, so there is no logout to confirm.
+        $logoutEnded = true;
+    }
+}
+
+// Other GET and HEAD requests display confirmation; only a validated POST logs out.
+if (!$logoutEnded || in_array($logoutAction, ['timeout', 'disabled', 'remote'], true)) {
+    if (!$logoutEnded) {
+        $message = '';
+    } elseif ($logoutAction === 'timeout') {
         $message = __('You have been logged out of Kadupul due to a session timeout.');
-    } elseif (get_request_var('action') == 'disabled') {
+    } elseif ($logoutAction === 'disabled') {
         $message = __('You have been logged out of Kadupul due to an account suspension.');
-    } elseif (get_request_var('action') == 'remote') {
+    } elseif ($logoutAction === 'remote') {
         $message = __('You have been logged out of Kadupul due to a Remote Data Collector state change');
     } else {
         $message = '';
     }
 
-    print "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>";
-    print "<html>";
-    print "<head>";
+    // Keep native header/footer evaluation in global scope: plugins may change
+    // globals or restart a session after teardown. Only rendering crosses over.
+    require_once __DIR__ . '/include/vendor/autoload.php';
+    $logoutBufferLevel = ob_get_level();
+    ob_start();
     html_common_header(__('Logout of Kadupul'));
-    print "</head>";
-    print "<body class='logoutBody'>
-	<div class='logoutLeft'></div>
-	<div class='logoutCenter'>
-		<div class='logoutArea'>
-			<div class='cactiLogoutLogo'></div>
-			<legend>" . __('Automatic Logout') . "</legend>
-			<div class='logoutTitle'>
-				<p>" . $message . "</p>
-				<p>" . __('Please close your browser or %sLogin Again%s', '</p><center>[<a href="index.php">', '</a>]</center>') . "
-			</div>
-			<div class='logoutErrors'></div>
-		</div>
-		<div class='versionInfo'>" . __('Version %s', $version) . " | " . COPYRIGHT_YEARS_SHORT . "</div>
-	</div>
-	<div class='logoutRight'></div>
-	<script type='text/javascript' " . CactiSecureHeaders::getNonceAttribute() . ">
-	$(function() {
-		if (typeof myRefresh != 'undefined') {
-			clearTimeout(myRefresh);
-		}
-
-		$('.loginLeft').css('width',parseInt($(window).width()*0.33)+'px');
-		$('.loginRight').css('width',parseInt($(window).width()*0.33)+'px');
-	});
-	</script>";
+    $logoutHead = \Kadupul\Platform\Infrastructure\Symfony\LegacyLogoutPage::finishCapture($logoutBufferLevel);
+    $logoutPrompt = $logoutEnded ? __('Please close your browser or %sLogin Again%s', '</p><center>[<a href="index.php">', '</a>]</center>') : '';
+    $logoutHeading = $logoutEnded ? __('Automatic Logout') : __('Logout of Kadupul');
+    $logoutVersion = __('Version %s', $version);
+    $logoutNonce = CactiSecureHeaders::getNonce();
+    ob_start();
     include('./include/global_session.php');
-    print "</body>
-	</html>";
+    $logoutFooter = \Kadupul\Platform\Infrastructure\Symfony\LegacyLogoutPage::finishCapture($logoutBufferLevel);
+    $logoutKernel = require __DIR__ . '/config/bootstrap.php';
+    \Kadupul\Platform\Infrastructure\Symfony\LegacyLogoutPage::send(
+        $logoutKernel,
+        new \Kadupul\Platform\Infrastructure\Symfony\NativeLogoutPage(
+            $logoutHead,
+            $logoutFooter,
+            $message,
+            $logoutPrompt,
+            $logoutHeading,
+            $logoutVersion,
+            COPYRIGHT_YEARS_SHORT,
+            $logoutNonce,
+            CactiSecureHeaders::contentSecurityPolicies(),
+            $logoutEnded ? null : [
+                // Use the configured same-origin path; never derive a form target
+                // carrying a CSRF token from the untrusted Host request header.
+                'target' => \Kadupul\Platform\Infrastructure\Symfony\LegacyLogoutPage::confirmationTarget($config['url_path']),
+                'action' => $logoutAction,
+                'token' => csrf_get_tokens(),
+                'label' => __('Logout'),
+            ],
+        ),
+    );
 } else {
-    header('Location: index.php');
+    header('Location: index.php', true, 303);
 }

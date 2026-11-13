@@ -179,3 +179,97 @@ test('host comparison ignores ports and keeps bare IPv6 addresses whole', functi
     'bare IPv6' => array('2001:db8::1', '2001:db8::1', true),
     'bare IPv6 is not shortened' => array('2001:db8::1', '2001:db8:', false),
 ));
+
+/*
+ * A Remote Data Collector page ends the session only for a request that shows
+ * it came from this site; any other GET gets the CSRF-bound confirmation.
+ */
+function remote_collector_logout_run(string $page, string $method, array $headers): array
+{
+    $root = dirname(__DIR__, 4);
+    require_once $root . '/tests/Helpers/PhpSource.php';
+    $auth = file_get_contents($root . '/lib/auth.php');
+    $directory = sys_get_temp_dir() . '/remote-collector-logout-' . bin2hex(random_bytes(8));
+    mkdir($directory . '/include', 0700, true);
+    mkdir($directory . '/lib', 0700);
+    try {
+        $stubs = '<?php' . "\n"
+            . '$config = array("include_path" => ' . var_export($root . '/include', true) . ', "is_web" => false, "poller_id" => 2);' . "\n"
+            . '$_SESSION = array("sess_user_id" => 42);' . "\n"
+            . '$GLOBALS["events"] = array();' . "\n"
+            . 'require ' . var_export($root . '/lib/html_utility.php', true) . ';' . "\n"
+            . 'require ' . var_export($root . '/include/csrf.php', true) . ';' . "\n"
+            . 'function api_plugin_hook($name) { $GLOBALS["events"][] = $name; }' . "\n"
+            . 'function clear_auth_cookie() { $GLOBALS["events"][] = "clear_auth_cookie"; }' . "\n"
+            . 'function cacti_cookie_logout() { $GLOBALS["events"][] = "cookie_logout"; }' . "\n"
+            . 'function cacti_session_destroy() { $_SESSION = array(); $GLOBALS["events"][] = "session_destroy"; }' . "\n"
+            . 'function cacti_session_start() { $GLOBALS["events"][] = "session_start"; }' . "\n"
+            . 'function clog_admin() { return false; }' . "\n"
+            . 'function clog_authorized() { return false; }' . "\n"
+            . 'register_shutdown_function(function () { echo json_encode(array("status" => http_response_code(), "events" => $GLOBALS["events"], "session" => $_SESSION)); });' . "\n"
+            . test_php_function_source($auth, 'auth_end_session') . "\n";
+        file_put_contents($directory . '/include/auth.php', $stubs);
+        foreach (array('clog_webapi', 'poller', 'utility') as $module) {
+            file_put_contents($directory . '/lib/' . $module . '.php', '<?php');
+        }
+        $program = '$_SERVER["REQUEST_METHOD"] = $argv[1]; $_SERVER["SERVER_NAME"] = "kadupul.example.com";'
+            . 'foreach (json_decode($argv[2], true) as $name => $value) { $_SERVER[$name] = $value; }'
+            . 'require $argv[3];';
+        $process = proc_open(
+            array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, $method, json_encode($headers), $root . '/' . $page),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $directory
+        );
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($process);
+    } finally {
+        foreach (array_merge(glob($directory . '/include/*') ?: array(), glob($directory . '/lib/*') ?: array()) as $file) {
+            unlink($file);
+        }
+        rmdir($directory . '/include');
+        rmdir($directory . '/lib');
+        rmdir($directory);
+    }
+
+    expect($stderr)->toBe('');
+
+    return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+}
+
+test('a remote collector page ends the session only for a same-site request', function (string $page, string $method, array $headers, bool $ended) {
+    $result = remote_collector_logout_run($page, $method, $headers);
+
+    if ($ended) {
+        expect($result['status'])->toBe(303)
+            ->and($result['events'])->toBe(array('logout_pre_session_destroy', 'clear_auth_cookie', 'cookie_logout', 'session_destroy', 'logout_post_session_destroy'))
+            ->and($result['session'])->toBe(array());
+    } else {
+        // Redirected to the confirmation page; the session survives untouched.
+        expect($result['status'])->toBe(302)
+            ->and($result['events'])->toBe(array())
+            ->and($result['session'])->toBe(array('sess_user_id' => 42));
+    }
+})->with(function () {
+    $cases = array(
+        'Sec-Fetch-Site cross-site' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'cross-site'), false),
+        'Sec-Fetch-Site same-site' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'same-site'), false),
+        'Sec-Fetch-Site none' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'none'), false),
+        'no headers' => array('GET', array(), false),
+        'foreign Origin' => array('GET', array('HTTP_ORIGIN' => 'https://attacker.example.net'), false),
+        'opaque Origin' => array('GET', array('HTTP_ORIGIN' => 'null'), false),
+        'foreign Referer' => array('GET', array('HTTP_REFERER' => 'https://attacker.example.net/page'), false),
+        'own Referer with foreign Origin' => array('GET', array('HTTP_REFERER' => 'https://kadupul.example.com/clog.php', 'HTTP_ORIGIN' => 'https://attacker.example.net'), false),
+        'Sec-Fetch-Site same-origin' => array('GET', array('HTTP_SEC_FETCH_SITE' => 'same-origin'), true),
+        'own Referer without Sec-Fetch-Site' => array('GET', array('HTTP_REFERER' => 'https://kadupul.example.com/index.php'), true),
+        'CSRF-validated POST' => array('POST', array(), true),
+    );
+    foreach (array('clog.php', 'clog_user.php') as $page) {
+        foreach ($cases as $name => $case) {
+            yield $page . ': ' . $name => array($page, ...$case);
+        }
+    }
+});
