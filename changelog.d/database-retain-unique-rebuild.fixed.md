@@ -1,0 +1,1 @@
+Keep an existing UNIQUE constraint when db_update_table() rebuilds an index listed under regular keys, including column-order changes. Reject conflicting rebuilds while retaining the original index and rows.
