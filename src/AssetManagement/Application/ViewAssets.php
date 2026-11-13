@@ -21,6 +21,9 @@ use Kadupul\AssetManagement\Application\Port\AssetStore;
  */
 final readonly class ViewAssets
 {
+    /**
+     * Binds the view to actor access and the asset store.
+     */
     public function __construct(private AssetAccess $access, private AssetStore $store) {}
 
     /**

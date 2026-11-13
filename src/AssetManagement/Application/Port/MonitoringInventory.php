@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Kadupul\AssetManagement\Application\Port;
 
+/**
+ * Source of device observations from the monitoring system.
+ */
 interface MonitoringInventory
 {
     /**
