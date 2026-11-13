@@ -1300,6 +1300,9 @@ INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',0,'PRIMARY'
 INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',0,'PRIMARY',2,'time',NULL,NULL,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',0,'PRIMARY',3,'rrd_name',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',1,'time',1,'time','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',1,'local_data_id',1,'local_data_id','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',1,'local_data_id',2,'rrd_name','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_cache',1,'local_data_id',3,'time','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_last',0,'PRIMARY',1,'local_data_id',NULL,NULL,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('data_source_stats_hourly_last',0,'PRIMARY',2,'rrd_name',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('data_source_stats_monthly',0,'PRIMARY',1,'local_data_id','A',0,NULL,NULL,'','BTREE','');
