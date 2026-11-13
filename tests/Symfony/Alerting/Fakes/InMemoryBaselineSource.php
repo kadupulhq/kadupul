@@ -46,7 +46,7 @@ final class InMemoryBaselineSource implements BaselineSource
      */
     public function put(SeriesKey $series, array $weeklyValues): void
     {
-        $this->history[$series->id()] = array_map(static fn(float $v): HourBucket => new HourBucket(1, $v, $v * $v), $weeklyValues);
+        $this->history[$series->id()] = array_map(static fn(float $v): HourBucket => new HourBucket(1, $v, 0.0), $weeklyValues);
     }
 
     public function prune(int $now): int

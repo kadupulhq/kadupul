@@ -38,7 +38,9 @@ final class BaselineRuleTest extends TestCase
         return array_map(static function (float|array $week): HourBucket {
             $values = is_array($week) ? $week : [$week];
 
-            return new HourBucket(count($values), array_sum($values), array_sum(array_map(static fn(float $v): float => $v * $v, $values)));
+            $mean = array_sum($values) / count($values);
+
+            return new HourBucket(count($values), $mean, array_sum(array_map(static fn(float $v): float => ($v - $mean) ** 2, $values)));
         }, $weeks);
     }
 
@@ -82,9 +84,9 @@ final class BaselineRuleTest extends TestCase
         $band = $rule->band(self::weeks(self::FOUR_WEEKS));
         self::assertNotNull($band);
         self::assertSame(100.0, $band->mean);
-        self::assertSame(sqrt(400.0 / 3.0), $band->deviation);
-        self::assertSame(100.0 + 3.0 * sqrt(400.0 / 3.0), $band->upper(3.0));
-        self::assertSame(100.0 - 3.0 * sqrt(400.0 / 3.0), $band->lower(3.0));
+        self::assertEqualsWithDelta(sqrt(400.0 / 3.0), $band->deviation, 1e-12);
+        self::assertEqualsWithDelta(100.0 + 3.0 * sqrt(400.0 / 3.0), $band->upper(3.0), 1e-12);
+        self::assertEqualsWithDelta(100.0 - 3.0 * sqrt(400.0 / 3.0), $band->lower(3.0), 1e-12);
 
         // Weeks of different sizes weigh by their observations: n = 6, sum = 600,
         // sum of squares = 2 x 8100 + 2 x 12100 + 2 x 10000 = 60400, variance = 400 / 5 = 80.
@@ -133,7 +135,7 @@ final class BaselineRuleTest extends TestCase
         self::assertSame(Verdict::Breach, $rule->evaluate(170.0, $band, false));
     }
 
-    public function testFloatCancellationOnALargeNearlyConstantSeriesClampsToTheFloor(): void
+    public function testTinyVariationOnALargeSeriesRemainsBelowTheFloor(): void
     {
         $rule = new BaselineRule(3.0, 3.0, 0.25);
         // Twelve observations a week around 987654321.5, differing by 1e-7.
@@ -142,23 +144,18 @@ final class BaselineRuleTest extends TestCase
             $week[] = 987654321.5 + ($i % 2) * 1e-7;
         }
         $buckets = self::weeks(array_fill(0, 4, $week));
-        $n = 48;
-        $sum = array_sum(array_map(static fn(HourBucket $b): float => $b->sum, $buckets));
-        $squares = array_sum(array_map(static fn(HourBucket $b): float => $b->sumSquares, $buckets));
-        self::assertLessThan(0.0, ($squares - $sum * $sum / $n) / ($n - 1), 'The textbook formula cancels to a negative variance here.');
-
         $band = $rule->band($buckets);
 
         self::assertNotNull($band);
         self::assertEqualsWithDelta(987654321.5, $band->mean, 1e-6);
-        self::assertSame(0.25, $band->deviation, 'A negative variance is 0, and the floor applies.');
+        self::assertSame(0.25, $band->deviation, 'The real variation is smaller than the configured floor.');
         self::assertNull($rule->band(self::weeks(array_fill(0, 4, [\INF]))), 'A non-finite week is not a sample.');
     }
 
-    public function testWeeksWhosePooledSumOverflowsGiveNoBand(): void
+    public function testWeeksWhosePooledMomentOverflowsGiveNoBand(): void
     {
         $rule = new BaselineRule(3.0, 3.0, 1.0);
-        // Each week is finite and usable; their sum is not.
+        // Each moment is finite and usable; their pooled moment is not.
         $week = new HourBucket(1, 1.0e308, 1.0e308);
         self::assertTrue($week->isUsable());
 

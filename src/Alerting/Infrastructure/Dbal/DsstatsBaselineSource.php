@@ -30,7 +30,7 @@ use Kadupul\Alerting\Domain\Rule\SeriesKey;
  * dsstats_hourly_duration minutes.
  *
  * Each row is one series in one wall-clock hour of the installation time
- * zone (BaselineCalendar), with the count, sum and sum of squares of the
+ * zone (BaselineCalendar), with the count, mean and centered second moment of the
  * fresh rates the evaluator read in that hour and the newest observation
  * time counted. A band pools the buckets of one hour of the week. The
  * installation time zone is PHP's default time zone in the evaluator, the CLI date.timezone that the
@@ -69,7 +69,9 @@ final readonly class DsstatsBaselineSource implements BaselineSource
         foreach ($observations as $entry) {
             $hour = $this->calendar->wallHour($entry->observation->observedAt);
             $rate = $entry->observation->rate;
-            $rows[$hour . '|' . $entry->series->id()] = [$hour, $entry->series->localDataId, $entry->series->rrdName, $rate, $rate * $rate, $entry->observation->observedAt];
+            // DBAL's default string binding otherwise applies PHP's precision
+            // setting (usually 14 digits), erasing small rate differences.
+            $rows[$hour . '|' . $entry->series->id()] = [$hour, $entry->series->localDataId, $entry->series->rrdName, sprintf('%.17G', $rate), sprintf('%.17G', $rate * $rate), $entry->observation->observedAt, sprintf('%.17G', $rate)];
         }
         if ($rows === []) {
             return;
@@ -93,9 +95,9 @@ final readonly class DsstatsBaselineSource implements BaselineSource
             $ids = array_values(array_unique(array_map(static fn(SeriesKey $key): int => $key->localDataId, $series)));
             foreach (array_chunk($ids, self::CHUNK) as $chunk) {
                 $rows = $this->database->fetchAllAssociative(
-                    'SELECT local_hour, local_data_id, rrd_name, sample_count, sample_sum, sample_sum_squares
+                    'SELECT local_hour, local_data_id, rrd_name, sample_count, sample_mean, sample_m2
                     FROM alert_baseline_sample
-                    WHERE local_hour IN (?) AND local_data_id IN (?)',
+                    WHERE local_hour IN (?) AND local_data_id IN (?) AND sample_mean IS NOT NULL',
                     [$this->calendar->priorWeeks($hour), $chunk],
                     [ArrayParameterType::INTEGER, ArrayParameterType::INTEGER],
                 );
@@ -130,26 +132,33 @@ final readonly class DsstatsBaselineSource implements BaselineSource
 
     /**
      * Adds one observation per row. MariaDB and MySQL apply the assignments
-     * left to right, so the sum and count compare against the stored
-     * last_observed_at before it moves; SQLite (the store tests) reads the
-     * old row in every assignment.
+     * left to right: M2 uses the old mean/count, then count advances and the
+     * mean uses that new count. SQLite reads the old row in every assignment.
+     * Pre-upgrade buckets have no mean; their lost precision cannot be
+     * reconstructed, so the first fresh observation starts a new bucket.
      */
     private function upsert(int $rows): string
     {
-        $sql = 'INSERT INTO alert_baseline_sample (local_hour, local_data_id, rrd_name, sample_sum, sample_sum_squares, last_observed_at, sample_count) VALUES '
-            . implode(', ', array_fill(0, $rows, '(?, ?, ?, ?, ?, ?, 1)'));
+        $sql = 'INSERT INTO alert_baseline_sample (local_hour, local_data_id, rrd_name, sample_sum, sample_sum_squares, last_observed_at, sample_mean, sample_m2, sample_count) VALUES '
+            . implode(', ', array_fill(0, $rows, '(?, ?, ?, ?, ?, ?, ?, 0, 1)'));
         if ($this->database->getDatabasePlatform() instanceof SQLitePlatform) {
             return $sql . ' ON CONFLICT (local_hour, local_data_id, rrd_name) DO UPDATE SET
-                sample_sum = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN alert_baseline_sample.sample_sum + excluded.sample_sum ELSE alert_baseline_sample.sample_sum END,
-                sample_sum_squares = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN alert_baseline_sample.sample_sum_squares + excluded.sample_sum_squares ELSE alert_baseline_sample.sample_sum_squares END,
-                sample_count = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN alert_baseline_sample.sample_count + 1 ELSE alert_baseline_sample.sample_count END,
+                sample_m2 = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN
+                    CASE WHEN sample_mean IS NULL THEN 0 ELSE sample_m2 + (excluded.sample_mean - sample_mean) * (excluded.sample_mean - sample_mean) * (1.0 * sample_count / (sample_count + 1)) END ELSE sample_m2 END,
+                sample_mean = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN
+                    CASE WHEN sample_mean IS NULL THEN excluded.sample_mean ELSE sample_mean + (excluded.sample_mean - sample_mean) / (sample_count + 1) END ELSE sample_mean END,
+                sample_sum = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN CASE WHEN sample_mean IS NULL THEN excluded.sample_sum ELSE alert_baseline_sample.sample_sum + excluded.sample_sum END ELSE alert_baseline_sample.sample_sum END,
+                sample_sum_squares = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN CASE WHEN sample_mean IS NULL THEN excluded.sample_sum_squares ELSE alert_baseline_sample.sample_sum_squares + excluded.sample_sum_squares END ELSE alert_baseline_sample.sample_sum_squares END,
+                sample_count = CASE WHEN excluded.last_observed_at > alert_baseline_sample.last_observed_at THEN CASE WHEN sample_mean IS NULL THEN 1 ELSE alert_baseline_sample.sample_count + 1 END ELSE alert_baseline_sample.sample_count END,
                 last_observed_at = MAX(alert_baseline_sample.last_observed_at, excluded.last_observed_at)';
         }
 
         return $sql . ' ON DUPLICATE KEY UPDATE
-            sample_sum = IF(VALUES(last_observed_at) > last_observed_at, sample_sum + VALUES(sample_sum), sample_sum),
-            sample_sum_squares = IF(VALUES(last_observed_at) > last_observed_at, sample_sum_squares + VALUES(sample_sum_squares), sample_sum_squares),
-            sample_count = IF(VALUES(last_observed_at) > last_observed_at, sample_count + 1, sample_count),
+            sample_m2 = IF(VALUES(last_observed_at) > last_observed_at, IF(sample_mean IS NULL, 0, sample_m2 + (VALUES(sample_mean) - sample_mean) * (VALUES(sample_mean) - sample_mean) * (sample_count / (sample_count + 1.0e0))), sample_m2),
+            sample_sum = IF(VALUES(last_observed_at) > last_observed_at, IF(sample_mean IS NULL, VALUES(sample_sum), sample_sum + VALUES(sample_sum)), sample_sum),
+            sample_sum_squares = IF(VALUES(last_observed_at) > last_observed_at, IF(sample_mean IS NULL, VALUES(sample_sum_squares), sample_sum_squares + VALUES(sample_sum_squares)), sample_sum_squares),
+            sample_count = IF(VALUES(last_observed_at) > last_observed_at, IF(sample_mean IS NULL, 1, sample_count + 1), sample_count),
+            sample_mean = IF(VALUES(last_observed_at) > last_observed_at, IF(sample_mean IS NULL, VALUES(sample_mean), sample_mean + (VALUES(sample_mean) - sample_mean) / sample_count), sample_mean),
             last_observed_at = GREATEST(last_observed_at, VALUES(last_observed_at))';
     }
 
@@ -212,7 +221,7 @@ final readonly class DsstatsBaselineSource implements BaselineSource
     }
 
     /**
-     * The bucket, or null when its count or sums cannot be used.
+     * The bucket, or null when its count or centered moments cannot be used.
      *
      * @param array<string, mixed> $row
      */
@@ -221,8 +230,8 @@ final readonly class DsstatsBaselineSource implements BaselineSource
         try {
             $bucket = new HourBucket(
                 StoredValue::int($row['sample_count'], 'alert_baseline_sample', 'sample_count'),
-                StoredValue::float($row['sample_sum'], 'alert_baseline_sample', 'sample_sum'),
-                StoredValue::float($row['sample_sum_squares'], 'alert_baseline_sample', 'sample_sum_squares'),
+                StoredValue::float($row['sample_mean'], 'alert_baseline_sample', 'sample_mean'),
+                StoredValue::float($row['sample_m2'], 'alert_baseline_sample', 'sample_m2'),
             );
         } catch (StoredAlertingRowUnreadable) {
             return null;

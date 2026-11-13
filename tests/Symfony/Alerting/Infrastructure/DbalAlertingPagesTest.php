@@ -19,6 +19,13 @@ use Kadupul\Alerting\Application\Query\AlertingAccessDenied;
 use Kadupul\Alerting\Application\ReadModel\NotificationView;
 use Kadupul\Alerting\Application\Rule\RuleSubmission;
 use Kadupul\Alerting\Application\Rule\RuleSubmissionRefused;
+use Kadupul\Alerting\Application\Rule\RuleDefinition;
+use Kadupul\Alerting\Domain\Evaluation\RuleState;
+use Kadupul\Alerting\Domain\Evaluation\Transition;
+use Kadupul\Alerting\Domain\Rule\Comparator;
+use Kadupul\Alerting\Domain\Rule\SeriesKey;
+use Kadupul\Alerting\Domain\Rule\ThresholdRule;
+use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentCatalog;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentStore;
 use Kadupul\Alerting\Infrastructure\Dbal\DbalRuleCatalog;
@@ -325,6 +332,49 @@ final class DbalAlertingPagesTest extends TestCase
             static fn(mixed $value): mixed => is_numeric($value) ? (int) $value : $value,
             array_values($this->database->fetchAssociative('SELECT baseline_direction, baseline_min_samples FROM alert_rule WHERE id = ?', [$id]) ?: []),
         ));
+    }
+
+    public function testEditedThresholdStartsANewBreachRunWithoutRecountingTheLastObservation(): void
+    {
+        $old = new ThresholdRule(Comparator::GreaterThan, 90, 80, 3);
+        $series = new SeriesKey(101, 'traffic_in');
+        $id = $this->rules->create(self::VIEWER, new RuleDefinition($series, $old));
+        $state = new RuleState();
+        foreach ([self::NOW - 600, self::NOW - 300] as $at) {
+            $state->advanceAt($old->evaluate(95, false), $old, $at);
+        }
+        $states = new DbalRuleStateStore($this->database);
+        $states->save($id, $state);
+        // Saving an unchanged form must preserve pending observations.
+        $this->rules->update(self::VIEWER, $id, $this->revision($id), new RuleDefinition($series, $old));
+        self::assertTrue($state->equals($states->load([$id])[$id]));
+
+        $new = new ThresholdRule(Comparator::GreaterThan, 100, 80, 3);
+        $this->rules->update(self::VIEWER, $id, $this->revision($id), new RuleDefinition($series, $new));
+        $state = $states->load([$id])[$id];
+        self::assertSame(0, $state->consecutiveBreaches());
+        self::assertSame(self::NOW - 300, $state->lastObservedAt());
+        self::assertSame(Transition::None, $state->advanceAt($new->evaluate(105, false), $new, self::NOW - 300));
+        self::assertSame(Transition::None, $state->advanceAt($new->evaluate(105, false), $new, self::NOW));
+        self::assertSame(Transition::None, $state->advanceAt($new->evaluate(105, false), $new, self::NOW + 300));
+        self::assertSame(Transition::Opened, $state->advanceAt($new->evaluate(105, false), $new, self::NOW + 600));
+    }
+
+    public function testEditedClearThresholdResetsRecoveryButPreservesTheOpenIncident(): void
+    {
+        $id = $this->insertRule(101);
+        $incident = $this->openIncident($id);
+        $states = new DbalRuleStateStore($this->database);
+        $states->save($id, new RuleState(true, 0, 2, true, self::NOW - 300));
+        $new = new ThresholdRule(Comparator::GreaterThan, 90, 60, 3);
+        $this->rules->update(self::VIEWER, $id, $this->revision($id), new RuleDefinition(new SeriesKey(101, 'traffic_in'), $new));
+        $state = $states->load([$id])[$id];
+        self::assertTrue($state->isOpen());
+        self::assertTrue($state->isUnknown());
+        self::assertSame(0, $state->consecutiveOks());
+        self::assertSame(self::NOW - 300, $state->lastObservedAt());
+        self::assertSame(['open', $id, null], $this->incidentRow($incident, true));
+        self::assertSame(Transition::None, $state->advanceAt($new->evaluate(50, true), $new, self::NOW));
     }
 
     public function testAStaleRevisionIsRefusedWithoutAWrite(): void

@@ -219,6 +219,26 @@ final class EvaluateRulesTest extends TestCase
         self::assertSame([['101:traffic_in', '102:traffic_in']], $this->rates->requests);
     }
 
+    public function testAnExpiredBudgetOnTheLastFullBatchDoesNotWasteTheNextPoll(): void
+    {
+        $this->rules->add(self::rule(1), self::rule(2));
+        $this->rates = new InMemoryRateSource(clock: $this->clock, secondsPerRead: 1.1);
+
+        self::assertSame(2, $this->evaluator()(2, 1.0)->evaluated);
+        self::assertSame(2, $this->cursor->position());
+        self::assertSame(2, $this->evaluator()(2, 30.0)->evaluated);
+        self::assertSame(0, $this->cursor->position());
+        self::assertCount(2, $this->rates->requests, 'Each invocation visits the rules once.');
+    }
+
+    public function testAnEmptyRepositoryWithAStaleCursorTerminates(): void
+    {
+        $this->cursor->moveTo(99);
+        self::assertSame(0, $this->evaluator()(2, 30.0)->evaluated);
+        self::assertSame(0, $this->cursor->position());
+        self::assertSame([], $this->rates->requests);
+    }
+
     public function testInvalidLimitsAreRefusedBeforeAnyRead(): void
     {
         foreach ([[0, 1.0], [1, -1.0], [1, NAN], [1, INF]] as [$batch, $budget]) {

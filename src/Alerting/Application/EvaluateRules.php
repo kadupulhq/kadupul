@@ -106,7 +106,16 @@ final readonly class EvaluateRules
             $batch = $this->rules->batchAfter($after, $batchSize);
             if ($batch === []) {
                 $this->cursor->moveTo(0);
-                break;
+                if ($after === 0 || $evaluated + $skipped + $failed > 0) {
+                    break;
+                }
+                // The previous run may have spent its budget on a full final
+                // batch. Start this poll at the beginning instead of wasting it.
+                $after = 0;
+                $batch = $this->rules->batchAfter(0, $batchSize);
+                if ($batch === []) {
+                    break;
+                }
             }
             [$batchEvaluated, $batchSkipped, $batchFailed, $batchChanged] = $this->evaluateBatch($batch);
             $evaluated += $batchEvaluated;

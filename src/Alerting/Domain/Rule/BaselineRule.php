@@ -76,11 +76,9 @@ final readonly class BaselineRule
     /**
      * The band from the earlier weeks' buckets for this hour of the week, or
      * null with fewer than $minSamples usable buckets (weeks) or fewer than
-     * two observations. The observations of all those buckets are pooled:
-     * n = sum of counts, mean = sum / n and variance =
-     * (sum of squares - sum^2 / n) / (n - 1). Float cancellation can make
-     * that negative or non-finite for a large, nearly constant series; it is
-     * then 0 and the floor applies.
+     * two observations. Merge centered moments (Chan's parallel variance)
+     * rather than subtracting large squared sums, which loses the variance
+     * of high-valued series with small fluctuations.
      *
      * @param list<HourBucket> $buckets
      */
@@ -88,26 +86,32 @@ final readonly class BaselineRule
     {
         $weeks = 0;
         $count = 0;
-        $sum = 0.0;
-        $squares = 0.0;
+        $mean = 0.0;
+        $m2 = 0.0;
         foreach ($buckets as $bucket) {
             if (!$bucket->isUsable()) {
                 continue;
             }
             ++$weeks;
-            $count += $bucket->count;
-            $sum += $bucket->sum;
-            $squares += $bucket->sumSquares;
+            $total = $count + $bucket->count;
+            $delta = $bucket->mean - $mean;
+            if ($count === 0) {
+                $mean = $bucket->mean;
+                $m2 = $bucket->m2;
+            } else {
+                $weight = $bucket->count / $total;
+                $mean += $delta * $weight;
+                $m2 += $bucket->m2 + $delta * $delta * ($count * $weight);
+            }
+            $count = $total;
         }
         if ($weeks < $this->minSamples || $count < 2) {
             return null;
         }
-        $mean = $sum / $count;
-        if (!is_finite($mean)) {
+        if (!is_finite($mean) || !is_finite($m2)) {
             return null;
         }
-        $variance = ($squares - $sum * $sum / $count) / ($count - 1);
-        $deviation = is_finite($variance) && $variance > 0.0 ? sqrt($variance) : 0.0;
+        $deviation = sqrt($m2 / ($count - 1));
 
         return new BaselineBand($mean, max($deviation, $this->deviationFloor));
     }

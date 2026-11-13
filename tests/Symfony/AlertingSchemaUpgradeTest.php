@@ -30,6 +30,7 @@ final class AlertingSchemaUpgradeTest extends TestCase
         require_once $root . '/include/global_constants.php';
         require_once __DIR__ . '/Fixtures/forward_schema_repair_bridge.php';
         require_once $root . '/install/upgrades/1_2_40.php';
+        require_once $root . '/install/upgrades/1_2_41.php';
         $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
         if ($dsn === false || $dsn === '') {
             return;
@@ -49,7 +50,7 @@ final class AlertingSchemaUpgradeTest extends TestCase
         }
     }
 
-    public function testFreshInstallAndUpgradeDefineTheSameTables(): void
+    public function testInitialAlertingStepDefinesTheOriginalTables(): void
     {
         $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
         $definitions = upgrade_alerting_tables();
@@ -64,8 +65,8 @@ final class AlertingSchemaUpgradeTest extends TestCase
     public function testTheStepAddsOnlyTablesAndIsReachableAboveTheDeployedRelease(): void
     {
         $root = dirname(__DIR__, 2);
-        self::assertSame('1.2.40', trim((string) file_get_contents($root . '/include/cacti_version')));
-        self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.39'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.40'\\s*=>\\s*'0103',\\n\\);/m", (string) file_get_contents($root . '/include/global_arrays.php'));
+        self::assertSame('1.2.41', trim((string) file_get_contents($root . '/include/cacti_version')));
+        self::assertMatchesRegularExpression("/^\\s*'1\\.2\\.39'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.40'\\s*=>\\s*'0103',\\n\\s*'1\\.2\\.41'\\s*=>\\s*'0103',\\n\\);/m", (string) file_get_contents($root . '/include/global_arrays.php'));
         // Off by default (decision 10): the step writes no setting, rule or
         // row; its only write is the realm grant of decision 12.
         $source = (string) file_get_contents($root . '/install/upgrades/1_2_40.php');
@@ -186,7 +187,7 @@ final class AlertingSchemaUpgradeTest extends TestCase
         upgrade_alerting_signature($create);
     }
 
-    public function testUpgradeCreatesTheTablesAFreshInstallCreates(): void
+    public function testInitialUpgradeMatchesFreshInstallBeforeCenteredMoments(): void
     {
         $db = $this->database();
         $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
@@ -353,6 +354,41 @@ final class AlertingSchemaUpgradeTest extends TestCase
         return $this->db;
     }
 
+    public function testCenteredMomentUpgradeKeepsHistoryAndMatchesAFreshInstall(): void
+    {
+        $db = $this->database();
+        upgrade_to_1_2_40();
+        self::assertNotFalse($db->exec("INSERT INTO alert_baseline_sample VALUES (1, 7, 'traffic_in', 2, 30, 500, 123)"));
+        upgrade_to_1_2_41();
+        $expected = $this->createStatement('alert_baseline_sample');
+        self::assertSame('123', $this->scalar('SELECT last_observed_at FROM alert_baseline_sample'));
+        self::assertSame('1', $this->scalar('SELECT COUNT(*) FROM alert_baseline_sample WHERE sample_mean IS NULL AND sample_m2 IS NULL'));
+        upgrade_to_1_2_41();
+        self::assertSame($expected, $this->createStatement('alert_baseline_sample'));
+        self::assertSame('1', $this->scalar('SELECT COUNT(*) FROM alert_baseline_sample'));
+        $db->exec('DROP TABLE alert_baseline_sample');
+        $sql = (string) file_get_contents(dirname(__DIR__, 2) . '/cacti.sql');
+        self::assertSame(1, preg_match('/^CREATE TABLE alert_baseline_sample \\(.*?^\\)[^;\\n]*;/ms', $sql, $found));
+        self::assertNotFalse($db->exec($found[0]));
+        self::assertSame($expected, $this->createStatement('alert_baseline_sample'));
+    }
+
+    public function testCenteredMomentUpgradeRetriesAfterAPartialOrIncompatibleColumn(): void
+    {
+        $db = $this->database();
+        upgrade_to_1_2_40();
+        self::assertNotFalse($db->exec('ALTER TABLE alert_baseline_sample ADD COLUMN sample_mean double DEFAULT NULL, ADD COLUMN sample_m2 varchar(20) DEFAULT NULL'));
+        try {
+            upgrade_to_1_2_41();
+            self::fail('An incompatible moment column was accepted.');
+        } catch (RuntimeException $failure) {
+            self::assertStringContainsString('differs from its required definition', $failure->getMessage());
+        }
+        self::assertNotFalse($db->exec('ALTER TABLE alert_baseline_sample DROP COLUMN sample_m2'));
+        upgrade_to_1_2_41();
+        self::assertSame('2', $this->scalar("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'alert_baseline_sample' AND COLUMN_NAME IN ('sample_mean', 'sample_m2') AND DATA_TYPE = 'double'"));
+    }
+
     private function createStatement(string $table): string
     {
         $row = $this->database()->query('SHOW CREATE TABLE `' . $table . '`')->fetch(PDO::FETCH_NUM);
@@ -379,7 +415,8 @@ final class AlertingSchemaUpgradeTest extends TestCase
     {
         self::assertSame(1, preg_match('/^CREATE TABLE `?' . $table . '`? \(.*?^\)[^;\n]*;/ms', $sql, $found), $table . ' must be created once in cacti.sql');
 
-        return rtrim($found[0], ';');
+        // The original 1.2.40 contract; the full 1.2.41 chain is tested separately.
+        return str_replace(["  sample_mean double default NULL,\n", "  sample_m2 double default NULL,\n"], '', rtrim($found[0], ';'));
     }
 
     private static function normalized(string $create): string

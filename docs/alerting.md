@@ -114,11 +114,22 @@ on its first small change.
   A new rule therefore does nothing for at least 4 weeks, and the history grows
   only while alerting runs. Time with alerting off or collection down costs
   those weeks.
+- **Baseline upgrade.** Schema 1.2.41 adds centered running moments. Old
+  buckets remain stored but are excluded because their squared sums cannot
+  recover lost precision. Baseline rules warm up again for their configured
+  minimum number of weeks; threshold rules continue immediately. Stop the
+  evaluator while upgrading. To roll application code back, disable alerting
+  first; retain the added columns and schema version rather than downgrading
+  the database. Do not run old and new evaluators together.
+- **Editing conditions.** A changed condition resets pending breach and
+  recovery counts, while keeping any open incident and the last observation
+  timestamp. An unchanged save preserves the counts.
 - **History size.** The evaluator keeps its own history in
   `alert_baseline_sample`, one row per data source, RRD data source name and
-  hour. At 8 weeks and a day that is about 1,500 rows and 75 KB per series. A
-  measurement with 5,000 series was 6.7 million rows and about 370 MB of data
-  and index. Rules on the same series share the history.
+  hour. At 8 weeks and a day that is about 1,500 rows per series. Before
+  the two centered-moment columns were added, a measurement with 5,000 series
+  was 6.7 million rows and about 370 MB of data and index; storage with the
+  additional columns has not been remeasured. Rules on the same series share the history.
 - **Pruning.** Each run removes history older than 8 weeks plus one day, even
   for series with no rule left, at most 5,000 hour and data source pairs per
   run, oldest first. Pruning runs only when the evaluator runs. With alerting

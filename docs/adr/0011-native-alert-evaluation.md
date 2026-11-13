@@ -162,7 +162,8 @@ behavior until an administrator opts in.
      last period (`dsstats_write_buffer()` in `lib/dsstats.php`). The cache
      keeps only `dsstats_hourly_duration` minutes. So the evaluator keeps its
      own history in `alert_baseline_sample`: for each series and wall-clock
-     hour, the count, sum and sum of squares of the fresh rates (decision 1)
+     hour, the count, mean and sum of squared deviations from the mean (M2)
+     of the fresh rates (decision 1)
      it read in that hour, and the newest observation time it counted, so a
      sample read by two runs counts once. History starts when the first baseline rule on a
      series is evaluated; rules on the same series share it.
@@ -177,14 +178,11 @@ behavior until an administrator opts in.
      observations, the quantity a rule compares, not the spread of hourly
      means: a rate that swings within every hour but has the same hourly
      mean each week still has a wide band. All observations in the sample
-     buckets are pooled: n is the sum of the counts, the mean is the sum of
-     the sums over n, and the variance is (sum of squares - sum^2 / n) /
-     (n - 1). For a large, nearly constant series that formula can cancel to
-     a small negative or non-finite value in floating point; such a variance
-     is 0. The deviation used is the larger of the square root of the
-     variance and the rule's deviation floor, an absolute amount in the
-     series' own unit that must be greater than zero, so the band is never
-     narrower than 2 x k x floor and the floor covers the clamped case.
+     buckets are pooled with Chan's centered-moment merge. Welford's update
+     accumulates each bucket without subtracting large squared sums. The
+     sample variance is pooled M2 / (n - 1); the deviation is its square root,
+     raised to the rule's absolute deviation floor. Non-finite pooled moments
+     give an unknown band rather than a spuriously narrow band.
      The floor is absolute, not a fraction of the mean, because the commonest
      zero-variance series, such as an error counter that is always 0, has a
      mean of 0, where a relative floor is zero again.
@@ -634,8 +632,10 @@ behavior until an administrator opts in.
     and RRD data source name, so a band's read and the age-out are ranges on
     its first column. They are added to `cacti.sql` and
     `docs/audit_schema.sql`, and created by a new `install/upgrades/1_2_40.php`.
-    `include/cacti_version` moves from 1.2.39 to 1.2.40 the way PR #1136 moved
-    it, and the version is written only after every step succeeds so a failed
+    `install/upgrades/1_2_41.php` then adds nullable centered moments, also
+    present in the fresh-install and audit schemas. Old buckets remain but
+    cannot provide a band until fresh history warms up. The schema version
+    becomes 1.2.41 and is written only after every step succeeds so a failed
     upgrade can be retried. Persistent tables are used because counters and
     incidents must survive a restart, unlike the MEMORY source. Times are Unix
     seconds in unsigned integer columns, so no value depends on a session time

@@ -52,12 +52,57 @@ final class DsstatsBaselineSourceTest extends TestCase
             }
         };
         $this->database = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true], (new Configuration())->setMiddlewares([new Middleware($this->log)]));
-        $this->database->executeStatement('CREATE TABLE alert_baseline_sample (local_hour INT NOT NULL, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, sample_count INT NOT NULL, sample_sum REAL NOT NULL, sample_sum_squares REAL NOT NULL, last_observed_at INT NOT NULL, PRIMARY KEY (local_hour, local_data_id, rrd_name))');
+        $this->database->executeStatement('CREATE TABLE alert_baseline_sample (local_hour INT NOT NULL, local_data_id INT NOT NULL, rrd_name BLOB NOT NULL, sample_count INT NOT NULL, sample_sum REAL NOT NULL, sample_sum_squares REAL NOT NULL, last_observed_at INT NOT NULL, sample_mean REAL NULL, sample_m2 REAL NULL, PRIMARY KEY (local_hour, local_data_id, rrd_name))');
     }
 
     private function source(): DsstatsBaselineSource
     {
         return new DsstatsBaselineSource($this->database, new \DateTimeZone(self::ZONE));
+    }
+
+    public function testLargeRatesRetainTheirVarianceThroughStorage(): void
+    {
+        $source = $this->source();
+        $series = new SeriesKey(7, 'traffic_in');
+        $now = self::at('2026-11-09 09:30:00');
+        foreach ([1, 2, 3, 4] as $week) {
+            $at = self::weeksBefore($now, $week);
+            $source->record([self::seen($series, 100000000 - 1, $at)]);
+            $source->record([self::seen($series, 100000000 + 1, $at + 300)]);
+            $source->record([self::seen($series, 100000000 + 1, $at + 300)]);
+        }
+        $rule = new BaselineRule(3, 2, 0.1);
+        $band = $rule->band($source->history([self::seen($series, 100000001, $now)])[$series->id()]);
+        self::assertNotNull($band);
+        self::assertSame(100000000.0, $band->mean);
+        self::assertEqualsWithDelta(sqrt(8 / 7), $band->deviation, 1e-12);
+        self::assertSame(\Kadupul\Alerting\Domain\Evaluation\Verdict::Ok, $rule->evaluate(100000001, $band));
+        self::assertSame(\Kadupul\Alerting\Domain\Evaluation\Verdict::Breach, $rule->evaluate(100000004, $band));
+    }
+
+    public function testOldHistoryWarmsUpOnlyOnANewerObservation(): void
+    {
+        $source = $this->source();
+        $series = new SeriesKey(7, 'traffic_in');
+        $now = self::at('2026-11-09 09:30:00');
+        $at = self::weeksBefore($now, 1);
+        $source->record([self::seen($series, 10, $at)]);
+        $this->database->executeStatement('UPDATE alert_baseline_sample SET sample_mean = NULL, sample_m2 = NULL, sample_count = 12');
+        self::assertSame([], $source->history([self::seen($series, 10, $now)]));
+        $source->record([self::seen($series, 10, $at)]);
+        self::assertNull($this->database->fetchOne('SELECT sample_mean FROM alert_baseline_sample'));
+        $source->record([self::seen($series, 20, $at + 300)]);
+        self::assertEquals([$series->id() => [new HourBucket(1, 20, 0)]], $source->history([self::seen($series, 10, $now)]));
+        $source->record([self::seen($series, 22, $at + 600)]);
+        self::assertEquals([$series->id() => [new HourBucket(2, 21, 2)]], $source->history([self::seen($series, 10, $now)]));
+    }
+
+    public function testStringBindingPreservesAllRateDigits(): void
+    {
+        $series = new SeriesKey(7, 'traffic_in');
+        $rate = 100000000.12345679;
+        $this->source()->record([self::seen($series, $rate, self::at('2026-11-09 09:30:00'))]);
+        self::assertSame($rate, (float) $this->database->fetchOne('SELECT sample_mean FROM alert_baseline_sample'));
     }
 
     private static function at(string $local): int
@@ -122,7 +167,7 @@ final class DsstatsBaselineSourceTest extends TestCase
         $history = $source->history([self::seen($series, 1.0, $now), self::seen(new SeriesKey(9, 'traffic_in'), 1.0, $now)]);
 
         // 30 and 32, 20 and 22, 10 and 12: newest week first; a series with no history is absent.
-        self::assertEquals(['7:traffic_in' => [new HourBucket(2, 62.0, 1924.0), new HourBucket(2, 42.0, 884.0), new HourBucket(2, 22.0, 244.0)]], $history);
+        self::assertEquals(['7:traffic_in' => [new HourBucket(2, 31.0, 2.0), new HourBucket(2, 21.0, 2.0), new HourBucket(2, 11.0, 2.0)]], $history);
     }
 
     public function testADaylightSavingChangeKeepsTheHourOfTheWeek(): void
@@ -135,8 +180,8 @@ final class DsstatsBaselineSourceTest extends TestCase
         $source->record([self::seen($series, 7.0, self::at('2026-03-02 08:30:00'))]);
 
         // Monday 09:10 EDT is 167 real hours later, yet the same hour of the week.
-        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 42.0, 1764.0)]], $source->history([self::seen($series, 1.0, self::at('2026-03-09 09:10:00'))]));
-        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 7.0, 49.0)]], $source->history([self::seen($series, 1.0, self::at('2026-03-09 08:10:00'))]));
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 42.0, 0.0)]], $source->history([self::seen($series, 1.0, self::at('2026-03-09 09:10:00'))]));
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 7.0, 0.0)]], $source->history([self::seen($series, 1.0, self::at('2026-03-09 08:10:00'))]));
     }
 
     public function testAnUnreadableBucketLeavesItsSeriesWithoutHistory(): void
@@ -150,13 +195,13 @@ final class DsstatsBaselineSourceTest extends TestCase
         }
         $this->database->executeStatement('UPDATE alert_baseline_sample SET sample_count = 0 WHERE local_data_id = 7 AND last_observed_at = ?', [self::weeksBefore($now, 2)]);
 
-        $good10 = ['8:traffic_in' => [new HourBucket(1, 10.0, 100.0), new HourBucket(1, 10.0, 100.0)]];
+        $good10 = ['8:traffic_in' => [new HourBucket(1, 10.0, 0.0), new HourBucket(1, 10.0, 0.0)]];
         self::assertEquals($good10, $source->history([self::seen($bad, 1.0, $now), self::seen($good, 1.0, $now)]));
 
-        $this->database->executeStatement("UPDATE alert_baseline_sample SET sample_count = 1, sample_sum = 'lots' WHERE local_data_id = 7");
+        $this->database->executeStatement("UPDATE alert_baseline_sample SET sample_count = 1, sample_mean = 'lots' WHERE local_data_id = 7");
         self::assertEquals($good10, $source->history([self::seen($bad, 1.0, $now), self::seen($good, 1.0, $now)]));
 
-        $this->database->executeStatement("UPDATE alert_baseline_sample SET sample_sum = 10, sample_sum_squares = 'lots' WHERE local_data_id = 7");
+        $this->database->executeStatement("UPDATE alert_baseline_sample SET sample_mean = 10, sample_m2 = 'lots' WHERE local_data_id = 7");
         self::assertEquals($good10, $source->history([self::seen($bad, 1.0, $now), self::seen($good, 1.0, $now)]));
     }
 
@@ -169,10 +214,10 @@ final class DsstatsBaselineSourceTest extends TestCase
         // Rows of the same data source and hour that no SeriesKey can name: not a data source name, and not text.
         $this->insertBucket($hour, 7, 'traffic-in');
         $this->insertBucket($hour, 7, '');
-        $this->database->executeStatement('INSERT INTO alert_baseline_sample VALUES (?, 7, 5, 1, 1.0, 1.0, 1)', [$hour]);
+        $this->database->executeStatement('INSERT INTO alert_baseline_sample VALUES (?, 7, 5, 1, 1.0, 1.0, 1, 1.0, 0.0)', [$hour]);
         self::assertCount(4, $this->rows());
 
-        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 10.0, 100.0)]], $this->source()->history([self::seen($series, 1.0, $now)]));
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 10.0, 0.0)]], $this->source()->history([self::seen($series, 1.0, $now)]));
     }
 
     public function testRecordingNothingWritesNothing(): void
@@ -240,7 +285,7 @@ final class DsstatsBaselineSourceTest extends TestCase
         $source->record([self::seen($series, 40.0, self::weeksBefore($observed, BaselineRule::HISTORY_WEEKS))]);
 
         self::assertSame(0, $source->prune($now));
-        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 40.0, 1600.0)]], $source->history([self::seen($series, 1.0, $observed)]));
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 40.0, 0.0)]], $source->history([self::seen($series, 1.0, $observed)]));
     }
 
     public function testTheGraceEndsAtExactly24HoursOfObservationAge(): void
@@ -255,7 +300,7 @@ final class DsstatsBaselineSourceTest extends TestCase
         $source->record([self::seen($series, 25.0, self::weeksBefore($older, BaselineRule::HISTORY_WEEKS))]);
 
         self::assertSame(1, $source->prune($now), 'Only the bucket read by the older observation goes.');
-        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 24.0, 576.0)]], $source->history([self::seen($series, 1.0, $day)]), 'The oldest week of a 24-hour-old rate is kept.');
+        self::assertEquals(['7:traffic_in' => [new HourBucket(1, 24.0, 0.0)]], $source->history([self::seen($series, 1.0, $day)]), 'The oldest week of a 24-hour-old rate is kept.');
         self::assertSame([], $source->history([self::seen($series, 1.0, $older)]));
     }
 
@@ -302,7 +347,7 @@ final class DsstatsBaselineSourceTest extends TestCase
         $history = $source->history(array_map(fn(SeriesKey $key): SeriesObservation => self::seen($key, 1.0, $now), $series));
 
         self::assertCount(1201, $history);
-        self::assertEquals([new HourBucket(1, 1201.0, 1201.0 * 1201.0)], $history['1201:traffic_in']);
+        self::assertEquals([new HourBucket(1, 1201.0, 0.0)], $history['1201:traffic_in']);
         self::assertCount(3, array_filter($writes, static fn(string $sql): bool => str_starts_with($sql, 'INSERT')), '500 series per insert.');
         self::assertCount(3, $this->log->statements, 'One read per 500 series of one hour, never one per series.');
     }

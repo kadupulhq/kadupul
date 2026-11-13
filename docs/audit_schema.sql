@@ -174,6 +174,8 @@ INSERT INTO `table_columns` VALUES ('alert_baseline_sample',4,'sample_count','in
 INSERT INTO `table_columns` VALUES ('alert_baseline_sample',5,'sample_sum','double','NO','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_baseline_sample',6,'sample_sum_squares','double','NO','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_baseline_sample',7,'last_observed_at','int(10) unsigned','NO','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('alert_baseline_sample',8,'sample_mean','double','YES','',NULL,'',NULL);
+INSERT INTO `table_columns` VALUES ('alert_baseline_sample',9,'sample_m2','double','YES','',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_incident',1,'id','int(10) unsigned','NO','PRI',NULL,'auto_increment',NULL);
 INSERT INTO `table_columns` VALUES ('alert_incident',2,'rule_id','int(10) unsigned','NO','MUL',NULL,'',NULL);
 INSERT INTO `table_columns` VALUES ('alert_incident',3,'status','varchar(16)','NO','',NULL,'','utf8mb4_unicode_ci');

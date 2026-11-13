@@ -166,7 +166,7 @@ final class AlertBaselineDatabaseTest extends TestCase
         self::assertIsArray($row);
         // A repeated or older sample adds nothing; the sums and count read last_observed_at before it moves.
         self::assertSame([3, 60.0, 1400.0, $nine + 900], [(int) $row['sample_count'], (float) $row['sample_sum'], (float) $row['sample_sum_squares'], (int) $row['last_observed_at']]);
-        self::assertEquals(['7:traffic_in' => [new HourBucket(3, 60.0, 1400.0)]], $source->history([new SeriesObservation($series, new Observation(1.0, self::at('2026-11-16 09:30:00'), STEP))]));
+        self::assertEquals(['7:traffic_in' => [new HourBucket(3, 20.0, 200.0)]], $source->history([new SeriesObservation($series, new Observation(1.0, self::at('2026-11-16 09:30:00'), STEP))]));
     }
 
     public function testTheEvaluatorBuildsHistoryAcrossADaylightSavingChangeAndThenBreaches(): void
@@ -263,7 +263,7 @@ final class AlertBaselineDatabaseTest extends TestCase
         $calendar = new BaselineCalendar(new \DateTimeZone(ZONE));
         // Four earlier weeks of 100 for the baseline series, and old rows a prune must remove.
         foreach (array_slice($calendar->priorWeeks($calendar->wallHour($now)), 0, 4) as $hour) {
-            $this->database->insert('alert_baseline_sample', ['local_hour' => $hour, 'local_data_id' => 101, 'rrd_name' => 'traffic_in', 'sample_count' => 1, 'sample_sum' => 100, 'sample_sum_squares' => 10000, 'last_observed_at' => $hour * 3600]);
+            $this->database->insert('alert_baseline_sample', ['local_hour' => $hour, 'local_data_id' => 101, 'rrd_name' => 'traffic_in', 'sample_count' => 1, 'sample_sum' => 100, 'sample_sum_squares' => 10000, 'sample_mean' => 100, 'sample_m2' => 0, 'last_observed_at' => $hour * 3600]);
         }
         $old = $calendar->oldestKept($calendar->wallHour($now)) - DsstatsBaselineSource::GRACE_HOURS - 1;
         foreach ([500, 501, 502] as $id) {

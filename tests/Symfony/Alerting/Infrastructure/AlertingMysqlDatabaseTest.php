@@ -189,7 +189,7 @@ final class AlertingMysqlDatabaseTest extends TestCase
             $this->database->fetchAllNumeric('SELECT sample_count, sample_sum, sample_sum_squares, last_observed_at FROM alert_baseline_sample'),
         ));
         // A week later the same hour of the week reads that bucket.
-        self::assertEquals(['7:traffic_in' => [new HourBucket(2, 30.0, 500.0)]], $source->history([$seen(1.0, $nine + 7 * 86_400 + 60)]));
+        self::assertEquals(['7:traffic_in' => [new HourBucket(2, 15.0, 50.0)]], $source->history([$seen(1.0, $nine + 7 * 86_400 + 60)]));
     }
 
     private function assertUnexpectedRow(): void
@@ -200,6 +200,36 @@ final class AlertingMysqlDatabaseTest extends TestCase
         } catch (\UnexpectedValueException $error) {
             self::assertSame('The dsstats tables returned an unexpected row.', $error->getMessage());
         }
+    }
+
+    public function testLargeBaselineRatesPreserveVarianceAndWarmUpLegacyHistory(): void
+    {
+        $series = new SeriesKey(7, 'traffic_in');
+        $source = new DsstatsBaselineSource($this->database, new \DateTimeZone('UTC'));
+        $now = (new \DateTimeImmutable('2026-11-09 09:00:00', new \DateTimeZone('UTC')))->getTimestamp();
+        $seen = static fn(float $rate, int $at): SeriesObservation => new SeriesObservation($series, new Observation($rate, $at, 300));
+        foreach ([1, 2, 3, 4] as $week) {
+            foreach ([-1.0, 1.0, -1.0, 1.0] as $index => $delta) {
+                $entry = $seen(100000000 + $delta, $now - $week * 604800 + $index * 300);
+                $source->record([$entry]);
+                $source->record([$entry]);
+            }
+        }
+        $rule = new \Kadupul\Alerting\Domain\Rule\BaselineRule(3, 2, 0.1);
+        $band = $rule->band($source->history([$seen(100000001, $now)])[$series->id()]);
+        self::assertNotNull($band);
+        self::assertEqualsWithDelta(100000000, $band->mean, 1e-8);
+        self::assertEqualsWithDelta(sqrt(16 / 15), $band->deviation, 1e-8);
+        self::assertSame(\Kadupul\Alerting\Domain\Evaluation\Verdict::Ok, $rule->evaluate(100000001, $band));
+
+        $source->record([$seen(10, $now)]);
+        $this->database->executeStatement('UPDATE alert_baseline_sample SET sample_mean = NULL, sample_m2 = NULL, sample_count = 12 WHERE last_observed_at = ?', [$now]);
+        $source->record([$seen(20, $now)]);
+        self::assertSame(1, (int) $this->database->fetchOne('SELECT COUNT(*) FROM alert_baseline_sample WHERE sample_mean IS NULL'));
+        $source->record([$seen(20, $now + 300)]);
+        $source->record([$seen(22, $now + 600)]);
+        $history = $source->history([$seen(1, $now + 604800)]);
+        self::assertEquals(new HourBucket(2, 21, 2), $history[$series->id()][0]);
     }
 
     /**

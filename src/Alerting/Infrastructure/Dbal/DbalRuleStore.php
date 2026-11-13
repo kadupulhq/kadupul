@@ -18,6 +18,7 @@ use Kadupul\Alerting\Application\Rule\RuleDefinition;
 use Kadupul\Alerting\Application\Rule\RuleSubmissionRefused;
 use Kadupul\Alerting\Domain\Incident\IncidentStatus;
 use Kadupul\Alerting\Domain\Rule\BaselineRule;
+use Kadupul\Alerting\Domain\Rule\AlertRule;
 use Kadupul\Alerting\Domain\Rule\ThresholdRule;
 use Kadupul\IdentityAccess\Contract\AuditTrail;
 use Kadupul\Platform\Contract\LegacyConfiguration;
@@ -69,6 +70,13 @@ final readonly class DbalRuleStore implements RuleStore
                 // Another series or kind is another rule for the evaluator:
                 // the old state and incident describe what it no longer watches.
                 $this->endRule($ruleId);
+            } else {
+                $previous = DbalRuleRepository::fromRow($stored);
+                if (!$previous instanceof AlertRule || !$previous->equals(new AlertRule($ruleId, $rule->series, $rule->condition))) {
+                    // Counts describe the old condition. Keep the incident and
+                    // watermark, so an edit cannot count the same sample twice.
+                    $this->database->update('alert_rule_state', ['consecutive_breaches' => 0, 'consecutive_oks' => 0], ['rule_id' => $ruleId]);
+                }
             }
             $this->database->update('alert_rule', self::columns($rule), ['id' => $ruleId]);
         });
