@@ -13,10 +13,21 @@ use Doctrine\DBAL\ArrayParameterType;
 use Kadupul\AssetManagement\Application\Port\MonitoringInventory;
 use Kadupul\AssetManagement\Domain\AssetError;
 
+/**
+ * Reads the monitored devices from the host table as asset observations.
+ */
 final readonly class MonitoringSnapshot implements MonitoringInventory
 {
+    /**
+     * Binds the inventory to the database connection.
+     */
     public function __construct(private Connection $database) {}
 
+    /**
+     * Returns one observation per device id, stamped with $observedAt.
+     *
+     * @throws AssetError when any id is not an existing, undeleted device
+     */
     public function observations(array $ids, string $observedAt): array
     {
         $rows = $this->database->fetchAllAssociative("SELECT id, description, hostname, location FROM host WHERE deleted = '' AND id IN (?) ORDER BY id", [$ids], [ArrayParameterType::INTEGER]);

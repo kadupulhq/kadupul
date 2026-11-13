@@ -77,7 +77,11 @@ test('automation controllers render real SQL records and preserve declared mutat
             $sources = \NativeAutomationPresentation::sources();
             $markers = \NativeAutomationPresentation::markers(isset($case['post']));
             $hits = [$case['page']];
-            if (isset($case['heading'])) $hits = array_merge($hits, ['lib/html.php', 'lib/html_form.php']);
+            if (isset($case['heading'])) {
+                $hits[] = 'lib/html.php';
+                // Read-only pages ('form' => false) render no form, so html_form.php never runs for them.
+                if ($case['form'] ?? true) $hits[] = 'lib/html_form.php';
+            }
             if (isset($case['post'])) $hits[] = 'include/csrf.php';
             $report = $directory . '/automation.coverage';
             $child = \NativeChildCoverageEvidence::load($report, $root, 'tests/Fixtures/automation-presentation-native.php', $input, $sources, $markers, $hits);

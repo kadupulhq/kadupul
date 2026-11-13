@@ -37,6 +37,11 @@ final class AssetData
         return $result;
     }
 
+    /**
+     * Returns the value when it is a string.
+     *
+     * @throws AssetError when stored data is not a string
+     */
     public static function string(mixed $value): string
     {
         if (!is_string($value)) {
@@ -45,6 +50,11 @@ final class AssetData
         return $value;
     }
 
+    /**
+     * Reads a stored non-negative integer from an integer or a canonical decimal string.
+     *
+     * @throws AssetError when the value is neither
+     */
     public static function number(mixed $value): int
     {
         if (is_string($value) && preg_match('/\A(?:0|[1-9][0-9]{0,17})\z/D', $value) === 1) {
@@ -142,6 +152,11 @@ final class AssetData
         return $result;
     }
 
+    /**
+     * Returns the value when it is a UTC timestamp in the form 2026-01-31T12:00:00Z.
+     *
+     * @throws AssetError when stored data is not in that form
+     */
     public static function timestamp(mixed $value): string
     {
         $value = self::string($value);
