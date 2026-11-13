@@ -1818,7 +1818,7 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
 
                 // One statement, so a rebuild the server rejects (such as a
                 // UNIQUE index over duplicate rows) leaves the old index in place.
-                if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`, ADD " . ($k['unique'] ? 'UNIQUE ' : '') . "INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
+                if (!db_execute("ALTER TABLE `$table` DROP INDEX `$n`, ADD " . (($k['unique'] || $uniqueindex[$n]) ? 'UNIQUE ' : '') . "INDEX `$n` (" . $columns . ')', $log, $db_conn)) {
                     return false;
                 }
             }
