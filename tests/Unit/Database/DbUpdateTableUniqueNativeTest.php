@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-#[RunTestsInSeparateProcesses]
 final class DbUpdateTableUniqueNativeTest extends TestCase
 {
     #[DataProvider('rebuilds')]
@@ -22,9 +20,6 @@ final class DbUpdateTableUniqueNativeTest extends TestCase
             self::markTestSkipped('Set KADUPUL_TEST_MYSQL_DSN to a disposable database.');
         }
         $root = dirname(__DIR__, 3);
-        if (is_file($root . '/include/vendor/autoload.php')) {
-            require_once $root . '/include/vendor/autoload.php';
-        }
         require_once $root . '/lib/database.php';
         require_once $root . '/lib/functions.php';
         $GLOBALS['config'] = [];
