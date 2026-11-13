@@ -31,10 +31,10 @@ $created = [];
 function db_install_execute($sql, $params = [], $log = true)
 {
     if ($params === []) {
-        return $GLOBALS['installer_connection']->exec($sql);
+        return $GLOBALS['installer_connection']->exec($sql) === false ? DB_STATUS_ERROR : DB_STATUS_SUCCESS;
     }
 
-    return $GLOBALS['installer_connection']->prepare($sql)->execute($params);
+    return $GLOBALS['installer_connection']->prepare($sql)->execute($params) ? DB_STATUS_SUCCESS : DB_STATUS_ERROR;
 }
 function db_index_exists($table, $name)
 {
@@ -187,6 +187,10 @@ try {
     $modes = ($argv[1] ?? '') === '--from-lts-only' ? ['upgrade-lts-1.2.32'] : ['fresh', 'upgrade-1.2.31', 'upgrade-lts-1.2.32', 'upgrade-1.2.33'];
     foreach ($modes as $mode) {
         if ($mode !== 'fresh') {
+            // Each historical scenario starts before these later migrations.
+            foreach ($upgradeTables as $table) {
+                $owner->exec("DROP TABLE IF EXISTS `$table`");
+            }
             $installedVersion = match ($mode) {
                 'upgrade-1.2.31' => '1.2.31', 'upgrade-1.2.33' => '1.2.33', default => '1.2.32'
             };
