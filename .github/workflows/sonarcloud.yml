@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       full_analysis: ${{ steps.scope.outputs.full_analysis }}
+      legacy_coverage: ${{ steps.scope.outputs.legacy_coverage }}
       reason: ${{ steps.scope.outputs.reason }}
     steps:
       - name: Checkout
@@ -76,21 +77,23 @@ jobs:
   #
   # The legacy unit suite took 100 minutes serially, longer than the
   # application producer (46-60 minutes) and the gap between merges to main.
-  # Six shards bring each to roughly 17 minutes of tests plus about six of
-  # setup; classes are split by count, not by time, so the slowest shard is
-  # expected to stay well under the application producer even when uneven.
+  # Six shards bring each to roughly 25 minutes of tests plus about six of
+  # setup. Classes are assigned longest-first by the measured weights in
+  # tests/tools/pest_shard_weights.json, so the shards finish within a few
+  # minutes of each other; refresh the weights when a class becomes slow.
   legacy-unit-coverage:
     timeout-minutes: 90
     name: Legacy unit coverage (${{ matrix.shard }}/6)
     needs: scope
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch","merge_group"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
+    # Merge groups run the shards whatever SONAR_ALL_PRS says; see the scope job.
     if: >-
-      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.legacy_coverage == 'true' &&
       github.actor != 'dependabot[bot]' &&
       ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
        (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
-       (github.event_name == 'merge_group' && vars.SONAR_ALL_PRS == 'true') ||
+       github.event_name == 'merge_group' ||
        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
         (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     strategy:
@@ -121,7 +124,10 @@ jobs:
           --health-cmd="healthcheck.sh --connect --innodb_initialized"
           --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
+      # The shards never use the token; merge groups run them without any
+      # analysis, so only a run that requests analysis needs it.
       - name: Verify requested analysis credentials
+        if: needs.scope.outputs.full_analysis == 'true'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -241,14 +247,15 @@ jobs:
     needs: [scope, legacy-unit-coverage]
     outputs:
       artifact-id: ${{ steps.coverage-artifact.outputs.artifact-id }}
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch","merge_group"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
+    # Merge groups run the shards whatever SONAR_ALL_PRS says; see the scope job.
     if: >-
-      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
+      vars.ENABLE_SONAR == 'true' && needs.scope.outputs.legacy_coverage == 'true' &&
       github.actor != 'dependabot[bot]' &&
       ((github.event_name == 'push' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) ||
        (github.event_name == 'workflow_dispatch' && inputs.run_sonar) ||
-       (github.event_name == 'merge_group' && vars.SONAR_ALL_PRS == 'true') ||
+       github.event_name == 'merge_group' ||
        (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
         (vars.SONAR_ALL_PRS == 'true' || startsWith(github.head_ref, 'sonar/') || startsWith(github.head_ref, 'release/'))))
     permissions:
@@ -376,7 +383,7 @@ jobs:
     needs: scope
     outputs:
       artifact-id: ${{ steps.coverage-artifact.outputs.artifact-id }}
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch","merge_group"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
     if: >-
       vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
@@ -581,7 +588,7 @@ jobs:
     timeout-minutes: 15
     name: SonarQube Cloud analysis
     needs: [scope, legacy-coverage, application-coverage]
-    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
+    runs-on: ${{ vars.DO_RUNNERS_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (contains(fromJSON('["push","schedule","workflow_dispatch","merge_group"]'), github.event_name) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')) && fromJSON('["self-hosted","Linux","X64","kadupul-do"]') || 'ubuntu-latest' }}
     # Keep a native trust boundary even if PR-authored classification code changes.
     if: >-
       vars.ENABLE_SONAR == 'true' && needs.scope.outputs.full_analysis == 'true' &&
@@ -691,7 +698,9 @@ jobs:
 
   quality-gate:
     name: Sonar Quality Gate
-    needs: [scope, analyze]
+    # The legacy coverage chain is also due on merge groups without analysis,
+    # and this is the only required check that can bind it.
+    needs: [scope, legacy-coverage, analyze]
     # Always reports, because a required check reads a skipped job as passing.
     # It fails whenever analysis was due and did not pass, and passes only
     # when the scope job says this run is intentionally outside Sonar.
@@ -707,10 +716,17 @@ jobs:
           SCOPE_RESULT: ${{ needs.scope.result }}
           FULL_ANALYSIS: ${{ needs.scope.outputs.full_analysis }}
           SCOPE_REASON: ${{ needs.scope.outputs.reason }}
+          LEGACY_COVERAGE: ${{ needs.scope.outputs.legacy_coverage }}
+          LEGACY_RESULT: ${{ needs.legacy-coverage.result }}
           ANALYSIS_RESULT: ${{ needs.analyze.result }}
         run: |
           if [ "$SCOPE_RESULT" != 'success' ]; then
             echo '::error::Sonar scheduling did not complete, so this run cannot claim a quality gate result.'
+            exit 1
+          fi
+          # A failed shard skips the merge, so only success counts.
+          if [ "$LEGACY_COVERAGE" = 'true' ] && [ "$LEGACY_RESULT" != 'success' ]; then
+            echo '::error::Legacy unit coverage was due and its shards or merge did not pass.'
             exit 1
           fi
           # SONAR_ALL_PRS keeps its strict meaning: every run must be analysed.

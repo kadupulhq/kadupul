@@ -49,13 +49,30 @@ if (count($classes) < $total) {
     exit(1);
 }
 
-// Round-robin over the sorted list spreads each directory across the shards.
+// Greedy longest-first assignment: classes are taken in descending weight (ties
+// by name) and each goes to the currently lightest shard (ties to the lowest
+// index), so the split is deterministic and every class lands in exactly one
+// shard. Weights are the checked-in pest_shard_weights.json, in units of about
+// ten seconds of measured test time; a class not listed there weighs 1.
+$weights = json_decode((string) file_get_contents(__DIR__ . '/pest_shard_weights.json'), true, 4, JSON_THROW_ON_ERROR);
+if (!is_array($weights)) {
+    fwrite(STDERR, "The shard weight map must be a JSON object.\n");
+    exit(1);
+}
+$weightOf = static function (string $class) use ($weights): int {
+    $weight = $weights[$class] ?? 1;
+    return is_int($weight) && $weight > 0 ? $weight : 1;
+};
+usort($classes, static fn(string $a, string $b): int => [$weightOf($b), $a] <=> [$weightOf($a), $b]);
+$loads = array_fill(0, $total, 0);
 $selected = [];
-foreach ($classes as $position => $class) {
-    if ($position % $total === $index - 1) {
+foreach ($classes as $class) {
+    $lightest = array_search(min($loads), $loads, true);
+    $loads[$lightest] += $weightOf($class);
+    if ($lightest === $index - 1) {
         $selected[] = preg_quote($class, '/');
     }
 }
 
-fwrite(STDERR, sprintf("Shard %d/%d: %d of %d test classes\n", $index, $total, count($selected), count($classes)));
+fwrite(STDERR, sprintf("Shard %d/%d: %d of %d test classes, weight %d\n", $index, $total, count($selected), count($classes), $loads[$index - 1]));
 echo '/^(?:' . implode('|', $selected) . ')::/', PHP_EOL;
