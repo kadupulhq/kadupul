@@ -103,11 +103,33 @@ final class PresentationPageNativeCoverageTest extends TestCase
         }
     }
 
+    /**
+     * Pages whose editable form moved to Symfony/Twig. The legacy page renders
+     * their settings read-only, so there is no control oracle to retain.
+     */
+    private const READ_ONLY_PAGES = array('data_queries-edit');
+
+    public function testReadOnlyPagesRecordNoControls(): void
+    {
+        $root = dirname(__DIR__, 2);
+        $scenarios = require $root . '/tests/Fixtures/legacy-form-golden-scenarios.php';
+        foreach (self::READ_ONLY_PAGES as $name) {
+            self::assertArrayHasKey($name, $scenarios['pages']);
+            $golden = file_get_contents($root . '/tests/Golden/forms/pages/' . $name . '.html');
+            self::assertNotFalse($golden);
+            // If the page regains a control it must return to the native-page oracle above.
+            self::assertSame(array(), PresentationPageEvidence::contracts($golden)['controls'], $name);
+        }
+    }
+
     public static function pages(): array
     {
         $scenarios = require dirname(__DIR__) . '/Fixtures/legacy-form-golden-scenarios.php';
         $cases = array();
         foreach ($scenarios['pages'] as $name => $scenario) {
+            if (in_array($name, self::READ_ONLY_PAGES, true)) {
+                continue;
+            }
             $cases[$name] = array($name, $scenario);
         }
         if ($cases === array()) {

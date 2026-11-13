@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Kadupul\AssetManagement\Domain;
 
+/**
+ * Validation rules and defaults for asset register fields. Checks throw an AssetError for bad input; text is trimmed and missing optional values take defaults.
+ */
 final class AssetFields
 {
     public const array DEFAULTS = [
@@ -65,6 +68,11 @@ final class AssetFields
         return $result;
     }
 
+    /**
+     * Returns the trimmed text after checking that it is valid UTF-8, free of control characters other than tab, line feed and carriage return, and at most $max characters long.
+     *
+     * @throws AssetError when the value is not acceptable text, or is blank and $required is set
+     */
     public static function text(mixed $value, int $max = 200, bool $required = false): string
     {
         if (!is_string($value) || !mb_check_encoding($value, 'UTF-8') || preg_match('/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/', $value) === 1 || mb_strlen($value, 'UTF-8') > $max) {
@@ -77,6 +85,11 @@ final class AssetFields
         return $value;
     }
 
+    /**
+     * Returns the value when it is a 32-character lowercase hexadecimal id.
+     *
+     * @throws AssetError when it is not
+     */
     public static function id(mixed $value): string
     {
         if (!is_string($value) || preg_match('/\A[a-f0-9]{32}\z/D', $value) !== 1) {
@@ -85,6 +98,11 @@ final class AssetFields
         return $value;
     }
 
+    /**
+     * Returns the name of an observation source.
+     *
+     * @throws AssetError when it is not a valid name, or has leading or trailing whitespace
+     */
     public static function source(mixed $value): string
     {
         $value = self::externalKey($value, 120);
@@ -94,6 +112,11 @@ final class AssetFields
         return $value;
     }
 
+    /**
+     * Returns a source's own key for an item, which must not need trimming.
+     *
+     * @throws AssetError when the key is blank, too long or has leading or trailing whitespace
+     */
     public static function externalKey(mixed $value, int $limit = 200): string
     {
         $key = self::text($value, $limit, true);
@@ -103,6 +126,11 @@ final class AssetFields
         return $key;
     }
 
+    /**
+     * Returns the value when it is an integer from 0 to $max.
+     *
+     * @throws AssetError when it is not
+     */
     public static function integer(mixed $value, int $max): int
     {
         if (!is_int($value) || $value < 0 || $value > $max) {
@@ -111,6 +139,11 @@ final class AssetFields
         return $value;
     }
 
+    /**
+     * Checks that the value is empty or a calendar date as YYYY-MM-DD.
+     *
+     * @throws AssetError when it is not
+     */
     private static function date(string $value): void
     {
         if ($value === '') {

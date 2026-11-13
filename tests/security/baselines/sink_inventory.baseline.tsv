@@ -539,7 +539,7 @@ fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:75	    $lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:79	        file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
-fs_write	./src/AssetManagement/Infrastructure/Console/AssetCommand.php:46	                $stream = fopen('php://stdin', 'rb');
+fs_write	./src/AssetManagement/Infrastructure/Console/AssetCommand.php:60	                $stream = fopen('php://stdin', 'rb');
 fs_write	./src/Graphing/Domain/PaletteCsv.php:101	        $stream = fopen('php://temp', 'w+');
 fs_write	./src/Graphing/Domain/PaletteCsv.php:25	        $stream = fopen('php://temp', 'w+');
 fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:58	            $handle = fopen($path, 'r+b');

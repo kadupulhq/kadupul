@@ -9,6 +9,9 @@ namespace Kadupul\AssetManagement\Application\Port;
 
 use Kadupul\IdentityAccess\Contract\Actor;
 
+/**
+ * Decides who may use the asset register in the current context.
+ */
 interface AssetAccess
 {
     /** Resolve and revalidate the current actor; throws before protected data is read. */

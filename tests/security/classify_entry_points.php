@@ -156,13 +156,13 @@ const INSTALLER_AUTHENTICATION_SOURCES = [
 // Asset admission precedes locale loading, then runs again in the controller
 // and command worker. Changes to the reviewed handoff must fail closed.
 const ASSET_AUTHENTICATION_SOURCES = [
-    'src/AssetManagement/Infrastructure/Symfony/AssetRequestAccess.php' => '1ca4e0220e9062188ea8c04b8c342f142e146ca97ce479b3338bcafa04edc665',
-    'src/AssetManagement/Infrastructure/Symfony/WebAssetAccess.php' => '921efb26ab25e09cbdfa91a1d0370a9707635a20a40b1efc9032f6fbbb02b8dd',
-    'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php' => '2023416800b66e74cc63ec175be56f051b1bae2d045d0b9cc9fcde24c7ba45fa',
-    'src/AssetManagement/Infrastructure/Symfony/AssetWorker.php' => '65932412758cd19efcdc3752a735afa078ad24b10826fc50ffa9379927e568cd',
-    'src/AssetManagement/Infrastructure/Console/CliAssetAccess.php' => '7a0f4d0dbc8a4495c47471f9f2c5d1703bd90eb543e1e5c9b789370bd9cf6175',
-    'src/AssetManagement/Infrastructure/Console/AssetCommand.php' => 'c252e68648263ae90442a2085956e05826e311676bc3c7b5b4944c6924f7cebb',
-    'src/AssetManagement/Application/AssetRegistry.php' => '18910ebe9d1ea0d57502fcf618bded185026e3b242fe757e4c76a5ce7da2beb9',
+    'src/AssetManagement/Infrastructure/Symfony/AssetRequestAccess.php' => '72a9aaea134db538c24a48d113bc175523e889367c9a93fb32c742bed01e2e42',
+    'src/AssetManagement/Infrastructure/Symfony/WebAssetAccess.php' => 'f615acf2936cb4b7ebc2868bbae48cf8063f7e385f9a6abf6c301fdf9cc243f8',
+    'src/AssetManagement/Infrastructure/Symfony/Controller/AssetController.php' => '14321e0681dae1331ec6f0c72f2821e5c77afb1b5ce42cdaf6054dd57f89094e',
+    'src/AssetManagement/Infrastructure/Symfony/AssetWorker.php' => '6ea76f32d21736ba2b147db69ce8f77957652f83800476938f2f44a76013d581',
+    'src/AssetManagement/Infrastructure/Console/CliAssetAccess.php' => '36ecdfc785c4fdd777a905a15b17836374704a73b4ace7df95fda0a36855be86',
+    'src/AssetManagement/Infrastructure/Console/AssetCommand.php' => '0a6d1e5a8765873b494ce45109db28a0e781c2f9b3308b5cb708e4052f2424b1',
+    'src/AssetManagement/Application/AssetRegistry.php' => '67bdd6eff21f91c4abe46ef84685cfb27dcad8efa748ff92a5502aa6fdd86400',
     'src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php' => '9b2fbcb863a9bf49f400383a36e149d7f7296e7965d4641c8bbedf3bd05fda5b',
     'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php' => '382331b44cbc08cbc70f261fd880d32d6a881873fdc141b59249fa16ed51038b',
     'src/Platform/Infrastructure/Legacy/CollectorIdentity.php' => 'd79950f41ab9b026bc5f18204d00af252b53c19205a7db4f029c86f5513bf7e8',

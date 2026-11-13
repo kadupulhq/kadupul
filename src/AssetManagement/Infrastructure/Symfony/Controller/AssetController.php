@@ -23,10 +23,20 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
+/**
+ * Serves the asset register page and its form submissions.
+ * Responses are not cacheable.
+ */
 final readonly class AssetController
 {
+    /**
+     * Binds the controller to access checks, the view, the command writer, CSRF, templating, URLs and translation.
+     */
     public function __construct(private WebAssetAccess $access, private ViewAssets $view, private AssetWriter $writer, private CsrfTokenManagerInterface $csrf, private Environment $twig, private UrlGeneratorInterface $urls, private TranslatorInterface $translator) {}
 
+    /**
+     * Renders the register, or applies a posted command and redirects to the resulting page.
+     */
     #[Route('/assets', name: 'asset_register', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request): Response
     {
