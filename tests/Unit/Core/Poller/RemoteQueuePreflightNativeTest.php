@@ -10,7 +10,7 @@ test('remote production poller checks its actual queue before continuing collect
     mkdir($directory . '/include', 0700);
     mkdir($directory . '/lib', 0700);
     copy($root . '/' . $entry, $directory . '/poller.php');
-    foreach (array('poller', 'data_query', 'rrd', 'dsstats', 'dsdebug', 'boost', 'reports', 'rrdcheck') as $library) {
+    foreach (array('poller', 'data_query', 'rrd', 'dsstats', 'alerting', 'dsdebug', 'boost', 'reports', 'rrdcheck') as $library) {
         file_put_contents($directory . '/lib/' . $library . '.php', '<?php');
     }
     file_put_contents($directory . '/lib/rrd_maintenance.php', '<?php require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';');

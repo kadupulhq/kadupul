@@ -354,11 +354,12 @@ final class AuditSchemaTest extends TestCase
     {
         $baseline = AuditSchemaDump::parse((string) file_get_contents(dirname(__DIR__, 2) . '/docs/audit_schema.sql'));
 
-        self::assertCount(1062, $baseline->columnRows);
-        self::assertCount(398, $baseline->indexRows);
+        self::assertCount(1113, $baseline->columnRows);
+        self::assertCount(415, $baseline->indexRows);
         self::assertSame(['data_source_profile_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_data', 'data_source_profile_id')));
         self::assertSame(['data_input_field_id'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_template_rrd', 'data_input_field_id')));
         self::assertSame(['class', 'time'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('user_auth_row_cache', 'class_time')));
+        self::assertSame(['local_data_id', 'rrd_name', 'time'], array_map(static fn(BaselineIndex $index): string => $index->columnName, $baseline->index('data_source_stats_hourly_cache', 'local_data_id')));
         // mysqldump wrote each table's rows in primary key order under a case-insensitive collation.
         self::assertSame(['graph_template_id', 'PRIMARY', 'user_id'], array_values(array_unique(array_map(static fn(BaselineIndex $index): string => $index->keyName, $baseline->indexes('AGGREGATE_GRAPH_TEMPLATES')))));
     }

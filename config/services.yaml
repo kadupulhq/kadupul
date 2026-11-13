@@ -93,6 +93,12 @@ services:
 
     Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog: ~
 
+    Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+
+    Kadupul\Platform\Contract\OperatorLog:
+        alias: Kadupul\Platform\Infrastructure\Legacy\MainDatabaseOperatorLog
+
     Kadupul\Platform\Application\Port\DatabaseMaintenance:
         alias: Kadupul\Platform\Infrastructure\Persistence\DbalDatabaseMaintenance
     Kadupul\Platform\Application\Port\TableConversion:
@@ -277,6 +283,111 @@ services:
     # Fetched by include/admin_notifications.php.
     Kadupul\Alerting\Infrastructure\Legacy\AdministratorNotificationBridge:
         public: true
+
+    # Native alert evaluation (ADR 0011). Every store uses the main connection:
+    # rules and incidents are central, dsstats fills its tables on the main
+    # poller, and a rule's state and incident change commit in one
+    # transaction, which needs one connection. The run locks are named locks
+    # on that same session. kadupul:alerting:evaluate runs EvaluateRules here
+    # and DeliverNotifications in bin/legacy-alerting-deliver.php, which needs
+    # the legacy mail runtime and reads the use case from this container.
+    Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    # Baseline history uses PHP's default time zone (ADR 0011 decision 3).
+    Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalInactiveWarningRecord:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain: ~
+    Kadupul\Alerting\Infrastructure\Clock\SymfonyClock: ~
+    Kadupul\Alerting\Infrastructure\Logging\OperatorAlertingLog: ~
+    Kadupul\Alerting\Application\EvaluateRules: ~
+    Kadupul\Alerting\Application\DeliverNotifications:
+        public: true
+    Kadupul\Alerting\Application\RunAlerting: ~
+    Kadupul\Alerting\Infrastructure\Symfony\EvaluateCommand: ~
+    Kadupul\Alerting\Application\Port\RateSource:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsRateSource
+    Kadupul\Alerting\Application\Port\BaselineSource:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DsstatsBaselineSource
+    Kadupul\Alerting\Application\Port\RuleRepository:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleRepository
+    Kadupul\Alerting\Application\Port\RuleStateStore:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStateStore
+    Kadupul\Alerting\Application\Port\IncidentRepository:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentRepository
+    Kadupul\Alerting\Application\Port\EvaluationCursor:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalEvaluationCursor
+    Kadupul\Alerting\Application\Port\TransactionRunner:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalTransactionRunner
+    Kadupul\Alerting\Application\Port\NotificationQueue:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalNotificationQueue
+    Kadupul\Alerting\Application\Port\Clock:
+        alias: Kadupul\Alerting\Infrastructure\Clock\SymfonyClock
+    Kadupul\Alerting\Application\Port\AlertingLog:
+        alias: Kadupul\Alerting\Infrastructure\Logging\OperatorAlertingLog
+    Kadupul\Alerting\Application\Port\AlertingSettings:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalAlertingSettings
+    Kadupul\Alerting\Application\Port\RunLock:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRunLock
+    Kadupul\Alerting\Application\Port\InactiveWarningRecord:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalInactiveWarningRecord
+    # The rule and incident pages (ADR 0011 decision 12) read and write on
+    # the evaluator's main connection too: a rule save takes the row lock the
+    # evaluator takes, and the actor recheck and the visibility predicate
+    # must read the session the write commits on. The device visibility
+    # policy is therefore projected on that connection as well.
+    kadupul.alerting.management_visibility:
+        class: Kadupul\IdentityAccess\Infrastructure\Persistence\DbalManagementVisibility
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\SeriesVisibility:
+        arguments: { $visibility: '@kadupul.alerting.management_visibility' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleAccess:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentAccess:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleCatalog:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStore:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentCatalog:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentStore:
+        arguments: { $database: '@doctrine.dbal.main_connection' }
+    Kadupul\Alerting\Application\Query\ViewAlertingStatus: ~
+    Kadupul\Alerting\Application\Port\RuleAccess:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleAccess
+    Kadupul\Alerting\Application\Port\IncidentAccess:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentAccess
+    Kadupul\Alerting\Application\Port\RuleCatalog:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleCatalog
+    Kadupul\Alerting\Application\Port\RuleStore:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalRuleStore
+    Kadupul\Alerting\Application\Port\IncidentCatalog:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentCatalog
+    Kadupul\Alerting\Application\Port\IncidentStore:
+        alias: Kadupul\Alerting\Infrastructure\Dbal\DbalIncidentStore
+    Kadupul\Alerting\Infrastructure\Symfony\Controller\:
+        resource: '../src/Alerting/Infrastructure/Symfony/Controller/'
+        tags: ['controller.service_arguments']
+    Kadupul\Alerting\Application\Port\NotificationDrain:
+        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyNotificationDrain
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
 

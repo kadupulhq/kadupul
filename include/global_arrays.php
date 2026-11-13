@@ -136,6 +136,8 @@ $cacti_version_codes = array(
     '1.2.37'  => '0103',
     '1.2.38'  => '0103',
     '1.2.39'  => '0103',
+    '1.2.40'  => '0103',
+    '1.2.41'  => '0103',
 );
 
 $messages = array(
@@ -1001,6 +1003,8 @@ if ($config['poller_id'] == 1 || $config['connection'] == 'online') {
             'graphs.php'           => __('Graphs'),
             'data_sources.php'     => __('Data Sources'),
             'aggregate_graphs.php' => __('Aggregates'),
+            'app.php/alerting/rules'     => __('Alert Rules'),
+            'app.php/alerting/incidents' => __('Alert Incidents'),
         ),
         __('Data Collection') => array(
             'pollers.php' => __('Data Collectors'),
@@ -1237,6 +1241,8 @@ $user_auth_realms = array(
     5    => __('Graphs'),
     4    => __('Trees'),
     1043 => __('Spike Handling'),
+    29   => __('Alert Rules'),
+    30   => __('Alert Incidents'),
 
     9    => __('Data Source Profiles'),
     14   => __('Presets'),
@@ -1261,7 +1267,7 @@ $user_auth_realms = array(
 $user_auth_roles = array(
     __('Normal User')            => array(7, 19, 20, 22, 24, 25, 27, 28),
     __('Template Editor')        => array(8, 2, 9, 10, 11, 12, 13, 14, 16, 17),
-    __('General Administration') => array(8, 3, 4, 5, 23, 1043),
+    __('General Administration') => array(8, 3, 4, 5, 23, 1043, 29, 30),
     __('System Administration')  => array(8, 15, 26, 1, 18, 21, 101)
 );
 
@@ -1294,6 +1300,8 @@ $user_auth_realm_filenames = array(
     'host.php' => 3,
     'app.php/inventory/devices' => 3,
     'app.php/inventory/devices/new' => 3,
+    'app.php/alerting/rules' => 29,
+    'app.php/alerting/incidents' => 30,
     'host_templates.php' => 12,
     'index.php' => 8,
     'install.php' => 26,

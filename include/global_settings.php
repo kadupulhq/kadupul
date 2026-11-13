@@ -2290,6 +2290,44 @@ $settings = array(
             'default' => '1024',
             'array' => $dsstats_max_memory
         ),
+        'alerting_header' => array(
+            'friendly_name' => __('Native Alerting'),
+            'collapsible' => 'true',
+            'method' => 'spacer',
+        ),
+        'alerting_enable' => array(
+            'friendly_name' => __('Enable Native Alert Evaluation'),
+            'description' => __('Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled.'),
+            'method' => 'checkbox',
+            'default' => ''
+        ),
+        'alerting_batch_size' => array(
+            'friendly_name' => __('Alert Rules per Batch'),
+            'description' => __('The number of alert rules read and evaluated together. The time budget is checked between batches.'),
+            'method' => 'drop_array',
+            'default' => '500',
+            'array' => array(
+                100  => __('%d Rules', 100),
+                250  => __('%d Rules', 250),
+                500  => __('%d Rules', 500),
+                1000 => __('%d Rules', 1000),
+                2500 => __('%d Rules', 2500),
+                5000 => __('%d Rules', 5000),
+            )
+        ),
+        'alerting_time_budget' => array(
+            'friendly_name' => __('Alert Evaluation Time Budget'),
+            'description' => __('How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run.'),
+            'method' => 'drop_array',
+            'default' => '30',
+            'array' => array(
+                10  => __('%d Seconds', 10),
+                20  => __('%d Seconds', 20),
+                30  => __('%d Seconds', 30),
+                60  => __('%d Minute', 1),
+                120 => __('%d Minutes', 2),
+            )
+        ),
         'rrdcheck_hq_header' => array(
             'friendly_name' => __('RRDfile Check'),
             'collapsible' => 'true',

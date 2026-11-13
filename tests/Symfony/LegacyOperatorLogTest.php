@@ -165,6 +165,15 @@ PHP;
         self::assertFileDoesNotExist($this->root . '/log/cacti.log');
     }
 
+    public function testAnUnreachableSettingsDatabaseStillWritesWithTheLegacyDefaults(): void
+    {
+        // read_config_option() returns the declared defaults when the database is
+        // down, so cacti_log() still writes; a failed connection must not lose the line.
+        $down = DriverManager::getConnection(['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => 1, 'user' => 'nobody', 'password' => 'not-a-real-secret', 'dbname' => 'cacti']);
+        $this->log()->record($down, 'ALERTING', 'ERROR: Alert evaluation failed: ConnectionException');
+        self::assertSame("03/04/2026 05:06:07 - ALERTING ERROR: Alert evaluation failed: ConnectionException\n", file_get_contents($this->root . '/log/cacti.log'));
+    }
+
     public function testUnwritableLogFileIsIgnored(): void
     {
         $this->set('path_cactilog', $this->root . '/missing/dir/cacti.log');

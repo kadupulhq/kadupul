@@ -194,7 +194,7 @@ def has_feature_realm(entry):
                 'templates/devices', 'templates/graphs', 'templates/data-sources', 'templates/aggregates',
                 'data-collection/queries', 'automation/snmp-options', 'automation/graph-rules',
                 'automation/tree-rules', 'automation/networks', 'utilities/notification-receivers',
-                'administration/users', 'administration/user-groups', 'administration/domains', 'automation/discovered-devices', 'data-collection/collectors', 'graphing/trees', 'utilities/rrd-candidates', 'utilities/snmp-objects', 'utilities/snmp-notifications', 'utilities/login-history')
+                'administration/users', 'administration/user-groups', 'administration/domains', 'automation/discovered-devices', 'data-collection/collectors', 'graphing/trees', 'utilities/rrd-candidates', 'utilities/snmp-objects', 'utilities/snmp-notifications', 'utilities/login-history', 'alerting')
     return entry in legacy or any(entry == 'app.php/' + prefix or
                                  entry.startswith('app.php/' + prefix + '/')
                                  for prefix in prefixes)
@@ -286,6 +286,23 @@ def route_fixtures(rig, rows, ids):
         ids['graphing/colors'] = {'id': int(rig.sql('SELECT MIN(id) FROM colors').strip())}
     if present('links'):
         ids['links'] = {'id': 1}
+    if present('alerting/'):
+        # A rule that cannot fire and an already closed incident on a real
+        # series; alerting_enable stays off, so no evaluation or mail runs.
+        series = rig.sql('SELECT local_data_id, data_source_name FROM data_template_rrd WHERE local_data_id > 0 ORDER BY id LIMIT 1').split()
+        if len(series) != 2:
+            series = rig.sql("INSERT INTO data_local (host_id) VALUES (%d); SET @entry_source = LAST_INSERT_ID(); INSERT INTO data_template_rrd (local_data_id,data_source_name) VALUES (@entry_source,'entry_sweep'); SELECT @entry_source, 'entry_sweep'" % ids['devices']).split()
+        if len(series) != 2 or not series[0].isdecimal() or not re.fullmatch(r'[A-Za-z0-9_]{1,19}', series[1]):
+            raise RuntimeError('Missing concrete alerting series')
+        source, rrd = int(series[0]), series[1]
+        rule = rig.sql("INSERT INTO alert_rule (local_data_id,rrd_name,kind,comparator,trigger_threshold,clear_threshold,for_cycles) VALUES (%d,'%s','threshold','gt',1e300,1e299,1); SELECT LAST_INSERT_ID()" % (source, rrd)).strip()
+        if not rule.isdecimal() or int(rule) < 1:
+            raise RuntimeError('Missing concrete alerting rule')
+        incident = rig.sql("INSERT INTO alert_incident (rule_id,status,opened_at,ended_at,local_data_id,rrd_name,rule_kind) VALUES (%s,'closed',UNIX_TIMESTAMP(),UNIX_TIMESTAMP(),%d,'%s','threshold'); SELECT LAST_INSERT_ID()" % (rule, source, rrd)).strip()
+        if not incident.isdecimal() or int(incident) < 1:
+            raise RuntimeError('Missing concrete alerting incident')
+        ids['alerting/rules'] = {'id': int(rule)}
+        ids['alerting/incidents'] = {'id': int(incident)}
     for prefix, table in (('management/graph-template-items', 'graph_templates'),
                           ('management/graph-template-inputs', 'graph_templates'),
                           ('management/device-template-graphs', 'host_template'),

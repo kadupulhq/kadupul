@@ -71,6 +71,45 @@ class RouteSamples(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'Missing concrete management parent'):
             route_fixtures(Rig(), [('app.php/management/graph-template-items/{id}', 'symfony:management', '')],
                            {'devices': 1, 'sites': 1})
+    def test_alerting_routes_bind_a_seeded_rule_and_incident(self):
+        class Rig:
+            def __init__(self, series):
+                self.series, self.statements = series, []
+            def sql(self, statement):
+                self.statements.append(statement)
+                if statement.startswith('SELECT local_data_id'):
+                    return self.series
+                if statement.startswith('INSERT INTO data_local'):
+                    return '41\tentry_sweep'
+                if statement.startswith('INSERT INTO alert_rule'):
+                    return '5'
+                if statement.startswith('INSERT INTO alert_incident'):
+                    return '6'
+                raise AssertionError('unexpected statement: ' + statement)
+        rows = [('app.php/alerting/rules/{id}/edit', 'symfony:alerting_rule_edit', ''),
+                ('app.php/alerting/incidents/{id}', 'symfony:alerting_incident_show', '')]
+        for series, source, rrd in (('12\ttraffic_in', 12, 'traffic_in'), ('', 41, 'entry_sweep')):
+            with self.subTest(series=series):
+                rig, fixtures = Rig(series), {'devices': 7, 'sites': 9}
+                route_fixtures(rig, rows, fixtures)
+                self.assertEqual('app.php/alerting/rules/5/edit', sample('app.php/alerting/rules/{id}/edit', '', fixtures))
+                self.assertEqual('app.php/alerting/incidents/6', sample('app.php/alerting/incidents/{id}', '', fixtures))
+                rule = next(s for s in rig.statements if s.startswith('INSERT INTO alert_rule'))
+                incident = next(s for s in rig.statements if s.startswith('INSERT INTO alert_incident'))
+                self.assertIn("(%d,'%s','threshold','gt',1e300,1e299,1)" % (source, rrd), rule)
+                self.assertIn("(5,'closed',", incident)
+                self.assertIn(",%d,'%s','threshold')" % (source, rrd), incident)
+                self.assertEqual(series == '', any(s.startswith('INSERT INTO data_local (host_id) VALUES (7)') for s in rig.statements))
+        self.assertTrue(has_feature_realm('app.php/alerting/incidents/{id}'))
+        self.assertFalse(has_feature_realm('app.php/alerting-other'))
+
+    def test_alerting_series_must_be_a_safe_rrd_name(self):
+        class Rig:
+            def sql(self, statement):
+                return "12\tx');DROP" if statement.startswith('SELECT') else '1'
+        with self.assertRaisesRegex(RuntimeError, 'Missing concrete alerting series'):
+            route_fixtures(Rig(), [('app.php/alerting/rules/{id}/edit', '', '')], {'devices': 7, 'sites': 9})
+
     def test_relationship_routes_bind_existing_parents(self):
         class Rig:
             def sql(self, statement):

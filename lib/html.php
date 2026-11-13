@@ -1642,7 +1642,10 @@ function draw_menu($user_menu = '')
                     $show_header_items = false;
                 }
             } else {
-                $current_realm_id = (isset($user_auth_realm_filenames[basename($item_url)]) ? $user_auth_realm_filenames[basename($item_url)] : 0);
+                // A routed page such as app.php/alerting/rules is mapped by its full path.
+                $realm_key = explode('?', $item_url)[0];
+                $realm_key = isset($user_auth_realm_filenames[$realm_key]) ? $realm_key : basename($item_url);
+                $current_realm_id = (isset($user_auth_realm_filenames[$realm_key]) ? $user_auth_realm_filenames[$realm_key] : 0);
 
                 if (is_realm_allowed($current_realm_id)) {
                     $show_header_items = true;
@@ -1676,6 +1679,9 @@ function draw_menu($user_menu = '')
             foreach ($header_array as $item_url => $item_title) {
                 $basename = explode('?', basename($item_url));
                 $basename = $basename[0];
+                if (isset($user_auth_realm_filenames[explode('?', $item_url)[0]])) {
+                    $basename = explode('?', $item_url)[0];
+                }
                 $current_realm_id = (isset($user_auth_realm_filenames[$basename]) ? $user_auth_realm_filenames[$basename] : 0);
 
                 /* if this item is an array, then it contains sub-items. if not, is just
