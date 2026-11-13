@@ -43,20 +43,21 @@ final readonly class InstallerCollectorSynchronization
 
         if ($pollers !== []) {
             foreach ($pollers as $poller) {
-                if (!is_array($poller) || !isset($poller['id'], $poller['status'], $poller['gap']) || (!is_int($poller['id']) && !is_string($poller['id']))) {
+                if (!is_array($poller) || !isset($poller['id'], $poller['status']) || !array_key_exists('gap', $poller) || (!is_int($poller['id']) && !is_string($poller['id']))) {
                     throw new \RuntimeException('Invalid collector synchronization record.');
                 }
-                $this->native->call('log_install_debug', 'sync', 'Poller ' . $poller['id'] . ' has a status of ' . $this->native->text($poller['status']) . ' with gap ' . $this->native->text($poller['gap']));
+                $this->native->call('log_install_debug', 'sync', 'Poller ' . $poller['id'] . ' has a status of ' . $this->native->text($poller['status']) . ' with gap ' . $this->native->text($poller['gap'] ?? 'unknown'));
 
                 $status = $this->native->text($poller['status']);
-                $gap = $this->native->text($poller['gap']);
-                if (preg_match('/\A[0-9]+\z/D', $status) !== 1 || preg_match('/\A-?[0-9]+\z/D', $gap) !== 1) {
+                // UNIX_TIMESTAMP returns NULL for the schema's never-run zero timestamp.
+                $gap = $poller['gap'] === null ? null : $this->native->text($poller['gap']);
+                if (preg_match('/\A[0-9]+\z/D', $status) !== 1 || ($gap !== null && preg_match('/\A-?[0-9]+\z/D', $gap) !== 1)) {
                     throw new \RuntimeException('Invalid collector synchronization state.');
                 }
                 // Native status constants: NEW=0, DOWN=3, HEARTBEAT=6, RECOVERING=5, DISABLED=4.
                 if (in_array((int) $status, [0, 3, 6, 5, 4], true)) {
                     $skipped[] = $poller['id'];
-                } elseif ((int) $gap < $gap_time) {
+                } elseif ($gap !== null && (int) $gap < $gap_time) {
                     $this->native->call('log_install_medium', 'sync', 'Replicating to Poller ' . $poller['id']);
                     if ((bool) $this->native->call('replicate_out', $poller['id'])) {
                         $this->native->call('log_install_debug', 'sync', 'Completed replication to Poller ' . $poller['id']);

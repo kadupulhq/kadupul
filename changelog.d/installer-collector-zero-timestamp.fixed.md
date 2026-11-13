@@ -1,0 +1,1 @@
+Installer synchronization now skips new or inactive collectors whose last-update timestamp is unset, and reports active collectors with an unknown age as timed out instead of failing the installation.
