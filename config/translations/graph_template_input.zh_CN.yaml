@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/zh-CN.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "关联相关图形"
+"CDEF Function": "CDEF 功能"
+"Cancel": "取消"
+"Color": "颜色"
+"Consolidation Function": "合并功能"
+"Continue": "继续"
+"Create": "创建"
+"Dash Offset (dash-offset=offset)": "偏移(Dash-offset = offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "虚线(破折号[=on_s[,off_s[,on_s,off_s]...]])"
+"Data Source": "数据源"
+"Description": "描述"
+"Enter a description for this graph item input to describe what this input is used for.": "输入此图形项目输入的描述以描述此输入的用途."
+"Enter a name for this graph item input, make sure it is something you recognize.": "请为图形项目输入一个名字,确保您可以识别它."
+"Field Type": "字段类型"
+"GPRINT Type": "GPRINT 类型"
+"Graph Item Inputs [edit graph: %name%]": "图形项目输入[编辑图: %name%]"
+"Graph Item Type": "图形项类型"
+"How data is to be represented on the graph.": "数据如何在图形中表示."
+"Insert Hard Return": "插入硬换行"
+"Item #%number%": "项目 #%number%"
+"Name": "名称"
+"No Items": "无项目"
+"Opacity/Alpha Channel": "不透明度/ Alpha通道"
+"Save": "保存"
+"Sequence": "排序"
+"Shift Data": "切换数据"
+"Text Alignment (TEXTALIGN)": "文本对齐(TEXTALIGN)"
+"Text Format": "Text Format"
+"VDEF Function": "VDEF 功能"
+"Value": "值"

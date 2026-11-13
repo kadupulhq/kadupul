@@ -701,9 +701,6 @@ header_redirect	./graph_templates.php:198	    header('Location: graph_templates.
 header_redirect	./graph_templates.php:336	        header('Location: graph_templates.php?header=false');
 header_redirect	./graph_templates.php:429	        header('Location: graph_templates.php?header=false');
 header_redirect	./graph_templates.php:46	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
-header_redirect	./graph_templates_inputs.php:116				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
-header_redirect	./graph_templates_inputs.php:119				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
-header_redirect	./graph_templates_inputs.php:23			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:251	            header('Location: graph_templates_items.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:254	            header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:64	        header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));

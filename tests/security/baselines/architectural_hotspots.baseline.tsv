@@ -478,7 +478,6 @@ host_header	./lib/html_utility.php:1126	    } elseif (isset($_SERVER['HTTP_HOST'
 host_header	./lib/html_utility.php:1127	        $srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 sort_order_input	./data_queries.php:896						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:505			ORDER BY name', array(get_request_var('id')));
-sort_order_input	./graph_templates_inputs.php:205			ORDER BY gti.sequence", array(get_request_var('id'), get_request_var('graph_template_id')));
 sort_order_input	./graphs.php:1365				ORDER BY gti.sequence", array(get_request_var('id')));
 sort_order_input	./host_templates.php:474				ORDER BY graph_templates.name', array(get_request_var('id')));
 sort_order_input	./host_templates.php:512									ORDER BY gt.name', array(get_request_var('id'))), 'name', 'id', '', '', '');?>

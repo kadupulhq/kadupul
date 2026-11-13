@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/ar-SA.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "عناصر الرسم البياني المرتبطة"
+"CDEF Function": "وظيفة CDEF"
+"Cancel": "إلغاء"
+"Color": "اللون"
+"Consolidation Function": "وظيفة توحيد"
+"Continue": "إستمرار"
+"Create": "أنشأ"
+"Dash Offset (dash-offset=offset)": "Dash Offset (اندفاعة - إزاحة = تخالف)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "الشرطات (الشرطات [= on_s [، off_s [، on_s، off_s] ...]])"
+"Data Source": "مصدر البيانات"
+"Description": "الوصف"
+"Enter a description for this graph item input to describe what this input is used for.": "أدخل وصفًا لمدخل عنصر الرسم البياني هذا لوصف ماهية هذه المدخلات المستخدمة."
+"Enter a name for this graph item input, make sure it is something you recognize.": "أدخل اسمًا لمدخلات عنصر الرسم البياني هذا ، وتأكد من أنه شيء تعرفه."
+"Field Type": "نوع الحقل"
+"GPRINT Type": "نوع GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "مدخلات عنصر الرسم البياني [تحرير الرسم البياني: %name%]"
+"Graph Item Type": "نوع البند البياني"
+"How data is to be represented on the graph.": "كيف يتم تمثيل البيانات على الرسم البياني."
+"Insert Hard Return": "إدراج الثابت العودة"
+"Item #%number%": "العنصر #%number%"
+"Name": "الاسم"
+"No Items": "لا عناصر"
+"Opacity/Alpha Channel": "تعتيم / قناة ألفا"
+"Save": "حفظ"
+"Sequence": "تسلسل، تتابع، متوالية"
+"Shift Data": "تحول البيانات"
+"Text Alignment (TEXTALIGN)": "محاذاة النص (TEXTALIGN)"
+"Text Format": "نسق النص"
+"VDEF Function": "وظيفة VDEF"
+"Value": "القيمة"

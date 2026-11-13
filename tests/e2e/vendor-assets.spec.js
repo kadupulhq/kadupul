@@ -41,22 +41,24 @@ test("Font Awesome legacy circle alias renders with the bundled font", async ({ 
   expect(icons.every(icon => icon.fontLoaded)).toBe(true);
 });
 
-test("graph input delete handler sends the CSRF token by POST", async ({ page }) => {
+test("graph input delete marker opens the confirmation by GET without the legacy token", async ({ page }) => {
   const controller = fs.readFileSync(path.resolve(__dirname, "../../graph_templates.php"), "utf8");
-  const handler = controller.match(/\$\('\.inputDeleteMarker'\)\.on\('click', function\(event\) \{[\s\S]*?\n\t\t\}\);/);
+  expect(controller).not.toContain("loadPageUsingPost");
+  const handler = controller.match(/\$\('\.deleteMarker, \.moveArrow'\)\.not\('\.cactiPostAction'\)\.on\('click', function\(event\) \{[\s\S]*?\n\t\t\}\);/);
   expect(handler).not.toBeNull();
-  await page.setContent('<a class="inputDeleteMarker" href="graph_templates_inputs.php?action=input_remove&id=7&graph_template_id=2">Delete input</a>');
+  await page.setContent('<a class="deleteMarker inputDeleteMarker" href="graph_templates_inputs.php?action=input_remove&id=7&graph_template_id=2&nostate=true">Delete input</a>');
   await load(page, "jquery.js");
   await page.evaluate(() => {
     window.csrfMagicToken = "test-body-token";
-    window.loadPageUsingPost = (url, data) => { window.deleteRequest = { url, data }; };
+    window.requests = [];
+    window.loadPageNoHeader = url => window.requests.push(["get", url]);
+    window.loadPageUsingPost = (url, data) => window.requests.push(["post", url, data]);
   });
   await page.addScriptTag({ content: handler[0] });
   await page.getByText("Delete input", { exact: true }).click();
-  expect(await page.evaluate(() => window.deleteRequest)).toEqual({
-    url: "graph_templates_inputs.php?action=input_remove&id=7&graph_template_id=2",
-    data: { __csrf_magic: "test-body-token" },
-  });
+  expect(await page.evaluate(() => window.requests)).toEqual([
+    ["get", "graph_templates_inputs.php?action=input_remove&id=7&graph_template_id=2&nostate=true"],
+  ]);
 });
 
 test("plugin lifecycle links send token-bearing POST requests", async ({ page }) => {

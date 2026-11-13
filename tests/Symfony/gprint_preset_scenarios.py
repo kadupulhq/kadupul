@@ -180,6 +180,13 @@ def verify_gprint_presets(harness, session, user_id, check):
               'legacy create URL forwards to Symfony create form')
         check(fetch('/gprint_presets.php', {'action': 'actions'})[0] == 409,
               'legacy POST form expires without replaying mutation')
+        # The graph template input shim shares this realm-holding session; its
+        # forwarding contract is covered in GraphTemplateInputRoutesTest.
+        _, _, input_url, _ = fetch('/graph_templates_inputs.php?action=input_edit&graph_template_id=1')
+        check('/graphing/graph-templates/1/inputs/new' in input_url,
+              'legacy graph template input URL forwards to its Symfony create route')
+        check(fetch('/graph_templates_inputs.php?action=purge&graph_template_id=1')[0] == 400,
+              'legacy graph template input URL refuses unknown actions')
 
         harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=5')
         try:

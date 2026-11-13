@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.3.0.-1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 14:51-0800\n"
 "PO-Revision-Date: 2023-07-27 15:11+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3067,28 +3067,6 @@ msgstr "Вертикальний підпис для Графіків."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "Вертикальний Підпис"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "Асоційовані Елементи Графіків"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "Елементи Введення Графіку [редагування графіка: %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "Елемент #%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "Немає Елементів"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10356,6 +10334,10 @@ msgstr "Елемент # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr ""
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "Немає Елементів"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

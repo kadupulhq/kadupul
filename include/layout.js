@@ -2437,7 +2437,9 @@ function navigateUsingPost(href) {
 	}
 }
 
-/** These Symfony pages own their document and load their own script modules. */
+/** These Symfony pages own their document and load their own script modules.
+ * graph_templates_inputs.php forwards to the Symfony graph item input editor,
+ * which the legacy graph template page links to. */
 function navigateToSymfonySites(href) {
 	var target;
 	try {
@@ -2447,7 +2449,7 @@ function navigateToSymfonySites(href) {
 	}
 	/* Every Symfony page renders its own document without #main, so loading
 	 * one by AJAX would blank the content area. */
-	if (target.origin !== window.location.origin || !(/\/(?:sites|index)\.php$|\/(?:app\.php|public\/index\.php)\/[^/]/).test(target.pathname)) {
+	if (target.origin !== window.location.origin || !(/\/(?:sites|index|graph_templates_inputs)\.php$|\/(?:app\.php|public\/index\.php)\/[^/]/).test(target.pathname)) {
 		return false;
 	}
 	window.location.assign(target.href);

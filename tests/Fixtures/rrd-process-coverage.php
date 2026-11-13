@@ -117,6 +117,7 @@ if (defined('INPUT_WHITELIST_TEST_COVERAGE')) {
     if (in_array('--audit', $_SERVER['argv'], true)) {
         $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
         $coverageFilter->includeFile($coverageRoot . '/lib/graph_template_input.php');
+        $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Domain/GraphTemplateInputColumn.php');
     }
 }
 if (defined('INPUT_STRING_VALIDATOR_TEST_COVERAGE')) {
@@ -306,11 +307,11 @@ if (defined('ADMIN_MUTATION_TEST_COVERAGE')) {
 }
 if (defined('GRAPH_INPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/graph_template_input.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/Graphing/Domain/GraphTemplateInputColumn.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/api_graph.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_form_template.php');
     $coverageFilter->includeFile($coverageRoot . '/graphs.php');
-    $coverageFilter->includeFile($coverageRoot . '/graph_templates_inputs.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }

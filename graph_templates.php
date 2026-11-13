@@ -525,13 +525,9 @@ function item()
     ?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	$(function() {
-		$('.inputDeleteMarker').on('click', function(event) {
-			event.preventDefault();
-			loadPageUsingPost($(this).attr('href'), {
-				__csrf_magic: csrfMagicToken
-			});
-		});
-		$('.deleteMarker:not(.inputDeleteMarker), .moveArrow').not('.cactiPostAction').on('click', function(event) {
+		// Input removal opens the Symfony confirmation page by GET; the
+		// confirmation posts with its own CSRF token.
+		$('.deleteMarker, .moveArrow').not('.cactiPostAction').on('click', function(event) {
 			event.preventDefault();
 			loadPageNoHeader($(this).attr('href'));
 		});
