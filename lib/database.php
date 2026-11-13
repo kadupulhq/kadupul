@@ -1773,7 +1773,7 @@ function db_update_table($table, $data, $removecolumns = false, $log = true, $db
 				}
 
 				$alter_clauses[] = "DROP INDEX `$n`";
-				$alter_clauses[] = 'ADD ' . ($k['unique'] ? 'UNIQUE ' : '') . 'INDEX `' . $n . '` (' . $columns . ')';
+				$alter_clauses[] = 'ADD ' . (($k['unique'] || $uniqueindex[$n]) ? 'UNIQUE ' : '') . 'INDEX `' . $n . '` (' . $columns . ')';
 			}
 		} elseif (isset($data['keys'])) {
 			// As in 1.2.31, undeclared indexes are removed only when keys are declared
