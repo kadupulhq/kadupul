@@ -8,11 +8,13 @@ declare(strict_types=1);
  */
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
-/** @runTestsInSeparateProcesses */
+#[RunTestsInSeparateProcesses]
 final class DbUpdateTableUniqueNativeTest extends TestCase
 {
-    /** @dataProvider rebuilds */
+    #[DataProvider('rebuilds')]
     public function testRebuildPreservesUniqueness(string $before, array $after, bool $success): void
     {
         $dsn = getenv('KADUPUL_TEST_MYSQL_DSN');
