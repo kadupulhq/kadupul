@@ -46,6 +46,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(required, json.loads(result.stdout))
 
+
     def test_native_graph_query_pages_survive_the_production_import_guard(self):
         result = self.guard('import-paths', ['graph_image.php', 'graph_json.php', 'bin/unregistered-worker.php'])
         self.assertEqual(0, result.returncode, result.stderr)
@@ -254,26 +255,7 @@ class HttpProducerSourceRegistrationTest(unittest.TestCase):
         # Database negatives retain their real separate reports later in main().
         for handler in ('files',):
             with self.subTest(handler=handler):
-                # These published heads keep the production inventory inline.
-                # Tokenize and execute its actual assignments; never include the CLI merger.
-                program = r"""
-$source = file_get_contents($argv[1]);
-if (!is_string($source)) { throw new RuntimeException('Missing merger source'); }
-$handler = 'files';
-foreach (['$legacyCallerPaths', '$requiredPaths'] as $name) {
-    $collect = false; $statement = '';
-    foreach (token_get_all($source) as $token) {
-        $text = is_array($token) ? $token[1] : $token;
-        if (!$collect && is_array($token) && $token[0] === T_VARIABLE && $text === $name) { $collect = true; }
-        if ($collect) { $statement .= $text; }
-        if ($collect && $text === ';') { break; }
-    }
-    if (!$collect || $statement === '') { throw new RuntimeException('Missing required assignment'); }
-    eval($statement);
-}
-echo json_encode(array_merge($requiredPaths, $legacyCallerPaths), JSON_THROW_ON_ERROR);
-"""
-                result = subprocess.run([os.environ.get('PHP', 'php'), '-d', 'display_errors=stderr', '-r', program, str(ROOT / 'tests/Symfony/merge_coverage.php')], capture_output=True, text=True, timeout=30)
+                result = subprocess.run([os.environ.get('PHP', 'php'), '-d', 'display_errors=stderr', str(ROOT / 'tests/Fixtures/http-coverage-source-guard.php'), 'required', handler], capture_output=True, text=True, timeout=30)
                 self.assertEqual(0, result.returncode, result.stderr)
                 expected = {'/var/www/html/' + path for path in json.loads(result.stdout)}
                 self.assertFalse(expected - baseline, 'Negative baseline omits required source(s): ' + ', '.join(sorted(expected - baseline)))
@@ -312,6 +294,72 @@ echo json_encode(array_merge($requiredPaths, $legacyCallerPaths), JSON_THROW_ON_
                             refused = self.guard('verify', changed)
                             self.assertNotEqual(0, refused.returncode)
                             self.assertIn('Integration test source differs from checkout: ' + source, refused.stderr)
+
+    def test_every_required_measured_source_reaches_the_actual_import_guard(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            fixture = ROOT / 'tests/Fixtures/http-coverage-source-guard.php'
+            def invoke(operation, argument, payload=None, merger=None):
+                command = [os.environ.get('PHP', 'php'), str(fixture), operation, argument]
+                if merger is not None:
+                    command.append(str(merger))
+                return subprocess.run(command, input=json.dumps(payload) if payload is not None else '',
+                                      capture_output=True, text=True, timeout=30)
+            for handler in ('files', 'database', 'none'):
+                listed = invoke('required', handler)
+                self.assertEqual(0, listed.returncode, listed.stderr)
+                paths = json.loads(listed.stdout)
+                legacy = ['graphs.php'] if handler != 'none' else []
+                paths += legacy
+                report = {'php': '8.4.25', 'files': {}}
+                for path in paths:
+                    report['files']['/var/www/html/' + path] = {
+                        'sha256': hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
+                        'lines': {'1': 1},
+                    }
+                # Unexpected configuration/plugin reports stay outside the closed inventory.
+                report['files']['/var/www/html/include/config.php'] = {'sha256': '0' * 64, 'lines': {'1': 1}}
+                filename = root / 'coverage-admitted.json'
+                filename.write_text(json.dumps(report))
+                payload = {'handler': handler, 'reports': [str(filename)], 'legacy': legacy}
+                admitted = invoke('import', str(ROOT), payload)
+                self.assertEqual(0, admitted.returncode, admitted.stderr)
+                self.assertEqual(set(paths), set(json.loads(admitted.stdout)))
+                if handler == 'none':
+                    continue
+                graph_sources = [path for path in paths if path.startswith(('cli/', 'bin/legacy-graph'))]
+                self.assertIn('cli/poller_graphs_reapply_names.php', graph_sources)
+                self.assertIn('bin/legacy-graph-titles.php', graph_sources)
+                for path in graph_sources:
+                    for mutation in ('missing', 'unmeasured'):
+                        changed = copy.deepcopy(report)
+                        if mutation == 'missing':
+                            del changed['files']['/var/www/html/' + path]
+                        else:
+                            changed['files']['/var/www/html/' + path]['lines'] = {'1': -1}
+                        filename.write_text(json.dumps(changed))
+                        refused = invoke('import', str(ROOT), payload)
+                        self.assertNotEqual(0, refused.returncode)
+                        self.assertIn('Missing measured execution: ' + path, refused.stderr)
+                filename.write_text(json.dumps(report))
+                # Restore the old production predicate while retaining the real inventories.
+                original = (ROOT / 'tests/Symfony/merge_coverage.php').read_text()
+                needle = '!in_array($relative, $requiredPaths, true) && '
+                self.assertIn(needle, original)
+                broken = root / 'previous-import-predicate.php'
+                predicate = next(line for line in original.splitlines(keepends=True)
+                                 if '!str_starts_with($relative,' in line and needle in line)
+                # Main now also names this writer explicitly. Reproduce the
+                # historical omission in that redundant literal allowlist too,
+                # while keeping the required-source inventory intact.
+                self.assertIn("'bin/legacy-tree-save.php', ", predicate)
+                incomplete = predicate.replace(needle, '', 1).replace("'bin/legacy-tree-save.php', ", '', 1)
+                broken.write_text(original.replace(predicate, incomplete, 1))
+                refused = invoke('import', str(ROOT), payload, broken)
+                self.assertNotEqual(0, refused.returncode)
+                # The deliberately omitted tree writer must fail at its real
+                # measured-execution guard, before unrelated negative probes.
+                self.assertIn('Missing measured execution: bin/legacy-tree-save.php', refused.stderr)
 
     def test_imported_local_scenarios_and_their_frozen_cli_oracles_are_registered(self):
         paths = set(self.support.http_coverage_sources(ROOT))
