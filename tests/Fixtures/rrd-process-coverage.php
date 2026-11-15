@@ -236,6 +236,9 @@ if (defined('AUTH_CONTROLLER_TEST_COVERAGE') || defined('AUTH_HARDENING_TEST_COV
 }
 if (defined('AUTH_CONTROLLER_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Application/Command/TransitionAuthenticationSession.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionAccounts.php');
+    $coverageFilter->includeFile($coverageRoot . '/src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionSession.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');

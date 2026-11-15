@@ -36,7 +36,7 @@ test('proxy configuration diagnostics preserve native caller outcomes and never 
         expect($authLines)->toHaveCount(($diagnostic ? 1 : 0) + (!empty($scenario['audit']) ? 2 : 0));
         if (!empty($scenario['audit'])) {
             expect($state['audit'])->toBe([['username' => 'owned-user', 'user_id' => 42, 'result' => 0, 'ip' => '']]);
-            expect($state['audit_parameters'])->toBe([['owned-user', 42, false]]);
+            expect($state['audit_parameters'])->toBe([['owned-user', 42, '']]);
         }
         if ($diagnostic) {
             expect($authLines[0])->toContain('proxy_trusted_addresses', 'proxy_headers', 'Legacy boolean')
@@ -46,7 +46,7 @@ test('proxy configuration diagnostics preserve native caller outcomes and never 
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
             expect($reports)->toHaveCount(1);
-            $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'tests/Unit/Security/ClientAddrDiagnosticNativeTest.php', 'include/global_constants.php', 'include/session.php', 'lib/session_data.php', 'lib/session_store.php', 'lib/session_metadata.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'cacti.sql', 'remote_agent.php', 'lib/remote_agent_auth.php', 'lib/functions.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php'];
+            $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'tests/Unit/Security/ClientAddrDiagnosticNativeTest.php', 'include/global_constants.php', 'include/session.php', 'lib/session_data.php', 'lib/session_store.php', 'lib/session_metadata.php', 'lib/auth.php', 'lib/graph_item_choices.php', 'cacti.sql', 'remote_agent.php', 'lib/remote_agent_auth.php', 'lib/functions.php', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php', 'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php', 'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php', 'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php'];
             $markers = ['client-address-and-caller-outcomes-readback', 'actual-auth-log-readback', 'persisted-session-address-readback'];
             $hits = ['lib/functions.php'];
             if (!empty($scenario['audit'])) {

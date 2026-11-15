@@ -14,7 +14,11 @@ final class GraphDataRemovalCoverageRegistration
         'lib/graph_data_removal.php', 'lib/api_graph.php', 'graphs.php', 'data_sources.php',
         'src/Platform/Infrastructure/Legacy/LegacyReferenceWriteTransaction.php', 'tests/Fixtures/graph-data-removal-native.php',
         'tests/Helpers/GraphDataRemovalCoverageRegistration.php', 'include/global_constants.php', 'cacti.sql',
-        'composer.lock', 'tests/composer.lock', 'lib/html_form.php', 'lib/graph_template_input.php');
+        'composer.lock', 'tests/composer.lock', 'lib/html_form.php', 'lib/graph_template_input.php',
+        'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php',
+        'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php',
+        'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php');
     public const MARKERS = array('native-policy-operation-returned', 'policy-session-observed', 'cascade-controller-state-observed');
     public const HITS = array('lib/auth.php', 'lib/graph_data_removal.php');
 }

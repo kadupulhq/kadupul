@@ -389,7 +389,14 @@ final class AuthControllerNativeCoverageTest extends TestCase
                         'src/IdentityAccess/Infrastructure/Legacy/NativeAuthenticationTransitionSession.php',
                     ));
                 }
-                if ($mode === 'logout' && (!isset($scenario['method']) || $scenario['method'] === 'GET' || $scenario['method'] === 'HEAD')) {
+                // A GET or HEAD logout renders the page unless logout.php redirects first:
+                // a live same-origin timeout ends the session, and an anonymous request
+                // without a reason has nothing to confirm.
+                $logoutAction = $scenario['request']['action'] ?? '';
+                $anonymous = $scenario['anonymous'] ?? false;
+                $logoutRedirects = ($logoutAction === 'timeout' && !$anonymous && ($scenario['site'] ?? '') === 'same-origin')
+                    || ($logoutAction === '' && $anonymous);
+                if ($mode === 'logout' && !$logoutRedirects && (!isset($scenario['method']) || $scenario['method'] === 'GET' || $scenario['method'] === 'HEAD')) {
                     $hits = array_merge($hits, ['src/Platform/Infrastructure/Symfony/NativeLogoutPage.php', 'src/Platform/Infrastructure/Symfony/Controller/LogoutMessageController.php']);
                 }
                 $arguments = array($reports[0], $root, 'tests/Fixtures/auth-controller-native.php', json_encode($scenario, JSON_THROW_ON_ERROR), $sources, $markers, $hits);
