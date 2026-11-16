@@ -34,7 +34,10 @@ final class ListTemplateRenderingTest extends TestCase
     public function testListRegionMatchesThePreMacroRendering(string $name, string $template, \Closure $context): void
     {
         $actual = self::listRegion(self::render($template, $context()));
-        self::assertStringEqualsFile(self::GOLDEN_DIR . '/' . $name . '.html', $actual);
+        $expected = file_get_contents(self::GOLDEN_DIR . '/' . $name . '.html');
+        self::assertIsString($expected);
+        // libxml versions serialize equivalent attribute quotes differently.
+        self::assertSame(self::listRegion($expected), $actual);
     }
 
     public function testListMarkupCarriesLegacyThemeHooks(): void
