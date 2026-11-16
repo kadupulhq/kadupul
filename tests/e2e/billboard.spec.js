@@ -44,7 +44,7 @@ test("exposes the UMD global with every API the v4 ESM build made optional", asy
     methods: ["export", "flow", "xgrids", "ygrids", "regions", "category", "categories", "resize", "destroy", "load", "tooltip"]
       .filter((name) => typeof chart[name] !== (name === "tooltip" ? "object" : "function")),
   }));
-  expect(api).toEqual({ version: "4.1.3", d3: "7.9.0", methods: [] });
+  expect(api).toEqual({ version: "4.1.3", d3: "7.9.2", methods: [] });
 
   await page.evaluate(() => {
     chart.xgrids([{ value: 1, text: "x" }]);
