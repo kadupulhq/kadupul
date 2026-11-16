@@ -174,6 +174,14 @@ final class LegacyFormGoldenTest extends TestCase
                 self::assertStringContainsString($entry['golden'], $golden, $file . ': allowlist entry no longer matches the golden (' . $entry['reason'] . ')');
                 $golden = str_replace($entry['golden'], $entry['rendered'], $golden);
             }
+            if ($file === 'pages/settings-authentication.html') {
+                // The legacy LDAP help omits the semicolon after &gt. libxml
+                // versions either preserve that entity as text or decode it.
+                // Canonicalize only this placeholder, leaving form values and
+                // the rest of the captured help text under exact comparison.
+                $golden = str_replace('&lt;username&amp;gt', '&lt;username&gt;', $golden);
+                $contents = str_replace('&lt;username&amp;gt', '&lt;username&gt;', $contents);
+            }
             self::assertSame($golden, $contents, 'Golden ' . $file);
         }
     }
