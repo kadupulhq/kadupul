@@ -73,3 +73,56 @@ test('an account that may not change its password is refused like a wrong passwo
         ->and($refused['messages'])->toBe($wrong['messages'])
         ->and(local_login_policy_writes($refused, '/must_change_password/'))->toBe(array());
 });
+
+test('post-verification policy retains lazy settings and bounded native writes', function (bool $forced, bool $compliant, bool $mayChange, mixed $expiry, bool $tracks) {
+    $password = $compliant ? 'Str0ngpass' : 'weak';
+    $scenario = local_login_policy_scenario('alice', $password);
+    $scenario['users'][0]['password'] = 'hash:' . $password;
+    $scenario['users'][0]['password_change'] = $mayChange ? 'on' : '';
+    $scenario['config']['secpass_forceold'] = $forced ? 'on' : '';
+    $scenario['config']['secpass_expireaccount'] = $expiry;
+    $denied = $forced && !$compliant && !$mayChange;
+    $change = $forced && !$compliant && $mayChange;
+    $reads = array('secpass_forceold');
+    if ($forced) {
+        $reads[] = 'secpass_minlen';
+        if ($compliant) {
+            $reads = array_merge($reads, array('secpass_reqnum', 'secpass_reqmixcase', 'secpass_reqspec'));
+        }
+    }
+    if (!$denied) {
+        $reads[] = 'secpass_expireaccount';
+    }
+
+    $before = time();
+    $result = local_login_policy_run($scenario);
+    $after = time();
+    expect($result['error'])->toBe($denied)
+        ->and($result['setting_reads'])->toBe($reads)
+        ->and($result['headers'])->toBe(array())
+        ->and($result['messages'])->toBe($change ? array('forced_password') : array())
+        ->and($result['executed'])->toHaveCount((int) $change + (int) (!$denied && $tracks));
+    if ($change) {
+        expect($result['executed'][0])->toBe(array(
+            'sql' => "UPDATE user_auth SET must_change_password = 'on' WHERE id = ? AND realm = 0 AND enabled = 'on'",
+            'params' => array(42),
+        ));
+    }
+    if (!$denied && $tracks) {
+        $write = $result['executed'][count($result['executed']) - 1];
+        expect($write['sql'])->toBe("UPDATE user_auth SET lastlogin = ? WHERE username = ? AND realm = 0 AND enabled = 'on'")
+            ->and($write['params'][1])->toBe('alice')
+            ->and($write['params'][0])->toBeGreaterThanOrEqual($before)
+            ->and($write['params'][0])->toBeLessThanOrEqual($after);
+    }
+})->with(array(
+    'disabled policy and activity' => array(false, false, false, 0, false),
+    'disabled policy records activity' => array(false, false, false, '1', true),
+    'compliant without change permission' => array(true, true, false, 1, true),
+    'compliant with empty expiry' => array(true, true, false, '', false),
+    'compliant with zero string expiry' => array(true, true, true, '0', false),
+    'compliant with negative expiry' => array(true, true, true, -1, false),
+    'force change before activity' => array(true, false, true, '1', true),
+    'force change without activity' => array(true, false, true, 0, false),
+    'refuse before activity lookup' => array(true, false, false, 1, true),
+));

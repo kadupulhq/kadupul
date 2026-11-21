@@ -1,8 +1,8 @@
 # Authentication surface inventory
 
 Measured on `origin/main` at `6bd6a540ba` by reading the files named below. It
-supports [ADR 0010](../adr/0010-symfony-security-authentication.md). Nothing here
-was executed; every statement is from source. The hook list covers the
+supports [ADR 0010](../adr/0010-symfony-security-authentication.md). The original inventory was source-only. Later local migration evidence is
+identified below and in the implementation record. The hook list covers the
 authentication files, `lib/auth.php`, `lib/ldap.php`, `include/session.php` and
 the helpers in `lib/functions.php` that the login flow calls (see "Not covered").
 `AuthenticationHookInventoryTest` pins the list.
@@ -12,13 +12,13 @@ the helpers in `lib/functions.php` that the login flow calls (see "Not covered")
 | File | Role | Notes |
 | --- | --- | --- |
 | `login.php` (15 lines) | Compatibility entry that requires `include/auth.php`, then redirects to `index.php` with 303 | `index.php` now belongs to Symfony |
-| `auth_login.php` (469) | Login form and credential processing | Requires a validated POST for every method except Basic (`cacti_require_post_actions(['login'])`) |
-| `logout.php` (87) | Hooks, remembered-token revocation, cookie and session teardown, redirect | Reachable by GET without a CSRF token; the file records this |
+| `auth_login.php` (380) | Native credential processing and hooks; form sections rendered by the injected Twig service | Requires a validated POST for every method except Basic (`cacti_require_post_actions(['login'])`) |
+| `logout.php` (102) | Symfony request validation and confirmation/message rendering; POST retains native hooks, remembered-token revocation, cookie/session teardown and redirect | GET/HEAD require confirmation; only a native-CSRF-validated POST runs teardown. `/logout/message` renders only an in-process presentation object and cannot perform logout |
 | `auth_changepassword.php` (500) | Password change, including the forced change | Reachable by an eligible user without a realm check (`include/auth.php`) |
 | `auth_profile.php` (684) | Profile tabs and the Logout Everywhere action | `logout_everywhere` is a POST action that calls `auth_logout_everywhere()` |
 | `user_domains.php` (775) | Administration of LDAP domains (`user_domains`, `user_domains_ldap`) | Administration, not a login path |
 | `include/auth.php` (363) | The gate included by protected legacy pages | See below |
-| `lib/auth.php` (6536) | Credential, lockout, LDAP, domain, permission and session-binding functions | |
+| `lib/auth.php` (6362) | Credential, lockout, LDAP, domain, permission and session-binding functions | |
 | `include/session.php` (135) | Database session handler, loaded when configured | Skipped for CLI |
 | `include/csrf.php` (404) | csrf-magic bootstrap, secret loading, cross-site refusal | |
 | `public/index.php` | Symfony front controller | The target docroot |
@@ -68,10 +68,13 @@ also passes `REMOTE_USER`.
 
 ## Credentials and sessions
 
-**Password hashes.** Verified through `compat_password_verify`; a hash that
+**Password hashes.** The three native `compat_password_*` helpers now share
+`LegacyPasswordHasher`, registered with Symfony as `legacy_native`. Verification
+retains native bytes, existing MD5 support and default-cost padding. Hashing and
+rehash checks retain the selected PHP algorithm/options. A hash that
 `compat_password_needs_rehash` flags is rewritten at login by
 `auth_rehash_password_preserving_sessions()` in one transaction that also keeps
-the credential generation (`lib/auth.php:6186`).
+the credential generation (`lib/auth.php:6025`).
 
 **Credential generation.** `settings_user` row named `auth_credential_generation`
 holds `<sha256(password hash)>:<64 hex>`. `auth_session_credential_generation()`
@@ -87,23 +90,31 @@ Restore requires an enabled, unlocked account of the stated realm, the token
 hash, the same client address as stored, a passing lockout check, and, for a
 versioned token, a matching MAC. Restore rotates: the old row is deleted and a
 new token is issued. Versioned tokens are `v1.<64 hex>.<hmac_sha256(64 hex,
-generation)>`; an unversioned token is accepted until revoked and is converted
-on restore. `auth_cache_enabled` must be `on`. Tokens for the guest account are
+generation)>`. A password login issues a versioned token bound to the
+generation its new session was bound to, so a Logout Everywhere that commits
+before the token row is written still revokes it. An unversioned token issued
+before this change is accepted until revoked and is converted on restore. `auth_cache_enabled` must be `on`. Tokens for the guest account are
 refused.
 
-**Logout Everywhere.** `auth_logout_everywhere()` (`lib/auth.php:6042`), in one
-transaction on the sessions connection: requires InnoDB for `user_auth`,
+**Logout Everywhere.** `auth_logout_everywhere()` (`lib/auth.php:5937`) delegates
+to `NativeSessionRevocation`, also injectable through `DatabaseConnection`. In one
+transaction on the resolved sessions connection it: requires InnoDB for `user_auth`,
 `settings_user`, `user_auth_cache` and `sessions` (MySQL), locks the account row,
 checks the presented generation is still current, writes a new generation, reads
 it back, deletes the user's `user_auth_cache` and `sessions` rows, commits. Any
 failure rolls back and the caller returns HTTP 503. The browser is logged out only
 after the commit.
 
-**Auth transition.** `cacti_auth_transition($user_id, $reason)` rechecks that the
-account is enabled and unlocked (the guest may be disabled), regenerates the
-session id, clears cached permissions and binds the credential generation.
-Reasons in use: `login`, `cookie_restore`, `basic_auth`, `guest`.
-`cookie_restore` keeps the generation that admitted the token.
+**Auth transition.** `cacti_auth_transition($user_id, $reason)` is now a thin
+compatibility adapter to `TransitionAuthenticationSession`. The application
+use case rechecks that the account is enabled and unlocked (the guest may be
+disabled), validates the remembered-login credential snapshot, and orders
+session rotation, permission-cache clearing and credential binding. The native
+adapter still performs PHP session operations and legacy logging. Form login,
+Basic login, remembered-login restore and guest entry all retain the same
+compatibility facade. The authenticated user ID is written only after a
+successful transition. Reasons in use: `login`, `cookie_restore`, `basic_auth`,
+`guest`. `cookie_restore` keeps the generation that admitted the token.
 
 **Lockout.** Per `username` and `realm`, not per address: `secpass_lockfailed`
 (attempt limit), `secpass_unlocktime` (minutes, capped at 1440), enforced by
@@ -131,9 +142,10 @@ session and rechecks the account: `SharedSession`, `NativeAuthenticationSession`
 (establish, publish, revoke), `LegacyBrowserAuthentication` (Basic and remembered
 restore for the About route), `ReadOnlyDatabaseSessionHandler`, the
 `AuthenticationFileSessionHandler` and `AuthenticationDatabaseSessionHandler`.
-Symfony's own session bag is disabled. `symfony/security-core`, `security-csrf`
-and `password-hasher` are installed; `symfony/security-bundle`, `symfony/ldap` and
-`symfony/rate-limiter` are not, and `config/packages` has no `security.yaml`.
+Symfony's own session bag is disabled. SecurityBundle, Security HTTP/Core, CSRF
+and PasswordHasher are installed. `config/packages/security.yaml` configures the
+three-route native session firewall and the `legacy_native` password hasher.
+Symfony LDAP and RateLimiter remain uninstalled pending their consumers.
 
 ## CSRF
 
@@ -152,29 +164,29 @@ returned to core); "action" is `api_plugin_hook` (no return value used).
 | --- | --- | --- | --- |
 | `auth_alternate_realms` | fn | `include/auth.php:58` | none; runs on every gated request when `auth_method != 0` |
 | `custom_denied` | fn | `include/auth.php:304` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
-| `custom_login` | fn | `auth_login.php:302` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
-| `login_title` | fn | `auth_login.php:312` | the default title string |
-| `login_before` | fn | `auth_login.php:322` | array with `error`, `error_msg`, `username` and further keys not read here; output is echoed inside the form |
-| `login_realms` | fn | `auth_login.php:356` | realm array keyed by realm id with `name` and `selected`; LDAP method only |
-| `login_after` | action | `auth_login.php:411` | none; output is echoed |
-| `login_process` | fn | `lib/auth.php:4473` | `false`; a truthy return skips core local verification |
-| `login_options_navigate` | fn | `lib/auth.php:5751` | the user's `login_opts`; reached in the default branch of the post-login redirect |
-| `logout_pre_session_destroy` | action | `logout.php:16` | none; runs before token revocation |
-| `logout_post_session_destroy` | action | `logout.php:33` | none |
-| `custom_logout_message` | fn | `logout.php:36` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
-| `custom_password` | fn | `auth_changepassword.php:278` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` as above |
-| `change_password_title` | fn | `auth_changepassword.php:370` | the default title string |
+| `custom_login` | fn | `auth_login.php:315` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
+| `login_title` | fn | `auth_login.php:329` | the default title string |
+| `login_before` | fn | `auth_login.php:331` | array with `error`, `error_msg`, `username` and further keys not read here; output is echoed inside the form |
+| `login_realms` | fn | `auth_login.php:349` | realm array keyed by realm id with `name` and `selected`; LDAP method only |
+| `login_after` | action | `auth_login.php:382` | none; output is echoed |
+| `login_process` | fn | `lib/auth.php:4411` | `false`; a truthy return skips core local verification |
+| `login_options_navigate` | fn | `lib/auth.php:5581` | the user's `login_opts`; reached in the default branch of the post-login redirect |
+| `logout_pre_session_destroy` | action | `lib/auth.php:150` | none; `auth_end_session()` runs it after logout.php POST/CSRF validation or a server-side logout decision, before token revocation |
+| `logout_post_session_destroy` | action | `lib/auth.php:156` | none; presentation reads any changed action afterward |
+| `custom_logout_message` | fn | `logout.php:38` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` means the plugin rendered the page |
+| `custom_password` | fn | `auth_changepassword.php:279` | `OPER_MODE_NATIVE`; `OPER_MODE_RESKIN` as above |
+| `change_password_title` | fn | `auth_changepassword.php:371` | the default title string |
 | `auth_profile_update_data` | fn | `auth_profile.php:43` | the current tab |
 | `auth_profile_tabs` | fn | `auth_profile.php:66` | the tab array |
 | `auth_profile_run_action` | fn | `auth_profile.php:93` | the requested tab |
 | `auth_profile_reset` | action | `auth_profile.php:131` | none |
 | `auth_profile_reset_value` | fn | `auth_profile.php:180` | the setting name |
 | `auth_profile_save` | action | `auth_profile.php:255` | none |
-| `copy_user` | fn | `lib/auth.php:600` | the copy hook data, after a successful copy |
+| `copy_user` | fn | `lib/auth.php:604` | the copy hook data, after a successful copy |
 | `get_template_account` | fn | `lib/functions.php:3447` | the username being created from a template; returning a different value replaces the template account |
 | `nav_login_before` | action | `lib/functions.php:4265` | none; runs before the guest user menu is printed |
 | `nav_login_after` | action | `lib/functions.php:4274` | none; runs after the guest user menu is printed |
-| `user_remove` | fn | `lib/auth.php:714` | the user id |
+| `user_remove` | fn | `lib/auth.php:718` | the user id |
 
 These are part of the public plugin API under [VERSIONING.md](../../VERSIONING.md):
 removing or renaming one, or changing what it is passed, forces a major release.
@@ -218,9 +230,69 @@ characterization suite (`make test-auth`).
   method 4 uses `get_auth_realms(true)`.
 - **Session idle timeout.** There is no application timer. A session ends when PHP
   garbage-collects it after `session.gc_maxlifetime` (the database handler checks
-  the same value). `logout.php?action=timeout` only selects the message, and the
-  gate redirects there when the session has gone. The authenticator must therefore
+  the same value). `logout.php?action=timeout` now selects a confirmation reason;
+  the gate still redirects there when the session has gone. A validated POST
+  performs teardown and shows the timeout message. The authenticator must therefore
   keep the session lifetime as it is and not add a second timer.
+
+## Shared native lockout check
+
+`auth_process_lockout_check()` now delegates to `IsAccountLocked` through
+`NativeAccountLockoutStatus`. Local, LDAP, domain and remembered-token callers
+retain their original ordering and error reporting. Disabled policy skips the
+lookup; enabled policy reads the current enabled/locked account in its exact realm.
+The facade preserves an existing caller error when unlocked and sets the native
+translated error when locked. Failure counting and timed unlocking remain native.
+See the [implementation record](symfony-security-authentication.md) for native
+characterization, execution coverage, persistence limits and rollout/rollback.
+
+## Shared complexity implementation
+
+`secpass_check_pass()` now delegates to `NativePasswordComplexity`, backed by the
+pure `PasswordComplexity` domain rules. Login policy, password changes and both
+administrator check/save paths share that facade. Settings-read order, byte and
+ASCII semantics, native comparisons and gettext identities remain compatible.
+The [implementation record](symfony-security-authentication.md) records 3,969
+original-helper comparisons, native persistence tests and catalog verification.
+
+## Policy after password verification
+
+`secpass_login_process()` delegates its post-verification stage to
+`ApplyLocalLoginPolicy` through `NativeLocalLoginPolicy`. The application command
+coordinates forced-change permission and optional activity recording. The adapter
+retains settings, the native complexity checker, local enabled-account SQL,
+translated notification/denial and logging. Lockout and credential verification
+still happen before delegation; the caller still owns session eligibility and
+issuance. Fourteen compatibility scenarios match the preceding native flow. See
+the [implementation record](symfony-security-authentication.md) for measured
+coverage, persistence limits and rollout/rollback.
+
+## Local credential application boundary
+
+`local_auth_login_process()` retains the plugin hook and elapsed timing floor,
+then delegates to `VerifyLocalCredentials` through `NativeLocalCredentials`.
+The application service coordinates one verification, fresh local-account hash
+confirmation and optional rehash. Native policy, messages, rehash transaction and
+session issuance retain their existing helpers. The adapter reads the submitted
+password again only when rehashing is required. No new HTTP route or write path
+exists. See the [implementation record](symfony-security-authentication.md) for
+compatibility evidence and the remaining policy/issuer migration.
+
+## Login presentation migration
+
+`LoginPageRenderer` renders named Twig sections between the original native
+hooks. Hook arguments, echoed output, mutation of later display values and early
+plugin exit stay in native scope. `custom_login` reskin mode returns before
+Symfony boots. The existing entry still owns authentication, credential writes,
+realm selection, native headers/footer and csrf-magic insertion. The form keeps
+its relative target, method and control names. No new HTTP login route exists.
+
+Local characterization covers the original and migrated form DOM in 13 scenarios,
+including native entity handling, realm options, translated fixture labels, hook
+changes and early exits. Four browser cases execute the migrated script under
+the native default/nonce CSP policies. This does not establish installed plugin,
+LDAP or user-preference locale behavior. See the
+[implementation record](symfony-security-authentication.md) for verification.
 
 ## Not covered
 

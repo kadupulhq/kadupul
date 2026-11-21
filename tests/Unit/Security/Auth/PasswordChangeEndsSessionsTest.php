@@ -157,7 +157,7 @@ function db_fetch_row_prepared($sql, $params = array()) {
 PHP;
 
     foreach (array('clear_auth_cookie', 'auth_session_credential_key', 'auth_session_credential_generation', 'auth_session_credentials_valid') as $name) {
-        $global .= "\n" . test_php_function_source($auth, $name) . "\n";
+        $global .= "\n" . str_replace('__DIR__', var_export($root . '/lib', true), test_php_function_source($auth, $name)) . "\n";
     }
 
     file_put_contents($work . '/include/global.php', $global);

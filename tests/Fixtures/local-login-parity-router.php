@@ -119,6 +119,12 @@ function html_escape($string)
     return $string === null ? null : htmlspecialchars(str_replace('`', '&#96;', (string) $string), ENT_QUOTES | ENT_HTML5, 'UTF-8', false);
 }
 
+// Matches lib/html.php for the UTF-8 html_escape() above.
+function html_escape_charset(): string
+{
+    return 'UTF-8';
+}
+
 // The login form's CSRF contract has its own suite (LoginMutationCsrfTest).
 function csrf_check($fatal = true)
 {

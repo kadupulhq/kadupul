@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 15:06-0800\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -691,6 +691,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Odmowa dostępu! Identyfikator użytkownika gościa %s nie istnieje.  Skontaktuj się z administratorem."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Odmowa dostępu, konto użytkownika wyłączone."
 
@@ -10715,11 +10717,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul oczyszczone z kłód"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Hasło musi zawierać co najmniej %d znaków!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Ograniczony"
 
@@ -10741,24 +10738,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Basic Authentication skonfigurowane, ale żadna nazwa użytkownika nie została przekazana z serwera WWW. Upewnij się, że masz włączone uwierzytelnianie na serwerze WWW."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Twój Administrator Kadupul wymusił silne hasła do logowania i Twoje obecne hasło nie spełnia nowych wymagań. W związku z tym musisz teraz zmienić hasło."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Odmowa dostępu, prosimy o kontakt z administratorem Kadupul."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Twoje hasło musi zawierać kombinację małych i dużych liter!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Twoje hasło musi zawierać co najmniej 1 znak numeryczny!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Twoje hasło musi zawierać co najmniej 1 znak specjalny!"
 
 #: lib/boost.php
 #, php-format
@@ -11453,7 +11434,7 @@ msgstr "Zalogowany jako: %s"
 msgid "Login as Regular User"
 msgstr "Login jako zwykły użytkownik"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Wyloguj"
 
@@ -16482,6 +16463,27 @@ msgstr "FATAL: Nie wolno zabijać szpiku"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAL: Metoda usuwania kolców \"%s\" jest nieważna"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Twój Administrator Kadupul wymusił silne hasła do logowania i Twoje obecne hasło nie spełnia nowych wymagań. W związku z tym musisz teraz zmienić hasło."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Hasło musi zawierać co najmniej %d znaków!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Twoje hasło musi zawierać kombinację małych i dużych liter!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Twoje hasło musi zawierać co najmniej 1 znak numeryczny!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Twoje hasło musi zawierać co najmniej 1 znak specjalny!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

@@ -46,15 +46,17 @@ final class CdefNativeProbeCoverageTest extends TestCase
                 if (!is_dir(dirname($probe))) self::assertTrue(mkdir(dirname($probe), 0700, true));
                 $body = '<?php declare(strict_types=1); echo ' . var_export($earlyMarker . "\n", true) . '; exit(0);';
                 self::assertSame(strlen($body), file_put_contents($probe, $body));
+                $coverageCase = $case;
+                $coverageDirectory = $reports;
                 $process = new \Symfony\Component\Process\Process(
                     [PHP_BINARY, '-d', 'pcov.enabled=1', '-d', 'pcov.directory=' . $candidate,
                         '-d', 'auto_prepend_file=' . $candidate . '/tests/Fixtures/cdef-native-coverage.php', $probe],
                     $candidate,
-                    ['KADUPUL_NATIVE_COVERAGE_CASE' => $case, 'KADUPUL_NATIVE_COVERAGE_DIRECTORY' => $reports],
+                    ['KADUPUL_NATIVE_COVERAGE_CASE' => $coverageCase, 'KADUPUL_NATIVE_COVERAGE_DIRECTORY' => $coverageDirectory],
                     timeout: 30
                 );
                 self::assertNotSame(0, $process->run());
-                self::assertStringContainsString('did not confirm completion', $process->getErrorOutput());
+                self::assertStringContainsString('did not confirm completion', $process->getOutput() . $process->getErrorOutput());
                 self::assertFileDoesNotExist($reports . '/native.coverage');
                 self::assertSame([], glob($reports . '/*'));
             } finally {

@@ -193,7 +193,9 @@ final class LegacyPasswordAccountsTest extends TestCase
         $program = 'function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }' . "\n"
             . test_php_function_source($auth, 'compat_password_hash') . "\n"
             . test_php_function_source($auth, 'compat_hash_equals') . "\n"
-            . test_php_function_source($auth, 'compat_password_verify') . "\n"
+            // The extracted function runs as -r code, where __DIR__ is the working
+            // directory; give it back the lib/ directory it has in lib/auth.php.
+            . str_replace('__DIR__', var_export(dirname(__DIR__, 2) . '/lib', true), test_php_function_source($auth, 'compat_password_verify')) . "\n"
             . '[$stored, $password] = json_decode($argv[1], true);'
             . 'print json_encode(["verified" => compat_password_verify($password, $stored), "modern" => password_get_info($stored)["algo"] !== null]);';
         $run = test_php_run([PHP_BINARY, '-r', $program, json_encode([$stored, $password], JSON_THROW_ON_ERROR)]);

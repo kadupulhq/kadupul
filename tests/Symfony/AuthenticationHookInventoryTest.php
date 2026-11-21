@@ -31,8 +31,6 @@ final class AuthenticationHookInventoryTest extends TestCase
         ],
         'login.php' => [],
         'logout.php' => [
-            'logout_pre_session_destroy' => self::ACTION,
-            'logout_post_session_destroy' => self::ACTION,
             'custom_logout_message' => self::FUNCTION,
         ],
         'auth_changepassword.php' => [
@@ -61,6 +59,9 @@ final class AuthenticationHookInventoryTest extends TestCase
         'user_remove' => self::FUNCTION,
         'login_process' => self::FUNCTION,
         'login_options_navigate' => self::FUNCTION,
+        // auth_end_session() owns the teardown for logout.php and server-side logouts.
+        'logout_pre_session_destroy' => self::ACTION,
+        'logout_post_session_destroy' => self::ACTION,
     ];
 
     /** Hooks the login flow reaches through shared helpers. */

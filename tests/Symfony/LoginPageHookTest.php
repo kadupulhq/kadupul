@@ -50,7 +50,7 @@ final class LoginPageHookTest extends TestCase
         file_put_contents($directory . '/prelude.php', $this->prelude($method, $reskin));
         try {
             $process = proc_open(
-                [PHP_BINARY, '-d', 'auto_prepend_file=', '-d', 'display_errors=stderr', '-r', 'require $argv[1]; require $argv[2];', $directory . '/prelude.php', $root . '/auth_login.php'],
+                [PHP_BINARY, '-d', 'memory_limit=2G', '-d', 'auto_prepend_file=', '-d', 'display_errors=stderr', '-r', 'require $argv[1]; require $argv[2];', $directory . '/prelude.php', $root . '/auth_login.php'],
                 [1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
                 $pipes,
                 $directory,
@@ -89,6 +89,9 @@ final class LoginPageHookTest extends TestCase
             define('OPER_MODE_RESKIN', 2);
             define('CACTI_LOCALE', 'en-US');
             define('COPYRIGHT_YEARS_SHORT', '2004-2026');
+            \$_SERVER['APP_ENV'] = 'test';
+            \$_SERVER['APP_DEBUG'] = '1';
+            \$_SERVER['SHELL_VERBOSITY'] = \$_ENV['SHELL_VERBOSITY'] = '-1';
             \$GLOBALS['hooks'] = [];
             function api_plugin_hook(string \$name): void { \$GLOBALS['hooks'][] = [\$name, null]; print '<!--' . \$name . '-->'; }
             function api_plugin_hook_function(string \$name, \$arg = null)
@@ -111,6 +114,7 @@ final class LoginPageHookTest extends TestCase
             function html_common_header(string \$title): void {}
             function get_current_page(): string { return 'index.php'; }
             function html_escape(string \$value): string { return htmlspecialchars(\$value); }
+            function html_escape_charset(): string { return 'UTF-8'; }
             function __(string \$text, ...\$args): string { return vsprintf(\$text, \$args); }
             function __esc(string \$text): string { return \$text; }
             function isempty_request_var(string \$name): bool { return true; }

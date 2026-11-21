@@ -13,5 +13,9 @@ final class GraphCacheCoverageRegistration
         'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php',
         'lib/rrdcheck.php', 'lib/dsstats.php', 'graph_image.php', 'lib/html_utility.php',
         'include/global_constants.php', 'tests/Fixtures/graph-cache-native.php',
-        'tests/Helpers/GraphCacheCoverageRegistration.php');
+        'tests/Helpers/GraphCacheCoverageRegistration.php',
+        'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php',
+        'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php',
+        'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php');
 }

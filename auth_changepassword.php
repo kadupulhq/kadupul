@@ -264,8 +264,9 @@ switch ($action) {
 
             raise_message('password_success');
 
-            // Redirect to login with new password
-            header('Location: logout.php');
+            // End the session here, then sign in again with the new password.
+            auth_end_session();
+            header('Location: index.php', true, 303);
 
             exit;
         } else {

@@ -3,6 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+require_once dirname(__DIR__, 3) . '/Helpers/NativeChildCoverageEvidence.php';
+
 function domains_login_realm_run(PHPUnit\Framework\TestCase $test, string $mode, array $scenario): array
 {
     $root = dirname(__DIR__, 4);
@@ -17,7 +19,7 @@ function domains_login_realm_run(PHPUnit\Framework\TestCase $test, string $mode,
     }
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($root . '/tests/Fixtures/domains-login-realm.php', true) . ';', $root, $mode, json_encode($scenario, JSON_THROW_ON_ERROR)),
+            array(PHP_BINARY, '-d', 'memory_limit=2G', '-d', 'error_reporting=24575', '-d', 'display_errors=stderr', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($root . '/tests/Fixtures/domains-login-realm.php', true) . ';', $root, $mode, json_encode($scenario, JSON_THROW_ON_ERROR)),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -32,9 +34,21 @@ function domains_login_realm_run(PHPUnit\Framework\TestCase $test, string $mode,
             throw new RuntimeException($stderr . $stdout);
         }
         if ($coverage !== null) {
-            foreach (glob($dir . '/*.coverage') as $file) {
-                $coverage->merge(unserialize(file_get_contents($file)));
+            $reports = glob($dir . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $sources = array('composer.lock', 'tests/composer.lock', 'tests/Unit/Security/Auth/DomainsLoginRealmTest.php', 'tests/Fixtures/domains-login-realm.php', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php', 'tests/Helpers/PhpSource.php', 'lib/auth.php', 'lib/ldap.php', 'auth_login.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php', 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php', 'templates/identity_access/login.html.twig', 'config/services.yaml', 'lib/rrd.php', 'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php', 'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php');
+            $hits = $mode === 'process' ? array('lib/auth.php') : array('auth_login.php');
+            if ($scenario['render'] ?? false) {
+                $hits[] = 'src/IdentityAccess/Infrastructure/Symfony/LoginPageRenderer.php';
             }
+            $arguments = array($reports[0], $root, 'tests/Fixtures/domains-login-realm.php', $mode . ':' . json_encode($scenario, JSON_THROW_ON_ERROR), $sources, array('domain-login-state-produced'), $hits);
+            $measured = NativeChildCoverageEvidence::load(...$arguments);
+            static $verifiedOmissions = false;
+            if (!$verifiedOmissions) {
+                expect(NativeChildCoverageEvidence::verifyRejections(...array_merge($arguments, array('lib/boost.php'))))->toBe(count($sources) + 11);
+                $verifiedOmissions = true;
+            }
+            $coverage->merge($measured);
         }
 
         return json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
@@ -136,12 +150,14 @@ test('auth_login.php redraws the login form after a domain login when no domain 
 });
 
 
-test('the login entry point chooses local only for configured local selector values', function ($method, $realm, $dispatches, $events) {
+test('the login entry point chooses local only for configured local selector values', function ($method, $realm, $dispatches, $events, $status = 200) {
     $result = domains_login_realm_run($this, 'login', array(
         'username' => 'alice', 'request' => array('action' => 'login', 'realm' => $realm, 'login_password' => 'secret'),
         'config' => array('auth_method' => $method), 'process_error' => false, 'template' => 5, 'guest' => 6,
     ));
-    expect($result['dispatches'])->toBe($dispatches)->and($result['events'])->toBe($events);
+    expect($result['dispatches'])->toBe($dispatches)
+        ->and($result['events'])->toBe($events)
+        ->and($result['status'])->toBe($status);
 })->with(array(
     'Domains Local' => array('4', '0', array('local'), array('PROCESS', 'TEMPLATE')),
     'LDAP Local' => array('3', '1', array('local'), array('PROCESS', 'TEMPLATE')),
@@ -149,7 +165,7 @@ test('the login entry point chooses local only for configured local selector val
     'LDAP selector' => array('3', '2', array('ldap'), array('PROCESS', 'TEMPLATE')),
     'Domain selector' => array('4', '1001', array('domain'), array('PROCESS', 'LOG_FAILED')),
     'unknown Domains Local selector' => array('4', '1', array('domain'), array('PROCESS', 'LOG_FAILED')),
-    'negative Domains selector' => array('4', '-1', array(), array('INPUT_REJECTED')),
-    'fractional Domains selector' => array('4', '0.5', array(), array('INPUT_REJECTED')),
-    'array Domains selector' => array('4', array('0'), array(), array('INPUT_REJECTED')),
+    'negative Domains selector' => array('4', '-1', array(), array(), 400),
+    'fractional Domains selector' => array('4', '0.5', array(), array(), 400),
+    'array Domains selector' => array('4', array('0'), array(), array(), 400),
 ));

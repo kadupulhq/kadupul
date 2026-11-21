@@ -4,12 +4,12 @@ about.php	symfony:forward	forwards to app.php/about/legacy
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
 app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-app.php/about	symfony:platform_about	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
-app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; AuthenticatedAccess signed-in account; no realm required
+app.php/about	symfony:platform_about	methods=GET|HEAD; Symfony Security native session; signed-in account; no realm required
+app.php/about/legacy	symfony:platform_about_legacy	methods=GET|HEAD|POST; Symfony Security native session; signed-in account; no realm required
 app.php/administration/domains	symfony:admin_user_domains	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/administration/user-groups	symfony:admin_user_groups	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
 app.php/administration/users	symfony:admin_users	methods=GET|HEAD; ConsoleAccess realm 8 + realm 1
-app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at eda938c7dfc38657534e5c06442c5d8d44e085312b399e577ec00d95a69c5af3
+app.php/assets	symfony:asset_register	methods=GET|HEAD|POST; opt-in; primary collector; ConsoleAccess realm 8 + realm 15; CSRF before mutation; reviewed at bdf41721e3aacafa372a28c9e5be61c0a198f24a328f4458e98a3ce7b032686b
 app.php/automation/discovered-devices	symfony:admin_discovered_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules	symfony:admin_graph_rules	methods=GET|HEAD; ConsoleAccess realm 8 + realm 23
 app.php/automation/graph-rules/new	symfony:automation_graph_rule_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 23
@@ -95,7 +95,7 @@ app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET
 app.php/graphing/trees	symfony:admin_trees	methods=GET|HEAD; ConsoleAccess realm 8 + realm 4
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/help	symfony:platform_help	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
-app.php/installer	symfony:platform_installer	methods=GET|HEAD|POST; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at eb2743c912e9c220d4f9f5b782cac4acbf034847990698fb0f26405e36fcb0aa
+app.php/installer	symfony:platform_installer	methods=GET|HEAD|POST; authenticated native installer capability + realm 26; CSRF before mutation; reviewed at 0bd0cb70c1e957e60500bafc271efec41e6adb6fb10f0b7d7bfdc5ee3100e48b
 app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
@@ -123,6 +123,7 @@ app.php/links/action/{operation}	symfony:navigation_link_action	methods=GET|HEAD
 app.php/links/legacy	symfony:navigation_links_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/new	symfony:navigation_link_create	methods=GET|HEAD|POST; ConsoleAccess realm 8
 app.php/links/{id}/edit	symfony:navigation_link_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8
+app.php/logout/message	symfony:platform_logout_message	methods=GET|HEAD; native logout presentation object required; no credential mutation
 app.php/management/aggregate-graphs	symfony:management_aggregate_graphs	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
 app.php/management/aggregate-members/{id}	symfony:management_aggregate_members	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
 app.php/management/collector-devices/{id}	symfony:management_collector_devices	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
@@ -184,7 +185,7 @@ app.php/relationships/user-realm-grants/{id}	symfony:relationships_user_realm_gr
 app.php/relationships/user-templates-permissions/{id}	symfony:relationships_user_templates_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/user-time-preferences/{id}	symfony:relationships_user_time_preferences	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
 app.php/relationships/user-trees-permissions/{id}	symfony:relationships_user_trees_permissions	methods=GET|HEAD requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 1
-app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
+app.php/session	symfony:session	methods=GET|HEAD; Symfony Security native session; ConsoleAccess realm 8
 app.php/templates/aggregates	symfony:admin_aggregate_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 5
 app.php/templates/data-sources	symfony:admin_data_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 11
 app.php/templates/devices	symfony:admin_device_templates	methods=GET|HEAD; ConsoleAccess realm 8 + realm 12
@@ -210,7 +211,7 @@ app.php/utilities/system/php	symfony:platform_diagnostics_php	methods=GET|HEAD; 
 app.php/utilities/system/poller-cache	symfony:platform_diagnostics_poller_cache	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 app.php/utilities/system/summary	symfony:platform_diagnostics_summary	methods=GET|HEAD; ConsoleAccess realm 8 + realm 15
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
-auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 858e41478258
+auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at d43449d19ec2
 auth_profile.php	realm:20	include/auth.php; guest_account withdrawn from anonymous and guest callers
 automation_devices.php	realm:23	include/auth.php
 automation_graph_rules.php	realm:23	include/auth.php
@@ -313,13 +314,13 @@ include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, revie
 include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 060d320b61c0; included by lib/functions.php
 include/vendor/	web-server-denied	nginx; apache .htaccess
 index.php	symfony:forward	forwards to app.php/console
-install/background.php	cli-only	native CLI guard; reserved installer token and current actor eligibility before execution; reviewed at eb2743c912e9c220d4f9f5b782cac4acbf034847990698fb0f26405e36fcb0aa
+install/background.php	cli-only	native CLI guard; reserved installer token and current actor eligibility before execution; reviewed at 0bd0cb70c1e957e60500bafc271efec41e6adb6fb10f0b7d7bfdc5ee3100e48b
 install/cli_check.php	cli-only	guard: include/cli_check.php
 install/cli_test.php	cli-only	guard: php_sapi_name() check
 install/functions.php	anonymous-allowed	inert: declarations and literal assignments only
 install/index.php	anonymous-allowed	redirect-only
-install/install.php	realm:26	native login/account policy and uncached realm 26 before workflow; CSRF before mutations; reviewed at eb2743c912e9c220d4f9f5b782cac4acbf034847990698fb0f26405e36fcb0aa
-install/installer-bootstrap.php	guarded-fragment	direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability; reviewed at eb2743c912e9c220d4f9f5b782cac4acbf034847990698fb0f26405e36fcb0aa
+install/install.php	realm:26	native login/account policy and uncached realm 26 before workflow; CSRF before mutations; reviewed at 0bd0cb70c1e957e60500bafc271efec41e6adb6fb10f0b7d7bfdc5ee3100e48b
+install/installer-bootstrap.php	guarded-fragment	direct requests return 404 before includes; only authenticated installer or trusted CLI bootstrap defines the capability; reviewed at 0bd0cb70c1e957e60500bafc271efec41e6adb6fb10f0b7d7bfdc5ee3100e48b
 install/step_json.php	realm:26	include/auth.php; auth_json
 install/upgrades/0_8_1.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/0_8_2.php	anonymous-allowed	inert: declarations and literal assignments only

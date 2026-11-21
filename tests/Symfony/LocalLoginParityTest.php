@@ -107,13 +107,16 @@ final class LocalLoginParityTest extends TestCase
         $this->assertFloor($response);
     }
 
-    public function testSuccessWithRememberMeIssuesAnUnversionedToken(): void
+    public function testSuccessWithRememberMeIssuesATokenBoundToTheSessionGeneration(): void
     {
         $response = $this->login(self::USER, self::PASSWORD, ['remember_me' => 'on']);
 
         self::assertSame(302, $response['status']);
-        // A password login issues the unversioned form; only a restore converts it to v1.
-        self::assertMatchesRegularExpression('/\A10,0,[a-f0-9]{64}\z/D', $response['cookies']['cacti_remembers'] ?? '');
+        // The token is MACed with the generation the new session was bound to.
+        $generation = $response['session']['sess_user_credential'] ?? '';
+        self::assertSame(hash('sha256', $this->storedHash()), $generation);
+        self::assertSame(1, preg_match('/\A10,0,v1\.([a-f0-9]{64})\.([a-f0-9]{64})\z/D', $response['cookies']['cacti_remembers'] ?? '', $parts));
+        self::assertSame(hash_hmac('sha256', $parts[1], $generation), $parts[2]);
         $token = explode(',', $response['cookies']['cacti_remembers'])[2];
         self::assertSame([['user_id' => self::USER_ID, 'hostname' => '127.0.0.1', 'token' => hash('sha512', $token)]], $this->cacheRows());
         self::assertSame(['user_id' => self::USER_ID, 'hash' => hash('sha512', $token)], $response['session']['sess_remember_token']);
@@ -379,12 +382,36 @@ final class LocalLoginParityTest extends TestCase
 
     // ---- Remembered login (cacti_remembers) through include/auth.php ----
 
-    public function testLegacyIssuedUnversionedTokenRestoresAndIsConvertedAndRotated(): void
+    public function testRememberMeLoginTokenRestoresAndRotatesWhileItsGenerationIsCurrent(): void
     {
         $issued = $this->login(self::USER, self::PASSWORD, ['remember_me' => 'on']);
-        $old = $issued['cookies']['cacti_remembers'];
+        $cookie = $issued['cookies']['cacti_remembers'] ?? '';
         $this->database->executeStatement('DELETE FROM user_log');
         file_put_contents($this->directory . '/cacti.log', '');
+
+        $response = $this->request('/gated.php', [], ['cacti_remembers' => $cookie]);
+
+        $this->assertRestored($response, $cookie, hash('sha256', $this->storedHash()));
+    }
+
+    public function testRememberMeLoginRacingLogoutEverywhereCannotBeRestored(): void
+    {
+        $issued = $this->login(self::USER, self::PASSWORD, ['remember_me' => 'on']);
+        $cookie = $issued['cookies']['cacti_remembers'] ?? '';
+        self::assertNotSame('', $cookie);
+        $this->database->executeStatement('DELETE FROM user_log');
+        file_put_contents($this->directory . '/cacti.log', '');
+        // Logout Everywhere commits a new generation after the login bound its
+        // session but before the token row was written, so the row survives.
+        $this->database->insert('settings_user', ['user_id' => self::USER_ID, 'name' => 'auth_credential_generation', 'value' => hash('sha256', $this->storedHash()) . ':' . bin2hex(random_bytes(32))]);
+
+        $this->assertRefused($this->request('/gated.php', [], ['cacti_remembers' => $cookie]));
+    }
+
+    public function testLegacyIssuedUnversionedTokenRestoresAndIsConvertedAndRotated(): void
+    {
+        // Tokens issued before generation binding remain valid until revoked.
+        $old = $this->seedToken(bin2hex(random_bytes(32)));
 
         $response = $this->request('/gated.php', [], ['cacti_remembers' => $old]);
 
