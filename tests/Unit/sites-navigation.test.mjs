@@ -56,3 +56,19 @@ test('unrelated paths, foreign origins and lookalike query strings remain outsid
   }
   assert.deepEqual(locations, []);
 });
+
+test('graph item input links from the legacy template page open the Symfony editor as a full document', () => {
+  for (const loader of ['loadPage', 'loadPageNoHeader']) {
+    for (const path of ['graph_templates_inputs.php?action=input_edit&id=4&graph_template_id=2', 'graph_templates_inputs.php?action=input_remove&id=4&graph_template_id=2&nostate=true',
+      'app.php/graphing/graph-templates/2/inputs/new', 'app.php/graphing/graph-templates/2/inputs/4/edit', 'public/index.php/graphing/graph-templates/2/inputs/4/delete']) {
+      const { scope, locations } = context();
+      scope[loader](path);
+      assert.deepEqual(locations, [new URL(path, scope.window.location.href).href], path);
+    }
+  }
+  const { scope, locations } = context();
+  for (const path of ['graph_templates.php?action=template_edit&id=2', 'graph_templates_items.php?action=item_edit', 'graph_templates_inputs.php.bak', 'xgraph_templates_inputs.php']) {
+    assert.equal(scope.navigateToSymfonySites(path), false, path);
+  }
+  assert.deepEqual(locations, []);
+});

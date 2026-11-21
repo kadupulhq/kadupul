@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 14:51-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3145,28 +3145,6 @@ msgstr "العلامة الرأسية للرسم البياني الناتج."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "العلامة الرأسية"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "عناصر الرسم البياني المرتبطة"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "مدخلات عنصر الرسم البياني [تحرير الرسم البياني: %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "العنصر #%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "لا عناصر"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10466,6 +10444,10 @@ msgstr "رقم المنتج # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "بند اللون"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "لا عناصر"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

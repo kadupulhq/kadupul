@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.39)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.39\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 14:51-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2746,28 +2746,6 @@ msgstr ""
 
 #: graph_templates.php
 msgid "No Graph Templates Found"
-msgstr ""
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr ""
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr ""
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr ""
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
 msgstr ""
 
 #: graph_templates_items.php
@@ -10018,6 +9996,10 @@ msgstr ""
 
 #: lib/api_aggregate.php
 msgid "Aggregate Items are not editable"
+msgstr ""
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
 msgstr ""
 
 #: lib/api_aggregate.php

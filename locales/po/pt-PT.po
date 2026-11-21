@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 14:51-0800\n"
 "PO-Revision-Date: 2024-04-20 19:18-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3048,28 +3048,6 @@ msgstr "A etiqueta vertical para os Gráficos resultantes."
 #: graph_templates.php graph_xport.php
 msgid "Vertical Label"
 msgstr "Etiqueta Vertical"
-
-#: graph_templates_inputs.php
-msgid "Associated Graph Items"
-msgstr "Itens de gráfico associados"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "Graph Item Inputs [editar gráfico: %s]"
-
-#: graph_templates_inputs.php
-#, php-format
-msgid "Item #%s"
-msgstr "Item #%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-msgid "No Items"
-msgstr "Sem Itens"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -10350,6 +10328,10 @@ msgstr "Item # %d"
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
 msgstr "Cor do Item"
+
+#: lib/api_aggregate.php lib/html.php
+msgid "No Items"
+msgstr "Sem Itens"
 
 #: lib/api_aggregate.php
 msgid "Override this Value"

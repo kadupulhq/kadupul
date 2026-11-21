@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/es-ES.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Items de gráfico asociados"
+"CDEF Function": "Función CDEF"
+"Cancel": "Cancelar"
+"Color": "Color"
+"Consolidation Function": "Función de consolidación"
+"Continue": "Continuar"
+"Create": "Crear"
+"Dash Offset (dash-offset=offset)": "Compensación de guión (dash-offset=offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Guiones (dashes[=on_s[,off_s[,on_s,off_s]...]])"
+"Data Source": "Data Source"
+"Description": "Descripción"
+"Enter a description for this graph item input to describe what this input is used for.": "Ingrese una descripción para esta entrada de item de gráfico para describir para qué se utiliza esta entrada."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Ingrese un nombre para esta entrada de item de gráfico, asegúrese de que sea algo que reconozca."
+"Field Type": "Tipo de campo"
+"GPRINT Type": "Tipo de GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Entrada de item de gráfico [editar gráfico: %name%]"
+"Graph Item Type": "Tipo de item de gráfico"
+"How data is to be represented on the graph.": "Como se representan los datos en el gráfico."
+"Insert Hard Return": "Insertar salto de línea"
+"Item #%number%": "Item #%number%"
+"Name": "Nombre"
+"No Items": "No Items"
+"Opacity/Alpha Channel": "Canal de Opacidad/Alfa"
+"Save": "Guardar"
+"Sequence": "Secuencia"
+"Shift Data": "Datos de Jornada"
+"Text Alignment (TEXTALIGN)": "Alineación de texto (TEXTALIGN)"
+"Text Format": "Formato de texto"
+"VDEF Function": "Función VDEF"
+"Value": "Valor"

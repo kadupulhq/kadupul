@@ -86,7 +86,7 @@ final class PresentationSinkContextEvidence
             'lib/graph_fonts.php',
             'lib/graph_data_removal.php',
             'lib/graph_item_editor.php',
-            'lib/graph_template_input.php',
+            'lib/graph_template_input.php', 'src/Graphing/Domain/GraphTemplateInputColumn.php',
             'lib/graphs.php',
             'lib/headers_secure.php',
             'lib/html.php',

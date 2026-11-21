@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/it-IT.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Articoli grafici associati"
+"CDEF Function": "Funzione CDEF"
+"Cancel": "Annulla"
+"Color": "Colore"
+"Consolidation Function": "Funzione di consolidamento"
+"Continue": "Continua"
+"Create": "Crea"
+"Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset=offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Tratti (trattini (trattini[=on_s[,off_s[,on_s,on_s,off_s]....]]))"
+"Data Source": "Origine Dati"
+"Description": "Descrizione"
+"Enter a description for this graph item input to describe what this input is used for.": "Immettere una descrizione di questa voce del grafico per descrivere a cosa serve questo input."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Immettere un nome per questa voce del grafico, assicurarsi che sia qualcosa che si riconosce."
+"Field Type": "Tipo di campo"
+"GPRINT Type": "Tipo GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Grafico Voce Ingressi [modifica grafico: %name%]."
+"Graph Item Type": "Grafico Tipo di elemento"
+"How data is to be represented on the graph.": "Come devono essere rappresentati i dati sul grafico."
+"Insert Hard Return": "Inserisci ritorno duro"
+"Item #%number%": "Elementi #%number%"
+"Name": "Nome"
+"No Items": "Nessun elemento"
+"Opacity/Alpha Channel": "Opacità/canale alfa"
+"Save": "Salva"
+"Sequence": "Sequenza"
+"Shift Data": "Dati dello Shift"
+"Text Alignment (TEXTALIGN)": "Allineamento del testo (TEXTALIGN)"
+"Text Format": "Formato testo"
+"VDEF Function": "Funzione VDEF"
+"Value": "Valore"

@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/hi-IN.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "एसोसिएटेड ग्राफ़ आइटम"
+"CDEF Function": "CDEF फ़ंक्शन"
+"Cancel": "कैंसिल करें"
+"Color": "रंग"
+"Consolidation Function": "समेकन समारोह"
+"Continue": "जारी रखें"
+"Create": "बनाएं"
+"Dash Offset (dash-offset=offset)": "डैश ऑफसेट (डैश ऑफ़सेट = ऑफसेट)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "डैश (डैश [= on_s [, off_s [, on_s, off_s] ...]))"
+"Data Source": "डाटा स्रोत"
+"Description": "विवरण"
+"Enter a description for this graph item input to describe what this input is used for.": "इस ग्राफ़ आइटम इनपुट के लिए एक विवरण दर्ज करें कि यह इनपुट किस लिए उपयोग किया जाता है"
+"Enter a name for this graph item input, make sure it is something you recognize.": "इस ग्राफ़ आइटम इनपुट के लिए एक नाम दर्ज करें, सुनिश्चित करें कि यह कुछ ऐसा है जिसे आप पहचानते हैं।"
+"Field Type": "क्षेत्र क़िस्म"
+"GPRINT Type": "GPRINT प्रकार"
+"Graph Item Inputs [edit graph: %name%]": "ग्राफ़ आइटम इनपुट [संपादित करें ग्राफ़: %name%]"
+"Graph Item Type": "ग्राफ आइटम प्रकार"
+"How data is to be represented on the graph.": "ग्राफ पर डेटा को कैसे दर्शाया जाना है।"
+"Insert Hard Return": "हार्ड रिटर्न डालें"
+"Item #%number%": "आइटम # %number%"
+"Name": "नाम"
+"No Items": "वस्तुएं"
+"Opacity/Alpha Channel": "अपारदर्शिता / अल्फा चैनल"
+"Save": "सेव करें"
+"Sequence": "अनुक्रम"
+"Shift Data": "डेटा शिफ्ट करें"
+"Text Alignment (TEXTALIGN)": "पाठ संरेखण (कपड़ा)"
+"Text Format": "पाठ फार्मेट"
+"VDEF Function": "VDEF फ़ंक्शन"
+"Value": "मूल्य"

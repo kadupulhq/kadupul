@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 14:51-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3515,30 +3515,6 @@ msgstr "結果圖的垂直標籤。"
 #, fuzzy
 msgid "Vertical Label"
 msgstr "垂直標籤"
-
-#: graph_templates_inputs.php
-#, fuzzy
-msgid "Associated Graph Items"
-msgstr "相關圖表項"
-
-#: graph_templates_inputs.php
-#, fuzzy, php-format
-msgid "Graph Item Inputs [edit graph: %s]"
-msgstr "圖表項輸入[編輯圖：%s]"
-
-#: graph_templates_inputs.php
-#, fuzzy, php-format
-msgid "Item #%s"
-msgstr "項目＃%s"
-
-#: graph_templates_inputs.php lib/api_aggregate.php lib/html.php
-#, fuzzy
-msgid "No Items"
-msgstr "沒有課程"
-
-#: graph_templates_inputs.php
-msgid "The Graph Item Input relationship is invalid."
-msgstr ""
 
 #: graph_templates_items.php graphs_items.php
 #, fuzzy
@@ -12279,6 +12255,11 @@ msgstr "項目＃%d"
 #, fuzzy
 msgid "Item Color"
 msgstr "項目顏色"
+
+#: lib/api_aggregate.php lib/html.php
+#, fuzzy
+msgid "No Items"
+msgstr "沒有課程"
 
 #: lib/api_aggregate.php
 #, fuzzy

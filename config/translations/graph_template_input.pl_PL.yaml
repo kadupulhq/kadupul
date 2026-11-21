@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/pl-PL.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Powiązane pozycje wykresów"
+"CDEF Function": "Funkcja CDEF"
+"Cancel": "Anuluj"
+"Color": "Kolor"
+"Consolidation Function": "Funkcja konsolidacji"
+"Continue": "Kontynuuj"
+"Create": "Utwórz"
+"Dash Offset (dash-offset=offset)": "Dash Offset (offset kreski = offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Kreski (kreski (kreski[=on_s[,off_s[,on_s,off_s]....]])"
+"Data Source": "Źródło danych"
+"Description": "Opis"
+"Enter a description for this graph item input to describe what this input is used for.": "Wprowadź opis wejścia tego elementu wykresu, aby opisać, do czego służy to wejście."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Wprowadź nazwę dla tego elementu wykresu, upewnij się, że jest to coś, co rozpoznajesz."
+"Field Type": "Typ pola"
+"GPRINT Type": "Typ GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Wejścia elementów wykresu [edytuj wykres: %name%]."
+"Graph Item Type": "Typ elementu wykresu"
+"How data is to be represented on the graph.": "W jaki sposób dane mają być przedstawiane na wykresie."
+"Insert Hard Return": "Wstaw twardy powrót"
+"Item #%number%": "Element #%number%"
+"Name": "Nazwa"
+"No Items": "Brak elementów"
+"Opacity/Alpha Channel": "Kanał nieprzezroczystości/Alfa"
+"Save": "Zapisz"
+"Sequence": "Sekwencja"
+"Shift Data": "Dane dotyczące przesunięcia"
+"Text Alignment (TEXTALIGN)": "Dostosowanie tekstu (TEXTALIGN)"
+"Text Format": "Format tekstu"
+"VDEF Function": "Funkcja VDEF"
+"Value": "Wartość"

@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/nl-NL.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Gekoppelde grafiekitems"
+"CDEF Function": "CDEF functie"
+"Cancel": "Annuleer"
+"Color": "Kleur"
+"Consolidation Function": "Kies een of meerdere consolidatie functie(s)"
+"Continue": "Volgende"
+"Create": "Maken"
+"Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset=offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Streepjes (streepjes[=on_s[,off_s[,on_s,off_s]....]])"
+"Data Source": "Data bron"
+"Description": "Omschrijving"
+"Enter a description for this graph item input to describe what this input is used for.": "Voer een beschrijving in voor deze grafiek item invoer zodat wordt beschreven waar de invoer voor wordt gebruikt."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Voer een naam in voor dit grafiekitem, zorg ervoor dat het een duidelijke naam is."
+"Field Type": "Veld type"
+"GPRINT Type": "GPRINT type"
+"Graph Item Inputs [edit graph: %name%]": "Grafiek item invoer [wijzig grafiek: %name%]"
+"Graph Item Type": "Grafiek item type"
+"How data is to be represented on the graph.": "Hoe data wordt weergegeven in de grafiek."
+"Insert Hard Return": "Voer harde enter in"
+"Item #%number%": "Berichten #%number%"
+"Name": "Naam"
+"No Items": "Geen items"
+"Opacity/Alpha Channel": "Opaciteit/Alpha-kanaal"
+"Save": "Opslaan"
+"Sequence": "Volgorde"
+"Shift Data": "Verschuif data"
+"Text Alignment (TEXTALIGN)": "Tekst uitlijning (TEXTALIGN)"
+"Text Format": "Tekst opmaak"
+"VDEF Function": "VDEF functie"
+"Value": "Waarde"

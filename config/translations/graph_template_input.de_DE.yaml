@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/de-DE.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Zugeordnete Diagramm Elemente"
+"CDEF Function": "CDEF Funktion"
+"Cancel": "Abbrechen"
+"Color": "Farbe"
+"Consolidation Function": "Konsolidierungsfunktion"
+"Continue": "Fortsetzen"
+"Create": "Erzeugen"
+"Dash Offset (dash-offset=offset)": "Strich-Abstand (dash-offset=Abstand)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Striche (dashes[=on_s[,off_s[,on_s,off_s]...]])"
+"Data Source": "Datenquelle"
+"Description": "Beschreibung"
+"Enter a description for this graph item input to describe what this input is used for.": "Geben Sie eine Beschreibung für diese Eingabe des Grafikelements ein, um zu beschreiben, wofür diese Eingabe verwendet wird."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Geben Sie einen Namen für diese Eingabe des Diagrammelements ein, und stellen Sie sicher, dass es sich um etwas handelt, das Sie erkennen."
+"Field Type": "Feldtyp"
+"GPRINT Type": "GPRINT Typ"
+"Graph Item Inputs [edit graph: %name%]": "Grafik Element Eingaben[Grafik bearbeiten: %name%]"
+"Graph Item Type": "Graph Element Typ"
+"How data is to be represented on the graph.": "Wie die Daten im Diagramm dargestellt werden sollen."
+"Insert Hard Return": "Zeilenumbruch einfügen"
+"Item #%number%": "Element #%number%"
+"Name": "Name"
+"No Items": "Eine Einträge"
+"Opacity/Alpha Channel": "Deckkraft/Alpha-Kanal"
+"Save": "Speichern"
+"Sequence": "Sequenz"
+"Shift Data": "Nach links verschieben"
+"Text Alignment (TEXTALIGN)": "Textausrichtung (TEXTALIGN)"
+"Text Format": "Text Format"
+"VDEF Function": "VDEF Funktion"
+"Value": "Wert"

@@ -1,0 +1,20 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/uk-UA.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Асоційовані Елементи Графіків"
+"Cancel": "Відміна"
+"Color": "Колір"
+"Continue": "Продовжити"
+"Create": "Створити"
+"Data Source": "Джерело Даних"
+"Description": "Опис"
+"Graph Item Inputs [edit graph: %name%]": "Елементи Введення Графіку [редагування графіка: %name%]"
+"Item #%number%": "Елемент #%number%"
+"Name": "Ім'я"
+"No Items": "Немає Елементів"
+"Save": "Зберегти"
+"Sequence": "Послідовність"
+"Value": "Значення"

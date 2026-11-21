@@ -185,12 +185,12 @@ def has_feature_realm(entry):
     """These migrated pages require a feature grant in addition to Console."""
     legacy = {'gprint_presets.php', 'vdef.php', 'cdef.php', 'automation_templates.php', 'color_templates.php',
               'color_templates_items.php', 'aggregate_templates.php', 'host_templates.php',
-              'color.php', 'links.php', 'data_input.php', 'rrdcheck.php', 'data_source_profiles.php'}
+              'color.php', 'links.php', 'data_input.php', 'rrdcheck.php', 'data_source_profiles.php', 'graph_templates_inputs.php'}
     prefixes = ('relationships', 'graphing/gprint-presets', 'graph-definitions/vdefs',
                 'graph-definitions/cdefs', 'automation/templates', 'graphing/color-templates',
                 'graphing/color-template-items', 'aggregate-templates',
                 'inventory/device-templates', 'graphing/colors', 'links', 'data-inputs',
-                'utilities/rrd-check', 'utilities/system', 'graphing/data-source-profiles', 'management',
+                'utilities/rrd-check', 'utilities/system', 'graphing/data-source-profiles', 'graphing/graph-templates', 'management',
                 'templates/devices', 'templates/graphs', 'templates/data-sources', 'templates/aggregates',
                 'data-collection/queries', 'automation/snmp-options', 'automation/graph-rules',
                 'automation/tree-rules', 'automation/networks', 'utilities/notification-receivers',
@@ -239,6 +239,10 @@ def route_fixtures(rig, rows, ids):
     if present('graphing/data-source-profiles'):
         parent, child = map(int, rig.sql('SELECT data_source_profile_id,id FROM data_source_profiles_rra ORDER BY id LIMIT 1').split())
         ids['graphing/data-source-profiles'] = {'id': parent, 'rraId': child}
+    if present('graphing/graph-templates'):
+        template = int(rig.sql("INSERT INTO graph_templates (hash,name) VALUES (MD5('entry-sweep'),'entry-sweep'); SELECT LAST_INSERT_ID()").strip())
+        graph_input = int(rig.sql(f"INSERT INTO graph_template_input (hash,graph_template_id,name,description,column_name) VALUES (MD5('entry-sweep-input'),{template},'entry-sweep','','title'); SELECT LAST_INSERT_ID()").strip())
+        ids['graphing/graph-templates'] = {'templateId': template, 'inputId': graph_input}
     if present('graphing/color-templates'):
         parent, child = map(int, rig.sql('SELECT color_template_id,color_template_item_id FROM color_template_items ORDER BY color_template_item_id LIMIT 1').split())
         ids['graphing/color-templates'] = {'id': parent, 'itemId': child}

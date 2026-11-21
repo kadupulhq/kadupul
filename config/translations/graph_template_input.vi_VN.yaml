@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/vi-VN.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Mục đồ thị liên kết"
+"CDEF Function": "Chức năng CDEF"
+"Cancel": "Hủy"
+"Color": "Màu"
+"Consolidation Function": "Chức năng hợp nhất"
+"Continue": "Tiếp tục"
+"Create": "Tạo"
+"Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset = offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Dấu gạch ngang (dấu gạch ngang [= on_s [, off_s [, on_s, off_s] ...]])"
+"Data Source": "Nguồn dữ liệu"
+"Description": "Mô tả"
+"Enter a description for this graph item input to describe what this input is used for.": "Nhập mô tả cho đầu vào mục đồ thị này để mô tả đầu vào này được sử dụng để làm gì."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Nhập tên cho mục nhập biểu đồ này, đảm bảo đó là thứ bạn nhận ra."
+"Field Type": "Loại trường"
+"GPRINT Type": "Loại GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "Đầu vào mục đồ thị [chỉnh sửa biểu đồ: %name%]"
+"Graph Item Type": "Loại đồ thị"
+"How data is to be represented on the graph.": "Làm thế nào dữ liệu được thể hiện trên biểu đồ."
+"Insert Hard Return": "Chèn trả lại cứng"
+"Name": "Tên"
+"No Items": "Sản phẩm"
+"Opacity/Alpha Channel": "Opacity / Kênh Alpha"
+"Save": "Lưu"
+"Sequence": "Thứ tự"
+"Shift Data": "Dữ liệu thay đổi"
+"Text Alignment (TEXTALIGN)": "Sắp xếp văn bản (văn bản)"
+"Text Format": "Đáy:"
+"VDEF Function": "Hàm VDEF"
+"Value": "Giá trị"

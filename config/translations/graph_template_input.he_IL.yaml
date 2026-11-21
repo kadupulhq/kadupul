@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/he-IL.po. Messages
+# without a legacy translation are left out and fall back to English.
+# "Text Format" is left out: its legacy msgstr is double-encoded UTF-8.
+
+"Associated Graph Items": "פריטים גרפיים משויכים"
+"CDEF Function": "פונקציית CDEF"
+"Cancel": "ביטול"
+"Color": "צבע"
+"Consolidation Function": "פונקציית איחוד"
+"Continue": "המשך"
+"Create": "צור"
+"Dash Offset (dash-offset=offset)": "קיזוז מקף (מקף - קיזוז = קיזוז)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "מקפים (מקפים [= on_s [, off_s [, on_s, off_s] ...]])"
+"Data Source": "מקור"
+"Description": "תיאור"
+"Enter a description for this graph item input to describe what this input is used for.": "הזן תיאור עבור קלט פריט התרשים כדי לתאר את אופן השימוש בקלט זה."
+"Enter a name for this graph item input, make sure it is something you recognize.": "הזן שם עבור קלט פריט התרשים הזה, וודא שהוא מזהה משהו."
+"Field Type": "סוג שדה"
+"GPRINT Type": "סוג GPRINT"
+"Graph Item Inputs [edit graph: %name%]": "תרשים ערכי פריט [גרף עריכה: %name%]"
+"Graph Item Type": "סוג פריט גרף"
+"How data is to be represented on the graph.": "כיצד נתונים להיות מיוצגים על הגרף."
+"Insert Hard Return": "הכנס החזרה קשה"
+"Item #%number%": "פריט # %number%"
+"Name": "שם"
+"No Items": "אין פריטים"
+"Opacity/Alpha Channel": "אטימות / ערוץ אלפא"
+"Save": "שמור"
+"Sequence": "סדר פעולות"
+"Shift Data": "Shift Data"
+"Text Alignment (TEXTALIGN)": "יישור טקסט (TEXTALIGN)"
+"VDEF Function": "פונקציה VDEF"
+"Value": "ערך"

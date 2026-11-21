@@ -2874,6 +2874,20 @@ characters. A refused read-only change is recorded as a failed
 `graphing.data_source_profile.edit` audit event instead of a `cacti.log`
 warning. At most 100 profiles may be selected.
 
+### Graph item input administration
+
+The graph item input editor that `graph_templates_inputs.php` rendered uses
+Symfony routes, Forms and Twig under `/graphing/graph-templates/{templateId}/inputs`.
+It covers create, edit and a confirmed POST removal. The legacy page forwards
+GET navigation to them and answers 409 to posted forms. Every route requires
+console access and the Graph Templates realm (10) before any template is read.
+A save locks the template and input, checks the form revision, confirms that
+every item is a template item of the same template, pushes values out to
+existing graphs, and rewrites the item set in one audited transaction on the
+primary collector. Graph template and graph item editing stay in PHP. Scope,
+outcome codes, behaviour differences and rollback are in
+[graph item inputs](migrations/graph-template-inputs.md).
+
 ### Template synchronization discovery boundary
 
 Bulk template synchronization first validates and commits the primary template

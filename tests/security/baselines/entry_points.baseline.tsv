@@ -92,6 +92,10 @@ app.php/graphing/gprint-presets/actions/delete	symfony:gprint_preset_delete	meth
 app.php/graphing/gprint-presets/legacy	symfony:gprint_preset_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/new	symfony:gprint_preset_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 5
 app.php/graphing/gprint-presets/{id}/edit	symfony:gprint_preset_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 5
+app.php/graphing/graph-templates/inputs/legacy	symfony:graph_template_input_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 10
+app.php/graphing/graph-templates/{templateId}/inputs/new	symfony:graph_template_input_create	methods=GET|HEAD|POST requirements=templateId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
+app.php/graphing/graph-templates/{templateId}/inputs/{inputId}/delete	symfony:graph_template_input_delete	methods=GET|HEAD|POST requirements=templateId=[1-9][0-9]{0,7},inputId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
+app.php/graphing/graph-templates/{templateId}/inputs/{inputId}/edit	symfony:graph_template_input_edit	methods=GET|HEAD|POST requirements=templateId=[1-9][0-9]{0,7},inputId=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 10
 app.php/graphing/trees	symfony:admin_trees	methods=GET|HEAD; ConsoleAccess realm 8 + realm 4
 app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
 app.php/help	symfony:platform_help	methods=GET|HEAD; AuthenticatedAccess signed-in account; no realm required
@@ -247,7 +251,7 @@ graph_image.php	guest-or-realm:7	include/auth.php; guest_account, auth_text
 graph_json.php	guest-or-realm:7	include/auth.php; guest_account, auth_json
 graph_realtime.php	realm:25	guest identity from include/auth.php; own realm 25 check for every caller; reviewed at 5d47cd271d29
 graph_templates.php	realm:10	include/auth.php
-graph_templates_inputs.php	realm:10	include/auth.php
+graph_templates_inputs.php	symfony:forward	forwards to app.php/graphing/graph-templates/inputs/legacy
 graph_templates_items.php	realm:10	include/auth.php
 graph_view.php	guest-or-realm:7	include/auth.php; guest_account
 graph_xport.php	guest-or-realm:7	include/auth.php; guest_account

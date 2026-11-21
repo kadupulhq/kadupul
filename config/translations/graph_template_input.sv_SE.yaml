@@ -1,0 +1,36 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Copied verbatim from the legacy translations in locales/po/sv-SE.po. Messages
+# without a legacy translation are left out and fall back to English.
+
+"Associated Graph Items": "Associerade grafiska objekt"
+"CDEF Function": "CDEF-funktion"
+"Cancel": "Avbryt"
+"Color": "Färg"
+"Consolidation Function": "Konsolideringsfunktion"
+"Continue": "Fortsätt"
+"Create": "Skapa"
+"Dash Offset (dash-offset=offset)": "Dash Offset (dash-offset=offset)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Bindestreck (bindestreck[=på_s[,av_s[,på_s,av_s]...]]])"
+"Data Source": "Datakälla"
+"Description": "Beskrivning"
+"Enter a description for this graph item input to describe what this input is used for.": "Ange en beskrivning för denna inmatning för grafobjekt för att beskriva vad denna inmatning används till."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Ange ett namn för den här inmatningen för grafobjekt, se till att det är något du känner igen."
+"Field Type": "Fälttyp"
+"GPRINT Type": "GPRINT Typ"
+"Graph Item Inputs [edit graph: %name%]": "Ingångar för grafobjekt [redigera graf: %name%]"
+"Graph Item Type": "Typ av grafiskt objekt"
+"How data is to be represented on the graph.": "Hur data ska representeras i diagrammet."
+"Insert Hard Return": "Insert Hård retur"
+"Item #%number%": "Artikel #%number%"
+"Name": "Namn"
+"No Items": "Inga objekt"
+"Opacity/Alpha Channel": "Opacitet / Alfa kanal"
+"Save": "Spara"
+"Sequence": "Sekvens"
+"Shift Data": "Skiftdata"
+"Text Alignment (TEXTALIGN)": "Justering av text (TEXTALIGN)"
+"Text Format": "Textformat"
+"VDEF Function": "VDEF-funktion"
+"Value": "Värde"
