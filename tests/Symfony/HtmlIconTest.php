@@ -134,6 +134,34 @@ final class HtmlIconTest extends TestCase
         );
     }
 
+    public function testRoutedMenuItemsFollowTheRealmOfTheirFullPath(): void
+    {
+        $menu = <<<'PHP'
+            (function () {
+                global $menu_glyphs, $user_auth_realm_filenames;
+                $user_auth_realm_filenames = array('host.php' => 3, 'app.php/alerting/rules' => 29, 'app.php/alerting/incidents' => 30);
+                $menu_glyphs = array();
+                ob_start();
+                draw_menu(array('Management' => array(
+                    'host.php' => 'Devices',
+                    'app.php/alerting/rules' => 'Alert Rules',
+                    'app.php/alerting/incidents' => 'Alert Incidents',
+                )));
+                preg_match_all('/>([A-Za-z ]+)<\/a><\/li>/', ob_get_clean(), $items);
+                return implode('|', $items[1]);
+            })()
+            PHP;
+        $stubs = 'function is_realm_allowed($realm) { return in_array($realm, array(3, 30), true); }'
+            . 'function api_user_realm_auth($file) { return false; }'
+            . 'function clean_up_name($name) { return $name; }'
+            . 'function get_current_page() { return "index.php"; }'
+            . 'function is_menu_pick_active($url) { return false; }';
+
+        // The rules page is mapped to realm 29, which this user lacks; the
+        // basename "rules" alone has no mapping and used to show it to everyone.
+        self::assertSame('Devices|Alert Incidents', $this->call($menu, 'modern', $stubs, array('draw_menu')));
+    }
+
     /** @param list<string> $functions further lib/html.php functions the expression needs */
     private function call(string $expression, string $theme = 'modern', string $stubs = '', array $functions = array()): string
     {

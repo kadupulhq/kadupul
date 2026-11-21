@@ -65,8 +65,8 @@ function repairAssert(PDO $database): void
         'actual repaired schema preserves stored creation time across a later aggregate update'
     );
     installerAssert(
-        $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.39',
-        'actual entrypoint publishes reachable forward version 1.2.39 after repair'
+        $database->query('SELECT cacti FROM version')->fetchColumn() === '1.2.41',
+        'actual entrypoint publishes reachable forward version 1.2.41 after repair'
     );
 }
 $root = dirname(__DIR__, 2);
@@ -145,6 +145,8 @@ try {
         $seedDatabase->exec("USE `$schema`");
     }
     installerSeed($seedDatabase, $root);
+    // The historical marker must not start with future baseline-moment columns.
+    $seedDatabase->exec('ALTER TABLE alert_baseline_sample DROP COLUMN sample_mean, DROP COLUMN sample_m2');
     // Preserve the actual earlier CDEF guards under the same installer actor.
     require_once $root . '/lib/cdef_reference.php';
     (new \Kadupul\Platform\Infrastructure\Legacy\CdefReferenceContract($seedDatabase, 1))->install();

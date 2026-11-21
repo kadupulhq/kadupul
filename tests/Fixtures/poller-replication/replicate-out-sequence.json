@@ -1,7 +1,7 @@
 {
   "sql": [
     "UPDATE poller SET requires_sync=\"on\" WHERE id=?",
-    "SELECT *\n\t\t\tFROM settings\n\t\t\tWHERE name NOT LIKE \"%_lastrun%\"\n\t\t\tAND name NOT LIKE \"path_%\"\n\t\t\tAND name NOT LIKE \"%_path\"\n\t\t\tAND name NOT LIKE \"stats%\"\n\t\t\tAND name != \"rrdtool_version\"\n\t\t\tAND name NOT LIKE \"poller_replicate%\"\n\t\t\tAND name NOT LIKE \"install%\"\n\t\t\tAND name != \"poller_enabled\"\n\t\t\tAND name NOT LIKE \"md5dirsum%\"\n\t\t\tUNION\n\t\t\tSELECT *\n\t\t\tFROM settings\n\t\t\tWHERE name LIKE \"path_spine%\"\n\t\t\tAND name=\"poller_type\"",
+    "SELECT *\n\t\t\tFROM settings\n\t\t\tWHERE name NOT LIKE \"%_lastrun%\"\n\t\t\tAND name NOT LIKE \"path_%\"\n\t\t\tAND name NOT LIKE \"%_path\"\n\t\t\tAND name NOT LIKE \"stats%\"\n\t\t\tAND name != \"rrdtool_version\"\n\t\t\tAND name NOT LIKE \"poller_replicate%\"\n\t\t\tAND name NOT LIKE \"install%\"\n\t\t\tAND name != \"poller_enabled\"\n\t\t\tAND name NOT LIKE \"md5dirsum%\"\n\t\t\tAND name != \"alerting_evaluation_cursor\"\n\t\t\tUNION\n\t\t\tSELECT *\n\t\t\tFROM settings\n\t\t\tWHERE name LIKE \"path_spine%\"\n\t\t\tAND name=\"poller_type\"",
     "SELECT * FROM automation_graph_rule_items",
     "SELECT * FROM automation_graph_rules",
     "SELECT * FROM automation_match_rule_items",

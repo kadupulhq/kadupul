@@ -613,7 +613,12 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile, 
                     throw new RuntimeException('Copied CLI changed while measuring coverage');
                 }
                 $canonicalCliSources[realpath($copy)] = realpath($source);
-                $childCoverage->getData(true)->renameFile(realpath($copy), realpath($source));
+                // A helper copy the request never reached has no lines to map;
+                // the consumer's required hit sources still reject a scenario
+                // that should have run it.
+                if (array_key_exists(realpath($copy), $childCoverage->getData(true)->lineCoverage())) {
+                    $childCoverage->getData(true)->renameFile(realpath($copy), realpath($source));
+                }
             }
             // Preserve canonical measured paths and support both installed filter APIs.
             if (method_exists($childCoverage->filter(), 'excludeFile')) {

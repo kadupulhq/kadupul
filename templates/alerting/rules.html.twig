@@ -1,0 +1,41 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+{% import '_list.html.twig' as list %}
+{% import 'alerting/_alerting.html.twig' as alerting %}
+
+{% block title %}{{ 'Alert Rules'|trans({}, 'alerting') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ 'Alert Rules'|trans({}, 'alerting') }}</h1>
+    {{ alerting.status_notice(status) }}
+    {% if deleted %}<p role="status">{{ 'The alert rule was deleted.'|trans({}, 'alerting') }}</p>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('alerting_rule_create') }}">{{ 'Create alert rule'|trans({}, 'alerting') }}</a>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    · <a href="{{ path('alerting_incident_list') }}">{{ 'Alert Incidents'|trans({}, 'alerting') }}</a></p>
+    <table class="cactiTable">
+        <caption>{{ 'Alert rules on data sources you can view'|trans({}, 'alerting') }}</caption>
+        <thead><tr class="tableHeader"><th scope="col">{{ 'ID'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Series'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Kind'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Condition'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Active incident'|trans({}, 'alerting') }}</th><th scope="col">{{ 'Actions'|trans({}, 'alerting') }}</th></tr></thead>
+        <tbody>
+        {% for rule in page.rules %}
+            <tr>
+                <td>{{ rule.id }}</td>
+                <td>{{ alerting.series(rule) }}</td>
+                <td>{{ rule.kind is null ? 'Unusable'|trans({}, 'alerting') : {threshold: 'Threshold', baseline: 'Hour-of-week baseline'}[rule.kind]|trans({}, 'alerting') }}</td>
+                <td>{{ alerting.condition(rule) }}</td>
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                <td>{% if rule.activeIncidentId is not null %}<a href="{{ path('alerting_incident_show', {id: rule.activeIncidentId}) }}">{{ 'Incident %id%'|trans({'%id%': rule.activeIncidentId}, 'alerting') }}</a>{% else %}{{ 'None'|trans({}, 'alerting') }}{% endif %}</td>
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                <td><a href="{{ path('alerting_rule_edit', {id: rule.id}) }}" aria-label="{{ 'Edit alert rule %id%'|trans({'%id%': rule.id}, 'alerting') }}">{{ 'Edit'|trans({}, 'alerting') }}</a>
+                {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+                · <a href="{{ path('alerting_rule_delete', {id: rule.id}) }}" aria-label="{{ 'Delete alert rule %id%'|trans({'%id%': rule.id}, 'alerting') }}">{{ 'Delete'|trans({}, 'alerting') }}</a></td>
+            </tr>
+        {% else %}<tr><td colspan="6">{{ 'No alert rules.'|trans({}, 'alerting') }}</td></tr>{% endfor %}
+        </tbody>
+    </table>
+    {{ list.pagination('alerting_rule_list', {}, page.page, page.hasPrevious, page.hasNext, 'Alert rule pages', 'Page %page%, %total% rules', {'%page%': page.page, '%total%': page.total}, 'alerting') }}
+</main>
+{% endblock %}

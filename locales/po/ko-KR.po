@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:55-0800\n"
+"POT-Creation-Date: 2026-11-12 14:58-0800\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1163,7 +1163,7 @@ msgstr "제목 형식"
 msgid "rule_name"
 msgstr "규칙 이름"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d 분"
@@ -4070,6 +4070,14 @@ msgstr "부스트 후"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Legacy)"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7539,6 +7547,11 @@ msgstr "프로세스 % d 개"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "% d 개의 스파이크"
 
@@ -7654,6 +7667,14 @@ msgstr "고급"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "이 일수 이후에는 영업 시간이 그래프에 추가되지 않습니다. <br/>추천: 62일"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8241,6 +8262,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Lotus Notes (R) 비틀기 사용 설정"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "주문형 RRD 업데이트 활성화"
 
@@ -8519,6 +8544,10 @@ msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Daily Stats를 얼마나 자주 업데이트해야합니까?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8849,6 +8878,10 @@ msgstr "내 브라우저 시간대"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9365,6 +9398,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "그래프가 있고 데이터 원본이 기본적으로 선택되어 있어야합니다."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "집합"
 
@@ -9792,6 +9829,10 @@ msgstr "Kadupul 시스템에 문제가 발생할 때 전자 메일을 자동으�
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul가 새로운 Web Basic 및 LDAP 사용자를위한 템플릿으로 사용할 사용자의 이름. 기본적으로 &#39;손님&#39;입니다. 이 사용자 계정은 선택시 로그인 할 수 없게됩니다."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

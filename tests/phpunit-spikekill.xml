@@ -15,6 +15,7 @@
       <file>Unit/Core/Poller/OfflinePollerRetentionTest.php</file>
       <file>Unit/Security/PackageExpandedSizeTest.php</file>
       <file>Unit/Core/Poller/ReportPollerOutcomeTest.php</file>
+      <file>Unit/Core/Poller/AlertingPollerBottomTest.php</file>
       <file>Unit/SnmpValueAndWalkGuardsTest.php</file>
       <file>Unit/Core/Poller/PingOrSnmpAvailabilityTest.php</file>
       <file>Unit/Security/Shell/SpikekillReferenceMeanTest.php</file>
@@ -69,6 +70,7 @@
       <file>Unit/Core/Cli/BoostPartitionWorkerNativeTest.php</file>
       <file>Unit/Core/Cli/BoostQueueMasterNativeTest.php</file>
       <file>Unit/Core/Cli/BoostMasterWorkerNativeTest.php</file>
+      <file>Unit/Core/Cli/AlertingDeliveryWorkerNativeTest.php</file>
       <file>Unit/Core/Cli/PollerDrainNativeTest.php</file>
       <file>Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
@@ -122,6 +124,7 @@
       <file>Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
       <file>Unit/Core/Poller/PollerAcknowledgementTest.php</file>
       <file>Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
+      <file>Unit/Core/Poller/BoostDsstatsHandoffNativeTest.php</file>
       <file>Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
       <file>Unit/Core/Rrd/RrdProxyNativeTest.php</file>
