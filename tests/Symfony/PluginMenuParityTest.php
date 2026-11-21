@@ -21,6 +21,7 @@ use Kadupul\Platform\Contract\PluginConsoleMenu;
 use Kadupul\Platform\Infrastructure\Legacy\ConsoleMenuRuntime;
 use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorker;
+use Kadupul\Platform\Infrastructure\Legacy\LegacyBrowserWorkerRunner;
 use Kadupul\Platform\Infrastructure\Legacy\LegacyPluginConsoleMenu;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -538,7 +539,7 @@ final class PluginMenuParityTest extends TestCase
         $requests = new RequestStack();
         $requests->push($request);
 
-        $worker = new LegacyBrowserWorker($this->root, $requests, $session, $database, new InstallationConfiguration($this->root), new NullLogger(), $timeout);
+        $worker = new LegacyBrowserWorker(new LegacyBrowserWorkerRunner($this->root, $requests, $session, $database, new InstallationConfiguration($this->root), new NullLogger()), $requests, new InstallationConfiguration($this->root), $timeout);
         $locale = self::createStub(LocalePreference::class);
         $locale->method('preferredLocale')->willReturn($preferred);
         if ($configuration === null) {

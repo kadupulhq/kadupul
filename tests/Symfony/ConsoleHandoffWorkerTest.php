@@ -71,6 +71,181 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame(['/kadupul/about.php', $this->directory . '/about.php', 'GET', self::SESSION_ID, $this->directory . '/sessions', $this->directory . '/include'], $run['state']);
     }
 
+    public function testSourceOwnedQueryContextOverridesClientPageAndNeverReplaysPostOrFiles(): void
+    {
+        $script = 'bin/legacy-context-fixture.php';
+        $wrapper = <<<'PHP'
+<?php
+$consoleHandoff=[
+    'page'=>'about.php','path'=>'page_path','suffix'=>'/about.php','keys'=>['sections'],
+    'valid'=>static fn(array $command):bool=>is_array($command['sections'] ?? null),
+    'realm'=>8,
+    'run'=>static fn(array $command):array=>['context'=>[$_GET,$_REQUEST,$_POST,$_FILES,$_COOKIE,$_SERVER['QUERY_STRING'],$_SERVER['REQUEST_URI']]],
+    'json'=>0,
+    'query'=>static fn(array $command):array=>['action'=>'edit','id'=>'5','tab'=>'settings'],
+];
+require __DIR__.'/legacy-console-handoff.php';
+PHP;
+        file_put_contents($this->directory . '/' . $script, $wrapper);
+        $command = $this->command();
+        $command['query'] = ['action' => 'delete','id' => '99','tab' => 'realms','extension' => 'native'];
+        $command['cookies']['plugin_context'] = 'cookie-value';
+        $command['server']['QUERY_STRING'] = 'id=99&action=delete&tab=realms&extension=native';
+        $run = $this->worker($script, $command);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        $context = json_decode($run['stdout'], true, 16, JSON_THROW_ON_ERROR)['context'];
+        self::assertSame(['action' => 'edit','id' => '5','tab' => 'settings','extension' => 'native'], $context[0]);
+        self::assertSame($context[0], $context[1]);
+        self::assertSame([], $context[2]);
+        self::assertSame([], $context[3]);
+        self::assertSame('cookie-value', $context[4]['plugin_context']);
+        self::assertSame('action=edit&id=5&tab=settings&extension=native', $context[5]);
+        self::assertSame('/kadupul/about.php?' . $context[5], $context[6]);
+        $command['query'] = [];
+        $command['server']['QUERY_STRING'] = '';
+        $run = $this->worker($script, $command);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        self::assertSame(['action' => 'edit','id' => '5','tab' => 'settings'], json_decode($run['stdout'], true, 16, JSON_THROW_ON_ERROR)['context'][0]);
+        // A client cannot opt into a different descriptor callback.
+        $command['query_context'] = ['id' => '6'];
+        $run = $this->worker($script, $command);
+        self::assertSame(1, $run['exit']);
+        self::assertSame('{"status":"failed"}', $run['stdout']);
+        unset($command['query_context']);
+        foreach (["[]", "static fn(array \$command):string=>'invalid'", "static fn(array \$command):array=>[0=>'invalid']", "static fn(array \$command):array=>array_fill_keys(range(1,17),'invalid')", "static fn(array \$command):array=>['id'=>[]]", "static fn(array \$command):array=>['id'=>str_repeat('x',4097)]"] as $invalidDescriptor) {
+            $invalidWrapper = str_replace("static fn(array \$command):array=>['action'=>'edit','id'=>'5','tab'=>'settings']", $invalidDescriptor, $wrapper, $replacements);
+            self::assertSame(1, $replacements);
+            file_put_contents($this->directory . '/' . $script, $invalidWrapper);
+            $run = $this->worker($script, $command);
+            self::assertSame(1, $run['exit']);
+            self::assertSame('{"status":"failed"}', $run['stdout']);
+        }
+    }
+
+    public function testHandoffDoesNotPolluteTheEarlyNativeSettingsReader(): void
+    {
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), settingsProbe: true);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        self::assertSame('', $run['stderr']);
+        self::assertSame('ok', json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR)['status']);
+    }
+
+    public function testOptedInRealmDenialBindsTheNativeSessionAndClearsBootstrapOutput(): void
+    {
+        $this->realmDenialOptIn();
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), realmDenied: true);
+        self::assertSame(0, $run['exit'], $run['stderr']);
+        self::assertSame('', $run['stderr']);
+        self::assertSame(['status' => 'ok','actor' => 7,'outcome' => 'denied'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+        $session = file_get_contents($this->directory . '/sessions/sess_' . self::SESSION_ID);
+        self::assertIsString($session);
+        self::assertStringContainsString('sess_user_id|i:7;', $session);
+    }
+
+    public static function deniedBindings(): iterable
+    {
+        yield 'wrong actor' => [['sess_user_id' => 8,'sess_user_credential' => str_repeat('a', 64)],false];
+        yield 'malformed actor' => [['sess_user_id' => '7bad','sess_user_credential' => str_repeat('a', 64)],false];
+        yield 'wrong credential' => [['sess_user_id' => 7,'sess_user_credential' => str_repeat('b', 64)],false];
+        yield 'missing credential' => [['sess_user_id' => 7],false];
+        yield 'released session' => [['sess_user_id' => 7,'sess_user_credential' => str_repeat('a', 64)],true];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('deniedBindings')]
+    public function testRealmDenialCannotAuthenticateAnUnboundOrReleasedSession(array $session, bool $released): void
+    {
+        $this->realmDenialOptIn();
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), session: $session, hookClosesSession: $released, realmDenied: true);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+        self::assertStringNotContainsString(str_repeat('a', 64), $run['stdout'] . $run['stderr']);
+        self::assertStringNotContainsString('bootstrap output', $run['stdout'] . $run['stderr']);
+        self::assertNotSame('', $run['stderr']);
+    }
+
+    public function testDefaultWorkersDoNotOptInToTypedNativeRealmDenials(): void
+    {
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), realmDenied: true);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
+    public function testTypedDenialRequiresActualNativeHandlerWriteSuccess(): void
+    {
+        $this->realmDenialOptIn();
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), realmDenied: true, closeWriteFailure: true);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+        self::assertStringNotContainsString(str_repeat('a', 64), $run['stdout'] . $run['stderr']);
+    }
+
+    public function testNormalWorkerAlsoRequiresActualNativeHandlerWriteSuccess(): void
+    {
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command(), closeWriteFailure: true);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
+    public function testCommandCannotSelectTheNativeRealmDenialMode(): void
+    {
+        $command = $this->command();
+        $command['realm_denial'] = true;
+        $run = $this->worker('bin/legacy-console-menu.php', $command, realmDenied: true);
+        self::assertSame(1, $run['exit']);
+        self::assertNull($run['state'], 'Reject before native session/bootstrap access.');
+    }
+
+    public function testNullTrustedRealmDenialConfigurationIsRefused(): void
+    {
+        $this->realmDenialOptIn();
+        $path = $this->directory . '/bin/legacy-console-menu.php';
+        $source = file_get_contents($path);
+        self::assertIsString($source);
+        file_put_contents($path, str_replace("'realm_denial' => true", "'realm_denial' => null", $source));
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command());
+        self::assertSame(1, $run['exit']);
+        self::assertNull($run['state']);
+    }
+
+    private function realmDenialOptIn(): void
+    {
+        $path = $this->directory . '/bin/legacy-console-menu.php';
+        $source = file_get_contents($path);
+        self::assertIsString($source);
+        $replacement = str_replace("    'json' => JSON_INVALID_UTF8_SUBSTITUTE,", "    'json' => JSON_INVALID_UTF8_SUBSTITUTE,\n    'realm_denial' => true,", $source, $count);
+        self::assertSame(1, $count);
+        self::assertNotFalse(file_put_contents($path, $replacement));
+    }
+
+    public function testTrustedMutationInputLimitAcceptsLargeCommands(): void
+    {
+        $wrapper = (string) file_get_contents($this->directory . '/bin/legacy-console-menu.php');
+        $wrapper = str_replace("    'json' => JSON_INVALID_UTF8_SUBSTITUTE,", "    'json' => JSON_INVALID_UTF8_SUBSTITUTE,\n    'input_limit' => 1048576,", $wrapper, $count);
+        self::assertSame(1, $count);
+        file_put_contents($this->directory . '/bin/legacy-console-menu.php', $wrapper);
+        $command = $this->command();
+        $command['server']['HTTP_USER_AGENT'] = str_repeat('a', 70000);
+        $run = $this->worker('bin/legacy-console-menu.php', $command);
+        self::assertSame(0, $run['exit']);
+        self::assertSame('', $run['stderr']);
+        $command['server']['HTTP_USER_AGENT'] = str_repeat('a', 1048576);
+        $run = $this->worker('bin/legacy-console-menu.php', $command);
+        self::assertSame(1, $run['exit']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
+    public function testAnExplicitNullInputLimitIsNotTheDefault(): void
+    {
+        $wrapper = (string) file_get_contents($this->directory . '/bin/legacy-console-menu.php');
+        $wrapper = str_replace("    'json' => JSON_INVALID_UTF8_SUBSTITUTE,", "    'json' => JSON_INVALID_UTF8_SUBSTITUTE,\n    'input_limit' => null,", $wrapper, $count);
+        self::assertSame(1, $count);
+        file_put_contents($this->directory . '/bin/legacy-console-menu.php', $wrapper);
+        $run = $this->worker('bin/legacy-console-menu.php', $this->command());
+        self::assertSame(1, $run['exit']);
+        self::assertSame('LogicException', json_decode($run['stderr'], true, 8, JSON_THROW_ON_ERROR)['class']);
+        self::assertSame(['status' => 'failed'], json_decode($run['stdout'], true, 8, JSON_THROW_ON_ERROR));
+    }
+
     /** @return iterable<string, array{string, string, string, string}> */
     public static function refusals(): iterable
     {
@@ -89,7 +264,7 @@ final class ConsoleHandoffWorkerTest extends TestCase
         yield 'rotated credential' => ['credential', 'identity', 'RuntimeException', $revoked];
         yield 'console realm revoked' => ['realm', 'identity', 'RuntimeException', $revoked];
         yield 'permission denied page actor revoked' => ['denied-page', 'identity', 'RuntimeException', $revoked];
-        yield 'session closed by a hook' => ['hook-closed-session', 'session', 'RuntimeException', "throw new RuntimeException('Console session changes could not be persisted.');"];
+        yield 'session closed by a hook' => ['hook-closed-session', 'session', 'RuntimeException', "throw new \RuntimeException('Native session close could not be confirmed.');"];
     }
 
     #[DataProvider('refusals')]
@@ -165,7 +340,8 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertSame('{"status":"failed"}', $run['stdout']);
         $diagnostic = json_decode($run['stderr'], true, 4, JSON_THROW_ON_ERROR);
         self::assertSame(['phase', 'class', 'file', 'line'], array_keys($diagnostic));
-        self::assertSame([$phase, $class, basename(self::HANDOFF), $this->line($statement)], array_values($diagnostic));
+        $diagnosticSource = $case === 'hook-closed-session' ? 'src/Platform/Infrastructure/Legacy/BrowserWorkerSession.php' : self::HANDOFF;
+        self::assertSame([$phase, $class, basename($diagnosticSource), $this->line($statement, $diagnosticSource)], array_values($diagnostic));
     }
 
     public function testTheLargestAcceptedCommandStillReachesTheBootstrap(): void
@@ -245,12 +421,12 @@ final class ConsoleHandoffWorkerTest extends TestCase
      * @param list<int> $realms
      * @return array{exit: ?int, stdout: string, stderr: string, state: ?list<mixed>}
      */
-    private function worker(string $script, array|string $input, ?array $session = null, array $realms = [8], bool $hookClosesSession = false, string $measured = self::HANDOFF): array
+    private function worker(string $script, array|string $input, ?array $session = null, array $realms = [8], bool $hookClosesSession = false, string $measured = self::HANDOFF, bool $settingsProbe = false, bool $realmDenied = false, bool $closeWriteFailure = false): array
     {
         $session ??= ['sess_user_id' => 7, 'sess_user_credential' => str_repeat('a', 64)];
-        $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'session' => $session, 'realms' => $realms];
+        $scenario = ['autoload' => $this->root . '/include/vendor/autoload.php', 'hook_closes_session' => $hookClosesSession, 'settings_probe' => $settingsProbe, 'realm_denied' => $realmDenied, 'close_write_failure' => $closeWriteFailure, 'session' => $session, 'realms' => $realms];
         file_put_contents($this->directory . '/scenario.json', json_encode($scenario, JSON_THROW_ON_ERROR));
-        $label = $script . ' ' . (is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR)) . ' ' . json_encode($scenario, JSON_THROW_ON_ERROR);
+        $label = hash('sha256', $script . ' ' . (is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR)) . ' ' . json_encode($scenario, JSON_THROW_ON_ERROR));
         [$options, $environment] = $this->coverageOptions($measured, true, $label);
         $process = new Process([PHP_BINARY, ...$options, $this->directory . '/' . $script], $this->directory, $environment);
         $process->setInput(is_string($input) ? $input : json_encode($input, JSON_THROW_ON_ERROR));
@@ -295,7 +471,9 @@ final class ConsoleHandoffWorkerTest extends TestCase
         self::assertCount(1, $reports);
         $producer = 'tests/Fixtures/console-handoff-native.php';
         $sources = ['composer.lock', 'tests/composer.lock', 'tests/Fixtures/rrd-process-coverage.php', 'tests/Helpers/NativeChildCoverageEvidence.php',
-            'tests/Fixtures/console-handoff-bootstrap.php', 'tests/Symfony/ConsoleHandoffWorkerTest.php', $measured];
+            'tests/Fixtures/console-handoff-bootstrap.php', 'tests/Symfony/ConsoleHandoffWorkerTest.php', 'lib/functions.php',
+            'src/Platform/Infrastructure/Legacy/BrowserWorkerRealmDenied.php',
+            'src/Platform/Infrastructure/Legacy/BrowserWorkerSession.php', $measured];
         $markers = ['console-handoff-worker-terminated'];
         $child = \NativeChildCoverageEvidence::load($reports[0], $this->root, $producer, $scenario, $sources, $markers, [$measured]);
         if (!self::$rejectionsVerified) {
@@ -307,9 +485,9 @@ final class ConsoleHandoffWorkerTest extends TestCase
         unlink($reports[0]);
     }
 
-    private function line(string $statement): int
+    private function line(string $statement, string $source = self::HANDOFF): int
     {
-        $lines = array_keys(array_map('trim', file($this->root . '/' . self::HANDOFF, FILE_IGNORE_NEW_LINES)), $statement, true);
+        $lines = array_keys(array_map('trim', file($this->root . '/' . $source, FILE_IGNORE_NEW_LINES)), $statement, true);
         self::assertCount(1, $lines, $statement);
 
         return $lines[0] + 1;
