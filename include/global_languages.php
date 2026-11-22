@@ -720,7 +720,9 @@ function __date($format, $timestamp = false, $domain = 'cacti') {
  */
 function get_list_of_locales() {
 	$lang2locale = array(
+		'af-ZA' => array('language' => 'Afrikaans',           'direction' => 'ltr', 'country' => 'za', 'filename' => 'afrikaans_south_africa'),
 		'sq-AL' => array('language' => 'Albanian',            'direction' => 'ltr', 'country' => 'al', 'filename' => 'albanian_albania'),
+		'am-ET' => array('language' => 'Amharic',             'direction' => 'ltr', 'country' => 'et', 'filename' => 'amharic_ethiopia'),
 		'ar-SA' => array('language' => 'Arabic',              'direction' => 'rtl', 'country' => 'sa', 'filename' => 'arabic_saudi_arabia'),
 		'hy-AM' => array('language' => 'Armenian',            'direction' => 'ltr', 'country' => 'am', 'filename' => 'armenian_armenia'),
 		'be-BY' => array('language' => 'Belarusian',          'direction' => 'ltr', 'country' => 'by', 'filename' => 'belarusian_belarus'),
@@ -739,13 +741,16 @@ function get_list_of_locales() {
 		'et-EE' => array('language' => 'Estonian',            'direction' => 'ltr', 'country' => 'ee', 'filename' => 'estonian_estonia'),
 		'fi-FI' => array('language' => 'Finnish',             'direction' => 'ltr', 'country' => 'fi', 'filename' => 'finnish_finland'),
 		'fr-FR' => array('language' => 'French',              'direction' => 'ltr', 'country' => 'fr', 'filename' => 'french_france'),
+		'fr-SN' => array('language' => 'French (Africa)',     'direction' => 'ltr', 'country' => 'sn', 'filename' => 'french_africa'),
 		'ka-GE' => array('language' => 'Georgian',            'direction' => 'ltr', 'country' => 'ge', 'filename' => 'georgian_georgia'),
 		'de-DE' => array('language' => 'German',              'direction' => 'ltr', 'country' => 'de', 'filename' => 'german_germany'),
 		'el-GR' => array('language' => 'Greek',               'direction' => 'ltr', 'country' => 'gr', 'filename' => 'greek_greece'),
+		'ha-NG' => array('language' => 'Hausa',               'direction' => 'ltr', 'country' => 'ng', 'filename' => 'hausa_nigeria'),
 		'he-IL' => array('language' => 'Hebrew',              'direction' => 'rtl', 'country' => 'il', 'filename' => 'hebrew_israel'),
 		'hi-IN' => array('language' => 'Hindi',               'direction' => 'ltr', 'country' => 'in', 'filename' => 'hindi_india'),
 		'hu-HU' => array('language' => 'Hungarian',           'direction' => 'ltr', 'country' => 'hu', 'filename' => 'hungarian_hungary'),
 		'is-IS' => array('language' => 'Icelandic',           'direction' => 'ltr', 'country' => 'is', 'filename' => 'icelandic_iceland'),
+		'ig-NG' => array('language' => 'Igbo',                'direction' => 'ltr', 'country' => 'ng', 'filename' => 'igbo_nigeria'),
 		'id-ID' => array('language' => 'Indonesian',          'direction' => 'ltr', 'country' => 'id', 'filename' => 'indonesian_indonesia'),
 		'ga-IE' => array('language' => 'Irish',               'direction' => 'ltr', 'country' => 'ie', 'filename' => 'irish_ireland'),
 		'it-IT' => array('language' => 'Italian',             'direction' => 'ltr', 'country' => 'it', 'filename' => 'italian_italy'),
@@ -776,7 +781,10 @@ function get_list_of_locales() {
 		'tr-TR' => array('language' => 'Turkish',             'direction' => 'ltr', 'country' => 'tr', 'filename' => 'turkish_turkey'),
 		'uk-UA' => array('language' => 'Ukrainian',           'direction' => 'ltr', 'country' => 'ua', 'filename' => 'ukrainian_ukraine'),
 		'ur-PK' => array('language' => 'Urdu',                'direction' => 'rtl', 'country' => 'pk', 'filename' => 'urdu_pakistan'),
-		'vi-VN' => array('language' => 'Vietnamese',          'direction' => 'ltr', 'country' => 'vn', 'filename' => 'vietnamese_vietnam')
+		'vi-VN' => array('language' => 'Vietnamese',          'direction' => 'ltr', 'country' => 'vn', 'filename' => 'vietnamese_vietnam'),
+		'xh-ZA' => array('language' => 'Xhosa',               'direction' => 'ltr', 'country' => 'za', 'filename' => 'xhosa_south_africa'),
+		'yo-NG' => array('language' => 'Yoruba',              'direction' => 'ltr', 'country' => 'ng', 'filename' => 'yoruba_nigeria'),
+		'zu-ZA' => array('language' => 'Zulu',                'direction' => 'ltr', 'country' => 'za', 'filename' => 'zulu_south_africa')
 	);
 
 	return $lang2locale;
