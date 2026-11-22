@@ -77,8 +77,8 @@ final class RenderedCorpusTest extends TestCase
         self::assertSame('Löschen', $value('de-DE', '__x', 'dropdown action', 'Delete'));
         self::assertSame(['Löschen', 'Zurücksetzen'], [$value('de-DE', '__gettext', 'Clear'), $value('de-DE', '__x', 'filter: reset', 'Clear')]);
         // gettext's own Plural-Forms choose the form: Russian has three.
-        $russian = array_map(static fn(int $n): mixed => $value('ru-RU', '__n', 'Delete Data Query', 'Delete Data Queries', $n), [1, 2, 5]);
-        self::assertCount(3, array_unique($russian));
+        self::assertSame([0, 1, 2], array_map(static fn(int $n): int => (int) $corpus->renderings['ru-RU']['plural_index']['cacti'][$n], [1, 2, 5]));
+        self::assertSame(['Удалить запрос данных', 'Удалить запросы данных', 'Удалить запросы данных'], array_map(static fn(int $n): mixed => $value('ru-RU', '__n', 'Delete Data Query', 'Delete Data Queries', $n), [1, 2, 5]));
         // An empty compiled plural form renders as an empty string.
         self::assertSame('', $value('de-DE', '__n', '%d slot', '%d slots', 2, 'i18nprobe'));
         self::assertSame('%d Platz', $value('de-DE', '__n', '%d slot', '%d slots', 1, 'i18nprobe'));
