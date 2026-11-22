@@ -604,7 +604,7 @@ msgstr "Zorunlu şifre değişikliği"
 #: auth_changepassword.php
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "En az% d karakter uzunluğunda olmalı"
+msgstr "En az %d karakter uzunluğunda olmalı"
 
 #: auth_changepassword.php
 msgid "Must include at least 1 number"
@@ -1166,7 +1166,7 @@ msgstr "Kural Adı"
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
-msgstr "% d dakika"
+msgstr "%d dakika"
 
 #: automation_networks.php data_sources.php include/global_arrays.php
 #: include/global_settings.php pollers.php
@@ -1510,12 +1510,12 @@ msgstr "UYARI: Kadupul Daemon PID["
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "Ayarlar Veri Toplayıcıya kaydedildi% d Başarısız."
+msgstr "Ayarlar Veri Toplayıcıya kaydedildi %d Başarısız."
 
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Ayarlar Veri Toplayıcıya kaydedildi% d Başarısız."
+msgstr "Ayarlar Veri Toplayıcıya kaydedildi %d Başarısız."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -2883,7 +2883,7 @@ msgstr "saniye kaldı."
 #: graph_realtime.php
 #, php-format
 msgid "%d seconds left."
-msgstr "% d saniye kaldı."
+msgstr "%d saniye kaldı."
 
 #: graph_realtime.php
 #, fuzzy
@@ -3877,12 +3877,12 @@ msgstr "%d Gün"
 #: include/global_arrays.php
 #, php-format
 msgid "%d GByte"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php
 #, php-format
@@ -3897,22 +3897,22 @@ msgstr "%d Saat"
 #: include/global_arrays.php
 #, php-format
 msgid "%d Lines"
-msgstr "% d Satır"
+msgstr "%d Satır"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MBbayt"
+msgstr "%d MBbayt"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d Megabayt"
+msgstr "%d Megabayt"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Min"
-msgstr "% d Min"
+msgstr "%d Min"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
@@ -3927,12 +3927,12 @@ msgstr "%d Ay"
 #: include/global_arrays.php
 #, php-format
 msgid "%d Threads"
-msgstr "% d Konular"
+msgstr "%d Konular"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Week"
-msgstr "% d Hafta"
+msgstr "%d Hafta"
 
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
@@ -4557,7 +4557,7 @@ msgstr "Her %d Gün"
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "Every %d Hours"
-msgstr "Her% d saatte bir"
+msgstr "Her %d saatte bir"
 
 #: include/global_arrays.php
 #, php-format
@@ -4567,12 +4567,12 @@ msgstr "Her %d Dakika"
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Seconds"
-msgstr "Her% d Saniyede"
+msgstr "Her %d Saniyede"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Weeks"
-msgstr "Her% d Hafta"
+msgstr "Her %d Hafta"
 
 #: include/global_arrays.php
 msgid "Every 1 Hour"
@@ -4947,22 +4947,22 @@ msgstr "Son %d Gün"
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Hours"
-msgstr "Son% d Saat"
+msgstr "Son %d Saat"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Months"
-msgstr "Son% d Ay"
+msgstr "Son %d Ay"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Weeks"
-msgstr "Son% d Hafta"
+msgstr "Son %d Hafta"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Years"
-msgstr "Son% d Yıllar"
+msgstr "Son %d Yıllar"
 
 #: include/global_arrays.php
 msgid "Last Day"
@@ -6319,7 +6319,7 @@ msgstr "Sekme genişliği varsayılan olarak 40 pikseldir, değiştirmek için b
 #: include/global_form.php
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "Varsayılan olarak, eksen etiketlerinin formatı otomatik olarak belirlenir. Bunu kendiniz yapmak istiyorsanız, PRINT ve GPRINT komutlarından bildiğiniz% lf argümanları ile bu seçeneği kullanın."
+msgstr "Varsayılan olarak, eksen etiketlerinin formatı otomatik olarak belirlenir. Bunu kendiniz yapmak istiyorsanız, PRINT ve GPRINT komutlarından bildiğiniz %lf argümanları ile bu seçeneği kullanın."
 
 #: include/global_form.php
 msgid "CDEF Function"
@@ -7490,11 +7490,11 @@ msgstr "Söz konusu RRA&#39;ya göre bir Grafik görüntülerken, söz konusu Gr
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Sol eksen etiketini ayarlarken, veri formatına bir kural uygulayın. Desteklenen formatlar, verilerin sayısal olarak değerlendirildiği &quot;sayısal&quot;, değerlerin UNIX zaman damgaları (Ocak 1970&#39;den bu yana saniye sayısı) olarak yorumlandığı ve strftime formatı kullanılarak ifade edilen (varsayılan &quot;% Y-% m-% d% H :%MS&quot;). Ayrıca bakınız - birimler uzunluğu. Son olarak, değerlerin milisaniye cinsinden süre olarak yorumlandığı &quot;süre&quot;. Biçimlendirme, geçerlilik süresi nitelikli PRINT / GPRINT kurallarına uyar."
+msgstr "Sol eksen etiketini ayarlarken, veri formatına bir kural uygulayın. Desteklenen formatlar, verilerin sayısal olarak değerlendirildiği &quot;sayısal&quot;, değerlerin UNIX zaman damgaları (Ocak 1970&#39;den bu yana saniye sayısı) olarak yorumlandığı ve strftime formatı kullanılarak ifade edilen (varsayılan &quot;% Y-% m-%d% H :%MS&quot;). Ayrıca bakınız - birimler uzunluğu. Son olarak, değerlerin milisaniye cinsinden süre olarak yorumlandığı &quot;süre&quot;. Biçimlendirme, geçerlilik süresi nitelikli PRINT / GPRINT kurallarına uyar."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Doğru eksen etiketini ayarlarken, veri formatına bir kural uygulayın. Desteklenen formatlar, verilerin sayısal olarak değerlendirildiği &quot;sayısal&quot;, değerlerin UNIX zaman damgaları (Ocak 1970&#39;den bu yana saniye sayısı) olarak yorumlandığı ve strftime formatı kullanılarak ifade edilen (varsayılan &quot;% Y-% m-% d% H :%MS&quot;). Ayrıca bkz. - birimler uzunluk ve - dik eksen formatı. Son olarak, değerlerin milisaniye cinsinden süre olarak yorumlandığı &quot;süre&quot;. Biçimlendirme, geçerlilik süresi nitelikli PRINT / GPRINT kurallarına uyar."
+msgstr "Doğru eksen etiketini ayarlarken, veri formatına bir kural uygulayın. Desteklenen formatlar, verilerin sayısal olarak değerlendirildiği &quot;sayısal&quot;, değerlerin UNIX zaman damgaları (Ocak 1970&#39;den bu yana saniye sayısı) olarak yorumlandığı ve strftime formatı kullanılarak ifade edilen (varsayılan &quot;% Y-% m-%d% H :%MS&quot;). Ayrıca bkz. - birimler uzunluk ve - dik eksen formatı. Son olarak, değerlerin milisaniye cinsinden süre olarak yorumlandığı &quot;süre&quot;. Biçimlendirme, geçerlilik süresi nitelikli PRINT / GPRINT kurallarına uyar."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7543,12 +7543,12 @@ msgstr "T"
 #: include/global_settings.php
 #, php-format
 msgid "%d Attempts"
-msgstr "% d Denemeler"
+msgstr "%d Denemeler"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Changes"
-msgstr "% d Değişiklikler"
+msgstr "%d Değişiklikler"
 
 #: include/global_settings.php lib/html_graph.php lib/html_tree.php
 #, php-format
@@ -7558,22 +7558,22 @@ msgstr "yaklaşık %d gün önce"
 #: include/global_settings.php
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d Yüksek / Düşük Örnekler"
+msgstr "%d Yüksek / Düşük Örnekler"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Processes"
-msgstr "% d İşlemler"
+msgstr "%d İşlemler"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Spikes"
-msgstr "% d Spike"
+msgstr "%d Spike"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d Standart Sapmalar"
+msgstr "%d Standart Sapmalar"
 
 #: include/global_settings.php
 #, php-format
@@ -10373,7 +10373,7 @@ msgstr "Grafik Öğesi"
 #: lib/api_aggregate.php lib/html.php lib/html_reports.php
 #, php-format
 msgid "Item # %d"
-msgstr "Öğe #% d"
+msgstr "Öğe #%d"
 
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
@@ -10454,7 +10454,7 @@ msgstr "Öğe"
 #: lib/api_automation.php
 #, php-format
 msgid "Item#%d"
-msgstr "Ürün No.% d"
+msgstr "Ürün No.%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -10715,7 +10715,7 @@ msgstr "Kadupul Günlüğü Temizlendi"
 #: lib/auth.php
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "Şifre en az% d karakter olmalı!"
+msgstr "Şifre en az %d karakter olmalı!"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10842,12 +10842,12 @@ msgstr "Günlük Filtreleri"
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "Günlük [Toplam Satır:% d %s - Filtre etkin]"
+msgstr "Günlük [Toplam Satır: %d %s - Filtre etkin]"
 
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "Günlük [Toplam Satır:% d %s - Filtrelenmemiş]"
+msgstr "Günlük [Toplam Satır: %d %s - Filtrelenmemiş]"
 
 #: lib/clog_webapi.php
 msgid "Matches"
@@ -11249,7 +11249,7 @@ msgstr "%d Toplu Yürüme Boyu, %2.4f yanıtıyla test edildi."
 #: lib/data_query.php
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "Toplam:% f, Delta:% f, %s"
+msgstr "Toplam: %f, Delta: %f, %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11624,7 +11624,7 @@ msgstr "Eylem başarısız"
 #: lib/html.php
 #, php-format
 msgid "All %d %s"
-msgstr "Tüm% d %s"
+msgstr "Tüm %d %s"
 
 #: lib/html.php
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
@@ -13484,7 +13484,7 @@ msgstr "Kurulum tamamlandıktan sonra CSRF yolu salt okunur olarak ayarlanmalıd
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Değişkenlerin tümü config.php dosyasında ayarlandıktan sonra, ana Kadupul veritabanı sunucusuna $ rdatabase_username erişimini de vermelisiniz. Diğer Kadupul kurulumlarıyla aynı prosedürü uygulayın. Daha sonra &#39;Test Connection&#39; düğmesine basabilirsiniz. Sınama başarılı olursa, yükleme işlemine devam edip tamamlayabilirsiniz."
+msgstr "Değişkenlerin tümü config.php dosyasında ayarlandıktan sonra, ana Kadupul veritabanı sunucusuna $rdatabase_username erişimini de vermelisiniz. Diğer Kadupul kurulumlarıyla aynı prosedürü uygulayın. Daha sonra &#39;Test Connection&#39; düğmesine basabilirsiniz. Sınama başarılı olursa, yükleme işlemine devam edip tamamlayabilirsiniz."
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -13750,7 +13750,7 @@ msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Yükleyici otomatik olarak bir $ poller_id atar ve config.php dosyasına ekler."
+msgstr "Yükleyici otomatik olarak bir $poller_id atar ve config.php dosyasına ekler."
 
 #: lib/installer.php
 msgid "The Installer could not proceed due to an unexpected error."
@@ -14437,12 +14437,12 @@ msgstr "Kadupul tanımında RRA &#39; %s&#39; eksik"
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD dosyasına eklendi"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f) RRD dosyasına eklendi"
 
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD dosyasından kaldırıldı"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f) RRD dosyasından kaldırıldı"
 
 #: lib/rrd.php
 msgid "RRA Folder"
@@ -17666,12 +17666,12 @@ msgstr "Bu Kullanıcı Grubundaki bir kullanıcı oturum açtığında ne yapmal
 #: utilities.php
 #, php-format
 msgid "%0.2f percent of update frequency)"
-msgstr "Güncelleme sıklığının% 0.2f&#39;si)"
+msgstr "Güncelleme sıklığının %0.2f&#39;si)"
 
 #: utilities.php
 #, php-format
 msgid "%d Bytes"
-msgstr "% d Bayt"
+msgstr "%d Bayt"
 
 #: utilities.php
 #, php-format
@@ -17872,7 +17872,7 @@ msgstr "HATA: Yüklü RRDtool sürümü yapılandırılmış sürümü aşmıyor
 #: utilities.php
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "HATA: RRDtool 1.2.x +, GIF resim biçimini desteklemiyor, ancak% d &quot;grafik ve / veya şablonlarda GIF resim biçimi olarak ayarlanmış."
+msgstr "HATA: RRDtool 1.2.x +, GIF resim biçimini desteklemiyor, ancak %d &quot;grafik ve / veya şablonlarda GIF resim biçimi olarak ayarlanmış."
 
 #: utilities.php
 msgid "Each browser tab can use upto 10 connections depending on the browser."
@@ -17984,12 +17984,12 @@ msgstr "Log Girdileri"
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "Günlük [Toplam Satır:% d - Gösterilen Tüm Öğeler]"
+msgstr "Günlük [Toplam Satır: %d - Gösterilen Tüm Öğeler]"
 
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "Günlük [Toplam Satırlar:% d - Eşleşmeyen Öğeler Gizlendi]"
+msgstr "Günlük [Toplam Satırlar: %d - Eşleşmeyen Öğeler Gizlendi]"
 
 #: utilities.php
 msgid "MBytes"

@@ -2478,14 +2478,14 @@ msgstr[1] "Eliminar fontes de dados"
 #: data_sources.php
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Exclua todos os itens <forte>Gráficos</forte> que referenciam esta Fonte de Dados."
-msgstr[1] "Exclua todos os itens <forte>Gráficos</forte> que referenciam essas fontes de dados."
+msgstr[0] "Exclua todos os itens <strong>Gráficos</strong> que referenciam esta Fonte de Dados."
+msgstr[1] "Exclua todos os itens <strong>Gráficos</strong> que referenciam essas fontes de dados."
 
 #: data_sources.php
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
-msgstr[0] "Exclua todos os <forte>Gráficos</sforte> que referenciam esta Fonte de Dados."
-msgstr[1] "Exclua todos os <forte>Gráficos</sforte> que referenciam essas Fontes de Dados."
+msgstr[0] "Exclua todos os <strong>Gráficos</strong> que referenciam esta Fonte de Dados."
+msgstr[1] "Exclua todos os <strong>Gráficos</strong> que referenciam essas Fontes de Dados."
 
 #: data_sources.php graph_view.php graphs.php include/global_arrays.php
 #: lib/api_automation.php lib/functions.php lib/html.php lib/html_reports.php
@@ -2537,7 +2537,7 @@ msgstr "Se esta Fonte de Dados não estiver em uso há muito tempo por Gráficos
 #: data_sources.php
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
-msgstr[0] "Deixa o <forte>Gráfico</sforte> intocado."
+msgstr[0] "Deixa o <strong>Gráfico</strong> intocado."
 msgstr[1] "Deixa todos os gráficos não tocados."
 
 #: data_sources.php data_templates.php lib/import.php package_import.php
@@ -7538,7 +7538,7 @@ msgstr "0 alterações"
 #: include/global_settings.php lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Columns"
-msgstr "% d colunas"
+msgstr "%d colunas"
 
 #: include/global_settings.php
 #, php-format
@@ -12097,7 +12097,7 @@ msgstr "Houve uma tentativa de Injeção de SQL na página"
 #: lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Column"
-msgstr "% d coluna"
+msgstr "%d coluna"
 
 #: lib/html_graph.php lib/html_tree.php
 msgid "Columns"
@@ -13311,7 +13311,7 @@ msgstr "É essencial que o servidor Central Kadupul possa se comunicar via MySQL
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "É altamente recomendável que você atualize seu config.php para ativar esse recurso, descomentando a variável <b>$ input_whitelist</b> e executando as três opções de script da CLI acima, após a conclusão da instalação baseada na Web."
+msgstr "É altamente recomendável que você atualize seu config.php para ativar esse recurso, descomentando a variável <b>$input_whitelist</b> e executando as três opções de script da CLI acima, após a conclusão da instalação baseada na Web."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."

@@ -604,7 +604,7 @@ msgstr "जबरदस्ती पासवर्ड बदलना"
 #: auth_changepassword.php
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "लंबाई में कम से कम% d वर्ण होने चाहिए"
+msgstr "लंबाई में कम से कम %d वर्ण होने चाहिए"
 
 #: auth_changepassword.php
 msgid "Must include at least 1 number"
@@ -1170,19 +1170,19 @@ msgstr "नियम का नाम"
 #: automation_networks.php pollers.php
 #, php-format
 msgid "%d Minute"
-msgstr "% d मिनट"
+msgstr "%d मिनट"
 
 #: automation_networks.php data_sources.php include/global_arrays.php
 #: include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minutes"
-msgstr "% d मिनट"
+msgstr "%d मिनट"
 
 #: automation_networks.php data_sources.php include/global_arrays.php
 #: include/global_settings.php pollers.php
 #, php-format
 msgid "%d Seconds"
-msgstr "% d सेकंड्स"
+msgstr "%d सेकंड्स"
 
 #: automation_networks.php
 #, php-format
@@ -1516,12 +1516,12 @@ msgstr "चेतावनी: Kadupul डेमन पीआईडी["
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "सेटिंग्स डेटा कलेक्टर में सहेजने में% d विफल।"
+msgstr "सेटिंग्स डेटा कलेक्टर में सहेजने में%d विफल।"
 
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "सेटिंग्स डेटा कलेक्टर में सहेजने में% d विफल।"
+msgstr "सेटिंग्स डेटा कलेक्टर में सहेजने में%d विफल।"
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -2891,7 +2891,7 @@ msgstr "सेकंड बचे हैं।"
 #: graph_realtime.php
 #, php-format
 msgid "%d seconds left."
-msgstr "% d सेकंड बचे हैं।"
+msgstr "%d सेकंड बचे हैं।"
 
 #: graph_realtime.php
 #, fuzzy
@@ -3883,62 +3883,62 @@ msgstr "%d दिन"
 #: include/global_arrays.php
 #, php-format
 msgid "%d GByte"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Hour"
-msgstr "% d घंटा"
+msgstr "%d घंटा"
 
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "%d Hours"
-msgstr "% d घंटे"
+msgstr "%d घंटे"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Lines"
-msgstr "% d लाइन्स"
+msgstr "%d लाइन्स"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d MBytes"
-msgstr "% d एमबीटीज़"
+msgstr "%d एमबीटीज़"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d मेगाबाइट्स"
+msgstr "%d मेगाबाइट्स"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Min"
-msgstr "% d मिन"
+msgstr "%d मिन"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Month"
-msgstr "% d महीना"
+msgstr "%d महीना"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Months"
-msgstr "% d माह"
+msgstr "%d माह"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Threads"
-msgstr "% d थ्रेड्स"
+msgstr "%d थ्रेड्स"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Week"
-msgstr "% d वीक"
+msgstr "%d वीक"
 
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
@@ -3948,12 +3948,12 @@ msgstr "%d सप्ताह"
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
 msgid "%d Year"
-msgstr "% d वष"
+msgstr "%d वष"
 
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "%d Years"
-msgstr "% d वष"
+msgstr "%d वष"
 
 #: include/global_arrays.php lib/boost.php
 #, php-format
@@ -4570,17 +4570,17 @@ msgstr "हर %d घंटे में"
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Minutes"
-msgstr "प्रत्येक% d मिनट"
+msgstr "प्रत्येक %d मिनट"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Seconds"
-msgstr "हर% d सेकंड"
+msgstr "हर %d सेकंड"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Weeks"
-msgstr "हर% d वीक"
+msgstr "हर %d वीक"
 
 #: include/global_arrays.php
 msgid "Every 1 Hour"
@@ -4949,27 +4949,27 @@ msgstr "कम - सांख्यिकी और त्रुटियां"
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Days"
-msgstr "अंतिम% d दिन"
+msgstr "अंतिम %d दिन"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Hours"
-msgstr "अंतिम% d घंटे"
+msgstr "अंतिम %d घंटे"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Months"
-msgstr "अंतिम% d महीने"
+msgstr "अंतिम %d महीने"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Weeks"
-msgstr "अंतिम% d सप्ताह"
+msgstr "अंतिम %d सप्ताह"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Last %d Years"
-msgstr "अंतिम% d वर्ष"
+msgstr "अंतिम %d वर्ष"
 
 #: include/global_arrays.php
 msgid "Last Day"
@@ -5861,7 +5861,7 @@ msgstr "सभी को सत्यापित करें"
 #: include/global_arrays.php
 #, php-format
 msgid "Version %d"
-msgstr "संस्करण% d"
+msgstr "संस्करण %d"
 
 #: include/global_arrays.php
 msgid "Vietnamese"
@@ -6324,7 +6324,7 @@ msgstr "डिफ़ॉल्ट रूप से टैब-चौड़ाई 4
 #: include/global_form.php
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "डिफ़ॉल्ट रूप से, अक्ष लेबल का प्रारूप स्वचालित रूप से निर्धारित हो जाता है। यदि आप इसे स्वयं करना चाहते हैं, तो इस विकल्प का उपयोग उन्हीं% lf तर्कों के साथ करें जिन्हें आप PRINT और GPRINT कमांड से जानते हैं।"
+msgstr "डिफ़ॉल्ट रूप से, अक्ष लेबल का प्रारूप स्वचालित रूप से निर्धारित हो जाता है। यदि आप इसे स्वयं करना चाहते हैं, तो इस विकल्प का उपयोग उन्हीं%lf तर्कों के साथ करें जिन्हें आप PRINT और GPRINT कमांड से जानते हैं।"
 
 #: include/global_form.php
 msgid "CDEF Function"
@@ -7550,37 +7550,37 @@ msgstr "T"
 #: include/global_settings.php
 #, php-format
 msgid "%d Attempts"
-msgstr "% d प्रयास"
+msgstr "%d प्रयास"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Changes"
-msgstr "% d चेंज"
+msgstr "%d चेंज"
 
 #: include/global_settings.php lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Columns"
-msgstr "% d कॉलम"
+msgstr "%d कॉलम"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d उच्च / निम्न नमूने"
+msgstr "%d उच्च / निम्न नमूने"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Processes"
-msgstr "% d प्रक्रियाएं"
+msgstr "%d प्रक्रियाएं"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Spikes"
-msgstr "% d स्पाइक्स"
+msgstr "%d स्पाइक्स"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d मानक विचलन"
+msgstr "%d मानक विचलन"
 
 #: include/global_settings.php
 #, php-format
@@ -10401,7 +10401,7 @@ msgstr "ग्राफ़ आइटम"
 #: lib/api_aggregate.php lib/html.php lib/html_reports.php
 #, php-format
 msgid "Item # %d"
-msgstr "आइटम #% d"
+msgstr "आइटम #%d"
 
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
@@ -10482,7 +10482,7 @@ msgstr "मद"
 #: lib/api_automation.php
 #, php-format
 msgid "Item#%d"
-msgstr "मद #% d"
+msgstr "मद #%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -10743,7 +10743,7 @@ msgstr "Kadupul लॉग क्लीयर"
 #: lib/auth.php
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "पासवर्ड कम से कम% d वर्ण का होना चाहिए!"
+msgstr "पासवर्ड कम से कम %d वर्ण का होना चाहिए!"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10869,12 +10869,12 @@ msgstr "लॉग फ़िल्टर करें"
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "लॉग [कुल पंक्तियाँ:% d %s - फ़िल्टर सक्रिय]"
+msgstr "लॉग [कुल पंक्तियाँ: %d %s - फ़िल्टर सक्रिय]"
 
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "लॉग [कुल पंक्तियाँ:% d %s - अनफ़िल्टर्ड]"
+msgstr "लॉग [कुल पंक्तियाँ: %d %s - अनफ़िल्टर्ड]"
 
 #: lib/clog_webapi.php
 msgid "Matches"
@@ -11276,7 +11276,7 @@ msgstr "बल्क वॉक साइज़ %d का परीक्षण %
 #: lib/data_query.php
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "कुल:% f, डेल्टा:% f, %s"
+msgstr "कुल: %f, डेल्टा: %f, %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11652,7 +11652,7 @@ msgstr "क्रिया: विफल रही है"
 #: lib/html.php
 #, php-format
 msgid "All %d %s"
-msgstr "सभी% d %s"
+msgstr "सभी%d %s"
 
 #: lib/html.php
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
@@ -12159,7 +12159,7 @@ msgstr "पेज पर SQL इंजेक्शन लगाने का प
 #: lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Column"
-msgstr "% d स्तम्भ"
+msgstr "%d स्तम्भ"
 
 #: lib/html_graph.php lib/html_tree.php
 msgid "Columns"
@@ -13380,7 +13380,7 @@ msgstr "यह आवश्यक है कि केंद्रीय Kadupul
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "यह दृढ़ता से सुझाव दिया जाता है कि आप इस <b>इनपुट</b> को <b>$ input_whitelist</b> वैरिएबल को <b>अनइंस्टॉल करने</b> और फिर वेब आधारित इंस्टॉल पूरा होने के बाद ऊपर दिए तीन CLI स्क्रिप्ट विकल्पों को चलाने के लिए अपने config.php को अपडेट करें।"
+msgstr "यह दृढ़ता से सुझाव दिया जाता है कि आप इस <b>इनपुट</b> को <b>$input_whitelist</b> वैरिएबल को <b>अनइंस्टॉल करने</b> और फिर वेब आधारित इंस्टॉल पूरा होने के बाद ऊपर दिए तीन CLI स्क्रिप्ट विकल्पों को चलाने के लिए अपने config.php को अपडेट करें।"
 
 #: lib/installer.php
 #, fuzzy
@@ -13787,7 +13787,7 @@ msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "इंस्टॉलर स्वतः एक $ poller_id असाइन करता है और इसे config.php फ़ाइल में जोड़ता है।"
+msgstr "इंस्टॉलर स्वतः एक $poller_id असाइन करता है और इसे config.php फ़ाइल में जोड़ता है।"
 
 #: lib/installer.php
 msgid "The Installer could not proceed due to an unexpected error."
@@ -14482,12 +14482,12 @@ msgstr "Ract &#39; %s&#39; Kadupul परिभाषा में गायब 
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD फाइल में जोड़"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f) RRD फाइल में जोड़"
 
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "आरआरडी फ़ाइल से हटाए गए RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f)"
+msgstr "आरआरडी फ़ाइल से हटाए गए RRA (CF = %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f)"
 
 #: lib/rrd.php
 msgid "RRA Folder"
@@ -17721,22 +17721,22 @@ msgstr "जब कोई उपयोगकर्ता इस उपयोग�
 #: utilities.php
 #, php-format
 msgid "%0.2f percent of update frequency)"
-msgstr "अद्यतन आवृत्ति का% 0.2f प्रतिशत)"
+msgstr "अद्यतन आवृत्ति का%0.2f प्रतिशत)"
 
 #: utilities.php
 #, php-format
 msgid "%d Bytes"
-msgstr "% d बाइट्स"
+msgstr "%d बाइट्स"
 
 #: utilities.php
 #, php-format
 msgid "%d minutes"
-msgstr "% d मिनट"
+msgstr "%d मिनट"
 
 #: utilities.php
 #, php-format
 msgid "%d seconds"
-msgstr "% d सेकंड"
+msgstr "%d सेकंड"
 
 #: utilities.php
 #, php-format
@@ -17927,7 +17927,7 @@ msgstr "त्रुटि: स्थापित RRDtool संस्करण 
 #: utilities.php
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "ERROR: RRDtool 1.2.x + GIF छवियों के प्रारूप का समर्थन नहीं करता है, लेकिन% d &quot;ग्राफ़ (ओं) और / या टेम्पलेट्स में GIF को छवि प्रारूप के रूप में सेट किया गया है।"
+msgstr "ERROR: RRDtool 1.2.x + GIF छवियों के प्रारूप का समर्थन नहीं करता है, लेकिन %d &quot;ग्राफ़ (ओं) और / या टेम्पलेट्स में GIF को छवि प्रारूप के रूप में सेट किया गया है।"
 
 #: utilities.php
 msgid "Each browser tab can use upto 10 connections depending on the browser."
@@ -18039,12 +18039,12 @@ msgstr "लॉग इन करें"
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "लॉग [कुल पंक्तियाँ:% d - सभी आइटम दिखाए गए]"
+msgstr "लॉग [कुल पंक्तियाँ: %d - सभी आइटम दिखाए गए]"
 
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "लॉग [कुल पंक्तियाँ:% d - गैर-मिलान आइटम छिपा हुआ]"
+msgstr "लॉग [कुल पंक्तियाँ: %d - गैर-मिलान आइटम छिपा हुआ]"
 
 #: utilities.php
 msgid "MBytes"
