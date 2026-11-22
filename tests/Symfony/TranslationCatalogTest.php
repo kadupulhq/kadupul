@@ -68,10 +68,11 @@ final class TranslationCatalogTest extends TestCase
 
     /** @var list<string> */
     private const TRANSLATED_LOCALES = [
-        'ar_SA', 'bg_BG', 'bn_BD', 'de_DE', 'el_GR', 'es_ES', 'fa_IR', 'fr',
-        'he_IL', 'hi_IN', 'id_ID', 'it_IT', 'ja_JP', 'ko_KR', 'lv_LV', 'mr_IN',
-        'nl_NL', 'pl_PL', 'pt_BR', 'pt_PT', 'ru_RU', 'sv_SE', 'sw_KE', 'ta_IN',
-        'te_IN', 'th_TH', 'tr_TR', 'uk_UA', 'ur_PK', 'vi_VN', 'zh_CN', 'zh_TW',
+        'af_ZA', 'am_ET', 'ar_SA', 'bg_BG', 'bn_BD', 'de_DE', 'el_GR', 'es_ES',
+        'fa_IR', 'fr', 'fr_SN', 'ha_NG', 'he_IL', 'hi_IN', 'id_ID', 'ig_NG',
+        'it_IT', 'ja_JP', 'ko_KR', 'lv_LV', 'mr_IN', 'nl_NL', 'pl_PL', 'pt_BR',
+        'pt_PT', 'ru_RU', 'sv_SE', 'sw_KE', 'ta_IN', 'te_IN', 'th_TH', 'tr_TR',
+        'uk_UA', 'ur_PK', 'vi_VN', 'xh_ZA', 'yo_NG', 'zh_CN', 'zh_TW', 'zu_ZA',
     ];
 
     #[DataProvider('domains')]

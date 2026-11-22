@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Taimako"
+"Access denied.": "An hana shiga."
+"Choose a topic to open the Kadupul documentation.": "Zaɓi batu don buɗe takardun Kadupul."
+"Get started": "Fara yanzu"
+"Graphs": "Jadawalai"
+"Templates": "Samfura"
+"Data queries": "Tambayoyin bayanai"
+"Remote data collectors": "Masu tattara bayanai na nesa"
+"Users and permissions": "Masu amfani da izini"
+"Plugins": "Plugins"
+"Troubleshoot missing data": "Magance matsalar bayanan da suka ɓace"
+"Not available locally.": "Ba ya samuwa a gida."
+"Back to console": "Koma zuwa na'urar wasan bidiyo"
