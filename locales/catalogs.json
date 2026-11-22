@@ -1,6 +1,8 @@
 {
   "source_fallback": "en-US",
   "translated_locales": [
+    "af-ZA",
+    "am-ET",
     "ar-SA",
     "bg-BG",
     "bn-BD",
@@ -9,9 +11,12 @@
     "es-ES",
     "fa-IR",
     "fr-FR",
+    "fr-SN",
+    "ha-NG",
     "he-IL",
     "hi-IN",
     "id-ID",
+    "ig-NG",
     "it-IT",
     "ja-JP",
     "ko-KR",
@@ -31,7 +36,10 @@
     "uk-UA",
     "ur-PK",
     "vi-VN",
+    "xh-ZA",
+    "yo-NG",
     "zh-CN",
-    "zh-TW"
+    "zh-TW",
+    "zu-ZA"
   ]
 }

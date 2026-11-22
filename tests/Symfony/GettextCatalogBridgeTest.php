@@ -69,7 +69,7 @@ final class GettextCatalogBridgeTest extends TestCase
         $files = array_map(static fn(string $path): string => basename($path, '.po'), glob(self::ROOT . '/locales/po/*.po') ?: []);
         sort($files);
         self::assertSame($locales, $files);
-        self::assertCount(32, $locales);
+        self::assertCount(40, $locales);
         $keys = [];
         foreach (glob(self::ROOT . '/config/translations/*.en.yaml') ?: [] as $source) {
             $keys = array_merge($keys, array_map('strval', array_keys(Yaml::parseFile($source))));
@@ -302,6 +302,7 @@ final class GettextCatalogBridgeTest extends TestCase
     {
         yield 'English region' => ['en-GB', 'en'];
         yield 'legacy French' => ['fr_FR', 'fr'];
+        yield 'African French' => ['fr-SN', 'fr_SN'];
         yield 'French region' => ['fr-CA', 'fr'];
         yield 'Brazilian hyphen' => ['pt-BR', 'pt_BR'];
         yield 'Brazilian underscore lower case' => ['pt_br', 'pt_BR'];

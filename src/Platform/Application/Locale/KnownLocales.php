@@ -24,7 +24,9 @@ final class KnownLocales
 {
     /** @var array<string, array{language: string, direction: string, country: string, filename: string}> */
     public const ALL = [
+        'af-ZA' => ['language' => 'Afrikaans', 'direction' => 'ltr', 'country' => 'za', 'filename' => 'afrikaans_south_africa'],
         'sq-AL' => ['language' => 'Albanian', 'direction' => 'ltr', 'country' => 'al', 'filename' => 'albanian_albania'],
+        'am-ET' => ['language' => 'Amharic', 'direction' => 'ltr', 'country' => 'et', 'filename' => 'amharic_ethiopia'],
         'ar-SA' => ['language' => 'Arabic', 'direction' => 'rtl', 'country' => 'sa', 'filename' => 'arabic_saudi_arabia'],
         'hy-AM' => ['language' => 'Armenian', 'direction' => 'ltr', 'country' => 'am', 'filename' => 'armenian_armenia'],
         'be-BY' => ['language' => 'Belarusian', 'direction' => 'ltr', 'country' => 'by', 'filename' => 'belarusian_belarus'],
@@ -43,13 +45,16 @@ final class KnownLocales
         'et-EE' => ['language' => 'Estonian', 'direction' => 'ltr', 'country' => 'ee', 'filename' => 'estonian_estonia'],
         'fi-FI' => ['language' => 'Finnish', 'direction' => 'ltr', 'country' => 'fi', 'filename' => 'finnish_finland'],
         'fr-FR' => ['language' => 'French', 'direction' => 'ltr', 'country' => 'fr', 'filename' => 'french_france'],
+        'fr-SN' => ['language' => 'French (Africa)', 'direction' => 'ltr', 'country' => 'sn', 'filename' => 'french_africa'],
         'ka-GE' => ['language' => 'Georgian', 'direction' => 'ltr', 'country' => 'ge', 'filename' => 'georgian_georgia'],
         'de-DE' => ['language' => 'German', 'direction' => 'ltr', 'country' => 'de', 'filename' => 'german_germany'],
         'el-GR' => ['language' => 'Greek', 'direction' => 'ltr', 'country' => 'gr', 'filename' => 'greek_greece'],
+        'ha-NG' => ['language' => 'Hausa', 'direction' => 'ltr', 'country' => 'ng', 'filename' => 'hausa_nigeria'],
         'he-IL' => ['language' => 'Hebrew', 'direction' => 'rtl', 'country' => 'il', 'filename' => 'hebrew_israel'],
         'hi-IN' => ['language' => 'Hindi', 'direction' => 'ltr', 'country' => 'in', 'filename' => 'hindi_india'],
         'hu-HU' => ['language' => 'Hungarian', 'direction' => 'ltr', 'country' => 'hu', 'filename' => 'hungarian_hungary'],
         'is-IS' => ['language' => 'Icelandic', 'direction' => 'ltr', 'country' => 'is', 'filename' => 'icelandic_iceland'],
+        'ig-NG' => ['language' => 'Igbo', 'direction' => 'ltr', 'country' => 'ng', 'filename' => 'igbo_nigeria'],
         'id-ID' => ['language' => 'Indonesian', 'direction' => 'ltr', 'country' => 'id', 'filename' => 'indonesian_indonesia'],
         'ga-IE' => ['language' => 'Irish', 'direction' => 'ltr', 'country' => 'ie', 'filename' => 'irish_ireland'],
         'it-IT' => ['language' => 'Italian', 'direction' => 'ltr', 'country' => 'it', 'filename' => 'italian_italy'],
@@ -81,5 +86,8 @@ final class KnownLocales
         'uk-UA' => ['language' => 'Ukrainian', 'direction' => 'ltr', 'country' => 'ua', 'filename' => 'ukrainian_ukraine'],
         'ur-PK' => ['language' => 'Urdu', 'direction' => 'rtl', 'country' => 'pk', 'filename' => 'urdu_pakistan'],
         'vi-VN' => ['language' => 'Vietnamese', 'direction' => 'ltr', 'country' => 'vn', 'filename' => 'vietnamese_vietnam'],
+        'xh-ZA' => ['language' => 'Xhosa', 'direction' => 'ltr', 'country' => 'za', 'filename' => 'xhosa_south_africa'],
+        'yo-NG' => ['language' => 'Yoruba', 'direction' => 'ltr', 'country' => 'ng', 'filename' => 'yoruba_nigeria'],
+        'zu-ZA' => ['language' => 'Zulu', 'direction' => 'ltr', 'country' => 'za', 'filename' => 'zulu_south_africa'],
     ];
 }
