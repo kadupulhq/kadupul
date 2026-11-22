@@ -115,7 +115,7 @@ final class GettextCatalogBridgeTest extends TestCase
         yield 'missing msgid with placeholder falls back to English' => ['ru_RU', 'inventory', 'Page %page%', ['%page%' => 3], 'Page 3'];
         yield 'printf conversion becomes the Symfony placeholder' => ['de_DE', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Alle 6 Stunden'];
         yield 'named placeholder through %s' => ['de_DE', 'graph_definition', 'VDEFs [edit: %name%]', ['%name%' => '<x>'], 'VDEFs [bearbeiten: <x>]'];
-        yield 'space-flag conversion is not guessed' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 Day'];
+        yield 'Hebrew count message matches fixed %d placeholder' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 יום'];
         yield 'plural form for n != 1 locale' => ['de_DE', 'palette', 'Delete Colors', [], 'Farben löschen'];
         yield 'single plural form locale' => ['ja_JP', 'palette', 'Delete Colors', [], '色を削除'];
         yield 'n > 1 plural rule keeps English' => ['pt_BR', 'palette', 'Delete Colors', [], 'Delete Colors'];
@@ -187,6 +187,9 @@ final class GettextCatalogBridgeTest extends TestCase
                 msgid "Width %d"
                 msgstr "Breite %5d"
 
+                msgid "Spaced %d"
+                msgstr "Abstand % d"
+
                 msgid "Extra %s"
                 msgstr "%s %s"
 
@@ -218,6 +221,7 @@ final class GettextCatalogBridgeTest extends TestCase
             self::assertSame('Last %load%%', $catalog->translate('Load %load%'));
             self::assertNull($catalog->translate('Load %load%%'));
             self::assertNull($catalog->translate('Width %width%'));
+            self::assertNull($catalog->translate('Spaced %count%'));
             self::assertNull($catalog->translate('Extra %value%'));
             self::assertNull($catalog->translate('Pipe'));
             self::assertNull($catalog->translate('Untranslated'));
