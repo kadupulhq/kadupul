@@ -178,7 +178,7 @@ final class LocaleResolverTest extends TestCase
 
     public function testKnownLocalesAreTheLegacyTableInOrder(): void
     {
-        self::assertCount(50, KnownLocales::ALL);
+        self::assertCount(57, KnownLocales::ALL);
         self::assertSame(['pt-PT', 'pt-BR'], array_values(array_filter(array_keys(KnownLocales::ALL), static fn(string $locale): bool => str_starts_with($locale, 'pt-'))));
         foreach (KnownLocales::ALL as $locale => $properties) {
             self::assertMatchesRegularExpression('/\A[a-z]{2}-[A-Z]{2}\z/', $locale);

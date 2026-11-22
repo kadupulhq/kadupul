@@ -45,7 +45,7 @@ final class RenderedCorpusTest extends TestCase
         // Counts, not arrays: PHPUnit exports every asserted value, even on success.
         self::assertSame(count($identities) - $plurals + $plurals * count(RenderedCorpus::COUNTS) + count(RenderedCorpus::fixedCalls()), count($corpus->calls));
         self::assertSame(RenderedCorpus::locales($root), array_keys($corpus->renderings));
-        self::assertSame(24, count($corpus->renderings));
+        self::assertSame(33, count($corpus->renderings));
         // CACTI_LANGUAGE_HANDLER_DEFAULT and _PHPGETTEXT in include/global_constants.php.
         [$fallback, $phpGettext] = [0, 1];
         foreach ($corpus->renderings as $locale => $rendering) {

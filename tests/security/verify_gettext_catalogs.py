@@ -18,7 +18,7 @@ import re
 import subprocess
 import tempfile
 
-COMPATIBILITY_CONTENT_SHA256 = "be9c11c6bb6387a19851598ec6e08a32b153c03036716b26f45dc3353810eaab"
+COMPATIBILITY_CONTENT_SHA256 = "1c25ba9791e27029a8a1b4abc2a89b3e012bd2a2e852c8900e0e822b692ff190"
 # Catalogs record file-only references so moving lines never rewrites them.
 LINE_REFERENCE = re.compile(r":\d+$")
 RETIRED_MESSAGES = frozenset(("Access Denied!  LDAP Error: %s",
