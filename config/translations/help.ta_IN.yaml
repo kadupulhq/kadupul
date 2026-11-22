@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "உதவி"
+"Access denied.": "அணுகல் மறுக்கப்பட்டது."
+"Choose a topic to open the Kadupul documentation.": "Kadupul ஆவணங்களைத் திறக்க ஒரு தலைப்பைத் தேர்ந்தெடுக்கவும்."
+"Get started": "தொடங்கு"
+"Graphs": "வரைபடங்கள்"
+"Templates": "வார்ப்புருக்கள்"
+"Data queries": "தரவு வினவல்கள்"
+"Remote data collectors": "தொலைநிலை தரவு சேகரிப்பான்கள்"
+"Users and permissions": "பயனர்கள் மற்றும் அனுமதிகள்"
+"Plugins": "செருகுநிரல்கள்"
+"Troubleshoot missing data": "விடுபட்ட தரவைப் பிழைநீக்கு"
+"Not available locally.": "உள்ளூரில் கிடைக்கவில்லை."
+"Back to console": "கன்சோலுக்குத் திரும்பு"

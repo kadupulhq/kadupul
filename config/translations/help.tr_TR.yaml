@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Yardım"
+"Access denied.": "Erişim reddedildi."
+"Choose a topic to open the Kadupul documentation.": "Kadupul belgelerini açmak için bir konu seçin."
+"Get started": "Başlayın"
+"Graphs": "Grafikler"
+"Templates": "Şablonlar"
+"Data queries": "Veri sorguları"
+"Remote data collectors": "Uzak veri toplayıcıları"
+"Users and permissions": "Kullanıcılar ve izinler"
+"Plugins": "Eklentiler"
+"Troubleshoot missing data": "Eksik verileri gider"
+"Not available locally.": "Yerel olarak kullanılamıyor."
+"Back to console": "Konsola geri dön"

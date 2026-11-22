@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Tentang Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul adalah proyek sumber terbuka independen untuk pemantauan jaringan dan pembuatan grafik deret waktu."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Pengembangan, kontribusi, dan keputusan rilis dikelola oleh organisasi Kadupul."
+"For documentation and support, visit the Kadupul project.": "Untuk dokumentasi dan dukungan, kunjungi proyek Kadupul."
+"License": "Lisensi"
+"Kadupul is licensed under the GNU GPL:": "Kadupul dilisensikan di bawah GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Program ini adalah perangkat lunak bebas; Anda dapat mendistribusikan ulang dan/atau memodifikasinya di bawah ketentuan GNU General Public License sebagaimana diterbitkan oleh Free Software Foundation; baik versi 2 dari Lisensi tersebut, atau (sesuai pilihan Anda) versi yang lebih baru."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Program ini didistribusikan dengan harapan dapat bermanfaat, tetapi TANPA JAMINAN APA PUN; bahkan tanpa jaminan tersirat mengenai KELAYAKAN DAGANG atau KESESUAIAN UNTUK TUJUAN TERTENTU. Lihat GNU General Public License untuk detail selengkapnya."
+"Access denied.": "Akses ditolak."
+"Open About Kadupul to view project information.": "Buka Tentang Kadupul untuk melihat informasi proyek."
+"Version %version%": "Versi %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Organisasi Kadupul"
+"Kadupul project": "Proyek Kadupul"

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Σχετικά με το Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Το Kadupul είναι ένα ανεξάρτητο έργο ανοιχτού κώδικα για παρακολούθηση δικτύων και σχεδίαση γραφημάτων χρονοσειρών."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Η ανάπτυξη, οι συνεισφορές και οι αποφάσεις εκδόσεων διαχειρίζονται από τον οργανισμό Kadupul."
+"For documentation and support, visit the Kadupul project.": "Για τεκμηρίωση και υποστήριξη, επισκεφθείτε το έργο Kadupul."
+"License": "Άδεια Χρήσης"
+"Kadupul is licensed under the GNU GPL:": "Το Kadupul διαθέτει άδεια χρήσης του GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Το πρόγραμμα αυτό είναι ελεύθερο λογισμικό. Επιτρέπεται η αναδιανομή ή/και τροποποίησή του υπό τους όρους της Γενικής Άδειας Δημόσιας Χρήσης GNU (GNU General Public License), όπως αυτή έχει δημοσιευτεί από το Ίδρυμα Ελεύθερου Λογισμικού (Free Software Foundation) – είτε της έκδοσης 2 της Άδειας, είτε (κατ&apos; επιλογήν) οποιασδήποτε μεταγενέστερης έκδοσης."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Το πρόγραμμα αυτό διανέμεται με την ελπίδα ότι θα αποδειχθεί χρήσιμο, παρόλα αυτά ΧΩΡΙΣ ΚΑΜΙΑ ΕΓΓΥΗΣΗ – χωρίς ούτε και την σιωπηρή εγγύηση ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ή ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΗ ΧΡΗΣΗ. Για περισσότερες λεπτομέρειες ανατρέξτε στη Γενική Άδεια Δημόσιας Χρήσης GNU (GNU General Public License)."
+"Access denied.": "Άρνηση πρόσβασης."
+"Open About Kadupul to view project information.": "Ανοίξτε το Σχετικά με το Kadupul για να δείτε πληροφορίες του έργου."
+"Version %version%": "Έκδοση %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Οργανισμός Kadupul"
+"Kadupul project": "Έργο Kadupul"

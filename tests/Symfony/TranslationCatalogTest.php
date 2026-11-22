@@ -66,25 +66,36 @@ final class TranslationCatalogTest extends TestCase
         return array_combine(array_map('strval', array_keys($messages)), $messages);
     }
 
+    /** @var list<string> */
+    private const TRANSLATED_LOCALES = [
+        'ar_SA', 'bg_BG', 'bn_BD', 'de_DE', 'el_GR', 'es_ES', 'fa_IR', 'fr',
+        'he_IL', 'hi_IN', 'id_ID', 'it_IT', 'ja_JP', 'ko_KR', 'lv_LV', 'mr_IN',
+        'nl_NL', 'pl_PL', 'pt_BR', 'pt_PT', 'ru_RU', 'sv_SE', 'sw_KE', 'ta_IN',
+        'te_IN', 'th_TH', 'tr_TR', 'uk_UA', 'ur_PK', 'vi_VN', 'zh_CN', 'zh_TW',
+    ];
+
     #[DataProvider('domains')]
-    public function testEnglishAndFrenchDefineTheSameMessages(string $domain): void
+    public function testEnglishAndTranslatedLocalesDefineTheSameMessages(string $domain): void
     {
         $english = self::catalog($domain, 'en');
-        $french = self::catalog($domain, 'fr');
-
-        self::assertSame([], array_values(array_diff_key($english, $french)), $domain . ' is missing French messages');
-        self::assertSame([], array_values(array_diff_key($french, $english)), $domain . ' is missing English messages');
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            $translated = self::catalog($domain, $locale);
+            self::assertSame([], array_values(array_diff_key($english, $translated)), $domain . ' is missing ' . $locale . ' messages');
+            self::assertSame([], array_values(array_diff_key($translated, $english)), $domain . ' has extra ' . $locale . ' messages');
+        }
     }
 
     #[DataProvider('domains')]
     public function testMessagesAreNotBlankAndKeepPlaceholders(string $domain): void
     {
         $english = self::catalog($domain, 'en');
-        foreach (self::catalog($domain, 'fr') as $id => $message) {
-            $id = (string) $id;
-            self::assertNotSame('', trim($message), $domain . ' fr: ' . $id);
-            // A plural form may drop %count% ("Every %count% Day" becomes "Chaque jour") but must not invent one.
-            self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), $domain . ' fr: ' . $id);
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            foreach (self::catalog($domain, $locale) as $id => $message) {
+                $id = (string) $id;
+                self::assertNotSame('', trim($message), $domain . ' ' . $locale . ': ' . $id);
+                // A plural form may drop %count% ("Every %count% Day" becomes "Chaque jour") but must not invent one.
+                self::assertSame([], array_diff(self::placeholders($message), self::placeholders($id)), $domain . ' ' . $locale . ': ' . $id);
+            }
         }
         foreach ($english as $id => $message) {
             self::assertNotSame('', trim($message), $domain . ' en: ' . $id);

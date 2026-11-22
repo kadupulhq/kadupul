@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Over Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul is een onafhankelijk open-sourceproject voor netwerkmonitoring en tijdreeksgrafieken."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Ontwikkeling, bijdragen en releasebeslissingen worden beheerd door de Kadupul-organisatie."
+"For documentation and support, visit the Kadupul project.": "Bezoek het Kadupul-project voor documentatie en ondersteuning."
+"License": "Licentie"
+"Kadupul is licensed under the GNU GPL:": "Kadupul is gelicentieerd onder de GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Dit programma is gratis; je mag het distribueren of aanpassen onder de termen van de GNU General Public License zoals gepubliceerd door de Free Software Foundation; uitsluitend versie 2 van de licentie, of enig latere versie."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Dit programma is gedistribueerd in de hoop dat het zinnig zal zijn, maar komt ZONDER ENIGE GARANTIE; zelfs zonder de impliciete garantie van VERKOOPBAARHEID of GESCHIKTHEID VOOR EEN BEPAALD DOEL. Zie de GNU General Public License voor meer details."
+"Access denied.": "Toegang geweigerd."
+"Open About Kadupul to view project information.": "Open Over Kadupul om projectinformatie te bekijken."
+"Version %version%": "Versie %version%"
+"- Beta %beta%": "- Bèta %beta%"
+"Kadupul organization": "Kadupul-organisatie"
+"Kadupul project": "Kadupul-project"

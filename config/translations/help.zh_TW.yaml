@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "說明"
+"Access denied.": "拒絕存取。"
+"Choose a topic to open the Kadupul documentation.": "選擇主題以開啟 Kadupul 說明文件。"
+"Get started": "開始使用"
+"Graphs": "圖表"
+"Templates": "範本"
+"Data queries": "資料查詢"
+"Remote data collectors": "遠端資料收集器"
+"Users and permissions": "使用者與權限"
+"Plugins": "外掛程式"
+"Troubleshoot missing data": "疑難排解遺漏資料"
+"Not available locally.": "本機無法使用。"
+"Back to console": "返回主控台"

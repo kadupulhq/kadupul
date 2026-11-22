@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "เกี่ยวกับ Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul เป็นโครงการโอเพนซอร์สอิสระสำหรับการตรวจสอบเครือข่ายและการสร้างกราฟอนุกรมเวลา"
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "การพัฒนา การมีส่วนร่วม และการตัดสินใจเผยแพร่เวอร์ชันได้รับการจัดการโดยองค์กร Kadupul"
+"For documentation and support, visit the Kadupul project.": "สำหรับเอกสารประกอบและการสนับสนุน โปรดเยี่ยมชมโครงการ Kadupul"
+"License": "สัญญาอนุญาต"
+"Kadupul is licensed under the GNU GPL:": "Kadupul เผยแพร่ภายใต้สัญญาอนุญาต GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "โปรแกรมนี้เป็นซอฟต์แวร์เสรี คุณสามารถเผยแพร่ต่อและ/หรือแก้ไขได้ภายใต้เงื่อนไขของสัญญาอนุญาตสาธารณะทั่วไปของกนู (GNU General Public License) ที่เผยแพร่โดย Free Software Foundation ไม่ว่าจะเป็นสัญญาอนุญาตรุ่นที่ 2 หรือรุ่นที่ใหม่กว่า (ตามที่คุณเลือก)"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "โปรแกรมนี้เผยแพร่ด้วยความหวังว่าจะเป็นประโยชน์ แต่ไม่มีการรับประกันใดๆ ทั้งสิ้น รวมถึงไม่มีการรับประกันโดยนัยถึงความสามารถในการจำหน่ายหรือความเหมาะสมสำหรับวัตถุประสงค์เฉพาะ ดูรายละเอียดเพิ่มเติมได้ในสัญญาอนุญาตสาธารณะทั่วไปของกนู (GNU General Public License)"
+"Access denied.": "ปฏิเสธการเข้าถึง"
+"Open About Kadupul to view project information.": "เปิด 'เกี่ยวกับ Kadupul' เพื่อดูข้อมูลโครงการ"
+"Version %version%": "เวอร์ชัน %version%"
+"- Beta %beta%": "- เบต้า %beta%"
+"Kadupul organization": "องค์กร Kadupul"
+"Kadupul project": "โครงการ Kadupul"

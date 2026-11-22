@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kadupul பற்றி"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul என்பது பிணையக் கண்காணிப்பு மற்றும் நேர-வரிசை வரைபடத்திற்கான ஒரு சுயாதீன திறந்த-மூலத் திட்டமாகும்."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "மேம்பாடு, பங்களிப்புகள் மற்றும் வெளியீட்டு முடிவுகள் Kadupul அமைப்பால் நிர்வகிக்கப்படுகின்றன."
+"For documentation and support, visit the Kadupul project.": "ஆவணங்கள் மற்றும் ஆதரவுக்கு, Kadupul திட்டத்தைப் பார்வையிடவும்."
+"License": "உரிமம்"
+"Kadupul is licensed under the GNU GPL:": "Kadupul GNU GPL-இன் கீழ் உரிமம் பெற்றது:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "இந்த நிரல் ஒரு இலவச மென்பொருள்; Free Software Foundation வெளியிட்ட GNU General Public License-இன் விதிமுறைகளின் கீழ் (பதிப்பு 2 அல்லது உங்கள் விருப்பப்படி பிந்தைய பதிப்பு) நீங்கள் இதை மறுவிநியோகம் செய்யலாம் மற்றும்/அல்லது மாற்றலாம்."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "இந்த நிரல் பயனுள்ளதாக இருக்கும் என்ற நம்பிக்கையில் விநியோகிக்கப்படுகிறது, ஆனால் எந்த உத்தரவாதமும் இல்லாமல்; வணிகத்தன்மை அல்லது ஒரு குறிப்பிட்ட நோக்கத்திற்கான தகுதி குறித்த மறைமுக உத்தரவாதமும் கூட இல்லை. மேலும் விவரங்களுக்கு GNU General Public License-ஐப் பார்க்கவும்."
+"Access denied.": "அணுகல் மறுக்கப்பட்டது."
+"Open About Kadupul to view project information.": "திட்டத் தகவலைப் பார்க்க Kadupul பற்றி என்பதைத் திறக்கவும்."
+"Version %version%": "பதிப்பு %version%"
+"- Beta %beta%": "- பீட்டா %beta%"
+"Kadupul organization": "Kadupul அமைப்பு"
+"Kadupul project": "Kadupul திட்டம்"

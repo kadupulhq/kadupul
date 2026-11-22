@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Βοήθεια"
+"Access denied.": "Άρνηση πρόσβασης."
+"Choose a topic to open the Kadupul documentation.": "Επιλέξτε ένα θέμα για να ανοίξετε την τεκμηρίωση του Kadupul."
+"Get started": "Έναρξη"
+"Graphs": "Γραφήματα"
+"Templates": "Πρότυπα"
+"Data queries": "Ερωτήματα δεδομένων"
+"Remote data collectors": "Απομακρυσμένοι συλλέκτες δεδομένων"
+"Users and permissions": "Χρήστες και δικαιώματα"
+"Plugins": "Πρόσθετα"
+"Troubleshoot missing data": "Αντιμετώπιση προβλημάτων ελλιπών δεδομένων"
+"Not available locally.": "Μη διαθέσιμο τοπικά."
+"Back to console": "Επιστροφή στην κονσόλα"

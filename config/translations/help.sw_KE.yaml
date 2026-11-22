@@ -1,0 +1,16 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Help": "Usaidizi"
+"Access denied.": "Ufikiaji umekataliwa."
+"Choose a topic to open the Kadupul documentation.": "Chagua mada ili kufungua nyaraka za Kadupul."
+"Get started": "Anza"
+"Graphs": "Grafu"
+"Templates": "Violezo"
+"Data queries": "Hoja za data"
+"Remote data collectors": "Vikusanya data vya mbali"
+"Users and permissions": "Watumiaji na ruhusa"
+"Plugins": "Programu-jalizi"
+"Troubleshoot missing data": "Tatua data iliyokosekana"
+"Not available locally.": "Haipatikani ndani."
+"Back to console": "Rudi kwenye konsole"

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Kuhusu Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul ni mradi huru wa chanzo wazi kwa ajili ya ufuatiliaji wa mtandao na uchoraji grafu wa mfululizo wa muda."
+"Development, contributions, and release decisions are managed by the Kadupul organization.": "Maendeleo, michango, na maamuzi ya matoleo yanadhibitiwa na shirika la Kadupul."
+"For documentation and support, visit the Kadupul project.": "Kwa nyaraka na usaidizi, tembelea mradi wa Kadupul."
+"License": "Leseni"
+"Kadupul is licensed under the GNU GPL:": "Kadupul imepewa leseni chini ya GNU GPL:"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Programu hii ni programu huria; unaweza kuisambaza tena na/au kuirekebisha chini ya masharti ya Leseni ya Umma ya GNU kama ilivyochapishwa na Free Software Foundation; ama toleo la 2 la Leseni, au (kwa chaguo lako) toleo lolote la baadaye."
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Programu hii inasambazwa kwa matumaini kwamba itakuwa muhimu, lakini BILA DHAMANA YOYOTE; hata bila dhamana iliyodokezwa ya UUZAJI au UFAAJI KWA MADHUMUNI MAALUM. Tazama Leseni ya Umma ya GNU kwa maelezo zaidi."
+"Access denied.": "Ufikiaji umekataliwa."
+"Open About Kadupul to view project information.": "Fungua Kuhusu Kadupul ili kutazama taarifa za mradi."
+"Version %version%": "Toleo %version%"
+"- Beta %beta%": "- Beta %beta%"
+"Kadupul organization": "Shirika la Kadupul"
+"Kadupul project": "Mradi wa Kadupul"
