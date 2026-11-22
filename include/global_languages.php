@@ -724,6 +724,7 @@ function get_list_of_locales() {
 		'ar-SA' => array('language' => 'Arabic',              'direction' => 'rtl', 'country' => 'sa', 'filename' => 'arabic_saudi_arabia'),
 		'hy-AM' => array('language' => 'Armenian',            'direction' => 'ltr', 'country' => 'am', 'filename' => 'armenian_armenia'),
 		'be-BY' => array('language' => 'Belarusian',          'direction' => 'ltr', 'country' => 'by', 'filename' => 'belarusian_belarus'),
+		'bn-BD' => array('language' => 'Bengali',             'direction' => 'ltr', 'country' => 'bd', 'filename' => 'bengali_bangladesh'),
 		'bg-BG' => array('language' => 'Bulgarian',           'direction' => 'ltr', 'country' => 'bg', 'filename' => 'bulgarian_bulgaria'),
 		'zh-CN' => array('language' => 'Chinese (China)',     'direction' => 'ltr', 'country' => 'cn', 'filename' => 'chinese_china_simplified'),
 		'zh-HK' => array('language' => 'Chinese (Hong Kong)', 'direction' => 'ltr', 'country' => 'hk', 'filename' => 'chinese_hong_kong'),
@@ -755,7 +756,9 @@ function get_list_of_locales() {
 		'mk-MK' => array('language' => 'Macedonian',          'direction' => 'ltr', 'country' => 'mk', 'filename' => 'macedonian_macedonia'),
 		'ms-MY' => array('language' => 'Malay',               'direction' => 'ltr', 'country' => 'my', 'filename' => 'malay_malaysia'),
 		'mt-LT' => array('language' => 'Maltese',             'direction' => 'ltr', 'country' => 'lt', 'filename' => 'maltese_malta'),
+		'mr-IN' => array('language' => 'Marathi',             'direction' => 'ltr', 'country' => 'in', 'filename' => 'marathi_india'),
 		'no-NO' => array('language' => 'Norwegian',           'direction' => 'ltr', 'country' => 'no', 'filename' => 'norwegian_norway'),
+		'fa-IR' => array('language' => 'Persian',             'direction' => 'rtl', 'country' => 'ir', 'filename' => 'persian_iran'),
 		'pl-PL' => array('language' => 'Polish',              'direction' => 'ltr', 'country' => 'pl', 'filename' => 'polish_poland'),
 		'pt-PT' => array('language' => 'Portuguese',          'direction' => 'ltr', 'country' => 'pt', 'filename' => 'portuguese_portugal'),
 		'pt-BR' => array('language' => 'Portuguese (Brazil)', 'direction' => 'ltr', 'country' => 'br', 'filename' => 'portuguese_brazil'),
@@ -765,10 +768,14 @@ function get_list_of_locales() {
 		'sk-SK' => array('language' => 'Slovak',              'direction' => 'ltr', 'country' => 'sk', 'filename' => 'slovak_slovakia'),
 		'sl-SI' => array('language' => 'Slovenian',           'direction' => 'ltr', 'country' => 'si', 'filename' => 'slovenian_slovenia'),
 		'es-ES' => array('language' => 'Spanish',             'direction' => 'ltr', 'country' => 'es', 'filename' => 'spanish_spain'),
+		'sw-KE' => array('language' => 'Swahili',             'direction' => 'ltr', 'country' => 'ke', 'filename' => 'swahili_kenya'),
 		'sv-SE' => array('language' => 'Swedish',             'direction' => 'ltr', 'country' => 'se', 'filename' => 'swedish_sweden'),
+		'ta-IN' => array('language' => 'Tamil',               'direction' => 'ltr', 'country' => 'in', 'filename' => 'tamil_india'),
+		'te-IN' => array('language' => 'Telugu',              'direction' => 'ltr', 'country' => 'in', 'filename' => 'telugu_india'),
 		'th-TH' => array('language' => 'Thai',                'direction' => 'ltr', 'country' => 'th', 'filename' => 'thai_thailand'),
 		'tr-TR' => array('language' => 'Turkish',             'direction' => 'ltr', 'country' => 'tr', 'filename' => 'turkish_turkey'),
 		'uk-UA' => array('language' => 'Ukrainian',           'direction' => 'ltr', 'country' => 'ua', 'filename' => 'ukrainian_ukraine'),
+		'ur-PK' => array('language' => 'Urdu',                'direction' => 'rtl', 'country' => 'pk', 'filename' => 'urdu_pakistan'),
 		'vi-VN' => array('language' => 'Vietnamese',          'direction' => 'ltr', 'country' => 'vn', 'filename' => 'vietnamese_vietnam')
 	);
 
