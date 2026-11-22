@@ -2814,7 +2814,7 @@ msgstr "Die Datei muss eine Kopfzeile mit den folgenden Spaltenüberschriften en
 
 #: color.php:462
 msgid "<strong>name</strong> - The Color Name"
-msgstr "<stark>name</stark> - Der Farbname"
+msgstr "<strong>name</strong> - Der Farbname"
 
 #: color.php:463
 msgid "<strong>hex</strong> - The Hex Value"
@@ -2982,7 +2982,7 @@ msgstr "Farbvorlage[neu]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Bei der Farbvorlage '%s' wurden% d Aggregatvorlagen und% d Nicht-Vorlagenaggregate herausgeschoben"
+msgstr "Bei der Farbvorlage '%s' wurden %d Aggregatvorlagen und %d Nicht-Vorlagenaggregate herausgeschoben"
 
 #: color_templates.php:482
 #, php-format
@@ -4074,8 +4074,8 @@ msgstr[1] "Die folgenden Grafiken verwenden diese Datenquellen:"
 #: data_sources.php:541
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
-msgstr[0] "Lassen Sie die <starke>Grafik</starke> unberührt."
-msgstr[1] "Lassen Sie alle <stark>Grafiken</stark> unberührt."
+msgstr[0] "Lassen Sie die <strong>Grafik</strong> unberührt."
+msgstr[1] "Lassen Sie alle <strong>Grafiken</strong> unberührt."
 
 #: data_sources.php:542
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
@@ -8807,7 +8807,7 @@ msgstr "Kein Gridfit (--kein Gridfit)"
 
 #: include/global_form.php:863
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
-msgstr "Um Verwacklungsunschärfe zu vermeiden, fängt RRDtool Punkte an Pixel mit Geräteauflösung, was zu einem klareren Erscheinungsbild führt. Wenn dies nicht nach Ihrem Geschmack ist, können Sie mit diesem Schalter dieses Verhalten deaktivieren. <br><stark>Hinweis: </stark>Rasterfitting ist für PDF-, EPS- und SVG-Ausgaben standardmäßig deaktiviert."
+msgstr "Um Verwacklungsunschärfe zu vermeiden, fängt RRDtool Punkte an Pixel mit Geräteauflösung, was zu einem klareren Erscheinungsbild führt. Wenn dies nicht nach Ihrem Geschmack ist, können Sie mit diesem Schalter dieses Verhalten deaktivieren. <br><strong>Hinweis: </strong>Rasterfitting ist für PDF-, EPS- und SVG-Ausgaben standardmäßig deaktiviert."
 
 #: include/global_form.php:866
 msgid "Alternative Y Grid (--alt-y-grid)"
@@ -8815,7 +8815,7 @@ msgstr "Alternatives Y-Netz (--alt-y-y-Netz)"
 
 #: include/global_form.php:869
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "Der Algorithmus stellt sicher, dass Sie immer ein Gitter haben, dass es genügend, aber nicht zu viele Gitterlinien gibt und dass das Gitter metrisch ist. Dieser Parameter stellt auch sicher, dass Sie genügend Dezimalstellen angezeigt bekommen, selbst wenn Ihr Diagramm von 69.998 bis 70.001.<br><stark>Hinweis: </stark>Dieser Parameter kann die --alt-autoskalierten Optionen stören."
+msgstr "Der Algorithmus stellt sicher, dass Sie immer ein Gitter haben, dass es genügend, aber nicht zu viele Gitterlinien gibt und dass das Gitter metrisch ist. Dieser Parameter stellt auch sicher, dass Sie genügend Dezimalstellen angezeigt bekommen, selbst wenn Ihr Diagramm von 69.998 bis 70.001.<br><strong>Hinweis: </strong>Dieser Parameter kann die --alt-autoskalierten Optionen stören."
 
 #: include/global_form.php:872
 msgid "Axis Options"
@@ -8988,7 +8988,7 @@ msgstr "Textausrichtung (TEXTALIGN)"
 
 #: include/global_form.php:1052
 msgid "All subsequent legend line(s) will be aligned as given here.  You may use this command multiple times in a single graph.  This command does not produce tabular layout.<br/><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br/> <strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!"
-msgstr "Alle nachfolgenden Legendenlinien werden wie hier angegeben ausgerichtet.  Sie können diesen Befehl mehrmals in einem einzigen Diagramm verwenden.  Dieser Befehl erzeugt kein tabellarisches Layout.<br/><stark>Hinweis: </stark>Sie möchten vielleicht ein &lt;HR&gt; auf dem vorhergehenden Grafikelement einfügen.<br/> <stark>Hinweis: </stark>A &lt;HR&gt; auf dieser Legende wird diese Einstellung veraltet!"
+msgstr "Alle nachfolgenden Legendenlinien werden wie hier angegeben ausgerichtet.  Sie können diesen Befehl mehrmals in einem einzigen Diagramm verwenden.  Dieser Befehl erzeugt kein tabellarisches Layout.<br/><strong>Hinweis: </strong>Sie möchten vielleicht ein &lt;HR&gt; auf dem vorhergehenden Grafikelement einfügen.<br/> <strong>Hinweis: </strong>A &lt;HR&gt; auf dieser Legende wird diese Einstellung veraltet!"
 
 #: include/global_form.php:1055
 msgid "Text Format"
@@ -9444,7 +9444,7 @@ msgstr "Präfix für GPRINT-Summen"
 #: include/global_form.php:1878 include/global_form.php:1966
 #: include/global_form.php:2071
 msgid "A Prefix for all <strong>totaling</strong> GPRINT lines."
-msgstr "Ein Präfix für alle <stark>Summenbildung</stark> GPRINT-Zeilen."
+msgstr "Ein Präfix für alle <strong>Summenbildung</strong> GPRINT-Zeilen."
 
 #: include/global_form.php:1885 include/global_form.php:1973
 #: include/global_form.php:2078
@@ -9605,7 +9605,7 @@ msgstr "Alle Optionen (ohne 'Titel') werden an alle untergeordnete 'Überschrift
 
 #: include/global_form.php:2347
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Das String Pattern (Regular Expression), gegen das man abgleichen kann, muss <stark>NICHT</stark> angegeben werden!"
+msgstr "Das String Pattern (Regular Expression), gegen das man abgleichen kann, muss <strong>NICHT</strong> angegeben werden!"
 
 #: include/global_form.php:2354
 msgid "Replacement Pattern"
@@ -9847,7 +9847,7 @@ msgstr "Arşiv klasörü"
 
 #: include/global_settings.php:256
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
-msgstr "Dies ist das Verzeichnis, in dem sich die RRD-Dateien <stark>verschiebt</stark> zur Archivierung befinden."
+msgstr "Dies ist das Verzeichnis, in dem sich die RRD-Dateien <strong>verschiebt</strong> zur Archivierung befinden."
 
 #: include/global_settings.php:264
 msgid "Log Settings"
@@ -13674,7 +13674,7 @@ msgstr "Mailer-Fehler: Nein <b>TO</b>Adresse gesetzt!<br>Wenn Sie den Link <i>Te
 #: lib/functions.php:5730
 #, php-format
 msgid "Authentication failed: %s"
-msgstr "Authentifizierung fehlgeschlagen:% s"
+msgstr "Authentifizierung fehlgeschlagen: %s"
 
 #: lib/functions.php:5734
 #, php-format
@@ -15462,7 +15462,7 @@ msgstr "Installationsart"
 #: lib/installer.php:2167
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
-msgstr "Upgrade von <stark>%s</stark> auf <stark>%s</stark>"
+msgstr "Upgrade von <strong>%s</strong> auf <strong>%s</strong>"
 
 #: lib/installer.php:2169
 #, fuzzy
@@ -15480,7 +15480,7 @@ msgstr "Wenn nach dem Leeren des Caches und dem Neustart des Browsers immer noch
 #: lib/installer.php:2177
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
-msgstr "Herabstufung von <stark>%s</stark> auf <stark>%s</stark>"
+msgstr "Herabstufung von <strong>%s</strong> auf <strong>%s</strong>"
 
 #: lib/installer.php:2178
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
@@ -15705,7 +15705,7 @@ msgstr "Diese Skriptoption aktiviert alle deaktivierten Datenquellen wieder."
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Es wird dringend empfohlen, die Datei config.php zu aktualisieren, um diese Funktion zu aktivieren, indem Sie die Variable <b>$ input_whitelist auskommentieren</b> und nach Abschluss der webbasierten Installation die drei oben genannten CLI- <b>Skriptoptionen ausführen</b> ."
+msgstr "Es wird dringend empfohlen, die Datei config.php zu aktualisieren, um diese Funktion zu aktivieren, indem Sie die Variable <b>$input_whitelist auskommentieren</b> und nach Abschluss der webbasierten Installation die drei oben genannten CLI- <b>Skriptoptionen ausführen</b> ."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -19169,19 +19169,19 @@ msgstr "Verweigern"
 
 #: user_admin.php:813 user_group_admin.php:861
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "Hinweis:<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
 
 #: user_admin.php:815 user_group_admin.php:863
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
 
 #: user_admin.php:817 user_group_admin.php:865
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
 
 #: user_admin.php:819 user_group_admin.php:867
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "Hinweis:<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
 
 #: user_admin.php:823 user_group_admin.php:875
 msgid "Default Graph Policy"

@@ -856,7 +856,7 @@ msgstr "Yêu cầu mật khẩu bao gồm:"
 #: auth_changepassword.php:256
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "Phải có ít nhất% d ký tự"
+msgstr "Phải có ít nhất %d ký tự"
 
 #: auth_changepassword.php:260
 msgid "Must include mixed case"
@@ -873,7 +873,7 @@ msgstr "Phải bao gồm ít nhất 1 ký tự đặc biệt"
 #: auth_changepassword.php:272
 #, php-format
 msgid "Cannot be reused for %d password changes"
-msgstr "Không thể được sử dụng lại để thay đổi mật khẩu% d"
+msgstr "Không thể được sử dụng lại để thay đổi mật khẩu %d"
 
 #: auth_changepassword.php:325
 msgid "There are problems with the Change Password page.  Contact your Cacti administrator right away."
@@ -1683,7 +1683,7 @@ msgstr "Xác định số lượng luồng để sử dụng để khám phá Ph
 #: automation_networks.php:521
 #, php-format
 msgid "%d Thread"
-msgstr "% d Chủ đề"
+msgstr "%d Chủ đề"
 
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
@@ -1697,7 +1697,7 @@ msgstr "% d Chủ đề"
 #: include/global_arrays.php:845 include/global_arrays.php:846
 #, php-format
 msgid "%d Threads"
-msgstr "% d Chủ đề"
+msgstr "%d Chủ đề"
 
 #: automation_networks.php:538
 msgid "Run Limit"
@@ -2182,7 +2182,7 @@ msgstr "Làm mới"
 #: pollers.php:992 pollers.php:993 pollers.php:994
 #, php-format
 msgid "%d Seconds"
-msgstr "% d Giây"
+msgstr "%d Giây"
 
 #: automation_networks.php:1253
 msgid "Clear Filtered"
@@ -2335,7 +2335,7 @@ msgstr "Hành động"
 #: lib/api_automation.php:1558 lib/api_automation.php:1626
 #, php-format
 msgid "Item#%d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: automation_snmp.php:575
 msgid "none"
@@ -2687,7 +2687,7 @@ msgstr "Giá trị sản phẩm"
 #: cdef.php:609 vdef.php:633
 #, php-format
 msgid "Item #%d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: cdef.php:686
 msgid "Delete CDEF Item"
@@ -2886,7 +2886,7 @@ msgstr "Mục màu"
 #: lib/html_reports.php:1869
 #, php-format
 msgid "Item # %d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: color_templates.php:133 graph_templates_inputs.php:274
 #: lib/api_aggregate.php:1915 lib/html.php:1684
@@ -2953,7 +2953,7 @@ msgstr "Mẫu màu [mới]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Mẫu màu '%s' có% d Mẫu tổng hợp được đẩy ra và% d Các mẫu tổng hợp không được đẩy ra"
+msgstr "Mẫu màu '%s' có %d Mẫu tổng hợp được đẩy ra và %d Các mẫu tổng hợp không được đẩy ra"
 
 #: color_templates.php:482
 #, php-format
@@ -3889,7 +3889,7 @@ msgstr ""
 #: include/global_arrays.php:1488 include/global_settings.php:1627
 #, php-format
 msgid "%d Years"
-msgstr "% d Năm"
+msgstr "%d Năm"
 
 #: data_source_profiles.php:943
 msgid "1 Year"
@@ -3899,7 +3899,7 @@ msgstr "1 Năm"
 #: include/global_arrays.php:1482 rrdcleaner.php:549
 #, php-format
 msgid "%d Month"
-msgstr "% d Tháng"
+msgstr "%d Tháng"
 
 #: data_source_profiles.php:952 include/global_arrays.php:800
 #: include/global_arrays.php:801 include/global_arrays.php:802
@@ -3909,14 +3909,14 @@ msgstr "% d Tháng"
 #: rrdcleaner.php:552
 #, php-format
 msgid "%d Months"
-msgstr "% d Tháng"
+msgstr "%d Tháng"
 
 #: data_source_profiles.php:961 include/global_arrays.php:740
 #: include/global_arrays.php:796 include/global_arrays.php:1480
 #: rrdcleaner.php:545 rrdcleaner.php:546
 #, php-format
 msgid "%d Week"
-msgstr "% d Tuần"
+msgstr "%d Tuần"
 
 #: data_source_profiles.php:961 include/global_arrays.php:797
 #: include/global_arrays.php:798 include/global_arrays.php:1481
@@ -3924,7 +3924,7 @@ msgstr "% d Tuần"
 #: include/global_settings.php:2923 rrdcleaner.php:547 rrdcleaner.php:548
 #, php-format
 msgid "%d Weeks"
-msgstr "% d Tuần"
+msgstr "%d Tuần"
 
 #: data_source_profiles.php:970 include/global_arrays.php:739
 #: include/global_arrays.php:783 include/global_arrays.php:793
@@ -4605,7 +4605,7 @@ msgstr "Ảnh thu nhỏ"
 #: graph_realtime.php:532
 #, php-format
 msgid "%d seconds left."
-msgstr "% d giây còn lại."
+msgstr "%d giây còn lại."
 
 #: graph_realtime.php:548
 msgid " seconds left."
@@ -5634,7 +5634,7 @@ msgstr "Hành động"
 #: host.php:1029
 #, php-format
 msgid " [%d Items, %d Rows]"
-msgstr "[% d Mục,% d Hàng]"
+msgstr "[%d Mục, %d Hàng]"
 
 #: host.php:1029
 msgid "Fail"
@@ -6470,7 +6470,7 @@ msgstr "Không sử dụng"
 #: include/global_arrays.php:899
 #, php-format
 msgid "Version %d"
-msgstr "Phiên bản% d"
+msgstr "Phiên bản %d"
 
 #: include/global_arrays.php:659 include/global_arrays.php:669
 msgid "[None]"
@@ -6596,7 +6596,7 @@ msgstr "Khoảng thời gian chọn"
 #: include/global_arrays.php:819 include/global_arrays.php:820
 #, php-format
 msgid "Every %d Seconds"
-msgstr "Mỗi% d giây"
+msgstr "Mỗi %d giây"
 
 #: include/global_arrays.php:748 include/global_arrays.php:821
 #: include/global_arrays.php:866
@@ -6609,7 +6609,7 @@ msgstr "Mỗi phút"
 #: include/global_arrays.php:827 include/global_arrays.php:867
 #, php-format
 msgid "Every %d Minutes"
-msgstr "Mỗi% d Phút"
+msgstr "Mỗi %d Phút"
 
 #: include/global_arrays.php:754 include/global_arrays.php:828
 msgid "Every Hour"
@@ -6625,7 +6625,7 @@ msgstr "Mỗi tiếng"
 #: include/global_settings.php:2543
 #, php-format
 msgid "Every %d Hours"
-msgstr "Mỗi% d giờ"
+msgstr "Mỗi %d giờ"
 
 #: include/global_arrays.php:759
 #, fuzzy, php-format
@@ -6641,7 +6641,7 @@ msgstr "%d phút"
 #: include/global_settings.php:1626 rrdcleaner.php:553
 #, php-format
 msgid "%d Year"
-msgstr "% d Năm"
+msgstr "%d Năm"
 
 #: include/global_arrays.php:826
 msgid "Disabled/Manual"
@@ -7057,7 +7057,7 @@ msgstr "Toàn Bộ các Đường"
 #: include/global_arrays.php:1152 include/global_arrays.php:1153
 #, php-format
 msgid "%d Lines"
-msgstr "% d Dòng"
+msgstr "%d Dòng"
 
 #: include/global_arrays.php:1231
 msgid "Console Access"
@@ -7267,7 +7267,7 @@ msgstr "Năm trước"
 #: include/global_arrays.php:1470
 #, php-format
 msgid "%d Min"
-msgstr "% d tối thiểu"
+msgstr "%d tối thiểu"
 
 #: include/global_arrays.php:1525
 msgid "Month Number, Day, Year"
@@ -7303,7 +7303,7 @@ msgstr "Sau khi tăng"
 #: include/global_arrays.php:1617
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MByte"
+msgstr "%d MByte"
 
 #: include/global_arrays.php:1555
 msgid "1 GByte"
@@ -7321,7 +7321,7 @@ msgstr "%s GB"
 #: include/global_arrays.php:1624 include/global_arrays.php:1625
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GByte"
+msgstr "%d GByte"
 
 #: include/global_arrays.php:1578
 msgid "2,000 Data Source Items"
@@ -7380,7 +7380,7 @@ msgstr "%s giờ"
 #: include/global_arrays.php:1618
 #, php-format
 msgid "%d GByte"
-msgstr "% d GByte"
+msgstr "%d GByte"
 
 #: include/global_arrays.php:1626 utilities.php:2830 utilities.php:2831
 #: utilities.php:2880
@@ -7412,7 +7412,7 @@ msgstr "1 Megabyte"
 #: include/global_arrays.php:1671 include/global_arrays.php:1672
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d Megabyte"
+msgstr "%d Megabyte"
 
 #: include/global_arrays.php:1676
 msgid "Send Now"
@@ -7673,7 +7673,7 @@ msgstr "Mỗi tuần"
 #: include/global_arrays.php:1902 include/global_arrays.php:1903
 #, php-format
 msgid "Every %d Weeks"
-msgstr "Mỗi% d tuần"
+msgstr "Mỗi %d tuần"
 
 #: include/global_arrays.php:1934
 msgctxt "A short textual representation of a month, three letters"
@@ -8777,7 +8777,7 @@ msgstr "Định dạng trục phải (định dạng trục chính &lt;format&gt
 #: include/global_form.php:898
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "Theo mặc định, định dạng của nhãn trục được xác định tự động. Nếu bạn muốn tự làm điều này, hãy sử dụng tùy chọn này với cùng các đối số% lf bạn biết từ các lệnh PRINT và GPRINT."
+msgstr "Theo mặc định, định dạng của nhãn trục được xác định tự động. Nếu bạn muốn tự làm điều này, hãy sử dụng tùy chọn này với cùng các đối số %lf bạn biết từ các lệnh PRINT và GPRINT."
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
@@ -8785,7 +8785,7 @@ msgstr "Trình định dạng trục phải (--right-form-formatter &lt;formatna
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Khi bạn thiết lập ghi nhãn trục phải, áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-% d% H :%CÔ&quot;). Xem thêm --units-length và --right-format-format. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
+msgstr "Khi bạn thiết lập ghi nhãn trục phải, áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-%d% H :%CÔ&quot;). Xem thêm --units-length và --right-format-format. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
 
 #: include/global_form.php:909
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
@@ -8793,7 +8793,7 @@ msgstr "Trình định dạng trục trái (--left-trục-formatter &lt;formatna
 
 #: include/global_form.php:914
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-% d% H :%CÔ&quot;). Xem thêm - chiều dài. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
+msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-%d% H :%CÔ&quot;). Xem thêm - chiều dài. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
 
 #: include/global_form.php:917
 msgid "Legend Options"
@@ -11021,7 +11021,7 @@ msgstr "1 quá trình"
 #: include/global_settings.php:2293 include/global_settings.php:2294
 #, php-format
 msgid "%d Processes"
-msgstr "% d Quá trình"
+msgstr "%d Quá trình"
 
 #: include/global_settings.php:1455
 msgid "Maintenance Background Generation Timeout"
@@ -11213,7 +11213,7 @@ msgstr "1 Thay đổi"
 #: include/global_settings.php:1660
 #, php-format
 msgid "%d Changes"
-msgstr "% d Thay đổi"
+msgstr "%d Thay đổi"
 
 #: include/global_settings.php:1663
 msgid "Account Locking"
@@ -11236,7 +11236,7 @@ msgstr "1 lần thử"
 #: include/global_settings.php:1679
 #, php-format
 msgid "%d Attempts"
-msgstr "% d Nỗ lực"
+msgstr "%d Nỗ lực"
 
 #: include/global_settings.php:1682
 msgid "Auto Unlock"
@@ -12004,7 +12004,7 @@ msgstr "Bất kỳ giá trị nào có nhiều độ lệch chuẩn trên trung 
 #: include/global_settings.php:2454
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d Độ lệch chuẩn"
+msgstr "%d Độ lệch chuẩn"
 
 #: include/global_settings.php:2458
 msgid "Variance Percentage"
@@ -12032,7 +12032,7 @@ msgstr "Giá trị này biểu thị số lượng mẫu trung bình cao và th�
 #: include/global_settings.php:2499
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d Mẫu cao / thấp"
+msgstr "%d Mẫu cao / thấp"
 
 #: include/global_settings.php:2503
 msgid "Max Kills Per RRA"
@@ -12050,7 +12050,7 @@ msgstr "Giá trị này biểu thị số lượng gai tối đa cần xóa kh�
 #: include/global_settings.php:2518 include/global_settings.php:2519
 #, php-format
 msgid "%d Spikes"
-msgstr "% d gai"
+msgstr "%d gai"
 
 #: include/global_settings.php:2523
 msgid "RRDfile Backup Directory"
@@ -12275,7 +12275,7 @@ msgstr "1 cột"
 #: lib/html_tree.php:1062
 #, php-format
 msgid "%d Columns"
-msgstr "% d Cột"
+msgstr "%d Cột"
 
 #: include/global_settings.php:2748
 msgid "Tree View Thumbnail Columns"
@@ -12865,7 +12865,7 @@ msgstr "Quản trị viên Cacti của bạn đã buộc mật khẩu phức t�
 #: lib/auth.php:4754
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "Mật khẩu phải có ít nhất% d ký tự!"
+msgstr "Mật khẩu phải có ít nhất %d ký tự!"
 
 #: lib/auth.php:4760
 msgid "Your password must contain at least 1 numerical character!"
@@ -12934,12 +12934,12 @@ msgstr "- Chế độ xem của quản trị viên"
 #: lib/clog_webapi.php:318
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "Nhật ký [Tổng số dòng:% d %s - Bộ lọc hoạt động]"
+msgstr "Nhật ký [Tổng số dòng: %d %s - Bộ lọc hoạt động]"
 
 #: lib/clog_webapi.php:320
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "Nhật ký [Tổng số dòng:% d %s - Chưa được lọc]"
+msgstr "Nhật ký [Tổng số dòng: %d %s - Chưa được lọc]"
 
 #: lib/clog_webapi.php:330 utilities.php:1577 utilities.php:1929
 #: utilities.php:2156 utilities.php:2270 utilities.php:3176 utilities.php:3401
@@ -13231,7 +13231,7 @@ msgstr "Mục tìm thấy [ %s = &#39; %s&#39;] chỉ mục: %s"
 #: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "Tổng cộng:% f, Delta:% f, %s"
+msgstr "Tổng cộng: %f, Delta: %f, %s"
 
 #: lib/data_query.php:905
 #, php-format
@@ -13376,7 +13376,7 @@ msgstr "Có SNMP nhận kết quả cho dữ liệu @ &#39; %s&#39; [value = &#3
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$ value&#39;]"
+msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$value&#39;]"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -13511,12 +13511,12 @@ msgstr "Tệp RRD không được cập nhật sau khi bỏ phiếu"
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
+msgstr "Cài đặt lưu vào Trình thu thập dữ liệu %d Không thành công."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
+msgstr "Cài đặt lưu vào Trình thu thập dữ liệu %d Không thành công."
 
 #: lib/functions.php:932 lib/functions.php:1023
 msgid "Message Not Found."
@@ -13751,12 +13751,12 @@ msgstr "Tiếp"
 #: lib/html.php:739
 #, php-format
 msgid "%d to %d of %s [ %s ]"
-msgstr "% d đến% d của %s [ %s]"
+msgstr "%d đến %d của %s [ %s]"
 
 #: lib/html.php:749
 #, php-format
 msgid "All %d %s"
-msgstr "Tất cả% d %s"
+msgstr "Tất cả %d %s"
 
 #: lib/html.php:787
 #, fuzzy, php-format
@@ -14237,7 +14237,7 @@ msgstr "Cột"
 #: lib/html_graph.php:238 lib/html_tree.php:1057
 #, php-format
 msgid "%d Column"
-msgstr "% d Cột"
+msgstr "%d Cột"
 
 #: lib/html_graph.php:268 lib/html_tree.php:1087
 msgid "Custom"
@@ -15464,7 +15464,7 @@ msgstr "Cấu hình của Poller"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "Thông tin về Cacti từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$ rdatabase_default, $ rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Cacti chính của bạn. Sửa lỗi này và thử lại."
+msgstr "Thông tin về Cacti từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$rdatabase_default, $rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Cacti chính của bạn. Sửa lỗi này và thử lại."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15476,11 +15476,11 @@ msgstr "Các biến phải được đặt trong tệp config.php bao gồm:"
 
 #: lib/installer.php:2296
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Trình cài đặt tự động gán một $ poller_id và thêm nó vào tệp config.php."
+msgstr "Trình cài đặt tự động gán một $poller_id và thêm nó vào tệp config.php."
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $ rdatabase_username cho máy chủ cơ sở dữ liệu Cacti chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Cacti nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
+msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $rdatabase_username cho máy chủ cơ sở dữ liệu Cacti chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Cacti nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -16522,12 +16522,12 @@ msgstr "Lỗi trong khi phân tích cú pháp XML của RRDtool dump"
 #: lib/rrd.php:4716
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) đã bị xóa khỏi tệp RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_law = %d, XFF = %1.2f) đã bị xóa khỏi tệp RRD"
 
 #: lib/rrd.php:4754
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) thêm vào tệp RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_law = %d, XFF = %1.2f) thêm vào tệp RRD"
 
 #: lib/rrd.php:4786 lib/rrd.php:4800
 #, php-format
@@ -19738,7 +19738,7 @@ msgstr "LRI: Phiên bản RRDtool đã cài đặt không vượt quá phiên b�
 #: utilities.php:285
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng% d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
+msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng %d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
 
 #: utilities.php:298
 msgid "General Information"
@@ -20028,12 +20028,12 @@ msgstr "表示順"
 #: utilities.php:1565
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "Nhật ký [Tổng số dòng:% d - Ẩn các mục không khớp]"
+msgstr "Nhật ký [Tổng số dòng: %d - Ẩn các mục không khớp]"
 
 #: utilities.php:1567
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "Nhật ký [Tổng số dòng:% d - Tất cả các mục được hiển thị]"
+msgstr "Nhật ký [Tổng số dòng: %d - Tất cả các mục được hiển thị]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
@@ -20302,7 +20302,7 @@ msgstr "Trung bình byte / bản ghi:"
 #: utilities.php:2824
 #, php-format
 msgid "%d Bytes"
-msgstr "% d byte"
+msgstr "%d byte"
 
 #: utilities.php:2824
 msgid "Max Record Length:"
@@ -20344,7 +20344,7 @@ msgstr "%d phút"
 #: utilities.php:2859
 #, php-format
 msgid "%d seconds"
-msgstr "% d giây"
+msgstr "%d giây"
 
 #: utilities.php:2862
 #, fuzzy, php-format

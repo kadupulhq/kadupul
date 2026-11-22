@@ -2979,7 +2979,7 @@ msgstr "Szablon kolorowy [nowy]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Szablon kolorów „%s” wypchnął szablony agregatów% d oraz wypchnięto% d agregatów bez szablonów"
+msgstr "Szablon kolorów „%s” wypchnął szablony agregatów %d oraz wypchnięto %d agregatów bez szablonów"
 
 #: color_templates.php:482
 #, php-format
@@ -15683,7 +15683,7 @@ msgstr "Ta opcja skryptu spowoduje ponowne włączenie wszelkich wyłączonych �
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Zdecydowanie <b>zaleca się zaktualizowanie pliku</b> config.php, aby włączyć tę funkcję, poprzez odkomentowanie zmiennej <b>$ input_whitelist</b> , a następnie uruchomienie trzech powyższych opcji skryptu CLI po zakończeniu instalacji przez Internet."
+msgstr "Zdecydowanie <b>zaleca się zaktualizowanie pliku</b> config.php, aby włączyć tę funkcję, poprzez odkomentowanie zmiennej <b>$input_whitelist</b> , a następnie uruchomienie trzech powyższych opcji skryptu CLI po zakończeniu instalacji przez Internet."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

@@ -2966,7 +2966,7 @@ msgstr "Modelo de cor [novo]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "O modelo de cor '%s' teve% d modelos agregados enviados e% d agregados não modelados enviados"
+msgstr "O modelo de cor '%s' teve %d modelos agregados enviados e %d agregados não modelados enviados"
 
 #: color_templates.php:482
 #, php-format
@@ -4059,20 +4059,20 @@ msgstr[1] "Os gráficos a seguir estão usando essas fontes de dados:"
 #: data_sources.php:541
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
-msgstr[0] "Deixa o <forte>Gráfico</sforte> intocado."
+msgstr[0] "Deixa o <strong>Gráfico</strong> intocado."
 msgstr[1] "Deixa todos os gráficos não tocados."
 
 #: data_sources.php:542
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Exclua todos os itens <forte>Gráficos</forte> que referenciam esta Fonte de Dados."
-msgstr[1] "Exclua todos os itens <forte>Gráficos</forte> que referenciam essas fontes de dados."
+msgstr[0] "Exclua todos os itens <strong>Gráficos</strong> que referenciam esta Fonte de Dados."
+msgstr[1] "Exclua todos os itens <strong>Gráficos</strong> que referenciam essas fontes de dados."
 
 #: data_sources.php:543
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
-msgstr[0] "Exclua todos os <forte>Gráficos</sforte> que referenciam esta Fonte de Dados."
-msgstr[1] "Exclua todos os <forte>Gráficos</sforte> que referenciam essas Fontes de Dados."
+msgstr[0] "Exclua todos os <strong>Gráficos</strong> que referenciam esta Fonte de Dados."
+msgstr[1] "Exclua todos os <strong>Gráficos</strong> que referenciam essas Fontes de Dados."
 
 #: data_sources.php:550
 msgid "Delete Data Source"
@@ -12316,7 +12316,7 @@ msgstr "1 Coluna"
 #: lib/html_tree.php:1062
 #, php-format
 msgid "%d Columns"
-msgstr "% d colunas"
+msgstr "%d colunas"
 
 #: include/global_settings.php:2748
 msgid "Tree View Thumbnail Columns"
@@ -14278,7 +14278,7 @@ msgstr "Colunas"
 #: lib/html_graph.php:238 lib/html_tree.php:1057
 #, php-format
 msgid "%d Column"
-msgstr "% d coluna"
+msgstr "%d coluna"
 
 #: lib/html_graph.php:268 lib/html_tree.php:1087
 msgid "Custom"
@@ -15649,7 +15649,7 @@ msgstr "Esta opção de script reativará todas as fontes de dados desativadas."
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "É altamente recomendável que você atualize seu config.php para ativar esse recurso, descomentando a variável <b>$ input_whitelist</b> e executando as três opções de script da CLI acima, após a conclusão da instalação baseada na Web."
+msgstr "É altamente recomendável que você atualize seu config.php para ativar esse recurso, descomentando a variável <b>$input_whitelist</b> e executando as três opções de script da CLI acima, após a conclusão da instalação baseada na Web."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

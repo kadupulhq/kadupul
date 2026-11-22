@@ -857,7 +857,7 @@ msgstr "Οι απαιτήσεις κωδικού πρόσβασης περιλα
 #: auth_changepassword.php:256
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "Πρέπει να έχουν μήκος τουλάχιστον% d χαρακτήρων"
+msgstr "Πρέπει να έχουν μήκος τουλάχιστον %d χαρακτήρων"
 
 #: auth_changepassword.php:260
 msgid "Must include mixed case"
@@ -874,7 +874,7 @@ msgstr "Πρέπει να περιλαμβάνει τουλάχιστον ένα
 #: auth_changepassword.php:272
 #, php-format
 msgid "Cannot be reused for %d password changes"
-msgstr "Δεν είναι δυνατή η επαναχρησιμοποίηση για αλλαγές% d κωδικών"
+msgstr "Δεν είναι δυνατή η επαναχρησιμοποίηση για αλλαγές %d κωδικών"
 
 #: auth_changepassword.php:325
 msgid "There are problems with the Change Password page.  Contact your Cacti administrator right away."
@@ -1684,7 +1684,7 @@ msgstr "Ορίστε τον αριθμό των νημάτων που θα χρ�
 #: automation_networks.php:521
 #, php-format
 msgid "%d Thread"
-msgstr "% d Νήμα"
+msgstr "%d Νήμα"
 
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
@@ -1698,7 +1698,7 @@ msgstr "% d Νήμα"
 #: include/global_arrays.php:845 include/global_arrays.php:846
 #, php-format
 msgid "%d Threads"
-msgstr "% d Νήματα"
+msgstr "%d Νήματα"
 
 #: automation_networks.php:538
 msgid "Run Limit"
@@ -1711,7 +1711,7 @@ msgstr "Μετά το επιλεγμένο όριο εκτέλεσης, η δι�
 #: automation_networks.php:542 automation_networks.php:1239 pollers.php:995
 #, php-format
 msgid "%d Minute"
-msgstr "% d λεπτά"
+msgstr "%d λεπτά"
 
 #: automation_networks.php:543 automation_networks.php:544
 #: automation_networks.php:545 automation_networks.php:546
@@ -2966,7 +2966,7 @@ msgstr "Πρότυπο χρώματος [νέο]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Το πρότυπο χρώματος '%s' είχε% d Συγκεντρωτικά πρότυπα έξω και% d Μη τυποποιημένα συγκεντρωτικά στοιχεία"
+msgstr "Το πρότυπο χρώματος '%s' είχε %d Συγκεντρωτικά πρότυπα έξω και %d Μη τυποποιημένα συγκεντρωτικά στοιχεία"
 
 #: color_templates.php:482
 #, php-format
@@ -3913,7 +3913,7 @@ msgstr "Εισαγάγετε έναν έγκυρο αριθμό σειρών γ�
 #: include/global_arrays.php:1488 include/global_settings.php:1627
 #, php-format
 msgid "%d Years"
-msgstr "% d Έτη"
+msgstr "%d Έτη"
 
 #: data_source_profiles.php:943
 msgid "1 Year"
@@ -3923,7 +3923,7 @@ msgstr "1 Έτος"
 #: include/global_arrays.php:1482 rrdcleaner.php:549
 #, php-format
 msgid "%d Month"
-msgstr "% d Μήνα"
+msgstr "%d Μήνα"
 
 #: data_source_profiles.php:952 include/global_arrays.php:800
 #: include/global_arrays.php:801 include/global_arrays.php:802
@@ -3933,14 +3933,14 @@ msgstr "% d Μήνα"
 #: rrdcleaner.php:552
 #, php-format
 msgid "%d Months"
-msgstr "% d Μήνας"
+msgstr "%d Μήνας"
 
 #: data_source_profiles.php:961 include/global_arrays.php:740
 #: include/global_arrays.php:796 include/global_arrays.php:1480
 #: rrdcleaner.php:545 rrdcleaner.php:546
 #, php-format
 msgid "%d Week"
-msgstr "% d Εβδομάδα"
+msgstr "%d Εβδομάδα"
 
 #: data_source_profiles.php:961 include/global_arrays.php:797
 #: include/global_arrays.php:798 include/global_arrays.php:1481
@@ -3948,14 +3948,14 @@ msgstr "% d Εβδομάδα"
 #: include/global_settings.php:2923 rrdcleaner.php:547 rrdcleaner.php:548
 #, php-format
 msgid "%d Weeks"
-msgstr "% d εβδομάδες"
+msgstr "%d εβδομάδες"
 
 #: data_source_profiles.php:970 include/global_arrays.php:739
 #: include/global_arrays.php:783 include/global_arrays.php:793
 #: include/global_arrays.php:1476
 #, php-format
 msgid "%d Day"
-msgstr "% d Ημέρα"
+msgstr "%d Ημέρα"
 
 #: data_source_profiles.php:970 include/global_arrays.php:784
 #: include/global_arrays.php:794 include/global_arrays.php:795
@@ -4642,7 +4642,7 @@ msgstr "Μικρογραφίες"
 #: graph_realtime.php:532
 #, php-format
 msgid "%d seconds left."
-msgstr "% d δευτερόλεπτα αριστερά."
+msgstr "%d δευτερόλεπτα αριστερά."
 
 #: graph_realtime.php:548
 msgid " seconds left."
@@ -5473,7 +5473,7 @@ msgstr "Η συσκευή είναι απενεργοποιημένη"
 #: host.php:256
 #, php-format
 msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "Η συσκευή Reindex ολοκληρώθηκε σε% 0.2f δευτερόλεπτα. Ενημερώθηκαν% d στοιχεία."
+msgstr "Η συσκευή Reindex ολοκληρώθηκε σε %0.2f δευτερόλεπτα. Ενημερώθηκαν %d στοιχεία."
 
 #: host.php:390
 #, php-format
@@ -5672,7 +5672,7 @@ msgstr "Ενέργειες"
 #: host.php:1029
 #, php-format
 msgid " [%d Items, %d Rows]"
-msgstr "[% d Στοιχεία,% d Γραμμές]"
+msgstr "[%d Στοιχεία, %d Γραμμές]"
 
 #: host.php:1029
 msgid "Fail"
@@ -6508,7 +6508,7 @@ msgstr "Δε χρησιμοποιείται"
 #: include/global_arrays.php:899
 #, php-format
 msgid "Version %d"
-msgstr "Έκδοση% d"
+msgstr "Έκδοση %d"
 
 #: include/global_arrays.php:659 include/global_arrays.php:669
 msgid "[None]"
@@ -6634,7 +6634,7 @@ msgstr "Επιλεγμένο χρονικό διάστημα"
 #: include/global_arrays.php:819 include/global_arrays.php:820
 #, php-format
 msgid "Every %d Seconds"
-msgstr "Κάθε% d δευτερόλεπτα"
+msgstr "Κάθε %d δευτερόλεπτα"
 
 #: include/global_arrays.php:748 include/global_arrays.php:821
 #: include/global_arrays.php:866
@@ -6663,7 +6663,7 @@ msgstr "Κάθε ώρα"
 #: include/global_settings.php:2543
 #, php-format
 msgid "Every %d Hours"
-msgstr "Κάθε% d Ώρες"
+msgstr "Κάθε %d Ώρες"
 
 #: include/global_arrays.php:759
 #, php-format
@@ -6679,7 +6679,7 @@ msgstr "${ 0 } λεπτά"
 #: include/global_settings.php:1626 rrdcleaner.php:553
 #, php-format
 msgid "%d Year"
-msgstr "% d Έτος"
+msgstr "%d Έτος"
 
 #: include/global_arrays.php:826
 msgid "Disabled/Manual"
@@ -7095,7 +7095,7 @@ msgstr "Όλες οι γραμμές"
 #: include/global_arrays.php:1152 include/global_arrays.php:1153
 #, php-format
 msgid "%d Lines"
-msgstr "% d Γραμμές"
+msgstr "%d Γραμμές"
 
 #: include/global_arrays.php:1231
 msgid "Console Access"
@@ -7226,7 +7226,7 @@ msgstr "Τελευταία ώρα"
 #: include/global_arrays.php:1442 include/global_arrays.php:1443
 #, php-format
 msgid "Last %d Hours"
-msgstr "Τελευταία% d ώρες"
+msgstr "Τελευταία %d ώρες"
 
 #: include/global_arrays.php:1444
 msgid "Last Day"
@@ -7245,7 +7245,7 @@ msgstr "Τελευταία Εβδομάδα"
 #: include/global_arrays.php:1449
 #, php-format
 msgid "Last %d Weeks"
-msgstr "Τελευταία% d εβδομάδες"
+msgstr "Τελευταία %d εβδομάδες"
 
 #: include/global_arrays.php:1450
 msgid "Last Month"
@@ -7255,7 +7255,7 @@ msgstr "Τον Τελευταίο Μήνα"
 #: include/global_arrays.php:1453 include/global_arrays.php:1454
 #, php-format
 msgid "Last %d Months"
-msgstr "Τελευταία% d Μήνες"
+msgstr "Τελευταία %d Μήνες"
 
 #: include/global_arrays.php:1455
 msgid "Last Year"
@@ -7264,7 +7264,7 @@ msgstr "Προηγούμενο έτος"
 #: include/global_arrays.php:1456
 #, php-format
 msgid "Last %d Years"
-msgstr "Τελευταία% d έτη"
+msgstr "Τελευταία %d έτη"
 
 #: include/global_arrays.php:1457
 msgid "Day Shift"
@@ -7305,7 +7305,7 @@ msgstr "Προηγούμενο έτος"
 #: include/global_arrays.php:1470
 #, php-format
 msgid "%d Min"
-msgstr "% d Ελάχ"
+msgstr "%d Ελάχ"
 
 #: include/global_arrays.php:1525
 msgid "Month Number, Day, Year"
@@ -7341,7 +7341,7 @@ msgstr "Μετά την ώθηση"
 #: include/global_arrays.php:1617
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MBytes"
+msgstr "%d MBytes"
 
 #: include/global_arrays.php:1555
 msgid "1 GByte"
@@ -7359,7 +7359,7 @@ msgstr "%s GBytes"
 #: include/global_arrays.php:1624 include/global_arrays.php:1625
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php:1578
 msgid "2,000 Data Source Items"
@@ -7418,7 +7418,7 @@ msgstr "%s Ώρες"
 #: include/global_arrays.php:1618
 #, php-format
 msgid "%d GByte"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php:1626 utilities.php:2830 utilities.php:2831
 #: utilities.php:2880
@@ -7450,7 +7450,7 @@ msgstr "1 Megabyte"
 #: include/global_arrays.php:1671 include/global_arrays.php:1672
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d Megabytes"
+msgstr "%d Megabytes"
 
 #: include/global_arrays.php:1676
 msgid "Send Now"
@@ -7711,7 +7711,7 @@ msgstr "Κάθε Εβδομάδα"
 #: include/global_arrays.php:1902 include/global_arrays.php:1903
 #, php-format
 msgid "Every %d Weeks"
-msgstr "Κάθε% d εβδομάδες"
+msgstr "Κάθε %d εβδομάδες"
 
 #: include/global_arrays.php:1934
 msgctxt "A short textual representation of a month, three letters"
@@ -8815,7 +8815,7 @@ msgstr "Μορφή ορθών αξόνων (μορφοποίηση - άξονα�
 #: include/global_form.php:898
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "Από προεπιλογή, η μορφή των ετικετών άξονα καθορίζεται αυτόματα. Αν θέλετε να το κάνετε μόνοι σας, χρησιμοποιήστε αυτή την επιλογή με τα ίδια% lf τα οποία γνωρίζετε από τις εντολές PRINT και GPRINT."
+msgstr "Από προεπιλογή, η μορφή των ετικετών άξονα καθορίζεται αυτόματα. Αν θέλετε να το κάνετε μόνοι σας, χρησιμοποιήστε αυτή την επιλογή με τα ίδια %lf τα οποία γνωρίζετε από τις εντολές PRINT και GPRINT."
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
@@ -8823,7 +8823,7 @@ msgstr "Διαμορφωτής σωστών αξόνων (μορφοποιητή
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Όταν ρυθμίζετε την επισήμανση του δεξιού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν &quot;αριθμητική&quot; όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, &quot;timestamp&quot; όπου οι τιμές ερμηνεύονται ως timestamps UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (προεπιλογή είναι &quot;% Y-% m-% d% H&quot; :%ΚΥΡΙΑ&quot;). Δείτε επίσης - μορφοποίηση μήκους και άξονα-άξονα. Τέλος, &quot;διάρκεια&quot; όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες της υψηλής ποιότητας PRINT / GPRINT."
+msgstr "Όταν ρυθμίζετε την επισήμανση του δεξιού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν &quot;αριθμητική&quot; όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, &quot;timestamp&quot; όπου οι τιμές ερμηνεύονται ως timestamps UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (προεπιλογή είναι &quot;% Y-% m-%d% H&quot; :%ΚΥΡΙΑ&quot;). Δείτε επίσης - μορφοποίηση μήκους και άξονα-άξονα. Τέλος, &quot;διάρκεια&quot; όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες της υψηλής ποιότητας PRINT / GPRINT."
 
 #: include/global_form.php:909
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
@@ -8831,7 +8831,7 @@ msgstr "Διαμορφωτής αριστερού άξονα (μορφοποιη
 
 #: include/global_form.php:914
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Όταν ρυθμίζετε την επισήμανση του αριστερού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν &quot;αριθμητική&quot; όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, &quot;timestamp&quot; όπου οι τιμές ερμηνεύονται ως timestamps UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (προεπιλογή είναι &quot;% Y-% m-% d% H&quot; :%ΚΥΡΙΑ&quot;). Δείτε επίσης - μήκους μονάδων. Τέλος, &quot;διάρκεια&quot; όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες της υψηλής ποιότητας PRINT / GPRINT."
+msgstr "Όταν ρυθμίζετε την επισήμανση του αριστερού άξονα, εφαρμόστε έναν κανόνα στη μορφή δεδομένων. Οι υποστηριζόμενες μορφές περιλαμβάνουν &quot;αριθμητική&quot; όπου τα δεδομένα αντιμετωπίζονται ως αριθμητικά, &quot;timestamp&quot; όπου οι τιμές ερμηνεύονται ως timestamps UNIX (αριθμός δευτερολέπτων από τον Ιανουάριο του 1970) και εκφράζονται με χρήση μορφής strftime (προεπιλογή είναι &quot;% Y-% m-%d% H&quot; :%ΚΥΡΙΑ&quot;). Δείτε επίσης - μήκους μονάδων. Τέλος, &quot;διάρκεια&quot; όπου οι τιμές ερμηνεύονται ως διάρκεια σε χιλιοστά του δευτερολέπτου. Η μορφοποίηση ακολουθεί τους κανόνες της υψηλής ποιότητας PRINT / GPRINT."
 
 #: include/global_form.php:917
 msgid "Legend Options"
@@ -11060,7 +11060,7 @@ msgstr "1 Διαδικασία"
 #: include/global_settings.php:2293 include/global_settings.php:2294
 #, php-format
 msgid "%d Processes"
-msgstr "% d Διαδικασίες"
+msgstr "%d Διαδικασίες"
 
 #: include/global_settings.php:1455
 msgid "Maintenance Background Generation Timeout"
@@ -11252,7 +11252,7 @@ msgstr "1 Αλλαγή"
 #: include/global_settings.php:1660
 #, php-format
 msgid "%d Changes"
-msgstr "% d Αλλαγές"
+msgstr "%d Αλλαγές"
 
 #: include/global_settings.php:1663
 msgid "Account Locking"
@@ -11275,7 +11275,7 @@ msgstr "1 Προσπάθεια"
 #: include/global_settings.php:1679
 #, php-format
 msgid "%d Attempts"
-msgstr "% d Προσπάθειες"
+msgstr "%d Προσπάθειες"
 
 #: include/global_settings.php:1682
 msgid "Auto Unlock"
@@ -12043,7 +12043,7 @@ msgstr "Οποιαδήποτε τιμή είναι αυτή πολλές τυπ�
 #: include/global_settings.php:2454
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d τυπικές αποκλίσεις"
+msgstr "%d τυπικές αποκλίσεις"
 
 #: include/global_settings.php:2458
 msgid "Variance Percentage"
@@ -12071,7 +12071,7 @@ msgstr "Αυτή η τιμή αντιπροσωπεύει τον αριθμό τ
 #: include/global_settings.php:2499
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d δείγματα υψηλής / χαμηλής"
+msgstr "%d δείγματα υψηλής / χαμηλής"
 
 #: include/global_settings.php:2503
 msgid "Max Kills Per RRA"
@@ -12089,7 +12089,7 @@ msgstr "Αυτή η τιμή αντιπροσωπεύει το μέγιστο α
 #: include/global_settings.php:2518 include/global_settings.php:2519
 #, php-format
 msgid "%d Spikes"
-msgstr "% d Spikes"
+msgstr "%d Spikes"
 
 #: include/global_settings.php:2523
 msgid "RRDfile Backup Directory"
@@ -12904,7 +12904,7 @@ msgstr "Ο διαχειριστής του Cacti έχει επιβάλει σύ�
 #: lib/auth.php:4754
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "Ο κωδικός πρόσβασης πρέπει να είναι τουλάχιστον% d χαρακτήρες!"
+msgstr "Ο κωδικός πρόσβασης πρέπει να είναι τουλάχιστον %d χαρακτήρες!"
 
 #: lib/auth.php:4760
 msgid "Your password must contain at least 1 numerical character!"
@@ -12973,12 +12973,12 @@ msgstr "- Προβολή διαχειριστή"
 #: lib/clog_webapi.php:318
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "Αρχείο καταγραφής [Συνολικές γραμμές:% d %s - Φίλτρο ενεργό]"
+msgstr "Αρχείο καταγραφής [Συνολικές γραμμές: %d %s - Φίλτρο ενεργό]"
 
 #: lib/clog_webapi.php:320
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "Αρχειοθέτηση [Συνολικές γραμμές:% d %s - Μη φιλτραρισμένες]"
+msgstr "Αρχειοθέτηση [Συνολικές γραμμές: %d %s - Μη φιλτραρισμένες]"
 
 #: lib/clog_webapi.php:330 utilities.php:1577 utilities.php:1929
 #: utilities.php:2156 utilities.php:2270 utilities.php:3176 utilities.php:3401
@@ -13270,7 +13270,7 @@ msgstr "Βρέθηκε στοιχείο [ %s = &#39; %s&#39;] ευρετήριο
 #: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "Σύνολο:% f, Δέλτα:% f, %s"
+msgstr "Σύνολο: %f, Δέλτα: %f, %s"
 
 #: lib/data_query.php:905
 #, php-format
@@ -13550,12 +13550,12 @@ msgstr "Το αρχείο RRD δεν ενημερώθηκε μετά την ψη
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Οι ρυθμίσεις αποθηκεύονται στον συλλέκτη δεδομένων% d απέτυχαν."
+msgstr "Οι ρυθμίσεις αποθηκεύονται στον συλλέκτη δεδομένων %d απέτυχαν."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "Οι ρυθμίσεις αποθηκεύονται στον συλλέκτη δεδομένων% d απέτυχαν."
+msgstr "Οι ρυθμίσεις αποθηκεύονται στον συλλέκτη δεδομένων %d απέτυχαν."
 
 #: lib/functions.php:932 lib/functions.php:1023
 msgid "Message Not Found."
@@ -13790,12 +13790,12 @@ msgstr "Επόμενο"
 #: lib/html.php:739
 #, php-format
 msgid "%d to %d of %s [ %s ]"
-msgstr "% d έως% d του %s [ %s]"
+msgstr "%d έως %d του %s [ %s]"
 
 #: lib/html.php:749
 #, php-format
 msgid "All %d %s"
-msgstr "Όλα τα% d %s"
+msgstr "Όλα τα %d %s"
 
 #: lib/html.php:787
 #, fuzzy, php-format
@@ -15504,7 +15504,7 @@ msgstr "Διαμόρφωση του Poller"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "Οι πληροφορίες Remote Cacti Poller δεν έχουν συμπεριληφθεί στο αρχείο config.php. Ελέγξτε το αρχείο config.php.dist και ορίστε τις μεταβλητές: <i>$ rdatabase_default, $ rdatabase_username</i> , κλπ. Αυτές οι μεταβλητές πρέπει να οριστούν και να επιστρέψουν στον κεντρικό διακομιστή βάσης δεδομένων Cacti. Διορθώστε αυτό και προσπαθήστε ξανά."
+msgstr "Οι πληροφορίες Remote Cacti Poller δεν έχουν συμπεριληφθεί στο αρχείο config.php. Ελέγξτε το αρχείο config.php.dist και ορίστε τις μεταβλητές: <i>$rdatabase_default, $rdatabase_username</i> , κλπ. Αυτές οι μεταβλητές πρέπει να οριστούν και να επιστρέψουν στον κεντρικό διακομιστή βάσης δεδομένων Cacti. Διορθώστε αυτό και προσπαθήστε ξανά."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15516,11 +15516,11 @@ msgstr "Οι μεταβλητές που πρέπει να οριστούν στ
 
 #: lib/installer.php:2296
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Ο εγκαταστάτης εκχωρεί αυτόματα ένα $ poller_id και το προσθέτει στο αρχείο config.php."
+msgstr "Ο εγκαταστάτης εκχωρεί αυτόματα ένα $poller_id και το προσθέτει στο αρχείο config.php."
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Μόλις οι μεταβλητές έχουν οριστεί στο αρχείο config.php, πρέπει επίσης να παραχωρήσετε πρόσβαση στο $ rdatabase_username στον κύριο διακομιστή βάσης δεδομένων Cacti. Ακολουθήστε την ίδια διαδικασία που θα κάνατε με οποιαδήποτε άλλη εγκατάσταση του Cacti. Στη συνέχεια, μπορείτε να πατήσετε το πλήκτρο &#39;Δοκιμή σύνδεσης&#39;. Εάν η δοκιμή είναι επιτυχής, θα μπορέσετε να προχωρήσετε και να ολοκληρώσετε την εγκατάσταση."
+msgstr "Μόλις οι μεταβλητές έχουν οριστεί στο αρχείο config.php, πρέπει επίσης να παραχωρήσετε πρόσβαση στο $rdatabase_username στον κύριο διακομιστή βάσης δεδομένων Cacti. Ακολουθήστε την ίδια διαδικασία που θα κάνατε με οποιαδήποτε άλλη εγκατάσταση του Cacti. Στη συνέχεια, μπορείτε να πατήσετε το πλήκτρο &#39;Δοκιμή σύνδεσης&#39;. Εάν η δοκιμή είναι επιτυχής, θα μπορέσετε να προχωρήσετε και να ολοκληρώσετε την εγκατάσταση."
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15647,7 +15647,7 @@ msgstr "Αυτή η επιλογή σεναρίου θα ενεργοποιήσ�
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Συνιστάται ανεπιφύλακτα να ενημερώσετε το config.php για να ενεργοποιήσετε αυτήν τη δυνατότητα <b>αποσυσκευάζοντας τη</b> μεταβλητή <b>$ input_whitelist</b> και στη συνέχεια εκτελώντας τις τρεις παραπάνω επιλογές σεναρίου CLI μετά την ολοκλήρωση της εγκατάστασης μέσω ιστού."
+msgstr "Συνιστάται ανεπιφύλακτα να ενημερώσετε το config.php για να ενεργοποιήσετε αυτήν τη δυνατότητα <b>αποσυσκευάζοντας τη</b> μεταβλητή <b>$input_whitelist</b> και στη συνέχεια εκτελώντας τις τρεις παραπάνω επιλογές σεναρίου CLI μετά την ολοκλήρωση της εγκατάστασης μέσω ιστού."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -16562,12 +16562,12 @@ msgstr "Σφάλμα κατά την ανάλυση της XML της απόρρ
 #: lib/rrd.php:4716
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) αφαιρεθεί από το αρχείο RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f) αφαιρεθεί από το αρχείο RRD"
 
 #: lib/rrd.php:4754
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) προσθήκη στο αρχείο RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f) προσθήκη στο αρχείο RRD"
 
 #: lib/rrd.php:4786 lib/rrd.php:4800
 #, php-format
@@ -19816,7 +19816,7 @@ msgstr "ERROR: Η εγκατεστημένη έκδοση RRDtool δεν υπε�
 #: utilities.php:285
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "ERROR: Το εργαλείο RRDtool 1.2.x + δεν υποστηρίζει τη μορφή των εικόνων GIF, αλλά το% d &quot;γράμματα και / ή τα πρότυπα έχουν οριστεί ως μορφή εικόνας GIF."
+msgstr "ERROR: Το εργαλείο RRDtool 1.2.x + δεν υποστηρίζει τη μορφή των εικόνων GIF, αλλά το %d &quot;γράμματα και / ή τα πρότυπα έχουν οριστεί ως μορφή εικόνας GIF."
 
 #: utilities.php:298
 msgid "General Information"
@@ -20107,12 +20107,12 @@ msgstr "Σειρά εμφάνισης"
 #: utilities.php:1565
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "Αρχειοθέτηση [Συνολικές γραμμές:% d - Στοιχεία που δεν αντιστοιχούν]"
+msgstr "Αρχειοθέτηση [Συνολικές γραμμές: %d - Στοιχεία που δεν αντιστοιχούν]"
 
 #: utilities.php:1567
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "Καταγραφή [Συνολικές γραμμές:% d - Όλα τα στοιχεία εμφανίζονται]"
+msgstr "Καταγραφή [Συνολικές γραμμές: %d - Όλα τα στοιχεία εμφανίζονται]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
@@ -20381,7 +20381,7 @@ msgstr "Avg Bytes / Εγγραφή:"
 #: utilities.php:2824
 #, php-format
 msgid "%d Bytes"
-msgstr "% d Bytes"
+msgstr "%d Bytes"
 
 #: utilities.php:2824
 msgid "Max Record Length:"
@@ -20428,7 +20428,7 @@ msgstr "%d δευτερόλεπτα"
 #: utilities.php:2862
 #, php-format
 msgid "%0.2f percent of update frequency)"
-msgstr "% 0.2f τοις εκατό της συχνότητας ενημέρωσης)"
+msgstr "%0.2f τοις εκατό της συχνότητας ενημέρωσης)"
 
 #: utilities.php:2870
 msgid "RRD Updates:"

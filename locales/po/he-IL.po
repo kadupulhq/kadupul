@@ -857,7 +857,7 @@ msgstr "דרישות הסיסמה כוללות:"
 #: auth_changepassword.php:256
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "חייב להיות לפחות% d תווים באורך"
+msgstr "חייב להיות לפחות %d תווים באורך"
 
 #: auth_changepassword.php:260
 msgid "Must include mixed case"
@@ -874,7 +874,7 @@ msgstr "חייב לכלול לפחות תו מיוחד אחד"
 #: auth_changepassword.php:272
 #, php-format
 msgid "Cannot be reused for %d password changes"
-msgstr "לא ניתן לעשות בו שימוש חוזר לשינויים ב-% d"
+msgstr "לא ניתן לעשות בו שימוש חוזר לשינויים ב-%d"
 
 #: auth_changepassword.php:325
 msgid "There are problems with the Change Password page.  Contact your Cacti administrator right away."
@@ -1684,7 +1684,7 @@ msgstr "הגדר את מספר החוטים לשימוש כדי לגלות את 
 #: automation_networks.php:521
 #, php-format
 msgid "%d Thread"
-msgstr "% d Thread"
+msgstr "%d Thread"
 
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
@@ -1698,7 +1698,7 @@ msgstr "% d Thread"
 #: include/global_arrays.php:845 include/global_arrays.php:846
 #, php-format
 msgid "%d Threads"
-msgstr "% d Threads"
+msgstr "%d Threads"
 
 #: automation_networks.php:538
 msgid "Run Limit"
@@ -2336,7 +2336,7 @@ msgstr "פעולה"
 #: lib/api_automation.php:1558 lib/api_automation.php:1626
 #, php-format
 msgid "Item#%d"
-msgstr "פריט #% d"
+msgstr "פריט #%d"
 
 #: automation_snmp.php:575
 msgid "none"
@@ -2700,7 +2700,7 @@ msgstr "ערך פריט"
 #: cdef.php:609 vdef.php:633
 #, php-format
 msgid "Item #%d"
-msgstr "פריט #% d"
+msgstr "פריט #%d"
 
 #: cdef.php:686
 msgid "Delete CDEF Item"
@@ -2905,7 +2905,7 @@ msgstr "פריט צבע"
 #: lib/html_reports.php:1869
 #, php-format
 msgid "Item # %d"
-msgstr "פריט #% d"
+msgstr "פריט #%d"
 
 #: color_templates.php:133 graph_templates_inputs.php:274
 #: lib/api_aggregate.php:1915 lib/html.php:1684
@@ -2990,7 +2990,7 @@ msgstr "תבנית צבע [חדש]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "לתבנית הצבע '%s' היה% d תבניות מצטברות נדחקו ו-% d אגרגטים לא-תבנית נדחקו החוצה"
+msgstr "לתבנית הצבע '%s' היה %d תבניות מצטברות נדחקו ו-%d אגרגטים לא-תבנית נדחקו החוצה"
 
 #: color_templates.php:482
 #, php-format
@@ -3956,7 +3956,7 @@ msgstr "הזן מספר חוקי של שורות כדי לקבל את גודל �
 #: include/global_arrays.php:1488 include/global_settings.php:1627
 #, php-format
 msgid "%d Years"
-msgstr "% d שנים"
+msgstr "%d שנים"
 
 #: data_source_profiles.php:943
 msgid "1 Year"
@@ -3966,7 +3966,7 @@ msgstr "1 שנה"
 #: include/global_arrays.php:1482 rrdcleaner.php:549
 #, php-format
 msgid "%d Month"
-msgstr "% d חודש"
+msgstr "%d חודש"
 
 #: data_source_profiles.php:952 include/global_arrays.php:800
 #: include/global_arrays.php:801 include/global_arrays.php:802
@@ -3983,7 +3983,7 @@ msgstr "%d חודשים"
 #: rrdcleaner.php:545 rrdcleaner.php:546
 #, php-format
 msgid "%d Week"
-msgstr "% d שבוע"
+msgstr "%d שבוע"
 
 #: data_source_profiles.php:961 include/global_arrays.php:797
 #: include/global_arrays.php:798 include/global_arrays.php:1481
@@ -3991,14 +3991,14 @@ msgstr "% d שבוע"
 #: include/global_settings.php:2923 rrdcleaner.php:547 rrdcleaner.php:548
 #, php-format
 msgid "%d Weeks"
-msgstr "% d שבועות"
+msgstr "%d שבועות"
 
 #: data_source_profiles.php:970 include/global_arrays.php:739
 #: include/global_arrays.php:783 include/global_arrays.php:793
 #: include/global_arrays.php:1476
 #, php-format
 msgid "%d Day"
-msgstr "% d יום"
+msgstr "%d יום"
 
 #: data_source_profiles.php:970 include/global_arrays.php:784
 #: include/global_arrays.php:794 include/global_arrays.php:795
@@ -4711,7 +4711,7 @@ msgstr "תמונות ממוזערות"
 #: graph_realtime.php:532
 #, php-format
 msgid "%d seconds left."
-msgstr "נותרו% d שניות."
+msgstr "נותרו %d שניות."
 
 #: graph_realtime.php:548
 msgid " seconds left."
@@ -5741,7 +5741,7 @@ msgstr "פעולות"
 #: host.php:1029
 #, php-format
 msgid " [%d Items, %d Rows]"
-msgstr "[% d פריטים,% d שורות]"
+msgstr "[%d פריטים, %d שורות]"
 
 #: host.php:1029
 msgid "Fail"
@@ -6577,7 +6577,7 @@ msgstr "לא בשימוש"
 #: include/global_arrays.php:899
 #, php-format
 msgid "Version %d"
-msgstr "גרסה% d"
+msgstr "גרסה %d"
 
 #: include/global_arrays.php:659 include/global_arrays.php:669
 msgid "[None]"
@@ -6703,7 +6703,7 @@ msgstr "בחירת מרווח פולרים"
 #: include/global_arrays.php:819 include/global_arrays.php:820
 #, php-format
 msgid "Every %d Seconds"
-msgstr "כל% d שניות"
+msgstr "כל %d שניות"
 
 #: include/global_arrays.php:748 include/global_arrays.php:821
 #: include/global_arrays.php:866
@@ -6732,7 +6732,7 @@ msgstr "כל שעה"
 #: include/global_settings.php:2543
 #, php-format
 msgid "Every %d Hours"
-msgstr "כל% d שעות"
+msgstr "כל %d שעות"
 
 #: include/global_arrays.php:759
 #, php-format
@@ -6748,7 +6748,7 @@ msgstr "%0.1f דקות"
 #: include/global_settings.php:1626 rrdcleaner.php:553
 #, php-format
 msgid "%d Year"
-msgstr "% d שנה"
+msgstr "%d שנה"
 
 #: include/global_arrays.php:826
 msgid "Disabled/Manual"
@@ -7164,7 +7164,7 @@ msgstr "כל השורות"
 #: include/global_arrays.php:1152 include/global_arrays.php:1153
 #, php-format
 msgid "%d Lines"
-msgstr "% d שורות"
+msgstr "%d שורות"
 
 #: include/global_arrays.php:1231
 msgid "Console Access"
@@ -7295,7 +7295,7 @@ msgstr "בשעה האחרונה"
 #: include/global_arrays.php:1442 include/global_arrays.php:1443
 #, php-format
 msgid "Last %d Hours"
-msgstr "אחרון% d שעות"
+msgstr "אחרון %d שעות"
 
 #: include/global_arrays.php:1444
 msgid "Last Day"
@@ -7314,7 +7314,7 @@ msgstr "בשבוע שעבר"
 #: include/global_arrays.php:1449
 #, php-format
 msgid "Last %d Weeks"
-msgstr "האחרון% d שבועות"
+msgstr "האחרון %d שבועות"
 
 #: include/global_arrays.php:1450
 msgid "Last Month"
@@ -7374,7 +7374,7 @@ msgstr "שנה שעברה"
 #: include/global_arrays.php:1470
 #, php-format
 msgid "%d Min"
-msgstr "% d דקות"
+msgstr "%d דקות"
 
 #: include/global_arrays.php:1525
 msgid "Month Number, Day, Year"
@@ -7410,7 +7410,7 @@ msgstr "לאחר Boost"
 #: include/global_arrays.php:1617
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MBtes"
+msgstr "%d MBtes"
 
 #: include/global_arrays.php:1555
 msgid "1 GByte"
@@ -7428,7 +7428,7 @@ msgstr "%s GBytes"
 #: include/global_arrays.php:1624 include/global_arrays.php:1625
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php:1578
 msgid "2,000 Data Source Items"
@@ -7487,7 +7487,7 @@ msgstr "%s שעות"
 #: include/global_arrays.php:1618
 #, php-format
 msgid "%d GByte"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php:1626 utilities.php:2830 utilities.php:2831
 #: utilities.php:2880
@@ -7519,7 +7519,7 @@ msgstr "1 מגה בייט"
 #: include/global_arrays.php:1671 include/global_arrays.php:1672
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d מגה בייט"
+msgstr "%d מגה בייט"
 
 #: include/global_arrays.php:1676
 msgid "Send Now"
@@ -7780,7 +7780,7 @@ msgstr "כל שבוע"
 #: include/global_arrays.php:1902 include/global_arrays.php:1903
 #, php-format
 msgid "Every %d Weeks"
-msgstr "כל% d שבועות"
+msgstr "כל %d שבועות"
 
 #: include/global_arrays.php:1934
 msgctxt "A short textual representation of a month, three letters"
@@ -8884,7 +8884,7 @@ msgstr "פורמט ימין של ציר (- פורמט ימני - פורמט&gt;&
 #: include/global_form.php:898
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "כברירת מחדל, הפורמט של תוויות הצירים נקבע באופן אוטומטי. אם אתה רוצה לעשות זאת בעצמך, השתמש באפשרות זו עם אותם% lf ארגומנטים שאתה מכיר מהפקודות PRINT ו- GPRINT."
+msgstr "כברירת מחדל, הפורמט של תוויות הצירים נקבע באופן אוטומטי. אם אתה רוצה לעשות זאת בעצמך, השתמש באפשרות זו עם אותם %lf ארגומנטים שאתה מכיר מהפקודות PRINT ו- GPRINT."
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
@@ -8892,7 +8892,7 @@ msgstr "תבנית ציר ימין (- תבנית ציר ימין &lt;פורמט&
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "כאשר אתה מגדיר את תיוג ציר הנכון, להחיל כלל על פורמט הנתונים. הפורמטים הנתמכים כוללים &quot;numeric&quot; כאשר הנתונים מטופלים כמספריים, &quot;חותמת זמן&quot; שבה ערכים מתפרשים כחותמות זמן של UNIX (מספר שניות מאז ינואר 1970) והמוצגות באמצעות תבנית strftime (ברירת המחדל היא% Y-% m-% d% H :%גברת&quot;). ראה גם - אורך - ו - ציר ציר בפורמט. לבסוף &quot;משך&quot; שבו ערכים מפורשים כמו משך אלפיות השנייה. עיצוב עוקב אחר הכללים של valstrfduration מוסמך הדפסה / GPRINT."
+msgstr "כאשר אתה מגדיר את תיוג ציר הנכון, להחיל כלל על פורמט הנתונים. הפורמטים הנתמכים כוללים &quot;numeric&quot; כאשר הנתונים מטופלים כמספריים, &quot;חותמת זמן&quot; שבה ערכים מתפרשים כחותמות זמן של UNIX (מספר שניות מאז ינואר 1970) והמוצגות באמצעות תבנית strftime (ברירת המחדל היא% Y-% m-%d% H :%גברת&quot;). ראה גם - אורך - ו - ציר ציר בפורמט. לבסוף &quot;משך&quot; שבו ערכים מפורשים כמו משך אלפיות השנייה. עיצוב עוקב אחר הכללים של valstrfduration מוסמך הדפסה / GPRINT."
 
 #: include/global_form.php:909
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
@@ -8900,7 +8900,7 @@ msgstr "שמאל ציר מעצב (- ציר ציר, פורמט&gt;&gt;)"
 
 #: include/global_form.php:914
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "כאשר אתה מגדיר את תיוג ציר שמאל, להחיל כלל על פורמט הנתונים. הפורמטים הנתמכים כוללים &quot;numeric&quot; כאשר הנתונים מטופלים כמספריים, &quot;חותמת זמן&quot; שבה ערכים מתפרשים כחותמות זמן של UNIX (מספר שניות מאז ינואר 1970) והמוצגות באמצעות תבנית strftime (ברירת המחדל היא% Y-% m-% d% H :%גברת&quot;). ראה גם - אורך. לבסוף &quot;משך&quot; שבו ערכים מפורשים כמו משך אלפיות השנייה. עיצוב עוקב אחר הכללים של valstrfduration מוסמך הדפסה / GPRINT."
+msgstr "כאשר אתה מגדיר את תיוג ציר שמאל, להחיל כלל על פורמט הנתונים. הפורמטים הנתמכים כוללים &quot;numeric&quot; כאשר הנתונים מטופלים כמספריים, &quot;חותמת זמן&quot; שבה ערכים מתפרשים כחותמות זמן של UNIX (מספר שניות מאז ינואר 1970) והמוצגות באמצעות תבנית strftime (ברירת המחדל היא% Y-% m-%d% H :%גברת&quot;). ראה גם - אורך. לבסוף &quot;משך&quot; שבו ערכים מפורשים כמו משך אלפיות השנייה. עיצוב עוקב אחר הכללים של valstrfduration מוסמך הדפסה / GPRINT."
 
 #: include/global_form.php:917
 msgid "Legend Options"
@@ -11129,7 +11129,7 @@ msgstr "תהליך"
 #: include/global_settings.php:2293 include/global_settings.php:2294
 #, php-format
 msgid "%d Processes"
-msgstr "% d תהליכים"
+msgstr "%d תהליכים"
 
 #: include/global_settings.php:1455
 msgid "Maintenance Background Generation Timeout"
@@ -11321,7 +11321,7 @@ msgstr "1 שנה"
 #: include/global_settings.php:1660
 #, php-format
 msgid "%d Changes"
-msgstr "% d שינויים"
+msgstr "%d שינויים"
 
 #: include/global_settings.php:1663
 msgid "Account Locking"
@@ -11344,7 +11344,7 @@ msgstr "1 ניסיון"
 #: include/global_settings.php:1679
 #, php-format
 msgid "%d Attempts"
-msgstr "% d ניסיונות"
+msgstr "%d ניסיונות"
 
 #: include/global_settings.php:1682
 msgid "Auto Unlock"
@@ -12112,7 +12112,7 @@ msgstr "כל ערך שהוא זה סטיות תקן רבות מעל הממוצע
 #: include/global_settings.php:2454
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d סטיות תקן"
+msgstr "%d סטיות תקן"
 
 #: include/global_settings.php:2458
 msgid "Variance Percentage"
@@ -12140,7 +12140,7 @@ msgstr "ערך זה מייצג את מספר הדגימות הממוצעות ה�
 #: include/global_settings.php:2499
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d גבוה / נמוך דוגמאות"
+msgstr "%d גבוה / נמוך דוגמאות"
 
 #: include/global_settings.php:2503
 msgid "Max Kills Per RRA"
@@ -12158,7 +12158,7 @@ msgstr "ערך זה מייצג את המספר המרבי של קוצים להס
 #: include/global_settings.php:2518 include/global_settings.php:2519
 #, php-format
 msgid "%d Spikes"
-msgstr "% d קוצים"
+msgstr "%d קוצים"
 
 #: include/global_settings.php:2523
 msgid "RRDfile Backup Directory"
@@ -12383,7 +12383,7 @@ msgstr "עמודה 1"
 #: lib/html_tree.php:1062
 #, php-format
 msgid "%d Columns"
-msgstr "% d עמודות"
+msgstr "%d עמודות"
 
 #: include/global_settings.php:2748
 msgid "Tree View Thumbnail Columns"
@@ -12973,7 +12973,7 @@ msgstr "מנהל הקקטוסים שלך אילץ סיסמאות מורכבות 
 #: lib/auth.php:4754
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "הסיסמה חייבת להיות לפחות% d תווים!"
+msgstr "הסיסמה חייבת להיות לפחות %d תווים!"
 
 #: lib/auth.php:4760
 msgid "Your password must contain at least 1 numerical character!"
@@ -13042,12 +13042,12 @@ msgstr "- תצוגת מנהל מערכת"
 #: lib/clog_webapi.php:318
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "יומן [סה&quot;כ שורות:% d %s - מסנן פעיל]"
+msgstr "יומן [סה&quot;כ שורות: %d %s - מסנן פעיל]"
 
 #: lib/clog_webapi.php:320
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "התחבר [סה&quot;כ שורות:% d %s - ללא סינון]"
+msgstr "התחבר [סה&quot;כ שורות: %d %s - ללא סינון]"
 
 #: lib/clog_webapi.php:330 utilities.php:1577 utilities.php:1929
 #: utilities.php:2156 utilities.php:2270 utilities.php:3176 utilities.php:3401
@@ -13339,7 +13339,7 @@ msgstr "נמצא פריט [ %s = &#39; %s&#39;]: %s"
 #: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "סה&quot;כ:% f, דלתא:% f, %s"
+msgstr "סה&quot;כ: %f, דלתא: %f, %s"
 
 #: lib/data_query.php:905
 #, php-format
@@ -13484,7 +13484,7 @@ msgstr "קיבלת תוצאה של SNMP עבור נתונים @ &#39; %s&#39; [v
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "ביצוע SNMP עבור נתונים @ &#39; %s&#39; [value = &#39;$ value&#39;]"
+msgstr "ביצוע SNMP עבור נתונים @ &#39; %s&#39; [value = &#39;$value&#39;]"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -13619,12 +13619,12 @@ msgstr "קובץ RRD לא עודכן לאחר הסקרים"
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "הגדרות שמור ל - Data Collector% d נכשל."
+msgstr "הגדרות שמור ל - Data Collector %d נכשל."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "הגדרות שמור ל - Data Collector% d נכשל."
+msgstr "הגדרות שמור ל - Data Collector %d נכשל."
 
 #: lib/functions.php:932 lib/functions.php:1023
 msgid "Message Not Found."
@@ -13859,12 +13859,12 @@ msgstr "הבא"
 #: lib/html.php:739
 #, php-format
 msgid "%d to %d of %s [ %s ]"
-msgstr "% d ל-% d מתוך %s [ %s]"
+msgstr "%d ל-%d מתוך %s [ %s]"
 
 #: lib/html.php:749
 #, php-format
 msgid "All %d %s"
-msgstr "כל% d %s"
+msgstr "כל %d %s"
 
 #: lib/html.php:787
 #, fuzzy, php-format
@@ -14345,7 +14345,7 @@ msgstr "עמודות"
 #: lib/html_graph.php:238 lib/html_tree.php:1057
 #, php-format
 msgid "%d Column"
-msgstr "עמודה% d"
+msgstr "עמודה %d"
 
 #: lib/html_graph.php:268 lib/html_tree.php:1087
 msgid "Custom"
@@ -15573,7 +15573,7 @@ msgstr "תצורה של פולר"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "מידע ה- Cacti Remote Poller המרוחק שלך לא נכלל בקובץ config.php שלך. בדוק את config.php.dist וקבע את המשתנים: <i>$ rdatabase_default, $ rdatabase_username</i> וכו &#39;. יש להגדיר משתנים אלה ולהצביע חזרה לשרת מסד הנתונים הראשי של Cacti. תקן את זה ונסה שוב."
+msgstr "מידע ה- Cacti Remote Poller המרוחק שלך לא נכלל בקובץ config.php שלך. בדוק את config.php.dist וקבע את המשתנים: <i>$rdatabase_default, $rdatabase_username</i> וכו &#39;. יש להגדיר משתנים אלה ולהצביע חזרה לשרת מסד הנתונים הראשי של Cacti. תקן את זה ונסה שוב."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15585,11 +15585,11 @@ msgstr "המשתנים שיש להגדיר בקובץ config.php כוללים א
 
 #: lib/installer.php:2296
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "תוכנית ההתקנה מקצה באופן אוטומטי $ poller_id ומוסיפה אותו לקובץ config.php."
+msgstr "תוכנית ההתקנה מקצה באופן אוטומטי $poller_id ומוסיפה אותו לקובץ config.php."
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "לאחר המשתנים כל להגדיר בקובץ config.php, עליך גם להעניק את הגישה $ rdatabase_username לשרת הנתונים הראשי Cacti. בצע את ההליך אותו היית עושה עם כל התקנה אחרת Cacti. לאחר מכן תוכל ללחוץ על הלחצן &#39;בדיקת חיבור&#39;. אם הבדיקה תצליח תוכל להמשיך ולהשלים את ההתקנה."
+msgstr "לאחר המשתנים כל להגדיר בקובץ config.php, עליך גם להעניק את הגישה $rdatabase_username לשרת הנתונים הראשי Cacti. בצע את ההליך אותו היית עושה עם כל התקנה אחרת Cacti. לאחר מכן תוכל ללחוץ על הלחצן &#39;בדיקת חיבור&#39;. אם הבדיקה תצליח תוכל להמשיך ולהשלים את ההתקנה."
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15716,7 +15716,7 @@ msgstr "אפשרות סקריפט זו תאפשר מחדש כל מקורות נ�
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "מומלץ בחום שתעדכן את ה- config.php שלך כדי לאפשר תכונה זו על ידי <b>ביטול הפרדה של</b> המשתנה <b>$ input_whitelist</b> ואז הפעלת שלוש אפשרויות הסקריפט CLI שלמעלה לאחר השלמת ההתקנה מבוססת האינטרנט."
+msgstr "מומלץ בחום שתעדכן את ה- config.php שלך כדי לאפשר תכונה זו על ידי <b>ביטול הפרדה של</b> המשתנה <b>$input_whitelist</b> ואז הפעלת שלוש אפשרויות הסקריפט CLI שלמעלה לאחר השלמת ההתקנה מבוססת האינטרנט."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -19962,7 +19962,7 @@ msgstr "שגיאה: גרסה RRDtool מותקנת אינה חורגת מהגיר
 #: utilities.php:285
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "שגיאה: RRDtool 1.2.x + אינו תומך בתבנית תמונות GIF, אך% d &quot;גרפים ו / או תבניות מוגדרים כ- GIF כפורמט התמונה."
+msgstr "שגיאה: RRDtool 1.2.x + אינו תומך בתבנית תמונות GIF, אך %d &quot;גרפים ו / או תבניות מוגדרים כ- GIF כפורמט התמונה."
 
 #: utilities.php:298
 msgid "General Information"
@@ -20252,12 +20252,12 @@ msgstr "סדר הצגה"
 #: utilities.php:1565
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "התחבר [סה&quot;כ שורות:% d - פריטים שאינם תואמים מוסתר]"
+msgstr "התחבר [סה&quot;כ שורות: %d - פריטים שאינם תואמים מוסתר]"
 
 #: utilities.php:1567
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "יומן [סה&quot;כ שורות:% d - כל הפריטים המוצגים]"
+msgstr "יומן [סה&quot;כ שורות: %d - כל הפריטים המוצגים]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
@@ -20526,7 +20526,7 @@ msgstr "ממוצע בתים / הקלטה:"
 #: utilities.php:2824
 #, php-format
 msgid "%d Bytes"
-msgstr "% d בתים"
+msgstr "%d בתים"
 
 #: utilities.php:2824
 msgid "Max Record Length:"
@@ -20573,7 +20573,7 @@ msgstr "%d שניות"
 #: utilities.php:2862
 #, php-format
 msgid "%0.2f percent of update frequency)"
-msgstr "% 0.2f אחוז תדירות העדכון)"
+msgstr "%0.2f אחוז תדירות העדכון)"
 
 #: utilities.php:2870
 msgid "RRD Updates:"

@@ -15700,7 +15700,7 @@ msgstr "Эта опция скрипта включит все отключен�
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Настоятельно рекомендуется обновить файл config.php, чтобы включить эту функцию, раскомментировав переменную <b>$ input_whitelist,</b> а затем запустив три параметра сценария CLI, описанные выше, после завершения установки через Интернет."
+msgstr "Настоятельно рекомендуется обновить файл config.php, чтобы включить эту функцию, раскомментировав переменную <b>$input_whitelist,</b> а затем запустив три параметра сценария CLI, описанные выше, после завершения установки через Интернет."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

@@ -2966,7 +2966,7 @@ msgstr "Kleurtemplate [nieuw]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Kleurensjabloon '%s' had% d Aggregaatsjablonen naar buiten gedrukt en% d Niet-sjabloonaggregaten naar buiten gedrukt"
+msgstr "Kleurensjabloon '%s' had %d Aggregaatsjablonen naar buiten gedrukt en %d Niet-sjabloonaggregaten naar buiten gedrukt"
 
 #: color_templates.php:482
 #, php-format
@@ -5472,7 +5472,7 @@ msgstr "Apparaat is uitgeschakeld"
 #: host.php:256
 #, php-format
 msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "Apparaat opnieuw indexeren voltooid in% 0.2f seconden. Er zijn% d items geüpdatet."
+msgstr "Apparaat opnieuw indexeren voltooid in %0.2f seconden. Er zijn %d items geüpdatet."
 
 #: host.php:390
 #, php-format
@@ -15645,7 +15645,7 @@ msgstr "Met deze scriptoptie worden alle uitgeschakelde gegevensbronnen weer ing
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$ input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
+msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

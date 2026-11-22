@@ -857,7 +857,7 @@ msgstr "암호 요구 사항은 다음과 같습니다."
 #: auth_changepassword.php:256
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "길이는 % d 자 이상이어야합니다."
+msgstr "길이는 %d 자 이상이어야합니다."
 
 #: auth_changepassword.php:260
 msgid "Must include mixed case"
@@ -874,7 +874,7 @@ msgstr "최소 1 개의 특수 문자를 포함해야합니다."
 #: auth_changepassword.php:272
 #, php-format
 msgid "Cannot be reused for %d password changes"
-msgstr "% d 개의 암호 변경에 재사용 할 수 없습니다."
+msgstr "%d 개의 암호 변경에 재사용 할 수 없습니다."
 
 #: auth_changepassword.php:325
 msgid "There are problems with the Change Password page.  Contact your Cacti administrator right away."
@@ -1684,7 +1684,7 @@ msgstr "이 네트워크 범위를 검색하는 데 사용할 스레드 수를 �
 #: automation_networks.php:521
 #, php-format
 msgid "%d Thread"
-msgstr "스레드 % d 개"
+msgstr "스레드 %d 개"
 
 #: automation_networks.php:522 automation_networks.php:523
 #: automation_networks.php:524 automation_networks.php:525
@@ -1698,7 +1698,7 @@ msgstr "스레드 % d 개"
 #: include/global_arrays.php:845 include/global_arrays.php:846
 #, php-format
 msgid "%d Threads"
-msgstr "스레드 % d 개"
+msgstr "스레드 %d 개"
 
 #: automation_networks.php:538
 msgid "Run Limit"
@@ -2336,7 +2336,7 @@ msgstr "실행"
 #: lib/api_automation.php:1558 lib/api_automation.php:1626
 #, php-format
 msgid "Item#%d"
-msgstr "항목 # % d"
+msgstr "항목 # %d"
 
 #: automation_snmp.php:575
 msgid "none"
@@ -2688,7 +2688,7 @@ msgstr "항목 값"
 #: cdef.php:609 vdef.php:633
 #, php-format
 msgid "Item #%d"
-msgstr "항목 # % d"
+msgstr "항목 # %d"
 
 #: cdef.php:686
 msgid "Delete CDEF Item"
@@ -2887,7 +2887,7 @@ msgstr "색상 항목"
 #: lib/html_reports.php:1869
 #, php-format
 msgid "Item # %d"
-msgstr "항목 # % d"
+msgstr "항목 # %d"
 
 #: color_templates.php:133 graph_templates_inputs.php:274
 #: lib/api_aggregate.php:1915 lib/html.php:1684
@@ -2954,7 +2954,7 @@ msgstr "색상 템플릿 [신규]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "색상 템플릿 '%s'에 % d 집계 템플릿이 푸시되었고 % d 비 템플릿 집계가 푸시되었습니다."
+msgstr "색상 템플릿 '%s'에 %d 집계 템플릿이 푸시되었고 %d 비 템플릿 집계가 푸시되었습니다."
 
 #: color_templates.php:482
 #, php-format
@@ -3890,7 +3890,7 @@ msgstr "RRA 크기를 얻으려면 유효한 행 수를 입력하십시오."
 #: include/global_arrays.php:1488 include/global_settings.php:1627
 #, php-format
 msgid "%d Years"
-msgstr "% d 년"
+msgstr "%d 년"
 
 #: data_source_profiles.php:943
 msgid "1 Year"
@@ -3900,7 +3900,7 @@ msgstr "1년"
 #: include/global_arrays.php:1482 rrdcleaner.php:549
 #, php-format
 msgid "%d Month"
-msgstr "% d 개월"
+msgstr "%d 개월"
 
 #: data_source_profiles.php:952 include/global_arrays.php:800
 #: include/global_arrays.php:801 include/global_arrays.php:802
@@ -3910,14 +3910,14 @@ msgstr "% d 개월"
 #: rrdcleaner.php:552
 #, php-format
 msgid "%d Months"
-msgstr "개월 % d 개월"
+msgstr "개월 %d 개월"
 
 #: data_source_profiles.php:961 include/global_arrays.php:740
 #: include/global_arrays.php:796 include/global_arrays.php:1480
 #: rrdcleaner.php:545 rrdcleaner.php:546
 #, php-format
 msgid "%d Week"
-msgstr "% d주의"
+msgstr "%d주의"
 
 #: data_source_profiles.php:961 include/global_arrays.php:797
 #: include/global_arrays.php:798 include/global_arrays.php:1481
@@ -3925,14 +3925,14 @@ msgstr "% d주의"
 #: include/global_settings.php:2923 rrdcleaner.php:547 rrdcleaner.php:548
 #, php-format
 msgid "%d Weeks"
-msgstr "% d 주"
+msgstr "%d 주"
 
 #: data_source_profiles.php:970 include/global_arrays.php:739
 #: include/global_arrays.php:783 include/global_arrays.php:793
 #: include/global_arrays.php:1476
 #, php-format
 msgid "%d Day"
-msgstr "% d 일"
+msgstr "%d 일"
 
 #: data_source_profiles.php:970 include/global_arrays.php:784
 #: include/global_arrays.php:794 include/global_arrays.php:795
@@ -4606,7 +4606,7 @@ msgstr "썸네일"
 #: graph_realtime.php:532
 #, php-format
 msgid "%d seconds left."
-msgstr "% d 초 남았습니다."
+msgstr "%d 초 남았습니다."
 
 #: graph_realtime.php:548
 msgid " seconds left."
@@ -5437,7 +5437,7 @@ msgstr "기기가 사용 중지되었습니다."
 #: host.php:256
 #, php-format
 msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "장치 재 색인이 % 0.2f 초 안에 완료되었습니다. % d 개의 항목이 업데이트되었습니다."
+msgstr "장치 재 색인이 %0.2f 초 안에 완료되었습니다. %d 개의 항목이 업데이트되었습니다."
 
 #: host.php:390
 #, php-format
@@ -5636,7 +5636,7 @@ msgstr "작업"
 #: host.php:1029
 #, php-format
 msgid " [%d Items, %d Rows]"
-msgstr "[% d 개 항목, % d 개 행]"
+msgstr "[%d 개 항목, %d 개 행]"
 
 #: host.php:1029
 msgid "Fail"
@@ -6472,7 +6472,7 @@ msgstr "사용 중이 아닌"
 #: include/global_arrays.php:899
 #, php-format
 msgid "Version %d"
-msgstr "버전 % d"
+msgstr "버전 %d"
 
 #: include/global_arrays.php:659 include/global_arrays.php:669
 msgid "[None]"
@@ -6598,7 +6598,7 @@ msgstr "선택한 폴러 간격"
 #: include/global_arrays.php:819 include/global_arrays.php:820
 #, php-format
 msgid "Every %d Seconds"
-msgstr "% d 초마다"
+msgstr "%d 초마다"
 
 #: include/global_arrays.php:748 include/global_arrays.php:821
 #: include/global_arrays.php:866
@@ -6627,7 +6627,7 @@ msgstr "매시간"
 #: include/global_settings.php:2543
 #, php-format
 msgid "Every %d Hours"
-msgstr "% d 시간마다"
+msgstr "%d 시간마다"
 
 #: include/global_arrays.php:759
 #, php-format
@@ -6643,7 +6643,7 @@ msgstr "%0.1f분"
 #: include/global_settings.php:1626 rrdcleaner.php:553
 #, php-format
 msgid "%d Year"
-msgstr "% d 년"
+msgstr "%d 년"
 
 #: include/global_arrays.php:826
 msgid "Disabled/Manual"
@@ -7059,7 +7059,7 @@ msgstr "모든 라인"
 #: include/global_arrays.php:1152 include/global_arrays.php:1153
 #, php-format
 msgid "%d Lines"
-msgstr "% d 개 라인"
+msgstr "%d 개 라인"
 
 #: include/global_arrays.php:1231
 msgid "Console Access"
@@ -7190,7 +7190,7 @@ msgstr "최근"
 #: include/global_arrays.php:1442 include/global_arrays.php:1443
 #, php-format
 msgid "Last %d Hours"
-msgstr "마지막 % d 시간"
+msgstr "마지막 %d 시간"
 
 #: include/global_arrays.php:1444
 msgid "Last Day"
@@ -7200,7 +7200,7 @@ msgstr "Last Day"
 #: include/global_arrays.php:1447
 #, php-format
 msgid "Last %d Days"
-msgstr "마지막 % d 일"
+msgstr "마지막 %d 일"
 
 #: include/global_arrays.php:1448
 msgid "Last Week"
@@ -7209,7 +7209,7 @@ msgstr "지난 주"
 #: include/global_arrays.php:1449
 #, php-format
 msgid "Last %d Weeks"
-msgstr "지난 % d 주"
+msgstr "지난 %d 주"
 
 #: include/global_arrays.php:1450
 msgid "Last Month"
@@ -7219,7 +7219,7 @@ msgstr "지난 달"
 #: include/global_arrays.php:1453 include/global_arrays.php:1454
 #, php-format
 msgid "Last %d Months"
-msgstr "지난 % d 개월"
+msgstr "지난 %d 개월"
 
 #: include/global_arrays.php:1455
 msgid "Last Year"
@@ -7228,7 +7228,7 @@ msgstr "지난해"
 #: include/global_arrays.php:1456
 #, php-format
 msgid "Last %d Years"
-msgstr "마지막 % d 년"
+msgstr "마지막 %d 년"
 
 #: include/global_arrays.php:1457
 msgid "Day Shift"
@@ -7269,7 +7269,7 @@ msgstr "작년"
 #: include/global_arrays.php:1470
 #, php-format
 msgid "%d Min"
-msgstr "% d 분"
+msgstr "%d 분"
 
 #: include/global_arrays.php:1525
 msgid "Month Number, Day, Year"
@@ -7305,7 +7305,7 @@ msgstr "부스트 후"
 #: include/global_arrays.php:1617
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MBytes"
+msgstr "%d MBytes"
 
 #: include/global_arrays.php:1555
 msgid "1 GByte"
@@ -7323,7 +7323,7 @@ msgstr "%s GBytes"
 #: include/global_arrays.php:1624 include/global_arrays.php:1625
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php:1578
 msgid "2,000 Data Source Items"
@@ -7382,7 +7382,7 @@ msgstr "%s 시간"
 #: include/global_arrays.php:1618
 #, php-format
 msgid "%d GByte"
-msgstr "% d GBytes"
+msgstr "%d GBytes"
 
 #: include/global_arrays.php:1626 utilities.php:2830 utilities.php:2831
 #: utilities.php:2880
@@ -7414,7 +7414,7 @@ msgstr "1 메가 바이트"
 #: include/global_arrays.php:1671 include/global_arrays.php:1672
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d 메가 바이트"
+msgstr "%d 메가 바이트"
 
 #: include/global_arrays.php:1676
 msgid "Send Now"
@@ -7675,7 +7675,7 @@ msgstr "매주"
 #: include/global_arrays.php:1902 include/global_arrays.php:1903
 #, php-format
 msgid "Every %d Weeks"
-msgstr "% d 주마다"
+msgstr "%d 주마다"
 
 #: include/global_arrays.php:1934
 msgctxt "A short textual representation of a month, three letters"
@@ -8779,7 +8779,7 @@ msgstr "오른쪽 축 형식 (--right-axis-format &lt;format&gt;)"
 #: include/global_form.php:898
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "기본적으로 축 레이블의 형식은 자동으로 결정됩니다. 직접하고 싶다면이 옵션을 PRINT와 GPRINT 명령에서 알 수있는 것과 같은 % lf 인수와 함께 사용하십시오."
+msgstr "기본적으로 축 레이블의 형식은 자동으로 결정됩니다. 직접하고 싶다면이 옵션을 PRINT와 GPRINT 명령에서 알 수있는 것과 같은 %lf 인수와 함께 사용하십시오."
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
@@ -8787,7 +8787,7 @@ msgstr "오른쪽 축 포매터 (--right-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php:906
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "오른쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;% Y- % m- % d % H : % M :  %s &quot;). --units-length 및 --right-axis-format도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
+msgstr "오른쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;% Y- % m- %d % H : % M :  %s &quot;). --units-length 및 --right-axis-format도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
 
 #: include/global_form.php:909
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
@@ -8795,7 +8795,7 @@ msgstr "왼쪽 축 포매터 (- 축 축 형식 지정자 &lt;형식 이름&gt;)"
 
 #: include/global_form.php:914
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "왼쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;% Y- % m- % d % H : % M :  %s &quot;). --units-length도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
+msgstr "왼쪽 축 레이블을 설정할 때 데이터 형식에 규칙을 적용하십시오. 지원되는 형식은 데이터가 숫자로 처리되는 &quot;숫자&quot;, 값이 UNIX 시간 소인 (1970 년 1 월 이후의 초 수로 해석 됨) 및 strftime 형식으로 표시되는 &quot;시간 소인&quot;을 포함합니다 (기본값은 &quot;% Y- % m- %d % H : % M :  %s &quot;). --units-length도 참조하십시오. 마지막으로 &quot;duration&quot;값은 밀리 초 단위의 지속 기간으로 해석됩니다. 형식 지정은 valstrfduration 인증 된 PRINT / GPRINT의 규칙을 따릅니다."
 
 #: include/global_form.php:917
 msgid "Legend Options"
@@ -11025,7 +11025,7 @@ msgstr "1 프로세스"
 #: include/global_settings.php:2293 include/global_settings.php:2294
 #, php-format
 msgid "%d Processes"
-msgstr "프로세스 % d 개"
+msgstr "프로세스 %d 개"
 
 #: include/global_settings.php:1455
 msgid "Maintenance Background Generation Timeout"
@@ -11217,7 +11217,7 @@ msgstr "1 변경"
 #: include/global_settings.php:1660
 #, php-format
 msgid "%d Changes"
-msgstr "% d 개 변경"
+msgstr "%d 개 변경"
 
 #: include/global_settings.php:1663
 msgid "Account Locking"
@@ -11240,7 +11240,7 @@ msgstr "1 회 시도"
 #: include/global_settings.php:1679
 #, php-format
 msgid "%d Attempts"
-msgstr "% d 회 시도"
+msgstr "%d 회 시도"
 
 #: include/global_settings.php:1682
 msgid "Auto Unlock"
@@ -12008,7 +12008,7 @@ msgstr "평균보다 많은 표준 편차 인 값은 제외됩니다. 좋은 숫
 #: include/global_settings.php:2454
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d 표준 편차"
+msgstr "%d 표준 편차"
 
 #: include/global_settings.php:2458
 msgid "Variance Percentage"
@@ -12036,7 +12036,7 @@ msgstr "이 값은 분산 평균을 계산하기 전에 샘플 세트에서 고 
 #: include/global_settings.php:2499
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d 높음 / 낮음 샘플"
+msgstr "%d 높음 / 낮음 샘플"
 
 #: include/global_settings.php:2503
 msgid "Max Kills Per RRA"
@@ -12054,7 +12054,7 @@ msgstr "이 값은 그래프 RRA에서 제거 할 최대 스파이크 수를 나
 #: include/global_settings.php:2518 include/global_settings.php:2519
 #, php-format
 msgid "%d Spikes"
-msgstr "% d 개의 스파이크"
+msgstr "%d 개의 스파이크"
 
 #: include/global_settings.php:2523
 msgid "RRDfile Backup Directory"
@@ -12869,7 +12869,7 @@ msgstr "Cacti 관리자가 로그인을 위해 복잡한 비밀번호를 설정�
 #: lib/auth.php:4754
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "비밀번호는 % d 자 이상이어야합니다!"
+msgstr "비밀번호는 %d 자 이상이어야합니다!"
 
 #: lib/auth.php:4760
 msgid "Your password must contain at least 1 numerical character!"
@@ -12938,12 +12938,12 @@ msgstr "- 관리자보기"
 #: lib/clog_webapi.php:318
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "로그 [총선 : % d  %s - 필터 작동 중]"
+msgstr "로그 [총선 : %d  %s - 필터 작동 중]"
 
 #: lib/clog_webapi.php:320
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "로그 [총선 : % d  %s - 필터링되지 않음]"
+msgstr "로그 [총선 : %d  %s - 필터링되지 않음]"
 
 #: lib/clog_webapi.php:330 utilities.php:1577 utilities.php:1929
 #: utilities.php:2156 utilities.php:2270 utilities.php:3176 utilities.php:3401
@@ -13235,7 +13235,7 @@ msgstr "발견 된 항목 [ %s = &#39; %s&#39;] 색인 :  %s"
 #: lib/data_query.php:865 lib/data_query.php:880
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "총계 : % f, 델타 : % f,  %s"
+msgstr "총계 : %f, 델타 : %f,  %s"
 
 #: lib/data_query.php:905
 #, php-format
@@ -13380,7 +13380,7 @@ msgstr "SNMP @ &#39; %s&#39;에 대한 결과 가져 오기 [값 = &#39; %s&#39;
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "SNMP를 실행하면 데이터 @ &#39; %s&#39;에 도착합니다 [value = &#39;$ value&#39;]"
+msgstr "SNMP를 실행하면 데이터 @ &#39; %s&#39;에 도착합니다 [value = &#39;$value&#39;]"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -13515,12 +13515,12 @@ msgstr "폴링 후 RRD 파일이 업데이트되지 않음"
 #: lib/functions.php:451 settings.php:274
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "데이터 수집기 % d에 설정이 저장되지 않았습니다."
+msgstr "데이터 수집기 %d에 설정이 저장되지 않았습니다."
 
 #: lib/functions.php:463 settings.php:286
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "데이터 수집기 % d에 설정이 저장되지 않았습니다."
+msgstr "데이터 수집기 %d에 설정이 저장되지 않았습니다."
 
 #: lib/functions.php:932 lib/functions.php:1023
 msgid "Message Not Found."
@@ -13760,7 +13760,7 @@ msgstr "%d ~ %d/%s [%s]"
 #: lib/html.php:749
 #, php-format
 msgid "All %d %s"
-msgstr "전체 % d  %s"
+msgstr "전체 %d  %s"
 
 #: lib/html.php:787
 #, fuzzy, php-format
@@ -15469,7 +15469,7 @@ msgstr "폴러 구성"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "원격 Cacti Poller 정보가 config.php 파일에 포함되어 있지 않습니다. config.php.dist를 검토하고 <i>$ rdatabase_default, $ rdatabase_username</i> 등의 변수를 설정하십시오. 이러한 변수를 설정하고 기본 Cacti 데이터베이스 서버를 다시 가리켜 야합니다. 이를 수정하고 다시 시도하십시오."
+msgstr "원격 Cacti Poller 정보가 config.php 파일에 포함되어 있지 않습니다. config.php.dist를 검토하고 <i>$rdatabase_default, $rdatabase_username</i> 등의 변수를 설정하십시오. 이러한 변수를 설정하고 기본 Cacti 데이터베이스 서버를 다시 가리켜 야합니다. 이를 수정하고 다시 시도하십시오."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15481,11 +15481,11 @@ msgstr "config.php 파일에서 설정해야하는 변수는 다음과 같습니
 
 #: lib/installer.php:2296
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Installer는 자동으로 $ poller_id를 할당하고 config.php 파일에 추가합니다."
+msgstr "Installer는 자동으로 $poller_id를 할당하고 config.php 파일에 추가합니다."
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "변수가 config.php 파일에 모두 설정되면 주 Cacti 데이터베이스 서버에 $ rdatabase_username 액세스 권한을 부여해야합니다. 다른 Cacti 설치와 동일한 절차를 따르십시오. 그런 다음 &#39;연결 테스트&#39;버튼을 누를 수 있습니다. 테스트가 성공적이면 설치를 완료하고 완료 할 수 있습니다."
+msgstr "변수가 config.php 파일에 모두 설정되면 주 Cacti 데이터베이스 서버에 $rdatabase_username 액세스 권한을 부여해야합니다. 다른 Cacti 설치와 동일한 절차를 따르십시오. 그런 다음 &#39;연결 테스트&#39;버튼을 누를 수 있습니다. 테스트가 성공적이면 설치를 완료하고 완료 할 수 있습니다."
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15612,7 +15612,7 @@ msgstr "이 스크립트 옵션은 비활성화 된 모든 데이터 소스를 �
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "<b>$ input_whitelist</b> 변수를 주석 해제 한 다음 웹 기반 설치가 완료된 후 위의 세 가지 CLI 스크립트 옵션을 실행하여이 기능을 사용하도록 config.php를 업데이트하는 것이 좋습니다."
+msgstr "<b>$input_whitelist</b> 변수를 주석 해제 한 다음 웹 기반 설치가 완료된 후 위의 세 가지 CLI 스크립트 옵션을 실행하여이 기능을 사용하도록 config.php를 업데이트하는 것이 좋습니다."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
@@ -16527,12 +16527,12 @@ msgstr "RRDtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했�
 #: lib/rrd.php:4716
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f)가 RRD 파일에서 제거되었습니다."
+msgstr "RRA (CF =  %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f)가 RRD 파일에서 제거되었습니다."
 
 #: lib/rrd.php:4754
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f) RRD 파일에 추가"
+msgstr "RRA (CF =  %s, ROWS = %d, PDP_PER_ROW = %d, XFF = %1.2f) RRD 파일에 추가"
 
 #: lib/rrd.php:4786 lib/rrd.php:4800
 #, php-format
@@ -19744,7 +19744,7 @@ msgstr "오류 : 설치된 RRDtool 버전이 구성된 버전을 초과하지 �
 #: utilities.php:285
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "오류 : RRDtool 1.2.x +는 GIF 이미지 형식을 지원하지 않지만 % d &quot;그래프 및 / 또는 템플릿에는 GIF가 이미지 형식으로 설정되어 있습니다."
+msgstr "오류 : RRDtool 1.2.x +는 GIF 이미지 형식을 지원하지 않지만 %d &quot;그래프 및 / 또는 템플릿에는 GIF가 이미지 형식으로 설정되어 있습니다."
 
 #: utilities.php:298
 msgid "General Information"
@@ -20035,12 +20035,12 @@ msgstr "표시 순서"
 #: utilities.php:1565
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "로그 [총선 수 : % d - 일치하지 않는 항목 숨김]"
+msgstr "로그 [총선 수 : %d - 일치하지 않는 항목 숨김]"
 
 #: utilities.php:1567
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "로그 [총선 : % d - 표시된 모든 항목]"
+msgstr "로그 [총선 : %d - 표시된 모든 항목]"
 
 #: utilities.php:1661
 msgid "Clear Cacti Log"
@@ -20309,7 +20309,7 @@ msgstr "평균 바이트 / 레코드 :"
 #: utilities.php:2824
 #, php-format
 msgid "%d Bytes"
-msgstr "% d 바이트"
+msgstr "%d 바이트"
 
 #: utilities.php:2824
 msgid "Max Record Length:"

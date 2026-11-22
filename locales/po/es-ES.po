@@ -2962,7 +2962,7 @@ msgstr "Plantilla de color [nuevo]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "La plantilla de color '%s' tenía% d plantillas agregadas eliminadas y% d agregados no basados en plantillas"
+msgstr "La plantilla de color '%s' tenía %d plantillas agregadas eliminadas y %d agregados no basados en plantillas"
 
 #: color_templates.php:482
 #, php-format
@@ -5468,7 +5468,7 @@ msgstr "El dispositivo está deshabilitado"
 #: host.php:256
 #, php-format
 msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "Reindex del dispositivo completado en% 0.2f segundos. Se actualizaron% d elementos."
+msgstr "Reindex del dispositivo completado en %0.2f segundos. Se actualizaron %d elementos."
 
 #: host.php:390
 #, php-format
@@ -10147,7 +10147,7 @@ msgstr "Fuentes alternativas de contenido seguro"
 
 #: include/global_settings.php:533
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Los nombres de dominio delimitados por espacios que tendrán permitido ser accedidos desde el exterior del servidor web.  Esto es importante para los usuarios que escojan usar un CDN o un sitio de alojamiento.  Las fuentes pueden incluir comodines por ejemplo: *.midominio.com o un protocolo, por ejemplo: https://*.ejemplo.com.  Estas fuentes alternativas incluyen los tipos de imágenes, CSS y JavaScript unicamente."
+msgstr "Los nombres de dominio delimitados por espacios que tendrán permitido ser accedidos desde el exterior del servidor web.  Esto es importante para los usuarios que escojan usar un CDN o un sitio de alojamiento.  Las fuentes pueden incluir comodines por ejemplo: *.midominio.com o un protocolo, por ejemplo: https://*.example.com.  Estas fuentes alternativas incluyen los tipos de imágenes, CSS y JavaScript unicamente."
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
@@ -15642,7 +15642,7 @@ msgstr "Esta opción de secuencia de comandos volverá a habilitar cualquier fue
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Se <b>recomienda</b> encarecidamente que actualice su config.php para habilitar esta función descomentando la variable <b>$ input_whitelist</b> y luego ejecutando las tres opciones de script CLI anteriores después de que se haya completado la instalación basada en web."
+msgstr "Se <b>recomienda</b> encarecidamente que actualice su config.php para habilitar esta función descomentando la variable <b>$input_whitelist</b> y luego ejecutando las tres opciones de script CLI anteriores después de que se haya completado la instalación basada en web."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
