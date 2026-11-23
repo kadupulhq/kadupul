@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -11004,7 +11004,7 @@ msgstr "%s oids (%s)に対してSNMP GETを実行しています"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "データ@'%s'[ value ='$ value ']のSNMP GETを実行しています"
+msgstr "データ@'%s'[ value ='$value ']のSNMP GETを実行しています"
 
 #: lib/data_query.php
 #, php-format
@@ -13349,7 +13349,7 @@ msgstr "Central KadupulサーバーがMySQLを介して各リモートKadupulデ
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "<b>$ input_whitelist</b>変数のコメントを<b>外し</b> 、Webベースのインストールの完了後に上記の3つのCLIスクリプトオプションを実行することにより、config.phpを更新してこの機能を有効にすることを強くお勧めします。"
+msgstr "<b>$input_whitelist</b>変数のコメントを<b>外し</b> 、Webベースのインストールの完了後に上記の3つのCLIスクリプトオプションを実行することにより、config.phpを更新してこの機能を有効にすることを強くお勧めします。"
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13481,7 +13481,7 @@ msgstr "インストールがCSRFパスを完了したら、読み取り専用�
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "変数がすべてconfig.phpファイルに設定されたら、$ rdatabase_usernameにメインKadupulデータベースサーバーへのアクセス権も付与する必要があります。他のKadupulインストールと同じ手順に従います。その後、「接続テスト」ボタンを押してください。テストが成功したら、インストールを続行して完了することができます。"
+msgstr "変数がすべてconfig.phpファイルに設定されたら、$rdatabase_usernameにメインKadupulデータベースサーバーへのアクセス権も付与する必要があります。他のKadupulインストールと同じ手順に従います。その後、「接続テスト」ボタンを押してください。テストが成功したら、インストールを続行して完了することができます。"
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -13748,7 +13748,7 @@ msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "インストーラは自動的に$ poller_idを割り当て、それをconfig.phpファイルに追加します。"
+msgstr "インストーラは自動的に$poller_idを割り当て、それをconfig.phpファイルに追加します。"
 
 #: lib/installer.php
 msgid "The Installer could not proceed due to an unexpected error."
@@ -14015,7 +14015,7 @@ msgstr "MySQL TimeZoneデータベースにデータが入力されていませ�
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "あなたのRemote Kadupul Poller情報はあなたのconfig.phpファイルに含まれていません。 config.php.distを確認し、変数を設定してください。 <i>$ rdatabase_default、$ rdatabase_username</i>など。これらの変数は、設定してプライマリKadupulデータベースサーバーを指している必要があります。これを訂正してやり直してください。"
+msgstr "あなたのRemote Kadupul Poller情報はあなたのconfig.phpファイルに含まれていません。 config.php.distを確認し、変数を設定してください。 <i>$rdatabase_default、$rdatabase_username</i>など。これらの変数は、設定してプライマリKadupulデータベースサーバーを指している必要があります。これを訂正してやり直してください。"
 
 #: lib/installer.php
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."

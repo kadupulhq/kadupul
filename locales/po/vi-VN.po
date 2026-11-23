@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -582,7 +582,7 @@ msgstr "Giao diện"
 #: auth_changepassword.php
 #, php-format
 msgid "Cannot be reused for %d password changes"
-msgstr "Không thể được sử dụng lại để thay đổi mật khẩu% d"
+msgstr "Không thể được sử dụng lại để thay đổi mật khẩu %d"
 
 #: auth_changepassword.php include/global_form.php lib/functions.php
 #: lib/html.php
@@ -604,7 +604,7 @@ msgstr "Buộc thay đổi mật khẩu"
 #: auth_changepassword.php
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "Phải có ít nhất% d ký tự"
+msgstr "Phải có ít nhất %d ký tự"
 
 #: auth_changepassword.php
 msgid "Must include at least 1 number"
@@ -1178,7 +1178,7 @@ msgstr "%d phút"
 #: include/global_settings.php pollers.php
 #, php-format
 msgid "%d Seconds"
-msgstr "% d Giây"
+msgstr "%d Giây"
 
 #: automation_networks.php
 #, php-format
@@ -1508,12 +1508,12 @@ msgstr "CẢNH BÁO: Kadupul Daemon PID ["
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
+msgstr "Cài đặt lưu vào Trình thu thập dữ liệu %d Không thành công."
 
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
+msgstr "Cài đặt lưu vào Trình thu thập dữ liệu %d Không thành công."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -2860,7 +2860,7 @@ msgstr "Vài giây còn lại."
 #: graph_realtime.php
 #, php-format
 msgid "%d seconds left."
-msgstr "% d giây còn lại."
+msgstr "%d giây còn lại."
 
 #: graph_realtime.php
 msgid "Kadupul Real-time Graphing"
@@ -3850,12 +3850,12 @@ msgstr "%d Ngày"
 #: include/global_arrays.php
 #, php-format
 msgid "%d GByte"
-msgstr "% d GByte"
+msgstr "%d GByte"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GByte"
+msgstr "%d GByte"
 
 #: include/global_arrays.php
 #, php-format
@@ -3870,57 +3870,57 @@ msgstr "%d giờ"
 #: include/global_arrays.php
 #, php-format
 msgid "%d Lines"
-msgstr "% d Dòng"
+msgstr "%d Dòng"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MByte"
+msgstr "%d MByte"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d Megabyte"
+msgstr "%d Megabyte"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Min"
-msgstr "% d tối thiểu"
+msgstr "%d tối thiểu"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Month"
-msgstr "% d Tháng"
+msgstr "%d Tháng"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Months"
-msgstr "% d Tháng"
+msgstr "%d Tháng"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Threads"
-msgstr "% d Chủ đề"
+msgstr "%d Chủ đề"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Week"
-msgstr "% d Tuần"
+msgstr "%d Tuần"
 
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
 msgid "%d Weeks"
-msgstr "% d Tuần"
+msgstr "%d Tuần"
 
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
 msgid "%d Year"
-msgstr "% d Năm"
+msgstr "%d Năm"
 
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "%d Years"
-msgstr "% d Năm"
+msgstr "%d Năm"
 
 #: include/global_arrays.php lib/boost.php
 #, php-format
@@ -4539,22 +4539,22 @@ msgstr "Mỗi% 1 ngày"
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "Every %d Hours"
-msgstr "Mỗi% d giờ"
+msgstr "Mỗi %d giờ"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Minutes"
-msgstr "Mỗi% d Phút"
+msgstr "Mỗi %d Phút"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Seconds"
-msgstr "Mỗi% d giây"
+msgstr "Mỗi %d giây"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Weeks"
-msgstr "Mỗi% d tuần"
+msgstr "Mỗi %d tuần"
 
 #: include/global_arrays.php
 msgid "Every 1 Hour"
@@ -5835,7 +5835,7 @@ msgstr "Xác nhận tất cả"
 #: include/global_arrays.php
 #, php-format
 msgid "Version %d"
-msgstr "Phiên bản% d"
+msgstr "Phiên bản %d"
 
 #: include/global_arrays.php
 msgid "Vietnamese"
@@ -6297,7 +6297,7 @@ msgstr "Theo mặc định, chiều rộng của tab là 40 pixel, sử dụng t
 #: include/global_form.php
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "Theo mặc định, định dạng của nhãn trục được xác định tự động. Nếu bạn muốn tự làm điều này, hãy sử dụng tùy chọn này với cùng các đối số% lf bạn biết từ các lệnh PRINT và GPRINT."
+msgstr "Theo mặc định, định dạng của nhãn trục được xác định tự động. Nếu bạn muốn tự làm điều này, hãy sử dụng tùy chọn này với cùng các đối số %lf bạn biết từ các lệnh PRINT và GPRINT."
 
 #: include/global_form.php
 msgid "CDEF Function"
@@ -7467,11 +7467,11 @@ msgstr "Khi xem Biểu đồ dựa trên RRA được đề cập, Timespan mặ
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-% d% H :%CÔ&quot;). Xem thêm - chiều dài. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
+msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-%d% H :%CÔ&quot;). Xem thêm - chiều dài. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Khi bạn thiết lập ghi nhãn trục phải, áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-% d% H :%CÔ&quot;). Xem thêm --units-length và --right-format-format. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
+msgstr "Khi bạn thiết lập ghi nhãn trục phải, áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-%d% H :%CÔ&quot;). Xem thêm --units-length và --right-format-format. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7520,27 +7520,27 @@ msgstr "T"
 #: include/global_settings.php
 #, php-format
 msgid "%d Attempts"
-msgstr "% d Nỗ lực"
+msgstr "%d Nỗ lực"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Changes"
-msgstr "% d Thay đổi"
+msgstr "%d Thay đổi"
 
 #: include/global_settings.php lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Columns"
-msgstr "% d Cột"
+msgstr "%d Cột"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d Mẫu cao / thấp"
+msgstr "%d Mẫu cao / thấp"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Processes"
-msgstr "% d Quá trình"
+msgstr "%d Quá trình"
 
 #: include/global_settings.php
 #, php-format
@@ -7550,12 +7550,12 @@ msgstr ""
 #: include/global_settings.php
 #, php-format
 msgid "%d Spikes"
-msgstr "% d gai"
+msgstr "%d gai"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d Độ lệch chuẩn"
+msgstr "%d Độ lệch chuẩn"
 
 #: include/global_settings.php
 #, php-format
@@ -10369,7 +10369,7 @@ msgstr "Mục đồ thị"
 #: lib/api_aggregate.php lib/html.php lib/html_reports.php
 #, php-format
 msgid "Item # %d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
@@ -10450,7 +10450,7 @@ msgstr "Mục"
 #: lib/api_automation.php
 #, php-format
 msgid "Item#%d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -10711,7 +10711,7 @@ msgstr "Nhật ký Kadupul đã bị xóa"
 #: lib/auth.php
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "Mật khẩu phải có ít nhất% d ký tự!"
+msgstr "Mật khẩu phải có ít nhất %d ký tự!"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10837,12 +10837,12 @@ msgstr "Nhật ký bộ lọc"
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "Nhật ký [Tổng số dòng:% d %s - Bộ lọc hoạt động]"
+msgstr "Nhật ký [Tổng số dòng: %d %s - Bộ lọc hoạt động]"
 
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "Nhật ký [Tổng số dòng:% d %s - Chưa được lọc]"
+msgstr "Nhật ký [Tổng số dòng: %d %s - Chưa được lọc]"
 
 #: lib/clog_webapi.php
 msgid "Matches"
@@ -10994,7 +10994,7 @@ msgstr "Thực hiện SNMP nhận được %s oids ( %s)"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$ value&#39;]"
+msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$value&#39;]"
 
 #: lib/data_query.php
 #, php-format
@@ -11244,7 +11244,7 @@ msgstr "Đã kiểm tra Kích thước Đi bộ Hàng loạt %d với phản h�
 #: lib/data_query.php
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "Tổng cộng:% f, Delta:% f, %s"
+msgstr "Tổng cộng: %f, Delta: %f, %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11586,7 +11586,7 @@ msgstr "#"
 #: lib/html.php
 #, php-format
 msgid "%d to %d of %s [ %s ]"
-msgstr "% d đến% d của %s [ %s]"
+msgstr "%d đến %d của %s [ %s]"
 
 #: lib/html.php
 msgid "16x"
@@ -11619,7 +11619,7 @@ msgstr "Hành động không thành công"
 #: lib/html.php
 #, php-format
 msgid "All %d %s"
-msgstr "Tất cả% d %s"
+msgstr "Tất cả %d %s"
 
 #: lib/html.php
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
@@ -12126,7 +12126,7 @@ msgstr ""
 #: lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Column"
-msgstr "% d Cột"
+msgstr "%d Cột"
 
 #: lib/html_graph.php lib/html_tree.php
 msgid "Columns"
@@ -13472,7 +13472,7 @@ msgstr "Khi quá trình cài đặt đã hoàn tất đường dẫn CSRF, nên 
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $ rdatabase_username cho máy chủ cơ sở dữ liệu Kadupul chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Kadupul nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
+msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $rdatabase_username cho máy chủ cơ sở dữ liệu Kadupul chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Kadupul nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -13737,7 +13737,7 @@ msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Trình cài đặt tự động gán một $ poller_id và thêm nó vào tệp config.php."
+msgstr "Trình cài đặt tự động gán một $poller_id và thêm nó vào tệp config.php."
 
 #: lib/installer.php
 msgid "The Installer could not proceed due to an unexpected error."
@@ -14002,7 +14002,7 @@ msgstr "Cơ sở dữ liệu TimeZone MySQL của bạn không được điền.
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "Thông tin về Kadupul từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$ rdatabase_default, $ rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Kadupul chính của bạn. Sửa lỗi này và thử lại."
+msgstr "Thông tin về Kadupul từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$rdatabase_default, $rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Kadupul chính của bạn. Sửa lỗi này và thử lại."
 
 #: lib/installer.php
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
@@ -14419,12 +14419,12 @@ msgstr "RRA &#39; %s&#39; bị thiếu trong định nghĩa Kadupul"
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) thêm vào tệp RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_law = %d, XFF = %1.2f) thêm vào tệp RRD"
 
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) đã bị xóa khỏi tệp RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_law = %d, XFF = %1.2f) đã bị xóa khỏi tệp RRD"
 
 #: lib/rrd.php
 msgid "RRA Folder"
@@ -17607,7 +17607,7 @@ msgstr "% 0,2f phần trăm tần suất cập nhật)"
 #: utilities.php
 #, php-format
 msgid "%d Bytes"
-msgstr "% d byte"
+msgstr "%d byte"
 
 #: utilities.php
 #, php-format
@@ -17617,7 +17617,7 @@ msgstr "%d phút"
 #: utilities.php
 #, php-format
 msgid "%d seconds"
-msgstr "% d giây"
+msgstr "%d giây"
 
 #: utilities.php
 #, php-format
@@ -17807,7 +17807,7 @@ msgstr "LRI: Phiên bản RRDtool đã cài đặt không vượt quá phiên b�
 #: utilities.php
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng% d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
+msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng %d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
 
 #: utilities.php
 msgid "Each browser tab can use upto 10 connections depending on the browser."
@@ -17917,12 +17917,12 @@ msgstr "Đăng nhập"
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "Nhật ký [Tổng số dòng:% d - Tất cả các mục được hiển thị]"
+msgstr "Nhật ký [Tổng số dòng: %d - Tất cả các mục được hiển thị]"
 
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "Nhật ký [Tổng số dòng:% d - Ẩn các mục không khớp]"
+msgstr "Nhật ký [Tổng số dòng: %d - Ẩn các mục không khớp]"
 
 #: utilities.php
 msgid "MBytes"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -13383,7 +13383,7 @@ msgstr "Istotne jest, że centralny serwer Kadupul może komunikować się poprz
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Zdecydowanie <b>zaleca się zaktualizowanie pliku</b> config.php, aby włączyć tę funkcję, poprzez odkomentowanie zmiennej <b>$ input_whitelist</b> , a następnie uruchomienie trzech powyższych opcji skryptu CLI po zakończeniu instalacji przez Internet."
+msgstr "Zdecydowanie <b>zaleca się zaktualizowanie pliku</b> config.php, aby włączyć tę funkcję, poprzez odkomentowanie zmiennej <b>$input_whitelist</b> , a następnie uruchomienie trzech powyższych opcji skryptu CLI po zakończeniu instalacji przez Internet."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."

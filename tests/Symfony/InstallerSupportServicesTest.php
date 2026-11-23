@@ -479,6 +479,25 @@ final class InstallerSupportServicesTest extends TestCase
         $sync->run();
     }
 
+    /** A never-run collector's zero timestamp produces SQL NULL, not a numeric age. */
+    public function testCollectorSynchronizationAcceptsUnknownAgeWithoutReplication(): void
+    {
+        self::$options['poller_interval'] = '60';
+        self::$handlers['db_fetch_assoc'] = static fn(): array => [
+            ['id' => '2', 'status' => '0', 'gap' => null],
+            ['id' => '3', 'status' => '3', 'gap' => null],
+            ['id' => '4', 'status' => '4', 'gap' => null],
+            ['id' => '5', 'status' => '5', 'gap' => null],
+            ['id' => '6', 'status' => '6', 'gap' => null],
+            ['id' => '7', 'status' => '2', 'gap' => null],
+        ];
+        $this->assertSame([
+            'success' => [], 'failed' => [], 'skipped' => ['2', '3', '4', '5', '6'],
+            'timeout' => ['7'], 'total' => 6,
+        ], (new InstallerCollectorSynchronization($this->native))->run());
+        $this->assertSame([], array_values(array_filter(self::$calls, static fn(array $call): bool => in_array($call[0], ['replicate_out', 'db_execute_prepared'], true))));
+    }
+
     /** Only named release-owned automation rules are repaired; user changes are preserved. */
     public function testAutomationRepairKeepsReleaseHashesAndSkipsUserRenamedRules(): void
     {

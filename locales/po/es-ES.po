@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -9450,7 +9450,7 @@ msgstr "Algunas de las interfaces de Kadupul soportan Drag-N-Drop. Si activa est
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Los nombres de dominio delimitados por espacios que tendrán permitido ser accedidos desde el exterior del servidor web.  Esto es importante para los usuarios que escojan usar un CDN o un sitio de alojamiento.  Las fuentes pueden incluir comodines por ejemplo: *.midominio.com o un protocolo, por ejemplo: https://*.ejemplo.com.  Estas fuentes alternativas incluyen los tipos de imágenes, CSS y JavaScript unicamente."
+msgstr "Los nombres de dominio delimitados por espacios que tendrán permitido ser accedidos desde el exterior del servidor web.  Esto es importante para los usuarios que escojan usar un CDN o un sitio de alojamiento.  Las fuentes pueden incluir comodines por ejemplo: *.midominio.com o un protocolo, por ejemplo: https://*.example.com.  Estas fuentes alternativas incluyen los tipos de imágenes, CSS y JavaScript unicamente."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -13346,7 +13346,7 @@ msgstr "Es imprescindible que el servidor central de Kadupul pueda comunicarse a
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Se <b>recomienda</b> encarecidamente que actualice su config.php para habilitar esta función descomentando la variable <b>$ input_whitelist</b> y luego ejecutando las tres opciones de script CLI anteriores después de que se haya completado la instalación basada en web."
+msgstr "Se <b>recomienda</b> encarecidamente que actualice su config.php para habilitar esta función descomentando la variable <b>$input_whitelist</b> y luego ejecutando las tres opciones de script CLI anteriores después de que se haya completado la instalación basada en web."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2474,8 +2474,8 @@ msgstr[1] "Supprimer des sources de données"
 #: data_sources.php
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Supprimer tous les éléments graphiques <forts>graphiques </forts> qui font référence à cette source de données."
-msgstr[1] "Supprimer tous les éléments graphiques <forts>graphiques </forts> qui font référence à ces sources de données."
+msgstr[0] "Supprimer tous les éléments graphiques <strong>graphiques </strong> qui font référence à cette source de données."
+msgstr[1] "Supprimer tous les éléments graphiques <strong>graphiques </strong> qui font référence à ces sources de données."
 
 #: data_sources.php
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
@@ -13343,7 +13343,7 @@ msgstr "Il est essentiel que le serveur central Kadupul puisse communiquer via M
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Il est fortement recommandé de mettre à jour votre config.php pour activer cette fonctionnalité en décommentant la variable <b>$ input_whitelist</b> , puis en exécutant les trois options de script CLI ci-dessus une fois l'installation Web terminée."
+msgstr "Il est fortement recommandé de mettre à jour votre config.php pour activer cette fonctionnalité en décommentant la variable <b>$input_whitelist</b> , puis en exécutant les trois options de script CLI ci-dessus une fois l'installation Web terminée."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."

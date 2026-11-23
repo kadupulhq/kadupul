@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -7586,11 +7586,11 @@ msgstr "عند عرض الرسم البياني على أساس RRA في الس�
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "عندما تقوم بإعداد وضع العلامات على المحور الأيسر ، قم بتطبيق قاعدة على تنسيق البيانات. تتضمن التنسيقات المدعومة &quot;رقمية&quot; حيث يتم التعامل مع البيانات على أنها رقمية ، &quot;طابع زمني&quot; حيث يتم تفسير القيم على أنها طوابع زمنية UNIX (عدد الثواني منذ يناير 1970) ويتم التعبير عنها باستخدام تنسيق strftime (الافتراضي هو &quot;٪ Y-٪ m-٪ d٪ H :٪الآنسة&quot;). انظر أيضا - طول طول. وأخيرًا &quot;المدة&quot; حيث يتم تفسير القيم على أنها المدة بالمللي ثانية. يتبع التنسيق قواعد valstrfduration المؤهلين PRINT / GPRINT."
+msgstr "عندما تقوم بإعداد وضع العلامات على المحور الأيسر ، قم بتطبيق قاعدة على تنسيق البيانات. تتضمن التنسيقات المدعومة &quot;رقمية&quot; حيث يتم التعامل مع البيانات على أنها رقمية ، &quot;طابع زمني&quot; حيث يتم تفسير القيم على أنها طوابع زمنية UNIX (عدد الثواني منذ يناير 1970) ويتم التعبير عنها باستخدام تنسيق strftime (الافتراضي هو &quot;%Y-%m-%d %H:%M:%S&quot;). انظر أيضا - طول طول. وأخيرًا &quot;المدة&quot; حيث يتم تفسير القيم على أنها المدة بالمللي ثانية. يتبع التنسيق قواعد valstrfduration المؤهلين PRINT / GPRINT."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "عند إعداد وضع العلامات على المحور الأيمن ، قم بتطبيق قاعدة على تنسيق البيانات. تتضمن التنسيقات المدعومة &quot;رقمية&quot; حيث يتم التعامل مع البيانات على أنها رقمية ، &quot;طابع زمني&quot; حيث يتم تفسير القيم على أنها طوابع زمنية UNIX (عدد الثواني منذ يناير 1970) ويتم التعبير عنها باستخدام تنسيق strftime (الافتراضي هو &quot;٪ Y-٪ m-٪ d٪ H :٪الآنسة&quot;). انظر أيضا - طول طول و - بصري - شكل المحور. وأخيرًا &quot;المدة&quot; حيث يتم تفسير القيم على أنها المدة بالمللي ثانية. يتبع التنسيق قواعد valstrfduration المؤهلين PRINT / GPRINT."
+msgstr "عند إعداد وضع العلامات على المحور الأيمن ، قم بتطبيق قاعدة على تنسيق البيانات. تتضمن التنسيقات المدعومة &quot;رقمية&quot; حيث يتم التعامل مع البيانات على أنها رقمية ، &quot;طابع زمني&quot; حيث يتم تفسير القيم على أنها طوابع زمنية UNIX (عدد الثواني منذ يناير 1970) ويتم التعبير عنها باستخدام تنسيق strftime (الافتراضي هو &quot;%Y-%m-%d %H:%M:%S&quot;). انظر أيضا - طول طول و - بصري - شكل المحور. وأخيرًا &quot;المدة&quot; حيث يتم تفسير القيم على أنها المدة بالمللي ثانية. يتبع التنسيق قواعد valstrfduration المؤهلين PRINT / GPRINT."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -13483,7 +13483,7 @@ msgstr "من الضروري أن يتصل خادم Kadupul المركزي عبر
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "يُقترح بشدة أن تقوم بتحديث config.php الخاص بك لتمكين هذه الميزة عن طريق إلغاء <b>التعليق على</b> المتغير <b>$ input_whitelist</b> ثم تشغيل خيارات البرنامج النصي CLI الثلاثة أعلاه بعد اكتمال التثبيت المستند إلى الويب."
+msgstr "يُقترح بشدة أن تقوم بتحديث config.php الخاص بك لتمكين هذه الميزة عن طريق إلغاء <b>التعليق على</b> المتغير <b>$input_whitelist</b> ثم تشغيل خيارات البرنامج النصي CLI الثلاثة أعلاه بعد اكتمال التثبيت المستند إلى الويب."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13616,7 +13616,7 @@ msgstr "بمجرد اكتمال التثبيت لمسار CSRF ، يجب ضبط�
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "بمجرد أن يتم تعيين جميع المتغيرات في ملف config.php ، يجب أيضًا منح حق الوصول إلى $ rdatabase_username إلى خادم قاعدة البيانات الرئيسية Kadupul. اتبع نفس الإجراء الذي تريده مع أي تثبيت Kadupul آخر. يمكنك بعد ذلك الضغط على زر &quot;اختبار الاتصال&quot;. إذا نجح الاختبار ، فستتمكن من متابعة التثبيت وإكماله."
+msgstr "بمجرد أن يتم تعيين جميع المتغيرات في ملف config.php ، يجب أيضًا منح حق الوصول إلى $rdatabase_username إلى خادم قاعدة البيانات الرئيسية Kadupul. اتبع نفس الإجراء الذي تريده مع أي تثبيت Kadupul آخر. يمكنك بعد ذلك الضغط على زر &quot;اختبار الاتصال&quot;. إذا نجح الاختبار ، فستتمكن من متابعة التثبيت وإكماله."
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -13882,7 +13882,7 @@ msgstr ""
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "يقوم برنامج Installer تلقائيًا بتعيين $ poller_id وإضافته إلى ملف config.php."
+msgstr "يقوم برنامج Installer تلقائيًا بتعيين $poller_id وإضافته إلى ملف config.php."
 
 #: lib/installer.php
 msgid "The Installer could not proceed due to an unexpected error."
@@ -14148,7 +14148,7 @@ msgstr "لا يتم ملء قاعدة بيانات MySQL TimeZone الخاصة �
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "لم يتم تضمين معلومات مستضد Kadupul عن بعد في ملف config.php الخاص بك. الرجاء مراجعة config.php.dist وتعيين المتغيرات: <i>$ rdatabase_default ، $ rdatabase_username</i> ، الخ. يجب تعيين هذه المتغيرات ثم الرجوع إلى خادم قاعدة البيانات الرئيسية Kadupul. قم بتصحيح هذا وحاول مرة أخرى."
+msgstr "لم يتم تضمين معلومات مستضد Kadupul عن بعد في ملف config.php الخاص بك. الرجاء مراجعة config.php.dist وتعيين المتغيرات: <i>$rdatabase_default ، $rdatabase_username</i> ، الخ. يجب تعيين هذه المتغيرات ثم الرجوع إلى خادم قاعدة البيانات الرئيسية Kadupul. قم بتصحيح هذا وحاول مرة أخرى."
 
 #: lib/installer.php
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."

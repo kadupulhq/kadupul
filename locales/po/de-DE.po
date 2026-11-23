@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:58-0800\n"
+"POT-Creation-Date: 2026-11-23 12:33-0800\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2552,8 +2552,8 @@ msgstr "Wenn diese Datenquelle von Graphen nicht mehr verwendet wird, kann sie g
 #: data_sources.php
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
-msgstr[0] "Lassen Sie die <starke>Grafik</starke> unberührt."
-msgstr[1] "Lassen Sie alle <stark>Grafiken</stark> unberührt."
+msgstr[0] "Lassen Sie die <strong>Grafik</strong> unberührt."
+msgstr[1] "Lassen Sie alle <strong>Grafiken</strong> unberührt."
 
 #: data_sources.php data_templates.php lib/import.php package_import.php
 msgid "New"
@@ -6171,7 +6171,7 @@ msgstr "Eine CDEF-Funktion (Mathematik), die auf dieses Element im Diagramm oder
 
 #: include/global_form.php
 msgid "A Prefix for all <strong>totaling</strong> GPRINT lines."
-msgstr "Ein Präfix für alle <stark>Summenbildung</stark> GPRINT-Zeilen."
+msgstr "Ein Präfix für alle <strong>Summenbildung</strong> GPRINT-Zeilen."
 
 #: include/global_form.php
 msgid "A Prefix for all GPRINT lines to distinguish e.g. different hosts."
@@ -6263,7 +6263,7 @@ msgstr "Aggregationsebene"
 
 #: include/global_form.php
 msgid "All subsequent legend line(s) will be aligned as given here.  You may use this command multiple times in a single graph.  This command does not produce tabular layout.<br/><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br/> <strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!"
-msgstr "Alle nachfolgenden Legendenlinien werden wie hier angegeben ausgerichtet.  Sie können diesen Befehl mehrmals in einem einzigen Diagramm verwenden.  Dieser Befehl erzeugt kein tabellarisches Layout.<br/><stark>Hinweis: </stark>Sie möchten vielleicht ein &lt;HR&gt; auf dem vorhergehenden Grafikelement einfügen.<br/> <stark>Hinweis: </stark>A &lt;HR&gt; auf dieser Legende wird diese Einstellung veraltet!"
+msgstr "Alle nachfolgenden Legendenlinien werden wie hier angegeben ausgerichtet.  Sie können diesen Befehl mehrmals in einem einzigen Diagramm verwenden.  Dieser Befehl erzeugt kein tabellarisches Layout.<br/><strong>Hinweis: </strong>Sie möchten vielleicht ein &lt;HR&gt; auf dem vorhergehenden Grafikelement einfügen.<br/> <strong>Hinweis: </strong>A &lt;HR&gt; auf dieser Legende wird diese Einstellung veraltet!"
 
 #: include/global_form.php
 msgid "Allow Empty Input"
@@ -6755,7 +6755,7 @@ msgstr "Falls LINE gewählt wurde, geben Sie hier die Breite der Linie an.  Sie 
 
 #: include/global_form.php
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
-msgstr "Um Verwacklungsunschärfe zu vermeiden, fängt RRDtool Punkte an Pixel mit Geräteauflösung, was zu einem klareren Erscheinungsbild führt. Wenn dies nicht nach Ihrem Geschmack ist, können Sie mit diesem Schalter dieses Verhalten deaktivieren. <br><stark>Hinweis: </stark>Rasterfitting ist für PDF-, EPS- und SVG-Ausgaben standardmäßig deaktiviert."
+msgstr "Um Verwacklungsunschärfe zu vermeiden, fängt RRDtool Punkte an Pixel mit Geräteauflösung, was zu einem klareren Erscheinungsbild führt. Wenn dies nicht nach Ihrem Geschmack ist, können Sie mit diesem Schalter dieses Verhalten deaktivieren. <br><strong>Hinweis: </strong>Rasterfitting ist für PDF-, EPS- und SVG-Ausgaben standardmäßig deaktiviert."
 
 #: include/global_form.php
 msgid "Include Prefix Text"
@@ -7231,7 +7231,7 @@ msgstr "Das Ersetzungszeichenkettenmuster zur Verwendung als Baumüberschrift.<b
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Das String Pattern (Regular Expression), gegen das man abgleichen kann, muss <stark>NICHT</stark> angegeben werden!"
+msgstr "Das String Pattern (Regular Expression), gegen das man abgleichen kann, muss <strong>NICHT</strong> angegeben werden!"
 
 #: include/global_form.php package_import.php
 msgid "The Width to be used when importing or updating Graph Templates."
@@ -7239,7 +7239,7 @@ msgstr "Die Standard-Diagrammbreite, die für alle neuen Diagrammvorlagen verwen
 
 #: include/global_form.php
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
-msgstr "Der Algorithmus stellt sicher, dass Sie immer ein Gitter haben, dass es genügend, aber nicht zu viele Gitterlinien gibt und dass das Gitter metrisch ist. Dieser Parameter stellt auch sicher, dass Sie genügend Dezimalstellen angezeigt bekommen, selbst wenn Ihr Diagramm von 69.998 bis 70.001.<br><stark>Hinweis: </stark>Dieser Parameter kann die --alt-autoskalierten Optionen stören."
+msgstr "Der Algorithmus stellt sicher, dass Sie immer ein Gitter haben, dass es genügend, aber nicht zu viele Gitterlinien gibt und dass das Gitter metrisch ist. Dieser Parameter stellt auch sicher, dass Sie genügend Dezimalstellen angezeigt bekommen, selbst wenn Ihr Diagramm von 69.998 bis 70.001.<br><strong>Hinweis: </strong>Dieser Parameter kann die --alt-autoskalierten Optionen stören."
 
 #: include/global_form.php
 msgid "The amount of time in seconds between expected updates."
@@ -10092,7 +10092,7 @@ msgstr "Dies ist der eigentliche Name, unter dem die E-Mail erscheinen wird."
 
 #: include/global_settings.php
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
-msgstr "Dies ist das Verzeichnis, in dem sich die RRD-Dateien <stark>verschiebt</stark> zur Archivierung befinden."
+msgstr "Dies ist das Verzeichnis, in dem sich die RRD-Dateien <strong>verschiebt</strong> zur Archivierung befinden."
 
 #: include/global_settings.php
 msgid "This is the hostname/IP of the SMTP Server you will send the Email to. For failover, separate your hosts using a semi-colon."
@@ -13193,7 +13193,7 @@ msgstr "Downgrade"
 #: lib/installer.php
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
-msgstr "Herabstufung von <stark>%s</stark> auf <stark>%s</stark>"
+msgstr "Herabstufung von <strong>%s</strong> auf <strong>%s</strong>"
 
 #: lib/installer.php
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
@@ -13413,7 +13413,7 @@ msgstr "Es ist wichtig, dass der Central Kadupul Server über MySQL mit jedem en
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Es wird dringend empfohlen, die Datei config.php zu aktualisieren, um diese Funktion zu aktivieren, indem Sie die Variable <b>$ input_whitelist auskommentieren</b> und nach Abschluss der webbasierten Installation die drei oben genannten CLI- <b>Skriptoptionen ausführen</b> ."
+msgstr "Es wird dringend empfohlen, die Datei config.php zu aktualisieren, um diese Funktion zu aktivieren, indem Sie die Variable <b>$input_whitelist auskommentieren</b> und nach Abschluss der webbasierten Installation die drei oben genannten CLI- <b>Skriptoptionen ausführen</b> ."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13996,7 +13996,7 @@ msgstr "Upgrade"
 #: lib/installer.php
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
-msgstr "Upgrade von <stark>%s</stark> auf <stark>%s</stark>"
+msgstr "Upgrade von <strong>%s</strong> auf <strong>%s</strong>"
 
 #: lib/installer.php
 #, php-format
@@ -16994,19 +16994,19 @@ msgstr "1 Woche"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "Hinweis:<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "Hinweis:<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist'Permissiv', d.h. der Benutzer muss Zugriff auf mindestens eine der Grafik-, Geräte- oder Grafikvorlagen haben, um Zugriff auf die Grafik zu erhalten."
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
+msgstr "<b>Hinweis:</b> Die Systemgrafikrichtlinie ist restriktiv, d.h. der Benutzer muss entweder Zugang zum Graphen oder zum Gerät und zur Grafikvorlage haben, um Zugang zum Graphen zu erhalten."
 
 #: user_admin.php
 msgid "> 1 Month Ago"
