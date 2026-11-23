@@ -2966,7 +2966,7 @@ msgstr "Modello di colore [nuovo]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Il modello di colore '%s' aveva% d modelli aggregati espulsi e% d aggregati non templated espulsi"
+msgstr "Il modello di colore '%s' aveva %d modelli aggregati espulsi e %d aggregati non templated espulsi"
 
 #: color_templates.php:482
 #, php-format
@@ -5472,7 +5472,7 @@ msgstr "Il dispositivo è disabilitato"
 #: host.php:256
 #, php-format
 msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
-msgstr "Reindice dispositivo completato in% 0.2f secondi. Sono stati aggiornati% d articoli."
+msgstr "Reindice dispositivo completato in %0.2f secondi. Sono stati aggiornati %d articoli."
 
 #: host.php:390
 #, php-format
@@ -6662,7 +6662,7 @@ msgstr "Ogni Ora"
 #: include/global_settings.php:2543
 #, php-format
 msgid "Every %d Hours"
-msgstr "Ogni % di ore"
+msgstr "Ogni %di ore"
 
 #: include/global_arrays.php:759
 #, php-format
@@ -15648,7 +15648,7 @@ msgstr "Questa opzione di script riattiverà qualsiasi origine dati disabilitata
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Si consiglia vivamente di aggiornare config.php per abilitare questa funzione decommentando la variabile <b>$ input_whitelist</b> e quindi eseguendo le tre opzioni di script CLI sopra una volta completata l'installazione basata sul web."
+msgstr "Si consiglia vivamente di aggiornare config.php per abilitare questa funzione decommentando la variabile <b>$input_whitelist</b> e quindi eseguendo le tre opzioni di script CLI sopra una volta completata l'installazione basata sul web."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

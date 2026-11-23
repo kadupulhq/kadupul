@@ -2961,7 +2961,7 @@ msgstr "Modèle de couleur [nouveau]"
 #: color_templates.php:480
 #, php-format
 msgid "Color Template '%s' had %d Aggregate Templates pushed out and %d Non-Templated Aggregates pushed out"
-msgstr "Le modèle de couleur '%s' avait% d modèles d'agrégats expulsés et% d agrégats non basés sur un modèle expulsés"
+msgstr "Le modèle de couleur '%s' avait %d modèles d'agrégats expulsés et %d agrégats non basés sur un modèle expulsés"
 
 #: color_templates.php:482
 #, php-format
@@ -4059,8 +4059,8 @@ msgstr[1] "Laisser tous les <strong>Graphs</strong>intact."
 #: data_sources.php:542
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Supprimer tous les éléments graphiques <forts>graphiques </forts> qui font référence à cette source de données."
-msgstr[1] "Supprimer tous les éléments graphiques <forts>graphiques </forts> qui font référence à ces sources de données."
+msgstr[0] "Supprimer tous les éléments graphiques <strong>graphiques </strong> qui font référence à cette source de données."
+msgstr[1] "Supprimer tous les éléments graphiques <strong>graphiques </strong> qui font référence à ces sources de données."
 
 #: data_sources.php:543
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
@@ -15640,7 +15640,7 @@ msgstr "Cette option de script réactivera toutes les sources de données désac
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Il est fortement recommandé de mettre à jour votre config.php pour activer cette fonctionnalité en décommentant la variable <b>$ input_whitelist</b> , puis en exécutant les trois options de script CLI ci-dessus une fois l'installation Web terminée."
+msgstr "Il est fortement recommandé de mettre à jour votre config.php pour activer cette fonctionnalité en décommentant la variable <b>$input_whitelist</b> , puis en exécutant les trois options de script CLI ci-dessus une fois l'installation Web terminée."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

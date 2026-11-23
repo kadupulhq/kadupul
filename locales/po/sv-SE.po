@@ -8805,7 +8805,7 @@ msgstr "Right Axis Format (- right-axis-format &lt;format&gt;)"
 #: include/global_form.php:898
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "Som standard bestäms axelmärkningens format automatiskt. Om du vill göra det själv använder du det här alternativet med samma% lf argument som du vet från PRINT och GPRINT-kommandona."
+msgstr "Som standard bestäms axelmärkningens format automatiskt. Om du vill göra det själv använder du det här alternativet med samma %lf argument som du vet från PRINT och GPRINT-kommandona."
 
 #: include/global_form.php:901
 msgid "Right Axis Formatter (--right-axis-formatter &lt;formatname&gt;)"
@@ -13403,7 +13403,7 @@ msgstr "Fick SNMP få resultat för data @ &#39; %s&#39; [value = &#39; %s&#39;]
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Utför SNMP för data @ &#39; %s&#39; [value = &#39;$ value&#39;]"
+msgstr "Utför SNMP för data @ &#39; %s&#39; [value = &#39;$value&#39;]"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -15491,7 +15491,7 @@ msgstr "Konfiguration av Poller"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "Din Remote Cacti Poller-information har inte inkluderats i din config.php-fil. Granska config.php.dist och ställ in variablerna: <i>$ rdatabase_default, $ rdatabase_username</i> etc. Dessa variabler måste ställas in och peka tillbaka till din primära Cactis databasserver. Korrigera detta och försök igen."
+msgstr "Din Remote Cacti Poller-information har inte inkluderats i din config.php-fil. Granska config.php.dist och ställ in variablerna: <i>$rdatabase_default, $rdatabase_username</i> etc. Dessa variabler måste ställas in och peka tillbaka till din primära Cactis databasserver. Korrigera detta och försök igen."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15503,11 +15503,11 @@ msgstr "De variabler som måste ställas in i config.php-filen inkluderar följa
 
 #: lib/installer.php:2296
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Installeraren tilldelar automatiskt en $ poller_id och lägger till den i config.php-filen."
+msgstr "Installeraren tilldelar automatiskt en $poller_id och lägger till den i config.php-filen."
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "När variablerna är alla inställda i config.php-filen måste du också ge $ rdatabase_username åtkomst till huvuddatabasservern för Cacti. Följ samma procedur som du skulle med någon annan Cacti-installation. Du kan då trycka på knappen &quot;Test Connection&quot;. Om testet är framgångsrikt kan du fortsätta och slutföra installationen."
+msgstr "När variablerna är alla inställda i config.php-filen måste du också ge $rdatabase_username åtkomst till huvuddatabasservern för Cacti. Följ samma procedur som du skulle med någon annan Cacti-installation. Du kan då trycka på knappen &quot;Test Connection&quot;. Om testet är framgångsrikt kan du fortsätta och slutföra installationen."
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15634,7 +15634,7 @@ msgstr "Detta skriptalternativ aktiverar alla inaktiverade datakällor igen."
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Det rekommenderas starkt att du uppdaterar config.php för att aktivera den här funktionen genom att avmarkera komponenten <b>$ input_whitelist</b> och sedan köra de tre CLI-skriptalternativen ovan efter att den webbaserade installationen har slutförts."
+msgstr "Det rekommenderas starkt att du uppdaterar config.php för att aktivera den här funktionen genom att avmarkera komponenten <b>$input_whitelist</b> och sedan köra de tre CLI-skriptalternativen ovan efter att den webbaserade installationen har slutförts."
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

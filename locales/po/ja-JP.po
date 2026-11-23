@@ -13374,7 +13374,7 @@ msgstr "データ@'%s'[ value ='%s']のSNMP取得結果を取得しました(イ
 #: lib/data_query.php:1297
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "データ@'%s'[ value ='$ value ']のSNMP GETを実行しています"
+msgstr "データ@'%s'[ value ='$value ']のSNMP GETを実行しています"
 
 #: lib/data_query.php:1305
 #, php-format
@@ -15463,7 +15463,7 @@ msgstr "ポーラーの設定"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "あなたのRemote Cacti Poller情報はあなたのconfig.phpファイルに含まれていません。 config.php.distを確認し、変数を設定してください。 <i>$ rdatabase_default、$ rdatabase_username</i>など。これらの変数は、設定してプライマリCactiデータベースサーバーを指している必要があります。これを訂正してやり直してください。"
+msgstr "あなたのRemote Cacti Poller情報はあなたのconfig.phpファイルに含まれていません。 config.php.distを確認し、変数を設定してください。 <i>$rdatabase_default、$rdatabase_username</i>など。これらの変数は、設定してプライマリCactiデータベースサーバーを指している必要があります。これを訂正してやり直してください。"
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15475,11 +15475,11 @@ msgstr "config.phpファイルに設定する必要がある変数は次のと�
 
 #: lib/installer.php:2296
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "インストーラは自動的に$ poller_idを割り当て、それをconfig.phpファイルに追加します。"
+msgstr "インストーラは自動的に$poller_idを割り当て、それをconfig.phpファイルに追加します。"
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "変数がすべてconfig.phpファイルに設定されたら、$ rdatabase_usernameにメインCactiデータベースサーバーへのアクセス権も付与する必要があります。他のCactiインストールと同じ手順に従います。その後、「接続テスト」ボタンを押してください。テストが成功したら、インストールを続行して完了することができます。"
+msgstr "変数がすべてconfig.phpファイルに設定されたら、$rdatabase_usernameにメインCactiデータベースサーバーへのアクセス権も付与する必要があります。他のCactiインストールと同じ手順に従います。その後、「接続テスト」ボタンを押してください。テストが成功したら、インストールを続行して完了することができます。"
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15606,7 +15606,7 @@ msgstr "このスクリプトオプションは、無効なデータソースを
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "<b>$ input_whitelist</b>変数のコメントを<b>外し</b> 、Webベースのインストールの完了後に上記の3つのCLIスクリプトオプションを実行することにより、config.phpを更新してこの機能を有効にすることを強くお勧めします。"
+msgstr "<b>$input_whitelist</b>変数のコメントを<b>外し</b> 、Webベースのインストールの完了後に上記の3つのCLIスクリプトオプションを実行することにより、config.phpを更新してこの機能を有効にすることを強くお勧めします。"
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"

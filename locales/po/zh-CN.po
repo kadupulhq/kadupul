@@ -15466,7 +15466,7 @@ msgstr "Poller 配置"
 
 #: lib/installer.php:2279
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
-msgstr "您的Cacti 远程poller 信息未包含在您的config.php 文件中. 请查看config.php.dist,并设置变量:<i> $ rdatabase_default,$ rdatabase_username </i>等.必须设置这些变量并指向您的主Cacti 数据库服务器. 纠正这一点,然后再试一次."
+msgstr "您的Cacti 远程poller 信息未包含在您的config.php 文件中. 请查看config.php.dist,并设置变量:<i> $rdatabase_default,$rdatabase_username </i>等.必须设置这些变量并指向您的主Cacti 数据库服务器. 纠正这一点,然后再试一次."
 
 #: lib/installer.php:2283
 msgid "Remote Poller Variables"
@@ -15482,7 +15482,7 @@ msgstr "安装程序自动分配 $poller_id 并将其添加到config.php 文件�
 
 #: lib/installer.php:2298
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "一旦变量全部在config.php 文件中设置,您还必须授予$ rdatabase_username访问主Cacti 数据库服务器的权限.按照与任何其他Cacti 安装相同的步骤进行操作.然后,您可以按 '测试连接' 按钮.如果测试成功,您将能够继续并完成安装."
+msgstr "一旦变量全部在config.php 文件中设置,您还必须授予$rdatabase_username访问主Cacti 数据库服务器的权限.按照与任何其他Cacti 安装相同的步骤进行操作.然后,您可以按 '测试连接' 按钮.如果测试成功,您将能够继续并完成安装."
 
 #: lib/installer.php:2302
 msgid "Additional Steps After Installation"
@@ -15609,7 +15609,7 @@ msgstr "此脚本选项将重新启用所有禁用的数据源。"
 
 #: lib/installer.php:2547
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "强烈建议您通过取消注释<b>$ input_whitelist</b>变量并在基于Web的安装完成后运行上面的三个CLI脚本选项来更新config.php以启用此功能。"
+msgstr "强烈建议您通过取消注释<b>$input_whitelist</b>变量并在基于Web的安装完成后运行上面的三个CLI脚本选项来更新config.php以启用此功能。"
 
 #: lib/installer.php:2549
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
