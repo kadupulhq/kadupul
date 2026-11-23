@@ -9,10 +9,17 @@ declare(strict_types=1);
 
 namespace Kadupul\Platform\Infrastructure\Legacy;
 
-final class ConsoleUpgradeRequired extends \RuntimeException
+use Kadupul\Platform\Contract\InstallationUpgradeRequired;
+
+final class ConsoleUpgradeRequired extends \RuntimeException implements InstallationUpgradeRequired
 {
     public function __construct(public readonly string $location)
     {
         parent::__construct('The installation requires an upgrade.');
+    }
+
+    public function location(): string
+    {
+        return $this->location;
     }
 }
