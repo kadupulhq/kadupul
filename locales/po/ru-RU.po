@@ -13375,7 +13375,7 @@ msgstr "Важно, чтобы центральный сервер Kadupul мо�
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Настоятельно рекомендуется обновить файл config.php, чтобы включить эту функцию, раскомментировав переменную <b>$ input_whitelist,</b> а затем запустив три параметра сценария CLI, описанные выше, после завершения установки через Интернет."
+msgstr "Настоятельно рекомендуется обновить файл config.php, чтобы включить эту функцию, раскомментировав переменную <b>$input_whitelist,</b> а затем запустив три параметра сценария CLI, описанные выше, после завершения установки через Интернет."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."

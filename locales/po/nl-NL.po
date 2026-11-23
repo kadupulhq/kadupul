@@ -13322,7 +13322,7 @@ msgstr "Het is essentieel dat de Central Kadupul server via MySQL kan communicer
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$ input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
+msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
