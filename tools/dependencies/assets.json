@@ -102,13 +102,13 @@
   {
     "file": "d3.js",
     "package": "d3",
-    "version": "7.9.0",
-    "url": "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.js",
-    "sha256": "0c0d58be2106c14e242fc75bc09a17467800630751580665f6e9552a0c064ea2",
+    "version": "7.9.2",
+    "url": "https://cdn.jsdelivr.net/npm/d3@7.9.2/dist/d3.js",
+    "sha256": "9318e48c7f911287bc47fd7b4ec1ac189150ddd1000d281f079dc897a4eca8af",
     "replacements": [
       {
-        "before": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;",
-        "after": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;\n  // Kadupul: consume single-use iterables once before indexed access.\n  values = array(values);"
+        "before": "function quantileIndex(values, p, valueof = number$4) {\n  if (isNaN(p = +p)) return;",
+        "after": "function quantileIndex(values, p, valueof = number$4) {\n  if (isNaN(p = +p)) return;\n  // Kadupul: consume single-use iterables once before indexed access.\n  values = array(values);"
       },
       {
         "before": "      index = Uint32Array.from(values, (_, i) => i),\n      j = numbers.length - 1,",
