@@ -7,9 +7,9 @@
     "test:assets": "node asset-native.cjs"
   },
   "devDependencies": {
-    "@playwright/test": "1.65.0",
+    "@playwright/test": "1.65.1",
     "istanbul-lib-coverage": "3.2.2",
-    "playwright": "1.65.0",
+    "playwright": "1.65.1",
     "v8-to-istanbul": "9.3.0"
   }
 }
