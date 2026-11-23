@@ -1,0 +1,45 @@
+{# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+   SPDX-License-Identifier: GPL-3.0-or-later #}
+
+{% extends 'base.html.twig' %}
+{% import 'alerting/_alerting.html.twig' as alerting %}
+
+{% block title %}{{ rule ? 'Edit alert rule'|trans({}, 'alerting') : 'Create alert rule'|trans({}, 'alerting') }} · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>{{ rule ? 'Alert Rules [edit: %id%]'|trans({'%id%': rule.id}, 'alerting') : 'Alert Rules [new]'|trans({}, 'alerting') }}</h1>
+    {{ alerting.status_notice(status) }}
+    {% if saved %}<p role="status">{{ 'The alert rule was saved.'|trans({}, 'alerting') }}</p>{% endif %}
+    {% if rule %}
+        <p>{{ alerting.series(rule) }}</p>
+        {% if rule.unusable is not null %}<p role="alert">{{ 'The evaluator skips this rule: %reason%'|trans({'%reason%': rule.unusable}, 'alerting') }}</p>{% endif %}
+        {% if rule.activeIncidentId is not null %}<p>{{ 'Changing the data source, the RRD data source name or the kind ends incident %id% as orphaned without a notification.'|trans({'%id%': rule.activeIncidentId}, 'alerting') }}</p>{% endif %}
+    {% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.kind) }}
+        {{ form_row(form.local_data_id) }}
+        {{ form_row(form.rrd_name) }}
+        {{ form_row(form.for_cycles) }}
+        <fieldset>
+            <legend>{{ 'Threshold rule'|trans({}, 'alerting') }}</legend>
+            {{ form_row(form.comparator) }}
+            {{ form_row(form.trigger_threshold) }}
+            {{ form_row(form.clear_threshold) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'Hour-of-week baseline rule'|trans({}, 'alerting') }}</legend>
+            {{ form_row(form.baseline_direction) }}
+            {{ form_row(form.baseline_deviations) }}
+            {{ form_row(form.baseline_clear_deviations) }}
+            {{ form_row(form.baseline_floor) }}
+            {{ form_row(form.baseline_min_samples) }}
+        </fieldset>
+        {{ form_widget(form.revision) }}
+        <button type="submit">{{ 'Save'|trans({}, 'alerting') }}</button>
+    {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route and encodes parameters; no supplied URI. #}
+    <p><a href="{{ path('alerting_rule_list') }}">{{ 'Back to alert rules'|trans({}, 'alerting') }}</a></p>
+</main>
+{% endblock %}

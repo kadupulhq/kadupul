@@ -2067,6 +2067,7 @@ function replicate_out($remote_poller_id = 1, $class = 'all')
 			AND name NOT LIKE "install%"
 			AND name != "poller_enabled"
 			AND name NOT LIKE "md5dirsum%"
+			AND name != "alerting_evaluation_cursor"
 			UNION
 			SELECT *
 			FROM settings

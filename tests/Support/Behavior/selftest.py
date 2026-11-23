@@ -913,6 +913,17 @@ def boundary_status_channel():
             assert completed and result['exit'] == 70 and result['stderr'] == 'application output'
         assert calls[-1][0:2] == ('rm', '-f')
         assert calls[0][4] == calls[-1][2]
+    # A longer observation window reaches wait-php.php through its environment
+    # and leaves the completion channel and observed command unchanged.
+    captured = object.__new__(harness.Harness)
+    calls = []
+    def command(*args, **kwargs):
+        calls.append(args)
+        return {'exit': 0, 'stdout': 'complete\n' if args[0] == 'cat' else '', 'stderr': ''}
+    captured.command = command
+    captured.php('poller.php', '--force', observation_timeout=90)
+    assert calls[0][:3] == ('env', 'HARNESS_OBSERVATION_TIMEOUT=90', 'php')
+    assert calls[0][6] == calls[-1][2] and calls[0][-2:] == ('poller.php', '--force')
     print('separate completion channel preserves application status and rejects incomplete observations')
 
 

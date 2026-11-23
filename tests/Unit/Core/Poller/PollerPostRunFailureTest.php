@@ -12,13 +12,13 @@ test('RRD write failure preserves poller post-run services and only changes exit
     expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
     $postRun = substr($source, $start, $end - $start);
     $postRun = str_replace(test_php_function_source($source, 'poller_heartbeat_check'), '', $postRun);
-    $main = array('multiple_poller_boost_check', 'poller_replicate_check', 'snmpagent_poller_bottom', 'boost_poller_bottom', 'dsstats_poller_bottom', 'dsdebug_poller_bottom', 'reports_poller_bottom', 'spikekill_poller_bottom', 'automation_poller_bottom', 'poller_maintenance', 'rrdcheck_poller_bottom', 'api_plugin_hook', 'bad_index_check', 'host_status_cache_check', 'poller_heartbeat_check');
+    $main = array('multiple_poller_boost_check', 'poller_replicate_check', 'snmpagent_poller_bottom', 'boost_poller_bottom', 'dsstats_poller_bottom', 'alerting_poller_bottom', 'dsdebug_poller_bottom', 'reports_poller_bottom', 'spikekill_poller_bottom', 'automation_poller_bottom', 'poller_maintenance', 'rrdcheck_poller_bottom', 'api_plugin_hook', 'bad_index_check', 'host_status_cache_check', 'poller_heartbeat_check');
     $all = array_merge($main, array('cacti_log', 'poller_recovery_flush_boost'));
     $program = '<?php namespace PollerPostRunProbe; $events=array();';
     foreach ($all as $name) {
         $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
     }
-    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$mibs_recorded=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
+    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$mibs_recorded=false;$config=array("base_path"=>"/opt/kadupul","connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
     $program .= '$rrd_runs_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');
     file_put_contents($file, $program);
@@ -92,11 +92,11 @@ test('a failed drain in an earlier run still fails a multi-run poller process', 
     $postRun = substr($source, $start, $end - $start);
     $postRun = str_replace(test_php_function_source($source, 'poller_heartbeat_check'), '', $postRun);
     $program = '<?php namespace PollerRunsProbe;';
-    foreach (array('multiple_poller_boost_check', 'poller_replicate_check', 'snmpagent_poller_bottom', 'boost_poller_bottom', 'dsstats_poller_bottom', 'dsdebug_poller_bottom', 'reports_poller_bottom', 'spikekill_poller_bottom', 'automation_poller_bottom', 'poller_maintenance', 'rrdcheck_poller_bottom', 'api_plugin_hook', 'bad_index_check', 'host_status_cache_check', 'poller_heartbeat_check', 'cacti_log', 'poller_recovery_flush_boost') as $name) {
+    foreach (array('multiple_poller_boost_check', 'poller_replicate_check', 'snmpagent_poller_bottom', 'boost_poller_bottom', 'dsstats_poller_bottom', 'alerting_poller_bottom', 'dsdebug_poller_bottom', 'reports_poller_bottom', 'spikekill_poller_bottom', 'automation_poller_bottom', 'poller_maintenance', 'rrdcheck_poller_bottom', 'api_plugin_hook', 'bad_index_check', 'host_status_cache_check', 'poller_heartbeat_check', 'cacti_log', 'poller_recovery_flush_boost') as $name) {
         $program .= 'function ' . $name . '(...$args){}';
     }
     // The first run's drain fails; the second run's drain succeeds.
-    $program .= '$poller_id=1;$mibs=false;$mibs_recorded=false;$config=array("connection"=>"online");$rrd_runs_failed=false;'
+    $program .= '$poller_id=1;$mibs=false;$mibs_recorded=false;$config=array("base_path"=>"/opt/kadupul","connection"=>"online");$rrd_runs_failed=false;'
         . 'foreach (array(true, false) as $rrd_write_failed) {' . $accumulate . '}' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-runs-');
     file_put_contents($file, $program);
