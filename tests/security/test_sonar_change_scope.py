@@ -7,6 +7,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -238,6 +239,7 @@ class SonarChangeScopeTest(unittest.TestCase):
                                     env=env, capture_output=True, text=True, check=False)
             self.assertEqual(result.returncode, 0)
             self.assertIn(f"full_analysis={'true' if full else 'false'}\n", output.read_text())
+            self.assertIn(f"legacy_coverage={'true' if full else 'false'}\n", output.read_text())
             self.assertNotIn(str(self.repo), result.stdout + result.stderr + output.read_text())
         event_path.write_text("not-json")
         result = subprocess.run(["/bin/bash", "-e", "-c", shell], cwd=ROOT,
@@ -265,6 +267,17 @@ class SonarChangeScopeTest(unittest.TestCase):
         for branch in ["sonar", "release", "sonar-other", "feature/sonar/change"]:
             self.assertFalse(self.policy(branch=branch).full_analysis)
 
+    def test_legacy_coverage_outside_merge_groups_follows_full_analysis(self):
+        cases = [{}, {"branch": "feature/change"}, {"branch": "feature/change", "all_prs": "true"},
+                 {"source": "outside/fork"}, {"actor": "dependabot[bot]"}, {"enable": "false"},
+                 {"event_name": "push"}, {"event_name": "push", "ref": "refs/heads/feature/change"},
+                 {"event_name": "workflow_dispatch", "run_sonar": "true"},
+                 {"event_name": "workflow_dispatch", "run_sonar": "false"}]
+        for case in cases:
+            with self.subTest(**case):
+                decision = self.policy(**case)
+                self.assertEqual(decision.legacy_coverage, decision.full_analysis)
+
     def test_default_branch_and_manual_dispatch(self):
         self.assertTrue(self.policy(event_name="push").full_analysis)
         self.assertTrue(self.policy(event_name="push", default="primary", ref="refs/heads/primary").full_analysis)
@@ -291,10 +304,14 @@ class SonarChangeScopeTest(unittest.TestCase):
                                                  kw.get("all_prs", ""), "", "owned/repository",
                                                  kw.get("actor", "maintainer"), ref)
         self.assertFalse(decide().full_analysis)
-        self.assertEqual(decide().reason, "merge-queue-not-enforced")
+        self.assertEqual(decide().reason, "merge-queue-legacy-coverage")
         self.assertTrue(decide(all_prs="true").full_analysis)
-        self.assertFalse(decide(all_prs="true", enable="false").full_analysis)
-        self.assertFalse(decide(all_prs="true", actor="dependabot[bot]").full_analysis)
+        for all_prs in ["", "true"]:
+            self.assertTrue(decide(all_prs=all_prs).legacy_coverage)
+            self.assertFalse(decide(all_prs=all_prs, enable="false").full_analysis)
+            self.assertFalse(decide(all_prs=all_prs, enable="false").legacy_coverage)
+            self.assertFalse(decide(all_prs=all_prs, actor="dependabot[bot]").full_analysis)
+            self.assertFalse(decide(all_prs=all_prs, actor="dependabot[bot]").legacy_coverage)
         with self.assertRaises(ValueError):
             scope.event_policy("merge_group", {"repository": event["repository"]}, "true", "true", "",
                                "owned/repository", "maintainer", ref)
@@ -325,17 +342,41 @@ class SonarChangeScopeTest(unittest.TestCase):
                 self.assertIn("SONAR_TOKEN is not configured", result.stdout)
 
 
+    def test_merge_groups_run_and_bind_the_legacy_coverage_chain(self):
+        content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
+        body = content.split("\njobs:\n", 1)[1]
+        jobs = {block.split(":", 1)[0]: block
+                for block in re.split(r"\n(?=  [a-z][a-z0-9-]*:\n)", "\n" + body) if block}
+        jobs = {name.strip(): block for name, block in jobs.items()}
+        for name in ["legacy-unit-coverage", "legacy-coverage"]:
+            condition = re.split(r"\n    (?=\S)", jobs[name].split("    if: >-\n", 1)[1], maxsplit=1)[0]
+            with self.subTest(job=name):
+                self.assertIn("needs.scope.outputs.legacy_coverage == 'true'", condition)
+                self.assertIn("github.event_name == 'merge_group' ||", condition)
+                self.assertNotIn("full_analysis", condition)
+        for name in ["application-coverage", "analyze"]:
+            condition = re.split(r"\n    (?=\S)", jobs[name].split("    if: >-\n", 1)[1], maxsplit=1)[0]
+            with self.subTest(job=name):
+                self.assertIn("needs.scope.outputs.full_analysis == 'true'", condition)
+                self.assertIn("(github.event_name == 'merge_group' && vars.SONAR_ALL_PRS == 'true')", condition)
+        self.assertIn("    needs: [scope, legacy-coverage, analyze]\n", jobs["quality-gate"])
+        self.assertIn("LEGACY_RESULT: ${{ needs.legacy-coverage.result }}", jobs["quality-gate"])
+        self.assertIn("legacy_coverage: ${{ steps.scope.outputs.legacy_coverage }}", jobs["scope"])
+
     def test_quality_gate_fails_closed_when_analysis_is_due(self):
         content = (ROOT / ".github/workflows/sonarcloud.yml").read_text()
         shell = textwrap.dedent(content.split("      - name: Require completed analysis\n", 1)[1]
                                 .split("        run: |\n", 1)[1])
         results = ["success", "failure", "cancelled", "skipped"]
 
-        def gate(scope_result, full, all_prs, analysis_result, reason="development-branch"):
+        def gate(scope_result, full, all_prs, analysis_result, reason="development-branch",
+                 legacy="", legacy_result="skipped"):
             return subprocess.run(["/bin/bash", "-e", "-c", shell],
                                   env={**os.environ, "SCOPE_RESULT": scope_result,
                                        "FULL_ANALYSIS": full, "ALL_PRS": all_prs,
                                        "SCOPE_REASON": reason,
+                                       "LEGACY_COVERAGE": legacy,
+                                       "LEGACY_RESULT": legacy_result,
                                        "ANALYSIS_RESULT": analysis_result},
                                   capture_output=True, text=True)
 
@@ -355,6 +396,20 @@ class SonarChangeScopeTest(unittest.TestCase):
         self.assertIn("out of scope for this run (unknown)", skipped.stdout)
         self.assertNotIn("::warning::", skipped.stdout)
         self.assertIn("(development-branch)", gate("success", "false", "", "skipped").stdout)
+
+        # A merge group outside Sonar still binds the legacy shards and merge.
+        for legacy_result in results:
+            with self.subTest(legacy=legacy_result):
+                queued = gate("success", "false", "", "skipped", reason="merge-queue-legacy-coverage",
+                              legacy="true", legacy_result=legacy_result)
+                self.assertEqual(queued.returncode, 0 if legacy_result == "success" else 1)
+                full = gate("success", "true", "", "success", legacy="true",
+                            legacy_result=legacy_result)
+                self.assertEqual(full.returncode, 0 if legacy_result == "success" else 1)
+        self.assertIn("did not pass", gate("success", "false", "", "skipped", legacy="true",
+                                           legacy_result="failure").stdout)
+        self.assertEqual(gate("success", "false", "", "skipped", legacy="false",
+                              legacy_result="failure").returncode, 0)
 
 
 if __name__ == "__main__":

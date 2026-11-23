@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 15:06-0800\n"
+"POT-Creation-Date: 2026-11-23 13:53-0800\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -49,14 +49,13 @@ msgid "Add Graphs to Report"
 msgstr "Ajouter des graphiques au rapport"
 
 #: aggregate_graphs.php
-#, fuzzy, php-format
+#, php-format
 msgid "Aggregate Graph %s"
-msgstr "Cliquez sur 'Continuer' pour combiner le(s) graphique(s) agrégé(s) suivant(s) en un unique graphique agrégé."
+msgstr "Graphique agrégé %s"
 
 #: aggregate_graphs.php
-#, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "Réglages du graphique agrégé"
+msgstr "Le graphique agrégé demandé n'existe pas"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
@@ -516,9 +515,8 @@ msgid "Aggregate Template [new]"
 msgstr "Modèle d'agrégat [nouveau]"
 
 #: aggregate_templates.php
-#, fuzzy
 msgid "Aggregate Template not found."
-msgstr "Aucun modèle d'agrégat trouvé"
+msgstr "Modèle agrégé introuvable."
 
 #: aggregate_templates.php include/global_arrays.php
 msgid "Aggregate Templates"
@@ -698,9 +696,8 @@ msgid "Access Denied!  User account disabled."
 msgstr "Accès refusé, compte d'utilisateur désactivé."
 
 #: auth_login.php
-#, fuzzy
 msgid "Access Denied! User account locked."
-msgstr "Accès refusé, compte d'utilisateur désactivé."
+msgstr "Accès refusé ! Compte utilisateur verrouillé."
 
 #: auth_login.php
 msgid "Enter your Username and Password below"
@@ -1012,7 +1009,7 @@ msgstr "Durée de fonctionnement"
 
 #: automation_graph_rules.php
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr ""
+msgstr "Une tentative d'injection SQL a été détectée dans l'automatisation des graphiques"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Apply requested action"
@@ -1074,7 +1071,7 @@ msgstr "Dupliquer"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
-msgstr ""
+msgstr "Modifier les paramètres de la règle"
 
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
@@ -1138,7 +1135,7 @@ msgstr "Sélection de règle [edit : %s]"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Rule not found."
-msgstr ""
+msgstr "Règle introuvable."
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1150,7 +1147,7 @@ msgstr "Le nom de cette règle."
 
 #: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
-msgstr ""
+msgstr "Ce formulaire de règle de graphique a expiré. Ouvrez à nouveau la règle et utilisez son formulaire actuel."
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1308,7 +1305,7 @@ msgstr "L'état actuel de cette découverte de réseaux"
 
 #: automation_networks.php
 msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
-msgstr ""
+msgstr "Ce formulaire de plage de découverte réseau a expiré. Ouvrez à nouveau le réseau et utilisez son formulaire actuel."
 
 #: automation_networks.php pollers.php
 msgid "Threads"
@@ -1376,7 +1373,7 @@ msgstr "Règles SNMP"
 
 #: automation_snmp.php
 msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
-msgstr ""
+msgstr "Ce formulaire de jeu d'options SNMP a expiré. Ouvrez à nouveau le jeu d'options SNMP et utilisez son formulaire actuel."
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1396,7 +1393,7 @@ msgstr "nom"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr ""
+msgstr "Une tentative d'injection SQL a été détectée dans l'automatisation des arborescences"
 
 #: automation_tree_rules.php
 #, php-format
@@ -1432,9 +1429,8 @@ msgid "Hook into Tree"
 msgstr "S'accrocher à l'arbre"
 
 #: automation_tree_rules.php
-#, fuzzy
 msgid "Invalid Field Name specified for Tree Rule Item."
-msgstr "Le nom du champ qui doit être utilisé pour cet élément de règle."
+msgstr "Nom de champ invalide spécifié pour l'élément de règle d'arborescence."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
@@ -1458,7 +1454,7 @@ msgstr "Racines de végétal"
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
-msgstr ""
+msgstr "Ce formulaire de règle d'arborescence a expiré. Ouvrez à nouveau la règle et utilisez son formulaire actuel."
 
 #: automation_tree_rules.php
 msgid "This Type"
@@ -1926,7 +1922,7 @@ msgstr "L'utilisateur qui a demandé le débogage."
 
 #: data_debug.php lib/dsdebug.php
 msgid "The requested Data Source is not available."
-msgstr ""
+msgstr "La source de données demandée n'est pas disponible."
 
 #: data_debug.php lib/html.php utilities.php
 msgid "User"
@@ -2227,7 +2223,7 @@ msgstr[1] "Supprimer une requête de données"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
-msgstr ""
+msgstr "Modifier les paramètres de la requête de données"
 
 #: data_queries.php
 msgid "Equation"
@@ -2346,7 +2342,7 @@ msgstr "Le nombre de graphiques utilisant cette requête."
 
 #: data_queries.php
 msgid "This Data Query form has expired. Open the data query again and use its current form."
-msgstr ""
+msgstr "Ce formulaire de requête de données a expiré. Ouvrez à nouveau la requête de données et utilisez son formulaire actuel."
 
 #: data_queries.php include/global_form.php
 msgid "XML Path"
@@ -2476,8 +2472,8 @@ msgstr[1] "Supprimer des sources de données"
 #: data_sources.php
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
-msgstr[0] "Supprimer tous les éléments graphiques <forts>graphiques </forts> qui font référence à cette source de données."
-msgstr[1] "Supprimer tous les éléments graphiques <forts>graphiques </forts> qui font référence à ces sources de données."
+msgstr[0] "Supprimer tous les éléments graphiques <strong>graphiques </strong> qui font référence à cette source de données."
+msgstr[1] "Supprimer tous les éléments graphiques <strong>graphiques </strong> qui font référence à ces sources de données."
 
 #: data_sources.php
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
@@ -2851,13 +2847,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "Syntaxe des graphiques RRDtool"
 
 #: graph.php
-#, fuzzy
 msgid "The Graph you requested does not exist."
-msgstr "La source de données n'existe pas."
+msgstr "Le graphique demandé n'existe pas."
 
 #: graph.php
 msgid "This Graph has no stored data to zoom into."
-msgstr ""
+msgstr "Ce graphique ne contient aucune donnée enregistrée sur laquelle zoomer."
 
 #: graph.php lib/html.php
 msgid "Utility View"
@@ -2972,9 +2967,8 @@ msgid "Graph Template [new]"
 msgstr "Modèle de graphique[nouveau]"
 
 #: graph_templates.php
-#, fuzzy
 msgid "Graph Template not found."
-msgstr "Aucun modèle de graphique trouvé"
+msgstr "Modèle de graphique introuvable."
 
 #: graph_templates.php graphs_new.php include/global_arrays.php
 #: lib/html_tree.php user_admin.php user_group_admin.php
@@ -3067,7 +3061,7 @@ msgstr "Aucuns éléments"
 
 #: graph_templates_inputs.php
 msgid "The Graph Item Input relationship is invalid."
-msgstr ""
+msgstr "La relation d'entrée de l'élément de graphique est invalide."
 
 #: graph_templates_items.php graphs_items.php
 msgid "Avg:"
@@ -3258,7 +3252,7 @@ msgstr "<graph_title> Gabarit"
 
 #: graphs.php
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
+msgstr "Une entrée d'élément de graphique contient une valeur invalide."
 
 #: graphs.php
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
@@ -3416,7 +3410,7 @@ msgstr "Graphique [nouveau]"
 
 #: graphs.php spikekill.php
 msgid "Graph access denied"
-msgstr ""
+msgstr "Accès au graphique refusé"
 
 #: graphs.php
 msgid "Leave the Data Source(s) untouched."
@@ -3476,11 +3470,11 @@ msgstr "L'identifiant de la base de données interne pour ce graphique.  Utile p
 
 #: graphs.php
 msgid "The selected Device is not available."
-msgstr ""
+msgstr "Le périphérique sélectionné n'est pas disponible."
 
 #: graphs.php
 msgid "The selected Tree is not available."
-msgstr ""
+msgstr "L'arborescence sélectionnée n'est pas disponible."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
@@ -3632,7 +3626,7 @@ msgstr "L'index est désactivé car la requête de données n'a pas de modèles 
 
 #: graphs_new.php
 msgid "The requested device is not available."
-msgstr ""
+msgstr "Le périphérique demandé n'est pas disponible."
 
 #: graphs_new.php
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
@@ -3645,12 +3639,12 @@ msgstr "Vous pouvez exécuter cette requête de données en mode débogage"
 #: help.php
 #, php-format
 msgid "The document page '%s' could not be reached locally."
-msgstr ""
+msgstr "La page de documentation '%s' n'a pas pu être atteinte localement."
 
 #: help.php
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "AVERTISSEMENT : Page Kadupul :%s pour l'utilisateur :%s a généré une erreur fatale %d !"
+msgstr "AVERTISSEMENT : La page Kadupul :%s pour l'utilisateur :%s a généré une erreur fatale %d !"
 
 #: host_templates.php
 msgid "Add Data Query"
@@ -3896,9 +3890,9 @@ msgid "%d MBytes"
 msgstr "d Mo octets %d"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "%d Megabytes"
-msgstr "megabytes"
+msgstr "%d mégaoctets"
 
 #: include/global_arrays.php
 #, php-format
@@ -4433,7 +4427,7 @@ msgstr "La requête de données n'a pas été trouvée lors de l'exportation.  V
 
 #: include/global_arrays.php
 msgid "Data Source Item field holds a value the Data Source form would reject."
-msgstr ""
+msgstr "Le champ de l'élément de source de données contient une valeur que le formulaire de source de données rejetterait."
 
 #: include/global_arrays.php include/global_form.php package_import.php
 msgid "Data Source Profile"
@@ -5370,9 +5364,8 @@ msgid "SHA-256"
 msgstr "SHA-256"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "SHA-384"
-msgstr "SHA-392"
+msgstr "SHA-384"
 
 #: include/global_arrays.php
 msgid "SHA-512"
@@ -5582,9 +5575,8 @@ msgid "TCP Ping"
 msgstr "Ping TCP"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "TCP Ping Closed"
-msgstr "Ping TCP"
+msgstr "Ping TCP fermé"
 
 #: include/global_arrays.php
 msgid "Take Ownership"
@@ -5741,9 +5733,8 @@ msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "Impossible d'établir une connexion MySQL avec Remote Data Collector."
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
-msgstr "Impossible d'augmenter la taille du champ du mot de passe, veuillez vérifier la permission de l'utilisateur db"
+msgstr "Impossible d'augmenter la taille du champ mot de passe, veuillez vérifier les permissions de l'utilisateur de base de données"
 
 #: include/global_arrays.php
 msgid "Unexpected error occurred"
@@ -6108,9 +6099,9 @@ msgid "secs"
 msgstr "secs"
 
 #: include/global_form.php
-#, fuzzy, php-format
+#, php-format
 msgid "%d OID"
-msgstr "OID"
+msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
@@ -7350,9 +7341,8 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Le type de graphique généré ; PNG, GIF ou SVG.  La sélection du type d'image du graphique est très dépendante de RRDtool."
 
 #: include/global_form.php
-#, fuzzy
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "Le type de paquet ping à envoyer.  <br><i>NOTE : ICMP sous Linux/UNIX nécessite les privilèges root.</i>"
+msgstr "Le type de paquet ping à envoyer. <br><i>NOTE : ICMP sous Linux/UNIX nécessite les privilèges root.</i> <br><i>NOTE : Ping TCP fermé - Même si le ping TCP échoue, le périphérique peut être considéré comme ACTIF (UP).</i>"
 
 #: include/global_form.php
 msgid "The width (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title."
@@ -7464,7 +7454,7 @@ msgstr "Lorsque les données sont recueillies, les données de ce champ seront p
 
 #: include/global_form.php
 msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
-msgstr ""
+msgstr "Lorsque cette option est activée, l'option de mise à l'échelle automatique sélectionnée détermine les limites utilisées par RRDtool : --alt-autoscale ignore les deux limites, --alt-autoscale-max conserve la limite inférieure, --alt-autoscale-min conserve la limite supérieure et --alt-autoscale (en acceptant les deux limites) conserve les deux limites. Lorsqu'elle est désactivée, les limites inférieure et supérieure configurées sont utilisées directement. Limites rigides contrôle si les valeurs en dehors de ces limites étendent la plage du graphique."
 
 #: include/global_form.php
 msgid "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph."
@@ -7568,14 +7558,14 @@ msgid "%s Minute"
 msgstr "%s minute"
 
 #: include/global_settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s Thread"
-msgstr "Fil de discussion"
+msgstr "%s thread"
 
 #: include/global_settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s Threads"
-msgstr "Fils de conversation"
+msgstr "%s threads"
 
 #: include/global_settings.php
 msgid ".  This is limited by the php setting 'max_input_vars', currently:"
@@ -7675,25 +7665,23 @@ msgstr "Permettre l'extension du graphique à l'avenir"
 
 #: include/global_settings.php
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Autoriser le JavaScript en ligne sans nonce"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "Le nom de cette méthode d'acquisition des données."
+msgstr "Autoriser les métacaractères non sécurisés dans les méthodes d'entrée de données"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "État du collecteur de données à distance :"
+msgstr "Autoriser le HTTPS non sécurisé pour les collecteurs de données distants"
 
 #: include/global_settings.php
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Autoriser à la fois unsafe-eval et le JavaScript en ligne sans nonce"
 
 #: include/global_settings.php
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr ""
+msgstr "Autoriser l'utilisation de certificats autosignés et permettre que le nom d'hôte du certificat diffère de celui du collecteur de données distant."
 
 #: include/global_settings.php
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Kadupul. If disabled, the default language will be in force until the user elects another language."
@@ -7849,7 +7837,7 @@ msgstr "Stimuler le journal de débogage"
 
 #: include/global_settings.php
 msgid "Boost Processing Mode"
-msgstr ""
+msgstr "Mode de traitement Boost"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
@@ -7868,9 +7856,8 @@ msgid "By default, the main Kadupul Data Collector will cache the entire web sit
 msgstr "Par défaut, le collecteur de données Kadupul principal mettra en cache l'intégralité du site Web et des plug-ins dans un cache de ressources. Ensuite, périodiquement, les collecteurs de données distants se mettront à jour avec toutes les mises à jour du collecteur de données Kadupul principal. Ce cache de ressources permet essentiellement aux collecteurs de données distants de se mettre à niveau eux-mêmes. Si vous ne souhaitez pas utiliser cette option, vous pouvez la désactiver à l'aide de ce paramètre."
 
 #: include/global_settings.php
-#, fuzzy
 msgid "CSP Violation Report URI"
-msgstr "Rapport Kadupul"
+msgstr "URI de signalement des violations CSP"
 
 #: include/global_settings.php
 msgid "Cache Directory"
@@ -7921,9 +7908,8 @@ msgid "Content-Security Alternate Sources"
 msgstr "Sources alternatives de sécurité du contenu"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Content-Security Script Policy"
-msgstr "Sources alternatives de sécurité du contenu"
+msgstr "Politique de sécurité de contenu pour les scripts"
 
 #: include/global_settings.php
 msgid "Controls disabling check for increasing OID while walking OID tree."
@@ -7931,7 +7917,7 @@ msgstr "Contrôles désactivant la vérification de l'augmentation de l'OID pend
 
 #: include/global_settings.php
 msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
-msgstr ""
+msgstr "Contrôle la politique CSP script-src. Le choix Mode Nonce - Signalement uniquement signale les scripts en ligne dépourvus de nonce sans les bloquer. L'implémentation prend également en charge un mode nonce strict par configuration directe, mais ce mode n'est pas proposé ici car de nombreuses pages intégrées et de nombreux plugins utilisent encore des scripts en ligne sans nonce. Activer l'application stricte avant la migration de ces scripts peut provoquer des dysfonctionnements des pages et plugins. Utilisez CactiSecureHeaders::getNonceAttribute() lors de l'ajout de scripts en ligne."
 
 #: include/global_settings.php
 msgid "Cron/Daemon Interval"
@@ -8307,7 +8293,7 @@ msgstr "Fin du quart de travail quotidien"
 
 #: include/global_settings.php
 msgid "Enter a Pango font description"
-msgstr ""
+msgstr "Saisissez une description de police Pango"
 
 #: include/global_settings.php
 msgid "Enter the SNMP v3 Context for all new Devices."
@@ -8387,7 +8373,7 @@ msgstr "Connexions de force sur HTTPS"
 
 #: include/global_settings.php
 msgid "Forked processes"
-msgstr ""
+msgstr "Processus dupliqués (fork)"
 
 #: include/global_settings.php lib/html_reports.php
 msgid "From Email Address"
@@ -8439,7 +8425,7 @@ msgstr "Durée du graphique"
 
 #: include/global_settings.php
 msgid "Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph's device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations."
-msgstr ""
+msgstr "L'accès au graphique est accordé directement par une permission sur le graphique dans tous les modes. Le mode Permissif accorde également l'accès lorsque l'utilisateur dispose d'une permission pour le périphérique ou le modèle du graphique. Le mode Restrictif exige une permission à la fois pour le périphérique et pour le modèle en l'absence de permission directe sur le graphique. Basé sur le périphérique exige une permission sur le périphérique, et Basé sur le modèle de graphique exige une permission sur le modèle. Les politiques utilisateur et groupe sont évaluées séparément et leurs résultats autorisés sont combinés. Ces modes arbitrent entre les performances des requêtes et la granularité des permissions sur les grandes installations."
 
 #: include/global_settings.php
 msgid "Graph/Data Source Creation Method"
@@ -8495,7 +8481,7 @@ msgstr "Masque les périphériques et les graphiques désactivés lors de l'affi
 
 #: include/global_settings.php
 msgid "Historically, Kadupul administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Kadupul Graphs.  In earlier versions of Kadupul, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Kadupul, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Kadupul restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Kadupul continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr ""
+msgstr "Historiquement, les administrateurs Kadupul créaient des méthodes d'entrée de données simples incluant des commandes telles que \"ps -ef | grep something | wc -l\" pour représenter une valeur numérique destinée aux graphiques Kadupul. Dans les versions antérieures de Kadupul, cela était autorisé. Toutefois, il s'agit d'une pratique non sécurisée car elle permet à des utilisateurs tiers de publier des modèles de données vulnérables. Dans le Kadupul moderne, ce type de pratique doit être évité. Nous fournissons néanmoins cette option si vous disposez d'anciennes méthodes d'entrée de données contenant ces métacaractères non sécurisés et que vous ne les avez pas encore converties en scripts locaux dans le répertoire 'scripts'. Lorsque cette option est décochée, Kadupul restreint les métacaractères de style shell tels que les guillemets, les accolades, les barres verticales, les barres obliques inverses et les accents graves. Kadupul continue d'autoriser les signes supérieur et inférieur pour des éléments comme <path_cacti> et les paramètres d'entrée, mais si cette option est décochée, leur utilisation autorisée s'arrête là."
 
 #: include/global_settings.php
 msgid "Hourly Average Window"
@@ -8503,11 +8489,11 @@ msgstr "Fenêtre horaire moyenne"
 
 #: include/global_settings.php
 msgid "Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them."
-msgstr ""
+msgstr "Nombre d'heures pendant lesquelles les échantillons refusés par RRDtool, par exemple après une modification du schéma d'une source de données, restent en file d'attente pour nouvelle tentative avant d'être déplacés vers la table poller_output_rejected. Réparez le RRDfile, puis exécutez cli/replay_rejected_samples.php pour les traiter."
 
 #: include/global_settings.php
 msgid "How Boost distributes RRD updates. Forked processes start the number of Boost processes above on every run. Message queue workers hand each partition to Messenger workers instead."
-msgstr ""
+msgstr "Comment Boost répartit les mises à jour RRD. Les processus dupliqués démarrent à chaque exécution le nombre de processus Boost défini ci-dessus. Les travailleurs de file de messages confient chaque partition aux travailleurs Messenger."
 
 #: include/global_settings.php
 msgid "How Often Should Boost Update All RRDs"
@@ -8823,7 +8809,7 @@ msgstr "Limite de mémoire pour le collecteur de données statistiques sur les s
 
 #: include/global_settings.php
 msgid "Message queue workers"
-msgstr ""
+msgstr "Travailleurs de file de messages"
 
 #: include/global_settings.php
 msgid "Minimum Length"
@@ -8867,7 +8853,7 @@ msgstr "Pas d'utilisateur"
 
 #: include/global_settings.php
 msgid "Nonce Mode - Reporting Only"
-msgstr ""
+msgstr "Mode Nonce - Signalement uniquement"
 
 #: include/global_settings.php
 msgid "Notify Primary Admin of Issues"
@@ -9139,16 +9125,15 @@ msgstr "Actualiser la table des polleurs par cycle"
 
 #: include/global_settings.php
 msgid "Rejected Sample Limit"
-msgstr ""
+msgstr "Limite d'échantillons rejetés"
 
 #: include/global_settings.php
 msgid "Rejected Sample Retention"
-msgstr ""
+msgstr "Rétention des échantillons rejetés"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
-msgstr "Rappelez-vous ce nombre d'anciens mots de passe et n'autorisez pas leur réutilisation."
+msgstr "Mémoriser ce nombre d'anciens mots de passe et interdire leur réutilisation."
 
 #: include/global_settings.php
 msgid "Remote Agent Timeout"
@@ -9356,7 +9341,7 @@ msgstr "Devrait-on recueillir des statistiques sur les sources de données pour 
 
 #: include/global_settings.php
 msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
-msgstr ""
+msgstr "Indique si LDAP doit vérifier les certificats TLS reçus par le client. Demand et Hard refusent un serveur dont le certificat ne peut être vérifié. Never et Allow ignorent cette vérification, permettant ainsi à quiconque sur le chemin réseau de se faire passer pour l'annuaire et de lire les mots de passe qui lui sont envoyés."
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
@@ -9383,9 +9368,8 @@ msgid "Show Graph Title"
 msgstr "Afficher le titre du graphique"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Show business hours"
-msgstr "Montrer les heures d’ouverture?"
+msgstr "Afficher les heures ouvrées"
 
 #: include/global_settings.php
 msgid "Show only locations that are available at a devices selected site."
@@ -9533,7 +9517,7 @@ msgstr "Texte placé en bas au centre de chaque graphique."
 
 #: include/global_settings.php user_domains.php
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
-msgstr ""
+msgstr "La syntaxe « Distinguished Name », applicable aux configurations OpenLDAP comme Windows AD, offre de la souplesse pour définir l'identité de l'utilisateur. Pour OpenLDAP, le format suit cette structure : <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD propose une syntaxe alternative : <i>\"&lt;username&gt;@win2kdomain.local\"</i>, communément appelée « userPrincipalName (UPN) ». Dans ce contexte, « &lt;username&gt; » représente le nom d'utilisateur saisi lors de la connexion. Ceci est particulièrement pertinent en mode « Sans recherche » ou lorsque « Exiger l'appartenance à un groupe » est activé."
 
 #: include/global_settings.php
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
@@ -9581,19 +9565,19 @@ msgstr "Veuillez entrer le délai d'attente SMTP en secondes."
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
-msgstr ""
+msgstr "La description de police Pango à utiliser pour les éléments d'axe du graphique, telle que DejaVu Sans"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
-msgstr ""
+msgstr "La description de police Pango à utiliser pour les éléments de légende du graphique, telle que DejaVu Sans Mono"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
-msgstr ""
+msgstr "La description de police Pango à utiliser pour les titres du graphique, telle que DejaVu Sans Bold"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
-msgstr ""
+msgstr "La description de police Pango à utiliser pour les éléments d'unité du graphique, telle que DejaVu Sans"
 
 #: include/global_settings.php
 msgid "The System default date format to use in Kadupul."
@@ -9705,19 +9689,19 @@ msgstr "Le premier jour de la semaine pour les écrans graphiques hebdomadaires"
 
 #: include/global_settings.php
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "La police à utiliser pour les éléments d'axe du graphique. Saisissez une description de police Pango, telle que DejaVu Sans Bold. RRDtool ne charge pas de fichiers de police."
 
 #: include/global_settings.php
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "La police à utiliser pour les légendes du graphique. Saisissez une description de police Pango, telle que DejaVu Sans Bold. RRDtool ne charge pas de fichiers de police."
 
 #: include/global_settings.php
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "La police à utiliser pour les titres du graphique. Saisissez une description de police Pango, telle que DejaVu Sans Bold. RRDtool ne charge pas de fichiers de police."
 
 #: include/global_settings.php
 msgid "The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "La police à utiliser pour les éléments d'unité du graphique. Saisissez une description de police Pango, telle que DejaVu Sans Bold. RRDtool ne charge pas de fichiers de police."
 
 #: include/global_settings.php
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
@@ -9785,7 +9769,7 @@ msgstr "La méthode utilisée pour nettoyer les fichiers RRD de Kadupul après l
 
 #: include/global_settings.php
 msgid "The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately."
-msgstr ""
+msgstr "Nombre maximal d'échantillons refusés qu'une source de données peut conserver en file d'attente. Les échantillons les plus anciens dépassant cette limite sont immédiatement déplacés vers la table poller_output_rejected."
 
 #: include/global_settings.php
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
@@ -10122,11 +10106,11 @@ msgstr "Liens URL"
 
 #: include/global_settings.php
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
-msgstr ""
+msgstr "URL vers laquelle les navigateurs envoient par POST les rapports de violation CSP en modes nonce-report et nonce. Laissez vide pour utiliser /cacti/csp_report.php à la racine de l'installation. Ne doit contenir que des caractères d'URL sûrs."
 
 #: include/global_settings.php
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
-msgstr ""
+msgstr "URL vers laquelle les navigateurs envoient par POST les rapports de violation CSP en modes nonce-report et nonce. Laissez vide pour utiliser <url_path>/csp_report.php. Ne doit contenir que des caractères d'URL sûrs."
 
 #: include/global_settings.php
 msgid "Unit Font Setting"
@@ -10146,7 +10130,7 @@ msgstr "Utiliser des polices personnalisées"
 
 #: include/global_settings.php
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
-msgstr ""
+msgstr "Utilisez un sous-dossier distinct pour les fichiers RRD de chaque hôte. Le nommage des RRDfiles suivra l'un des formats suivants :<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Vous pouvez effectuer ce changement après l'installation en exécutant le script CLI <b>structure_rra_paths.php</b> après avoir modifié le paramètre. NOTE : Si vous modifiez la valeur Nombre maximal de répertoires pour diminuer le nombre de répertoires, ou si vous modifiez le modèle de répertoire, les répertoires vides ne seront pas supprimés après la réexécution du script <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php
 msgid "User Language"
@@ -10221,9 +10205,8 @@ msgid "When creating a new report, what image type should be used for the inline
 msgstr "Lors de la création d'un nouveau rapport, quel type d'image doit être utilisé pour les graphiques en ligne."
 
 #: include/global_settings.php
-#, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
-msgstr "Lors de la création de graphiques, quel type de graphique souhaitez-vous présélectionner ?"
+msgstr "Lors de la création de graphiques, quel type de graphique souhaitez-vous voir présélectionné ?"
 
 #: include/global_settings.php
 msgid "When disabled, Kadupul Automation will not actively create any Graph.  This is useful when adjusting Device settings so as to avoid creating new Graphs each time you save an object.  Invoking Automation Rules manually will still be possible."
@@ -10247,7 +10230,7 @@ msgstr "Lorsqu'il est activé, Kadupul définira le bouton radio pour supprimer 
 
 #: include/global_settings.php
 msgid "When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis."
-msgstr ""
+msgstr "Lorsque le contrôle des polices basé sur le thème n'est pas utilisé, description de police Pango à utiliser pour tous les graphiques, telle que DejaVu Sans. Vous pouvez éventuellement laisser ce champ vide et gérer les paramètres de police par objet."
 
 #: include/global_settings.php
 msgid "When performing batch spike removal, only the templates selected below will be acted on."
@@ -10531,7 +10514,7 @@ msgstr "L'appareil est désactivé"
 
 #: lib/api_device.php
 msgid "Device replication failed. A FullSync is required; see the log for details."
-msgstr ""
+msgstr "Échec de la réplication du périphérique. Une synchronisation complète (FullSync) est requise ; consultez le journal pour plus de détails."
 
 #: lib/api_device.php
 msgid "ERROR: Device ID is Blank"
@@ -10593,12 +10576,12 @@ msgstr "Système:"
 #: lib/api_device.php
 #, php-format
 msgid "Unable to remove Device %s because its Graphs could not all be removed."
-msgstr ""
+msgstr "Impossible de supprimer le périphérique %s car tous ses graphiques n'ont pas pu être supprimés."
 
 #: lib/api_device.php
 #, php-format
 msgid "Unable to remove Device %s because its database records could not be removed together."
-msgstr ""
+msgstr "Impossible de supprimer le périphérique %s car ses enregistrements en base de données n'ont pas pu être supprimés conjointement."
 
 #: lib/api_device.php
 msgid "Uptime:"
@@ -10615,7 +10598,7 @@ msgstr "Les %s authentifiés par le serveur Web, mais les utilisateurs de modèl
 
 #: lib/auth.php
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
-msgstr ""
+msgstr "Accès refusé ! Le modèle de domaine n'est pas configuré. Veuillez contacter votre administrateur."
 
 #: lib/auth.php
 msgid "Access Denied!  Login Disabled."
@@ -10714,9 +10697,9 @@ msgid "%s KBytes"
 msgstr "GBytes %s"
 
 #: lib/boost.php utilities.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s MBytes"
-msgstr "moctets"
+msgstr "%s Mo"
 
 #: lib/clog_webapi.php
 msgid " - Admin Filter active"
@@ -11133,7 +11116,7 @@ msgstr "Nouveau champ de tri validé.  La zone de tri doit être mise à jour."
 
 #: lib/data_query.php
 msgid "No Index Changes Detected, Poller Cache Refreshed"
-msgstr ""
+msgstr "Aucun changement d'index détecté, cache du poller actualisé"
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -11493,19 +11476,19 @@ msgstr "invité"
 
 #: lib/graph_data_removal.php
 msgid "The removal could not be completed. Reload and review the selection before retrying."
-msgstr ""
+msgstr "La suppression n'a pas pu être menée à terme. Rechargez la page et vérifiez la sélection avant de réessayer."
 
 #: lib/graph_data_removal.php
 msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
-msgstr ""
+msgstr "La portée des dépendances de suppression dépasse le lot pris en charge. Sélectionnez moins d'enregistrements et réessayez."
 
 #: lib/graph_data_removal.php
 msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
-msgstr ""
+msgstr "La suppression a échoué et les modifications du collecteur peuvent être partielles. Réconciliez les collecteurs avant de réessayer."
 
 #: lib/graph_data_removal.php
 msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
-msgstr ""
+msgstr "La suppression a échoué. Le nettoyage persistant de la transaction a été tenté séparément ; les caches statistiques volatils ont peut-être été invalidés. Rechargez et réconciliez les modifications du collecteur avant de réessayer."
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
@@ -11513,11 +11496,11 @@ msgstr "Modèles d'équipement"
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
-msgstr ""
+msgstr "LINE1, LINE2 et LINE3 utilisent des largeurs fixes. Pour LINE:STACK, saisissez une largeur positive en pixels ; les valeurs entières ou décimales sont prises en charge."
 
 #: lib/graph_item_editor.php
 msgid "Line Width"
-msgstr ""
+msgstr "Largeur de ligne"
 
 #: lib/graphs.php
 msgid "Aggregated Device"
@@ -11672,7 +11655,7 @@ msgstr "L'opération de copie n'est pas disponible pour le moment."
 #: lib/html.php
 #, php-format
 msgid "Current Page: %s"
-msgstr ""
+msgstr "Page actuelle : %s"
 
 #: lib/html.php
 msgid "Dark Color Mode"
@@ -11767,7 +11750,6 @@ msgid "Ignore System Color"
 msgstr "Couleur de l’objet"
 
 #: lib/html.php
-#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -12046,9 +12028,8 @@ msgid "Warning Unsaved Form Data"
 msgstr "Avertissement Données de formulaire non sauvegardées"
 
 #: lib/html_form.php
-#, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
-msgstr "Vous avez des modifications non sauvegardées dans ce formulaire.  Si vous appuyez sur &#39;Continuer&#39; ces changements seront perdus.  Appuyez sur &#39;Annuler&#39; pour continuer l&#39;édition du formulaire."
+msgstr "Vous avez des modifications non enregistrées sur ce formulaire. Si vous cliquez sur « Continuer », ces modifications seront abandonnées. Cliquez sur « Annuler » pour continuer l'édition du formulaire."
 
 #: lib/html_form_template.php
 #, php-format
@@ -12177,9 +12158,9 @@ msgid ", Branch: %s"
 msgstr ", Agence : %s"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid ", Device: %s"
-msgstr "Dispositif(s)"
+msgstr ", Périphérique : %s"
 
 #: lib/html_reports.php
 #, php-format
@@ -12293,9 +12274,9 @@ msgid "Details %s"
 msgstr "Détails %s"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Device: %s"
-msgstr "Dispositif(s)"
+msgstr "Périphérique : %s"
 
 #: lib/html_reports.php
 msgid "Email Frequency"
@@ -12370,9 +12351,9 @@ msgid "Graph Tree Branch"
 msgstr "Branche de l'arbre"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Graph: %s"
-msgstr "Convertir en graphique(s) normal(aux) "
+msgstr "Graphique : %s"
 
 #: lib/html_reports.php
 msgid "Image attach type"
@@ -12581,9 +12562,9 @@ msgid "To Email Address(es)"
 msgstr "Adresse(s) email de destination"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Tree: %s"
-msgstr "arborescence"
+msgstr "Arborescence : %s"
 
 #: lib/html_reports.php
 #, php-format
@@ -12761,7 +12742,7 @@ msgstr "Kadupul effectuerait les modifications suivantes si le modèle était im
 
 #: lib/import.php
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
-msgstr ""
+msgstr "Les champs d'entrée et mappages système hérités seront vérifiés pour réparation uniquement lors de l'importation du modèle."
 
 #: lib/import.php
 #, php-format
@@ -12823,7 +12804,7 @@ msgstr "n'a pas pu ouvrir"
 
 #: lib/import.php
 msgid "kept"
-msgstr ""
+msgstr "conservé"
 
 #: lib/import.php
 msgid "not exists"
@@ -12835,7 +12816,7 @@ msgstr "Pas accessible en écriture"
 
 #: lib/import.php
 msgid "not written"
-msgstr ""
+msgstr "non écrit"
 
 #: lib/import.php
 msgid "written"
@@ -12844,7 +12825,7 @@ msgstr "écrit"
 #: lib/installer.php
 #, php-format
 msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
-msgstr ""
+msgstr "%d sources de données ont un chemin RRDfile en dehors du répertoire RRA. Cette version crée et met à jour les fichiers RRD uniquement dans le répertoire RRA ou dans un répertoire listé dans $config['rrd_additional_paths'] dans include/config.php ; ces sources de données cesseront donc d'être mises à jour jusqu'à ce que l'une des actions suivantes soit effectuée :"
 
 #: lib/installer.php
 #, php-format
@@ -12987,7 +12968,7 @@ msgstr "Conversion de la table #%s '%s'"
 #: lib/installer.php
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
-msgstr ""
+msgstr "La conversion de la table #%s '%s' a échoué en cours de traitement : %s"
 
 #: lib/installer.php
 msgid "Creating Graphs for Default Device"
@@ -13007,7 +12988,7 @@ msgstr "Actuel"
 
 #: lib/installer.php
 msgid "DATA SOURCES:"
-msgstr ""
+msgstr "SOURCES DE DONNÉES :"
 
 #: lib/installer.php
 msgid "DOWNGRADE DETECTED"
@@ -13077,17 +13058,17 @@ msgstr "ERREUR :"
 #: lib/installer.php
 #, php-format
 msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
-msgstr ""
+msgstr "ERREUR : Impossible de confirmer la version de base de données %s ; réessayez à partir de la dernière version confirmée."
 
 #: lib/installer.php
 #, php-format
 msgid "ERROR: Failed to find upgrade function for v%s"
-msgstr ""
+msgstr "ERREUR : Impossible de trouver la fonction de mise à niveau pour v%s"
 
 #: lib/installer.php
 #, php-format
 msgid "ERROR: Required upgrade file for v%s was not found."
-msgstr ""
+msgstr "ERREUR : Le fichier de mise à niveau requis pour v%s est introuvable."
 
 #: lib/installer.php
 msgid "EXAMPLE:"
@@ -13103,7 +13084,7 @@ msgstr "Profils de localisation d'erreurs"
 
 #: lib/installer.php
 msgid "Every Data Source RRDfile path is inside an allowed directory"
-msgstr ""
+msgstr "Chaque chemin RRDfile de source de données se trouve dans un répertoire autorisé"
 
 #: lib/installer.php
 #, php-format
@@ -13283,7 +13264,7 @@ msgstr "Il est essentiel que le serveur central Kadupul puisse communiquer via M
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Il est fortement recommandé de mettre à jour votre config.php pour activer cette fonctionnalité en décommentant la variable <b>$ input_whitelist</b> , puis en exécutant les trois options de script CLI ci-dessus une fois l'installation Web terminée."
+msgstr "Il est fortement recommandé de mettre à jour votre config.php pour activer cette fonctionnalité en décommentant la variable <b>$input_whitelist</b> , puis en exécutant les trois options de script CLI ci-dessus une fois l'installation Web terminée."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13311,7 +13292,7 @@ msgstr "Contrat de licence"
 
 #: lib/installer.php
 msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
-msgstr ""
+msgstr "Listez le répertoire qui les contient dans $config['rrd_additional_paths'] dans include/config.php, par exemple $config['rrd_additional_paths'] = array('/data/rrd');"
 
 #: lib/installer.php
 msgid "Local Database Connection Information"
@@ -13435,7 +13416,7 @@ msgstr "Modules optionnels"
 
 #: lib/installer.php
 msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
-msgstr ""
+msgstr "Ou déplacez-les dans le répertoire RRA avec structure_rra_paths.php --proceed : arrêtez le poller, indiquez leur répertoire dans $config['rrd_additional_paths'] afin que le script les accepte, exécutez-le, puis supprimez l'entrée. Ne les déplacez pas manuellement en effaçant le chemin de la source de données, ce qui créerait un nouveau RRDfile vide."
 
 #: lib/installer.php
 msgid "PHP - Module Support (Optional)"
@@ -13460,7 +13441,7 @@ msgstr "Recommandations PHP"
 
 #: lib/installer.php
 msgid "PHP is not in the server-configured installer allowlist or did not return the expected result"
-msgstr ""
+msgstr "PHP ne figure pas dans la liste blanche de l'installateur configurée sur le serveur ou n'a pas renvoyé le résultat attendu"
 
 #: lib/installer.php
 msgid "Path is not writable"
@@ -13475,9 +13456,8 @@ msgid "Please ensure the directory permissions below are correct before proceedi
 msgstr "Veuillez vous assurer que les permissions du répertoire ci-dessous sont correctes avant de continuer.  Pendant l'installation, ces répertoires doivent appartenir à l'utilisateur du serveur Web.  Ces modifications d'autorisation sont nécessaires pour permettre à l'installateur d'installer les paquets de modèles de périphériques qui incluent les fichiers XML et les fichiers script qui seront placés dans ces répertoires.  Si vous choisissez de ne pas installer les paquets, il existe un script cli'install_package.php' qui peut être utilisé depuis la ligne de commande une fois l'installation terminée."
 
 #: lib/installer.php
-#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Veuillez vous assurer que votre serveur web a un accès en lecture/écriture aux dossiers de Kadupul qui montrent les erreurs ci-dessous."
+msgstr "Veuillez vous assurer que votre serveur web dispose d'un accès en lecture/écriture aux dossiers Kadupul affichant des erreurs ci-dessous."
 
 #: lib/installer.php
 msgid "Please report this to the Kadupul Group."
@@ -13523,7 +13503,7 @@ msgstr "Appuyez sur'%s' puis cliquez sur'%s' pour terminer le processus d'instal
 
 #: lib/installer.php
 msgid "RRDfile Locations"
-msgstr ""
+msgstr "Emplacements des fichiers RRD"
 
 #: lib/installer.php
 msgid "Recommended"
@@ -13572,7 +13552,7 @@ msgstr "Écriture obligatoire au moment de l'installation uniquement"
 #: lib/installer.php
 #, php-format
 msgid "Required core database tables are missing: %s"
-msgstr ""
+msgstr "Des tables principales requises de la base de données sont manquantes : %s"
 
 #: lib/installer.php
 #, php-format
@@ -13593,7 +13573,7 @@ msgstr "Format de ligne"
 
 #: lib/installer.php
 msgid "Run it as an account with the Installation/Upgrades realm and no pending password change, for example with --as=<user>."
-msgstr ""
+msgstr "Exécutez-le avec un compte disposant du domaine Installation/Mises à niveau et sans changement de mot de passe en attente, par exemple avec --as=<user>."
 
 #: lib/installer.php
 msgid "Running first-time data query for local host"
@@ -13605,7 +13585,7 @@ msgstr "Mode Balayage"
 
 #: lib/installer.php
 msgid "See docs/rrd-path-containment.md for details."
-msgstr ""
+msgstr "Consultez docs/rrd-path-containment.md pour plus de détails."
 
 #: lib/installer.php
 msgid "Select default theme: "
@@ -13677,7 +13657,7 @@ msgstr "Merci de prendre le temps de télécharger et d'installer Kadupul, la so
 
 #: lib/installer.php
 msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
-msgstr ""
+msgstr "Les chemins des sources de données n'ont pas pu être lus ; les emplacements des fichiers RRD n'ont donc pas été vérifiés. Vérifiez-les après la mise à niveau à l'aide du journal du poller."
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
@@ -13713,11 +13693,11 @@ msgstr "L'installation ne peut pas continuer car aucun profil n'a pu être trouv
 
 #: lib/installer.php
 msgid "The installed database could not be checked because its table list could not be read."
-msgstr ""
+msgstr "La base de données installée n'a pas pu être vérifiée car sa liste de tables n'a pas pu être lue."
 
 #: lib/installer.php
 msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
-msgstr ""
+msgstr "La base de données installée n'a pas pu être vérifiée car la liste des tables principales n'a pas pu être lue depuis cacti.sql."
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
@@ -13725,16 +13705,15 @@ msgstr "La version installée de la base de données n’a pas pu être confirm�
 
 #: lib/installer.php
 msgid "The installer CLI interpreter is unavailable for refreshing the Symfony production cache."
-msgstr ""
+msgstr "L'interpréteur CLI de l'installateur est indisponible pour actualiser le cache de production Symfony."
 
 #: lib/installer.php
 msgid "The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying."
 msgstr "Le contrat de référence CDEF principal n’a pas pu être installé. Vérifiez le schéma et les privilèges du programme d’installation avant de réessayer."
 
 #: lib/installer.php
-#, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
-msgstr "La valeur spécifiée semble être différente dans la configuration en cours d'exécution par rapport au fichier INI."
+msgstr "La valeur spécifiée semble différente entre la configuration en cours d'exécution et le fichier INI."
 
 #: lib/installer.php
 #, php-format
@@ -13746,9 +13725,8 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Les variables qui doivent être définies dans le fichier config.php sont les suivantes :"
 
 #: lib/installer.php
-#, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "La façon dont fonctionne la liste blanche est que lorsque vous importez pour la première fois une méthode d'entrée de données, ou que vous réimportez une méthode d'entrée de données, et que le script et / ou les aguments changent de quelque manière que ce soit, la méthode d'entrée de données et toutes les sources de données correspondantes être immédiatement désactivé jusqu'à ce que l'administrateur valide la validité de la méthode de saisie des données."
+msgstr "Le principe de la liste blanche est que lorsque vous importez pour la première fois une méthode d'entrée de données, ou que vous la réimportez, et que le script ou ses arguments changent de quelque manière que ce soit, la méthode d'entrée de données ainsi que toutes les sources de données correspondantes sont immédiatement désactivées jusqu'à ce que l'administrateur valide la méthode d'entrée de données."
 
 #: lib/installer.php
 msgid "Then run the following within MySQL as an administrator:"
@@ -13814,11 +13792,11 @@ msgstr "Pour identifier les méthodes d'entrée de données dans cet état, nous
 
 #: lib/installer.php
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
-msgstr ""
+msgstr "Impossible d'actualiser le cache de production Symfony. Vérifiez les permissions du cache et exécutez bin/console cache:clear --env=prod --no-debug avant de réessayer la mise à niveau."
 
 #: lib/installer.php
 msgid "Unable to update application defaults."
-msgstr ""
+msgstr "Impossible de mettre à jour les paramètres par défaut de l'application."
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
@@ -13972,7 +13950,7 @@ msgstr "Votre collation de serveur ne semble PAS être entièrement compatible U
 #: lib/installer.php
 #, php-format
 msgid "and %d more"
-msgstr ""
+msgstr "et %d de plus"
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -14043,9 +14021,9 @@ msgid "Specific DN and Password required"
 msgstr "Nom d'utilisateur et mot de passe spécifiques requis"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to Connect to Server (%s)"
-msgstr "Connexion au serveur impossible"
+msgstr "Impossible de se connecter au serveur (%s)"
 
 #: lib/ldap.php
 #, php-format
@@ -14091,14 +14069,14 @@ msgid "Please upgrade to PHP 5.5.4+ for IPv6 support!"
 msgstr "Veuillez mettre à jour vers PHP 5.5.4+ pour le support IPv6 !"
 
 #: lib/ping.php
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
-msgstr "TCP ping : socket_connect(), raison : %s"
+msgstr "Échec du ping TCP : socket_connect(), motif : %s"
 
 #: lib/ping.php
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
-msgstr "TCP ping : socket_select() a échoué, raison : %s"
+msgstr "Échec du ping TCP : socket_select() a échoué, motif : %s"
 
 #: lib/ping.php
 #, php-format
@@ -14106,9 +14084,9 @@ msgid "TCP Ping Success (%s ms)"
 msgstr "TCP Ping Success (%s ms)"
 
 #: lib/ping.php
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "TCP Ping Success (%s ms)"
+msgstr "Ping TCP réussi, connexion refusée (%s ms)"
 
 #: lib/ping.php
 msgid "TCP ping timed out"
@@ -14148,7 +14126,7 @@ msgstr "Non indiqué"
 
 #: lib/plugins.php
 msgid "Plugin INFO must declare a valid compat version"
-msgstr ""
+msgstr "Le fichier INFO du plugin doit déclarer une version compat valide"
 
 #: lib/plugins.php
 msgid "Plugin cannot be installed."
@@ -14180,11 +14158,11 @@ msgstr "Le plugin dans le répertoire '%s' n'inclut pas de fonction de version '
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
-msgstr ""
+msgstr "La synchronisation a échoué lors de la réplication des définitions de sources de données. Consultez le journal pour plus de détails."
 
 #: lib/poller.php
 msgid "Synchronization failed. See the log for details."
-msgstr ""
+msgstr "La synchronisation a échoué. Consultez le journal pour plus de détails."
 
 #: lib/reports.php
 msgid "(No Graph Template)"
@@ -14284,9 +14262,9 @@ msgid "ERROR while writing XML file: %s"
 msgstr "ERREUR lors de l'écriture d'un fichier XML : %s"
 
 #: lib/rrd.php
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: RRD file does not exist: %s"
-msgstr "ERREUR : le fichier RRD %s n'est pas inscriptible"
+msgstr "ERREUR : Le fichier RRD n'existe pas : %s"
 
 #: lib/rrd.php
 #, php-format
@@ -14295,11 +14273,11 @@ msgstr "ERREUR : le fichier RRD %s n'est pas inscriptible"
 
 #: lib/rrd.php
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
-msgstr ""
+msgstr "ERREUR : Le graphique contient une valeur que RRDtool ne peut pas accepter."
 
 #: lib/rrd.php
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
-msgstr ""
+msgstr "ERREUR : Le chemin du fichier RRD de cette source de données se trouve en dehors du répertoire RRA."
 
 #: lib/rrd.php
 msgid "Error while parsing the XML of RRDtool dump"
@@ -14386,7 +14364,7 @@ msgstr "RRD minimum pour la source de données'%s' devrait être'%s'."
 
 #: lib/rrd.php
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
-msgstr ""
+msgstr "La restauration RRD a échoué ; le XML d'origine et celui de récupération ont été conservés. Consultez le journal de l'application."
 
 #: lib/rrd.php
 msgid "Root"
@@ -14398,7 +14376,7 @@ msgstr "Archives Round Robin"
 
 #: lib/rrd.php
 msgid "The Graph contains a value RRDtool cannot accept."
-msgstr ""
+msgstr "Le graphique contient une valeur que RRDtool ne peut pas accepter."
 
 #: lib/rrd.php
 #, php-format
@@ -14450,320 +14428,308 @@ msgstr "renommer %s en %s"
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage configuration requires attention"
-msgstr ""
+msgstr "La configuration du stockage RRD requiert votre attention"
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
+msgstr "Le stockage RRD n'est pas prêt pour un accès coordonné. Activez PHP POSIX et configurez les valeurs numériques rrd_maintenance_trusted_uids et rrd_maintenance_trusted_gids dans include/config.php pour chaque compte de service web et poller. Supprimez les permissions d'écriture pour tout le monde et vérifiez les répertoires parents du stockage. Consultez docs/testing/spikekill-safety.md avant la mise à niveau."
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
-msgstr ""
+msgstr "Le stockage RRD n'est pas prêt : le répertoire configuré doit exister et permettre à ce compte de service de créer, lire, écrire et supprimer des fichiers."
 
 #: lib/rrd_maintenance.php
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
-msgstr ""
+msgstr "La file d'attente poller_output doit utiliser InnoDB avant la collecte. Arrêtez tous les collecteurs, y compris les collecteurs distants, et exécutez cli/upgrade_database.php --migrate-poller-queue (ou convertissez poller_output vers InnoDB après une sauvegarde). Moteur observé : %s. Les échantillons conservés ne doivent pas être supprimés pour lever cette condition."
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr ""
+msgstr "indisponible"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
-msgstr ""
+msgstr "La réparation directe du schéma n'a pas pu être confirmée. Vérifiez le schéma cible et les privilèges de l'installateur avant de réessayer."
 
 #: lib/snmp.php
-#, fuzzy, php-format
+#, php-format
 msgid "SNMP Command is: %s"
-msgstr "Options SNMP [modifier : %s]"
+msgstr "La commande SNMP est : %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Avg"
-msgstr "Moy.:"
+msgstr "Moy."
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "CF"
-msgstr "CDEF"
+msgstr "CF"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "DS"
-msgstr "DES"
+msgstr "DS"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' does not exist."
-msgstr "XML : La version Kadupul n'existe pas."
+msgstr "FATAL : Le fichier '%s' n'existe pas."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: File '%s' is not a regular file."
-msgstr ""
+msgstr "FATAL : Le fichier '%s' n'est pas un fichier ordinaire."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr ""
+msgstr "FATAL : Le fichier '%s' n'est pas accessible en écriture par '%s'."
 
 #: lib/spikekill.php
 msgid "FATAL: Number of spikes to remove must be a positive integer"
-msgstr ""
+msgstr "FATAL : Le nombre de pics à supprimer doit être un entier positif"
 
 #: lib/spikekill.php
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
-msgstr ""
+msgstr "FATAL : La plage temporelle des valeurs aberrantes nécessite de spécifier outlier-start et outlier-end."
 
 #: lib/spikekill.php
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
-msgstr ""
+msgstr "FATAL : La plage temporelle des valeurs aberrantes exige que outlier-start soit inférieur à outlier-end."
 
 #: lib/spikekill.php
 msgid "FATAL: Percent deviation must be a positive floating point number."
-msgstr ""
+msgstr "FATAL : Le pourcentage d'écart doit être un nombre à virgule flottante positif."
 
 #: lib/spikekill.php
 msgid "FATAL: RRD source identity changed or could not be verified safely."
-msgstr ""
+msgstr "FATAL : L'identité de la source RRD a changé ou n'a pas pu être vérifiée de manière sûre."
 
 #: lib/spikekill.php
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
-msgstr ""
+msgstr "FATAL : Le stockage RRD est occupé. Réessayez une fois la collecte terminée."
 
 #: lib/spikekill.php
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
-msgstr ""
+msgstr "FATAL : Le stockage RRD n'est pas fiable ou est indisponible. Exécutez cli/upgrade_database.php --check-rrd-storage en tant que compte du service web et corrigez sa configuration de stockage."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
-msgstr ""
+msgstr "FATAL : La sauvegarde RRDfile de '%s' vers '%s' a ÉCHOUÉ !"
 
 #: lib/spikekill.php
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
-msgstr ""
+msgstr "FATAL : La commande RRDtool a échoué. Veuillez vérifier que le chemin de RRDtool est valide dans Paramètres->Chemins !"
 
 #: lib/spikekill.php
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
-msgstr ""
+msgstr "FATAL : RRDtool a renvoyé un vidage vide. Le fichier RRD n'a pas été modifié."
 
 #: lib/spikekill.php
 msgid "FATAL: Standard Deviation must be a positive integer."
-msgstr ""
+msgstr "FATAL : L'écart-type doit être un entier positif."
 
 #: lib/spikekill.php
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
-msgstr ""
+msgstr "FATAL : Arrêtez les processus externes d'écriture RRD et désactivez RRDCACHED_ADDRESS avant la suppression des pics."
 
 #: lib/spikekill.php
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "FATAL : La méthode de suppression 'float' nécessite de spécifier une date de début et une date de fin."
 
 #: lib/spikekill.php
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "FATAL : La méthode de suppression 'gapfill' nécessite de spécifier une date de début et une date de fin."
 
 #: lib/spikekill.php
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
-msgstr ""
+msgstr "FATAL : Le nombre de valeurs aberrantes à exclure doit être un entier positif."
 
 #: lib/spikekill.php
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr ""
+msgstr "FATAL : Les arguments outlier-start et outlier-end doivent être au format AAAA-MM-JJ HH:MM ou un horodatage Unix."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
-msgstr ""
+msgstr "FATAL : Impossible de sauvegarder '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr ""
+msgstr "FATAL : Impossible de restaurer '%s' depuis '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
-msgstr ""
+msgstr "FATAL : Impossible de créer en toute sécurité un fichier XML temporaire dans '%s' !"
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
-msgstr ""
+msgstr "FATAL : Impossible d'écrire le fichier XML '%s'"
 
 #: lib/spikekill.php
 msgid "FATAL: You must specify an RRDfile!"
-msgstr ""
+msgstr "FATAL : Vous devez spécifier un RRDfile !"
 
 #: lib/spikekill.php
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
-msgstr ""
+msgstr "FATAL : Vous devez spécifier 'last', 'avg' ou 'nan' comme méthode de remplacement."
 
 #: lib/spikekill.php
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
-msgstr ""
+msgstr "FATAL : Vous devez spécifier 'stddev', 'variance', 'float' ou 'fill' comme méthodes."
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Gap Fill"
-msgstr "Plage de remplissage de l'espace"
+msgstr "Comblement des trous"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "Max Kills:     %s"
-msgstr "Max tue par RRA"
+msgstr "Suppressions max : %s"
 
 #: lib/spikekill.php
 msgid "Max Kills:     Unlimited"
-msgstr ""
+msgstr "Suppressions max : Illimité"
 
 #: lib/spikekill.php
 msgid "MaxStdDev"
-msgstr ""
+msgstr "MaxStdDev"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "MaxValue"
-msgstr "Valeur"
+msgstr "MaxValue"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Method:        %s"
-msgstr ""
+msgstr "Méthode :          %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "MinStdDev"
-msgstr "Marche à sec StdDev"
+msgstr "MinStdDev"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "MinValue"
-msgstr "Valeur"
+msgstr "MinValue"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr ""
+msgstr "NOTE : Sauvegarde de '%s' vers '%s'"
 
 #: lib/spikekill.php
 msgid "NOTE: Dryrun requested.  No updates performed"
-msgstr ""
+msgstr "NOTE : Simulation (dryrun) demandée. Aucune mise à jour effectuée"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
-msgstr ""
+msgstr "NOTE : Limité à la fenêtre temporelle : %s à %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "NOTE: No Spikes Found."
-msgstr "Aucun site trouvé"
+msgstr "NOTE : Aucun pic trouvé."
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
-msgstr ""
+msgstr "NOTE : Aucun pic trouvé dans '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
-msgstr ""
+msgstr "NOTE : Aucun pic dans la fenêtre trouvé dans '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
-msgstr ""
+msgstr "NOTE : Réimportation de '%s' vers '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
-msgstr ""
+msgstr "NOTE : Recherche de pics dans le fichier XML '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
-msgstr ""
+msgstr "NOTE : Pics trouvés et corrigés. Total des pics : %s"
 
 #: lib/spikekill.php
 msgid "NonNan"
-msgstr ""
+msgstr "NonNan"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Num Outliers:  %s"
-msgstr ""
+msgstr "Nb val. aberr. :   %s"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile:       %s"
-msgstr "Fichiers RRD"
+msgstr "RRDfile :          %s"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "Repair Type:   %s"
-msgstr "Etapes de réparation [ %s ]"
+msgstr "Type réparation :  %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Samples"
-msgstr "Simple"
+msgstr "Échantillons"
 
 #: lib/spikekill.php
 msgid "Spike Kill Settings Used for Analysis/Correction"
-msgstr ""
+msgstr "Paramètres Spike Kill utilisés pour l'analyse/correction"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "Standard Devs: %s"
-msgstr "Écart type"
+msgstr "Écarts-types :     %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "StdDev"
-msgstr "Supprimer StdDev"
+msgstr "StdDev"
 
 #: lib/spikekill.php
 msgid "StdKilled"
-msgstr ""
+msgstr "StdKilled"
 
 #: lib/spikekill.php
 msgid "VarKilled"
-msgstr ""
+msgstr "VarKilled"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Variance"
-msgstr "Variable"
+msgstr "Variance"
 
 #: lib/spikekill.php
 msgid "Variance %%%:    %s %%%"
-msgstr ""
+msgstr "Variance %%% :    %s %%%"
 
 #: lib/spikekill.php
 msgid "WindKilled"
-msgstr ""
+msgstr "WindKilled"
 
 #: lib/spikekill.php
 msgid "WindSamples"
-msgstr ""
+msgstr "WindSamples"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Window End:    %s (%s)"
-msgstr ""
+msgstr "Fin fenêtre :      %s (%s)"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Window Range:  All"
-msgstr "Lié à Windows"
+msgstr "Plage fenêtre :    Tout"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Window Start:  %s (%s)"
-msgstr ""
+msgstr "Début fenêtre :    %s (%s)"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Non-Template"
@@ -14842,7 +14808,7 @@ msgstr "En fonction du nombre de connexions et de l'utilisation du collecteur de
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr ""
+msgstr "Si vous utilisez le Performance Booster de Kadupul avec un moteur de stockage en mémoire, vous devez veiller à vider le tampon du Performance Booster avant que le système ne manque d'espace pour les tables en mémoire. Cela se fait de deux manières : d'abord en réduisant la taille de votre colonne de sortie au strict nécessaire. Cette colonne se trouve dans les tables poller_output et poller_output_boost. La seconde mesure consiste à allouer davantage de mémoire aux tables en mémoire. Nous avons arbitrairement choisi une valeur recommandée de 10%% de la mémoire système, mais si vous utilisez des disques SSD ou disposez d'un système plus modeste, vous pouvez ignorer cette recommandation ou choisir un autre moteur de stockage. Vous pouvez consulter la consommation prévue des tables du Performance Booster sous Console -> Utilitaires système -> Afficher l'état de Boost."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14863,7 +14829,7 @@ msgstr "Si vos tables ont des index très volumineux, vous devez utiliser le Bar
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr ""
+msgstr "InnoDB conserve autant de tables et d'index que possible dans la mémoire système. Par conséquent, vous devez dimensionner innodb_buffer_pool suffisamment grand pour contenir la majeure partie des tables et des index en mémoire. Vérifier la taille du répertoire /var/lib/mysql/cacti vous aidera à déterminer cette valeur. Nous recommandons 25%% de la mémoire totale de votre système, mais vos besoins varieront selon la taille de votre système."
 
 #: lib/utility.php
 #, php-format
@@ -14914,9 +14880,8 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "C'est là que les métadonnées sont stockées. Si vous aviez beaucoup de tables, il serait utile d'augmenter ce nombre."
 
 #: lib/utility.php
-#, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "Ces paramètres doivent rester activés à moins que vos instances Kadupul ne s'exécutent sur ZFS ou FusionI / O qui ont tous deux une journalisation interne pour s'adapter aux pannes brusques du système. Cependant, si vous avez une très bonne alimentation et que vos systèmes tombent rarement en panne et que vous avez des sauvegardes, la désactivation de ce paramètre peut vous permettre d'augmenter de près de 50% les performances de la base de données."
+msgstr "Ce paramètre doit rester ACTIVÉ sauf si votre instance Kadupul fonctionne sur ZFS ou FusionI/O, qui disposent tous deux d'une journalisation interne pour faire face aux pannes système brutales. Toutefois, si vous disposez d'une alimentation très fiable, que vos systèmes tombent rarement en panne et que vous avez des sauvegardes, désactiver ce paramètre peut vous faire gagner près de 50% de performances sur la base de données."
 
 #: lib/utility.php
 msgid "Variable"
@@ -14928,7 +14893,7 @@ msgstr "Lors de l'exécution de sous-requêtes, ayant une taille de table tempor
 
 #: lib/utility.php
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr ""
+msgstr "Lors de l'exécution de jointures, si leur taille est inférieure à cette valeur, elles sont conservées en mémoire et ne sont jamais écrites dans un fichier temporaire. Comme il s'agit d'une allocation mémoire par connexion, il faut veiller à ne pas l'augmenter excessivement. La somme join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + mémoire principale MySQL/MariaDB doit rester inférieure à 80%. Si la recommandation est négative, vous devez diminuer ce paramètre et/ou sort_buffer_size jusqu'à ce que la recommandation tienne dans la mémoire autorisée."
 
 #: lib/utility.php
 #, php-format
@@ -14986,7 +14951,7 @@ msgstr "Un nom utile pour ce VDEF."
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr ""
+msgstr "Le lien externe d'ID '%s' avec le titre '%s' a tenté d'injecter une URL invalide et a été bloqué !"
 
 #: links.php
 msgid "Apply Filter"
@@ -15273,7 +15238,7 @@ msgstr "Niveau de Gravité"
 
 #: managers.php
 msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
-msgstr ""
+msgstr "Ce formulaire de récepteur de notifications SNMP a expiré. Ouvrez à nouveau le récepteur et utilisez son formulaire actuel."
 
 #: managers.php utilities.php
 msgid "Time"
@@ -15316,9 +15281,8 @@ msgid "Error in Package"
 msgstr "Erreur dans la requête des données."
 
 #: package_import.php
-#, fuzzy
 msgid "Error: Invalid file path."
-msgstr "Entrez un chemin d'accès valide"
+msgstr "Erreur : Chemin de fichier invalide."
 
 #: package_import.php
 msgid "File Differences for: "
@@ -15425,7 +15389,7 @@ msgstr "Échec du téléchargement ou de la validation du package"
 
 #: package_import.php
 msgid "Unable to create temporary package file."
-msgstr ""
+msgstr "Impossible de créer le fichier de paquet temporaire."
 
 #: package_import.php
 msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
@@ -15594,7 +15558,7 @@ msgstr "Impossible d'installer le plugin.  Les Plugins suivants doivent d'abord 
 #: plugins.php
 #, php-format
 msgid "Unable to Install Plugin: %s"
-msgstr ""
+msgstr "Impossible d'installer le plugin : %s"
 
 #: plugins.php
 #, php-format
@@ -15616,7 +15580,7 @@ msgstr "La désinstallation de ce Plugin supprimera toutes les données et param
 #: poller.php
 #, php-format
 msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
-msgstr ""
+msgstr "ERREUR : Le chemin du binaire PHP : %s est invalide pour l'ID de poller %d. Le poller ne peut pas continuer !"
 
 #: poller.php
 #, php-format
@@ -15646,9 +15610,8 @@ msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  Th
 msgstr "AVERTISSEMENT : %s n'est pas synchronisé avec l'intervalle d'interrogation pour l'identifiant d'interrogation %d !  L'intervalle d'interrogation est de %d secondes, avec un maximum de %d secondes, mais %d secondes se sont écoulées depuis le dernier sondage !"
 
 #: poller.php
-#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "AVERTISSEMENT : le cycle d'interrogation des Kadupul a dépassé l'intervalle d'interrogation de"
+msgstr "AVERTISSEMENT : Le cycle de collecte de Kadupul a dépassé l'intervalle du poller de "
 
 #: poller.php
 #, php-format
@@ -15674,9 +15637,9 @@ msgid "Kadupul Primary Admin"
 msgstr "Kadupul Primary Admin"
 
 #: poller_automation.php
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
-msgstr "AVERTISSEMENT : Base de données principale Kadupul hors ligne ou en récupération"
+msgstr "AVERTISSEMENT : La base de données principale Kadupul %s est hors ligne ou en cours de récupération"
 
 #: poller_boost.php
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
@@ -16012,7 +15975,7 @@ msgstr "Fuseau horaire"
 #: pollers.php
 #, php-format
 msgid "WARNING: Use of Data Collector Hostname '%s' is insecure!  Use either a fully qualified domain name or IP address to avoid equivalent hosts from other domains accessing this service"
-msgstr ""
+msgstr "AVERTISSEMENT : L'utilisation du nom d'hôte '%s' du collecteur de données n'est pas sécurisée ! Utilisez soit un nom de domaine complet (FQDN), soit une adresse IP afin d'éviter que des hôtes équivalents d'autres domaines n'accèdent à ce service"
 
 #: pollers.php
 #, php-format
@@ -16039,7 +16002,7 @@ msgstr "Archiver tous les fichiers RRD inconnus"
 
 #: rrdcleaner.php
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
+msgstr "Le nettoyage automatique local des fichiers RRD n'est pas disponible sous Windows. Arrêtez tous les processus d'écriture RRD avant le nettoyage manuel."
 
 #: rrdcleaner.php user_group_admin.php
 msgctxt "filter: reset"
@@ -16141,9 +16104,9 @@ msgid "Files Selected"
 msgstr "Fichiers sélectionnés"
 
 #: settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Paramètres des Kadupul (%s)%s"
+msgstr "Paramètres Kadupul (%s)%s"
 
 #: settings.php
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
@@ -16563,9 +16526,9 @@ msgid "Import Templates [ None selected imports all, Check to import selectively
 msgstr "Importer des modèles [ Aucun n'importe tout, cochez pour importer sélectivement ]"
 
 #: templates_import.php
-#, fuzzy, php-format
+#, php-format
 msgid "Met: %d"
-msgstr "Satisfaction"
+msgstr "Satisfaits : %d"
 
 #: templates_import.php
 msgid "Not Readable"
@@ -16590,9 +16553,9 @@ msgid "The Template XML file \"%s\" validation failed"
 msgstr "La validation du fichier XML modèle « %s » a échoué"
 
 #: templates_import.php
-#, fuzzy, php-format
+#, php-format
 msgid "Unmet: %d"
-msgstr "Non satisfait"
+msgstr "Non satisfaits : %d"
 
 #: tree.php
 msgid "A Tree must be locked in order to be edited."
@@ -16832,9 +16795,8 @@ msgid "Unpublished Trees cannot be viewed from the Graph tab"
 msgstr "Les arbres non publiés ne peuvent pas être visualisés à partir de l'onglet Graphiques"
 
 #: tree.php
-#, fuzzy
 msgid "You do not have permission to modify this tree."
-msgstr "Permission refusée. Vous n'êtes pas autorisé à exécuter l'action demandée."
+msgstr "Vous n'avez pas l'autorisation de modifier cette arborescence."
 
 #: tree.php
 msgctxt "ordering of tree items"
@@ -16863,12 +16825,11 @@ msgstr "numérique"
 
 #: user_admin.php
 msgid "< 1 Month Ago"
-msgstr ""
+msgstr "Il y a < 1 mois"
 
 #: user_admin.php
-#, fuzzy
 msgid "< 1 Week Ago"
-msgstr "1 Semaine"
+msgstr "Il y a < 1 semaine"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
@@ -16888,17 +16849,15 @@ msgstr "<Note:</b> La politique graphique du système est'Restrictive', ce qui s
 
 #: user_admin.php
 msgid "> 1 Month Ago"
-msgstr ""
+msgstr "Il y a > 1 mois"
 
 #: user_admin.php
-#, fuzzy
 msgid "> 2 Months Ago"
-msgstr "%d mois"
+msgstr "Il y a > 2 mois"
 
 #: user_admin.php
-#, fuzzy
 msgid "> 4 Months Ago"
-msgstr "%d mois"
+msgstr "Il y a > 4 mois"
 
 #: user_admin.php user_group_admin.php
 msgid "ALLOW"
@@ -17051,9 +17010,8 @@ msgid "Graph Policy"
 msgstr "Politique en matière de graphiques"
 
 #: user_admin.php
-#, fuzzy
 msgid "Group"
-msgstr "Groupes"
+msgstr "Groupe"
 
 #: user_admin.php
 msgid "Group Membership"
@@ -17146,7 +17104,7 @@ msgstr "Révoquer l'accès"
 
 #: user_admin.php
 msgid "Set a new password to move this account to the Local realm."
-msgstr ""
+msgstr "Définissez un nouveau mot de passe pour déplacer ce compte vers le domaine Local."
 
 #: user_admin.php user_group_admin.php
 #, php-format
@@ -17221,9 +17179,8 @@ msgid "User Settings %s"
 msgstr "Réglages utilisateur %s"
 
 #: user_admin.php
-#, fuzzy
 msgid "User not found."
-msgstr "Fichier non trouvé"
+msgstr "Utilisateur introuvable."
 
 #: user_admin.php
 msgid "User(s) to update:"
@@ -17243,15 +17200,15 @@ msgstr "Vous n'êtes pas autorisé à changer votre mot de passe."
 
 #: user_admin.php
 msgid "You are not allowed to disable the primary administrator account"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à désactiver le compte administrateur principal"
 
 #: user_admin.php
 msgid "You are not allowed to overwrite the current login account"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à écraser le compte de connexion actuel"
 
 #: user_admin.php
 msgid "You are not allowed to overwrite the primary administrator account"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à écraser le compte administrateur principal"
 
 #: user_domains.php
 msgid "CN FullName"
@@ -17571,11 +17528,11 @@ msgstr "Montrer l'écran des graphiques par défaut."
 
 #: user_group_admin.php
 msgid "The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -"
-msgstr ""
+msgstr "Le préfixe de groupe ne peut contenir que des lettres, des chiffres, des espaces et les caractères . _ \\ @ -"
 
 #: user_group_admin.php
 msgid "The copied Group Name must not exceed 20 characters, including the numeric suffix."
-msgstr ""
+msgstr "Le nom de groupe copié ne doit pas dépasser 20 caractères, suffixe numérique compris."
 
 #: user_group_admin.php
 msgid "The name of this Group."

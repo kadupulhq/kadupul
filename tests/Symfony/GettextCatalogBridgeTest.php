@@ -69,7 +69,7 @@ final class GettextCatalogBridgeTest extends TestCase
         $files = array_map(static fn(string $path): string => basename($path, '.po'), glob(self::ROOT . '/locales/po/*.po') ?: []);
         sort($files);
         self::assertSame($locales, $files);
-        self::assertCount(23, $locales);
+        self::assertCount(40, $locales);
         $keys = [];
         foreach (glob(self::ROOT . '/config/translations/*.en.yaml') ?: [] as $source) {
             $keys = array_merge($keys, array_map('strval', array_keys(Yaml::parseFile($source))));
@@ -115,7 +115,7 @@ final class GettextCatalogBridgeTest extends TestCase
         yield 'missing msgid with placeholder falls back to English' => ['ru_RU', 'inventory', 'Page %page%', ['%page%' => 3], 'Page 3'];
         yield 'printf conversion becomes the Symfony placeholder' => ['de_DE', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Alle 6 Stunden'];
         yield 'named placeholder through %s' => ['de_DE', 'graph_definition', 'VDEFs [edit: %name%]', ['%name%' => '<x>'], 'VDEFs [bearbeiten: <x>]'];
-        yield 'space-flag conversion is not guessed' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 Day'];
+        yield 'Hebrew count message matches fixed %d placeholder' => ['he_IL', 'data_source_profile', '%count% Day', ['%count%' => 1], '1 יום'];
         yield 'plural form for n != 1 locale' => ['de_DE', 'palette', 'Delete Colors', [], 'Farben löschen'];
         yield 'single plural form locale' => ['ja_JP', 'palette', 'Delete Colors', [], '色を削除'];
         yield 'n > 1 plural rule keeps English' => ['pt_BR', 'palette', 'Delete Colors', [], 'Delete Colors'];
@@ -187,6 +187,9 @@ final class GettextCatalogBridgeTest extends TestCase
                 msgid "Width %d"
                 msgstr "Breite %5d"
 
+                msgid "Spaced %d"
+                msgstr "Abstand % d"
+
                 msgid "Extra %s"
                 msgstr "%s %s"
 
@@ -218,6 +221,7 @@ final class GettextCatalogBridgeTest extends TestCase
             self::assertSame('Last %load%%', $catalog->translate('Load %load%'));
             self::assertNull($catalog->translate('Load %load%%'));
             self::assertNull($catalog->translate('Width %width%'));
+            self::assertNull($catalog->translate('Spaced %count%'));
             self::assertNull($catalog->translate('Extra %value%'));
             self::assertNull($catalog->translate('Pipe'));
             self::assertNull($catalog->translate('Untranslated'));
@@ -276,14 +280,20 @@ final class GettextCatalogBridgeTest extends TestCase
             $checked++;
         }
         self::assertGreaterThan(0, $checked);
-        // Arabic selects the same form index as gettext (see the table above), but
-        // no shipped Arabic plural entry has all six forms, so none is bridged.
-        $arabic = array_filter((new PoFileLoader())->load(self::ROOT . '/locales/po/ar-SA.po', 'ar_SA')->all('messages'), static fn(string $message, string|int $id): bool => substr_count((string) $id, '|') === 1, ARRAY_FILTER_USE_BOTH);
-        self::assertNotEmpty($arabic);
-        foreach ($arabic as $message) {
+        // Arabic selects the same six form indices as gettext through Symfony.
+        $arabicRule = 'n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5';
+        $arabicChecked = 0;
+        foreach ((new PoFileLoader())->load(self::ROOT . '/locales/po/ar-SA.po', 'ar_SA')->all('messages') as $id => $message) {
             $parts = explode('|', $message);
-            self::assertTrue(count($parts) !== 6 || in_array('', $parts, true));
+            if (substr_count((string) $id, '|') !== 1 || count($parts) !== 6 || in_array('', $parts, true) || count(array_unique($parts)) < 2 || preg_grep('/^\s*(\w+:|[\[\]{])/', $parts) !== []) {
+                continue;
+            }
+            foreach ([0, 1, 2, 3, 10, 11, 99, 100, 101, 102, 103, 111, 1000] as $n) {
+                self::assertSame(trim($parts[self::evaluate($arabicRule, $n)]), $identity->trans($message, ['%count%' => $n], null, 'ar_SA'), $id . ' ' . $n);
+            }
+            $arabicChecked++;
         }
+        self::assertGreaterThan(0, $arabicChecked);
         self::assertSame(['Delete Colors' => 'Delete Colors'], [self::translator()->trans('Delete Colors', [], 'palette', 'ar_SA') => self::translator()->trans('Delete Colors', ['%count%' => 3], 'palette', 'ar_SA')]);
     }
 
@@ -292,6 +302,7 @@ final class GettextCatalogBridgeTest extends TestCase
     {
         yield 'English region' => ['en-GB', 'en'];
         yield 'legacy French' => ['fr_FR', 'fr'];
+        yield 'African French' => ['fr-SN', 'fr_SN'];
         yield 'French region' => ['fr-CA', 'fr'];
         yield 'Brazilian hyphen' => ['pt-BR', 'pt_BR'];
         yield 'Brazilian underscore lower case' => ['pt_br', 'pt_BR'];

@@ -15,6 +15,12 @@ final class PresentationPageNativeCoverageTest extends TestCase
 {
     use \PestCodeCoverageCompatibility;
 
+    /**
+     * Pages whose editable form moved to Symfony/Twig. The legacy page renders
+     * their settings read-only, so there is no control oracle to retain.
+     */
+    private const READ_ONLY_PAGES = array('data_queries-edit');
+
     #[\PHPUnit\Framework\Attributes\DataProvider('pages')]
     public function testNativePageRetainsRecordedFormControlsLabelsLinksAndIcons(string $name, array $scenario): void
     {
@@ -103,12 +109,6 @@ final class PresentationPageNativeCoverageTest extends TestCase
         }
     }
 
-    /**
-     * Pages whose editable form moved to Symfony/Twig. The legacy page renders
-     * their settings read-only, so there is no control oracle to retain.
-     */
-    private const READ_ONLY_PAGES = array('data_queries-edit');
-
     public function testReadOnlyPagesRecordNoControls(): void
     {
         $root = dirname(__DIR__, 2);
@@ -117,8 +117,20 @@ final class PresentationPageNativeCoverageTest extends TestCase
             self::assertArrayHasKey($name, $scenarios['pages']);
             $golden = file_get_contents($root . '/tests/Golden/forms/pages/' . $name . '.html');
             self::assertNotFalse($golden);
-            // If the page regains a control it must return to the native-page oracle above.
+            // This reads the recorded golden, not the live page. The live render is held to this golden
+            // by LegacyFormGoldenTest, so a page that regains a control fails there first and must then
+            // return to the native-page oracle above. contracts()['controls'] only sees controls inside a
+            // <form>, so also reject any form or control element anywhere in the document.
             self::assertSame(array(), PresentationPageEvidence::contracts($golden)['controls'], $name);
+            $document = new \DOMDocument();
+            $prior = libxml_use_internal_errors(true);
+            try {
+                self::assertTrue($document->loadHTML('<?xml encoding="UTF-8">' . $golden));
+            } finally {
+                libxml_clear_errors();
+                libxml_use_internal_errors($prior);
+            }
+            self::assertSame(0, (new \DOMXPath($document))->query('//form | //input | //select | //textarea | //button')->length, $name);
         }
     }
 

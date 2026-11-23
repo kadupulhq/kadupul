@@ -43,8 +43,10 @@ are not edited or used to fabricate execution data.
 Sonar is selective during modernization. With `ENABLE_SONAR=true`, full analysis
 runs on main pushes, same-repository `sonar/*` and `release/*` PR sources, and
 manual dispatch with `run_sonar=true`. Normal development and consolidation
-branches skip it. Fork and Dependabot PRs retain ordinary CI without provider
-secrets. Disabled analysis is an intentional skip, never a passing quality gate.
+branches skip it. Merge groups run the legacy unit coverage shards and their
+merge without analysis, and `Sonar Quality Gate` requires them there. Fork and
+Dependabot PRs retain ordinary CI without provider secrets. Disabled analysis
+is an intentional skip, never a passing quality gate.
 
 The existing complete coverage pipeline, source registrations, exclusions and
 profile are unchanged. Requested analyses fail visibly on missing credentials,

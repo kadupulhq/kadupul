@@ -305,6 +305,12 @@ if ($auth_method != 0) {
                 exit;
             }
 
+            // Private feature workers let their authenticated parent render the
+            // denial. Keep custom_denied and its reskin/exit contract above.
+            if (PHP_SAPI === 'cli' && defined('KADUPUL_BROWSER_WORKER_REALM_DENIAL') && KADUPUL_BROWSER_WORKER_REALM_DENIAL === true) {
+                throw new \Kadupul\Platform\Infrastructure\Legacy\BrowserWorkerRealmDenied();
+            }
+
             if (isset($_SERVER['HTTP_REFERER'])) {
                 $goBack = "<td colspan='2' class='center'>[<a href='" . validate_redirect_url($_SERVER['HTTP_REFERER'], $_SERVER['SCRIPT_NAME']) . "'>" . __('Return') . "</a> | <a href='" . $config['url_path'] . "logout.php'>" . __('Login Again') . "</a>]</td>";
             } elseif ($auth_method != 2 && $auth_method > 0) {

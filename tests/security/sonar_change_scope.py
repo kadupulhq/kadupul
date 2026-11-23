@@ -28,6 +28,13 @@ class Scope:
     full_analysis: bool
     reason: str
     changed_files: int = 0
+    # The legacy unit shards and their merge, without Sonar analysis. Full
+    # analysis always includes them.
+    legacy_only: bool = False
+
+    @property
+    def legacy_coverage(self) -> bool:
+        return self.full_analysis or self.legacy_only
 
 
 def git(checkout: Path, *arguments: str, input_bytes: bytes | None = None) -> bytes:
@@ -195,12 +202,14 @@ def event_policy(event_name: str, event: dict, enable: str, all_prs: str,
         return Scope(selected, "analysis-branch" if selected else "development-branch")
     if event_name == "merge_group":
         # GitHub builds merge groups only from this repository's queued pull
-        # requests, so they follow the trusted pull request switch.
+        # requests, so they follow the trusted pull request switch. The legacy
+        # unit shards always run: ordinary pull requests skip them, so the
+        # queue is the last point that catches a change breaking main's shards.
         if not isinstance(event.get("merge_group"), dict):
             raise ValueError("Merge group identity is unavailable")
         if flags[1] == "true":
             return Scope(True, "merge-queue")
-        return Scope(False, "merge-queue-not-enforced")
+        return Scope(False, "merge-queue-legacy-coverage", legacy_only=True)
     return Scope(False, "unsupported-event")
 
 
@@ -228,7 +237,7 @@ def main() -> int:
         else:
             scope = event_policy(args.event_name, event, args.enable_sonar, args.all_prs,
                                  args.run_sonar, args.repository, args.actor, args.ref)
-            if scope.full_analysis:
+            if scope.legacy_coverage:
                 if git(args.checkout, "rev-parse", "HEAD").decode("ascii").strip() != args.expected_checkout:
                     raise ValueError("Requested Sonar checkout does not match the event")
     except (OSError, UnicodeError, ValueError, RecursionError, subprocess.SubprocessError):
@@ -238,9 +247,12 @@ def main() -> int:
         scope = Scope(True, "unreadable-event")
     with args.output.open("a", encoding="utf-8") as output:
         output.write(f"full_analysis={'true' if scope.full_analysis else 'false'}\n")
+        output.write(f"legacy_coverage={'true' if scope.legacy_coverage else 'false'}\n")
         output.write(f"reason={scope.reason}\nchanged_files={scope.changed_files}\n")
     if scope.full_analysis:
         print(f"Full Sonar coverage and analysis required: {scope.reason}")
+    elif scope.legacy_coverage:
+        print(f"Legacy unit coverage required without Sonar analysis: {scope.reason}")
     else:
         print(f"Sonar intentionally skipped: {scope.reason}; "
               "no analysis or passing quality-gate result is claimed")

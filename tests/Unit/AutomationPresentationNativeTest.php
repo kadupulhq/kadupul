@@ -53,11 +53,13 @@ test('automation controllers render real SQL records and preserve declared mutat
                 libxml_use_internal_errors($prior);
             }
             $xpath = new \DOMXPath($document);
-            $forms = $xpath->query('//form[@action="' . $case['page'] . '"]')->length;
             if ($case['form'] ?? true) {
-                expect($forms)->toBeGreaterThan(0);
+                expect($xpath->query('//form[@action="' . $case['page'] . '"]')->length)->toBeGreaterThan(0);
             } else {
-                expect($forms)->toBe(0);
+                // Read-only pages must render no form of any action and no form control, so a regained
+                // form_start() or draw_edit_form() fails here even if it posts elsewhere. The Return
+                // link is a type="button" input and is not a form control.
+                expect(array_map(static fn(\DOMNode $n): string => $n->ownerDocument->saveHTML($n), iterator_to_array($xpath->query('//form | //input[not(@type="button")] | //select | //textarea | //button[not(@type="button")]'))))->toBe([]);
             }
             expect($document->textContent)->toContain($case['heading']);
             foreach ($case['labels'] ?? [] as $label) {
