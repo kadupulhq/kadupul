@@ -174,6 +174,8 @@ try {
             failureAssert($database, $lateDdl);
             if ($lateDdl) {
                 $database->exec("GRANT ALTER ON `$schema`.aggregate_graphs TO $fixtureAccount");
+                // The retry runs on to 1.2.41, which adds the baseline moment columns.
+                $database->exec("GRANT ALTER ON `$schema`.alert_baseline_sample TO $fixtureAccount");
             } else {
                 $database->exec('ALTER TABLE data_input_data DROP INDEX data_input_field_id');
             }
@@ -264,6 +266,8 @@ try {
             failureAssert($database, $lateDdl);
             if ($lateDdl) {
                 $database->exec("GRANT ALTER ON `$schema`.aggregate_graphs TO $fixtureAccount");
+                // The retry runs on to 1.2.41, which adds the baseline moment columns.
+                $database->exec("GRANT ALTER ON `$schema`.alert_baseline_sample TO $fixtureAccount");
             } else {
                 $database->exec('ALTER TABLE data_input_data DROP INDEX data_input_field_id');
             }
