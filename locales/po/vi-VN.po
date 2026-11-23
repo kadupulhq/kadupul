@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-12 14:51-0800\n"
+"POT-Creation-Date: 2026-11-23 13:57-0800\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -57,9 +57,8 @@ msgid "Aggregate Graph %s"
 msgstr "Đồ thị tổng hợp %s"
 
 #: aggregate_graphs.php
-#, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "Cài đặt đồ thị tổng hợp"
+msgstr "Đồ thị tổng hợp được truy cập không tồn tại"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
@@ -92,19 +91,19 @@ msgstr "Mẫu tổng hợp:"
 
 #: aggregate_graphs.php
 msgid "Aggregate graph regeneration failed. Graph regeneration could not be confirmed; review the settings before retrying."
-msgstr ""
+msgstr "Tạo lại đồ thị tổng hợp thất bại. Không thể xác nhận việc tạo lại đồ thị; hãy xem lại cài đặt trước khi thử lại."
 
 #: aggregate_graphs.php
 msgid "Aggregate graph regeneration failed. Other graph settings may already have been saved; review them before retrying."
-msgstr ""
+msgstr "Tạo lại đồ thị tổng hợp thất bại. Các cài đặt đồ thị khác có thể đã được lưu; hãy xem lại chúng trước khi thử lại."
 
 #: aggregate_graphs.php
 msgid "Aggregate graph settings could not be confirmed. Other settings may already have been saved; review them before retrying."
-msgstr ""
+msgstr "Không thể xác nhận cài đặt đồ thị tổng hợp. Các cài đặt khác có thể đã được lưu; hãy xem lại chúng trước khi thử lại."
 
 #: aggregate_graphs.php aggregate_templates.php
 msgid "Aggregate items could not be saved. Other graph settings may already have been saved; review them before retrying."
-msgstr ""
+msgstr "Không thể lưu các mục tổng hợp. Các cài đặt đồ thị khác có thể đã được lưu; hãy xem lại chúng trước khi thử lại."
 
 #: aggregate_graphs.php graph_view.php graphs.php
 msgid "Align"
@@ -519,9 +518,8 @@ msgid "Aggregate Template [new]"
 msgstr "Mẫu tổng hợp [mới]"
 
 #: aggregate_templates.php
-#, fuzzy
 msgid "Aggregate Template not found."
-msgstr "Không tìm thấy mẫu tổng hợp"
+msgstr "Không tìm thấy Mẫu tổng hợp."
 
 #: aggregate_templates.php include/global_arrays.php
 msgid "Aggregate Templates"
@@ -533,11 +531,11 @@ msgstr "Các mẫu tổng hợp đang sử dụng không thể bị xóa. Trong 
 
 #: aggregate_templates.php
 msgid "Aggregate graph regeneration failed. Template settings may already have been saved; review them before retrying."
-msgstr ""
+msgstr "Tạo lại đồ thị tổng hợp thất bại. Các cài đặt mẫu có thể đã được lưu; hãy xem lại chúng trước khi thử lại."
 
 #: aggregate_templates.php
 msgid "Aggregate template settings could not be confirmed. Review the graph settings before retrying."
-msgstr ""
+msgstr "Không thể xác nhận cài đặt mẫu tổng hợp. Hãy xem lại cài đặt đồ thị trước khi thử lại."
 
 #: aggregate_templates.php
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
@@ -582,7 +580,7 @@ msgstr "Giao diện"
 #: auth_changepassword.php
 #, php-format
 msgid "Cannot be reused for %d password changes"
-msgstr "Không thể được sử dụng lại để thay đổi mật khẩu% d"
+msgstr "Không thể được sử dụng lại để thay đổi mật khẩu %d"
 
 #: auth_changepassword.php include/global_form.php lib/functions.php
 #: lib/html.php
@@ -604,7 +602,7 @@ msgstr "Buộc thay đổi mật khẩu"
 #: auth_changepassword.php
 #, php-format
 msgid "Must be at least %d characters in length"
-msgstr "Phải có ít nhất% d ký tự"
+msgstr "Phải có ít nhất %d ký tự"
 
 #: auth_changepassword.php
 msgid "Must include at least 1 number"
@@ -643,14 +641,12 @@ msgid "Passwords do Not Match"
 msgstr "Mất khẩu không hợp lệ"
 
 #: auth_changepassword.php
-#, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
+msgstr "Vui lòng nhập mật khẩu hiện tại và mật khẩu<br>Kadupul mới của bạn."
 
 #: auth_changepassword.php
-#, fuzzy
 msgid "Please enter your new Kadupul password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
+msgstr "Vui lòng nhập mật khẩu Kadupul mới của bạn."
 
 #: auth_changepassword.php auth_profile.php graphs_new.php lib/html_form.php
 #: lib/html_graph.php lib/html_tree.php settings.php
@@ -659,7 +655,7 @@ msgstr "Lưu"
 
 #: auth_changepassword.php
 msgid "There are problems with the Change Password page.  Contact your Kadupul administrator right away."
-msgstr ""
+msgstr "Có sự cố với trang Đổi mật khẩu. Hãy liên hệ ngay với quản trị viên Kadupul của bạn."
 
 #: auth_changepassword.php auth_login.php include/global_settings.php
 #: lib/functions.php
@@ -688,9 +684,9 @@ msgid "Your new passwords do not match, please retype."
 msgstr "Mật khẩu mới của bạn không khớp, vui lòng nhập lại."
 
 #: auth_login.php
-#, fuzzy, php-format
+#, php-format
 msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Administrator."
-msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
+msgstr "Từ chối truy cập! ID người dùng khách %s không tồn tại. Vui lòng liên hệ Quản trị viên của bạn."
 
 #: auth_login.php lib/auth.php
 msgid "Access Denied!  Login Failed."
@@ -701,9 +697,8 @@ msgid "Access Denied!  User account disabled."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
 #: auth_login.php
-#, fuzzy
 msgid "Access Denied! User account locked."
-msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
+msgstr "Từ chối truy cập! Tài khoản người dùng đã bị khóa."
 
 #: auth_login.php
 msgid "Enter your Username and Password below"
@@ -895,14 +890,14 @@ msgid "Description"
 msgstr "Mô tả"
 
 #: automation_devices.php
-#, fuzzy, php-format
+#, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Đã thêm vào Kadupul"
+msgstr "Đã thêm Thiết bị %s vào Kadupul"
 
 #: automation_devices.php
-#, fuzzy, php-format
+#, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "Chưa được thêm vào Kadupul"
+msgstr "Chưa thêm Thiết bị %s vào Kadupul"
 
 #: automation_devices.php
 msgid "Device Name"
@@ -1015,7 +1010,7 @@ msgstr "Thời gian hoạt động"
 
 #: automation_graph_rules.php
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr ""
+msgstr "Đã phát hiện nỗ lực thực hiện SQL injection trong tự động hóa Đồ thị"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Apply requested action"
@@ -1077,7 +1072,7 @@ msgstr "Bản sao"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Edit Rule Settings"
-msgstr ""
+msgstr "Chỉnh sửa cài đặt Quy tắc"
 
 #: automation_graph_rules.php automation_networks.php automation_tree_rules.php
 #: data_sources.php include/global_arrays.php include/global_settings.php
@@ -1141,7 +1136,7 @@ msgstr "Lựa chọn quy tắc [chỉnh sửa: %s]"
 
 #: automation_graph_rules.php automation_tree_rules.php
 msgid "Rule not found."
-msgstr ""
+msgstr "Không tìm thấy quy tắc."
 
 #: automation_graph_rules.php
 msgid "The internal database ID for this rule.  Useful in performing debugging and automation."
@@ -1153,7 +1148,7 @@ msgstr "Tên của quy tắc này."
 
 #: automation_graph_rules.php
 msgid "This Graph Rule form has expired. Open the rule again and use its current form."
-msgstr ""
+msgstr "Biểu mẫu Quy tắc đồ thị này đã hết hạn. Hãy mở lại quy tắc và sử dụng biểu mẫu hiện tại của nó."
 
 #: automation_graph_rules.php automation_tree_rules.php graphs.php
 msgid "Title Format"
@@ -1178,7 +1173,7 @@ msgstr "%d phút"
 #: include/global_settings.php pollers.php
 #, php-format
 msgid "%d Seconds"
-msgstr "% d Giây"
+msgstr "%d Giây"
 
 #: automation_networks.php
 #, php-format
@@ -1311,7 +1306,7 @@ msgstr "Trạng thái hiện tại của Khám phá Mạng này"
 
 #: automation_networks.php
 msgid "This Network Discovery Range form has expired. Open the network again and use its current form."
-msgstr ""
+msgstr "Biểu mẫu Phạm vi khám phá mạng này đã hết hạn. Hãy mở lại mạng và sử dụng biểu mẫu hiện tại của nó."
 
 #: automation_networks.php pollers.php
 msgid "Threads"
@@ -1379,7 +1374,7 @@ msgstr "Quy tắc SNMP"
 
 #: automation_snmp.php
 msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
-msgstr ""
+msgstr "Biểu mẫu Bộ tùy chọn SNMP này đã hết hạn. Hãy mở lại Bộ tùy chọn SNMP và sử dụng biểu mẫu hiện tại của nó."
 
 #: automation_snmp.php
 msgid "V1 Entries"
@@ -1399,7 +1394,7 @@ msgstr "tên"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr ""
+msgstr "Đã phát hiện nỗ lực thực hiện SQL injection trong tự động hóa Cây"
 
 #: automation_tree_rules.php
 #, php-format
@@ -1435,9 +1430,8 @@ msgid "Hook into Tree"
 msgstr "Móc vào cây"
 
 #: automation_tree_rules.php
-#, fuzzy
 msgid "Invalid Field Name specified for Tree Rule Item."
-msgstr "Tên trường sẽ được sử dụng cho Mục quy tắc này."
+msgstr "Tên trường không hợp lệ được chỉ định cho Mục quy tắc cây."
 
 #: automation_tree_rules.php include/global_form.php
 msgid "Leaf Item Type"
@@ -1461,7 +1455,7 @@ msgstr "Root"
 
 #: automation_tree_rules.php
 msgid "This Tree Rule form has expired. Open the rule again and use its current form."
-msgstr ""
+msgstr "Biểu mẫu Quy tắc cây này đã hết hạn. Hãy mở lại quy tắc và sử dụng biểu mẫu hiện tại của nó."
 
 #: automation_tree_rules.php
 msgid "This Type"
@@ -1508,12 +1502,12 @@ msgstr "CẢNH BÁO: Kadupul Daemon PID ["
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
-msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
+msgstr "Cài đặt lưu vào Trình thu thập dữ liệu %d Không thành công."
 
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Cài đặt lưu vào Trình thu thập dữ liệu% d Không thành công."
+msgstr "Cài đặt lưu vào Trình thu thập dữ liệu %d Không thành công."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -1883,7 +1877,7 @@ msgstr "Kết quả"
 
 #: data_debug.php
 msgid "Run All"
-msgstr ""
+msgstr "Chạy tất cả"
 
 #: data_debug.php
 msgid "Run Check"
@@ -1891,7 +1885,7 @@ msgstr "Chạy kiểm tra"
 
 #: data_debug.php
 msgid "Run checks on currently filtered Data Sources and preserve other results"
-msgstr ""
+msgstr "Chạy kiểm tra trên các Nguồn dữ liệu đang được lọc hiện tại và giữ nguyên các kết quả khác"
 
 #: data_debug.php
 msgid "Second Check TimeStamp"
@@ -1927,7 +1921,7 @@ msgstr "Người dùng đã yêu cầu Gỡ lỗi."
 
 #: data_debug.php lib/dsdebug.php
 msgid "The requested Data Source is not available."
-msgstr ""
+msgstr "Nguồn dữ liệu được yêu cầu không khả dụng."
 
 #: data_debug.php lib/html.php utilities.php
 msgid "User"
@@ -2222,7 +2216,7 @@ msgstr[0] "Xóa truy vấn dữ liệu"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
-msgstr ""
+msgstr "Chỉnh sửa cài đặt Truy vấn dữ liệu"
 
 #: data_queries.php
 msgid "Equation"
@@ -2321,7 +2315,7 @@ msgstr "Phương thức nhập dữ liệu được sử dụng để thu thập
 #: data_queries.php
 #, php-format
 msgid "The Data Query ID [%s] that you are trying to Edit does not exist.  Please run the repair_database.php CLI script to resolve this database issue."
-msgstr ""
+msgstr "Truy vấn dữ liệu ID [%s] mà bạn đang cố Chỉnh sửa không tồn tại. Vui lòng chạy script CLI repair_database.php để giải quyết sự cố cơ sở dữ liệu này."
 
 #: data_queries.php graph_templates.php
 msgid "The internal ID for this Graph Template.  Useful when performing automation or debugging."
@@ -2341,7 +2335,7 @@ msgstr "Số lượng biểu đồ sử dụng truy vấn dữ liệu này."
 
 #: data_queries.php
 msgid "This Data Query form has expired. Open the data query again and use its current form."
-msgstr ""
+msgstr "Biểu mẫu Truy vấn dữ liệu này đã hết hạn. Hãy mở lại truy vấn dữ liệu và sử dụng biểu mẫu hiện tại của nó."
 
 #: data_queries.php include/global_form.php
 msgid "XML Path"
@@ -2496,9 +2490,9 @@ msgid "Edit Device."
 msgstr "Chỉnh sửa thiết bị"
 
 #: data_sources.php
-#, fuzzy, php-format
+#, php-format
 msgid "Edit Graph: '%s'."
-msgstr "Chỉnh sửa mẫu biểu đồ."
+msgstr "Chỉnh sửa Đồ thị: '%s'."
 
 #: data_sources.php
 msgid "Enable Data Source"
@@ -2833,13 +2827,12 @@ msgid "RRDtool Graph Syntax"
 msgstr "Cú pháp đồ thị RRDtool"
 
 #: graph.php
-#, fuzzy
 msgid "The Graph you requested does not exist."
-msgstr "Nguồn dữ liệu không tồn tại."
+msgstr "Đồ thị bạn yêu cầu không tồn tại."
 
 #: graph.php
 msgid "This Graph has no stored data to zoom into."
-msgstr ""
+msgstr "Đồ thị này không có dữ liệu lưu trữ để thu phóng."
 
 #: graph.php lib/html.php
 msgid "Utility View"
@@ -2860,7 +2853,7 @@ msgstr "Vài giây còn lại."
 #: graph_realtime.php
 #, php-format
 msgid "%d seconds left."
-msgstr "% d giây còn lại."
+msgstr "%d giây còn lại."
 
 #: graph_realtime.php
 msgid "Kadupul Real-time Graphing"
@@ -2954,9 +2947,8 @@ msgid "Graph Template [new]"
 msgstr "Mẫu biểu đồ [mới]"
 
 #: graph_templates.php
-#, fuzzy
 msgid "Graph Template not found."
-msgstr "Không tìm thấy mẫu đồ thị"
+msgstr "Không tìm thấy Mẫu đồ thị."
 
 #: graph_templates.php graphs_new.php include/global_arrays.php
 #: lib/html_tree.php user_admin.php user_group_admin.php
@@ -3218,11 +3210,11 @@ msgstr "<graph_title> Bản mẫu"
 
 #: graphs.php
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
+msgstr "Đầu vào mục đồ thị chứa giá trị không hợp lệ."
 
 #: graphs.php
 msgid "Aggregate graph creation could not be confirmed. Review the graph settings before retrying."
-msgstr ""
+msgstr "Không thể xác nhận việc tạo đồ thị tổng hợp. Hãy xem lại cài đặt đồ thị trước khi thử lại."
 
 #: graphs.php
 msgid "Apply Automation Rules"
@@ -3241,9 +3233,9 @@ msgid "Choose a Graph Template and click 'Continue' to change the Graph Template
 msgstr "Chọn Mẫu biểu đồ và nhấp vào &#39;Tiếp tục&#39; để thay đổi Mẫu biểu đồ cho (các) biểu đồ sau. Xin lưu ý rằng chỉ các Mẫu biểu đồ tương thích sẽ được hiển thị. Tương thích được xác định bởi những người có Nguồn dữ liệu giống hệt nhau."
 
 #: graphs.php
-#, fuzzy, php-format
+#, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Chọn một mẫu biểu đồ để áp dụng cho biểu đồ này. Xin lưu ý rằng bạn chỉ có thể thay đổi Mẫu biểu đồ thành Mẫu biểu đồ tương thích 100%, có nghĩa là nó bao gồm các nguồn dữ liệu giống hệt nhau."
+msgstr "Chọn một Mẫu đồ thị để áp dụng cho Đồ thị này. Xin lưu ý rằng bạn chỉ có thể thay đổi sang một Mẫu đồ thị tương thích 100%%, nghĩa là bao gồm các Nguồn dữ liệu giống hệt nhau."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3345,9 +3337,9 @@ msgid "Graph Items [new]"
 msgstr "Mục đồ thị [mới]"
 
 #: graphs.php
-#, fuzzy, php-format
+#, php-format
 msgid "Graph Management [ %s ]"
-msgstr "Quản lý đồ thị"
+msgstr "Quản lý đồ thị [ %s ]"
 
 #: graphs.php
 msgid "Graph Management [ All Devices ]"
@@ -3376,7 +3368,7 @@ msgstr "Biểu đồ [mới]"
 
 #: graphs.php spikekill.php
 msgid "Graph access denied"
-msgstr ""
+msgstr "Truy cập đồ thị bị từ chối"
 
 #: graphs.php
 msgid "Leave the Data Source(s) untouched."
@@ -3436,11 +3428,11 @@ msgstr "ID cơ sở dữ liệu nội bộ cho biểu đồ này. Hữu ích khi
 
 #: graphs.php
 msgid "The selected Device is not available."
-msgstr ""
+msgstr "Thiết bị đã chọn không khả dụng."
 
 #: graphs.php
 msgid "The selected Tree is not available."
-msgstr ""
+msgstr "Cây đã chọn không khả dụng."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
@@ -3511,9 +3503,9 @@ msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%
 msgstr "Lỗi phân tích cú pháp tệp XML tài nguyên truy vấn dữ liệu cho Truy vấn dữ liệu '%s' với id '%s'"
 
 #: graphs_new.php
-#, fuzzy, php-format
+#, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "Lỗi phân tích cú pháp tệp XML tài nguyên truy vấn dữ liệu cho Truy vấn dữ liệu '%s' với id '%s'"
+msgstr "Lỗi phân tích cú pháp tệp XML tài nguyên Truy vấn dữ liệu cho Truy vấn dữ liệu '%s' có id '%s'. Tên trường '%s' thiếu thuộc tính 'direction'"
 
 #: graphs_new.php
 #, php-format
@@ -3549,9 +3541,9 @@ msgid "New Graphs for None Host Type"
 msgstr "Đồ thị mới cho Không có Loại máy chủ"
 
 #: graphs_new.php
-#, fuzzy, php-format
+#, php-format
 msgid "New Graphs for [ %s ] (%s %s)"
-msgstr "Đồ thị mới cho [ %s]"
+msgstr "Đồ thị mới cho [ %s ] (%s %s)"
 
 #: graphs_new.php
 msgid "New Graphs for [ All Devices ]"
@@ -3592,7 +3584,7 @@ msgstr "Chỉ mục bị vô hiệu hóa do Truy vấn Dữ liệu không có M�
 
 #: graphs_new.php
 msgid "The requested device is not available."
-msgstr ""
+msgstr "Thiết bị được yêu cầu không khả dụng."
 
 #: graphs_new.php
 msgid "This Data Query returned 0 rows, perhaps there was a problem executing this Data Query."
@@ -3605,12 +3597,12 @@ msgstr "Bạn có thể chạy Truy vấn dữ liệu này trong chế độ g�
 #: help.php
 #, php-format
 msgid "The document page '%s' could not be reached locally."
-msgstr ""
+msgstr "Không thể truy cập cục bộ trang tài liệu '%s'."
 
 #: help.php
 #, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr ""
+msgstr "CẢNH BÁO: Trang Kadupul:%s cho Người dùng:%s Đã tạo ra Lỗi Nghiêm trọng %d!"
 
 #: host_templates.php
 msgid "Add Data Query"
@@ -3741,7 +3733,7 @@ msgstr "Đồng bộ hóa thiết bị với (các) mẫu thiết bị"
 
 #: host_templates.php
 msgid "The Class of this Device Template.  The Class Name should be representative of it's function."
-msgstr ""
+msgstr "Lớp của Mẫu thiết bị này. Tên lớp phải thể hiện đúng chức năng của nó."
 
 #: host_templates.php
 msgid "The internal database ID for this Device Template.  Useful when performing automation or debugging."
@@ -3757,7 +3749,7 @@ msgstr "Số lượng thiết bị sử dụng Mẫu thiết bị này."
 
 #: host_templates.php include/global_arrays.php
 msgid "Unassigned"
-msgstr ""
+msgstr "Chưa gán"
 
 #: include/auth.php
 msgid "FATAL: You must be logged in to access this area of Kadupul."
@@ -3804,16 +3796,16 @@ msgstr "Bạn phải đăng nhập để truy cập vào khu vực này của Ka
 
 #: include/global.php
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
-msgstr ""
+msgstr "Bộ thu thập dữ liệu chính đã chuyển sang Trạng thái Ngoại tuyến hoặc Đang khôi phục"
 
 #: include/global.php
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Lần cuối cùng Bộ thu thập dữ liệu này được đồng bộ hóa hoàn toàn với trang web chính của Kadupul."
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "%0.1f Minutes"
-msgstr "%d phút"
+msgstr "%0.1f Phút"
 
 #: include/global_arrays.php
 #, php-format
@@ -3828,12 +3820,12 @@ msgstr "%d Ngày"
 #: include/global_arrays.php
 #, php-format
 msgid "%d GByte"
-msgstr "% d GByte"
+msgstr "%d GByte"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d GBytes"
-msgstr "% d GByte"
+msgstr "%d GByte"
 
 #: include/global_arrays.php
 #, php-format
@@ -3848,57 +3840,57 @@ msgstr "%d giờ"
 #: include/global_arrays.php
 #, php-format
 msgid "%d Lines"
-msgstr "% d Dòng"
+msgstr "%d Dòng"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d MBytes"
-msgstr "% d MByte"
+msgstr "%d MByte"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Megabytes"
-msgstr "% d Megabyte"
+msgstr "%d Megabyte"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Min"
-msgstr "% d tối thiểu"
+msgstr "%d tối thiểu"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Month"
-msgstr "% d Tháng"
+msgstr "%d Tháng"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Months"
-msgstr "% d Tháng"
+msgstr "%d Tháng"
 
 #: include/global_arrays.php
 #, php-format
 msgid "%d Threads"
-msgstr "% d Chủ đề"
+msgstr "%d Chủ đề"
 
 #: include/global_arrays.php rrdcleaner.php
 #, php-format
 msgid "%d Week"
-msgstr "% d Tuần"
+msgstr "%d Tuần"
 
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
 msgid "%d Weeks"
-msgstr "% d Tuần"
+msgstr "%d Tuần"
 
 #: include/global_arrays.php include/global_settings.php rrdcleaner.php
 #, php-format
 msgid "%d Year"
-msgstr "% d Năm"
+msgstr "%d Năm"
 
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "%d Years"
-msgstr "% d Năm"
+msgstr "%d Năm"
 
 #: include/global_arrays.php lib/boost.php
 #, php-format
@@ -4020,13 +4012,12 @@ msgid "AES-256-C"
 msgstr "AES-256"
 
 #: include/global_arrays.php lib/html.php
-#, fuzzy
 msgid "About Kadupul"
-msgstr "Về Kadupul"
+msgstr "Giới thiệu về Kadupul"
 
 #: include/global_arrays.php
 msgid "Access Points, Controllers"
-msgstr ""
+msgstr "Điểm truy cập, Bộ điều khiển"
 
 #: include/global_arrays.php lib/api_automation.php lib/html_reports.php
 #: plugins.php
@@ -4394,7 +4385,7 @@ msgstr "Truy vấn dữ liệu không được tìm thấy trong khi xuất. Vui
 
 #: include/global_arrays.php
 msgid "Data Source Item field holds a value the Data Source form would reject."
-msgstr ""
+msgstr "Trường Mục nguồn dữ liệu chứa giá trị mà biểu mẫu Nguồn dữ liệu sẽ từ chối."
 
 #: include/global_arrays.php include/global_form.php package_import.php
 msgid "Data Source Profile"
@@ -4502,29 +4493,29 @@ msgid "English"
 msgstr "Tiếng Anh"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "Every %d Day"
-msgstr "Mỗi% 1 ngày"
+msgstr "Mỗi %d ngày"
 
 #: include/global_arrays.php include/global_settings.php
 #, php-format
 msgid "Every %d Hours"
-msgstr "Mỗi% d giờ"
+msgstr "Mỗi %d giờ"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Minutes"
-msgstr "Mỗi% d Phút"
+msgstr "Mỗi %d Phút"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Seconds"
-msgstr "Mỗi% d giây"
+msgstr "Mỗi %d giây"
 
 #: include/global_arrays.php
 #, php-format
 msgid "Every %d Weeks"
-msgstr "Mỗi% d tuần"
+msgstr "Mỗi %d tuần"
 
 #: include/global_arrays.php
 msgid "Every 1 Hour"
@@ -4572,7 +4563,7 @@ msgstr "Liên kết Bên ngoài"
 
 #: include/global_arrays.php
 msgid "Facilities Related"
-msgstr ""
+msgstr "Liên quan đến cơ sở vật chất"
 
 #: include/global_arrays.php
 msgctxt "A short textual representation of a month, three letters"
@@ -4734,7 +4725,7 @@ msgstr "Giờ"
 
 #: include/global_arrays.php
 msgid "Hypervisor Related"
-msgstr ""
+msgstr "Liên quan đến Hypervisor"
 
 #: include/global_arrays.php
 msgid "ICMP Ping"
@@ -4742,7 +4733,7 @@ msgstr "ICMP Ping"
 
 #: include/global_arrays.php
 msgid "ILO, IPMI, iDrac, etc."
-msgstr ""
+msgstr "ILO, IPMI, iDrac, v.v."
 
 #: include/global_arrays.php
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -4840,24 +4831,20 @@ msgid "Justified"
 msgstr "正当化された"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "Kadupul Help"
-msgstr "Trang chủ Kadupul"
+msgstr "Trợ giúp Kadupul"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "Kadupul Related"
-msgstr "Báo cáo Kadupul"
+msgstr "Liên quan đến Kadupul"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "Kadupul Settings"
 msgstr "Cài đặt Kadupul"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "Kadupul log purged successfully"
-msgstr "Nhật ký Kadupul đã thanh trừng thành công"
+msgstr "Đã dọn sạch nhật ký Kadupul thành công"
 
 #: include/global_arrays.php
 msgid "Keep Graph Types"
@@ -4892,29 +4879,29 @@ msgid "LOW - Statistics and Errors"
 msgstr "THẤP - Thống kê và lỗi"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "Last %d Days"
-msgstr "% D ngày cuối cùng"
+msgstr "%d ngày qua"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "Last %d Hours"
-msgstr "% D giờ cuối cùng"
+msgstr "%d giờ qua"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "Last %d Months"
-msgstr "% D tháng trước"
+msgstr "%d tháng qua"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "Last %d Weeks"
-msgstr "% D tuần trước"
+msgstr "%d tuần qua"
 
 #: include/global_arrays.php
-#, fuzzy, php-format
+#, php-format
 msgid "Last %d Years"
-msgstr "% D năm trước"
+msgstr "%d năm qua"
 
 #: include/global_arrays.php
 msgid "Last Day"
@@ -4946,7 +4933,7 @@ msgstr "Trái"
 
 #: include/global_arrays.php
 msgid "Licensing Related"
-msgstr ""
+msgstr "Liên quan đến cấp phép"
 
 #: include/global_arrays.php
 msgid "Light"
@@ -4954,7 +4941,7 @@ msgstr "Sáng"
 
 #: include/global_arrays.php
 msgid "Linux Related"
-msgstr ""
+msgstr "Liên quan đến Linux"
 
 #: include/global_arrays.php
 msgid "List Mode"
@@ -5073,7 +5060,7 @@ msgstr "Nhiều tên miền LDAP / AD"
 
 #: include/global_arrays.php
 msgid "NAS/SAN Related"
-msgstr ""
+msgstr "Liên quan đến NAS/SAN"
 
 #: include/global_arrays.php
 msgid "NONE - Syslog Only if Selected"
@@ -5219,7 +5206,7 @@ msgstr "Tiếng Bồ Đào Nha (Brazil)"
 
 #: include/global_arrays.php
 msgid "Power Related PDUs/STS, etc."
-msgstr ""
+msgstr "Liên quan đến nguồn điện PDU/STS, v.v."
 
 #: include/global_arrays.php lib/html_filter.php lib/html_graph.php
 #: lib/html_tree.php
@@ -5335,9 +5322,8 @@ msgid "SHA-256"
 msgstr "SHA-256"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "SHA-384"
-msgstr "SHA-392"
+msgstr "SHA-384"
 
 #: include/global_arrays.php
 msgid "SHA-512"
@@ -5495,7 +5481,7 @@ msgstr "Cài đặt Spike Kill"
 
 #: include/global_arrays.php
 msgid "Storage Related"
-msgstr ""
+msgstr "Liên quan đến lưu trữ"
 
 #: include/global_arrays.php
 msgid "Suggested Field Name was not entered.  Please enter a field name and try again."
@@ -5547,9 +5533,8 @@ msgid "TCP Ping"
 msgstr "Ping Ping"
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "TCP Ping Closed"
-msgstr "Ping Ping"
+msgstr "TCP Ping bị đóng"
 
 #: include/global_arrays.php
 msgid "Take Ownership"
@@ -5671,7 +5656,7 @@ msgstr "Ping UDP"
 
 #: include/global_arrays.php
 msgid "UPS Related"
-msgstr ""
+msgstr "Liên quan đến UPS"
 
 #: include/global_arrays.php
 msgid "Unable to Add Graphs.  Current user is not owner"
@@ -5706,9 +5691,8 @@ msgid "Unable to establish MySQL connection with Remote Data Collector."
 msgstr "Không thể thiết lập kết nối MySQL với Trình thu thập dữ liệu từ xa."
 
 #: include/global_arrays.php
-#, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
-msgstr "Không thể tăng kích thước của trường mật khẩu, xin vui lòng kiểm tra quyền của người dùng db"
+msgstr "Không thể tăng kích thước trường mật khẩu, vui lòng kiểm tra quyền của người dùng cơ sở dữ liệu"
 
 #: include/global_arrays.php
 msgid "Unexpected error occurred"
@@ -5805,7 +5789,7 @@ msgstr "Xác nhận tất cả"
 #: include/global_arrays.php
 #, php-format
 msgid "Version %d"
-msgstr "Phiên bản% d"
+msgstr "Phiên bản %d"
 
 #: include/global_arrays.php
 msgid "Vietnamese"
@@ -5845,7 +5829,7 @@ msgstr "Xác thực cơ bản web"
 
 #: include/global_arrays.php
 msgid "Web Server Related"
-msgstr ""
+msgstr "Liên quan đến máy chủ Web"
 
 #: include/global_arrays.php
 msgctxt "A textual representation of a day, three letters"
@@ -5878,7 +5862,7 @@ msgstr "Khi thời gian hoạt động của thiết bị SNMP bị lùi, Chỉ 
 
 #: include/global_arrays.php
 msgid "Windows Related"
-msgstr ""
+msgstr "Liên quan đến Windows"
 
 #: include/global_arrays.php
 msgid "XML parse error."
@@ -6073,9 +6057,9 @@ msgid "secs"
 msgstr "giây"
 
 #: include/global_form.php
-#, fuzzy, php-format
+#, php-format
 msgid "%d OID"
-msgstr "OID tối đa"
+msgstr "%d OID"
 
 #: include/global_form.php
 #, php-format
@@ -6083,14 +6067,14 @@ msgid "%d OID's"
 msgstr "%d OID của"
 
 #: include/global_form.php
-#, fuzzy, php-format
+#, php-format
 msgid "%d Repetitions"
-msgstr "Tùy chọn lưới"
+msgstr "%d Lần lặp"
 
 #: include/global_form.php
-#, fuzzy, php-format
+#, php-format
 msgid "%d Repitition"
-msgstr "Lưu giữ nhật ký"
+msgstr "%d Lần lặp"
 
 #: include/global_form.php
 msgid "A CDEF (math) function to apply to this item on the graph or legend."
@@ -6267,7 +6251,7 @@ msgstr "Theo mặc định, chiều rộng của tab là 40 pixel, sử dụng t
 #: include/global_form.php
 #, php-format
 msgid "By default, the format of the axis labels gets determined automatically.  If you want to do this yourself, use this option with the same %lf arguments you know from the PRINT and GPRINT commands."
-msgstr "Theo mặc định, định dạng của nhãn trục được xác định tự động. Nếu bạn muốn tự làm điều này, hãy sử dụng tùy chọn này với cùng các đối số% lf bạn biết từ các lệnh PRINT và GPRINT."
+msgstr "Theo mặc định, định dạng của nhãn trục được xác định tự động. Nếu bạn muốn tự làm điều này, hãy sử dụng tùy chọn này với cùng các đối số %lf bạn biết từ các lệnh PRINT và GPRINT."
 
 #: include/global_form.php
 msgid "CDEF Function"
@@ -6512,9 +6496,9 @@ msgid "Field Type"
 msgstr "Loại trường"
 
 #: include/global_form.php
-#, fuzzy, php-format
+#, php-format
 msgid "Field [%s]"
-msgstr "Lĩnh vực]"
+msgstr "Trường [%s]"
 
 #: include/global_form.php
 msgid "Fill in the SNMP read community for this device."
@@ -6932,11 +6916,11 @@ msgstr "Sắp xếp lại đồ thị."
 
 #: include/global_form.php package_import.php
 msgid "Replace Data Query Suggested Value Patterns"
-msgstr ""
+msgstr "Thay thế mẫu giá trị đề xuất của Truy vấn dữ liệu"
 
 #: include/global_form.php
 msgid "Replace Data Source and Graph Template Suggested Value Records for Data Queries.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
-msgstr ""
+msgstr "Thay thế Bản ghi giá trị đề xuất của Nguồn dữ liệu và Mẫu đồ thị cho Truy vấn dữ liệu. Đồ thị và Nguồn dữ liệu sẽ nhận tên mới sau khi Lập lại chỉ mục Truy vấn dữ liệu hoặc bằng cách sử dụng quy trình Thay thế giá trị đề xuất bắt buộc."
 
 #: include/global_form.php
 msgid "Replacement Pattern"
@@ -7315,9 +7299,8 @@ msgid "The type of graph that is generated; PNG, GIF or SVG.  The selection of g
 msgstr "Loại biểu đồ được tạo ra; PNG, GIF hoặc SVG. Việc lựa chọn loại hình ảnh đồ thị phụ thuộc rất RRDtool."
 
 #: include/global_form.php
-#, fuzzy
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "Các loại gói ping để gửi. <br> <i>LƯU Ý: ICMP trên Linux / UNIX yêu cầu quyền root.</i>"
+msgstr "Loại gói tin ping cần gửi. <br><i>LƯU Ý: ICMP trên Linux/UNIX yêu cầu quyền root.</i> <br><i>LƯU Ý: TCP Ping Đã đóng - Ngay cả khi tcp ping không thành công, thiết bị vẫn có thể được coi là HOẠT ĐỘNG (UP).</i>"
 
 #: include/global_form.php
 msgid "The width (in pixels) of the graph area within the graph. This area does not include the legend, axis legends, or title."
@@ -7429,7 +7412,7 @@ msgstr "Khi dữ liệu được thu thập, dữ liệu cho trường này sẽ
 
 #: include/global_form.php
 msgid "When enabled, the selected Auto Scale Option determines which limits RRDtool uses: --alt-autoscale ignores both limits, --alt-autoscale-max keeps the lower limit, --alt-autoscale-min keeps the upper limit, and --alt-autoscale (accepting both limits) keeps both limits. When disabled, the configured lower and upper limits are used directly. Rigid Boundaries controls whether values outside those limits expand the graph range."
-msgstr ""
+msgstr "Khi được bật, Tùy chọn Tự động chia tỷ lệ được chọn sẽ xác định giới hạn nào RRDtool sử dụng: --alt-autoscale bỏ qua cả hai giới hạn, --alt-autoscale-max giữ giới hạn dưới, --alt-autoscale-min giữ giới hạn trên và --alt-autoscale (chấp nhận cả hai giới hạn) giữ cả hai giới hạn. Khi tắt, các giới hạn dưới và trên đã cấu hình được sử dụng trực tiếp. Ranh giới cứng (Rigid Boundaries) kiểm soát việc các giá trị nằm ngoài các giới hạn đó có mở rộng phạm vi đồ thị hay không."
 
 #: include/global_form.php
 msgid "When viewing a Graph based upon the RRA in question, the default Timespan to show for that Graph."
@@ -7437,11 +7420,11 @@ msgstr "Khi xem Biểu đồ dựa trên RRA được đề cập, Timespan mặ
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-% d% H :%CÔ&quot;). Xem thêm - chiều dài. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
+msgstr "Khi bạn thiết lập ghi nhãn trục trái, hãy áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-%d% H :%CÔ&quot;). Xem thêm - chiều dài. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Khi bạn thiết lập ghi nhãn trục phải, áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-% d% H :%CÔ&quot;). Xem thêm --units-length và --right-format-format. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
+msgstr "Khi bạn thiết lập ghi nhãn trục phải, áp dụng quy tắc cho định dạng dữ liệu. Các định dạng được hỗ trợ bao gồm &quot;số&quot; trong đó dữ liệu được coi là số, &quot;dấu thời gian&quot; nơi các giá trị được hiểu là dấu thời gian UNIX (số giây kể từ tháng 1 năm 1970) và được biểu thị bằng định dạng strftime (mặc định là &quot;% Y-% m-%d% H :%CÔ&quot;). Xem thêm --units-length và --right-format-format. Cuối cùng &quot;thời lượng&quot; trong đó các giá trị được hiểu là thời lượng tính bằng mili giây. Định dạng tuân theo các quy tắc của valstrfduration đủ điều kiện IN / GPRINT."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7490,37 +7473,37 @@ msgstr "T"
 #: include/global_settings.php
 #, php-format
 msgid "%d Attempts"
-msgstr "% d Nỗ lực"
+msgstr "%d Nỗ lực"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Changes"
-msgstr "% d Thay đổi"
+msgstr "%d Thay đổi"
 
 #: include/global_settings.php lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Columns"
-msgstr "% d Cột"
+msgstr "%d Cột"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d High/Low Samples"
-msgstr "% d Mẫu cao / thấp"
+msgstr "%d Mẫu cao / thấp"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Processes"
-msgstr "% d Quá trình"
+msgstr "%d Quá trình"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Spikes"
-msgstr "% d gai"
+msgstr "%d gai"
 
 #: include/global_settings.php
 #, php-format
 msgid "%d Standard Deviations"
-msgstr "% d Độ lệch chuẩn"
+msgstr "%d Độ lệch chuẩn"
 
 #: include/global_settings.php
 #, php-format
@@ -7533,18 +7516,18 @@ msgid "%s Minute"
 msgstr "%s Phút"
 
 #: include/global_settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s Thread"
-msgstr "% d Chủ đề"
+msgstr "%s Luồng"
 
 #: include/global_settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s Threads"
-msgstr "% d Chủ đề"
+msgstr "%s Luồng"
 
 #: include/global_settings.php
 msgid ".  This is limited by the php setting 'max_input_vars', currently:"
-msgstr ""
+msgstr ". Giá trị này bị giới hạn bởi thiết lập php 'max_input_vars', hiện tại là:"
 
 #: include/global_settings.php
 msgid "1 Attempt"
@@ -7628,7 +7611,7 @@ msgstr "Nâng cao"
 
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
-msgstr ""
+msgstr "Sau số ngày này, giờ làm việc sẽ không được thêm vào đồ thị. <br/>Khuyến nghị: 62 ngày"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -7640,25 +7623,23 @@ msgstr "Cho phép đồ thị mở rộng đến tương lai"
 
 #: include/global_settings.php
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Cho phép JavaScript nội tuyến không có Nonce"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "Tên của Phương thức nhập dữ liệu này."
+msgstr "Cho phép siêu ký tự không an toàn trong Phương thức nhập dữ liệu"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "Trạng thái thu thập dữ liệu từ xa:"
+msgstr "Cho phép HTTPS không an toàn cho Bộ thu thập dữ liệu từ xa"
 
 #: include/global_settings.php
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Cho phép cả unsafe-eval và JavaScript nội tuyến không có Nonce"
 
 #: include/global_settings.php
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr ""
+msgstr "Cho phép sử dụng Chứng chỉ tự ký và cho phép tên máy chủ của Chứng chỉ khác với tên của Bộ thu thập dữ liệu từ xa."
 
 #: include/global_settings.php
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Kadupul. If disabled, the default language will be in force until the user elects another language."
@@ -7690,7 +7671,7 @@ msgstr "Thư mục lưu trữ"
 
 #: include/global_settings.php
 msgid "At what frequency do you wish to Re-Index all Devices.  This Re-Index will occur at midnight at the frequency that you select."
-msgstr ""
+msgstr "Bạn muốn Lập lại chỉ mục tất cả Thiết bị với tần suất nào. Việc Lập lại chỉ mục này sẽ diễn ra vào lúc nửa đêm theo tần suất bạn chọn."
 
 #: include/global_settings.php
 msgid "At what frequency would you like to rotate your logs?"
@@ -7814,7 +7795,7 @@ msgstr "Tăng nhật ký gỡ lỗi"
 
 #: include/global_settings.php
 msgid "Boost Processing Mode"
-msgstr ""
+msgstr "Chế độ xử lý Boost"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
@@ -7826,16 +7807,15 @@ msgstr "Theo mẫu / Truy vấn dữ liệu"
 
 #: include/global_settings.php
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr ""
+msgstr "Theo mặc định, trợ giúp trang Kadupul nằm tại kadupul.org. Tuy nhiên, nếu hệ thống của bạn không có kết nối Internet, bạn có thể tải tài liệu xuống cục bộ ở định dạng HTML và lưu trữ trong thư mục 'docs' của máy chủ Kadupul. Nếu bạn chỉ muốn sử dụng vị trí cục bộ cho tài liệu trợ giúp trang, hãy đánh dấu hộp kiểm này."
 
 #: include/global_settings.php
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
 msgstr "Theo mặc định, Trình thu thập dữ liệu Kadupul chính sẽ lưu trữ toàn bộ trang web và bổ sung vào Bộ đệm tài nguyên. Sau đó, định kỳ Trình thu thập dữ liệu từ xa sẽ cập nhật các chủ đề với bất kỳ cập nhật nào từ Trình thu thập dữ liệu Kadupul chính. Resource Cache này về cơ bản cho phép Trình thu thập dữ liệu từ xa tự nâng cấp. Nếu bạn không muốn sử dụng tùy chọn này, bạn có thể tắt nó bằng cài đặt này."
 
 #: include/global_settings.php
-#, fuzzy
 msgid "CSP Violation Report URI"
-msgstr "Báo cáo xương rồng"
+msgstr "URI báo cáo vi phạm CSP"
 
 #: include/global_settings.php
 msgid "Cache Directory"
@@ -7871,7 +7851,7 @@ msgstr "MySQL - Hỗ trợ TimeZone"
 
 #: include/global_settings.php
 msgid "Color to use for business hours"
-msgstr ""
+msgstr "Màu sử dụng cho giờ làm việc"
 
 #: include/global_settings.php
 msgid "Community"
@@ -7886,9 +7866,8 @@ msgid "Content-Security Alternate Sources"
 msgstr "Nguồn thay thế bảo mật nội dung"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Content-Security Script Policy"
-msgstr "Nguồn thay thế bảo mật nội dung"
+msgstr "Chính sách Script Bảo mật Nội dung (CSP)"
 
 #: include/global_settings.php
 msgid "Controls disabling check for increasing OID while walking OID tree."
@@ -7896,7 +7875,7 @@ msgstr "Kiểm soát vô hiệu hóa kiểm tra để tăng OID trong khi đi b�
 
 #: include/global_settings.php
 msgid "Controls the script-src CSP policy. The Nonce Mode - Reporting Only choice reports inline scripts that lack a nonce without blocking them. The implementation also supports an enforcing nonce mode through direct configuration, but this mode is not offered here because many built-in pages and plugins still use inline scripts without nonces. Enabling enforcement before those scripts are migrated can break pages and plugins. Use CactiSecureHeaders::getNonceAttribute() when adding inline scripts."
-msgstr ""
+msgstr "Kiểm soát chính sách CSP script-src. Lựa chọn Chế độ Nonce - Chỉ báo cáo sẽ báo cáo các script nội tuyến thiếu nonce mà không chặn chúng. Bản triển khai cũng hỗ trợ chế độ nonce bắt buộc thông qua cấu hình trực tiếp, nhưng chế độ này không được cung cấp ở đây vì nhiều trang và plugin tích hợp sẵn vẫn sử dụng script nội tuyến không có nonce. Bật chế độ bắt buộc trước khi di chuyển các script đó có thể làm hỏng trang và plugin. Hãy sử dụng CactiSecureHeaders::getNonceAttribute() khi thêm script nội tuyến."
 
 #: include/global_settings.php
 msgid "Cron/Daemon Interval"
@@ -8112,7 +8091,7 @@ msgstr "Tên thiết bị"
 
 #: include/global_settings.php
 msgid "Device Hash/Device ID/Data Query ID"
-msgstr ""
+msgstr "Hash Thiết bị/ID Thiết bị/ID Truy vấn dữ liệu"
 
 #: include/global_settings.php
 msgid "Device ID"
@@ -8144,7 +8123,7 @@ msgstr "Vô hiệu hóa tăng kiểm tra OID"
 
 #: include/global_settings.php
 msgid "Display business hours on rrd graphs."
-msgstr ""
+msgstr "Hiển thị giờ làm việc trên đồ thị rrd."
 
 #: include/global_settings.php
 msgid "Display the graph title on the page so that it may be searched using the browser."
@@ -8244,7 +8223,7 @@ msgstr "Kích hoạt hoặc vô hiệu hóa các giới thiệu LDAP. Nếu bị
 
 #: include/global_settings.php
 msgid "Enabled Gradient Support for AREA and STACK charts."
-msgstr ""
+msgstr "Đã bật hỗ trợ dải chuyển màu (Gradient) cho biểu đồ AREA và STACK."
 
 #: include/global_settings.php
 msgid "Enables direct insert of records into poller output boost with results in a 25% time reduction in each poll cycle."
@@ -8264,7 +8243,7 @@ msgstr "Thời gian kết thúc của ca làm việc hàng ngày."
 
 #: include/global_settings.php
 msgid "End of Business Day"
-msgstr ""
+msgstr "Kết thúc ngày làm việc"
 
 #: include/global_settings.php
 msgid "End of Daily Shift"
@@ -8272,7 +8251,7 @@ msgstr "Kết thúc ca làm việc hàng ngày"
 
 #: include/global_settings.php
 msgid "Enter a Pango font description"
-msgstr ""
+msgstr "Nhập mô tả phông chữ Pango"
 
 #: include/global_settings.php
 msgid "Enter the SNMP v3 Context for all new Devices."
@@ -8352,7 +8331,7 @@ msgstr "Buộc kết nối qua HTTPS"
 
 #: include/global_settings.php
 msgid "Forked processes"
-msgstr ""
+msgstr "Tiến trình phân nhánh"
 
 #: include/global_settings.php lib/html_reports.php
 msgid "From Email Address"
@@ -8404,7 +8383,7 @@ msgstr "Biểu đồ thời gian"
 
 #: include/global_settings.php
 msgid "Graph access is granted directly by a graph permission in every mode. Permissive also grants access when the user has permission for the graph's device or template. Restrictive requires permission for both the device and template when there is no direct graph permission. Device Based requires device permission, and Graph Template Based requires template permission. User and group policies are evaluated separately and their allowed results are combined. These modes trade query performance against fine-grained permissions on large installations."
-msgstr ""
+msgstr "Quyền truy cập đồ thị được cấp trực tiếp bởi quyền đồ thị trong mọi chế độ. Chế độ Cho phép (Permissive) cũng cấp quyền khi người dùng có quyền đối với thiết bị hoặc mẫu của đồ thị. Chế độ Hạn chế (Restrictive) yêu cầu quyền đối với cả thiết bị và mẫu khi không có quyền đồ thị trực tiếp. Theo Thiết bị yêu cầu quyền thiết bị, và Theo Mẫu đồ thị yêu cầu quyền mẫu. Chính sách người dùng và nhóm được đánh giá riêng biệt và kết quả được phép của chúng được kết hợp lại. Các chế độ này đánh đổi hiệu năng truy vấn lấy quyền chi tiết trên các hệ thống cài đặt lớn."
 
 #: include/global_settings.php
 msgid "Graph/Data Source Creation Method"
@@ -8460,7 +8439,7 @@ msgstr "Ẩn các thiết bị và đồ thị bị vô hiệu hóa khi xem bên
 
 #: include/global_settings.php
 msgid "Historically, Kadupul administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Kadupul Graphs.  In earlier versions of Kadupul, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Kadupul, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Kadupul restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Kadupul continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr ""
+msgstr "Trước đây, các quản trị viên Kadupul thường tạo các Phương thức nhập dữ liệu đơn giản bao gồm các lệnh như \"ps -ef | grep something | wc -l\" để biểu diễn một giá trị số dùng trong Đồ thị Kadupul. Trong các phiên bản Kadupul trước đây, điều này được phép. Tuy nhiên, đây là một thực hành không an toàn vì nó là cửa ngõ để người dùng bên thứ ba xuất bản các Mẫu dữ liệu không an toàn. Trong Kadupul hiện đại, cần tránh các kiểu thực hành này. Tuy vậy, chúng tôi vẫn cung cấp tùy chọn này nếu bạn có các Phương thức nhập dữ liệu cũ chứa các Siêu ký tự không an toàn này và chưa chuyển đổi chúng sang các script cục bộ trong thư mục 'scripts'. Khi bỏ chọn tùy chọn này, Kadupul sẽ hạn chế các siêu ký tự kiểu shell như dấu ngoặc kép, dấu ngoặc nhọn, dấu gạch đứng, dấu gạch chéo ngược và dấu huyền. Kadupul vẫn tiếp tục cho phép dấu lớn hơn và nhỏ hơn cho các mục như <path_cacti> và cho tham số đầu vào, nhưng nếu bỏ chọn tùy chọn này thì đó là giới hạn sử dụng được phép của chúng."
 
 #: include/global_settings.php
 msgid "Hourly Average Window"
@@ -8468,11 +8447,11 @@ msgstr "Cửa sổ trung bình hàng giờ"
 
 #: include/global_settings.php
 msgid "Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them."
-msgstr ""
+msgstr "Số giờ các mẫu bị RRDtool từ chối, ví dụ sau khi thay đổi lược đồ nguồn dữ liệu, được giữ trong hàng đợi để thử lại trước khi chuyển vào bảng poller_output_rejected. Hãy sửa RRDfile, sau đó chạy cli/replay_rejected_samples.php để xử lý chúng."
 
 #: include/global_settings.php
 msgid "How Boost distributes RRD updates. Forked processes start the number of Boost processes above on every run. Message queue workers hand each partition to Messenger workers instead."
-msgstr ""
+msgstr "Cách Boost phân phối các bản cập nhật RRD. Tiến trình phân nhánh sẽ khởi động số lượng tiến trình Boost ở trên trong mỗi lần chạy. Worker hàng đợi thông điệp sẽ giao từng phân vùng cho các worker Messenger thay thế."
 
 #: include/global_settings.php
 msgid "How Often Should Boost Update All RRDs"
@@ -8508,7 +8487,7 @@ msgstr "Tần suất bạn muốn hiển thị nhật ký Kadupul cập nhật."
 
 #: include/global_settings.php
 msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
-msgstr ""
+msgstr "Cách Kadupul hỗ trợ Ngày của máy khách dựa trên múi giờ của trình duyệt máy khách."
 
 #: include/global_settings.php
 msgid "How will Kadupul handle event logging."
@@ -8516,16 +8495,15 @@ msgstr "Kadupul sẽ xử lý việc ghi nhật ký sự kiện như thế nào.
 
 #: include/global_settings.php
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr ""
+msgstr "Bạn muốn Kadupul trình bày ngày tháng như thế nào? Thiết lập này cũng sẽ thay đổi cách biểu diễn ngày tháng trên Đồ thị Kadupul."
 
 #: include/global_settings.php
 msgid "How would you like the Data Collector output errors logged?  Options include: 'Detailed' which details every error, 'Summary' which provides the number of output errors per Device, and 'None', which does not provide error counts."
 msgstr "Làm thế nào bạn muốn lỗi đầu ra cột sống được ghi lại? Các tùy chọn là: &#39;Chi tiết&#39; tương tự như ghi nhật ký cmd.php; &#39;Tóm tắt&#39; cung cấp số lượng lỗi đầu ra trên mỗi Thiết bị; và &#39;Không&#39;, không cung cấp số lỗi."
 
 #: include/global_settings.php
-#, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "Nếu được Kiểm tra Kadupul sẽ ghi thông tin LDAP bổ sung vào nhật ký Kadupul trong các hoạt động Ràng buộc và Tìm kiếm."
+msgstr "Nếu được chọn, Kadupul sẽ ghi thêm thông tin LDAP vào nhật ký Kadupul trong quá trình Liên kết (Binding) và Tìm kiếm (Searching)."
 
 #: include/global_settings.php
 msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
@@ -8737,7 +8715,7 @@ msgstr "Thời gian bảo trì"
 
 #: include/global_settings.php
 msgid "Max Device Hash Directories"
-msgstr ""
+msgstr "Số thư mục Hash Thiết bị tối đa"
 
 #: include/global_settings.php
 msgid "Max Kills Per RRA"
@@ -8789,7 +8767,7 @@ msgstr "Giới hạn bộ nhớ cho thống kê nguồn dữ liệu Trình thu t
 
 #: include/global_settings.php
 msgid "Message queue workers"
-msgstr ""
+msgstr "Worker hàng đợi thông điệp"
 
 #: include/global_settings.php
 msgid "Minimum Length"
@@ -8817,7 +8795,7 @@ msgstr "Hàng tháng vào ngày"
 
 #: include/global_settings.php
 msgid "My Browsers Timezone"
-msgstr ""
+msgstr "Múi giờ trình duyệt của tôi"
 
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
@@ -8833,7 +8811,7 @@ msgstr "Thành viên: "
 
 #: include/global_settings.php
 msgid "Nonce Mode - Reporting Only"
-msgstr ""
+msgstr "Chế độ Nonce - Chỉ báo cáo"
 
 #: include/global_settings.php
 msgid "Notify Primary Admin of Issues"
@@ -8869,7 +8847,7 @@ msgstr "Một lần một ngày"
 
 #: include/global_settings.php
 msgid "Only show business hours during weekdays."
-msgstr ""
+msgstr "Chỉ hiển thị giờ làm việc vào các ngày trong tuần."
 
 #: include/global_settings.php
 msgid "Other Settings"
@@ -8905,7 +8883,7 @@ msgstr "Hiệu suất"
 
 #: include/global_settings.php
 msgid "Periodic All Device Re-Index"
-msgstr ""
+msgstr "Lập lại chỉ mục tất cả Thiết bị định kỳ"
 
 #: include/global_settings.php
 msgid "Permissive"
@@ -9105,16 +9083,15 @@ msgstr ""
 
 #: include/global_settings.php
 msgid "Rejected Sample Limit"
-msgstr ""
+msgstr "Giới hạn mẫu bị từ chối"
 
 #: include/global_settings.php
 msgid "Rejected Sample Retention"
-msgstr ""
+msgstr "Thời gian lưu giữ mẫu bị từ chối"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
-msgstr "Ghi nhớ số mật khẩu cũ này và không cho phép sử dụng lại chúng."
+msgstr "Ghi nhớ số lượng mật khẩu cũ này và không cho phép sử dụng lại chúng."
 
 #: include/global_settings.php
 msgid "Remote Agent Timeout"
@@ -9173,9 +9150,8 @@ msgid "Retries"
 msgstr "Thử lại"
 
 #: include/global_settings.php
-#, fuzzy
 msgid "Rotate the Kadupul Log"
-msgstr "Xoay Nhật ký Kadupul"
+msgstr "Xoay vòng nhật ký Kadupul"
 
 #: include/global_settings.php
 msgid "Rotation Frequency"
@@ -9323,7 +9299,7 @@ msgstr "Có nên thu thập số liệu thống kê nguồn dữ liệu cho hệ
 
 #: include/global_settings.php
 msgid "Should LDAP verify TLS Certificates when received by the Client.  Demand and Hard refuse a server whose certificate does not verify.  Never and Allow skip that check, so anyone on the network path can pose as the directory and read the passwords sent to it."
-msgstr ""
+msgstr "LDAP có nên xác minh Chứng chỉ TLS khi Máy khách nhận được hay không. Demand và Hard sẽ từ chối máy chủ có chứng chỉ không xác minh được. Never và Allow sẽ bỏ qua bước kiểm tra đó, vì vậy bất kỳ ai trên đường truyền mạng đều có thể giả mạo thư mục và đọc mật khẩu được gửi tới đó."
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
@@ -9351,11 +9327,11 @@ msgstr "Hiển thị tiêu đề đồ thị"
 
 #: include/global_settings.php
 msgid "Show business hours"
-msgstr ""
+msgstr "Hiển thị giờ làm việc"
 
 #: include/global_settings.php
 msgid "Show only locations that are available at a devices selected site."
-msgstr ""
+msgstr "Chỉ hiển thị các vị trí khả dụng tại địa điểm đã chọn của thiết bị."
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
@@ -9419,7 +9395,7 @@ msgstr "Thời gian bắt đầu của ca làm việc hàng ngày."
 
 #: include/global_settings.php
 msgid "Start of Business Day"
-msgstr ""
+msgstr "Bắt đầu ngày làm việc"
 
 #: include/global_settings.php
 msgid "Start of Daily Shift"
@@ -9499,7 +9475,7 @@ msgstr "Văn bản được đặt ở trung tâm dưới cùng của mỗi đ�
 
 #: include/global_settings.php user_domains.php
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
-msgstr ""
+msgstr "Cú pháp \"Distinguished Name\", áp dụng cho cả cấu hình OpenLDAP và Windows AD, mang lại sự linh hoạt trong việc định nghĩa danh tính người dùng. Đối với OpenLDAP, định dạng tuân theo cấu trúc sau: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD cung cấp một cú pháp thay thế: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, thường được gọi là \"userPrincipalName (UPN)\". Trong ngữ cảnh này, \"&lt;username&gt;\" đại diện cho tên người dùng cụ thể được cung cấp tại dấu nhắc đăng nhập. Điều này đặc biệt liên quan khi hoạt động ở chế độ \"Không tìm kiếm\" (No Searching) hoặc khi bật \"Yêu cầu tư cách thành viên nhóm\" (Require Group Membership)."
 
 #: include/global_settings.php
 msgid "The Base Time for Spike removal to occur.  For example, if you use '12:00am' and you choose once per day, the batch removal would begin at approximately midnight every day."
@@ -9547,19 +9523,19 @@ msgstr "Vui lòng nhập thời gian chờ SMTP trong vài giây."
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
-msgstr ""
+msgstr "Mô tả phông chữ Pango sử dụng cho các mục Trục đồ thị, chẳng hạn như DejaVu Sans"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Legend items, such as DejaVu Sans Mono"
-msgstr ""
+msgstr "Mô tả phông chữ Pango sử dụng cho các mục Chú giải đồ thị, chẳng hạn như DejaVu Sans Mono"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Titles, such as DejaVu Sans Bold"
-msgstr ""
+msgstr "Mô tả phông chữ Pango sử dụng cho Tiêu đề đồ thị, chẳng hạn như DejaVu Sans Bold"
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Unit items, such as DejaVu Sans"
-msgstr ""
+msgstr "Mô tả phông chữ Pango sử dụng cho các mục Đơn vị đồ thị, chẳng hạn như DejaVu Sans"
 
 #: include/global_settings.php
 msgid "The System default date format to use in Kadupul."
@@ -9575,7 +9551,7 @@ msgstr "Lượng thời gian, tính bằng giây, máy chủ web Central Kadupul
 
 #: include/global_settings.php
 msgid "The color to be shown for business hours"
-msgstr ""
+msgstr "Màu sẽ hiển thị cho giờ làm việc"
 
 #: include/global_settings.php
 msgid "The date format to use in Kadupul."
@@ -9671,19 +9647,19 @@ msgstr "Ngày đầu tiên trong tuần để hiển thị biểu đồ hàng tu
 
 #: include/global_settings.php
 msgid "The font to use for Graph Axis items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "Phông chữ sử dụng cho các mục Trục đồ thị. Nhập mô tả phông chữ Pango, chẳng hạn như DejaVu Sans Bold. RRDtool không tải các tệp phông chữ."
 
 #: include/global_settings.php
 msgid "The font to use for Graph Legends.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "Phông chữ sử dụng cho Chú giải đồ thị. Nhập mô tả phông chữ Pango, chẳng hạn như DejaVu Sans Bold. RRDtool không tải các tệp phông chữ."
 
 #: include/global_settings.php
 msgid "The font to use for Graph Titles.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "Phông chữ sử dụng cho Tiêu đề đồ thị. Nhập mô tả phông chữ Pango, chẳng hạn như DejaVu Sans Bold. RRDtool không tải các tệp phông chữ."
 
 #: include/global_settings.php
 msgid "The font to use for Graph Unit items.  Enter a Pango font description, such as DejaVu Sans Bold. RRDtool does not load font files."
-msgstr ""
+msgstr "Phông chữ sử dụng cho các mục Đơn vị đồ thị. Nhập mô tả phông chữ Pango, chẳng hạn như DejaVu Sans Bold. RRDtool không tải các tệp phông chữ."
 
 #: include/global_settings.php
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
@@ -9735,7 +9711,7 @@ msgstr "Lượng thời gian tối đa mà tập lệnh Spikekill của Kadupul 
 
 #: include/global_settings.php
 msgid "The maximum number of Device Directories to be created based upon hashed Device ID's."
-msgstr ""
+msgstr "Số lượng Thư mục Thiết bị tối đa sẽ được tạo dựa trên ID Thiết bị được băm."
 
 #: include/global_settings.php
 msgid "The maximum size of the E-Mail message including all attachments."
@@ -9751,7 +9727,7 @@ msgstr "Phương thức được sử dụng để làm sạch RRDfiles khỏi K
 
 #: include/global_settings.php
 msgid "The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately."
-msgstr ""
+msgstr "Số lượng mẫu bị từ chối tối đa mà một nguồn dữ liệu có thể giữ trong hàng đợi. Các mẫu cũ nhất vượt quá giới hạn này sẽ được chuyển ngay vào bảng poller_output_rejected."
 
 #: include/global_settings.php
 msgid "The name of the guest user for viewing graphs; is 'No User' by default."
@@ -9779,7 +9755,7 @@ msgstr "Số lượng các quá trình tăng đồng thời được sử dụng
 
 #: include/global_settings.php
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
-msgstr ""
+msgstr "Số lượng tiến trình Lệnh Poller đồng thời. Sẽ có tối đa một lệnh đồng thời trên mỗi máy chủ trong nhóm Lệnh Poller."
 
 #: include/global_settings.php
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
@@ -9891,11 +9867,11 @@ msgstr "Kích thước của phông chữ được sử dụng cho Đơn vị đ
 
 #: include/global_settings.php
 msgid "The time your business hours end. Format: hh:mm"
-msgstr ""
+msgstr "Thời gian kết thúc giờ làm việc của bạn. Định dạng: hh:mm"
 
 #: include/global_settings.php
 msgid "The time your business hours start. Format: hh:mm"
-msgstr ""
+msgstr "Thời gian bắt đầu giờ làm việc của bạn. Định dạng: hh:mm"
 
 #: include/global_settings.php
 msgid "The username to authenticate with when sending via SMTP. (Leave blank if you do not require authentication.)"
@@ -9987,7 +9963,7 @@ msgstr "Tùy chọn này sẽ xoay Nhật ký Kadupul theo định kỳ."
 
 #: include/global_settings.php user_domains.php
 msgid "This refers to the specific attribute within the LDAP directory that holds the usernames of group members. It is crucial to ensure that the attribute value aligns with the configuration specified in the \"Distinguished Name\" or that the actual attribute value is searchable using the settings outlined in the \"Distinguished Name\"."
-msgstr ""
+msgstr "Điều này đề cập đến thuộc tính cụ thể trong thư mục LDAP chứa tên người dùng của các thành viên nhóm. Điều quan trọng là phải đảm bảo giá trị thuộc tính khớp với cấu hình được chỉ định trong \"Distinguished Name\" hoặc giá trị thuộc tính thực tế có thể tìm kiếm được bằng các cài đặt được nêu trong \"Distinguished Name\"."
 
 #: include/global_settings.php
 msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
@@ -10006,9 +9982,9 @@ msgid "This value represents the number of high and low average samples will be 
 msgstr "Giá trị này biểu thị số lượng mẫu trung bình cao và thấp sẽ bị xóa khỏi bộ mẫu trước khi tính Trung bình phương sai. Nếu bạn chọn giá trị ngoại lệ là 5, thì cả trung bình 5 trên cùng và dưới cùng sẽ bị xóa."
 
 #: include/global_settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Giá trị này biểu thị tỷ lệ phần trăm trên mức trung bình mẫu đã điều chỉnh một khi các ngoại lệ đã bị xóa khỏi mẫu. Ví dụ: Tỷ lệ phần trăm phương sai 100% trên trung bình đã điều chỉnh là 50 sẽ loại bỏ bất kỳ mẫu nào trên số lượng 100 khỏi biểu đồ."
+msgstr "Giá trị này biểu thị phần trăm vượt trên mức trung bình mẫu đã điều chỉnh sau khi các giá trị ngoại lai đã bị loại khỏi mẫu. Ví dụ, Tỷ lệ phương sai là 100%% trên mức trung bình đã điều chỉnh là 50 sẽ loại bỏ bất kỳ mẫu nào vượt quá số lượng 100 khỏi đồ thị."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10088,11 +10064,11 @@ msgstr "Liên kết URL"
 
 #: include/global_settings.php
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
-msgstr ""
+msgstr "URL nơi trình duyệt gửi POST báo cáo vi phạm CSP ở chế độ nonce-report và nonce. Để trống để sử dụng /cacti/csp_report.php tại gốc cài đặt. Chỉ được chứa các ký tự URL an toàn."
 
 #: include/global_settings.php
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
-msgstr ""
+msgstr "URL nơi trình duyệt gửi POST báo cáo vi phạm CSP ở chế độ nonce-report và nonce. Để trống để sử dụng <url_path>/csp_report.php. Chỉ được chứa các ký tự URL an toàn."
 
 #: include/global_settings.php
 msgid "Unit Font Setting"
@@ -10112,7 +10088,7 @@ msgstr "Sử dụng phông chữ tùy chỉnh"
 
 #: include/global_settings.php
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
-msgstr ""
+msgstr "Sử dụng một thư mục con riêng cho các tệp RRD của mỗi máy chủ. Cách đặt tên các RRDfile sẽ là một trong các dạng sau:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Bạn có thể thực hiện thay đổi này sau khi cài đặt bằng cách chạy script CLI <b>structure_rra_paths.php</b> sau khi thay đổi. LƯU Ý: Nếu bạn thay đổi giá trị Thư mục tối đa để giảm số lượng thư mục, hoặc nếu bạn thay đổi Mẫu thư mục, các thư mục trống sẽ không bị xóa sau khi bạn chạy lại script <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php
 msgid "User Language"
@@ -10148,7 +10124,7 @@ msgstr "Cảnh báo"
 
 #: include/global_settings.php
 msgid "Weekly on Sunday"
-msgstr ""
+msgstr "Hàng tuần vào Chủ nhật"
 
 #: include/global_settings.php
 msgid "What level of detail do you want sent to the log file.  WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -10187,9 +10163,8 @@ msgid "When creating a new report, what image type should be used for the inline
 msgstr "Khi tạo một báo cáo mới, loại hình ảnh nào sẽ được sử dụng cho các biểu đồ nội tuyến."
 
 #: include/global_settings.php
-#, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
-msgstr "Khi tạo biểu đồ, bạn muốn chọn loại biểu đồ nào?"
+msgstr "Khi tạo đồ thị, bạn muốn loại Đồ thị nào được chọn sẵn?"
 
 #: include/global_settings.php
 msgid "When disabled, Kadupul Automation will not actively create any Graph.  This is useful when adjusting Device settings so as to avoid creating new Graphs each time you save an object.  Invoking Automation Rules manually will still be possible."
@@ -10213,7 +10188,7 @@ msgstr "Khi được bật, Kadupul sẽ đặt Nút radio để xóa Nguồn d�
 
 #: include/global_settings.php
 msgid "When not using Theme based font control, the Pango font description to use for all Graphs, such as DejaVu Sans. Optionally, you may leave blank and control font settings on a per object basis."
-msgstr ""
+msgstr "Khi không sử dụng điều khiển phông chữ theo Chủ đề, mô tả phông chữ Pango dùng cho tất cả Đồ thị, chẳng hạn như DejaVu Sans. Tùy chọn, bạn có thể để trống và điều khiển cài đặt phông chữ theo từng đối tượng."
 
 #: include/global_settings.php
 msgid "When performing batch spike removal, only the templates selected below will be acted on."
@@ -10241,7 +10216,7 @@ msgstr "Khi bạn bật boost, các tệp RRD của bạn chỉ được cập n
 
 #: include/global_settings.php
 msgid "Which Directory Pattern do you wish to use for Structured RRD Paths.  'Device ID' is the default.  The setting 'Device ID/Data Query ID' should be used when you have Devices with thousands of Graphs.  After Changing the Directory Pattern, you must run the Structured Path CLI script again to modify the RRDfile paths to the new Pattern."
-msgstr ""
+msgstr "Mẫu thư mục nào bạn muốn sử dụng cho Đường dẫn RRD có cấu trúc. 'ID Thiết bị' là mặc định. Cài đặt 'ID Thiết bị/ID Truy vấn dữ liệu' nên được sử dụng khi bạn có các Thiết bị với hàng nghìn Đồ thị. Sau khi thay đổi Mẫu thư mục, bạn phải chạy lại script CLI Đường dẫn có cấu trúc để sửa đổi đường dẫn RRDfile sang Mẫu mới."
 
 #: include/global_settings.php
 msgid "Which Graph mode you want displayed by default when you first visit the Graphs page?"
@@ -10306,7 +10281,7 @@ msgstr "Mục đồ thị"
 #: lib/api_aggregate.php lib/html.php lib/html_reports.php
 #, php-format
 msgid "Item # %d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: lib/api_aggregate.php lib/html.php
 msgid "Item Color"
@@ -10391,7 +10366,7 @@ msgstr "Mục"
 #: lib/api_automation.php
 #, php-format
 msgid "Item#%d"
-msgstr "Mục #% d"
+msgstr "Mục #%d"
 
 #: lib/api_automation.php
 msgid "Matching Devices"
@@ -10501,7 +10476,7 @@ msgstr "Thiết bị bị vô hiệu hóa"
 
 #: lib/api_device.php
 msgid "Device replication failed. A FullSync is required; see the log for details."
-msgstr ""
+msgstr "Sao chép thiết bị thất bại. Cần thực hiện FullSync; xem nhật ký để biết chi tiết."
 
 #: lib/api_device.php
 msgid "ERROR: Device ID is Blank"
@@ -10538,7 +10513,7 @@ msgstr "Kết quả Ping"
 #: lib/api_device.php lib/utility.php
 #, php-format
 msgid "Remote Poller %s is Down, you will need to perform a FullSync once it is up again"
-msgstr ""
+msgstr "Poller từ xa %s đang ngừng hoạt động, bạn sẽ cần thực hiện FullSync sau khi nó hoạt động trở lại"
 
 #: lib/api_device.php
 msgid "SNMP Information"
@@ -10563,12 +10538,12 @@ msgstr "Hệ thống:"
 #: lib/api_device.php
 #, php-format
 msgid "Unable to remove Device %s because its Graphs could not all be removed."
-msgstr ""
+msgstr "Không thể xóa Thiết bị %s vì không thể xóa hết các Đồ thị của nó."
 
 #: lib/api_device.php
 #, php-format
 msgid "Unable to remove Device %s because its database records could not be removed together."
-msgstr ""
+msgstr "Không thể xóa Thiết bị %s vì không thể xóa đồng thời các bản ghi cơ sở dữ liệu của nó."
 
 #: lib/api_device.php
 msgid "Uptime:"
@@ -10585,7 +10560,7 @@ msgstr "%s được xác thực bởi Máy chủ Web, nhưng cả Người dùng
 
 #: lib/auth.php
 msgid "Access Denied!  Domain template is not configured.  Please contact your Administrator."
-msgstr ""
+msgstr "Từ chối truy cập! Mẫu miền chưa được cấu hình. Vui lòng liên hệ Quản trị viên của bạn."
 
 #: lib/auth.php
 msgid "Access Denied!  Login Disabled."
@@ -10596,9 +10571,9 @@ msgid "Access Denied!  No password provided by user."
 msgstr "Truy cập bị Từ chối! Không có mật khẩu được cung cấp bởi người dùng."
 
 #: lib/auth.php
-#, fuzzy, php-format
+#, php-format
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
-msgstr "Truy cập bị từ chối, vui lòng liên hệ với bạn Quản trị viên Kadupul."
+msgstr "Từ chối truy cập! ID người dùng mẫu %s không tồn tại. Vui lòng liên hệ Quản trị viên của bạn."
 
 #: lib/auth.php
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -10609,18 +10584,18 @@ msgid "Branch:"
 msgstr "Chi nhánh:"
 
 #: lib/auth.php
-#, fuzzy, php-format
+#, php-format
 msgid "Device+Template:(%s%s)"
-msgstr "Mẫu thiết bị:"
+msgstr "Thiết bị+Mẫu:(%s%s)"
 
 #: lib/auth.php lib/html_tree.php lib/reports.php
 msgid "Device:"
 msgstr "Thiết bị:"
 
 #: lib/auth.php
-#, fuzzy, php-format
+#, php-format
 msgid "Device:(%s%s)"
-msgstr "Thiết bị"
+msgstr "Thiết bị:(%s%s)"
 
 #: lib/auth.php
 msgid "Device:(Hide Disabled)"
@@ -10635,24 +10610,23 @@ msgid "Granted By: "
 msgstr "Dành được bởi:"
 
 #: lib/auth.php
-#, fuzzy, php-format
+#, php-format
 msgid "Graph+Device+Template:(%s%s)"
-msgstr "Mẫu thiết bị:"
+msgstr "Đồ thị+Thiết bị+Mẫu:(%s%s)"
 
 #: lib/auth.php
-#, fuzzy, php-format
+#, php-format
 msgid "Graph:(%s%s)"
-msgstr "Đồ thị"
+msgstr "Đồ thị:(%s%s)"
 
 #: lib/auth.php
-#, fuzzy
 msgid "Kadupul Login Failure"
-msgstr "Nhật ký Kadupul đã bị xóa"
+msgstr "Đăng nhập Kadupul thất bại"
 
 #: lib/auth.php
 #, php-format
 msgid "Password must be at least %d characters!"
-msgstr "Mật khẩu phải có ít nhất% d ký tự!"
+msgstr "Mật khẩu phải có ít nhất %d ký tự!"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10663,9 +10637,9 @@ msgid "Restricted By: "
 msgstr "Hạn chế"
 
 #: lib/auth.php
-#, fuzzy, php-format
+#, php-format
 msgid "Template:(%s%s)"
-msgstr "Giao diện"
+msgstr "Mẫu:(%s%s)"
 
 #: lib/auth.php
 msgid "Web Basic"
@@ -10706,9 +10680,9 @@ msgid "%s KBytes"
 msgstr "%s GB"
 
 #: lib/boost.php utilities.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s MBytes"
-msgstr "% d MByte"
+msgstr "%s MByte"
 
 #: lib/clog_webapi.php
 msgid " - Admin Filter active"
@@ -10778,12 +10752,12 @@ msgstr "Nhật ký bộ lọc"
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Filter active]"
-msgstr "Nhật ký [Tổng số dòng:% d %s - Bộ lọc hoạt động]"
+msgstr "Nhật ký [Tổng số dòng: %d %s - Bộ lọc hoạt động]"
 
 #: lib/clog_webapi.php
 #, php-format
 msgid "Log [Total Lines: %d %s - Unfiltered]"
-msgstr "Nhật ký [Tổng số dòng:% d %s - Chưa được lọc]"
+msgstr "Nhật ký [Tổng số dòng: %d %s - Chưa được lọc]"
 
 #: lib/clog_webapi.php
 msgid "Matches"
@@ -10864,7 +10838,7 @@ msgstr "Hoàn thành tự động hóa cho truy vấn dữ liệu"
 #: lib/data_query.php
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
-msgstr ""
+msgstr "Phát hiện mục rewrite_value không hợp lệ, index='%s'"
 
 #: lib/data_query.php
 #, php-format
@@ -10896,7 +10870,7 @@ msgstr "Không thể tìm thấy tệp XML truy vấn dữ liệu tại &#39; %s
 
 #: lib/data_query.php
 msgid "Could not parse translation map (rewrite_value)"
-msgstr ""
+msgstr "Không thể phân tích bản đồ dịch (rewrite_value)"
 
 #: lib/data_query.php
 msgid "Data Query returned no indexes."
@@ -10935,7 +10909,7 @@ msgstr "Thực hiện SNMP nhận được %s oids ( %s)"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$ value&#39;]"
+msgstr "Đang thực hiện SNMP lấy dữ liệu @ &#39; %s&#39; [value = &#39;$value&#39;]"
 
 #: lib/data_query.php
 #, php-format
@@ -10953,9 +10927,9 @@ msgid "Executing SNMP walk for data @ '%s'"
 msgstr "Thực hiện đi bộ SNMP cho dữ liệu @ &#39; %s&#39;"
 
 #: lib/data_query.php
-#, fuzzy, php-format
+#, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
-msgstr "Đang thực hiện đi bộ SNMP cho danh sách các chỉ mục @ &#39; %s&#39; Chỉ số:"
+msgstr "Đang thực thi SNMP walk cho danh sách chỉ mục @ '%s' Số lượng chỉ mục: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11047,9 +11021,9 @@ msgid "Found item [%s='%s'] index: %s [from regexp oid parse]"
 msgstr "Mục tìm thấy [ %s = &#39; %s&#39;] chỉ mục: %s [từ phân tích chính quy"
 
 #: lib/data_query.php
-#, fuzzy, php-format
+#, php-format
 msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
-msgstr "Mục đã tìm thấy [ %s = &#39; %s&#39;]"
+msgstr "Tìm thấy mục [%s='%s'] chỉ mục: %s [từ phân tích giá trị oid regexp]"
 
 #: lib/data_query.php
 #, php-format
@@ -11125,7 +11099,7 @@ msgstr "Trường sắp xếp mới được xác thực. Trường sắp xếp 
 
 #: lib/data_query.php
 msgid "No Index Changes Detected, Poller Cache Refreshed"
-msgstr ""
+msgstr "Không phát hiện thay đổi chỉ mục, Đã làm mới Bộ nhớ đệm Poller"
 
 #: lib/data_query.php
 msgid "No SNMP data returned"
@@ -11134,7 +11108,7 @@ msgstr "Không có dữ liệu SNMP được trả về"
 #: lib/data_query.php
 #, php-format
 msgid "No index[%s] in value_index_parse, skipping."
-msgstr ""
+msgstr "Không có chỉ mục[%s] trong value_index_parse, đang bỏ qua."
 
 #: lib/data_query.php
 msgid "Plugin Hooks complete"
@@ -11173,9 +11147,9 @@ msgid "Sort field returned no data for OID[%s], skipping."
 msgstr "Trường sắp xếp trả về không dữ liệu. Không thể tiếp tục lập chỉ mục lại cho OID [ %s]"
 
 #: lib/data_query.php
-#, fuzzy, php-format
+#, php-format
 msgid "Sort field returned no data for field name %s, skipping"
-msgstr "Trường sắp xếp trả về không có dữ liệu. Không thể tiếp tục lập chỉ mục lại."
+msgstr "Trường sắp xếp không trả về dữ liệu cho tên trường %s, đang bỏ qua"
 
 #: lib/data_query.php
 #, php-format
@@ -11185,7 +11159,7 @@ msgstr "Đã kiểm tra Kích thước Đi bộ Hàng loạt %d với phản h�
 #: lib/data_query.php
 #, php-format
 msgid "Total: %f, Delta: %f, %s"
-msgstr "Tổng cộng:% f, Delta:% f, %s"
+msgstr "Tổng cộng: %f, Delta: %f, %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11210,18 +11184,18 @@ msgid "Update Poller Cache for Query complete"
 msgstr "Cập nhật Pug Cache cho truy vấn hoàn tất"
 
 #: lib/data_query.php
-#, fuzzy, php-format
+#, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
-msgstr "Cập nhật Re-Index Cache hoàn tất. Đã có"
+msgstr "Hoàn tất cập nhật Bộ nhớ đệm Lập lại chỉ mục. Có %s thay đổi chỉ mục và %s chỉ mục mồ côi."
 
 #: lib/data_query.php
 msgid "Update graph data query cache complete"
 msgstr "Cập nhật truy vấn dữ liệu Sắp xếp Cache hoàn tất"
 
 #: lib/data_query.php
-#, fuzzy, php-format
+#, php-format
 msgid "Verification of %s Local Data ID's Complete"
-msgstr "Hiệp hội chỉ mục với dữ liệu địa phương hoàn tất"
+msgstr "Hoàn tất xác minh %s ID dữ liệu cục bộ"
 
 #: lib/data_query.php
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
@@ -11259,9 +11233,9 @@ msgid "Failed to determine password field length, can not continue as may corrup
 msgstr "Không thể xác định độ dài trường mật khẩu, không thể tiếp tục vì có thể làm hỏng mật khẩu"
 
 #: lib/dsdebug.php
-#, fuzzy, php-format
+#, php-format
 msgid "Data Source ID %s does not exist"
-msgstr "Nguồn dữ liệu không tồn tại"
+msgstr "Nguồn dữ liệu ID %s không tồn tại"
 
 #: lib/dsdebug.php
 msgid "Data Source is not set as Active"
@@ -11288,18 +11262,18 @@ msgid "No issues found"
 msgstr "Không tìm thấy vấn đề"
 
 #: lib/dsdebug.php
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile Folder (rra) is not writable by Poller.  Folder owner: %s.  Poller runs as: %s"
-msgstr "Thư mục RRD không thể ghi được bằng Poller. Chủ sở hữu RRD:"
+msgstr "Thư mục RRDfile (rra) không thể ghi bởi Poller. Chủ sở hữu thư mục: %s. Poller chạy dưới quyền: %s"
 
 #: lib/dsdebug.php
 msgid "RRDfile does not match Data Source"
 msgstr "Tệp RRD không khớp với Hồ sơ dữ liệu"
 
 #: lib/dsdebug.php
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile is not writable by Poller.  RRDfile owner: %s.  Poller runs as %s"
-msgstr "Tệp RRD không thể ghi được bằng Poller. Chủ sở hữu RRD:"
+msgstr "RRDfile không thể ghi bởi Poller. Chủ sở hữu RRDfile: %s. Poller chạy dưới quyền %s"
 
 #: lib/dsdebug.php
 msgid "RRDfile not created yet"
@@ -11354,7 +11328,6 @@ msgid "HELO failed: %s"
 msgstr "Helo thất bại: %s"
 
 #: lib/functions.php
-#, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Thông báo kiểm tra Kadupul"
 
@@ -11469,12 +11442,12 @@ msgstr "Phiên bản %s %s"
 #: lib/functions.php
 #, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr ""
+msgstr "CẢNH BÁO: Thiếu Tệp bao gồm Kadupul quan trọng %s. Vui lòng tìm và thay thế tệp này"
 
 #: lib/functions.php
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
-msgstr ""
+msgstr "CẢNH BÁO: PollerID:%s có tên máy chủ không hợp lệ:%s. Có thể không truy cập được qua DNS!"
 
 #: lib/functions.php
 msgid "Your email settings are currently set as follows"
@@ -11486,19 +11459,19 @@ msgstr "khách"
 
 #: lib/graph_data_removal.php
 msgid "The removal could not be completed. Reload and review the selection before retrying."
-msgstr ""
+msgstr "Không thể hoàn tất việc xóa. Hãy tải lại và xem lại lựa chọn trước khi thử lại."
 
 #: lib/graph_data_removal.php
 msgid "The removal dependency scope exceeds the supported batch. Select fewer records and try again."
-msgstr ""
+msgstr "Phạm vi phụ thuộc cần xóa vượt quá lô được hỗ trợ. Hãy chọn ít bản ghi hơn và thử lại."
 
 #: lib/graph_data_removal.php
 msgid "The removal failed and collector changes may be partial. Reconcile collectors before retrying."
-msgstr ""
+msgstr "Việc xóa thất bại và các thay đổi của bộ thu thập có thể chỉ thực hiện một phần. Hãy đối chiếu lại các bộ thu thập trước khi thử lại."
 
 #: lib/graph_data_removal.php
 msgid "The removal failed. Persistent transaction cleanup was attempted separately; volatile statistics caches may have been invalidated. Reload and reconcile any collector changes before retrying."
-msgstr ""
+msgstr "Việc xóa thất bại. Đã thử dọn dẹp giao dịch bền vững riêng biệt; bộ nhớ đệm thống kê tạm thời có thể đã bị vô hiệu hóa. Hãy tải lại và đối chiếu mọi thay đổi của bộ thu thập trước khi thử lại."
 
 #: lib/graph_item_choices.php
 msgid "No Device - "
@@ -11506,11 +11479,11 @@ msgstr "Thiết bị"
 
 #: lib/graph_item_editor.php
 msgid "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a positive width in pixels; integers or decimal values are supported."
-msgstr ""
+msgstr "LINE1, LINE2 và LINE3 sử dụng độ rộng cố định. Đối với LINE:STACK, hãy nhập độ rộng dương tính bằng pixel; hỗ trợ số nguyên hoặc giá trị thập phân."
 
 #: lib/graph_item_editor.php
 msgid "Line Width"
-msgstr ""
+msgstr "Độ rộng đường"
 
 #: lib/graphs.php
 msgid "Aggregated Device"
@@ -11527,7 +11500,7 @@ msgstr "#"
 #: lib/html.php
 #, php-format
 msgid "%d to %d of %s [ %s ]"
-msgstr "% d đến% d của %s [ %s]"
+msgstr "%d đến %d của %s [ %s]"
 
 #: lib/html.php
 msgid "16x"
@@ -11560,7 +11533,7 @@ msgstr "Hành động không thành công"
 #: lib/html.php
 #, php-format
 msgid "All %d %s"
-msgstr "Tất cả% d %s"
+msgstr "Tất cả %d %s"
 
 #: lib/html.php
 msgid "Allow or limit the table columns to extend beyond the current windows limits."
@@ -11647,9 +11620,8 @@ msgid "Connection Successful"
 msgstr "Operation successful"
 
 #: lib/html.php
-#, fuzzy
 msgid "Contribute to the Kadupul Project"
-msgstr "Xoay Nhật ký Kadupul"
+msgstr "Đóng góp cho Dự án Kadupul"
 
 #: lib/html.php
 msgid "Copy graph"
@@ -11664,9 +11636,9 @@ msgid "Copy operation is unavailable at this time"
 msgstr "Hoạt động sao chép không có sẵn tại thời điểm này"
 
 #: lib/html.php
-#, fuzzy, php-format
+#, php-format
 msgid "Current Page: %s"
-msgstr "Giá trị hiện tại"
+msgstr "Trang hiện tại: %s"
 
 #: lib/html.php
 msgid "Dark Color Mode"
@@ -11761,17 +11733,14 @@ msgid "Ignore System Color"
 msgstr "Màu mục"
 
 #: lib/html.php
-#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
 #: lib/html.php
-#, fuzzy
 msgid "Kadupul Home"
 msgstr "Trang chủ Kadupul"
 
 #: lib/html.php
-#, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Trang dự án Kadupul"
 
@@ -12013,9 +11982,9 @@ msgid "Import"
 msgstr "Nhập"
 
 #: lib/html_form.php
-#, fuzzy, php-format
+#, php-format
 msgid "Kadupul Color (%s)"
-msgstr "Màu Kadupul ( %s)"
+msgstr "Màu Kadupul (%s)"
 
 #: lib/html_form.php
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -12042,18 +12011,17 @@ msgid "Warning Unsaved Form Data"
 msgstr "Cảnh báo dữ liệu biểu mẫu chưa lưu"
 
 #: lib/html_form.php
-#, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
-msgstr "Bạn có những thay đổi chưa được lưu trong mẫu này. Nếu bạn nhấn &#39;Tiếp tục&#39;, những thay đổi này sẽ bị loại bỏ. Bấm &#39;Hủy&#39; để tiếp tục chỉnh sửa biểu mẫu."
+msgstr "Bạn có các thay đổi chưa được lưu trên biểu mẫu này. Nếu bạn nhấn 'Tiếp tục', các thay đổi này sẽ bị hủy bỏ. Nhấn 'Hủy' để tiếp tục chỉnh sửa biểu mẫu."
 
 #: lib/html_form_template.php
 #, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr ""
+msgstr "Một máy khách đã cố tạo SQL Injection vào Kadupul, có thể từ một máy chủ bên ngoài có địa chỉ %s"
 
 #: lib/html_form_template.php
 msgid "Attempted SQL Injection"
-msgstr ""
+msgstr "Nỗ lực SQL Injection"
 
 #: lib/html_form_template.php
 #, php-format
@@ -12062,12 +12030,12 @@ msgstr "Truy vấn dữ liệu Nguồn dữ liệu phải được tạo qua %s"
 
 #: lib/html_form_template.php
 msgid "There was a SQL Injection attempted on the page"
-msgstr ""
+msgstr "Đã có một nỗ lực SQL Injection trên trang này"
 
 #: lib/html_graph.php lib/html_tree.php
 #, php-format
 msgid "%d Column"
-msgstr "% d Cột"
+msgstr "%d Cột"
 
 #: lib/html_graph.php lib/html_tree.php
 msgid "Columns"
@@ -12168,9 +12136,9 @@ msgid "(Current Branch)"
 msgstr "(Chi nhánh hiện tại)"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid ", Branch: %s"
-msgstr "Chi nhánh:"
+msgstr ", Nhánh: %s"
 
 #: lib/html_reports.php
 #, php-format
@@ -12284,9 +12252,9 @@ msgid "Defines the default font size for all text in the report including the Re
 msgstr "Xác định kích thước phông chữ mặc định cho tất cả văn bản trong báo cáo bao gồm Tiêu đề báo cáo."
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Details %s"
-msgstr "Chi tiết"
+msgstr "Chi tiết %s"
 
 #: lib/html_reports.php
 #, php-format
@@ -12366,9 +12334,9 @@ msgid "Graph Tree Branch"
 msgstr "Cành cây"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Graph: %s"
-msgstr "Đồ thị"
+msgstr "Đồ thị: %s"
 
 #: lib/html_reports.php
 msgid "Image attach type"
@@ -12391,7 +12359,6 @@ msgid "Item Type to be added."
 msgstr "Loại mục sẽ được thêm vào."
 
 #: lib/html_reports.php
-#, fuzzy
 msgid "Kadupul Report"
 msgstr "Báo cáo Kadupul"
 
@@ -12458,14 +12425,14 @@ msgid "Report Item [new Report: %s]"
 msgstr "Mục báo cáo [Báo cáo mới: %s]"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Report Items %s"
-msgstr "Không có mục báo cáo"
+msgstr "Mục báo cáo %s"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Report Preview %s"
-msgstr "Xem trước báo cáo"
+msgstr "Xem trước báo cáo %s"
 
 #: lib/html_reports.php
 msgid "Report Title"
@@ -12481,9 +12448,9 @@ msgid "Reports [%s]"
 msgstr "Báo cáo [ %s]"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Scheduled Events %s"
-msgstr "Sự kiện theo lịch trình"
+msgstr "Sự kiện đã lên lịch %s"
 
 #: lib/html_reports.php
 msgid "Select a Device Template to use to filter for Devices or Graphs."
@@ -12578,9 +12545,9 @@ msgid "To Email Address(es)"
 msgstr "Đến địa chỉ email"
 
 #: lib/html_reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Tree: %s"
-msgstr "Cây:"
+msgstr "Cây: %s"
 
 #: lib/html_reports.php
 #, php-format
@@ -12692,11 +12659,11 @@ msgstr "Lỗi"
 
 #: lib/html_utility.php
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr ""
+msgstr "Biểu thức chính quy của Kadupul chỉ được giới hạn tối đa 50 ký tự vì lý do bảo mật."
 
 #: lib/html_utility.php
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr ""
+msgstr "Biểu thức chính quy của Kadupul không thể chứa ký tự dấu chấm phẩy."
 
 #: lib/html_utility.php
 msgid "Recursion limit was exhausted!"
@@ -12758,7 +12725,7 @@ msgstr "Kadupul sẽ thực hiện các thay đổi sau nếu Mẫu được nh�
 
 #: lib/import.php
 msgid "Legacy system input fields and mappings will be checked for repairs only when the template is imported."
-msgstr ""
+msgstr "Các trường đầu vào và ánh xạ của hệ thống cũ sẽ chỉ được kiểm tra để sửa chữa khi mẫu được nhập."
 
 #: lib/import.php
 #, php-format
@@ -12820,7 +12787,7 @@ msgstr "không thể mở"
 
 #: lib/import.php
 msgid "kept"
-msgstr ""
+msgstr "đã giữ lại"
 
 #: lib/import.php
 msgid "not exists"
@@ -12832,7 +12799,7 @@ msgstr "Có thể ghi"
 
 #: lib/import.php
 msgid "not written"
-msgstr ""
+msgstr "chưa được ghi"
 
 #: lib/import.php
 msgid "written"
@@ -12841,17 +12808,17 @@ msgstr "bằng văn bản"
 #: lib/installer.php
 #, php-format
 msgid "%d Data Sources have an RRDfile path outside the RRA directory. This version only creates and updates RRDfiles inside the RRA directory or a directory listed in $config['rrd_additional_paths'] in include/config.php, so these Data Sources will stop updating until one of the following is done:"
-msgstr ""
+msgstr "%d Nguồn dữ liệu có đường dẫn RRDfile nằm ngoài thư mục RRA. Phiên bản này chỉ tạo và cập nhật các RRDfile bên trong thư mục RRA hoặc một thư mục được liệt kê trong $config['rrd_additional_paths'] ở tệp include/config.php, vì vậy các Nguồn dữ liệu này sẽ ngừng cập nhật cho đến khi một trong các bước sau được thực hiện:"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s - N/A"
-msgstr "Phút"
+msgstr "%s - N/A"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "%s - No"
-msgstr "Phút"
+msgstr "%s - Không"
 
 #: lib/installer.php
 #, php-format
@@ -12984,7 +12951,7 @@ msgstr "Bảng chuyển đổi #%s '%s'"
 #: lib/installer.php
 #, php-format
 msgid "Converting Table #%s '%s' failed in-process: %s"
-msgstr ""
+msgstr "Chuyển đổi Bảng #%s '%s' thất bại trong tiến trình: %s"
 
 #: lib/installer.php
 msgid "Creating Graphs for Default Device"
@@ -13004,7 +12971,7 @@ msgstr "Hiện hành"
 
 #: lib/installer.php
 msgid "DATA SOURCES:"
-msgstr ""
+msgstr "NGUỒN DỮ LIỆU:"
 
 #: lib/installer.php
 msgid "DOWNGRADE DETECTED"
@@ -13074,17 +13041,17 @@ msgstr "Lỗi:"
 #: lib/installer.php
 #, php-format
 msgid "ERROR: Database version %s could not be confirmed; retry from the last confirmed version."
-msgstr ""
+msgstr "LỖI: Không thể xác nhận phiên bản cơ sở dữ liệu %s; hãy thử lại từ phiên bản đã xác nhận gần nhất."
 
 #: lib/installer.php
 #, php-format
 msgid "ERROR: Failed to find upgrade function for v%s"
-msgstr ""
+msgstr "LỖI: Không tìm thấy hàm nâng cấp cho v%s"
 
 #: lib/installer.php
 #, php-format
 msgid "ERROR: Required upgrade file for v%s was not found."
-msgstr ""
+msgstr "LỖI: Không tìm thấy tệp nâng cấp bắt buộc cho v%s."
 
 #: lib/installer.php
 msgid "EXAMPLE:"
@@ -13100,17 +13067,17 @@ msgstr "Lỗi định vị hồ sơ"
 
 #: lib/installer.php
 msgid "Every Data Source RRDfile path is inside an allowed directory"
-msgstr ""
+msgstr "Mọi đường dẫn RRDfile của Nguồn dữ liệu đều nằm trong thư mục được phép"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Exception occurred during installation: #%s - %s"
-msgstr "Ngoại lệ xảy ra trong khi cài đặt: #"
+msgstr "Đã xảy ra ngoại lệ trong quá trình cài đặt: #%s - %s"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Failed to apply '%s' as Automation Range"
-msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
+msgstr "Không thể áp dụng '%s' làm Phạm vi tự động hóa"
 
 #: lib/installer.php
 #, php-format
@@ -13140,9 +13107,9 @@ msgid "Failed to find automation network, no changes were made"
 msgstr "Không thể tìm thấy mạng tự động, không có thay đổi nào được thực hiện"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
-msgstr "Không thể áp dụng hồ sơ được chỉ định %s! = %s"
+msgstr "Không tìm thấy hồ sơ đã chọn (%s), không có thay đổi nào được thực hiện"
 
 #: lib/installer.php
 #, php-format
@@ -13155,9 +13122,9 @@ msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "Không thể đặt phiên bản %sRRDTool được chỉ định: %s"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Failed to updated Automation Option Set %s"
-msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
+msgstr "Cập nhật Bộ tùy chọn tự động hóa %s thất bại"
 
 #: lib/installer.php
 msgid "File not found"
@@ -13287,7 +13254,6 @@ msgid "Kadupul Data Input methods that call a script can be exploited in ways th
 msgstr "Các phương thức Nhập dữ liệu của Kadupul có thể được khai thác theo cách mà một người không phải là quản trị viên có thể gây thiệt hại cho các tệp do tài khoản pug sở hữu và trong trường hợp ai đó chạy trình đẩy Kadupul với quyền root, có thể làm tổn hại hệ điều hành cho phép kẻ tấn công khai thác cơ sở hạ tầng của bạn."
 
 #: lib/installer.php utilities.php
-#, fuzzy
 msgid "Kadupul Version"
 msgstr "Phiên bản Kadupul"
 
@@ -13309,7 +13275,7 @@ msgstr "Äiá»u kiá»n giáº¥y phÃ©p"
 
 #: lib/installer.php
 msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
-msgstr ""
+msgstr "Liệt kê thư mục chứa chúng trong $config['rrd_additional_paths'] ở tệp include/config.php, ví dụ $config['rrd_additional_paths'] = array('/data/rrd');"
 
 #: lib/installer.php
 msgid "Local Database Connection Information"
@@ -13329,9 +13295,9 @@ msgid "Make sure you have read and followed the required steps needed to install
 msgstr "Hãy chắc chắn rằng bạn đã đọc và làm theo các bước cần thiết để cài đặt Kadupul trước khi tiếp tục. Thông tin cài đặt có thể được tìm thấy cho <a href=\"%1$s\">các</a> hệ điều hành dựa trên <a href=\"%1$s\">Unix</a> và <a href=\"%2$s\">Win32</a> ."
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
-msgstr "Mẫu tự động hóa cho [Mẫu đã xóa]"
+msgstr "Ánh xạ Mẫu tự động hóa cho Mẫu thiết bị '%s'"
 
 #: lib/installer.php
 msgid "MySQL - Settings"
@@ -13363,9 +13329,9 @@ msgid "New Remote Poller"
 msgstr "Xe đẩy từ xa mới"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "No - %s"
-msgstr "Phút"
+msgstr "Không - %s"
 
 #: lib/installer.php
 msgid "No Remote Data Collectors found for full synchronization"
@@ -13413,7 +13379,7 @@ msgstr "Khi quá trình cài đặt đã hoàn tất đường dẫn CSRF, nên 
 
 #: lib/installer.php
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $ rdatabase_username cho máy chủ cơ sở dữ liệu Kadupul chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Kadupul nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
+msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $rdatabase_username cho máy chủ cơ sở dữ liệu Kadupul chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Kadupul nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
 
 #: lib/installer.php
 msgid "One or more paths appear to be incorrect, unable to proceed"
@@ -13433,7 +13399,7 @@ msgstr "Các module tùy chọn"
 
 #: lib/installer.php
 msgid "Or move them into the RRA directory with structure_rra_paths.php --proceed: stop the poller, list their directory in $config['rrd_additional_paths'] so the script accepts them, run it, then remove the entry. Do not move them by hand and clear the Data Source Path, which starts a new, empty RRDfile."
-msgstr ""
+msgstr "Hoặc di chuyển chúng vào thư mục RRA bằng structure_rra_paths.php --proceed: dừng poller, liệt kê thư mục của chúng trong $config['rrd_additional_paths'] để script chấp nhận chúng, chạy script, sau đó xóa mục đó đi. Không di chuyển thủ công và xóa Đường dẫn Nguồn dữ liệu, vì điều đó sẽ bắt đầu một RRDfile mới, trống."
 
 #: lib/installer.php
 msgid "PHP - Module Support (Optional)"
@@ -13444,9 +13410,9 @@ msgid "PHP - Module Support (Required)"
 msgstr "PHP - Hỗ trợ mô-đun (Bắt buộc)"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "PHP - Recommendations (%s)"
-msgstr "PHP - Khuyến nghị"
+msgstr "PHP - Khuyến nghị (%s)"
 
 #: lib/installer.php
 msgid "PHP Binary"
@@ -13458,7 +13424,7 @@ msgstr "Khuyến nghị về PHP"
 
 #: lib/installer.php
 msgid "PHP is not in the server-configured installer allowlist or did not return the expected result"
-msgstr ""
+msgstr "PHP không nằm trong danh sách cho phép của trình cài đặt do máy chủ cấu hình hoặc không trả về kết quả mong đợi"
 
 #: lib/installer.php
 msgid "Path is not writable"
@@ -13520,7 +13486,7 @@ msgstr "Nhấn &#39; %s&#39;, sau đó nhấp vào &#39; %s&#39; để hoàn t�
 
 #: lib/installer.php
 msgid "RRDfile Locations"
-msgstr ""
+msgstr "Vị trí RRDfile"
 
 #: lib/installer.php
 msgid "Recommended"
@@ -13569,12 +13535,12 @@ msgstr "Yêu cầu có thể ghi tại thời gian cài đặt"
 #: lib/installer.php
 #, php-format
 msgid "Required core database tables are missing: %s"
-msgstr ""
+msgstr "Thiếu các bảng cơ sở dữ liệu lõi bắt buộc: %s"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Resequencing Automation Option Set %s"
-msgstr "Chạy tự động hóa trên thiết bị"
+msgstr "Đánh số lại thứ tự Bộ tùy chọn tự động hóa %s"
 
 #: lib/installer.php
 msgid "Resource is not writable"
@@ -13590,7 +13556,7 @@ msgstr "Định dạng"
 
 #: lib/installer.php
 msgid "Run it as an account with the Installation/Upgrades realm and no pending password change, for example with --as=<user>."
-msgstr ""
+msgstr "Chạy nó dưới dạng một tài khoản thuộc vùng Cài đặt/Nâng cấp và không có yêu cầu đổi mật khẩu đang chờ, ví dụ với --as=<user>."
 
 #: lib/installer.php
 msgid "Running first-time data query for local host"
@@ -13602,16 +13568,16 @@ msgstr "Chế độ quét"
 
 #: lib/installer.php
 msgid "See docs/rrd-path-containment.md for details."
-msgstr ""
+msgstr "Xem docs/rrd-path-containment.md để biết chi tiết."
 
 #: lib/installer.php
 msgid "Select default theme: "
 msgstr "Chọn chủ đề mặc định:"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Selecting Automation Option Set %s"
-msgstr "Xóa (các) Mẫu tự động hóa"
+msgstr "Đang chọn Bộ tùy chọn tự động hóa %s"
 
 #: lib/installer.php
 msgid "Server Collation"
@@ -13628,9 +13594,9 @@ msgid "Setting PHP Option %s = %s"
 msgstr "Đặt tùy chọn PHP%s =%s"
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Setting default data source profile to %s (%s)"
-msgstr "Hồ sơ nguồn dữ liệu mặc định cho mẫu dữ liệu này."
+msgstr "Đang đặt hồ sơ nguồn dữ liệu mặc định thành %s (%s)"
 
 #: lib/installer.php
 #, php-format
@@ -13674,11 +13640,11 @@ msgstr "Cảm ơn bạn đã dành thời gian để tải xuống và cài đ�
 
 #: lib/installer.php
 msgid "The Data Source paths could not be read, so RRDfile locations were not checked. Check them after the upgrade with the poller log."
-msgstr ""
+msgstr "Không thể đọc đường dẫn Nguồn dữ liệu nên vị trí RRDfile chưa được kiểm tra. Hãy kiểm tra chúng sau khi nâng cấp bằng nhật ký poller."
 
 #: lib/installer.php
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
-msgstr "Trình cài đặt tự động gán một $ poller_id và thêm nó vào tệp config.php."
+msgstr "Trình cài đặt tự động gán một $poller_id và thêm nó vào tệp config.php."
 
 #: lib/installer.php
 msgid "The Installer could not proceed due to an unexpected error."
@@ -13710,27 +13676,27 @@ msgstr "Việc cài đặt không thể tiếp tục vì không thể tìm thấ
 
 #: lib/installer.php
 msgid "The installed database could not be checked because its table list could not be read."
-msgstr ""
+msgstr "Không thể kiểm tra cơ sở dữ liệu đã cài đặt vì không thể đọc danh sách bảng của nó."
 
 #: lib/installer.php
 msgid "The installed database could not be checked because the core table list could not be read from cacti.sql."
-msgstr ""
+msgstr "Không thể kiểm tra cơ sở dữ liệu đã cài đặt vì không thể đọc danh sách bảng lõi từ cacti.sql."
 
 #: lib/installer.php
 msgid "The installed database version could not be confirmed. Review the installer errors before retrying."
-msgstr ""
+msgstr "Không thể xác nhận phiên bản cơ sở dữ liệu đã cài đặt. Hãy xem lại các lỗi trình cài đặt trước khi thử lại."
 
 #: lib/installer.php
 msgid "The installer CLI interpreter is unavailable for refreshing the Symfony production cache."
-msgstr ""
+msgstr "Trình thông dịch CLI của trình cài đặt không khả dụng để làm mới bộ nhớ đệm sản xuất Symfony."
 
 #: lib/installer.php
 msgid "The primary CDEF reference contract could not be installed. Review the schema and installer privileges before retrying."
-msgstr ""
+msgstr "Không thể cài đặt hợp đồng tham chiếu CDEF chính. Hãy xem lại lược đồ và đặc quyền trình cài đặt trước khi thử lại."
 
 #: lib/installer.php
 msgid "The specified value appears to be different in the running config versus the INI file."
-msgstr ""
+msgstr "Giá trị được chỉ định có vẻ khác nhau trong cấu hình đang chạy so với tệp INI."
 
 #: lib/installer.php
 #, php-format
@@ -13742,9 +13708,8 @@ msgid "The variables that must be set in the config.php file include the followi
 msgstr "Các biến phải được đặt trong tệp config.php bao gồm:"
 
 #: lib/installer.php
-#, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "Cách thức hoạt động của Danh sách trắng là khi bạn lần đầu tiên nhập Phương thức nhập dữ liệu hoặc bạn nhập lại Phương thức nhập dữ liệu và tập lệnh và hoặc thay đổi theo bất kỳ cách nào, Phương thức nhập dữ liệu và tất cả các nguồn dữ liệu tương ứng sẽ bị vô hiệu hóa ngay lập tức cho đến khi quản trị viên xác nhận rằng Phương thức nhập dữ liệu hợp lệ."
+msgstr "Cách hoạt động của Danh sách trắng (Whitelisting) là khi bạn nhập một Phương thức nhập dữ liệu lần đầu, hoặc nhập lại một Phương thức nhập dữ liệu, và script hoặc các tham số thay đổi theo bất kỳ cách nào, Phương thức nhập dữ liệu cùng tất cả các Nguồn dữ liệu tương ứng sẽ bị vô hiệu hóa ngay lập tức cho đến khi quản trị viên xác nhận rằng Phương thức nhập dữ liệu đó hợp lệ."
 
 #: lib/installer.php
 msgid "Then run the following within MySQL as an administrator:"
@@ -13810,11 +13775,11 @@ msgstr "Để xác định Phương thức nhập dữ liệu ở trạng thái 
 
 #: lib/installer.php
 msgid "Unable to refresh the Symfony production cache. Check cache permissions and run bin/console cache:clear --env=prod --no-debug before retrying the upgrade."
-msgstr ""
+msgstr "Không thể làm mới bộ nhớ đệm sản xuất Symfony. Kiểm tra quyền bộ nhớ đệm và chạy bin/console cache:clear --env=prod --no-debug trước khi thử nâng cấp lại."
 
 #: lib/installer.php
 msgid "Unable to update application defaults."
-msgstr ""
+msgstr "Không thể cập nhật các giá trị mặc định của ứng dụng."
 
 #: lib/installer.php
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
@@ -13834,9 +13799,9 @@ msgid "Update the path_php_binary value in the settings table."
 msgstr "Cập nhật giá trị path_php_binary trong bảng cài đặt."
 
 #: lib/installer.php
-#, fuzzy, php-format
+#, php-format
 msgid "Updating Automation Option Set %s"
-msgstr "Tùy chọn SNMP tự động hóa"
+msgstr "Đang cập nhật Bộ tùy chọn tự động hóa %s"
 
 #: lib/installer.php
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
@@ -13943,7 +13908,7 @@ msgstr "Cơ sở dữ liệu TimeZone MySQL của bạn không được điền.
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "Thông tin về Kadupul từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$ rdatabase_default, $ rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Kadupul chính của bạn. Sửa lỗi này và thử lại."
+msgstr "Thông tin về Kadupul từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$rdatabase_default, $rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Kadupul chính của bạn. Sửa lỗi này và thử lại."
 
 #: lib/installer.php
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
@@ -13968,7 +13933,7 @@ msgstr "Đối chiếu máy chủ của bạn dường như KHÔNG tuân thủ �
 #: lib/installer.php
 #, php-format
 msgid "and %d more"
-msgstr ""
+msgstr "và %d mục nữa"
 
 #: lib/ldap.php
 msgid "Authentication Failure"
@@ -13979,19 +13944,19 @@ msgid "Authentication Success"
 msgstr "Xác thực thành công"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Connection Timeout to Server (%s)"
-msgstr "Hết thời gian kết nối"
+msgstr "Hết thời gian kết nối đến Máy chủ (%s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Group DN could not be found to compare on Server (%s)"
-msgstr "Không thể tìm thấy nhóm DN để so sánh"
+msgstr "Không tìm thấy DN nhóm để so sánh trên Máy chủ (%s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Insufficient Access to Server (%s)"
-msgstr "không đủ mọi quyền để truy cập"
+msgstr "Không đủ quyền truy cập Máy chủ (%s)"
 
 #: lib/ldap.php
 msgid "Invalid Password provided.  Login failed."
@@ -14015,38 +13980,38 @@ msgid "Protocol Error, General failure (%s)"
 msgstr "Lỗi giao thức, lỗi chung ( %s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
-msgstr "Lỗi giao thức, không thể liên kết, kết quả LDAP: %s"
+msgstr "Lỗi giao thức, không thể liên kết (bind), kết quả LDAP: (%s) trên Máy chủ (%s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Protocol Error, Unable to set referrals option (%s) on Server (%s)"
-msgstr "Lỗi giao thức, không thể đặt tùy chọn giới thiệu"
+msgstr "Lỗi giao thức, không thể đặt tùy chọn chuyển tiếp (referrals) (%s) trên Máy chủ (%s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Protocol Error, Unable to set version (%s) on Server (%s)"
-msgstr "Lỗi giao thức, không thể đặt phiên bản"
+msgstr "Lỗi giao thức, không thể đặt phiên bản (%s) trên Máy chủ (%s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Protocol Error, unable to start TLS communications (%s) on Server (%s)"
-msgstr "Lỗi giao thức, không thể bắt đầu liên lạc TLS"
+msgstr "Lỗi giao thức, không thể bắt đầu giao tiếp TLS (%s) trên Máy chủ (%s)"
 
 #: lib/ldap.php
 msgid "Specific DN and Password required"
 msgstr "Yêu cầu cụ thể về DN và mật khẩu"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to Connect to Server (%s)"
-msgstr "Không thể kết nối đến máy chủ"
+msgstr "Không thể kết nối tới Máy chủ (%s)"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to create LDAP connection object to Server (%s)"
-msgstr "Không thể tạo đối tượng kết nối LDAP"
+msgstr "Không thể tạo đối tượng kết nối LDAP tới Máy chủ (%s)"
 
 #: lib/ldap.php
 msgid "Unable to find user from DN"
@@ -14057,9 +14022,9 @@ msgid "Unable to find users DN"
 msgstr "Không thể tìm thấy người dùng DN"
 
 #: lib/ldap.php
-#, fuzzy, php-format
+#, php-format
 msgid "Unexpected error %s (Ldap Error: %s) on Server (%s)"
-msgstr "Lỗi không mong muốn %s (Lỗi Ldap: %s)"
+msgstr "Lỗi không mong muốn %s (Lỗi Ldap: %s) trên Máy chủ (%s)"
 
 #: lib/ping.php
 msgid "Destination address not specified"
@@ -14087,14 +14052,14 @@ msgid "Please upgrade to PHP 5.5.4+ for IPv6 support!"
 msgstr "Vui lòng nâng cấp lên PHP 5.5.4+ để được hỗ trợ IPv6!"
 
 #: lib/ping.php
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
-msgstr "TCP ping: socket_connect (), lý do: %s"
+msgstr "TCP Ping thất bại: socket_connect(), lý do: %s"
 
 #: lib/ping.php
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
-msgstr "TCP ping: socket_select () không thành công, lý do: %s"
+msgstr "TCP Ping thất bại: socket_select() thất bại, lý do: %s"
 
 #: lib/ping.php
 #, php-format
@@ -14102,9 +14067,9 @@ msgid "TCP Ping Success (%s ms)"
 msgstr "TCP Ping thành công ( %s ms)"
 
 #: lib/ping.php
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "TCP Ping thành công ( %s ms)"
+msgstr "TCP Ping thành công Kết nối bị từ chối (%s ms)"
 
 #: lib/ping.php
 msgid "TCP ping timed out"
@@ -14144,7 +14109,7 @@ msgstr "Không nêu"
 
 #: lib/plugins.php
 msgid "Plugin INFO must declare a valid compat version"
-msgstr ""
+msgstr "Plugin INFO phải khai báo phiên bản compat hợp lệ"
 
 #: lib/plugins.php
 msgid "Plugin cannot be installed."
@@ -14162,25 +14127,25 @@ msgstr "Yêu cầu: Kadupul&gt; = %s"
 #: lib/plugins.php
 #, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
-msgstr ""
+msgstr "Thư mục Plugin '%s' cần được đổi tên để xóa 'plugin_' khỏi tên trước khi có thể cài đặt."
 
 #: lib/plugins.php
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr ""
+msgstr "Plugin trong thư mục '%s' không bao gồm hàm cài đặt '%s()'. Hàm này phải tồn tại để plugin có thể được cài đặt."
 
 #: lib/plugins.php
 #, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr ""
+msgstr "Plugin trong thư mục '%s' không bao gồm hàm phiên bản '%s()'. Hàm này phải tồn tại để plugin có thể được cài đặt."
 
 #: lib/poller.php
 msgid "Synchronization failed while replicating data-source definitions. See the log for details."
-msgstr ""
+msgstr "Đồng bộ hóa thất bại khi sao chép định nghĩa nguồn dữ liệu. Xem nhật ký để biết chi tiết."
 
 #: lib/poller.php
 msgid "Synchronization failed. See the log for details."
-msgstr ""
+msgstr "Đồng bộ hóa thất bại. Xem nhật ký để biết chi tiết."
 
 #: lib/reports.php
 msgid "(No Graph Template)"
@@ -14209,9 +14174,9 @@ msgid "Device '%s' not added to Report as it already exists on report."
 msgstr "Thiết bị '%s' không được thêm vào Báo cáo vì nó đã tồn tại trên báo cáo."
 
 #: lib/reports.php
-#, fuzzy, php-format
+#, php-format
 msgid "Device '%s' successfully added to Report."
-msgstr "Đã thêm vào xương rồng"
+msgstr "Đã thêm thành công Thiết bị '%s' vào Báo cáo."
 
 #: lib/reports.php
 msgid "Device not found! Unable to add to Report"
@@ -14280,9 +14245,9 @@ msgid "ERROR while writing XML file: %s"
 msgstr "LRI trong khi viết tệp XML: %s"
 
 #: lib/rrd.php
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: RRD file does not exist: %s"
-msgstr "LRI: RRDfile %s không thể ghi"
+msgstr "LỖI: Tệp RRD không tồn tại: %s"
 
 #: lib/rrd.php
 #, php-format
@@ -14291,11 +14256,11 @@ msgstr "LRI: RRDfile %s không thể ghi"
 
 #: lib/rrd.php
 msgid "ERROR: The Graph contains a value RRDtool cannot accept."
-msgstr ""
+msgstr "LỖI: Đồ thị chứa giá trị mà RRDtool không thể chấp nhận."
 
 #: lib/rrd.php
 msgid "ERROR: The RRD file path of this Data Source is outside the RRA directory."
-msgstr ""
+msgstr "LỖI: Đường dẫn tệp RRD của Nguồn dữ liệu này nằm ngoài thư mục RRA."
 
 #: lib/rrd.php
 msgid "Error while parsing the XML of RRDtool dump"
@@ -14360,12 +14325,12 @@ msgstr "RRA &#39; %s&#39; bị thiếu trong định nghĩa Kadupul"
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) thêm vào tệp RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_law = %d, XFF = %1.2f) thêm vào tệp RRD"
 
 #: lib/rrd.php
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) đã bị xóa khỏi tệp RRD"
+msgstr "RRA (CF = %s, ROWS = %d, PDP_PER_law = %d, XFF = %1.2f) đã bị xóa khỏi tệp RRD"
 
 #: lib/rrd.php
 msgid "RRA Folder"
@@ -14382,7 +14347,7 @@ msgstr "RRD tối thiểu cho Nguồn dữ liệu &#39; %s&#39; phải là &#39;
 
 #: lib/rrd.php
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
-msgstr ""
+msgstr "Khôi phục RRD thất bại; XML gốc và XML khôi phục đã được giữ lại. Xem nhật ký ứng dụng."
 
 #: lib/rrd.php
 msgid "Root"
@@ -14394,7 +14359,7 @@ msgstr "Lưu trữ vòng Robin"
 
 #: lib/rrd.php
 msgid "The Graph contains a value RRDtool cannot accept."
-msgstr ""
+msgstr "Đồ thị chứa giá trị mà RRDtool không thể chấp nhận."
 
 #: lib/rrd.php
 #, php-format
@@ -14407,19 +14372,19 @@ msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF cho id RRA của Kadupul &#39; %s&#39; phải là &#39; %s&#39;"
 
 #: lib/rrd.php
-#, fuzzy, php-format
+#, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
-msgstr "Số lượng hàng cho id Kadupul RRA &#39; %s&#39; phải là &#39; %s&#39;"
+msgstr "Số hàng cho Kadupul RRA id '%s' không chính xác. Số hàng hiện là '%s' nhưng phải là '%s'"
 
 #: lib/rrd.php
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
-msgstr ""
+msgstr "Giá trị pdp_per_row '%s' không hợp lệ cho RRA '%s', phải là '%s'. Hãy cân nhắc xóa và cho phép Kadupul tạo lại RRDfile."
 
 #: lib/rrd.php
-#, fuzzy, php-format
+#, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
-msgstr "Kích thước bước RRD bắt buộc là &#39; %s&#39;"
+msgstr "Kích thước bước RRDfile bắt buộc là '%s' nhưng bước quan sát được là '%s'"
 
 #: lib/rrd.php
 #, php-format
@@ -14446,319 +14411,308 @@ msgstr "đổi tên %s thành %s"
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage configuration requires attention"
-msgstr ""
+msgstr "Cấu hình lưu trữ RRD cần được chú ý"
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
+msgstr "Bộ lưu trữ RRD chưa sẵn sàng cho truy cập phối hợp. Hãy bật PHP POSIX và cấu hình giá trị số rrd_maintenance_trusted_uids và rrd_maintenance_trusted_gids trong include/config.php cho mọi tài khoản dịch vụ web và poller. Xóa quyền ghi công khai (world-write) và kiểm tra các thư mục cha lưu trữ. Xem docs/testing/spikekill-safety.md trước khi nâng cấp."
 
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
-msgstr ""
+msgstr "Bộ lưu trữ RRD chưa sẵn sàng: thư mục được cấu hình phải tồn tại và cho phép tài khoản dịch vụ này tạo, đọc, ghi và xóa tệp."
 
 #: lib/rrd_maintenance.php
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
-msgstr ""
+msgstr "Hàng đợi poller_output phải sử dụng InnoDB trước khi thu thập dữ liệu. Hãy dừng tất cả bộ thu thập, bao gồm cả bộ thu thập từ xa, và chạy cli/upgrade_database.php --migrate-poller-queue (hoặc chuyển đổi poller_output sang InnoDB sau khi sao lưu). Engine quan sát được: %s. Không được hủy bỏ các mẫu đang được giữ lại để xóa tình trạng này."
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr ""
+msgstr "Không thể xác nhận thao tác. Hãy kiểm tra lịch sử thay đổi trước khi thử lại."
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."
-msgstr ""
+msgstr "Không thể xác nhận sửa chữa lược đồ chuyển tiếp. Hãy xem lại lược đồ đích và đặc quyền trình cài đặt trước khi thử lại."
 
 #: lib/snmp.php
-#, fuzzy, php-format
+#, php-format
 msgid "SNMP Command is: %s"
-msgstr "Tùy chọn SNMP [chỉnh sửa: %s]"
+msgstr "Lệnh SNMP là: %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Avg"
-msgstr "Trung bình:"
+msgstr "TB"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "CF"
-msgstr "CDEF"
+msgstr "CF"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "DS"
-msgstr "MÔ TẢ"
+msgstr "DS"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' does not exist."
-msgstr "XML: Phiên bản Kadupul không tồn tại."
+msgstr "LỖI NGHIÊM TRỌNG: Tệp '%s' không tồn tại."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: File '%s' is not a regular file."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Tệp '%s' không phải là tệp thông thường."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Tệp '%s' không thể ghi bởi '%s'."
 
 #: lib/spikekill.php
 msgid "FATAL: Number of spikes to remove must be a positive integer"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Số lượng đột biến cần loại bỏ phải là một số nguyên dương"
 
 #: lib/spikekill.php
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Phạm vi thời gian ngoại lai yêu cầu phải chỉ định outlier-start và outlier-end."
 
 #: lib/spikekill.php
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Phạm vi thời gian ngoại lai yêu cầu outlier-start phải nhỏ hơn outlier-end."
 
 #: lib/spikekill.php
 msgid "FATAL: Percent deviation must be a positive floating point number."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Phần trăm độ lệch phải là một số thực dấu phẩy động dương."
 
 #: lib/spikekill.php
 msgid "FATAL: RRD source identity changed or could not be verified safely."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Danh tính nguồn RRD đã thay đổi hoặc không thể xác minh an toàn."
 
 #: lib/spikekill.php
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Bộ lưu trữ RRD đang bận. Hãy thử lại sau khi hoàn tất thăm dò."
 
 #: lib/spikekill.php
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Bộ lưu trữ RRD không đáng tin cậy hoặc không khả dụng. Hãy chạy cli/upgrade_database.php --check-rrd-storage bằng tài khoản dịch vụ web và sửa cấu hình lưu trữ của nó."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Sao lưu RRDfile từ '%s' sang '%s' THẤT BẠI!"
 
 #: lib/spikekill.php
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Lệnh RRDtool thất bại. Vui lòng xác minh đường dẫn RRDtool hợp lệ trong Cài đặt->Đường dẫn!"
 
 #: lib/spikekill.php
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: RRDtool trả về một bản kết xuất (dump) trống. Tệp RRD không bị sửa đổi."
 
 #: lib/spikekill.php
 msgid "FATAL: Standard Deviation must be a positive integer."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Độ lệch chuẩn phải là một số nguyên dương."
 
 #: lib/spikekill.php
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Hãy dừng các trình ghi RRD bên ngoài và tắt RRDCACHED_ADDRESS trước khi loại bỏ đột biến."
 
 #: lib/spikekill.php
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Phương thức loại bỏ 'float' yêu cầu chỉ định ngày bắt đầu và ngày kết thúc."
 
 #: lib/spikekill.php
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Phương thức loại bỏ 'gapfill' yêu cầu chỉ định ngày bắt đầu và ngày kết thúc."
 
 #: lib/spikekill.php
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Số lượng giá trị ngoại lai cần loại trừ phải là một số nguyên dương."
 
 #: lib/spikekill.php
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Các tham số outlier-start và outlier-end phải có định dạng YYYY-MM-DD HH:MM hoặc dấu thời gian unix."
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Không thể sao lưu '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Không thể khôi phục '%s' từ '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Không thể tạo tệp XML tạm thời một cách an toàn trong '%s'!"
 
 #: lib/spikekill.php
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Không thể ghi tệp XML '%s'"
 
 #: lib/spikekill.php
 msgid "FATAL: You must specify an RRDfile!"
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Bạn phải chỉ định một RRDfile!"
 
 #: lib/spikekill.php
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Bạn phải chỉ định 'last', 'avg' hoặc 'nan' làm phương thức thay thế."
 
 #: lib/spikekill.php
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
-msgstr ""
+msgstr "LỖI NGHIÊM TRỌNG: Bạn phải chỉ định 'stddev', 'variance', 'float' hoặc 'fill' làm phương thức."
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Gap Fill"
-msgstr "Khoảng cách điền vào"
+msgstr "Điền khoảng trống"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "Max Kills:     %s"
-msgstr "Tối đa giết chết mỗi RRA"
+msgstr "Số lần loại tối đa: %s"
 
 #: lib/spikekill.php
 msgid "Max Kills:     Unlimited"
-msgstr ""
+msgstr "Số lần loại tối đa: Không giới hạn"
 
 #: lib/spikekill.php
 msgid "MaxStdDev"
-msgstr ""
+msgstr "MaxStdDev"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "MaxValue"
-msgstr "Giá trị"
+msgstr "MaxValue"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Method:        %s"
-msgstr ""
+msgstr "Phương thức:        %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "MinStdDev"
-msgstr "Chạy khô StdDev"
+msgstr "MinStdDev"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "MinValue"
-msgstr "Giá trị"
+msgstr "MinValue"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr ""
+msgstr "LƯU Ý: Đang sao lưu '%s' sang '%s'"
 
 #: lib/spikekill.php
 msgid "NOTE: Dryrun requested.  No updates performed"
-msgstr ""
+msgstr "LƯU Ý: Đã yêu cầu chạy thử (Dryrun). Không có cập nhật nào được thực hiện"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
-msgstr ""
+msgstr "LƯU Ý: Giới hạn trong Khung thời gian: %s đến %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "NOTE: No Spikes Found."
-msgstr "Không tìm thấy trang nào"
+msgstr "LƯU Ý: Không tìm thấy đột biến nào."
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
-msgstr ""
+msgstr "LƯU Ý: Không tìm thấy đột biến nào trong '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
-msgstr ""
+msgstr "LƯU Ý: Không tìm thấy đột biến khung thời gian nào trong '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
-msgstr ""
+msgstr "LƯU Ý: Đang nhập lại '%s' vào '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
-msgstr ""
+msgstr "LƯU Ý: Đang tìm kiếm đột biến trong tệp XML '%s'"
 
 #: lib/spikekill.php
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
-msgstr ""
+msgstr "LƯU Ý: Đã tìm thấy và khắc phục đột biến. Tổng số đột biến %s"
 
 #: lib/spikekill.php
 msgid "NonNan"
-msgstr ""
+msgstr "NonNan"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Num Outliers:  %s"
-msgstr ""
+msgstr "Số giá trị ngoại lai: %s"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile:       %s"
-msgstr "RRDfiles"
+msgstr "RRDfile:       %s"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "Repair Type:   %s"
-msgstr "Các bước sửa chữa [ %s]"
+msgstr "Loại sửa chữa:   %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Samples"
-msgstr "Đơn giản"
+msgstr "Mẫu"
 
 #: lib/spikekill.php
 msgid "Spike Kill Settings Used for Analysis/Correction"
-msgstr ""
+msgstr "Cài đặt Spike Kill được sử dụng để Phân tích/Sửa lỗi"
 
 #: lib/spikekill.php
-#, fuzzy, php-format
+#, php-format
 msgid "Standard Devs: %s"
-msgstr "Độ lệch chuẩn"
+msgstr "Độ lệch chuẩn: %s"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "StdDev"
-msgstr "Xóa StdDev"
+msgstr "StdDev"
 
 #: lib/spikekill.php
 msgid "StdKilled"
-msgstr ""
+msgstr "StdKilled"
 
 #: lib/spikekill.php
 msgid "VarKilled"
-msgstr ""
+msgstr "VarKilled"
 
 #: lib/spikekill.php
-#, fuzzy
 msgid "Variance"
-msgstr "Biến thể"
+msgstr "Phương sai"
 
 #: lib/spikekill.php
 msgid "Variance %%%:    %s %%%"
-msgstr ""
+msgstr "Phương sai %%%:    %s %%%"
 
 #: lib/spikekill.php
 msgid "WindKilled"
-msgstr ""
+msgstr "WindKilled"
 
 #: lib/spikekill.php
 msgid "WindSamples"
-msgstr ""
+msgstr "WindSamples"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Window End:    %s (%s)"
-msgstr ""
+msgstr "Kết thúc khung:  %s (%s)"
 
 #: lib/spikekill.php
 msgid "Window Range:  All"
-msgstr ""
+msgstr "Phạm vi khung:  Tất cả"
 
 #: lib/spikekill.php
 #, php-format
 msgid "Window Start:  %s (%s)"
-msgstr ""
+msgstr "Bắt đầu khung:   %s (%s)"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Non-Template"
@@ -14778,14 +14732,14 @@ msgid "ERROR: Whitelist Validation Failed. Check Data Input Method"
 msgstr "LRI: Xác thực danh sách trắng không thành công. Kiểm tra phương thức nhập dữ liệu"
 
 #: lib/template.php
-#, fuzzy, php-format
+#, php-format
 msgid "Graph Not created for %s due to bad data"
-msgstr "Tạo đồ thị"
+msgstr "Đồ thị không được tạo cho %s do dữ liệu không hợp lệ"
 
 #: lib/template.php
 #, php-format
 msgid "NOTE: Graph not added for Data Query %s and index %s due to Data Source verification failure"
-msgstr ""
+msgstr "LƯU Ý: Đồ thị không được thêm cho Truy vấn dữ liệu %s và chỉ mục %s do xác minh Nguồn dữ liệu thất bại"
 
 #: lib/utility.php
 #, php-format
@@ -14909,9 +14863,8 @@ msgid "This is where metadata is stored. If you had a lot of tables, it would be
 msgstr "Đây là nơi siêu dữ liệu được lưu trữ. Nếu bạn có nhiều bảng, sẽ rất hữu ích khi tăng cái này."
 
 #: lib/utility.php
-#, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "Cài đặt này sẽ duy trì BẬT trừ khi các phiên bản Kadupul của bạn đang chạy trên ZFS hoặc FusionI / O, cả hai đều có nhật ký nội bộ để khắc phục sự cố hệ thống đột ngột. Tuy nhiên, nếu bạn có sức mạnh rất tốt và hệ thống của bạn hiếm khi ngừng hoạt động và bạn có các bản sao lưu, việc chuyển cài đặt này thành TẮT có thể giúp bạn tăng hiệu suất cơ sở dữ liệu lên gần 50%."
+msgstr "Cài đặt này nên giữ ở trạng thái BẬT (ON) trừ khi các phiên bản Kadupul của bạn đang chạy trên ZFS hoặc FusionI/O, cả hai đều có ghi nhật ký nội bộ (journaling) để xử lý sự cố hệ thống đột ngột. Tuy nhiên, nếu bạn có nguồn điện rất tốt, hệ thống hiếm khi sập nguồn và bạn có bản sao lưu, việc TẮT (OFF) cài đặt này có thể giúp bạn tăng hiệu năng cơ sở dữ liệu gần 50%."
 
 #: lib/utility.php
 msgid "Variable"
@@ -14923,7 +14876,7 @@ msgstr "Khi thực hiện các truy vấn con, có kích thước bảng tạm t
 
 #: lib/utility.php
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr ""
+msgstr "Khi thực hiện phép nối (join), nếu nhỏ hơn kích thước này, chúng sẽ được giữ trong bộ nhớ và không bao giờ ghi ra tệp tạm thời. Vì đây là cấp phát bộ nhớ theo từng kết nối, cần cẩn thận không tăng quá cao. Tổng của join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + bộ nhớ MySQL/MariaDB lõi phải dưới 80%. Nếu khuyến nghị là số âm, bạn phải giảm giá trị này và/hoặc sort_buffer_size cho đến khi khuyến nghị nằm trong bộ nhớ cho phép."
 
 #: lib/utility.php
 #, php-format
@@ -14981,7 +14934,7 @@ msgstr "Một tên hữu ích cho VDEF này."
 #: link.php
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr ""
+msgstr "Liên kết ngoài ID '%s' với Tiêu đề '%s' đã cố chèn một URL không hợp lệ và bị chặn!"
 
 #: links.php
 msgid "Apply Filter"
@@ -15133,9 +15086,8 @@ msgid "Automatic Logout"
 msgstr "Đăng xuất tự động"
 
 #: logout.php
-#, fuzzy
 msgid "Logout of Kadupul"
-msgstr "Thoát khỏi Kadupul"
+msgstr "Đăng xuất khỏi Kadupul"
 
 #: logout.php
 #, php-format
@@ -15266,7 +15218,7 @@ msgstr "Mức độ nghiêm trọng"
 
 #: managers.php
 msgid "This SNMP Notification Receiver form has expired. Open the receiver again and use its current form."
-msgstr ""
+msgstr "Biểu mẫu Trình nhận thông báo SNMP này đã hết hạn. Hãy mở lại trình nhận và sử dụng biểu mẫu hiện tại của nó."
 
 #: managers.php utilities.php
 msgid "Time"
@@ -15290,7 +15242,7 @@ msgstr "Thay đổi thiết bị"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
-msgstr ""
+msgstr "Kiểm tra tệp kho gói để tìm các tệp phải tồn tại và xác định tệp bị thiếu"
 
 #: package_import.php
 msgid "Copyright"
@@ -15302,20 +15254,19 @@ msgstr "Quy tắc thiết bị"
 
 #: package_import.php templates_import.php
 msgid "Differences"
-msgstr ""
+msgstr "Khác biệt"
 
 #: package_import.php
 msgid "Error in Package"
 msgstr "Lỗi trong truy vấn dữ liệu"
 
 #: package_import.php
-#, fuzzy
 msgid "Error: Invalid file path."
-msgstr "Nhập đường dẫn tệp hợp lệ"
+msgstr "Lỗi: Đường dẫn tệp không hợp lệ."
 
 #: package_import.php
 msgid "File Differences for: "
-msgstr ""
+msgstr "Khác biệt tệp cho: "
 
 #: package_import.php
 msgid "Filename"
@@ -15323,23 +15274,23 @@ msgstr "Đổi tên"
 
 #: package_import.php
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
-msgstr ""
+msgstr "Nếu được chọn, Kadupul sẽ tự động Tin cậy Người ký cho Gói này và bất kỳ Gói nào trong tương lai của tác giả đó."
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
-msgstr ""
+msgstr "Nhập tên tệp của gói [ Không chọn sẽ nhập tất cả, Đánh dấu để nhập có chọn lọc ]"
 
 #: package_import.php
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
-msgstr ""
+msgstr "Nhập mẫu của gói [ Không chọn sẽ nhập tất cả, Đánh dấu để nhập có chọn lọc ]"
 
 #: package_import.php
 msgid "In order to use this Plugin, you must first run the <b><i class=\"deviceUp\">genkey.php</i></b> script in the plugin directory.  Once that is complete, you will have a public and private key used to sign your packages."
-msgstr ""
+msgstr "Để sử dụng Plugin này, trước tiên bạn phải chạy script <b><i class=\"deviceUp\">genkey.php</i></b> trong thư mục plugin. Sau khi hoàn tất, bạn sẽ có khóa công khai và khóa riêng tư dùng để ký các gói của mình."
 
 #: package_import.php
 msgid "Key Generation Required to Use Plugin"
-msgstr ""
+msgstr "Cần tạo khóa để sử dụng Plugin"
 
 #: package_import.php
 msgid "Local Package Import File"
@@ -15359,7 +15310,7 @@ msgstr "Nhập"
 
 #: package_import.php
 msgid "Package Key Information Not Found"
-msgstr ""
+msgstr "Không tìm thấy thông tin khóa của gói"
 
 #: package_import.php
 msgid "Package XML File Damaged."
@@ -15371,15 +15322,15 @@ msgstr "Gói tập tin"
 
 #: package_import.php
 msgid "Replace Data Source and Graph Template Suggested Value Records.  Graphs and Data Sources will take on new names after either a Data Query Reindex or by using the forced Replace Suggested Values process."
-msgstr ""
+msgstr "Thay thế Bản ghi giá trị đề xuất của Nguồn dữ liệu và Mẫu đồ thị. Đồ thị và Nguồn dữ liệu sẽ nhận tên mới sau khi Lập lại chỉ mục Truy vấn dữ liệu hoặc bằng cách sử dụng quy trình Thay thế giá trị đề xuất bắt buộc."
 
 #: package_import.php
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
-msgstr ""
+msgstr "Xem cacti.log để biết thêm thông tin. Có thể bạn đã gặp lỗi Khóa API, gói đã bị can thiệp hoặc vị trí không khả dụng"
 
 #: package_import.php
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available."
-msgstr ""
+msgstr "Xem cacti.log để biết thêm thông tin. Có thể bạn đã gặp lỗi Khóa API, gói đã bị can thiệp hoặc vị trí không khả dụng."
 
 #: package_import.php templates_import.php
 msgid "Template Type"
@@ -15387,42 +15338,42 @@ msgstr "Thêm cột mốc quan trọng vào Mẫu dự án"
 
 #: package_import.php
 msgid "The *.xml.gz file located on your Local machine to Upload and Import."
-msgstr ""
+msgstr "Tệp *.xml.gz nằm trên máy Cục bộ của bạn để Tải lên và Nhập."
 
 #: package_import.php
 #, php-format
 msgid "The Package %s Import Failed"
-msgstr ""
+msgstr "Nhập Gói %s thất bại"
 
 #: package_import.php
-#, fuzzy, php-format
+#, php-format
 msgid "The Package %s Imported Successfully"
-msgstr "Nhật ký xương rồng đã thanh trừng thành công"
+msgstr "Nhập Gói %s thành công"
 
 #: package_import.php
 msgid "The XML files appears to be invalid.  Please contact the package author"
-msgstr ""
+msgstr "Các tệp XML có vẻ không hợp lệ. Vui lòng liên hệ tác giả gói"
 
 #: package_import.php
 msgid "The XML files for the package does not exist"
-msgstr ""
+msgstr "Các tệp XML cho gói không tồn tại"
 
 #: package_import.php
 #, php-format
 msgid "The package \"%s\" download or validation failed"
-msgstr ""
+msgstr "Tải xuống hoặc xác thực gói \"%s\" thất bại"
 
 #: package_import.php
 msgid "The package download or validation failed"
-msgstr ""
+msgstr "Tải xuống hoặc xác thực gói thất bại"
 
 #: package_import.php
 msgid "Unable to create temporary package file."
-msgstr ""
+msgstr "Không thể tạo tệp gói tạm thời."
 
 #: package_import.php
 msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
-msgstr ""
+msgstr "Bạn chưa Tin cậy Tác giả Gói này. Nếu bạn muốn nhập, hãy đánh dấu hộp kiểm Tự động tin cậy Tác giả"
 
 #: plugins.php
 msgid "A description that the Plugins author has given to the Plugin."
@@ -15474,7 +15425,7 @@ msgstr "Đặt hàng"
 
 #: plugins.php
 msgid "Main / Remote Status"
-msgstr ""
+msgstr "Trạng thái Chính / Từ xa"
 
 #: plugins.php
 msgid "No Plugins Found"
@@ -15587,7 +15538,7 @@ msgstr "Không thể cài đặt Plugin. Các plugin sau phải được cài đ
 #: plugins.php
 #, php-format
 msgid "Unable to Install Plugin: %s"
-msgstr ""
+msgstr "Không thể cài đặt Plugin: %s"
 
 #: plugins.php
 #, php-format
@@ -15609,21 +15560,21 @@ msgstr "Gỡ cài đặt Plugin này sẽ xóa tất cả Dữ liệu và Cài �
 #: poller.php
 #, php-format
 msgid "ERROR: The PHP binary path: %s is invalid for poller id %d.  Poller can not continue!"
-msgstr ""
+msgstr "LỖI: Đường dẫn tệp thực thi PHP: %s không hợp lệ cho poller id %d. Poller không thể tiếp tục!"
 
 #: poller.php
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
-msgstr "LRI: Đường dẫn cột sống: %s không hợp lệ. Xe đẩy không thể tiếp tục!"
+msgstr "LỖI: Đường dẫn spine: %s không hợp lệ cho poller id %d. Poller không thể tiếp tục!"
 
 #: poller.php
 msgid "Kadupul System Notification"
 msgstr "Tiện ích hệ thống Kadupul"
 
 #: poller.php
-#, fuzzy, php-format
+#, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
-msgstr "Thời gian chạy tối đa% d giây vượt quá. Thoát hiểm."
+msgstr "Đã vượt quá thời gian chạy tối đa %d giây cho poller id %d. Đang thoát."
 
 #: poller.php
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -15631,32 +15582,31 @@ msgstr "LƯU Ý: Một bộ thu thập dữ liệu Kadupul thứ hai đã đư�
 
 #: poller.php
 msgid "Poller in Heartbeat Mode"
-msgstr ""
+msgstr "Poller đang ở chế độ Heartbeat"
 
 #: poller.php
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
-msgstr "CẢNH BÁO: %s không đồng bộ với Khoảng thời gian của Poller! Khoảng thời gian của Poller là &#39;% d&#39; giây, với tối đa &#39;% d&#39; giây, nhưng% d giây đã trôi qua kể từ cuộc thăm dò cuối cùng!"
+msgstr "CẢNH BÁO: %s không đồng bộ với Khoảng thời gian Poller cho poller id %d! Khoảng thời gian Poller là %d giây, tối đa là %d giây, nhưng đã %d giây trôi qua kể từ lần thăm dò cuối!"
 
 #: poller.php
-#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "CẢNH BÁO: Chu kỳ thăm dò của Kadupul đã vượt quá khoảng thời gian thăm dò của Kadupul bởi"
+msgstr "CẢNH BÁO: Chu kỳ thăm dò Kadupul đã vượt quá Khoảng thời gian Poller thêm "
 
 #: poller.php
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
-msgstr "CẢNH BÁO: Bảng đầu ra của xe đẩy không trống. Các vấn đề:% d, %s."
+msgstr "CẢNH BÁO: Bảng Đầu ra Poller không trống cho poller id %d. Sự cố: %d, %s."
 
 #: poller.php
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
-msgstr ""
+msgstr "CẢNH BÁO: PollerID:%s với Tên:%s đang ở Trạng thái Heartbeat"
 
 #: poller.php
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
-msgstr "CẢNH BÁO: Có &#39;% d&#39; được phát hiện là vượt quá chu kỳ bỏ phiếu, vui lòng điều tra."
+msgstr "CẢNH BÁO: Phát hiện %d tiến trình chạy vượt quá chu kỳ thăm dò cho poller id %d, vui lòng kiểm tra."
 
 #: poller_automation.php
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -15667,9 +15617,9 @@ msgid "Kadupul Primary Admin"
 msgstr "Quản trị viên chính của Kadupul"
 
 #: poller_automation.php
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
-msgstr "CẢNH BÁO: Cơ sở dữ liệu chính của Kadupul ngoại tuyến hoặc đang trong quá trình phục hồi"
+msgstr "CẢNH BÁO: Cơ sở dữ liệu Kadupul chính %s đang ngoại tuyến hoặc trong chế độ khôi phục"
 
 #: poller_boost.php
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
@@ -15996,7 +15946,7 @@ msgstr "Múi giờ"
 #: pollers.php
 #, php-format
 msgid "WARNING: Use of Data Collector Hostname '%s' is insecure!  Use either a fully qualified domain name or IP address to avoid equivalent hosts from other domains accessing this service"
-msgstr ""
+msgstr "CẢNH BÁO: Việc sử dụng Tên máy chủ Bộ thu thập dữ liệu '%s' không an toàn! Hãy sử dụng tên miền đủ điều kiện (FQDN) hoặc địa chỉ IP để tránh các máy chủ tương đương từ miền khác truy cập vào dịch vụ này"
 
 #: pollers.php
 #, php-format
@@ -16023,7 +15973,7 @@ msgstr "Lưu trữ tất cả RRDfiles không xác định"
 
 #: rrdcleaner.php
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
+msgstr "Tính năng dọn dẹp RRD cục bộ tự động không khả dụng trên Windows. Hãy dừng tất cả trình ghi RRD trước khi dọn dẹp thủ công."
 
 #: rrdcleaner.php user_group_admin.php
 msgctxt "filter: reset"
@@ -16106,7 +16056,7 @@ msgstr "Tổng kích thước [MB]:"
 
 #: settings.php
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
-msgstr ""
+msgstr "Sau khi thay đổi Mô hình quyền đồ thị, bạn nên kiểm tra lại quyền Đồ thị hiệu lực của Người dùng và Nhóm người dùng để đảm bảo bạn vẫn kiểm soát đầy đủ các Đồ thị của mình. LƯU Ý: Nếu bạn muốn hạn chế tất cả Đồ thị ở Mô hình quyền đồ thị theo Thiết bị hoặc theo Mẫu đồ thị, Chính sách đồ thị mặc định phải được đặt thành 'Từ chối' (Deny)."
 
 #: settings.php
 msgid "All Templates Selected"
@@ -16114,20 +16064,20 @@ msgstr "Tất cả các mẫu được chọn"
 
 #: settings.php
 msgid "Changing Permission Model Warning"
-msgstr ""
+msgstr "Cảnh báo thay đổi mô hình quyền"
 
 #: settings.php
 msgid "Changing Permission Model will alter a users effective Graph permissions."
-msgstr ""
+msgstr "Việc thay đổi Mô hình quyền sẽ làm thay đổi quyền Đồ thị hiệu lực của người dùng."
 
 #: settings.php
 msgid "Files Selected"
 msgstr "Tập tin được chọn"
 
 #: settings.php
-#, fuzzy, php-format
+#, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Cài đặt Kadupul ( %s)"
+msgstr "Cài đặt Kadupul (%s)%s"
 
 #: settings.php
 msgid "NOTE: Path Settings on this Tab are only saved locally!"
@@ -16511,7 +16461,7 @@ msgstr "Tên trường"
 
 #: templates_import.php
 msgid "Import Files [ If Files are missing, locate and install before using ]"
-msgstr ""
+msgstr "Nhập tệp [ Nếu thiếu tệp, hãy tìm và cài đặt trước khi sử dụng ]"
 
 #: templates_import.php
 msgid "Import Template"
@@ -16519,12 +16469,12 @@ msgstr "Nhập mẫu"
 
 #: templates_import.php
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
-msgstr ""
+msgstr "Nhập mẫu [ Không chọn sẽ nhập tất cả, Đánh dấu để nhập có chọn lọc ]"
 
 #: templates_import.php
 #, php-format
 msgid "Met: %d"
-msgstr ""
+msgstr "Đạt yêu cầu: %d"
 
 #: templates_import.php
 msgid "Not Readable"
@@ -16533,25 +16483,25 @@ msgstr "Có thể ghi"
 #: templates_import.php
 #, php-format
 msgid "See the cacti.log for more information, and review the XML file for proper syntax.  The error details are shown below.<br><br><b>Errors:</b><br>%s"
-msgstr ""
+msgstr "Xem cacti.log để biết thêm thông tin và kiểm tra tệp XML để đảm bảo cú pháp hợp lệ. Chi tiết lỗi được hiển thị bên dưới.<br><br><b>Lỗi:</b><br>%s"
 
 #: templates_import.php
 msgid "Some CDEF Items will not import due to an export error! Contact Template provider for an updated export."
-msgstr ""
+msgstr "Một số Mục CDEF sẽ không được nhập do lỗi xuất! Hãy liên hệ với nhà cung cấp Mẫu để lấy bản xuất đã cập nhật."
 
 #: templates_import.php
 msgid "The Template Import Succeeded."
-msgstr ""
+msgstr "Nhập Mẫu thành công."
 
 #: templates_import.php
 #, php-format
 msgid "The Template XML file \"%s\" validation failed"
-msgstr ""
+msgstr "Xác thực tệp XML Mẫu \"%s\" thất bại"
 
 #: templates_import.php
 #, php-format
 msgid "Unmet: %d"
-msgstr ""
+msgstr "Chưa đạt yêu cầu: %d"
 
 #: tree.php
 msgid "A Tree must be locked in order to be edited."
@@ -16783,9 +16733,8 @@ msgid "Unpublished Trees cannot be viewed from the Graph tab"
 msgstr "Cây chưa được công bố không thể được xem từ tab Biểu đồ"
 
 #: tree.php
-#, fuzzy
 msgid "You do not have permission to modify this tree."
-msgstr "Quyền bị từ chối. Bạn không có quyền đối với hành động được yêu cầu."
+msgstr "Bạn không có quyền sửa đổi cây này."
 
 #: tree.php
 msgctxt "ordering of tree items"
@@ -16814,12 +16763,11 @@ msgstr "Số"
 
 #: user_admin.php
 msgid "< 1 Month Ago"
-msgstr ""
+msgstr "< 1 Tháng trước"
 
 #: user_admin.php
-#, fuzzy
 msgid "< 1 Week Ago"
-msgstr "1 Tuần"
+msgstr "< 1 Tuần trước"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
@@ -16839,17 +16787,15 @@ msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Hạn ch
 
 #: user_admin.php
 msgid "> 1 Month Ago"
-msgstr ""
+msgstr "> 1 Tháng trước"
 
 #: user_admin.php
-#, fuzzy
 msgid "> 2 Months Ago"
-msgstr "% d Tháng"
+msgstr "> 2 Tháng trước"
 
 #: user_admin.php
-#, fuzzy
 msgid "> 4 Months Ago"
-msgstr "% d Tháng"
+msgstr "> 4 Tháng trước"
 
 #: user_admin.php user_group_admin.php
 msgid "ALLOW"
@@ -17002,7 +16948,6 @@ msgid "Graph Policy"
 msgstr "Chính sách đồ thị"
 
 #: user_admin.php
-#, fuzzy
 msgid "Group"
 msgstr "Nhóm"
 
@@ -17011,9 +16956,9 @@ msgid "Group Membership"
 msgstr "Thành viên nhóm"
 
 #: user_admin.php
-#, fuzzy, php-format
+#, php-format
 msgid "Group Membership %s"
-msgstr "Thành viên nhóm"
+msgstr "Tư cách thành viên nhóm %s"
 
 #: user_admin.php user_group_admin.php
 msgid "Groups"
@@ -17097,7 +17042,7 @@ msgstr "Thu hồi truy cập"
 
 #: user_admin.php
 msgid "Set a new password to move this account to the Local realm."
-msgstr ""
+msgstr "Đặt mật khẩu mới để chuyển tài khoản này sang vùng Cục bộ (Local)."
 
 #: user_admin.php user_group_admin.php
 #, php-format
@@ -17172,9 +17117,8 @@ msgid "User Settings %s"
 msgstr "Cài đặt người dùng %s"
 
 #: user_admin.php
-#, fuzzy
 msgid "User not found."
-msgstr "Không tìm thấy tập tin"
+msgstr "Không tìm thấy người dùng."
 
 #: user_admin.php
 msgid "User(s) to update:"
@@ -17194,15 +17138,15 @@ msgstr "Bạn không được phép thay đổi mật khẩu của bạn."
 
 #: user_admin.php
 msgid "You are not allowed to disable the primary administrator account"
-msgstr ""
+msgstr "Bạn không được phép vô hiệu hóa tài khoản quản trị viên chính"
 
 #: user_admin.php
 msgid "You are not allowed to overwrite the current login account"
-msgstr ""
+msgstr "Bạn không được phép ghi đè tài khoản đang đăng nhập hiện tại"
 
 #: user_admin.php
 msgid "You are not allowed to overwrite the primary administrator account"
-msgstr ""
+msgstr "Bạn không được phép ghi đè tài khoản quản trị viên chính"
 
 #: user_domains.php
 msgid "CN FullName"
@@ -17509,11 +17453,11 @@ msgstr "Hiển thị màn hình đồ thị mặc định"
 
 #: user_group_admin.php
 msgid "The Group Prefix may only contain letters, numbers, spaces and the characters . _ \\ @ -"
-msgstr ""
+msgstr "Tiền tố nhóm chỉ có thể chứa chữ cái, chữ số, dấu cách và các ký tự . _ \\ @ -"
 
 #: user_group_admin.php
 msgid "The copied Group Name must not exceed 20 characters, including the numeric suffix."
-msgstr ""
+msgstr "Tên Nhóm được sao chép không được vượt quá 20 ký tự, bao gồm cả hậu tố số."
 
 #: user_group_admin.php
 msgid "The name of this Group."
@@ -17541,14 +17485,14 @@ msgid "What to do when a User from this User Group logs in."
 msgstr "Phải làm gì khi Người dùng trong Nhóm Người dùng này đăng nhập."
 
 #: utilities.php
-#, fuzzy, php-format
+#, php-format
 msgid "%0.2f percent of update frequency)"
-msgstr "% 0,2f phần trăm tần suất cập nhật)"
+msgstr "%0.2f phần trăm tần suất cập nhật)"
 
 #: utilities.php
 #, php-format
 msgid "%d Bytes"
-msgstr "% d byte"
+msgstr "%d byte"
 
 #: utilities.php
 #, php-format
@@ -17558,7 +17502,7 @@ msgstr "%d phút"
 #: utilities.php
 #, php-format
 msgid "%d seconds"
-msgstr "% d giây"
+msgstr "%d giây"
 
 #: utilities.php
 #, php-format
@@ -17632,7 +17576,7 @@ msgstr "Tập tin lưu trữ:"
 
 #: utilities.php
 msgid "Calculation Formula"
-msgstr ""
+msgstr "Công thức tính toán"
 
 #: utilities.php
 msgid "Cannot open directory"
@@ -17648,7 +17592,6 @@ msgid "Clear"
 msgstr "Xóa"
 
 #: utilities.php
-#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "Xóa nhật ký Kadupul"
 
@@ -17748,7 +17691,7 @@ msgstr "LRI: Phiên bản RRDtool đã cài đặt không vượt quá phiên b�
 #: utilities.php
 #, php-format
 msgid "ERROR: RRDtool 1.2.x+ does not support the GIF images format, but %d\" graph(s) and/or templates have GIF set as the image format."
-msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng% d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
+msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, nhưng %d &quot;đồ thị và / hoặc mẫu có GIF được đặt làm định dạng hình ảnh."
 
 #: utilities.php
 msgid "Each browser tab can use upto 10 connections depending on the browser."
@@ -17813,12 +17756,10 @@ msgid "It is highly suggested that you alter you php.ini memory_limit to %s or h
 msgstr "Rất khuyến khích bạn thay đổi bộ nhớ php.ini_limit thành %s hoặc cao hơn."
 
 #: utilities.php
-#, fuzzy
 msgid "Kadupul Log Cleared"
-msgstr "Nhật ký Kadupul đã bị xóa"
+msgstr "Đã xóa nhật ký Kadupul"
 
 #: utilities.php
-#, fuzzy
 msgid "Kadupul OS"
 msgstr "Hệ điều hành Kadupul"
 
@@ -17858,12 +17799,12 @@ msgstr "Đăng nhập"
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - All Items Shown]"
-msgstr "Nhật ký [Tổng số dòng:% d - Tất cả các mục được hiển thị]"
+msgstr "Nhật ký [Tổng số dòng: %d - Tất cả các mục được hiển thị]"
 
 #: utilities.php
 #, php-format
 msgid "Log [Total Lines: %d - Non-Matching Items Hidden]"
-msgstr "Nhật ký [Tổng số dòng:% d - Ẩn các mục không khớp]"
+msgstr "Nhật ký [Tổng số dòng: %d - Ẩn các mục không khớp]"
 
 #: utilities.php
 msgid "MBytes"
@@ -17880,7 +17821,7 @@ msgstr "Kích thước bảng Boost tối đa được phép:"
 
 #: utilities.php
 msgid "Max Connection Memory Possible"
-msgstr ""
+msgstr "Bộ nhớ kết nối tối đa có thể"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
@@ -17924,7 +17865,7 @@ msgstr "Thông tin bảng MySQL - Kích thước tính bằng KBytes"
 
 #: utilities.php
 msgid "MySQL/MariaDB Memory Statistics (Source: MySQL Tuner)"
-msgstr ""
+msgstr "Thống kê bộ nhớ MySQL/MariaDB (Nguồn: MySQL Tuner)"
 
 #: utilities.php
 msgid "NET-SNMP Not Installed or its paths are not set.  Please install if you wish to monitor SNMP enabled devices."
@@ -17936,7 +17877,7 @@ msgstr "Phiên bản NET-SNMP"
 
 #: utilities.php
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
-msgstr ""
+msgstr "LƯU Ý: Trên các hệ thống lớn, lệnh này có thể mất từ vài phút đến vài giờ để hoàn thành và do đó không nên chạy từ giao diện web Kadupul. Bạn chỉ cần chạy 'php -q cli/rebuild_poller_cache.php --help' tại dòng lệnh để biết thêm thông tin."
 
 #: utilities.php
 msgid "Name: "
@@ -18031,9 +17972,9 @@ msgid "Previous Runtime Timers:"
 msgstr "Bộ đếm thời gian chạy chi tiết:"
 
 #: utilities.php
-#, fuzzy, php-format
+#, php-format
 msgid "Process: %d"
-msgstr "1 quá trình"
+msgstr "Tiến trình: %d"
 
 #: utilities.php
 msgid "Procs: "
@@ -18103,19 +18044,19 @@ msgstr "Bản ghi"
 #: utilities.php
 #, php-format
 msgid "Records: %s (ds rows), Time: %s (secs), GetRows: %s (secs), ResultsCycle: %s (secs), FileAndTemplate: %s (secs), LastUpdate: %s (secs), RRDUpdate: %s (secs), Delete: %s (secs)"
-msgstr ""
+msgstr "Bản ghi: %s (hàng ds), Thời gian: %s (giây), GetRows: %s (giây), ResultsCycle: %s (giây), FileAndTemplate: %s (giây), LastUpdate: %s (giây), RRDUpdate: %s (giây), Delete: %s (giây)"
 
 #: utilities.php
 msgid "Reduce MySQL/MariaDB Memory to less than 80% of System Memory.  Preserve additional Cache Memory for RRDfiles if the Database is on the same system as the RRDfiles.  See Core and Client Totals below for explanation of calculation method."
-msgstr ""
+msgstr "Giảm Bộ nhớ MySQL/MariaDB xuống dưới 80% Bộ nhớ hệ thống. Dự trữ thêm Bộ nhớ đệm cho các RRDfile nếu Cơ sở dữ liệu nằm trên cùng hệ thống với các RRDfile. Xem Tổng Lõi và Máy khách bên dưới để biết giải thích phương pháp tính."
 
 #: utilities.php
 msgid "Reduce Total Client Memory"
-msgstr ""
+msgstr "Giảm tổng bộ nhớ máy khách"
 
 #: utilities.php
 msgid "Reduce Total Core Memory"
-msgstr ""
+msgstr "Giảm tổng bộ nhớ lõi"
 
 #: utilities.php
 msgid "Refresh Interval"
@@ -18181,12 +18122,12 @@ msgstr "Mức độ nghiêm trọng: %s"
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceRecovering\"><b>Idle</b></span>, PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr ""
+msgstr "Trạng thái: <span class=\"deviceRecovering\"><b>Nhàn rỗi</b></span>, Thời gian chạy trước: %s (giây), Đã xử lý trước đó: %10s (hàng ds)"
 
 #: utilities.php
 #, php-format
 msgid "Status: <span class=\"deviceUp\"><b>Running</b></span>, Remaining: %s (dses), CurrentRuntime: %s (secs), PrevRuntime: %s (secs), PrevProcessed: %10s (ds rows)"
-msgstr ""
+msgstr "Trạng thái: <span class=\"deviceUp\"><b>Đang chạy</b></span>, Còn lại: %s (ds), Thời gian chạy hiện tại: %s (giây), Thời gian chạy trước: %s (giây), Đã xử lý trước đó: %10s (hàng ds)"
 
 #: utilities.php
 msgid "Success - Password"
@@ -18292,7 +18233,7 @@ msgstr "Tần số cập nhật:"
 
 #: utilities.php
 msgid "Use this utility to display problems with missing rrd files or missing values in rrdfiles. You need enable rrdcheck in Configuration->Settings->Data"
-msgstr ""
+msgstr "Sử dụng tiện ích này để hiển thị các sự cố về tệp rrd bị thiếu hoặc giá trị bị thiếu trong các tệp rrdfile. Bạn cần bật rrdcheck trong Cấu hình->Cài đặt->Dữ liệu"
 
 #: utilities.php
 msgid "User Login History"

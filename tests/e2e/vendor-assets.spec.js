@@ -1104,7 +1104,7 @@ test("D3 retains the browser global, scales and SVG rendering", async ({
       cx: document.querySelector("circle").getAttribute("cx"),
     };
   });
-  expect(result).toEqual({ version: "7.9.0", cx: "50" });
+  expect(result).toEqual({ version: "7.9.2", cx: "50" });
 });
 
 async function loadMidwinter(page, file) {
