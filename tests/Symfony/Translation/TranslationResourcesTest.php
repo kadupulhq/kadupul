@@ -24,7 +24,7 @@ final class TranslationResourcesTest extends TestCase
         self::assertIsArray($manifest);
         self::assertSame($manifest['translated_locales'], TranslationResources::shippedLocales($root));
         $resources = (new TranslationResources($root))->cactiResources();
-        self::assertSame(24, count($resources));
+        self::assertSame(41, count($resources));
         $locales = [];
         foreach ($resources as $resource) {
             self::assertSame(GettextMoLoader::FORMAT, $resource['format']);
