@@ -51,3 +51,9 @@ asset_management:
         path: '../src/AssetManagement/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\AssetManagement\Infrastructure\Symfony\Controller
     type: attribute
+
+alerting:
+    resource:
+        path: '../src/Alerting/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Alerting\Infrastructure\Symfony\Controller
+    type: attribute

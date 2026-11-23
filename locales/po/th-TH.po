@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Thai Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:53-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Thai\n"
@@ -1159,7 +1159,7 @@ msgstr "รูปแบบชื่อเรื่อง"
 msgid "rule_name"
 msgstr "rule_name"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d นาที"
@@ -4057,6 +4057,14 @@ msgstr "หลัง Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "การรวมข้อมูล (Aggregate)"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7519,6 +7527,11 @@ msgstr "%d โปรเซส"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d จุดพีค (Spikes)"
 
@@ -7634,6 +7647,14 @@ msgstr "ขั้นสูง"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "หลังจากจำนวนวันเท่านี้ จะไม่เพิ่มช่วงเวลาทำการลงในกราฟ <br/>แนะนำ: 62 วัน"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8216,6 +8237,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "เปิดใช้งานการปรับแต่งสำหรับ Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "เปิดใช้งานการอัปเดต RRD ตามต้องการ (On-demand)"
 
@@ -8494,6 +8519,10 @@ msgstr "ควรอัปเดตสถิติรายวันบ่อย
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "ควรตรวจสอบ RRD บ่อยแค่ไหน ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8822,6 +8851,10 @@ msgstr "เขตเวลาของเบราว์เซอร์ของ
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9336,6 +9369,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "ให้ทำเครื่องหมายถูกที่ 'มีกราฟ' และ 'มีแหล่งข้อมูล' โดยค่าเริ่มต้นหรือไม่"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "แสดงกราฟรวมของอุปกรณ์"
 
@@ -9762,6 +9799,10 @@ msgstr "ชื่อของบัญชีผู้ดูแลระบบห
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "ชื่อของผู้ใช้ที่ Kadupul จะใช้เป็นเทมเพลตสำหรับผู้ใช้ Web Basic และ LDAP ใหม่ ค่าเริ่มต้นคือ 'guest' บัญชีผู้ใช้นี้จะถูกปิดใช้งานจากการเข้าสู่ระบบเมื่อถูกเลือก"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

@@ -77,7 +77,9 @@ function confirm(array|false $tables): array
 }
 
 test('cacti.sql declares the core tables the check expects', function () {
-    expect(core_tables())->toHaveCount(121)
+    // ADR 0011: the native alerting tables are core schema, so a missing one fails the check too.
+    expect(core_tables())->toHaveCount(126)
+        ->and(array_values(array_intersect(['alert_baseline_sample', 'alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification'], core_tables())))->toBe(['alert_baseline_sample', 'alert_rule', 'alert_rule_state', 'alert_incident', 'alert_notification'])
         ->and(Installer::coreSchemaTables("CREATE TABLE `Host` (\nCREATE TABLE IF NOT EXISTS poller (\n-- CREATE TABLE skipped (\n"))->toBe(['host', 'poller']);
 });
 

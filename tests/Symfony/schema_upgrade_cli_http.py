@@ -20,6 +20,8 @@ def main():
         # the shipped CLI, without replacing its bootstrap or version check.
         rig.sql("ALTER TABLE data_template_rrd DROP INDEX data_input_field_id;"
                 "ALTER TABLE settings_user MODIFY user_id smallint(8) unsigned NOT NULL default '0';"
+                # The stored LTS release predates the centered-moment columns.
+                "ALTER TABLE alert_baseline_sample DROP COLUMN sample_mean, DROP COLUMN sample_m2;"
                 "UPDATE version SET cacti='1.2.32';")
         result = rig.php('cli/upgrade_database.php', '--debug')
         if result['exit'] != 0:

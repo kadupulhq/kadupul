@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Zulu Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:53-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Zulu\n"
@@ -1159,7 +1159,7 @@ msgstr "Ifomethi Yesihloko"
 msgid "rule_name"
 msgstr "igama lomthetho"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "Iminithi elingu-%d"
@@ -4078,6 +4078,14 @@ msgstr "Ngemva kwe-Boost"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "Hlanganisa"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7540,6 +7548,11 @@ msgstr "Izinqubo ezingu-%d"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "Iziphayikhi ezingu-%d"
 
@@ -7655,6 +7668,14 @@ msgstr "Okuthuthukile"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "Ngemva kwaleli nani lezinsuku, amahora okusebenza ngeke engezwe kugrafu. <br/>Kunconyiwe: izinsuku ezingu-62"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,6 +8258,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "Nika amandla ukulungiswa kwe-Lotus Notes (R)"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "Nika Amandla Ukubuyekezwa Kwe-RRD Okufunwayo"
 
@@ -8515,6 +8540,10 @@ msgstr "Kufanele izibalo Zansuku Zonke zibuyekezwe kangaki?"
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "Kufanele i-RRD ihlolwe kangaki ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8843,6 +8872,10 @@ msgstr "Indawo Yesikhathi Yesiphequluli Sami"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "Ama-NaN"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9357,6 +9390,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "Ingabe okuthi Inamagrafu nokuthi Inemithombo Yedatha kufanele Kuhlolwe Ngokuzenzakalelayo."
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "Bonisa Okuhlanganisiwe Kwedivayisi"
 
@@ -9783,6 +9820,10 @@ msgstr "Igama le-akhawunti eyinhloko yokuphatha ezothola Ama-imeyili ngokuzenzak
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Igama lomsebenzisi i-Kadupul ezomsebenzisa njengesifanekiso sabasebenzisi abasha be-Web Basic ne-LDAP; ngu-'guest' ngokuzenzakalelayo.  Le akhawunti yomsebenzisi izokhutshazwa ekungeneni lapho ikhethwa."
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

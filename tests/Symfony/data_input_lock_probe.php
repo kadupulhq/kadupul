@@ -31,10 +31,10 @@ $created = [];
 function db_install_execute($sql, $params = [], $log = true)
 {
     if ($params === []) {
-        return $GLOBALS['installer_connection']->exec($sql);
+        return $GLOBALS['installer_connection']->exec($sql) === false ? DB_STATUS_ERROR : DB_STATUS_SUCCESS;
     }
 
-    return $GLOBALS['installer_connection']->prepare($sql)->execute($params);
+    return $GLOBALS['installer_connection']->prepare($sql)->execute($params) ? DB_STATUS_SUCCESS : DB_STATUS_ERROR;
 }
 function db_index_exists($table, $name)
 {
@@ -140,9 +140,10 @@ foreach (['db_install_reset_error' => 'install/functions.php', 'db_install_add_c
     eval(test_php_function_source($functionSource, $function));
 }
 require $root . '/lib/installer.php';
-$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_input', 'settings'];
-// Created by the 1.2.37 upgrade step rather than the fixture, and dropped with it.
-$upgradeTables = ['kadupul_metric_binding', 'kadupul_writer_ownership'];
+$tables = ['data_input_data', 'aggregate_graphs', 'data_template_rrd', 'data_input_fields', 'settings_user', 'version', 'poller_output', 'data_source_profiles', 'data_template_data', 'data_source_profiles_rra', 'data_source_profiles_cf', 'data_input', 'settings', 'user_auth', 'user_auth_realm'];
+// Created by the 1.2.37 and 1.2.40 upgrade steps rather than the fixture, and dropped with them.
+// The 1.2.40 step also reads user_auth for its admin realm grant, so both user tables are fixtures above.
+$upgradeTables = ['kadupul_metric_binding', 'kadupul_writer_ownership', 'alert_rule', 'alert_rule_state', 'alert_baseline_sample', 'alert_incident', 'alert_notification'];
 foreach ([...$tables, ...$upgradeTables] as $table) {
     $check = $owner->prepare('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=?');
     $check->execute([$table]);
@@ -186,6 +187,10 @@ try {
     $modes = ($argv[1] ?? '') === '--from-lts-only' ? ['upgrade-lts-1.2.32'] : ['fresh', 'upgrade-1.2.31', 'upgrade-lts-1.2.32', 'upgrade-1.2.33'];
     foreach ($modes as $mode) {
         if ($mode !== 'fresh') {
+            // Each historical scenario starts before these later migrations.
+            foreach ($upgradeTables as $table) {
+                $owner->exec("DROP TABLE IF EXISTS `$table`");
+            }
             $installedVersion = match ($mode) {
                 'upgrade-1.2.31' => '1.2.31', 'upgrade-1.2.33' => '1.2.33', default => '1.2.32'
             };

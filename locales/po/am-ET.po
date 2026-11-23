@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Amharic Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:53-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Amharic\n"
@@ -1159,7 +1159,7 @@ msgstr "የርዕስ ቅርጸት"
 msgid "rule_name"
 msgstr "የደንብ ስም"
 
-#: automation_networks.php pollers.php
+#: automation_networks.php include/global_settings.php pollers.php
 #, php-format
 msgid "%d Minute"
 msgstr "%d ደቂቃ"
@@ -4078,6 +4078,14 @@ msgstr "ከ Boost በኋላ"
 #: include/global_arrays.php
 msgid "Aggregate"
 msgstr "ጥምር (Aggregate)"
+
+#: include/global_arrays.php
+msgid "Alert Incidents"
+msgstr ""
+
+#: include/global_arrays.php
+msgid "Alert Rules"
+msgstr ""
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7540,6 +7548,11 @@ msgstr "%d ሂደቶች"
 
 #: include/global_settings.php
 #, php-format
+msgid "%d Rules"
+msgstr ""
+
+#: include/global_settings.php
+#, php-format
 msgid "%d Spikes"
 msgstr "%d ስፓይኮች"
 
@@ -7655,6 +7668,14 @@ msgstr "የላቀ"
 #: include/global_settings.php
 msgid "After this number of days, the business hours will not be added to the graph. <br/>Recommended: 62 days"
 msgstr "ከዚህ የቀናት ብዛት በኋላ፣ የሥራ ሰዓታት ወደ ግራፉ አይታከሉም። <br/>የሚመከር: 62 ቀናት"
+
+#: include/global_settings.php
+msgid "Alert Evaluation Time Budget"
+msgstr ""
+
+#: include/global_settings.php
+msgid "Alert Rules per Batch"
+msgstr ""
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,6 +8258,10 @@ msgid "Enable Lotus Notes (R) tweak"
 msgstr "የ Lotus Notes (R) ማስተካከያ አንቃ"
 
 #: include/global_settings.php
+msgid "Enable Native Alert Evaluation"
+msgstr ""
+
+#: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
 msgstr "በፍላጎት RRD ማዘመንን አንቃ"
 
@@ -8515,6 +8540,10 @@ msgstr "ዕለታዊ ስታቲስቲክስ በምን ያህል ጊዜ መዘመ�
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
 msgstr "RRD በምን ያህል ጊዜ መፈተሽ አለበት ?"
+
+#: include/global_settings.php
+msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
+msgstr ""
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8843,6 +8872,10 @@ msgstr "የአሳሼ የሰዓት ሰቅ"
 #: include/global_settings.php lib/html.php
 msgid "NaN's"
 msgstr "NaNዎች"
+
+#: include/global_settings.php
+msgid "Native Alerting"
+msgstr ""
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9357,6 +9390,10 @@ msgid "Should the Has Graphs and Has Data Sources be Checked by Default."
 msgstr "ግራፎች አሉት እና የውሂብ ምንጮች አሉት በነባሪነት ምልክት መደረግ አለባቸው።"
 
 #: include/global_settings.php
+msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
+msgstr ""
+
+#: include/global_settings.php
 msgid "Show Device Aggregates"
 msgstr "የመሣሪያ ጥምሮችን አሳይ"
 
@@ -9783,6 +9820,10 @@ msgstr "የKadupul ሥርዓት ችግሮች ሲያጋጥሙት በራስ-ሰር
 #: include/global_settings.php
 msgid "The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is 'guest' by default.  This user account will be disabled from logging in upon being selected."
 msgstr "Kadupul ለአዲስ የWeb Basic እና LDAP ተጠቃሚዎች እንደ አብነት የሚጠቀምበት የተጠቃሚ ስም፤ በነባሪ 'guest' ነው። ይህ የተጠቃሚ መለያ ሲመረጥ ከመግባት ይሰናከላል።"
+
+#: include/global_settings.php
+msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
+msgstr ""
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

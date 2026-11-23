@@ -127,7 +127,11 @@ function api_plugin_hook_function(...$args)
 }
 function boost_poller_on_demand(...$args)
 {
-    return getenv('ACK_FAIL') === 'handoff' ? null : true;
+    if (getenv('ACK_FAIL') === 'handoff') {
+        return null;
+    }
+    // With Boost on, the samples were queued for Boost and the poller writes no RRD itself.
+    return getenv('ACK_BOOST') !== '1';
 }
 function rrd_init($output = true, $exclusive = false, $acknowledged = false, $timeout = null, &$busy = null)
 {

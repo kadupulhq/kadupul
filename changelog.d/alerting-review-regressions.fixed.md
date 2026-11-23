@@ -1,0 +1,1 @@
+- Preserve baseline variance for large rates with small fluctuations, reset pending alert counts when conditions change, and resume evaluation without an empty poll at the end of a budgeted pass. Schema 1.2.41 starts fresh baseline history while retaining old rows.
