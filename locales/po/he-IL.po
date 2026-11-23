@@ -44,9 +44,8 @@ msgid "Honorable Mentions"
 msgstr "מסוף תפריט סעיף"
 
 #: about.php:62
-#, fuzzy
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
-msgstr "תורמים ל - Docuemntation, ל - QA, ל - Packaging, לפורומים ולדף ה - YouTube שלנו."
+msgstr "תורמים לתיעוד, אבטחת איכות (QA), אריזה, פורומים ועמוד ה-YouTube שלנו."
 
 #: about.php:70
 msgid "Emeritus Members"
@@ -371,9 +370,8 @@ msgid "Preview"
 msgstr "תצוגה מקדימה"
 
 #: aggregate_graphs.php:629
-#, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "הגדרות גרף מצטברות"
+msgstr "הגרף המצטבר שניגשו אליו אינו קיים"
 
 #: aggregate_graphs.php:690
 msgid "Turn Off Graph Debug Mode"
@@ -758,9 +756,8 @@ msgid "No Aggregate Graphs Found"
 msgstr "לא נמצאו גרפים מצטברים"
 
 #: aggregate_templates.php:119 aggregate_templates.php:370
-#, fuzzy
 msgid "Aggregate Template not found."
-msgstr "לא נמצאו תבניות מצטברות"
+msgstr "תבנית צבירה לא נמצאה."
 
 #: aggregate_templates.php:318
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
@@ -963,9 +960,8 @@ msgid "You do not have access to any area of Cacti.  Contact your administrator.
 msgstr "אם אתה מרגיש שזאת טעות. אנא צור קשר עם מנהל Cacti שלך."
 
 #: auth_login.php:225
-#, fuzzy
 msgid "Access Denied! User account locked."
-msgstr "הגישה נדחתה, חשבון המשתמש מושבת."
+msgstr "הגישה נדחתה! חשבון המשתמש נעול."
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
@@ -1335,7 +1331,7 @@ msgstr "כיבוי"
 
 #: automation_graph_rules.php:162 automation_graph_rules.php:213
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr ""
+msgstr "בוצע ניסיון לבצע הזרקת SQL באוטומציית גרפים"
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
@@ -1575,9 +1571,8 @@ msgid "Monthly on Day"
 msgstr "חודשי ביום"
 
 #: automation_networks.php:439
-#, fuzzy
 msgid "Network not found."
-msgstr "קובץ לא נמצא"
+msgstr "רשת לא נמצאה."
 
 #: automation_networks.php:446
 #, php-format
@@ -2489,12 +2484,11 @@ msgstr "לא נמצאו תבניות אוטומציה"
 
 #: automation_tree_rules.php:148
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr ""
+msgstr "בוצע ניסיון לבצע הזרקת SQL באוטומציית עצים"
 
 #: automation_tree_rules.php:197
-#, fuzzy
 msgid "Invalid Field Name specified for Tree Rule Item."
-msgstr "שם השדה שישמש לפריט זה."
+msgstr "צוין שם שדה לא חוקי עבור פריט כלל עץ."
 
 #: automation_tree_rules.php:293
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -2607,26 +2601,26 @@ msgstr "שים לב: Cacti Daemon PID ["
 #: cdef.php:271
 msgid "Click 'Continue' to delete the following CDEF."
 msgid_plural "Click 'Continue' to delete all following CDEFs."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את ה - CDEF הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את ה-CDEF הבא."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את כל שני ה-CDEFs הבאים."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את כל ה-CDEFs הבאים."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את כל ה-CDEFs הבאים."
 
 #: cdef.php:276
 msgid "Delete CDEF"
 msgid_plural "Delete CDEFs"
-msgstr[0] "מחיקת CDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק CDEF"
+msgstr[1] "מחק CDEFs"
+msgstr[2] "מחק CDEFs"
+msgstr[3] "מחק CDEFs"
 
 #: cdef.php:280
 msgid "Click 'Continue' to duplicate the following CDEF. You can optionally change the title format for the new CDEF."
 msgid_plural "Click 'Continue' to duplicate the following CDEFs. You can optionally change the title format for the new CDEFs."
-msgstr[0] "לחץ על 'המשך' כדי לשכפל את ה - CDEF הבא. באפשרותך לשנות את פורמט הכותרת עבור CDEF החדש."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי לשכפל את ה-CDEF הבא. באפשרותך לשנות את פורמט הכותרת עבור ה-CDEF החדש."
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שני ה-CDEFs הבאים. באפשרותך לשנות את פורמט הכותרת עבור ה-CDEFs החדשים."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את ה-CDEFs הבאים. באפשרותך לשנות את פורמט הכותרת עבור ה-CDEFs החדשים."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את ה-CDEFs הבאים. באפשרותך לשנות את פורמט הכותרת עבור ה-CDEFs החדשים."
 
 #: cdef.php:282 color_templates.php:249 data_source_profiles.php:373
 #: data_templates.php:521 graph_templates.php:417 host_templates.php:286
@@ -2637,10 +2631,10 @@ msgstr "פורמט כותרת:"
 #: cdef.php:287
 msgid "Duplicate CDEF"
 msgid_plural "Duplicate CDEFs"
-msgstr[0] "שכפול CDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "שכפל CDEF"
+msgstr[1] "שכפל CDEFs"
+msgstr[2] "שכפל CDEFs"
+msgstr[3] "שכפל CDEFs"
 
 #: cdef.php:342
 msgid "Click 'Continue' to delete the following CDEF Item."
@@ -2742,11 +2736,11 @@ msgstr "אין תקליטורים"
 
 #: color.php:207
 msgid "The Colors could not be checked for use and were not Deleted."
-msgstr ""
+msgstr "לא ניתן היה לבדוק אם הצבעים נמצאים בשימוש ולכן הם לא נמחקו."
 
 #: color.php:219
 msgid "Colors referenced by a Graph, Graph Template or Color Template were not Deleted."
-msgstr ""
+msgstr "צבעים שגרף, תבנית גרף או תבנית צבע מפנים אליהם לא נמחקו."
 
 #: color.php:242
 msgid "Unnamed Color"
@@ -2756,17 +2750,17 @@ msgstr "צבע ללא שם"
 msgid "Click 'Continue' to delete the following Color"
 msgid_plural "Click 'Continue' to delete the following Colors"
 msgstr[0] "לחץ על 'המשך' כדי למחוק את הצבע הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני הצבעים הבאים"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את הצבעים הבאים"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את הצבעים הבאים"
 
 #: color.php:264
 msgid "Delete Color"
 msgid_plural "Delete Colors"
-msgstr[0] "מחיקת צבע"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק צבע"
+msgstr[1] "מחק צבעים"
+msgstr[2] "מחק צבעים"
+msgstr[3] "מחק צבעים"
 
 #: color.php:417
 msgid "Cacti has imported the following items:"
@@ -2876,9 +2870,8 @@ msgid "The Color as shown on the screen."
 msgstr "הצבע כפי שמוצג על המסך."
 
 #: color.php:778
-#, fuzzy
 msgid "Colors in use cannot be Deleted.  In use is defined as being referenced by a Graph, a Graph Template or a Color Template."
-msgstr "לא ניתן למחוק את צבעי השימוש. בשימוש מוגדר להיות הפניה או על ידי גרף או תבנית גרף."
+msgstr "לא ניתן למחוק צבעים שבשימוש. 'בשימוש' מוגדר כצבע שמופיע בהפניה של גרף, תבנית גרף או תבנית צבע."
 
 #: color.php:779
 msgid "The number of Graph using this Color."
@@ -2916,33 +2909,33 @@ msgstr "אין פריטים"
 msgid "Click 'Continue' to delete the following Color Template"
 msgid_plural "Click 'Continue' to delete following Color Templates"
 msgstr[0] "לחץ על 'המשך' כדי למחוק את תבנית הצבע הבאה"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שתי תבניות הצבע הבאות"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את תבניות הצבע הבאות"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את תבניות הצבע הבאות"
 
 #: color_templates.php:243
 msgid "Delete Color Template"
 msgid_plural "Delete Color Templates"
-msgstr[0] "מחיקת תבנית צבע"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק תבנית צבע"
+msgstr[1] "מחק תבניות צבע"
+msgstr[2] "מחק תבניות צבע"
+msgstr[3] "מחק תבניות צבע"
 
 #: color_templates.php:247
 msgid "Click 'Continue' to duplicate the following Color Template. You can optionally change the title format for the new color template."
 msgid_plural "Click 'Continue' to duplicate following Color Templates. You can optionally change the title format for the new color templates."
-msgstr[0] "לחץ על 'המשך' כדי לשכפל את תבנית הצבע הבאה. באפשרותך לשנות את תבנית הכותרת עבור תבנית הצבע החדשה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי לשכפל את תבנית הצבע הבאה. באפשרותך לשנות את פורמט הכותרת עבור תבנית הצבע החדשה."
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שתי תבניות הצבע הבאות. באפשרותך לשנות את פורמט הכותרת עבור תבניות הצבע החדשות."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את תבניות הצבע הבאות. באפשרותך לשנות את פורמט הכותרת עבור תבניות הצבע החדשות."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את תבניות הצבע הבאות. באפשרותך לשנות את פורמט הכותרת עבור תבניות הצבע החדשות."
 
 #: color_templates.php:255
 msgid "Duplicate Color Template"
 msgid_plural "Duplicate Color Templates"
-msgstr[0] "תבנית צבע כפול"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "שכפל תבנית צבע"
+msgstr[1] "שכפל תבניות צבע"
+msgstr[2] "שכפל תבניות צבע"
+msgstr[3] "שכפל תבניות צבע"
 
 #: color_templates.php:259
 msgid "Click 'Continue' to Synchronize all Aggregate Graphs with the selected Color Template."
@@ -2974,9 +2967,8 @@ msgid "Delete Color Item"
 msgstr "מחק פריט צבע"
 
 #: color_templates.php:395
-#, fuzzy
 msgid "Color Template not found."
-msgstr "לא נמצאו תבניות צבע"
+msgstr "תבנית הצבעים לא נמצאה."
 
 #: color_templates.php:402
 #, php-format
@@ -3011,9 +3003,8 @@ msgid "No Color Templates Found"
 msgstr "לא נמצאו תבניות צבע"
 
 #: color_templates_items.php:277
-#, fuzzy
 msgid "Color Template or Item not found."
-msgstr "פריטים תבנית צבע"
+msgstr "תבנית צבע או פריט לא נמצאו."
 
 #: color_templates_items.php:292
 msgid "Click 'Continue' to delete the following Color Template Color."
@@ -3380,29 +3371,28 @@ msgstr "ניפוי שגיאות"
 
 #: data_input.php:132
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "מחרוזת הקלט מכילה תווי מעטפת מסוכנים"
 
 #: data_input.php:140
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "רשימת ההיתרים של קלט (Input Whitelisting) פעילה. שינויים בשיטת קלט נתונים זו מחייבים הרצה חוזרת של סקריפט ה-CLI של רשימת ההיתרים (cli/input_whitelist.php) עם האפשרויות --audit ו---update לפני שמקור הנתונים יתושאל שוב."
 
 #: data_input.php:188
 #, php-format
 msgid "Input field <%s> requires Special Type Code \"%s\"."
-msgstr ""
+msgstr "שדה הקלט <%s> דורש קוד סוג מיוחד \"%s\"."
 
 #: data_input.php:270
-#, fuzzy
 msgid "Data Input Methods that are built in or in use were not deleted."
-msgstr "נראה כי שיטת קלט הנתונים אינה מופיעה ברשימה."
+msgstr "שיטות קלט נתונים מובנות או הנמצאות בשימוש לא נמחקו."
 
 #: data_input.php:336
 msgid "Click 'Continue' to delete the following Data Input Method"
 msgid_plural "Click 'Continue' to delete the following Data Input Method"
-msgstr[0] "לחץ על 'המשך' כדי למחוק את שיטת הזנת הנתונים הבאה"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את שיטת קלט הנתונים הבאה"
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שתי שיטות קלט הנתונים הבאות"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את שיטות קלט הנתונים הבאות"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את שיטות קלט הנתונים הבאות"
 
 #: data_input.php:343
 msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can optionally change the title format for the new Data Input Method(s)."
@@ -3416,9 +3406,9 @@ msgstr "שם קלט:"
 msgid "Delete Data Input Method"
 msgid_plural "Delete Data Input Methods"
 msgstr[0] "מחק שיטת קלט נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחק שיטות קלט נתונים"
+msgstr[2] "מחק שיטות קלט נתונים"
+msgstr[3] "מחק שיטות קלט נתונים"
 
 #: data_input.php:444
 msgid "Click 'Continue' to delete the following Data Input Field."
@@ -3534,9 +3524,8 @@ msgid "Delete Data Input Field"
 msgstr "מחק שדה קלט נתונים"
 
 #: data_input.php:962
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "עדכן שדה זה"
+msgstr "עדכן רשימת היתרים"
 
 #: data_input.php:1021 include/global_arrays.php:1018
 #: include/global_arrays.php:1242 include/global_arrays.php:2390
@@ -3601,25 +3590,25 @@ msgstr "לא נמצאו שיטות קלט נתונים"
 msgid "Click 'Continue' to Delete the following Data Query."
 msgid_plural "Click 'Continue' to Delete following Data Queries."
 msgstr[0] "לחץ על 'המשך' כדי למחוק את שאילתת הנתונים הבאה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שתי שאילתות הנתונים הבאות."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את שאילתות הנתונים הבאות."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את שאילתות הנתונים הבאות."
 
 #: data_queries.php:430
 msgid "Delete Data Query"
 msgid_plural "Delete Data Queries"
 msgstr[0] "מחק שאילתת נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחק שאילתות נתונים"
+msgstr[2] "מחק שאילתות נתונים"
+msgstr[3] "מחק שאילתות נתונים"
 
 #: data_queries.php:434
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
 msgstr[0] "לחץ על 'המשך' כדי לשכפל את שאילתת הנתונים הבאה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שתי שאילתות הנתונים הבאות."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את שאילתות הנתונים הבאות."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את שאילתות הנתונים הבאות."
 
 #: data_queries.php:436 lib/html_reports.php:591
 msgid "Name Format:"
@@ -3628,15 +3617,14 @@ msgstr "פורמט שם"
 #: data_queries.php:444
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "שאילתת נתונים כפולה"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "שכפל שאילתת נתונים"
+msgstr[1] "שכפל שאילתות נתונים"
+msgstr[2] "שכפל שאילתות נתונים"
+msgstr[3] "שכפל שאילתות נתונים"
 
 #: data_queries.php:584
-#, fuzzy
 msgid "The item does not belong to this Data Query."
-msgstr "השם של שאילתת נתונים זו."
+msgstr "הפריט אינו שייך לשאילתת נתונים זו."
 
 #: data_queries.php:678
 msgid "Click 'Continue' to delete the following Data Query Graph Association."
@@ -3653,7 +3641,7 @@ msgstr "המר לתבנית גרף"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
-msgstr ""
+msgstr "גרפים משתמשים בשיוך תבנית גרף זה, ולכן לא ניתן למחוק אותו."
 
 #: data_queries.php:771
 #, php-format
@@ -3718,7 +3706,7 @@ msgstr "הוסף שם מקור נתונים שם מוצע"
 
 #: data_queries.php:1262
 msgid "Graphs use this Data Query, so it can not be deleted."
-msgstr ""
+msgstr "גרפים משתמשים בשאילתת נתונים זו, ולכן לא ניתן למחוק אותה."
 
 #: data_queries.php:1323
 #, php-format
@@ -3822,38 +3810,37 @@ msgstr "פרופילים הנמצאים בשימוש על ידי מקורות נ
 msgid "Click 'Continue' to delete the following Data Source Profile"
 msgid_plural "Click 'Continue' to delete following Data Source Profiles"
 msgstr[0] "לחץ על 'המשך' כדי למחוק את פרופיל מקור הנתונים הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני פרופילי מקורות הנתונים הבאים"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את פרופילי מקורות הנתונים הבאים"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את פרופילי מקורות הנתונים הבאים"
 
 #: data_source_profiles.php:367
 msgid "Delete Data Source Profile"
 msgid_plural "Delete Data Source Profiles"
 msgstr[0] "מחק פרופיל מקור נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחק פרופילי מקורות נתונים"
+msgstr[2] "מחק פרופילי מקורות נתונים"
+msgstr[3] "מחק פרופילי מקורות נתונים"
 
 #: data_source_profiles.php:371
 msgid "Click 'Continue' to duplicate the following Data Source Profile. You can optionally change the title format for the new Data Source Profile"
 msgid_plural "Click 'Continue' to duplicate following Data Source Profiles. You can optionally change the title format for the new Data Source Profiles."
 msgstr[0] "לחץ על 'המשך' כדי לשכפל את פרופיל מקור הנתונים הבא. באפשרותך לשנות את פורמט הכותרת עבור פרופיל מקור הנתונים החדש"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שני פרופילי מקורות הנתונים הבאים. באפשרותך לשנות את פורמט הכותרת עבור פרופילי מקורות הנתונים החדשים."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את פרופילי מקורות הנתונים הבאים. באפשרותך לשנות את פורמט הכותרת עבור פרופילי מקורות הנתונים החדשים."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את פרופילי מקורות הנתונים הבאים. באפשרותך לשנות את פורמט הכותרת עבור פרופילי מקורות הנתונים החדשים."
 
 #: data_source_profiles.php:377
 msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
-msgstr[0] "פרופיל מקור נתונים כפול"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "שכפל פרופיל מקור נתונים"
+msgstr[1] "שכפל פרופילי מקורות נתונים"
+msgstr[2] "שכפל פרופילי מקורות נתונים"
+msgstr[3] "שכפל פרופילי מקורות נתונים"
 
 #: data_source_profiles.php:420
-#, fuzzy
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
-msgstr "אם מקור נתונים זה אינו נמצא בשימוש זמן רב על ידי גרפים, הוא יכול להימחק."
+msgstr "לא ניתן למחוק פרופילי מקורות נתונים שנמצאים בשימוש על ידי תבניות נתונים או מקורות נתונים."
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
@@ -3873,9 +3860,8 @@ msgid "Remove Data Source Profile RRA"
 msgstr "הסר פרופיל מקור נתונים RRA"
 
 #: data_source_profiles.php:559
-#, fuzzy
 msgid "Data Source Profiles in use by Data Sources are read only."
-msgstr "פרופילים הנמצאים בשימוש על ידי מקורות נתונים הופכים לקריאה רק לעת עתה."
+msgstr "פרופילי מקורות נתונים הנמצאים בשימוש על ידי מקורות נתונים הם לקריאה בלבד."
 
 #: data_source_profiles.php:597 data_source_profiles.php:616
 msgid "Each Insert is New Row"
@@ -4091,57 +4077,57 @@ msgstr "החל מחדש שמות מוצעים"
 msgid "Click 'Continue' to delete the following Data Source"
 msgid_plural "Click 'Continue' to delete following Data Sources"
 msgstr[0] "לחץ על 'המשך' כדי למחוק את מקור הנתונים הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני מקורות הנתונים הבאים"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את מקורות הנתונים הבאים"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את מקורות הנתונים הבאים"
 
 #: data_sources.php:532
 msgid "The following graph is using these data sources:"
 msgid_plural "The following graphs are using these data sources:"
 msgstr[0] "הגרף הבא משתמש במקורות נתונים אלה:"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "שני הגרפים הבאים משתמשים במקורות נתונים אלה:"
+msgstr[2] "הגרפים הבאים משתמשים במקורות נתונים אלה:"
+msgstr[3] "הגרפים הבאים משתמשים במקורות נתונים אלה:"
 
 #: data_sources.php:541
 msgid "Leave the <strong>Graph</strong> untouched."
 msgid_plural "Leave all <strong>Graphs</strong> untouched."
-msgstr[0] "אל תגעו <strong>בגרף</strong>."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "השאר את <strong>הגרף</strong> ללא שינוי."
+msgstr[1] "השאר את כל <strong>הגרפים</strong> ללא שינוי."
+msgstr[2] "השאר את כל <strong>הגרפים</strong> ללא שינוי."
+msgstr[3] "השאר את כל <strong>הגרפים</strong> ללא שינוי."
 
 #: data_sources.php:542
 msgid "Delete all <strong>Graph Items</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graph Items</strong> that reference these Data Sources."
 msgstr[0] "מחק את כל <strong>פריטי הגרף</strong> המפנים למקור נתונים זה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחק את כל <strong>פריטי הגרף</strong> המפנים לשני מקורות נתונים אלה."
+msgstr[2] "מחק את כל <strong>פריטי הגרף</strong> המפנים למקורות נתונים אלה."
+msgstr[3] "מחק את כל <strong>פריטי הגרף</strong> המפנים למקורות נתונים אלה."
 
 #: data_sources.php:543
 msgid "Delete all <strong>Graphs</strong> that reference this Data Source."
 msgid_plural "Delete all <strong>Graphs</strong> that reference these Data Sources."
 msgstr[0] "מחק את כל <strong>הגרפים</strong> המפנים למקור נתונים זה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחק את כל <strong>הגרפים</strong> המפנים לשני מקורות נתונים אלה."
+msgstr[2] "מחק את כל <strong>הגרפים</strong> המפנים למקורות נתונים אלה."
+msgstr[3] "מחק את כל <strong>הגרפים</strong> המפנים למקורות נתונים אלה."
 
 #: data_sources.php:550
 msgid "Delete Data Source"
 msgid_plural "Delete Data Sources"
 msgstr[0] "מחק מקור נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "מחק מקורות נתונים"
+msgstr[2] "מחק מקורות נתונים"
+msgstr[3] "מחק מקורות נתונים"
 
 #: data_sources.php:554
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
-msgstr[0] "בחר מכשיר חדש עבור מקור נתונים זה ולחץ על 'המשך '."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "בחר התקן חדש עבור מקור נתונים זה ולחץ על 'המשך'."
+msgstr[1] "בחר התקן חדש עבור שני מקורות נתונים אלה ולחץ על 'המשך'."
+msgstr[2] "בחר התקן חדש עבור מקורות נתונים אלה ולחץ על 'המשך'."
+msgstr[3] "בחר התקן חדש עבור מקורות נתונים אלה ולחץ על 'המשך'."
 
 #: data_sources.php:556
 msgid "New Device:"
@@ -4150,50 +4136,50 @@ msgstr "מכשיר חדש:"
 #: data_sources.php:566
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
-msgstr[0] "לחץ על 'המשך' כדי לאפשר את מקור הנתונים הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי להפעיל את מקור הנתונים הבא."
+msgstr[1] "לחץ על 'המשך' כדי להפעיל את כל שני מקורות הנתונים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי להפעיל את כל מקורות הנתונים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי להפעיל את כל מקורות הנתונים הבאים."
 
 #: data_sources.php:571
 msgid "Enable Data Source"
 msgid_plural "Enable Data Sources"
-msgstr[0] "אפשר מקור נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הפעל מקור נתונים"
+msgstr[1] "הפעל מקורות נתונים"
+msgstr[2] "הפעל מקורות נתונים"
+msgstr[3] "הפעל מקורות נתונים"
 
 #: data_sources.php:575
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
 msgstr[0] "לחץ על 'המשך' כדי להשבית את מקור הנתונים הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי להשבית את כל שני מקורות הנתונים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי להשבית את כל מקורות הנתונים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי להשבית את כל מקורות הנתונים הבאים."
 
 #: data_sources.php:580
 msgid "Disable Data Source"
 msgid_plural "Disable Data Sources"
 msgstr[0] "השבת מקור נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "השבת מקורות נתונים"
+msgstr[2] "השבת מקורות נתונים"
+msgstr[3] "השבת מקורות נתונים"
 
 #: data_sources.php:584
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
 msgstr[0] "לחץ על 'המשך' כדי להחיל מחדש את השם המוצע על מקור הנתונים הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי להחיל מחדש את השמות המוצעים על כל שני מקורות הנתונים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי להחיל מחדש את השמות המוצעים על כל מקורות הנתונים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי להחיל מחדש את השמות המוצעים על כל מקורות הנתונים הבאים."
 
 #: data_sources.php:589
 msgid "Reapply Suggested Naming to Data Source"
 msgid_plural "Reapply Suggested Naming to Data Sources"
-msgstr[0] "החל מחדש את השיום המוצע על מקור הנתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "החל מחדש מתן שמות מוצע על מקור נתונים"
+msgstr[1] "החל מחדש מתן שמות מוצע על מקורות נתונים"
+msgstr[2] "החל מחדש מתן שמות מוצע על מקורות נתונים"
+msgstr[3] "החל מחדש מתן שמות מוצע על מקורות נתונים"
 
 #: data_sources.php:673 data_templates.php:972
 #, php-format
@@ -4243,9 +4229,9 @@ msgid "Turn On Data Source Info Mode."
 msgstr "הפעל מצב מידע על מקור הנתונים."
 
 #: data_sources.php:927
-#, fuzzy, php-format
+#, php-format
 msgid "Edit Graph: '%s'."
-msgstr "ערוך תרשים: '{ 0 }'."
+msgstr "עריכת גרף: '%s'."
 
 #: data_sources.php:931 graphs.php:1627
 msgid "Edit Device."
@@ -4415,9 +4401,8 @@ msgid "Field \"%s\" is missing an Output Field"
 msgstr "שדה \"%s\" חסר שדה פלט"
 
 #: data_templates.php:394
-#, fuzzy
 msgid "Data Templates in use by a Data Source were not deleted."
-msgstr "לא ניתן לשנות תבניות נתונים בשימוש"
+msgstr "תבניות נתונים הנמצאות בשימוש על ידי מקור נתונים לא נמחקו."
 
 #: data_templates.php:510
 msgid "Click 'Continue' to delete the following Data Template(s).  Any data sources attached to these templates will become individual Data Source(s) and all Templating benefits will be removed."
@@ -4560,7 +4545,7 @@ msgstr "לא נמצאו תבניות נתונים"
 
 #: gprint_presets.php:174
 msgid "GPRINT Presets referenced by a Graph or Graph Template were not Deleted."
-msgstr ""
+msgstr "הגדרות מוכנות מראש של GPRINT שגרף או תבנית גרף מפנים אליהן לא נמחקו."
 
 #: gprint_presets.php:211
 msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
@@ -4571,9 +4556,8 @@ msgid "Delete GPRINT Preset(s)"
 msgstr "מחק הגדרות GPRINT קבועות מראש"
 
 #: gprint_presets.php:257
-#, fuzzy
 msgid "GPRINT Preset not found."
-msgstr "GPRINT מראש"
+msgstr "ערכת ה-GPRINT לא נמצאה."
 
 #: gprint_presets.php:264
 #, php-format
@@ -4633,9 +4617,8 @@ msgid "Viewing Graph"
 msgstr "הצגת תרשים"
 
 #: graph.php:116 graph.php:513 graph.php:537 graph.php:551 graph.php:606
-#, fuzzy
 msgid "The Graph you requested does not exist."
-msgstr "מקור הנתונים אינו קיים."
+msgstr "הגרף שביקשת אינו קיים."
 
 #: graph.php:301 lib/html.php:599
 msgid "Graph Details, Zooming and Debugging Utilities"
@@ -4730,9 +4713,8 @@ msgid "Quick Sync Graphs"
 msgstr "סנכרון גרפים"
 
 #: graph_templates.php:242
-#, fuzzy
 msgid "Graph Templates in use by a Graph were not deleted."
-msgstr "לא ניתן לשנות תבניות נתונים בשימוש"
+msgstr "תבניות גרף הנמצאות בשימוש על ידי גרף לא נמחקו."
 
 #: graph_templates.php:352 graph_templates.php:367
 #, php-format
@@ -4806,9 +4788,8 @@ msgid "No Inputs"
 msgstr "אין תשומות"
 
 #: graph_templates.php:609
-#, fuzzy
 msgid "Graph Template not found."
-msgstr "לא נמצאו תבניות גרפים"
+msgstr "תבנית גרף לא נמצאה."
 
 #: graph_templates.php:622
 #, php-format
@@ -4868,11 +4849,11 @@ msgstr "לא נמצאו תבניות גרפים"
 
 #: graph_templates_inputs.php:69
 msgid "The selected Field Type is not a valid Graph Item field."
-msgstr ""
+msgstr "סוג השדה שנבחר אינו שדה חוקי של פריט גרף."
 
 #: graph_templates_inputs.php:82
 msgid "The Graph Item Input relationship is invalid."
-msgstr ""
+msgstr "קשר קלט פריט הגרף אינו חוקי."
 
 #: graph_templates_inputs.php:187
 #, php-format
@@ -5110,15 +5091,15 @@ msgstr "שגיאה: אין מקור נתונים משויך. בדוק תבנית
 
 #: graphs.php:412
 msgid "A Graph Item Input contains an invalid field or value."
-msgstr ""
+msgstr "קלט פריט גרף מכיל שדה או ערך לא חוקיים."
 
 #: graphs.php:424 graphs.php:474
 msgid "Graph Item Input changes could not be saved."
-msgstr ""
+msgstr "לא ניתן היה לשמור שינויים בקלט פריט גרף."
 
 #: graphs.php:452
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
+msgstr "קלט פריט גרף מכיל ערך לא חוקי."
 
 #: graphs.php:952
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
@@ -5349,9 +5330,9 @@ msgid "Default Settings Saved"
 msgstr "הגדרות ברירת המחדל נשמרו"
 
 #: graphs_new.php:348
-#, fuzzy, php-format
+#, php-format
 msgid "New Graphs for [ %s ] (%s %s)"
-msgstr "גרפים חדשים עבור [{0 }]({ 1 }{ 2})"
+msgstr "גרפים חדשים עבור [ %s ] (%s %s)"
 
 #: graphs_new.php:350
 msgid "New Graphs for [ All Devices ]"
@@ -5411,9 +5392,9 @@ msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id of
 msgstr "שגיאה בניתוח קובץ XML של משאב שאילתת נתונים עבור שאילתת נתונים '%s' עם המזהה '%s'"
 
 #: graphs_new.php:703
-#, fuzzy, php-format
+#, php-format
 msgid "Error Parsing Data Query Resource XML file for Data Query '%s' with id '%s'.  Field Name '%s' missing a 'direction' attribute"
-msgstr "שגיאה בניתוח קובץ XML של משאב שאילתת הנתונים עבור שאילתת הנתונים '{ 0 }' עם המזהה '{ 1 }'. שם השדה '{ 2 }' חסר מאפיין 'כיוון'"
+msgstr "שגיאה בפענוח קובץ XML של משאב שאילתת נתונים עבור שאילתת נתונים '%s' עם מזהה '%s'. בשם השדה '%s' חסרה התכונה 'direction'"
 
 #: graphs_new.php:707
 #, php-format
@@ -5467,18 +5448,17 @@ msgid "WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!"
 msgstr "אזהרה: דף קקטוסים:%s למשתמש:%s יצר שגיאה חמורה %d!"
 
 #: help.php:99
-#, fuzzy, php-format
+#, php-format
 msgid "The Document page '%s' count not be reached.  The Cacti Documentation site is not reachable.  The http error was '%s'.  Consider downloading an official release to obtain the latest documentation and hosting the documentation locally."
-msgstr "הספירה של דף המסמך '{ 0 }' לא הושגה. לא ניתן להגיע לאתר התיעוד של קקטוסים. שגיאת ה - http הייתה '{ 1 }'. מומלץ להוריד גרסה רשמית כדי לקבל את המסמכים העדכניים ביותר ולארח את המסמכים באופן מקומי."
+msgstr "לא ניתן היה להגיע לדף התיעוד '%s'. אתר התיעוד של Cacti אינו נגיש. שגיאת ה-http הייתה '%s'. שקול להוריד גרסה רשמית כדי לקבל את התיעוד העדכני ביותר ולארח את התיעוד באופן מקומי."
 
 #: help.php:113
 msgid "Cacti GitHub Site"
 msgstr "אתר גיטהאב קקטוסים"
 
 #: help.php:113
-#, fuzzy
 msgid "Open a ticket at "
-msgstr "פתח קריאה"
+msgstr "פתח פנייה בכתובת "
 
 #: help.php:113
 #, php-format
@@ -5486,9 +5466,9 @@ msgid "The Help File %s was not located on the Cacti Documentation Website."
 msgstr "קובץ העזרה %s לא נמצא באתר התיעוד של קקטוסים."
 
 #: help.php:127
-#, fuzzy, php-format
+#, php-format
 msgid "The Document page '%s' count not be reached locally."
-msgstr "הספירה של דף המסמך '{ 0 }' לא מגיעה באופן מקומי."
+msgstr "לא ניתן היה להגיע מקומית לדף התיעוד '%s'."
 
 #: host.php:45
 msgid "Change Device Settings"
@@ -5532,12 +5512,11 @@ msgstr "שגיאה: התקן ["
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
-msgstr ""
+msgstr "בניית אינדקס מחדש של התקן זה כבר פועלת. נסה שוב לאחר שתסתיים."
 
 #: host.php:242
-#, fuzzy
 msgid "Device Reindex Failed."
-msgstr "המכשיר מושבת"
+msgstr "בניית אינדקס מחדש של ההתקן נכשלה."
 
 #: host.php:256
 #, php-format
@@ -5545,9 +5524,9 @@ msgid "Device Reindex Completed in %0.2f seconds.  There were %d items updated."
 msgstr "האינדקס מחדש של המכשיר הושלם תוך %0.2f שניות. %d פריטים עודכנו."
 
 #: host.php:390
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to add some Devices to Report '%s'"
-msgstr "לא ניתן להוסיף התקנים מסוימים לדיווח '{ 0 }'"
+msgstr "לא ניתן להוסיף חלק מההתקנים לדוח '%s'"
 
 #: host.php:457
 msgid "Click 'Continue' to enable the following Device(s)."
@@ -5910,9 +5889,8 @@ msgid "Sync Devices"
 msgstr "סנכרון התקנים"
 
 #: host_templates.php:207
-#, fuzzy
 msgid "That item can not be added to or removed from this Device Template."
-msgstr "השם של תבנית התקן זו."
+msgstr "לא ניתן להוסיף פריט זה לתבנית התקן זו או להסיר אותו ממנה."
 
 #: host_templates.php:275
 msgid "Click 'Continue' to delete the following Device Template(s)."
@@ -5939,9 +5917,8 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "סנכרן מכשירים לתבניות המכשיר"
 
 #: host_templates.php:362
-#, fuzzy
 msgid "A Device Template in use by a Device can not be deleted."
-msgstr "לא ניתן לשנות תבניות נתונים בשימוש"
+msgstr "לא ניתן למחוק תבנית התקן שנמצאת בשימוש על ידי התקן."
 
 #: host_templates.php:386
 msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
@@ -6091,12 +6068,12 @@ msgstr "יש התקנה או שדרוג בתהליך."
 
 #: include/csrf.php:219
 msgid "The browser did not return the Cacti session cookie. Ensure cookies are enabled and verify the configured URL path and cookie domain."
-msgstr ""
+msgstr "הדפדפן לא החזיר את קובץ ה-Cookie של הפעלת Cacti. ודא שקובצי Cookie מופעלים ואמת את נתיב ה-URL ואת דומיין ה-Cookie המוגדרים."
 
 #: include/csrf.php:220
-#, fuzzy, php-format
+#, php-format
 msgid "Return to Cacti: %s"
-msgstr "דורש: Cacti&gt; = %s"
+msgstr "חזרה אל Cacti: %s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
@@ -6284,7 +6261,7 @@ msgstr "לא ניתן לשנות סיסמה. חשבון משתמש לא נמצא
 
 #: include/global_arrays.php:285
 msgid "Data Source Item field holds a value the Data Source form would reject."
-msgstr ""
+msgstr "שדה פריט של מקור נתונים מחזיק ערך שטופס מקור הנתונים היה דוחה."
 
 #: include/global_arrays.php:288
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
@@ -6327,9 +6304,8 @@ msgid "Unable to determine size of password field, please check permissions of d
 msgstr "לא ניתן לקבוע את גודל שדה הסיסמה, בדוק הרשאות של משתמש db"
 
 #: include/global_arrays.php:318
-#, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
-msgstr "לא ניתן להגדיל את גודל שדה הסיסמה, התחנונים בודקים את הרשאת המשתמש db"
+msgstr "לא ניתן להגדיל את גודל שדה הסיסמה, בדוק את ההרשאות של משתמש מסד הנתונים"
 
 #: include/global_arrays.php:321
 msgid "LDAP/AD based password change not supported."
@@ -6600,9 +6576,8 @@ msgid "SHA-256"
 msgstr "SHA-256"
 
 #: include/global_arrays.php:664
-#, fuzzy
 msgid "SHA-384"
-msgstr "SHA-392"
+msgstr "SHA-384"
 
 #: include/global_arrays.php:665
 msgid "SHA-512"
@@ -6661,9 +6636,8 @@ msgid "TCP Ping"
 msgstr "TCP Ping"
 
 #: include/global_arrays.php:703
-#, fuzzy
 msgid "TCP Ping Closed"
-msgstr "TCP Ping"
+msgstr "TCP Ping סגור"
 
 #: include/global_arrays.php:704
 msgid "UDP Ping"
@@ -9167,9 +9141,8 @@ msgid "The method Cacti will use to determine if a host is available for polling
 msgstr "השיטה Cacti ישתמשו כדי לקבוע אם המארח זמין עבור הסקרים. <br> <i>הערה: מומלץ לבחור, לכל הפחות, SNMP תמיד.</i>"
 
 #: include/global_form.php:1277
-#, fuzzy
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "סוג חבילת ping שנשלח. <br> <i>הערה: ICMP ב- Linux / UNIX מחייב הרשאות בסיס.</i>"
+msgstr "סוג חבילת ה-ping לשליחה. <br><i>הערה: ICMP ב-Linux/UNIX דורש הרשאות root.</i> <br><i>הערה: TCP Ping Closed - גם אם בדיקת ה-tcp ping אינה מצליחה, ההתקן יכול להיחשב כפעיל (UP).</i>"
 
 #: include/global_form.php:1314 include/global_form.php:1806
 msgid "Additional Options"
@@ -10168,52 +10141,48 @@ msgid "When checked, any attempts to access Cacti will be redirected to HTTPS to
 msgstr "כאשר מסומן, כל הניסיונות לגשת Cacti ינותבו HTTPS כדי להבטיח אבטחה גבוהה."
 
 #: include/global_settings.php:502
-#, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "נתונים מרוחקים מצב אספן:"
+msgstr "אפשר HTTPS לא מאובטח עבור אוסף נתונים מרוחק"
 
 #: include/global_settings.php:503
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr ""
+msgstr "אפשר שימוש בתעודות בחתימה עצמית ואפשר לשם המארח בתעודה להיות שונה משם המארח של אוסף הנתונים המרוחק."
 
 #: include/global_settings.php:508
-#, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "השם של שיטת קלט נתונים זו."
+msgstr "אפשר תווי-על לא בטוחים בשיטות קלט נתונים"
 
 #: include/global_settings.php:509
 msgid "Historically, Cacti administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Cacti Graphs.  In earlier versions of Cacti, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Cacti, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Cacti restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Cacti continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr ""
+msgstr "באופן היסטורי, מנהלי Cacti יצרו שיטות קלט נתונים פשוטות הכוללות פקודות כמו \"ps -ef | grep something | wc -l\" כדי לייצג ערך מספרי לשימוש בגרפים של Cacti. בגרסאות קודמות של Cacti הדבר היה מותר. אולם זוהי פרקטיקה לא בטוחה מכיוון שהיא משמשת פתח למשתמשי צד שלישי לפרסם תבניות נתונים לא מאובטחות. בגרסאות מודרניות של Cacti יש להימנע מפרקטיקות מסוג זה. עם זאת, אנו מספקים אפשרות זו אם יש ברשותך שיטות קלט נתונים ישנות יותר המכילות תווי-על לא בטוחים אלה וטרם המרת אותן לסקריפטים מקומיים בתיקיית 'scripts'. כאשר אפשרות זו אינה מסומנת, Cacti מגביל תווי-על בסגנון מעטפת כגון מירכאות, סוגריים מסולסלים, קווים אנכיים, לוכסנים הפוכים וגרשיים הפוכים (backticks). Cacti ממשיך לאפשר סימני גדול-מ וקטן-מ עבור דברים כמו <path_cacti> ועבור פרמטרי קלט, אך אם אפשרות זו אינה מסומנת, זוהי מגבלת השימוש המותר בהם."
 
 #: include/global_settings.php:515
-#, fuzzy
 msgid "Content-Security Script Policy"
-msgstr "מקורות חלופיים של אבטחת תוכן"
+msgstr "מדיניות סקריפטים של אבטחת תוכן (CSP)"
 
 #: include/global_settings.php:516
 msgid "Controls the script-src CSP policy.  In Nonce Modes, Cacti Plugins that use inline JavaScript must include the nonce attribute from Cacti's builtin function 'CactiSecureHeaders::getNonceAttribute()'. Otherwise, those scripts will be blocked by the browser.  Currently, Cacti only allows reporting on Cacti Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces."
-msgstr ""
+msgstr "קובע את מדיניות ה-CSP של script-src. במצבי Nonce, תוספי Cacti המשתמשים ב-JavaScript מוטבע חייבים לכלול את התכונה nonce מהפונקציה המובנית של Cacti‏ 'CactiSecureHeaders::getNonceAttribute()'. אחרת, סקריפטים אלה ייחסמו על ידי הדפדפן. נכון לעכשיו, Cacti מאפשר רק דיווח על תוספי Cacti שאינם משתמשים כראוי במצב Nonce. בעתיד נאפשר למנהלי מערכת לחסום תוספים כאלה משימוש ב-JavaScript מוטבע אם אינם משתמשים ב-Nonces."
 
 #: include/global_settings.php:519
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "אפשר JavaScript מוטבע ללא Nonce"
 
 #: include/global_settings.php:520
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "אפשר גם unsafe-eval וגם JavaScript מוטבע ללא Nonce"
 
 #: include/global_settings.php:521
 msgid "Nonce Mode - Reporting Only"
-msgstr ""
+msgstr "מצב Nonce - דיווח בלבד"
 
 #: include/global_settings.php:525 include/global_settings.php:540
-#, fuzzy
 msgid "CSP Violation Report URI"
-msgstr "דו&quot;ח קקט"
+msgstr "URI לדיווח על הפרות CSP"
 
 #: include/global_settings.php:526
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
-msgstr ""
+msgstr "ה-URL שאליו דפדפנים שולחים ב-POST דוחות הפרת CSP במצבי nonce-report ו-nonce. השאר ריק כדי להשתמש ב-<url_path>/csp_report.php. חייב להכיל תווי URL בטוחים בלבד."
 
 #: include/global_settings.php:532
 msgid "Content-Security Alternate Sources"
@@ -10225,7 +10194,7 @@ msgstr "שמות דומיין מחוסלים בחלל שאפשר יהיה לגש
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
-msgstr ""
+msgstr "ה-URL שאליו דפדפנים שולחים ב-POST דוחות הפרת CSP במצבי nonce-report ו-nonce. השאר ריק כדי להשתמש ב-/cacti/csp_report.php בשורש ההתקנה. חייב להכיל תווי URL בטוחים בלבד."
 
 #: include/global_settings.php:553
 msgid "Enable Automatic Graph Creation"
@@ -10316,18 +10285,18 @@ msgid "The default number of Device Threads.  This is only applicable when using
 msgstr "מספר ברירת המחדל של שרשורי המכשיר. אפשרות זו חלה רק בעת השימוש במאגר הנתונים של עמוד השדרה."
 
 #: include/global_settings.php:656
-#, fuzzy, php-format
+#, php-format
 msgid "%s Thread"
-msgstr "חוט"
+msgstr "%s תהליכון"
 
 #: include/global_settings.php:657 include/global_settings.php:658
 #: include/global_settings.php:659 include/global_settings.php:660
 #: include/global_settings.php:661 include/global_settings.php:662
 #: include/global_settings.php:663 include/global_settings.php:664
 #: include/global_settings.php:665
-#, fuzzy, php-format
+#, php-format
 msgid "%s Threads"
-msgstr "אשכולות"
+msgstr "%s תהליכונים"
 
 #: include/global_settings.php:669
 msgid "Re-index Method for Data Queries"
@@ -10607,9 +10576,8 @@ msgid "Default Graph Type"
 msgstr "סוג גרף ברירת מחדל"
 
 #: include/global_settings.php:963
-#, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
-msgstr "בעת יצירת גרפים, איזה סוג גרף תרצה לבחור מראש?"
+msgstr "בעת יצירת גרפים, איזה סוג גרף תרצה שיהיה מסומן מראש?"
 
 #: include/global_settings.php:967
 msgid "All Types"
@@ -10838,9 +10806,8 @@ msgid "Only show business hours during weekdays."
 msgstr "להציג את שעות הפעילות של העסק רק בימי חול."
 
 #: include/global_settings.php:1176
-#, fuzzy
 msgid "Show business hours"
-msgstr "שעות פעילות"
+msgstr "הצג שעות עבודה"
 
 #: include/global_settings.php:1177
 msgid "Display business hours on rrd graphs."
@@ -11305,9 +11272,8 @@ msgid "Password History"
 msgstr "היסטוריית סיסמאות"
 
 #: include/global_settings.php:1644
-#, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
-msgstr "זכור מספר זה של סיסמאות ישנות וחסר שימוש חוזר בהן."
+msgstr "זכור מספר זה של סיסמאות ישנות ומנע שימוש חוזר בהן."
 
 #: include/global_settings.php:1649
 msgid "1 Change"
@@ -11456,7 +11422,7 @@ msgstr "שם ייחודי (DN)"
 
 #: include/global_settings.php:1790 user_domains.php:473
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
-msgstr ""
+msgstr "תחביר ה-\"Distinguished Name\", המתאים הן לתצורות OpenLDAP והן לתצורות Windows AD, מציע גמישות בהגדרת זהות המשתמש. עבור OpenLDAP, הפורמט פועל לפי מבנה זה: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD מספק תחביר חלופי: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, המוכר בדרך כלל בשם \"userPrincipalName (UPN)\". בהקשר זה, \"&lt;username&gt;\" מייצג את שם המשתמש הספציפי שסופק בעת בקשת ההתחברות. הדבר רלוונטי במיוחד בעת הפעלה במצב \"ללא חיפוש\", או כאשר \"דרוש חברות בקבוצה\" מופעל."
 
 #: include/global_settings.php:1796 user_domains.php:480
 msgid "Require Group Membership"
@@ -11972,7 +11938,7 @@ msgstr "נתיבי RRD מובנים"
 
 #: include/global_settings.php:2326
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
-msgstr ""
+msgstr "השתמש בתת-תיקייה נפרדת עבור קובצי ה-RRD של כל מארח. מתן השמות לקובצי ה-RRDfile יהיה אחד מהבאים:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>באפשרותך לבצע שינוי זה לאחר ההתקנה על ידי הרצת סקריפט ה-CLI <b>structure_rra_paths.php</b> לאחר ביצוע השינוי. הערה: אם תשנה את ערך מספר התיקיות המרבי כדי להקטין את מספר התיקיות, או אם תשנה את תבנית התיקיות, תיקיות ריקות לא ייגזמו לאחר הרצה חוזרת של הסקריפט <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php:2330
 msgid "Directory Pattern"
@@ -12996,9 +12962,9 @@ msgid "Authentication was previously not set.  Attempted to set to Local Authent
 msgstr "אימות לא הוגדר בעבר. ניסיתי להגדיר לאימות מקומית, אך לא נמצא חשבון Admintrative."
 
 #: lib/boost.php:150 utilities.php:2882
-#, fuzzy, php-format
+#, php-format
 msgid "%s MBytes"
-msgstr "מגה בייטים"
+msgstr "%s מגה-בייט"
 
 #: lib/boost.php:153
 #, php-format
@@ -13148,14 +13114,14 @@ msgid "Running Data Query [%s]."
 msgstr "הפעלת שאילתת נתונים [ %s]."
 
 #: lib/data_query.php:120
-#, fuzzy, php-format
+#, php-format
 msgid "Found Type = '%s' [%s]."
-msgstr "נמצא סוג = '{ 0 }' [%s]."
+msgstr "נמצא Type = '%s' [%s]."
 
 #: lib/data_query.php:142
-#, fuzzy, php-format
+#, php-format
 msgid "Unknown Type = '%s'."
-msgstr "סוג לא ידוע"
+msgstr "סוג לא ידוע = '%s'."
 
 #: lib/data_query.php:331
 msgid "WARNING: Sort Field Association has Changed.  Re-mapping issues may occur!"
@@ -13209,9 +13175,9 @@ msgid "Index Association with Local Data complete"
 msgstr "איגוד המדדים עם נתונים מקומיים הושלם"
 
 #: lib/data_query.php:197
-#, fuzzy, php-format
+#, php-format
 msgid "Update Re-Index Cache complete. There were %s index changes, and %s orphaned indexes."
-msgstr "עדכון מטמון אינדקס חוזר הושלם. היו %s שינויי אינדקס, ו -{ 1} אינדקסים יתומים."
+msgstr "עדכון מטמון הבנייה מחדש של האינדקס הושלם. היו %s שינויי אינדקס ו-%s אינדקסים יתומים."
 
 #: lib/data_query.php:201
 msgid "Update Poller Cache for Query complete"
@@ -13432,9 +13398,9 @@ msgid "Located input field '%s' [get]"
 msgstr "שדה קלט ממוקם &#39; %s&#39; [get]"
 
 #: lib/data_query.php:1107
-#, fuzzy, php-format
+#, php-format
 msgid "Found OID rewrite rule: 's/%s/%s/'"
-msgstr "נמצא כלל לשכתוב OID: 's /{ 0 }/{ 1 }/'"
+msgstr "נמצא כלל שכתוב OID: 's/%s/%s/'"
 
 #: lib/data_query.php:1118
 #, php-format
@@ -13508,9 +13474,9 @@ msgid "Found item [%s='%s'] index: %s [from %s]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] אינדקס: %s [מ- %s]"
 
 #: lib/data_query.php:1444
-#, fuzzy, php-format
+#, php-format
 msgid "Found OCTET STRING '%s' decoded value: '%s'"
-msgstr "נמצא מחרוזת אוקטט '{ 0 }' מפוענח ערך: '{ 1 }'"
+msgstr "נמצא OCTET STRING '%s' עם ערך מפוענח: '%s'"
 
 #: lib/data_query.php:1450 lib/data_query.php:1499
 #, php-format
@@ -13523,9 +13489,9 @@ msgid "Found item [%s='%s'] index: %s [from regexp oid value parse]"
 msgstr "נמצא פריט [ %s = &#39; %s&#39;] index: %s [מתוך rexxp oid value parse]"
 
 #: lib/data_query.php:1753
-#, fuzzy, php-format
+#, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
-msgstr "נמצא פריט REWRITE_VALUE מזויף, INDEX='{ 0 }'"
+msgstr "נמצא פריט rewrite_value פגום, index='%s'"
 
 #: lib/data_query.php:1766
 msgid "Could not parse translation map (rewrite_value)"
@@ -13776,9 +13742,9 @@ msgid "Cacti disabled plugin %s due to the following error: %s!  See the Cacti l
 msgstr "Cacti מושבת plugin %s עקב השגיאה הבאה: %s! לקבלת מידע נוסף, עיין בקובץ ה- Cacti logfile."
 
 #: lib/functions.php:6503
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
-msgstr "אזהרה: ל - PollerID: ל -{ 0} יש שם מארח לא חוקי:%s.  האם לא ניתן להגיע אליו באמצעות DNS!"
+msgstr "אזהרה: ל-PollerID:%s יש שם מארח לא חוקי:%s. האם הוא אינו נגיש דרך DNS!"
 
 #: lib/functions.php:6958 lib/functions.php:6960
 #, php-format
@@ -13867,9 +13833,9 @@ msgid "All %d %s"
 msgstr "כל %d %s"
 
 #: lib/html.php:787
-#, fuzzy, php-format
+#, php-format
 msgid "Current Page: %s"
-msgstr "עמוד נוכחי"
+msgstr "עמוד נוכחי: %s"
 
 #: lib/html.php:797
 #, php-format
@@ -14311,23 +14277,20 @@ msgid "Unsaved Changes Detected"
 msgstr "התגלו שינויים שלא נשמרו"
 
 #: lib/html_form.php:1791
-#, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
-msgstr "יש לך שינויים שלא נשמרו בטופס זה. אם תלחץ על &#39;המשך&#39;, השינויים ימחקו. לחץ על &#39;ביטול&#39; כדי להמשיך לערוך את הטופס."
+msgstr "יש לך שינויים שלא נשמרו בטופס זה. אם תלחץ על 'המשך', שינויים אלה יבוטלו. לחץ על 'ביטול' כדי להמשיך בעריכת הטופס."
 
 #: lib/html_form_template.php:161
-#, fuzzy
 msgid "Invalid Graph Template Input"
-msgstr "קלט תבנית גרף"
+msgstr "קלט תבנית גרף לא חוקי"
 
 #: lib/html_form_template.php:162
-#, fuzzy
 msgid "The graph template cannot be rendered"
-msgstr "לא נמצאו תבניות גרפים"
+msgstr "לא ניתן לעבד את תבנית הגרף"
 
 #: lib/html_form_template.php:163
 msgid "A Graph Item Input contains an invalid Field Type."
-msgstr ""
+msgstr "קלט פריט גרף מכיל סוג שדה לא חוקי."
 
 #: lib/html_form_template.php:639 lib/html_form_template.php:651
 #, php-format
@@ -14605,7 +14568,7 @@ msgstr "תאריך / שעה עבר באותו זמן מחר"
 
 #: lib/html_reports.php:345 lib/html_reports.php:500 lib/html_reports.php:679
 msgid "The From Email Address must be your own e-mail address or the site From Email Address."
-msgstr ""
+msgstr "כתובת הדוא\"ל של השולח (From) חייבת להיות כתובת הדוא\"ל שלך או כתובת הדוא\"ל של האתר."
 
 #: lib/html_reports.php:575
 msgid "Click 'Continue' to delete the following Report(s)."
@@ -14767,9 +14730,9 @@ msgid "Report Items %s"
 msgstr "דווח על פריטים %s"
 
 #: lib/html_reports.php:1706
-#, fuzzy, php-format
+#, php-format
 msgid "Scheduled Events %s"
-msgstr "משימות מתוזמנות"
+msgstr "אירועים מתוזמנים %s"
 
 #: lib/html_reports.php:1717
 #, php-format
@@ -14781,9 +14744,9 @@ msgid "Item Details"
 msgstr "פרטי פריט"
 
 #: lib/html_reports.php:1758
-#, fuzzy, php-format
+#, php-format
 msgid "Graph: %s"
-msgstr "Symbol for file attachment annotations"
+msgstr "גרף: %s"
 
 #: lib/html_reports.php:1761 lib/html_reports.php:1787
 #: lib/html_reports.php:1800 lib/html_reports.php:1801
@@ -14811,9 +14774,9 @@ msgid ", Using RegEx: \"%s\""
 msgstr ", באמצעות RegEx: \"%s\""
 
 #: lib/html_reports.php:1825
-#, fuzzy, php-format
+#, php-format
 msgid "Tree: %s"
-msgstr "עץ"
+msgstr "עץ: %s"
 
 #: lib/html_reports.php:1833
 #, php-format
@@ -14821,9 +14784,9 @@ msgid ", Device: %s"
 msgstr "(מהמכשיר: %s)"
 
 #: lib/html_reports.php:1835
-#, fuzzy, php-format
+#, php-format
 msgid ", Branch: %s"
-msgstr "סניף:"
+msgstr ", ענף: %s"
 
 #: lib/html_reports.php:1838
 msgid "(All Branches)"
@@ -14956,9 +14919,8 @@ msgid "Cacti regular expressions can not includes the semi-color character."
 msgstr "ביטויים רגילים של קקטוסים אינם יכולים לכלול את התו הצבעוני למחצה."
 
 #: lib/html_utility.php:1375
-#, fuzzy
 msgid "Invalid regular expression."
-msgstr "הזן ביטוי רגיל"
+msgstr "ביטוי רגולרי לא חוקי."
 
 #: lib/html_utility.php:1378
 msgid "There was an internal error!"
@@ -14982,7 +14944,7 @@ msgstr "שגיאת היסט לקויה של UTF-8!"
 
 #: lib/html_utility.php:1413
 msgid "Cacti RLIKE filters do not support alternation or bounded-repeat characters."
-msgstr ""
+msgstr "מסנני Cacti RLIKE אינם תומכים בברירה (alternation) או בתווים לחזרה מוגבלת."
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
@@ -15003,12 +14965,11 @@ msgstr "שגיאת אימות"
 
 #: lib/import.php:358
 msgid "The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "הדילוג על תיקון שיטת קלט הנתונים בוצע מכיוון שאין לך הרשאה לערוך שיטות קלט נתונים."
 
 #: lib/import.php:747
-#, fuzzy
 msgid "kept existing"
-msgstr "לא קיים"
+msgstr "הקיים נשמר"
 
 #: lib/import.php:765
 msgid "written"
@@ -15039,12 +15000,12 @@ msgstr "שאילתת נתונים [ %s]"
 #: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
-msgstr ""
+msgstr "'%s' לא יובא מכיוון שהוא משתמש בשיטת קלט נתונים שאין לך הרשאה לערוך."
 
 #: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "שיטת קלט הנתונים '%s' לא יובאה מכיוון שאין לך הרשאה לערוך שיטות קלט נתונים."
 
 #: lib/import.php:2845
 msgid "Unknown Field"
@@ -15117,7 +15078,7 @@ msgstr "הנתיב לא ניתן לכתיבה"
 #: lib/installer.php:574
 #, php-format
 msgid "WARNING: Path is not writable, HTMLPurifier will run without a definition cache: %s"
-msgstr ""
+msgstr "אזהרה: הנתיב אינו ניתן לכתיבה, HTMLPurifier ירוץ ללא מטמון הגדרות: %s"
 
 #: lib/installer.php:576
 msgid "Path is not writable"
@@ -15125,16 +15086,15 @@ msgstr "הנתיב אינו ניתן לכתיבה"
 
 #: lib/installer.php:689
 msgid "The external CSRF secret must be outside the Cacti document root"
-msgstr ""
+msgstr "סוד ה-CSRF החיצוני חייב להיות מחוץ לשורש המסמכים של Cacti"
 
 #: lib/installer.php:700
-#, fuzzy
 msgid "Unable to create the external CSRF secret"
-msgstr "לא ניתן לאחזר את סטטוס הטבלה"
+msgstr "לא ניתן ליצור את סוד ה-CSRF החיצוני"
 
 #: lib/installer.php:717
 msgid "Unable to persist the CSRF secret"
-msgstr ""
+msgstr "לא ניתן לשמור בהתמדה את סוד ה-CSRF"
 
 #: lib/installer.php:744
 #, php-format
@@ -15181,22 +15141,21 @@ msgid "Failed to apply specified cron interval"
 msgstr "החלת מרווח ה- cron שצוין נכשלה"
 
 #: lib/installer.php:1035
-#, fuzzy, php-format
+#, php-format
 msgid "Failed to apply '%s' as Automation Range"
-msgstr "החלת '{ 0 }' כטווח אוטומציה נכשלה"
+msgstr "החלת '%s' כטווח אוטומציה נכשלה"
 
 #: lib/installer.php:1110
 msgid "No matching snmp option exists"
 msgstr "לא קיימת אפשרות snmp תואמת"
 
 #: lib/installer.php:1291
-#, fuzzy
 msgid "Unable to load the available templates"
-msgstr "לא ניתן לאחזר את סטטוס הטבלה"
+msgstr "לא ניתן לטעון את התבניות הזמינות"
 
 #: lib/installer.php:1301
 msgid "The template selection was incomplete. Reload this installer step and select the templates again."
-msgstr ""
+msgstr "בחירת התבניות לא הושלמה. טען מחדש שלב התקנה זה ובחר שוב את התבניות."
 
 #: lib/installer.php:1334
 msgid "No matching template exists"
@@ -15204,11 +15163,11 @@ msgstr "אין תבנית תואמת"
 
 #: lib/installer.php:1416
 msgid "Unable to load the tables requiring conversion"
-msgstr ""
+msgstr "לא ניתן לטעון את הטבלאות הדורשות המרה"
 
 #: lib/installer.php:1428
 msgid "The table selection was incomplete. Reload this installer step and select the tables again."
-msgstr ""
+msgstr "בחירת הטבלאות לא הושלמה. טען מחדש שלב התקנה זה ובחר שוב את הטבלאות."
 
 #: lib/installer.php:1675
 msgid "The Installer could not proceed due to an unexpected error."
@@ -15396,9 +15355,8 @@ msgid "Restart Required"
 msgstr "נדרש"
 
 #: lib/installer.php:2015
-#, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
-msgstr "נראה שהערך הספציפי שונה בתצורת ההפעלה לעומת קובץ ה - INI."
+msgstr "נראה שהערך שצוין שונה בתצורה הפעילה לעומת קובץ ה-INI."
 
 #: lib/installer.php:2045
 msgid "PHP - Module Support (Required)"
@@ -15694,9 +15652,8 @@ msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist 
 msgstr "לפיכך, לפני מספר גרסאות, שופרו הקקטוסים בכדי לספק יכולות של רשימת לבן על סוגים אלה של שיטות הזנת נתונים. למרות שזה מאבטח קקטוסים בצורה יותר חדה, זה מגדיל את כמות העבודה הנדרשת על ידי מנהל הקקטוסים לייבוא וניהול של תבניות וחבילות."
 
 #: lib/installer.php:2536
-#, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "הדרך בה פועל רשימת ההיתרים היא שכאשר מייבאים לראשונה שיטת הזנת נתונים, או מייבאים מחדש שיטת הזנת נתונים, והתסריט או האזכורות משתנים בכל דרך שהיא, שיטת הזנת הנתונים וכל מקורות הנתונים המתאימים הושבת מייד עד שמנהל המערכת מאמת ששיטת הזנת הנתונים תקפה."
+msgstr "אופן הפעולה של רשימת ההיתרים הוא שכאשר אתה מייבא שיטת קלט נתונים בפעם הראשונה, או מייבא מחדש שיטת קלט נתונים, והסקריפט ו/או הארגומנטים משתנים בדרך כלשהי, שיטת קלט הנתונים וכל מקורות הנתונים התואמים יושבתו מיד עד שהמנהל יאמת ששיטת קלט הנתונים חוקית."
 
 #: lib/installer.php:2537
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Cacti's CLI directory that can be run with the following options:"
@@ -15799,9 +15756,8 @@ msgid "Updating Templates that you have already made modifications to is not adv
 msgstr "לא מומלץ לעדכן תבניות שכבר ביצעת שינויים בהן. שדרוג התבניות לא יסיר שינויים בתבניות גרף ונתונים ויכול לגרום להתנהגות בלתי צפויה. עם זאת, אם לא ביצעת שינויים בכל גרף, שאילתת נתונים או תבנית נתונים, לא אמורה להיות השפעה על ייבוא החבילה מחדש. במקרה זה, יהיה עליך 'לסנכרן גרפים' מהתבניות לאחר העדכון."
 
 #: lib/installer.php:2672
-#, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
-msgstr "בחר את תבניות ההתקן שבהן ברצונך להשתמש לאחר ההתקנה. אם מערכת ההפעלה היא Windows, עליך לוודא שאתה בוחר את &#39;תבנית התקן Windows&#39;. אם מערכת ההפעלה שלך היא Linux / UNIX, הקפד לבחור את &#39;מכונת לינוקס מקומי&#39; תבנית המכשיר."
+msgstr "בחר את תבניות ההתקנים שברצונך להשתמש בהן לאחר ההתקנה. אם מערכת ההפעלה שלך היא Windows, עליך לוודא שאתה בוחר את התבנית 'Windows Device'. אם מערכת ההפעלה שלך היא Linux/UNIX, ודא שאתה בוחר את תבנית ההתקן 'Local Linux Machine'."
 
 #: lib/installer.php:2678 package_import.php:531 plugins.php:621
 msgid "Author"
@@ -15921,9 +15877,9 @@ msgid "Your Cacti Server is almost ready.  Please check that you are happy to pr
 msgstr "שרת Cacti שלך מוכן כמעט. בדוק כי אתה שמח להמשיך."
 
 #: lib/installer.php:2839
-#, fuzzy, php-format
+#, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
-msgstr "לחץ על '{ 0 }' ולאחר מכן לחץ על '{ 1 }' כדי להשלים את תהליך ההתקנה לאחר בחירת תבניות המכשיר שלך."
+msgstr "לחץ על '%s' ולאחר מכן לחץ על '%s' כדי להשלים את תהליך ההתקנה לאחר בחירת תבניות ההתקנים שלך."
 
 #: lib/installer.php:2855
 #, php-format
@@ -15977,20 +15933,20 @@ msgstr "סיים תהליך%s עבור v%s"
 
 #: lib/installer.php:3213
 msgid "WARNING: Unable to validate the installed database because cacti.sql could not be read"
-msgstr ""
+msgstr "אזהרה: לא ניתן לאמת את מסד הנתונים המותקן מכיוון שלא ניתן היה לקרוא את cacti.sql"
 
 #: lib/installer.php:3219
 msgid "WARNING: Unable to validate the installed database because cacti.sql contains no table definitions"
-msgstr ""
+msgstr "אזהרה: לא ניתן לאמת את מסד הנתונים המותקן מכיוון ש-cacti.sql אינו מכיל הגדרות טבלאות"
 
 #: lib/installer.php:3228
 msgid "WARNING: Unable to query the installed database schema"
-msgstr ""
+msgstr "אזהרה: לא ניתן לשאול את סכימת מסד הנתונים המותקנת"
 
 #: lib/installer.php:3235
 #, php-format
 msgid "WARNING: Core database tables are missing: %s"
-msgstr ""
+msgstr "אזהרה: טבלאות ליבה במסד הנתונים חסרות: %s"
 
 #: lib/installer.php:3252
 #, php-format
@@ -16013,9 +15969,9 @@ msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "ייבוא החבילה #%s '%s' תחת הפרופיל '%s' נכשל"
 
 #: lib/installer.php:3296
-#, fuzzy, php-format
+#, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
-msgstr "מיפוי תבנית אוטומציה עבור תבנית המכשיר '{ 0 }'"
+msgstr "מיפוי תבנית אוטומציה עבור תבנית התקן '%s'"
 
 #: lib/installer.php:3313
 msgid "No templates were selected for import"
@@ -16026,9 +15982,9 @@ msgid "Updating remote configuration file"
 msgstr "ממתין לתצורה"
 
 #: lib/installer.php:3354
-#, fuzzy, php-format
+#, php-format
 msgid "Setting default data source profile to %s (%s)"
-msgstr "הגדרת פרופיל ברירת המחדל של מקור הנתונים ל -{ 0 }({ 1})"
+msgstr "מגדיר את פרופיל מקור הנתונים המוגדר כברירת מחדל ל-%s (%s)"
 
 #: lib/installer.php:3376
 #, php-format
@@ -16158,9 +16114,9 @@ msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "הרקע כבר התחיל ב-%s, ניסיון זה ב-%s דילג"
 
 #: lib/installer.php:3721
-#, fuzzy, php-format
+#, php-format
 msgid "Exception occurred during installation: #%s - %s"
-msgstr "החריגה אירעה במהלך ההתקנה: #{ 0} - %s"
+msgstr "חריגה התרחשה במהלך ההתקנה: #%s - %s"
 
 #: lib/installer.php:3737
 #, php-format
@@ -16172,23 +16128,23 @@ msgid "Both"
 msgstr "שניהם"
 
 #: lib/installer.php:3773
-#, fuzzy, php-format
+#, php-format
 msgid "No - %s"
-msgstr "עבר מ-%s ל-%s"
+msgstr "לא - %s"
 
 #: lib/installer.php:3778
-#, fuzzy, php-format
+#, php-format
 msgid "%s - N/A"
-msgstr "אין"
+msgstr "%s - לא זמין"
 
 #: lib/installer.php:3778 lib/installer.php:3780
 msgid "Web"
 msgstr "אתר אינטרנט"
 
 #: lib/installer.php:3780 lib/installer.php:3783
-#, fuzzy, php-format
+#, php-format
 msgid "%s - No"
-msgstr "עבר מ-%s ל-%s"
+msgstr "%s - לא"
 
 #: lib/installer.php:3783
 msgid "Cli"
@@ -16250,9 +16206,9 @@ msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "שגיאת פרוטוקול, לא ניתן לאגד, תוצאת LDAP: (%s) בשרת (%s)"
 
 #: lib/ldap.php:319
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to Connect to Server (%s)"
-msgstr "לא ניתן להתחבר לשרת"
+msgstr "לא ניתן להתחבר לשרת (%s)"
 
 #: lib/ldap.php:323
 #, php-format
@@ -16335,19 +16291,19 @@ msgid "UDP Ping Success (%s ms)"
 msgstr "UDP Ping הצלחה ( %s ms)"
 
 #: lib/ping.php:561
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "TCP Ping הצלחה ( %s ms)"
+msgstr "בדיקת TCP Ping הצליחה - החיבור נדחה (%s מ\"ש)"
 
 #: lib/ping.php:564
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
-msgstr "TCP Ping: socket_connect (), סיבה: %s"
+msgstr "בדיקת TCP Ping נכשלה: socket_connect(), סיבה: %s"
 
 #: lib/ping.php:587
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
-msgstr "TCP ping: socket_select () נכשל, סיבה: %s"
+msgstr "בדיקת TCP Ping נכשלה: socket_select() נכשל, סיבה: %s"
 
 #: lib/ping.php:602
 #, php-format
@@ -16377,19 +16333,19 @@ msgid "Plugin cannot be installed."
 msgstr "אין אפשרות להתקין את הפלאגין."
 
 #: lib/plugins.php:639
-#, fuzzy, php-format
+#, php-format
 msgid "The Plugin directory '%s' needs to be renamed to remove 'plugin_' from the name before it can be installed."
-msgstr "יש לשנות את שם ספריית התוספים '{ 0 }' כדי להסיר את 'plugin _' מהשם לפני שניתן יהיה להתקין אותה."
+msgstr "יש לשנות את שם תיקיית התוסף '%s' כדי להסיר את 'plugin_' מהשם לפני שניתן יהיה להתקין אותו."
 
 #: lib/plugins.php:642
-#, fuzzy, php-format
+#, php-format
 msgid "The Plugin in the directory '%s' does not include an version function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "התוסף בספריה '{ 0 }' אינו כולל פונקציית גרסה '{1 }()'. פונקציה זו חייבת להתקיים כדי שהתוסף יותקן."
+msgstr "התוסף בתיקייה '%s' אינו כולל פונקציית גרסה '%s()'. פונקציה זו חייבת להיות קיימת כדי שהתוסף יותקן."
 
 #: lib/plugins.php:669
-#, fuzzy, php-format
+#, php-format
 msgid "The Plugin in the directory '%s' does not include an install function '%s()'.  This function must exist for the plugin to be installed."
-msgstr "התוסף בספריה '{ 0 }' אינו כולל פונקציית התקנה '{1 }()'. פונקציה זו חייבת להתקיים כדי שהתוסף יותקן."
+msgstr "התוסף בתיקייה '%s' אינו כולל פונקציית התקנה '%s()'. פונקציה זו חייבת להיות קיימת כדי שהתוסף יותקן."
 
 #: lib/plugins.php:1198 lib/plugins.php:1205 plugins.php:506 plugins.php:587
 msgid "Plugins"
@@ -16409,9 +16365,9 @@ msgid "Not Stated"
 msgstr "לא צויין"
 
 #: lib/reports.php:139
-#, fuzzy, php-format
+#, php-format
 msgid "Device '%s' successfully added to Report."
-msgstr "המכשיר '{ 0 }' נוסף בהצלחה לדוח."
+msgstr "ההתקן '%s' נוסף לדוח בהצלחה."
 
 #: lib/reports.php:142
 msgid "Device not found! Unable to add to Report"
@@ -16476,14 +16432,14 @@ msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "דלג על דוח גרף פריט &#39; <i> %s</i> &#39; כבר קיים"
 
 #: lib/rrd.php:2348
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: RRD file does not exist: %s"
-msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
+msgstr "שגיאה: קובץ RRD אינו קיים: %s"
 
 #: lib/rrd.php:3830
-#, fuzzy, php-format
+#, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
-msgstr "גודל שלב RRDfile הנדרש הוא '{ 0 }' אך השלב הנצפה הוא '{ 1 }'"
+msgstr "גודל הצעד הנדרש של RRDfile הוא '%s' אך הצעד שנצפה הוא '%s'"
 
 #: lib/rrd.php:3890
 #, php-format
@@ -16516,9 +16472,9 @@ msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "קובץ ה- RRA &#39; %s&#39; כולל אותו CF / שלבים ( %s, %s) כ- &#39; %s&#39;"
 
 #: lib/rrd.php:3978
-#, fuzzy, php-format
+#, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
-msgstr "ה - pdp_per_row של '{ 0 }' אינו חוקי עבור RRA '{ 1 }' צריך להיות '{ 2 }'. שקול למחוק ולאפשר ל - Cacti ליצור מחדש RRDfile."
+msgstr "הערך pdp_per_row של '%s' אינו חוקי עבור RRA '%s' וצריך להיות '%s'. שקול למחוק ולאפשר ל-Cacti ליצור מחדש את קובץ ה-RRDfile."
 
 #: lib/rrd.php:3982
 #, php-format
@@ -16526,14 +16482,14 @@ msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "XFF עבור cacti RRA id &#39; %s&#39; צריך להיות &#39; %s&#39;"
 
 #: lib/rrd.php:3986
-#, fuzzy, php-format
+#, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
-msgstr "מספר השורות עבור מזהה Cacti RRA '{ 0 }' שגוי. מספר השורות הוא '{ 1 }' אבל צריך להיות '{ 2 }'"
+msgstr "מספר השורות עבור מזהה RRA של Cacti '%s' שגוי. מספר השורות הוא '%s' אך צריך להיות '%s'"
 
 #: lib/rrd.php:4003
-#, fuzzy, php-format
+#, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
-msgstr "קובץ ה - RRA '{ 0 }' חסר בקקטוס RRD הקיים"
+msgstr "ה-RRA '%s' חסר בקובץ ה-RRDfile הקיים של Cacti"
 
 #: lib/rrd.php:4011
 #, php-format
@@ -16602,9 +16558,8 @@ msgid "rename %s to %s"
 msgstr "שינוי שם %s ל - %s"
 
 #: lib/rrd.php:4307 lib/rrd.php:4388 lib/rrd.php:4456
-#, fuzzy
 msgid "ERROR: Invalid RRDfile path"
-msgstr "הזן נתיב קובץ חוקי"
+msgstr "שגיאה: נתיב RRDfile לא חוקי"
 
 #: lib/rrd.php:4317
 msgid "Error while parsing the XML of rrdtool dump"
@@ -16617,7 +16572,7 @@ msgstr "ERROR בעת כתיבת קובץ XML: %s"
 
 #: lib/rrd.php:4356 lib/rrd.php:4423 lib/rrd.php:4491
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
-msgstr ""
+msgstr "שחזור RRD נכשל; קובץ ה-XML המקורי וקובץ השחזור נשמרו. עיין ביומן היישום."
 
 #: lib/rrd.php:4362 lib/rrd.php:4429 lib/rrd.php:4497
 #, php-format
@@ -16629,14 +16584,14 @@ msgid "Error while parsing the XML of RRDtool dump"
 msgstr "שגיאה בעת ניתוח XML של DDR"
 
 #: lib/rrd.php:4716
-#, fuzzy, php-format
+#, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
-msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוסר מקובץ RRD"
+msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) הוסר מקובץ RRD"
 
 #: lib/rrd.php:4754
-#, fuzzy, php-format
+#, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
-msgstr "RRA (CF={ 0}, ROWS={ 1}, PDP_PER_ROW={ 2}, XFF={ 3}) הוספה לקובץ RRD"
+msgstr "מוסיף RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) לקובץ RRD"
 
 #: lib/rrd.php:4786 lib/rrd.php:4800
 #, php-format
@@ -16665,323 +16620,310 @@ msgstr "שגיאת RRDtool לא ידועה"
 
 #: lib/rrd_maintenance.php:224
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
-msgstr ""
+msgstr "אחסון ה-RRD אינו מוכן: התיקייה המוגדרת חייבת להיות קיימת ולאפשר לחשבון שירות זה ליצור, לקרוא, לכתוב ולהסיר קבצים."
 
 #: lib/rrd_maintenance.php:230
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
+msgstr "אחסון ה-RRD אינו מוכן לגישה מתואמת. הפעל PHP POSIX והגדר את הערכים המספריים rrd_maintenance_trusted_uids ו-rrd_maintenance_trusted_gids בקובץ include/config.php עבור כל חשבון שירות אינטרנט ו-poller. הסר הרשאות כתיבה לכולם (world-write) ובדוק את תיקיות האב של האחסון. עיין ב-docs/testing/spikekill-safety.md לפני השדרוג."
 
 #: lib/rrd_maintenance.php:286
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
-msgstr ""
+msgstr "התור poller_output חייב להשתמש ב-InnoDB לפני האיסוף. עצור את כל האוספים, כולל אוספים מרוחקים, והרץ cli/upgrade_database.php --migrate-poller-queue (או המר את poller_output ל-InnoDB לאחר גיבוי). מנוע שנצפה: %s. אסור להשליך דגימות שמורות כדי לנקות מצב זה."
 
 #: lib/rrd_maintenance.php:286
-#, fuzzy
 msgid "unavailable"
 msgstr "לא זמין"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
-msgstr ""
+msgstr "תצורת אחסון ה-RRD דורשת תשומת לב"
 
 #: lib/snmp.php:247 lib/snmp.php:347 lib/snmp.php:442 lib/snmp.php:877
 #: lib/snmp.php:892
-#, fuzzy, php-format
+#, php-format
 msgid "SNMP Command is: %s"
-msgstr "אפשרויות SNMP [עריכה: %s]"
+msgstr "פקודת SNMP היא: %s"
 
 #: lib/spikekill.php:188
 msgid "FATAL: You must specify an RRDfile!"
-msgstr ""
+msgstr "שגיאה קריטית: עליך לציין קובץ RRDfile!"
 
 #: lib/spikekill.php:192
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' does not exist."
-msgstr "XML: גרסת Cacti אינה קיימת."
+msgstr "שגיאה קריטית: הקובץ '%s' אינו קובץ."
 
 #: lib/spikekill.php:204
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' is not a regular file."
-msgstr "XML: גרסת Cacti אינה קיימת."
+msgstr "שגיאה קריטית: הקובץ '%s' אינו קובץ רגיל."
 
 #: lib/spikekill.php:206
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr ""
+msgstr "שגיאה קריטית: הקובץ '%s' אינו ניתן לכתיבה על ידי '%s'."
 
 #: lib/spikekill.php:272
 msgid "FATAL: Standard Deviation must be a positive integer."
-msgstr ""
+msgstr "שגיאה קריטית: סטיית התקן חייבת להיות מספר שלם חיובי."
 
 #: lib/spikekill.php:280 lib/spikekill.php:1782
-#, fuzzy
 msgid "StdDev"
-msgstr "הסר את StdDev"
+msgstr "StdDev"
 
 #: lib/spikekill.php:286 lib/spikekill.php:1782
-#, fuzzy
 msgid "Variance"
-msgstr "משתנה"
+msgstr "שונות"
 
 #: lib/spikekill.php:292
-#, fuzzy
 msgid "Gap Fill"
-msgstr "מילוי הפער טווח"
+msgstr "מילוי מרווחים"
 
 #: lib/spikekill.php:304
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
-msgstr ""
+msgstr "שגיאה קריטית: עליך לציין 'stddev', 'variance', 'float' או 'fill' כשיטות."
 
 #: lib/spikekill.php:319
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr ""
+msgstr "שגיאה קריטית: הארגומנטים outlier-start ו-outlier-end חייבים להיות בפורמט YYYY-MM-DD HH:MM או חותמת זמן unix."
 
 #: lib/spikekill.php:323
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
-msgstr ""
+msgstr "שגיאה קריטית: מספר החריגים לאי-הכללה חייב להיות מספר שלם חיובי."
 
 #: lib/spikekill.php:331
 msgid "FATAL: Percent deviation must be a positive floating point number."
-msgstr ""
+msgstr "שגיאה קריטית: אחוז הסטייה חייב להיות מספר נקודה צפה חיובי."
 
 #: lib/spikekill.php:337
 msgid "FATAL: Number of spikes to remove must be a positive integer"
-msgstr ""
+msgstr "שגיאה קריטית: מספר הקפיצות להסרה חייב להיות מספר שלם חיובי"
 
 #: lib/spikekill.php:342
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
-msgstr ""
+msgstr "שגיאה קריטית: טווח הזמן לחריגים מחייב ציון של outlier-start ו-outlier-end."
 
 #: lib/spikekill.php:348
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
-msgstr ""
+msgstr "שגיאה קריטית: טווח הזמן לחריגים מחייב ש-outlier-start יהיה קטן מ-outlier-end."
 
 #: lib/spikekill.php:353
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "שגיאה קריטית: שיטת ההסרה 'float' מחייבת ציון של תאריך התחלה וסיום."
 
 #: lib/spikekill.php:357
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "שגיאה קריטית: שיטת ההסרה 'gapfill' מחייבת ציון של תאריך התחלה וסיום."
 
 #: lib/spikekill.php:366
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
-msgstr ""
+msgstr "שגיאה קריטית: עליך לציין 'last', 'avg' או 'nan' כשיטת החלפה."
 
 #: lib/spikekill.php:369
 msgid "Spike Kill Settings Used for Analysis/Correction"
-msgstr ""
+msgstr "הגדרות Spike Kill המשמשות לניתוח/תיקון"
 
 #: lib/spikekill.php:375
 #, php-format
 msgid "Method:        %s"
-msgstr ""
+msgstr "שיטה:        %s"
 
 #: lib/spikekill.php:376
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile:       %s"
-msgstr "RRDfiles"
+msgstr "RRDfile:       %s"
 
 #: lib/spikekill.php:377
-#, fuzzy, php-format
+#, php-format
 msgid "Repair Type:   %s"
-msgstr "שלבי תיקון [ %s]"
+msgstr "סוג תיקון:   %s"
 
 #: lib/spikekill.php:380
 #, php-format
 msgid "Num Outliers:  %s"
-msgstr ""
+msgstr "מספר חריגים:  %s"
 
 #: lib/spikekill.php:381
-#, fuzzy, php-format
+#, php-format
 msgid "Max Kills:     %s"
-msgstr "מקסימום הורג RRA"
+msgstr "מקסימום הסרות:     %s"
 
 #: lib/spikekill.php:383
 msgid "Max Kills:     Unlimited"
-msgstr ""
+msgstr "מקסימום הסרות:     ללא הגבלה"
 
 #: lib/spikekill.php:387
-#, fuzzy, php-format
+#, php-format
 msgid "Standard Devs: %s"
-msgstr "סטיות תקן"
+msgstr "סטיות תקן: %s"
 
 #: lib/spikekill.php:389
 #, php-format
 msgid "Variance %%:    %s %%"
-msgstr ""
+msgstr "שונות %%:    %s %%"
 
 #: lib/spikekill.php:393
 #, php-format
 msgid "Window Start:  %s (%s)"
-msgstr ""
+msgstr "תחילת חלון:  %s (%s)"
 
 #: lib/spikekill.php:394
 #, php-format
 msgid "Window End:    %s (%s)"
-msgstr ""
+msgstr "סוף חלון:    %s (%s)"
 
 #: lib/spikekill.php:396
-#, fuzzy
 msgid "Window Range:  All"
-msgstr "קשור לחלונות"
+msgstr "טווח חלון:  הכל"
 
 #: lib/spikekill.php:411
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
-msgstr ""
+msgstr "שגיאה קריטית: עצור כותבי RRD חיצוניים והשבת את RRDCACHED_ADDRESS לפני הסרת קפיצות."
 
 #: lib/spikekill.php:418
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
-msgstr ""
+msgstr "שגיאה קריטית: אחסון ה-RRD עסוק. נסה שוב לאחר סיום התשאול."
 
 #: lib/spikekill.php:419
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
-msgstr ""
+msgstr "שגיאה קריטית: אחסון ה-RRD אינו מהימן או אינו זמין. הרץ cli/upgrade_database.php --check-rrd-storage כחשבון שירות האינטרנט ותקן את תצורת האחסון שלו."
 
 #: lib/spikekill.php:445
 msgid "FATAL: Secure randomness is unavailable; spike removal was not started."
-msgstr ""
+msgstr "שגיאה קריטית: אקראיות מאובטחת אינה זמינה; הסרת הקפיצות לא הופעלה."
 
 #: lib/spikekill.php:476
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
-msgstr ""
+msgstr "שגיאה קריטית: לא ניתן ליצור בבטחה קובץ XML זמני בתוך '%s'!"
 
 #: lib/spikekill.php:525 lib/spikekill.php:547
 msgid "FATAL: RRD source identity changed or could not be verified safely."
-msgstr ""
+msgstr "שגיאה קריטית: זהות מקור ה-RRD השתנתה או לא ניתן היה לאמת אותה בבטחה."
 
 #: lib/spikekill.php:555
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
-msgstr ""
+msgstr "שגיאה קריטית: פקודת RRDtool נכשלה. ודא שנתיב ה-RRDtool חוקי תחת הגדרות->נתיבים!"
 
 #: lib/spikekill.php:571
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
-msgstr ""
+msgstr "שגיאה קריטית: RRDtool החזיר פלט dump ריק. קובץ ה-RRD לא שונה."
 
 #: lib/spikekill.php:599
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
-msgstr ""
+msgstr "שגיאה קריטית: גיבוי RRDfile של '%s' אל '%s' נכשל!"
 
 #: lib/spikekill.php:813
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
-msgstr ""
+msgstr "הערה: מחפש קפיצות בקובץ ה-XML '%s'"
 
 #: lib/spikekill.php:816
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
-msgstr ""
+msgstr "הערה: מוגבל לחלון זמן: %s עד %s"
 
 #: lib/spikekill.php:823
 msgid "NOTE: Dryrun requested.  No updates performed"
-msgstr ""
+msgstr "הערה: התבקשה הרצת בדיקה (Dryrun). לא בוצעו עדכונים"
 
 #: lib/spikekill.php:859
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
-msgstr ""
+msgstr "הערה: לא נמצאו קפיצות בחלון בתוך '%s'"
 
 #: lib/spikekill.php:862
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
-msgstr ""
+msgstr "הערה: לא נמצאו קפיצות בתוך '%s'"
 
 #: lib/spikekill.php:875
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
-msgstr ""
+msgstr "הערה: נמצאו קפיצות והן טופלו. סך כל הקפיצות %s"
 
 #: lib/spikekill.php:879
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr ""
+msgstr "שגיאה קריטית: לא ניתן לשחזר את '%s' מתוך '%s'"
 
 #: lib/spikekill.php:889
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
-msgstr ""
+msgstr "שגיאה קריטית: לא ניתן לגבות את '%s'"
 
 #: lib/spikekill.php:899
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
-msgstr ""
+msgstr "שגיאה קריטית: לא ניתן לכתוב לקובץ ה-XML '%s'"
 
 #: lib/spikekill.php:908
-#, fuzzy
 msgid "NOTE: No Spikes Found."
-msgstr "לא נמצאו אתרים"
+msgstr "הערה: לא נמצאו קפיצות."
 
 #: lib/spikekill.php:969
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
-msgstr ""
+msgstr "הערה: מייבא מחדש את '%s' אל '%s'"
 
 #: lib/spikekill.php:1060
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr ""
+msgstr "הערה: מגבה את '%s' אל '%s'"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Avg"
-msgstr "ממוצע:"
+msgstr "ממוצע"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "CF"
-msgstr "CDEF"
+msgstr "CF"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "DS"
-msgstr "DES"
+msgstr "DS"
 
 #: lib/spikekill.php:1782
 msgid "NonNan"
-msgstr ""
+msgstr "NonNan"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Samples"
-msgstr "פשוט"
+msgstr "דגימות"
 
 #: lib/spikekill.php:1783
 msgid "MaxStdDev"
-msgstr ""
+msgstr "MaxStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MaxValue"
-msgstr "ערך"
+msgstr "MaxValue"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinStdDev"
-msgstr "יבש לרוץ StdDev"
+msgstr "MinStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinValue"
-msgstr "ערך"
+msgstr "MinValue"
 
 #: lib/spikekill.php:1783
 msgid "StdKilled"
-msgstr ""
+msgstr "StdKilled"
 
 #: lib/spikekill.php:1783
 msgid "VarKilled"
-msgstr ""
+msgstr "VarKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindKilled"
-msgstr ""
+msgstr "WindKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindSamples"
-msgstr ""
+msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
@@ -17057,7 +16999,7 @@ msgstr "בעת ביצוע שאילתות משנה, כאשר יש גודל שול
 
 #: lib/utility.php:1369 lib/utility.php:1375
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr ""
+msgstr "בעת ביצוע פעולות join, אם הן קטנות מגודל זה, הן יישמרו בזיכרון ולעולם לא ייכתבו לקובץ זמני. מכיוון שזוהי הקצאת זיכרון לכל חיבור, יש להקפיד שלא להגדיל אותה יותר מדי. סכום הזיכרון של join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + זיכרון הליבה של MySQL/MariaDB צריך להיות מתחת ל-80%. אם ההמלצה שלילית, עליך להקטין הגדרה זו ו/או את sort_buffer_size עד שההמלצה תתאים לזיכרון המותר."
 
 #: lib/utility.php:1381
 #, php-format
@@ -17078,9 +17020,8 @@ msgid "InnoDB will hold as much tables and indexes in system memory as is possib
 msgstr "InnoDB תקיים כמה טבלאות ואינדקסים בזיכרון המערכת ככל האפשר. לכן, אתה צריך לעשות את innodb_buffer_pool גדול מספיק כדי להחזיק כמה שיותר שולחנות ואינדקס בזיכרון. בדיקת גודל הספרייה / var / lib / mysql / cacti תסייע בקביעת ערך זה. אנו ממליצים על 25 %% מהמערכת הכוללת של הזיכרון, אך הדרישות שלך ישתנו בהתאם לגודל המערכות שלך."
 
 #: lib/utility.php:1405
-#, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "הגדרות אלה צריכות להישאר פועלות אלא אם כן מופעי הקקטוסים שלך פועלים בשני ZFS או ב- FusionI / O, שלשניהם יש יומן פנימי כדי לאפשר קריסות מערכת פתאומיות. עם זאת, אם יש לך כוח טוב מאוד, והמערכות שלך לעתים נדירות נופלות ויש לך גיבויים, הפיכת הגדרה זו למצב OFF יכולה להביא לעלייה כמעט של 50% בביצועי מסד הנתונים."
+msgstr "הגדרה זו צריכה להישאר מופעלת (ON) אלא אם מופעי ה-Cacti שלך פועלים על ZFS או FusionI/O שלשניהם יש רישום יומן פנימי להתמודדות עם קריסות מערכת פתאומיות. עם זאת, אם יש לך אספקת חשמל טובה מאוד, המערכות שלך כמעט אינן נופלות ויש לך גיבויים, כיבוי הגדרה זו (OFF) יכול להניב לך שיפור של כמעט 50% בביצועי מסד הנתונים."
 
 #: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
@@ -17205,11 +17146,11 @@ msgstr "שם שימושי עבור VDEF זה."
 #: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr ""
+msgstr "מזהה קישור חיצוני '%s' עם הכותרת '%s' ניסה להזריק URL לא חוקי ונחסם!"
 
 #: links.php:76
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "קובץ התוכן שלך אינו URL חוקי. הזן URL חוקי"
 
 #: links.php:197
 msgid "Click 'Continue' to Enable the following Page(s)."
@@ -17478,26 +17419,26 @@ msgstr "אין ערכי רישום של הודעת SNMP"
 #: managers.php:1125
 msgid "Click 'Continue' to delete the following Notification Receiver"
 msgid_plural "Click 'Continue' to delete following Notification Receiver"
-msgstr[0] "לחץ על 'המשך' כדי למחוק את מקבל ההתראות הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את מקלט ההתראות הבא"
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני מקלטי ההתראות הבאים"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את מקלטי ההתראות הבאים"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את מקלטי ההתראות הבאים"
 
 #: managers.php:1127
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
-msgstr[0] "לחץ על 'המשך' כדי לאפשר את מקבל ההודעות הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי להפעיל את מקלט ההתראות הבא"
+msgstr[1] "לחץ על 'המשך' כדי להפעיל את שני מקלטי ההתראות הבאים"
+msgstr[2] "לחץ על 'המשך' כדי להפעיל את מקלטי ההתראות הבאים"
+msgstr[3] "לחץ על 'המשך' כדי להפעיל את מקלטי ההתראות הבאים"
 
 #: managers.php:1129
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
-msgstr[0] "לחץ על 'המשך' כדי להשבית את מקבל ההודעות הבא"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי להשבית את מקלט ההתראות הבא"
+msgstr[1] "לחץ על 'המשך' כדי להשבית את שני מקלטי ההתראות הבאים"
+msgstr[2] "לחץ על 'המשך' כדי להשבית את מקלטי ההתראות הבאים"
+msgstr[3] "לחץ על 'המשך' כדי להשבית את מקלטי ההתראות הבאים"
 
 #: managers.php:1139
 #, php-format
@@ -17534,11 +17475,11 @@ msgstr "כדי להשתמש בתוסף זה, תחילה עליך להפעיל א
 
 #: package_import.php:127
 msgid "Unable to create temporary package file."
-msgstr ""
+msgstr "לא ניתן ליצור קובץ חבילה זמני."
 
 #: package_import.php:143
 msgid "The package signature could not be verified against a trusted author."
-msgstr ""
+msgstr "לא ניתן היה לאמת את חתימת החבילה מול מחבר מהימן."
 
 #: package_import.php:220
 #, php-format
@@ -17551,9 +17492,8 @@ msgid "The Package %s Import Failed"
 msgstr "הייבוא של החבילה %s נכשל"
 
 #: package_import.php:303
-#, fuzzy
 msgid "Error: Invalid file path."
-msgstr "הזן נתיב קובץ חוקי"
+msgstr "שגיאה: נתיב קובץ לא חוקי."
 
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
@@ -17565,9 +17505,9 @@ msgid "See the cacti.log for more information.  It could be that you had either 
 msgstr "לקבלת מידע נוסף, ניתן לעיין באתר cacti.log.  ייתכן שהייתה לך שגיאת מפתח API או שהחבילה טופלה, או שהמיקום אינו זמין."
 
 #: package_import.php:388
-#, fuzzy, php-format
+#, php-format
 msgid "The package \"%s\" download or validation failed"
-msgstr "הורדת או אימות החבילה \"{ 0 }\" נכשלה"
+msgstr "הורדת החבילה \"%s\" או אימותה נכשלו"
 
 #: package_import.php:394
 msgid "See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available"
@@ -17618,9 +17558,8 @@ msgid "Filename"
 msgstr "שינוי שם"
 
 #: package_import.php:629 package_import.php:729 templates_import.php:367
-#, fuzzy
 msgid "Differences"
-msgstr "הבדלים:"
+msgstr "הבדלים"
 
 #: package_import.php:631 package_import.php:698 templates_import.php:310
 msgid "Unchanged"
@@ -17890,9 +17829,9 @@ msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling 
 msgstr "הערה: נוסף אספן נתונים של קקטוסים. לפיכך, מאפשרים הגברה אוטומטית!"
 
 #: poller_automation.php:54
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Main Cacti database %s offline or in recovery"
-msgstr "אזהרה: מסד הנתונים הראשי של קקטוסים לא מקוון או בשחזור"
+msgstr "אזהרה: מסד הנתונים הראשי של Cacti %s לא מקוון או בהתאוששות"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
@@ -18053,7 +17992,7 @@ msgstr "הקובץ המחזיק ברשות אישורי SSL לשימוש כדי 
 #: pollers.php:318
 #, php-format
 msgid "WARNING: Use of Data Collector Hostname '%s' is insecure!  Use either a fully qualified domain name or IP address to avoid equivalent hosts from other domains accessing this service"
-msgstr ""
+msgstr "אזהרה: השימוש בשם המארח של אוסף הנתונים '%s' אינו מאובטח! השתמש בשם דומיין מלא (FQDN) או בכתובת IP כדי למנוע ממארחים מקבילים מדומיינים אחרים לגשת לשירות זה"
 
 #: pollers.php:324
 #, php-format
@@ -18072,66 +18011,66 @@ msgstr "נתונים סטטיסטיים"
 #: pollers.php:576
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Cacti Data Collector."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את מלקט הנתונים הבא.  שים לב, כל המכשירים ינותקו מאוסף נתונים זה וימופו חזרה לאספן הנתונים הראשי של קקטוסים."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את אוסף הנתונים הבא. שים לב, כל ההתקנים ינותקו מאוסף נתונים זה ויועברו חזרה לאוסף הנתונים הראשי של Cacti."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את כל שני אוספי הנתונים הבאים. שים לב, כל ההתקנים ינותקו מאוספי נתונים אלה ויועברו חזרה לאוסף הנתונים הראשי של Cacti."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את כל אוספי הנתונים הבאים. שים לב, כל ההתקנים ינותקו מאוספי נתונים אלה ויועברו חזרה לאוסף הנתונים הראשי של Cacti."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את כל אוספי הנתונים הבאים. שים לב, כל ההתקנים ינותקו מאוספי נתונים אלה ויועברו חזרה לאוסף הנתונים הראשי של Cacti."
 
 #: pollers.php:581
 msgid "Delete Data Collector"
 msgid_plural "Delete Data Collectors"
-msgstr[0] "מחיקת מלקט הנתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק אוסף נתונים"
+msgstr[1] "מחק אוספי נתונים"
+msgstr[2] "מחק אוספי נתונים"
+msgstr[3] "מחק אוספי נתונים"
 
 #: pollers.php:585
 msgid "Click 'Continue' to disable the following Data Collector."
 msgid_plural "Click 'Continue' to disable the following Data Collectors."
-msgstr[0] "לחץ על 'המשך' כדי להשבית את מלקט הנתונים הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי להשבית את אוסף הנתונים הבא."
+msgstr[1] "לחץ על 'המשך' כדי להשבית את שני אוספי הנתונים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי להשבית את אוספי הנתונים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי להשבית את אוספי הנתונים הבאים."
 
 #: pollers.php:590
 msgid "Disable Data Collector"
 msgid_plural "Disable Data Collectors"
-msgstr[0] "השבת את מלקט הנתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "השבת אוסף נתונים"
+msgstr[1] "השבת אוספי נתונים"
+msgstr[2] "השבת אוספי נתונים"
+msgstr[3] "השבת אוספי נתונים"
 
 #: pollers.php:594
 msgid "Click 'Continue' to enable the following Data Collector."
 msgid_plural "Click 'Continue' to enable the following Data Collectors."
 msgstr[0] "לחץ על 'המשך' כדי להפעיל את אוסף הנתונים הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי להפעיל את שני אוספי הנתונים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי להפעיל את אוספי הנתונים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי להפעיל את אוספי הנתונים הבאים."
 
 #: pollers.php:599 pollers.php:608
 msgid "Enable Data Collector"
 msgid_plural "Enable Data Collectors"
-msgstr[0] "אפשר מלקט נתונים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הפעל אוסף נתונים"
+msgstr[1] "הפעל אוספי נתונים"
+msgstr[2] "הפעל אוספי נתונים"
+msgstr[3] "הפעל אוספי נתונים"
 
 #: pollers.php:603
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
 msgid_plural "Click 'Continue' to Synchronize the Remote Data Collectors for Offline Operation."
-msgstr[0] "לחץ על 'המשך' כדי לסנכרן את מלקט הנתונים המרוחקים עבור פעולה במצב לא מקוון."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי לסנכרן את אוסף הנתונים המרוחק לפעולה לא מקוונת."
+msgstr[1] "לחץ על 'המשך' כדי לסנכרן את שני אוספי הנתונים המרוחקים לפעולה לא מקוונת."
+msgstr[2] "לחץ על 'המשך' כדי לסנכרן את אוספי הנתונים המרוחקים לפעולה לא מקוונת."
+msgstr[3] "לחץ על 'המשך' כדי לסנכרן את אוספי הנתונים המרוחקים לפעולה לא מקוונת."
 
 #: pollers.php:612
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "לחץ על 'המשך' כדי לנקות נתונים סטטיסטיים של מלקט הנתונים עבור מלקט הנתונים."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי לנקות את סטטיסטיקות אוסף הנתונים עבור אוסף הנתונים."
+msgstr[1] "לחץ על 'המשך' כדי לנקות את סטטיסטיקות אוסף הנתונים עבור שני אוספי הנתונים."
+msgstr[2] "לחץ על 'המשך' כדי לנקות את סטטיסטיקות אוסף הנתונים עבור אוספי הנתונים."
+msgstr[3] "לחץ על 'המשך' כדי לנקות את סטטיסטיקות אוסף הנתונים עבור אוספי הנתונים."
 
 #: pollers.php:617
 msgid "Clear Statistics for Data Collector"
@@ -18142,9 +18081,8 @@ msgstr[2] "מעמדו של אספן נתונים זה."
 msgstr[3] "מעמדו של אספן נתונים זה."
 
 #: pollers.php:669
-#, fuzzy
 msgid "The Main Data Collector can not be deleted or disabled."
-msgstr "בפעם האחרונה זה נתונים אספן היה מלא synced עם האתר הראשי Cacti."
+msgstr "לא ניתן למחוק או להשבית את אוסף הנתונים הראשי."
 
 #: pollers.php:688 sites.php:503
 #, php-format
@@ -18165,7 +18103,7 @@ msgstr "בדוק חיבור מסד נתונים"
 
 #: pollers.php:853
 msgid "Invalid Database Hostname or Port"
-msgstr ""
+msgstr "שם מארח או יציאה לא חוקיים של מסד הנתונים"
 
 #: pollers.php:969
 msgid "Collectors"
@@ -18362,7 +18300,7 @@ msgstr "ארכיון"
 
 #: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
+msgstr "ניקוי מקומי אוטומטי של RRD אינו זמין ב-Windows. עצור את כל כותבי ה-RRD לפני ניקוי ידני."
 
 #: rrdcleaner.php:380
 msgid "RRD Files"
@@ -18651,36 +18589,36 @@ msgstr "אתר התבנית לא נמצא! לא ניתן לשכפל."
 
 #: sites.php:355
 msgid "One or more of the selected Sites does not exist. Nothing was changed."
-msgstr ""
+msgstr "אחד או יותר מהאתרים שנבחרו אינו קיים. דבר לא שונה."
 
 #: sites.php:384
 #, php-format
 msgid "No more than %d Sites can be duplicated at once."
-msgstr ""
+msgstr "לא ניתן לשכפל יותר מ-%d אתרים בבת אחת."
 
 #: sites.php:436
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את האתר הבא.  שים לב, כל המכשירים ינותקו מאתר זה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את האתר הבא. שים לב, כל ההתקנים ינותקו מאתר זה."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את כל שני האתרים הבאים. שים לב, כל ההתקנים ינותקו מאתרים אלה."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את כל האתרים הבאים. שים לב, כל ההתקנים ינותקו מאתרים אלה."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את כל האתרים הבאים. שים לב, כל ההתקנים ינותקו מאתרים אלה."
 
 #: sites.php:441
 msgid "Delete Site"
 msgid_plural "Delete Sites"
-msgstr[0] "מחיקת אתר"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק אתר"
+msgstr[1] "מחק אתרים"
+msgstr[2] "מחק אתרים"
+msgstr[3] "מחק אתרים"
 
 #: sites.php:445
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
 msgstr[0] "לחץ על 'המשך' כדי לשכפל את האתר הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את כל שני האתרים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את כל האתרים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את כל האתרים הבאים."
 
 #: sites.php:447
 msgid "Site Name:"
@@ -18695,9 +18633,8 @@ msgstr[2] "שכפל"
 msgstr[3] "שכפל"
 
 #: sites.php:496
-#, fuzzy
 msgid "Site not found."
-msgstr "קובץ לא נמצא"
+msgstr "האתר לא נמצא."
 
 #: sites.php:678 tree.php:1047
 msgid "Site Name"
@@ -18807,9 +18744,9 @@ msgid "See the cacti.log for more information, and review the XML file for prope
 msgstr "עיין ב -cacti.log לקבלת מידע נוסף, ובדוק את קובץ ה - XML לקבלת תחביר מתאים. פרטי השגיאה מוצגים בהמשך.<br><br><b>שגיאות:</b><br>%s"
 
 #: templates_import.php:147
-#, fuzzy, php-format
+#, php-format
 msgid "The Template XML file \"%s\" validation failed"
-msgstr "אימות קובץ ה - XML של התבנית \"{ 0 }\" נכשל"
+msgstr "אימות קובץ ה-XML של התבנית \"%s\" נכשל"
 
 #: templates_import.php:231
 msgid "Import Files [ If Files are missing, locate and install before using ]"
@@ -18836,9 +18773,9 @@ msgid "Damaged"
 msgstr "מקור נתונים, גרף"
 
 #: templates_import.php:335
-#, fuzzy, php-format
+#, php-format
 msgid "Met: %d"
-msgstr "MET"
+msgstr "התקיימו: %d"
 
 #: templates_import.php:339
 #, php-format
@@ -18877,10 +18814,9 @@ msgid "Un-Lock"
 msgstr "נעול"
 
 #: tree.php:233 tree.php:634
-#, fuzzy
 #: graphs.php:652 graphs.php:1025
 msgid "You do not have permission to modify this tree."
-msgstr "ההרשאה נדחתה. אין לך הרשאה לפעולה המבוקשת."
+msgstr "אין לך הרשאה לשנות עץ זה."
 
 #: tree.php:250 tree.php:254 tree.php:969
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -18924,65 +18860,65 @@ msgstr "מספריים"
 msgid "Click 'Continue' to delete the following Tree."
 msgid_plural "Click 'Continue' to delete following Trees."
 msgstr[0] "לחץ על 'המשך' כדי למחוק את העץ הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני העצים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את העצים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את העצים הבאים."
 
 #: tree.php:850
 msgid "Delete Tree"
 msgid_plural "Delete Trees"
-msgstr[0] "מחיקת עץ"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק עץ"
+msgstr[1] "מחק עצים"
+msgstr[2] "מחק עצים"
+msgstr[3] "מחק עצים"
 
 #: tree.php:854
 msgid "Click 'Continue' to publish the following Tree."
 msgid_plural "Click 'Continue' to publish following Trees."
 msgstr[0] "לחץ על 'המשך' כדי לפרסם את העץ הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לפרסם את שני העצים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי לפרסם את העצים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי לפרסם את העצים הבאים."
 
 #: tree.php:859
 msgid "Publish Tree"
 msgid_plural "Publish Trees"
 msgstr[0] "פרסם עץ"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "פרסם עצים"
+msgstr[2] "פרסם עצים"
+msgstr[3] "פרסם עצים"
 
 #: tree.php:863
 msgid "Click 'Continue' to un-publish the following Tree."
 msgid_plural "Click 'Continue' to un-publish following Trees."
 msgstr[0] "לחץ על 'המשך' כדי לבטל את הפרסום של העץ הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לבטל את הפרסום של שני העצים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי לבטל את הפרסום של העצים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי לבטל את הפרסום של העצים הבאים."
 
 #: tree.php:868
 msgid "Un-publish Tree"
 msgid_plural "Un-publish Trees"
-msgstr[0] "ביטול הפרסום של עץ"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "בטל פרסום עץ"
+msgstr[1] "בטל פרסום עצים"
+msgstr[2] "בטל פרסום עצים"
+msgstr[3] "בטל פרסום עצים"
 
 #: tree.php:872
 msgid "Click 'Continue' to un-lock the following Tree."
 msgid_plural "Click 'Continue' to un-lock following Trees."
 msgstr[0] "לחץ על 'המשך' כדי לבטל את הנעילה של העץ הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי לבטל את הנעילה של שני העצים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי לבטל את הנעילה של העצים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי לבטל את הנעילה של העצים הבאים."
 
 #: tree.php:877
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "ביטול נעילת העץ"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "בטל נעילת עץ"
+msgstr[1] "בטל נעילת עצים"
+msgstr[2] "בטל נעילת עצים"
+msgstr[3] "בטל נעילת עצים"
 
 #: tree.php:927
 #, php-format
@@ -19420,9 +19356,8 @@ msgid "Tree Perms"
 msgstr "עץ"
 
 #: user_admin.php:1916
-#, fuzzy
 msgid "User not found."
-msgstr "קובץ לא נמצא"
+msgstr "משתמש לא נמצא."
 
 #: user_admin.php:1955
 #, php-format
@@ -19434,36 +19369,32 @@ msgid "User Management"
 msgstr "משתמש"
 
 #: user_admin.php:2235
-#, fuzzy
 msgid "Group"
-msgstr "קבוצות"
+msgstr "קבוצה"
 
 #: user_admin.php:2257 user_admin.php:2401
 msgid "Last Login"
 msgstr "התחברות אחרונה"
 
 #: user_admin.php:2262
-#, fuzzy
 msgid "< 1 Week Ago"
-msgstr "שבוע"
+msgstr "< לפני פחות משבוע"
 
 #: user_admin.php:2263
 msgid "< 1 Month Ago"
-msgstr ""
+msgstr "< לפני פחות מחודש"
 
 #: user_admin.php:2264
 msgid "> 1 Month Ago"
-msgstr ""
+msgstr "> לפני יותר מחודש"
 
 #: user_admin.php:2265
-#, fuzzy
 msgid "> 2 Months Ago"
-msgstr "%d חודשים"
+msgstr "> לפני יותר מחודשיים"
 
 #: user_admin.php:2266
-#, fuzzy
 msgid "> 4 Months Ago"
-msgstr "%d חודשים"
+msgstr "> לפני יותר מ-4 חודשים"
 
 #: user_admin.php:2277
 msgid "Basic"
@@ -19538,39 +19469,39 @@ msgstr "הרשאת עץ %s"
 
 #: user_domains.php:99 user_domains.php:178
 msgid "Choose a local account as the user template."
-msgstr ""
+msgstr "בחר חשבון מקומי כתבנית המשתמש."
 
 #: user_domains.php:264
 msgid "Click 'Continue' to delete the following User Domain."
 msgid_plural "Click 'Continue' to delete following User Domains."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את דומיין המשתמש הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את דומיין המשתמשים הבא."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני דומייני המשתמשים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את דומייני המשתמשים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את דומייני המשתמשים הבאים."
 
 #: user_domains.php:269
 msgid "Delete User Domain"
 msgid_plural "Delete User Domains"
-msgstr[0] "מחיקת דומיין משתמש"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק דומיין משתמשים"
+msgstr[1] "מחק דומייני משתמשים"
+msgstr[2] "מחק דומייני משתמשים"
+msgstr[3] "מחק דומייני משתמשים"
 
 #: user_domains.php:273
 msgid "Click 'Continue' to disable the following User Domain."
 msgid_plural "Click 'Continue' to disable following User Domains."
-msgstr[0] "לחץ על 'המשך' כדי להשבית את דומיין המשתמש הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי להשבית את דומיין המשתמשים הבא."
+msgstr[1] "לחץ על 'המשך' כדי להשבית את שני דומייני המשתמשים הבאים."
+msgstr[2] "לחץ על 'המשך' כדי להשבית את דומייני המשתמשים הבאים."
+msgstr[3] "לחץ על 'המשך' כדי להשבית את דומייני המשתמשים הבאים."
 
 #: user_domains.php:278
 msgid "Disable User Domain"
 msgid_plural "Disable User Domains"
-msgstr[0] "השבת את דומיין המשתמש"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "השבת דומיין משתמשים"
+msgstr[1] "השבת דומייני משתמשים"
+msgstr[2] "השבת דומייני משתמשים"
+msgstr[3] "השבת דומייני משתמשים"
 
 #: user_domains.php:282
 msgid "Click 'Continue' to enable the following User Domain."
@@ -19579,10 +19510,10 @@ msgstr "לחץ על &#39;המשך&#39; כדי להפעיל את דומיין ה�
 #: user_domains.php:287
 msgid "Enabled User Domain"
 msgid_plural "Enable User Domains"
-msgstr[0] "דומיין משתמש מופעל"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הפעל דומיין משתמשים"
+msgstr[1] "הפעל דומייני משתמשים"
+msgstr[2] "הפעל דומייני משתמשים"
+msgstr[3] "הפעל דומייני משתמשים"
 
 #: user_domains.php:291
 msgid "Click 'Continue' to make the following the following User Domain the default one."
@@ -19594,7 +19525,7 @@ msgstr "הפוך ברירת מחדל נבחרת לתחום"
 
 #: user_domains.php:350
 msgid "The domain to make default no longer exists."
-msgstr ""
+msgstr "הדומיין להפיכה לברירת מחדל אינו קיים עוד."
 
 #: user_domains.php:367
 #, php-format
@@ -19777,26 +19708,25 @@ msgstr "מה לעשות כאשר משתמש ממשתמש זה נכנס למער�
 msgid "Click 'Continue' to delete the following User Group"
 msgid_plural "Click 'Continue' to delete following User Groups"
 msgstr[0] "לחץ על 'המשך' כדי למחוק את קבוצת המשתמשים הבאה"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שתי קבוצות המשתמשים הבאות"
+msgstr[2] "לחץ על 'המשך' כדי למחוק את קבוצות המשתמשים הבאות"
+msgstr[3] "לחץ על 'המשך' כדי למחוק את קבוצות המשתמשים הבאות"
 
 #: user_group_admin.php:526
-#, fuzzy
 msgid "Delete User Group"
 msgid_plural "Delete User Groups"
-msgstr[0] "משתמש חסר."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק קבוצת משתמשים"
+msgstr[1] "מחק קבוצות משתמשים"
+msgstr[2] "מחק קבוצות משתמשים"
+msgstr[3] "מחק קבוצות משתמשים"
 
 #: user_group_admin.php:534
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
 msgstr[0] "לחץ על 'המשך' כדי להעתיק את קבוצת המשתמשים הבאה לקבוצת משתמשים חדשה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי להעתיק את שתי קבוצות המשתמשים הבאות לקבוצות משתמשים חדשות."
+msgstr[2] "לחץ על 'המשך' כדי להעתיק את קבוצות המשתמשים הבאות לקבוצות משתמשים חדשות."
+msgstr[3] "לחץ על 'המשך' כדי להעתיק את קבוצות המשתמשים הבאות לקבוצות משתמשים חדשות."
 
 #: user_group_admin.php:540
 msgid "Group Prefix:"
@@ -19807,45 +19737,44 @@ msgid "New Group"
 msgstr "קבוצה חדשה"
 
 #: user_group_admin.php:545
-#, fuzzy
 msgid "Copy User Group"
 msgid_plural "Copy User Groups"
-msgstr[0] "דרגת משתמש"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "העתק קבוצת משתמשים"
+msgstr[1] "העתק קבוצות משתמשים"
+msgstr[2] "העתק קבוצות משתמשים"
+msgstr[3] "העתק קבוצות משתמשים"
 
 #: user_group_admin.php:551
 msgid "Click 'Continue' to enable the following User Group."
 msgid_plural "Click 'Continue' to enable following User Groups."
 msgstr[0] "לחץ על 'המשך' כדי להפעיל את קבוצת המשתמשים הבאה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי להפעיל את שתי קבוצות המשתמשים הבאות."
+msgstr[2] "לחץ על 'המשך' כדי להפעיל את קבוצות המשתמשים הבאות."
+msgstr[3] "לחץ על 'המשך' כדי להפעיל את קבוצות המשתמשים הבאות."
 
 #: user_group_admin.php:556
 msgid "Enable User Group"
 msgid_plural "Enable User Groups"
-msgstr[0] "אפשר קבוצת משתמשים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "הפעל קבוצת משתמשים"
+msgstr[1] "הפעל קבוצות משתמשים"
+msgstr[2] "הפעל קבוצות משתמשים"
+msgstr[3] "הפעל קבוצות משתמשים"
 
 #: user_group_admin.php:562
 msgid "Click 'Continue' to disable the following User Group."
 msgid_plural "Click 'Continue' to disable following User Groups."
 msgstr[0] "לחץ על 'המשך' כדי להשבית את קבוצת המשתמשים הבאה."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "לחץ על 'המשך' כדי להשבית את שתי קבוצות המשתמשים הבאות."
+msgstr[2] "לחץ על 'המשך' כדי להשבית את קבוצות המשתמשים הבאות."
+msgstr[3] "לחץ על 'המשך' כדי להשבית את קבוצות המשתמשים הבאות."
 
 #: user_group_admin.php:567
 msgid "Disable User Group"
 msgid_plural "Disable User Groups"
-msgstr[0] "השבתת קבוצת משתמשים"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "השבת קבוצת משתמשים"
+msgstr[1] "השבת קבוצות משתמשים"
+msgstr[2] "השבת קבוצות משתמשים"
+msgstr[3] "השבת קבוצות משתמשים"
 
 #: user_group_admin.php:790
 msgid "Login Name"
@@ -19915,7 +19844,7 @@ msgstr "נקה"
 
 #: utilities.php:61
 msgid "A Poller Cache rebuild is already running."
-msgstr ""
+msgstr "בנייה מחדש של מטמון ה-Poller כבר פועלת."
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
@@ -20697,45 +20626,44 @@ msgid "Severity Level: %s"
 msgstr "רמת חומרה: %s"
 
 #: vdef.php:163 vdef.php:576
-#, fuzzy
 msgid "VDEF not found."
-msgstr "קובץ לא נמצא"
+msgstr "ה-VDEF לא נמצא."
 
 #: vdef.php:274
 msgid "Click 'Continue' to delete the following VDEF."
 msgid_plural "Click 'Continue' to delete following VDEFs."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את ה - VDEF הבא."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי למחוק את ה-VDEF הבא."
+msgstr[1] "לחץ על 'המשך' כדי למחוק את שני ה-VDEFs הבאים."
+msgstr[2] "לחץ על 'המשך' כדי למחוק את ה-VDEFs הבאים."
+msgstr[3] "לחץ על 'המשך' כדי למחוק את ה-VDEFs הבאים."
 
 #: vdef.php:279
 msgid "Delete VDEF"
 msgid_plural "Delete VDEFs"
-msgstr[0] "מחיקת VDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "מחק VDEF"
+msgstr[1] "מחק VDEFs"
+msgstr[2] "מחק VDEFs"
+msgstr[3] "מחק VDEFs"
 
 #: vdef.php:283
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] "לחץ על 'המשך' כדי לשכפל את ה - VDEF הבא. ניתן לשנות את פורמט הכותרת עבור ה - VDEF החדש."
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "לחץ על 'המשך' כדי לשכפל את ה-VDEF הבא. באפשרותך לשנות את פורמט הכותרת עבור ה-VDEF החדש."
+msgstr[1] "לחץ על 'המשך' כדי לשכפל את שני ה-VDEFs הבאים. באפשרותך לשנות את פורמט הכותרת עבור ה-VDEFs החדשים."
+msgstr[2] "לחץ על 'המשך' כדי לשכפל את ה-VDEFs הבאים. באפשרותך לשנות את פורמט הכותרת עבור ה-VDEFs החדשים."
+msgstr[3] "לחץ על 'המשך' כדי לשכפל את ה-VDEFs הבאים. באפשרותך לשנות את פורמט הכותרת עבור ה-VDEFs החדשים."
 
 #: vdef.php:289
 msgid "Duplicate VDEF"
 msgid_plural "Duplicate VDEFs"
-msgstr[0] "שכפול VDEF"
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] "שכפל VDEF"
+msgstr[1] "שכפל VDEFs"
+msgstr[2] "שכפל VDEFs"
+msgstr[3] "שכפל VDEFs"
 
 #: vdef.php:342
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF או פריט VDEF לא נמצא."
 
 #: vdef.php:352
 msgid "Click 'Continue' to delete the following VDEF's."
@@ -20884,31 +20812,40 @@ msgstr "אין VDEFs"
 
 #: lib/plugins.php:1233
 msgid "Plugin INFO must declare a valid compat version"
-msgstr ""
+msgstr "קובץ ה-INFO של התוסף חייב להכריז על גרסת תאימות חוקית"
 
 #: plugins.php:848
 #, php-format
 msgid "Unable to Install Plugin: %s"
-msgstr ""
+msgstr "לא ניתן להתקין את התוסף: %s"
 
 #: include/global_form.php:1069
 msgid "Line Width"
-msgstr ""
+msgstr "רוחב קו"
 
 #: include/global_form.php:1074
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
-msgstr ""
+msgstr "LINE1, LINE2 ו-LINE3 משתמשים ברוחבים קבועים. עבור LINE:STACK, הזן רוחב חיובי בפיקסלים; ערכים שלמים או עשרוניים נתמכים."
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
-msgstr ""
+msgstr "לא ניתן לשמור פריטי גרף מצטבר. ייתכן שהגדרות גרף אחרות כבר נשמרו."
 
 #: lib/data_query.php:203
 msgid "No Index Changes Detected, Poller Cache Refreshed"
-msgstr ""
+msgstr "לא זוהו שינויי אינדקס, מטמון ה-Poller רוענן"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-msgstr ""
+
+msgstr "הסנכרון נכשל. עיין ביומן לפרטים."
+
+#: graph.php:512
+msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
+msgstr "לגרף זה אין הגדרת RRA להתמקדות בה; בדוק את פרופיל מקור הנתונים שלו."
+
+#: lib/import.php:771
+msgid "not written"
+msgstr "לא נכתב"

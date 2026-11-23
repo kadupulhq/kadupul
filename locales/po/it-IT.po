@@ -44,9 +44,8 @@ msgid "Honorable Mentions"
 msgstr "Sezione Menu della console"
 
 #: about.php:62
-#, fuzzy
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
-msgstr "Contributori a Docuemntation, QA, Packaging, ai Forum e alla nostra pagina YouTube."
+msgstr "Collaboratori a documentazione, QA, pacchettizzazione, forum e al nostro canale YouTube."
 
 #: about.php:70
 msgid "Emeritus Members"
@@ -371,9 +370,8 @@ msgid "Preview"
 msgstr "Anteprima"
 
 #: aggregate_graphs.php:629
-#, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "Impostazioni del grafico aggregato"
+msgstr "Il grafico aggregato a cui si è tentato di accedere non esiste"
 
 #: aggregate_graphs.php:690
 msgid "Turn Off Graph Debug Mode"
@@ -758,9 +756,8 @@ msgid "No Aggregate Graphs Found"
 msgstr "Nessun grafico aggregato trovato"
 
 #: aggregate_templates.php:119 aggregate_templates.php:370
-#, fuzzy
 msgid "Aggregate Template not found."
-msgstr "Nessun modello aggregato trovato"
+msgstr "Modello aggregato non trovato."
 
 #: aggregate_templates.php:318
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
@@ -963,9 +960,8 @@ msgid "You do not have access to any area of Cacti.  Contact your administrator.
 msgstr "Se ritieni che questo sia un errore. Si prega di contattare il proprio Amministratore Cacti."
 
 #: auth_login.php:225
-#, fuzzy
 msgid "Access Denied! User account locked."
-msgstr "Accesso negato, account utente disabilitato."
+msgstr "Accesso negato! Account utente bloccato."
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
@@ -1335,7 +1331,7 @@ msgstr "Disabilita"
 
 #: automation_graph_rules.php:162 automation_graph_rules.php:213
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr ""
+msgstr "È stato effettuato un tentativo di SQL injection nell'automazione dei grafici"
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
@@ -1575,9 +1571,8 @@ msgid "Monthly on Day"
 msgstr "Mensile su giorno"
 
 #: automation_networks.php:439
-#, fuzzy
 msgid "Network not found."
-msgstr "File non trovato"
+msgstr "Rete non trovata."
 
 #: automation_networks.php:446
 #, php-format
@@ -2489,12 +2484,11 @@ msgstr "Nessun modello di dispositivo di automazione trovato"
 
 #: automation_tree_rules.php:148
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr ""
+msgstr "È stato effettuato un tentativo di SQL injection nell'automazione degli alberi"
 
 #: automation_tree_rules.php:197
-#, fuzzy
 msgid "Invalid Field Name specified for Tree Rule Item."
-msgstr "Il nome del campo che sarà utilizzato per questa voce della regola."
+msgstr "Nome di campo non valido specificato per l'elemento regola albero."
 
 #: automation_tree_rules.php:293
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -2734,11 +2728,11 @@ msgstr "Nessun CDEF"
 
 #: color.php:207
 msgid "The Colors could not be checked for use and were not Deleted."
-msgstr ""
+msgstr "Impossibile verificare l'utilizzo dei colori, pertanto non sono stati eliminati."
 
 #: color.php:219
 msgid "Colors referenced by a Graph, Graph Template or Color Template were not Deleted."
-msgstr ""
+msgstr "I colori referenziati da un grafico, modello di grafico o modello di colore non sono stati eliminati."
 
 #: color.php:242
 msgid "Unnamed Color"
@@ -2864,9 +2858,8 @@ msgid "The Color as shown on the screen."
 msgstr "Il colore come mostrato sullo schermo."
 
 #: color.php:778
-#, fuzzy
 msgid "Colors in use cannot be Deleted.  In use is defined as being referenced by a Graph, a Graph Template or a Color Template."
-msgstr "I colori in uso non possono essere eliminati.  In uso è definito come riferimento da un modello grafico o da un modello grafico."
+msgstr "I colori in uso non possono essere eliminati. Un colore è considerato in uso se è referenziato da un grafico, un modello di grafico o un modello di colore."
 
 #: color.php:779
 msgid "The number of Graph using this Color."
@@ -2950,9 +2943,8 @@ msgid "Delete Color Item"
 msgstr "Elimina elemento Colore"
 
 #: color_templates.php:395
-#, fuzzy
 msgid "Color Template not found."
-msgstr "Nessun modello di colore trovato"
+msgstr "Modello colore non trovato."
 
 #: color_templates.php:402
 #, php-format
@@ -2987,9 +2979,8 @@ msgid "No Color Templates Found"
 msgstr "Nessun modello di colore trovato"
 
 #: color_templates_items.php:277
-#, fuzzy
 msgid "Color Template or Item not found."
-msgstr "Elementi del modello di colore"
+msgstr "Modello di colore o elemento non trovato."
 
 #: color_templates_items.php:292
 msgid "Click 'Continue' to delete the following Color Template Color."
@@ -3356,21 +3347,20 @@ msgstr "Debugging"
 
 #: data_input.php:132
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "La stringa di input contiene caratteri shell pericolosi"
 
 #: data_input.php:140
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "La whitelist degli input è attiva. Le modifiche a questo metodo di input dati richiedono di eseguire nuovamente lo script CLI della whitelist degli input (cli/input_whitelist.php) utilizzando entrambe le opzioni --audit e --update prima che l'origine dati venga nuovamente interrogata."
 
 #: data_input.php:188
 #, php-format
 msgid "Input field <%s> requires Special Type Code \"%s\"."
-msgstr ""
+msgstr "Il campo di input <%s> richiede il codice di tipo speciale \"%s\"."
 
 #: data_input.php:270
-#, fuzzy
 msgid "Data Input Methods that are built in or in use were not deleted."
-msgstr "L'inserimento dei dati per il metodo non sembra essere nella lista bianca."
+msgstr "I metodi di input dati integrati o in uso non sono stati eliminati."
 
 #: data_input.php:336
 msgid "Click 'Continue' to delete the following Data Input Method"
@@ -3506,9 +3496,8 @@ msgid "Delete Data Input Field"
 msgstr "Cancellare il campo di inserimento dati"
 
 #: data_input.php:962
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Aggiornare questo campo"
+msgstr "Aggiorna whitelist"
 
 #: data_input.php:1021 include/global_arrays.php:1018
 #: include/global_arrays.php:1242 include/global_arrays.php:2390
@@ -3598,9 +3587,8 @@ msgstr[0] "Elimina query di dati"
 msgstr[1] "Elimina query di dati"
 
 #: data_queries.php:584
-#, fuzzy
 msgid "The item does not belong to this Data Query."
-msgstr "Il nome di questo Data Query."
+msgstr "L'elemento non appartiene a questa query dati."
 
 #: data_queries.php:678
 msgid "Click 'Continue' to delete the following Data Query Graph Association."
@@ -3617,7 +3605,7 @@ msgstr "Convertire in modello grafico"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
-msgstr ""
+msgstr "Dei grafici utilizzano questa associazione di modello di grafico, quindi non può essere eliminata."
 
 #: data_queries.php:771
 #, php-format
@@ -3682,7 +3670,7 @@ msgstr "Aggiungi il nome dell'origine dei dati Nome suggerito"
 
 #: data_queries.php:1262
 msgid "Graphs use this Data Query, so it can not be deleted."
-msgstr ""
+msgstr "Dei grafici utilizzano questa query dati, quindi non può essere eliminata."
 
 #: data_queries.php:1323
 #, php-format
@@ -3807,9 +3795,8 @@ msgstr[0] "Duplicare il profilo dell'origine dati"
 msgstr[1] "Duplicare i profili di origine della data"
 
 #: data_source_profiles.php:420
-#, fuzzy
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
-msgstr "Se questa Fonte Dati non è più in uso da tempo da Graphs, può essere cancellata."
+msgstr "I profili origine dati in uso da modelli dati o origini dati non possono essere eliminati."
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
@@ -3829,9 +3816,8 @@ msgid "Remove Data Source Profile RRA"
 msgstr "Rimozione del profilo della sorgente dati RRA"
 
 #: data_source_profiles.php:559
-#, fuzzy
 msgid "Data Source Profiles in use by Data Sources are read only."
-msgstr "I profili utilizzati dalle fonti di dati vengono letti solo per ora."
+msgstr "I profili di origine dati in uso da origini dati sono di sola lettura."
 
 #: data_source_profiles.php:597 data_source_profiles.php:616
 msgid "Each Insert is New Row"
@@ -4345,9 +4331,8 @@ msgid "Field \"%s\" is missing an Output Field"
 msgstr "Nel campo \"%s\" manca un campo di output"
 
 #: data_templates.php:394
-#, fuzzy
 msgid "Data Templates in use by a Data Source were not deleted."
-msgstr "I modelli di dati in uso non possono essere modificati."
+msgstr "I modelli di dati in uso da un'origine dati non sono stati eliminati."
 
 #: data_templates.php:510
 msgid "Click 'Continue' to delete the following Data Template(s).  Any data sources attached to these templates will become individual Data Source(s) and all Templating benefits will be removed."
@@ -4490,7 +4475,7 @@ msgstr "Nessun modello di dati trovato"
 
 #: gprint_presets.php:174
 msgid "GPRINT Presets referenced by a Graph or Graph Template were not Deleted."
-msgstr ""
+msgstr "I preset GPRINT referenziati da un grafico o un modello di grafico non sono stati eliminati."
 
 #: gprint_presets.php:211
 msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
@@ -4501,9 +4486,8 @@ msgid "Delete GPRINT Preset(s)"
 msgstr "Cancellare la o le preimpostazioni GPRINT"
 
 #: gprint_presets.php:257
-#, fuzzy
 msgid "GPRINT Preset not found."
-msgstr "Preimpostazione GPRINT"
+msgstr "Preset GPRINT non trovato."
 
 #: gprint_presets.php:264
 #, php-format
@@ -4563,9 +4547,8 @@ msgid "Viewing Graph"
 msgstr "Visualizzazione del grafico"
 
 #: graph.php:116 graph.php:513 graph.php:537 graph.php:551 graph.php:606
-#, fuzzy
 msgid "The Graph you requested does not exist."
-msgstr "Fonte dei dati non esiste."
+msgstr "Il grafico richiesto non esiste."
 
 #: graph.php:301 lib/html.php:599
 msgid "Graph Details, Zooming and Debugging Utilities"
@@ -4660,9 +4643,8 @@ msgid "Quick Sync Graphs"
 msgstr "Grafici di sincronizzazione"
 
 #: graph_templates.php:242
-#, fuzzy
 msgid "Graph Templates in use by a Graph were not deleted."
-msgstr "I modelli di dati in uso non possono essere modificati."
+msgstr "I modelli di grafico in uso da un grafico non sono stati eliminati."
 
 #: graph_templates.php:352 graph_templates.php:367
 #, php-format
@@ -4736,9 +4718,8 @@ msgid "No Inputs"
 msgstr "Nessun ingresso"
 
 #: graph_templates.php:609
-#, fuzzy
 msgid "Graph Template not found."
-msgstr "Nessun modello di grafico trovato"
+msgstr "Modello di grafico non trovato."
 
 #: graph_templates.php:622
 #, php-format
@@ -4798,11 +4779,11 @@ msgstr "Nessun modello di grafico trovato"
 
 #: graph_templates_inputs.php:69
 msgid "The selected Field Type is not a valid Graph Item field."
-msgstr ""
+msgstr "Il tipo di campo selezionato non è un campo valido per un elemento grafico."
 
 #: graph_templates_inputs.php:82
 msgid "The Graph Item Input relationship is invalid."
-msgstr ""
+msgstr "La relazione dell'input dell'elemento grafico non è valida."
 
 #: graph_templates_inputs.php:187
 #, php-format
@@ -5040,15 +5021,15 @@ msgstr "ERROR: nessuna fonte di dati associata. Modello di controllo"
 
 #: graphs.php:412
 msgid "A Graph Item Input contains an invalid field or value."
-msgstr ""
+msgstr "Un input di elemento grafico contiene un campo o un valore non valido."
 
 #: graphs.php:424 graphs.php:474
 msgid "Graph Item Input changes could not be saved."
-msgstr ""
+msgstr "Impossibile salvare le modifiche dell'input dell'elemento grafico."
 
 #: graphs.php:452
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
+msgstr "Un input di elemento grafico contiene un valore non valido."
 
 #: graphs.php:952
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
@@ -5406,9 +5387,8 @@ msgid "Cacti GitHub Site"
 msgstr "Sito GitHub Cactus"
 
 #: help.php:113
-#, fuzzy
 msgid "Open a ticket at "
-msgstr "Invia nuova FAQ"
+msgstr "Apri un ticket su "
 
 #: help.php:113
 #, php-format
@@ -5462,12 +5442,11 @@ msgstr "ERRORE: Dispositivo"
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
-msgstr ""
+msgstr "Una reindicizzazione di questo dispositivo è già in esecuzione. Riprova al termine dell'operazione."
 
 #: host.php:242
-#, fuzzy
 msgid "Device Reindex Failed."
-msgstr "Il dispositivo è disabilitato"
+msgstr "Reindicizzazione del dispositivo non riuscita."
 
 #: host.php:256
 #, php-format
@@ -5840,9 +5819,8 @@ msgid "Sync Devices"
 msgstr "Dispositivi di sincronizzazione"
 
 #: host_templates.php:207
-#, fuzzy
 msgid "That item can not be added to or removed from this Device Template."
-msgstr "Il nome di questo modello di dispositivo."
+msgstr "Questo elemento non può essere aggiunto o rimosso da questo modello di dispositivo."
 
 #: host_templates.php:275
 msgid "Click 'Continue' to delete the following Device Template(s)."
@@ -5869,9 +5847,8 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "Sincronizzare i dispositivi con i modelli dei dispositivi"
 
 #: host_templates.php:362
-#, fuzzy
 msgid "A Device Template in use by a Device can not be deleted."
-msgstr "I modelli di dati in uso non possono essere modificati."
+msgstr "Un modello di dispositivo utilizzato da un dispositivo non può essere eliminato."
 
 #: host_templates.php:386
 msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
@@ -6021,12 +5998,12 @@ msgstr "È in corso un'installazione o un aggiornamento."
 
 #: include/csrf.php:219
 msgid "The browser did not return the Cacti session cookie. Ensure cookies are enabled and verify the configured URL path and cookie domain."
-msgstr ""
+msgstr "Il browser non ha restituito il cookie di sessione Cacti. Assicurati che i cookie siano abilitati e verifica il percorso URL e il dominio del cookie configurati."
 
 #: include/csrf.php:220
-#, fuzzy, php-format
+#, php-format
 msgid "Return to Cacti: %s"
-msgstr "Richiede: Cactus >== %s"
+msgstr "Torna a Cacti: %s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
@@ -6214,7 +6191,7 @@ msgstr "Impossibile cambiare la password. Account utente non trovato."
 
 #: include/global_arrays.php:285
 msgid "Data Source Item field holds a value the Data Source form would reject."
-msgstr ""
+msgstr "Il campo dell'elemento origine dati contiene un valore che il modulo dell'origine dati rifiuterebbe."
 
 #: include/global_arrays.php:288
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
@@ -6257,9 +6234,8 @@ msgid "Unable to determine size of password field, please check permissions of d
 msgstr "Impossibile determinare la dimensione del campo password, si prega di controllare i permessi dell'utente db"
 
 #: include/global_arrays.php:318
-#, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
-msgstr "Impossibile aumentare la dimensione del campo password, si prega di verificare il permesso dell'utente db"
+msgstr "Impossibile aumentare la dimensione del campo password; verifica i permessi dell'utente del database"
 
 #: include/global_arrays.php:321
 msgid "LDAP/AD based password change not supported."
@@ -6530,9 +6506,8 @@ msgid "SHA-256"
 msgstr "SHA-256"
 
 #: include/global_arrays.php:664
-#, fuzzy
 msgid "SHA-384"
-msgstr "SHA-392"
+msgstr "SHA-384"
 
 #: include/global_arrays.php:665
 msgid "SHA-512"
@@ -6591,9 +6566,8 @@ msgid "TCP Ping"
 msgstr "Ping TCP"
 
 #: include/global_arrays.php:703
-#, fuzzy
 msgid "TCP Ping Closed"
-msgstr "Ping TCP"
+msgstr "Ping TCP chiuso"
 
 #: include/global_arrays.php:704
 msgid "UDP Ping"
@@ -8277,9 +8251,9 @@ msgid "The number of SNMP OIDs that can be obtained in a single SNMP Get request
 msgstr "Specificato il numero di OID che possono essere ottenuti in una singola richiesta SNMP Get."
 
 #: include/global_form.php:152
-#, fuzzy, php-format
+#, php-format
 msgid "%d OID"
-msgstr "OID"
+msgstr "%d OID"
 
 #: include/global_form.php:153 include/global_form.php:154
 #: include/global_form.php:155 include/global_form.php:156
@@ -8322,9 +8296,9 @@ msgstr "%d Ripetizione"
 #: include/global_form.php:190 include/global_form.php:191
 #: include/global_form.php:192 include/global_form.php:193
 #: include/global_form.php:194
-#, fuzzy, php-format
+#, php-format
 msgid "%d Repetitions"
-msgstr "Ripetizioni"
+msgstr "%d ripetizioni"
 
 #: include/global_form.php:202
 msgid "SNMP Retries"
@@ -9097,9 +9071,8 @@ msgid "The method Cacti will use to determine if a host is available for polling
 msgstr "Il metodo che Cacti utilizzerà per determinare se un host è disponibile per i sondaggi.  <br><i>Attenzione: Si raccomanda che, come minimo, sia sempre selezionato SNMP.</i>."
 
 #: include/global_form.php:1277
-#, fuzzy
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "Il tipo di pacchetto ping da inviare.  <br><i>Nota: ICMP su Linux/UNIX richiede privilegi di root.</i>."
+msgstr "Il tipo di pacchetto ping da inviare. <br><i>NOTA: ICMP su Linux/UNIX richiede i privilegi di root.</i> <br><i>NOTA: Ping TCP chiuso - Anche se il ping TCP non riesce, il dispositivo può essere considerato ATTIVO (UP).</i>"
 
 #: include/global_form.php:1314 include/global_form.php:1806
 msgid "Additional Options"
@@ -10098,52 +10071,48 @@ msgid "When checked, any attempts to access Cacti will be redirected to HTTPS to
 msgstr "Quando controllato, qualsiasi tentativo di accesso a Cacti sarà reindirizzato a HTTPS per garantire un'elevata sicurezza."
 
 #: include/global_settings.php:502
-#, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "Stato del raccoglitore dati remoto:"
+msgstr "Consenti HTTPS non sicuro per i raccoglitori di dati remoti"
 
 #: include/global_settings.php:503
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr ""
+msgstr "Consenti l'uso di certificati autofirmati e consenti che il nome host del certificato differisca da quello del raccoglitore di dati remoto."
 
 #: include/global_settings.php:508
-#, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "Il nome di questo metodo di inserimento dati."
+msgstr "Consenti metacaratteri non sicuri nei metodi di input dati"
 
 #: include/global_settings.php:509
 msgid "Historically, Cacti administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Cacti Graphs.  In earlier versions of Cacti, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Cacti, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Cacti restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Cacti continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr ""
+msgstr "Storicamente, gli amministratori di Cacti creavano semplici metodi di input dati che includevano comandi come \"ps -ef | grep something | wc -l\" per rappresentare un valore numerico da usare nei grafici Cacti. Nelle versioni precedenti di Cacti questo era consentito. Tuttavia, si tratta di una pratica non sicura poiché costituisce un varco per utenti terzi per pubblicare modelli di dati non sicuri. Nel Cacti moderno, questo tipo di pratiche va evitato. Offriamo comunque questa opzione nel caso in cui disponiate di vecchi metodi di input dati che contengono questi metacaratteri non sicuri e non li abbiate ancora convertiti in script locali nella directory 'scripts'. Quando questa opzione è deselezionata, Cacti limita i metacaratteri in stile shell come virgolette, parentesi graffe, barre verticali, barre rovesciate e apici inversi. Cacti continua a consentire i segni maggiore e minore per elementi come <path_cacti> e per i parametri di input, ma se questa opzione è deselezionata, quello è il limite del loro utilizzo consentito."
 
 #: include/global_settings.php:515
-#, fuzzy
 msgid "Content-Security Script Policy"
-msgstr "Fonti alternative per la sicurezza dei contenuti"
+msgstr "Politica di sicurezza dei contenuti per gli script"
 
 #: include/global_settings.php:516
 msgid "Controls the script-src CSP policy.  In Nonce Modes, Cacti Plugins that use inline JavaScript must include the nonce attribute from Cacti's builtin function 'CactiSecureHeaders::getNonceAttribute()'. Otherwise, those scripts will be blocked by the browser.  Currently, Cacti only allows reporting on Cacti Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces."
-msgstr ""
+msgstr "Controlla la politica CSP script-src. Nelle modalità Nonce, i plugin di Cacti che utilizzano JavaScript inline devono includere l'attributo nonce dalla funzione integrata di Cacti 'CactiSecureHeaders::getNonceAttribute()'. In caso contrario, tali script verranno bloccati dal browser. Attualmente, Cacti consente solo di segnalare i plugin di Cacti che non utilizzano correttamente la modalità Nonce. In futuro, consentiremo agli amministratori di bloccare l'utilizzo di JavaScript inline da parte di tali plugin se non utilizzano i Nonce."
 
 #: include/global_settings.php:519
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Consenti JavaScript inline senza nonce"
 
 #: include/global_settings.php:520
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Consenti sia unsafe-eval che JavaScript inline senza nonce"
 
 #: include/global_settings.php:521
 msgid "Nonce Mode - Reporting Only"
-msgstr ""
+msgstr "Modalità Nonce - Solo segnalazione"
 
 #: include/global_settings.php:525 include/global_settings.php:540
-#, fuzzy
 msgid "CSP Violation Report URI"
-msgstr "Rapporto Cacti"
+msgstr "URI di segnalazione delle violazioni CSP"
 
 #: include/global_settings.php:526
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
-msgstr ""
+msgstr "URL a cui i browser inviano tramite POST le segnalazioni di violazione CSP nelle modalità nonce-report e nonce. Lascia vuoto per utilizzare <url_path>/csp_report.php. Deve contenere solo caratteri URL sicuri."
 
 #: include/global_settings.php:532
 msgid "Content-Security Alternate Sources"
@@ -10155,7 +10124,7 @@ msgstr "Nomi di dominio delimitati da spazi a cui sarà consentito l'accesso al 
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
-msgstr ""
+msgstr "URL a cui i browser inviano tramite POST le segnalazioni di violazione CSP nelle modalità nonce-report e nonce. Lascia vuoto per utilizzare /cacti/csp_report.php nella directory radice dell'installazione. Deve contenere solo caratteri URL sicuri."
 
 #: include/global_settings.php:553
 msgid "Enable Automatic Graph Creation"
@@ -10246,9 +10215,9 @@ msgid "The default number of Device Threads.  This is only applicable when using
 msgstr "Il numero predefinito di Device Threads.  Questo è applicabile solo quando si utilizza il rilevatore di dati sulla colonna vertebrale."
 
 #: include/global_settings.php:656
-#, fuzzy, php-format
+#, php-format
 msgid "%s Thread"
-msgstr "Thread [%s]"
+msgstr "%s thread"
 
 #: include/global_settings.php:657 include/global_settings.php:658
 #: include/global_settings.php:659 include/global_settings.php:660
@@ -10537,9 +10506,8 @@ msgid "Default Graph Type"
 msgstr "Tipo di grafico predefinito"
 
 #: include/global_settings.php:963
-#, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
-msgstr "Quando si creano i grafici, quale tipo di grafico si desidera pre-selezionare?"
+msgstr "Durante la creazione dei grafici, quale tipo di grafico desideri che sia preselezionato?"
 
 #: include/global_settings.php:967
 msgid "All Types"
@@ -10744,18 +10712,16 @@ msgid "Business Hours Settings"
 msgstr "Impostazioni utente"
 
 #: include/global_settings.php:1154
-#, fuzzy
 msgid "Start of Business Day"
-msgstr "Inizio attività"
+msgstr "Inizio giornata lavorativa"
 
 #: include/global_settings.php:1155
 msgid "The time your business hours start. Format: hh:mm"
 msgstr "L'ora di inizio dell'orario lavorativo. Formato: hh:mm"
 
 #: include/global_settings.php:1162
-#, fuzzy
 msgid "End of Business Day"
-msgstr "Fine giorno lavorativo"
+msgstr "Fine giornata lavorativa"
 
 #: include/global_settings.php:1163
 msgid "The time your business hours end. Format: hh:mm"
@@ -10770,9 +10736,8 @@ msgid "Only show business hours during weekdays."
 msgstr "Mostra gli orari di apertura solo durante i giorni feriali."
 
 #: include/global_settings.php:1176
-#, fuzzy
 msgid "Show business hours"
-msgstr "Orario di lavoro"
+msgstr "Mostra orario lavorativo"
 
 #: include/global_settings.php:1177
 msgid "Display business hours on rrd graphs."
@@ -11237,9 +11202,8 @@ msgid "Password History"
 msgstr "Storico password"
 
 #: include/global_settings.php:1644
-#, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
-msgstr "Ricordate questo numero di vecchie password e rifiutate di riutilizzarle."
+msgstr "Ricorda questo numero di vecchie password e impediscine il riutilizzo."
 
 #: include/global_settings.php:1649
 msgid "1 Change"
@@ -11388,7 +11352,7 @@ msgstr "nome distinto (DN)"
 
 #: include/global_settings.php:1790 user_domains.php:473
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
-msgstr ""
+msgstr "La sintassi \"Distinguished Name\", applicabile sia alle configurazioni OpenLDAP che Windows AD, offre flessibilità nella definizione dell'identità utente. Per OpenLDAP, il formato segue questa struttura: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD fornisce una sintassi alternativa: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, comunemente nota come \"userPrincipalName (UPN)\". In questo contesto, \"&lt;username&gt;\" rappresenta il nome utente specifico inserito al momento dell'accesso. Ciò è particolarmente rilevante quando si opera in modalità \"Nessuna ricerca\" o con \"Richiedi appartenenza al gruppo\" abilitato."
 
 #: include/global_settings.php:1796 user_domains.php:480
 msgid "Require Group Membership"
@@ -11904,7 +11868,7 @@ msgstr "Percorsi RRD strutturati"
 
 #: include/global_settings.php:2326
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
-msgstr ""
+msgstr "Usa una sottocartella separata per i file RRD di ciascun host. La denominazione dei file RRD sarà una delle seguenti:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>Puoi effettuare questa modifica dopo l'installazione eseguendo lo script CLI <b>structure_rra_paths.php</b> dopo aver applicato la modifica. NOTA: Se modifichi il valore Numero massimo di directory per diminuire il numero di directory, o se modifichi il modello di directory, le directory vuote non verranno eliminate dopo aver rieseguito lo script <b>structure_rra_paths.php</b>."
 
 #: include/global_settings.php:2330
 msgid "Directory Pattern"
@@ -12928,9 +12892,9 @@ msgid "Authentication was previously not set.  Attempted to set to Local Authent
 msgstr "L'autenticazione non era precedentemente impostata. Tentativo di impostare l'autenticazione locale, ma non è stato trovato alcun account amministrativo."
 
 #: lib/boost.php:150 utilities.php:2882
-#, fuzzy, php-format
+#, php-format
 msgid "%s MBytes"
-msgstr "MByte"
+msgstr "%s MB"
 
 #: lib/boost.php:153
 #, php-format
@@ -13799,9 +13763,9 @@ msgid "All %d %s"
 msgstr "Tutti %d %s"
 
 #: lib/html.php:787
-#, fuzzy, php-format
+#, php-format
 msgid "Current Page: %s"
-msgstr "Pagina corrente:"
+msgstr "Pagina corrente: %s"
 
 #: lib/html.php:797
 #, php-format
@@ -14243,23 +14207,20 @@ msgid "Unsaved Changes Detected"
 msgstr "Rilevamento di modifiche non salvate"
 
 #: lib/html_form.php:1791
-#, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
-msgstr "Avete modifiche non salvate su questo modulo.  Se si preme &#39;Continua&#39; queste modifiche verranno scartate.  Premere Annulla per continuare a modificare il modulo."
+msgstr "Hai modifiche non salvate in questo modulo. Se premi 'Continua', queste modifiche verranno scartate. Premi 'Annulla' per continuare a modificare il modulo."
 
 #: lib/html_form_template.php:161
-#, fuzzy
 msgid "Invalid Graph Template Input"
-msgstr "Ingresso modello grafico"
+msgstr "Input modello di grafico non valido"
 
 #: lib/html_form_template.php:162
-#, fuzzy
 msgid "The graph template cannot be rendered"
-msgstr "Nessun modello di grafico trovato"
+msgstr "Impossibile eseguire il rendering del modello di grafico"
 
 #: lib/html_form_template.php:163
 msgid "A Graph Item Input contains an invalid Field Type."
-msgstr ""
+msgstr "Un input di elemento grafico contiene un tipo di campo non valido."
 
 #: lib/html_form_template.php:639 lib/html_form_template.php:651
 #, php-format
@@ -14537,7 +14498,7 @@ msgstr "Data/ora spostata alla stessa ora Domani"
 
 #: lib/html_reports.php:345 lib/html_reports.php:500 lib/html_reports.php:679
 msgid "The From Email Address must be your own e-mail address or the site From Email Address."
-msgstr ""
+msgstr "L'indirizzo email del mittente deve essere il tuo indirizzo email oppure l'indirizzo email del mittente del sito."
 
 #: lib/html_reports.php:575
 msgid "Click 'Continue' to delete the following Report(s)."
@@ -14689,9 +14650,9 @@ msgid "[new]"
 msgstr "new"
 
 #: lib/html_reports.php:1615
-#, fuzzy, php-format
+#, php-format
 msgid "Details %s"
-msgstr "Dettagli: %s"
+msgstr "Dettagli %s"
 
 #: lib/html_reports.php:1665
 #, php-format
@@ -14699,23 +14660,23 @@ msgid "Report Items %s"
 msgstr "Articoli del report %s"
 
 #: lib/html_reports.php:1706
-#, fuzzy, php-format
+#, php-format
 msgid "Scheduled Events %s"
-msgstr "Eventi Programmati"
+msgstr "Eventi pianificati %s"
 
 #: lib/html_reports.php:1717
-#, fuzzy, php-format
+#, php-format
 msgid "Report Preview %s"
-msgstr "Anteprima report"
+msgstr "Anteprima rapporto %s"
 
 #: lib/html_reports.php:1746
 msgid "Item Details"
 msgstr "Articolo"
 
 #: lib/html_reports.php:1758
-#, fuzzy, php-format
+#, php-format
 msgid "Graph: %s"
-msgstr "Grafico"
+msgstr "Grafico: %s"
 
 #: lib/html_reports.php:1761 lib/html_reports.php:1787
 #: lib/html_reports.php:1800 lib/html_reports.php:1801
@@ -14753,9 +14714,9 @@ msgid ", Device: %s"
 msgstr "(Dal dispositivo: %s)"
 
 #: lib/html_reports.php:1835
-#, fuzzy, php-format
+#, php-format
 msgid ", Branch: %s"
-msgstr "Filiale:"
+msgstr ", Ramo: %s"
 
 #: lib/html_reports.php:1838
 msgid "(All Branches)"
@@ -14888,9 +14849,8 @@ msgid "Cacti regular expressions can not includes the semi-color character."
 msgstr "Le espressioni regolari dei cactus non possono includere il carattere semicolore."
 
 #: lib/html_utility.php:1375
-#, fuzzy
 msgid "Invalid regular expression."
-msgstr "Inserire un'espressione regolare"
+msgstr "Espressione regolare non valida."
 
 #: lib/html_utility.php:1378
 msgid "There was an internal error!"
@@ -14914,7 +14874,7 @@ msgstr "Errore di offset UTF-8 difettoso!"
 
 #: lib/html_utility.php:1413
 msgid "Cacti RLIKE filters do not support alternation or bounded-repeat characters."
-msgstr ""
+msgstr "I filtri RLIKE di Cacti non supportano l'alternanza né i caratteri di ripetizione limitata."
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
@@ -14935,12 +14895,11 @@ msgstr "Errore di validazione"
 
 #: lib/import.php:358
 msgid "The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "La riparazione del metodo di input dati è stata saltata perché non hai il permesso di modificare i metodi di input dati."
 
 #: lib/import.php:747
-#, fuzzy
 msgid "kept existing"
-msgstr "non esiste"
+msgstr "esistente mantenuto"
 
 #: lib/import.php:765
 msgid "written"
@@ -14971,12 +14930,12 @@ msgstr "Interrogazione dati [%s]"
 #: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
-msgstr ""
+msgstr "'%s' non è stato importato perché utilizza un metodo di input dati che non hai il permesso di modificare."
 
 #: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "Il metodo di input dati '%s' non è stato importato perché non hai il permesso di modificare i metodi di input dati."
 
 #: lib/import.php:2845
 msgid "Unknown Field"
@@ -15049,7 +15008,7 @@ msgstr "L'immagine di percorso non è scrivibile"
 #: lib/installer.php:574
 #, php-format
 msgid "WARNING: Path is not writable, HTMLPurifier will run without a definition cache: %s"
-msgstr ""
+msgstr "ATTENZIONE: Il percorso non è scrivibile, HTMLPurifier verrà eseguito senza cache delle definizioni: %s"
 
 #: lib/installer.php:576
 msgid "Path is not writable"
@@ -15057,16 +15016,15 @@ msgstr "L'immagine di percorso non è scrivibile"
 
 #: lib/installer.php:689
 msgid "The external CSRF secret must be outside the Cacti document root"
-msgstr ""
+msgstr "Il segreto CSRF esterno deve trovarsi al di fuori della document root di Cacti"
 
 #: lib/installer.php:700
-#, fuzzy
 msgid "Unable to create the external CSRF secret"
-msgstr "Impossibile recuperare lo stato della tabella"
+msgstr "Impossibile creare il segreto CSRF esterno"
 
 #: lib/installer.php:717
 msgid "Unable to persist the CSRF secret"
-msgstr ""
+msgstr "Impossibile salvare in modo persistente il segreto CSRF"
 
 #: lib/installer.php:744
 #, php-format
@@ -15122,13 +15080,12 @@ msgid "No matching snmp option exists"
 msgstr "Non esiste un'opzione snmp corrispondente"
 
 #: lib/installer.php:1291
-#, fuzzy
 msgid "Unable to load the available templates"
-msgstr "Impossibile recuperare lo stato della tabella"
+msgstr "Impossibile caricare i modelli disponibili"
 
 #: lib/installer.php:1301
 msgid "The template selection was incomplete. Reload this installer step and select the templates again."
-msgstr ""
+msgstr "La selezione dei modelli era incompleta. Ricarica questo passaggio dell'installer e seleziona nuovamente i modelli."
 
 #: lib/installer.php:1334
 msgid "No matching template exists"
@@ -15136,11 +15093,11 @@ msgstr "Non esiste un modello corrispondente"
 
 #: lib/installer.php:1416
 msgid "Unable to load the tables requiring conversion"
-msgstr ""
+msgstr "Impossibile caricare le tabelle che richiedono la conversione"
 
 #: lib/installer.php:1428
 msgid "The table selection was incomplete. Reload this installer step and select the tables again."
-msgstr ""
+msgstr "La selezione delle tabelle era incompleta. Ricarica questo passaggio dell'installer e seleziona nuovamente le tabelle."
 
 #: lib/installer.php:1675
 msgid "The Installer could not proceed due to an unexpected error."
@@ -15328,7 +15285,6 @@ msgid "Restart Required"
 msgstr "Richiesto"
 
 #: lib/installer.php:2015
-#, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "Il valore specificato sembra essere diverso nella configurazione in esecuzione rispetto al file INI."
 
@@ -15626,9 +15582,8 @@ msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist 
 msgstr "Pertanto, diverse versioni fa, Cacti è stato migliorato per fornire funzionalità di whitelist su questi tipi di metodi di immissione dei dati. Sebbene ciò protegga i cactus in modo più approfondito, aumenta la quantità di lavoro richiesto dall'amministratore dei cactus per importare e gestire modelli e pacchetti."
 
 #: lib/installer.php:2536
-#, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "Il modo in cui funziona la whitelisting è che quando si importa per la prima volta un metodo di immissione dei dati o si reimporta un metodo di immissione dei dati e lo script e / o gli strumenti cambiano in qualsiasi modo, il metodo di immissione dei dati e tutte le corrispondenti origini dei dati essere disabilitato immediatamente fino a quando l'amministratore non convalida che il metodo di immissione dei dati è valido."
+msgstr "La whitelist funziona in questo modo: quando importi per la prima volta un metodo di input dati, o lo reimporti, e lo script o gli argomenti cambiano in qualsiasi modo, il metodo di input dati e tutte le corrispondenti origini dati vengono immediatamente disabilitati finché l'amministratore non convalida il metodo di input dati."
 
 #: lib/installer.php:2537
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Cacti's CLI directory that can be run with the following options:"
@@ -15731,9 +15686,8 @@ msgid "Updating Templates that you have already made modifications to is not adv
 msgstr "Non è consigliabile aggiornare i modelli a cui sono già state apportate modifiche. L'aggiornamento dei modelli NON rimuoverà le modifiche ai modelli di grafici e dati e può portare a comportamenti imprevisti. Tuttavia, se non hai apportato modifiche a nessun grafico, query di dati o modello di dati, la reimportazione del pacchetto non dovrebbe avere alcun effetto. In tal caso, dopo l'aggiornamento dovresti 'Sincronizzare i grafici' dai modelli."
 
 #: lib/installer.php:2672
-#, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
-msgstr "Selezionare i modelli di dispositivo che si desidera utilizzare dopo l'installazione.  Se il sistema operativo è Windows, è necessario assicurarsi di selezionare il modello \"Dispositivo Windows\".  Se il vostro sistema operativo è Linux/UNIX, assicuratevi di selezionare il template dispositivo \"Local Linux Machine\"."
+msgstr "Seleziona i modelli di dispositivo che desideri utilizzare dopo l'installazione. Se il tuo sistema operativo è Windows, assicurati di selezionare il modello 'Windows Device'. Se il tuo sistema operativo è Linux/UNIX, assicurati di selezionare il modello di dispositivo 'Local Linux Machine'."
 
 #: lib/installer.php:2678 package_import.php:531 plugins.php:621
 msgid "Author"
@@ -15909,20 +15863,20 @@ msgstr "Processo%s finito per v%s"
 
 #: lib/installer.php:3213
 msgid "WARNING: Unable to validate the installed database because cacti.sql could not be read"
-msgstr ""
+msgstr "ATTENZIONE: Impossibile convalidare il database installato perché non è stato possibile leggere cacti.sql"
 
 #: lib/installer.php:3219
 msgid "WARNING: Unable to validate the installed database because cacti.sql contains no table definitions"
-msgstr ""
+msgstr "ATTENZIONE: Impossibile convalidare il database installato perché cacti.sql non contiene definizioni di tabelle"
 
 #: lib/installer.php:3228
 msgid "WARNING: Unable to query the installed database schema"
-msgstr ""
+msgstr "ATTENZIONE: Impossibile interrogare lo schema del database installato"
 
 #: lib/installer.php:3235
 #, php-format
 msgid "WARNING: Core database tables are missing: %s"
-msgstr ""
+msgstr "ATTENZIONE: Mancano tabelle principali del database: %s"
 
 #: lib/installer.php:3252
 #, php-format
@@ -16104,23 +16058,23 @@ msgid "Both"
 msgstr "Entrambi"
 
 #: lib/installer.php:3773
-#, fuzzy, php-format
+#, php-format
 msgid "No - %s"
-msgstr "Versione %s %s"
+msgstr "No - %s"
 
 #: lib/installer.php:3778
-#, fuzzy, php-format
+#, php-format
 msgid "%s - N/A"
-msgstr "N/A"
+msgstr "%s - N/D"
 
 #: lib/installer.php:3778 lib/installer.php:3780
 msgid "Web"
 msgstr "Web"
 
 #: lib/installer.php:3780 lib/installer.php:3783
-#, fuzzy, php-format
+#, php-format
 msgid "%s - No"
-msgstr "Versione %s %s"
+msgstr "%s - No"
 
 #: lib/installer.php:3783
 msgid "Cli"
@@ -16182,9 +16136,9 @@ msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "Errore di protocollo, impossibile eseguire il binding, risultato LDAP: (%s) sul server (%s)"
 
 #: lib/ldap.php:319
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to Connect to Server (%s)"
-msgstr "Impossibile connettersi al server"
+msgstr "Impossibile connettersi al server (%s)"
 
 #: lib/ldap.php:323
 #, php-format
@@ -16267,19 +16221,19 @@ msgid "UDP Ping Success (%s ms)"
 msgstr "UDP Ping Successo (%s ms)"
 
 #: lib/ping.php:561
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "TCP Ping Successo (%s ms)"
+msgstr "Ping TCP riuscito, connessione rifiutata (%s ms)"
 
 #: lib/ping.php:564
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
-msgstr "TCP ping: socket_connect(), motivo: %s"
+msgstr "Ping TCP non riuscito: socket_connect(), motivo: %s"
 
 #: lib/ping.php:587
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
-msgstr "TCP ping: socket_select() fallito, ragione: %s"
+msgstr "Ping TCP non riuscito: socket_select() non riuscita, motivo: %s"
 
 #: lib/ping.php:602
 #, php-format
@@ -16408,9 +16362,9 @@ msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Voce del grafico del report saltata '<i>%s</i>' Già esistente"
 
 #: lib/rrd.php:2348
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: RRD file does not exist: %s"
-msgstr "ERRORE: RRDDfile %s non scrivibile"
+msgstr "ERRORE: Il file RRD non esiste: %s"
 
 #: lib/rrd.php:3830
 #, php-format
@@ -16534,9 +16488,8 @@ msgid "rename %s to %s"
 msgstr "Rinomina %s a %s"
 
 #: lib/rrd.php:4307 lib/rrd.php:4388 lib/rrd.php:4456
-#, fuzzy
 msgid "ERROR: Invalid RRDfile path"
-msgstr "Inserisci un percorso file valido"
+msgstr "ERRORE: Percorso RRDfile non valido"
 
 #: lib/rrd.php:4317
 msgid "Error while parsing the XML of rrdtool dump"
@@ -16549,7 +16502,7 @@ msgstr "ERROR durante la scrittura di un file XML: %s"
 
 #: lib/rrd.php:4356 lib/rrd.php:4423 lib/rrd.php:4491
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
-msgstr ""
+msgstr "Ripristino RRD non riuscito; XML originale e di ripristino conservati. Consulta il registro dell'applicazione."
 
 #: lib/rrd.php:4362 lib/rrd.php:4429 lib/rrd.php:4497
 #, php-format
@@ -16597,323 +16550,310 @@ msgstr "Errore RRDtool sconosciuto"
 
 #: lib/rrd_maintenance.php:224
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
-msgstr ""
+msgstr "Lo storage RRD non è pronto: la directory configurata deve esistere e consentire a questo account di servizio di creare, leggere, scrivere e rimuovere file."
 
 #: lib/rrd_maintenance.php:230
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
+msgstr "Lo storage RRD non è pronto per l'accesso coordinato. Abilita PHP POSIX e configura i valori numerici rrd_maintenance_trusted_uids e rrd_maintenance_trusted_gids in include/config.php per ogni account di servizio web e poller. Rimuovi i permessi di scrittura globali e controlla le directory superiori dello storage. Consulta docs/testing/spikekill-safety.md prima dell'aggiornamento."
 
 #: lib/rrd_maintenance.php:286
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
-msgstr ""
+msgstr "La coda poller_output deve utilizzare InnoDB prima della raccolta. Arresta tutti i raccoglitori, inclusi i raccoglitori remoti, ed esegui cli/upgrade_database.php --migrate-poller-queue (oppure converti poller_output in InnoDB dopo un backup). Motore rilevato: %s. I campioni conservati non devono essere scartati per risolvere questa condizione."
 
 #: lib/rrd_maintenance.php:286
-#, fuzzy
 msgid "unavailable"
-msgstr "Non disponibile"
+msgstr "Impossibile confermare l'operazione. Esamina la cronologia delle modifiche prima di riprovare."
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
-msgstr ""
+msgstr "La configurazione dello storage RRD richiede attenzione"
 
 #: lib/snmp.php:247 lib/snmp.php:347 lib/snmp.php:442 lib/snmp.php:877
 #: lib/snmp.php:892
-#, fuzzy, php-format
+#, php-format
 msgid "SNMP Command is: %s"
-msgstr "Opzioni SNMP [modifica: %s]."
+msgstr "Il comando SNMP è: %s"
 
 #: lib/spikekill.php:188
 msgid "FATAL: You must specify an RRDfile!"
-msgstr ""
+msgstr "FATALE: Devi specificare un RRDfile!"
 
 #: lib/spikekill.php:192
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' does not exist."
-msgstr "XML: La versione Cacti non esiste."
+msgstr "FATALE: Il file '%s' non esiste."
 
 #: lib/spikekill.php:204
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' is not a regular file."
-msgstr "XML: La versione Cacti non esiste."
+msgstr "FATALE: Il file '%s' non è un file regolare."
 
 #: lib/spikekill.php:206
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr ""
+msgstr "FATALE: Il file '%s' non è scrivibile da '%s'."
 
 #: lib/spikekill.php:272
 msgid "FATAL: Standard Deviation must be a positive integer."
-msgstr ""
+msgstr "FATALE: La deviazione standard deve essere un intero positivo."
 
 #: lib/spikekill.php:280 lib/spikekill.php:1782
-#, fuzzy
 msgid "StdDev"
-msgstr "Rimuovi StdDev"
+msgstr "StdDev"
 
 #: lib/spikekill.php:286 lib/spikekill.php:1782
-#, fuzzy
 msgid "Variance"
-msgstr "Variabile"
+msgstr "Varianza"
 
 #: lib/spikekill.php:292
-#, fuzzy
 msgid "Gap Fill"
-msgstr "Gamma Gap Fill"
+msgstr "Riempimento lacune"
 
 #: lib/spikekill.php:304
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
-msgstr ""
+msgstr "FATALE: Devi specificare 'stddev', 'variance', 'float' o 'fill' come metodi."
 
 #: lib/spikekill.php:319
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr ""
+msgstr "FATALE: Gli argomenti outlier-start e outlier-end devono essere nel formato AAAA-MM-GG HH:MM o un timestamp Unix."
 
 #: lib/spikekill.php:323
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
-msgstr ""
+msgstr "FATALE: Il numero di valori anomali da escludere deve essere un intero positivo."
 
 #: lib/spikekill.php:331
 msgid "FATAL: Percent deviation must be a positive floating point number."
-msgstr ""
+msgstr "FATALE: La deviazione percentuale deve essere un numero in virgola mobile positivo."
 
 #: lib/spikekill.php:337
 msgid "FATAL: Number of spikes to remove must be a positive integer"
-msgstr ""
+msgstr "FATALE: Il numero di picchi da rimuovere deve essere un intero positivo"
 
 #: lib/spikekill.php:342
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
-msgstr ""
+msgstr "FATALE: L'intervallo temporale dei valori anomali richiede che siano specificati outlier-start e outlier-end."
 
 #: lib/spikekill.php:348
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
-msgstr ""
+msgstr "FATALE: L'intervallo temporale dei valori anomali richiede che outlier-start sia inferiore a outlier-end."
 
 #: lib/spikekill.php:353
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "FATALE: Il metodo di rimozione 'float' richiede la specifica di una data di inizio e di fine."
 
 #: lib/spikekill.php:357
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "FATALE: Il metodo di rimozione 'gapfill' richiede la specifica di una data di inizio e di fine."
 
 #: lib/spikekill.php:366
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
-msgstr ""
+msgstr "FATALE: Devi specificare 'last', 'avg' o 'nan' come metodo di sostituzione."
 
 #: lib/spikekill.php:369
 msgid "Spike Kill Settings Used for Analysis/Correction"
-msgstr ""
+msgstr "Impostazioni Spike Kill utilizzate per analisi/correzione"
 
 #: lib/spikekill.php:375
 #, php-format
 msgid "Method:        %s"
-msgstr ""
+msgstr "Metodo:            %s"
 
 #: lib/spikekill.php:376
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile:       %s"
-msgstr "File RRD"
+msgstr "RRDfile:           %s"
 
 #: lib/spikekill.php:377
-#, fuzzy, php-format
+#, php-format
 msgid "Repair Type:   %s"
-msgstr "Fasi di riparazione [ %s ]."
+msgstr "Tipo riparazione:  %s"
 
 #: lib/spikekill.php:380
 #, php-format
 msgid "Num Outliers:  %s"
-msgstr ""
+msgstr "N. valori anomali: %s"
 
 #: lib/spikekill.php:381
-#, fuzzy, php-format
+#, php-format
 msgid "Max Kills:     %s"
-msgstr "Uccisioni massime per RRA"
+msgstr "Eliminazioni max:  %s"
 
 #: lib/spikekill.php:383
 msgid "Max Kills:     Unlimited"
-msgstr ""
+msgstr "Eliminazioni max:  Illimitato"
 
 #: lib/spikekill.php:387
-#, fuzzy, php-format
+#, php-format
 msgid "Standard Devs: %s"
-msgstr "Deviazioni standard"
+msgstr "Deviazioni std:    %s"
 
 #: lib/spikekill.php:389
 #, php-format
 msgid "Variance %%:    %s %%"
-msgstr ""
+msgstr "Varianza %%:      %s %%"
 
 #: lib/spikekill.php:393
 #, php-format
 msgid "Window Start:  %s (%s)"
-msgstr ""
+msgstr "Inizio finestra:   %s (%s)"
 
 #: lib/spikekill.php:394
 #, php-format
 msgid "Window End:    %s (%s)"
-msgstr ""
+msgstr "Fine finestra:     %s (%s)"
 
 #: lib/spikekill.php:396
-#, fuzzy
 msgid "Window Range:  All"
-msgstr "Relativo a Windows"
+msgstr "Intervallo fin.:   Tutto"
 
 #: lib/spikekill.php:411
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
-msgstr ""
+msgstr "FATALE: Arresta i processi esterni di scrittura RRD e disabilita RRDCACHED_ADDRESS prima della rimozione dei picchi."
 
 #: lib/spikekill.php:418
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
-msgstr ""
+msgstr "FATALE: Lo storage RRD è occupato. Riprova al termine del polling."
 
 #: lib/spikekill.php:419
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
-msgstr ""
+msgstr "FATALE: Lo storage RRD non è attendibile o non è disponibile. Esegui cli/upgrade_database.php --check-rrd-storage come account del servizio web e correggi la sua configurazione di storage."
 
 #: lib/spikekill.php:445
 msgid "FATAL: Secure randomness is unavailable; spike removal was not started."
-msgstr ""
+msgstr "FATALE: La casualità sicura non è disponibile; la rimozione dei picchi non è stata avviata."
 
 #: lib/spikekill.php:476
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
-msgstr ""
+msgstr "FATALE: Impossibile creare in sicurezza un file XML temporaneo in '%s'!"
 
 #: lib/spikekill.php:525 lib/spikekill.php:547
 msgid "FATAL: RRD source identity changed or could not be verified safely."
-msgstr ""
+msgstr "FATALE: L'identità dell'origine RRD è cambiata o non è stato possibile verificarla in sicurezza."
 
 #: lib/spikekill.php:555
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
-msgstr ""
+msgstr "FATALE: Comando RRDtool non riuscito. Verifica che il percorso di RRDtool sia valido in Impostazioni->Percorsi!"
 
 #: lib/spikekill.php:571
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
-msgstr ""
+msgstr "FATALE: RRDtool ha restituito un dump vuoto. Il file RRD non è stato modificato."
 
 #: lib/spikekill.php:599
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
-msgstr ""
+msgstr "FATALE: Backup RRDfile di '%s' in '%s' NON RIUSCITO!"
 
 #: lib/spikekill.php:813
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
-msgstr ""
+msgstr "NOTA: Ricerca di picchi nel file XML '%s'"
 
 #: lib/spikekill.php:816
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
-msgstr ""
+msgstr "NOTA: Limitato alla finestra temporale: da %s a %s"
 
 #: lib/spikekill.php:823
 msgid "NOTE: Dryrun requested.  No updates performed"
-msgstr ""
+msgstr "NOTA: Richiesta esecuzione di prova (dryrun). Nessun aggiornamento eseguito"
 
 #: lib/spikekill.php:859
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
-msgstr ""
+msgstr "NOTA: Nessun picco nella finestra trovato in '%s'"
 
 #: lib/spikekill.php:862
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
-msgstr ""
+msgstr "NOTA: Nessun picco trovato in '%s'"
 
 #: lib/spikekill.php:875
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
-msgstr ""
+msgstr "NOTA: Picchi trovati e corretti. Picchi totali: %s"
 
 #: lib/spikekill.php:879
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr ""
+msgstr "FATALE: Impossibile ripristinare '%s' da '%s'"
 
 #: lib/spikekill.php:889
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
-msgstr ""
+msgstr "FATALE: Impossibile eseguire il backup di '%s'"
 
 #: lib/spikekill.php:899
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
-msgstr ""
+msgstr "FATALE: Impossibile scrivere il file XML '%s'"
 
 #: lib/spikekill.php:908
-#, fuzzy
 msgid "NOTE: No Spikes Found."
-msgstr "Nessun sito trovato"
+msgstr "NOTA: Nessun picco trovato."
 
 #: lib/spikekill.php:969
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
-msgstr ""
+msgstr "NOTA: Reimportazione di '%s' in '%s' in corso"
 
 #: lib/spikekill.php:1060
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr ""
+msgstr "NOTA: Backup di '%s' in '%s' in corso"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Avg"
 msgstr "Media"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "CF"
-msgstr "CDEF"
+msgstr "CF"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "DS"
-msgstr "DES"
+msgstr "DS"
 
 #: lib/spikekill.php:1782
 msgid "NonNan"
-msgstr ""
+msgstr "NonNan"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Samples"
-msgstr "Semplice"
+msgstr "Campioni"
 
 #: lib/spikekill.php:1783
 msgid "MaxStdDev"
-msgstr ""
+msgstr "MaxStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MaxValue"
-msgstr "Valore"
+msgstr "MaxValue"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinStdDev"
-msgstr "Funzionamento a secco StdDev"
+msgstr "MinStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinValue"
-msgstr "Valore"
+msgstr "MinValue"
 
 #: lib/spikekill.php:1783
 msgid "StdKilled"
-msgstr ""
+msgstr "StdKilled"
 
 #: lib/spikekill.php:1783
 msgid "VarKilled"
-msgstr ""
+msgstr "VarKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindKilled"
-msgstr ""
+msgstr "WindKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindSamples"
-msgstr ""
+msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
@@ -16981,7 +16921,7 @@ msgstr "Grazie alle funzionalità di polling remoto, grandi quantità di dati sa
 #: lib/utility.php:1357
 #, php-format
 msgid "If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr ""
+msgstr "Se utilizzi il Performance Booster di Cacti e scegli un motore di archiviazione in memoria, devi fare attenzione a svuotare il buffer del Performance Booster prima che il sistema esaurisca lo spazio per le tabelle in memoria. Questo si ottiene in due modi: innanzitutto riducendo la dimensione della colonna di output alla dimensione strettamente necessaria. Questa colonna si trova nelle tabelle poller_output e poller_output_boost. La seconda cosa che puoi fare è allocare più memoria alle tabelle in memoria. Abbiamo scelto arbitrariamente un valore consigliato pari al 10%% della memoria di sistema, ma se utilizzi unità disco SSD o disponi di un sistema più piccolo, puoi ignorare questo consiglio o scegliere un motore di archiviazione diverso. Puoi vedere il consumo previsto delle tabelle del Performance Booster in Console -> Utilità di sistema -> Visualizza stato Boost."
 
 #: lib/utility.php:1363
 msgid "When executing subqueries, having a larger temporary table size, keep those temporary tables in memory."
@@ -16989,7 +16929,7 @@ msgstr "Quando si eseguono delle sottoquery, che hanno una dimensione di tabella
 
 #: lib/utility.php:1369 lib/utility.php:1375
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr ""
+msgstr "Durante l'esecuzione di join, se sono al di sotto di questa dimensione, verranno mantenuti in memoria e mai scritti su un file temporaneo. Poiché si tratta di un'allocazione di memoria per connessione, occorre prestare attenzione a non aumentarla troppo. La somma di join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + memoria principale MySQL/MariaDB deve essere inferiore all'80%. Se la raccomandazione è negativa, devi ridurre questo valore e/o sort_buffer_size finché la raccomandazione non rientra nella memoria consentita."
 
 #: lib/utility.php:1381
 #, php-format
@@ -17007,12 +16947,11 @@ msgstr "Se le tue tabelle hanno indici molto grandi, devi operare con Barracuda 
 #: lib/utility.php:1399
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr ""
+msgstr "InnoDB manterrà in memoria di sistema quante più tabelle e indici possibile. Pertanto, dovresti impostare innodb_buffer_pool abbastanza grande da contenere in memoria la maggior parte delle tabelle e degli indici. Controllare la dimensione della directory /var/lib/mysql/cacti ti aiuterà a determinare questo valore. Consigliamo il 25%% della memoria totale del sistema, ma i requisiti varieranno in base alle dimensioni del sistema."
 
 #: lib/utility.php:1405
-#, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "Queste impostazioni dovrebbero rimanere su ON a meno che le istanze di Cacti non siano in esecuzione su ZFS o FusionI / O che dispongono entrambe di journaling interno per compensare improvvisi arresti anomali del sistema. Tuttavia, se si dispone di una potenza molto buona e i sistemi raramente si arrestano e si dispone di backup, la disattivazione di questa impostazione può comportare un aumento di quasi il 50% delle prestazioni del database."
+msgstr "Questa impostazione dovrebbe rimanere ATTIVA a meno che l'istanza Cacti non sia in esecuzione su ZFS o FusionI/O, entrambi dotati di journaling interno per gestire arresti improvvisi del sistema. Tuttavia, se disponi di un'alimentazione molto affidabile, i tuoi sistemi vanno raramente in crash e hai dei backup, disattivare questa impostazione può farti guadagnare quasi un 50% di incremento delle prestazioni del database."
 
 #: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
@@ -17137,11 +17076,11 @@ msgstr "Un nome utile per questo VDEF."
 #: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr ""
+msgstr "Il collegamento esterno con ID '%s' e titolo '%s' ha tentato di iniettare un URL non valido ed è stato bloccato!"
 
 #: links.php:76
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Il tuo file di contenuto non è un URL valido. Inserisci un URL valido"
 
 #: links.php:197
 msgid "Click 'Continue' to Enable the following Page(s)."
@@ -17460,11 +17399,11 @@ msgstr "Per utilizzare questo plugin, è necessario prima eseguire lo script <b>
 
 #: package_import.php:127
 msgid "Unable to create temporary package file."
-msgstr ""
+msgstr "Impossibile creare il file di pacchetto temporaneo."
 
 #: package_import.php:143
 msgid "The package signature could not be verified against a trusted author."
-msgstr ""
+msgstr "Impossibile verificare la firma del pacchetto rispetto a un autore attendibile."
 
 #: package_import.php:220
 #, php-format
@@ -17472,14 +17411,13 @@ msgid "The Package %s Imported Successfully"
 msgstr "Il pacchetto %s è stato importato correttamente"
 
 #: package_import.php:222
-#, fuzzy, php-format
+#, php-format
 msgid "The Package %s Import Failed"
-msgstr "Importazione del pacchetto non riuscita."
+msgstr "Importazione del pacchetto %s non riuscita"
 
 #: package_import.php:303
-#, fuzzy
 msgid "Error: Invalid file path."
-msgstr "Inserisci un percorso file valido"
+msgstr "Errore: Percorso file non valido."
 
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
@@ -17815,9 +17753,9 @@ msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling 
 msgstr "NOTA: è stato aggiunto un secondo raccoglitore di dati di cactus. Pertanto, abilitando boost automaticamente!"
 
 #: poller_automation.php:54
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Main Cacti database %s offline or in recovery"
-msgstr "ATTENZIONE: database principale Cacti offline o in recovery"
+msgstr "ATTENZIONE: Il database principale di Cacti %s è offline o in ripristino"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
@@ -17978,7 +17916,7 @@ msgstr "Il file che contiene l'autorità di certificazione SSL da utilizzare per
 #: pollers.php:318
 #, php-format
 msgid "WARNING: Use of Data Collector Hostname '%s' is insecure!  Use either a fully qualified domain name or IP address to avoid equivalent hosts from other domains accessing this service"
-msgstr ""
+msgstr "ATTENZIONE: L'uso del nome host '%s' del raccoglitore di dati non è sicuro! Usa un nome di dominio completo (FQDN) o un indirizzo IP per evitare che host equivalenti di altri domini accedano a questo servizio"
 
 #: pollers.php:324
 #, php-format
@@ -18049,9 +17987,8 @@ msgstr[0] "Lo stato di questo raccoglitore di dati."
 msgstr[1] "Lo stato di questo raccoglitore di dati."
 
 #: pollers.php:669
-#, fuzzy
 msgid "The Main Data Collector can not be deleted or disabled."
-msgstr "L'ultima volta che questo Data Collector è stato completamente sincronizzato con il sito principale di Cacti."
+msgstr "Il raccoglitore di dati principale non può essere eliminato né disabilitato."
 
 #: pollers.php:688 sites.php:503
 #, php-format
@@ -18072,7 +18009,7 @@ msgstr "Connessione al database dei test"
 
 #: pollers.php:853
 msgid "Invalid Database Hostname or Port"
-msgstr ""
+msgstr "Nome host o porta del database non valido"
 
 #: pollers.php:969
 msgid "Collectors"
@@ -18269,7 +18206,7 @@ msgstr "Archivio"
 
 #: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
+msgstr "La pulizia locale automatica dei file RRD non è disponibile su Windows. Arresta tutti i processi di scrittura RRD prima della pulizia manuale."
 
 #: rrdcleaner.php:380
 msgid "RRD Files"
@@ -18558,12 +18495,12 @@ msgstr "Il sito modello non è stato trovato! Impossibile duplicare."
 
 #: sites.php:355
 msgid "One or more of the selected Sites does not exist. Nothing was changed."
-msgstr ""
+msgstr "Uno o più dei siti selezionati non esistono. Non è stato modificato nulla."
 
 #: sites.php:384
 #, php-format
 msgid "No more than %d Sites can be duplicated at once."
-msgstr ""
+msgstr "Non è possibile duplicare più di %d siti alla volta."
 
 #: sites.php:436
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
@@ -18594,9 +18531,8 @@ msgstr[0] "Duplicare Sito"
 msgstr[1] "Duplica"
 
 #: sites.php:496
-#, fuzzy
 msgid "Site not found."
-msgstr "File non trovato"
+msgstr "Sito non trovato."
 
 #: sites.php:678 tree.php:1047
 msgid "Site Name"
@@ -18735,14 +18671,14 @@ msgid "Damaged"
 msgstr "Fonte dei dati, grafico"
 
 #: templates_import.php:335
-#, fuzzy, php-format
+#, php-format
 msgid "Met: %d"
-msgstr "MET"
+msgstr "Soddisfatti: %d"
 
 #: templates_import.php:339
-#, fuzzy, php-format
+#, php-format
 msgid "Unmet: %d"
-msgstr "Non vengono soddisfatti"
+msgstr "Non soddisfatti: %d"
 
 #: templates_import.php:348
 msgid "Some CDEF Items will not import due to an export error! Contact Template provider for an updated export."
@@ -18776,10 +18712,9 @@ msgid "Un-Lock"
 msgstr "Bloccato"
 
 #: tree.php:233 tree.php:634
-#, fuzzy
 #: graphs.php:652 graphs.php:1025
 msgid "You do not have permission to modify this tree."
-msgstr "Permesso negato. Non sei autorizzato all'azione richiesta."
+msgstr "Non hai il permesso di modificare questo albero."
 
 #: tree.php:250 tree.php:254 tree.php:969
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -19303,9 +19238,8 @@ msgid "Tree Perms"
 msgstr "Permi degli alberi"
 
 #: user_admin.php:1916
-#, fuzzy
 msgid "User not found."
-msgstr "File non trovato"
+msgstr "Utente non trovato."
 
 #: user_admin.php:1955
 #, php-format
@@ -19317,36 +19251,32 @@ msgid "User Management"
 msgstr "Gestione Utente"
 
 #: user_admin.php:2235
-#, fuzzy
 msgid "Group"
-msgstr "Gruppi"
+msgstr "Gruppo"
 
 #: user_admin.php:2257 user_admin.php:2401
 msgid "Last Login"
 msgstr "Ultimo accesso"
 
 #: user_admin.php:2262
-#, fuzzy
 msgid "< 1 Week Ago"
-msgstr "1 Settimana"
+msgstr "< 1 settimana fa"
 
 #: user_admin.php:2263
 msgid "< 1 Month Ago"
-msgstr ""
+msgstr "< 1 mese fa"
 
 #: user_admin.php:2264
 msgid "> 1 Month Ago"
-msgstr ""
+msgstr "> 1 mese fa"
 
 #: user_admin.php:2265
-#, fuzzy
 msgid "> 2 Months Ago"
-msgstr "%d Mesi"
+msgstr "> 2 mesi fa"
 
 #: user_admin.php:2266
-#, fuzzy
 msgid "> 4 Months Ago"
-msgstr "%d Mesi"
+msgstr "> 4 mesi fa"
 
 #: user_admin.php:2277
 msgid "Basic"
@@ -19421,7 +19351,7 @@ msgstr "Autorizzazione degli alberi %s"
 
 #: user_domains.php:99 user_domains.php:178
 msgid "Choose a local account as the user template."
-msgstr ""
+msgstr "Scegli un account locale come modello utente."
 
 #: user_domains.php:264
 msgid "Click 'Continue' to delete the following User Domain."
@@ -19467,7 +19397,7 @@ msgstr "Rendere predefinito il dominio selezionato"
 
 #: user_domains.php:350
 msgid "The domain to make default no longer exists."
-msgstr ""
+msgstr "Il dominio da impostare come predefinito non esiste più."
 
 #: user_domains.php:367
 #, php-format
@@ -19770,7 +19700,7 @@ msgstr "Cancella"
 
 #: utilities.php:61
 msgid "A Poller Cache rebuild is already running."
-msgstr ""
+msgstr "Una ricostruzione della cache del poller è già in esecuzione."
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
@@ -20552,9 +20482,8 @@ msgid "Severity Level: %s"
 msgstr "Livello di gravità: %s"
 
 #: vdef.php:163 vdef.php:576
-#, fuzzy
 msgid "VDEF not found."
-msgstr "File non trovato"
+msgstr "VDEF non trovato."
 
 #: vdef.php:274
 msgid "Click 'Continue' to delete the following VDEF."
@@ -20582,7 +20511,7 @@ msgstr[1] "Duplicare i VDEFs"
 
 #: vdef.php:342
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF o elemento VDEF non trovato."
 
 #: vdef.php:352
 msgid "Click 'Continue' to delete the following VDEF's."
@@ -20731,31 +20660,40 @@ msgstr "Nessun VDEF"
 
 #: lib/plugins.php:1233
 msgid "Plugin INFO must declare a valid compat version"
-msgstr ""
+msgstr "Il file INFO del plugin deve dichiarare una versione compat valida"
 
 #: plugins.php:848
 #, php-format
 msgid "Unable to Install Plugin: %s"
-msgstr ""
+msgstr "Impossibile installare il plugin: %s"
 
 #: include/global_form.php:1069
 msgid "Line Width"
-msgstr ""
+msgstr "Larghezza linea"
 
 #: include/global_form.php:1074
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
-msgstr ""
+msgstr "LINE1, LINE2 e LINE3 utilizzano larghezze fisse. Per LINE:STACK, inserisci una larghezza in pixel; sono supportati valori interi o decimali."
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
-msgstr ""
+msgstr "Impossibile salvare gli elementi del grafico aggregato. Altre impostazioni del grafico potrebbero essere già state salvate."
 
 #: lib/data_query.php:203
 msgid "No Index Changes Detected, Poller Cache Refreshed"
-msgstr ""
+msgstr "Nessuna modifica dell'indice rilevata, cache del poller aggiornata"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-msgstr ""
+
+msgstr "Sincronizzazione non riuscita. Consulta il registro per i dettagli."
+
+#: graph.php:512
+msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
+msgstr "Questo grafico non ha alcuna definizione RRA su cui eseguire lo zoom; controlla il profilo della sua origine dati."
+
+#: lib/import.php:771
+msgid "not written"
+msgstr "non scritto"

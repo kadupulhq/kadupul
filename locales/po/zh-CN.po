@@ -44,9 +44,8 @@ msgid "Honorable Mentions"
 msgstr "荣誉提名"
 
 #: about.php:62
-#, fuzzy
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
-msgstr "文档、质量检查、包装、论坛和 YouTube 页面的贡献者。"
+msgstr "文档、QA、打包、论坛以及我们 YouTube 页面的贡献者。"
 
 #: about.php:70
 msgid "Emeritus Members"
@@ -371,9 +370,8 @@ msgid "Preview"
 msgstr "预览"
 
 #: aggregate_graphs.php:629
-#, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "聚合图形设置"
+msgstr "访问的聚合图形不存在"
 
 #: aggregate_graphs.php:690
 msgid "Turn Off Graph Debug Mode"
@@ -758,9 +756,8 @@ msgid "No Aggregate Graphs Found"
 msgstr "未找到聚合图形"
 
 #: aggregate_templates.php:119 aggregate_templates.php:370
-#, fuzzy
 msgid "Aggregate Template not found."
-msgstr "未找到聚合模板"
+msgstr "未找到聚合模板。"
 
 #: aggregate_templates.php:318
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
@@ -963,9 +960,8 @@ msgid "You do not have access to any area of Cacti.  Contact your administrator.
 msgstr "如果您觉得这是一个报错,请联系Cacti 管理员."
 
 #: auth_login.php:225
-#, fuzzy
 msgid "Access Denied! User account locked."
-msgstr "拒绝访问,用户帐号被禁用."
+msgstr "拒绝访问！用户账户已锁定。"
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
@@ -1335,7 +1331,7 @@ msgstr "禁用"
 
 #: automation_graph_rules.php:162 automation_graph_rules.php:213
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr ""
+msgstr "检测到在图形自动化中尝试执行 SQL 注入"
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
@@ -1575,9 +1571,8 @@ msgid "Monthly on Day"
 msgstr "每月的某一天"
 
 #: automation_networks.php:439
-#, fuzzy
 msgid "Network not found."
-msgstr "文件未找到"
+msgstr "未找到网络。"
 
 #: automation_networks.php:446
 #, php-format
@@ -2489,12 +2484,11 @@ msgstr "未找到自动化设备模板"
 
 #: automation_tree_rules.php:148
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr ""
+msgstr "检测到在树自动化中尝试执行 SQL 注入"
 
 #: automation_tree_rules.php:197
-#, fuzzy
 msgid "Invalid Field Name specified for Tree Rule Item."
-msgstr "应该用于此规则项目的字段名称."
+msgstr "为树规则项目指定的字段名称无效。"
 
 #: automation_tree_rules.php:293
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -2730,11 +2724,11 @@ msgstr "无 CDEFs"
 
 #: color.php:207
 msgid "The Colors could not be checked for use and were not Deleted."
-msgstr ""
+msgstr "无法检查颜色的使用情况，因此未删除。"
 
 #: color.php:219
 msgid "Colors referenced by a Graph, Graph Template or Color Template were not Deleted."
-msgstr ""
+msgstr "未删除被图形、图形模板或颜色模板引用的颜色。"
 
 #: color.php:242
 msgid "Unnamed Color"
@@ -2858,9 +2852,8 @@ msgid "The Color as shown on the screen."
 msgstr "颜色如屏幕上所示."
 
 #: color.php:778
-#, fuzzy
 msgid "Colors in use cannot be Deleted.  In use is defined as being referenced by a Graph, a Graph Template or a Color Template."
-msgstr "引用的颜色不能被删除. 被定义为在用的由图形或图形模板引用中."
+msgstr "无法删除正在使用的颜色。“正在使用”定义为被图形、图形模板或颜色模板引用。"
 
 #: color.php:779
 msgid "The number of Graph using this Color."
@@ -2938,9 +2931,8 @@ msgid "Delete Color Item"
 msgstr "删除颜色项目"
 
 #: color_templates.php:395
-#, fuzzy
 msgid "Color Template not found."
-msgstr "未找到颜色模板"
+msgstr "未找到颜色模板。"
 
 #: color_templates.php:402
 #, php-format
@@ -2975,9 +2967,8 @@ msgid "No Color Templates Found"
 msgstr "未找到颜色模板"
 
 #: color_templates_items.php:277
-#, fuzzy
 msgid "Color Template or Item not found."
-msgstr "颜色模板项目"
+msgstr "未找到颜色模板或项目。"
 
 #: color_templates_items.php:292
 msgid "Click 'Continue' to delete the following Color Template Color."
@@ -3344,21 +3335,20 @@ msgstr "调试"
 
 #: data_input.php:132
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "输入字符串包含危险的 shell 字符"
 
 #: data_input.php:140
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "输入白名单已生效。更改此数据输入方法后，必须同时使用 --audit 和 --update 选项重新运行输入白名单 CLI 脚本 (cli/input_whitelist.php)，然后才会再次查询数据源。"
 
 #: data_input.php:188
 #, php-format
 msgid "Input field <%s> requires Special Type Code \"%s\"."
-msgstr ""
+msgstr "输入字段 <%s> 需要特殊类型代码 \"%s\"。"
 
 #: data_input.php:270
-#, fuzzy
 msgid "Data Input Methods that are built in or in use were not deleted."
-msgstr "数据输入的方法似乎未列入白名单."
+msgstr "未删除内置或正在使用的数据输入方法。"
 
 #: data_input.php:336
 msgid "Click 'Continue' to delete the following Data Input Method"
@@ -3492,9 +3482,8 @@ msgid "Delete Data Input Field"
 msgstr "删除数据输入字段"
 
 #: data_input.php:962
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "更新这个字段"
+msgstr "更新白名单"
 
 #: data_input.php:1021 include/global_arrays.php:1018
 #: include/global_arrays.php:1242 include/global_arrays.php:2390
@@ -3580,9 +3569,8 @@ msgid_plural "Duplicate Data Queries"
 msgstr[0] "删除数据查询"
 
 #: data_queries.php:584
-#, fuzzy
 msgid "The item does not belong to this Data Query."
-msgstr "这个数据查询的名称."
+msgstr "该项目不属于此数据查询。"
 
 #: data_queries.php:678
 msgid "Click 'Continue' to delete the following Data Query Graph Association."
@@ -3599,7 +3587,7 @@ msgstr "转换为图形模板"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
-msgstr ""
+msgstr "图形正在使用此图形模板关联，因此无法删除。"
 
 #: data_queries.php:771
 #, php-format
@@ -3664,7 +3652,7 @@ msgstr "添加数据源名称建议的名称"
 
 #: data_queries.php:1262
 msgid "Graphs use this Data Query, so it can not be deleted."
-msgstr ""
+msgstr "图形正在使用此数据查询，因此无法删除。"
 
 #: data_queries.php:1323
 #, php-format
@@ -3785,9 +3773,8 @@ msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "重复的数据源配置文件"
 
 #: data_source_profiles.php:420
-#, fuzzy
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
-msgstr "如果此数据源没有被Graphs使用太久,则可以将其删除."
+msgstr "正在被数据模板或数据源使用的数据源配置文件无法删除。"
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
@@ -3807,9 +3794,8 @@ msgid "Remove Data Source Profile RRA"
 msgstr "删除数据源配置文件RRA"
 
 #: data_source_profiles.php:559
-#, fuzzy
 msgid "Data Source Profiles in use by Data Sources are read only."
-msgstr "数据源正在使用的配置文件现在变为只读."
+msgstr "正在被数据源使用的数据源配置文件为只读。"
 
 #: data_source_profiles.php:597 data_source_profiles.php:616
 msgid "Each Insert is New Row"
@@ -4310,9 +4296,8 @@ msgid "Field \"%s\" is missing an Output Field"
 msgstr "字段“%s”缺少输出字段"
 
 #: data_templates.php:394
-#, fuzzy
 msgid "Data Templates in use by a Data Source were not deleted."
-msgstr "正在使用的数据模板无法修改"
+msgstr "未删除正在被数据源使用的数据模板。"
 
 #: data_templates.php:510
 msgid "Click 'Continue' to delete the following Data Template(s).  Any data sources attached to these templates will become individual Data Source(s) and all Templating benefits will be removed."
@@ -4455,7 +4440,7 @@ msgstr "未找到数据模板"
 
 #: gprint_presets.php:174
 msgid "GPRINT Presets referenced by a Graph or Graph Template were not Deleted."
-msgstr ""
+msgstr "未删除被图形或图形模板引用的 GPRINT 预设。"
 
 #: gprint_presets.php:211
 msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
@@ -4466,9 +4451,8 @@ msgid "Delete GPRINT Preset(s)"
 msgstr "删除GPRINT 预设"
 
 #: gprint_presets.php:257
-#, fuzzy
 msgid "GPRINT Preset not found."
-msgstr "GPRINT 预设"
+msgstr "未找到 GPRINT 预设。"
 
 #: gprint_presets.php:264
 #, php-format
@@ -4528,9 +4512,8 @@ msgid "Viewing Graph"
 msgstr "查看图形"
 
 #: graph.php:116 graph.php:513 graph.php:537 graph.php:551 graph.php:606
-#, fuzzy
 msgid "The Graph you requested does not exist."
-msgstr "数据源不存在."
+msgstr "您请求的图形不存在。"
 
 #: graph.php:301 lib/html.php:599
 msgid "Graph Details, Zooming and Debugging Utilities"
@@ -4625,9 +4608,8 @@ msgid "Quick Sync Graphs"
 msgstr "同步图"
 
 #: graph_templates.php:242
-#, fuzzy
 msgid "Graph Templates in use by a Graph were not deleted."
-msgstr "正在使用的数据模板无法修改"
+msgstr "未删除正在被图形使用的图形模板。"
 
 #: graph_templates.php:352 graph_templates.php:367
 #, php-format
@@ -4701,9 +4683,8 @@ msgid "No Inputs"
 msgstr "无法导入"
 
 #: graph_templates.php:609
-#, fuzzy
 msgid "Graph Template not found."
-msgstr "未找到图形模板"
+msgstr "未找到图形模板。"
 
 #: graph_templates.php:622
 #, php-format
@@ -4763,11 +4744,11 @@ msgstr "未找到图形模板"
 
 #: graph_templates_inputs.php:69
 msgid "The selected Field Type is not a valid Graph Item field."
-msgstr ""
+msgstr "所选字段类型不是有效的图形项目字段。"
 
 #: graph_templates_inputs.php:82
 msgid "The Graph Item Input relationship is invalid."
-msgstr ""
+msgstr "图形项目输入关系无效。"
 
 #: graph_templates_inputs.php:187
 #, php-format
@@ -5005,15 +4986,15 @@ msgstr "ERROR: 没有关联数据源. 请检查模板"
 
 #: graphs.php:412
 msgid "A Graph Item Input contains an invalid field or value."
-msgstr ""
+msgstr "图形项目输入包含无效的字段或值。"
 
 #: graphs.php:424 graphs.php:474
 msgid "Graph Item Input changes could not be saved."
-msgstr ""
+msgstr "无法保存图形项目输入更改。"
 
 #: graphs.php:452
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
+msgstr "图形项目输入包含无效的值。"
 
 #: graphs.php:952
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
@@ -5426,12 +5407,11 @@ msgstr "ERROR: 设备."
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
-msgstr ""
+msgstr "此设备的重新索引已在运行中。请在完成后重试。"
 
 #: host.php:242
-#, fuzzy
 msgid "Device Reindex Failed."
-msgstr "设备已禁用"
+msgstr "设备重新索引失败。"
 
 #: host.php:256
 #, php-format
@@ -5804,9 +5784,8 @@ msgid "Sync Devices"
 msgstr "同步设备"
 
 #: host_templates.php:207
-#, fuzzy
 msgid "That item can not be added to or removed from this Device Template."
-msgstr "设备模板的名称."
+msgstr "无法向此设备模板添加或从中移除该项目。"
 
 #: host_templates.php:275
 msgid "Click 'Continue' to delete the following Device Template(s)."
@@ -5833,9 +5812,8 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "将设备同步到设备模板"
 
 #: host_templates.php:362
-#, fuzzy
 msgid "A Device Template in use by a Device can not be deleted."
-msgstr "正在使用的数据模板无法修改"
+msgstr "无法删除正在被设备使用的设备模板。"
 
 #: host_templates.php:386
 msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
@@ -5985,12 +5963,12 @@ msgstr "正在进行安装或升级."
 
 #: include/csrf.php:219
 msgid "The browser did not return the Cacti session cookie. Ensure cookies are enabled and verify the configured URL path and cookie domain."
-msgstr ""
+msgstr "浏览器未返回 Cacti 会话 Cookie。请确保已启用 Cookie，并验证配置的 URL 路径和 Cookie 域。"
 
 #: include/csrf.php:220
-#, fuzzy, php-format
+#, php-format
 msgid "Return to Cacti: %s"
-msgstr "需要:Cacti >= %s"
+msgstr "返回 Cacti：%s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
@@ -6178,7 +6156,7 @@ msgstr "无法更改密码。找不到用户帐户。"
 
 #: include/global_arrays.php:285
 msgid "Data Source Item field holds a value the Data Source form would reject."
-msgstr ""
+msgstr "数据源项目字段包含数据源表单将拒绝的值。"
 
 #: include/global_arrays.php:288
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
@@ -6221,9 +6199,8 @@ msgid "Unable to determine size of password field, please check permissions of d
 msgstr "无法确定密码字段的大小,请检查db用户的权限"
 
 #: include/global_arrays.php:318
-#, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
-msgstr "无法增加密码字段的大小,请检查数据库用户的权限"
+msgstr "无法增大密码字段的大小，请检查数据库用户的权限"
 
 #: include/global_arrays.php:321
 msgid "LDAP/AD based password change not supported."
@@ -6494,9 +6471,8 @@ msgid "SHA-256"
 msgstr "SHA-256"
 
 #: include/global_arrays.php:664
-#, fuzzy
 msgid "SHA-384"
-msgstr "SHA-392"
+msgstr "SHA-384"
 
 #: include/global_arrays.php:665
 msgid "SHA-512"
@@ -6555,9 +6531,8 @@ msgid "TCP Ping"
 msgstr "TCP Ping"
 
 #: include/global_arrays.php:703
-#, fuzzy
 msgid "TCP Ping Closed"
-msgstr "TCP Ping"
+msgstr "TCP Ping 已关闭"
 
 #: include/global_arrays.php:704
 msgid "UDP Ping"
@@ -9061,9 +9036,8 @@ msgid "The method Cacti will use to determine if a host is available for polling
 msgstr "Cacti 将使用该方法来确定主机是否可采集. <br> <i>注意: 建议至少选择SNMP.</i>"
 
 #: include/global_form.php:1277
-#, fuzzy
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "要发送的ping 包的类型. <br> <i>注意: Linux/UNIX 上的ICMP 需要root 权限.</i>"
+msgstr "要发送的 Ping 数据包类型。<br><i>注意：Linux/UNIX 上的 ICMP 需要 root 权限。</i>  <br><i>注意：TCP Ping 关闭 - 即使 tcp ping 未成功，设备也可被视为 UP。</i>"
 
 #: include/global_form.php:1314 include/global_form.php:1806
 msgid "Additional Options"
@@ -10062,52 +10036,48 @@ msgid "When checked, any attempts to access Cacti will be redirected to HTTPS to
 msgstr "选中后, Cacti 的所有访问都将被重定向到HTTPS 以确保高安全性."
 
 #: include/global_settings.php:502
-#, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "远程数据采集器状态:"
+msgstr "允许不安全的远程数据采集器 HTTPS"
 
 #: include/global_settings.php:503
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr ""
+msgstr "允许使用自签名证书，并允许证书的主机名与远程数据采集器的主机名不同。"
 
 #: include/global_settings.php:508
-#, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "此数据输入方法的名称."
+msgstr "在数据输入方法中允许不安全的元字符"
 
 #: include/global_settings.php:509
 msgid "Historically, Cacti administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Cacti Graphs.  In earlier versions of Cacti, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Cacti, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Cacti restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Cacti continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr ""
+msgstr "过去，Cacti 管理员创建了简单的数据输入方法，其中包含类似 \"ps -ef | grep something | wc -l\" 的命令，用于表示可在 Cacti 图形中使用的数值。在早期版本的 Cacti 中这是允许的。然而，这是一种不安全的做法，因为它为第三方用户发布不安全的数据模板提供了入口。在现代 Cacti 中，应避免此类做法。但是，如果您有包含这些不安全元字符的旧版数据输入方法，且尚未将其转换为 'scripts' 目录中的本地脚本，我们提供了此选项。取消选中此选项时，Cacti 会限制类似 shell 的元字符，例如引号、大括号、竖线、反斜杠和反引号。Cacti 仍允许将大于号和小于号用于 <path_cacti> 和输入参数等用途，但若取消选中此选项，这就是其允许使用的上限。"
 
 #: include/global_settings.php:515
-#, fuzzy
 msgid "Content-Security Script Policy"
-msgstr "内容安全替代来源"
+msgstr "内容安全脚本策略"
 
 #: include/global_settings.php:516
 msgid "Controls the script-src CSP policy.  In Nonce Modes, Cacti Plugins that use inline JavaScript must include the nonce attribute from Cacti's builtin function 'CactiSecureHeaders::getNonceAttribute()'. Otherwise, those scripts will be blocked by the browser.  Currently, Cacti only allows reporting on Cacti Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces."
-msgstr ""
+msgstr "控制 script-src CSP 策略。在 Nonce 模式下，使用内联 JavaScript 的 Cacti 插件必须包含来自 Cacti 内置函数 'CactiSecureHeaders::getNonceAttribute()' 的 nonce 属性。否则，这些脚本将被浏览器阻止。目前，Cacti 仅允许报告未正确使用 Nonce 模式的 Cacti 插件。将来，我们将允许管理员阻止未使用 Nonce 的插件执行其内联 JavaScript。"
 
 #: include/global_settings.php:519
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "允许无 Nonce 的内联 JavaScript"
 
 #: include/global_settings.php:520
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "同时允许 unsafe-eval 和无 Nonce 的内联 JavaScript"
 
 #: include/global_settings.php:521
 msgid "Nonce Mode - Reporting Only"
-msgstr ""
+msgstr "Nonce 模式 - 仅报告"
 
 #: include/global_settings.php:525 include/global_settings.php:540
-#, fuzzy
 msgid "CSP Violation Report URI"
-msgstr "Cacti 报告"
+msgstr "CSP 违规报告 URI"
 
 #: include/global_settings.php:526
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
-msgstr ""
+msgstr "浏览器在 nonce-report 和 nonce 模式下向其 POST CSP 违规报告的 URL。留空以使用 <url_path>/csp_report.php。只能包含安全的 URL 字符。"
 
 #: include/global_settings.php:532
 msgid "Content-Security Alternate Sources"
@@ -10119,7 +10089,7 @@ msgstr "将允许在 Web 服务器本身之外访问的空格分隔的域名。�
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
-msgstr ""
+msgstr "浏览器在 nonce-report 和 nonce 模式下向其 POST CSP 违规报告的 URL。留空以使用安装根目录下的 /cacti/csp_report.php。只能包含安全的 URL 字符。"
 
 #: include/global_settings.php:553
 msgid "Enable Automatic Graph Creation"
@@ -10501,9 +10471,8 @@ msgid "Default Graph Type"
 msgstr "默认图形类型"
 
 #: include/global_settings.php:963
-#, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
-msgstr "在创建图形时,您想要预先选择哪种图形类型?"
+msgstr "创建图形时，您希望预选哪种图形类型？"
 
 #: include/global_settings.php:967
 msgid "All Types"
@@ -11198,9 +11167,8 @@ msgid "Password History"
 msgstr "历史密码"
 
 #: include/global_settings.php:1644
-#, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
-msgstr "记住旧密码的个数,不允许重新使用它们."
+msgstr "记住此数量的旧密码并禁止重复使用。"
 
 #: include/global_settings.php:1649
 msgid "1 Change"
@@ -14204,23 +14172,20 @@ msgid "Unsaved Changes Detected"
 msgstr "检测到未保存的更改"
 
 #: lib/html_form.php:1791
-#, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
-msgstr "您在此表单上有未保存的更改.如果按&#39;继续&#39;,这些更改将被丢弃.按&#39;取消&#39;继续编辑表单."
+msgstr "您在此表单上有未保存的更改。如果按“继续”，这些更改将被丢弃。按“取消”继续编辑表单。"
 
 #: lib/html_form_template.php:161
-#, fuzzy
 msgid "Invalid Graph Template Input"
-msgstr "图形模板输入"
+msgstr "无效的图形模板输入"
 
 #: lib/html_form_template.php:162
-#, fuzzy
 msgid "The graph template cannot be rendered"
-msgstr "未找到图形模板"
+msgstr "无法渲染图形模板"
 
 #: lib/html_form_template.php:163
 msgid "A Graph Item Input contains an invalid Field Type."
-msgstr ""
+msgstr "图形项目输入包含无效的字段类型。"
 
 #: lib/html_form_template.php:639 lib/html_form_template.php:651
 #, php-format
@@ -14498,7 +14463,7 @@ msgstr "日期/时间移到明天同一时间"
 
 #: lib/html_reports.php:345 lib/html_reports.php:500 lib/html_reports.php:679
 msgid "The From Email Address must be your own e-mail address or the site From Email Address."
-msgstr ""
+msgstr "发件人电子邮件地址必须是您自己的电子邮件地址或站点的发件人电子邮件地址。"
 
 #: lib/html_reports.php:575
 msgid "Click 'Continue' to delete the following Report(s)."
@@ -14849,9 +14814,8 @@ msgid "Cacti regular expressions can not includes the semi-color character."
 msgstr "仙人掌正则表达式不能包含半彩色字符。"
 
 #: lib/html_utility.php:1375
-#, fuzzy
 msgid "Invalid regular expression."
-msgstr "输入正则表达式"
+msgstr "无效的正则表达式。"
 
 #: lib/html_utility.php:1378
 msgid "There was an internal error!"
@@ -14875,7 +14839,7 @@ msgstr "UTF-8 偏移错误!"
 
 #: lib/html_utility.php:1413
 msgid "Cacti RLIKE filters do not support alternation or bounded-repeat characters."
-msgstr ""
+msgstr "Cacti RLIKE 过滤器不支持交替或有界重复字符。"
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
@@ -14896,12 +14860,11 @@ msgstr "验证错误"
 
 #: lib/import.php:358
 msgid "The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "由于您无权编辑数据输入方法，已跳过数据输入方法修复。"
 
 #: lib/import.php:747
-#, fuzzy
 msgid "kept existing"
-msgstr "不存在"
+msgstr "保留现有"
 
 #: lib/import.php:765
 msgid "written"
@@ -14932,12 +14895,12 @@ msgstr "数据查询 [%s]"
 #: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
-msgstr ""
+msgstr "未导入 '%s'，因为它使用了您无权编辑的数据输入方法。"
 
 #: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "未导入数据输入方法 '%s'，因为您无权编辑数据输入方法。"
 
 #: lib/import.php:2845
 msgid "Unknown Field"
@@ -15010,7 +14973,7 @@ msgstr "路径不可写"
 #: lib/installer.php:574
 #, php-format
 msgid "WARNING: Path is not writable, HTMLPurifier will run without a definition cache: %s"
-msgstr ""
+msgstr "警告：路径不可写，HTMLPurifier 将在没有定义缓存的情况下运行：%s"
 
 #: lib/installer.php:576
 msgid "Path is not writable"
@@ -15018,16 +14981,15 @@ msgstr "路径不可写"
 
 #: lib/installer.php:689
 msgid "The external CSRF secret must be outside the Cacti document root"
-msgstr ""
+msgstr "外部 CSRF 密钥必须位于 Cacti 文档根目录之外"
 
 #: lib/installer.php:700
-#, fuzzy
 msgid "Unable to create the external CSRF secret"
-msgstr "无法检索表格状态"
+msgstr "无法创建外部 CSRF 密钥"
 
 #: lib/installer.php:717
 msgid "Unable to persist the CSRF secret"
-msgstr ""
+msgstr "无法持久化 CSRF 密钥"
 
 #: lib/installer.php:744
 #, php-format
@@ -15083,13 +15045,12 @@ msgid "No matching snmp option exists"
 msgstr "没有匹配的snmp 选项"
 
 #: lib/installer.php:1291
-#, fuzzy
 msgid "Unable to load the available templates"
-msgstr "无法检索表格状态"
+msgstr "无法加载可用的模板"
 
 #: lib/installer.php:1301
 msgid "The template selection was incomplete. Reload this installer step and select the templates again."
-msgstr ""
+msgstr "模板选择不完整。请重新加载此安装步骤并再次选择模板。"
 
 #: lib/installer.php:1334
 msgid "No matching template exists"
@@ -15097,11 +15058,11 @@ msgstr "没有匹配的模板"
 
 #: lib/installer.php:1416
 msgid "Unable to load the tables requiring conversion"
-msgstr ""
+msgstr "无法加载需要转换的表"
 
 #: lib/installer.php:1428
 msgid "The table selection was incomplete. Reload this installer step and select the tables again."
-msgstr ""
+msgstr "表选择不完整。请重新加载此安装步骤并再次选择表。"
 
 #: lib/installer.php:1675
 msgid "The Installer could not proceed due to an unexpected error."
@@ -15289,9 +15250,8 @@ msgid "Restart Required"
 msgstr "要求"
 
 #: lib/installer.php:2015
-#, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
-msgstr "在运行配置中，指定值与 INI 文件中的指定值似乎不同。"
+msgstr "指定的值在运行配置与 INI 文件中似乎不同。"
 
 #: lib/installer.php:2045
 msgid "PHP - Module Support (Required)"
@@ -15587,9 +15547,8 @@ msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist 
 msgstr "因此，在多个版本之前，对Cacti进行了增强，以针对这些类型的数据输入法提供白名单功能。尽管这样做确实可以更彻底地保护Cacti，但是它确实增加了Cacti管理员导入和管理模板和软件包所需的工作量。"
 
 #: lib/installer.php:2536
-#, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "白名单的工作方式是，当您首次导入数据输入法或重新导入数据输入法，并且脚本和/或参数以任何方式更改时，数据输入法以及所有相应的数据源都会立即禁用，直到管理员确认数据输入法有效。"
+msgstr "白名单的工作方式是：当您首次导入数据输入方法或重新导入数据输入方法，且脚本或参数发生任何更改时，该数据输入方法以及所有对应的数据源都会立即被禁用，直到管理员验证该数据输入方法有效为止。"
 
 #: lib/installer.php:2537
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Cacti's CLI directory that can be run with the following options:"
@@ -15692,9 +15651,8 @@ msgid "Updating Templates that you have already made modifications to is not adv
 msgstr "不建议更新您已经修改过的模板。模板的升级不会删除对图形和数据模板的修改，并可能导致意外行为。但是，如果您没有对任何图形、数据查询或数据模板进行更改，则重新导入包应该没有任何影响。在这种情况下，您必须在更新后从模板“同步图表”。"
 
 #: lib/installer.php:2672
-#, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
-msgstr "请在安装后选择您想要使用的设备模板. 如果您的操作系统是Windows,则需要确保选择 'Windows 设备' 模板.如果您的操作系统是Linux/UNIX,请确保选择 ' Local Linux Machine' 设备模板."
+msgstr "请选择您在安装后希望使用的设备模板。如果您的操作系统是 Windows，请务必选择 'Windows Device' 模板。如果您的操作系统是 Linux/UNIX，请务必选择 'Local Linux Machine' 设备模板。"
 
 #: lib/installer.php:2678 package_import.php:531 plugins.php:621
 msgid "Author"
@@ -15870,20 +15828,20 @@ msgstr "已完成%s针对v%s的进程"
 
 #: lib/installer.php:3213
 msgid "WARNING: Unable to validate the installed database because cacti.sql could not be read"
-msgstr ""
+msgstr "警告：由于无法读取 cacti.sql，无法验证已安装的数据库"
 
 #: lib/installer.php:3219
 msgid "WARNING: Unable to validate the installed database because cacti.sql contains no table definitions"
-msgstr ""
+msgstr "警告：由于 cacti.sql 不包含表定义，无法验证已安装的数据库"
 
 #: lib/installer.php:3228
 msgid "WARNING: Unable to query the installed database schema"
-msgstr ""
+msgstr "警告：无法查询已安装的数据库架构"
 
 #: lib/installer.php:3235
 #, php-format
 msgid "WARNING: Core database tables are missing: %s"
-msgstr ""
+msgstr "警告：缺少核心数据库表：%s"
 
 #: lib/installer.php:3252
 #, php-format
@@ -16228,19 +16186,19 @@ msgid "UDP Ping Success (%s ms)"
 msgstr "UDP Ping 成功 (%s ms)"
 
 #: lib/ping.php:561
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "TCP Ping 成功 (%s ms)"
+msgstr "TCP Ping 成功 连接被拒绝 (%s ms)"
 
 #: lib/ping.php:564
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
-msgstr "TCP ping: socket_connect(), 原因: %s"
+msgstr "TCP Ping 失败：socket_connect()，原因：%s"
 
 #: lib/ping.php:587
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
-msgstr "TCP ping: socket_select()失败, 原因: %s"
+msgstr "TCP Ping 失败：socket_select() 失败，原因：%s"
 
 #: lib/ping.php:602
 #, php-format
@@ -16369,9 +16327,9 @@ msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "跳过已存在的报告图项目 '<i>%s</i>'"
 
 #: lib/rrd.php:2348
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: RRD file does not exist: %s"
-msgstr "ERROR: RRD 文件 %s 不可写入"
+msgstr "错误：RRD 文件不存在：%s"
 
 #: lib/rrd.php:3830
 #, php-format
@@ -16495,9 +16453,8 @@ msgid "rename %s to %s"
 msgstr "将 %s 重命名为 %s"
 
 #: lib/rrd.php:4307 lib/rrd.php:4388 lib/rrd.php:4456
-#, fuzzy
 msgid "ERROR: Invalid RRDfile path"
-msgstr "输入有效的文件路径"
+msgstr "错误：无效的 RRDfile 路径"
 
 #: lib/rrd.php:4317
 msgid "Error while parsing the XML of rrdtool dump"
@@ -16510,7 +16467,7 @@ msgstr "写入XML 文件时出错: %s"
 
 #: lib/rrd.php:4356 lib/rrd.php:4423 lib/rrd.php:4491
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
-msgstr ""
+msgstr "RRD 恢复失败；已保留原始和恢复 XML。请参见应用程序日志。"
 
 #: lib/rrd.php:4362 lib/rrd.php:4429 lib/rrd.php:4497
 #, php-format
@@ -16558,323 +16515,310 @@ msgstr "未知的RRDtool 错误"
 
 #: lib/rrd_maintenance.php:224
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
-msgstr ""
+msgstr "RRD 存储尚未就绪：配置的目录必须存在，并且允许此服务账户创建、读取、写入和删除文件。"
 
 #: lib/rrd_maintenance.php:230
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
+msgstr "RRD 存储尚未准备好进行协调访问。请启用 PHP POSIX 并在 include/config.php 中为每个 Web 和轮询器服务账户配置数字化的 rrd_maintenance_trusted_uids 和 rrd_maintenance_trusted_gids。移除全局写入权限并检查存储上级目录。升级前请参见 docs/testing/spikekill-safety.md。"
 
 #: lib/rrd_maintenance.php:286
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
-msgstr ""
+msgstr "在收集之前，poller_output 队列必须使用 InnoDB。请停止所有采集器（包括远程采集器），并运行 cli/upgrade_database.php --migrate-poller-queue（或在备份后将 poller_output 转换为 InnoDB）。检测到的引擎：%s。不得通过丢弃保留的样本来清除此状况。"
 
 #: lib/rrd_maintenance.php:286
-#, fuzzy
 msgid "unavailable"
-msgstr "不可用"
+msgstr "无法确认操作。重试前请检查更改历史。"
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
-msgstr ""
+msgstr "RRD 存储配置需要注意"
 
 #: lib/snmp.php:247 lib/snmp.php:347 lib/snmp.php:442 lib/snmp.php:877
 #: lib/snmp.php:892
-#, fuzzy, php-format
+#, php-format
 msgid "SNMP Command is: %s"
-msgstr "SNMP 选项 [编辑: %s]"
+msgstr "SNMP 命令为：%s"
 
 #: lib/spikekill.php:188
 msgid "FATAL: You must specify an RRDfile!"
-msgstr ""
+msgstr "致命错误：您必须指定一个 RRDfile！"
 
 #: lib/spikekill.php:192
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' does not exist."
-msgstr "XML: Cacti 版本不存在."
+msgstr "致命错误：文件 '%s' 不存在。"
 
 #: lib/spikekill.php:204
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' is not a regular file."
-msgstr "XML: Cacti 版本不存在."
+msgstr "致命错误：文件 '%s' 不是常规文件。"
 
 #: lib/spikekill.php:206
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr ""
+msgstr "致命错误：'%s' 无法由 '%s' 写入。"
 
 #: lib/spikekill.php:272
 msgid "FATAL: Standard Deviation must be a positive integer."
-msgstr ""
+msgstr "致命错误：标准差必须为正整数。"
 
 #: lib/spikekill.php:280 lib/spikekill.php:1782
-#, fuzzy
 msgid "StdDev"
-msgstr "删除标准设置"
+msgstr "StdDev"
 
 #: lib/spikekill.php:286 lib/spikekill.php:1782
-#, fuzzy
 msgid "Variance"
-msgstr "变量"
+msgstr "方差"
 
 #: lib/spikekill.php:292
-#, fuzzy
 msgid "Gap Fill"
-msgstr "差距填充范围"
+msgstr "间隙填充"
 
 #: lib/spikekill.php:304
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
-msgstr ""
+msgstr "致命错误：您必须指定 'stddev'、'variance'、'float' 或 'fill' 作为方法。"
 
 #: lib/spikekill.php:319
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr ""
+msgstr "致命错误：outlier-start 和 outlier-end 参数必须采用 YYYY-MM-DD HH:MM 格式或 Unix 时间戳。"
 
 #: lib/spikekill.php:323
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
-msgstr ""
+msgstr "致命错误：要排除的异常值数量必须为正整数。"
 
 #: lib/spikekill.php:331
 msgid "FATAL: Percent deviation must be a positive floating point number."
-msgstr ""
+msgstr "致命错误：百分比偏差必须为正浮点数。"
 
 #: lib/spikekill.php:337
 msgid "FATAL: Number of spikes to remove must be a positive integer"
-msgstr ""
+msgstr "致命错误：要移除的峰值数量必须为正整数"
 
 #: lib/spikekill.php:342
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
-msgstr ""
+msgstr "致命错误：异常值时间范围需要指定 outlier-start 和 outlier-end。"
 
 #: lib/spikekill.php:348
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
-msgstr ""
+msgstr "致命错误：异常值时间范围要求 outlier-start 小于 outlier-end。"
 
 #: lib/spikekill.php:353
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "致命错误：'float' 移除方法需要指定开始日期和结束日期。"
 
 #: lib/spikekill.php:357
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "致命错误：'gapfill' 移除方法需要指定开始日期和结束日期。"
 
 #: lib/spikekill.php:366
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
-msgstr ""
+msgstr "致命错误：您必须指定 'last'、'avg' 或 'nan' 作为替换方法。"
 
 #: lib/spikekill.php:369
 msgid "Spike Kill Settings Used for Analysis/Correction"
-msgstr ""
+msgstr "用于分析/修正的 Spike Kill 设置"
 
 #: lib/spikekill.php:375
 #, php-format
 msgid "Method:        %s"
-msgstr ""
+msgstr "方法：        %s"
 
 #: lib/spikekill.php:376
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile:       %s"
-msgstr "RRD 文件"
+msgstr "RRDfile：       %s"
 
 #: lib/spikekill.php:377
-#, fuzzy, php-format
+#, php-format
 msgid "Repair Type:   %s"
-msgstr "修复步骤[ %s ]"
+msgstr "修复类型：   %s"
 
 #: lib/spikekill.php:380
 #, php-format
 msgid "Num Outliers:  %s"
-msgstr ""
+msgstr "异常值数量：  %s"
 
 #: lib/spikekill.php:381
-#, fuzzy, php-format
+#, php-format
 msgid "Max Kills:     %s"
-msgstr "每个RRA 最大削除"
+msgstr "最大消除数：     %s"
 
 #: lib/spikekill.php:383
 msgid "Max Kills:     Unlimited"
-msgstr ""
+msgstr "最大消除数：     无限制"
 
 #: lib/spikekill.php:387
-#, fuzzy, php-format
+#, php-format
 msgid "Standard Devs: %s"
-msgstr "标准偏差"
+msgstr "标准差：%s"
 
 #: lib/spikekill.php:389
 #, php-format
 msgid "Variance %%:    %s %%"
-msgstr ""
+msgstr "方差 %%:    %s %%"
 
 #: lib/spikekill.php:393
 #, php-format
 msgid "Window Start:  %s (%s)"
-msgstr ""
+msgstr "窗口开始：  %s (%s)"
 
 #: lib/spikekill.php:394
 #, php-format
 msgid "Window End:    %s (%s)"
-msgstr ""
+msgstr "窗口结束：    %s (%s)"
 
 #: lib/spikekill.php:396
-#, fuzzy
 msgid "Window Range:  All"
-msgstr "Windows 相关"
+msgstr "窗口范围：  全部"
 
 #: lib/spikekill.php:411
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
-msgstr ""
+msgstr "致命错误：在移除峰值之前，请停止外部 RRD 写入进程并禁用 RRDCACHED_ADDRESS。"
 
 #: lib/spikekill.php:418
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
-msgstr ""
+msgstr "致命错误：RRD 存储正忙。请在轮询完成后重试。"
 
 #: lib/spikekill.php:419
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
-msgstr ""
+msgstr "致命错误：RRD 存储不受信任或不可用。请以 Web 服务账户身份运行 cli/upgrade_database.php --check-rrd-storage 并修正其存储配置。"
 
 #: lib/spikekill.php:445
 msgid "FATAL: Secure randomness is unavailable; spike removal was not started."
-msgstr ""
+msgstr "致命错误：安全随机数不可用；未启动峰值移除。"
 
 #: lib/spikekill.php:476
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
-msgstr ""
+msgstr "致命错误：无法在 '%s' 中安全创建临时 XML 文件！"
 
 #: lib/spikekill.php:525 lib/spikekill.php:547
 msgid "FATAL: RRD source identity changed or could not be verified safely."
-msgstr ""
+msgstr "致命错误：RRD 源标识已更改或无法安全验证。"
 
 #: lib/spikekill.php:555
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
-msgstr ""
+msgstr "致命错误：RRDtool 命令失败。请在“设置->路径”中验证 RRDtool 路径是否有效！"
 
 #: lib/spikekill.php:571
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
-msgstr ""
+msgstr "致命错误：RRDtool 返回了空转储。RRD 文件未被修改。"
 
 #: lib/spikekill.php:599
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
-msgstr ""
+msgstr "致命错误：将 RRDfile '%s' 备份到 '%s' 失败！"
 
 #: lib/spikekill.php:813
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
-msgstr ""
+msgstr "注意：正在 XML 文件 '%s' 中搜索峰值"
 
 #: lib/spikekill.php:816
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
-msgstr ""
+msgstr "注意：仅限时间窗口：%s 至 %s"
 
 #: lib/spikekill.php:823
 msgid "NOTE: Dryrun requested.  No updates performed"
-msgstr ""
+msgstr "注意：已请求试运行。未执行任何更新"
 
 #: lib/spikekill.php:859
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
-msgstr ""
+msgstr "注意：在 '%s' 中未发现窗口峰值"
 
 #: lib/spikekill.php:862
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
-msgstr ""
+msgstr "注意：在 '%s' 中未发现峰值"
 
 #: lib/spikekill.php:875
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
-msgstr ""
+msgstr "注意：已发现并修复峰值。总峰值数 %s"
 
 #: lib/spikekill.php:879
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr ""
+msgstr "致命错误：无法从 '%s' 恢复 '%s'"
 
 #: lib/spikekill.php:889
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
-msgstr ""
+msgstr "致命错误：无法备份 '%s'"
 
 #: lib/spikekill.php:899
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
-msgstr ""
+msgstr "致命错误：无法写入 XML 文件 '%s'"
 
 #: lib/spikekill.php:908
-#, fuzzy
 msgid "NOTE: No Spikes Found."
-msgstr "未找到站点"
+msgstr "注意：未发现峰值。"
 
 #: lib/spikekill.php:969
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
-msgstr ""
+msgstr "注意：正在将 '%s' 重新导入到 '%s'"
 
 #: lib/spikekill.php:1060
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr ""
+msgstr "注意：正在将 '%s' 备份到 '%s'"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Avg"
-msgstr "平均:"
+msgstr "平均值"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "CF"
-msgstr "CDEF"
+msgstr "CF"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "DS"
-msgstr "DES"
+msgstr "DS"
 
 #: lib/spikekill.php:1782
 msgid "NonNan"
-msgstr ""
+msgstr "NonNan"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Samples"
-msgstr "简单"
+msgstr "样本"
 
 #: lib/spikekill.php:1783
 msgid "MaxStdDev"
-msgstr ""
+msgstr "MaxStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MaxValue"
-msgstr "值"
+msgstr "MaxValue"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinStdDev"
-msgstr "干运行标准设置"
+msgstr "MinStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinValue"
-msgstr "值"
+msgstr "MinValue"
 
 #: lib/spikekill.php:1783
 msgid "StdKilled"
-msgstr ""
+msgstr "StdKilled"
 
 #: lib/spikekill.php:1783
 msgid "VarKilled"
-msgstr ""
+msgstr "VarKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindKilled"
-msgstr ""
+msgstr "WindKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindSamples"
-msgstr ""
+msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
@@ -16971,9 +16915,8 @@ msgid "InnoDB will hold as much tables and indexes in system memory as is possib
 msgstr "InnoDB将在系统内存中保存尽可能多的表和索引。 因此，你应该让innodb_buffer_pool大到足以容纳内存中的表和索引。 检查/ var / lib / mysql / cacti目录的大小将有助于确定此值。 我们建议您的系统总内存的25％，但是您的要求会因系统大小而异。"
 
 #: lib/utility.php:1405
-#, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "除非您的Cacti实例在ZFS或FusionI / O上运行，并且两者都具有内部日记功能以适应突然的系统崩溃，否则此设置应保持为ON。但是，如果您的电源非常好，并且系统很少宕机并且有备份，那么将此设置设置为OFF可以使数据库性能提高近50％。"
+msgstr "除非您的 Cacti 实例运行在具有内部日志功能以应对系统突然崩溃的 ZFS 或 FusionI/O 上，否则应保持此设置为 ON。不过，如果您的电源非常稳定、系统极少宕机并且有备份，将此设置设为 OFF 可使数据库性能提升近 50%。"
 
 #: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
@@ -17098,11 +17041,11 @@ msgstr "VDEF 的名称."
 #: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr ""
+msgstr "标题为 '%s' 的外部链接 ID '%s' 尝试注入无效 URL 并已被阻止！"
 
 #: links.php:76
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "您的内容文件不是有效的 URL。请输入有效的 URL"
 
 #: links.php:197
 msgid "Click 'Continue' to Enable the following Page(s)."
@@ -17418,11 +17361,11 @@ msgstr "为了使用此插件，您必须首先在插件目录中运行 <b><i cl
 
 #: package_import.php:127
 msgid "Unable to create temporary package file."
-msgstr ""
+msgstr "无法创建临时包文件。"
 
 #: package_import.php:143
 msgid "The package signature could not be verified against a trusted author."
-msgstr ""
+msgstr "无法根据受信任的作者验证包签名。"
 
 #: package_import.php:220
 #, php-format
@@ -17435,9 +17378,8 @@ msgid "The Package %s Import Failed"
 msgstr "包%s导入失败"
 
 #: package_import.php:303
-#, fuzzy
 msgid "Error: Invalid file path."
-msgstr "输入有效的文件路径"
+msgstr "错误：无效的文件路径。"
 
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
@@ -17773,9 +17715,9 @@ msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling 
 msgstr "注意：已添加第二个仙人掌数据收集器。因此，自动启用增强功能！"
 
 #: poller_automation.php:54
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Main Cacti database %s offline or in recovery"
-msgstr "警告：主 Cacti 数据库离线或正在恢复"
+msgstr "警告：主 Cacti 数据库 %s 处于离线或恢复状态"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
@@ -17936,7 +17878,7 @@ msgstr "包含用于连接到远程数据库的SSL证书颁发机构的文件。
 #: pollers.php:318
 #, php-format
 msgid "WARNING: Use of Data Collector Hostname '%s' is insecure!  Use either a fully qualified domain name or IP address to avoid equivalent hosts from other domains accessing this service"
-msgstr ""
+msgstr "警告：使用数据采集器主机名 '%s' 不安全！请使用完全限定域名 (FQDN) 或 IP 地址，以防止其他域中的等效主机访问此服务"
 
 #: pollers.php:324
 #, php-format
@@ -17998,9 +17940,8 @@ msgid_plural "Clear Statistics for Data Collectors"
 msgstr[0] "清除数据收集统计信息"
 
 #: pollers.php:669
-#, fuzzy
 msgid "The Main Data Collector can not be deleted or disabled."
-msgstr "此数据采集器最后一次与主Cacti 站点完全同步"
+msgstr "主数据采集器不能被删除或禁用。"
 
 #: pollers.php:688 sites.php:503
 #, php-format
@@ -18021,7 +17962,7 @@ msgstr "测试数据库连接"
 
 #: pollers.php:853
 msgid "Invalid Database Hostname or Port"
-msgstr ""
+msgstr "无效的数据库主机名或端口"
 
 #: pollers.php:969
 msgid "Collectors"
@@ -18218,7 +18159,7 @@ msgstr "归档"
 
 #: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
+msgstr "Windows 上不支持自动本地 RRD 清理。手动清理前请停止所有 RRD 写入进程。"
 
 #: rrdcleaner.php:380
 msgid "RRD Files"
@@ -18507,12 +18448,12 @@ msgstr "找不到模板网站！无法复制。"
 
 #: sites.php:355
 msgid "One or more of the selected Sites does not exist. Nothing was changed."
-msgstr ""
+msgstr "所选的一个或多个站点不存在。未作任何更改。"
 
 #: sites.php:384
 #, php-format
 msgid "No more than %d Sites can be duplicated at once."
-msgstr ""
+msgstr "一次最多只能复制 %d 个站点。"
 
 #: sites.php:436
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
@@ -18539,9 +18480,8 @@ msgid_plural "Duplicate Sites"
 msgstr[0] "重复站点"
 
 #: sites.php:496
-#, fuzzy
 msgid "Site not found."
-msgstr "文件未找到"
+msgstr "未找到站点。"
 
 #: sites.php:678 tree.php:1047
 msgid "Site Name"
@@ -18721,10 +18661,9 @@ msgid "Un-Lock"
 msgstr "锁定"
 
 #: tree.php:233 tree.php:634
-#, fuzzy
 #: graphs.php:652 graphs.php:1025
 msgid "You do not have permission to modify this tree."
-msgstr "没有权限。您无权执行所请求的操作。"
+msgstr "您无权修改此树。"
 
 #: tree.php:250 tree.php:254 tree.php:969
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -19240,9 +19179,8 @@ msgid "Tree Perms"
 msgstr "树权限"
 
 #: user_admin.php:1916
-#, fuzzy
 msgid "User not found."
-msgstr "文件未找到"
+msgstr "未找到用户。"
 
 #: user_admin.php:1955
 #, php-format
@@ -19254,7 +19192,6 @@ msgid "User Management"
 msgstr "用户管理"
 
 #: user_admin.php:2235
-#, fuzzy
 msgid "Group"
 msgstr "组"
 
@@ -19263,27 +19200,24 @@ msgid "Last Login"
 msgstr "上次登录"
 
 #: user_admin.php:2262
-#, fuzzy
 msgid "< 1 Week Ago"
-msgstr "1周"
+msgstr "< 1 周前"
 
 #: user_admin.php:2263
 msgid "< 1 Month Ago"
-msgstr ""
+msgstr "< 1 个月前"
 
 #: user_admin.php:2264
 msgid "> 1 Month Ago"
-msgstr ""
+msgstr "> 1 个月前"
 
 #: user_admin.php:2265
-#, fuzzy
 msgid "> 2 Months Ago"
-msgstr "%d 月"
+msgstr "> 2 个月前"
 
 #: user_admin.php:2266
-#, fuzzy
 msgid "> 4 Months Ago"
-msgstr "%d 月"
+msgstr "> 4 个月前"
 
 #: user_admin.php:2277
 msgid "Basic"
@@ -19358,7 +19292,7 @@ msgstr "树权限 %s"
 
 #: user_domains.php:99 user_domains.php:178
 msgid "Choose a local account as the user template."
-msgstr ""
+msgstr "选择本地账户作为用户模板。"
 
 #: user_domains.php:264
 msgid "Click 'Continue' to delete the following User Domain."
@@ -19399,7 +19333,7 @@ msgstr "使选定的域默认"
 
 #: user_domains.php:350
 msgid "The domain to make default no longer exists."
-msgstr ""
+msgstr "要设为默认的域已不存在。"
 
 #: user_domains.php:367
 #, php-format
@@ -19694,7 +19628,7 @@ msgstr "清除"
 
 #: utilities.php:61
 msgid "A Poller Cache rebuild is already running."
-msgstr ""
+msgstr "轮询器缓存重建已在运行中。"
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
@@ -20476,9 +20410,8 @@ msgid "Severity Level: %s"
 msgstr "严重级别: %s"
 
 #: vdef.php:163 vdef.php:576
-#, fuzzy
 msgid "VDEF not found."
-msgstr "文件未找到"
+msgstr "未找到 VDEF。"
 
 #: vdef.php:274
 msgid "Click 'Continue' to delete the following VDEF."
@@ -20502,7 +20435,7 @@ msgstr[0] "重复VDEF"
 
 #: vdef.php:342
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "未找到 VDEF 或 VDEF 项目。"
 
 #: vdef.php:352
 msgid "Click 'Continue' to delete the following VDEF's."
@@ -20651,31 +20584,40 @@ msgstr "没有VDEF"
 
 #: lib/plugins.php:1233
 msgid "Plugin INFO must declare a valid compat version"
-msgstr ""
+msgstr "插件 INFO 必须声明有效的 compat 版本"
 
 #: plugins.php:848
 #, php-format
 msgid "Unable to Install Plugin: %s"
-msgstr ""
+msgstr "无法安装插件：%s"
 
 #: include/global_form.php:1069
 msgid "Line Width"
-msgstr ""
+msgstr "线宽"
 
 #: include/global_form.php:1074
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
-msgstr ""
+msgstr "LINE1、LINE2 和 LINE3 使用固定宽度。对于 LINE:STACK，请输入像素宽度；支持整数或小数。"
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
-msgstr ""
+msgstr "无法保存聚合图形项目。其他图形设置可能已保存。"
 
 #: lib/data_query.php:203
 msgid "No Index Changes Detected, Poller Cache Refreshed"
-msgstr ""
+msgstr "未检测到索引更改，已刷新轮询器缓存"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-msgstr ""
+
+msgstr "同步失败。详情请参见日志。"
+
+#: graph.php:512
+msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
+msgstr "此图形没有可缩放的 RRA 定义；请检查其数据源配置文件。"
+
+#: lib/import.php:771
+msgid "not written"
+msgstr "未写入"

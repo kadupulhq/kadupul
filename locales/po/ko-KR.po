@@ -44,9 +44,8 @@ msgid "Honorable Mentions"
 msgstr "콘솔 메뉴 섹션"
 
 #: about.php:62
-#, fuzzy
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
-msgstr "문서, QA, 포장, 포럼 및 YouTube 페이지의 기여자."
+msgstr "문서, QA, 패키징, 포럼 및 YouTube 페이지 기여자."
 
 #: about.php:70
 msgid "Emeritus Members"
@@ -371,9 +370,8 @@ msgid "Preview"
 msgstr "미리보기"
 
 #: aggregate_graphs.php:629
-#, fuzzy
 msgid "Aggregate Graph Accessed does not Exist"
-msgstr "그래프 설정 집계"
+msgstr "액세스한 집계 그래프가 존재하지 않습니다"
 
 #: aggregate_graphs.php:690
 msgid "Turn Off Graph Debug Mode"
@@ -758,9 +756,8 @@ msgid "No Aggregate Graphs Found"
 msgstr "누적 된 그래프 없음"
 
 #: aggregate_templates.php:119 aggregate_templates.php:370
-#, fuzzy
 msgid "Aggregate Template not found."
-msgstr "누적 된 템플릿 없음"
+msgstr "집계 템플릿을 찾을 수 없습니다."
 
 #: aggregate_templates.php:318
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
@@ -963,9 +960,8 @@ msgid "You do not have access to any area of Cacti.  Contact your administrator.
 msgstr "이것이 오류라고 생각하면. Cacti 관리자에게 문의하십시오."
 
 #: auth_login.php:225
-#, fuzzy
 msgid "Access Denied! User account locked."
-msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
+msgstr "접근이 거부되었습니다! 사용자 계정이 잠겼습니다."
 
 #: auth_login.php:314 lib/html_tree.php:164
 msgid "Login to Cacti"
@@ -1335,7 +1331,7 @@ msgstr "비활성화"
 
 #: automation_graph_rules.php:162 automation_graph_rules.php:213
 msgid "An attempt was made to perform a SQL injection in Graph automation"
-msgstr ""
+msgstr "그래프 자동화에서 SQL 인젝션 시도가 감지되었습니다"
 
 #: automation_graph_rules.php:317
 msgid "Press 'Continue' to delete the following Graph Rules."
@@ -1575,9 +1571,8 @@ msgid "Monthly on Day"
 msgstr "매월 매일"
 
 #: automation_networks.php:439
-#, fuzzy
 msgid "Network not found."
-msgstr "파일을 찾을 수 없습니다."
+msgstr "네트워크를 찾을 수 없습니다."
 
 #: automation_networks.php:446
 #, php-format
@@ -2489,12 +2484,11 @@ msgstr "자동화 장치 템플릿을 찾을 수 없음"
 
 #: automation_tree_rules.php:148
 msgid "An attempt was made to perform a SQL injection in Tree automation"
-msgstr ""
+msgstr "트리 자동화에서 SQL 인젝션 시도가 감지되었습니다"
 
 #: automation_tree_rules.php:197
-#, fuzzy
 msgid "Invalid Field Name specified for Tree Rule Item."
-msgstr "이 규칙 항목에 사용될 필드 이름."
+msgstr "트리 규칙 항목에 잘못된 필드 이름이 지정되었습니다."
 
 #: automation_tree_rules.php:293
 msgid "Click 'Continue' to delete the following Rule(s)."
@@ -2730,11 +2724,11 @@ msgstr "CDEF가 없습니다."
 
 #: color.php:207
 msgid "The Colors could not be checked for use and were not Deleted."
-msgstr ""
+msgstr "색상의 사용 여부를 확인할 수 없어 삭제되지 않았습니다."
 
 #: color.php:219
 msgid "Colors referenced by a Graph, Graph Template or Color Template were not Deleted."
-msgstr ""
+msgstr "그래프, 그래프 템플릿 또는 색상 템플릿에서 참조하는 색상은 삭제되지 않았습니다."
 
 #: color.php:242
 msgid "Unnamed Color"
@@ -2858,9 +2852,8 @@ msgid "The Color as shown on the screen."
 msgstr "화면에 표시되는 색상입니다."
 
 #: color.php:778
-#, fuzzy
 msgid "Colors in use cannot be Deleted.  In use is defined as being referenced by a Graph, a Graph Template or a Color Template."
-msgstr "사용중인 색상은 삭제할 수 없습니다. In은 Graph 또는 Graph Template에 의해 참조되는 것으로 정의됩니다."
+msgstr "사용 중인 색상은 삭제할 수 없습니다. 사용 중이란 그래프, 그래프 템플릿 또는 색상 템플릿에서 참조되는 상태를 의미합니다."
 
 #: color.php:779
 msgid "The number of Graph using this Color."
@@ -2938,9 +2931,8 @@ msgid "Delete Color Item"
 msgstr "색상 항목 삭제"
 
 #: color_templates.php:395
-#, fuzzy
 msgid "Color Template not found."
-msgstr "색상 템플릿을 찾을 수 없음"
+msgstr "색상 템플릿을 찾을 수 없습니다."
 
 #: color_templates.php:402
 #, php-format
@@ -2975,9 +2967,8 @@ msgid "No Color Templates Found"
 msgstr "색상 템플릿을 찾을 수 없음"
 
 #: color_templates_items.php:277
-#, fuzzy
 msgid "Color Template or Item not found."
-msgstr "색상 템플릿 항목"
+msgstr "색상 템플릿 또는 항목을 찾을 수 없습니다."
 
 #: color_templates_items.php:292
 msgid "Click 'Continue' to delete the following Color Template Color."
@@ -3344,21 +3335,20 @@ msgstr "디버깅"
 
 #: data_input.php:132
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "입력 문자열에 위험한 셸 문자가 포함되어 있습니다"
 
 #: data_input.php:140
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "입력 화이트리스트가 적용 중입니다. 이 데이터 입력 방법을 변경하면 데이터 소스를 다시 쿼리하기 전에 --audit 및 --update 옵션을 모두 사용하여 입력 화이트리스트 CLI 스크립트(cli/input_whitelist.php)를 다시 실행해야 합니다."
 
 #: data_input.php:188
 #, php-format
 msgid "Input field <%s> requires Special Type Code \"%s\"."
-msgstr ""
+msgstr "입력 필드 <%s>에는 특수 유형 코드 \"%s\"이(가) 필요합니다."
 
 #: data_input.php:270
-#, fuzzy
 msgid "Data Input Methods that are built in or in use were not deleted."
-msgstr "메소드의 데이터 입력이 허용 목록에없는 것으로 보입니다."
+msgstr "내장되어 있거나 사용 중인 데이터 입력 방법은 삭제되지 않았습니다."
 
 #: data_input.php:336
 msgid "Click 'Continue' to delete the following Data Input Method"
@@ -3492,9 +3482,8 @@ msgid "Delete Data Input Field"
 msgstr "데이터 입력 필드 삭제"
 
 #: data_input.php:962
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "이 입력란 업데이트"
+msgstr "화이트리스트 업데이트"
 
 #: data_input.php:1021 include/global_arrays.php:1018
 #: include/global_arrays.php:1242 include/global_arrays.php:2390
@@ -3580,9 +3569,8 @@ msgid_plural "Duplicate Data Queries"
 msgstr[0] "데이터 쿼리 삭제"
 
 #: data_queries.php:584
-#, fuzzy
 msgid "The item does not belong to this Data Query."
-msgstr "이 데이터 쿼리의 이름입니다."
+msgstr "해당 항목은 이 데이터 쿼리에 속하지 않습니다."
 
 #: data_queries.php:678
 msgid "Click 'Continue' to delete the following Data Query Graph Association."
@@ -3599,7 +3587,7 @@ msgstr "그래프 템플릿으로 변환"
 
 #: data_queries.php:724
 msgid "Graphs use this Graph Template association, so it can not be deleted."
-msgstr ""
+msgstr "그래프에서 이 그래프 템플릿 연결을 사용 중이므로 삭제할 수 없습니다."
 
 #: data_queries.php:771
 #, php-format
@@ -3664,7 +3652,7 @@ msgstr "데이터 소스 이름 제안 이름 추가"
 
 #: data_queries.php:1262
 msgid "Graphs use this Data Query, so it can not be deleted."
-msgstr ""
+msgstr "그래프에서 이 데이터 쿼리를 사용 중이므로 삭제할 수 없습니다."
 
 #: data_queries.php:1323
 #, php-format
@@ -3785,9 +3773,8 @@ msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "중복 데이터 소스 프로필"
 
 #: data_source_profiles.php:420
-#, fuzzy
 msgid "Data Source Profiles in use by Data Templates or Data Sources can not be deleted."
-msgstr "이 데이터 소스가 그래프에서 오랫동안 사용되지 않으면 삭제 될 수 있습니다."
+msgstr "데이터 템플릿 또는 데이터 소스에서 사용 중인 데이터 소스 프로필은 삭제할 수 없습니다."
 
 #: data_source_profiles.php:484
 msgid "Unable to duplicate Data Source Profile.  Check Cacti Log for errors."
@@ -3807,9 +3794,8 @@ msgid "Remove Data Source Profile RRA"
 msgstr "데이터 원본 프로필 RRA 제거"
 
 #: data_source_profiles.php:559
-#, fuzzy
 msgid "Data Source Profiles in use by Data Sources are read only."
-msgstr "데이터 소스에서 사용중인 프로파일은 현재 읽기 전용이됩니다."
+msgstr "데이터 소스에서 사용 중인 데이터 소스 프로필은 읽기 전용입니다."
 
 #: data_source_profiles.php:597 data_source_profiles.php:616
 msgid "Each Insert is New Row"
@@ -4310,9 +4296,8 @@ msgid "Field \"%s\" is missing an Output Field"
 msgstr "필드 \"%s\"에 출력 필드가 없습니다."
 
 #: data_templates.php:394
-#, fuzzy
 msgid "Data Templates in use by a Data Source were not deleted."
-msgstr "사용중인 데이터 템플릿은 수정할 수 없습니다."
+msgstr "데이터 소스에서 사용 중인 데이터 템플릿은 삭제되지 않았습니다."
 
 #: data_templates.php:510
 msgid "Click 'Continue' to delete the following Data Template(s).  Any data sources attached to these templates will become individual Data Source(s) and all Templating benefits will be removed."
@@ -4455,7 +4440,7 @@ msgstr "데이터 템플릿 없음"
 
 #: gprint_presets.php:174
 msgid "GPRINT Presets referenced by a Graph or Graph Template were not Deleted."
-msgstr ""
+msgstr "그래프 또는 그래프 템플릿에서 참조하는 GPRINT 프리셋은 삭제되지 않았습니다."
 
 #: gprint_presets.php:211
 msgid "Click 'Continue' to delete the following GPRINT Preset(s)."
@@ -4466,9 +4451,8 @@ msgid "Delete GPRINT Preset(s)"
 msgstr "GPRINT 프리셋 삭제"
 
 #: gprint_presets.php:257
-#, fuzzy
 msgid "GPRINT Preset not found."
-msgstr "GPRINT 프리셋"
+msgstr "GPRINT 사전 설정을 찾을 수 없습니다."
 
 #: gprint_presets.php:264
 #, php-format
@@ -4528,9 +4512,8 @@ msgid "Viewing Graph"
 msgstr "그래프보기"
 
 #: graph.php:116 graph.php:513 graph.php:537 graph.php:551 graph.php:606
-#, fuzzy
 msgid "The Graph you requested does not exist."
-msgstr "데이터 소스가 없습니다."
+msgstr "요청한 그래프가 존재하지 않습니다."
 
 #: graph.php:301 lib/html.php:599
 msgid "Graph Details, Zooming and Debugging Utilities"
@@ -4625,9 +4608,8 @@ msgid "Quick Sync Graphs"
 msgstr "동기화 그래프"
 
 #: graph_templates.php:242
-#, fuzzy
 msgid "Graph Templates in use by a Graph were not deleted."
-msgstr "사용중인 데이터 템플릿은 수정할 수 없습니다."
+msgstr "그래프에서 사용 중인 그래프 템플릿은 삭제되지 않았습니다."
 
 #: graph_templates.php:352 graph_templates.php:367
 #, php-format
@@ -4701,9 +4683,8 @@ msgid "No Inputs"
 msgstr "입력 없음"
 
 #: graph_templates.php:609
-#, fuzzy
 msgid "Graph Template not found."
-msgstr "그래프 템플릿 없음"
+msgstr "그래프 템플릿을 찾을 수 없습니다."
 
 #: graph_templates.php:622
 #, php-format
@@ -4763,11 +4744,11 @@ msgstr "그래프 템플릿 없음"
 
 #: graph_templates_inputs.php:69
 msgid "The selected Field Type is not a valid Graph Item field."
-msgstr ""
+msgstr "선택한 필드 유형은 유효한 그래프 항목 필드가 아닙니다."
 
 #: graph_templates_inputs.php:82
 msgid "The Graph Item Input relationship is invalid."
-msgstr ""
+msgstr "그래프 항목 입력 관계가 잘못되었습니다."
 
 #: graph_templates_inputs.php:187
 #, php-format
@@ -5005,15 +4986,15 @@ msgstr "오류 : 연결된 데이터 소스가 없습니다. 템플릿 확인"
 
 #: graphs.php:412
 msgid "A Graph Item Input contains an invalid field or value."
-msgstr ""
+msgstr "그래프 항목 입력에 잘못된 필드 또는 값이 포함되어 있습니다."
 
 #: graphs.php:424 graphs.php:474
 msgid "Graph Item Input changes could not be saved."
-msgstr ""
+msgstr "그래프 항목 입력 변경 사항을 저장할 수 없습니다."
 
 #: graphs.php:452
 msgid "A Graph Item Input contains an invalid value."
-msgstr ""
+msgstr "그래프 항목 입력에 잘못된 값이 포함되어 있습니다."
 
 #: graphs.php:952
 msgid "Click 'Continue' to delete the following Graph(s).  Note that if you choose to Delete Data Sources, only those Data Sources not in use elsewhere will also be Deleted."
@@ -5371,9 +5352,8 @@ msgid "Cacti GitHub Site"
 msgstr "Cacti GitHub 사이트"
 
 #: help.php:113
-#, fuzzy
 msgid "Open a ticket at "
-msgstr "문의하기"
+msgstr "티켓 열기: "
 
 #: help.php:113
 #, php-format
@@ -5427,12 +5407,11 @@ msgstr "오류 : 장치 ["
 
 #: host.php:226
 msgid "A Re-Index of this Device is already running.  Try again after it finishes."
-msgstr ""
+msgstr "이 장치의 재인덱싱이 이미 실행 중입니다. 완료된 후 다시 시도하세요."
 
 #: host.php:242
-#, fuzzy
 msgid "Device Reindex Failed."
-msgstr "기기가 사용 중지되었습니다."
+msgstr "장치 재인덱싱에 실패했습니다."
 
 #: host.php:256
 #, php-format
@@ -5805,9 +5784,8 @@ msgid "Sync Devices"
 msgstr "동기 장치"
 
 #: host_templates.php:207
-#, fuzzy
 msgid "That item can not be added to or removed from this Device Template."
-msgstr "이 장치 템플릿의 이름입니다."
+msgstr "해당 항목은 이 장치 템플릿에 추가하거나 제거할 수 없습니다."
 
 #: host_templates.php:275
 msgid "Click 'Continue' to delete the following Device Template(s)."
@@ -5834,9 +5812,8 @@ msgid "Sync Devices to Device Template(s)"
 msgstr "장치를 장치 템플릿에 동기화"
 
 #: host_templates.php:362
-#, fuzzy
 msgid "A Device Template in use by a Device can not be deleted."
-msgstr "사용중인 데이터 템플릿은 수정할 수 없습니다."
+msgstr "장치에서 사용 중인 장치 템플릿은 삭제할 수 없습니다."
 
 #: host_templates.php:386
 msgid "Click 'Continue' to delete the following Graph Template will be disassociated from the Device Template."
@@ -5986,12 +5963,12 @@ msgstr "진행중인 설치 또는 업그레이드가 있습니다."
 
 #: include/csrf.php:219
 msgid "The browser did not return the Cacti session cookie. Ensure cookies are enabled and verify the configured URL path and cookie domain."
-msgstr ""
+msgstr "브라우저가 Cacti 세션 쿠키를 반환하지 않았습니다. 쿠키가 활성화되어 있는지 확인하고 구성된 URL 경로와 쿠키 도메인을 점검하세요."
 
 #: include/csrf.php:220
-#, fuzzy, php-format
+#, php-format
 msgid "Return to Cacti: %s"
-msgstr "요구 사항 : Cacti&gt; =  %s"
+msgstr "Cacti로 돌아가기: %s"
 
 #: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
@@ -6179,7 +6156,7 @@ msgstr "비밀번호를 변경할 수 없습니다. 사용자 계정을 찾을 �
 
 #: include/global_arrays.php:285
 msgid "Data Source Item field holds a value the Data Source form would reject."
-msgstr ""
+msgstr "데이터 소스 항목 필드에 데이터 소스 양식에서 거부되는 값이 포함되어 있습니다."
 
 #: include/global_arrays.php:288
 msgid "Data Input Saved.  You must update the Data Templates referencing this Data Input Method before creating Graphs or Data Sources."
@@ -6222,9 +6199,8 @@ msgid "Unable to determine size of password field, please check permissions of d
 msgstr "암호 필드의 크기를 확인할 수 없습니다. db 사용자의 권한을 확인하십시오."
 
 #: include/global_arrays.php:318
-#, fuzzy
 msgid "Unable to increase size of password field, please check permission of db user"
-msgstr "암호 필드의 크기를 늘릴 수 없습니다. db 사용자의 허가를 확인하십시오."
+msgstr "비밀번호 필드의 크기를 늘릴 수 없습니다. DB 사용자의 권한을 확인하세요"
 
 #: include/global_arrays.php:321
 msgid "LDAP/AD based password change not supported."
@@ -6495,9 +6471,8 @@ msgid "SHA-256"
 msgstr "SHA-256"
 
 #: include/global_arrays.php:664
-#, fuzzy
 msgid "SHA-384"
-msgstr "SHA-392"
+msgstr "SHA-384"
 
 #: include/global_arrays.php:665
 msgid "SHA-512"
@@ -6556,9 +6531,8 @@ msgid "TCP Ping"
 msgstr "TCP Ping"
 
 #: include/global_arrays.php:703
-#, fuzzy
 msgid "TCP Ping Closed"
-msgstr "TCP Ping"
+msgstr "TCP Ping 닫힘"
 
 #: include/global_arrays.php:704
 msgid "UDP Ping"
@@ -6635,7 +6609,7 @@ msgid "Every %d Day"
 msgstr "%d 일마다"
 
 #: include/global_arrays.php:771
-#, fuzzy, php-format
+#, php-format
 msgid "%0.1f Minutes"
 msgstr "%0.1f분"
 
@@ -9062,9 +9036,8 @@ msgid "The method Cacti will use to determine if a host is available for polling
 msgstr "Cacti가 호스트를 폴링에 사용할 수 있는지 확인하는 방법. <br> <i>참고 : 최소한 SNMP를 항상 선택하는 것이 좋습니다.</i>"
 
 #: include/global_form.php:1277
-#, fuzzy
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
-msgstr "전송할 ping 패킷 유형입니다. <br> <i>참고 : Linux / UNIX의 ICMP에는 루트 권한이 필요합니다.</i>"
+msgstr "전송할 Ping 패킷 유형입니다.  <br><i>참고: Linux/UNIX에서 ICMP를 사용하려면 root 권한이 필요합니다.</i>  <br><i>참고: TCP Ping 닫힘 - TCP Ping이 성공하지 않더라도 장치가 UP 상태로 간주될 수 있습니다.</i>"
 
 #: include/global_form.php:1314 include/global_form.php:1806
 msgid "Additional Options"
@@ -10063,52 +10036,48 @@ msgid "When checked, any attempts to access Cacti will be redirected to HTTPS to
 msgstr "이 옵션을 선택하면 Cacti에 액세스하려는 모든 시도가 높은 보안을 위해 HTTPS로 리디렉션됩니다."
 
 #: include/global_settings.php:502
-#, fuzzy
 msgid "Allow Unsafe Remote Data Collector HTTPS"
-msgstr "원격 데이터 수집기 상태 :"
+msgstr "안전하지 않은 원격 데이터 수집기 HTTPS 허용"
 
 #: include/global_settings.php:503
 msgid "Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector."
-msgstr ""
+msgstr "자체 서명된 인증서 사용을 허용하고 인증서의 호스트 이름이 원격 데이터 수집기의 호스트 이름과 다를 수 있도록 허용합니다."
 
 #: include/global_settings.php:508
-#, fuzzy
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
-msgstr "이 데이터 입력 메소드의 이름."
+msgstr "데이터 입력 방법에서 안전하지 않은 메타 문자 허용"
 
 #: include/global_settings.php:509
 msgid "Historically, Cacti administrators created simple Data Input Methods that include commands like \"ps -ef | grep something | wc -l\" to represent a numeric value for use in Cacti Graphs.  In earlier versions of Cacti, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Cacti, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the 'scripts' directory.  When this option is unchecked, Cacti restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Cacti continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use."
-msgstr ""
+msgstr "과거에는 Cacti 관리자가 Cacti 그래프에서 사용할 숫자 값을 나타내기 위해 \"ps -ef | grep something | wc -l\"과 같은 명령을 포함하는 간단한 데이터 입력 방법을 생성했습니다. 이전 버전의 Cacti에서는 이것이 허용되었습니다. 그러나 이는 제3자가 안전하지 않은 데이터 템플릿을 게시할 수 있는 통로가 되므로 안전하지 않은 관행입니다. 최신 Cacti에서는 이러한 관행을 피해야 합니다. 그러나 이러한 안전하지 않은 메타 문자가 포함된 오래된 데이터 입력 방법이 있고 아직 'scripts' 디렉터리의 로컬 스크립트로 변환하지 않은 경우를 위해 이 옵션을 제공합니다. 이 옵션을 선택 해제하면 Cacti는 따옴표, 중괄호, 세로 막대, 백슬래시 및 백틱과 같은 셸 스타일 메타 문자를 제한합니다. Cacti는 <path_cacti> 및 입력 매개변수와 같은 용도로 보다 큼(>) 및 보다 작음(<) 기호를 계속 허용하지만, 이 옵션을 선택 해제하면 허용되는 사용 범위는 여기까지로 제한됩니다."
 
 #: include/global_settings.php:515
-#, fuzzy
 msgid "Content-Security Script Policy"
-msgstr "콘텐츠 보안 대체 소스"
+msgstr "콘텐츠 보안 스크립트 정책"
 
 #: include/global_settings.php:516
 msgid "Controls the script-src CSP policy.  In Nonce Modes, Cacti Plugins that use inline JavaScript must include the nonce attribute from Cacti's builtin function 'CactiSecureHeaders::getNonceAttribute()'. Otherwise, those scripts will be blocked by the browser.  Currently, Cacti only allows reporting on Cacti Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces."
-msgstr ""
+msgstr "script-src CSP 정책을 제어합니다. Nonce 모드에서 인라인 JavaScript를 사용하는 Cacti 플러그인은 Cacti 내장 함수 'CactiSecureHeaders::getNonceAttribute()'에서 제공하는 nonce 속성을 반드시 포함해야 합니다. 그렇지 않으면 브라우저에서 해당 스크립트가 차단됩니다. 현재 Cacti는 Nonce 모드를 올바르게 사용하지 않는 Cacti 플러그인에 대한 보고만 허용합니다. 향후 관리자가 Nonce를 사용하지 않는 플러그인의 인라인 JavaScript 사용을 차단할 수 있도록 지원할 예정입니다."
 
 #: include/global_settings.php:519
 msgid "Allow Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "Nonce가 없는 인라인 JavaScript 허용"
 
 #: include/global_settings.php:520
 msgid "Allow both unsafe-eval and Non-Nonced Inline JavaScript"
-msgstr ""
+msgstr "unsafe-eval 및 Nonce가 없는 인라인 JavaScript 모두 허용"
 
 #: include/global_settings.php:521
 msgid "Nonce Mode - Reporting Only"
-msgstr ""
+msgstr "Nonce 모드 - 보고 전용"
 
 #: include/global_settings.php:525 include/global_settings.php:540
-#, fuzzy
 msgid "CSP Violation Report URI"
-msgstr "선인장 보고서"
+msgstr "CSP 위반 보고 URI"
 
 #: include/global_settings.php:526
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use <url_path>/csp_report.php. Must contain only safe URL characters."
-msgstr ""
+msgstr "nonce-report 및 nonce 모드에서 브라우저가 CSP 위반 보고서를 POST할 URL입니다. <url_path>/csp_report.php를 사용하려면 비워 두세요. 안전한 URL 문자만 포함해야 합니다."
 
 #: include/global_settings.php:532
 msgid "Content-Security Alternate Sources"
@@ -10120,7 +10089,7 @@ msgstr "웹 서버 자체 외부에서 액세스가 허용되는 공백으로 �
 
 #: include/global_settings.php:541
 msgid "URL where browsers POST CSP violation reports in nonce-report and nonce modes. Leave empty to use /cacti/csp_report.php at the installation root. Must contain only safe URL characters."
-msgstr ""
+msgstr "nonce-report 및 nonce 모드에서 브라우저가 CSP 위반 보고서를 POST할 URL입니다. 설치 루트의 /cacti/csp_report.php를 사용하려면 비워 두세요. 안전한 URL 문자만 포함해야 합니다."
 
 #: include/global_settings.php:553
 msgid "Enable Automatic Graph Creation"
@@ -10211,18 +10180,18 @@ msgid "The default number of Device Threads.  This is only applicable when using
 msgstr "기본 장치 스레드 수입니다. 이것은 척추 데이터 수집기를 사용할 때만 적용됩니다."
 
 #: include/global_settings.php:656
-#, fuzzy, php-format
+#, php-format
 msgid "%s Thread"
-msgstr "스레드"
+msgstr "%s개 스레드"
 
 #: include/global_settings.php:657 include/global_settings.php:658
 #: include/global_settings.php:659 include/global_settings.php:660
 #: include/global_settings.php:661 include/global_settings.php:662
 #: include/global_settings.php:663 include/global_settings.php:664
 #: include/global_settings.php:665
-#, fuzzy, php-format
+#, php-format
 msgid "%s Threads"
-msgstr "스레드"
+msgstr "%s개 스레드"
 
 #: include/global_settings.php:669
 msgid "Re-index Method for Data Queries"
@@ -10502,9 +10471,8 @@ msgid "Default Graph Type"
 msgstr "기본 그래프 유형"
 
 #: include/global_settings.php:963
-#, fuzzy
 msgid "When creating graphs, what Graph Type would you like preselected?"
-msgstr "그래프를 만들 때 어떤 그래프 유형을 미리 선택 하시겠습니까?"
+msgstr "그래프를 생성할 때 어떤 그래프 유형을 미리 선택하시겠습니까?"
 
 #: include/global_settings.php:967
 msgid "All Types"
@@ -10733,9 +10701,8 @@ msgid "Only show business hours during weekdays."
 msgstr "평일에는 영업시간만 표시됩니다."
 
 #: include/global_settings.php:1176
-#, fuzzy
 msgid "Show business hours"
-msgstr "운영시간"
+msgstr "업무 시간 표시"
 
 #: include/global_settings.php:1177
 msgid "Display business hours on rrd graphs."
@@ -11201,9 +11168,8 @@ msgid "Password History"
 msgstr "비밀번호 기록"
 
 #: include/global_settings.php:1644
-#, fuzzy
 msgid "Remember this number of old passwords and disallow reusing them."
-msgstr "이 이전 암호 수를 기억하고 암호를 다시 사용하지 못하게하십시오."
+msgstr "이 수만큼의 이전 비밀번호를 기억하고 재사용을 금지합니다."
 
 #: include/global_settings.php:1649
 msgid "1 Change"
@@ -11352,7 +11318,7 @@ msgstr "고유 이름 (DN)"
 
 #: include/global_settings.php:1790 user_domains.php:473
 msgid "The \"Distinguished Name\" syntax, applicable for both OpenLDAP and Windows AD configurations, offers flexibility in defining user identity. For OpenLDAP, the format follows this structure: <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i>. Windows AD provides an alternative syntax: <i>\"&lt;username&gt;@win2kdomain.local\"</i>, commonly known as \"userPrincipalName (UPN)\". In this context, \"&lt;username&gt;\" represents the specific username provided during the login prompt. This is particularly pertinent when operating in \"No Searching\" mode, or \"Require Group Membership\" enabled."
-msgstr ""
+msgstr "\"고유 이름(Distinguished Name)\" 구문은 OpenLDAP 및 Windows AD 구성 모두에 적용되며 사용자 ID를 유연하게 정의할 수 있습니다. OpenLDAP의 경우 형식은 <i>\"uid=&lt;username&gt;,ou=people,dc=domain,dc=local\"</i> 구조를 따릅니다. Windows AD는 일반적으로 \"userPrincipalName (UPN)\"으로 알려진 대체 구문 <i>\"&lt;username&gt;@win2kdomain.local\"</i>을 제공합니다. 이 문맥에서 \"&lt;username&gt;\"은 로그인 프롬프트 중에 입력된 특정 사용자 이름을 나타냅니다. 이는 \"검색 안 함(No Searching)\" 모드에서 작동하거나 \"그룹 멤버십 필요(Require Group Membership)\"가 활성화된 경우 특히 중요합니다."
 
 #: include/global_settings.php:1796 user_domains.php:480
 msgid "Require Group Membership"
@@ -11868,7 +11834,7 @@ msgstr "구조화 된 RRD 경로"
 
 #: include/global_settings.php:2326
 msgid "Use a separate subfolder for each hosts RRD files.  The naming of the RRDfiles will be one of the following:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>You can make this change after install by running the CLI script <b>structure_rra_paths.php</b> after you make the change.  NOTE: If you change Max Directories value to decrease the number of directories, or if you change the Directory Pattern, empty directories will not be pruned after you rerun the <b>structure_rra_paths.php</b> script."
-msgstr ""
+msgstr "각 호스트의 RRD 파일에 대해 별도의 하위 폴더를 사용합니다. RRDfiles의 명명 규칙은 다음 중 하나가 됩니다:<br><ul><li>&lt;path_cacti&gt;/rra/host_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_id/data_query_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/local_data_id.rrd,</li><li>&lt;path_cacti&gt;/rra/device_hash/device_id/data_query_id/local_data_id.rrd.</li></ul><br>설치 후 변경한 다음 CLI 스크립트 <b>structure_rra_paths.php</b>를 실행하여 이 변경을 적용할 수 있습니다. 참고: 디렉터리 수를 줄이기 위해 최대 디렉터리 값을 변경하거나 디렉터리 패턴을 변경한 경우 <b>structure_rra_paths.php</b> 스크립트를 다시 실행한 후에도 빈 디렉터리는 정리되지 않습니다."
 
 #: include/global_settings.php:2330
 msgid "Directory Pattern"
@@ -12784,31 +12750,31 @@ msgid "Device:(Hide Disabled)"
 msgstr "기기가 사용 중지되었습니다."
 
 #: lib/auth.php:2348 lib/auth.php:2350 lib/auth.php:2356 lib/auth.php:2358
-#, fuzzy, php-format
+#, php-format
 msgid "Graph:(%s%s)"
-msgstr "그래프: (%s% 초)"
+msgstr "그래프:(%s%s)"
 
 #: lib/auth.php:2371 lib/auth.php:2377 lib/auth.php:2444 lib/auth.php:2446
 #: lib/auth.php:2450 lib/auth.php:2452
-#, fuzzy, php-format
+#, php-format
 msgid "Device:(%s%s)"
-msgstr "장치: (%s% 초)"
+msgstr "장치:(%s%s)"
 
 #: lib/auth.php:2385 lib/auth.php:2391 lib/auth.php:2460 lib/auth.php:2462
 #: lib/auth.php:2466 lib/auth.php:2468
-#, fuzzy, php-format
+#, php-format
 msgid "Template:(%s%s)"
-msgstr "템플릿: (%s% 초)"
+msgstr "템플릿:(%s%s)"
 
 #: lib/auth.php:2398
-#, fuzzy, php-format
+#, php-format
 msgid "Graph+Device+Template:(%s%s)"
-msgstr "그래프 + 장치 + 템플릿: (%s% 초)"
+msgstr "그래프+장치+템플릿:(%s%s)"
 
 #: lib/auth.php:2435 lib/auth.php:2437
-#, fuzzy, php-format
+#, php-format
 msgid "Device+Template:(%s%s)"
-msgstr "장치 + 템플릿: (%s% 초)"
+msgstr "장치+템플릿:(%s%s)"
 
 #: lib/auth.php:2481 lib/auth.php:2488 lib/auth.php:2497
 msgid "Restricted By: "
@@ -13251,9 +13217,9 @@ msgid "Failed to load SNMP session."
 msgstr "SNMP 세션을로드하지 못했습니다."
 
 #: lib/data_query.php:949
-#, fuzzy, php-format
+#, php-format
 msgid "Tested Bulk Walk Size %d with a response of %2.4f."
-msgstr "%2.4f 의 응답으로 테스트된 벌크 워크 크기 %d."
+msgstr "대량 워크 크기 %d 테스트 결과 응답 시간 %2.4f."
 
 #: lib/data_query.php:960
 #, php-format
@@ -13763,9 +13729,9 @@ msgid "All %d %s"
 msgstr "전체 %d  %s"
 
 #: lib/html.php:787
-#, fuzzy, php-format
+#, php-format
 msgid "Current Page: %s"
-msgstr "현재"
+msgstr "현재 페이지: %s"
 
 #: lib/html.php:797
 #, php-format
@@ -14207,23 +14173,20 @@ msgid "Unsaved Changes Detected"
 msgstr "저장되지 않은 변경 사항이 감지되었습니다."
 
 #: lib/html_form.php:1791
-#, fuzzy
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
-msgstr "이 양식에 변경 사항을 저장하지 않았습니다. &#39;계속&#39;을 누르면 이러한 변경 사항이 삭제됩니다. 양식 편집을 계속하려면 &#39;취소&#39;를 누르십시오."
+msgstr "이 양식에 저장되지 않은 변경 사항이 있습니다. '계속'을 누르면 이러한 변경 사항이 삭제됩니다. 양식을 계속 편집하려면 '취소'를 누르세요."
 
 #: lib/html_form_template.php:161
-#, fuzzy
 msgid "Invalid Graph Template Input"
-msgstr "그래프 템플릿 입력"
+msgstr "잘못된 그래프 템플릿 입력"
 
 #: lib/html_form_template.php:162
-#, fuzzy
 msgid "The graph template cannot be rendered"
-msgstr "그래프 템플릿 없음"
+msgstr "그래프 템플릿을 렌더링할 수 없습니다"
 
 #: lib/html_form_template.php:163
 msgid "A Graph Item Input contains an invalid Field Type."
-msgstr ""
+msgstr "그래프 항목 입력에 잘못된 필드 유형이 포함되어 있습니다."
 
 #: lib/html_form_template.php:639 lib/html_form_template.php:651
 #, php-format
@@ -14501,7 +14464,7 @@ msgstr "날짜 / 시간이 같은 시간으로 이동 됨 내일"
 
 #: lib/html_reports.php:345 lib/html_reports.php:500 lib/html_reports.php:679
 msgid "The From Email Address must be your own e-mail address or the site From Email Address."
-msgstr ""
+msgstr "보내는 사람 이메일 주소는 본인의 이메일 주소이거나 사이트의 보내는 사람 이메일 주소여야 합니다."
 
 #: lib/html_reports.php:575
 msgid "Click 'Continue' to delete the following Report(s)."
@@ -14653,9 +14616,9 @@ msgid "[new]"
 msgstr "[새로운]"
 
 #: lib/html_reports.php:1615
-#, fuzzy, php-format
+#, php-format
 msgid "Details %s"
-msgstr "세부 정보"
+msgstr "세부 정보 %s"
 
 #: lib/html_reports.php:1665
 #, php-format
@@ -14663,9 +14626,9 @@ msgid "Report Items %s"
 msgstr "보고서 항목 %s"
 
 #: lib/html_reports.php:1706
-#, fuzzy, php-format
+#, php-format
 msgid "Scheduled Events %s"
-msgstr "예약한 이벤트"
+msgstr "예약된 이벤트 %s"
 
 #: lib/html_reports.php:1717
 #, php-format
@@ -14677,9 +14640,9 @@ msgid "Item Details"
 msgstr "아이템 세부내역"
 
 #: lib/html_reports.php:1758
-#, fuzzy, php-format
+#, php-format
 msgid "Graph: %s"
-msgstr "그래프:"
+msgstr "그래프: %s"
 
 #: lib/html_reports.php:1761 lib/html_reports.php:1787
 #: lib/html_reports.php:1800 lib/html_reports.php:1801
@@ -14707,9 +14670,9 @@ msgid ", Using RegEx: \"%s\""
 msgstr ", 정규식 사용: \"%s\""
 
 #: lib/html_reports.php:1825
-#, fuzzy, php-format
+#, php-format
 msgid "Tree: %s"
-msgstr "트리:"
+msgstr "트리: %s"
 
 #: lib/html_reports.php:1833
 #, php-format
@@ -14717,9 +14680,9 @@ msgid ", Device: %s"
 msgstr "(장치에서 :  %s)"
 
 #: lib/html_reports.php:1835
-#, fuzzy, php-format
+#, php-format
 msgid ", Branch: %s"
-msgstr "브랜치"
+msgstr ", 브랜치: %s"
 
 #: lib/html_reports.php:1838
 msgid "(All Branches)"
@@ -14852,9 +14815,8 @@ msgid "Cacti regular expressions can not includes the semi-color character."
 msgstr "선인장 정규식은 반색 문자를 포함할 수 없습니다."
 
 #: lib/html_utility.php:1375
-#, fuzzy
 msgid "Invalid regular expression."
-msgstr "정규 표현식 입력"
+msgstr "잘못된 정규 표현식입니다."
 
 #: lib/html_utility.php:1378
 msgid "There was an internal error!"
@@ -14878,7 +14840,7 @@ msgstr "잘못된 UTF-8 오프셋 오류!"
 
 #: lib/html_utility.php:1413
 msgid "Cacti RLIKE filters do not support alternation or bounded-repeat characters."
-msgstr ""
+msgstr "Cacti RLIKE 필터는 선택 또는 범위 반복 문자를 지원하지 않습니다."
 
 #: lib/html_utility.php:1452
 msgid "Down (Thold)"
@@ -14899,12 +14861,11 @@ msgstr "유효성 검사 오류"
 
 #: lib/import.php:358
 msgid "The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "데이터 입력 방법을 편집할 권한이 없으므로 데이터 입력 방법 복구를 건너뛰었습니다."
 
 #: lib/import.php:747
-#, fuzzy
 msgid "kept existing"
-msgstr "존재하지 않는다."
+msgstr "기존 유지됨"
 
 #: lib/import.php:765
 msgid "written"
@@ -14935,12 +14896,12 @@ msgstr "데이터 쿼리 [ %s]"
 #: lib/import.php:2557
 #, php-format
 msgid "'%s' was not imported because it uses a Data Input Method you do not have permission to edit."
-msgstr ""
+msgstr "'%s'은(는) 편집 권한이 없는 데이터 입력 방법을 사용하므로 가져오지 못했습니다."
 
 #: lib/import.php:2733
 #, php-format
 msgid "Data Input Method '%s' was not imported because you do not have permission to edit Data Input Methods."
-msgstr ""
+msgstr "데이터 입력 방법을 편집할 권한이 없으므로 데이터 입력 방법 '%s'을(를) 가져오지 못했습니다."
 
 #: lib/import.php:2845
 msgid "Unknown Field"
@@ -15013,7 +14974,7 @@ msgstr "경로에 쓸 수 없습니다."
 #: lib/installer.php:574
 #, php-format
 msgid "WARNING: Path is not writable, HTMLPurifier will run without a definition cache: %s"
-msgstr ""
+msgstr "경고: 경로에 쓰기 권한이 없어 HTMLPurifier가 정의 캐시 없이 실행됩니다: %s"
 
 #: lib/installer.php:576
 msgid "Path is not writable"
@@ -15021,16 +14982,15 @@ msgstr "경로에 쓸 수 없습니다."
 
 #: lib/installer.php:689
 msgid "The external CSRF secret must be outside the Cacti document root"
-msgstr ""
+msgstr "외부 CSRF 비밀 키는 Cacti 문서 루트 외부에 있어야 합니다"
 
 #: lib/installer.php:700
-#, fuzzy
 msgid "Unable to create the external CSRF secret"
-msgstr "테이블 상태를 검색 할 수 없습니다."
+msgstr "외부 CSRF 비밀 키를 생성할 수 없습니다"
 
 #: lib/installer.php:717
 msgid "Unable to persist the CSRF secret"
-msgstr ""
+msgstr "CSRF 비밀 키를 유지할 수 없습니다"
 
 #: lib/installer.php:744
 #, php-format
@@ -15086,13 +15046,12 @@ msgid "No matching snmp option exists"
 msgstr "일치하는 snmp 옵션이 없습니다."
 
 #: lib/installer.php:1291
-#, fuzzy
 msgid "Unable to load the available templates"
-msgstr "테이블 상태를 검색 할 수 없습니다."
+msgstr "사용 가능한 템플릿을 로드할 수 없습니다"
 
 #: lib/installer.php:1301
 msgid "The template selection was incomplete. Reload this installer step and select the templates again."
-msgstr ""
+msgstr "템플릿 선택이 완료되지 않았습니다. 이 설치 단계를 다시 로드하고 템플릿을 다시 선택하세요."
 
 #: lib/installer.php:1334
 msgid "No matching template exists"
@@ -15100,11 +15059,11 @@ msgstr "일치하는 템플릿이 없습니다."
 
 #: lib/installer.php:1416
 msgid "Unable to load the tables requiring conversion"
-msgstr ""
+msgstr "변환이 필요한 테이블을 로드할 수 없습니다"
 
 #: lib/installer.php:1428
 msgid "The table selection was incomplete. Reload this installer step and select the tables again."
-msgstr ""
+msgstr "테이블 선택이 완료되지 않았습니다. 이 설치 단계를 다시 로드하고 테이블을 다시 선택하세요."
 
 #: lib/installer.php:1675
 msgid "The Installer could not proceed due to an unexpected error."
@@ -15292,9 +15251,8 @@ msgid "Restart Required"
 msgstr "필수"
 
 #: lib/installer.php:2015
-#, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
-msgstr "지정된 값은 INI 파일과 달리 실행 중인 구성에서 다른 것으로 나타납니다."
+msgstr "지정된 값이 INI 파일과 실행 중인 구성에서 서로 다른 것으로 보입니다."
 
 #: lib/installer.php:2045
 msgid "PHP - Module Support (Required)"
@@ -15590,9 +15548,8 @@ msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist 
 msgstr "따라서 여러 버전 전에 Cacti는 이러한 유형의 데이터 입력 방법에 대한 화이트리스트 기능을 제공하도록 향상되었습니다. 이렇게하면 Cacti를 한 시간 더 안전하게 보호 할 수 있지만 Cacti 관리자가 템플릿 및 패키지를 가져오고 관리하는 데 필요한 작업량을 증가시킵니다."
 
 #: lib/installer.php:2536
-#, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
-msgstr "허용 목록이 작동하는 방식은 데이터 입력 방법을 처음 가져 오거나 데이터 입력 방법을 다시 가져 오면 스크립트 및 / 또는 인수가 어떤 식 으로든 데이터 입력 방법과 해당하는 모든 데이터 소스가 변경되는 방식입니다 관리자가 데이터 입력 방법이 유효한지 확인할 때까지 즉시 비활성화하십시오."
+msgstr "화이트리스트 작동 방식은 데이터 입력 방법을 처음 가져오거나 다시 가져올 때 스크립트나 인수가 조금이라도 변경되면 관리자가 해당 데이터 입력 방법이 유효한지 검증할 때까지 해당 데이터 입력 방법과 관련된 모든 데이터 소스가 즉시 비활성화되는 것입니다."
 
 #: lib/installer.php:2537
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Cacti's CLI directory that can be run with the following options:"
@@ -15695,9 +15652,8 @@ msgid "Updating Templates that you have already made modifications to is not adv
 msgstr "이미 수정한 템플릿을 업데이트하는 것은 바람직하지 않습니다. 템플릿을 업그레이드해도 그래프 및 데이터 템플릿에 대한 수정 사항은 제거되지 않으며 예기치 않은 동작이 발생할 수 있습니다. 그러나 그래프, 데이터 쿼리 또는 데이터 템플릿을 변경하지 않은 경우 패키지를 다시 가져와도 아무런 영향이 없습니다. 이 경우 업데이트 후 템플릿에서 '그래프 동기화'를 수행해야 합니다."
 
 #: lib/installer.php:2672
-#, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
-msgstr "설치 후에 사용할 장치 템플릿을 선택하십시오. 운영 체제가 Windows 인 경우 &#39;Windows 장치&#39;템플리트를 선택해야합니다. 운영 체제가 Linux / UNIX 인 경우 &#39;로컬 Linux 시스템&#39;장치 템플릿을 선택하십시오."
+msgstr "설치 후 사용할 장치 템플릿을 선택하세요. 운영 체제가 Windows인 경우 'Windows Device' 템플릿을 선택해야 합니다. 운영 체제가 Linux/UNIX인 경우 'Local Linux Machine' 장치 템플릿을 선택하세요."
 
 #: lib/installer.php:2678 package_import.php:531 plugins.php:621
 msgid "Author"
@@ -15873,20 +15829,20 @@ msgstr "v %s에 대한 %s 프로세스 완료"
 
 #: lib/installer.php:3213
 msgid "WARNING: Unable to validate the installed database because cacti.sql could not be read"
-msgstr ""
+msgstr "경고: cacti.sql을 읽을 수 없어 설치된 데이터베이스를 검증할 수 없습니다"
 
 #: lib/installer.php:3219
 msgid "WARNING: Unable to validate the installed database because cacti.sql contains no table definitions"
-msgstr ""
+msgstr "경고: cacti.sql에 테이블 정의가 포함되어 있지 않아 설치된 데이터베이스를 검증할 수 없습니다"
 
 #: lib/installer.php:3228
 msgid "WARNING: Unable to query the installed database schema"
-msgstr ""
+msgstr "경고: 설치된 데이터베이스 스키마를 쿼리할 수 없습니다"
 
 #: lib/installer.php:3235
 #, php-format
 msgid "WARNING: Core database tables are missing: %s"
-msgstr ""
+msgstr "경고: 핵심 데이터베이스 테이블이 누락되었습니다: %s"
 
 #: lib/installer.php:3252
 #, php-format
@@ -16068,23 +16024,23 @@ msgid "Both"
 msgstr "모두"
 
 #: lib/installer.php:3773
-#, fuzzy, php-format
+#, php-format
 msgid "No - %s"
-msgstr "분"
+msgstr "아니요 - %s"
 
 #: lib/installer.php:3778
-#, fuzzy, php-format
+#, php-format
 msgid "%s - N/A"
-msgstr "해당 없음"
+msgstr "%s - 해당 없음"
 
 #: lib/installer.php:3778 lib/installer.php:3780
 msgid "Web"
 msgstr "웹"
 
 #: lib/installer.php:3780 lib/installer.php:3783
-#, fuzzy, php-format
+#, php-format
 msgid "%s - No"
-msgstr "분"
+msgstr "%s - 아니요"
 
 #: lib/installer.php:3783
 msgid "Cli"
@@ -16146,9 +16102,9 @@ msgid "Protocol Error, Unable to bind, LDAP result: (%s) on Server (%s)"
 msgstr "프로토콜 오류, 바인딩할 수 없음, 서버 (%s) 에서 LDAP 결과: (%s)"
 
 #: lib/ldap.php:319
-#, fuzzy, php-format
+#, php-format
 msgid "Unable to Connect to Server (%s)"
-msgstr "서버에 연결할 수 없습니다"
+msgstr "서버에 연결할 수 없음 (%s)"
 
 #: lib/ldap.php:323
 #, php-format
@@ -16231,19 +16187,19 @@ msgid "UDP Ping Success (%s ms)"
 msgstr "UDP Ping 성공 ( %s 밀리 초)"
 
 #: lib/ping.php:561
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Success Connection Refused (%s ms)"
-msgstr "TCP Ping 성공 ( %s 밀리 초)"
+msgstr "TCP Ping 성공 연결 거부됨 (%s ms)"
 
 #: lib/ping.php:564
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
-msgstr "TCP ping : socket_connect (), 이유 :  %s"
+msgstr "TCP Ping 실패: socket_connect(), 이유: %s"
 
 #: lib/ping.php:587
-#, fuzzy, php-format
+#, php-format
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
-msgstr "TCP ping : socket_select ()가 실패했습니다. 이유는  %s입니다."
+msgstr "TCP Ping 실패: socket_select() 실패, 이유: %s"
 
 #: lib/ping.php:602
 #, php-format
@@ -16372,9 +16328,9 @@ msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "건너 뛴 보고서 그래프 항목 &#39; <i> %s</i> &#39;이 (가) 이미 있음"
 
 #: lib/rrd.php:2348
-#, fuzzy, php-format
+#, php-format
 msgid "ERROR: RRD file does not exist: %s"
-msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
+msgstr "오류: RRD 파일이 존재하지 않습니다: %s"
 
 #: lib/rrd.php:3830
 #, php-format
@@ -16498,9 +16454,8 @@ msgid "rename %s to %s"
 msgstr "%s에서  %s (으)로 이름 바꾸기"
 
 #: lib/rrd.php:4307 lib/rrd.php:4388 lib/rrd.php:4456
-#, fuzzy
 msgid "ERROR: Invalid RRDfile path"
-msgstr "유효한 파일 경로를 입력하십시오."
+msgstr "오류: 잘못된 RRDfile 경로"
 
 #: lib/rrd.php:4317
 msgid "Error while parsing the XML of rrdtool dump"
@@ -16513,7 +16468,7 @@ msgstr "XML 파일을 쓰는 동안 오류가 발생했습니다 :  %s"
 
 #: lib/rrd.php:4356 lib/rrd.php:4423 lib/rrd.php:4491
 msgid "RRD restore failed; original and recovery XML preserved. See application log."
-msgstr ""
+msgstr "RRD 복원에 실패했습니다. 원본 및 복구용 XML이 보존되었습니다. 애플리케이션 로그를 참조하세요."
 
 #: lib/rrd.php:4362 lib/rrd.php:4429 lib/rrd.php:4497
 #, php-format
@@ -16561,323 +16516,310 @@ msgstr "알 수없는 RRDtool 오류"
 
 #: lib/rrd_maintenance.php:224
 msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
-msgstr ""
+msgstr "RRD 스토리지가 준비되지 않았습니다: 구성된 디렉터리가 존재해야 하며 이 서비스 계정이 파일을 생성, 읽기, 쓰기 및 삭제할 수 있어야 합니다."
 
 #: lib/rrd_maintenance.php:230
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
+msgstr "RRD 스토리지가 조정된 액세스 준비가 되지 않았습니다. 모든 웹 및 폴러 서비스 계정에 대해 PHP POSIX를 활성화하고 include/config.php에 숫자 rrd_maintenance_trusted_uids 및 rrd_maintenance_trusted_gids를 구성하세요. 전체 쓰기 권한을 제거하고 스토리지 상위 디렉터리를 확인하세요. 업그레이드 전에 docs/testing/spikekill-safety.md를 참조하세요."
 
 #: lib/rrd_maintenance.php:286
 #, php-format
 msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
-msgstr ""
+msgstr "수집 전에 poller_output 큐는 반드시 InnoDB를 사용해야 합니다. 원격 수집기를 포함한 모든 수집기를 중지하고 cli/upgrade_database.php --migrate-poller-queue를 실행하세요(또는 백업 후 poller_output을 InnoDB로 변환). 확인된 엔진: %s. 이 상태를 해결하기 위해 보존된 샘플을 폐기해서는 안 됩니다."
 
 #: lib/rrd_maintenance.php:286
-#, fuzzy
 msgid "unavailable"
-msgstr "불가"
+msgstr "작업을 확인할 수 없습니다. 다시 시도하기 전에 변경 이력을 점검하세요."
 
 #: lib/rrd_maintenance.php:298
 msgid "RRD storage configuration requires attention"
-msgstr ""
+msgstr "RRD 스토리지 구성에 주의가 필요합니다"
 
 #: lib/snmp.php:247 lib/snmp.php:347 lib/snmp.php:442 lib/snmp.php:877
 #: lib/snmp.php:892
-#, fuzzy, php-format
+#, php-format
 msgid "SNMP Command is: %s"
-msgstr "SNMP 옵션 [편집 :  %s]"
+msgstr "SNMP 명령: %s"
 
 #: lib/spikekill.php:188
 msgid "FATAL: You must specify an RRDfile!"
-msgstr ""
+msgstr "치명적 오류: RRDfile을 지정해야 합니다!"
 
 #: lib/spikekill.php:192
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' does not exist."
-msgstr "XML : Cacti 버전이 존재하지 않습니다."
+msgstr "치명적 오류: 파일 '%s'이(가) 존재하지 않습니다."
 
 #: lib/spikekill.php:204
-#, fuzzy, php-format
+#, php-format
 msgid "FATAL: File '%s' is not a regular file."
-msgstr "XML : Cacti 버전이 존재하지 않습니다."
+msgstr "치명적 오류: 파일 '%s'은(는) 일반 파일이 아닙니다."
 
 #: lib/spikekill.php:206
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
-msgstr ""
+msgstr "치명적 오류: 파일 '%s'에 '%s'이(가) 쓸 수 없습니다."
 
 #: lib/spikekill.php:272
 msgid "FATAL: Standard Deviation must be a positive integer."
-msgstr ""
+msgstr "치명적 오류: 표준 편차는 양의 정수여야 합니다."
 
 #: lib/spikekill.php:280 lib/spikekill.php:1782
-#, fuzzy
 msgid "StdDev"
-msgstr "StdDev 제거"
+msgstr "StdDev"
 
 #: lib/spikekill.php:286 lib/spikekill.php:1782
-#, fuzzy
 msgid "Variance"
-msgstr "변수"
+msgstr "분산"
 
 #: lib/spikekill.php:292
-#, fuzzy
 msgid "Gap Fill"
-msgstr "갭 필 범위"
+msgstr "간격 채우기"
 
 #: lib/spikekill.php:304
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
-msgstr ""
+msgstr "치명적 오류: 방법으로 'stddev', 'variance', 'float' 또는 'fill' 중 하나를 지정해야 합니다."
 
 #: lib/spikekill.php:319
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
-msgstr ""
+msgstr "치명적 오류: outlier-start 및 outlier-end 인수는 YYYY-MM-DD HH:MM 형식 또는 Unix 타임스탬프여야 합니다."
 
 #: lib/spikekill.php:323
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
-msgstr ""
+msgstr "치명적 오류: 제외할 이상치 수는 양의 정수여야 합니다."
 
 #: lib/spikekill.php:331
 msgid "FATAL: Percent deviation must be a positive floating point number."
-msgstr ""
+msgstr "치명적 오류: 백분율 편차는 양의 부동 소수점 숫자여야 합니다."
 
 #: lib/spikekill.php:337
 msgid "FATAL: Number of spikes to remove must be a positive integer"
-msgstr ""
+msgstr "치명적 오류: 제거할 스파이크 수는 양의 정수여야 합니다"
 
 #: lib/spikekill.php:342
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
-msgstr ""
+msgstr "치명적 오류: 이상치 시간 범위에는 outlier-start와 outlier-end를 지정해야 합니다."
 
 #: lib/spikekill.php:348
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
-msgstr ""
+msgstr "치명적 오류: 이상치 시간 범위는 outlier-start가 outlier-end보다 작아야 합니다."
 
 #: lib/spikekill.php:353
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "치명적 오류: 'float' 제거 방법에는 시작 날짜와 종료 날짜를 지정해야 합니다."
 
 #: lib/spikekill.php:357
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
-msgstr ""
+msgstr "치명적 오류: 'gapfill' 제거 방법에는 시작 날짜와 종료 날짜를 지정해야 합니다."
 
 #: lib/spikekill.php:366
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
-msgstr ""
+msgstr "치명적 오류: 대체 방법으로 'last', 'avg' 또는 'nan' 중 하나를 지정해야 합니다."
 
 #: lib/spikekill.php:369
 msgid "Spike Kill Settings Used for Analysis/Correction"
-msgstr ""
+msgstr "분석/수정에 사용된 Spike Kill 설정"
 
 #: lib/spikekill.php:375
 #, php-format
 msgid "Method:        %s"
-msgstr ""
+msgstr "방법:        %s"
 
 #: lib/spikekill.php:376
-#, fuzzy, php-format
+#, php-format
 msgid "RRDfile:       %s"
-msgstr "RRD 파일"
+msgstr "RRDfile:       %s"
 
 #: lib/spikekill.php:377
-#, fuzzy, php-format
+#, php-format
 msgid "Repair Type:   %s"
-msgstr "복구 단계 [ %s]"
+msgstr "복구 유형:   %s"
 
 #: lib/spikekill.php:380
 #, php-format
 msgid "Num Outliers:  %s"
-msgstr ""
+msgstr "이상치 수:  %s"
 
 #: lib/spikekill.php:381
-#, fuzzy, php-format
+#, php-format
 msgid "Max Kills:     %s"
-msgstr "RRA 당 최대 사망자 수"
+msgstr "최대 제거 수:     %s"
 
 #: lib/spikekill.php:383
 msgid "Max Kills:     Unlimited"
-msgstr ""
+msgstr "최대 제거 수:     무제한"
 
 #: lib/spikekill.php:387
-#, fuzzy, php-format
+#, php-format
 msgid "Standard Devs: %s"
-msgstr "표준 편차"
+msgstr "표준 편차: %s"
 
 #: lib/spikekill.php:389
 #, php-format
 msgid "Variance %%:    %s %%"
-msgstr ""
+msgstr "분산 %%:    %s %%"
 
 #: lib/spikekill.php:393
 #, php-format
 msgid "Window Start:  %s (%s)"
-msgstr ""
+msgstr "창 시작:  %s (%s)"
 
 #: lib/spikekill.php:394
 #, php-format
 msgid "Window End:    %s (%s)"
-msgstr ""
+msgstr "창 종료:    %s (%s)"
 
 #: lib/spikekill.php:396
-#, fuzzy
 msgid "Window Range:  All"
-msgstr "Windows 관련"
+msgstr "창 범위:  전체"
 
 #: lib/spikekill.php:411
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
-msgstr ""
+msgstr "치명적 오류: 스파이크를 제거하기 전에 외부 RRD 쓰기 프로세스를 중지하고 RRDCACHED_ADDRESS를 비활성화하세요."
 
 #: lib/spikekill.php:418
 msgid "FATAL: RRD storage is busy. Retry after polling completes."
-msgstr ""
+msgstr "치명적 오류: RRD 스토리지가 사용 중입니다. 폴링이 완료된 후 다시 시도하세요."
 
 #: lib/spikekill.php:419
 msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
-msgstr ""
+msgstr "치명적 오류: RRD 스토리지를 신뢰할 수 없거나 사용할 수 없습니다. 웹 서비스 계정으로 cli/upgrade_database.php --check-rrd-storage를 실행하고 스토리지 구성을 수정하세요."
 
 #: lib/spikekill.php:445
 msgid "FATAL: Secure randomness is unavailable; spike removal was not started."
-msgstr ""
+msgstr "치명적 오류: 안전한 난수를 사용할 수 없어 스파이크 제거가 시작되지 않았습니다."
 
 #: lib/spikekill.php:476
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
-msgstr ""
+msgstr "치명적 오류: '%s'에 임시 XML 파일을 안전하게 생성할 수 없습니다!"
 
 #: lib/spikekill.php:525 lib/spikekill.php:547
 msgid "FATAL: RRD source identity changed or could not be verified safely."
-msgstr ""
+msgstr "치명적 오류: RRD 소스 ID가 변경되었거나 안전하게 확인할 수 없습니다."
 
 #: lib/spikekill.php:555
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
-msgstr ""
+msgstr "치명적 오류: RRDtool 명령이 실패했습니다. 설정->경로에서 RRDtool 경로가 올바른지 확인하세요!"
 
 #: lib/spikekill.php:571
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
-msgstr ""
+msgstr "치명적 오류: RRDtool이 빈 덤프를 반환했습니다. RRD 파일이 수정되지 않았습니다."
 
 #: lib/spikekill.php:599
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
-msgstr ""
+msgstr "치명적 오류: '%s'에서 '%s'(으)로의 RRDfile 백업에 실패했습니다!"
 
 #: lib/spikekill.php:813
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
-msgstr ""
+msgstr "참고: XML 파일 '%s'에서 스파이크를 검색하는 중"
 
 #: lib/spikekill.php:816
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
-msgstr ""
+msgstr "참고: 시간 범위로 제한됨: %s ~ %s"
 
 #: lib/spikekill.php:823
 msgid "NOTE: Dryrun requested.  No updates performed"
-msgstr ""
+msgstr "참고: 드라이런이 요청되었습니다. 업데이트가 수행되지 않았습니다"
 
 #: lib/spikekill.php:859
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
-msgstr ""
+msgstr "참고: '%s'에서 기간 내 스파이크가 발견되지 않았습니다"
 
 #: lib/spikekill.php:862
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
-msgstr ""
+msgstr "참고: '%s'에서 스파이크가 발견되지 않았습니다"
 
 #: lib/spikekill.php:875
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
-msgstr ""
+msgstr "참고: 스파이크가 발견되어 수정되었습니다. 총 스파이크 수 %s"
 
 #: lib/spikekill.php:879
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
-msgstr ""
+msgstr "치명적 오류: '%s'을(를) '%s'에서 복원할 수 없습니다"
 
 #: lib/spikekill.php:889
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
-msgstr ""
+msgstr "치명적 오류: '%s'을(를) 백업할 수 없습니다"
 
 #: lib/spikekill.php:899
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
-msgstr ""
+msgstr "치명적 오류: XML 파일 '%s'을(를) 쓸 수 없습니다"
 
 #: lib/spikekill.php:908
-#, fuzzy
 msgid "NOTE: No Spikes Found."
-msgstr "찾을 수있는 사이트가 없습니다."
+msgstr "참고: 스파이크가 발견되지 않았습니다."
 
 #: lib/spikekill.php:969
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
-msgstr ""
+msgstr "참고: '%s'을(를) '%s'(으)로 다시 가져오는 중"
 
 #: lib/spikekill.php:1060
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
-msgstr ""
+msgstr "참고: '%s'을(를) '%s'(으)로 백업 중"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Avg"
-msgstr "평균 :"
+msgstr "평균"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "CF"
-msgstr "CDEF"
+msgstr "CF"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "DS"
-msgstr "DES"
+msgstr "DS"
 
 #: lib/spikekill.php:1782
 msgid "NonNan"
-msgstr ""
+msgstr "NonNan"
 
 #: lib/spikekill.php:1782
-#, fuzzy
 msgid "Samples"
-msgstr "단순"
+msgstr "샘플"
 
 #: lib/spikekill.php:1783
 msgid "MaxStdDev"
-msgstr ""
+msgstr "MaxStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MaxValue"
-msgstr "값"
+msgstr "MaxValue"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinStdDev"
-msgstr "드라이 런 StdDev"
+msgstr "MinStdDev"
 
 #: lib/spikekill.php:1783
-#, fuzzy
 msgid "MinValue"
-msgstr "값"
+msgstr "MinValue"
 
 #: lib/spikekill.php:1783
 msgid "StdKilled"
-msgstr ""
+msgstr "StdKilled"
 
 #: lib/spikekill.php:1783
 msgid "VarKilled"
-msgstr ""
+msgstr "VarKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindKilled"
-msgstr ""
+msgstr "WindKilled"
 
 #: lib/spikekill.php:1783
 msgid "WindSamples"
-msgstr ""
+msgstr "WindSamples"
 
 #: lib/template.php:1518
 msgid "Attempting to Create Graph from Non-Template"
@@ -16953,7 +16895,7 @@ msgstr "임시 테이블 크기가 더 큰 서브 쿼리를 실행할 때 임시
 
 #: lib/utility.php:1369 lib/utility.php:1375
 msgid "When performing joins, if they are below this size, they will be kept in memory and never written to a temporary file.  As this is a per connection memory allocation, care must be taken not to increase it too high.  The sum of the join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + Core MySQL/MariaDB memory should be below 80%.  If the recommendation is negative, you must decrease this and or the sort_buffer_size until the recommendation fits within the allowable memory."
-msgstr ""
+msgstr "조인을 수행할 때 이 크기 미만인 경우 임시 파일에 기록되지 않고 메모리에 유지됩니다. 이는 연결당 메모리 할당이므로 너무 높게 설정하지 않도록 주의해야 합니다. join_buffer_size + sort_buffer_size + read_buffer_size + read_rnd_buffer_size + thread_stack + binlog_cache_size + 핵심 MySQL/MariaDB 메모리의 합계는 80% 미만이어야 합니다. 권장 값이 음수인 경우 허용 메모리 내에 맞도록 이 값 및/또는 sort_buffer_size를 줄여야 합니다."
 
 #: lib/utility.php:1381
 #, php-format
@@ -16974,9 +16916,8 @@ msgid "InnoDB will hold as much tables and indexes in system memory as is possib
 msgstr "InnoDB는 가능한 많은 테이블과 인덱스를 시스템 메모리에 보유합니다. 그러므로, innodb_buffer_pool을 메모리에서 많은 테이블과 인덱스를 저장할만큼 충분히 크게 만들어야한다. / var / lib / mysql / cacti 디렉토리의 크기를 확인하면이 값을 결정하는 데 도움이됩니다. 시스템 총 메모리의 25 %%를 권장하지만 사용자의 요구 사항은 시스템 크기에 따라 다릅니다."
 
 #: lib/utility.php:1405
-#, fuzzy
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "갑작스러운 시스템 충돌을 수용하기 위해 내부 저널링이있는 ZFS 또는 FusionI / O에서 Cacti 인스턴스를 실행하지 않는 한이 설정은 ON으로 유지되어야합니다. 그러나 전원이 매우 양호하고 시스템이 거의 다운되지 않고 백업이있는 경우이 설정을 끄면 데이터베이스 성능이 거의 50 % 향상 될 수 있습니다."
+msgstr "Cacti 인스턴스가 갑작스러운 시스템 충돌을 처리하기 위한 자체 저널링을 갖춘 ZFS 또는 FusionI/O에서 실행 중인 경우가 아니면 이 설정은 ON으로 유지해야 합니다. 그러나 전원 공급이 매우 안정적이고 시스템이 거의 다운되지 않으며 백업이 있는 경우 이 설정을 OFF로 전환하면 데이터베이스 성능이 약 50% 향상될 수 있습니다."
 
 #: lib/utility.php:1410
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
@@ -17101,11 +17042,11 @@ msgstr "이 VDEF의 유용한 이름입니다."
 #: link.php:64
 #, php-format
 msgid "External Link ID '%s' with Title '%s' attempted to inject an invalid URL and was blocked!"
-msgstr ""
+msgstr "외부 링크 ID '%s'(제목: '%s')이(가) 잘못된 URL 주입을 시도하여 차단되었습니다!"
 
 #: links.php:76
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "콘텐츠 파일이 유효한 URL이 아닙니다. 유효한 URL을 입력하세요"
 
 #: links.php:197
 msgid "Click 'Continue' to Enable the following Page(s)."
@@ -17421,11 +17362,11 @@ msgstr "이 플러그인을 사용하려면 먼저 플러그인 디렉토리에�
 
 #: package_import.php:127
 msgid "Unable to create temporary package file."
-msgstr ""
+msgstr "임시 패키지 파일을 생성할 수 없습니다."
 
 #: package_import.php:143
 msgid "The package signature could not be verified against a trusted author."
-msgstr ""
+msgstr "신뢰할 수 있는 작성자를 기준으로 패키지 서명을 확인할 수 없습니다."
 
 #: package_import.php:220
 #, php-format
@@ -17438,9 +17379,8 @@ msgid "The Package %s Import Failed"
 msgstr "패키지 %s 가져오기 실패"
 
 #: package_import.php:303
-#, fuzzy
 msgid "Error: Invalid file path."
-msgstr "유효한 파일 경로를 입력하십시오."
+msgstr "오류: 잘못된 파일 경로입니다."
 
 #: package_import.php:388 package_import.php:394 package_import.php:480
 #: package_import.php:483
@@ -17776,9 +17716,9 @@ msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling 
 msgstr "참고 : 두 번째 Cacti 데이터 수집기가 추가되었습니다. 따라서 자동으로 부스트를 활성화하십시오!"
 
 #: poller_automation.php:54
-#, fuzzy, php-format
+#, php-format
 msgid "WARNING: Main Cacti database %s offline or in recovery"
-msgstr "경고: 주요 Cacti 데이터베이스가 오프라인이거나 복구 중입니다."
+msgstr "경고: 주 Cacti 데이터베이스 %s이(가) 오프라인이거나 복구 중입니다"
 
 #: poller_automation.php:1007 poller_automation.php:1058
 msgid "Cacti Primary Admin"
@@ -17939,7 +17879,7 @@ msgstr "원격 데이터베이스에 연결하는 데 사용할 SSL 인증 기�
 #: pollers.php:318
 #, php-format
 msgid "WARNING: Use of Data Collector Hostname '%s' is insecure!  Use either a fully qualified domain name or IP address to avoid equivalent hosts from other domains accessing this service"
-msgstr ""
+msgstr "경고: 데이터 수집기 호스트 이름 '%s' 사용은 안전하지 않습니다! 다른 도메인의 동일한 호스트가 이 서비스에 접근하는 것을 방지하려면 FQDN(정규화된 도메인 이름) 또는 IP 주소를 사용하세요"
 
 #: pollers.php:324
 #, php-format
@@ -18001,9 +17941,8 @@ msgid_plural "Clear Statistics for Data Collectors"
 msgstr[0] "이 데이터 수집기의 상태."
 
 #: pollers.php:669
-#, fuzzy
 msgid "The Main Data Collector can not be deleted or disabled."
-msgstr "이 데이터 수집기가 Cacti 주요 사이트와 완전히 동기화 된 마지막 시간입니다."
+msgstr "주 데이터 수집기는 삭제하거나 비활성화할 수 없습니다."
 
 #: pollers.php:688 sites.php:503
 #, php-format
@@ -18024,7 +17963,7 @@ msgstr "데이터베이스 연결 테스트"
 
 #: pollers.php:853
 msgid "Invalid Database Hostname or Port"
-msgstr ""
+msgstr "잘못된 데이터베이스 호스트 이름 또는 포트"
 
 #: pollers.php:969
 msgid "Collectors"
@@ -18221,7 +18160,7 @@ msgstr "아카이브"
 
 #: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
+msgstr "Windows에서는 자동 로컬 RRD 정리를 사용할 수 없습니다. 수동으로 정리하기 전에 모든 RRD 쓰기 프로세스를 중지하세요."
 
 #: rrdcleaner.php:380
 msgid "RRD Files"
@@ -18510,12 +18449,12 @@ msgstr "템플릿 사이트를 찾을 수 없습니다! 복제 할 수 없습니
 
 #: sites.php:355
 msgid "One or more of the selected Sites does not exist. Nothing was changed."
-msgstr ""
+msgstr "선택한 사이트 중 하나 이상이 존재하지 않습니다. 변경된 사항이 없습니다."
 
 #: sites.php:384
 #, php-format
 msgid "No more than %d Sites can be duplicated at once."
-msgstr ""
+msgstr "한 번에 최대 %d개의 사이트만 복제할 수 있습니다."
 
 #: sites.php:436
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
@@ -18542,9 +18481,8 @@ msgid_plural "Duplicate Sites"
 msgstr[0] "사이트 복제하기"
 
 #: sites.php:496
-#, fuzzy
 msgid "Site not found."
-msgstr "파일을 찾을 수 없습니다."
+msgstr "사이트를 찾을 수 없습니다."
 
 #: sites.php:678 tree.php:1047
 msgid "Site Name"
@@ -18683,9 +18621,9 @@ msgid "Damaged"
 msgstr "데이터 소스, 그래프"
 
 #: templates_import.php:335
-#, fuzzy, php-format
+#, php-format
 msgid "Met: %d"
-msgstr "만남"
+msgstr "충족됨: %d"
 
 #: templates_import.php:339
 #, php-format
@@ -18724,10 +18662,9 @@ msgid "Un-Lock"
 msgstr "잠김"
 
 #: tree.php:233 tree.php:634
-#, fuzzy
 #: graphs.php:652 graphs.php:1025
 msgid "You do not have permission to modify this tree."
-msgstr "권한이 거부되었습니다. 요청한 작업에 대한 권한이 없습니다."
+msgstr "이 트리를 수정할 권한이 없습니다."
 
 #: tree.php:250 tree.php:254 tree.php:969
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -19243,9 +19180,8 @@ msgid "Tree Perms"
 msgstr "트리 퍼밋"
 
 #: user_admin.php:1916
-#, fuzzy
 msgid "User not found."
-msgstr "파일을 찾을 수 없습니다."
+msgstr "사용자를 찾을 수 없습니다."
 
 #: user_admin.php:1955
 #, php-format
@@ -19257,7 +19193,6 @@ msgid "User Management"
 msgstr "사용자 관리"
 
 #: user_admin.php:2235
-#, fuzzy
 msgid "Group"
 msgstr "그룹"
 
@@ -19266,27 +19201,24 @@ msgid "Last Login"
 msgstr "최근 로그인"
 
 #: user_admin.php:2262
-#, fuzzy
 msgid "< 1 Week Ago"
-msgstr "1주"
+msgstr "< 1주 전"
 
 #: user_admin.php:2263
 msgid "< 1 Month Ago"
-msgstr ""
+msgstr "< 1개월 전"
 
 #: user_admin.php:2264
 msgid "> 1 Month Ago"
-msgstr ""
+msgstr "> 1개월 전"
 
 #: user_admin.php:2265
-#, fuzzy
 msgid "> 2 Months Ago"
-msgstr "개월 % d 개월"
+msgstr "> 2개월 전"
 
 #: user_admin.php:2266
-#, fuzzy
 msgid "> 4 Months Ago"
-msgstr "개월 % d 개월"
+msgstr "> 4개월 전"
 
 #: user_admin.php:2277
 msgid "Basic"
@@ -19361,7 +19293,7 @@ msgstr "트리 권한  %s"
 
 #: user_domains.php:99 user_domains.php:178
 msgid "Choose a local account as the user template."
-msgstr ""
+msgstr "사용자 템플릿으로 로컬 계정을 선택하세요."
 
 #: user_domains.php:264
 msgid "Click 'Continue' to delete the following User Domain."
@@ -19402,7 +19334,7 @@ msgstr "선택한 도메인 기본값으로 만들기"
 
 #: user_domains.php:350
 msgid "The domain to make default no longer exists."
-msgstr ""
+msgstr "기본값으로 설정할 도메인이 더 이상 존재하지 않습니다."
 
 #: user_domains.php:367
 #, php-format
@@ -19697,7 +19629,7 @@ msgstr "지우기"
 
 #: utilities.php:61
 msgid "A Poller Cache rebuild is already running."
-msgstr ""
+msgstr "폴러 캐시 재구성이 이미 실행 중입니다."
 
 #: utilities.php:125
 msgid "Data Source Statistics Purged."
@@ -19882,9 +19814,8 @@ msgid "Reduce Total Core Memory"
 msgstr "총 코어 메모리 감소"
 
 #: utilities.php:719 utilities.php:736
-#, fuzzy
 msgid "Calculation Formula"
-msgstr "［계산식］"
+msgstr "계산 수식"
 
 #: utilities.php:725 utilities.php:730 utilities.php:746
 msgid "Max Connection Memory Possible"
@@ -20388,9 +20319,9 @@ msgid "Previous Runtime Timers:"
 msgstr "자세한 런타임 타이머 :"
 
 #: utilities.php:2953 utilities.php:2955
-#, fuzzy, php-format
+#, php-format
 msgid "Process: %d"
-msgstr "프로세스: "
+msgstr "프로세스: %d"
 
 #: utilities.php:2953
 #, php-format
@@ -20480,9 +20411,8 @@ msgid "Severity Level: %s"
 msgstr "심각도 수준 :  %s"
 
 #: vdef.php:163 vdef.php:576
-#, fuzzy
 msgid "VDEF not found."
-msgstr "파일을 찾을 수 없습니다."
+msgstr "VDEF를 찾을 수 없습니다."
 
 #: vdef.php:274
 msgid "Click 'Continue' to delete the following VDEF."
@@ -20506,7 +20436,7 @@ msgstr[0] "중복 된 VDEF"
 
 #: vdef.php:342
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF 또는 VDEF 항목을 찾을 수 없습니다."
 
 #: vdef.php:352
 msgid "Click 'Continue' to delete the following VDEF's."
@@ -20655,31 +20585,40 @@ msgstr "VDEF 없음"
 
 #: lib/plugins.php:1233
 msgid "Plugin INFO must declare a valid compat version"
-msgstr ""
+msgstr "플러그인 INFO는 유효한 compat 버전을 선언해야 합니다"
 
 #: plugins.php:848
 #, php-format
 msgid "Unable to Install Plugin: %s"
-msgstr ""
+msgstr "플러그인을 설치할 수 없음: %s"
 
 #: include/global_form.php:1069
 msgid "Line Width"
-msgstr ""
+msgstr "선 너비"
 
 #: include/global_form.php:1074
 msgid ""
 "LINE1, LINE2 and LINE3 use fixed widths. For LINE:STACK, enter a width in "
 "pixels; integers or decimal values are supported."
-msgstr ""
+msgstr "LINE1, LINE2 및 LINE3은 고정 너비를 사용합니다. LINE:STACK의 경우 픽셀 단위의 너비를 입력하세요. 정수 또는 소수 값이 지원됩니다."
 
 #: aggregate_graphs.php:237 aggregate_templates.php:246 graphs.php:766
 msgid "Unable to save aggregate graph items. Other graph settings may already have been saved."
-msgstr ""
+msgstr "집계 그래프 항목을 저장할 수 없습니다. 다른 그래프 설정이 이미 저장되었을 수 있습니다."
 
 #: lib/data_query.php:203
 msgid "No Index Changes Detected, Poller Cache Refreshed"
-msgstr ""
+msgstr "인덱스 변경 사항이 감지되지 않았으며, 폴러 캐시가 새로 고쳐졌습니다"
 
 #: lib/poller.php:2193
 msgid "Synchronization failed. See the log for details."
-msgstr ""
+
+msgstr "동기화에 실패했습니다. 자세한 내용은 로그를 참조하세요."
+
+#: graph.php:512
+msgid "This Graph has no RRA definition to zoom into; check its Data Source Profile."
+msgstr "이 그래프에는 확대할 RRA 정의가 없습니다. 데이터 소스 프로필을 확인하세요."
+
+#: lib/import.php:771
+msgid "not written"
+msgstr "기록되지 않음"
