@@ -214,6 +214,8 @@ final class DsstatsBaselineSourceTest extends TestCase
         // Rows of the same data source and hour that no SeriesKey can name: not a data source name, and not text.
         $this->insertBucket($hour, 7, 'traffic-in');
         $this->insertBucket($hour, 7, '');
+        // With moments they pass the history query's filter, so the adapter itself has to skip them.
+        $this->database->executeStatement('UPDATE alert_baseline_sample SET sample_mean = 1.0, sample_m2 = 0.0 WHERE sample_mean IS NULL');
         $this->database->executeStatement('INSERT INTO alert_baseline_sample VALUES (?, 7, 5, 1, 1.0, 1.0, 1, 1.0, 0.0)', [$hour]);
         self::assertCount(4, $this->rows());
 

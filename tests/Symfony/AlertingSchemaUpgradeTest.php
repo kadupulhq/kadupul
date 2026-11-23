@@ -264,6 +264,26 @@ final class AlertingSchemaUpgradeTest extends TestCase
         }
     }
 
+    public function testACacheTableTheIndexCannotBeAddedToStopsTheStep(): void
+    {
+        $db = $this->database();
+        $db->exec('DROP TABLE IF EXISTS data_source_stats_hourly_cache');
+        // No time column, so the ALTER fails as it would on a full MEMORY table.
+        self::assertNotFalse($db->exec('CREATE TABLE data_source_stats_hourly_cache (local_data_id mediumint(8) unsigned NOT NULL, rrd_name varchar(19) NOT NULL, value double DEFAULT NULL, PRIMARY KEY (local_data_id, rrd_name)) ENGINE=MEMORY'));
+        $before = $this->createStatement('data_source_stats_hourly_cache');
+
+        try {
+            upgrade_to_1_2_40();
+            self::fail('The step completed without the dsstats cache index.');
+        } catch (RuntimeException $e) {
+            self::assertSame('The index local_data_id could not be added to data_source_stats_hourly_cache. Check max_heap_table_size and rerun the upgrade.', $e->getMessage());
+            self::assertContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+            self::assertSame($before, $this->createStatement('data_source_stats_hourly_cache'));
+        } finally {
+            $db->exec('DROP TABLE IF EXISTS data_source_stats_hourly_cache');
+        }
+    }
+
     public function testARetryAfterAPartialAttemptCompletesTheStep(): void
     {
         $db = $this->database();
@@ -385,6 +405,23 @@ final class AlertingSchemaUpgradeTest extends TestCase
             self::assertStringContainsString('differs from its required definition', $failure->getMessage());
         }
         self::assertNotFalse($db->exec('ALTER TABLE alert_baseline_sample DROP COLUMN sample_m2'));
+        upgrade_to_1_2_41();
+        self::assertSame('2', $this->scalar("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'alert_baseline_sample' AND COLUMN_NAME IN ('sample_mean', 'sample_m2') AND DATA_TYPE = 'double'"));
+    }
+
+    public function testCenteredMomentUpgradeStopsWhenAColumnCannotBeAddedAndARetryCompletesIt(): void
+    {
+        $this->database();
+        // The 1.2.40 step has not run, so there is no table to alter.
+        try {
+            upgrade_to_1_2_41();
+            self::fail('The step completed without the moment columns.');
+        } catch (RuntimeException $failure) {
+            self::assertSame('The baseline moment column could not be added. Rerun the upgrade after correcting the database error.', $failure->getMessage());
+        }
+        self::assertContains(DB_STATUS_ERROR, $GLOBALS['forward_schema_status']);
+
+        upgrade_to_1_2_40();
         upgrade_to_1_2_41();
         self::assertSame('2', $this->scalar("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'alert_baseline_sample' AND COLUMN_NAME IN ('sample_mean', 'sample_m2') AND DATA_TYPE = 'double'"));
     }
