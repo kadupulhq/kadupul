@@ -4059,11 +4059,11 @@ msgstr "Agrégat"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Incidents d'alerte"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Règles d'alerte"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "Processus %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d règles"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Budget de temps d'évaluation des alertes"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Règles d'alerte par lot"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "Activer l'ajustement de Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Activer l'évaluation native des alertes"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "Quelle devrait être la fréquence de mise à jour de Daily Stats ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Durée maximale pendant laquelle une exécution d'évaluation peut démarrer de nouveaux lots de règles. L'envoi des notifications en file d'attente suit l'évaluation avec le temps restant et peut envoyer un lot même lorsque le budget est épuisé. Les règles non atteintes sont évaluées en premier lors de l'exécution suivante."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Alertes natives"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "Si les graphiques Has et les sources de données Has doivent être véri
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Le collecteur de données principal doit-il évaluer les règles d'alerte après chaque cycle d'interrogation et envoyer leurs notifications ? Les règles d'alerte lisent les taux collectés par les statistiques sur les sources de données ; la collecte des statistiques sur les sources de données doit donc également être activée."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "Le nom de l'utilisateur que Kadupul utilisera comme modèle pour les nou
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Le nombre de règles d'alerte lues et évaluées ensemble. Le budget de temps est vérifié entre les lots."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -13052,7 +13052,7 @@ msgstr "Profil défaut"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Modèles de périphériques[Modifier : %s]"
+msgstr "Le modèle d'équipement pour le premier équipement Kadupul est %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."

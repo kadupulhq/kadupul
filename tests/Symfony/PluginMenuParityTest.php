@@ -344,7 +344,7 @@ final class PluginMenuParityTest extends TestCase
 
     public function testAcceptLanguageSpellingsOfOneLocaleShareAnEntry(): void
     {
-        foreach (['fr', 'fr-CA,fr;q=0.9', 'xx-YY, fr-FR;q=0.8, en;q=0.1'] as $header) {
+        foreach (['fr', 'fr-BE,fr;q=0.9', 'xx-YY, fr-FR;q=0.8, en;q=0.1'] as $header) {
             $this->menu([8], null, Request::create('https://example.test/kadupul/app.php/x', server: ['HTTP_ACCEPT_LANGUAGE' => $header]))->sections();
         }
         self::assertSame(1, $this->workerRuns());

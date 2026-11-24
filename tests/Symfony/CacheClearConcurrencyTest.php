@@ -340,7 +340,7 @@ final class CacheClearConcurrencyTest extends TestCase
         $root = dirname(__DIR__, 2);
 
         return new Process(
-            [PHP_BINARY, $root . '/bin/console', $command, ...$options, '--env=prod', '--no-debug', '--no-interaction'],
+            [PHP_BINARY, '-d', 'memory_limit=-1', $root . '/bin/console', $command, ...$options, '--env=prod', '--no-debug', '--no-interaction'],
             $root,
             ['APP_ENV' => 'prod', 'APP_DEBUG' => '0', 'APP_CACHE_DIR' => $this->cacheRoot],
             null,

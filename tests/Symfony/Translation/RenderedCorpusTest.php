@@ -45,7 +45,7 @@ final class RenderedCorpusTest extends TestCase
         // Counts, not arrays: PHPUnit exports every asserted value, even on success.
         self::assertSame(count($identities) - $plurals + $plurals * count(RenderedCorpus::COUNTS) + count(RenderedCorpus::fixedCalls()), count($corpus->calls));
         self::assertSame(RenderedCorpus::locales($root), array_keys($corpus->renderings));
-        self::assertSame(41, count($corpus->renderings));
+        self::assertSame(44, count($corpus->renderings));
         // CACTI_LANGUAGE_HANDLER_DEFAULT and _PHPGETTEXT in include/global_constants.php.
         [$fallback, $phpGettext] = [0, 1];
         foreach ($corpus->renderings as $locale => $rendering) {
@@ -58,8 +58,8 @@ final class RenderedCorpusTest extends TestCase
             }
             self::assertSame($phpGettext, $rendering['handler'], $locale);
             self::assertStringEndsWith('/locales/LC_MESSAGES/' . $locale . '.mo', $rendering['domains']['cacti'], $locale);
-            // uk-UA and zh-TW are mostly untranslated or fuzzy; every catalog still changes something.
-            self::assertGreaterThan(1000, $corpus->translatedCount($locale), $locale);
+            // en-GB shares most strings with en-US and differs only on British spelling/terminology.
+            self::assertGreaterThan($locale === 'en-GB' ? 100 : 1000, $corpus->translatedCount($locale), $locale);
         }
         self::assertSame(['cacti', 'i18nprobe', 'folder'], array_keys($corpus->renderings['de-DE']['domains']));
         self::assertStringEndsWith('/plugins/folder/locales/LC_MESSAGES/german_germany.mo', $corpus->renderings['de-DE']['domains']['folder']);

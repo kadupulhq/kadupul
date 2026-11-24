@@ -4059,11 +4059,11 @@ msgstr "అగ్రిగేట్"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "హెచ్చరిక సంఘటనలు"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "హెచ్చరిక నియమాలు"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "%d ప్రాసెస్‌లు"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d నియమాలు"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "ఈ రోజుల సంఖ్య తర్వాత, గ్రాఫ�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "హెచ్చరిక మూల్యాంకన సమయ బడ్జెట్"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "ఒక్కో బ్యాచ్‌కు హెచ్చరిక నియమాలు"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "Lotus Notes (R) ట్వీక్‌ను ప్రారంభిం�
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "స్థానిక హెచ్చరిక మూల్యాంకనాన్ని ప్రారంభించు"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "RRD ఎంత తరచుగా తనిఖీ చేయబడాల�
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "ఒక మూల్యాంకన రన్ కొత్త నియమాల బ్యాచ్‌లను ఎంత సమయం వరకు ప్రారంభించవచ్చు. క్యూలో ఉన్న నోటిఫికేషన్‌లను పంపడం మిగిలిన సమయంతో మూల్యాంకనం తర్వాత జరుగుతుంది మరియు బడ్జెట్ అయిపోయినప్పటికీ ఒక బ్యాచ్‌ను పంపవచ్చు. చేరుకోని నియమాలు తదుపరి రన్‌లో మొదట మూల్యాంకనం చేయబడతాయి."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaNలు"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "స్థానిక హెచ్చరిక"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "Has Graphs మరియు Has Data Sources డిఫాల్ట్‌�
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "ప్రతి పోలింగ్ చక్రం తర్వాత ప్రధాన డేటా కలెక్టర్ హెచ్చరిక నియమాలను మూల్యాంకనం చేసి వాటి నోటిఫికేషన్‌లను పంపాలా? హెచ్చరిక నియమాలు డేటా సోర్స్ గణాంకాలు సేకరించే రేట్లను చదువుతాయి, కాబట్టి డేటా సోర్స్ గణాంకాల సేకరణ కూడా తప్పనిసరిగా ప్రారంభించబడి ఉండాలి."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "కొత్త Web Basic మరియు LDAP వినియోగద�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "కలిసి చదవబడి మూల్యాంకనం చేయబడే హెచ్చరిక నియమాల సంఖ్య. బ్యాచ్‌ల మధ్య సమయ బడ్జెట్ తనిఖీ చేయబడుతుంది."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

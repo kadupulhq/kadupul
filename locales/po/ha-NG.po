@@ -4059,11 +4059,11 @@ msgstr "Haɗaka"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Al'amuran Faɗakarwa"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Ƙa'idojin Faɗakarwa"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "Tsarukan aiki %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "Ƙa'idoji %d"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "Bayan wannan adadin kwanaki, ba za a ƙara sa'o'in aiki a kan jadawalin 
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Kasafin Lokacin Tantance Faɗakarwa"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Ƙa'idojin Faɗakarwa a Kowane Rukuni"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "Kunna daidaitawar Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Kunna Tantance Faɗakarwa ta Asali"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "Sau nawa ya kamata a duba RRD ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Tsawon lokacin da gudanarwar tantancewa guda ɗaya za ta iya fara sababbin rukunai na ƙa'idoji. Aika sanarwoyi da ke cikin layin jira yana biyo bayan tantancewa da sauran lokacin da ya rage, kuma yana iya aika rukuni guda ko da an ƙare kasafin lokacin. Ƙa'idojin da ba a kai gare su ba za a fara tantance su da farko a gudanarwa ta gaba."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Faɗakarwa ta Asali"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "Shin a zaɓi Yana da Jadawalai da Yana da Tushen Bayanai ta Tsoho."
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Shin babban Mai Tattara Bayanai ya tantance ƙa'idojin faɗakarwa bayan kowane zagayen tattarawa kuma ya aika sanarwoyinsu? Ƙa'idojin faɗakarwa suna karanta ƙimar gudu da Ƙididdigar Tushen Bayanai ke tattarawa, don haka dole ne a kunna Tattara Ƙididdigar Tushen Bayanai ma."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "Sunan mai amfani da Kadupul zai yi amfani da shi a matsayin samfuri ga s
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Adadin ƙa'idojin faɗakarwa da ake karantawa da tantancewa tare. Ana duba kasafin lokacin a tsakanin rukunai."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

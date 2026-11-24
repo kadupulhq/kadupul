@@ -4038,11 +4038,11 @@ msgstr "Idibaniso"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Iziganeko zeZilumkiso"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Imigaqo yeZilumkiso"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7506,7 +7506,7 @@ msgstr "%d Iinkqubo"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d Imigaqo"
 
 #: include/global_settings.php
 #, php-format
@@ -7628,11 +7628,11 @@ msgstr "Emva kweli nani leentsuku, iiyure zoshishino aziyi kongezwa kwigrafu. <b
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Isabelo seXesha loVavanyo lweZilumkiso"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Imigaqo yeZilumkiso ngeQela"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8216,7 +8216,7 @@ msgstr "Vula uhlengahlengiso lwe-Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Vula uVavanyo lweZilumkiso lweMveli"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8500,7 +8500,7 @@ msgstr "I-RRD kufuneka ijongwe rhoqo kangakanani ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Ixesha elinokuthathwa luvavanyo olunye ukuqalisa amaqela amatsha emigaqo. Ukuthunyelwa kwezaziso ezikumgca kulandela uvavanyo ngexesha elishiyekileyo, kwaye kusenokuthumela iqela elinye nokuba isabelo sexesha siphelile. Imigaqo ekungafikelelwanga kuyo ivavanywa kuqala kuvavanyo olulandelayo."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8832,7 +8832,7 @@ msgstr "Ii-NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Izilumkiso zeMveli"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9348,7 +9348,7 @@ msgstr "Ingaba i-Has Graphs ne-Has Data Sources kufuneka zikhethwe ngokungagqibe
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Ingaba uMqokeleli weDatha oPhambili kufuneka avavanye imigaqo yezilumkiso emva komjikelo ngamnye we-polling aze athumele izaziso zayo? Imigaqo yezilumkiso ifunda amazinga aqokelelwa ziiNkcukacha-manani zoMthombo weDatha, ngoko ke ukuQokelelwa kweeNkcukacha-manani zoMthombo weDatha nako kufuneka kuvulwe."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9780,7 +9780,7 @@ msgstr "Igama lomsebenzisi eliza kusetyenziswa yi-Kadupul njengokulinganisa kwab
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Inani lemigaqo yezilumkiso efundwayo nevavanywa kunye. Isabelo sexesha sihlolwa phakathi kwamaqela."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

@@ -1,0 +1,1 @@
+- Repair remaining localization defects across all 40 shipped gettext catalogs (1,616 entries plus 37 plural-form repairs in `ar-SA`, `lv-LV`, `pl-PL`, and `uk-UA`) and add regional gettext catalogs for `en-GB`, `es-MX`, and `fr-CA` for 43 translated locales total (#1499).

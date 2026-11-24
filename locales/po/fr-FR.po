@@ -17,16 +17,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Le développement, les contributions et les décisions de publication sont gérés par %sl'organisation Kadupul%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Pour la documentation et l'assistance, consultez le %sprojet Kadupul%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul est un projet open-source indépendant de supervision réseau et de représentation graphique de séries temporelles."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -76,7 +76,7 @@ msgstr "Aperçu de l'agrégat %s"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Aperçu de l'agrégat %s."
+msgstr "L'aperçu de l'agrégat n'existe pas"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -1575,7 +1575,7 @@ msgstr "Couleur nommée"
 
 #: color.php
 msgid "Named Colors"
-msgstr "Couleurs nommÃ©es%1 is the number of paths, %2 is the list of paths (with newlines between them)"
+msgstr "Couleurs nommées"
 
 #: color.php
 msgid "No Colors Found"
@@ -2050,11 +2050,11 @@ msgstr "La chaîne d'entrée n'existe pas dans la liste blanche.  Exécutez le s
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "La liste blanche des entrées est activée. Les modifications apportées à cette méthode d'entrée de données nécessitent de réexécuter le script CLI de liste blanche des entrées (cli/input_whitelist.php) avec les options --audit et --update avant que la source de données ne soit à nouveau interrogée."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "La chaîne d'entrée contient des caractères shell dangereux"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2110,9 +2110,8 @@ msgid "Update RRA"
 msgstr "Mise à jour RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Mettre à jour ce champ"
+msgstr "Mettre à jour la liste blanche"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2681,7 +2680,7 @@ msgstr "Cliquez sur 'Continuer' pour dupliquer le(s) modèle(s) de données suiv
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Données personnalisées [données entrées : %s]."
+msgstr "Message d'avertissement de données personnalisées"
 
 #: data_templates.php
 #, php-format
@@ -3255,7 +3254,7 @@ msgstr "Choisissez un modèle de graphique et cliquez sur 'Continuer' pour modif
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Choisissez un modèle de graphique à appliquer à ce graphique. Veuillez noter que vous ne pouvez modifier les modèles de graphique que pour un modèle de graphique compatible avec 100%%, ce qui signifie qu'il inclut des sources de données identiques."
+msgstr "Choisissez un modèle de graphique à appliquer à ce graphique. Veuillez noter que vous ne pouvez remplacer le modèle de graphique que par un modèle compatible à 100 %%, c'est-à-dire incluant des sources de données identiques."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3957,7 +3956,7 @@ msgstr "1 Mégaoctet"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "%d Thread(s)"
+msgstr "1 thread"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -4058,11 +4057,11 @@ msgstr "Agrégat"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Incidents d'alerte"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Règles d'alerte"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6202,7 +6201,7 @@ msgstr "Niveau d'agrégation"
 
 #: include/global_form.php
 msgid "All subsequent legend line(s) will be aligned as given here.  You may use this command multiple times in a single graph.  This command does not produce tabular layout.<br/><strong>Note: </strong>You may want to insert a &lt;HR&gt; on the preceding graph item.<br/> <strong>Note: </strong>A &lt;HR&gt; on this legend line will obsolete this setting!"
-msgstr "Toutes les lignes de légende suivantes seront alignées comme indiqué ici.  Vous pouvez utiliser cette commande plusieurs fois dans un seul graphique.  Cette commande ne produit pas de disposition tabulaire.<br/><strong>Note : </strong>Note : </strong>Vous voudrez peut-être insérer un paramètre &lt;HR&gt ; sur l'élément graphique précédent.<br/> <strong>Note : </strong>A &lt;HR&gt ; sur cette ligne de légende va obsolete ce paramètre !"
+msgstr "Toutes les lignes de légende suivantes seront alignées comme indiqué ici. Vous pouvez utiliser cette commande plusieurs fois dans un même graphique. Cette commande ne produit pas de disposition tabulaire.<br/><strong>Note : </strong>Vous souhaiterez peut-être insérer un &lt;HR&gt; sur l'élément de graphique précédent.<br/> <strong>Note : </strong>Un &lt;HR&gt; sur cette ligne de légende rendra ce paramètre obsolète !"
 
 #: include/global_form.php
 msgid "Allow Empty Input"
@@ -7526,7 +7525,7 @@ msgstr "Processus %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d règles"
 
 #: include/global_settings.php
 #, php-format
@@ -7616,7 +7615,7 @@ msgstr "Ethernet 56 Gbps"
 
 #: include/global_settings.php
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>Built-in Authentication</i> - Kadupul gère l'authentification utilisateur, qui vous permet de créer des utilisateurs et de leur donner des droits sur différentes zones dans Kadupul.<br><br>br><i>Web Basic Authentication</i> - L'authentification est traitée par le serveur web. Les utilisateurs peuvent être ajoutés ou créés automatiquement lors de la première connexion si l'utilisateur modèle est défini, sinon les permissions invités définies seront utilisées. <br><br><br><i>LDAP Authentication</i> - Permet l'authentification sur un serveur LDAP. Les utilisateurs seront créés automatiquement lors de la première connexion si l'utilisateur de modèle est défini, sinon les permissions d'invité définies seront utilisées.  Si le module LDAP de PHPs n'est pas activé, l'authentification LDAP n'apparaîtra pas comme une option sélectionnable.<br><br><br><i>Multiple LDAP/AD Domain Authentication</i> - Permet aux administrateurs de supporter plusieurs groupes disparates de différents annuaires LDAP/AD pour accéder aux ressources Kadupul.  Tout comme pour l'authentification LDAP, le module PHP LDAP est nécessaire pour utiliser cette méthode. </blockquote>."
+msgstr "<blockquote><i>Authentification intégrée</i> - Kadupul gère l'authentification des utilisateurs, ce qui vous permet de créer des utilisateurs et de leur accorder des droits sur différentes zones de Kadupul.<br><br><i>Authentification Web de base</i> - L'authentification est gérée par le serveur Web. Les utilisateurs peuvent être ajoutés ou créés automatiquement lors de la première connexion si l'utilisateur modèle est défini ; sinon, les permissions d'invité définies seront utilisées.<br><br><i>Authentification LDAP</i> - Permet l'authentification auprès d'un serveur LDAP. Les utilisateurs seront créés automatiquement lors de la première connexion si l'utilisateur modèle est défini ; sinon, les permissions d'invité définies seront utilisées. Si le module LDAP de PHP n'est pas activé, l'authentification LDAP n'apparaîtra pas comme option sélectionnable.<br><br><i>Authentification multi-domaines LDAP/AD</i> - Permet aux administrateurs de prendre en charge plusieurs groupes distincts issus de différents annuaires LDAP/AD pour accéder aux ressources Kadupul. Tout comme pour l'authentification LDAP, le module PHP LDAP est requis pour utiliser cette méthode.</blockquote>"
 
 #: include/global_settings.php
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
@@ -7648,11 +7647,11 @@ msgstr "Après ce nombre de jours, les heures ouvrables ne seront plus ajoutées
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Budget temps d'évaluation des alertes"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Règles d'alerte par lot"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -7696,7 +7695,7 @@ msgstr "Un compte sera automatiquement déverrouillé après ce nombre de minute
 
 #: include/global_settings.php
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Toutes les chaînes qui correspondent à ce regex seront exclues de l'affichage de l'utilisateur.  <Par exemple, si vous voulez exclure toutes les lignes de log qui contiennent les mots'Admin' ou'Login', vous devez taper '(Admin ||| Login)'</strong>."
+msgstr "Toutes les chaînes qui correspondent à cette expression régulière seront exclues de l'affichage utilisateur. <strong>Par exemple, si vous souhaitez exclure toutes les lignes de journal contenant les mots « Admin » ou « Login », saisissez « (Admin || Login) »</strong>"
 
 #: include/global_settings.php
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
@@ -7996,7 +7995,7 @@ msgstr "Largeur de sortie de débogage"
 
 #: include/global_settings.php
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Disponibilité/Réachabilité par défaut pour tous les nouveaux appareils.  La méthode que Kadupul utilisera pour déterminer si un dispositif est disponible pour l'interrogation.  <br><i>NOTE : Il est recommandé qu'au minimum, SNMP soit toujours sélectionné."
+msgstr "Méthode de disponibilité/accessibilité par défaut pour tous les nouveaux périphériques. Méthode utilisée par Kadupul pour déterminer si un périphérique est disponible pour l'interrogation. <br><i>REMARQUE : il est recommandé qu'au minimum, SNMP soit toujours sélectionné.</i>"
 
 #: include/global_settings.php
 msgid "Default Font"
@@ -8236,7 +8235,7 @@ msgstr "Activer l'ajustement de Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Activer l'évaluation native des alertes"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8476,7 +8475,7 @@ msgstr "Masquer le tableau de bord Kadupul"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "%d semaines"
+msgstr "Masquer les week-ends"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8520,7 +8519,7 @@ msgstr "Quelle devrait être la fréquence de mise à jour de Daily Stats ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Durée pendant laquelle une exécution d'évaluation peut démarrer de nouveaux lots de règles. L'envoi des notifications en file d'attente suit l'évaluation avec le temps restant et peut envoyer un lot même lorsque le budget est épuisé. Les règles non atteintes sont évaluées en premier lors de l'exécution suivante."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8644,7 +8643,7 @@ msgstr "Chemin de billes Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul Server v%s - Maintenance"
+msgstr "Fuseau horaire du serveur Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8852,7 +8851,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Alertes natives"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9368,7 +9367,7 @@ msgstr "Si les graphiques Has et les sources de données Has doivent être véri
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Le collecteur de données principal doit-il évaluer les règles d'alerte après chaque cycle d'interrogation et envoyer leurs notifications ? Les règles d'alerte lisent les taux collectés par les statistiques des sources de données ; la collecte des statistiques des sources de données doit donc également être activée."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9800,7 +9799,7 @@ msgstr "Le nom de l'utilisateur que Kadupul utilisera comme modèle pour les nou
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Nombre de règles d'alerte lues et évaluées ensemble. Le budget temps est vérifié entre les lots."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10045,7 +10044,7 @@ msgstr "Cette valeur représente le nombre d'échantillons moyens élevé et fai
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Cette valeur représente le pourcentage au-dessus de la moyenne ajustée de l'échantillon une fois que les valeurs aberrantes ont été supprimées de l'échantillon.  Par exemple, un pourcentage de variance de 100%% sur une moyenne ajustée de 50 supprimerait tout échantillon supérieur à la quantité de 100 du graphique."
+msgstr "Cette valeur représente le pourcentage au-dessus de la moyenne ajustée de l'échantillon une fois les valeurs aberrantes supprimées de l'échantillon. Par exemple, avec une moyenne ajustée de 50 et un pourcentage de variance de 100 %%, tout échantillon supérieur à la quantité de 100 serait supprimé du graphique."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10751,7 +10750,7 @@ msgstr "Renforcé"
 
 #: lib/clog_webapi.php
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
-msgstr "Cliquez sur 'Continuer' pour supprimer le fichier des logs.<br><br><br><br>Note : si l'enregistrement des logs a été mis en place sur Kadupul et Syslog, les informations des logs dans Syslog ne sont pas altérées."
+msgstr "Cliquez sur « Continuer » pour purger le fichier journal.<br><br><br>Remarque : si la journalisation est configurée à la fois sur Kadupul et sur Syslog, les informations de journalisation resteront dans Syslog."
 
 #: lib/clog_webapi.php utilities.php
 msgid "Debug"
@@ -10783,7 +10782,7 @@ msgstr "Fichier"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "%d lignes"
+msgstr "Premières lignes"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -11408,7 +11407,7 @@ msgstr "Se déconnecter"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Erreur d'expéditeur : Si vous utilisez le lien <i>Test Mail</i>, réglez le paramètre <b>Alerter e-mail</b>."
+msgstr "Erreur de messagerie : aucune adresse de destinataire définie !!<br>Si vous utilisez le lien <i>Test Mail</i>, veuillez configurer le paramètre <b>E-mail d'alerte</b>."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -12831,7 +12830,7 @@ msgstr "conservé"
 
 #: lib/import.php
 msgid "not exists"
-msgstr "不存在"
+msgstr "n'existe pas"
 
 #: lib/import.php
 msgid "not writable"
@@ -13051,7 +13050,7 @@ msgstr "Profil défaut"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Modèles de périphériques[Modifier : %s]"
+msgstr "Le modèle de périphérique pour le premier périphérique Kadupul est %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13332,7 +13331,7 @@ msgstr "Assurez-vous que toutes ces valeurs sont correctes avant de continuer."
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Assurez-vous d'avoir lu et suivi les étapes nécessaires à l'installation de Kadupul avant de continuer. Les informations d'installation peuvent être trouvées pour les systèmes d'exploitation basés sur <a href=\"%1$s\">Unix</a> et <a href=\"%2$s\">Win32</a>."
+msgstr "Assurez-vous d'avoir lu et suivi les étapes requises pour installer Kadupul avant de continuer. Les informations d'installation sont disponibles pour les systèmes d'exploitation basés sur <a href=\"%s\">Unix</a> et <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php
 #, php-format
@@ -13948,7 +13947,7 @@ msgstr "Votre base de données MySQL TimeZone n'est pas remplie.  Veuillez rempl
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "Les informations de votre Remote Kadupul Poller n'ont pas été incluses dans votre fichier config.php.  Veuillez revoir le fichier config.php.dist, et définir les variables : <i>$database_default, $database_username</i>, etc.  Ces variables doivent être définies et renvoyées vers votre serveur de base de données Kadupul primaire.  Corrigez ceci et réessayez."
+msgstr "Les informations de votre collecteur Kadupul distant (Remote Kadupul Poller) n'ont pas été incluses dans votre fichier config.php. Veuillez consulter config.php.dist et définir les variables : <i>$rdatabase_default, $rdatabase_username</i>, etc. Ces variables doivent être définies et pointer vers votre serveur de base de données Kadupul principal. Corrigez cela et réessayez."
 
 #: lib/installer.php
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
@@ -14312,7 +14311,7 @@ msgstr "Erreur lors de l'analyse du XML de rrdtool dump"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Pas de %s trouvé(e)(s)"
+msgstr "Erreurs détectées"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14831,7 +14830,7 @@ msgstr "En fonction du nombre de connexions et de l'utilisation du collecteur de
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Si vous utilisez le Performance Booster de Kadupul avec un moteur de stockage en mémoire, vous devez veiller à vider le tampon du Performance Booster avant que le système ne manque d'espace pour les tables en mémoire. Cela se fait de deux manières : d'abord en réduisant la taille de votre colonne de sortie au strict nécessaire. Cette colonne se trouve dans les tables poller_output et poller_output_boost. La seconde mesure consiste à allouer davantage de mémoire aux tables en mémoire. Nous avons arbitrairement choisi une valeur recommandée de 10%% de la mémoire système, mais si vous utilisez des disques SSD ou disposez d'un système plus modeste, vous pouvez ignorer cette recommandation ou choisir un autre moteur de stockage. Vous pouvez consulter la consommation prévue des tables du Performance Booster sous Console -> Utilitaires système -> Afficher l'état de Boost."
+msgstr "Si vous utilisez Kadupul Performance Booster et choisissez un moteur de stockage en mémoire, vous devez veiller à vider le tampon du Performance Booster avant que le système ne manque d'espace pour les tables en mémoire. Cela se fait de deux manières : d'abord en réduisant la taille de votre colonne de sortie au strict nécessaire. Cette colonne se trouve dans les tables poller_output et poller_output_boost. La seconde consiste à allouer davantage de mémoire aux tables en mémoire. Nous avons arbitrairement fixé la valeur recommandée de mémoire système à 10 %%, mais si vous utilisez des disques SSD ou disposez d'un système plus modeste, vous pouvez ignorer cette recommandation ou choisir un autre moteur de stockage. Vous pouvez consulter la consommation prévue des tables du Performance Booster sous Console -> Utilitaires système -> Afficher l'état de Boost."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14852,7 +14851,7 @@ msgstr "Si vos tables ont des index très volumineux, vous devez utiliser le Bar
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB conserve autant de tables et d'index que possible dans la mémoire système. Par conséquent, vous devez dimensionner innodb_buffer_pool suffisamment grand pour contenir la majeure partie des tables et des index en mémoire. Vérifier la taille du répertoire /var/lib/mysql/cacti vous aidera à déterminer cette valeur. Nous recommandons 25%% de la mémoire totale de votre système, mais vos besoins varieront selon la taille de votre système."
+msgstr "InnoDB conserve autant de tables et d'index que possible dans la mémoire système. Par conséquent, vous devez dimensionner innodb_buffer_pool suffisamment grand pour contenir la majeure partie des tables et des index en mémoire. Vérifier la taille du répertoire /var/lib/mysql/cacti vous aidera à déterminer cette valeur. Nous recommandons une part de la mémoire totale de votre système fixée à 25 %%, mais vos besoins varieront selon la taille de votre système."
 
 #: lib/utility.php
 #, php-format
@@ -15091,7 +15090,7 @@ msgstr "Le texte qui apparaîtra dans l'onglet ou le menu."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "URL valide à utiliser pour ce lien externe. Elle doit inclure le protocole, par exemple https://kadupul.org. Notez que de nombreux sites Web n'autorisent pas leur intégration dans un iframe depuis un site tiers, et que les liens externes peuvent donc ne pas fonctionner."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15119,7 +15118,7 @@ msgstr "Où cette page doit-elle apparaître ?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Votre fichier de contenu n'est pas une URL valide. Veuillez saisir une URL valide"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15228,7 +15227,7 @@ msgstr "Notifications"
 
 #: managers.php utilities.php
 msgid "OID"
-msgstr "Obligation à prime d'émission"
+msgstr "OID"
 
 #: managers.php utilities.php
 msgid "Purge Notification Log"
@@ -16292,9 +16291,8 @@ msgid "Site Name:"
 msgstr "Nom du site :"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Fichier non trouvé"
+msgstr "Site introuvable."
 
 #: sites.php
 msgid "State"
@@ -16760,7 +16758,7 @@ msgstr "Le nombre total de graphiques individuels dans cet arbre."
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Cet arbre a été verrouillé pour l'édition le %1$s par %2$s."
+msgstr "Cet arbre a été verrouillé pour modification le %s par %s."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -16856,19 +16854,19 @@ msgstr "Il y a < 1 semaine"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Restrictive', ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de dispositif et de graphique pour accéder au graphique."
+msgstr "<b>Note :</b> La politique de graphique système est « Device », ce qui signifie que l'utilisateur doit avoir accès au graphique ou au périphérique pour accéder au graphique"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Permissive' ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, dispositif ou modèle graphique pour accéder au graphique."
+msgstr "<b>Note :</b> La politique de graphique système est « Graph Template », ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de graphique pour accéder au graphique"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Permissive' ce qui signifie que l'utilisateur doit avoir accès à au moins un graphique, dispositif ou modèle graphique pour accéder au graphique."
+msgstr "<b>Note :</b> La politique de graphique système est « Permissive », ce qui signifie que l'utilisateur doit avoir accès à au moins l'un des éléments suivants : graphique, périphérique ou modèle de graphique pour accéder au graphique"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
-msgstr "<Note:</b> La politique graphique du système est'Restrictive', ce qui signifie que l'utilisateur doit avoir accès au graphique ou au modèle de dispositif et de graphique pour accéder au graphique."
+msgstr "<b>Note :</b> La politique de graphique système est « Restrictive », ce qui signifie que l'utilisateur doit avoir accès soit au graphique, soit au périphérique et au modèle de graphique pour accéder au graphique"
 
 #: user_admin.php
 msgid "> 1 Month Ago"
@@ -17995,7 +17993,7 @@ msgstr "Pas d'articles à voter"
 
 #: utilities.php
 msgid "OID:"
-msgstr "Obligation à prime d'émission"
+msgstr "OID :"
 
 #: utilities.php
 msgid "OIDs"
@@ -18456,13 +18454,12 @@ msgid "VDEF Preview"
 msgstr "Aperçu VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Fichier non trouvé"
+msgstr "VDEF introuvable."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF ou élément VDEF introuvable."
 
 #: vdef.php
 #, php-format

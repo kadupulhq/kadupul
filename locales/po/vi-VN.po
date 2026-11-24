@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Quá trình phát triển, đóng góp và các quyết định phát hành được quản lý bởi %stổ chức Kadupul%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Để xem tài liệu và được hỗ trợ, hãy truy cập %sdự án Kadupul%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul là một dự án mã nguồn mở độc lập dùng để giám sát mạng và vẽ đồ thị chuỗi thời gian."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -79,7 +79,7 @@ msgstr "Xem trước tổng hợp [ %s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Xem trước tổng hợp [ %s]"
+msgstr "Bản xem trước tổng hợp không tồn tại"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -2049,11 +2049,11 @@ msgstr "Chuỗi đầu vào không tồn tại trong Danh sách trắng. Chạy 
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Tính năng Danh sách trắng đầu vào (Input Whitelisting) đang có hiệu lực. Mọi thay đổi trong Phương thức nhập dữ liệu này yêu cầu chạy lại tập lệnh CLI Danh sách trắng đầu vào (cli/input_whitelist.php) với cả hai tùy chọn --audit và --update trước khi Nguồn dữ liệu được truy vấn lại."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Chuỗi đầu vào chứa các ký tự shell nguy hiểm"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2109,9 +2109,8 @@ msgid "Update RRA"
 msgstr "Cập nhật RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Cập nhật trường này"
+msgstr "Cập nhật danh sách trắng"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2152,7 +2151,7 @@ msgstr "Biểu đồ liên kết / Mẫu dữ liệu [chỉnh sửa: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Biểu đồ liên kết / Mẫu dữ liệu [chỉnh sửa: %s]"
+msgstr "Mẫu đồ thị/dữ liệu liên kết [mới]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2663,7 +2662,7 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để nhân đôi (các) Mẫu dữ l
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Dữ liệu tùy chỉnh [nhập dữ liệu: %s]"
+msgstr "Thông báo cảnh báo dữ liệu tùy chỉnh"
 
 #: data_templates.php
 #, php-format
@@ -3237,7 +3236,7 @@ msgstr "Chọn Mẫu biểu đồ và nhấp vào &#39;Tiếp tục&#39; để t
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Chọn một Mẫu đồ thị để áp dụng cho Đồ thị này. Xin lưu ý rằng bạn chỉ có thể thay đổi sang một Mẫu đồ thị tương thích 100%%, nghĩa là bao gồm các Nguồn dữ liệu giống hệt nhau."
+msgstr "Chọn một Mẫu đồ thị để áp dụng cho Đồ thị này. Xin lưu ý rằng bạn chỉ có thể chuyển đổi sang một Mẫu đồ thị tương thích 100%%, nghĩa là mẫu đó bao gồm các Nguồn dữ liệu giống hệt nhau."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3353,7 +3352,7 @@ msgstr "[Danh sách biểu đồ tùy chỉnh được áp dụng - Bộ lọc T
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Quản lý nhóm người dùng [chỉnh sửa: %s]"
+msgstr "Quản lý đồ thị [ Không theo thiết bị ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3939,7 +3938,7 @@ msgstr "1 Megabyte"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "% d Chủ đề"
+msgstr "1 Luồng"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -4040,11 +4039,11 @@ msgstr "cốt liệu"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Sự cố cảnh báo"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Quy tắc cảnh báo"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -4231,7 +4230,7 @@ msgstr "Cấu hình"
 #: include/global_arrays.php lib/functions.php lib/html.php user_admin.php
 #: user_group_admin.php
 msgid "Console"
-msgstr "ÄÃ³ng"
+msgstr "Bảng điều khiển"
 
 #: include/global_arrays.php
 msgid "Console Access"
@@ -4838,7 +4837,7 @@ msgstr "Tháng 6"
 
 #: include/global_arrays.php
 msgid "Justified"
-msgstr "正当化された"
+msgstr "Căn đều"
 
 #: include/global_arrays.php
 msgid "Kadupul Help"
@@ -5046,7 +5045,7 @@ msgstr "Thứ hai"
 
 #: include/global_arrays.php
 msgid "Mono"
-msgstr "モノ"
+msgstr "Đơn cách"
 
 #: include/global_arrays.php
 msgid "Month Name, Day, Year"
@@ -5811,7 +5810,7 @@ msgstr "Xem Cache truy vấn dữ liệu"
 
 #: include/global_arrays.php
 msgid "View Log"
-msgstr "viewログ"
+msgstr "Xem nhật ký"
 
 #: include/global_arrays.php utilities.php
 msgid "View Poller Cache"
@@ -6301,7 +6300,7 @@ msgstr "Chọn một cây cho các mục cây mới."
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Chọn tên cho nguồn dữ liệu này. Nó có thể bao gồm các biến thay thế, chẳng hạn như | host_description | hoặc | query_fieldName |. Để biết danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Kadupul."
+msgstr "Chọn tên cho nguồn dữ liệu này. Tên có thể bao gồm các biến thay thế như |host_description| hoặc |query_fieldName|. Để xem danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Kadupul."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -7266,7 +7265,7 @@ msgstr "Tên của màu này."
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Tên được in trên biểu đồ. Nó có thể bao gồm các biến thay thế, chẳng hạn như | host_description | hoặc | query_fieldName |. Để biết danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Kadupul."
+msgstr "Tên được in trên đồ thị. Tên có thể bao gồm các biến thay thế như |host_description| hoặc |query_fieldName|. Để xem danh sách đầy đủ các thẻ thay thế được hỗ trợ, vui lòng xem tài liệu Kadupul."
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7508,7 +7507,7 @@ msgstr "%d Quá trình"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d Quy tắc"
 
 #: include/global_settings.php
 #, php-format
@@ -7630,11 +7629,11 @@ msgstr "Sau số ngày này, giờ làm việc sẽ không được thêm vào �
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Quỹ thời gian đánh giá cảnh báo"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Số quy tắc cảnh báo mỗi lô"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8218,7 +8217,7 @@ msgstr "Kích hoạt tinh chỉnh Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Bật đánh giá cảnh báo gốc"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8458,7 +8457,7 @@ msgstr "Ẩn bảng điều khiển Kadupul"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "% d Tuần"
+msgstr "Ẩn cuối tuần"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8502,7 +8501,7 @@ msgstr "Số liệu thống kê hàng ngày nên được cập nhật thường
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Thời gian tối đa một lượt đánh giá có thể bắt đầu các lô quy tắc mới. Việc gửi thông báo đang chờ trong hàng đợi diễn ra sau khi đánh giá với quỹ thời gian còn lại, và có thể gửi một lô ngay cả khi đã dùng hết quỹ thời gian. Các quy tắc chưa xử lý tới sẽ được đánh giá trước ở lượt chạy tiếp theo."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8626,7 +8625,7 @@ msgstr "Đường dẫn đăng nhập Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Máy chủ Kadupul v %s - Bảo trì"
+msgstr "Múi giờ máy chủ Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8714,7 +8713,7 @@ msgstr "Lưu giữ nhật ký"
 
 #: include/global_settings.php
 msgid "Log Settings"
-msgstr "ログ設定"
+msgstr "Cài đặt nhật ký"
 
 #: include/global_settings.php
 msgid "Log Tail Refresh"
@@ -8834,7 +8833,7 @@ msgstr "NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Cảnh báo gốc"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -8910,7 +8909,7 @@ msgstr "Mật khẩu cho Tìm kiếm cụ thể ràng buộc vào thư mục LDA
 
 #: include/global_settings.php
 msgid "Paths"
-msgstr "ChÃ¨n dÃ²ng"
+msgstr "Đường dẫn"
 
 #: include/global_settings.php
 msgid "Performance"
@@ -9114,7 +9113,7 @@ msgstr "Giới thiệu"
 
 #: include/global_settings.php
 msgid "Refresh Poller Table Per Cycle"
-msgstr ""
+msgstr "Làm mới bảng Poller mỗi chu kỳ"
 
 #: include/global_settings.php
 msgid "Rejected Sample Limit"
@@ -9350,7 +9349,7 @@ msgstr "Theo mặc định các đồ thị có và nguồn dữ liệu có đư
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Bộ thu thập dữ liệu chính có nên đánh giá các quy tắc cảnh báo sau mỗi chu kỳ thăm dò và gửi thông báo của chúng không? Các quy tắc cảnh báo đọc các tỷ lệ do Thống kê nguồn dữ liệu thu thập, vì vậy tính năng Thu thập thống kê nguồn dữ liệu cũng phải được bật."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9394,7 +9393,7 @@ msgstr "Một số giao diện của Kadupul hỗ trợ Drag-N-Drop. Nếu đư�
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Không gian giới hạn tên miền sẽ được phép truy cập bên ngoài Máy chủ Web. Điều này quan trọng đối với người dùng chọn sử dụng CDN hoặc trang web lưu trữ. Các nguồn có thể bao gồm các ký tự đại diện, ví dụ: * .mydomain.com hoặc một giao thức, ví dụ: https: //*.example.com. Các Nguồn Thay thế này chỉ bao gồm các loại Hình ảnh, CSS và JavaScript."
+msgstr "Các tên miền phân tách bằng dấu cách được phép truy cập từ bên ngoài Máy chủ Web. Điều này quan trọng đối với người dùng chọn sử dụng CDN hoặc trang lưu trữ ngoài. Các nguồn có thể bao gồm ký tự đại diện, ví dụ: *.mydomain.com, hoặc kèm giao thức, ví dụ: https://*.example.com. Các nguồn thay thế này chỉ bao gồm các loại Hình ảnh, CSS và JavaScript."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9418,11 +9417,11 @@ msgstr "Gai"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "Vị trí tệp nhị phân cột sống"
+msgstr "Vị trí tệp nhị phân Spine"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "Đường dẫn tệp cấu hình cột sống"
+msgstr "Đường dẫn tệp cấu hình Spine"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9650,7 +9649,7 @@ msgstr "Số SNMP tối đa mặc định Nhận OID để phát hành cho mỗi
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Số lượng chủ đề thiết bị mặc định. Điều này chỉ áp dụng khi sử dụng Bộ thu thập dữ liệu cột sống."
+msgstr "Số lượng luồng thiết bị mặc định. Thiết lập này chỉ áp dụng khi sử dụng Bộ thu thập dữ liệu Spine."
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
@@ -9782,7 +9781,7 @@ msgstr "Tên người dùng mà Kadupul sẽ sử dụng làm mẫu cho người
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Số lượng quy tắc cảnh báo được đọc và đánh giá cùng lúc. Quỹ thời gian được kiểm tra giữa các lô."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9842,7 +9841,7 @@ msgstr "Mật khẩu để xác thực khi gửi qua SMTP. (Để trống nếu 
 
 #: include/global_settings.php
 msgid "The path to Spine binary."
-msgstr "Đường dẫn đến cột sống nhị phân."
+msgstr "Đường dẫn đến tệp nhị phân Spine."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -10010,7 +10009,7 @@ msgstr "Điều này đề cập đến thuộc tính cụ thể trong thư mụ
 
 #: include/global_settings.php
 msgid "This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap."
-msgstr ""
+msgstr "Thiết lập này chỉ dành cho các hệ thống có một poller duy nhất để xây dựng lại bảng poller output sau mỗi chu kỳ thăm dò, nhằm ngăn bảng bộ nhớ bị đẩy ra swap trên các hệ thống rất lớn có cơ sở dữ liệu lớn có thể sử dụng swap."
 
 #: include/global_settings.php
 msgid "This timespan you wish to see on the default graph."
@@ -10027,7 +10026,7 @@ msgstr "Giá trị này biểu thị số lượng mẫu trung bình cao và th�
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Giá trị này biểu thị phần trăm vượt trên mức trung bình mẫu đã điều chỉnh sau khi các giá trị ngoại lai đã bị loại khỏi mẫu. Ví dụ, Tỷ lệ phương sai là 100%% trên mức trung bình đã điều chỉnh là 50 sẽ loại bỏ bất kỳ mẫu nào vượt quá số lượng 100 khỏi đồ thị."
+msgstr "Giá trị này biểu thị tỷ lệ phần trăm vượt trên mức trung bình mẫu đã điều chỉnh sau khi đã loại bỏ các giá trị ngoại lai khỏi mẫu. Ví dụ, Tỷ lệ phương sai là 100%% trên mức trung bình đã điều chỉnh là 50 sẽ loại bỏ mọi mẫu có giá trị vượt quá 100 khỏi đồ thị."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10083,7 +10082,7 @@ msgstr "Kích thước phông chữ tiêu đề"
 
 #: include/global_settings.php
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Được sử dụng khi định dạng | date_time | trên một đồ thị"
+msgstr "Được sử dụng khi định dạng |date_time| trên đồ thị"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
@@ -10275,7 +10274,7 @@ msgstr "Những phần nào của Kadupul hiển thị hình thu nhỏ theo mặ
 
 #: include/global_settings.php
 msgid "Word Wrap"
-msgstr "Biá»u thá»©c chÃ­nh quy"
+msgstr "Ngắt dòng tự động"
 
 #: include/global_settings.php
 msgid "snmpbulkwalk Binary Path"
@@ -10765,7 +10764,7 @@ msgstr "Tập tin"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "% d Dòng"
+msgstr "Số dòng đầu"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -11390,7 +11389,7 @@ msgstr "Đăng xuất"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Lỗi Mailer: Không có địa chỉ <b>TO</b> được đặt !! <br> Nếu sử dụng liên kết <i>Kiểm tra Thư</i> , vui lòng đặt cài đặt <b>e-mail Thông báo</b> ."
+msgstr "Lỗi trình gửi thư: Chưa thiết lập địa chỉ người nhận!!<br>Nếu đang sử dụng liên kết <i>Kiểm tra thư</i>, vui lòng thiết lập mục <b>Email cảnh báo</b>."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11615,7 +11614,7 @@ msgstr "Khách hàng"
 
 #: lib/html.php
 msgid "Clipboard"
-msgstr "Báº­t lÃªn trÃ¬nh ÄÆ¡n khá»i cháº¡y"
+msgstr "Bảng nhớ tạm"
 
 #: lib/html.php
 msgid "Clipboard ID"
@@ -13033,7 +13032,7 @@ msgstr "Cấu hình mặc định"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Mẫu thiết bị [chỉnh sửa: %s]"
+msgstr "Mẫu thiết bị cho Thiết bị Kadupul đầu tiên là %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13269,7 +13268,7 @@ msgstr "Điều cần thiết là máy chủ Kadupul trung tâm có thể giao t
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Chúng tôi khuyên bạn nên cập nhật config.php để kích hoạt tính năng này bằng cách bỏ qua biến <b>$ input_whlistist</b> và sau đó chạy ba tùy chọn tập lệnh CLI ở trên sau khi quá trình cài đặt dựa trên web hoàn tất."
+msgstr "Chúng tôi khuyến nghị mạnh mẽ rằng bạn nên cập nhật tệp config.php để bật tính năng này bằng cách bỏ chú thích biến <b>$input_whitelist</b>, sau đó chạy ba tùy chọn tập lệnh CLI ở trên sau khi quá trình cài đặt trên nền web hoàn tất."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13293,7 +13292,7 @@ msgstr "Kadupul yêu cầu một số Mô-đun PHP được cài đặt để ho
 
 #: lib/installer.php
 msgid "License Agreement"
-msgstr "Äiá»u kiá»n giáº¥y phÃ©p"
+msgstr "Thỏa thuận cấp phép"
 
 #: lib/installer.php
 msgid "List the directory that holds them in $config['rrd_additional_paths'] in include/config.php, for example $config['rrd_additional_paths'] = array('/data/rrd');"
@@ -13314,7 +13313,7 @@ msgstr "Hãy chắc chắn rằng tất cả các giá trị này là chính xá
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Hãy chắc chắn rằng bạn đã đọc và làm theo các bước cần thiết để cài đặt Kadupul trước khi tiếp tục. Thông tin cài đặt có thể được tìm thấy cho <a href=\"%1$s\">các</a> hệ điều hành dựa trên <a href=\"%1$s\">Unix</a> và <a href=\"%2$s\">Win32</a> ."
+msgstr "Hãy đảm bảo rằng bạn đã đọc và làm theo các bước cần thiết để cài đặt Kadupul trước khi tiếp tục. Thông tin cài đặt có thể được tìm thấy cho các hệ điều hành nền <a href=\"%s\">Unix</a> và <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php
 #, php-format
@@ -14294,7 +14293,7 @@ msgstr "Lỗi trong khi phân tích cú pháp XML của rrdtool dump"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Không %s Tìm thấy"
+msgstr "Tìm thấy lỗi"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14386,7 +14385,7 @@ msgstr "Đồ thị chứa giá trị mà RRDtool không thể chấp nhận."
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "RRA &#39; %s&#39; bị thiếu trong RRDfile"
+msgstr "Thiếu RRA '%s' trong RRDfile Kadupul hiện có"
 
 #: lib/rrd.php
 #, php-format
@@ -14813,7 +14812,7 @@ msgstr "Tùy thuộc vào số lần đăng nhập và sử dụng trình thu th
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Nếu sử dụng Kadupul Performance Booster và chọn công cụ lưu trữ bộ nhớ, bạn phải cẩn thận để xóa bộ đệm Performance Booster trước khi hệ thống hết dung lượng bảng nhớ. Điều này được thực hiện theo hai cách, đầu tiên là giảm kích thước cột đầu ra của bạn xuống đúng kích thước. Cột này nằm trong bảng pollerDefput và pollerDefput_boost. Điều thứ hai bạn có thể làm là phân bổ thêm bộ nhớ cho các bảng bộ nhớ. Chúng tôi đã tùy ý chọn giá trị đề xuất là 10 %% bộ nhớ hệ thống, nhưng nếu bạn đang sử dụng ổ đĩa SSD hoặc có hệ thống nhỏ hơn, bạn có thể bỏ qua đề xuất này hoặc chọn một công cụ lưu trữ khác. Bạn có thể thấy mức tiêu thụ dự kiến của các bảng Performance Booster trong Bảng điều khiển -&gt; Tiện ích hệ thống -&gt; Xem Trạng thái tăng."
+msgstr "Nếu sử dụng Kadupul Performance Booster và chọn bộ lưu trữ dạng bộ nhớ (memory storage engine), bạn phải chú ý xả bộ đệm Performance Booster trước khi hệ thống hết dung lượng bảng bộ nhớ. Có hai cách thực hiện việc này: thứ nhất là giảm kích thước cột output xuống vừa đủ dùng; cột này nằm trong các bảng poller_output và poller_output_boost. Cách thứ hai là cấp phát thêm bộ nhớ cho các bảng bộ nhớ. Chúng tôi chọn giá trị khuyến nghị là 10%% bộ nhớ hệ thống, nhưng nếu bạn đang dùng ổ đĩa SSD hoặc có hệ thống nhỏ hơn, bạn có thể bỏ qua khuyến nghị này hoặc chọn một bộ lưu trữ khác. Bạn có thể xem mức tiêu thụ dự kiến của các bảng Performance Booster tại Bảng điều khiển -> Tiện ích hệ thống -> Xem trạng thái Boost."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14834,7 +14833,7 @@ msgstr "Nếu các bảng của bạn có các chỉ mục rất lớn, bạn ph
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB sẽ giữ càng nhiều bảng và chỉ mục trong bộ nhớ hệ thống càng tốt. Do đó, bạn nên làm cho innodb_buffer_pool đủ lớn để chứa càng nhiều bảng và chỉ mục trong bộ nhớ. Kiểm tra kích thước của thư mục / var / lib / mysql / Kadupul sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị 25 %% tổng bộ nhớ hệ thống của bạn, nhưng yêu cầu của bạn sẽ thay đổi tùy thuộc vào kích thước hệ thống của bạn."
+msgstr "InnoDB sẽ giữ nhiều bảng và chỉ mục trong bộ nhớ hệ thống nhất có thể. Do đó, bạn nên đặt innodb_buffer_pool đủ lớn để chứa tối đa các bảng và chỉ mục trong bộ nhớ. Kiểm tra kích thước thư mục /var/lib/mysql/cacti sẽ giúp xác định giá trị này. Chúng tôi khuyến nghị mức 25%% tổng bộ nhớ hệ thống của bạn, nhưng yêu cầu thực tế sẽ thay đổi tùy theo quy mô hệ thống."
 
 #: lib/utility.php
 #, php-format
@@ -15073,7 +15072,7 @@ msgstr "Văn bản sẽ xuất hiện trong tab hoặc menu."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "URL hợp lệ để sử dụng cho liên kết ngoài này. Phải bao gồm giao thức, ví dụ https://kadupul.org. Lưu ý rằng nhiều trang web không cho phép nhúng vào iframe từ một trang khác, và do đó Liên kết ngoài có thể không hoạt động."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15101,7 +15100,7 @@ msgstr "Trang này nên xuất hiện ở đâu?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Tệp nội dung (contentfile) của bạn không phải là URL hợp lệ. Vui lòng nhập một URL hợp lệ"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15927,7 +15926,7 @@ msgstr "Số lượng SNMP được liên kết với Bộ sưu tập này."
 
 #: pollers.php
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Số lượng Chủ đề cột sống sẽ sử dụng cho mỗi quy trình Thu thập dữ liệu."
+msgstr "Số lượng luồng Spine được sử dụng cho mỗi tiến trình Bộ thu thập dữ liệu."
 
 #: pollers.php
 msgid "The number of script calls associated with this Data Collector."
@@ -16258,9 +16257,8 @@ msgid "Site Name:"
 msgstr "Tên site:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Không tìm thấy tập tin"
+msgstr "Không tìm thấy địa điểm (Site)."
 
 #: sites.php
 msgid "State"
@@ -16604,7 +16602,7 @@ msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để hủy xuất bản Cây sau.
 
 #: tree.php
 msgid "Cut"
-msgstr "カット"
+msgstr "Cắt"
 
 #: tree.php
 msgid "Delete Tree"
@@ -16649,7 +16647,7 @@ msgstr "Không tìm thấy cây"
 
 #: tree.php
 msgid "Paste"
-msgstr "ペースト"
+msgstr "Dán"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -16720,7 +16718,7 @@ msgstr "Tổng số đồ thị riêng lẻ trong Cây này."
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Cây này đã bị khóa để Chỉnh sửa trên%1$s bởi%2$s."
+msgstr "Cây này đã bị khóa chỉnh sửa vào %s bởi %s."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -17724,7 +17722,7 @@ msgstr "Thư mục KHÔNG tồn tại !!"
 
 #: utilities.php
 msgid "Display Order"
-msgstr "表示順"
+msgstr "Thứ tự hiển thị"
 
 #: utilities.php
 #, php-format
@@ -18397,13 +18395,12 @@ msgid "VDEF Preview"
 msgstr "Xem trước VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Không tìm thấy tập tin"
+msgstr "Không tìm thấy VDEF."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "Không tìm thấy VDEF hoặc mục VDEF."
 
 #: vdef.php
 #, php-format

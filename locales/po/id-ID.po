@@ -4013,7 +4013,7 @@ msgstr "Akses Ditolak! Login Dinonaktifkan."
 
 #: include/global_arrays.php lib/html.php
 msgid "About Kadupul"
-msgstr "Akses Ditolak! ID pengguna templat %s tidak ada. Silakan hubungi Administrator Anda."
+msgstr "Tentang Kadupul"
 
 #: include/global_arrays.php
 msgid "Access Points, Controllers"
@@ -4038,11 +4038,11 @@ msgstr "Pembuatan grafik agregat tidak dapat dikonfirmasi. Tinjau pengaturan gra
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Insiden Peringatan"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Aturan Peringatan"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -6162,7 +6162,7 @@ msgstr "Setelah instalasi selesai, Anda dapat menjadikan beberapa direktori ini 
 
 #: include/global_form.php
 msgid "After an initial failure, the number of ping retries Kadupul will attempt before failing."
-msgstr "Nama Templat Agregat"
+msgstr "Setelah kegagalan awal, jumlah percobaan ulang ping yang akan dilakukan Kadupul sebelum dinyatakan gagal."
 
 #: include/global_form.php
 msgid "Aggregate Graph Settings"
@@ -7506,7 +7506,7 @@ msgstr "%d Proses"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d Aturan"
 
 #: include/global_settings.php
 #, php-format
@@ -7608,7 +7608,7 @@ msgstr "Waktu eksekusi minimal %s m"
 
 #: include/global_settings.php user_domains.php
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
-msgstr "Nama yang berguna untuk Templat ini."
+msgstr "Daftar nama host DNS atau alamat IP yang dipisahkan spasi untuk server LDAP yang valid. Kadupul akan mencoba menggunakan server LDAP dari kiri ke kanan untuk mengautentikasi pengguna."
 
 #: include/global_settings.php
 msgid "Account Locking"
@@ -7628,11 +7628,11 @@ msgstr "Templat Agregat [baru]"
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Anggaran Waktu Evaluasi Peringatan"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Aturan Peringatan per Batch"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -7664,7 +7664,7 @@ msgstr "Perkiraan Sedang Diproses:"
 
 #: include/global_settings.php
 msgid "Allow to automatically determine the 'default' language of the user and provide it at login time if that language is supported by Kadupul. If disabled, the default language will be in force until the user elects another language."
-msgstr "Arab"
+msgstr "Izinkan untuk menentukan bahasa 'bawaan' pengguna secara otomatis dan menyediakannya saat masuk jika bahasa tersebut didukung oleh Kadupul. Jika dinonaktifkan, bahasa bawaan akan tetap berlaku hingga pengguna memilih bahasa lain."
 
 #: include/global_settings.php
 msgid "Alternate Poller Path"
@@ -8216,7 +8216,7 @@ msgstr "Aktifkan penyesuaian Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Aktifkan Evaluasi Peringatan Bawaan"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8500,7 +8500,7 @@ msgstr "Seberapa sering RRD harus diperiksa?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Berapa lama satu proses evaluasi dapat memulai batch aturan baru. Pengiriman notifikasi yang antre dilakukan setelah evaluasi menggunakan sisa waktu yang ada, dan dapat mengirim satu batch meskipun anggaran waktu sudah habis. Aturan yang belum terjangkau akan dievaluasi terlebih dahulu pada proses berikutnya."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8832,7 +8832,7 @@ msgstr "NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Peringatan Bawaan"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9348,7 +9348,7 @@ msgstr "Haruskah Memiliki Grafik dan Memiliki Sumber Data Dicentang secara Defau
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Haruskah Pengumpul Data utama mengevaluasi aturan peringatan setelah setiap siklus polling dan mengirim notifikasinya? Aturan peringatan membaca laju yang dikumpulkan oleh Statistik Sumber Data, sehingga Pengumpulan Statistik Sumber Data juga harus diaktifkan."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9780,7 +9780,7 @@ msgstr "Nama pengguna yang akan digunakan Kadupul sebagai templat untuk pengguna
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Jumlah aturan peringatan yang dibaca dan dievaluasi secara bersamaan. Anggaran waktu diperiksa di antara setiap batch."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -10358,7 +10358,7 @@ msgstr "Warna font biru menunjukkan bahwa aturan akan diterapkan pada objek yang
 
 #: lib/api_automation.php
 msgid "Added by Kadupul Automation"
-msgstr "Alamat1"
+msgstr "Ditambahkan oleh Otomasi Kadupul"
 
 #: lib/api_automation.php
 msgid "Create Graph Rule"
@@ -12896,7 +12896,7 @@ msgstr "Templat Grafik/Data Terkait [baru]"
 
 #: lib/installer.php
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
-msgstr "Mencoba Membuat Grafik dari Templat Grafik yang Dihapus"
+msgstr "Tabel apa pun yang dibuat oleh plugin mungkin mengalami masalah saat ditautkan ke tabel Kadupul Core jika kolasinya tidak cocok. Pastikan basis data Anda diubah ke 'utf8mb4_unicode_ci' dengan menjalankan perintah berikut: "
 
 #: lib/installer.php package_import.php plugins.php
 msgid "Author"

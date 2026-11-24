@@ -4059,11 +4059,11 @@ msgstr "تجمیع"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "رخدادهای هشدار"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "قوانین هشدار"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "%d فرایند"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d قانون"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "پس از این تعداد روز، ساعات کاری به نمودا
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "بودجه زمانی ارزیابی هشدار"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "قوانین هشدار در هر دسته"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "فعال کردن بهینه‌سازی Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "فعال‌سازی ارزیابی بومی هشدار"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "RRD هر چند وقت یک‌بار باید بررسی شود؟"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "مدت زمانی که یک اجرای ارزیابی می‌تواند دسته‌های جدید قوانین را آغاز کند. ارسال اعلان‌های در صف، پس از ارزیابی با زمان باقی‌مانده انجام می‌شود و ممکن است حتی پس از پایان بودجه زمانی، یک دسته را ارسال کند. قوانینی که نوبتشان نرسد، در اجرای بعدی پیش از همه ارزیابی می‌شوند."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "مقادیر NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "هشداردهی بومی"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "آیا گزینه‌های دارای نمودار و دارای منب�
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "آیا گردآورنده داده اصلی باید پس از هر چرخه پولینگ، قوانین هشدار را ارزیابی کرده و اعلان‌های آن‌ها را ارسال کند؟ قوانین هشدار نرخ‌هایی را می‌خوانند که آمار منبع داده جمع‌آوری می‌کند؛ بنابراین جمع‌آوری آمار منبع داده نیز باید فعال باشد."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "نام کاربری که Kadupul به عنوان الگو برای کا�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "تعداد قوانین هشداری که با هم خوانده و ارزیابی می‌شوند. بودجه زمانی بین دسته‌ها بررسی می‌شود."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

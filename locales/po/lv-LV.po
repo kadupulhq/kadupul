@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Izstrādi, ieguldījumus un laidienu lēmumus pārvalda %sKadupul organizācija%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Dokumentācijai un atbalstam apmeklējiet %sKadupul projektu%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul ir neatkarīgs atvērtā pirmkoda projekts tīkla uzraudzībai un laikrindu grafiku veidošanai."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -1980,9 +1980,9 @@ msgstr "Noklikšķiniet uz \"Turpināt\", lai dzēstu šo datu ievades lauku."
 #: data_input.php
 msgid "Click 'Continue' to delete the following Data Input Method"
 msgid_plural "Click 'Continue' to delete the following Data Input Method"
-msgstr[0] "Noklikšķiniet uz \"Turpināt\", lai dzēstu šādu datu ievades metodi"
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Noklikšķiniet uz 'Turpināt', lai dzēstu šīs datu ievades metodes"
+msgstr[1] "Noklikšķiniet uz 'Turpināt', lai dzēstu šo datu ievades metodi"
+msgstr[2] "Noklikšķiniet uz 'Turpināt', lai dzēstu šīs datu ievades metodes"
 
 #: data_input.php
 msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can optionally change the title format for the new Data Input Method(s)."
@@ -2012,9 +2012,9 @@ msgstr "Dzēst datu ievades lauku"
 #: data_input.php
 msgid "Delete Data Input Method"
 msgid_plural "Delete Data Input Methods"
-msgstr[0] "Dzēst datu ievades metodi"
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Dzēst datu ievades metodes"
+msgstr[1] "Dzēst datu ievades metodi"
+msgstr[2] "Dzēst datu ievades metodes"
 
 #: data_input.php
 #, php-format
@@ -2057,11 +2057,11 @@ msgstr "Baltajā sarakstā ievades virkne nepastāv. Palaidiet CLI skriptu input
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Ir spēkā ievades atļauto saraksta pārbaude. Lai datu avots atkal tiktu vaicāts, pēc izmaiņām šajā datu ievades metodē ir atkārtoti jāpalaiž ievades atļauto saraksta CLI skripts (cli/input_whitelist.php) ar abām opcijām --audit un --update."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Ievades virkne satur bīstamas čaulas rakstzīmes"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2117,9 +2117,8 @@ msgid "Update RRA"
 msgstr "Atjauniniet RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Atsvaidzināt šo lauku"
+msgstr "Atjaunināt atļauto sarakstu"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -4082,11 +4081,11 @@ msgstr "Agregāts"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Brīdinājumu incidenti"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Brīdinājumu noteikumi"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7550,7 +7549,7 @@ msgstr "%d procesi"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d noteikumi"
 
 #: include/global_settings.php
 #, php-format
@@ -7672,11 +7671,11 @@ msgstr "Pēc šī dienu skaita uzņēmējdarbības darba stundas netiks pievieno
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Brīdinājumu izvērtēšanas laika budžets"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Brīdinājumu noteikumi vienā partijā"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8260,7 +8259,7 @@ msgstr "Iespējot Lotus Notes (R) pielāgošanu"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Iespējot iebūvēto brīdinājumu izvērtēšanu"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8544,7 +8543,7 @@ msgstr "Cik bieži pārbaudīt RRD?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Cik ilgi vienā izvērtēšanas ciklā drīkst sākt jaunas noteikumu partijas. Rindā esošo paziņojumu nosūtīšana notiek pēc izvērtēšanas atlikušajā laikā, un vienu partiju var nosūtīt pat tad, ja laika budžets ir iztērēts. Nesasniegtie noteikumi nākamajā ciklā tiek izvērtēti pirmie."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8876,7 +8875,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Iebūvētā brīdināšana"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9392,7 +9391,7 @@ msgstr "Vai pēc noklusējuma pārbaudīt grafikus un datu avotus."
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Vai galvenajam datu apkopotājam pēc katra aptaujas cikla ir jāizvērtē brīdinājumu noteikumi un jānosūta to paziņojumi? Brīdinājumu noteikumi nolasa ātrumus, ko apkopo datu avotu statistika, tāpēc jābūt iespējotai arī datu avotu statistikas apkopošanai."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9824,7 +9823,7 @@ msgstr "Lietotāja vārds, kuru Kadupul izmantos kā veidni jauniem Web Basic un
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Vienlaikus nolasāmo un izvērtējamo brīdinājumu noteikumu skaits. Laika budžets tiek pārbaudīts starp partijām."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -15115,7 +15114,7 @@ msgstr "Teksts, kas tiks parādīts cilnē vai izvēlnē."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Derīgs URL, ko izmantot šai ārējai saitei. Jānorāda protokols, piemēram, https://kadupul.org. Ņemiet vērā, ka daudzas tīmekļa vietnes neļauj tās iegult iframe elementā no citas vietnes, tāpēc ārējā saistīšana var nedarboties."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15143,7 +15142,7 @@ msgstr "Kur šai lapai jāparādās?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Norādītais satura fails nav derīgs URL. Lūdzu, ievadiet derīgu URL."
 
 #: logout.php
 msgid "Automatic Logout"
@@ -16242,16 +16241,16 @@ msgstr "Pilsēta"
 #: sites.php
 msgid "Click 'Continue' to Delete the following Site.  Note, all Devices will be disassociated from this site."
 msgid_plural "Click 'Continue' to delete all following Sites.  Note, all devices will be disassociated from this site."
-msgstr[0] "Noklikšķiniet uz \"Turpināt\", lai dzēstu šo vietni.  Ņemiet vērā, ka visas ierīces tiks atsaistītas no šīs vietnes."
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Noklikšķiniet uz 'Turpināt', lai dzēstu visas šīs vietnes. Ņemiet vērā, ka visas ierīces tiks atsaistītas no šīs vietnes."
+msgstr[1] "Noklikšķiniet uz 'Turpināt', lai dzēstu šo vietni. Ņemiet vērā, ka visas ierīces tiks atsaistītas no šīs vietnes."
+msgstr[2] "Noklikšķiniet uz 'Turpināt', lai dzēstu visas šīs vietnes. Ņemiet vērā, ka visas ierīces tiks atsaistītas no šīs vietnes."
 
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "Noklikšķiniet uz \"Turpināt\", lai dublētu šo vietni."
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Noklikšķiniet uz 'Turpināt', lai dublētu visas šīs vietnes."
+msgstr[1] "Noklikšķiniet uz 'Turpināt', lai dublētu šo vietni."
+msgstr[2] "Noklikšķiniet uz 'Turpināt', lai dublētu visas šīs vietnes."
 
 #: sites.php
 msgid "Country"
@@ -16265,7 +16264,6 @@ msgstr[1] "Dzēst vietni"
 msgstr[2] "Dzēst vietnes"
 
 #: sites.php
-#, fuzzy
 msgid "Duplicate Site"
 msgid_plural "Duplicate Sites"
 msgstr[0] "Dublēt vietnes"
@@ -16333,9 +16331,8 @@ msgid "Site Name:"
 msgstr "Vietnes nosaukums:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Fails nav atrasts"
+msgstr "Vietne nav atrasta."
 
 #: sites.php
 msgid "State"
@@ -18445,9 +18442,9 @@ msgstr[2] "Noklikšķiniet 'Turpināt', lai dzēstu sekojošos VDEF vienumus."
 #: vdef.php
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] "Noklikšķiniet uz \"Turpināt\", lai dublētu šādu VDEF. Pēc izvēles varat mainīt jaunā VDEF nosaukuma formātu."
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Noklikšķiniet uz 'Turpināt', lai dublētu šos VDEF. Pēc izvēles varat mainīt jauno VDEF nosaukuma formātu."
+msgstr[1] "Noklikšķiniet uz 'Turpināt', lai dublētu šo VDEF. Pēc izvēles varat mainīt jaunā VDEF nosaukuma formātu."
+msgstr[2] "Noklikšķiniet uz 'Turpināt', lai dublētu šos VDEF. Pēc izvēles varat mainīt jauno VDEF nosaukuma formātu."
 
 #: vdef.php
 msgid "Delete VDEF"

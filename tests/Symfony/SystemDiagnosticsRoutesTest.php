@@ -179,7 +179,7 @@ final class SystemDiagnosticsRoutesTest extends TestCase
         $database->method('get')->willReturn($pdo);
         $container->set(DatabaseConnection::class, $database);
         $preference = $this->createMock(LocalePreference::class);
-        $preference->method('preferredLocale')->willReturn('fr-CA');
+        $preference->method('preferredLocale')->willReturn('fr-BE');
         $container->set(LocalePreference::class, $preference);
         foreach (self::screens() as [$screen, $path]) {
             $response = $this->kernel->handle(Request::create($path, cookies: ['Cacti' => 'test']));
