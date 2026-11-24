@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Characterizes locale selection in the real include/global_languages.php.
  *
  * Each case runs the shipped file in a child process, as include/global.php
- * includes it, with the shipped catalogs and php-gettext handler. The
+ * includes it, with the shipped catalogs and the handler it selects. The
  * expectations were recorded against origin/main before the shared resolver
  * existed. Every case still holds except the Accept-Language cases marked
  * "weighted", the one intentional change: the header is now an RFC 9110
@@ -60,6 +60,13 @@ final class LegacyLocaleResolutionTest extends TestCase
         rmdir($base . '/plugins/nocatalog');
         rmdir($base . '/plugins');
         unlink($base . '/locales');
+        // Catalogues the Symfony language handler compiled for the translated cases.
+        $compiled = glob($base . '/var/cache/legacy-translations/catalogue.*') ?: [];
+        self::assertNotSame([], $compiled);
+        array_map('unlink', $compiled);
+        rmdir($base . '/var/cache/legacy-translations');
+        rmdir($base . '/var/cache');
+        rmdir($base . '/var');
         rmdir($base);
     }
 

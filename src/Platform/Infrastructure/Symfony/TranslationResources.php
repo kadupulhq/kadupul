@@ -17,8 +17,9 @@ use Symfony\Component\Translation\Translator;
  * set. Paths come from the shipped locale manifest only, never a request.
  *
  * The cacti domain holds each shipped .mo under its gettext identities (see
- * GettextMoLoader). Nothing translates through it yet: legacy __() still reads
- * the .mo through php-gettext, and the kernel translator does not register it.
+ * GettextMoLoader). The kernel translator does not register it yet. Legacy
+ * __() reads the same identities through LegacyTranslations, which registers
+ * the catalogs the legacy bootstrap found, plugin domains included.
  */
 final class TranslationResources
 {

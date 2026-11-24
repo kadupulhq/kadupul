@@ -138,6 +138,13 @@ if (empty($i18n_handler) && !empty($config['i18n_language_handler'])) {
 	$i18n_handler = $config['i18n_language_handler'];
 }
 
+/* The settings table holds the handler as a string, while
+   get_src_language_files() compares it with the integer constants. Without
+   this a saved handler matched no provider and the first one found was used. */
+if (is_string($i18n_handler) && preg_match('/^[0-9]+$/D', $i18n_handler)) {
+	$i18n_handler = (int) $i18n_handler;
+}
+
 i18n_debug("require(1): Defined handler $i18n_handler");
 
 $i18n_provider = null;
@@ -168,7 +175,9 @@ define('CACTI_LANGUAGE_HANDLER', $i18n_handler);
 
 i18n_debug('require(2): Final handler ' . CACTI_LANGUAGE_HANDLER);
 
-if (CACTI_LANGUAGE_HANDLER != CACTI_LANGUAGE_HANDLER_DEFAULT) {
+if (CACTI_LANGUAGE_HANDLER == CACTI_LANGUAGE_HANDLER_SYMFONY) {
+	$i18n = load_gettext_symfony($cacti_locale, $cacti_textdomains, $config['base_path']);
+} elseif (CACTI_LANGUAGE_HANDLER != CACTI_LANGUAGE_HANDLER_DEFAULT) {
 	/* prefetch all language files to work in memory only,
 	   die if one of the language files is corrupted */
 
@@ -252,6 +261,17 @@ function get_src_language_files($i18n_handler) {
 	global $config;
 
 	$i18n_providers = [];
+
+	/* Listed first, so it is the handler when none is chosen. Its classes
+	   come from the Composer autoloader, which include/global.php would
+	   otherwise load after this file. */
+	if (empty($i18n_handler) || $i18n_handler === CACTI_LANGUAGE_HANDLER_SYMFONY) {
+		$i18n_providers[] = [
+			'handler' => CACTI_LANGUAGE_HANDLER_SYMFONY,
+			'paths'   => [ $config['include_path'] . '/vendor/' ],
+			'files'   => ['autoload.php'],
+		];
+	}
 
 	if (empty($i18n_handler) || $i18n_handler === CACTI_LANGUAGE_HANDLER_PHPGETTEXT) {
 		$i18n_providers[] = [
@@ -413,6 +433,33 @@ function load_gettext_oscarotero($domain) {
 	return $i18n_domain;
 }
 
+/* load_gettext_symfony - loads every text domain through Symfony Translation
+   and returns the readers for $i18n. A catalog that cannot be read is logged
+   and left out, so its text is shown in English instead of ending the request. */
+function load_gettext_symfony($locale, $textdomains, $base_path) {
+	$catalogs = array();
+	foreach ($textdomains as $domain => $paths) {
+		i18n_debug("load_gettext_symfony($domain): " . $paths['path2catalogue']);
+		$catalogs[$domain] = $paths['path2catalogue'];
+	}
+
+	/* Compiled catalogues are PHP files, so they are kept only below the
+	   application's own cache directory. When that cannot be written the
+	   catalogs are read on every request. */
+	$translations = new \Kadupul\Platform\Infrastructure\Legacy\LegacyTranslations($locale, $catalogs, $base_path . '/var/cache/legacy-translations');
+
+	if (!$translations->cached()) {
+		i18n_debug('load_gettext_symfony(): catalogs read without the compiled cache');
+	}
+
+	foreach ($translations->failures() as $domain => $reason) {
+		i18n_debug("load_gettext_symfony($domain): $reason");
+		cacti_log("WARNING: Language file '" . $catalogs[$domain] . "' is unusable, text domain '$domain' is shown in English: $reason", false, 'i18n');
+	}
+
+	return $translations->domains();
+}
+
 function apply_locale($language) {
 	global $cacti_locale, $cacti_country, $lang2locale;
 
@@ -519,6 +566,7 @@ function __gettext($text, $domain = 'cacti') {
 	// Assume translation fails or is not defined
 	if (isset($i18n[$domain])) {
 		switch (CACTI_LANGUAGE_HANDLER) {
+			case CACTI_LANGUAGE_HANDLER_SYMFONY:
 			case CACTI_LANGUAGE_HANDLER_PHPGETTEXT:
 				$translated = $i18n[$domain]->translate($text);
 				break;
