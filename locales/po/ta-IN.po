@@ -4059,11 +4059,11 @@ msgstr "ஒருங்கிணைப்பு"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "எச்சரிக்கைச் சம்பவங்கள்"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "எச்சரிக்கை விதிகள்"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "%d செயல்முறைகள்"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d விதிகள்"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "இந்த நாட்களின் எண்ணிக்கைக�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "எச்சரிக்கை மதிப்பீட்டு நேர ஒதுக்கீடு"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "ஒரு தொகுதிக்கான எச்சரிக்கை விதிகள்"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "Lotus Notes (R) மாற்றத்தை இயக்கு"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "உள்ளமைந்த எச்சரிக்கை மதிப்பீட்டை இயக்கு"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "RRD எவ்வளவு அடிக்கடி சரிபார்
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "ஒரு மதிப்பீட்டு ஓட்டம் எவ்வளவு நேரம் புதிய விதித் தொகுதிகளைத் தொடங்கலாம். மதிப்பீட்டிற்குப் பிறகு மீதமுள்ள நேரத்தில் வரிசையில் உள்ள அறிவிப்புகள் அனுப்பப்படும்; நேர ஒதுக்கீடு முடிந்தாலும் ஒரு தொகுதி அனுப்பப்படலாம். எட்டப்படாத விதிகள் அடுத்த ஓட்டத்தில் முதலில் மதிப்பீடு செய்யப்படும்."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaNகள்"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "உள்ளமைந்த எச்சரிக்கை"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "வரைபடங்கள் உள்ளன மற்றும் த
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "ஒவ்வொரு வினவல் சுழற்சிக்குப் பிறகும் முதன்மைத் தரவு சேகரிப்பான் எச்சரிக்கை விதிகளை மதிப்பீடு செய்து அவற்றின் அறிவிப்புகளை அனுப்ப வேண்டுமா? தரவு மூலப் புள்ளிவிவரங்கள் சேகரிக்கும் வீதங்களை எச்சரிக்கை விதிகள் படிப்பதால், தரவு மூலப் புள்ளிவிவரச் சேகரிப்பும் இயக்கப்பட்டிருக்க வேண்டும்."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "புதிய Web Basic மற்றும் LDAP பயனர்க�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "ஒன்றாகப் படிக்கப்பட்டு மதிப்பீடு செய்யப்படும் எச்சரிக்கை விதிகளின் எண்ணிக்கை. தொகுதிகளுக்கு இடையே நேர ஒதுக்கீடு சரிபார்க்கப்படும்."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

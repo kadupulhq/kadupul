@@ -69,7 +69,7 @@ final class GettextCatalogBridgeTest extends TestCase
         $files = array_map(static fn(string $path): string => basename($path, '.po'), glob(self::ROOT . '/locales/po/*.po') ?: []);
         sort($files);
         self::assertSame($locales, $files);
-        self::assertCount(40, $locales);
+        self::assertCount(43, $locales);
         $keys = [];
         foreach (glob(self::ROOT . '/config/translations/*.en.yaml') ?: [] as $source) {
             $keys = array_merge($keys, array_map('strval', array_keys(Yaml::parseFile($source))));
@@ -304,10 +304,14 @@ final class GettextCatalogBridgeTest extends TestCase
     /** @return iterable<string, array{mixed, ?string}> */
     public static function spellings(): iterable
     {
-        yield 'English region' => ['en-GB', 'en'];
+        yield 'British English' => ['en-GB', 'en_GB'];
+        yield 'English region' => ['en-AU', 'en'];
         yield 'legacy French' => ['fr_FR', 'fr'];
         yield 'African French' => ['fr-SN', 'fr_SN'];
-        yield 'French region' => ['fr-CA', 'fr'];
+        yield 'Canadian French' => ['fr-CA', 'fr_CA'];
+        yield 'French region' => ['fr-BE', 'fr'];
+        yield 'Mexican Spanish' => ['es-MX', 'es_MX'];
+        yield 'unshipped Spanish region' => ['es-AR', null];
         yield 'Brazilian hyphen' => ['pt-BR', 'pt_BR'];
         yield 'Brazilian underscore lower case' => ['pt_br', 'pt_BR'];
         yield 'Portugal' => ['pt-PT', 'pt_PT'];

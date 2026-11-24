@@ -4038,11 +4038,11 @@ msgstr "การรวมข้อมูล (Aggregate)"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "เหตุการณ์การแจ้งเตือน"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "กฎการแจ้งเตือน"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7506,7 +7506,7 @@ msgstr "%d โปรเซส"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d กฎ"
 
 #: include/global_settings.php
 #, php-format
@@ -7628,11 +7628,11 @@ msgstr "หลังจากจำนวนวันเท่านี้ จ�
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "งบประมาณเวลาการประเมินการแจ้งเตือน"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "จำนวนกฎการแจ้งเตือนต่อชุด"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8216,7 +8216,7 @@ msgstr "เปิดใช้งานการปรับแต่งสำห
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "เปิดใช้งานการประเมินการแจ้งเตือนในตัว"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8500,7 +8500,7 @@ msgstr "ควรตรวจสอบ RRD บ่อยแค่ไหน ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "ระยะเวลาที่การประเมินหนึ่งรอบสามารถเริ่มชุดกฎใหม่ได้ การส่งการแจ้งเตือนที่อยู่ในคิวจะดำเนินการต่อจากการประเมินด้วยเวลาที่เหลืออยู่ และอาจส่งได้หนึ่งชุดแม้ว่างบประมาณเวลาจะหมดลงแล้ว กฎที่ยังประเมินไม่ถึงจะถูกประเมินเป็นลำดับแรกในรอบถัดไป"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8832,7 +8832,7 @@ msgstr "NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "การแจ้งเตือนในตัว"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9348,7 +9348,7 @@ msgstr "ให้ทำเครื่องหมายถูกที่ 'ม�
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "ตัวรวบรวมข้อมูลหลักควรประเมินกฎการแจ้งเตือนหลังจบรอบการโพลแต่ละครั้งและส่งการแจ้งเตือนหรือไม่ กฎการแจ้งเตือนจะอ่านค่าอัตราที่สถิติแหล่งข้อมูลเก็บรวบรวมไว้ ดังนั้นจึงต้องเปิดใช้งานการรวบรวมสถิติแหล่งข้อมูลด้วย"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9780,7 +9780,7 @@ msgstr "ชื่อของผู้ใช้ที่ Kadupul จะใช้
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "จำนวนกฎการแจ้งเตือนที่อ่านและประเมินพร้อมกัน โดยจะตรวจสอบงบประมาณเวลาในระหว่างแต่ละชุด"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

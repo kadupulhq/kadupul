@@ -27,16 +27,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Entwicklung, Beiträge und Release-Entscheidungen werden von der %sKadupul-Organisation%s verwaltet."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Dokumentation und Support finden Sie im %sKadupul-Projekt%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul ist ein unabhängiges Open-Source-Projekt für Netzwerküberwachung und Zeitreihendiagramme."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -86,7 +86,7 @@ msgstr "Aggregatvorschau[%s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Aggregatvorschau[%s]"
+msgstr "Aggregat-Vorschau existiert nicht"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -655,7 +655,7 @@ msgstr "Bitte gib dein aktuelles Passwort und dein neues <br>Kadupul Passwort ei
 
 #: auth_changepassword.php
 msgid "Please enter your new Kadupul password."
-msgstr "Bitte Benutzernamen und Kennwort eingeben:"
+msgstr "Bitte geben Sie Ihr neues Kadupul-Passwort ein."
 
 #: auth_changepassword.php auth_profile.php graphs_new.php lib/html_form.php
 #: lib/html_graph.php lib/html_tree.php settings.php
@@ -1495,7 +1495,7 @@ msgstr "Gruppierung verwenden"
 
 #: cactid.php
 msgid "Kadupul System Notice"
-msgstr "Systemwerkzeuge"
+msgstr "Kadupul-Systemhinweis"
 
 #: cactid.php help.php lib/functions.php poller.php poller_automation.php
 #: poller_boost.php
@@ -1526,7 +1526,7 @@ msgstr "<strong>hex</strong> - Der Hex-Wert"
 
 #: color.php
 msgid "<strong>name</strong> - The Color Name"
-msgstr "<stark>name</stark> - Der Farbname"
+msgstr "<strong>name</strong> - Der Farbname"
 
 #: color.php
 msgid "Allow Existing Rows to be Updated?"
@@ -2062,11 +2062,11 @@ msgstr "Die Eingabezeichenkette ist in der Weißen Liste nicht vorhanden.  Führ
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Die Eingabe-Whitelist ist aktiv. Änderungen an dieser Dateneingabemethode erfordern das erneute Ausführen des CLI-Skripts für die Eingabe-Whitelist (cli/input_whitelist.php) mit den Optionen --audit und --update, bevor die Datenquelle wieder abgefragt wird."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Die Eingabezeichenkette enthält gefährliche Shell-Zeichen"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2122,9 +2122,8 @@ msgid "Update RRA"
 msgstr "Aktualisiere RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Dieses Feld aktualisieren"
+msgstr "Whitelist aktualisieren"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2165,7 +2164,7 @@ msgstr "Zugehörige Grafik-/Datenvorlagen[Bearbeiten: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Zugehörige Grafik-/Datenvorlagen[Bearbeiten: %s]"
+msgstr "Zugeordnete Diagramm-/Datenvorlagen [neu]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2693,7 +2692,7 @@ msgstr "Klicken Sie auf \"Weiter\", um die folgende(n) Datenvorlage(n) zu dupliz
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Benutzerdefinierte Daten (Dateneingabe: %s)"
+msgstr "Warnmeldung für benutzerdefinierte Daten"
 
 #: data_templates.php
 #, php-format
@@ -2881,7 +2880,7 @@ msgstr "Der Kadupul-Poller wurde noch nicht ausgeführt."
 
 #: graph_realtime.php
 msgid " seconds left."
-msgstr "%d Sekunden übrig."
+msgstr " Sekunden verbleibend."
 
 #: graph_realtime.php
 #, php-format
@@ -3268,7 +3267,7 @@ msgstr "Wählen Sie eine Grafikvorlage aus und klicken Sie auf \"Weiter\", um di
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Wählen Sie eine Diagrammvorlage aus, die auf dieses Diagramm angewendet werden soll. Bitte beachten Sie, dass Sie nur Graphenvorlagen in eine 100%% kompatible Graphenvorlage ändern können, was bedeutet, dass sie identische Datenquellen enthält."
+msgstr "Wählen Sie eine Diagrammvorlage aus, die auf dieses Diagramm angewendet werden soll. Bitte beachten Sie, dass Sie Diagrammvorlagen nur in eine zu 100%% kompatible Diagrammvorlage ändern können, was bedeutet, dass sie identische Datenquellen enthält."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3384,7 +3383,7 @@ msgstr "[ Angewandte benutzerdefinierte Grafikliste - Filter aus der Liste ]"
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Benutzergruppenverwaltung[Bearbeiten: %s]"
+msgstr "Diagrammverwaltung [ Nicht gerätebasiert ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3970,7 +3969,7 @@ msgstr "1 Megabyte"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "%d Thread"
+msgstr "1 Thread"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -4071,11 +4070,11 @@ msgstr "Zusammenfassen"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Alarmvorfälle"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Alarmregeln"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -5925,7 +5924,7 @@ msgstr "XML: Hash Version existiert nicht."
 
 #: include/global_arrays.php
 msgid "XML: Kadupul version does not exist."
-msgstr "XML: Hash Version existiert nicht."
+msgstr "XML: Kadupul-Version existiert nicht."
 
 #: include/global_arrays.php
 msgid "Year(s)"
@@ -7183,7 +7182,7 @@ msgstr "Das Ersetzungszeichenkettenmuster zur Verwendung als Baumüberschrift.<b
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
-msgstr "Das String Pattern (Regular Expression), gegen das man abgleichen kann, muss <strong>NICHT</strong> angegeben werden!"
+msgstr "Das Zeichenkettenmuster (regulärer Ausdruck), gegen das abgeglichen werden soll.<br>Umschließende '/' dürfen <strong>NICHT</strong> angegeben werden!"
 
 #: include/global_form.php package_import.php
 msgid "The Width to be used when importing or updating Graph Templates."
@@ -7271,7 +7270,7 @@ msgstr "Der maximale vertikale Wert für das Diagramm."
 
 #: include/global_form.php
 msgid "The method Kadupul will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Die Methode Kadupul wird verwendet, um zu bestimmen, ob ein Host für die Abfrage zur Verfügung steht.  <br><i>HINWEIS: Es wird empfohlen, mindestens immer SNMP zu wählen."
+msgstr "Die Methode, die Kadupul verwendet, um festzustellen, ob ein Host für die Abfrage verfügbar ist. <br><i>HINWEIS: Es wird empfohlen, mindestens SNMP immer ausgewählt zu lassen.</i>"
 
 #: include/global_form.php
 msgid "The minimum value of data that is allowed to be collected."
@@ -7311,7 +7310,7 @@ msgstr "Geben Sie die Anzahl der OIDs an, die in einer einzigen SNMP Get-Anfrage
 
 #: include/global_form.php
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "Die Anzahl der gleichzeitigen Threads, die für die Abfrage dieses Geräts verwendet werden.  Dies gilt nur für den Wirbelsäulenposter."
+msgstr "Die Anzahl der gleichzeitigen Threads, die für die Abfrage dieses Geräts verwendet werden. Dies gilt nur für den Spine-Poller."
 
 #: include/global_form.php
 msgid "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1."
@@ -7541,7 +7540,7 @@ msgstr "%d Prozesse"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d Regeln"
 
 #: include/global_settings.php
 #, php-format
@@ -7631,7 +7630,7 @@ msgstr "56 Gbit/s Ethernet"
 
 #: include/global_settings.php
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i>Built-in Authentication</i> - Kadupul übernimmt die Benutzerauthentifizierung, mit der Sie Benutzer erstellen und ihnen Rechte für verschiedene Bereiche innerhalb von Kadupul geben können.<br><br><br><i>Web Basic Authentication</i> - Die Authentifizierung erfolgt über den Webserver. Benutzer können bei der ersten Anmeldung automatisch hinzugefügt oder erstellt werden, wenn der Vorlagenbenutzer definiert ist, andernfalls werden die definierten Gastberechtigungen verwendet.<br><br><br><i>LDAP Authentication</i> - Ermöglicht die Authentifizierung an einem LDAP-Server. Benutzer werden beim ersten Login automatisch angelegt, wenn der Vorlagenbenutzer definiert ist, andernfalls werden die definierten Gastberechtigungen verwendet.  Wenn das LDAP-Modul von PHP nicht aktiviert ist, wird die LDAP-Authentifizierung nicht als wählbare Option angezeigt.<br><br><br><i><i>Multiple LDAP/AD Domain Authentication</i> - Ermöglicht es Administratoren, mehrere disparate Gruppen aus verschiedenen LDAP/AD-Verzeichnissen zu unterstützen, um auf Kadupul-Ressourcen zuzugreifen.  Genau wie die LDAP-Authentifizierung ist auch das PHP-LDAP-Modul erforderlich, um diese Methode zu verwenden.</blockquote>."
+msgstr "<blockquote><i>Integrierte Authentifizierung</i> - Kadupul übernimmt die Benutzerauthentifizierung, sodass Sie Benutzer anlegen und ihnen Rechte für verschiedene Bereiche innerhalb von Kadupul zuweisen können.<br><br><i>Web-Basic-Authentifizierung</i> - Die Authentifizierung erfolgt über den Webserver. Benutzer können bei der ersten Anmeldung automatisch hinzugefügt oder erstellt werden, sofern der Vorlagenbenutzer definiert ist; andernfalls werden die definierten Gastberechtigungen verwendet.<br><br><i>LDAP-Authentifizierung</i> - Ermöglicht die Authentifizierung gegenüber einem LDAP-Server. Benutzer werden bei der ersten Anmeldung automatisch erstellt, sofern der Vorlagenbenutzer definiert ist; andernfalls werden die definierten Gastberechtigungen verwendet. Wenn das PHP-LDAP-Modul nicht aktiviert ist, erscheint die LDAP-Authentifizierung nicht als auswählbare Option.<br><br><i>Authentifizierung über mehrere LDAP/AD-Domänen</i> - Ermöglicht Administratoren die Unterstützung mehrerer getrennter Gruppen aus verschiedenen LDAP/AD-Verzeichnissen für den Zugriff auf Kadupul-Ressourcen. Genau wie bei der LDAP-Authentifizierung ist das PHP-LDAP-Modul erforderlich, um diese Methode zu verwenden.</blockquote>"
 
 #: include/global_settings.php
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
@@ -7663,11 +7662,11 @@ msgstr "Nach dieser Anzahl von Tagen werden die Geschäftszeiten nicht mehr zum 
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Zeitbudget für Alarmauswertung"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Alarmregeln pro Batch"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -7711,7 +7710,7 @@ msgstr "Ein Konto wird nach so vielen Minuten automatisch freigeschaltet.  Selbs
 
 #: include/global_settings.php
 msgid "Any strings that match this regex will be excluded from the user display.  <strong>For example, if you want to exclude all log lines that include the words 'Admin' or 'Login' you would type '(Admin || Login)'</strong>"
-msgstr "Alle Zeichenketten, die diesem Regex entsprechen, werden von der Benutzeranzeige ausgeschlossen.  <Wenn Sie beispielsweise alle Protokollzeilen ausschließen möchten, die die Wörter'Admin' oder'Login' enthalten, geben Sie '(Admin ||| Login)'</strong> ein."
+msgstr "Alle Zeichenketten, die diesem regulären Ausdruck entsprechen, werden von der Benutzeranzeige ausgeschlossen.  <strong>Wenn Sie beispielsweise alle Protokollzeilen ausschließen möchten, die die Wörter 'Admin' oder 'Login' enthalten, geben Sie '(Admin || Login)' ein.</strong>"
 
 #: include/global_settings.php
 msgid "Any value that is this many standard deviations above the average will be excluded.  A good number will be dependent on the type of data to be operated on.  We recommend a number no lower than 5 Standard Deviations."
@@ -8011,7 +8010,7 @@ msgstr "Debuggen der Ausgabebreite"
 
 #: include/global_settings.php
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Standardverfügbarkeit/Reichbarkeit für alle neuen Geräte.  Die Methode, die Kadupul verwendet, um festzustellen, ob ein Gerät für die Abfrage verfügbar ist.  <br><i>HINWEIS: Es wird empfohlen, mindestens immer SNMP zu wählen."
+msgstr "Standardmethode für Verfügbarkeit/Erreichbarkeit aller neuen Geräte. Die Methode, die Kadupul verwendet, um festzustellen, ob ein Gerät für die Abfrage verfügbar ist. <br><i>HINWEIS: Es wird empfohlen, mindestens SNMP immer ausgewählt zu lassen.</i>"
 
 #: include/global_settings.php
 msgid "Default Font"
@@ -8251,7 +8250,7 @@ msgstr "Lotus Notes (R) Optimieren aktivieren"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Native Alarmauswertung aktivieren"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8491,7 +8490,7 @@ msgstr "Kadupul-Dashboard ausblenden"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "%d Wochen"
+msgstr "Wochenenden ausblenden"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8535,7 +8534,7 @@ msgstr "Wie oft sollten die täglichen Statistiken aktualisiert werden?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Wie lange ein Auswertungslauf neue Regel-Batches starten darf. Das Senden in der Warteschlange stehender Benachrichtigungen erfolgt nach der Auswertung mit der verbleibenden Zeit und kann auch dann noch einen Batch senden, wenn das Zeitbudget aufgebraucht ist. Nicht erreichte Regeln werden beim nächsten Lauf zuerst ausgewertet."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8867,7 +8866,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Native Alarmierung"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9383,7 +9382,7 @@ msgstr "Sollen die Has-Graphen und Has-Datenquellen standardmäßig überprüft 
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Soll der Haupt-Datensammler nach jedem Abfragezyklus Alarmregeln auswerten und deren Benachrichtigungen senden? Alarmregeln lesen die Raten, die von den Datenquellenstatistiken erfasst werden, daher muss die Erfassung der Datenquellenstatistiken ebenfalls aktiviert sein."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9451,11 +9450,11 @@ msgstr "AEHRE"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "Lage der Binärdatei der Wirbelsäule"
+msgstr "Speicherort der Spine-Binärdatei"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "Wirbelsäulenkonfiguration Dateipfad"
+msgstr "Pfad zur Spine-Konfigurationsdatei"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9567,7 +9566,7 @@ msgstr "Der DNS-Hostname oder die IP-Adresse des RRDtool-Proxy-Servers."
 
 #: include/global_settings.php
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
-msgstr "Die Standard-Threads, die pro Prozess erlaubt sind.  HINWEIS: Ab Kadupul 1.2+ wird diese Einstellung im Datensammler beibehalten, und dies ist einfach das Preset.  Die Verwendung einer höheren Zahl bei der Verwendung der Wirbelsäule verbessert die Leistung.  Stellen Sie jedoch sicher, dass Sie genügend MySQL/MariaDB-Verbindungen haben, um die folgende Gleichung zu unterstützen: Verbindungen = Datensammler * Prozesse * (Threads + Skriptserver).  Sie müssen auch sicherstellen, dass Sie über genügend freie Verbindungen für Benutzer-Login-Verbindungen verfügen."
+msgstr "Die standardmäßig pro Prozess zulässigen Threads. HINWEIS: Ab Kadupul 1.2+ wird diese Einstellung im Datensammler verwaltet, und dies ist lediglich die Voreinstellung. Eine höhere Anzahl bei Verwendung von Spine verbessert die Leistung. Stellen Sie jedoch sicher, dass Sie über genügend MySQL/MariaDB-Verbindungen verfügen, um die folgende Gleichung zu erfüllen: Verbindungen = Datensammler * Prozesse * (Threads + Skriptserver). Außerdem müssen Sie sicherstellen, dass genügend freie Verbindungen für Benutzeranmeldungen vorhanden sind."
 
 #: include/global_settings.php
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
@@ -9687,7 +9686,7 @@ msgstr "Die Standardanzahl der Geräte-Threads.  Dies gilt nur bei Verwendung de
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
-msgstr "Die Standardanzahl der gleichzeitigen Prozesse, die pro Datensammler ausgeführt werden sollen.  HINWEIS: Ab Kadupul 1.2 wird diese Einstellung im Datensammler beibehalten.  In Zukunft ist dieser Wert nur eine Voreinstellung für den Datensammler.  Die Verwendung einer höheren Zahl bei der Verwendung von cmd.php verbessert die Leistung.  Leistungssteigerungen in der Wirbelsäule lassen sich am besten mit dem Thread-Parameter lösen.  Bei der Verwendung von Wirbelsäule empfehlen wir eine geringere Anzahl und stattdessen die Verwendung von Gewinden.  Wenn Sie cmd.php verwenden, verwenden Sie nicht mehr als das Doppelte der Anzahl der CPU-Kerne."
+msgstr "Die Standardanzahl gleichzeitiger Prozesse, die pro Datensammler ausgeführt werden sollen. HINWEIS: Ab Kadupul 1.2 wird diese Einstellung im Datensammler verwaltet. Künftig ist dieser Wert nur noch eine Voreinstellung für den Datensammler. Eine höhere Anzahl verbessert die Leistung bei Verwendung von cmd.php. Leistungssteigerungen bei Spine lassen sich am besten über den Threads-Parameter erzielen. Bei Verwendung von Spine empfehlen wir eine niedrigere Anzahl und stattdessen die Nutzung von Threads. Bei Verwendung von cmd.php sollten Sie nicht mehr als das Doppelte der Anzahl der CPU-Kerne verwenden."
 
 #: include/global_settings.php
 msgid "The default number of rows to display on for a table."
@@ -9815,7 +9814,7 @@ msgstr "Der Name des Benutzers, den Kadupul als Vorlage für neue Web Basic- und
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Die Anzahl der Alarmregeln, die gemeinsam gelesen und ausgewertet werden. Das Zeitbudget wird zwischen den Batches geprüft."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9875,7 +9874,7 @@ msgstr "Das Passwort, mit dem Sie sich beim Senden über SMTP authentifizieren m
 
 #: include/global_settings.php
 msgid "The path to Spine binary."
-msgstr "Der Pfad zur Binärdatei der Wirbelsäule."
+msgstr "Der Pfad zur Spine-Binärdatei."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
@@ -10060,7 +10059,7 @@ msgstr "Dieser Wert stellt die Anzahl der hohen und niedrigen Durchschnittswerte
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Dieser Wert stellt den Prozentsatz über dem angepassten Stichprobenmittelwert dar, sobald Ausreißer aus der Stichprobe entfernt wurden.  Ein Varianzprozentsatz von 100%% bei einem angepassten Durchschnitt von 50 würde beispielsweise jede Probe über der Menge von 100 aus dem Diagramm entfernen."
+msgstr "Dieser Wert gibt den Prozentsatz über dem bereinigten Stichprobenmittelwert an, nachdem Ausreißer aus der Stichprobe entfernt wurden. Beispielsweise würde ein Varianzprozentsatz von 100%% bei einem bereinigten Durchschnitt von 50 jeden Messwert über 100 aus dem Diagramm entfernen."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10798,7 +10797,7 @@ msgstr "Datei"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "%d Zeilen"
+msgstr "Erste Zeilen"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -11354,7 +11353,7 @@ msgstr "Bypass"
 
 #: lib/functions.php
 msgid "Checking Configuration...<br>"
-msgstr "Konfiguration prüfen....<br><br>"
+msgstr "Konfiguration wird geprüft...<br>"
 
 #: lib/functions.php tree.php user_admin.php user_group_admin.php
 msgid "Copy"
@@ -11423,7 +11422,7 @@ msgstr "Abmelden"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer-Fehler: Nein <b>TO</b>Adresse gesetzt!<br>Wenn Sie den Link <i>Test Mail</i> verwenden, setzen Sie bitte die Einstellung <b>Alarmmail</b>."
+msgstr "Mailer-Fehler: Keine Empfängeradresse festgelegt!!<br>Wenn Sie den Link <i>Test-E-Mail</i> verwenden, legen Sie bitte die Einstellung <b>Alarm-E-Mail</b> fest."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11946,7 +11945,7 @@ msgstr "SpikeKill Ergebnisse"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "Wirbelsäule"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -12847,7 +12846,7 @@ msgstr "beibehalten"
 
 #: lib/import.php
 msgid "not exists"
-msgstr "%s \"%s\" existiert bereits."
+msgstr "existiert nicht"
 
 #: lib/import.php
 msgid "not writable"
@@ -13067,7 +13066,7 @@ msgstr "Standardprofile"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Gerätevorlagen [bearbeiten: %s]"
+msgstr "Die Gerätevorlage für das erste Kadupul-Gerät ist %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13303,7 +13302,7 @@ msgstr "Es ist wichtig, dass der Central Kadupul Server über MySQL mit jedem en
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Es wird dringend empfohlen, die Datei config.php zu aktualisieren, um diese Funktion zu aktivieren, indem Sie die Variable <b>$input_whitelist auskommentieren</b> und nach Abschluss der webbasierten Installation die drei oben genannten CLI- <b>Skriptoptionen ausführen</b> ."
+msgstr "Es wird dringend empfohlen, Ihre config.php zu aktualisieren, um diese Funktion zu aktivieren, indem Sie die Auskommentierung der Variable <b>$input_whitelist</b> aufheben und anschließend nach Abschluss der webbasierten Installation die drei oben genannten CLI-Skriptoptionen ausführen."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13348,7 +13347,7 @@ msgstr "Stellen Sie sicher, dass alle diese Werte korrekt sind, bevor Sie fortfa
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Stellen Sie sicher, dass Sie die erforderlichen Schritte um Kadupul zu installieren gelesen und befolgt haben bevor Sie fortfahren. Informationen zur Installation finden Sie hier für <a href=\"%1$s\">Unix</a> und <a href=\"%2$s\">Win32</a>-basierte Betriebssysteme."
+msgstr "Stellen Sie sicher, dass Sie die erforderlichen Schritte zur Installation von Kadupul gelesen und befolgt haben, bevor Sie fortfahren. Installationsinformationen finden Sie für <a href=\"%s\">Unix</a>- und <a href=\"%s\">Win32</a>-basierte Betriebssysteme."
 
 #: lib/installer.php
 #, php-format
@@ -13712,7 +13711,7 @@ msgstr "Der binäre PHP-Speicherort ist ungültig und muss aktualisiert werden."
 
 #: lib/installer.php
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
-msgstr "Die folgenden PHP-Erweiterungen sind obligatorisch und müssen installiert werden, bevor Sie mit der Installation fortfahren."
+msgstr "Die folgenden PHP-Erweiterungen sind zwingend erforderlich und MÜSSEN installiert sein, bevor Sie mit der Kadupul-Installation fortfahren."
 
 #: lib/installer.php
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
@@ -13823,7 +13822,7 @@ msgstr "Diese Version von Kadupul (%s) scheint keinen gültigen Versionscode zu 
 
 #: lib/installer.php
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Um fortfahren zu können, erstellen Sie eine neue Datenbank, importieren Sie \"cacti.sql\" in diese:"
+msgstr "Um fortfahren zu können, <b>MÜSSEN</b> Sie eine neue Datenbank erstellen und \"cacti.sql\" in diese importieren:"
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
@@ -13904,11 +13903,11 @@ msgstr "Sie müssen die KACTI-Datenbank MANAUELL ändern, um alle Aktualisierung
 
 #: lib/installer.php
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "Sie müssen auch MySQL TimeZone Informationen in MySQL importieren und dem Kadupul Benutzer SELECT Zugriff auf die mysql.time_zone_name Tabelle gewähren."
+msgstr "Sie <b>MÜSSEN</b> außerdem die MySQL-Zeitzoneninformationen in MySQL importieren und dem Kadupul-Benutzer SELECT-Zugriff auf die Tabelle mysql.time_zone_name gewähren"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "Sie müssen dann \"include/config.php\" aktualisieren, um auf die neue Datenbank zu verweisen."
+msgstr "Sie <b>MÜSSEN</b> anschließend \"include/config.php\" aktualisieren, damit sie auf die neue Datenbank verweist."
 
 #: lib/installer.php
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
@@ -14328,7 +14327,7 @@ msgstr "Fehler beim Parsen des XML von rrdtool dump"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Keine %s gefunden"
+msgstr "Fehler gefunden"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14420,7 +14419,7 @@ msgstr "Das Diagramm enthält einen Wert, den RRDtool nicht akzeptieren kann."
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "RRA'%s' fehlt in RRDatei"
+msgstr "Das RRA '%s' fehlt in der vorhandenen Kadupul-RRD-Datei"
 
 #: lib/rrd.php
 #, php-format
@@ -14847,7 +14846,7 @@ msgstr "Abhängig von der Anzahl der Anmeldungen und der Verwendung des Spine Da
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Wenn Sie den Kadupul Performance Booster verwenden und eine Memory-Speicher-Engine wählen, müssen Sie darauf achten, den Performance-Booster-Puffer zu leeren, bevor dem System der Speicherplatz für Memory-Tabellen ausgeht. Dies geschieht auf zwei Arten: Erstens durch Verkleinern der Ausgabespalte auf genau die richtige Größe. Diese Spalte befindet sich in den Tabellen poller_output und poller_output_boost. Zweitens können Sie Memory-Tabellen mehr Arbeitsspeicher zuweisen. Wir haben willkürlich einen empfohlenen Wert von 10%% des Systemspeichers gewählt; wenn Sie jedoch SSD-Laufwerke oder ein kleineres System verwenden, können Sie diese Empfehlung ignorieren oder eine andere Speicher-Engine wählen. Den erwarteten Verbrauch der Performance-Booster-Tabellen können Sie unter Konsole -> System-Dienstprogramme -> Boost-Status anzeigen einsehen."
+msgstr "Wenn Sie den Kadupul Performance Booster verwenden und eine Memory-Speicher-Engine wählen, müssen Sie darauf achten, den Performance-Booster-Puffer zu leeren, bevor dem System der Speicherplatz für Memory-Tabellen ausgeht. Dies geschieht auf zwei Arten: Erstens durch Verkleinern der Ausgabespalte auf genau die richtige Größe. Diese Spalte befindet sich in den Tabellen poller_output und poller_output_boost. Zweitens können Sie den Memory-Tabellen mehr Arbeitsspeicher zuweisen. Wir haben einen empfohlenen Richtwert von 10%% Ihres Systemspeichers gewählt; wenn Sie jedoch SSD-Laufwerke oder ein kleineres System verwenden, können Sie diese Empfehlung ignorieren oder eine andere Speicher-Engine wählen. Den erwarteten Verbrauch der Performance-Booster-Tabellen können Sie unter Konsole -> Systemdienstprogramme -> Boost-Status anzeigen einsehen."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14868,7 +14867,7 @@ msgstr "Wenn Ihre Tabellen sehr große Indizes haben, müssen Sie mit dem Barrac
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB hält so viele Tabellen und Indizes wie möglich im Systemspeicher. Daher sollten Sie innodb_buffer_pool groß genug wählen, um möglichst viele Tabellen und Indizes im Speicher zu halten. Die Prüfung der Größe des Verzeichnisses /var/lib/mysql/cacti hilft bei der Bestimmung dieses Wertes. Wir empfehlen 25%% des gesamten Systemspeichers, Ihre Anforderungen variieren jedoch je nach Systemgröße."
+msgstr "InnoDB hält so viele Tabellen und Indizes wie möglich im Systemspeicher. Daher sollten Sie innodb_buffer_pool groß genug wählen, um möglichst viele Tabellen und Indizes im Speicher zu halten. Die Überprüfung der Größe des Verzeichnisses /var/lib/mysql/cacti hilft bei der Bestimmung dieses Wertes. Wir empfehlen 25%% Ihres gesamten Systemspeichers, Ihre Anforderungen variieren jedoch je nach Systemgröße."
 
 #: lib/utility.php
 #, php-format
@@ -15107,7 +15106,7 @@ msgstr "Der Text, der auf der Registerkarte oder im Menü angezeigt wird."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Die gültige URL, die für diesen externen Link verwendet werden soll. Muss das Protokoll enthalten, zum Beispiel https://kadupul.org. Beachten Sie, dass viele Websites die Einbettung in ein Iframe von einer fremden Seite nicht zulassen und daher die externe Verlinkung möglicherweise nicht funktioniert."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15135,7 +15134,7 @@ msgstr "Wo soll diese Seite erscheinen?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Ihre Inhaltsdatei ist keine gültige URL. Bitte geben Sie eine gültige URL ein"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15157,15 +15156,15 @@ msgstr "Version %s"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "Sie sind aufgrund von Inaktivität ausgeloggt worden."
+msgstr "Sie wurden aufgrund einer Statusänderung des Remote-Datensammlers von Kadupul abgemeldet"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a session timeout."
-msgstr "Sie sind aufgrund von Inaktivität ausgeloggt worden."
+msgstr "Sie wurden aufgrund einer Sitzungszeitüberschreitung von Kadupul abgemeldet."
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "Sie sind aufgrund von Inaktivität ausgeloggt worden."
+msgstr "Sie wurden aufgrund einer Kontosperrung von Kadupul abgemeldet."
 
 #: managers.php
 #, php-format
@@ -15628,7 +15627,7 @@ msgstr "FEHLER: Der Wirbelsäulenpfad: %s ist für die Poller-ID %d ungültig.  
 
 #: poller.php
 msgid "Kadupul System Notification"
-msgstr "Systemwerkzeuge"
+msgstr "Kadupul-Systembenachrichtigung"
 
 #: poller.php
 #, php-format
@@ -16308,9 +16307,8 @@ msgid "Site Name:"
 msgstr "Name der Seite:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Datei nicht gefunden"
+msgstr "Standort nicht gefunden."
 
 #: sites.php
 msgid "State"
@@ -16468,7 +16466,7 @@ msgstr "Anzahl der Offline-Sätze:"
 
 #: templates/platform/console_home_body.html.twig
 msgid "Recovery"
-msgstr "بازیابی"
+msgstr "Wiederherstellung"
 
 #: templates/platform/console_home_body.html.twig
 msgid "Remote Data Collector Status:"
@@ -16777,7 +16775,7 @@ msgstr "Die Gesamtzahl der einzelnen Diagramme in diesem Baum."
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Dieser Baum wurde für die Bearbeitung von %1$s durch %2$s gesperrt."
+msgstr "Dieser Baum wurde am %s von %s für die Bearbeitung gesperrt."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -16901,7 +16899,7 @@ msgstr "> vor 4 Monaten"
 
 #: user_admin.php user_group_admin.php
 msgid "ALLOW"
-msgstr "允許"
+msgstr "ZULASSEN"
 
 #: user_admin.php user_group_admin.php
 msgid "Access Granted"
@@ -17882,7 +17880,7 @@ msgstr "Kadupul Betriebssystem"
 
 #: utilities.php
 msgid "Kadupul System Utilities"
-msgstr "Systemwerkzeuge"
+msgstr "Kadupul-Systemdienstprogramme"
 
 #: utilities.php
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
@@ -18475,13 +18473,12 @@ msgid "VDEF Preview"
 msgstr "VDEF-Vorschau"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Datei nicht gefunden"
+msgstr "VDEF nicht gefunden."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF oder VDEF-Element nicht gefunden."
 
 #: vdef.php
 #, php-format

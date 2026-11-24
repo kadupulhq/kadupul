@@ -4059,11 +4059,11 @@ msgstr "Jumlishi"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Matukio ya Tahadhari"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Kanuni za Tahadhari"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "Michakato %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "Kanuni %d"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "Baada ya idadi hii ya siku, saa za kazi hazitaongezwa kwenye grafu. <br/
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Bajeti ya Muda wa Kutathmini Tahadhari"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Kanuni za Tahadhari kwa Kila Kundi"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "Wezesha marekebisho ya Lotus Notes (R)"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Wezesha Tathmini Asilia ya Tahadhari"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "RRD inapaswa kukaguliwa mara ngapi?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Muda ambao mzunguko mmoja wa tathmini unaweza kuanzisha makundi mapya ya kanuni. Kutuma arifa zilizopangwa kwenye foleni kunafuata tathmini kwa muda uliosalia, na kunaweza kutuma kundi moja hata kama bajeti ya muda imekwisha. Kanuni ambazo hazikufikiwa hutathminiwa kwanza katika mzunguko unaofuata."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Tahadhari Asilia"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "Je, Ina Grafu na Ina Vyanzo vya Data zitiwe alama kwa Chaguo-msingi."
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Je, Kikusanya Data kikuu kitathmini kanuni za tahadhari baada ya kila mzunguko wa ukusanyaji data na kutuma arifa zake? Kanuni za tahadhari husoma viwango ambavyo Takwimu za Chanzo cha Data hukusanya, kwa hivyo Ukusanyaji wa Takwimu za Chanzo cha Data lazima pia uwezeshwe."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "Jina la mtumiaji ambaye Kadupul itatumia kama kiolezo kwa watumiaji wapy
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Idadi ya kanuni za tahadhari zinazosomwa na kutathminiwa kwa pamoja. Bajeti ya muda hukaguliwa kati ya makundi."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

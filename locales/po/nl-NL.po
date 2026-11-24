@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Ontwikkeling, bijdragen en releasebeslissingen worden beheerd door de %sKadupul-organisatie%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Bezoek het %sKadupul-project%s voor documentatie en ondersteuning."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Kadupul is een onafhankelijk opensourceproject voor netwerkmonitoring en tijdreeksgrafieken."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -79,7 +79,7 @@ msgstr "Geaggregeerd voorbeeld [%s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Geaggregeerd voorbeeld [%s]"
+msgstr "Geaggregeerd voorbeeld bestaat niet"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -148,7 +148,7 @@ msgstr "Annuleer"
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php user_domains.php
 msgid "Clear"
-msgstr "Herstel"
+msgstr "Wissen"
 
 #: aggregate_graphs.php automation_snmp.php data_debug.php data_queries.php
 #: data_sources.php data_templates.php graph_templates.php graph_view.php
@@ -1706,7 +1706,7 @@ msgstr "Data bron debug"
 
 #: data_debug.php
 msgid "Data Source matches the RRDfile?"
-msgstr "Aantal data bron(nen) toegevoegd aan RRD bestand: %s"
+msgstr "Komt gegevensbron overeen met het RRD-bestand?"
 
 #: data_debug.php
 msgid "Data Source repair received an invalid Data Source ID."
@@ -2053,11 +2053,11 @@ msgstr "Input String bestaat niet in de witte lijst.  Start CLI script input_whi
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Invoer-whitelisting is actief. Wijzigingen in deze gegevensinvoermethode vereisen dat het Input Whitelist CLI-script (cli/input_whitelist.php) opnieuw wordt uitgevoerd met zowel de optie --audit als --update voordat de gegevensbron opnieuw wordt bevraagd."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Invoerreeks bevat gevaarlijke shell-tekens"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2113,9 +2113,8 @@ msgid "Update RRA"
 msgstr "RRA bijwerken"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Dit veld bijwerken"
+msgstr "Whitelist bijwerken"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2156,7 +2155,7 @@ msgstr "Gekoppelde grafiek/data templates [wijzig: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Gekoppelde grafiek/data templates [wijzig: %s]"
+msgstr "Gekoppelde grafiek-/datasjablonen [nieuw]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2684,7 +2683,7 @@ msgstr "Klik op 'Volgende' om de volgende data template(s) te dupliceren. Option
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Aangepaste data [data invoer: %s]"
+msgstr "Waarschuwingsbericht voor aangepaste gegevens"
 
 #: data_templates.php
 #, php-format
@@ -2871,7 +2870,7 @@ msgstr "De Kadupul Poller heeft nog niet gelopen."
 
 #: graph_realtime.php
 msgid " seconds left."
-msgstr "%d seconden over."
+msgstr " seconden over."
 
 #: graph_realtime.php
 #, php-format
@@ -3374,7 +3373,7 @@ msgstr "[ Aangepaste grafieklijst toegepast - Filter VAN lijst ]"
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Gebruikersgroepbeheer [bewerken: %s]"
+msgstr "Grafiekbeheer [ Niet-apparaatgebaseerd ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3960,7 +3959,7 @@ msgstr "1 Megabyte"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "%d Thread"
+msgstr "1 thread"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -4061,11 +4060,11 @@ msgstr "Aggregeer"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Meldingsincidenten"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Meldingsregels"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -4497,7 +4496,7 @@ msgstr "Apparaatsjabloon bijgewerkt.  Vergeet niet om sjablonen te synchronisere
 
 #: include/global_arrays.php
 msgid "Disabled/Manual"
-msgstr "Gehandicapten/Handboek"
+msgstr "Uitgeschakeld/Handmatig"
 
 #: include/global_arrays.php
 msgid "Discovered Devices"
@@ -6695,7 +6694,7 @@ msgstr "Indien LINE werd gekozen, geef hier de breedte van de lijn aan.  U moet 
 
 #: include/global_form.php
 msgid "In order to avoid anti-aliasing blurring effects RRDtool snaps points to device resolution pixels, this results in a crisper appearance. If this is not to your liking, you can use this switch to turn this behavior off.<br><strong>Note: </strong>Gridfitting is turned off for PDF, EPS, SVG output by default."
-msgstr "Om anti-aliasing vervagende effecten te voorkomen, worden met RRDtool-snaps punten naar de pixels in de resolutie van het apparaat geslepen, wat resulteert in een scherper uiterlijk. Als dit niet naar wens is, kunt u deze schakelaar gebruiken om dit gedrag uit te schakelen.<br><strong><strong>Note: </strong>Gridfitting is standaard uitgeschakeld voor PDF, EPS, SVG output."
+msgstr "Om vervaging door anti-aliasing te voorkomen, lijnt RRDtool punten uit op de apparaatspecifieke resolutiepixels, wat zorgt voor een scherper uiterlijk. Als u dit niet wenst, kunt u dit gedrag met deze schakelaar uitschakelen.<br><strong>Opmerking: </strong>Gridfitting is standaard uitgeschakeld voor PDF-, EPS- en SVG-uitvoer."
 
 #: include/global_form.php
 msgid "Include Prefix Text"
@@ -7259,7 +7258,7 @@ msgstr "De maximale verticale waarde voor de grafiek."
 
 #: include/global_form.php
 msgid "The method Kadupul will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "De methode die Kadupul zal gebruiken om te bepalen of een host beschikbaar is voor polling.  <br><i><i>NOTE: Het is aan te raden om minimaal SNMP altijd te selecteren.</i>"
+msgstr "De methode die Kadupul gebruikt om te bepalen of een host beschikbaar is voor polling.<br><i>OPMERKING: Het wordt aanbevolen om minimaal altijd SNMP te selecteren.</i>"
 
 #: include/global_form.php
 msgid "The minimum value of data that is allowed to be collected."
@@ -7529,7 +7528,7 @@ msgstr "%d Processen"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d regels"
 
 #: include/global_settings.php
 #, php-format
@@ -7619,7 +7618,7 @@ msgstr "56 Gbps Ethernet"
 
 #: include/global_settings.php
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote><i><i>Ingebouwde authenticatie</i> - Kadupul zorgt voor gebruikersauthenticatie, waarmee u gebruikers kunt aanmaken en rechten kunt geven aan verschillende gebieden binnen Kadupul.<br><br><br><i>Web Basic Authenticatie</i> - Authenticatie wordt uitgevoerd door de webserver. Gebruikers kunnen automatisch worden toegevoegd of aangemaakt bij de eerste login als de Sjabloongebruiker is gedefinieerd, anders worden de gedefinieerde gastrechten gebruikt.<br><br><br><i><i>LDAP-authenticatie</i> - Maakt authenticatie tegen een LDAP-server mogelijk. Gebruikers worden automatisch aangemaakt bij de eerste login als de Sjabloongebruiker is gedefinieerd, anders worden de gedefinieerde gastrechten gebruikt.  Als de LDAP-module PHP's LDAP-authenticatie niet is ingeschakeld, verschijnt LDAP-authenticatie niet als een selecteerbare optie.<br><br><br><i>Multiple LDAP/AD Domain Authentication</i> - Hiermee kunnen beheerders meerdere ongelijksoortige groepen uit verschillende LDAP/AD-directories ondersteunen om toegang te krijgen tot Kadupul-middelen.  Net als LDAP-authenticatie is de PHP LDAP-module vereist om deze methode te gebruiken.</blockquote>"
+msgstr "<blockquote><i>Ingebouwde authenticatie</i> - Kadupul verzorgt de gebruikersauthenticatie, waarmee u gebruikers kunt aanmaken en rechten kunt toekennen aan verschillende onderdelen binnen Kadupul.<br><br><i>Web Basic-authenticatie</i> - Authenticatie wordt afgehandeld door de webserver. Gebruikers kunnen automatisch worden toegevoegd of aangemaakt bij het eerste inloggen als de sjabloongebruiker is gedefinieerd; anders worden de gedefinieerde gastrechten gebruikt.<br><br><i>LDAP-authenticatie</i> - Maakt authenticatie tegen een LDAP-server mogelijk. Gebruikers worden automatisch aangemaakt bij het eerste inloggen als de sjabloongebruiker is gedefinieerd; anders worden de gedefinieerde gastrechten gebruikt. Als de LDAP-module van PHP niet is ingeschakeld, verschijnt LDAP-authenticatie niet als selecteerbare optie.<br><br><i>Authenticatie voor meerdere LDAP/AD-domeinen</i> - Hiermee kunnen beheerders meerdere afzonderlijke groepen uit verschillende LDAP/AD-directory's ondersteunen voor toegang tot Kadupul-bronnen. Net als bij LDAP-authenticatie is de PHP LDAP-module vereist om deze methode te gebruiken.</blockquote>"
 
 #: include/global_settings.php
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
@@ -7651,11 +7650,11 @@ msgstr "Na dit aantal dagen worden de kantooruren niet toegevoegd aan de grafiek
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Tijdbudget voor meldingsevaluatie"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Meldingsregels per batch"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -7999,7 +7998,7 @@ msgstr "Debug Outputbreedte"
 
 #: include/global_settings.php
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Standaard Beschikbaarheid/Reachability voor alle nieuwe apparaten.  De methode die Kadupul zal gebruiken om te bepalen of een apparaat beschikbaar is voor polling.  <br><i><i>NOTE: Het is aan te raden om minimaal SNMP altijd te selecteren.</i>"
+msgstr "Standaard beschikbaarheid/bereikbaarheid voor alle nieuwe apparaten. De methode die Kadupul gebruikt om te bepalen of een apparaat beschikbaar is voor polling.<br><i>OPMERKING: Het wordt aanbevolen om minimaal altijd SNMP te selecteren.</i>"
 
 #: include/global_settings.php
 msgid "Default Font"
@@ -8239,7 +8238,7 @@ msgstr "Activeer de Lotus Notes (R) tweak"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Ingebouwde meldingsevaluatie inschakelen"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8479,7 +8478,7 @@ msgstr "Kadupul-dashboard verbergen"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "%d Weken"
+msgstr "Weekenden verbergen"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8523,7 +8522,7 @@ msgstr "Hoe vaak moeten Daily Stats worden bijgewerkt?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Hoe lang één evaluatierun nieuwe batches met regels mag starten. Het verzenden van meldingen in de wachtrij volgt na de evaluatie met de resterende tijd en kan nog één batch verzenden, zelfs als het budget is verbruikt. Regels die niet zijn bereikt, worden bij de volgende run als eerste geëvalueerd."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8855,7 +8854,7 @@ msgstr "NaN's"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Ingebouwde meldingen"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9371,7 +9370,7 @@ msgstr "Moeten de grafieken en gegevensbronnen standaard worden gecontroleerd."
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Moet de hoofdgegevensverzamelaar (Data Collector) na elke pollingcyclus meldingsregels evalueren en de bijbehorende meldingen verzenden? Meldingsregels lezen de waarden die door Gegevensbronstatistieken worden verzameld, dus het verzamelen van gegevensbronstatistieken moet ook zijn ingeschakeld."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9415,7 +9414,7 @@ msgstr "Sommige interfaces van Kadupul ondersteunen Drag-N-Drop.  Indien aangevi
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Ruimte afgebakende domeinnamen die toegankelijk zijn buiten de webserver zelf. Dit is belangrijk voor gebruikers die ervoor kiezen om een CDN of hostingsite te gebruiken. Bronnen kunnen bijvoorbeeld jokertekens bevatten: *.mijndomein.com, of een protocol, bijvoorbeeld: https://*.voorbeeld.com. Deze alternatieve bronnen bevatten alleen de typen afbeeldingen, CSS en JavaScript."
+msgstr "Door spaties gescheiden domeinnamen die buiten de webserver zelf toegankelijk mogen zijn. Dit is belangrijk voor gebruikers die ervoor kiezen een CDN of hostingsite te gebruiken. Bronnen kunnen jokertekens bevatten, bijvoorbeeld: *.mydomain.com, of een protocol, bijvoorbeeld: https://*.example.com. Deze alternatieve bronnen omvatten alleen afbeeldings-, CSS- en JavaScript-typen."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9554,9 +9553,8 @@ msgid "The DNS hostname or IP address of the RRDtool proxy server."
 msgstr "De DNS hostnaam of IP-adres van de RRDtool proxy server."
 
 #: include/global_settings.php
-#, fuzzy
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
-msgstr "De Default Threads toegestaan per proces.  OPMERKING: Vanaf Kadupul 1.2+ wordt deze instelling gehandhaafd in het Gegevensverzamelprogramma, en dit is gewoon de Vooraf ingestelde instelling.  Het gebruik van een hoger getal bij gebruik van de wervelkolom zal de prestaties verbeteren.  Zorg er echter voor dat u genoeg MySQL/MariaDB-verbindingen hebt om de volgende vergelijking te ondersteunen: verbindingen = gegevensverzamelaars * processen * (threads + scriptservers).  U moet er ook voor zorgen dat u over voldoende reserveaansluitingen voor de gebruikersaansluitingen beschikt."
+msgstr "Het standaard aantal toegestane threads per proces. OPMERKING: Vanaf Kadupul 1.2+ wordt deze instelling beheerd in de Data Collector en is dit slechts de voorinstelling. Het gebruik van een hoger aantal bij gebruik van Spine verbetert de prestaties. Zorg er echter voor dat u voldoende MySQL/MariaDB-verbindingen heeft om de volgende formule te ondersteunen: verbindingen = gegevensverzamelaars * processen * (threads + scriptservers). Zorg er ook voor dat u voldoende reserveverbindingen overhoudt voor gebruikersverbindingen."
 
 #: include/global_settings.php
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
@@ -9784,7 +9782,7 @@ msgstr "De maximale tijd dat Kadupul zal wachten op een script om te voltooien. 
 
 #: include/global_settings.php
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
-msgstr "De methode die moet worden gebruikt om RRD bestanden op te ruimen nadat de data bronnen zijn verwijderd."
+msgstr "De methode die wordt gebruikt om RRD-bestanden uit Kadupul op te ruimen nadat de bijbehorende gegevensbronnen zijn verwijderd."
 
 #: include/global_settings.php
 msgid "The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately."
@@ -9804,7 +9802,7 @@ msgstr "De naam van de gebruiker die Kadupul zal gebruiken als template voor nie
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Het aantal meldingsregels dat tegelijk wordt gelezen en geëvalueerd. Het tijdbudget wordt tussen batches gecontroleerd."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9868,7 +9866,7 @@ msgstr "De locatie van de Spine binary."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Het pad naar het configuratiebestand van de wervelkolom.  Standaard in de cwd van Spine, of /etc indien niet gespecificeerd."
+msgstr "Het pad naar het Spine-configuratiebestand. Standaard in de huidige werkmap (cwd) van Spine, of /etc indien niet opgegeven."
 
 #: include/global_settings.php
 msgid "The path to the rrdtool binary."
@@ -10787,7 +10785,7 @@ msgstr "Bestand"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "%d Regels"
+msgstr "Eerste regels"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -11412,7 +11410,7 @@ msgstr "Uitloggen"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Fout in de mailer: Nee <b>TO</b> adres ingesteld! <br>Als u de link <i>Test Mail</i> gebruikt, stelt u de instelling <b>Alert e-mail</b> in."
+msgstr "Mailerfout: geen ontvangeradres ingesteld!!<br>Als u de link <i>Testmail</i> gebruikt, stel dan de instelling <b>Meldings-e-mail</b> in."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11535,7 +11533,7 @@ msgstr "Geaggregeerd apparaat"
 
 #: lib/graphs.php
 msgid "Damaged Graph"
-msgstr "%d Grafiek"
+msgstr "Beschadigde grafiek"
 
 #: lib/html.php
 msgid "#"
@@ -12737,7 +12735,7 @@ msgstr "Validatiefout voor variabele %s met een waarde van %s.  Zie onderstaande
 
 #: lib/import.php
 msgid "Damaged"
-msgstr "%d Grafiek"
+msgstr "Beschadigd"
 
 #: lib/import.php
 msgid "Found Dependency:"
@@ -13055,7 +13053,7 @@ msgstr "Standaardprofiel"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Apparaattemplate [wijzig: %s]"
+msgstr "Apparaatsjabloon voor eerste Kadupul-apparaat is %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13336,7 +13334,7 @@ msgstr "Zorg ervoor dat al deze waarden correct zijn voordat u doorgaat."
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Zorg ervoor dat u de benodigde stappen heeft gelezen en gevolgd voor het installeren en Kadupul. Installatieinstructies kunnen worden gevonden voor <a href=\"%1$s\">Unix</a> en <a href=\"%2$s\">Win32</a>-gebaseerde besturingssystemen."
+msgstr "Zorg ervoor dat u de vereiste stappen voor de installatie van Kadupul heeft gelezen en gevolgd voordat u verdergaat. Installatie-informatie is beschikbaar voor <a href=\"%s\">Unix</a>- en <a href=\"%s\">Win32</a>-gebaseerde besturingssystemen."
 
 #: lib/installer.php
 #, php-format
@@ -13900,7 +13898,7 @@ msgstr "U <b>MUST</b> werkt dan \"include/config.php\" bij om naar de nieuwe dat
 
 #: lib/installer.php
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
-msgstr "U lijkt te downgraden naar een vorige versie.  Databasewijzigingen voor de nieuwere versie worden niet teruggedraaid en <i>zouden problemen kunnen veroorzaken."
+msgstr "Het lijkt erop dat u downgradet naar een eerdere versie. Databasewijzigingen die voor de nieuwere versie zijn aangebracht, worden niet teruggedraaid en <i>kunnen</i> problemen veroorzaken."
 
 #: lib/installer.php
 #, php-format
@@ -13952,7 +13950,7 @@ msgstr "Uw MySQL tijdzone database is niet ingevuld. Verrijk deze database alstu
 
 #: lib/installer.php
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "Uw Remote Kadupul Poller informatie is niet opgenomen in uw config.php bestand.  Bekijk de config.php.dist en stel de variabelen in: <i>$rdatabase_default, $rdatabase_gebruikersnaam</i>, enz.  Deze variabelen moeten worden ingesteld en terug naar uw Primaire Kadupul database server wijzen.  Corrigeer dit en probeer het opnieuw."
+msgstr "Uw gegevens voor de externe Kadupul Poller zijn niet opgenomen in uw config.php-bestand. Controleer config.php.dist en stel de variabelen in: <i>$rdatabase_default, $rdatabase_username</i>, enz. Deze variabelen moeten worden ingesteld en terugwijzen naar uw primaire Kadupul-databaseserver. Corrigeer dit en probeer het opnieuw."
 
 #: lib/installer.php
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
@@ -14316,7 +14314,7 @@ msgstr "Fout tijdens het parsen van de RRDtool dump XML"
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Geen %s gevonden"
+msgstr "Fouten gevonden"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14408,7 +14406,7 @@ msgstr "De grafiek bevat een waarde die RRDtool niet kan accepteren."
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "RRA '%s' ontbreekt in het RRD bestand"
+msgstr "De RRA '%s' ontbreekt in het bestaande Kadupul RRD-bestand"
 
 #: lib/rrd.php
 #, php-format
@@ -14835,7 +14833,7 @@ msgstr "Afhankelijk van het aantal logins en het gebruik van de Spine data colle
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Als u de Kadupul Performance Booster gebruikt en kiest voor een geheugenopslagengine, moet u voorzichtig zijn dat u uw Performance Booster-buffer leegmaakt voordat het systeem geen geheugentabelruimte meer heeft. Dit wordt op twee manieren gedaan: ten eerste door de grootte van uw uitvoerkolom precies groot genoeg te maken. Deze kolom bevindt zich in de tabellen poller_output en poller_output_boost. Het tweede wat u kunt doen is meer geheugen toewijzen aan geheugentabellen. We hebben willekeurig een aanbevolen waarde van 10%% van het systeemgeheugen gekozen, maar als u SSD-schijven gebruikt of een kleiner systeem heeft, kunt u deze aanbeveling negeren of een andere opslagengine kiezen. U kunt het verwachte verbruik van de Performance Booster-tabellen bekijken onder Console -> Systeemhulpprogramma's -> Boost-status bekijken."
+msgstr "Als u de Kadupul Performance Booster gebruikt en kiest voor een geheugenopslagengine, moet u ervoor zorgen dat u de Performance Booster-buffer leegmaakt voordat het systeem geen ruimte meer heeft voor geheugentabellen. Dit kan op twee manieren: ten eerste door de grootte van de uitvoerkolom precies op maat te maken. Deze kolom bevindt zich in de tabellen poller_output en poller_output_boost. Ten tweede kunt u meer geheugen toewijzen aan geheugentabellen. We hebben een aanbevolen waarde van 10%% van het systeemgeheugen gekozen, maar als u SSD-schijven gebruikt of een kleiner systeem heeft, kunt u deze aanbeveling negeren of een andere opslagengine kiezen. U kunt het verwachte verbruik van de Performance Booster-tabellen bekijken onder Console -> Systeemhulpprogramma's -> Boost-status bekijken."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14856,7 +14854,7 @@ msgstr "Als uw tabellen zeer grote indexen hebben, moet u werken met de Barracud
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "InnoDB bewaart zoveel mogelijk tabellen en indexen in het systeemgeheugen. Daarom moet u de innodb_buffer_pool groot genoeg maken om zoveel mogelijk van de tabellen en indexen in het geheugen te houden. Het controleren van de grootte van de map /var/lib/mysql/cacti helpt bij het bepalen van deze waarde. We raden 25%% van het totale geheugen van uw systeem aan, maar uw vereisten variëren afhankelijk van de grootte van uw systeem."
+msgstr "InnoDB houdt zoveel mogelijk tabellen en indexen in het systeemgeheugen. Daarom moet u de innodb_buffer_pool groot genoeg maken om zoveel mogelijk tabellen en indexen in het geheugen te houden. Het controleren van de grootte van de map /var/lib/mysql/cacti helpt bij het bepalen van deze waarde. We raden 25%% van het totale geheugen van uw systeem aan, maar uw vereisten variëren afhankelijk van de grootte van uw systeem."
 
 #: lib/utility.php
 #, php-format
@@ -15086,9 +15084,8 @@ msgid "Tab/Menu Name"
 msgstr "Tabblad/Menu-naam"
 
 #: links.php
-#, fuzzy
 msgid "The file that contains the content for this page. This file needs to be in the Kadupul 'include/content/' directory."
-msgstr "Het bestand dat de inhoud van deze pagina bevat. Dit bestand moet in de map 'include/content/content/' van de Kadupul staan."
+msgstr "Het bestand dat de inhoud voor deze pagina bevat. Dit bestand moet in de map 'include/content/' van Kadupul staan."
 
 #: links.php
 msgid "The text that will appear in the tab or menu."
@@ -15096,7 +15093,7 @@ msgstr "De tekst die in het tabblad of menu verschijnt."
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "De geldige URL voor deze externe link. Moet het type bevatten, bijvoorbeeld https://kadupul.org. Houd er rekening mee dat veel websites het insluiten in een iframe vanaf een externe site niet toestaan, waardoor extern linken mogelijk niet werkt."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15124,7 +15121,7 @@ msgstr "Waar moet deze pagina verschijnen?"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Uw inhoudsbestand is geen geldige URL. Voer een geldige URL in."
 
 #: logout.php
 msgid "Automatic Logout"
@@ -16035,7 +16032,7 @@ msgstr "Automatische lokale RRD-opruiming is niet beschikbaar op Windows. Stop a
 #: rrdcleaner.php user_group_admin.php
 msgctxt "filter: reset"
 msgid "Clear"
-msgstr "Herstel"
+msgstr "Wissen"
 
 #: rrdcleaner.php
 msgid "DS ID"
@@ -16297,9 +16294,8 @@ msgid "Site Name:"
 msgstr "Sitenaam:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Bestand niet gevonden"
+msgstr "Site niet gevonden."
 
 #: sites.php
 msgid "State"
@@ -16765,7 +16761,7 @@ msgstr "Het totale aantal individuele grafieken in deze boom."
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Deze boom is vergrendeld voor Bewerken op %1$s met %2$s."
+msgstr "Deze boomstructuur is vergrendeld voor bewerking op %s door %s."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -17116,7 +17112,7 @@ msgstr "Beleid (Grafiet/Apparaat/Sjabloon)"
 
 #: user_admin.php
 msgid "Realm:"
-msgstr "Lees mij"
+msgstr "Realm:"
 
 #: user_admin.php
 msgid "Remove Membership"
@@ -17396,7 +17392,7 @@ msgstr "Gebruikers van deze groep de mogelijkheid bieden om aangepaste gebruiker
 #: user_group_admin.php
 msgctxt "filter reset"
 msgid "Clear"
-msgstr "Herstel"
+msgstr "Wissen"
 
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
@@ -17692,7 +17688,7 @@ msgstr "Changelog"
 #: utilities.php
 msgctxt "Button: reset filter settings"
 msgid "Clear"
-msgstr "Herstel"
+msgstr "Wissen"
 
 #: utilities.php
 msgid "Clear Kadupul Log"
@@ -18461,13 +18457,12 @@ msgid "VDEF Preview"
 msgstr "VDEF voorbeeld"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Bestand niet gevonden"
+msgstr "VDEF niet gevonden."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "VDEF of VDEF-item niet gevonden."
 
 #: vdef.php
 #, php-format

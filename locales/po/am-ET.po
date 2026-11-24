@@ -4059,11 +4059,11 @@ msgstr "ጥምር (Aggregate)"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "የማንቂያ ክስተቶች"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "የማንቂያ ደንቦች"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "%d ሂደቶች"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d ደንቦች"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "ከዚህ የቀናት ብዛት በኋላ፣ የሥራ ሰዓታት ወ
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "የማንቂያ ግምገማ የጊዜ በጀት"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "የማንቂያ ደንቦች በአንድ ቡድን"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "የ Lotus Notes (R) ማስተካከያ አንቃ"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "ቤተኛ የማንቂያ ግምገማን አንቃ"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "RRD በምን ያህል ጊዜ መፈተሽ አለበት ?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "አንድ የግምገማ ዙር አዲስ የደንቦች ቡድኖችን መጀመር የሚችልበት የጊዜ ርዝመት። በወረፋ ላይ ያሉ ማሳወቂያዎችን መላክ ከግምገማው በኋላ በቀረው ጊዜ ይከናወናል፣ እና በጀቱ ቢያልቅም እንኳ አንድ ቡድን ሊልክ ይችላል። ያልተደረሱባቸው ደንቦች በሚቀጥለው ዙር መጀመሪያ ይገመገማሉ።"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaNዎች"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "ቤተኛ ማንቂያ"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "ግራፎች አሉት እና የውሂብ ምንጮች አሉት በነ
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "ዋናው የውሂብ ሰብሳቢ ከእያንዳንዱ የፖሊንግ ዑደት በኋላ የማንቂያ ደንቦችን መገምገም እና ማሳወቂያዎቻቸውን መላክ አለበት? የማንቂያ ደንቦች የውሂብ ምንጭ ስታቲስቲክስ የሚሰበስባቸውን ተመኖች ያነባሉ፣ ስለዚህ የውሂብ ምንጭ ስታቲስቲክስ መሰብሰብም መንቃት አለበት።"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "Kadupul ለአዲስ የWeb Basic እና LDAP ተጠቃሚዎች እን�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "በአንድ ላይ የሚነበቡ እና የሚገመገሙ የማንቂያ ደንቦች ብዛት። የጊዜ በጀቱ በቡድኖች መካከል ይፈተሻል።"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

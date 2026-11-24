@@ -4038,11 +4038,11 @@ msgstr "Àkójọpọ̀"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Àwọn Ìṣẹ̀lẹ̀ Ìkìlọ̀"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Àwọn Òfin Ìkìlọ̀"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7506,7 +7506,7 @@ msgstr "Ìlànà ìṣiṣẹ́ %d"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "Àwọn Òfin %d"
 
 #: include/global_settings.php
 #, php-format
@@ -7628,11 +7628,11 @@ msgstr "Lẹ́yìn iye ọjọ́ yìí, a kò ní fi àwọn wákàtí iṣẹ́
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Ìṣúná Àkókò Àyẹ̀wò Ìkìlọ̀"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Àwọn Òfin Ìkìlọ̀ fún Ìdìpọ̀ Kọ̀ọ̀kan"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8216,7 +8216,7 @@ msgstr "Mú àtúnṣe kékeré Lotus Notes (R) ṣiṣẹ́"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Mú Àyẹ̀wò Ìkìlọ̀ Abínibí Ṣiṣẹ́"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8500,7 +8500,7 @@ msgstr "Báwo ni a ṣe yẹ kí a máa ṣàyẹ̀wò RRD lóòrèkóòrè tó?
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Bí ìṣiṣẹ́ àyẹ̀wò kan ṣe lè pẹ́ tó láti bẹ̀rẹ̀ àwọn ìdìpọ̀ òfin tuntun. Fífiránṣẹ́ àwọn ìfitónilétí tó wà lórí ìlà ń tẹ̀lé àyẹ̀wò pẹ̀lú àkókò tó kù, ó sì lè fi ìdìpọ̀ kan ránṣẹ́ kódà nígbà tí ìṣúná àkókò bá ti tán. Àwọn òfin tí a kò bá dé ni a óò kọ́kọ́ ṣàyẹ̀wò ní ìṣiṣẹ́ tó kàn."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8832,7 +8832,7 @@ msgstr "Àwọn NaN"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Ìkìlọ̀ Abínibí"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9348,7 +9348,7 @@ msgstr "Ṣé a gbọ́dọ̀ ṣàmì sí Ní Àwọn Gíráfù àti Ní Àwọ
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Ṣé Olùkó Dátà àkọ́kọ́ gbọ́dọ̀ ṣàyẹ̀wò àwọn òfin ìkìlọ̀ lẹ́yìn ìyípo ìṣàyẹ̀wò kọ̀ọ̀kan kí ó sì fi àwọn ìfitónilétí wọn ránṣẹ́? Àwọn òfin ìkìlọ̀ ń ka àwọn ìwọ̀n tí Àwọn Ìṣirò Orísun Dátà ń kó jọ, nítorí náà a tún gbọ́dọ̀ mú Ìkójọpọ̀ Àwọn Ìṣirò Orísun Dátà ṣiṣẹ́."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9780,7 +9780,7 @@ msgstr "Orúkọ olùlò tí Kadupul yóò lò gẹ́gẹ́ bí àdàkọ fún �
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Iye àwọn òfin ìkìlọ̀ tí a kà tí a sì ṣàyẹ̀wò papọ̀. A ń ṣàyẹ̀wò ìṣúná àkókò láàárín àwọn ìdìpọ̀."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."

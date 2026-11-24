@@ -20,16 +20,16 @@ msgstr ""
 #: about.php
 #, php-format
 msgid "Development, contributions, and release decisions are managed by the %sKadupul organization%s."
-msgstr ""
+msgstr "Η ανάπτυξη, οι συνεισφορές και οι αποφάσεις κυκλοφορίας διαχειρίζονται από τον %sοργανισμό Kadupul%s."
 
 #: about.php
 #, php-format
 msgid "For documentation and support, visit the %sKadupul project%s."
-msgstr ""
+msgstr "Για τεκμηρίωση και υποστήριξη, επισκεφθείτε το %sέργο Kadupul%s."
 
 #: about.php
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
-msgstr ""
+msgstr "Το Kadupul είναι ένα ανεξάρτητο έργο ανοιχτού κώδικα για παρακολούθηση δικτύου και δημιουργία γραφημάτων χρονοσειρών."
 
 #: about.php
 msgid "Kadupul is licensed under the GNU GPL:"
@@ -79,7 +79,7 @@ msgstr "Συνολική προεπισκόπηση [ %s]"
 
 #: aggregate_graphs.php
 msgid "Aggregate Preview Does Not Exist"
-msgstr "Συνολική προεπισκόπηση [ %s]"
+msgstr "Η συγκεντρωτική προεπισκόπηση δεν υπάρχει"
 
 #: aggregate_graphs.php graphs.php
 msgid "Aggregate Template"
@@ -1808,7 +1808,7 @@ msgstr "Δεν υπάρχουν έλεγχοι"
 
 #: data_debug.php
 msgid "No Device"
-msgstr "设备："
+msgstr "Καμία συσκευή"
 
 #: data_debug.php
 msgid "No Initial found!  Waiting on RRDfile update"
@@ -2053,11 +2053,11 @@ msgstr "Η συμβολοσειρά εισόδου δεν υπάρχει στη 
 
 #: data_input.php
 msgid "Input Whitelisting is in effect.  Changes in this Data Input Method require rerunning of the Input Whitelist CLI script (cli/input_whitelist.php) using both the --audit and --update options before Data Source will be queried again."
-msgstr ""
+msgstr "Η λίστα επιτρεπόμενων εισόδων (Input Whitelisting) είναι ενεργή. Οι αλλαγές σε αυτήν τη Μέθοδο Εισόδου Δεδομένων απαιτούν εκ νέου εκτέλεση του σεναρίου CLI της λίστας επιτρεπόμενων εισόδων (cli/input_whitelist.php) με τις επιλογές --audit και --update προτού γίνει ξανά ερώτημα στην Πηγή Δεδομένων."
 
 #: data_input.php
 msgid "Input string contains dangerous shell characters"
-msgstr ""
+msgstr "Η συμβολοσειρά εισόδου περιέχει επικίνδυνους χαρακτήρες κελύφους (shell)"
 
 #: data_input.php
 msgid "No Data Input Methods Found"
@@ -2113,9 +2113,8 @@ msgid "Update RRA"
 msgstr "Ενημέρωση RRA"
 
 #: data_input.php
-#, fuzzy
 msgid "Update Whitelist"
-msgstr "Ενημερώστε αυτό το πεδίο"
+msgstr "Ενημέρωση λίστας επιτρεπόμενων"
 
 #: data_input.php
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
@@ -2156,7 +2155,7 @@ msgstr "Σχετικά πρότυπα γραφήματος / δεδομένων 
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Σχετικά πρότυπα γραφήματος / δεδομένων [επεξεργασία: %s]"
+msgstr "Συσχετισμένα πρότυπα γραφημάτων/δεδομένων [νέο]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2684,7 +2683,7 @@ msgstr "Κάντε κλικ στο κουμπί &quot;Συνέχεια&quot; γ�
 
 #: data_templates.php
 msgid "Custom Data Warning Message"
-msgstr "Προσαρμοσμένα δεδομένα [εισαγωγή δεδομένων: %s]"
+msgstr "Προσαρμοσμένο προειδοποιητικό μήνυμα δεδομένων"
 
 #: data_templates.php
 #, php-format
@@ -3258,7 +3257,7 @@ msgstr "Επιλέξτε ένα πρότυπο γραφήματος και κά�
 #: graphs.php
 #, php-format
 msgid "Choose a Graph Template to apply to this Graph. Please note that you may only change Graph Templates to a 100%% compatible Graph Template, which means that it includes identical Data Sources."
-msgstr "Επιλέξτε ένα πρότυπο γραφήματος για εφαρμογή σε αυτό το γράφημα. Λάβετε υπόψη ότι μπορείτε να αλλάξετε μόνο τα πρότυπα γραφήματος σε ένα 100%% συμβατό πρότυπο γραφήματος, πράγμα που σημαίνει ότι περιλαμβάνει πανομοιότυπες πηγές δεδομένων."
+msgstr "Επιλέξτε ένα πρότυπο γραφήματος για εφαρμογή σε αυτό το γράφημα. Λάβετε υπόψη ότι μπορείτε να αλλάξετε πρότυπο γραφήματος μόνο σε ένα 100%% συμβατό πρότυπο γραφήματος, το οποίο περιλαμβάνει πανομοιότυπες πηγές δεδομένων."
 
 #: graphs.php
 msgid "Choose a new Device for these Graph(s) and click 'Continue'."
@@ -3374,7 +3373,7 @@ msgstr "[Εφαρμογή προσαρμοσμένης γραφήματος - Φ
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Διαχείριση ομάδας χρηστών [επεξεργασία: %s]"
+msgstr "Διαχείριση γραφημάτων [ Χωρίς βάση συσκευής ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3960,7 +3959,7 @@ msgstr "1 Megabyte"
 
 #: include/global_arrays.php
 msgid "1 Thread"
-msgstr "% d Νήμα"
+msgstr "1 νήμα"
 
 #: include/global_arrays.php
 msgid "10,000 Data Source Items"
@@ -4061,11 +4060,11 @@ msgstr "Άθροισμα"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "Περιστατικά ειδοποιήσεων"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "Κανόνες ειδοποιήσεων"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -4105,7 +4104,7 @@ msgstr "Όλες οι ρυθμίσεις χρήστη έχουν επιστρα�
 
 #: include/global_arrays.php user_admin.php user_group_admin.php
 msgid "Allow"
-msgstr "允许"
+msgstr "Να επιτρέπεται"
 
 #: include/global_arrays.php
 msgid "Alphabetic Ordering"
@@ -5873,7 +5872,7 @@ msgstr "Τετάρτη"
 
 #: include/global_arrays.php
 msgid "Week(s)"
-msgstr "Εβδομάδα(ες) %s"
+msgstr "Εβδομάδα(-ες)"
 
 #: include/global_arrays.php
 msgid "West"
@@ -6009,7 +6008,7 @@ msgstr "δεν ταιριάζει με την κανονική έκφραση"
 
 #: include/global_arrays.php
 msgid "ends with"
-msgstr "结束于"
+msgstr "τελειώνει με"
 
 #: include/global_arrays.php lib/api_device.php
 msgid "hours"
@@ -6021,7 +6020,7 @@ msgstr "ώρες"
 
 #: include/global_arrays.php
 msgid "is empty"
-msgstr "是空的"
+msgstr "είναι κενό"
 
 #: include/global_arrays.php
 msgid "is greater than"
@@ -6041,7 +6040,7 @@ msgstr "είναι μικρότερη ή ίση"
 
 #: include/global_arrays.php
 msgid "is not empty"
-msgstr "不是空的"
+msgstr "δεν είναι κενό"
 
 #: include/global_arrays.php
 msgid "is not equal to"
@@ -6322,7 +6321,7 @@ msgstr "Επιλέξτε ένα δέντρο για τα νέα στοιχεία
 
 #: include/global_form.php
 msgid "Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Επιλέξτε ένα όνομα για αυτήν την πηγή δεδομένων. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως | host_description | ή | query_fieldName |. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Kadupul."
+msgstr "Επιλέξτε ένα όνομα για αυτήν την πηγή δεδομένων. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως |host_description| ή |query_fieldName|. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Kadupul."
 
 #: include/global_form.php
 msgid "Choose an Object to build a new Sub-header."
@@ -7287,7 +7286,7 @@ msgstr "Το όνομα αυτού του χρώματος."
 
 #: include/global_form.php
 msgid "The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation."
-msgstr "Το όνομα που έχει εκτυπωθεί στο γράφημα. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως | host_description | ή | query_fieldName |. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Kadupul."
+msgstr "Το όνομα που εκτυπώνεται στο γράφημα. Μπορεί να περιλαμβάνει μεταβλητές αντικατάστασης όπως |host_description| ή |query_fieldName|. Για μια πλήρη λίστα των υποστηριζόμενων ετικετών αντικατάστασης, ανατρέξτε στην τεκμηρίωση του Kadupul."
 
 #: include/global_form.php
 msgid "The new Title of the aggregated Graph."
@@ -7299,7 +7298,7 @@ msgstr "Καθορίστηκε ο αριθμός των OID που μπορού�
 
 #: include/global_form.php
 msgid "The number of concurrent threads to use for polling this device.  This applies to the Spine poller only."
-msgstr "Ο αριθμός των ταυτόχρονων κλωστών που θα χρησιμοποιηθούν για την ψηφοφορία αυτής της συσκευής. Αυτό ισχύει μόνο για τον σπόνδυλο της σπονδυλικής στήλης."
+msgstr "Ο αριθμός των ταυτόχρονων νημάτων που χρησιμοποιούνται για τη συλλογή δεδομένων (polling) αυτής της συσκευής. Αυτό ισχύει μόνο για τον συλλέκτη Spine."
 
 #: include/global_form.php
 msgid "The number of samples required prior to filling a row in the RRA specification.  The first RRA should always have a value of 1."
@@ -7529,7 +7528,7 @@ msgstr "%d Διαδικασίες"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%d κανόνες"
 
 #: include/global_settings.php
 #, php-format
@@ -7619,7 +7618,7 @@ msgstr "56 Gbps Ethernet"
 
 #: include/global_settings.php
 msgid "<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>"
-msgstr "<blockquote> <i>Ενσωματωμένος έλεγχος ταυτότητας</i> - ο Kadupul χειρίζεται τον έλεγχο ταυτότητας χρήστη, ο οποίος σας επιτρέπει να δημιουργείτε χρήστες και να τους παρέχετε δικαιώματα σε διαφορετικές περιοχές εντός του Kadupul. <br><br> <i>Βασικός έλεγχος</i> ταυτότητας <i>ιστού</i> - Ο έλεγχος ταυτότητας γίνεται από τον διακομιστή ιστού. Οι χρήστες μπορούν να προστεθούν ή να δημιουργηθούν αυτόματα κατά την πρώτη είσοδο, αν ο χρήστης του προτύπου έχει οριστεί, διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη. <br><br> <i>Έλεγχος ταυτότητας LDAP</i> - Επιτρέπει τον έλεγχο ταυτότητας σε έναν διακομιστή LDAP. Οι χρήστες θα δημιουργηθούν αυτόματα κατά την πρώτη σύνδεσή τους, εάν ο χρήστης του προτύπου έχει οριστεί, διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη. Εάν η λειτουργική μονάδα LDAP της PHP δεν είναι ενεργοποιημένη, ο έλεγχος ταυτότητας LDAP δεν θα εμφανιστεί ως επιλογή επιλογής. <br><br> <i>Πολλαπλή επαλήθευση τομέα LDAP / AD</i> - Επιτρέπει στους διαχειριστές να υποστηρίζουν πολλαπλές διαφορετικές ομάδες από διαφορετικούς καταλόγους LDAP / AD για πρόσβαση σε πόρους του Kadupul. Ακριβώς όπως ο έλεγχος ταυτότητας LDAP, η μονάδα LDAP της PHP απαιτείται για να χρησιμοποιήσει αυτή τη μέθοδο. </blockquote>"
+msgstr "<blockquote><i>Ενσωματωμένος έλεγχος ταυτότητας</i> - Το Kadupul διαχειρίζεται τον έλεγχο ταυτότητας χρηστών, επιτρέποντάς σας να δημιουργείτε χρήστες και να τους εκχωρείτε δικαιώματα σε διάφορες περιοχές εντός του Kadupul.<br><br><i>Βασικός έλεγχος ταυτότητας ιστού</i> - Ο έλεγχος ταυτότητας γίνεται από τον διακομιστή ιστού. Οι χρήστες μπορούν να προστεθούν ή να δημιουργηθούν αυτόματα κατά την πρώτη σύνδεση εάν έχει οριστεί ο Χρήστης Προτύπου· διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη.<br><br><i>Έλεγχος ταυτότητας LDAP</i> - Επιτρέπει τον έλεγχο ταυτότητας σε έναν διακομιστή LDAP. Οι χρήστες θα δημιουργούνται αυτόματα κατά την πρώτη σύνδεση εάν έχει οριστεί ο Χρήστης Προτύπου· διαφορετικά θα χρησιμοποιηθούν τα καθορισμένα δικαιώματα επισκέπτη. Εάν η λειτουργική μονάδα LDAP της PHP δεν είναι ενεργοποιημένη, ο έλεγχος ταυτότητας LDAP δεν θα εμφανίζεται ως διαθέσιμη επιλογή.<br><br><i>Έλεγχος ταυτότητας πολλαπλών τομέων LDAP/AD</i> - Επιτρέπει στους διαχειριστές να υποστηρίζουν πολλαπλές διαφορετικές ομάδες από διαφορετικούς καταλόγους LDAP/AD για πρόσβαση σε πόρους του Kadupul. Όπως και στον έλεγχο ταυτότητας LDAP, απαιτείται η λειτουργική μονάδα LDAP της PHP για τη χρήση αυτής της μεθόδου.</blockquote>"
 
 #: include/global_settings.php
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
@@ -7651,11 +7650,11 @@ msgstr "Μετά από αυτόν τον αριθμό ημερών, οι εργ
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "Χρονικό όριο αξιολόγησης ειδοποιήσεων"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "Κανόνες ειδοποιήσεων ανά παρτίδα"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8239,7 +8238,7 @@ msgstr "Ενεργοποιήστε το Lotus Notes (R) τσίμπημα"
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "Ενεργοποίηση εγγενούς αξιολόγησης ειδοποιήσεων"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8479,7 +8478,7 @@ msgstr "Απόκρυψη του ταμπλό του Kadupul"
 
 #: include/global_settings.php
 msgid "Hide Weekends"
-msgstr "% d εβδομάδες"
+msgstr "Απόκρυψη Σαββατοκύριακων"
 
 #: include/global_settings.php
 msgid "Hides Disabled Devices and Graphs when viewing outside of Console tab."
@@ -8523,7 +8522,7 @@ msgstr "Πόσο συχνά πρέπει να ενημερώνονται τα η
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "Πόσο χρόνο μπορεί μια εκτέλεση αξιολόγησης να ξεκινά νέες παρτίδες κανόνων. Η αποστολή των ειδοποιήσεων σε ουρά ακολουθεί την αξιολόγηση με τον εναπομείναντα χρόνο και ενδέχεται να στείλει μία παρτίδα ακόμη και όταν εξαντληθεί το χρονικό όριο. Οι κανόνες που δεν εξετάστηκαν αξιολογούνται πρώτοι στην επόμενη εκτέλεση."
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8647,7 +8646,7 @@ msgstr "Kadupul Log Path"
 
 #: include/global_settings.php
 msgid "Kadupul Server Timezone"
-msgstr "Kadupul Server v %s - Συντήρηση"
+msgstr "Ζώνη ώρας διακομιστή Kadupul"
 
 #: include/global_settings.php
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
@@ -8855,7 +8854,7 @@ msgstr "ΝαN&#39;s"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "Εγγενείς ειδοποιήσεις"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -8983,7 +8982,7 @@ msgstr "Χρονικό όριο εντολών παρασκηνίου"
 
 #: include/global_settings.php
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "Πολλαπλά επίπεδα καταγραφής για την αναφορά κακί"
+msgstr "Επίπεδο καταγραφής Poller για αναφορές του Kadupul"
 
 #: include/global_settings.php
 msgid "Poller Standard Error Log Path"
@@ -9371,7 +9370,7 @@ msgstr "Πρέπει να ελέγχονται από προεπιλογή οι 
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "Θα πρέπει ο κύριος Συλλέκτης Δεδομένων να αξιολογεί τους κανόνες ειδοποιήσεων μετά από κάθε κύκλο συλλογής (polling) και να στέλνει τις ειδοποιήσεις τους; Οι κανόνες ειδοποιήσεων διαβάζουν τους ρυθμούς που συλλέγουν τα Στατιστικά Πηγής Δεδομένων, οπότε πρέπει να είναι ενεργοποιημένη και η Συλλογή Στατιστικών Πηγής Δεδομένων."
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9415,7 +9414,7 @@ msgstr "Ορισμένες από τις διεπαφές του Kadupul υπο�
 
 #: include/global_settings.php
 msgid "Space delimited domain names that will be permitted to be accessed outside of the Web Server itself.  This is important for users choosing to use a CDN, or hosting site.  Sources can includes wildcards for example: *.mydomain.com, or a protocol, for example: https://*.example.com.  These Alternate Sources include Image, CSS and JavaScript types only."
-msgstr "Ονομαστικά χώρου με διαχωρισμό χώρου στα οποία θα επιτρέπεται η πρόσβαση εκτός του ίδιου του διακομιστή Web. Αυτό είναι σημαντικό για τους χρήστες που επιλέγουν να χρησιμοποιήσουν CDN ή ιστότοπο φιλοξενίας. Οι πηγές μπορούν να περιλαμβάνουν μπαλαντέρ για παράδειγμα: *.mydomain.com ή ένα πρωτόκολλο, για παράδειγμα: https: //*.example.com. Αυτές οι Εναλλακτικές Πηγές περιλαμβάνουν μόνο τύπους εικόνας, CSS και JavaScript."
+msgstr "Ονόματα τομέων διαχωρισμένα με κενό στα οποία θα επιτρέπεται η πρόσβαση εκτός του ίδιου του διακομιστή ιστού. Αυτό είναι σημαντικό για χρήστες που επιλέγουν να χρησιμοποιήσουν CDN ή εξωτερική φιλοξενία. Οι πηγές μπορούν να περιλαμβάνουν χαρακτήρες μπαλαντέρ (wildcards), για παράδειγμα: *.mydomain.com, ή πρωτόκολλο, για παράδειγμα: https://*.example.com. Αυτές οι εναλλακτικές πηγές περιλαμβάνουν μόνο τύπους εικόνων, CSS και JavaScript."
 
 #: include/global_settings.php
 msgid "Special Users"
@@ -9439,11 +9438,11 @@ msgstr "Ακίδες"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "Θέση αρχείου διπλού αρχείου σπονδυλικής στήλης"
+msgstr "Τοποθεσία εκτελέσιμου αρχείου Spine"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
-msgstr "Διαδρομή αρχείου διαμόρφωσης σπονδυλικής στήλης"
+msgstr "Διαδρομή αρχείου διαμόρφωσης Spine"
 
 #: include/global_settings.php
 msgid "Standard Deviation"
@@ -9555,7 +9554,7 @@ msgstr "Το όνομα κεντρικού υπολογιστή DNS ή η διε
 
 #: include/global_settings.php
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
-msgstr "Τα προκαθορισμένα θέματα επιτρέπονται ανά διαδικασία. ΣΗΜΕΙΩΣΗ: Ξεκινώντας από το Kadupul 1.2+, αυτή η ρύθμιση διατηρείται στον συλλέκτη δεδομένων και αυτή είναι απλώς η προκαθορισμένη ρύθμιση. Χρησιμοποιώντας έναν υψηλότερο αριθμό κατά τη χρήση της σπονδυλικής στήλης, θα βελτιωθεί η απόδοση. Ωστόσο, βεβαιωθείτε ότι έχετε αρκετές συνδέσεις MySQL / MariaDB για να υποστηρίξετε την ακόλουθη εξίσωση: connections = collectors data * processes * (threads + script servers). Πρέπει επίσης να βεβαιωθείτε ότι έχετε αρκετές εφεδρικές συνδέσεις για τις συνδέσεις σύνδεσης χρήστη."
+msgstr "Ο προεπιλεγμένος αριθμός νημάτων που επιτρέπονται ανά διεργασία. ΣΗΜΕΙΩΣΗ: Από το Kadupul 1.2+ και μετά, αυτή η ρύθμιση διατηρείται στον Συλλέκτη Δεδομένων και εδώ αποτελεί απλώς την προεπιλογή. Η χρήση μεγαλύτερου αριθμού με το Spine θα βελτιώσει την απόδοση. Ωστόσο, βεβαιωθείτε ότι διαθέτετε αρκετές συνδέσεις MySQL/MariaDB ώστε να καλύπτεται η εξής εξίσωση: connections = data collectors * processes * (threads + script servers). Πρέπει επίσης να βεβαιωθείτε ότι υπάρχουν αρκετές εφεδρικές συνδέσεις και για τις συνδέσεις εισόδου χρηστών."
 
 #: include/global_settings.php
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
@@ -9671,11 +9670,11 @@ msgstr "Ο προεπιλεγμένος μέγιστος αριθμός SNMP Λ�
 
 #: include/global_settings.php
 msgid "The default number of Device Threads.  This is only applicable when using the Spine Data Collector."
-msgstr "Ο προεπιλεγμένος αριθμός Threads της συσκευής. Αυτό ισχύει μόνο όταν χρησιμοποιείτε τον συλλέκτη δεδομένων σπονδυλικής στήλης."
+msgstr "Ο προεπιλεγμένος αριθμός νημάτων συσκευής. Αυτό ισχύει μόνο κατά τη χρήση του Συλλέκτη Δεδομένων Spine."
 
 #: include/global_settings.php
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
-msgstr "Ο προεπιλεγμένος αριθμός ταυτόχρονων διεργασιών που εκτελούνται ανά Συλλέκτη Δεδομένων. ΣΗΜΕΙΩΣΗ: Ξεκινώντας από το Kadupul 1.2, αυτή η ρύθμιση διατηρείται στον συλλέκτη δεδομένων. Προχωρώντας προς τα εμπρός, αυτή η τιμή είναι μόνο προκαθορισμένη για τον συλλέκτη δεδομένων. Η χρήση ενός μεγαλύτερου αριθμού κατά τη χρήση του cmd.php θα βελτιώσει την απόδοση. Οι βελτιώσεις απόδοσης στη σπονδυλική στήλη επιλύονται καλύτερα με την παράμετρο των νημάτων. Όταν χρησιμοποιείτε τη σπονδυλική στήλη, συνιστούμε έναν μικρότερο αριθμό και το μοχλό μόχλευσης. Όταν χρησιμοποιείτε το cmd.php, χρησιμοποιήστε όχι περισσότερο από 2 φορές τον αριθμό των πυρήνων της CPU."
+msgstr "Ο προεπιλεγμένος αριθμός ταυτόχρονων διεργασιών που εκτελούνται ανά Συλλέκτη Δεδομένων. ΣΗΜΕΙΩΣΗ: Από το Kadupul 1.2 και μετά, αυτή η ρύθμιση διατηρείται στον Συλλέκτη Δεδομένων. Στο εξής, αυτή η τιμή αποτελεί μόνο προεπιλογή για τον Συλλέκτη Δεδομένων. Η χρήση μεγαλύτερου αριθμού με το cmd.php θα βελτιώσει την απόδοση. Οι βελτιώσεις απόδοσης στο Spine επιτυγχάνονται καλύτερα μέσω της παραμέτρου νημάτων (threads). Κατά τη χρήση του Spine, συνιστούμε μικρότερο αριθμό διεργασιών και αξιοποίηση των νημάτων. Κατά τη χρήση του cmd.php, μην χρησιμοποιείτε περισσότερο από 2x τον αριθμό των πυρήνων CPU."
 
 #: include/global_settings.php
 msgid "The default number of rows to display on for a table."
@@ -9803,7 +9802,7 @@ msgstr "Το όνομα του χρήστη που θα χρησιμοποιήσ
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "Ο αριθμός των κανόνων ειδοποιήσεων που διαβάζονται και αξιολογούνται μαζί. Το χρονικό όριο ελέγχεται μεταξύ των παρτίδων."
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
@@ -9863,11 +9862,11 @@ msgstr "Ο κωδικός πρόσβασης για τον έλεγχο ταυτ
 
 #: include/global_settings.php
 msgid "The path to Spine binary."
-msgstr "Το μονοπάτι προς δυαδικό επίπεδο της σπονδυλικής στήλης."
+msgstr "Η διαδρομή προς το εκτελέσιμο αρχείο του Spine."
 
 #: include/global_settings.php
 msgid "The path to Spine configuration file.  By default, in the cwd of Spine, or /etc if not specified."
-msgstr "Η διαδρομή προς το αρχείο διαμόρφωσης σπονδυλικής στήλης. Από προεπιλογή, στο cwd της σπονδυλικής στήλης ή / και αν δεν έχει καθοριστεί."
+msgstr "Η διαδρομή προς το αρχείο διαμόρφωσης του Spine. Από προεπιλογή, στον τρέχοντα κατάλογο εργασίας (cwd) του Spine ή στο /etc εάν δεν έχει καθοριστεί."
 
 #: include/global_settings.php
 msgid "The path to the rrdtool binary."
@@ -10048,7 +10047,7 @@ msgstr "Αυτή η τιμή αντιπροσωπεύει τον αριθμό τ
 #: include/global_settings.php
 #, php-format
 msgid "This value represents the percentage above the adjusted sample average once outliers have been removed from the sample.  For example, a Variance Percentage of 100%% on an adjusted average of 50 would remove any sample above the quantity of 100 from the graph."
-msgstr "Αυτή η τιμή αντιπροσωπεύει το ποσοστό πάνω από το προσαρμοσμένο μέσο δείγματος μόλις αφαιρεθούν τα αποθέματα από το δείγμα. Για παράδειγμα, ένα ποσοστό διακύμανσης 100 %% σε έναν προσαρμοσμένο μέσο όρο των 50 θα αφαιρέσει οποιοδήποτε δείγμα πάνω από την ποσότητα των 100 από το γράφημα."
+msgstr "Αυτή η τιμή αντιπροσωπεύει το ποσοστό πάνω από τον προσαρμοσμένο μέσο όρο δείγματος, αφού αφαιρεθούν οι ακραίες τιμές από το δείγμα. Για παράδειγμα, ένα Ποσοστό Διακύμανσης 100%% σε προσαρμοσμένο μέσο όρο 50 θα αφαιρούσε από το γράφημα κάθε δείγμα πάνω από την ποσότητα 100."
 
 #: include/global_settings.php
 msgid "This will require all old passwords to also meet the new complexity requirements upon login.  If not met, it will force a password change."
@@ -10104,7 +10103,7 @@ msgstr "Μέγεθος Γραμματοσειράς Τίτλου"
 
 #: include/global_settings.php
 msgid "To be used when formatting |date_time| on a graph"
-msgstr "Για χρήση κατά τη μορφοποίηση | ημερομηνία_ ώρα | σε ένα γράφημα"
+msgstr "Προς χρήση κατά τη μορφοποίηση του |date_time| σε ένα γράφημα"
 
 #: include/global_settings.php
 msgid "To optimize performance, the boost RRD updater needs to know how many Data Source Items should be retrieved in one pass.  Please be careful not to set too high as graphing performance during major updates can be compromised.  If you encounter graphing or polling slowness during updates, lower this number.  The default value is 50000."
@@ -10654,7 +10653,7 @@ msgstr "Συσκευή+πρότυπο:(%s%s)"
 
 #: lib/auth.php lib/html_tree.php lib/reports.php
 msgid "Device:"
-msgstr "设备："
+msgstr "Συσκευή:"
 
 #: lib/auth.php
 #, php-format
@@ -10786,7 +10785,7 @@ msgstr "Αρχείο"
 
 #: lib/clog_webapi.php
 msgid "Head Lines"
-msgstr "% d Γραμμές"
+msgstr "Πρώτες γραμμές"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
@@ -10952,7 +10951,7 @@ msgstr "Εκτέλεση του SNMP για %s ( %s)"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP get for data @ '%s' [value='$value']"
-msgstr "Εκτέλεση του SNMP get για δεδομένα @ &#39; %s&#39; [value = &#39;value value&#39;]"
+msgstr "Εκτέλεση SNMP get για δεδομένα @ '%s' [value='$value']"
 
 #: lib/data_query.php
 #, php-format
@@ -11411,7 +11410,7 @@ msgstr "Αποσύνδεση"
 
 #: lib/functions.php
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
-msgstr "Mailer Σφάλμα: Δεν <b>Για την</b> αντιμετώπιση που !! <br> Εάν χρησιμοποιείτε το σύνδεσμο <i>Δοκιμαστική αλληλογραφία</i> , ορίστε τη ρύθμιση <b>E-mail ειδοποίησης</b> ."
+msgstr "Σφάλμα αποστολέα αλληλογραφίας: Δεν έχει οριστεί διεύθυνση παραλήπτη!!<br>Εάν χρησιμοποιείτε τον σύνδεσμο <i>Δοκιμαστικό μήνυμα</i>, ορίστε τη ρύθμιση <b>E-mail ειδοποίησης</b>."
 
 #: lib/functions.php
 msgid "Message Not Found."
@@ -11777,7 +11776,7 @@ msgstr "Χρώμα στοιχείου"
 
 #: lib/html.php
 msgid "Kadupul"
-msgstr "Astrophytum asterias (I)"
+msgstr "Kadupul"
 
 #: lib/html.php
 msgid "Kadupul Home"
@@ -12058,9 +12057,9 @@ msgid "You have unsaved changes on this form.  If you press 'Continue' these cha
 msgstr "Έχετε μη αποθηκευμένες αλλαγές σε αυτή τη φόρμα. Εάν πατήσετε 'Συνέχεια', αυτές οι αλλαγές θα απορριφθούν. Πατήστε 'Ακύρωση' για να συνεχίσετε την επεξεργασία της φόρμας."
 
 #: lib/html_form_template.php
-#, fuzzy, php-format
+#, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr "Ένας πελάτης προσπάθησε να δημιουργήσει μια έγχυση SQL σε Kadupul πιθανώς από έναν εξωτερικό κεντρικό υπολογιστή με τη διεύθυνση %s"
+msgstr "Ένας πελάτης επιχείρησε να πραγματοποιήσει έγχυση SQL (SQL Injection) στο Kadupul, πιθανώς από εξωτερικό κεντρικό υπολογιστή με διεύθυνση %s"
 
 #: lib/html_form_template.php
 msgid "Attempted SQL Injection"
@@ -13054,7 +13053,7 @@ msgstr "Προεπιλεγμένο προφίλ"
 #: lib/installer.php
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "Πρότυπα συσκευών [επεξεργασία: %s]"
+msgstr "Το πρότυπο συσκευής για την πρώτη συσκευή Kadupul είναι %s"
 
 #: lib/installer.php
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
@@ -13290,7 +13289,7 @@ msgstr "Είναι σημαντικό ο κεντρικός διακομιστή
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "Συνιστάται ανεπιφύλακτα να ενημερώσετε το config.php για να ενεργοποιήσετε αυτήν τη δυνατότητα <b>αποσυσκευάζοντας τη</b> μεταβλητή <b>$input_whitelist</b> και στη συνέχεια εκτελώντας τις τρεις παραπάνω επιλογές σεναρίου CLI μετά την ολοκλήρωση της εγκατάστασης μέσω ιστού."
+msgstr "Συνιστάται ανεπιφύλακτα να ενημερώσετε το config.php για να ενεργοποιήσετε αυτήν τη δυνατότητα, αφαιρώντας το σχόλιο από τη μεταβλητή <b>$input_whitelist</b> και στη συνέχεια εκτελώντας τις τρεις παραπάνω επιλογές του σεναρίου CLI μετά την ολοκλήρωση της εγκατάστασης μέσω ιστού."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13335,7 +13334,7 @@ msgstr "Βεβαιωθείτε ότι όλες αυτές οι τιμές είν
 #: lib/installer.php
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
-msgstr "Βεβαιωθείτε ότι έχετε διαβάσει και ακολουθήσει τα απαραίτητα βήματα που απαιτούνται για την εγκατάσταση του Kadupul προτού συνεχίσετε. Μπορούν να βρεθούν πληροφορίες εγκατάστασης για λειτουργικά συστήματα που βασίζονται σε <a href=\"%1$s\">Unix</a> και <a href=\"%2$s\">Win32</a> ."
+msgstr "Βεβαιωθείτε ότι έχετε διαβάσει και ακολουθήσει τα απαραίτητα βήματα για την εγκατάσταση του Kadupul προτού συνεχίσετε. Πληροφορίες εγκατάστασης υπάρχουν για λειτουργικά συστήματα που βασίζονται σε <a href=\"%s\">Unix</a> και <a href=\"%s\">Win32</a>."
 
 #: lib/installer.php
 #, php-format
@@ -14315,7 +14314,7 @@ msgstr "Παρουσιάστηκε σφάλμα κατά την ανάλυση �
 
 #: lib/rrd.php
 msgid "Errors Found"
-msgstr "Δεν βρέθηκαν %s"
+msgstr "Βρέθηκαν σφάλματα"
 
 #: lib/rrd.php
 msgid "Failed to open data file, poller may not have run yet"
@@ -14407,12 +14406,12 @@ msgstr "Το γράφημα περιέχει μια τιμή που το RRDtool
 #: lib/rrd.php
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "Το RRA &#39; %s&#39; λείπει στο αρχείο RRD"
+msgstr "Το RRA '%s' λείπει από το υπάρχον αρχείο RRDfile του Kadupul"
 
 #: lib/rrd.php
 #, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
-msgstr "Το XFF για τον κάτοχο RRA id &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
+msgstr "Το XFF για το αναγνωριστικό RRA του Kadupul είναι '%s', ενώ θα έπρεπε να είναι '%s'"
 
 #: lib/rrd.php
 #, php-format
@@ -14834,7 +14833,7 @@ msgstr "Ανάλογα με τον αριθμό των συνδέσεων και
 #: lib/utility.php
 #, php-format
 msgid "If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status."
-msgstr "Εάν χρησιμοποιείτε το Kadupul Performance Booster και επιλέγετε μια μηχανή αποθήκευσης μνήμης, θα πρέπει να είστε προσεκτικοί για να ξεπλύνετε το ρυθμιστή απόδοσης Booster πριν το σύστημα ξεπεράσει το χώρο μνήμης. Αυτό γίνεται με δύο τρόπους, αρχικά μειώνοντας το μέγεθος της στήλης εξόδου σας στο σωστό μέγεθος. Αυτή η στήλη βρίσκεται στους πίνακες poller_output και poller_output_boost. Το δεύτερο πράγμα που μπορείτε να κάνετε είναι να διαθέσετε περισσότερη μνήμη στους πίνακες μνήμης. Έχουμε επιλέξει αυθαίρετα μια συνιστώμενη τιμή 10 %% μνήμης συστήματος, αλλά αν χρησιμοποιείτε SSD δίσκους ή έχετε μικρότερο σύστημα, μπορείτε να αγνοήσετε αυτή τη σύσταση ή να επιλέξετε διαφορετική μηχανή αποθήκευσης. Ενδέχεται να δείτε την αναμενόμενη κατανάλωση των πινάκων Performance Booster κάτω από την Κονσόλα -&gt; Συστήματα Utilities -&gt; View Boost Status."
+msgstr "Εάν χρησιμοποιείτε το Kadupul Performance Booster και επιλέξετε μια μηχανή αποθήκευσης στη μνήμη, πρέπει να προσέχετε να εκκενώνετε την ενδιάμεση μνήμη του Performance Booster προτού εξαντληθεί ο χώρος των πινάκων μνήμης του συστήματος. Αυτό γίνεται με δύο τρόπους: πρώτον, μειώνοντας το μέγεθος της στήλης εξόδου στο απολύτως απαραίτητο μέγεθος (η στήλη αυτή βρίσκεται στους πίνακες poller_output και poller_output_boost)· δεύτερον, εκχωρώντας περισσότερη μνήμη στους πίνακες μνήμης. Έχουμε επιλέξει αυθαίρετα μια συνιστώμενη τιμή 10%% της μνήμης συστήματος, αλλά αν χρησιμοποιείτε δίσκους SSD ή διαθέτετε μικρότερο σύστημα, μπορείτε να αγνοήσετε αυτή τη σύσταση ή να επιλέξετε διαφορετική μηχανή αποθήκευσης. Μπορείτε να δείτε την αναμενόμενη κατανάλωση των πινάκων Performance Booster στο Κονσόλα -> Βοηθητικά προγράμματα συστήματος -> Προβολή κατάστασης Boost."
 
 #: lib/utility.php
 msgid "If you have SSD disks, use this suggestion.  If you have physical hard drives, use 200 * the number of active drives in the array.  If using NVMe or PCIe Flash, much larger numbers as high as 100000 can be used."
@@ -14855,7 +14854,7 @@ msgstr "Εάν τα τραπέζια σας έχουν πολύ μεγάλα ε�
 #: lib/utility.php
 #, php-format
 msgid "InnoDB will hold as much tables and indexes in system memory as is possible.  Therefore, you should make the innodb_buffer_pool large enough to hold as much of the tables and index in memory.  Checking the size of the /var/lib/mysql/cacti directory will help in determining this value.  We are recommending 25%% of your systems total memory, but your requirements will vary depending on your systems size."
-msgstr "Το InnoDB θα κρατήσει όσο το δυνατόν περισσότερους πίνακες και ευρετήρια στη μνήμη του συστήματος. Επομένως, θα πρέπει να κάνετε το innodb_buffer_pool αρκετά μεγάλο για να κρατήσετε όσο περισσότερους πίνακες και ευρετήριο στη μνήμη. Ο έλεγχος του μεγέθους του κατάλογο / var / lib / mysql / Kadupul θα βοηθήσει στον προσδιορισμό αυτής της τιμής. Συνιστούμε 25 %% από τα συστήματα σας για μνήμη, αλλά οι απαιτήσεις σας θα διαφέρουν ανάλογα με το μέγεθος των συστημάτων σας."
+msgstr "Η μηχανή InnoDB διατηρεί στη μνήμη του συστήματος όσο το δυνατόν περισσότερους πίνακες και ευρετήρια. Επομένως, θα πρέπει να ορίσετε το innodb_buffer_pool αρκετά μεγάλο ώστε να χωράει όσο το δυνατόν περισσότερους πίνακες και ευρετήρια στη μνήμη. Ο έλεγχος του μεγέθους του καταλόγου /var/lib/mysql/cacti θα σας βοηθήσει να προσδιορίσετε αυτήν την τιμή. Συνιστούμε 25%% της συνολικής μνήμης του συστήματός σας, αν και οι απαιτήσεις σας θα διαφέρουν ανάλογα με το μέγεθος του συστήματός σας."
 
 #: lib/utility.php
 #, php-format
@@ -15094,7 +15093,7 @@ msgstr "Το κείμενο που θα εμφανιστεί στην καρτέ
 
 #: links.php
 msgid "The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work."
-msgstr ""
+msgstr "Η έγκυρη διεύθυνση URL που θα χρησιμοποιηθεί για αυτόν τον εξωτερικό σύνδεσμο. Πρέπει να περιλαμβάνει τον τύπο, για παράδειγμα https://kadupul.org. Λάβετε υπόψη ότι πολλοί ιστότοποι δεν επιτρέπουν την ενσωμάτωσή τους σε iframe από εξωτερικό ιστότοπο και, επομένως, η εξωτερική σύνδεση ενδέχεται να μην λειτουργεί."
 
 #: links.php
 msgid "Top of Console Page"
@@ -15122,7 +15121,7 @@ msgstr "Πού θα εμφανιστεί αυτή η σελίδα;"
 
 #: links.php
 msgid "Your contentfile is not a valid URL.  Please enter a value URL"
-msgstr ""
+msgstr "Το αρχείο περιεχομένου σας δεν είναι έγκυρη διεύθυνση URL. Εισαγάγετε μια έγκυρη διεύθυνση URL"
 
 #: logout.php
 msgid "Automatic Logout"
@@ -15960,7 +15959,7 @@ msgstr "Ο αριθμός του SNMP συνδέεται με αυτόν τον 
 
 #: pollers.php
 msgid "The number of Spine Threads to use per Data Collector process."
-msgstr "Ο αριθμός των νημάτων της σπονδυλικής στήλης που χρησιμοποιούνται κατά τη διαδικασία συλλογής δεδομένων."
+msgstr "Ο αριθμός των νημάτων Spine που χρησιμοποιούνται ανά διεργασία Συλλέκτη Δεδομένων."
 
 #: pollers.php
 msgid "The number of script calls associated with this Data Collector."
@@ -16295,9 +16294,8 @@ msgid "Site Name:"
 msgstr "Ονομα ιστοσελίδας:"
 
 #: sites.php
-#, fuzzy
 msgid "Site not found."
-msgstr "Το αρχείο δε βρέθηκε"
+msgstr "Η τοποθεσία δεν βρέθηκε."
 
 #: sites.php
 msgid "State"
@@ -16763,7 +16761,7 @@ msgstr "Ο συνολικός αριθμός των μεμονωμένων γρ�
 #: tree.php
 #, php-format
 msgid "This tree has been locked for Editing on %s by %s."
-msgstr "Αυτό το δέντρο έχει κλειδωθεί για επεξεργασία στο%1$s από%2$s."
+msgstr "Αυτό το δέντρο έχει κλειδωθεί για επεξεργασία στις %s από %s."
 
 #: tree.php
 msgid "To Edit this tree, you must first lock it by pressing the Edit Tree button."
@@ -16887,7 +16885,7 @@ msgstr "> πριν από 4 μήνες"
 
 #: user_admin.php user_group_admin.php
 msgid "ALLOW"
-msgstr "允许"
+msgstr "ΕΠΙΤΡΕΠΕΤΑΙ"
 
 #: user_admin.php user_group_admin.php
 msgid "Access Granted"
@@ -17774,7 +17772,7 @@ msgstr "Στατιστικά χρόνου εκτέλεσης"
 
 #: utilities.php
 msgid "Different version of Kadupul and Spine!"
-msgstr "Διαφορετική έκδοση του Kadupul και της σπονδυλικής στήλης!"
+msgstr "Διαφορετική έκδοση του Kadupul και του Spine!"
 
 #: utilities.php
 msgid "Directory Does NOT Exist!!"
@@ -18459,13 +18457,12 @@ msgid "VDEF Preview"
 msgstr "Προεπισκόπηση VDEF"
 
 #: vdef.php
-#, fuzzy
 msgid "VDEF not found."
-msgstr "Το αρχείο δε βρέθηκε"
+msgstr "Το VDEF δεν βρέθηκε."
 
 #: vdef.php
 msgid "VDEF or VDEF Item not found."
-msgstr ""
+msgstr "Το VDEF ή το στοιχείο VDEF δεν βρέθηκε."
 
 #: vdef.php
 #, php-format

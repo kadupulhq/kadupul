@@ -4059,11 +4059,11 @@ msgstr "অ্যাগ্রিগেট"
 
 #: include/global_arrays.php
 msgid "Alert Incidents"
-msgstr ""
+msgstr "অ্যালার্ট ঘটনাসমূহ"
 
 #: include/global_arrays.php
 msgid "Alert Rules"
-msgstr ""
+msgstr "অ্যালার্ট নিয়মসমূহ"
 
 #: include/global_arrays.php
 msgid "All Data Sources (Do not Include Duplicates)"
@@ -7527,7 +7527,7 @@ msgstr "%d প্রসেস"
 #: include/global_settings.php
 #, php-format
 msgid "%d Rules"
-msgstr ""
+msgstr "%dটি নিয়ম"
 
 #: include/global_settings.php
 #, php-format
@@ -7649,11 +7649,11 @@ msgstr "এই সংখ্যক দিন পর, গ্রাফে ব্য
 
 #: include/global_settings.php
 msgid "Alert Evaluation Time Budget"
-msgstr ""
+msgstr "অ্যালার্ট মূল্যায়নের সময় বাজেট"
 
 #: include/global_settings.php
 msgid "Alert Rules per Batch"
-msgstr ""
+msgstr "প্রতি ব্যাচে অ্যালার্ট নিয়ম"
 
 #: include/global_settings.php
 msgid "All Types"
@@ -8237,7 +8237,7 @@ msgstr "Lotus Notes (R) সমন্বয় সক্রিয় করুন
 
 #: include/global_settings.php
 msgid "Enable Native Alert Evaluation"
-msgstr ""
+msgstr "নেটিভ অ্যালার্ট মূল্যায়ন সক্রিয় করুন"
 
 #: include/global_settings.php
 msgid "Enable On-demand RRD Updating"
@@ -8521,7 +8521,7 @@ msgstr "কত ঘন ঘন RRD পরীক্ষা করা উচিত?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
-msgstr ""
+msgstr "একটি মূল্যায়ন রান সর্বোচ্চ কতক্ষণ নিয়মের নতুন ব্যাচ শুরু করতে পারবে। অবশিষ্ট সময়ে মূল্যায়নের পর কিউতে থাকা বিজ্ঞপ্তি পাঠানো হয় এবং বাজেট শেষ হয়ে গেলেও একটি ব্যাচ পাঠানো হতে পারে। যে নিয়মগুলোতে পৌঁছানো যায়নি সেগুলো পরবর্তী রানে প্রথমে মূল্যায়ন করা হয়।"
 
 #: include/global_settings.php
 msgid "How many OID's should be returned per snmpbulkwalk request?  For Devices with large SNMP trees, increasing this size will increase re-index performance over a WAN."
@@ -8853,7 +8853,7 @@ msgstr "NaN-সমূহ"
 
 #: include/global_settings.php
 msgid "Native Alerting"
-msgstr ""
+msgstr "নেটিভ অ্যালার্টিং"
 
 #: include/global_settings.php
 msgid "New Window"
@@ -9369,7 +9369,7 @@ msgstr "Has Graphs এবং Has Data Sources কি ডিফল্টরূপ
 
 #: include/global_settings.php
 msgid "Should the main Data Collector evaluate alert rules after each polling cycle and send their notifications? Alert rules read the rates that Data Source Statistics collects, so Data Source Statistics Collection must also be enabled."
-msgstr ""
+msgstr "মূল ডেটা কালেক্টর কি প্রতিটি পোলিং চক্রের পরে অ্যালার্ট নিয়মগুলো মূল্যায়ন করবে এবং সেগুলোর বিজ্ঞপ্তি পাঠাবে? অ্যালার্ট নিয়মগুলো ডেটা সোর্স পরিসংখ্যান দ্বারা সংগৃহীত হার পড়ে, তাই ডেটা সোর্স পরিসংখ্যান সংগ্রহও সক্রিয় থাকতে হবে।"
 
 #: include/global_settings.php
 msgid "Show Device Aggregates"
@@ -9801,7 +9801,7 @@ msgstr "নতুন Web Basic এবং LDAP ব্যবহারকারী�
 
 #: include/global_settings.php
 msgid "The number of alert rules read and evaluated together. The time budget is checked between batches."
-msgstr ""
+msgstr "একসাথে পড়া ও মূল্যায়ন করা অ্যালার্ট নিয়মের সংখ্যা। ব্যাচগুলোর মধ্যবর্তী সময়ে সময় বাজেট পরীক্ষা করা হয়।"
 
 #: include/global_settings.php
 msgid "The number of columns to use when displaying Thumbnail graphs in Preview mode."
