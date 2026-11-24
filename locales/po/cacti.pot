@@ -10,7 +10,7 @@ msgstr ""
 "#-#-#-#-#  cacti.pot (Kadupul 1.2.41)  #-#-#-#-#\n"
 "Project-Id-Version: Kadupul 1.2.41\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 15:48-0800\n"
+"POT-Creation-Date: 2026-11-24 00:54-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,12 +25,12 @@ msgstr ""
 "Language: en\n"
 
 #: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php include/global_settings.php
+#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Delete"
 msgstr ""
 
@@ -84,21 +84,20 @@ msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
 msgstr ""
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_form.php
-#: lib/html_reports.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
+#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr ""
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: lib/clog_webapi.php lib/html.php lib/html_reports.php managers.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr ""
 
@@ -115,9 +114,9 @@ msgid "In order to migrate the Aggregate Graphs below to a Template based Aggreg
 msgstr ""
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_queries.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr ""
@@ -320,11 +319,11 @@ msgid "Matching Graphs"
 msgstr ""
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
 #: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
 #: settings.php tree.php user_admin.php user_domains.php user_group_admin.php
 #: utilities.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
@@ -339,13 +338,12 @@ msgid "Graphs"
 msgstr ""
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php include/global_form.php
-#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
-#: pollers.php rrdcleaner.php tree.php user_admin.php user_domains.php
-#: user_group_admin.php utilities.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php include/global_form.php lib/api_automation.php
+#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
+#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 msgid "Default"
 msgstr ""
@@ -355,41 +353,41 @@ msgid "Part of Aggregate"
 msgstr ""
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php
 msgid "Go"
 msgstr ""
 
-#: aggregate_graphs.php automation_devices.php automation_snmp.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/html_graph.php managers.php plugins.php pollers.php
-#: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php graphs_new.php host_templates.php lib/html_graph.php managers.php
+#: plugins.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php utilities.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 msgid "Set/Refresh Filters"
 msgstr ""
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php lib/api_automation.php lib/clog_webapi.php
 #: lib/html_filter.php lib/html_graph.php lib/html_reports.php
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php user_domains.php
 msgid "Clear"
 msgstr ""
 
-#: aggregate_graphs.php automation_snmp.php data_debug.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php graphs_new.php host_templates.php lib/html_graph.php
-#: lib/html_tree.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php utilities.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/html_graph.php lib/html_tree.php
+#: managers.php plugins.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php utilities.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 msgid "Clear Filters"
 msgstr ""
@@ -991,9 +989,9 @@ msgstr ""
 msgid "N/A"
 msgstr ""
 
-#: automation_graph_rules.php automation_snmp.php automation_tree_rules.php
-#: data_queries.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php
+#: automation_graph_rules.php automation_tree_rules.php data_queries.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php
 msgid "Duplicate"
 msgstr ""
 
@@ -1305,74 +1303,6 @@ msgstr ""
 
 #: automation_networks.php
 msgid "Clear Filtered"
-msgstr ""
-
-#: automation_snmp.php
-msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
-msgstr ""
-
-#: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option(s)."
-msgstr ""
-
-#: automation_snmp.php
-msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
-msgstr ""
-
-#: automation_snmp.php
-msgid "Name Format"
-msgstr ""
-
-#: automation_snmp.php
-msgid "name"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Automation SNMP Options has been Duplicated."
-msgstr ""
-
-#: automation_snmp.php
-msgid "Automation Item does not exist.  Can not Duplicate."
-msgstr ""
-
-#: automation_snmp.php
-msgid "Automation SNMP Options"
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Rules"
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Option Sets"
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Option Set"
-msgstr ""
-
-#: automation_snmp.php
-msgid "Networks Using"
-msgstr ""
-
-#: automation_snmp.php
-msgid "SNMP Entries"
-msgstr ""
-
-#: automation_snmp.php
-msgid "V1 Entries"
-msgstr ""
-
-#: automation_snmp.php
-msgid "V2 Entries"
-msgstr ""
-
-#: automation_snmp.php
-msgid "V3 Entries"
-msgstr ""
-
-#: automation_snmp.php
-msgid "No SNMP Option Sets Found"
 msgstr ""
 
 #: automation_tree_rules.php

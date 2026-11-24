@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Tamil Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 15:48-0800\n"
+"POT-Creation-Date: 2026-11-24 00:54-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Tamil\n"
@@ -129,30 +129,29 @@ msgid "Associate with Aggregate"
 msgstr "ஒருங்கிணைப்புடன் தொடர்புபடுத்து"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: host_templates.php lib/clog_webapi.php lib/html.php lib/html_form.php
-#: lib/html_reports.php managers.php plugins.php pollers.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graph_view.php graphs.php host_templates.php lib/clog_webapi.php
+#: lib/html.php lib/html_form.php lib/html_reports.php managers.php plugins.php
+#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
 msgid "Cancel"
 msgstr "ரத்துசெய்"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php lib/api_automation.php lib/clog_webapi.php
 #: lib/html_filter.php lib/html_graph.php lib/html_reports.php
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php user_domains.php
 msgid "Clear"
 msgstr "அழி"
 
-#: aggregate_graphs.php automation_snmp.php data_debug.php data_queries.php
-#: data_sources.php data_templates.php graph_templates.php graph_view.php
-#: graphs.php graphs_new.php host_templates.php lib/html_graph.php
-#: lib/html_tree.php managers.php plugins.php pollers.php
+#: aggregate_graphs.php data_debug.php data_queries.php data_sources.php
+#: data_templates.php graph_templates.php graph_view.php graphs.php
+#: graphs_new.php host_templates.php lib/html_graph.php lib/html_tree.php
+#: managers.php plugins.php pollers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Clear Filters"
@@ -191,11 +190,11 @@ msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree
 msgstr "மரக் கிளையின் கீழ் பின்வரும் ஒருங்கிணைந்த வரைபட(ங்கள்) ஐ வைக்க 'Continue' என்பதைக் கிளிக் செய்யவும்."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graphs.php host_templates.php
-#: lib/clog_webapi.php lib/html.php lib/html_reports.php managers.php
-#: pollers.php tree.php user_admin.php user_domains.php user_group_admin.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_queries.php data_sources.php data_templates.php graph_templates.php
+#: graphs.php host_templates.php lib/clog_webapi.php lib/html.php
+#: lib/html_reports.php managers.php pollers.php tree.php user_admin.php
+#: user_domains.php user_group_admin.php
 msgid "Continue"
 msgstr "தொடர்"
 
@@ -212,24 +211,23 @@ msgid "Create New Aggregate from Aggregates"
 msgstr "ஒருங்கிணைப்புகளிலிருந்து புதிய ஒருங்கிணைப்பை உருவாக்கு"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php include/global_form.php
-#: lib/api_automation.php lib/html_reports.php managers.php plugins.php
-#: pollers.php rrdcleaner.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php include/global_form.php lib/api_automation.php
+#: lib/html_reports.php managers.php plugins.php pollers.php rrdcleaner.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Default"
 msgstr "இயல்புநிலை"
 
 #: aggregate_graphs.php aggregate_templates.php automation_graph_rules.php
-#: automation_networks.php automation_snmp.php automation_tree_rules.php
-#: data_queries.php data_sources.php data_templates.php graph_templates.php
-#: graphs.php host_templates.php include/global_arrays.php
-#: include/global_settings.php lib/api_automation.php lib/html.php
-#: lib/html_form.php lib/html_reports.php managers.php pollers.php tree.php
-#: user_admin.php user_domains.php user_group_admin.php
+#: automation_networks.php automation_tree_rules.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graphs.php
+#: host_templates.php include/global_arrays.php include/global_settings.php
+#: lib/api_automation.php lib/html.php lib/html_form.php lib/html_reports.php
+#: managers.php pollers.php tree.php user_admin.php user_domains.php
+#: user_group_admin.php
 msgid "Delete"
 msgstr "நீக்கு"
 
@@ -254,11 +252,11 @@ msgid "Disassociate with Aggregate"
 msgstr "ஒருங்கிணைப்பிலிருந்து தொடர்பைத் துண்டி"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
 #: lib/html_tree.php managers.php plugins.php pollers.php tree.php
 #: user_admin.php
 msgid "Go"
@@ -397,29 +395,29 @@ msgid "Report Name"
 msgstr "அறிக்கை பெயர்"
 
 #: aggregate_graphs.php auth_changepassword.php auth_profile.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_queries.php graphs.php include/auth.php
-#: lib/api_aggregate.php lib/html_form.php lib/html_reports.php managers.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_queries.php graphs.php include/auth.php lib/api_aggregate.php
+#: lib/html_form.php lib/html_reports.php managers.php
 #: templates/platform/permission_denied.html.twig
 msgid "Return"
 msgstr "திரும்பு"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
-#: automation_graph_rules.php automation_networks.php automation_snmp.php
-#: automation_tree_rules.php data_debug.php data_queries.php data_sources.php
-#: data_templates.php graph_templates.php graph_view.php graphs.php
-#: graphs_new.php host_templates.php lib/api_automation.php lib/clog_webapi.php
-#: lib/html.php lib/html_filter.php lib/html_graph.php lib/html_reports.php
+#: automation_graph_rules.php automation_networks.php automation_tree_rules.php
+#: data_debug.php data_queries.php data_sources.php data_templates.php
+#: graph_templates.php graph_view.php graphs.php graphs_new.php
+#: host_templates.php lib/api_automation.php lib/clog_webapi.php lib/html.php
+#: lib/html_filter.php lib/html_graph.php lib/html_reports.php
 #: lib/html_tree.php managers.php plugins.php pollers.php rrdcleaner.php
 #: settings.php src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php
 #: tree.php user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Search"
 msgstr "தேடு"
 
-#: aggregate_graphs.php automation_devices.php automation_snmp.php
-#: data_debug.php data_queries.php data_sources.php data_templates.php
-#: graph_templates.php graph_view.php graphs.php graphs_new.php
-#: host_templates.php lib/html_graph.php managers.php plugins.php pollers.php
+#: aggregate_graphs.php automation_devices.php data_debug.php data_queries.php
+#: data_sources.php data_templates.php graph_templates.php graph_view.php
+#: graphs.php graphs_new.php host_templates.php lib/html_graph.php managers.php
+#: plugins.php pollers.php
 #: src/IdentityAccess/Infrastructure/Legacy/PermissionFilter.php tree.php
 #: user_admin.php user_domains.php user_group_admin.php utilities.php
 msgid "Set/Refresh Filters"
@@ -1065,9 +1063,9 @@ msgstr "முடக்கப்பட்டது"
 msgid "Don't Show"
 msgstr "காட்ட வேண்டாம்"
 
-#: automation_graph_rules.php automation_snmp.php automation_tree_rules.php
-#: data_queries.php data_templates.php graph_templates.php graphs.php
-#: host_templates.php include/global_arrays.php
+#: automation_graph_rules.php automation_tree_rules.php data_queries.php
+#: data_templates.php graph_templates.php graphs.php host_templates.php
+#: include/global_arrays.php
 msgid "Duplicate"
 msgstr "நகலெடு"
 
@@ -1324,74 +1322,6 @@ msgstr "இயங்கும்/SNMP புரவலன்கள்"
 #: automation_networks.php include/global_arrays.php
 msgid "Weekly"
 msgstr "வாராந்திரம்"
-
-#: automation_snmp.php
-msgid "Automation Item does not exist.  Can not Duplicate."
-msgstr "தானியக்கமாக்கல் உருப்படி இல்லை. நகலெடுக்க முடியாது."
-
-#: automation_snmp.php
-msgid "Automation SNMP Options"
-msgstr "தானியக்கமாக்கல் SNMP விருப்பங்கள்"
-
-#: automation_snmp.php
-msgid "Automation SNMP Options has been Duplicated."
-msgstr "தானியக்கமாக்கல் SNMP விருப்பங்கள் நகலெடுக்கப்பட்டுள்ளன."
-
-#: automation_snmp.php
-msgid "Click 'Continue' to delete the following SNMP Option(s)."
-msgstr "பின்வரும் SNMP விருப்ப(ங்கள்) ஐ நீக்க 'Continue' என்பதைக் கிளிக் செய்யவும்."
-
-#: automation_snmp.php
-msgid "Click 'Continue' to duplicate the following SNMP Options. You can optionally change the title format for the new SNMP Options."
-msgstr "பின்வரும் SNMP விருப்பங்களை நகலெடுக்க 'Continue' என்பதைக் கிளிக் செய்யவும். புதிய SNMP விருப்பங்களுக்கான தலைப்பு வடிவமைப்பை நீங்கள் விருப்பப்படி மாற்றலாம்."
-
-#: automation_snmp.php
-msgid "Name Format"
-msgstr "பெயர் வடிவமைப்பு"
-
-#: automation_snmp.php
-msgid "Networks Using"
-msgstr "பயன்படுத்தும் பிணையங்கள்"
-
-#: automation_snmp.php
-msgid "No SNMP Option Sets Found"
-msgstr "SNMP விருப்பத் தொகுப்புகள் எவையும் காணப்படவில்லை"
-
-#: automation_snmp.php
-msgid "SNMP Entries"
-msgstr "SNMP உள்ளீடுகள்"
-
-#: automation_snmp.php
-msgid "SNMP Option Set"
-msgstr "SNMP விருப்பத் தொகுப்பு"
-
-#: automation_snmp.php
-msgid "SNMP Option Sets"
-msgstr "SNMP விருப்பத் தொகுப்புகள்"
-
-#: automation_snmp.php
-msgid "SNMP Rules"
-msgstr "SNMP விதிகள்"
-
-#: automation_snmp.php
-msgid "This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form."
-msgstr "இந்த SNMP விருப்பத் தொகுப்பு படிவம் காலாவதியாகிவிட்டது. SNMP விருப்பத் தொகுப்பை மீண்டும் திறந்து அதன் தற்போதைய படிவத்தைப் பயன்படுத்தவும்."
-
-#: automation_snmp.php
-msgid "V1 Entries"
-msgstr "V1 உள்ளீடுகள்"
-
-#: automation_snmp.php
-msgid "V2 Entries"
-msgstr "V2 உள்ளீடுகள்"
-
-#: automation_snmp.php
-msgid "V3 Entries"
-msgstr "V3 உள்ளீடுகள்"
-
-#: automation_snmp.php
-msgid "name"
-msgstr "பெயர்"
 
 #: automation_tree_rules.php
 msgid "An attempt was made to perform a SQL injection in Tree automation"
