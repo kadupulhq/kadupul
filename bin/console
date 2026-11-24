@@ -15,5 +15,13 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 
+// Compiling the container and warming every locale's translation catalogue
+// peaks near 180 MB, above PHP's 128 MB CLI default. A higher or unlimited
+// configured limit is left alone.
+$memoryLimit = ini_parse_quantity((string) ini_get('memory_limit'));
+if ($memoryLimit !== -1 && $memoryLimit < 512 * 1024 * 1024) {
+    ini_set('memory_limit', '512M');
+}
+
 $kernel = require dirname(__DIR__) . '/config/bootstrap.php';
 exit((new Application($kernel))->run());

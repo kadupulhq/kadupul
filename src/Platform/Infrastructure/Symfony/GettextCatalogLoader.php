@@ -26,8 +26,14 @@ final class GettextCatalogLoader implements LoaderInterface
 {
     public const string FORMAT = 'kadupul_gettext';
 
-    /** @var array<string, GettextCatalog> */
-    private array $catalogs = [];
+    /**
+     * The catalog parsed last. A translator loads every domain of one locale
+     * before the next, and a parsed catalog holds several megabytes, so
+     * keeping all of them exhausts the memory limit during cache warm-up.
+     *
+     * @var array{path: string, catalog: GettextCatalog}|null
+     */
+    private ?array $parsed = null;
 
     #[\Override]
     public function load(mixed $resource, string $locale, string $domain = 'messages'): MessageCatalogue
@@ -37,7 +43,11 @@ final class GettextCatalogLoader implements LoaderInterface
         }
         $yaml = new YamlFileLoader();
         $translated = is_file($resource['domain']) ? $yaml->load($resource['domain'], $locale, $domain)->all($domain) : [];
-        $catalog = $this->catalogs[$resource['catalog']] ??= GettextCatalog::fromFile($resource['catalog']);
+        if ($this->parsed === null || $this->parsed['path'] !== $resource['catalog']) {
+            $this->parsed = null;
+            $this->parsed = ['path' => $resource['catalog'], 'catalog' => GettextCatalog::fromFile($resource['catalog'])];
+        }
+        $catalog = $this->parsed['catalog'];
         $catalogue = new MessageCatalogue($locale);
         foreach (array_keys($yaml->load($resource['source'], 'en', $domain)->all($domain)) as $key) {
             $key = (string) $key;
