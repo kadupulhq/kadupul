@@ -14,6 +14,7 @@ use Kadupul\Automation\Application\Port\AutomationTemplateStore;
 use Kadupul\Automation\Application\Query\AutomationTemplateAccessDenied;
 use Kadupul\Automation\Domain\AutomationTemplateFilters;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyRequestId;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +25,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /** automation_templates.php lands here. Old links navigate; nothing here changes data. */
 final class LegacyAutomationTemplateController
 {
-    private const string ID = '/\A(?:0|[1-9][0-9]{0,7})\z/D';
-
     #[Route('/automation/templates/legacy', name: 'automation_templates_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $console, AutomationTemplateAccess $access, AutomationTemplateStore $store, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -78,13 +77,7 @@ final class LegacyAutomationTemplateController
 
     private static function id(mixed $raw): int
     {
-        if ($raw === '') {
-            return 0;
-        }
-        if (!is_string($raw) || preg_match(self::ID, $raw) !== 1) {
-            throw new \InvalidArgumentException('Invalid automation template filters.');
-        }
-        return (int) $raw;
+        return LegacyRequestId::parse($raw, 'Invalid automation template filters.');
     }
 
     private static function redirect(string $url): RedirectResponse

@@ -14,6 +14,7 @@ use Kadupul\Automation\Application\Query\AutomationTemplateAccessDenied;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
 use Kadupul\Navigation\Contract\Administration\ListFilters;
 use Kadupul\Navigation\Contract\Administration\ListScreen;
+use Kadupul\Platform\Contract\LegacyRequestId;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +25,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /** automation_snmp.php lands here. Old links navigate; nothing here reads or changes data. */
 final readonly class LegacySnmpOptionController
 {
-    private const string ID = '/\A(?:0|[1-9][0-9]{0,9})\z/D';
     private const string EXPIRED = 'This SNMP Option Set form has expired. Open the SNMP Option Set again and use its current form.';
 
     #[Route('/automation/snmp-options/legacy', name: 'automation_snmp_options_legacy', methods: ['GET', 'HEAD', 'POST'])]
@@ -76,11 +76,7 @@ final readonly class LegacySnmpOptionController
     /** An absent or empty ID is 0, as the legacy page read it. */
     private static function id(mixed $raw): int
     {
-        return match (true) {
-            $raw === '' => 0,
-            is_string($raw) && preg_match(self::ID, $raw) === 1 => (int) $raw,
-            default => throw new \InvalidArgumentException('Invalid SNMP Option Set request.'),
-        };
+        return LegacyRequestId::parse($raw, 'Invalid SNMP Option Set request.', 10);
     }
 
     private static function entry(UrlGeneratorInterface $urls, int $set, int $entry): string

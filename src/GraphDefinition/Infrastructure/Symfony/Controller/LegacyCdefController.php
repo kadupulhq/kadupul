@@ -14,6 +14,7 @@ use Kadupul\GraphDefinition\Application\Port\CdefStore;
 use Kadupul\GraphDefinition\Application\Query\CdefAccessDenied;
 use Kadupul\GraphDefinition\Domain\CdefFilters;
 use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\LegacyRequestId;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +25,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /** cdef.php lands here. Old links navigate; nothing here changes data. */
 final class LegacyCdefController
 {
-    private const string ID = '/\A(?:0|[1-9][0-9]{0,7})\z/D';
-
     /** Redirects a legacy cdef.php GET to the matching page. A legacy POST or write action is refused (409 or 405) because its form has expired. */
     #[Route('/graph-definitions/cdefs/legacy', name: 'graph_cdef_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $console, CdefAccess $access, CdefStore $store, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
@@ -102,13 +101,7 @@ final class LegacyCdefController
      */
     private static function id(mixed $raw): int
     {
-        if ($raw === '') {
-            return 0;
-        }
-        if (!is_string($raw) || preg_match(self::ID, $raw) !== 1) {
-            throw new \InvalidArgumentException('Invalid CDEF filters.');
-        }
-        return (int) $raw;
+        return LegacyRequestId::parse($raw, 'Invalid CDEF filters.');
     }
 
     /** A 302 redirect that is not cached. */
