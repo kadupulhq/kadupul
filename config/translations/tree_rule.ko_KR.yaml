@@ -35,7 +35,7 @@
 "Save the rule first; its Object Selection and Tree Creation Criteria are added afterwards.": "먼저 규칙을 저장하세요. 개체 선택 및 트리 생성 기준은 그 이후에 추가됩니다."
 "The Item Type that shall be dynamically added to the tree.": "트리에 동적으로 추가되는 Item Type."
 "The tree rule changed since you opened this form. Reload before saving.": "이 양식을 연 후 트리 규칙이 변경되었습니다. 저장하기 전에 다시 불러오세요."
-"Tree": "나무"
+"Tree": "트리"
 "Tree Rule Selection [edit: %name%]": "트리 규칙 선택 [편집: %name%]"
 "Tree Rules Selection [new]": "트리 규칙 선택 [새로 만들기]"
 "Tree rule not found.": "트리 규칙을 찾을 수 없습니다."

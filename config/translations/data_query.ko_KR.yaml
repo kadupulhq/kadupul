@@ -7,7 +7,7 @@
 "Add Data Query": "데이터 쿼리 추가"
 "Associated Graph Templates": "연결된 그래프 템플릿"
 "Back to Data Queries": "데이터 쿼리 목록으로 돌아가기"
-"Choose a Data Input Method": "데이터 입력 방식 선택"
+"Choose a Data Input Method": "데이터 입력 방법 선택"
 "Choose an existing Data Input Method.": "기존 데이터 입력 방식을 선택하세요."
 "Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "이 데이터 쿼리에 대한 입력 방법을 선택하십시오. 이 입력 방법은 데이터 쿼리와 연결된 각 장치에 대해 데이터를 수집하는 방법을 정의합니다."
 "Could not locate XML file.": "XML 파일을 찾을 수 없습니다."

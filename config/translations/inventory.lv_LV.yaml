@@ -177,7 +177,7 @@
 "Device creation outcome is uncertain. Check the device list before retrying.": "Ierīces izveides iznākums nav skaidrs. Pirms atkārtota mēģinājuma pārbaudiet ierīču sarakstu."
 "Select a valid device option.": "Atlasiet derīgu ierīces opciju."
 "Description": "Apraksts"
-"Poller": "Aptaujātajs"
+"Poller": "Poller"
 "Version 1": "1. versija"
 "Version 2": "2. versija"
 "Version 3": "3. versija"

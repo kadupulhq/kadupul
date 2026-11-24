@@ -31,7 +31,7 @@
 "SNMP Auth Password (v3)": "Пароль аутентификации SNMP (v3)"
 "SNMP Auth Protocol (v3)": "Протокол аутентификации SNMP (v3)"
 "SNMP Community": "Сообщество SNMP (Community)"
-"SNMP Engine ID (v3)": "ID двигателя SNMP (v3)"
+"SNMP Engine ID (v3)": "ID движка SNMP (v3)"
 "SNMP Message Type": "Тип сообщения SNMP"
 "SNMP Notification Receiver [edit: %name%]": "Получатель уведомлений SNMP [редактирование: %name%]"
 "SNMP Notification Receiver [new]": "Приемник уведомления SNMP [новый]"

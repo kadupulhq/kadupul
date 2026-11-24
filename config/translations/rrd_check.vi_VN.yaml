@@ -34,7 +34,7 @@
 "RRD check pages": "Trang kiểm tra RRD"
 "RRD check problems": "Sự cố kiểm tra RRD"
 "RRD check problems purged.": "Đã xóa sạch các sự cố kiểm tra RRD."
-"RRDfile Checker": "Chất tẩy rửa RRDfile"
+"RRDfile Checker": "RRDfile Checker"
 "Search": "Tìm kiếm"
 "This legacy RRD check form has expired. Open RRD Check and submit a new form.": "Biểu mẫu kiểm tra RRD kế thừa này đã hết hạn. Hãy mở Kiểm tra RRD và gửi biểu mẫu mới."
 "Unable to load RRD check problems. Reload before retrying.": "Không thể tải sự cố kiểm tra RRD. Hãy tải lại trước khi thử lại."

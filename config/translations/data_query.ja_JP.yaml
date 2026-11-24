@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 "A description for this data query.": "このデータクエリの説明。"
-"A name for this data query.": "この問い合わせの名前です。"
+"A name for this data query.": "このデータクエリの名前です。"
 "Access denied.": "アクセスが拒否されました。"
 "Add Data Query": "データクエリを追加"
 "Associated Graph Templates": "関連グラフテンプレート"
 "Back to Data Queries": "データクエリ一覧に戻る"
-"Choose a Data Input Method": "データ入力方式を選択"
+"Choose a Data Input Method": "データの入力方法を選択"
 "Choose an existing Data Input Method.": "既存のデータ入力方式を選択してください。"
 "Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "このデータクエリの入力方法を選択してください。この入力メソッドは、データクエリに関連付けられている各デバイスのデータの収集方法を定義します。"
 "Could not locate XML file.": "XMLファイルが見つかりませんでした。"

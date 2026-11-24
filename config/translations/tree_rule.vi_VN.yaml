@@ -35,7 +35,7 @@
 "Save the rule first; its Object Selection and Tree Creation Criteria are added afterwards.": "Hãy lưu quy tắc trước; Tiêu chí chọn đối tượng và tạo cây sẽ được thêm sau."
 "The Item Type that shall be dynamically added to the tree.": "Loại vật phẩm sẽ được tự động thêm vào cây."
 "The tree rule changed since you opened this form. Reload before saving.": "Quy tắc cây đã thay đổi kể từ khi bạn mở biểu mẫu này. Hãy tải lại trước khi lưu."
-"Tree": "Cây thân gỗ"
+"Tree": "Tree"
 "Tree Rule Selection [edit: %name%]": "Chọn quy tắc cây [chỉnh sửa: %name%]"
 "Tree Rules Selection [new]": "Chọn quy tắc cây [mới]"
 "Tree rule not found.": "Không tìm thấy quy tắc cây."

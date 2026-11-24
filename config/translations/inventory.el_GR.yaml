@@ -42,7 +42,7 @@
 "Notes must be valid text of at most 1,024 characters.": "Οι σημειώσεις πρέπει να είναι έγκυρο κείμενο το πολύ 1.024 χαρακτήρων."
 "Save outcome is uncertain. Reload the site before retrying.": "Η έκβαση της αποθήκευσης είναι αβέβαιη. Επαναφορτώστε την τοποθεσία πριν προσπαθήσετε ξανά."
 "Search by name, hostname, location or external ID": "Αναζήτηση κατά όνομα, όνομα κεντρικού υπολογιστή, θέση ή εξωτερικό αναγνωριστικό"
-"Site": "Ιστοσελίδα"
+"Site": "Site"
 "All sites": "Όλες οι τοποθεσίες"
 "Unassigned": "Μη ανατεθειμένο"
 "Selected site (no accessible devices)": "Επιλεγμένη τοποθεσία (δεν υπάρχουν προσβάσιμες συσκευές)"

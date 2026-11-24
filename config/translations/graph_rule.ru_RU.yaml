@@ -18,7 +18,7 @@
 "Enter a name.": "Введите имя."
 "Enter at most %count% characters.": "Введите не более %count% символов."
 "Enter single-line text.": "Введите однострочный текст."
-"Graph Type": "Тип диаграммы"
+"Graph Type": "Тип графика"
 "Graph rule not found.": "Правило графиков не найдено."
 "Graph rule saved.": "Правило графиков сохранено."
 "Name": "Имя"

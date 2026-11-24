@@ -11,7 +11,7 @@
 "Choose a Graph Type of the selected Data Query.": "選択したデータクエリのグラフタイプを選択してください。"
 "Choose an existing Data Query.": "既存のデータクエリを選択してください。"
 "Choose any of the available Graph Types of the selected Data Query to apply to this rule.": "このルールに適用する、選択したデータクエリの利用可能な任意のグラフタイプを選択してください。"
-"Data Query": "データ問合せ"
+"Data Query": "データクエリ"
 "Device Selection and Graph Creation Criteria": "デバイス選択およびグラフ作成基準"
 "Edit Graph Rule": "グラフルールを編集"
 "Enable Rule": "ルールを有効にします"

@@ -14,7 +14,7 @@
 "Choose an existing Tree.": "Choisissez un arbre existant."
 "Choose how graphs are grouped when drawn for this particular host on the tree. Used for Device leaves.": "Choisissez comment les graphiques de cet hôte sont regroupés dans l’arbre. Utilisé pour les feuilles de type équipement."
 "Data Query Index": "Index des requêtes de données"
-"Device": "Équipement"
+"Device": "Appareil"
 "Device leaves cannot use criteria on graph or graph template columns. When changing the Leaf Item Type to Device, check this box to remove those criteria; they cannot be recovered.": "Les feuilles de type équipement ne peuvent pas utiliser de critères sur les colonnes des graphiques ou des modèles de graphique. Lorsque vous passez le type d’élément feuille à Équipement, cochez cette case pour supprimer ces critères ; ils ne pourront pas être récupérés."
 "Device leaves cannot use graph-based criteria. Confirm the removal of %count% criteria to save.": "Les feuilles de type équipement ne peuvent pas utiliser de critères sur les graphiques. Confirmez la suppression de %count% critères pour enregistrer."
 "Edit Tree Rule": "Modifier la règle d’arbre"

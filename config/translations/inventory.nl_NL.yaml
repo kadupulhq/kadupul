@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"Sites": "Locaties"
+"Sites": "Sites"
 "Devices": "Apparaten"
 "Search by name, city, state or country": "Zoeken op naam, plaats, provincie/staat of land"
 "Name order": "Naamvolgorde"
@@ -42,7 +42,7 @@
 "Notes must be valid text of at most 1,024 characters.": "Notities moeten geldige tekst zijn van maximaal 1.024 tekens."
 "Save outcome is uncertain. Reload the site before retrying.": "Het opslagresultaat is onzeker. Herlaad de site voordat u het opnieuw probeert."
 "Search by name, hostname, location or external ID": "Zoeken op naam, hostnaam, locatie of externe ID"
-"Site": "Website"
+"Site": "Site"
 "All sites": "Alle sites"
 "Unassigned": "Niet toegewezen"
 "Selected site (no accessible devices)": "Geselecteerde site (geen toegankelijke apparaten)"

@@ -66,7 +66,7 @@
 "Status is unavailable. Saved work is retained. Refresh to reconnect; do not submit another installation.": "Der Status ist nicht verfügbar. Gespeicherte Arbeit bleibt erhalten. Aktualisieren Sie zur Wiederverbindung; senden Sie keine weitere Installation ab."
 "Synchronizing collectors": "Datensammler werden synchronisiert"
 "Table conversions": "Tabellenkonvertierungen"
-"Templates": "Schablonen"
+"Templates": "Vorlagen"
 "The database version matches this application. Installation does not establish that polling is healthy.": "Die Datenbankversion entspricht dieser Anwendung. Die Installation belegt nicht, dass die Abfrage fehlerfrei läuft."
 "The request outcome is unknown. Check execution status before retrying.": "Das Ergebnis der Anfrage ist unbekannt. Prüfen Sie vor einem erneuten Versuch den Ausführungsstatus."
 "Theme": "Theme"

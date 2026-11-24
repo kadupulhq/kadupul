@@ -1,17 +1,17 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-"A description for this data query.": "Een beschrijving voor deze data query."
-"A name for this data query.": "Een naam voor deze data query."
+"A description for this data query.": "Een beschrijving voor deze gegevensquery."
+"A name for this data query.": "Een naam voor deze gegevensquery."
 "Access denied.": "Toegang geweigerd."
-"Add Data Query": "Data query toevoegen"
-"Associated Graph Templates": "Gekoppelde grafiektemplates"
+"Add Data Query": "Gegevensquery toevoegen"
+"Associated Graph Templates": "Gekoppelde grafieksjablonen"
 "Back to Data Queries": "Terug naar gegevensqueries"
 "Choose a Data Input Method": "Kies een gegevensinvoermethode"
 "Choose an existing Data Input Method.": "Kies een bestaande gegevensinvoermethode."
-"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Kies de invoermethode voor deze gegevensvraag.  Deze invoermethode bepaalt hoe gegevens worden verzameld voor elk apparaat dat bij de gegevensvraag hoort."
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Kies de invoermethode voor deze gegevensquery.  Deze invoermethode bepaalt hoe gegevens worden verzameld voor elk apparaat dat bij de gegevensquery hoort."
 "Could not locate XML file.": "XML bestand niet gevonden."
-"Data Input Method": "Data invoer methode"
+"Data Input Method": "Gegevensinvoermethode"
 "Data Queries [edit: %name%]": "Gegevensqueries [bewerken: %name%]"
 "Data Queries [new]": "Gegevensqueries [nieuw]"
 "Data query not found.": "Gegevensquery niet gevonden."

@@ -102,7 +102,7 @@
 "SNMP Port": "Porta SNMP"
 "SNMP Privacy Passphrase (v3)": "Passphrase privacy SNMP (v3)"
 "SNMP Privacy Protocol (v3)": "Protocollo sulla privacy SNMP (v3)"
-"SNMP Retries": "Riprova SNMP"
+"SNMP Retries": "Tentativi SNMP"
 "SNMP Timeout": "Timeout SNMP"
 "SNMP Uptime": "Tempo di attività SNMP"
 "SNMP Username (v3)": "Nome utente SNMP (v3)"

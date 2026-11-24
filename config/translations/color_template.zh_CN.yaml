@@ -55,7 +55,7 @@
 "Each Color Template is synchronized in turn. Synchronization stops at the first failure, and templates not started within %seconds% seconds are left for another run.": "每个颜色模板依次同步。遇到首次失败时将停止同步，且未在 %seconds% 秒内开始的模板将留待下次运行。"
 "Go": "Go"
 "Graphs": "图形"
-"Has Graphs": "有图"
+"Has Graphs": "有图形"
 "Hex": "十六进制"
 "Invalid color item order.": "无效的颜色项顺序。"
 "Invalid color template filters.": "无效的颜色模板筛选器。"

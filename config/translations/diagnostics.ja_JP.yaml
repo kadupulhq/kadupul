@@ -15,7 +15,7 @@
 "Command arguments and SNMP credentials are excluded.": "コマンド引数と SNMP 認証情報は除外されます。"
 "Comment": "コメント"
 "Data Length": "データ長"
-"Data Query": "データ問合せ"
+"Data Query": "データクエリ"
 "Data Query Cache": "データクエリキャッシュ"
 "Data Query ID": "データクエリ ID"
 "Data Source": "データソース"

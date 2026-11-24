@@ -13,7 +13,7 @@
 "Choose a listed Leaf Item Type.": "Scegli un tipo di elemento foglia elencato."
 "Choose an existing Tree.": "Scegli un albero esistente."
 "Choose how graphs are grouped when drawn for this particular host on the tree. Used for Device leaves.": "Scegli come vengono raggruppati i grafici quando vengono disegnati per questo specifico host sull'albero. Usato per le foglie dispositivo."
-"Data Query Index": "Indice delle query di dati"
+"Data Query Index": "Indice delle query dati"
 "Device": "Dispositivo"
 "Device leaves cannot use criteria on graph or graph template columns. When changing the Leaf Item Type to Device, check this box to remove those criteria; they cannot be recovered.": "Le foglie dispositivo non possono usare criteri sulle colonne di grafico o modello grafico. Quando cambi il tipo di elemento foglia in Dispositivo, seleziona questa casella per rimuovere tali criteri; non potranno essere recuperati."
 "Device leaves cannot use graph-based criteria. Confirm the removal of %count% criteria to save.": "Le foglie dispositivo non possono usare criteri basati su grafici. Conferma la rimozione di %count% criteri per salvare."

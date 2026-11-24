@@ -107,7 +107,7 @@ final class GettextCatalogBridgeTest extends TestCase
     public static function resolved(): iterable
     {
         yield 'French YAML wins over French gettext' => ['fr', 'inventory', 'Devices', [], 'Appareils'];
-        yield 'German from YAML' => ['de_DE', 'inventory', 'Devices', [], 'Zielsysteme'];
+        yield 'German from YAML' => ['de_DE', 'inventory', 'Devices', [], 'Geräte'];
         yield 'Russian from YAML' => ['ru_RU', 'inventory', 'Devices', [], 'Устройства'];
         yield 'Japanese from YAML' => ['ja_JP', 'inventory', 'Devices', [], 'デバイス'];
         yield 'Arabic from YAML' => ['ar_SA', 'inventory', 'Devices', [], 'الأجهزة'];

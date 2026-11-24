@@ -108,7 +108,7 @@
 "Open Data Source Profiles and use its current forms.": "Mở Hồ sơ nguồn dữ liệu và sử dụng các biểu mẫu hiện tại của nó."
 "Page %page% of %total% profiles": "Trang %page% / %total% hồ sơ"
 "Poller Interval": "Khoảng thời gian đẩy"
-"Polling Interval": "Khoảng thời gian bỏ phiếu"
+"Polling Interval": "Polling Interval"
 "Previous": "Trước"
 "Profiles": "Hồ sơ"
 "Profiles that are in use by Data Sources become read only for now.": "Các hồ sơ đang được Nguồn dữ liệu sử dụng tạm thời ở chế độ chỉ đọc."
