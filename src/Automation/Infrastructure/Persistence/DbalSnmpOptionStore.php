@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Kadupul\Automation\Infrastructure\Persistence;
 
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Kadupul\Automation\Application\Port\AutomationTemplateAccess;
 use Kadupul\Automation\Application\Port\SnmpOptionStore;
@@ -25,8 +27,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * automation_snmp and automation_snmp_items. Every write locks the set row
- * first, so concurrent edits, appends and moves of one set are serialized,
- * and the legacy bulk delete of the set waits for them to commit.
+ * first, so concurrent edits, appends, moves, copies and deletions of one set
+ * are serialized. A bulk action locks its sets in ID order.
  */
 #[AsAlias(SnmpOptionStore::class)]
 final readonly class DbalSnmpOptionStore implements SnmpOptionStore
@@ -35,6 +37,12 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
     private const array WRITE_TABLES = ['automation_snmp', 'automation_snmp_items', 'user_auth', 'user_auth_realm', 'user_auth_group', 'user_auth_group_realm', 'user_auth_group_members', 'settings'];
     private const string SET_STALE = 'The SNMP Option Set changed since you opened this form. Reload before saving.';
     private const string ENTRY_STALE = 'The SNMP entry changed since you opened this form. Reload before saving.';
+    private const string SELECTION_INVALID = 'Invalid SNMP Option Set selection.';
+    private const string SELECTION_MISSING = 'One or more selected SNMP Option Sets no longer exist.';
+    private const int MAX_ID = 4294967295;
+    // Every entry column except its own ID and its set.
+    private const array COPIED_COLUMNS = ['sequence', 'snmp_version', 'snmp_community', 'snmp_port', 'snmp_timeout', 'snmp_retries', 'max_oids', 'bulk_walk_size',
+        'snmp_username', 'snmp_password', 'snmp_auth_protocol', 'snmp_priv_passphrase', 'snmp_priv_protocol', 'snmp_context', 'snmp_engine_id'];
     private const string ORDER_STALE = 'The SNMP entry order changed since you opened this page. Reload before moving.';
     private const string ENTRY_COLUMNS = 'id, snmp_id, sequence, snmp_version, snmp_community, snmp_port, snmp_timeout, snmp_retries, max_oids, bulk_walk_size,
         snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_engine_id';
@@ -91,6 +99,18 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
         return $row === false ? null : new SnmpOptionSet(self::int($row['id']), self::text($row['name']), SnmpOptionSet::revisionOf($row));
     }
 
+    public function findSets(array $ids): array
+    {
+        if ($ids === []) {
+            return [];
+        }
+        $sets = [];
+        foreach ($this->database->fetchAllAssociative('SELECT id, name FROM automation_snmp WHERE id IN (?) ORDER BY id', [$ids], [ArrayParameterType::INTEGER]) as $row) {
+            $sets[self::int($row['id'])] = new SnmpOptionSet(self::int($row['id']), self::text($row['name']), SnmpOptionSet::revisionOf($row));
+        }
+        return $sets;
+    }
+
     public function entries(int $setId): SnmpOptionEntries
     {
         $rows = $this->database->fetchAllAssociative('SELECT ' . self::ENTRY_COLUMNS . ' FROM automation_snmp_items WHERE snmp_id = ? ORDER BY sequence, id', [$setId]);
@@ -121,6 +141,55 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
             }
             $this->database->update('automation_snmp', ['name' => $name], ['id' => $id]);
             return $id;
+        });
+    }
+
+    public function deleteSets(int $actorId, array $ids, array $revisions): void
+    {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, self::MAX_ID, self::SELECTION_INVALID, self::SET_STALE);
+        $this->writes->run($actorId, 'delete', 'automation_snmp_option', function () use ($ids, $revisions): void {
+            $this->lockSets($ids, $revisions);
+            // automation_networks.snmp_id is left as it is: the legacy page deleted a set in use
+            // without touching the networks, and discovery then finds no SNMP options for them.
+            $this->database->executeStatement('DELETE FROM automation_snmp_items WHERE snmp_id IN (?)', [$ids], [ArrayParameterType::INTEGER]);
+            if ($this->database->executeStatement('DELETE FROM automation_snmp WHERE id IN (?)', [$ids], [ArrayParameterType::INTEGER]) !== count($ids)) {
+                throw new \RuntimeException('SNMP Option Set deletion was not confirmed.');
+            }
+        });
+    }
+
+    public function duplicateSets(int $actorId, array $ids, array $revisions, string $nameFormat): void
+    {
+        AuditedPrimaryWrite::assertSelection($ids, $revisions, self::MAX_SELECTION, self::MAX_ID, self::SELECTION_INVALID, self::SET_STALE);
+        // Refuse a malformed format before the transaction; the names it produces are checked under the lock.
+        SnmpOptionSet::copyName($nameFormat, 'x');
+        $this->writes->run($actorId, 'duplicate', 'automation_snmp_option', function () use ($ids, $revisions, $nameFormat): void {
+            $names = [];
+            foreach ($this->lockSets($ids, $revisions) as $id => $name) {
+                $names[$id] = SnmpOptionSet::copyName($nameFormat, $name);
+            }
+            $pairs = [];
+            foreach ($names as $id => $name) {
+                // One insert per copy: the new ID is only reliable for a single-row insert.
+                $this->database->insert('automation_snmp', ['name' => $name]);
+                $copy = (int) $this->database->lastInsertId();
+                if ($copy < 1) {
+                    throw new \RuntimeException('SNMP Option Set duplication was not confirmed.');
+                }
+                array_push($pairs, $id, $copy);
+            }
+            // The entries of every selected set are copied by one statement inside the
+            // database, so stored credentials are never read into this process. Unlike
+            // the legacy copy, bulk_walk_size is carried over instead of reset to its default.
+            $map = implode(' UNION ALL ', array_fill(0, count($names), 'SELECT ? AS source, ? AS copy'));
+            $this->database->executeStatement(
+                'INSERT INTO automation_snmp_items (snmp_id, ' . implode(', ', self::COPIED_COLUMNS) . ')
+                SELECT copies.copy, items.' . implode(', items.', self::COPIED_COLUMNS) . "
+                FROM automation_snmp_items items INNER JOIN ($map) copies ON copies.source = items.snmp_id
+                ORDER BY items.snmp_id, items.sequence, items.id",
+                $pairs,
+                array_fill(0, count($pairs), ParameterType::INTEGER),
+            );
         });
     }
 
@@ -191,6 +260,29 @@ final readonly class DbalSnmpOptionStore implements SnmpOptionStore
             throw new \InvalidArgumentException('SNMP Option Set not found.');
         }
         return $row;
+    }
+
+    /**
+     * Lock the selected sets in ID order and compare each with the revision the form showed.
+     *
+     * @param non-empty-list<int> $ids
+     * @param array<int, string> $revisions
+     * @return array<int, string> ID => stored name
+     */
+    private function lockSets(array $ids, array $revisions): array
+    {
+        $names = [];
+        foreach ($this->database->fetchAllAssociative('SELECT id, name FROM automation_snmp WHERE id IN (?) ORDER BY id' . $this->forUpdate(), [$ids], [ArrayParameterType::INTEGER]) as $row) {
+            $id = self::int($row['id']);
+            if (!hash_equals(SnmpOptionSet::revisionOf($row), $revisions[$id] ?? '')) {
+                throw new \InvalidArgumentException(self::SET_STALE);
+            }
+            $names[$id] = self::text($row['name']);
+        }
+        if (count($names) !== count($ids)) {
+            throw new \InvalidArgumentException(self::SELECTION_MISSING);
+        }
+        return $names;
     }
 
     /** @return array<string, mixed> */
