@@ -126,7 +126,8 @@ if (CACTI_LOCALE !== $expectedLocale || CACTI_LANGUAGE_HANDLER !== $expectedHand
     exit(3);
 }
 $readerClass = [
-    CACTI_LANGUAGE_HANDLER_PHPGETTEXT => gettext_reader::class,
+    // Named as a string: php-gettext is loaded by include, not by Composer.
+    CACTI_LANGUAGE_HANDLER_PHPGETTEXT => 'gettext_reader',
     CACTI_LANGUAGE_HANDLER_SYMFONY => Kadupul\Platform\Infrastructure\Legacy\LegacyTextDomain::class,
     CACTI_LANGUAGE_HANDLER_MOTRANSLATOR => PhpMyAdmin\MoTranslator\Translator::class,
 ][CACTI_LANGUAGE_HANDLER] ?? null;
