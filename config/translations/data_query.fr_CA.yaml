@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A description for this data query.": "Une description pour cette requête."
+"A name for this data query.": "Nom de cette requète."
+"Add Data Query": "Ajouter une requête"
+"Choose the input method for this Data Query.  This input method defines how data is collected for each Device associated with the Data Query.": "Choisissez la méthode de saisie pour cette requête.  Cette méthode de saisie définit comment les données sont collectées pour chaque dispositif associé à la requête."
+"Data Input Method": "Méthode d'acquisition des données"
+"Data Queries [edit: %name%]": "Requêtes [éditer : %name%]"
+"The full path to the XML file containing definitions for this data query.": "Le chemin complet vers le fichier XML contenant les définitions pour cette requête."

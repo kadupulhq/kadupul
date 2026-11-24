@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Ku saabsan Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul waa mashruuc madax-bannaan oo il-furan ah oo loogu talagalay la socodka shabakadda iyo samaynta jaantusyada taxanaha waqtiga."
+"Kadupul is licensed under the GNU GPL:": "Kadupul waxaa lagu shatiyeeyay GNU GPL:"
+"License": "Shatiga"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Barnaamijkan waxaa loo qaybiyaa iyadoo la rajaynayo inuu faa'iido yeelan doono, laakiin MA LAHA WAX DAMMAANAD AH; xitaa ma laha dammaanad maldahan oo ku saabsan GANACSI-KU-HABBOONAANTA ama KU-HABBOONAANTA UJEEDDO GAAR AH. Eeg Shatiga Guud ee Dadweynaha ee GNU wixii faahfaahin dheeraad ah."
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Barnaamijkani waa software xor ah; dib baad u qaybin kartaa ama wax ka beddeli kartaa iyadoo la raacayo shuruudaha Shatiga Guud ee Dadweynaha ee GNU (GNU General Public License) sida ay u daabacday Hay'adda Free Software Foundation; nooca 2aad ee Shatiga, ama (doorashadaada) nooc kasta oo ka dambeeya."
+"Version %version%": "Nooca %version%"

@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this Rule.": "اسم مفيد لهذه القاعدة."
+"Check this box to enable this rule.": "حدد هذه الخانة لتفعيل هذه القاعدة."
+"Choose a Data Query to apply to this rule.": "اختر استعلام معطيات لتطبيقه على هذه القاعدة."
+"Data Query": "استعلام المعطيات"
+"Enable Rule": "تفعيل القاعدة"
+"Graph Type": "نوع المبيان"
+"Name": "الاسم"
+"Rule Selection [edit: %name%]": "تحديد القاعدة [تعديل: %name%]"
+"Save": "حفظ"

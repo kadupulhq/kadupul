@@ -1,0 +1,13 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"(Not In Use)": "Non utilisé"
+"Data Input Field": "Champ de saisie"
+"Data Input Method": "Méthode d'acquisition des données"
+"Data Input Methods": "Acquisition des données"
+"Default": "Défaut"
+"Input Fields": "Champ d'entrée"
+"No Data Input Methods Found": "Aucune méthode d'acquisition de données trouvée"
+"SNMP Get": "SNMP Get"
+"Script Server": "Serveur de script"
+"Update RRA": "Mise à jour RRA"

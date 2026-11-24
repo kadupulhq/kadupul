@@ -18,20 +18,16 @@ use Kadupul\Kernel;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Infrastructure\Symfony\ConsoleTranslations;
-use Kadupul\Platform\Infrastructure\Symfony\GettextCatalog;
-use Kadupul\Platform\Infrastructure\Symfony\GettextCatalogLoader;
 use Kadupul\Platform\Infrastructure\Symfony\LocaleSubscriber;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Translation\Loader\MoFileLoader;
-use Symfony\Component\Translation\Loader\PoFileLoader;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class GettextCatalogBridgeTest extends TestCase
+final class ConsoleTranslationsTest extends TestCase
 {
     private const string ROOT = __DIR__ . '/../..';
 
@@ -55,58 +51,10 @@ final class GettextCatalogBridgeTest extends TestCase
         return $translator;
     }
 
-    /** @return list<string> */
-    private static function shippedLocales(): array
-    {
-        $manifest = json_decode((string) file_get_contents(self::ROOT . '/locales/catalogs.json'), true, 16, JSON_THROW_ON_ERROR);
-
-        return $manifest['translated_locales'];
-    }
-
-    public function testEveryShippedCatalogParsesAndFillsModuleKeys(): void
-    {
-        $locales = self::shippedLocales();
-        $files = array_map(static fn(string $path): string => basename($path, '.po'), glob(self::ROOT . '/locales/po/*.po') ?: []);
-        sort($files);
-        self::assertSame($locales, $files);
-        self::assertCount(49, $locales);
-        $keys = [];
-        foreach (glob(self::ROOT . '/config/translations/*.en.yaml') ?: [] as $source) {
-            $keys = array_merge($keys, array_map('strval', array_keys(Yaml::parseFile($source))));
-        }
-        $keys = array_values(array_unique($keys));
-        self::assertGreaterThan(1000, count($keys));
-        $counts = [];
-        foreach ($locales as $locale) {
-            $path = self::ROOT . '/locales/po/' . $locale . '.po';
-            self::assertGreaterThan(400, count((new PoFileLoader())->load($path, 'en')->all('messages')), $locale);
-            self::assertMatchesRegularExpression('/^"Plural-Forms: nplurals=\d+; plural=[^"]+;\\\\n"$/m', (string) file_get_contents($path), $locale);
-            $catalog = GettextCatalog::fromFile($path);
-            // The compiled .mo is what legacy __() reads; plain bridged text must match it.
-            $compiled = (new MoFileLoader())->load(self::ROOT . '/locales/LC_MESSAGES/' . $locale . '.mo', 'en')->all('messages');
-            $counts[$locale] = 0;
-            foreach ($keys as $key) {
-                $message = $catalog->translate($key);
-                if ($message === null) {
-                    continue;
-                }
-                $counts[$locale]++;
-                if (!str_contains($key, '%') && isset($compiled[$key])) {
-                    self::assertSame(str_replace('%%', '%', $compiled[$key]), $message, $locale . ' ' . $key);
-                }
-            }
-        }
-        // zh-TW is mostly fuzzy and uk-UA mostly untranslated; gettext skips both too.
-        self::assertGreaterThan(10, min($counts));
-        foreach (['ar-SA', 'de-DE', 'fr-FR', 'ja-JP', 'pl-PL', 'pt-BR', 'ru-RU', 'zh-CN'] as $locale) {
-            self::assertGreaterThan(450, $counts[$locale], $locale);
-        }
-    }
-
     /** @return iterable<string, array{string, string, string, array<string, int|string>, string}> */
     public static function resolved(): iterable
     {
-        yield 'French YAML wins over French gettext' => ['fr', 'inventory', 'Devices', [], 'Appareils'];
+        yield 'French YAML' => ['fr', 'inventory', 'Devices', [], 'Appareils'];
         yield 'German from YAML' => ['de_DE', 'inventory', 'Devices', [], 'Geräte'];
         yield 'Russian from YAML' => ['ru_RU', 'inventory', 'Devices', [], 'Устройства'];
         yield 'Japanese from YAML' => ['ja_JP', 'inventory', 'Devices', [], 'デバイス'];
@@ -123,6 +71,14 @@ final class GettextCatalogBridgeTest extends TestCase
         yield 'Russian YAML palette action' => ['ru_RU', 'palette', 'Delete Colors', [], 'Удалить цвета'];
         yield 'Arabic YAML palette action' => ['ar_SA', 'palette', 'Delete Colors', [], 'حذف الألوان'];
         yield 'Russian YAML count message' => ['ru_RU', 'data_source_profile', '%count% Days', ['%count%' => 5], '5 дн.'];
+        yield 'Canadian French keeps its own wording, not French' => ['fr_CA', 'inventory', 'Devices', [], 'Équipements'];
+        yield 'Canadian French falls back to French' => ['fr_CA', 'inventory', 'Cancel', [], 'Annuler'];
+        yield 'Canadian French placeholder' => ['fr_CA', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Toutes les 6 heures'];
+        yield 'Mexican Spanish partial file' => ['es_MX', 'inventory', 'Devices', [], 'Dispositivos'];
+        yield 'Mexican Spanish untranslated key shows English' => ['es_MX', 'inventory', 'Save site', [], 'Save site'];
+        yield 'Malagasy count placeholder' => ['mg_MG', 'data_source_profile', 'Every %count% Hours', ['%count%' => 6], 'Isaky ny 6 ora'];
+        yield 'Egyptian Arabic' => ['ar_EG', 'inventory', 'Devices', [], 'الأجهزة'];
+        yield 'British English falls back to English' => ['en_GB', 'inventory', 'Devices', [], 'Devices'];
         yield 'unshipped locale stays English' => ['fi', 'inventory', 'Devices', [], 'Devices'];
     }
 
@@ -133,172 +89,30 @@ final class GettextCatalogBridgeTest extends TestCase
         self::assertSame($expected, self::translator()->trans($key, $parameters, $domain, $locale));
     }
 
-    public function testKeyMissingFromLocaleYamlFallsBackToSameLanguageGettext(): void
-    {
-        $directory = sys_get_temp_dir() . '/kadupul-gettext-' . bin2hex(random_bytes(8));
-        mkdir($directory, 0700);
-        try {
-            file_put_contents($directory . '/probe.en.yaml', "\"Devices\": \"Devices\"\n\"Notes\": \"Notes\"\n\"Cancel\": \"Cancel\"\n\"Not in gettext\": \"Not in gettext\"\n");
-            file_put_contents($directory . '/probe.fr.yaml', "\"Devices\": \"Appareils\"\n");
-            $resource = ['source' => $directory . '/probe.en.yaml', 'catalog' => self::ROOT . '/locales/po/fr-FR.po', 'domain' => $directory . '/probe.fr.yaml'];
-            $catalogue = (new GettextCatalogLoader())->load($resource, 'fr', 'probe');
-            self::assertSame(['Notes' => 'Notes', 'Cancel' => 'Annuler'], $catalogue->all('probe'));
-            $resource['domain'] = $directory . '/absent.fr.yaml';
-            self::assertSame('Équipements', (new GettextCatalogLoader())->load($resource, 'fr', 'probe')->get('Devices', 'probe'));
-        } finally {
-            array_map('unlink', glob($directory . '/*') ?: []);
-            rmdir($directory);
-        }
-    }
-
-    public function testInvalidResourceIsRefused(): void
-    {
-        $this->expectException(\Symfony\Component\Translation\Exception\InvalidResourceException::class);
-        (new GettextCatalogLoader())->load(self::ROOT . '/locales/po/de-DE.po', 'de_DE', 'inventory');
-    }
-
-    public function testAmbiguousOrUnsafeEntriesStayUntranslated(): void
-    {
-        $path = tempnam(sys_get_temp_dir(), 'kadupul-po-');
-        self::assertIsString($path);
-        try {
-            file_put_contents($path, <<<'PO'
-                msgid ""
-                msgstr ""
-                "Content-Type: text/plain; charset=UTF-8\n"
-                "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-                msgid "Delete"
-                msgstr "Löschen"
-
-                msgctxt "dropdown action"
-                msgid "Delete"
-                msgstr "Entfernen"
-
-                msgid "Copy %s to %s"
-                msgstr "%2$s aus %1$s kopieren"
-
-                msgid "Mixed %s and %s"
-                msgstr "%2$s und %s"
-
-                msgid "Load %d"
-                msgstr "Last %d%%"
-
-                msgid "Width %d"
-                msgstr "Breite %5d"
-
-                msgid "Spaced %d"
-                msgstr "Abstand % d"
-
-                msgid "Extra %s"
-                msgstr "%s %s"
-
-                msgid "Pipe"
-                msgstr "a|b"
-
-                msgid "Untranslated"
-                msgstr ""
-
-                #, fuzzy
-                msgid "Fuzzy"
-                msgstr "Unscharf"
-
-                msgid "Color"
-                msgid_plural "Colors"
-                msgstr[0] "Farbe"
-                msgstr[1] "Farben"
-
-                msgid "Item"
-                msgid_plural "Items"
-                msgstr[0] "Element"
-                msgstr[1] ""
-
-                PO);
-            $catalog = GettextCatalog::fromFile($path);
-            self::assertNull($catalog->translate('Delete'));
-            self::assertSame('%to% aus %from% kopieren', $catalog->translate('Copy %from% to %to%'));
-            self::assertNull($catalog->translate('Mixed %a% and %b%'));
-            self::assertSame('Last %load%%', $catalog->translate('Load %load%'));
-            self::assertNull($catalog->translate('Load %load%%'));
-            self::assertNull($catalog->translate('Width %width%'));
-            self::assertNull($catalog->translate('Spaced %count%'));
-            self::assertNull($catalog->translate('Extra %value%'));
-            self::assertNull($catalog->translate('Pipe'));
-            self::assertNull($catalog->translate('Untranslated'));
-            self::assertNull($catalog->translate('Fuzzy'));
-            self::assertSame('Farbe', $catalog->translate('Color'));
-            self::assertSame('Farben', $catalog->translate('Colors'));
-            self::assertNull($catalog->translate('Items'));
-            self::assertNull($catalog->translate('100%'));
-            self::assertNull($catalog->translate('Absent'));
-        } finally {
-            unlink($path);
-        }
-    }
-
     /**
-     * Symfony picks plural forms with its own CLDR-style table, gettext with the
-     * catalog's Plural-Forms header. This records exactly where they disagree.
+     * Locales without a complete file set hold only the messages that differ
+     * from their fallback (English, or French for fr_CA and fr_MA). They must
+     * not invent keys, leave blanks or add placeholders.
      */
-    public function testSymfonyPluralSelectionAgainstShippedPluralForms(): void
+    public function testPartialLocaleFilesOnlyOverrideEnglishKeys(): void
     {
-        $identity = new \Symfony\Component\Translation\IdentityTranslator();
-        $differing = [];
-        foreach (self::shippedLocales() as $locale) {
-            $header = (string) file_get_contents(self::ROOT . '/locales/po/' . $locale . '.po');
-            self::assertSame(1, preg_match('/^"Plural-Forms: nplurals=(\d+); plural=([^;"]+);\\\\n"$/m', $header, $match), $locale);
-            $symfonyLocale = $locale === 'fr-FR' ? 'fr' : str_replace('-', '_', $locale);
-            $choices = implode('|', range(0, 5));
-            for ($n = 0; $n <= 1000; $n++) {
-                $gettext = self::evaluate($match[2], $n);
-                self::assertLessThan((int) $match[1], $gettext, $locale);
-                if ((int) $identity->trans($choices, ['%count%' => $n], null, $symfonyLocale) !== $gettext) {
-                    $differing[$locale] = $n;
-                    break;
+        $partial = 0;
+        foreach (['ar_EG', 'ar_MA', 'en_GB', 'es_MX', 'fr_CA', 'fr_MA', 'mg_MG', 'rw_RW', 'so_SO'] as $locale) {
+            foreach (glob(self::ROOT . '/config/translations/*.' . $locale . '.yaml') ?: [] as $file) {
+                $domain = basename($file, '.' . $locale . '.yaml');
+                $english = Yaml::parseFile(self::ROOT . '/config/translations/' . $domain . '.en.yaml');
+                foreach (Yaml::parseFile($file) as $key => $message) {
+                    $key = (string) $key;
+                    self::assertArrayHasKey($key, $english, $file . ' [' . $key . ']');
+                    self::assertNotSame('', trim((string) $message), $file . ' [' . $key . ']');
+                    preg_match_all('/%[a-z_]+%/i', (string) $message, $found);
+                    preg_match_all('/%[a-z_]+%/i', $key, $expected);
+                    self::assertSame([], array_diff($found[0], $expected[0]), $file . ' [' . $key . ']');
+                    ++$partial;
                 }
             }
         }
-        // First n where they disagree: he-IL has four gettext forms (0 is form 3)
-        // and two in Symfony; hi-IN's header puts the plural in form 0; lv-LV treats 0, 10
-        // and 11-19 differently; rw-RW and tr-TR have one Symfony form and two gettext forms.
-        self::assertSame(['he-IL' => 0, 'hi-IN' => 0, 'lv-LV' => 10, 'rw-RW' => 0, 'tr-TR' => 0], $differing);
-    }
-
-    public function testRussianAndArabicPluralFormsMatchGettextThroughSymfony(): void
-    {
-        $identity = new \Symfony\Component\Translation\IdentityTranslator();
-        $rule = 'n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2';
-        $checked = 0;
-        foreach ((new PoFileLoader())->load(self::ROOT . '/locales/po/ru-RU.po', 'ru_RU')->all('messages') as $id => $message) {
-            $parts = explode('|', $message);
-            if (substr_count((string) $id, '|') !== 1 || count($parts) !== 3 || in_array('', $parts, true) || count(array_unique($parts)) < 2 || preg_grep('/^\s*(\w+:|[\[\]{])/', $parts) !== []) {
-                continue;
-            }
-            foreach ([0, 1, 2, 3, 5, 11, 12, 21, 22, 25, 101, 102, 111, 112, 1000] as $n) {
-                self::assertSame(trim($parts[self::evaluate($rule, $n)]), $identity->trans($message, ['%count%' => $n], null, 'ru_RU'), $id . ' ' . $n);
-            }
-            $checked++;
-        }
-        self::assertGreaterThan(0, $checked);
-        // Arabic selects the same six form indices as gettext through Symfony.
-        $arabicRule = 'n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5';
-        $arabicChecked = 0;
-        foreach ((new PoFileLoader())->load(self::ROOT . '/locales/po/ar-SA.po', 'ar_SA')->all('messages') as $id => $message) {
-            $parts = explode('|', $message);
-            if (substr_count((string) $id, '|') !== 1 || count($parts) !== 6 || in_array('', $parts, true) || count(array_unique($parts)) < 2 || preg_grep('/^\s*(\w+:|[\[\]{])/', $parts) !== []) {
-                continue;
-            }
-            foreach ([0, 1, 2, 3, 10, 11, 99, 100, 101, 102, 103, 111, 1000] as $n) {
-                self::assertSame(trim($parts[self::evaluate($arabicRule, $n)]), $identity->trans($message, ['%count%' => $n], null, 'ar_SA'), $id . ' ' . $n);
-            }
-            $arabicChecked++;
-        }
-        self::assertGreaterThan(0, $arabicChecked);
-        // Gettext fallback does not bridge multi-form/divergent plural entries; YAML provides them.
-        foreach (['pt-BR', 'hi-IN', 'ru-RU', 'ar-SA'] as $locale) {
-            self::assertNull(GettextCatalog::fromFile(self::ROOT . '/locales/po/' . $locale . '.po')->translate('Delete Colors'), $locale);
-        }
-        self::assertSame(['حذف الألوان' => 'حذف الألوان'], [self::translator()->trans('Delete Colors', [], 'palette', 'ar_SA') => self::translator()->trans('Delete Colors', ['%count%' => 3], 'palette', 'ar_SA')]);
+        self::assertGreaterThan(6000, $partial);
     }
 
     /** @return iterable<string, array{mixed, ?string}> */
@@ -385,7 +199,7 @@ final class GettextCatalogBridgeTest extends TestCase
         self::assertSame($expected, $request->attributes->get('_locale'));
     }
 
-    public function testGermanSitePageRendersFromGettextWithValidLanguageTag(): void
+    public function testGermanSitePageRendersFromYamlWithValidLanguageTag(): void
     {
         $kernel = new Kernel('test', true);
         try {

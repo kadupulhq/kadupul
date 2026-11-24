@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"CDEF Function": "Fonction"
+"Dash Offset (dash-offset=offset)": "Décalage du tableau de bord (décalage du tableau de bord =décalage)"
+"Dashes (dashes[=on_s[,off_s[,on_s,off_s]...]])": "Tirets (tirets[=on_s[,off_s[,on_s,off_s]...]])"
+"Enter a description for this graph item input to describe what this input is used for.": "Entrez une description pour cette entrée d'élément graphique afin de décrire à quoi sert cette entrée."
+"Enter a name for this graph item input, make sure it is something you recognize.": "Entrez un nom pour cette entrée d'élément de graphique, assurez-vous qu'il s'agit de quelque chose que vous reconnaissez."
+"Graph Item Type": "Type de l'élément graphique"
+"Insert Hard Return": "Insérer un retour dur"
+"No Items": "Aucuns éléments"
+"Opacity/Alpha Channel": "Canal Opacité/Alpha"
+"Shift Data": "Données de poste de travail "
+"VDEF Function": "Fonction"

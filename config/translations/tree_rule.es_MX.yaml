@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this Rule.": "Un nombre útil para esta regla."
+"Check this box to enable this rule.": "Activa esta casilla para habilitar esta regla."
+"Choose a Tree for the new Tree Items.": "Elija un árbol para los nuevos items de árbol."
+"Data Query Index": "Indice de consulta de datos"
+"Device": "Dispositivo"
+"Enable Rule": "Habilitar regla"
+"Graph": "Gráfico"
+"Graph Grouping Style": "Estilo de Agrupación de Gráficos"
+"Graph Template": "Plantilla de gráficos"
+"Leaf Item Type": "Tipo de item de hoja"
+"Name": "Nombre"
+"Optional: Sub-Tree Item": "Opcional: item de Sub-árbol"
+"Save": "Guardar"
+"The Item Type that shall be dynamically added to the tree.": "El tipo de item que se añadirá dinámicamente al  árbol."
+"Tree": "Arbol"
+"Tree Rule Selection [edit: %name%]": "Selección de reglas de árbol [editar: %name%]"

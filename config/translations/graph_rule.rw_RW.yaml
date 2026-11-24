@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"A useful name for this Rule.": "Izina ry'ingirakamaro ry'iri tegeko."
+"Check this box to enable this rule.": "Hitamo aka gasanduku kugira ngo ukoreshe iri tegeko."
+"Choose a Data Query to apply to this rule.": "Hitamo ibaza ry'amakuru ryo gushyira kuri iri tegeko."
+"Data Query": "Ishakisha ry'amakuru"
+"Enable Rule": "Koresha itegeko"
+"Graph Type": "Ubwoko bw'igishushanyo"
+"Name": "Izina"
+"Rule Selection [edit: %name%]": "Guhitamo itegeko [hindura: %name%]"
+"Save": "Bika"

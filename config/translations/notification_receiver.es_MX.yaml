@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Description": "Descripción"
+"Hostname": "Nombre de equipo"
+"Notes": "Notas"
+"Notifications": "Notificaciones"
+"SNMP Auth Protocol (v3)": "Protocolo de autenticación de SNMP (v3)"
+"SNMP Engine ID (v3)": "ID de motor SNMP (v3)"
+"SNMP Notification Receiver [edit: %name%]": "Receptor de notificaciones SNMP [editar: %name%]"
+"SNMP Notification Receiver [new]": "Receptor de notificaciones SNMP [nuevo]"
+"SNMP Port": "Puerto SNMP"
+"SNMP Privacy Passphrase (v3)": "Contraseña de privacidad SNMP (v3)"
+"SNMP Privacy Protocol (v3)": "Protocolo de privacidad de SNMP (v3)"
+"SNMP Username (v3)": "Nombre de usuario SNMP (v3)"
+"SNMP Version": "Versión SNMP"
+"Save": "Guardar"

@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"Description": "Famaritana"
+"General": "Ankapobeny"
+"Hostname": "Anaran'ny mpampiantrano"
+"Logs": "Rakitra tatitra"
+"Notes": "Fanamarihana"
+"Notifications": "Fampahafantarana"
+"SNMP Auth Protocol (v3)": "Protokoly fanamarinana SNMP (v3)"
+"SNMP Engine ID (v3)": "ID-n'ny maotera SNMP (v3)"
+"SNMP Notification Receiver [edit: %name%]": "Mpandray fampahafantarana SNMP [fanovana: %name%]"
+"SNMP Notification Receiver [new]": "Mpandray fampahafantarana SNMP [vaovao]"
+"SNMP Port": "Seranana SNMP"
+"SNMP Privacy Passphrase (v3)": "Fiteny miafina tsiambaratelo SNMP (v3)"
+"SNMP Privacy Protocol (v3)": "Protokoly tsiambaratelo SNMP (v3)"
+"SNMP Username (v3)": "Anaran'ny mpampiasa SNMP (v3)"
+"SNMP Version": "Kinova SNMP"
+"Save": "Tahirizo"

@@ -114,7 +114,7 @@ final class TranslationCatalogTest extends TestCase
     {
         $catalogs = json_decode((string) file_get_contents(self::ROOT . '/locales/catalogs.json'), true, flags: JSON_THROW_ON_ERROR);
         self::assertIsArray($catalogs['translated_locales'] ?? null);
-        // The same names ConsoleTranslations gives the gettext fallback: fr-FR is fr, others use an underscore.
+        // Symfony locale names: fr-FR is fr, others use an underscore.
         $shipped = array_map(static fn(string $locale): string => str_replace('-', '_', $locale), array_diff($catalogs['translated_locales'], ['fr-FR']));
         $count = 0;
         foreach (glob(self::ROOT . '/config/translations/*.*.yaml') ?: [] as $file) {

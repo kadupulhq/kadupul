@@ -1,0 +1,1 @@
+- Remove the gettext bridge that filled missing Symfony translation keys from the `.po` catalogs; the nine locales it still served (`ar_EG`, `ar_MA`, `en_GB`, `es_MX`, `fr_CA`, `fr_MA`, `mg_MG`, `rw_RW`, `so_SO`) now have partial YAML files with the same text.

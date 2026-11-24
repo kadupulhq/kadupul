@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+"About Kadupul": "Ibyerekeye Kadupul"
+"Kadupul is an independent open-source project for network monitoring and time-series graphing.": "Kadupul ni umushinga wigenga ufite kode ifunguye (open-source) wo gukurikirana imiyoboro no gushushanya ibishushanyo bishingiye ku gihe."
+"Kadupul is licensed under the GNU GPL:": "Kadupul ifite uruhushya rwa GNU GPL:"
+"License": "Uruhushya"
+"This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.": "Iyi porogaramu ikwirakwizwa hizewe ko izagira akamaro, ariko NTA BWISHINGIZI NA BUCYE, ndetse nta n'ubwishingizi bwihariye bwo gucuruzwa cyangwa bwo guhuza n'intego runaka. Reba GNU General Public License kugira ngo ubone ibisobanuro birambuye."
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.": "Iyi porogaramu ni porogaramu yisanzuye; ushobora kuyikwirakwiza no/cyangwa kuyihindura ukurikije amategeko ya GNU General Public License nk'uko yasohowe na Free Software Foundation; haba verisiyo ya 2 y'Uruhushya, cyangwa (uko ubihisemo) verisiyo iyo ari yo yose izaza nyuma."
+"Version %version%": "Verisiyo %version%"
