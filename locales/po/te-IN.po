@@ -14469,7 +14469,7 @@ msgstr "సేకరణకు ముందు poller_output క్యూ తప�
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "చర్య నిర్ధారించబడలేదు. మళ్లీ ప్రయత్నించే ముందు మార్పుల చరిత్రను పరిశీలించండి."
+msgstr "అందుబాటులో లేదు"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

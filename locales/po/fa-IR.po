@@ -14469,7 +14469,7 @@ msgstr "صف poller_output پیش از جمع‌آوری باید از InnoDB ا
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "عملیات قابل تأیید نبود. پیش از تلاش مجدد، تاریخچه تغییرات را بررسی کنید."
+msgstr "در دسترس نیست"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

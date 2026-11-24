@@ -62,7 +62,7 @@ msgstr "De geopende samengestelde grafiek bestaat niet"
 
 #: aggregate_graphs.php
 msgid "Aggregate Graph does not Exist"
-msgstr "Geaggregeerde grafiek instellingen"
+msgstr "Geaggregeerde grafiek bestaat niet"
 
 #: aggregate_graphs.php include/global_arrays.php
 msgid "Aggregate Graphs"
@@ -177,7 +177,7 @@ msgstr "Klik op 'Volgende' om de volgende geaggregeerde grafiek(en) naar een enk
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Klik op 'Volgende' om de volgende geaggregeerde grafiek(en) naar een enkele geaggregeerde grafiek te combineren."
+msgstr "Klik op 'Doorgaan' om de volgende geaggregeerde grafiek(en) te converteren naar een normale grafiek."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -202,11 +202,11 @@ msgstr "Volgende"
 
 #: aggregate_graphs.php
 msgid "Convert to Normal Graph"
-msgstr "Converteer naar LINE1 grafiek"
+msgstr "Converteren naar normale grafiek"
 
 #: aggregate_graphs.php
 msgid "Convert to normal Graph(s)"
-msgstr "Converteer naar LINE1 grafiek"
+msgstr "Converteren naar normale grafiek(en)"
 
 #: aggregate_graphs.php
 msgid "Create New Aggregate from Aggregates"
@@ -303,7 +303,7 @@ msgstr "Voordat u deze geaggregeerde grafiek kunt migreren naar een template geb
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "Voordat u deze geaggregeerde grafiek kunt migreren naar een template gebaseerd aggregaat, moeten deze uitsluitend een template grafiek gebruiken. Klik op 'Terug' en selecteer uitsluitend geaggregeerde grafieken die hetzelfde grafiektemplate gebruiken."
+msgstr "Om de onderstaande geaggregeerde grafieken te kunnen migreren naar een aggregaatsjabloon, moet er al een bestaan. Klik op 'Terug' en maak eerst uw aggregaatsjabloon aan voordat u het opnieuw probeert."
 
 #: aggregate_graphs.php
 msgid "Included in Aggregate"
@@ -456,7 +456,7 @@ msgstr "De interne database identifier voor dit object"
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs does not appear to have any matching Aggregate Templates."
-msgstr "De geselecteerde geaggregeerde grafiek heeft elementen uit meer dan een grafiektemplate."
+msgstr "De geselecteerde geaggregeerde grafieken lijken geen overeenkomende aggregatiesjablonen te hebben."
 
 #: aggregate_graphs.php
 msgid "The selected Aggregate Graphs represent elements from more than one Graph Template."
@@ -468,7 +468,7 @@ msgstr "De titel van de geaggregeerde grafieken"
 
 #: aggregate_graphs.php
 msgid "There are currently no Aggregate Templates defined for the selected Legacy Aggregates."
-msgstr "Er zijn alleen geaggregeerde templates gedefinieerd voor de geselecteerde legacy aggregaten."
+msgstr "Er zijn momenteel geen aggregatiesjablonen gedefinieerd voor de geselecteerde legacy-aggregaten."
 
 #: aggregate_graphs.php graph_view.php graphs.php lib/html_reports.php
 msgid "Timespan"
@@ -752,7 +752,7 @@ msgstr "Gebruiker is geverifieerd, maar het sjabloonaccount is uitgeschakeld. Ga
 
 #: auth_login.php
 msgid "You do not have access to any area of Kadupul.  Contact your administrator."
-msgstr "Als u van mening bent dat dit foutief is, neem dan alstublieft contact op met uw Kadupul beheerder."
+msgstr "U hebt geen toegang tot enig onderdeel van Kadupul. Neem contact op met uw beheerder."
 
 #: auth_profile.php include/global_form.php
 msgid "A more descriptive name for this user, that can include spaces or special characters."
@@ -867,7 +867,7 @@ msgstr "Beschikbaarheid van methode"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Klik op 'Volgende' om de volgende gedetecteerde appara(a)t(en) toe te voegen."
+msgstr "Klik op 'Doorgaan' om de volgende gedetecteerde appara(a)t(en) te verwijderen."
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1180,12 +1180,12 @@ msgstr "%d Seconden"
 #: automation_networks.php
 #, php-format
 msgid "Can Not Perform Discovery for Disabled Network '%s'"
-msgstr "Kan geen Discovery for Disabled Network '%s' uitvoeren"
+msgstr "Kan geen detectie uitvoeren voor uitgeschakeld netwerk '%s'"
 
 #: automation_networks.php
 #, php-format
 msgid "Can Not Restart Discovery for Discovery in Progress for Network '%s'"
-msgstr "Kan Discovery for Discovery in Progress niet herstarten voor Discovery in Progress voor Netwerk '%s'."
+msgstr "Kan detectie niet herstarten terwijl detectie al bezig is voor netwerk '%s'"
 
 #: automation_networks.php
 msgid "Cancel Discovery"
@@ -1336,7 +1336,7 @@ msgstr "Automatisering SNMP opties"
 
 #: automation_snmp.php
 msgid "Automation SNMP Options has been Duplicated."
-msgstr "Automatisering SNMP opties"
+msgstr "Automatisering SNMP-opties zijn gedupliceerd."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
@@ -1509,7 +1509,7 @@ msgstr "Instellingen opslaan op Dataverzamelaar %d Mislukt."
 #: cli/refresh_csrf.php lib/functions.php settings.php
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
-msgstr "Instellingen opslaan op Dataverzamelaar %d Mislukt."
+msgstr "Opslaan van instellingen naar gegevensverzamelaar %d overgeslagen vanwege heartbeat."
 
 #: color.php
 msgid "<strong>hex</strong> - The Hex Value"
@@ -1804,7 +1804,7 @@ msgstr "Problemen gevonden!  Wachten op RRD file update"
 
 #: data_debug.php
 msgid "No Checks"
-msgstr "Checks"
+msgstr "Geen controles"
 
 #: data_debug.php
 msgid "No Device"
@@ -1820,11 +1820,11 @@ msgstr "Niet van toepassing"
 
 #: data_debug.php
 msgid "Not Checked Yet"
-msgstr "Pre installatie controle"
+msgstr "Nog niet gecontroleerd"
 
 #: data_debug.php
 msgid "Not Debugging"
-msgstr "Debugging"
+msgstr "Niet aan het debuggen"
 
 #: data_debug.php lib/api_automation.php lib/graphs.php templates_import.php
 msgid "Not Found"
@@ -1945,7 +1945,7 @@ msgstr "Wachten op gegevensbroncontrole om te voltooien"
 
 #: data_debug.php
 msgid "Waiting on analysis and RRDfile update"
-msgstr "Is het RRD-document bijgewerkt?"
+msgstr "Wachten op analyse en bijwerken van RRDfile"
 
 #: data_debug.php lib/installer.php
 msgid "Warning"
@@ -2086,7 +2086,7 @@ msgstr "Uitvoervelden kunnen niet worden verwijderd als er gegevensbronnen aanwe
 
 #: data_input.php
 msgid "The internal database ID for this Data Input Method.  Useful when performing automation or debugging."
-msgstr "De interne database ID voor deze data template. Handig voor automatisering of debugging."
+msgstr "De interne database-ID voor deze gegevensinvoermethode. Handig bij het uitvoeren van automatisering of foutopsporing."
 
 #: data_input.php
 msgid "The method used to gather information for this Data Input Method."
@@ -2174,8 +2174,8 @@ msgstr "Klik op 'Volgende' om de volgende data query grafiek koppeling te verwij
 #: data_queries.php
 msgid "Click 'Continue' to duplicate the following Data Query."
 msgid_plural "Click 'Continue' to duplicate following Data Queries."
-msgstr[0] "Klik op 'Volgende' om de volgende data query te verwijderen."
-msgstr[1] "Klik op 'Volgende' om de volgende data queries te verwijderen."
+msgstr[0] "Klik op 'Doorgaan' om de volgende gegevensquery te dupliceren."
+msgstr[1] "Klik op 'Doorgaan' om de volgende gegevensqueries te dupliceren."
 
 #: data_queries.php
 msgid "Could not locate XML file."
@@ -2220,8 +2220,8 @@ msgstr[1] "Verwijder data queries"
 #: data_queries.php
 msgid "Duplicate Data Query"
 msgid_plural "Duplicate Data Queries"
-msgstr[0] "Verwijder data query"
-msgstr[1] "Verwijder data queries"
+msgstr[0] "Gegevensquery dupliceren"
+msgstr[1] "Gegevensqueries dupliceren"
 
 #: data_queries.php
 msgid "Edit Data Query Settings"
@@ -2295,7 +2295,7 @@ msgstr "Volgorde"
 
 #: data_queries.php
 msgid "Remove Data Query Graph Template"
-msgstr "Converteer naar grafiektemplate"
+msgstr "Grafieksjabloon voor gegevensquery verwijderen"
 
 #: data_queries.php
 msgid "Successfully located XML file"
@@ -2369,7 +2369,7 @@ msgstr "Geaggregeerde"
 
 #: data_sources.php
 msgid "Bad Indexes"
-msgstr "Index"
+msgstr "Ongeldige indexen"
 
 #: data_sources.php graphs.php
 msgid "Change Device"
@@ -2450,7 +2450,7 @@ msgstr "Data bronnen [%s]"
 
 #: data_sources.php
 msgid "Data Sources [ All Devices ]"
-msgstr "Data bron [geen apparaat]"
+msgstr "Gegevensbronnen [ Alle apparaten ]"
 
 #: data_sources.php
 msgid "Data Sources [ Non Device Based ]"
@@ -2546,7 +2546,7 @@ msgstr "Nieuw apparaat:"
 
 #: data_sources.php
 msgid "No Aggregates"
-msgstr "Geaggregeerde"
+msgstr "Geen aggregaties"
 
 #: data_sources.php
 msgid "No Data Sources Found"
@@ -2554,7 +2554,7 @@ msgstr "Geen data bron gevonden"
 
 #: data_sources.php
 msgid "No Graphs"
-msgstr "Grafieken"
+msgstr "Geen grafieken"
 
 #: data_sources.php data_templates.php
 msgid "No Input Fields for the Selected Data Input Source"
@@ -2570,7 +2570,7 @@ msgstr "Er is niets ingevoerd"
 
 #: data_sources.php graphs.php
 msgid "Orphaned"
-msgstr "Overerfd"
+msgstr "Verweesd"
 
 #: data_sources.php include/global_settings.php
 msgid "Poller Interval"
@@ -2631,7 +2631,7 @@ msgstr "De naam van deze data bron. Over het algemeen programmatisch gegenereerd
 
 #: data_sources.php
 msgid "The number of Graphs and Aggregate Graphs that are using the Data Source."
-msgstr "Het aantal grafiektemplates dat deze data query gebruikt."
+msgstr "Het aantal grafieken en geaggregeerde grafieken dat de gegevensbron gebruikt."
 
 #: data_sources.php
 msgid "Turn Off Data Source Debug Mode."
@@ -3136,7 +3136,7 @@ msgstr "De titel van deze grafiek. Geprogrammeerd uit de definities van de grafi
 
 #: graph_view.php
 msgid "The device for this Graph."
-msgstr "De naam van deze groep."
+msgstr "Het apparaat voor deze grafiek."
 
 #: graph_view.php graphs.php
 msgid "The size of this Graph when not in Preview mode."
@@ -3339,7 +3339,7 @@ msgstr "Wijzig grafiektemplate."
 
 #: graphs.php
 msgid "Empty Graph"
-msgstr "Grafiek kopiëren"
+msgstr "Lege grafiek"
 
 #: graphs.php
 msgid "Graph Fields"
@@ -3648,7 +3648,7 @@ msgstr "Gekoppelde data queries"
 
 #: host_templates.php include/global_form.php
 msgid "Class"
-msgstr "Klassiek"
+msgstr "Klasse"
 
 #: host_templates.php
 msgid "Click 'Continue' to Synchronize Devices associated with the selected Device Template(s).  Note that this action may take some time depending on the number of Devices mapped to the Device Template."
@@ -3673,7 +3673,7 @@ msgstr "Klik op 'Volgende' om de volgende apparaat template(s) te dupliceren. Op
 #: host_templates.php
 #, php-format
 msgid "Data Query Name: %s"
-msgstr "Data bron naam: %s"
+msgstr "Naam gegevensquery: %s"
 
 #: host_templates.php
 msgid "Default Submit Button"
@@ -3685,7 +3685,7 @@ msgstr "Verwijder apparaattemplate(s)"
 
 #: host_templates.php
 msgid "Delete Item from Device Template"
-msgstr "Verwijder apparaattemplate(s)"
+msgstr "Item verwijderen uit apparaattemplate"
 
 #: host_templates.php
 msgid "Device Class"
@@ -3822,7 +3822,7 @@ msgstr "De hoofdgegevensverzamelaar is naar een offline of herstellende status g
 
 #: include/global.php
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "De laatste keer dat deze Dataverzamelaar volledig gesynchroniseerd werd met de hoofdsite van Kadupul."
+msgstr "De hoofddataverzamelaar is teruggekeerd naar de status Online"
 
 #: include/global_arrays.php
 #, php-format
@@ -4011,7 +4011,7 @@ msgstr "6 uur"
 
 #: include/global_arrays.php
 msgid "AES"
-msgstr "DES"
+msgstr "AES"
 
 #: include/global_arrays.php
 msgid "AES-128"
@@ -4162,11 +4162,11 @@ msgstr "Automatisering"
 
 #: include/global_arrays.php
 msgid "Base Graph Order"
-msgstr "Heeft grafieken"
+msgstr "Basisgrafiekvolgorde"
 
 #: include/global_arrays.php utilities.php
 msgid "Boost Status"
-msgstr "Verhoog de status"
+msgstr "Boost-status"
 
 #: include/global_arrays.php
 msgid "Bottom -> Up"
@@ -4643,7 +4643,7 @@ msgstr "Algemeen beheer"
 
 #: include/global_arrays.php
 msgid "Generic Device"
-msgstr "Generiek log niveau"
+msgstr "Generiek apparaat"
 
 #: include/global_arrays.php
 msgid "German"
@@ -5102,15 +5102,15 @@ msgstr "Natuurlijke sortering"
 
 #: include/global_arrays.php
 msgid "Network Firewalls"
-msgstr "Netwerkfilters"
+msgstr "Netwerkfirewalls"
 
 #: include/global_arrays.php
 msgid "Network Router"
-msgstr "Netwerkfilters"
+msgstr "Netwerkrouter"
 
 #: include/global_arrays.php
 msgid "Network Switch"
-msgstr "Netwerkfilters"
+msgstr "Netwerkswitch"
 
 #: include/global_arrays.php lib/html_form_template.php
 msgid "New Graphs"
@@ -5269,7 +5269,7 @@ msgstr "Afdrukken van in totaal alleen legende-items"
 
 #: include/global_arrays.php
 msgid "Printer Related"
-msgstr "Database status"
+msgstr "Printergerelateerd"
 
 #: include/global_arrays.php
 msgid "RRD Check"
@@ -5321,7 +5321,7 @@ msgstr "Rapportages"
 
 #: include/global_arrays.php
 msgid "Reports Administration"
-msgstr "Log beheer"
+msgstr "Rapportbeheer"
 
 #: include/global_arrays.php
 msgid "Reports Creation"
@@ -5467,7 +5467,7 @@ msgstr "Instellingen/gebruiksmogelijkheden"
 
 #: include/global_arrays.php
 msgid "Show Graph Action Icons"
-msgstr "Toon grafiektitel"
+msgstr "Actiepictogrammen voor grafieken weergeven"
 
 #: include/global_arrays.php
 msgid "Show User Help Links"
@@ -5532,7 +5532,7 @@ msgstr "Zondag"
 
 #: include/global_arrays.php
 msgid "Sunrise"
-msgstr "Doel.nu"
+msgstr "Zonsopgang"
 
 #: include/global_arrays.php
 msgid "Support"
@@ -5576,7 +5576,7 @@ msgstr "Technische ondersteuning"
 
 #: include/global_arrays.php
 msgid "Telco Related"
-msgstr "Selecteer template"
+msgstr "Telco-gerelateerd"
 
 #: include/global_arrays.php
 msgid "Template Editor"
@@ -5960,7 +5960,7 @@ msgstr "[Geen]"
 
 #: include/global_arrays.php
 msgid "[Restart]"
-msgstr "Beperkt"
+msgstr "[Herstarten]"
 
 #: include/global_arrays.php
 msgid "[Skipped]"
@@ -6248,7 +6248,7 @@ msgstr "Opties voor automatisch schalen"
 
 #: include/global_form.php
 msgid "Availability/Reachability Options"
-msgstr "Beschikbaarheid/Reachability Opties"
+msgstr "Opties voor beschikbaarheid/bereikbaarheid"
 
 #: include/global_form.php
 msgid "Axis Options"
@@ -6540,7 +6540,7 @@ msgstr "Voor SNMPv2- en SNMPv3-apparaten is de maximale herhalingsgrootte van de
 
 #: include/global_form.php
 msgid "Force Rules Legend (--force-rules-legend)"
-msgstr "Krachtregels Legende (--krachtregels-legend)"
+msgstr "Regellegenda forceren (--force-rules-legend)"
 
 #: include/global_form.php
 msgid "Force the generation of HRULE and VRULE legends."
@@ -6698,7 +6698,7 @@ msgstr "Om vervaging door anti-aliasing te voorkomen, lijnt RRDtool punten uit o
 
 #: include/global_form.php
 msgid "Include Prefix Text"
-msgstr "Inclusief index"
+msgstr "Voorvoegseltekst opnemen"
 
 #: include/global_form.php
 msgid "Include the source Graphs GPRINT Title Text with the Aggregate Graph(s)."
@@ -6730,7 +6730,7 @@ msgstr "Is dit om het sjabloon bij zich te dragen?"
 
 #: include/global_form.php
 msgid "Left Axis Formatter (--left-axis-formatter &lt;formatname&gt;)"
-msgstr "Linkerasformatter (--linker-asformatter &lt;formatname&gt;)"
+msgstr "Opmaak voor linkeras (--left-axis-formatter &lt;formatname&gt;)"
 
 #: include/global_form.php
 msgid "Legend Direction (--legend-direction=&lt;direction&gt;)"
@@ -6806,7 +6806,7 @@ msgstr "Nieuw RRA profiel"
 
 #: include/global_form.php
 msgid "No Gridfit (--no-gridfit)"
-msgstr "Geen Gridfit (--geen-gridfit)"
+msgstr "Geen Gridfit (--no-gridfit)"
 
 #: include/global_form.php lib/html_utility.php
 msgid "Not Selected"
@@ -6834,7 +6834,7 @@ msgstr "Opaciteit/Alpha-kanaal"
 
 #: include/global_form.php lib/api_automation.php
 msgid "Operation"
-msgstr "Atie"
+msgstr "Operatie"
 
 #: include/global_form.php
 msgid "Operator."
@@ -7022,7 +7022,7 @@ msgstr "SNMP pogingen"
 
 #: include/global_form.php
 msgid "SNMP Security Level"
-msgstr "SMTP Security"
+msgstr "SNMP-beveiligingsniveau"
 
 #: include/global_form.php
 msgid "SNMP Timeout"
@@ -7150,7 +7150,7 @@ msgstr "Het Grafieksjabloon waarop dit geaggregeerde sjabloon is gebaseerd."
 
 #: include/global_form.php package_import.php
 msgid "The Height to be used when importing or updating Graph Templates."
-msgstr "De standaard grafiekbreedte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
+msgstr "De hoogte die moet worden gebruikt bij het importeren of bijwerken van grafieksjablonen."
 
 #: include/global_form.php package_import.php
 msgid "The Image Format to be used when importing or updating Graph Templates."
@@ -7166,7 +7166,7 @@ msgstr "Het vergelijkingspatroon."
 
 #: include/global_form.php
 msgid "The Replacement String Pattern for use as a Tree Header.<br>Refer to a Match by e.g. <strong>\\${1}</strong> for the first match!"
-msgstr "Het Replacement String Pattern voor gebruik als Tree Header.<br>Refer to a Match door bijv. <strong>String${1}</strong> voor de eerste wedstrijd!"
+msgstr "Het vervangende tekenreekspatroon voor gebruik als boomstructuurkop.<br>Verwijs naar een overeenkomst via bijv. <strong>\\${1}</strong> voor de eerste overeenkomst!"
 
 #: include/global_form.php
 msgid "The String Pattern (Regular Expression) to match against.<br>Enclosing '/' must <strong>NOT</strong> be provided!"
@@ -7174,7 +7174,7 @@ msgstr "Het String Pattern (Regular Expression) om te matchen tegen.<br>Het slui
 
 #: include/global_form.php package_import.php
 msgid "The Width to be used when importing or updating Graph Templates."
-msgstr "De standaard grafiekbreedte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
+msgstr "De breedte die moet worden gebruikt bij het importeren of bijwerken van grafieksjablonen."
 
 #: include/global_form.php
 msgid "The algorithm ensures that you always have a grid, that there are enough but not too many grid lines, and that the grid is metric. This parameter will also ensure that you get enough decimals displayed even if your graph goes from 69.998 to 70.001.<br><strong>Note: </strong>This parameter may interfere with --alt-autoscale options."
@@ -7450,11 +7450,11 @@ msgstr "Bij het bekijken van een grafiek op basis van de RRA in kwestie, de stan
 
 #: include/global_form.php
 msgid "When you setup the left axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Wanneer u de linker aslabeling instelt, past u een regel toe op het gegevensformaat.  Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime formaat (standaard is \"%Y-%m-%m-%%%M:%M:%S\").  Zie ook -eenheden-lengte.  Tot slot \"duur\" waarbij de waarden worden geïnterpreteerd als duur in milliseconden.  De opmaak volgt de regels van valstrfduration gekwalificeerde PRINT/GPRINT."
+msgstr "Wanneer u de labeling van de linkeras instelt, past u een regel toe op het gegevensformaat. Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, en \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime-formaat (standaard is \"%Y-%m-%d %H:%M:%S\"). Zie ook --units-length. Tot slot \"duur\", waarbij de waarden worden geïnterpreteerd als een duur in milliseconden. De opmaak volgt de regels van valstrfduration-gekwalificeerde PRINT/GPRINT."
 
 #: include/global_form.php
 msgid "When you setup the right axis labeling, apply a rule to the data format.  Supported formats include \"numeric\" where data is treated as numeric, \"timestamp\" where values are interpreted as UNIX timestamps (number of seconds since January 1970) and expressed using strftime format (default is \"%Y-%m-%d %H:%M:%S\").  See also --units-length and --right-axis-format.  Finally \"duration\" where values are interpreted as duration in milliseconds.  Formatting follows the rules of valstrfduration qualified PRINT/GPRINT."
-msgstr "Wanneer u de rechter aslabeling instelt, past u een regel toe op het gegevensformaat.  Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime formaat (standaard is \"%Y-%m-%m-%%%M:%M:%S\").  Zie ook -eenheden-lengte en -rechts-as-formaat.  Tot slot \"duur\" waarbij de waarden worden geïnterpreteerd als duur in milliseconden.  De opmaak volgt de regels van valstrfduration gekwalificeerde PRINT/GPRINT."
+msgstr "Wanneer u de labeling van de rechteras instelt, past u een regel toe op het gegevensformaat. Ondersteunde formaten zijn onder meer \"numeriek\", waarbij de gegevens als numeriek worden behandeld, en \"tijdstempel\", waarbij de waarden worden geïnterpreteerd als UNIX-tijdstempels (aantal seconden sinds januari 1970) en worden uitgedrukt in strftime-formaat (standaard is \"%Y-%m-%d %H:%M:%S\"). Zie ook --units-length en --right-axis-format. Tot slot \"duur\", waarbij de waarden worden geïnterpreteerd als een duur in milliseconden. De opmaak volgt de regels van valstrfduration-gekwalificeerde PRINT/GPRINT."
 
 #: include/global_form.php
 msgid "Whether Kadupul should gather data for this data source or not."
@@ -7662,7 +7662,7 @@ msgstr "Alle types"
 
 #: include/global_settings.php
 msgid "Allow Graph to extend to Future"
-msgstr "Sta Graph toe om uit te breiden naar Future"
+msgstr "Sta grafiek toe om uit te breiden naar de toekomst"
 
 #: include/global_settings.php
 msgid "Allow Non-Nonced Inline JavaScript"
@@ -7778,7 +7778,7 @@ msgstr "Automatiseringsmelding naar e-mail"
 
 #: include/global_settings.php
 msgid "Availability/Reachability"
-msgstr "Beschikbaarheid/Reachability"
+msgstr "Beschikbaarheid/Bereikbaarheid"
 
 #: include/global_settings.php lib/html.php
 msgid "Average"
@@ -7794,7 +7794,7 @@ msgstr "As lettertype grootte"
 
 #: include/global_settings.php
 msgid "Background Timeout and Concurrent Process Settings"
-msgstr "Legenda lettertype instellingen"
+msgstr "Instellingen voor achtergrondtime-out en gelijktijdige processen"
 
 #: include/global_settings.php
 msgid "Backup Retention"
@@ -7810,7 +7810,7 @@ msgstr "Basistijd"
 
 #: include/global_settings.php
 msgid "Basic Auth Login Failure Message"
-msgstr "Basic Auth Mapfile"
+msgstr "Foutmelding bij Basic Auth-aanmelding"
 
 #: include/global_settings.php
 msgid "Basic Auth Mapfile"
@@ -7842,7 +7842,7 @@ msgstr "Boost-verwerkingsmodus"
 
 #: include/global_settings.php
 msgid "Business Hours Settings"
-msgstr "Gebruikersinstellingen"
+msgstr "Instellingen voor kantooruren"
 
 #: include/global_settings.php
 msgid "By Template/Data Query"
@@ -7930,7 +7930,7 @@ msgstr "Aangepaste Datumnotatie"
 
 #: include/global_settings.php
 msgid "Custom Watermark"
-msgstr "Aangepaste data"
+msgstr "Aangepast watermerk"
 
 #: include/global_settings.php
 msgid "DNS Options"
@@ -8014,7 +8014,7 @@ msgstr "Standaard grafiek type"
 
 #: include/global_settings.php
 msgid "Default Interface Speed"
-msgstr "Standaard grafiek type"
+msgstr "Standaard interfacesnelheid"
 
 #: include/global_settings.php
 msgid "Default Log Tail Lines"
@@ -8142,7 +8142,7 @@ msgstr "Apparaat"
 
 #: include/global_settings.php
 msgid "Device ID/Data Query ID"
-msgstr "Verwijder data query"
+msgstr "Apparaat-ID/Gegevensquery-ID"
 
 #: include/global_settings.php
 msgid "Device Threads"
@@ -8158,7 +8158,7 @@ msgstr "RRDtool grafiek watermerk"
 
 #: include/global_settings.php
 msgid "Disable Resource Cache Replication"
-msgstr "Resource cache opnieuw opbouwen"
+msgstr "Replicatie van resourcecache uitschakelen"
 
 #: include/global_settings.php
 msgid "Disable increasing OID Check"
@@ -8218,7 +8218,7 @@ msgstr "Activeer Drag-N-Drop (slepen en loslaten)"
 
 #: include/global_settings.php
 msgid "Enable Gradient Support"
-msgstr "Rapportage inschakelen"
+msgstr "Ondersteuning voor kleurverloop inschakelen"
 
 #: include/global_settings.php
 msgid "Enable Horizontal Scrolling"
@@ -8246,7 +8246,7 @@ msgstr "On-demand RRD Updaten op aanvraag inschakelen"
 
 #: include/global_settings.php
 msgid "Enable RRDfile Check"
-msgstr "Activeer regel"
+msgstr "RRDfile-controle inschakelen"
 
 #: include/global_settings.php
 msgid "Enable Real-time Graphing"
@@ -8346,7 +8346,7 @@ msgstr "Veld dat de e-mail van LDAP vervangt. (op ramen: post)"
 
 #: include/global_settings.php user_domains.php
 msgid "Field that will replace the Full Name when creating a new user, taken from LDAP. (on windows: displayname) "
-msgstr "Veld dat de volledige naam vervangt bij het aanmaken van een nieuwe gebruiker, overgenomen uit LDAP. (op ramen: verplaatsingsnaam)"
+msgstr "Veld dat de volledige naam vervangt bij het aanmaken van een nieuwe gebruiker, overgenomen uit LDAP. (op Windows: displayname) "
 
 #: include/global_settings.php
 msgid "Filter Settings"
@@ -8442,7 +8442,7 @@ msgstr "Grafiek-/gegevensbron-/gegevensvraaginstellingen"
 
 #: include/global_settings.php
 msgid "Graphs Auto Unlock"
-msgstr "Grafiek koppelregels"
+msgstr "Grafieken automatisch ontgrendelen"
 
 #: include/global_settings.php
 msgid "Graphs Per Page"
@@ -8502,7 +8502,7 @@ msgstr "Hoe Boost RRD-updates distribueert. Geforkte processen starten bij elke 
 
 #: include/global_settings.php
 msgid "How Often Should Boost Update All RRDs"
-msgstr "Hoe vaak moet Boost Update Alle RRD's"
+msgstr "Hoe vaak moet Boost alle RRD's bijwerken"
 
 #: include/global_settings.php
 msgid "How do you wish fonts to be handled by default?"
@@ -8518,7 +8518,7 @@ msgstr "Hoe vaak moeten Daily Stats worden bijgewerkt?"
 
 #: include/global_settings.php
 msgid "How frequent should RRD be checked ?"
-msgstr "Hoe vaak moeten Daily Stats worden bijgewerkt?"
+msgstr "Hoe vaak moet RRD worden gecontroleerd?"
 
 #: include/global_settings.php
 msgid "How long one evaluation run may start new batches of rules. Sending queued notifications follows evaluation with the time left, and may send one batch even when the budget is spent. Rules not reached are evaluated first by the next run."
@@ -8554,7 +8554,7 @@ msgstr "Hoe wilt u dat Spine output fouten worden geregistreerd?  De opties zijn
 
 #: include/global_settings.php
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "If Checked Kadupul logt extra LDAP-informatie in het Kadupul-logboek tijdens Binding- en zoekactiviteiten."
+msgstr "Indien aangevinkt logt Kadupul extra LDAP-informatie in het Kadupul-logboek tijdens bind- en zoekactiviteiten."
 
 #: include/global_settings.php
 msgid "If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles."
@@ -8610,7 +8610,7 @@ msgstr "Als u voor deze optie kiest, zal Kadupul proberen de belasting van elk p
 
 #: include/global_settings.php
 msgid "If you choose this option, Kadupul will check for output that exceeds Kadupul's ability to store it and issue a warning when it finds it."
-msgstr "Als u deze optie kiest, zal Kadupul controleren op uitvoer die de mogelijkheid van Kadupul's om het op te slaan overschrijdt en een waarschuwing geven wanneer het het het vindt."
+msgstr "Als u deze optie kiest, controleert Kadupul op uitvoer die de opslagcapaciteit van Kadupul overschrijdt en geeft een waarschuwing wanneer dit wordt aangetroffen."
 
 #: include/global_settings.php
 msgid "If you wish to stop the polling process completely, uncheck this box."
@@ -8702,7 +8702,7 @@ msgstr "Vereisten voor lokale rekeningcomplexiteit"
 
 #: include/global_settings.php
 msgid "Local Page Help Only"
-msgstr "Hulp vragen"
+msgstr "Alleen lokale paginahulp"
 
 #: include/global_settings.php
 msgid "Location for Image Files"
@@ -8798,11 +8798,11 @@ msgstr "Maximale titel lengte"
 
 #: include/global_settings.php
 msgid "Maximum Tree Width"
-msgstr "Maximale titel lengte"
+msgstr "Maximale boombreedte"
 
 #: include/global_settings.php
 msgid "Maximum number of days to show business hours"
-msgstr "Maximum aantal rijen per pagina"
+msgstr "Maximaal aantal dagen om kantooruren weer te geven"
 
 #: include/global_settings.php
 msgid "Maximum number of rows per page"
@@ -8838,7 +8838,7 @@ msgstr "Modus"
 
 #: include/global_settings.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the user's Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the user's Distinguished Name (DN)."
-msgstr "Modus die cactussen proberen te authenticeren tegen de LDAP-server.<blockquote><i><i>No Searching</i> - No Distinguished Name (DN) search occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><br><i>Anoniem zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via anonieme binding om de onderscheidende naam (DN) van de gebruiker te vinden.<br><br><br><i><i>Specifiek zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via specifieke onderscheidende naam (DN) en specifiek wachtwoord om de onderscheidende naam (DN) van de gebruiker te vinden."
+msgstr "Modus waarin Cacti probeert te authenticeren bij de LDAP-server.<blockquote><i>Niet zoeken</i> - Er wordt niet gezocht naar een Distinguished Name (DN); er wordt alleen geprobeerd te binden met de opgegeven opmaak voor de Distinguished Name (DN).<br><br><i>Anoniem zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via anonieme binding om de Distinguished Name (DN) van de gebruiker te vinden.<br><br><i>Specifiek zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via een specifieke Distinguished Name (DN) en een specifiek wachtwoord voor binding om de Distinguished Name (DN) van de gebruiker te vinden."
 
 #: include/global_settings.php
 msgid "Monthly on Sunady"
@@ -8878,7 +8878,7 @@ msgstr "Aantal boost processen"
 
 #: include/global_settings.php
 msgid "Number of DSStats Processes"
-msgstr "Aantal boost processen"
+msgstr "Aantal DSStats-processen"
 
 #: include/global_settings.php
 msgid "Number of PHP Script Servers"
@@ -8886,7 +8886,7 @@ msgstr "Aantal PHP Script servers"
 
 #: include/global_settings.php
 msgid "Number of RRDfile Check Processes"
-msgstr "Aantal boost processen"
+msgstr "Aantal RRDfile-controleprocessen"
 
 #: include/global_settings.php
 msgid "Number of Standard Deviations"
@@ -9062,7 +9062,7 @@ msgstr "Proxy server"
 
 #: include/global_settings.php
 msgid "RRDChecker Timeout"
-msgstr "DNS timeout"
+msgstr "RRDChecker-time-out"
 
 #: include/global_settings.php
 msgid "RRDfile Auto Clean"
@@ -9106,7 +9106,7 @@ msgstr "RSA Vingerafdruk"
 
 #: include/global_settings.php
 msgid "Re-Index All Device Schedule"
-msgstr "Herindexeringsmethode"
+msgstr "Planning voor het opnieuw indexeren van alle apparaten"
 
 #: include/global_settings.php
 msgid "Re-index Method for Data Queries"
@@ -9166,7 +9166,7 @@ msgstr "Vervangingsmethode"
 
 #: include/global_settings.php
 msgid "Report Generation Timeout"
-msgstr "Time-out agent op afstand"
+msgstr "Time-out voor het genereren van rapporten"
 
 #: include/global_settings.php
 msgid "Reporting Presets"
@@ -9178,15 +9178,15 @@ msgstr "Vereist groepslidmaatschap"
 
 #: include/global_settings.php
 msgid "Require Mix Case"
-msgstr "Hoofdletter/kleine letter ontbreekt"
+msgstr "Hoofdletters en kleine letters vereisen"
 
 #: include/global_settings.php
 msgid "Require Number"
-msgstr "Getal ontbreekt"
+msgstr "Cijfer vereisen"
 
 #: include/global_settings.php
 msgid "Require Special Character"
-msgstr "Speciaal karakter ontbreekt"
+msgstr "Speciaal teken vereisen"
 
 #: include/global_settings.php user_domains.php
 msgid "Require user to be member of group to authenticate. Group settings must be set for this to work, enabling without proper group settings will cause authentication failure."
@@ -9358,7 +9358,7 @@ msgstr "Of LDAP TLS-certificaten moet verifiëren wanneer ze door de client word
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "Moeten voor dit Kadupul-systeem gegevensbronstatistieken worden verzameld?"
+msgstr "Moet RRDfile-controle worden ingeschakeld voor dit Kadupul-systeem?"
 
 #: include/global_settings.php
 msgid "Should image caching be enabled?"
@@ -9394,7 +9394,7 @@ msgstr "Toon alleen locaties die beschikbaar zijn op een door apparaten geselect
 
 #: include/global_settings.php
 msgid "Show only site specific locations"
-msgstr "Stel hier eventuele grafiekspecifieke opties in."
+msgstr "Alleen sitespecifieke locaties weergeven"
 
 #: include/global_settings.php
 msgid "Simple"
@@ -9406,7 +9406,7 @@ msgstr "Website"
 
 #: include/global_settings.php
 msgid "Site Security"
-msgstr "SMTP Security"
+msgstr "Sitebeveiliging"
 
 #: include/global_settings.php
 msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
@@ -9438,7 +9438,7 @@ msgstr "Pieken"
 
 #: include/global_settings.php
 msgid "Spine Binary File Location"
-msgstr "De plaats van het ruggegraat Binaire Bestand"
+msgstr "Locatie van het binaire Spine-bestand"
 
 #: include/global_settings.php
 msgid "Spine Config File Path"
@@ -9494,11 +9494,11 @@ msgstr "Systeemniveau RRD Updater"
 
 #: include/global_settings.php
 msgid "System Setting"
-msgstr "Gebruikersinstellingen"
+msgstr "Systeeminstelling"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "TCP/UDP poort voor niet-SSL verbindingen."
+msgstr "TCP-poort voor LDAPS voor SSL-communicatie. Standaard is 636."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9542,7 +9542,7 @@ msgstr "De basistijd voor het verwijderen van de Spike.  Als u bijvoorbeeld '12:
 
 #: include/global_settings.php
 msgid "The Bind Timeout in seconds."
-msgstr "Voer de SMTP timeout in seconden in."
+msgstr "De Bind-time-out in seconden."
 
 #: include/global_settings.php
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
@@ -9578,7 +9578,7 @@ msgstr "De minimale breedte van de boom om mee samen te trekken."
 
 #: include/global_settings.php
 msgid "The Network Connect Timeout in seconds."
-msgstr "Voer de SMTP timeout in seconden in."
+msgstr "De time-out voor netwerkverbinding in seconden."
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
@@ -9626,7 +9626,7 @@ msgstr "De standaard apparaatsjabloon die op alle nieuwe apparaten wordt gebruik
 
 #: include/global_settings.php
 msgid "The default Graph Height to be used for all new Graph Templates."
-msgstr "De standaard grafiekbreedte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
+msgstr "De standaard grafiekhoogte die moet worden gebruikt voor alle nieuwe grafieksjablonen."
 
 #: include/global_settings.php
 msgid "The default Graph Width to be used for all new Graph Templates."
@@ -9754,7 +9754,7 @@ msgstr "De maximale hoeveelheid tijd die het Kadupul's Data Source Statistics-sc
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "De maximale tijd dat een Kadupul's Spikekill-script kan worden uitgevoerd zonder een time-outfout te genereren en te worden gedood."
+msgstr "De maximale tijd dat het RRDfile-controlescript van Kadupul kan worden uitgevoerd zonder een time-outfout te genereren en te worden afgebroken."
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
@@ -9814,7 +9814,7 @@ msgstr "Het aantal kolommen dat moet worden gebruikt bij het weergeven van minia
 
 #: include/global_settings.php
 msgid "The number of concurrent DSStats processes to use to use to process all of the Data Sources."
-msgstr "Het aantal gelijktijdige boost processen om te gebruiken om alle RRD's in de boost tabel te verwerken."
+msgstr "Het aantal gelijktijdige DSStats-processen dat moet worden gebruikt om alle gegevensbronnen te verwerken."
 
 #: include/global_settings.php
 msgid "The number of concurrent Poller Command processes.  The will be at most one concurrent command per host within the Poller Command pool."
@@ -9822,7 +9822,7 @@ msgstr "Het aantal gelijktijdige Poller Command-processen.  De bestaat uit maxim
 
 #: include/global_settings.php
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "Het aantal gelijktijdige boost processen om te gebruiken om alle RRD's in de boost tabel te verwerken."
+msgstr "Het aantal gelijktijdige RRDfile-controleprocessen dat moet worden gebruikt om alle RRD-bestanden te verwerken."
 
 #: include/global_settings.php
 msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
@@ -10002,7 +10002,7 @@ msgstr "Dit is de afzender naam."
 
 #: include/global_settings.php
 msgid "This is the directory where RRDfiles are <strong>moved</strong> for archiving"
-msgstr "Dit is de directory waar RRD-files <strong>moved</strong> zijn voor archivering"
+msgstr "Dit is de map waarnaar RRDfiles worden <strong>verplaatst</strong> voor archivering"
 
 #: include/global_settings.php
 msgid "This is the hostname/IP of the SMTP Server you will send the Email to. For failover, separate your hosts using a semi-colon."
@@ -10111,7 +10111,7 @@ msgstr "Om de prestaties te optimaliseren, moet de boost RRD updater weten hoeve
 
 #: include/global_settings.php
 msgid "Tree History"
-msgstr "Wachtwoord history"
+msgstr "Boomgeschiedenis"
 
 #: include/global_settings.php
 msgid "Tree Settings"
@@ -10167,7 +10167,7 @@ msgstr "Door de gebruiker gedefinieerd aantal lijnen voor de CLOG tot aan de sta
 
 #: include/global_settings.php
 msgid "Variance Based w/Outliers Removed"
-msgstr "Variantie gebaseerd op w/Outliers Verwijderd"
+msgstr "Op variantie gebaseerd met verwijderde uitschieters"
 
 #: include/global_settings.php
 msgid "Variance Number of Outliers"
@@ -10454,7 +10454,7 @@ msgstr "Geen apparaat selectie criteria"
 
 #: lib/api_automation.php
 msgid "No Graph Creation Criteria"
-msgstr "Criteria voor het maken van een grafiek"
+msgstr "Geen criteria voor het maken van grafieken"
 
 #: lib/api_automation.php
 msgid "No Items Found"
@@ -10466,7 +10466,7 @@ msgstr "Geen overeenkomende apparaten"
 
 #: lib/api_automation.php
 msgid "No Tree Creation Criteria"
-msgstr "Criteria voor het aanmaken van een menuitem"
+msgstr "Geen criteria voor het maken van boomstructuren"
 
 #: lib/api_automation.php
 msgid "Not Up"
@@ -10684,7 +10684,7 @@ msgstr "Grafiek:(%s%s)"
 
 #: lib/auth.php
 msgid "Kadupul Login Failure"
-msgstr "Kadupul log leeggemaakt"
+msgstr "Aanmeldingsfout bij Kadupul"
 
 #: lib/auth.php
 msgid "Restricted"
@@ -10714,12 +10714,12 @@ msgstr "Toegang geweigerd, neem alstublieft contact op uw Kadupul beheerder."
 #: lib/boost.php
 #, php-format
 msgid "%s Bytes"
-msgstr "%s GBytes"
+msgstr "%s Bytes"
 
 #: lib/boost.php
 #, php-format
 msgid "%s KBytes"
-msgstr "%s GBytes"
+msgstr "%s KBytes"
 
 #: lib/boost.php utilities.php
 #, php-format
@@ -10823,7 +10823,7 @@ msgstr "Logbestand legen"
 
 #: lib/clog_webapi.php
 msgid "Recaches"
-msgstr "komt overeen"
+msgstr "Cachevernieuwingen"
 
 #: lib/clog_webapi.php utilities.php
 msgid "SQL Calls"
@@ -10835,7 +10835,7 @@ msgstr "Statistieken"
 
 #: lib/clog_webapi.php
 msgid "System Device"
-msgstr "Synchroniseer apparaten"
+msgstr "Systeemapparaat"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Tail Lines"
@@ -10851,7 +10851,7 @@ msgstr "Waarschuwingen"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; exists in XML file but no data returned., 'Index Count Changed' not supported"
-msgstr "&lt;arg_num_num_indexes&gt; ontbreekt in XML-bestand, 'Index Count Changed' niet ondersteund"
+msgstr "&lt;arg_num_indexes&gt; bestaat in XML-bestand maar er zijn geen gegevens geretourneerd., 'Index Count Changed' wordt niet ondersteund"
 
 #: lib/data_query.php
 msgid "&lt;arg_num_indexes&gt; missing in XML file, 'Index Count Changed' emulated by counting arg_index entries"
@@ -10880,7 +10880,7 @@ msgstr "Automatiseringsuitvoering voor datavraag compleet"
 #: lib/data_query.php
 #, php-format
 msgid "Bogus rewrite_value item found, index='%s'"
-msgstr "Bogus rewrite_value item gevonden, index='%s'"
+msgstr "Ongeldig rewrite_value-item gevonden, index='%s'"
 
 #: lib/data_query.php
 #, php-format
@@ -10925,7 +10925,7 @@ msgstr "Gedetecteerd nieuw sorteerveld: \"%s\" Oud sorteerveld \"%s\"."
 
 #: lib/data_query.php
 msgid "Done updating Data Source Title Cache"
-msgstr "Dupliceer data bron profiel"
+msgstr "Bijwerken van de gegevensbrontitelcache voltooid"
 
 #: lib/data_query.php
 msgid "Done updating Graph Title Cache"
@@ -10971,12 +10971,12 @@ msgstr "SNMP-wandeling voor gegevens uitvoeren @ '%s'"
 #: lib/data_query.php
 #, php-format
 msgid "Executing SNMP walk for list of indexes @ '%s' Index Count: %s"
-msgstr "SNMP-wandeling uitvoeren voor lijst van indexen @ '%s' Index Count: %s"
+msgstr "SNMP-walk uitvoeren voor lijst met indexen @ '%s' Aantal indexen: %s"
 
 #: lib/data_query.php
 #, php-format
 msgid "Executing script for list of indexes '%s', Index Count: %s"
-msgstr "Het uitvoeren van een script voor de lijst van indexen '%s', Index Count: %s"
+msgstr "Script uitvoeren voor lijst met indexen '%s', Aantal indexen: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11020,7 +11020,7 @@ msgstr "Fixeren van een verkeerd \"methode\"-veld voor \"%s\" omdat \"rewrite_in
 #: lib/data_query.php
 #, php-format
 msgid "Found %s Local Data ID's to Verify"
-msgstr "%s tabellen gevonden om te converteren"
+msgstr "%s lokale gegevens-ID's gevonden om te verifiëren"
 
 #: lib/data_query.php
 #, php-format
@@ -11133,7 +11133,7 @@ msgstr "Gelegen invoerveld '%s' [lopen]"
 
 #: lib/data_query.php
 msgid "Must contain &lt;direction&gt;input&lt;/direction&gt; or &lt;direction&gt;input-output&lt;/direction&gt; fields only"
-msgstr "Moet &lt;richting&gt;input&lt;/richting&gt; of &lt;richting&gt;input-output&lt;/richting&gt; velden alleen bevatten"
+msgstr "Mag alleen &lt;direction&gt;input&lt;/direction&gt;- of &lt;direction&gt;input-output&lt;/direction&gt;-velden bevatten"
 
 #: lib/data_query.php
 msgid "New Sort Field validated.  Sort Field be updated."
@@ -11259,7 +11259,7 @@ msgstr "Uw Grafieksjabloon heeft geen datasjablonen in gebruik.  Gelieve uw Graf
 #: lib/data_query.php
 #, php-format
 msgid "oid_rewrite at OID: '%s' new OID: '%s'"
-msgstr "oid_rewrite at oid: '%s' new oid: '%s'"
+msgstr "oid_rewrite bij OID: '%s' nieuwe OID: '%s'"
 
 #: lib/data_query.php
 #, php-format
@@ -11607,7 +11607,7 @@ msgstr "CSV export van grafiekdata"
 
 #: lib/html.php
 msgid "Charts"
-msgstr "Grootboekschema"
+msgstr "Diagrammen"
 
 #: lib/html.php
 msgid "Choose an action"
@@ -11651,7 +11651,7 @@ msgstr "Sluiten"
 
 #: lib/html.php
 msgid "Compact Mode"
-msgstr "Gezoemwijze"
+msgstr "Compacte modus"
 
 #: lib/html.php pollers.php
 msgid "Connection Failed"
@@ -11663,7 +11663,7 @@ msgstr "Actie succesvol uitvoerd"
 
 #: lib/html.php
 msgid "Contribute to the Kadupul Project"
-msgstr "Roteer de Kadupul log"
+msgstr "Bijdragen aan het Kadupul-project"
 
 #: lib/html.php
 msgid "Copy graph"
@@ -11684,7 +11684,7 @@ msgstr "Huidige pagina: %s"
 
 #: lib/html.php
 msgid "Dark Color Mode"
-msgstr "Ontwikkelmodus"
+msgstr "Donkere kleurmodus"
 
 #: lib/html.php
 msgid "Dashboards"
@@ -11748,7 +11748,7 @@ msgstr "Vlotterbereik"
 
 #: lib/html.php
 msgid "GPrint"
-msgstr "Verwijder GRPINT voorinstelling(en)"
+msgstr "GPrint"
 
 #: lib/html.php
 msgid "Gap Fill Range"
@@ -11772,7 +11772,7 @@ msgstr "Hulp bij het vertalen"
 
 #: lib/html.php
 msgid "Ignore System Color"
-msgstr "Kleur item"
+msgstr "Systeemkleur negeren"
 
 #: lib/html.php
 msgid "Kadupul"
@@ -11800,7 +11800,7 @@ msgstr "Doodt per RRA"
 
 #: lib/html.php
 msgid "Light Color Mode"
-msgstr "Lijst modus"
+msgstr "Lichte kleurmodus"
 
 #: lib/html.php managers.php
 msgid "Logs"
@@ -11893,7 +11893,7 @@ msgstr "Reden:"
 
 #: lib/html.php
 msgid "Remote Server"
-msgstr "StdDev verwijderen"
+msgstr "Externe server"
 
 #: lib/html.php
 msgid "Remove StdDev"
@@ -11933,7 +11933,7 @@ msgstr "SpikeKill resultaten"
 
 #: lib/html.php
 msgid "Spine"
-msgstr "Ruggengraat"
+msgstr "Spine"
 
 #: lib/html.php
 msgid "Standard Deviations"
@@ -11941,7 +11941,7 @@ msgstr "Standaard afwijkingen"
 
 #: lib/html.php
 msgid "Standard Mode"
-msgstr "Scanmodus"
+msgstr "Standaardmodus"
 
 #: lib/html.php settings.php
 msgid "Templates Selected"
@@ -11965,7 +11965,7 @@ msgstr "Tijdstempels"
 
 #: lib/html.php
 msgid "Use System Color"
-msgstr "Kleur item"
+msgstr "Systeemkleur gebruiken"
 
 #: lib/html.php
 msgid "Zoom In"
@@ -12194,7 +12194,7 @@ msgstr "Grafiek [Template: %s]"
 
 #: lib/html_reports.php
 msgid ", Graph Template: All Templates"
-msgstr "Grafiektemplate toevoegen aan apparaat template"
+msgstr ", Grafiektemplate: Alle templates"
 
 #: lib/html_reports.php
 #, php-format
@@ -12508,7 +12508,7 @@ msgstr "Selecteer een grafieksjabloon voor het apparaat dat moet worden gebruikt
 
 #: lib/html_reports.php
 msgid "Select a Site to filter for Devices and Graphs."
-msgstr "Selecteer een apparaat om een grafiek op te geven"
+msgstr "Selecteer een site om te filteren op apparaten en grafieken."
 
 #: lib/html_reports.php
 msgid "Select a Tree Branch to use for Graphs and Devices.  Devices will be considered as Branches."
@@ -12693,7 +12693,7 @@ msgstr "Slechte UTF-8 offset fout!"
 
 #: lib/html_utility.php
 msgid "Down (Thold)"
-msgstr "Download"
+msgstr "Offline (Thold)"
 
 #: lib/html_utility.php lib/installer.php
 msgid "Error"
@@ -12951,7 +12951,7 @@ msgstr "Kies deze optie voor de primaire Kadupul locatie."
 
 #: lib/installer.php
 msgid "Cli"
-msgstr "Klassiek"
+msgstr "CLI"
 
 #: lib/installer.php utilities.php
 msgid "Collation"
@@ -13142,7 +13142,7 @@ msgstr "Geen toepassing van gespecificeerd profiel %s != %s !"
 
 #: lib/installer.php
 msgid "Failed to find any automation option set"
-msgstr "Geen gegevens gevonden om te kopiëren!"
+msgstr "Kan geen automatiseringsoptieset vinden"
 
 #: lib/installer.php
 msgid "Failed to find automation network, no changes were made"
@@ -13243,7 +13243,7 @@ msgstr "In het geval van problemen is het ten zeerste aan te raden om de cache v
 
 #: lib/installer.php
 msgid "Input Validation Whitelist Protection"
-msgstr "Inputvalidatie Whitelist Protection"
+msgstr "Beveiliging met witte lijst voor invoervalidatie"
 
 #: lib/installer.php plugins.php
 msgid "Install"
@@ -13289,7 +13289,7 @@ msgstr "Het is essentieel dat de Central Kadupul server via MySQL kan communicer
 
 #: lib/installer.php
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
-msgstr "We raden u ten zeerste aan om uw config.php bij te werken om deze functie in te schakelen door de <b>$input_whitelist-</b> variabele te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
+msgstr "Het wordt sterk aanbevolen om uw config.php bij te werken om deze functie in te schakelen door het commentaarteken voor de variabele <b>$input_whitelist</b> te verwijderen en vervolgens de drie bovenstaande CLI-scriptopties uit te voeren nadat de webgebaseerde installatie is voltooid."
 
 #: lib/installer.php
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
@@ -13490,7 +13490,7 @@ msgstr "Gelieve dit aan de Kadupul Group te melden."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
-msgstr "Selecteer het type sjabloon dat u wilt exporteren vanuit Kadupul."
+msgstr "Selecteer de apparaatsjablonen die u tijdens de upgrade wilt bijwerken."
 
 #: lib/installer.php
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
@@ -13590,7 +13590,7 @@ msgstr "Hulpbron is niet beschrijfbaar"
 
 #: lib/installer.php
 msgid "Restart Required"
-msgstr "Verplicht"
+msgstr "Herstart vereist"
 
 #: lib/installer.php utilities.php
 msgid "Row Format"
@@ -13792,7 +13792,7 @@ msgstr "Dit programma is gratis; je mag het distribueren of aanpassen onder de t
 
 #: lib/installer.php
 msgid "This script option un-ban the Data Input Methods that are currently banned."
-msgstr "Deze scriptoptie heft de gegevensinvoermethoden op die momenteel zijn verbannen."
+msgstr "Deze scriptoptie heft de ban op van de gegevensinvoermethoden die momenteel verbannen zijn."
 
 #: lib/installer.php
 msgid "This script option will re-enable any disabled Data Sources."
@@ -13809,7 +13809,7 @@ msgstr "Deze versie van Kadupul (%s) lijkt geen geldige versiecode te hebben, ne
 
 #: lib/installer.php
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
-msgstr "Om verder te kunnen gaan, maak je <b>MUST</b> een nieuwe database, importeer je \"cacti.sql\" erin:"
+msgstr "Om verder te kunnen gaan, <b>MOET</b> u een nieuwe database aanmaken en \"cacti.sql\" daarin importeren:"
 
 #: lib/installer.php
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
@@ -13856,7 +13856,7 @@ msgstr "Automatiseringsnetwerk updaten (%s), modus \"%s\" => \"%s\", subnet \"%s
 
 #: lib/installer.php
 msgid "Updating remote configuration file"
-msgstr "In afwachting van configuratie"
+msgstr "Extern configuratiebestand bijwerken"
 
 #: lib/installer.php
 msgid "Upgrade"
@@ -13886,15 +13886,15 @@ msgstr "Website"
 
 #: lib/installer.php
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
-msgstr "U MOET HANDELIJKE HANDELIJKE WIJZIGING VAN DE Kadupul-DATABASE VOOR EEN UPGHANDELIJKE WIJZIGING VAN EEN UPGRADE WIJZIGE WIJZIGINGEN DIE HEBBEN MADE.<br/>THE INSTALLER HEEFT GEEN BEREIK om deze AUTOMATISCHE WIJZIGINGEN VOOR U te DOEN"
+msgstr "U MOET DE KADUPUL-DATABASE HANDMATIG WIJZIGEN OM ALLE AANGEBRACHTE UPGRADEWIJZIGINGEN TERUG TE DRAAIEN.<br/>HET INSTALLATIEPROGRAMMA HEEFT GEEN METHODE OM DIT AUTOMATISCH VOOR U TE DOEN"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "U <b>MUST</b> importeert ook MySQL TimeZone-informatie in MySQL en verleent de Kadupul gebruiker SELECT toegang tot de mysql.time_zone_name tabel"
+msgstr "U <b>MOET</b> ook MySQL-tijdzone-informatie in MySQL importeren en de Kadupul-gebruiker SELECT-toegang verlenen tot de tabel mysql.time_zone_name"
 
 #: lib/installer.php
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
-msgstr "U <b>MUST</b> werkt dan \"include/config.php\" bij om naar de nieuwe database te verwijzen."
+msgstr "Vervolgens <b>MOET</b> u \"include/config.php\" bijwerken zodat dit naar de nieuwe database verwijst."
 
 #: lib/installer.php
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
@@ -14079,11 +14079,11 @@ msgstr "ICMP Ping succes (%s ms)"
 
 #: lib/ping.php
 msgid "ICMP Ping timed out"
-msgstr "ICMP ping timed out"
+msgstr "Time-out bij ICMP-ping"
 
 #: lib/ping.php
 msgid "ICMP ping Timed out"
-msgstr "ICMP ping timed out"
+msgstr "Time-out bij ICMP-ping"
 
 #: lib/ping.php
 msgid "Ping not performed due to setting."
@@ -14353,7 +14353,7 @@ msgstr "Minimale heartbeat"
 
 #: lib/rrd.php
 msgid "Optional Tuning Recommendations"
-msgstr "Data bron velden"
+msgstr "Optionele optimalisatie-aanbevelingen"
 
 #: lib/rrd.php
 msgid "PDP per Row"
@@ -14758,7 +14758,7 @@ msgstr "Vensterstart:  %s (%s)"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Non-Template"
-msgstr "Maak geaggregeerde grafiek vanaf template"
+msgstr "Poging om grafiek te maken vanaf niet-template"
 
 #: lib/template.php
 msgid "Attempting to Create Graph from Removed Graph Template"
@@ -15143,7 +15143,7 @@ msgstr "Versie %s"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "U bent uitgelogd uit Kadupul omdat de sessie is verlopen."
+msgstr "U bent uitgelogd bij Kadupul vanwege een statuswijziging van een externe dataverzamelaar"
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to a session timeout."
@@ -15151,7 +15151,7 @@ msgstr "U bent uitgelogd uit Kadupul omdat de sessie is verlopen."
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "U bent uitgelogd uit Kadupul omdat de sessie is verlopen."
+msgstr "U bent uitgelogd bij Kadupul vanwege een opschorting van het account."
 
 #: managers.php
 #, php-format
@@ -15251,7 +15251,7 @@ msgstr "SNMP-kennisgevingsontvanger [nieuw]"
 
 #: managers.php utilities.php
 msgid "SNMP Notification Receivers"
-msgstr "Geen SNMP notificatie ontvangers"
+msgstr "SNMP-meldingsontvangers"
 
 #: managers.php utilities.php
 msgid "Severity"
@@ -15279,11 +15279,11 @@ msgstr "U moet op zijn minst een melding object selecteren."
 
 #: package_import.php
 msgid "Automatically Trust Signer"
-msgstr "Automatisch toevoegen aan Kadupul"
+msgstr "Ondertekenaar automatisch vertrouwen"
 
 #: package_import.php templates_import.php
 msgid "Changes/Diffferences"
-msgstr "Wijzig apparaat"
+msgstr "Wijzigingen/Verschillen"
 
 #: package_import.php
 msgid "Check the package repository file for files that should exist and find the one that is missing"
@@ -15291,7 +15291,7 @@ msgstr "Controleer het pakketrepositorybestand op bestanden die zouden moeten be
 
 #: package_import.php
 msgid "Copyright"
-msgstr "rechts"
+msgstr "Auteursrecht"
 
 #: package_import.php
 msgid "Device class"
@@ -15303,7 +15303,7 @@ msgstr "Verschillen"
 
 #: package_import.php
 msgid "Error in Package"
-msgstr "Fout in data query"
+msgstr "Fout in pakket"
 
 #: package_import.php
 msgid "Error: Invalid file path."
@@ -15315,7 +15315,7 @@ msgstr "Bestandsverschillen voor:"
 
 #: package_import.php
 msgid "Filename"
-msgstr "Hernoem"
+msgstr "Bestandsnaam"
 
 #: package_import.php
 msgid "If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author."
@@ -15343,7 +15343,7 @@ msgstr "Pakketbestanden"
 
 #: package_import.php templates_import.php
 msgid "Orphans"
-msgstr "Overerfd"
+msgstr "Wezen"
 
 #: package_import.php
 msgid "Package"
@@ -15359,7 +15359,7 @@ msgstr "Informatie over pakketsleutel niet gevonden"
 
 #: package_import.php
 msgid "Package XML File Damaged."
-msgstr "Pakketbestanden"
+msgstr "Pakket-XML-bestand is beschadigd."
 
 #: package_import.php
 msgid "Packages Details"
@@ -15681,14 +15681,14 @@ msgstr "Statistieken opschonen"
 #: pollers.php
 msgid "Clear Statistics for Data Collector"
 msgid_plural "Clear Statistics for Data Collectors"
-msgstr[0] "De status van deze gegevensverzamelaar."
-msgstr[1] "De status van deze gegevensverzamelaar."
+msgstr[0] "Statistieken voor gegevensverzamelaar wissen"
+msgstr[1] "Statistieken voor gegevensverzamelaars wissen"
 
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "Klik op 'Doorgaan' om de volgende gegevensverzamelaar in te schakelen."
-msgstr[1] "Klik op 'Doorgaan' om de volgende gegevensverzamelaars in te schakelen."
+msgstr[0] "Klik op 'Doorgaan' om de gegevensverzamelaarstatistieken voor de gegevensverzamelaar te wissen."
+msgstr[1] "Klik op 'Doorgaan' om de gegevensverzamelaarstatistieken voor de gegevensverzamelaars te wissen."
 
 #: pollers.php
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
@@ -15736,7 +15736,7 @@ msgstr "Informatie over gegevensverzamelaars"
 
 #: pollers.php
 msgid "Data Collector Statistics cleared."
-msgstr "Gegevensbronnen Statistieken"
+msgstr "Gegevensverzamelaarstatistieken gewist."
 
 #: pollers.php
 msgid "Delete Data Collector"
@@ -15826,7 +15826,7 @@ msgstr "Externe databasepoort"
 
 #: pollers.php
 msgid "Remote Database Retries"
-msgstr "Externe database gebruiker"
+msgstr "Herpogingen voor externe database"
 
 #: pollers.php
 msgid "Remote Database SSL"
@@ -15971,7 +15971,7 @@ msgstr "Het aantal scriptserveroproepen dat aan deze gegevensverzamelaar is geko
 
 #: pollers.php
 msgid "The number of times to attempt to retry to connect to the remote database."
-msgstr "De gebruikersnaam om verbinding te maken met de externe database."
+msgstr "Het aantal pogingen om opnieuw verbinding te maken met de externe database."
 
 #: pollers.php
 msgid "The polling sync interval in use.  This setting will affect how often this poller is checked and updated."
@@ -16114,7 +16114,7 @@ msgstr "Nadat u het toestemmingsmodel voor grafieken hebt gewijzigd, moet u uw m
 
 #: settings.php
 msgid "All Templates Selected"
-msgstr "Alle templates geselected"
+msgstr "Alle templates geselecteerd"
 
 #: settings.php
 msgid "Changing Permission Model Warning"
@@ -16214,8 +16214,8 @@ msgstr[1] "Klik op 'Volgende' om alle volgende locaties te verwijderen. Let op, 
 #: sites.php
 msgid "Click 'Continue' to Duplicate the following Site."
 msgid_plural "Click 'Continue' to Duplicate all following Sites."
-msgstr[0] "Klik op 'Doorgaan' om de volgende boom te verwijderen."
-msgstr[1] "Klik op 'Doorgaan' om de volgende bomen te verwijderen."
+msgstr[0] "Klik op 'Doorgaan' om de volgende locatie te dupliceren."
+msgstr[1] "Klik op 'Doorgaan' om alle volgende locaties te dupliceren."
 
 #: sites.php
 msgid "Country"
@@ -16527,7 +16527,7 @@ msgstr "FOUT"
 
 #: templates_import.php
 msgid "Error in Template"
-msgstr "Exporteer templates"
+msgstr "Fout in sjabloon"
 
 #: templates_import.php
 msgid "Failed to access temporary folder, import functionality is disabled"
@@ -16535,7 +16535,7 @@ msgstr "Geen toegang tot de tijdelijke map, importfunctionaliteit is uitgeschake
 
 #: templates_import.php
 msgid "File Name"
-msgstr "Veldnaam"
+msgstr "Bestandsnaam"
 
 #: templates_import.php
 msgid "Import Files [ If Files are missing, locate and install before using ]"
@@ -16556,7 +16556,7 @@ msgstr "Voldaan: %d"
 
 #: templates_import.php
 msgid "Not Readable"
-msgstr "Niet schrijfbaar"
+msgstr "Niet leesbaar"
 
 #: templates_import.php
 #, php-format
@@ -16795,7 +16795,7 @@ msgstr "Bomen [nieuw]"
 #: tree.php
 msgctxt "dropdown action"
 msgid "Un-Lock"
-msgstr "Geblokkeerd"
+msgstr "Ontgrendelen"
 
 #: tree.php
 msgctxt "dropdown action"
@@ -16805,8 +16805,8 @@ msgstr "Niet meer publiceren"
 #: tree.php
 msgid "Un-lock Tree"
 msgid_plural "Un-lock Trees"
-msgstr[0] "Onuitgegeven boom"
-msgstr[1] "Niet-publiceer bomen"
+msgstr[0] "Boom ontgrendelen"
+msgstr[1] "Bomen ontgrendelen"
 
 #: tree.php
 msgid "Un-publish Tree"
@@ -16857,11 +16857,11 @@ msgstr "< 1 week geleden"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
-msgstr "<b>Note:</b> Systeem Grafiekbeleid is 'Restrictief', wat betekent dat de gebruiker toegang moet hebben tot de grafiek of het apparaat en het grafieksjabloon om toegang te krijgen tot de grafiek."
+msgstr "<b>Opmerking:</b> Het systeemgrafiekbeleid is 'Apparaat', wat betekent dat de gebruiker toegang moet hebben tot de grafiek of het apparaat om toegang te krijgen tot de grafiek"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
-msgstr "<b>Let op:</b> Grafiekrechten zijn permissief. Dit betekent dat de gebruiker op zijn minst toegang moet hebben tot een grafiek, apparaat of grafiektemplate om toegang te krijgen tot de grafiek"
+msgstr "<b>Opmerking:</b> Het systeemgrafiekbeleid is 'Grafiektemplate', wat betekent dat de gebruiker toegang moet hebben tot de grafiek of het grafiektemplate om toegang te krijgen tot de grafiek"
 
 #: user_admin.php user_group_admin.php
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
@@ -17060,7 +17060,7 @@ msgstr "Laatste login"
 
 #: user_admin.php user_group_admin.php
 msgid "Legacy Permissions"
-msgstr "Controleer rechten"
+msgstr "Verouderde rechten"
 
 #: user_admin.php
 msgid "Member"
@@ -17216,11 +17216,11 @@ msgstr "Gebruikersnaam:"
 
 #: user_admin.php
 msgid "You are not allowed to delete the current login account"
-msgstr "U mag uw wachtwoord niet wijzigen."
+msgstr "U mag het huidige inlogaccount niet verwijderen"
 
 #: user_admin.php
 msgid "You are not allowed to disable the current login account"
-msgstr "U mag uw wachtwoord niet wijzigen."
+msgstr "U mag het huidige inlogaccount niet uitschakelen"
 
 #: user_admin.php
 msgid "You are not allowed to disable the primary administrator account"
@@ -17330,7 +17330,7 @@ msgstr "Maak het geselecteerde domein standaard"
 
 #: user_domains.php
 msgid "Mode which cacti will attempt to authenticate against the LDAP server.<blockquote><i>No Searching</i> - No Distinguished Name (DN) searching occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><i>Anonymous Searching</i> - Attempts to search for username against LDAP directory via anonymous binding to locate the users Distinguished Name (DN).<br><br><i>Specific Searching</i> - Attempts search for username against LDAP directory via Specific Distinguished Name (DN) and Specific Password for binding to locate the users Distinguished Name (DN)."
-msgstr "Modus die cactussen proberen te authenticeren tegen de LDAP-server.<blockquote><i><i>No Searching</i> - No Distinguished Name (DN) search occurs, just attempt to bind with the provided Distinguished Name (DN) format.<br><br><br><i>Anoniem zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via anonieme binding om de gebruikers Distinguished Name (DN) te vinden.<br><br><i><i>Specifiek zoeken</i> - Pogingen om te zoeken naar een gebruikersnaam in de map LDAP via Specific Distinguished Name (DN) en Specific Password for binding om de gebruikers Distinguished Name (DN) te vinden."
+msgstr "Modus waarin Cacti probeert te authenticeren bij de LDAP-server.<blockquote><i>Niet zoeken</i> - Er wordt niet gezocht naar een Distinguished Name (DN); er wordt alleen geprobeerd te binden met de opgegeven opmaak voor de Distinguished Name (DN).<br><br><i>Anoniem zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via anonieme binding om de Distinguished Name (DN) van de gebruiker te vinden.<br><br><i>Specifiek zoeken</i> - Probeert de gebruikersnaam in de LDAP-directory te zoeken via een specifieke Distinguished Name (DN) en een specifiek wachtwoord voor binding om de Distinguished Name (DN) van de gebruiker te vinden."
 
 #: user_domains.php
 msgid "No User Domains Found"
@@ -17659,7 +17659,7 @@ msgstr "Verhoogde opslagstatistieken"
 
 #: utilities.php
 msgid "Boost Utilities"
-msgstr "Verhoogt nutsbedrijven"
+msgstr "Boost-hulpprogramma's"
 
 #: utilities.php
 msgid "Cache Directory:"
@@ -17740,7 +17740,7 @@ msgstr "Data Query Cache-items"
 
 #: utilities.php
 msgid "Data Source Statistics Purged."
-msgstr "Gegevensbronnen Statistieken"
+msgstr "Gegevensbronstatistieken opgeschoond."
 
 #: utilities.php
 msgid "Data Source Statistics Utilities"
@@ -17872,7 +17872,7 @@ msgstr "Kadupul technische support pagina. Gebruikt door developers en technisch
 
 #: utilities.php
 msgid "Last End Time:"
-msgstr "Laatste starttijd:"
+msgstr "Laatste eindtijd:"
 
 #: utilities.php
 msgid "Last Run Duration:"
@@ -17924,7 +17924,7 @@ msgstr "Max. verbindingsgeheugen mogelijk"
 
 #: utilities.php
 msgid "Max Core Memory Possible"
-msgstr "Maximaal toegestaan Pollergeheugen:"
+msgstr "Maximaal mogelijk kerngeheugen"
 
 #: utilities.php
 msgid "Max OID"
@@ -17944,7 +17944,7 @@ msgstr "Max. draden"
 
 #: utilities.php
 msgid "Max Total Memory Possible"
-msgstr "Maximaal toegestaan Pollergeheugen:"
+msgstr "Maximaal mogelijk totaalgeheugen"
 
 #: utilities.php
 msgid "Maximum Allowed Runtime:"
@@ -17956,7 +17956,7 @@ msgstr "Maximum aantal rijen:"
 
 #: utilities.php
 msgid "Minimum Connections:"
-msgstr "Test verbinding"
+msgstr "Minimaal aantal verbindingen:"
 
 #: utilities.php
 msgid "MySQL Table Information - Sizes in KBytes"
@@ -18077,7 +18077,7 @@ msgstr "Proces: %d"
 
 #: utilities.php
 msgid "Procs: "
-msgstr "1 Proces"
+msgstr "Proc.: "
 
 #: utilities.php
 msgctxt "Button: delete all table entries"
@@ -18086,7 +18086,7 @@ msgstr "Legen"
 
 #: utilities.php
 msgid "Purge Data Source Statistics"
-msgstr "Gegevensbronnen Statistieken"
+msgstr "Gegevensbronstatistieken opschonen"
 
 #: utilities.php
 msgid "Purge User Log"
@@ -18163,7 +18163,7 @@ msgstr "Vernieuwingsinterval"
 
 #: utilities.php
 msgid "Remaining Data Sources:"
-msgstr "Debugging Gegevensbron"
+msgstr "Resterende gegevensbronnen:"
 
 #: utilities.php
 msgid "Result"
@@ -18315,7 +18315,7 @@ msgstr "Totale gegevensbronnen:"
 
 #: utilities.php
 msgid "Total Poller Items:"
-msgstr "Poller gecachede items"
+msgstr "Totaal aantal poller-items:"
 
 #: utilities.php
 #, php-format

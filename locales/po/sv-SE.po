@@ -174,7 +174,7 @@ msgstr "Klicka på \"Fortsätt\" för att kombinera följande Aggregate Graph (e
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to convert the following Aggregate Graph(s) into a normal Graph."
-msgstr "Klicka på \"Fortsätt\" för att kombinera följande Aggregate Graph (er) till en enda Aggregate Graph."
+msgstr "Klicka på 'Fortsätt' för att konvertera följande aggregatgraf(er) till en normal graf."
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to delete the following Aggregate Graph(s)."
@@ -186,7 +186,7 @@ msgstr "Klicka på \"Fortsätt\" för att avbryta följande graf (er) från aggr
 
 #: aggregate_graphs.php
 msgid "Click 'Continue' to place the following Aggregate Graph(s) under the Tree Branch."
-msgstr "Klicka på \"Fortsätt\" för att placera följande Aggregate Graph (s) under Tree Branch."
+msgstr "Klicka på 'Fortsätt' för att placera följande aggregatgraf(er) under trädgrenen."
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
@@ -203,7 +203,7 @@ msgstr "Konvertera till normalgraf"
 
 #: aggregate_graphs.php
 msgid "Convert to normal Graph(s)"
-msgstr "Konvertera till LINE1-graf"
+msgstr "Konvertera till normal(a) graf(er)"
 
 #: aggregate_graphs.php
 msgid "Create New Aggregate from Aggregates"
@@ -245,11 +245,11 @@ msgstr "Detaljer"
 
 #: aggregate_graphs.php
 msgid "Dis-Associate Graph(s)"
-msgstr "Dis-Associate Graph (s)"
+msgstr "Koppla bort graf(er)"
 
 #: aggregate_graphs.php
 msgid "Disassociate with Aggregate"
-msgstr "Skilj på Aggregate och Aggregate"
+msgstr "Koppla bort från aggregat"
 
 #: aggregate_graphs.php aggregate_templates.php automation_devices.php
 #: automation_graph_rules.php automation_networks.php automation_snmp.php
@@ -300,7 +300,7 @@ msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat m�
 
 #: aggregate_graphs.php
 msgid "In order to migrate the Aggregate Graphs below use an Aggregate Template, one must already exist.  Please press 'Return' and then first create your Aggregate Template before retrying."
-msgstr "För att migrera Aggregatgraferna nedan till ett Mallbaserat aggregat måste de bara använda en grafmall. Vänligen tryck på &#39;Retur&#39; och välj sedan endast Aggregatgraf som använder samma grafmall."
+msgstr "För att migrera aggregatgraferna nedan till att använda en aggregatmall måste en sådan redan finnas. Tryck på 'Tillbaka' och skapa först din aggregatmall innan du försöker igen."
 
 #: aggregate_graphs.php
 msgid "Included in Aggregate"
@@ -536,7 +536,7 @@ msgstr "Inställningarna för aggregatmallen kunde inte bekräftas. Kontrollera 
 
 #: aggregate_templates.php
 msgid "Click 'Continue' to Delete the following Aggregate Graph Template(s)."
-msgstr "Klicka på \"Fortsätt\" för att ta bort följande Aggregate Graph Template (s)."
+msgstr "Klicka på 'Fortsätt' för att ta bort följande aggregatgrafmall(ar)."
 
 #: aggregate_templates.php data_queries.php data_sources.php data_templates.php
 #: graph_templates.php host_templates.php
@@ -864,7 +864,7 @@ msgstr "Tillgänglighetsmetod"
 
 #: automation_devices.php
 msgid "Click 'Continue' to Delete the following Discovered device(s)."
-msgstr "Klicka på \"Fortsätt\" för att lägga till följande Upptäckta enheter."
+msgstr "Klicka på 'Fortsätt' för att ta bort följande upptäckta enhet(er)."
 
 #: automation_devices.php
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -965,7 +965,7 @@ msgstr "OS"
 
 #: automation_devices.php pollers.php
 msgid "Pollers"
-msgstr "Opinionsundersökare"
+msgstr "Datainsamlare"
 
 #: automation_devices.php data_debug.php lib/clog_webapi.php managers.php
 msgid "Purge"
@@ -1333,7 +1333,7 @@ msgstr "Automatisering SNMP-alternativ"
 
 #: automation_snmp.php
 msgid "Automation SNMP Options has been Duplicated."
-msgstr "Automation SNMP Options har duplicerats."
+msgstr "SNMP-alternativ för automatisering har duplicerats."
 
 #: automation_snmp.php
 msgid "Click 'Continue' to delete the following SNMP Option(s)."
@@ -1695,7 +1695,7 @@ msgstr "Felsökare för datakälla [ Automatisk uppdatering till RRDfile-uppdate
 
 #: data_debug.php
 msgid "Data Source debug received an invalid Data Source ID."
-msgstr "Data Source debug fick ett ogiltigt ID för datakällan."
+msgstr "Felsökning av datakälla tog emot ett ogiltigt datakäll-ID."
 
 #: data_debug.php
 msgid "Data Source debug started."
@@ -1752,7 +1752,7 @@ msgstr "Avgör om RRD-filen matchar datakällans mall."
 
 #: data_debug.php
 msgid "Did the poller receive valid data?"
-msgstr "Fick röstmottagaren giltiga data?"
+msgstr "Tog datainsamlaren emot giltiga data?"
 
 #: data_debug.php
 msgid "Does the RRDfile Exist?"
@@ -1997,7 +1997,7 @@ msgstr "Namn på datainmatning"
 
 #: data_input.php
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
-msgstr "Data Inputs som är i bruk kan inte raderas. Används definieras som att det refereras till antingen av en datakälla eller en datamall."
+msgstr "Datainmatningar som används kan inte tas bort. Med att den används avses att den refereras av antingen en datakälla eller en datamall."
 
 #: data_input.php
 msgid "Delete Data Input Field"
@@ -2148,11 +2148,11 @@ msgstr "Associerade grafmallar"
 #: data_queries.php
 #, php-format
 msgid "Associated Graph/Data Templates [edit: %s]"
-msgstr "Associated Graph/Data Templates [redigera: %s]"
+msgstr "Associerade graf-/datamallar [redigera: %s]"
 
 #: data_queries.php
 msgid "Associated Graph/Data Templates [new]"
-msgstr "Associated Graph/Data Templates [ny]"
+msgstr "Associerade graf-/datamallar [ny]"
 
 #: data_queries.php
 msgid "Association Read Only until XML file located"
@@ -2375,8 +2375,8 @@ msgstr "Ändra enhet"
 #: data_sources.php
 msgid "Choose a new Device for this Data Source and click 'Continue'."
 msgid_plural "Choose a new Device for these Data Sources and click 'Continue'"
-msgstr[0] "Välj en ny enhet för den här datakällan och klicka på \"Fortsätt\".Välj en ny enhet för dessa datakällor och klicka på \"Fortsätt\""
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Välj en ny enhet för den här datakällan och klicka på 'Fortsätt'."
+msgstr[1] "Välj en ny enhet för dessa datakällor och klicka på 'Fortsätt'"
 
 #: data_sources.php
 msgid "Choose the Device that this Data Source belongs to."
@@ -2391,20 +2391,20 @@ msgstr[1] "Klicka på \"Fortsätt\" för att radera följande datakällor"
 #: data_sources.php
 msgid "Click 'Continue' to disable the following Data Source."
 msgid_plural "Click 'Continue' to disable all following Data Sources."
-msgstr[0] "Klicka på \"Fortsätt\" för att inaktivera följande datakälla.Klicka på \"Fortsätt\" för att inaktivera alla följande datakällor."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande datakälla."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera alla följande datakällor."
 
 #: data_sources.php
 msgid "Click 'Continue' to enable the following Data Source."
 msgid_plural "Click 'Continue' to enable all following Data Sources."
-msgstr[0] "Klicka på \"Fortsätt\" för att aktivera följande datakälla.Klicka på \"Fortsätt\" för att aktivera alla följande datakällor."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande datakälla."
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera alla följande datakällor."
 
 #: data_sources.php
 msgid "Click 'Continue' to re-apply the suggested name to the following Data Source."
 msgid_plural "Click 'Continue' to re-apply the suggested names to all following Data Sources."
-msgstr[0] "Klicka på \"Fortsätt\" för att tillämpa det föreslagna namnet på följande datakälla.Klicka på Fortsätt för att tillämpa de föreslagna namnen på alla följande datakällor."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att tillämpa det föreslagna namnet på nytt på följande datakälla."
+msgstr[1] "Klicka på 'Fortsätt' för att tillämpa de föreslagna namnen på nytt på alla följande datakällor."
 
 #: data_sources.php
 msgid "Custom Data"
@@ -2706,7 +2706,7 @@ msgstr "Mallar för data"
 #: data_templates.php
 #, php-format
 msgid "Data Templates [edit: %s]"
-msgstr "Data Templates [redigera: %s]"
+msgstr "Datamallar [redigera: %s]"
 
 #: data_templates.php
 msgid "Data Templates [new]"
@@ -2726,7 +2726,7 @@ msgstr "Ta bort datamall(ar)"
 
 #: data_templates.php
 msgid "Duplicate Data Template(s)"
-msgstr "Duplicate Data Template (s)"
+msgstr "Duplicera datamall(ar)"
 
 #: data_templates.php
 msgid "Edit Data Input Method."
@@ -3157,7 +3157,7 @@ msgstr "DU HAR INTE RÄTTIGHETER FÖR LISTA VISNING"
 
 #: graph_view.php
 msgid "YOU DO NOT HAVE RIGHTS FOR PREVIEW VIEW"
-msgstr "DU HAR INTE RÄTTIGHETER FÖR FÖRSIKTIGHETSFRÅGOR"
+msgstr "DU HAR INTE RÄTTIGHETER FÖR FÖRHANDSGRANSKNINGSVY"
 
 #: graph_view.php
 msgid "YOU DO NOT HAVE RIGHTS FOR TREE VIEW"
@@ -3370,7 +3370,7 @@ msgstr "Grafhantering [ Anpassad graflista tillämpad - Töm för att nollställ
 
 #: graphs.php
 msgid "Graph Management [ Non Device Based ]"
-msgstr "Graph Management [ Icke-enhetsbaserad ]"
+msgstr "Grafhantering [ Icke-enhetsbaserad ]"
 
 #: graphs.php
 msgid "Graph Source"
@@ -3455,7 +3455,7 @@ msgstr "Det valda trädet är inte tillgängligt."
 
 #: graphs.php
 msgid "There are presently no Aggregate Templates defined for this Graph Template.  Please either first create an Aggregate Template for the selected Graphs Graph Template and try again, or simply crease an un-templated Aggregate Graph."
-msgstr "Det finns för närvarande inga aggregerade mallar definierade för denna grafmall. Var god och skapar först en sammansatt mall för den valda grafmallen och försök igen, eller helt enkelt skapa en un-templated Aggregate Graph."
+msgstr "Det finns för närvarande inga aggregerade mallar definierade för denna grafmall. Skapa först en aggregerad mall för de valda grafernas grafmall och försök igen, eller skapa helt enkelt en aggregerad graf utan mall."
 
 #: graphs.php
 msgid "Turn Off Graph Debug Mode."
@@ -3665,7 +3665,7 @@ msgstr "Klicka på \"Fortsätt\" för att ta bort följande Graph Template komme
 
 #: host_templates.php
 msgid "Click 'Continue' to duplicate the following Device Template(s).  Optionally change the title for the new Device Template(s)."
-msgstr "Klicka på \"Fortsätt\" för att duplicera följande Device Template (s). Ändra eventuellt titeln för den nya Device Template (s)."
+msgstr "Klicka på 'Fortsätt' för att duplicera följande enhetsmall(ar). Ändra valfritt titeln för den eller de nya enhetsmallarna."
 
 #: host_templates.php
 #, php-format
@@ -3715,7 +3715,7 @@ msgstr "Enheter som använder"
 
 #: host_templates.php
 msgid "Duplicate Device Template(s)"
-msgstr "Duplicate Device Template (s)"
+msgstr "Duplicera enhetsmall(ar)"
 
 #: host_templates.php
 #, php-format
@@ -4089,7 +4089,7 @@ msgstr "Alla liknande datakällor (inkludera inte duplikat)"
 
 #: include/global_arrays.php
 msgid "All Similar Data Sources (Do not Include Duplicates) Polling Interval"
-msgstr "Alla liknande datakällor (inkludera inte dubbletter) Polling Interval"
+msgstr "Alla liknande datakällor (inkludera inte dubbletter) pollningsintervall"
 
 #: include/global_arrays.php
 msgid "All Similar Data Sources (Include Duplicates)"
@@ -4396,7 +4396,7 @@ msgstr "Datainmatning sparad.  Du måste uppdatera de datamallar som hänvisar t
 
 #: include/global_arrays.php
 msgid "Data Input for method does not appear to be whitelisted."
-msgstr "Data Input for method verkar inte vara vitlistad."
+msgstr "Datainmatning för metoden verkar inte vara vitlistad."
 
 #: include/global_arrays.php
 msgid "Data Profiles"
@@ -6711,7 +6711,7 @@ msgstr "Inmatning Typ"
 
 #: include/global_form.php
 msgid "Insert Hard Return"
-msgstr "Insert Hård retur"
+msgstr "Infoga hård radbrytning"
 
 #: include/global_form.php
 msgid "Internal Data Source Name"
@@ -7563,7 +7563,7 @@ msgstr ".  Detta begränsas av php-inställningen \"max_input_vars\", för närv
 
 #: include/global_settings.php
 msgid "1 Attempt"
-msgstr "Försök till brott"
+msgstr "1 försök"
 
 #: include/global_settings.php
 msgid "1 Change"
@@ -7995,7 +7995,7 @@ msgstr "Bredd på Debug-utgång"
 
 #: include/global_settings.php
 msgid "Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>"
-msgstr "Standard Tillgänglighet/Reachability för alla nya enheter.  Den metod som Kadupul kommer att använda för att avgöra om en enhet är tillgänglig för pollning. <br><i>OBS: Vi rekommenderar att SNMP alltid väljs som ett minimum.</i>"
+msgstr "Standardtillgänglighet/nåbarhet för alla nya enheter. Den metod som Kadupul använder för att avgöra om en enhet är tillgänglig för pollning. <br><i>OBS: Det rekommenderas att åtminstone SNMP alltid väljs.</i>"
 
 #: include/global_settings.php
 msgid "Default Font"
@@ -8439,7 +8439,7 @@ msgstr "Inställningar för graf/datakälla/datafrågeställning"
 
 #: include/global_settings.php
 msgid "Graphs Auto Unlock"
-msgstr "Grafer Auto Unlock"
+msgstr "Automatisk upplåsning av grafer"
 
 #: include/global_settings.php
 msgid "Graphs Per Page"
@@ -9175,7 +9175,7 @@ msgstr "Kräv gruppmedlemskap"
 
 #: include/global_settings.php
 msgid "Require Mix Case"
-msgstr "Kräver blandning Case"
+msgstr "Kräv blandat skiftläge"
 
 #: include/global_settings.php
 msgid "Require Number"
@@ -9355,7 +9355,7 @@ msgstr "Om LDAP ska verifiera TLS-certifikat när de tas emot av klienten.  Dema
 
 #: include/global_settings.php
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "Ska datakällans statistik samlas in för detta Kadupul-system?"
+msgstr "Ska RRDfile-kontroll aktiveras för detta Kadupul-system?"
 
 #: include/global_settings.php
 msgid "Should image caching be enabled?"
@@ -9495,7 +9495,7 @@ msgstr "Systeminställning"
 
 #: include/global_settings.php
 msgid "TCP port for LDAPS for SSL communications.  Default is 636."
-msgstr "TCP / UDP-port för icke-SSL-kommunikation."
+msgstr "TCP-port för LDAPS för SSL-kommunikation. Standard är 636."
 
 #: include/global_settings.php
 msgid "TCP port for Non-SSL communications including LDAP + TLS.  Default is 389."
@@ -9539,7 +9539,7 @@ msgstr "Bastid för när Spike-borttagningen ska ske.  Om du t.ex. använder \"1
 
 #: include/global_settings.php
 msgid "The Bind Timeout in seconds."
-msgstr "Vänligen ange SMTP-timeout på några sekunder."
+msgstr "Bind-timeout i sekunder."
 
 #: include/global_settings.php
 msgid "The DNS hostname or IP address of the RRDtool backup proxy server if proxy is running in MSR mode."
@@ -9575,7 +9575,7 @@ msgstr "Trädets minsta bredd som trädet ska kontraheras till."
 
 #: include/global_settings.php
 msgid "The Network Connect Timeout in seconds."
-msgstr "Vänligen ange SMTP-timeout på några sekunder."
+msgstr "Timeout för nätverksanslutning i sekunder."
 
 #: include/global_settings.php
 msgid "The Pango font description to use for Graph Axis items, such as DejaVu Sans"
@@ -9751,7 +9751,7 @@ msgstr "Den maximala tid som Kadupuls skript Data Source Statistics kan köras u
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Den maximala tiden ett Kadupuls Spikekill-skript kan köras utan att generera ett timeout-fel och dödas."
+msgstr "Den maximala tiden Kadupuls RRD-filkontrollskript kan köras utan att generera ett timeout-fel och dödas."
 
 #: include/global_settings.php
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
@@ -9819,7 +9819,7 @@ msgstr "Antalet samtidiga Poller Command-processer.  Det kommer att finnas högs
 
 #: include/global_settings.php
 msgid "The number of concurrent RRDfile check processes to use to use to process all of rrd files."
-msgstr "Antalet samtidiga boostprocesser som ska användas för att bearbeta alla RRD i boost-tabellen."
+msgstr "Antalet samtidiga processer för RRD-filkontroll som ska användas för att bearbeta alla RRD-filer."
 
 #: include/global_settings.php
 msgid "The number of concurrent boost processes to use to use to process all of the RRDs in the boost table."
@@ -10786,7 +10786,7 @@ msgstr "Huvudlinjer"
 
 #: lib/clog_webapi.php utilities.php
 msgid "Log Filters"
-msgstr "Log filtrar"
+msgstr "Loggfilter"
 
 #: lib/clog_webapi.php
 #, php-format
@@ -10868,11 +10868,11 @@ msgstr "Auto Bulk Walk Storlek vald."
 
 #: lib/data_query.php
 msgid "Automation Executing for Data Query complete"
-msgstr "Automation Executing för Data Query komplett"
+msgstr "Körning av automatisering för datafråga slutförd"
 
 #: lib/data_query.php
 msgid "Automation Execution for Data Query complete"
-msgstr "Automation Execution för Data Query komplett"
+msgstr "Utförande av automatisering för datafråga slutförd"
 
 #: lib/data_query.php
 #, php-format
@@ -10913,7 +10913,7 @@ msgstr "Kunde inte tolka översättningskartan (rewrite_value)"
 
 #: lib/data_query.php
 msgid "Data Query returned no indexes."
-msgstr "Data Query returnerade inga index."
+msgstr "Datafrågan returnerade inga index."
 
 #: lib/data_query.php
 #, php-format
@@ -11081,7 +11081,7 @@ msgstr "Fick SNMP get-resultat för data @ '%s' [värde='%s'] (index: %s)"
 
 #: lib/data_query.php
 msgid "Index Association with Local Data complete"
-msgstr "Index Association with Local Data komplett"
+msgstr "Indexkoppling med lokala data slutförd"
 
 #: lib/data_query.php
 #, php-format
@@ -11116,7 +11116,7 @@ msgstr "Ogiltigt host_id: %s"
 #: lib/data_query.php
 #, php-format
 msgid "List of indexes filtered by value @ '%s' Index Count: %s"
-msgstr "Lista över index filtrerade efter värde @ '%s' Index Count: %s"
+msgstr "Lista över index filtrerade efter värde @ '%s' Antal index: %s"
 
 #: lib/data_query.php
 #, php-format
@@ -11685,7 +11685,7 @@ msgstr "Mörkt färgläge"
 
 #: lib/html.php
 msgid "Dashboards"
-msgstr "Dölj Kadupul Dashboard"
+msgstr "Instrumentpaneler"
 
 #: lib/html.php lib/reports.php
 msgid "Data Query:"
@@ -12065,7 +12065,7 @@ msgstr "Försök till SQL-injektion"
 #: lib/html_form_template.php
 #, php-format
 msgid "Data Query Data Sources must be created through %s"
-msgstr "Data Query Datakällor måste skapas via %s"
+msgstr "Datakällor för datafrågor måste skapas via %s"
 
 #: lib/html_form_template.php
 msgid "There was a SQL Injection attempted on the page"
@@ -13037,7 +13037,7 @@ msgstr "Databas: <b>%s</b>"
 
 #: lib/installer.php
 msgid "Default Automation Network"
-msgstr "Standard Automation Network"
+msgstr "Standardnätverk för automatisering"
 
 #: lib/installer.php
 msgid "Default Options"
@@ -13844,7 +13844,7 @@ msgstr "Uppdatering av automationsalternativ %s"
 
 #: lib/installer.php
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
-msgstr "Det är inte tillrådligt att uppdatera mallar som du redan har gjort ändringar i.  Uppgraderingen av mallarna tar INTE bort ändringar i Graph- och Data Templates, och kan leda till oväntat beteende.  Om du inte har gjort några ändringar i någon Graph, Data Query eller Data Template bör det dock inte ha någon effekt att återimportera paketet.  I så fall måste du \"Sync Graphs\" för att ta bort mallarna efter uppdateringen."
+msgstr "Det är inte tillrådligt att uppdatera mallar som du redan har gjort ändringar i.  Uppgraderingen av mallarna tar INTE bort ändringar i graf- och datamallar och kan leda till oväntat beteende.  Om du inte har gjort några ändringar i någon grafmall, datafråga eller datamall bör det dock inte ha någon effekt att återimportera paketet.  I så fall måste du använda 'Synkronisera grafer' från mallarna efter uppdateringen."
 
 #: lib/installer.php
 #, php-format
@@ -15148,7 +15148,7 @@ msgstr "Du har blivit utloggad av Kadupul på grund av en session timeout."
 
 #: logout.php
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "Du har blivit utloggad av Kadupul på grund av en session timeout."
+msgstr "Du har blivit utloggad från Kadupul på grund av en kontoavstängning."
 
 #: managers.php
 #, php-format
@@ -15168,14 +15168,14 @@ msgstr "Klicka på Fortsätt för att inaktivera vidarebefordran av följande an
 #: managers.php
 msgid "Click 'Continue' to disable the following Notification Receiver"
 msgid_plural "Click 'Continue' to disable following Notification Receiver"
-msgstr[0] "Klicka på \"Fortsätt\" för att inaktivera följande meddelandemottagareKlicka på \"Fortsätt\" för att inaktivera följande Notifieringsmottagare"
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande meddelandemottagare"
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande meddelandemottagare"
 
 #: managers.php
 msgid "Click 'Continue' to enable the following Notification Receiver"
 msgid_plural "Click 'Continue' to enable following Notification Receiver"
-msgstr[0] "Klicka på \"Fortsätt\" för att aktivera följande Meddelande MottagareKlicka på \"Fortsätt\" för att aktivera följande Notifieringsmottagare"
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande meddelandemottagare"
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera följande meddelandemottagare"
 
 #: managers.php
 msgid "Click 'Continue' to forward the following Notification Objects to this Notification Receiver."
@@ -15320,11 +15320,11 @@ msgstr "Om det markeras kommer Kadupul automatiskt att lita på undertecknaren f
 
 #: package_import.php
 msgid "Import Package Filenames [ None selected imports all, Check to import selectively ]"
-msgstr "Import Package Filenames [ None selected importerar alla, Check för att importera selektivt ]"
+msgstr "Importera paketfilnamn [ Inget valt importerar alla, markera för att importera selektivt ]"
 
 #: package_import.php
 msgid "Import Package Templates [ None selected imports all, Check to import selectively ]"
-msgstr "Import Package Templates [ None selected importerar alla, Check för att importera selektivt ]"
+msgstr "Importera paketmallar [ Inget valt importerar alla, markera för att importera selektivt ]"
 
 #: package_import.php
 msgid "In order to use this Plugin, you must first run the <b><i class=\"deviceUp\">genkey.php</i></b> script in the plugin directory.  Once that is complete, you will have a public and private key used to sign your packages."
@@ -15684,14 +15684,14 @@ msgstr[1] "Tydlig statistik för datainsamlare"
 #: pollers.php
 msgid "Click 'Continue' to Clear Data Collector Statistics for the Data Collector."
 msgid_plural "Click 'Continue' to Clear DAta Collector Statistics for the Data Collectors."
-msgstr[0] "Klicka på \"Fortsätt\" för att aktivera följande datasamlare.Klicka på \"Fortsätt\" för att aktivera följande datainsamlare."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att rensa datainsamlarstatistik för datainsamlaren."
+msgstr[1] "Klicka på 'Fortsätt' för att rensa datainsamlarstatistik för datainsamlarna."
 
 #: pollers.php
 msgid "Click 'Continue' to Synchronize the Remote Data Collector for Offline Operation."
 msgid_plural "Click 'Continue' to Synchronize the Remote Data Collectors for Offline Operation."
-msgstr[0] "Klicka på \"Fortsätt\" för att synkronisera fjärrdatasamlaren för offline-användning.Klicka på \"Fortsätt\" för att synkronisera fjärrdatasamlare för offline-användning."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att synkronisera fjärrdatainsamlaren för offlineanvändning."
+msgstr[1] "Klicka på 'Fortsätt' för att synkronisera fjärrdatainsamlarna för offlineanvändning."
 
 #: pollers.php
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
@@ -15702,14 +15702,14 @@ msgstr[1] "Klicka på \"Fortsätt\" för att radera alla följande datainsamlare
 #: pollers.php
 msgid "Click 'Continue' to disable the following Data Collector."
 msgid_plural "Click 'Continue' to disable the following Data Collectors."
-msgstr[0] "Klicka på \"Fortsätt\" för att inaktivera följande datasamlare.Klicka på \"Fortsätt\" för att inaktivera följande datainsamlare."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande datainsamlare."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande datainsamlare."
 
 #: pollers.php
 msgid "Click 'Continue' to enable the following Data Collector."
 msgid_plural "Click 'Continue' to enable the following Data Collectors."
-msgstr[0] "Klicka på \"Fortsätt\" för att aktivera följande datasamlare.Klicka på \"Fortsätt\" för att aktivera följande datainsamlare."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande datainsamlare."
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera följande datainsamlare."
 
 #: pollers.php
 msgid "Collection Settings"
@@ -16107,7 +16107,7 @@ msgstr "Total storlek [MB]:"
 
 #: settings.php
 msgid "After you change the Graph Permission Model you should audit your Users and User Groups Effective Graph permission to ensure that you still have adequate control of your Graphs.  NOTE: If you want to restrict all Graphs at the Device or Graph Template Graph Permission Model, the default Graph Policy should be set to 'Deny'."
-msgstr "När du har ändrat Graph Permission Model bör du granska dina användares och användargruppers effektiva Graph-behörighet för att säkerställa att du fortfarande har tillräcklig kontroll över dina Graphs.  OBS: Om du vill begränsa alla grafer i enhetens eller grafmallens grafbehörighetsmodell ska standardprincipen för grafer vara inställd på \"Deny\"."
+msgstr "När du har ändrat grafbehörighetsmodellen bör du granska dina användares och användargruppers effektiva grafbehörighet för att säkerställa att du fortfarande har tillräcklig kontroll över dina grafer. OBS: Om du vill begränsa alla grafer i enhetens eller grafmallens grafbehörighetsmodell ska standardpolicyn för grafer vara inställd på 'Neka'."
 
 #: settings.php
 msgid "All Templates Selected"
@@ -16484,7 +16484,7 @@ msgstr "Inkludera beroenden"
 
 #: templates_export.php
 msgid "Output Format"
-msgstr "Output format"
+msgstr "Utdataformat"
 
 #: templates_export.php
 msgid "Output to the Browser (raw XML)"
@@ -16544,7 +16544,7 @@ msgstr "Importera mall"
 
 #: templates_import.php
 msgid "Import Templates [ None selected imports all, Check to import selectively ]"
-msgstr "Import Templates [ None selected importerar alla, Check för att importera selektivt ]"
+msgstr "Importera mallar [ Inget valt importerar alla, markera för att importera selektivt ]"
 
 #: templates_import.php
 #, php-format
@@ -16584,7 +16584,7 @@ msgstr "Ett träd måste vara låst för att kunna redigeras."
 
 #: tree.php
 msgid "Add Root Branch"
-msgstr "Lägg till Root Branch"
+msgstr "Lägg till rotgren"
 
 #: tree.php
 msgid "Add Tree"
@@ -17024,7 +17024,7 @@ msgstr "Grafbehörigheter %s"
 
 #: user_admin.php user_group_admin.php
 msgid "Graph Perms"
-msgstr "Grafisk permanentning"
+msgstr "Grafbehörigheter"
 
 #: user_admin.php user_group_admin.php
 msgid "Graph Policy"
@@ -17252,8 +17252,8 @@ msgstr[1] "Klicka på \"Fortsätt\" för att radera följande användardomäner.
 #: user_domains.php
 msgid "Click 'Continue' to disable the following User Domain."
 msgid_plural "Click 'Continue' to disable following User Domains."
-msgstr[0] "Klicka på \"Fortsätt\" för att inaktivera följande användardomän.Klicka på \"Fortsätt\" för att inaktivera följande användardomäner."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande användardomän."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande användardomäner."
 
 #: user_domains.php
 msgid "Click 'Continue' to enable the following User Domain."
@@ -17394,8 +17394,8 @@ msgstr "Rensa"
 #: user_group_admin.php
 msgid "Click 'Continue' to Copy the following User Group to a new User Group."
 msgid_plural "Click 'Continue' to Copy following User Groups to new User Groups."
-msgstr[0] "Klicka på \"Fortsätt\" för att kopiera följande användargrupp till en ny användargrupp.Klicka på \"Fortsätt\" för att kopiera följande användargrupper till nya användargrupper."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att kopiera följande användargrupp till en ny användargrupp."
+msgstr[1] "Klicka på 'Fortsätt' för att kopiera följande användargrupper till nya användargrupper."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to delete the following User Group"
@@ -17406,14 +17406,14 @@ msgstr[1] "Klicka på \"Fortsätt\" för att radera följande användargrupper"
 #: user_group_admin.php
 msgid "Click 'Continue' to disable the following User Group."
 msgid_plural "Click 'Continue' to disable following User Groups."
-msgstr[0] "Klicka på \"Fortsätt\" för att inaktivera följande användargrupp.Klicka på Fortsätt för att inaktivera följande användargrupper."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att inaktivera följande användargrupp."
+msgstr[1] "Klicka på 'Fortsätt' för att inaktivera följande användargrupper."
 
 #: user_group_admin.php
 msgid "Click 'Continue' to enable the following User Group."
 msgid_plural "Click 'Continue' to enable following User Groups."
-msgstr[0] "Klicka på \"Fortsätt\" för att aktivera följande användargrupp.Klicka på \"Fortsätt\" för att aktivera följande användargrupper."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att aktivera följande användargrupp."
+msgstr[1] "Klicka på 'Fortsätt' för att aktivera följande användargrupper."
 
 #: user_group_admin.php
 msgid "Copy User Group"
@@ -18380,8 +18380,8 @@ msgstr[1] "Klicka på \"Fortsätt\" för att radera följande VDEF."
 #: vdef.php
 msgid "Click 'Continue' to duplicate the following VDEF. You can optionally change the title format for the new VDEF."
 msgid_plural "Click 'Continue' to duplicate following VDEFs. You can optionally change the title format for the new VDEFs."
-msgstr[0] "Klicka på \"Fortsätt\" för att duplicera följande VDEF. Du kan valfritt ändra titelformat för den nya VDEF.Klicka på \"Fortsätt\" för att duplicera följande VDEFs. Du kan valfritt ändra titelformat för de nya VDEF: erna."
-msgstr[1] "PLACEHOLDER"
+msgstr[0] "Klicka på 'Fortsätt' för att duplicera följande VDEF. Du kan valfritt ändra titelformatet för den nya VDEF:en."
+msgstr[1] "Klicka på 'Fortsätt' för att duplicera följande VDEF:er. Du kan valfritt ändra titelformatet för de nya VDEF:erna."
 
 #: vdef.php
 msgid "Delete VDEF"

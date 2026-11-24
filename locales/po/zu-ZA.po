@@ -15640,7 +15640,7 @@ msgstr "ISEXWAYISO: Umjikelezo Wokuqoqa Idatha we-Kadupul Weqe Isikhawu Se-Polle
 #: poller.php
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
-msgstr "ISEXWAYISO: Ithebula Lokuphumayo Le-Poller alinalutho ku-poller id %d.  Izinkinga: %d, %s."
+msgstr "ISEXWAYISO: Ithebula Lokuphumayo Le-Poller alilona elingenalutho ku-poller id %d.  Izinkinga: %d, %s."
 
 #: poller.php
 #, php-format

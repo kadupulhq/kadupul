@@ -13992,7 +13992,7 @@ msgstr "Akọwapụtaghị aha njirimara"
 
 #: lib/ldap.php
 msgid "PHP LDAP not enabled"
-msgstr "Agbanyụghị PHP LDAP"
+msgstr "Agbanyeghị PHP LDAP"
 
 #: lib/ldap.php
 #, php-format

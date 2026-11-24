@@ -14469,7 +14469,7 @@ msgstr "جمع کرنے سے پہلے poller_output قطار کا InnoDB است�
 
 #: lib/rrd_maintenance.php
 msgid "unavailable"
-msgstr "عمل کی تصدیق نہیں ہو سکی۔ دوبارہ کوشش کرنے سے پہلے تبدیلیوں کی تاریخ کا معائنہ کریں۔"
+msgstr "غیر دستیاب"
 
 #: lib/schema_repair_integrity.php
 msgid "Forward schema repair could not be confirmed. Review the target schema and installer privileges before retrying."

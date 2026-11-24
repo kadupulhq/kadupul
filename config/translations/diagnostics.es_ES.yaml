@@ -66,7 +66,7 @@
 "RRD Name": "Nombre de RRD"
 "RRD Path": "Ruta de RRD"
 "RRD Step": "Paso de RRD"
-"RRDfile Checker": "Limpiador de archivos RRD"
+"RRDfile Checker": "Comprobador de archivos RRD"
 "RRDfile Cleaner": "Limpiador de archivos RRD"
 "Recorded Boost settings and database statistics. Row estimates are not exact queue counts. Refresh to read current values.": "Configuración de Boost y estadísticas de base de datos registradas. Las estimaciones de filas no son recuentos exactos de cola. Actualice para leer los valores actuales."
 "Recorded configuration and inventory counts. External tool probes and tuning recommendations are available in advanced diagnostics.": "Configuración y recuentos de inventario registrados. Las sondas de herramientas externas y las recomendaciones de ajuste están disponibles en el diagnóstico avanzado."
