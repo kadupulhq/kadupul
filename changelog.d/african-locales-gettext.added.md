@@ -1,0 +1,1 @@
+- Add African and regional gettext catalogs for Arabic (Egypt) (`ar-EG`), Arabic (Morocco) (`ar-MA`), French (Morocco) (`fr-MA`), Kinyarwanda (`rw-RW`), Malagasy (`mg-MG`), and Somali (`so-SO`) for 49 translated locales total (#1499).

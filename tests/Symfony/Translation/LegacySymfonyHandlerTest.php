@@ -57,7 +57,7 @@ final class LegacySymfonyHandlerTest extends TestCase
         self::assertSameRendering($gettext, $cold, 'cold');
         $compiled = glob($cache . '/legacy-translations/catalogue.*.php') ?: [];
         // One compiled catalogue per shipped locale, holding all of its text domains.
-        self::assertCount(43, $compiled);
+        self::assertCount(49, $compiled);
         // A rebuilt catalogue is a new file renamed into place, so a new inode.
         $written = array_map('fileinode', $compiled);
 
@@ -225,7 +225,7 @@ final class LegacySymfonyHandlerTest extends TestCase
         // Booleans and counts, not arrays: PHPUnit exports every asserted value, even on success.
         self::assertTrue($gettext->calls === $symfony->calls);
         self::assertSame(array_keys($gettext->renderings), array_keys($symfony->renderings));
-        self::assertSame(44, count($symfony->renderings));
+        self::assertSame(50, count($symfony->renderings));
         foreach ($gettext->renderings as $locale => $expected) {
             $actual = $symfony->renderings[$locale];
             self::assertSame($locale, $actual['locale'], $pass);
