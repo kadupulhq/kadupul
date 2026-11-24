@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Hausa Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Hausa\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "An Hana Shiga! ID na mai amfani baƙo %s ba ya wanzu. Da fatan za a tuntuɓi Mai Gudanarwa."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "An Hana Shiga! Shiga Ya Kasa."
 
@@ -10702,11 +10704,6 @@ msgid "Kadupul Login Failure"
 msgstr "Gazawar Shiga Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Kalmar sirri dole ne ta kasance aƙalla haruffa %d!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "An Taƙaita"
 
@@ -10728,24 +10725,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "An saita Tantancewar Web Basic, amma sabar yanar gizo ba ta miƙa wani sunan mai amfani ba. Da fatan za a tabbatar kun kunna tantancewa a sabar yanar gizo."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Mai gudanar da Kadupul naka ya tilasta kalmomin sirri masu sarƙaƙiya don shiga kuma kalmar sirrinka ta Kadupul ta yanzu ba ta dace da sabbin buƙatun ba.  Saboda haka, dole ne ka sauya kalmar sirrinka yanzu."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "An kulle asusunka.  Da fatan za a tuntuɓi Mai Gudanarwa naka."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Dole ne kalmar sirrinka ta ƙunshi haɗin ƙananan haruffa da manyan haruffa!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla lamba 1!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla alama ta musamman 1!"
 
 #: lib/boost.php
 #, php-format
@@ -11440,7 +11421,7 @@ msgstr "An shiga a matsayin %s"
 msgid "Login as Regular User"
 msgstr "Shiga a Matsayin Mai Amfani Na Yau da Kullum"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Fita"
 
@@ -16429,6 +16410,27 @@ msgstr "MAI TSANANI: Ba A Bada Damar Spike Kill Ba"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "MAI TSANANI: Hanyar Spike Kill '%s' Ba Daidai Ba Ce"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Mai gudanar da Kadupul naka ya tilasta kalmomin sirri masu sarƙaƙiya don shiga kuma kalmar sirrinka ta Kadupul ta yanzu ba ta dace da sabbin buƙatun ba.  Saboda haka, dole ne ka sauya kalmar sirrinka yanzu."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Kalmar sirri dole ne ta kasance aƙalla haruffa %d!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Dole ne kalmar sirrinka ta ƙunshi haɗin ƙananan haruffa da manyan haruffa!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla lamba 1!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Dole ne kalmar sirrinka ta ƙunshi aƙalla alama ta musamman 1!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

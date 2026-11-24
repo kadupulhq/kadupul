@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Igbo Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Igbo\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Ajụrụ Ohere! ID onye ọrụ ọbịa %s adịghị. Biko kpọtụrụ Onye Nchịkwa gị."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Ajụrụ Ohere! Nbanye Dara."
 
@@ -10681,11 +10683,6 @@ msgid "Kadupul Login Failure"
 msgstr "Ọdịda Nbanye Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Okwuntụghe ga-adịkarị ala mkpụrụedemede %d!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Egbochiri"
 
@@ -10707,24 +10704,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Ahaziri Nkwenye Weebụ Ntọala, mana ebufeghị aha onye ọrụ ọ bụla site na seva weebụ. Biko hụ na agbanwuola nkwenye na seva weebụ."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Onye nchịkwa Kadupul gị amanyela okwuntụghe dị mgbagwoju anya maka nbanye na okwuntụghe Kadupul gị dị ugbu a adabaghị na ihe ọhụrụ achọrọ. Ya mere, ị ga-agbanwerịrị okwuntụghe gị ugbu a."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "A kpọchiela akaụntụ gị. Biko kpọtụrụ Onye Nchịkwa gị."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Okwuntụghe gị ga-enwerịrị ngwakọta nke mkpụrụedemede obere na nnukwu mkpụrụedemede!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede ọnụọgụ!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede pụrụ iche!"
 
 #: lib/boost.php
 #, php-format
@@ -11419,7 +11400,7 @@ msgstr "Banyere dịka %s"
 msgid "Login as Regular User"
 msgstr "Banye dịka Onye Ọrụ Nkịtị"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Ọpụpụ"
 
@@ -16392,6 +16373,27 @@ msgstr "NJỌ NKE UKWUU: Ekwereghị Mgbu Spike"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "NJỌ NKE UKWUU: Ụzọ Mgbu Spike '%s' Abaghị Uru"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Onye nchịkwa Kadupul gị amanyela okwuntụghe dị mgbagwoju anya maka nbanye na okwuntụghe Kadupul gị dị ugbu a adabaghị na ihe ọhụrụ achọrọ. Ya mere, ị ga-agbanwerịrị okwuntụghe gị ugbu a."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Okwuntụghe ga-adịkarị ala mkpụrụedemede %d!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Okwuntụghe gị ga-enwerịrị ngwakọta nke mkpụrụedemede obere na nnukwu mkpụrụedemede!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede ọnụọgụ!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Okwuntụghe gị ga-enwerịrị opekata mpe 1 mkpụrụedemede pụrụ iche!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

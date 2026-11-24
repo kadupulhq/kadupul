@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Afrikaans Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Afrikaans\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "Toegang geweier! Gasgebruiker-ID %s bestaan nie. Kontak asseblief jou administrateur."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "Toegang geweier! Aanmelding het misluk."
 
@@ -10702,11 +10704,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul-aanmelding het misluk"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "Wagwoord moet ten minste %d karakters wees!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "Beperk"
 
@@ -10728,24 +10725,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "Web Basic-verifikasie gekonfigureer, maar geen gebruikersnaam is vanaf die webbediener deurgegee nie. Maak asseblief seker jy het verifikasie op die webbediener geaktiveer."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Jou Kadupul-administrateur het komplekse wagwoorde vir aanmeldings afgedwing en jou huidige Kadupul-wagwoord voldoen nie aan die nuwe vereistes nie.  Daarom moet jy nou jou wagwoord verander."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "Jou rekening is gesluit.  Kontak asseblief jou Administrateur."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "Jou wagwoord moet 'n mengsel van kleinletter- en hoofletterkarakters bevat!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "Jou wagwoord moet ten minste 1 syferkarakter bevat!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "Jou wagwoord moet ten minste 1 spesiale karakter bevat!"
 
 #: lib/boost.php
 #, php-format
@@ -11440,7 +11421,7 @@ msgstr "Aangemeld as %s"
 msgid "Login as Regular User"
 msgstr "Meld aan as gewone gebruiker"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "Meld af"
 
@@ -16429,6 +16410,27 @@ msgstr "FATAAL: Piekverwydering nie toegelaat nie"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "FATAAL: Piekverwyderingsmetode '%s' is ongeldig"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "Jou Kadupul-administrateur het komplekse wagwoorde vir aanmeldings afgedwing en jou huidige Kadupul-wagwoord voldoen nie aan die nuwe vereistes nie.  Daarom moet jy nou jou wagwoord verander."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "Wagwoord moet ten minste %d karakters wees!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "Jou wagwoord moet 'n mengsel van kleinletter- en hoofletterkarakters bevat!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "Jou wagwoord moet ten minste 1 syferkarakter bevat!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "Jou wagwoord moet ten minste 1 spesiale karakter bevat!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

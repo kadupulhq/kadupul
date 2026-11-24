@@ -12,7 +12,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-function local_login_timing_run(string $username, string $password, string $state = "enabled", ?string $legacy_hash = null, bool $replaced = false): array
+function local_login_timing_run(string $username, string $password, string $state = "enabled", ?string $legacy_hash = null, bool $replaced = false, array $behavior = array()): array
 {
     $auth = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 
@@ -22,20 +22,33 @@ define('POLLER_VERBOSITY_DEBUG', 5);
 $GLOBALS['users'] = array('alice' => array('id' => 42, 'username' => 'alice', 'enabled' => 'on', 'locked' => '', 'password' => $scenario['legacy_hash'] ?? 'known-hash'));
 $GLOBALS['users']['alice']['enabled'] = $scenario['state'] === 'disabled' ? '' : 'on';
 $GLOBALS['hashes'] = array();
+$GLOBALS['events'] = array();
+$GLOBALS['password_reads'] = 0;
+function fail_stage($stage) { if (($GLOBALS['scenario']['behavior']['throw'] ?? '') === $stage) throw new RuntimeException('fixture-' . $stage); }
 $error = false;
 $error_msg = '';
-function get_nfilter_request_var($name, $default = '') { return $name === 'login_password' ? $GLOBALS['scenario']['password'] : $default; }
+function get_nfilter_request_var($name, $default = '') { if ($name === 'login_password') $GLOBALS['password_reads']++; return $name === 'login_password' ? $GLOBALS['scenario']['password'] : $default; }
 function __($text, ...$args) { return vsprintf($text, $args); }
 function cacti_log(...$args) {}
 function cacti_sizeof($array) { return is_array($array) ? count($array) : 0; }
 function read_config_option($name, $force = false) { return ''; }
-function api_plugin_hook_function($name, $parm = null) { return $parm; }
+function api_plugin_hook_function($name, $parm = null) {
+    $GLOBALS['events'][] = 'hook:' . $name;
+    $GLOBALS['plugin_state'] = 'retained';
+    fail_stage('hook');
+    if ($GLOBALS['scenario']['behavior']['hook_error'] ?? false) { $GLOBALS['error'] = true; $GLOBALS['error_msg'] = 'plugin-denial'; }
+    return $GLOBALS['scenario']['behavior']['handled'] ?? $parm;
+}
 function auth_checkclear_lockout($username, $realm) {}
 function auth_process_lockout_check($username, $realm) { global $error; if ($GLOBALS['scenario']['state'] === 'locked' && $username === 'alice') { $error = true; return true; } return false; }
 function auth_process_lockout($username, $realm) {}
 function db_column_exists($table, $column) { return true; }
 function db_fetch_row_prepared($sql, $params = array()) {
+    $stage = str_contains($sql, 'SELECT *') ? 'reload' : 'verify';
+    $GLOBALS['events'][] = $stage;
+    fail_stage($stage);
     $row = $GLOBALS['users'][$params[0]] ?? array();
+    if ($stage === 'reload' && ($GLOBALS['scenario']['behavior']['missing'] ?? false)) return false;
     // A password reset that lands between verification and the full row read.
     if ($row && str_contains($sql, 'SELECT *') && !empty($GLOBALS['scenario']['replaced'])) {
         $row['password'] = 'replaced-hash';
@@ -48,8 +61,15 @@ function compat_password_verify($password, $hash) {
     $GLOBALS['hashes'][] = $hash;
     return $hash === 'known-hash' && $password === 'right';
 }
-function compat_password_needs_rehash($password, $algo, $options = array()) { return false; }
+function compat_password_needs_rehash($password, $algo, $options = array()) { $GLOBALS['events'][] = 'needs-rehash'; return $GLOBALS['scenario']['behavior']['rehash'] ?? false; }
+function db_check_password_length() { $GLOBALS['events'][] = 'column-width'; }
+function auth_rehash_password_preserving_sessions($id, $old, $new) {
+    $GLOBALS['events'][] = ['persist', $id, $old, $new];
+    fail_stage('persist');
+    return $GLOBALS['scenario']['behavior']['persist'] ?? true;
+}
 function compat_password_hash($password, $algo, $options = array()) {
+    fail_stage('hash');
     if (str_contains($password, chr(0))) { throw new ValueError('Bcrypt password must not contain NUL'); }
     $GLOBALS['hashes'][] = 'hash:' . $algo;
     return 'new-hash';
@@ -59,21 +79,25 @@ PHP;
 
     foreach (array('secpass_login_process', 'local_auth_login_process', 'auth_local_login_timing_floor', 'auth_unknown_user_password_verify') as $function) {
         if (strpos($auth, "\nfunction $function(") !== false) {
-            $program .= "\n" . test_php_function_source($auth, $function) . "\n";
+            $program .= "\n" . str_replace('__DIR__', var_export(dirname(__DIR__, 4) . '/lib', true), test_php_function_source($auth, $function)) . "\n";
         }
     }
 
     if ($legacy_hash !== null) {
         $program = preg_replace('/function compat_password_verify\(\$password, \$hash\) \{.*?\n\}/s', '', $program);
-        $program .= test_php_function_source($auth, 'compat_password_verify');
+        $program .= str_replace('__DIR__', var_export(dirname(__DIR__, 4) . '/lib', true), test_php_function_source($auth, 'compat_password_verify'));
         $program .= test_php_function_source($auth, 'compat_hash_equals');
     }
 
-    $program .= '$user = local_auth_login_process($scenario[\'username\']);';
-    $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'error_msg\' => $error_msg, \'hashes\' => $GLOBALS[\'hashes\']));';
+    $program .= '$attempt_started = hrtime(true); $caught = null; $user = array(); try { $user = local_auth_login_process($scenario[\'username\']); } catch (Throwable $failure) { $caught = $failure->getMessage(); }';
+    $program .= 'print json_encode(array(\'user\' => $user, \'error\' => $error, \'error_msg\' => $error_msg, \'hashes\' => $GLOBALS[\'hashes\'], \'events\' => $GLOBALS[\'events\'], \'password_reads\' => $GLOBALS[\'password_reads\'], \'plugin_state\' => $GLOBALS[\'plugin_state\'] ?? null, \'caught\' => $caught, \'elapsed\' => (hrtime(true) - $attempt_started) / 1e9));';
+
+    // Count the extracted hasher's cryptographic work at the same primitive
+    // boundary as the native facade. Real hashes run in the native probes below.
+    $program = 'namespace Kadupul\\IdentityAccess\\Infrastructure\\Legacy { function password_hash(string $password, string|int|null $algorithm, array $options = []): string { return \\compat_password_hash($password, $algorithm, $options); } } namespace { ' . $program . ' }';
 
     $process = proc_open(
-        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash, 'replaced' => $replaced))),
+        array(PHP_BINARY, '-d', 'display_errors=stderr', '-r', $program, json_encode(array('username' => $username, 'password' => $password, 'state' => $state, 'legacy_hash' => $legacy_hash, 'replaced' => $replaced, 'behavior' => $behavior))),
         array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
         $pipes
     );
@@ -81,11 +105,16 @@ PHP;
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    proc_close($process);
+    expect(proc_close($process))->toBe(0);
 
     expect($stderr)->toBe('');
 
-    return json_decode($stdout, true);
+    $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+    if (!isset($behavior['throw'])) {
+        expect($result['caught'])->toBeNull();
+    }
+
+    return $result;
 }
 
 test('an unknown username runs as many password verifications as a known one', function (string $password) {
@@ -142,6 +171,32 @@ test('a password replaced after verification refuses the login', function () {
         ->and($result['error_msg'])->toBe('Access Denied!  Login Failed.')
         ->and($result['hashes'])->toBe(array('known-hash'));
 });
+
+test('the local verification service preserves plugin ownership and lazy credential reads', function ($behavior, $events, $reads, $error, $message, $hasUser) {
+    $result = local_login_timing_run('alice', 'right', behavior: $behavior);
+    expect($result['events'])->toBe($events)
+        ->and($result['password_reads'])->toBe($reads)
+        ->and($result['plugin_state'])->toBe('retained')
+        ->and($result['error'])->toBe($error)
+        ->and($result['error_msg'])->toBe($message)
+        ->and(isset($result['user']['id']))->toBe($hasUser)
+        ->and($result['caught'])->toBeNull()
+        ->and($result['elapsed'])->toBeGreaterThanOrEqual(0.99);
+})->with(array(
+    'plugin owns login' => array(array('handled' => true), array('hook:login_process'), 0, false, '', false),
+    'plugin denial is retained' => array(array('hook_error' => true), array('hook:login_process', 'verify'), 1, true, 'plugin-denial', true),
+    'unchanged credential' => array(array(), array('hook:login_process', 'verify', 'reload', 'needs-rehash'), 1, false, '', true),
+    'missing fresh account' => array(array('missing' => true), array('hook:login_process', 'verify', 'reload'), 1, true, 'Access Denied!  Login Failed.', false),
+    'confirmed rehash' => array(array('rehash' => true), array('hook:login_process', 'verify', 'reload', 'needs-rehash', 'column-width', array('persist', 42, 'known-hash', 'new-hash')), 2, false, '', true),
+    'unconfirmed rehash' => array(array('rehash' => true, 'persist' => false), array('hook:login_process', 'verify', 'reload', 'needs-rehash', 'column-width', array('persist', 42, 'known-hash', 'new-hash')), 2, true, 'Access Denied!  Login Failed.', false),
+));
+
+test('the native local timing floor still applies when credential dependencies throw', function (string $stage) {
+    $result = local_login_timing_run('alice', 'right', behavior: array('throw' => $stage, 'rehash' => true));
+    expect($result['caught'])->toBe('fixture-' . $stage)
+        ->and($result['user'])->toBe(array())
+        ->and($result['elapsed'])->toBeGreaterThanOrEqual(0.99);
+})->with(array('hook', 'verify', 'reload', 'hash', 'persist'));
 
 test('disabled and locked usernames do the same password work as unknown names', function (string $state, string $password) {
     $known = local_login_timing_run('alice', $password, $state);

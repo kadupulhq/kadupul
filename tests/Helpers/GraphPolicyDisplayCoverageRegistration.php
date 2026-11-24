@@ -12,6 +12,10 @@ final class GraphPolicyDisplayCoverageRegistration
         'src/Graphing/Infrastructure/Rrd/ProxyCipher.php', 'lib/dsdebug.php', 'lib/rrd_maintenance.php', 'lib/poller.php',
         'lib/boost.php', 'lib/api_data_source.php', 'lib/rrdcheck.php', 'lib/dsstats.php',
         'tests/Fixtures/graph-policy-display-native.php', 'tests/Helpers/GraphPolicyDisplayCoverageRegistration.php',
-        'tests/Unit/Security/Auth/GraphPolicyDisplaySqlParityTest.php', 'composer.lock', 'tests/composer.lock', 'cacti.sql'];
+        'tests/Unit/Security/Auth/GraphPolicyDisplaySqlParityTest.php', 'composer.lock', 'tests/composer.lock', 'cacti.sql',
+        'src/IdentityAccess/Application/Command/ApplyLocalLoginPolicy.php', 'src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php',
+        'src/IdentityAccess/Domain/PasswordComplexity.php', 'src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php',
+        'src/IdentityAccess/Application/Port/AccountLockoutStatus.php', 'src/IdentityAccess/Application/Query/IsAccountLocked.php',
+        'src/IdentityAccess/Infrastructure/Legacy/NativeAccountLockoutStatus.php', 'src/IdentityAccess/Infrastructure/Legacy/LegacyPasswordHasher.php'];
     public const MARKERS = ['native-policy-operation-returned', 'policy-session-observed', 'persisted-policy-display-compared'];
 }

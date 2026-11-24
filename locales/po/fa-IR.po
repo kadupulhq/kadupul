@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Persian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Persian\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "دسترسی رد شد! شناسه کاربر مهمان %s وجود ندارد. لطفاً با مدیر خود تماس بگیرید."
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "دسترسی رد شد! ورود ناموفق بود."
 
@@ -10702,11 +10704,6 @@ msgid "Kadupul Login Failure"
 msgstr "خطای ورود به Kadupul"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "رمز عبور باید حداقل %d نویسه باشد!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "محدودشده"
 
@@ -10728,24 +10725,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "احراز هویت پایه وب پیکربندی شده است، اما هیچ نام کاربری از وب‌سرور ارسال نشده است. لطفاً مطمئن شوید احراز هویت در وب‌سرور فعال شده است."
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "مدیر Kadupul شما رمزهای عبور پیچیده را برای ورود اجباری کرده است و رمز عبور فعلی Kadupul شما با الزامات جدید مطابقت ندارد. بنابراین، باید اکنون رمز عبور خود را تغییر دهید."
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "حساب شما قفل شده است. لطفاً با مدیر خود تماس بگیرید."
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "رمز عبور شما باید شامل ترکیبی از حروف کوچک و بزرگ باشد!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "رمز عبور شما باید حداقل شامل 1 نویسه عددی باشد!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "رمز عبور شما باید حداقل شامل 1 نویسه ویژه باشد!"
 
 #: lib/boost.php
 #, php-format
@@ -11440,7 +11421,7 @@ msgstr "واردشده با نام %s"
 msgid "Login as Regular User"
 msgstr "ورود به عنوان کاربر عادی"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "خروج"
 
@@ -16429,6 +16410,27 @@ msgstr "بحرانی: حذف جهش (Spike Kill) مجاز نیست"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "بحرانی: روش حذف جهش «%s» نامعتبر است"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "مدیر Kadupul شما رمزهای عبور پیچیده را برای ورود اجباری کرده است و رمز عبور فعلی Kadupul شما با الزامات جدید مطابقت ندارد. بنابراین، باید اکنون رمز عبور خود را تغییر دهید."
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "رمز عبور باید حداقل %d نویسه باشد!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "رمز عبور شما باید شامل ترکیبی از حروف کوچک و بزرگ باشد!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "رمز عبور شما باید حداقل شامل 1 نویسه عددی باشد!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "رمز عبور شما باید حداقل شامل 1 نویسه ویژه باشد!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

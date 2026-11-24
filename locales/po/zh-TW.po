@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -692,6 +692,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "存取遭拒！訪客使用者 ID %s 不存在。請聯絡您的管理員。"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "拒絕訪問，禁用用戶帳戶。"
 
@@ -10742,11 +10744,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul Log清除"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "密碼必須至少為 %d 個字元！"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "受限制"
 
@@ -10768,24 +10765,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "已設定 Web Basic 驗證，但網頁伺服器未傳遞使用者名稱。請確保您已在網頁伺服器上啟用驗證功能。"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "您的 Kadupul 管理員已強制要求登入使用複雜密碼，而您目前的 Kadupul 密碼不符合新要求。因此，您現在必須變更密碼。"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "訪問被拒絕，請與您聯繫Kadupul管理員。"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "您的密碼必須包含小寫與大寫字元的混合！"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "您的密碼必須包含至少 1 個數字字元！"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "您的密碼必須包含至少 1 個特殊字元！"
 
 #: lib/boost.php
 #, php-format
@@ -11480,7 +11461,7 @@ msgstr "登入身分為 %s"
 msgid "Login as Regular User"
 msgstr "以一般使用者身分登入"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "登出"
 
@@ -16529,6 +16510,27 @@ msgstr "嚴重錯誤：不允許尖峰消除"
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "嚴重錯誤：尖峰消除方法 '%s' 無效"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "您的 Kadupul 管理員已強制要求登入使用複雜密碼，而您目前的 Kadupul 密碼不符合新要求。因此，您現在必須變更密碼。"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "密碼必須至少為 %d 個字元！"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "您的密碼必須包含小寫與大寫字元的混合！"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "您的密碼必須包含至少 1 個數字字元！"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "您的密碼必須包含至少 1 個特殊字元！"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

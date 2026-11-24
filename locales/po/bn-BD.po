@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Bengali Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Bengali\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "অ্যাক্সেস প্রত্যাখ্যাত! অতিথি ব্যবহারকারী আইডি %s বিদ্যমান নেই। অনুগ্রহ করে আপনার প্রশাসকের সাথে যোগাযোগ করুন।"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "অ্যাক্সেস প্রত্যাখ্যাত! লগইন ব্যর্থ হয়েছে।"
 
@@ -10702,11 +10704,6 @@ msgid "Kadupul Login Failure"
 msgstr "Kadupul লগইন ব্যর্থতা"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "পাসওয়ার্ড অবশ্যই কমপক্ষে %d অক্ষরের হতে হবে!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "সীমাবদ্ধ"
 
@@ -10728,24 +10725,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "ওয়েব বেসিক প্রমাণীকরণ কনফিগার করা আছে, কিন্তু ওয়েব সার্ভার থেকে কোনো ব্যবহারকারীর নাম পাঠানো হয়নি। অনুগ্রহ করে নিশ্চিত করুন যে ওয়েব সার্ভারে প্রমাণীকরণ সক্রিয় রয়েছে।"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "আপনার Kadupul অ্যাডমিনিস্ট্রেটর লগইনের জন্য জটিল পাসওয়ার্ড বাধ্যতামূলক করেছেন এবং আপনার বর্তমান Kadupul পাসওয়ার্ডটি নতুন শর্তাবলীর সাথে মেলে না। অতএব, আপনাকে অবশ্যই এখনই আপনার পাসওয়ার্ড পরিবর্তন করতে হবে।"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "আপনার অ্যাকাউন্ট লক করা হয়েছে। অনুগ্রহ করে আপনার অ্যাডমিনিস্ট্রেটরের সাথে যোগাযোগ করুন।"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "আপনার পাসওয়ার্ডে অবশ্যই ছোট হাতের এবং বড় হাতের অক্ষরের মিশ্রণ থাকতে হবে!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি সংখ্যাসূচক অক্ষর থাকতে হবে!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি বিশেষ অক্ষর থাকতে হবে!"
 
 #: lib/boost.php
 #, php-format
@@ -11440,7 +11421,7 @@ msgstr "%s হিসেবে লগইনকৃত"
 msgid "Login as Regular User"
 msgstr "সাধারণ ব্যবহারকারী হিসেবে লগইন করুন"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "লগআউট"
 
@@ -16429,6 +16410,27 @@ msgstr "গুরুতর ত্রুটি: স্পাইক কিল অ�
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "গুরুতর ত্রুটি: স্পাইক কিল পদ্ধতি '%s' অবৈধ"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "আপনার Kadupul অ্যাডমিনিস্ট্রেটর লগইনের জন্য জটিল পাসওয়ার্ড বাধ্যতামূলক করেছেন এবং আপনার বর্তমান Kadupul পাসওয়ার্ডটি নতুন শর্তাবলীর সাথে মেলে না। অতএব, আপনাকে অবশ্যই এখনই আপনার পাসওয়ার্ড পরিবর্তন করতে হবে।"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "পাসওয়ার্ড অবশ্যই কমপক্ষে %d অক্ষরের হতে হবে!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "আপনার পাসওয়ার্ডে অবশ্যই ছোট হাতের এবং বড় হাতের অক্ষরের মিশ্রণ থাকতে হবে!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি সংখ্যাসূচক অক্ষর থাকতে হবে!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "আপনার পাসওয়ার্ডে অবশ্যই কমপক্ষে ১-টি বিশেষ অক্ষর থাকতে হবে!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"

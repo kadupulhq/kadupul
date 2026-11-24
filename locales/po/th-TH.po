@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Thai Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-11-23 13:09-0800\n"
+"POT-Creation-Date: 2026-11-23 15:48-0800\n"
 "PO-Revision-Date: 2026-11-22 00:00+0000\n"
 "Last-Translator: The Kadupul Project\n"
 "Language-Team: Thai\n"
@@ -688,6 +688,8 @@ msgid "Access Denied!  Guest user id %s does not exist.  Please contact your Adm
 msgstr "ปฏิเสธการเข้าถึง! ไม่มี Guest user id %s อยู่ โปรดติดต่อผู้ดูแลระบบของคุณ"
 
 #: auth_login.php lib/auth.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalCredentials.php
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
 msgid "Access Denied!  Login Failed."
 msgstr "ปฏิเสธการเข้าถึง! เข้าสู่ระบบล้มเหลว"
 
@@ -10681,11 +10683,6 @@ msgid "Kadupul Login Failure"
 msgstr "การเข้าสู่ระบบ Kadupul ล้มเหลว"
 
 #: lib/auth.php
-#, php-format
-msgid "Password must be at least %d characters!"
-msgstr "รหัสผ่านต้องมีความยาวอย่างน้อย %d ตัวอักษร!"
-
-#: lib/auth.php
 msgid "Restricted"
 msgstr "ถูกจำกัด"
 
@@ -10707,24 +10704,8 @@ msgid "Web Basic Authentication configured, but no username was passed from the 
 msgstr "กำหนดค่า Web Basic Authentication ไว้แล้ว แต่ไม่มีชื่อผู้ใช้ถูกส่งมาจากเว็บเซิร์ฟเวอร์ โปรดตรวจสอบให้แน่ใจว่าคุณเปิดใช้งานการยืนยันตัวตนบนเว็บเซิร์ฟเวอร์แล้ว"
 
 #: lib/auth.php
-msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "ผู้ดูแลระบบ Kadupul ของคุณได้บังคับใช้รหัสผ่านที่ซับซ้อนสำหรับการเข้าสู่ระบบ และรหัสผ่าน Kadupul ปัจจุบันของคุณไม่ตรงตามข้อกำหนดใหม่ ดังนั้น คุณต้องเปลี่ยนรหัสผ่านของคุณตอนนี้"
-
-#: lib/auth.php
 msgid "Your account has been locked.  Please contact your Administrator."
 msgstr "บัญชีของคุณถูกล็อกแล้ว โปรดติดต่อผู้ดูแลระบบของคุณ"
-
-#: lib/auth.php
-msgid "Your password must contain a mix of lower case and upper case characters!"
-msgstr "รหัสผ่านของคุณต้องประกอบด้วยตัวอักษรพิมพ์เล็กและตัวพิมพ์ใหญ่ผสมกัน!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 numerical character!"
-msgstr "รหัสผ่านของคุณต้องมีตัวเลขอย่างน้อย 1 ตัว!"
-
-#: lib/auth.php
-msgid "Your password must contain at least 1 special character!"
-msgstr "รหัสผ่านของคุณต้องมีอักขระพิเศษอย่างน้อย 1 ตัว!"
 
 #: lib/boost.php
 #, php-format
@@ -11419,7 +11400,7 @@ msgstr "เข้าสู่ระบบในชื่อ %s"
 msgid "Login as Regular User"
 msgstr "เข้าสู่ระบบในฐานะผู้ใช้ทั่วไป"
 
-#: lib/functions.php lib/html.php
+#: lib/functions.php lib/html.php logout.php
 msgid "Logout"
 msgstr "ออกจากระบบ"
 
@@ -16392,6 +16373,27 @@ msgstr "ร้ายแรง (FATAL): ไม่อนุญาตให้ใ�
 #, php-format
 msgid "FATAL: Spike Kill method '%s' is Invalid"
 msgstr "ร้ายแรง (FATAL): วิธี Spike Kill '%s' ไม่ถูกต้อง"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativeLocalLoginPolicy.php
+msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
+msgstr "ผู้ดูแลระบบ Kadupul ของคุณได้บังคับใช้รหัสผ่านที่ซับซ้อนสำหรับการเข้าสู่ระบบ และรหัสผ่าน Kadupul ปัจจุบันของคุณไม่ตรงตามข้อกำหนดใหม่ ดังนั้น คุณต้องเปลี่ยนรหัสผ่านของคุณตอนนี้"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+#, php-format
+msgid "Password must be at least %d characters!"
+msgstr "รหัสผ่านต้องมีความยาวอย่างน้อย %d ตัวอักษร!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain a mix of lower case and upper case characters!"
+msgstr "รหัสผ่านของคุณต้องประกอบด้วยตัวอักษรพิมพ์เล็กและตัวพิมพ์ใหญ่ผสมกัน!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 numerical character!"
+msgstr "รหัสผ่านของคุณต้องมีตัวเลขอย่างน้อย 1 ตัว!"
+
+#: src/IdentityAccess/Infrastructure/Legacy/NativePasswordComplexity.php
+msgid "Your password must contain at least 1 special character!"
+msgstr "รหัสผ่านของคุณต้องมีอักขระพิเศษอย่างน้อย 1 ตัว!"
 
 #: src/Platform/Infrastructure/Legacy/InstallerCollectorConfiguration.php
 msgid "New Poller"
