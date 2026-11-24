@@ -66,7 +66,7 @@
 "Retry collector propagation": "Повторен опит за разпространение към колекторите"
 "delete": "изтриване"
 "duplicate": "дублиране"
-"field_delete": "field_delete"
+"field_delete": "Delete field"
 "propagate": "разпространение"
 "whitelist": "бял списък"
 "Script/Command": "Script / Command"

@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Notas moet geldige teks van hoogstens 65 535 grepe wees."
 "Location must be valid text of at most 40 characters.": "Ligging moet geldige teks van hoogstens 40 karakters wees."
 "External ID must be valid text of at most 40 characters.": "Eksterne ID moet geldige teks van hoogstens 40 karakters wees."
-"device.state": "device.state"
+"device.state": "State"
 "Add site": "Voeg terrein by"
 "Create site": "Skep terrein"
 "Address line 1": "Adresreël 1"

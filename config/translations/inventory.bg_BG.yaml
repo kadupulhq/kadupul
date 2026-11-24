@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Бележките трябва да бъдат валиден текст с размер най-много 65 535 байта."
 "Location must be valid text of at most 40 characters.": "Местоположението трябва да бъде валиден текст с дължина най-много 40 знака."
 "External ID must be valid text of at most 40 characters.": "Външният ИД трябва да бъде валиден текст с дължина най-много 40 знака."
-"device.state": "device.state"
+"device.state": "State"
 "Add site": "Добавяне на обект"
 "Create site": "Създаване на обект"
 "Address line 1": "Адрес (ред 1)"

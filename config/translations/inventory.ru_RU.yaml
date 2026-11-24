@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Примечания должны быть допустимым текстом длиной не более 65 535 байт."
 "Location must be valid text of at most 40 characters.": "Расположение должно быть допустимым текстом длиной не более 40 символов."
 "External ID must be valid text of at most 40 characters.": "Внешний ID должен быть допустимым текстом длиной не более 40 символов."
-"device.state": "Область"
+"device.state": "Состояние"
 "Add site": "Добавить площадку"
 "Create site": "Создать площадку"
 "Address line 1": "Адрес (строка 1)"

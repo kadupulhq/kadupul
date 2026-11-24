@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "As notas têm de ser texto válido com no máximo 65 535 bytes."
 "Location must be valid text of at most 40 characters.": "A localização tem de ser texto válido com no máximo 40 carateres."
 "External ID must be valid text of at most 40 characters.": "O ID externo tem de ser texto válido com no máximo 40 carateres."
-"device.state": "device.state"
+"device.state": "Estado"
 "Add site": "Adicionar site"
 "Create site": "Criar site"
 "Address line 1": "Linha de endereço 1"

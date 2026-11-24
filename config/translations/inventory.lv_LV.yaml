@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Piezīmēm jāsatur derīgs teksts, kas nepārsniedz 65 535 baitus."
 "Location must be valid text of at most 40 characters.": "Atrašanās vietai jāsatur derīgs teksts, kas nepārsniedz 40 rakstzīmes."
 "External ID must be valid text of at most 40 characters.": "Ārējam ID jābūt derīgam tekstam, kas nepārsniedz 40 rakstzīmes."
-"device.state": "device.state"
+"device.state": "State"
 "Add site": "Pievienot vietni"
 "Create site": "Izveidot vietni"
 "Address line 1": "Adreses 1. rindiņa"

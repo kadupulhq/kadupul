@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Οι σημειώσεις πρέπει να είναι έγκυρο κείμενο το πολύ 65.535 bytes."
 "Location must be valid text of at most 40 characters.": "Η θέση πρέπει να είναι έγκυρο κείμενο το πολύ 40 χαρακτήρων."
 "External ID must be valid text of at most 40 characters.": "Το εξωτερικό αναγνωριστικό πρέπει να είναι έγκυρο κείμενο το πολύ 40 χαρακτήρων."
-"device.state": "device.state"
+"device.state": "State"
 "Add site": "Προσθήκη τοποθεσίας"
 "Create site": "Δημιουργία τοποθεσίας"
 "Address line 1": "Γραμμή διεύθυνσης 1"

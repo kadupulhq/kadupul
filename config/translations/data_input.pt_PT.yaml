@@ -66,7 +66,7 @@
 "Retry collector propagation": "Tentar novamente propagação do coletor"
 "delete": "eliminar"
 "duplicate": "duplicado"
-"field_delete": "field_delete"
+"field_delete": "Eliminar campo"
 "propagate": "propagar"
 "whitelist": "lista de permissões"
 "Script/Command": "Script/Command"

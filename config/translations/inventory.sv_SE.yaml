@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Anteckningar måste vara giltig text på högst 65 535 byte."
 "Location must be valid text of at most 40 characters.": "Placering måste vara giltig text på högst 40 tecken."
 "External ID must be valid text of at most 40 characters.": "Externt ID måste vara giltig text på högst 40 tecken."
-"device.state": "device.state"
+"device.state": "State"
 "Add site": "Lägg till plats"
 "Create site": "Skapa plats"
 "Address line 1": "Adressrad 1"

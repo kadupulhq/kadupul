@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "메모는 최대 65,535바이트의 유효한 텍스트여야 합니다."
 "Location must be valid text of at most 40 characters.": "위치는 최대 40자의 유효한 텍스트여야 합니다."
 "External ID must be valid text of at most 40 characters.": "외부 ID는 최대 40자의 유효한 텍스트여야 합니다."
-"device.state": "주"
+"device.state": "상태"
 "Add site": "사이트 추가"
 "Create site": "사이트 생성"
 "Address line 1": "주소 1"

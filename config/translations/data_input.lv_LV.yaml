@@ -66,7 +66,7 @@
 "Retry collector propagation": "Atkārtot izplatīšanu savācējiem"
 "delete": "dzēst"
 "duplicate": "dublēt"
-"field_delete": "field_delete"
+"field_delete": "Delete field"
 "propagate": "izplatīt"
 "whitelist": "atļauto saraksts"
 "Script/Command": "Skripts/komanda"

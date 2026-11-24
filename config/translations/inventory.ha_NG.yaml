@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "Bayanin kula dole ne ya zama rubutu mai inganci na iyakar bytes 65,535."
 "Location must be valid text of at most 40 characters.": "Wuri dole ne ya zama rubutu mai inganci na iyakar haruffa 40."
 "External ID must be valid text of at most 40 characters.": "ID na Waje dole ne ya zama rubutu mai inganci na haruffa 40 a mafi yawa."
-"device.state": "device.state"
+"device.state": "State"
 "Add site": "Ƙara wuri"
 "Create site": "Ƙirƙiri wuri"
 "Address line 1": "Layin adireshi 1"

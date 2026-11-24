@@ -66,7 +66,7 @@
 "Retry collector propagation": "Försök sprida till insamlare igen"
 "delete": "ta bort"
 "duplicate": "duplicera"
-"field_delete": "field_delete"
+"field_delete": "Delete field"
 "propagate": "propagera"
 "whitelist": "vitlista"
 "Script/Command": "Skript/kommando"

@@ -89,7 +89,7 @@
 "Notes must be valid text of at most 65,535 bytes.": "メモは最大 65,535 バイトの有効なテキストである必要があります。"
 "Location must be valid text of at most 40 characters.": "場所は最大 40 文字の有効なテキストである必要があります。"
 "External ID must be valid text of at most 40 characters.": "外部 ID は最大 40 文字の有効なテキストである必要があります。"
-"device.state": "都道府県"
+"device.state": "状態"
 "Add site": "サイトを追加"
 "Create site": "サイトを作成"
 "Address line 1": "住所 1"
